@@ -1,0 +1,33 @@
+# 依赖
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+
+# 运行时数据与浏览器登录态（严禁提交）
+runtime/
+chrome_profiles/
+*.profile/
+user-data/
+.auth/
+*.cookies.json
+
+# 敏感信息
+*.env
+.env.*
+*.key
+*.token
+secrets*
+
+# 测试与构建产物
+test-results/
+playwright-report/
+dist/
+build/
+
+# 日志（日志文件放 logs/ 时需先检查不含敏感信息）
+*.log.tmp
+
+# 系统
+Thumbs.db
+.DS_Store
