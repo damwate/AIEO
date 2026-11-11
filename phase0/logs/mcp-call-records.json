@@ -1,0 +1,107 @@
+[
+  {
+    "ts": "2026-11-11T16:22:08.487Z",
+    "server": "aieo-poc",
+    "server_pid": 2976,
+    "tool": "aieo_poc_ping",
+    "arguments": {},
+    "result": {
+      "status": "ok",
+      "server": "aieo-poc",
+      "version": "0.1.0",
+      "started_at": "2026-11-11T16:22:08.439Z",
+      "now": "2026-11-11T16:22:08.487Z",
+      "pid": 2976
+    }
+  },
+  {
+    "ts": "2026-11-11T16:22:08.490Z",
+    "server": "aieo-poc",
+    "server_pid": 2976,
+    "tool": "aieo_poc_get_test_task",
+    "arguments": {},
+    "result": {
+      "task_id": "T-POC-001"
+    }
+  },
+  {
+    "ts": "2026-11-11T16:22:08.499Z",
+    "server": "aieo-poc",
+    "server_pid": 2976,
+    "tool": "aieo_poc_submit_result",
+    "arguments": {
+      "task_id": "T-POC-001",
+      "result": "SUCCESS",
+      "summary": "冒烟测试提交"
+    },
+    "result": {
+      "accepted": true,
+      "record_id": "REC-1794414128497-8960",
+      "task_id": "T-POC-001",
+      "result": "SUCCESS",
+      "summary": "冒烟测试提交",
+      "received_at": "2026-11-11T16:22:08.497Z",
+      "persisted": true
+    }
+  },
+  {
+    "ts": "2026-11-11T16:22:08.502Z",
+    "server": "aieo-poc",
+    "server_pid": 2976,
+    "tool": "aieo_poc_submit_result",
+    "arguments": {
+      "task_id": "T-WRONG",
+      "result": "SUCCESS",
+      "summary": "错误ID测试"
+    },
+    "result": {
+      "accepted": false,
+      "reason": "未知 task_id: T-WRONG，当前只接受 T-POC-001"
+    }
+  },
+  {
+    "ts": "2026-11-11T16:23:54.871Z",
+    "server": "aieo-poc",
+    "server_pid": 21952,
+    "tool": "aieo_poc_ping",
+    "arguments": {},
+    "result": {
+      "status": "ok",
+      "server": "aieo-poc",
+      "version": "0.1.0",
+      "started_at": "2026-11-11T16:23:45.659Z",
+      "now": "2026-11-11T16:23:54.871Z",
+      "pid": 21952
+    }
+  },
+  {
+    "ts": "2026-11-11T16:23:57.080Z",
+    "server": "aieo-poc",
+    "server_pid": 21952,
+    "tool": "aieo_poc_get_test_task",
+    "arguments": {},
+    "result": {
+      "task_id": "T-POC-001"
+    }
+  },
+  {
+    "ts": "2026-11-11T16:24:30.768Z",
+    "server": "aieo-poc",
+    "server_pid": 21952,
+    "tool": "aieo_poc_submit_result",
+    "arguments": {
+      "task_id": "T-POC-001",
+      "result": "SUCCESS",
+      "summary": "已在 files_scope 内创建 src/greet.js（导出 greet(name)）和 test_greet.js，并在 phase0/e2e-poc 执行 node test_greet.js，断言通过，退出码为 0。"
+    },
+    "result": {
+      "accepted": true,
+      "record_id": "REC-1794414270767-6851",
+      "task_id": "T-POC-001",
+      "result": "SUCCESS",
+      "summary": "已在 files_scope 内创建 src/greet.js（导出 greet(name)）和 test_greet.js，并在 phase0/e2e-poc 执行 node test_greet.js，断言通过，退出码为 0。",
+      "received_at": "2026-11-11T16:24:30.767Z",
+      "persisted": true
+    }
+  }
+]

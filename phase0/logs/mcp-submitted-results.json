@@ -1,0 +1,18 @@
+[
+  {
+    "accepted": true,
+    "record_id": "REC-1794414128497-8960",
+    "task_id": "T-POC-001",
+    "result": "SUCCESS",
+    "summary": "冒烟测试提交",
+    "received_at": "2026-11-11T16:22:08.497Z"
+  },
+  {
+    "accepted": true,
+    "record_id": "REC-1794414270767-6851",
+    "task_id": "T-POC-001",
+    "result": "SUCCESS",
+    "summary": "已在 files_scope 内创建 src/greet.js（导出 greet(name)）和 test_greet.js，并在 phase0/e2e-poc 执行 node test_greet.js，断言通过，退出码为 0。",
+    "received_at": "2026-11-11T16:24:30.767Z"
+  }
+]
