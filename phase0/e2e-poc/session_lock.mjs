@@ -1,4 +1,4 @@
-// AIEO Phase 0 返工 R8 — 共享 ChatGPT 会话跨进程独占锁 v4
+// AIEO Phase 0 返工 R9 — 共享 ChatGPT 会话跨进程独占锁 v5（票据 fail-closed + 严格 schema + 受控屏障钩子）
 //
 // 回应第八轮审查双 MAJOR（v3 的 rename 换出不是 CAS）：
 //   竞态：A 读到 stale S 后暂停；B 换出 S 并创建新锁 N 持锁；A 恢复后 rename 会把 N 整体
@@ -18,10 +18,17 @@
 //   - 空/损坏锁 fail-closed 保留；unlink 仅发生于 (a) 持有者 release（校验 pid+rand）、
 //     (b) 票据持有者对"复核后仍确认为目标世代"的锁、(c) 死亡票据的重建清理。
 //
-// 可测试性：回收流程拆分为 createReapTicket / completeReap 两个导出步骤，
-// 生产 acquireSessionLock 与屏障测试调用同一实现（无测试钩子）。
+// R9 追加修复（回应第九轮审查）：
+//   1. 票据初始化窗口 fail-closed：票据文件为空/损坏/缺字段时，竞争者**视为状态不明**，
+//      抛 SESSION_LOCK_CONFLICT 拒绝执行，绝不按"死票据"删除（v4 曾误删）；
+//   2. 严格 schema：锁文件必须有 pid(number)+rand(string)+born_at(string)，
+//      票据必须有 pid(number)+target_generation(string)；缺字段/类型错 → 状态不明 fail-closed，
+//      杜绝 tomb-undefined 类票据；
+//   3. 受控屏障钩子：createExclusiveWithContent 在 wx 创建与 writeSync 之间可选暂停
+//      （仅当环境变量 AIEO_LOCK_PAUSE_FILE 指向的文件存在时；生产不设置该变量=零影响），
+//      用于以真实多进程测试复现并验证初始化窗口的 fail-closed 语义。
 
-import { openSync, writeSync, closeSync, readFileSync, unlinkSync, mkdirSync } from "node:fs";
+import { openSync, writeSync, closeSync, readFileSync, unlinkSync, mkdirSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -43,23 +50,43 @@ function randTag() {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
-/** wx 原子创建并经同一 fd 写入完整内容（无初始化内容竞争面） */
+/**
+ * wx 原子创建并经同一 fd 写入完整内容。
+ * 受控屏障钩子：AIEO_LOCK_PAUSE_FILE 指向的文件存在时，在创建与写入之间同步等待
+ * （上限 30s），用于多进程测试复现"文件已存在但内容未写"的初始化窗口并验证
+ * 竞争者的 fail-closed 语义。生产环境不设置该变量 = 零影响。
+ */
 function createExclusiveWithContent(path, content) {
   const fd = openSync(path, "wx");
   try {
+    const pauseFile = process.env.AIEO_LOCK_PAUSE_FILE;
+    if (pauseFile) {
+      for (let i = 0; i < 3000 && !existsSync(pauseFile); i++) {
+        Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 10); // 10ms 同步等待
+      }
+    }
     writeSync(fd, content);
   } finally {
     closeSync(fd);
   }
 }
 
-/** 读取并解析锁/票据文件；空/损坏返回 null（调用方必须 fail-closed） */
-function readJsonFile(path) {
+/**
+ * 严格 schema 读取（R9）：字段缺失/类型错误一律返回 null（= 状态不明，调用方必须 fail-closed）。
+ * 锁文件：pid(number) + rand(string) + born_at(string)；票据：pid(number) + target_generation(string)。
+ */
+function readJsonFile(path, kind = "lock") {
   try {
     const raw = readFileSync(path, "utf8");
     if (!raw.trim()) return null;
     const parsed = JSON.parse(raw);
     if (!parsed || typeof parsed.pid !== "number") return null;
+    if (kind === "lock") {
+      if (typeof parsed.rand !== "string" || !parsed.rand) return null;
+      if (typeof parsed.born_at !== "string" || !parsed.born_at) return null;
+    } else {
+      if (typeof parsed.target_generation !== "string" || !parsed.target_generation) return null;
+    }
     return parsed;
   } catch {
     return null;
@@ -86,8 +113,18 @@ export function createReapTicket(lockPath, staleGen) {
       return { ticketPath, ticket };
     } catch (e) {
       if (e.code !== "EEXIST") throw e;
-      const cur = readJsonFile(ticketPath);
-      if (cur && pidAlive(cur.pid)) {
+      // R9：票据状态三分类——null（空/损坏/初始化中）一律 fail-closed，绝不按"死票据"删除
+      // （第九轮审查 MAJOR-1：初始化窗口内的空票据曾被误判并删除，导致双回收者）
+      const cur = readJsonFile(ticketPath, "ticket");
+      if (!cur) {
+        const err = new Error(
+          `SESSION_LOCK_CONFLICT: 回收票据状态不明（为空/损坏/初始化中，pid 未知）。按 fail-closed 原则拒绝执行，未删除任何文件，请稍后重试或人工处理。`
+        );
+        err.code = "SESSION_LOCK_CONFLICT";
+        err.reason = "TICKET_STATE_UNKNOWN";
+        throw err;
+      }
+      if (pidAlive(cur.pid)) {
         const err = new Error(
           `SESSION_LOCK_CONFLICT: stale 世代 ${staleGen.rand} 的回收票据被存活进程持有 pid=${cur.pid}。本次拒绝执行。`
         );
@@ -95,7 +132,7 @@ export function createReapTicket(lockPath, staleGen) {
         err.holder = cur;
         throw err;
       }
-      // 票据持有者已死亡 → 清理死票据后重建（死亡票据不赋予任何存活进程权利）
+      // 仅"完整解析且持有者已死亡"的票据可清理重建（死亡票据不赋予任何存活进程权利）
       try { unlinkSync(ticketPath); } catch { /* 他人已清理 → 下轮 wx 重建 */ }
     }
   }
@@ -112,7 +149,7 @@ export function createReapTicket(lockPath, staleGen) {
  *   changed  — 锁内容已非目标世代（他人已完成回收并可能持新锁）——**绝不 unlink**。
  */
 export function completeReap(lockPath, staleGen, ticketPath) {
-  const cur = readJsonFile(lockPath);
+  const cur = readJsonFile(lockPath, "lock");
   if (!cur) {
     try { unlinkSync(ticketPath); } catch { /* 清理自己的票据 */ }
     return { outcome: "vanished" };
@@ -148,7 +185,7 @@ export function acquireSessionLock(opts = {}) {
         info,
         release() {
           try {
-            const cur = readJsonFile(lockPath);
+            const cur = readJsonFile(lockPath, "lock");
             if (cur && cur.pid === process.pid && cur.rand === info.rand) unlinkSync(lockPath);
           } catch {
             try { unlinkSync(lockPath); } catch { /* 已不存在 */ }
@@ -162,7 +199,7 @@ export function acquireSessionLock(opts = {}) {
     // ---- 第 2 步：锁被占——读取并裁决 ----
     let cur = null;
     let corruptStrikes = 0;
-    while (!(cur = readJsonFile(lockPath))) {
+    while (!(cur = readJsonFile(lockPath, "lock"))) {
       corruptStrikes++;
       if (corruptStrikes >= 3) {
         const err = new Error(
@@ -172,6 +209,15 @@ export function acquireSessionLock(opts = {}) {
         throw err;
       }
       Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, CORRUPT_RETRY_MS);
+    }
+    // R9：schema 不完整（如只有 pid 缺 rand/born_at）的锁 → 世代标识无效，拒绝回收并保留现场
+    if (typeof cur.rand !== "string" || !cur.rand || typeof cur.born_at !== "string" || !cur.born_at) {
+      const err = new Error(
+        `LOCK_CORRUPT_OR_INITIALIZING: 锁文件缺少世代标识（rand/born_at 缺失或类型错误）。按 fail-closed 原则拒绝回收并保留现场。`
+      );
+      err.code = "LOCK_CORRUPT_OR_INITIALIZING";
+      err.holder = cur;
+      throw err;
     }
     if (pidAlive(cur.pid)) {
       const err = new Error(

@@ -1,0 +1,21 @@
+[PASS] S1 基础语义 — 获取/互斥/释放正常
+[PASS] S2 空/初始化中锁 fail-closed — 不删除
+[PASS] S3 损坏锁 fail-closed — 不删除
+[PASS] S4 schema 不完整锁拒收 — LOCK_CORRUPT_OR_INITIALIZING；现场保留；无 tomb-undefined
+[PASS] S5 并发 stale 回收 — 1 胜（pid=20500）3 拒，票据归属胜者并清理
+[PASS] S6 临界区独占 — 持锁 800ms 观察者 0 获取
+测试框架自身异常: AssertionError [ERR_ASSERTION]: B 必须 fail-closed（实际 acquired）
++ actual - expected
+
++ 'acquired'
+- 'SESSION_LOCK_CONFLICT'
+
+    at main (file:///D:/AIEO/phase0/e2e-poc/test_session_lock_v5.mjs:204:12)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 'acquired',
+  expected: 'SESSION_LOCK_CONFLICT',
+  operator: 'strictEqual',
+  diff: 'simple'
+}
