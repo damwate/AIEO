@@ -1,0 +1,750 @@
+diff --git a/phase0/e2e-poc/completion_judge.mjs b/phase0/e2e-poc/completion_judge.mjs
+new file mode 100644
+index 0000000..f6a7477
+--- /dev/null
++++ b/phase0/e2e-poc/completion_judge.mjs
+@@ -0,0 +1,89 @@
++// AIEO Phase 0 返工 R2 — GPT 生成完成判定模块（纯逻辑，可独立测试）
++//
++// 针对第二轮审查 MAJOR-001 的四点修复：
++//   1. generationObserved：记录本轮"确实观察到"生成状态（停止按钮可见），不再硬编码 true；
++//   2. generationEnded：记录停止按钮从可见到不可见的真实翻转；
++//   3. 300 秒内未确认生成结束 → waitForGenerationEnd 抛 GENERATION_TIMEOUT（调用方以 exit 1 终止）；
++//   4. completionConfirmed 必须同时满足 6 项条件（见 verifyCompletion），任何一项不满足都不算成功。
++//
++// 设计为纯函数 + 依赖注入（isGenVisible/sleep/now），使判定代码本身可以被反向测试真实执行，
++// 无需伪造浏览器状态。sendAndCollect 是唯一的生产调用方；test_completion_judge.mjs 是测试调用方。
++
++/**
++ * 创建生成状态跟踪器。
++ * @param {{initialObserved?: boolean}} opts 发送双验阶段若已观察到停止按钮，可置 initialObserved=true
++ */
++export function createGenerationTracker(opts = {}) {
++  return { generationObserved: opts.initialObserved === true, generationEnded: false };
++}
++
++/**
++ * 按当前停止按钮可见性更新跟踪器。
++ * 翻转语义：先观察到生成（observed=true），其后观察到不可见 → ended=true。
++ */
++export function trackGeneration(tracker, stopButtonVisibleNow) {
++  if (stopButtonVisibleNow === true) tracker.generationObserved = true;
++  if (tracker.generationObserved === true && stopButtonVisibleNow !== true) tracker.generationEnded = true;
++  return tracker;
++}
++
++/**
++ * 等待生成结束：轮询 isGenVisible()，直到 observed && ended。
++ * 超过 deadlineMs 仍未确认结束 → 抛 Error(code=GENERATION_TIMEOUT)，携带最终 tracker。
++ * @param {() => Promise<boolean>} isGenVisible 停止按钮可见性观察源
++ * @param {{deadlineMs?: number, intervalMs?: number, sleep?: (ms:number)=>Promise<void>, now?: () => number, tracker?: object}} opts
++ */
++export async function waitForGenerationEnd(isGenVisible, opts = {}) {
++  const deadlineMs = opts.deadlineMs ?? 300000; // 审查要求：300 秒上限
++  const intervalMs = opts.intervalMs ?? 2000;
++  const sleep = opts.sleep ?? ((ms) => new Promise((r) => setTimeout(r, ms)));
++  const now = opts.now ?? Date.now;
++  const tracker = opts.tracker ?? createGenerationTracker();
++  const t0 = now();
++  while (now() - t0 < deadlineMs) {
++    const gen = await isGenVisible();
++    trackGeneration(tracker, gen);
++    if (tracker.generationEnded) return tracker;
++    await sleep(intervalMs);
++  }
++  const err = new Error(`GENERATION_TIMEOUT: ${deadlineMs}ms 内未确认生成结束（observed=${tracker.generationObserved}, ended=${tracker.generationEnded}）`);
++  err.code = "GENERATION_TIMEOUT";
++  err.tracker = tracker;
++  throw err;
++}
++
++/**
++ * 最终完成判定：6 项条件必须全部满足，任何一项不满足都不能返回成功。
++ * @param {{tracker: object, finalStopVisible: boolean, tailAfter: object|null, tailAgain: object|null, composerEmpty: boolean}} input
++ * @returns {{confirmed: boolean, checks: object}} checks 逐项布尔值，写入结构化 evidence
++ */
++export function verifyCompletion({ tracker, finalStopVisible, tailAfter, tailAgain, composerEmpty }) {
++  const checks = {
++    generation_observed: tracker?.generationObserved === true,                 // 本轮确实观察到生成状态
++    generation_ended: tracker?.generationEnded === true,                       // 已观察到生成状态结束（可见→不可见翻转）
++    final_stop_button_not_visible: finalStopVisible === false,                 // 最终停止按钮不可见（确认窗后复查）
++    tail_is_assistant: tailAfter?.role === "assistant",                        // 尾部为 assistant
++    dil_uuid_present: typeof tailAfter?.assistantUuid === "string" && tailAfter.assistantUuid.length > 0, // UUID 存在
++    uuid_stable: typeof tailAfter?.assistantUuid === "string" &&
++      tailAfter.assistantUuid.length > 0 &&
++      tailAfter.assistantUuid === tailAgain?.assistantUuid,                    // 两次读取一致
++    composer_empty: composerEmpty === true,                                    // Composer 为空
++  };
++  const confirmed = Object.values(checks).every(Boolean);
++  return { confirmed, checks };
++}
++
++/**
++ * sendAndCollect 使用的判定入口：不满足即抛错（带逐项 checks），满足则返回结果。
++ */
++export function finalizeCompletion(input) {
++  const { confirmed, checks } = verifyCompletion(input);
++  if (!confirmed) {
++    const failed = Object.entries(checks).filter(([, v]) => !v).map(([k]) => k);
++    const err = new Error(`COMPLETION_NOT_CONFIRMED: 未满足项 [${failed.join(", ")}]`);
++    err.code = "COMPLETION_NOT_CONFIRMED";
++    err.checks = checks;
++    throw err;
++  }
++  return { confirmed, checks };
++}
+diff --git a/phase0/e2e-poc/e2e_orchestrate.mjs b/phase0/e2e-poc/e2e_orchestrate.mjs
+index 2b1aea1..f42d917 100644
+--- a/phase0/e2e-poc/e2e_orchestrate.mjs
++++ b/phase0/e2e-poc/e2e_orchestrate.mjs
+@@ -16,6 +16,7 @@ import { spawn, execFile } from "node:child_process";
+ import { existsSync, mkdirSync, writeFileSync, appendFileSync, readFileSync } from "node:fs";
+ import { dirname, join } from "node:path";
+ import { fileURLToPath } from "node:url";
++import { createGenerationTracker, waitForGenerationEnd, finalizeCompletion } from "./completion_judge.mjs";
+ 
+ const __dirname = dirname(fileURLToPath(import.meta.url));
+ const AIEO_ROOT = join(__dirname, "..", "..");
+@@ -178,29 +179,38 @@ async function sendAndCollect(page, text, label) {
+   if (!(tailOk && stopOk)) throw new Error(`[${label}] 发送双验未通过（tail=${tailOk} stop=${stopOk}），UNCERTAIN，不重发`);
+   log(`[${label}] 发送双验通过`);
+   await shot(page, `e2e-sent-${label}.png`);
+-  let everGenerating = true;
+-  const t1 = Date.now();
+-  while (Date.now() - t1 < 300000) {
+-    const gen = await stopButtonVisible(page);
+-    if (gen) everGenerating = true;
+-    if (everGenerating && !gen) break;
+-    await page.waitForTimeout(2000);
+-  }
++
++  // 生成等待：真实观察生成状态（R2 修复——不再硬编码 everGenerating=true）
++  // tracker 以发送双验的 stopOk 为初始 observed（该阶段已确认停止按钮出现），
++  // 随后由 waitForGenerationEnd 持续观察"可见→不可见"翻转；300 秒未结束即抛 GENERATION_TIMEOUT（exit 1）。
++  const tracker = await waitForGenerationEnd(() => stopButtonVisible(page), {
++    deadlineMs: 300000,
++    intervalMs: 2000,
++    tracker: createGenerationTracker({ initialObserved: stopOk }),
++  });
++  log(`[${label}] 生成状态跟踪: observed=${tracker.generationObserved} ended=${tracker.generationEnded}`);
+   await page.waitForTimeout(CONFIRM_WINDOW_MS);
++
++  // 最终判定（R2 修复）：确认窗后必须复查停止按钮；6 项条件全部满足才算完成
++  const finalStopVisible = await stopButtonVisible(page);
+   const tailAfter = await readTailUnit(page);
+   await page.waitForTimeout(3000);
+   const tailAgain = await readTailUnit(page);
+   const composerEmpty = ((await c.innerText().catch(() => "x")) || "").trim() === "";
+-  // 生成态真正结束的判定：尾部为 assistant + DIL UUID 两次读取稳定 + Composer 空
+-  const completionConfirmed = tailAfter?.role === "assistant" && !!tailAfter?.assistantUuid &&
+-    tailAfter.assistantUuid === tailAgain?.assistantUuid && composerEmpty;
+-  if (!completionConfirmed) throw new Error(`[${label}] 生成态未真正结束: ${JSON.stringify({ tailAfter, composerEmpty })}`);
++  const { confirmed: completionConfirmed, checks: completionChecks } = finalizeCompletion({
++    tracker,
++    finalStopVisible,
++    tailAfter,
++    tailAgain,
++    composerEmpty,
++  });
++  log(`[${label}] 完成判定6项: ${JSON.stringify(completionChecks)}`);
+   const marker = text.replace(/\s+/g, "").slice(0, 18);
+   const units = (await readReplyAfterOwnMessage(page, marker)) || [];
+   const reply = units.map((u) => u.text).join("\n").trim();
+   log(`[${label}] COMPLETED（生成态确认结束），回复 ${reply.length} 字符`);
+   await shot(page, `e2e-reply-${label}.png`);
+-  return { reply, assistant_uuid: tailAfter.assistantUuid, baseline, completion_confirmed: completionConfirmed };
++  return { reply, assistant_uuid: tailAfter.assistantUuid, baseline, completion_confirmed: completionConfirmed, completion_checks: completionChecks };
+ }
+ 
+ // ---------- 外部进程工具 ----------
+@@ -249,7 +259,7 @@ async function main() {
+     "需求：在一个全新的 Node.js 目录中实现 src/e2e_add.js，导出函数 add(a,b) 返回 a+b；并创建 test_e2e_add.js，用 assert 严格断言 add(2,3)===5 且 add(-1,1)===0，node 直接运行打印 TEST PASS。";
+   const plan = await sendAndCollect(page, planAsk, "plan");
+   log(`GPT 规划回复（前 200 字）: ${plan.reply.slice(0, 200)}`);
+-  step("gpt_plan", { raw_reply_head: plan.reply.slice(0, 500), assistant_uuid: plan.assistant_uuid, completion_confirmed: plan.completion_confirmed });
++  step("gpt_plan", { raw_reply_head: plan.reply.slice(0, 500), assistant_uuid: plan.assistant_uuid, completion_confirmed: plan.completion_confirmed, completion_checks: plan.completion_checks });
+ 
+   // 2. 提取 JSON（容忍 ```json 围栏）
+   const m = plan.reply.match(/\{[\s\S]*\}/);
+@@ -302,7 +312,7 @@ async function main() {
+   if (!rm) throw new Error("GPT 审查回复中未找到 JSON，停止");
+   let verdict;
+   try { verdict = JSON.parse(rm[0]); } catch (e) { throw new Error(`审查 JSON 解析失败: ${e.message}; 原文头: ${rm[0].slice(0, 200)}`); }
+-  step("gpt_review", { verdict, assistant_uuid: review.assistant_uuid, completion_confirmed: review.completion_confirmed });
++  step("gpt_review", { verdict, assistant_uuid: review.assistant_uuid, completion_confirmed: review.completion_confirmed, completion_checks: review.completion_checks });
+   log(`审查结论: ${verdict.result} — ${verdict.summary || ""}`);
+ 
+   await browser.close().catch(() => {});
+diff --git a/phase0/e2e-poc/test_completion_judge.mjs b/phase0/e2e-poc/test_completion_judge.mjs
+new file mode 100644
+index 0000000..068f850
+--- /dev/null
++++ b/phase0/e2e-poc/test_completion_judge.mjs
+@@ -0,0 +1,164 @@
++// AIEO Phase 0 返工 R2 — 生成完成判定反向测试
++//
++// 测试对象：completion_judge.mjs 的真实生产函数（sendAndCollect 调用的同一份代码），
++// 通过依赖注入（sleep/now/isGenVisible）模拟页面状态序列。这不是伪造浏览器，
++// 而是对判定代码本身的黑盒驱动测试；真实浏览器回归由 e2e 全链重跑承担（见报告）。
++//
++// 运行：node test_completion_judge.mjs
++// 输出：逐场景 PASS/FAIL + logs/rework2-judge-tests.json；任何失败 exit 1。
++
++import { strict as assert } from "node:assert";
++import { writeFileSync } from "node:fs";
++import {
++  createGenerationTracker,
++  trackGeneration,
++  waitForGenerationEnd,
++  verifyCompletion,
++  finalizeCompletion,
++} from "./completion_judge.mjs";
++
++function makeFakeClock() {
++  let t = 0;
++  return { now: () => t, sleep: async (ms) => { t += ms; } };
++}
++
++const UUID_A = "11111111-2222-3333-4444-555555555555";
++const UUID_B = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
++
++const scenarios = [];
++function record(name, pass, detail) {
++  scenarios.push({ name, pass, detail });
++  console.log(`[${pass ? "PASS" : "FAIL"}] ${name} — ${detail}`);
++}
++
++async function main() {
++  // ---------- 场景 1：正常生成结束（含生产路径：双验已观察到停止按钮后首轮即翻转到不可见） ----------
++  {
++    const clock = makeFakeClock();
++    const seq = [false]; // 双验阶段已见停止按钮（initialObserved=true），进入等待后首轮观察即已翻转
++    const tracker = await waitForGenerationEnd(() => Promise.resolve(seq.shift() ?? false), {
++      deadlineMs: 300000, intervalMs: 2000, ...clock,
++      tracker: createGenerationTracker({ initialObserved: true }),
++    });
++    assert.equal(tracker.generationObserved, true);
++    assert.equal(tracker.generationEnded, true);
++    const { confirmed, checks } = finalizeCompletion({
++      tracker, finalStopVisible: false,
++      tailAfter: { role: "assistant", assistantUuid: UUID_A },
++      tailAgain: { role: "assistant", assistantUuid: UUID_A },
++      composerEmpty: true,
++    });
++    assert.equal(confirmed, true);
++    record("1 正常生成结束", true, `tracker={observed:true,ended:true} confirmed=true, checks=${JSON.stringify(checks)}`);
++  }
++
++  // ---------- 场景 2：300 秒仍未结束 → GENERATION_TIMEOUT（真实执行轮询与超时分支） ----------
++  {
++    const clock = makeFakeClock();
++    let polls = 0;
++    let threw = null;
++    try {
++      await waitForGenerationEnd(() => { polls++; return Promise.resolve(true); }, {
++        deadlineMs: 300000, intervalMs: 2000, ...clock,
++        tracker: createGenerationTracker({ initialObserved: true }),
++      });
++    } catch (e) { threw = e; }
++    assert.ok(threw, "必须抛出异常");
++    assert.equal(threw.code, "GENERATION_TIMEOUT");
++    assert.equal(threw.tracker.generationEnded, false);
++    // 轮询次数 = 300000/2000 = 150 次后超时
++    assert.equal(polls, 150, `实际轮询 ${polls} 次`);
++    record("2 等待300秒仍未结束", true, `抛 GENERATION_TIMEOUT，轮询 ${polls} 次后按 deadline 终止，exit 路径=1`);
++  }
++
++  // ---------- 场景 3：最终停止按钮仍可见 → 不得判定完成 ----------
++  {
++    const tracker = { generationObserved: true, generationEnded: true };
++    let threw = null;
++    try {
++      finalizeCompletion({
++        tracker, finalStopVisible: true,
++        tailAfter: { role: "assistant", assistantUuid: UUID_A },
++        tailAgain: { role: "assistant", assistantUuid: UUID_A },
++        composerEmpty: true,
++      });
++    } catch (e) { threw = e; }
++    assert.ok(threw, "必须抛出异常");
++    assert.equal(threw.code, "COMPLETION_NOT_CONFIRMED");
++    assert.equal(threw.checks.final_stop_button_not_visible, false);
++    record("3 最终停止按钮仍可见", true, `抛 COMPLETION_NOT_CONFIRMED，未满足项=[${Object.entries(threw.checks).filter(([, v]) => !v).map(([k]) => k).join(", ")}]`);
++  }
++
++  // ---------- 场景 4：assistant UUID 不稳定（两次读取不一致） → 不得判定完成 ----------
++  {
++    const tracker = { generationObserved: true, generationEnded: true };
++    let threw = null;
++    try {
++      finalizeCompletion({
++        tracker, finalStopVisible: false,
++        tailAfter: { role: "assistant", assistantUuid: UUID_A },
++        tailAgain: { role: "assistant", assistantUuid: UUID_B },
++        composerEmpty: true,
++      });
++    } catch (e) { threw = e; }
++    assert.ok(threw, "必须抛出异常");
++    assert.equal(threw.code, "COMPLETION_NOT_CONFIRMED");
++    assert.equal(threw.checks.uuid_stable, false);
++    record("4 assistant UUID 不稳定", true, `抛 COMPLETION_NOT_CONFIRMED，uuid_stable=false`);
++  }
++
++  // ---------- 场景 5：Composer 非空 → 不得判定完成 ----------
++  {
++    const tracker = { generationObserved: true, generationEnded: true };
++    let threw = null;
++    try {
++      finalizeCompletion({
++        tracker, finalStopVisible: false,
++        tailAfter: { role: "assistant", assistantUuid: UUID_A },
++        tailAgain: { role: "assistant", assistantUuid: UUID_A },
++        composerEmpty: false,
++      });
++    } catch (e) { threw = e; }
++    assert.ok(threw, "必须抛出异常");
++    assert.equal(threw.code, "COMPLETION_NOT_CONFIRMED");
++    assert.equal(threw.checks.composer_empty, false);
++    record("5 Composer 非空", true, `抛 COMPLETION_NOT_CONFIRMED，composer_empty=false`);
++  }
++
++  // ---------- 场景 6（附加，对应 everGenerating=true 问题的根修）：从未观察到生成状态 → 不得判定完成 ----------
++  {
++    const tracker = createGenerationTracker(); // observed=false（如：发送后停止按钮从未出现）
++    trackGeneration(tracker, false);
++    trackGeneration(tracker, false);
++    const { confirmed, checks } = verifyCompletion({
++      tracker, finalStopVisible: false,
++      tailAfter: { role: "assistant", assistantUuid: UUID_A },
++      tailAgain: { role: "assistant", assistantUuid: UUID_A },
++      composerEmpty: true,
++    });
++    assert.equal(confirmed, false);
++    assert.equal(checks.generation_observed, false);
++    assert.equal(checks.generation_ended, false);
++    record("6 从未观察到生成状态（everGenerating 硬编码问题的根修验证）", true, `confirmed=false，generation_observed/ended=false 被正确拒绝`);
++  }
++
++  const allPass = scenarios.every((s) => s.pass);
++  const out = {
++    test_target: "phase0/e2e-poc/completion_judge.mjs（生产判定函数，sendAndCollect 同源）",
++    method: "依赖注入（fake clock / isGenVisible 序列）黑盒驱动真实代码；浏览器异常注入未在真实 Chrome 上模拟，见报告未实测声明",
++    executed_at: new Date().toISOString(),
++    all_pass: allPass,
++    scenarios,
++  };
++  writeFileSync(new URL("./../logs/rework2-judge-tests.json", import.meta.url), JSON.stringify(out, null, 2), "utf8");
++  console.log(allPass ? "JUDGE TESTS: ALL PASS" : "JUDGE TESTS: HAS FAIL");
++  process.exit(allPass ? 0 : 1);
++}
++
++main().catch((e) => {
++  console.error("测试框架自身异常:", e);
++  record("测试框架异常", false, String(e.message || e));
++  writeFileSync(new URL("./../logs/rework2-judge-tests.json", import.meta.url),
++    JSON.stringify({ all_pass: false, scenarios, framework_error: String(e.message || e) }, null, 2), "utf8");
++  process.exit(1);
++});
+diff --git a/phase0/logs/e2e-commit-evidence-f0b48418/SHA256SUMS.txt b/phase0/logs/e2e-commit-evidence-f0b48418/SHA256SUMS.txt
+new file mode 100644
+index 0000000..0273301
+--- /dev/null
++++ b/phase0/logs/e2e-commit-evidence-f0b48418/SHA256SUMS.txt
+@@ -0,0 +1,3 @@
++6a55d807ccb0a36e4e8ae90e423a570459b89f6e60561edc9074d2567e48d665 */d/AIEO/phase0/logs/e2e-commit-evidence-f0b48418/e2e_add.js
++440b0f9be8603a187ff90e62f30b7a44af78bb56158582ba50d3f08f346a56c9 */d/AIEO/phase0/logs/e2e-commit-evidence-f0b48418/test_e2e_add.js
++7dc00bb4d5b066e7c71eb340768b2347e3965eab731fddb772f3e30e0c985525 */d/AIEO/phase0/logs/e2e-commit-evidence-f0b48418/diff.patch
+diff --git a/phase0/logs/e2e-commit-evidence-f0b48418/commit-info.txt b/phase0/logs/e2e-commit-evidence-f0b48418/commit-info.txt
+new file mode 100644
+index 0000000..36a0364
+--- /dev/null
++++ b/phase0/logs/e2e-commit-evidence-f0b48418/commit-info.txt
+@@ -0,0 +1,3 @@
++f0b48418fe973a851fed8fbf4be204ad9ee0cdc0
++Thu Nov 12 01:49:59 2026 +0800
++feat(T-E2E-001): e2e_add 实现与测试（AIEO 端到端演示）
+diff --git a/phase0/logs/e2e-commit-evidence-f0b48418/diff.patch b/phase0/logs/e2e-commit-evidence-f0b48418/diff.patch
+new file mode 100644
+index 0000000..0d2b275
+--- /dev/null
++++ b/phase0/logs/e2e-commit-evidence-f0b48418/diff.patch
+@@ -0,0 +1,24 @@
++diff --git a/src/e2e_add.js b/src/e2e_add.js
++new file mode 100644
++index 0000000..aa666c9
++--- /dev/null
+++++ b/src/e2e_add.js
++@@ -0,0 +1,5 @@
+++function add(a, b) {
+++  return a + b;
+++}
+++
+++module.exports = add;
++diff --git a/test_e2e_add.js b/test_e2e_add.js
++new file mode 100644
++index 0000000..930ea3b
++--- /dev/null
+++++ b/test_e2e_add.js
++@@ -0,0 +1,7 @@
+++const assert = require('assert');
+++const add = require('./src/e2e_add.js');
+++
+++assert.strictEqual(add(2, 3), 5);
+++assert.strictEqual(add(-1, 1), 0);
+++
+++console.log('TEST PASS');
+diff --git a/phase0/logs/e2e-commit-evidence-f0b48418/e2e_add.js b/phase0/logs/e2e-commit-evidence-f0b48418/e2e_add.js
+new file mode 100644
+index 0000000..aa666c9
+--- /dev/null
++++ b/phase0/logs/e2e-commit-evidence-f0b48418/e2e_add.js
+@@ -0,0 +1,5 @@
++function add(a, b) {
++  return a + b;
++}
++
++module.exports = add;
+diff --git a/phase0/logs/e2e-commit-evidence-f0b48418/provenance.json b/phase0/logs/e2e-commit-evidence-f0b48418/provenance.json
+new file mode 100644
+index 0000000..4c1f86d
+--- /dev/null
++++ b/phase0/logs/e2e-commit-evidence-f0b48418/provenance.json
+@@ -0,0 +1,7 @@
++{
++  "source": "run3（R2 返工后全链回归）",
++  "base_sha": "ff3bde8fd9fe35ea6cc6b619007c846308732432",
++  "commit_sha": "f0b48418fe973a851fed8fbf4be204ad9ee0cdc0",
++  "branch": "feature/AIEO-E2E-001",
++  "zcode_session": "sess_e30db73b-2a55-4bec-98e4-afed9a854210"
++}
+\ No newline at end of file
+diff --git a/phase0/logs/e2e-commit-evidence-f0b48418/test_e2e_add.js b/phase0/logs/e2e-commit-evidence-f0b48418/test_e2e_add.js
+new file mode 100644
+index 0000000..930ea3b
+--- /dev/null
++++ b/phase0/logs/e2e-commit-evidence-f0b48418/test_e2e_add.js
+@@ -0,0 +1,7 @@
++const assert = require('assert');
++const add = require('./src/e2e_add.js');
++
++assert.strictEqual(add(2, 3), 5);
++assert.strictEqual(add(-1, 1), 0);
++
++console.log('TEST PASS');
+diff --git a/phase0/logs/e2e-evidence.json b/phase0/logs/e2e-evidence.json
+index 7f87af2..d2ed018 100644
+--- a/phase0/logs/e2e-evidence.json
++++ b/phase0/logs/e2e-evidence.json
+@@ -1,50 +1,68 @@
+ {
+-  "started_at": "2026-11-11T17:25:46.338Z",
++  "started_at": "2026-11-11T17:47:51.113Z",
+   "steps": [
+     {
+       "name": "repo_baseline",
+-      "at": "2026-11-11T17:25:46.961Z",
+-      "base_sha": "b9f130e981b2a7ef624d7075e28466007cd46aaf"
++      "at": "2026-11-11T17:47:51.763Z",
++      "base_sha": "ff3bde8fd9fe35ea6cc6b619007c846308732432"
+     },
+     {
+       "name": "gpt_plan",
+-      "at": "2026-11-11T17:27:21.181Z",
+-      "raw_reply_head": "{\n\"task_id\": \"T-E2E-001\",\n\"instruction\": \"在一个全新的 Node.js 项目目录中完成以下开发任务：1. 创建 src/e2e_add.js，使用 CommonJS 模块规范定义并导出 add(a, b) 函数，函数返回 a + b；2. 在项目根目录创建 test_e2e_add.js，使用 Node.js 内置 assert 模块，通过 require 引入 add 函数；3. 使用 assert.strictEqual 严格断言 add(2, 3) === 5 和 add(-1, 1) === 0；4. 两项断言全部通过后，使用 console.log 输出 TEST PASS；5. 不引入第三方依赖，不修改项目外部文件；6. 完成后检查文件结构，并实际执行 node test_e2e_add.js，确认测试通过。\",\n\"acceptance\": \"项目包含 src/e2e_add.js 和 test_e2e_add.js 两个指定文件，执行 node test_e2e_add.js 后两项严格断言全部通过且控制台输出 TEST PASS",
+-      "assistant_uuid": "181be645-6370-47aa-bc9e-5048a3b38afa",
+-      "completion_confirmed": true
++      "at": "2026-11-11T17:49:26.473Z",
++      "raw_reply_head": "{\n\"task_id\": \"T-E2E-001\",\n\"instruction\": \"在一个全新的 Node.js 项目目录中完成以下任务：1. 创建 src/e2e_add.js，使用 CommonJS 模块规范定义 add(a, b) 函数，返回 a + b，并通过 module.exports 导出函数；2. 在项目根目录创建 test_e2e_add.js，使用 Node.js 内置 assert 模块和 require 引入 add 函数；3. 使用 assert.strictEqual 严格断言 add(2, 3) === 5 和 add(-1, 1) === 0；4. 两项断言全部通过后，使用 console.log 输出 TEST PASS；5. 不引入第三方依赖，不修改项目外部文件；6. 完成后检查文件结构，并实际执行 node test_e2e_add.js，确认测试通过。\",\n\"acceptance\": \"项目包含 src/e2e_add.js 和 test_e2e_add.js，执行 node test_e2e_add.js 后两项严格断言全部通过，进程退出码为 ",
++      "assistant_uuid": "c3c88ace-3089-4f22-a309-f48ba701e681",
++      "completion_confirmed": true,
++      "completion_checks": {
++        "generation_observed": true,
++        "generation_ended": true,
++        "final_stop_button_not_visible": true,
++        "tail_is_assistant": true,
++        "dil_uuid_present": true,
++        "uuid_stable": true,
++        "composer_empty": true
++      }
+     },
+     {
+       "name": "plan_json_valid",
+-      "at": "2026-11-11T17:27:21.181Z",
++      "at": "2026-11-11T17:49:26.473Z",
+       "task_id": "T-E2E-001"
+     },
+     {
+       "name": "zcode_exec",
+-      "at": "2026-11-11T17:28:13.435Z",
+-      "session_id": "sess_c867a00a-4736-4ffb-9b49-5df78be8567e",
+-      "response_head": "已完成：\n\n- 创建 `src/e2e_add.js`，以 CommonJS 导出 `add(a, b)`。\n- 创建 `test_e2e_add.js`，包含两项严格断言。\n- 未引入第三方依赖，未修改其他文件。\n- 实际执行 `node test_e2e_add.js`，测试通过，输出：\n\n```text\nTEST PASS\n```"
++      "at": "2026-11-11T17:49:59.588Z",
++      "session_id": "sess_e30db73b-2a55-4bec-98e4-afed9a854210",
++      "response_head": "已创建：\n- `src/e2e_add.js`：CommonJS 导出 `add(a, b)`。\n- `test_e2e_add.js`：完成两项严格断言。\n\n实际执行 `node test_e2e_add.js`，测试通过，输出：\n\n```text\nTEST PASS\n```"
+     },
+     {
+       "name": "git_collect",
+-      "at": "2026-11-11T17:28:13.872Z",
+-      "base_sha": "b9f130e981b2a7ef624d7075e28466007cd46aaf",
+-      "commit_sha": "747197f8eaf788ca66b253c064dc880259b8ccda",
++      "at": "2026-11-11T17:50:00.061Z",
++      "base_sha": "ff3bde8fd9fe35ea6cc6b619007c846308732432",
++      "commit_sha": "f0b48418fe973a851fed8fbf4be204ad9ee0cdc0",
+       "clean": true,
+       "diff_lines": 24
+     },
+     {
+       "name": "gpt_review",
+-      "at": "2026-11-11T17:29:41.375Z",
++      "at": "2026-11-11T17:51:27.552Z",
+       "verdict": {
+         "result": "PASS",
+         "findings": [],
+-        "summary": "代码符合 T-E2E-001 全部实现要求，CommonJS 导出正确，两项 assert.strictEqual 严格断言完整，测试通过后输出 TEST PASS；从 Diff 看未发现问题。"
++        "summary": "Diff 符合 T-E2E-001 全部代码要求，CommonJS 导出正确，两项严格断言完整，测试成功后输出 TEST PASS；未发现代码缺陷，建议通过审查。"
+       },
+-      "assistant_uuid": "db23e558-98e2-4a9b-9503-3f80ff7d59d1",
+-      "completion_confirmed": true
++      "assistant_uuid": "e0ea8d8e-c08a-4eb9-9dd9-7ac9b42ac045",
++      "completion_confirmed": true,
++      "completion_checks": {
++        "generation_observed": true,
++        "generation_ended": true,
++        "final_stop_button_not_visible": true,
++        "tail_is_assistant": true,
++        "dil_uuid_present": true,
++        "uuid_stable": true,
++        "composer_empty": true
++      }
+     }
+   ],
+-  "finished_at": "2026-11-11T17:29:41.975Z",
++  "finished_at": "2026-11-11T17:51:28.186Z",
+   "acceptance": {
+     "plan_json_valid": true,
+     "plan_generation_confirmed": true,
+@@ -58,18 +76,18 @@
+   "e2e_loop_pass": true,
+   "task": {
+     "task_id": "T-E2E-001",
+-    "instruction": "在一个全新的 Node.js 项目目录中完成以下开发任务：1. 创建 src/e2e_add.js，使用 CommonJS 模块规范定义并导出 add(a, b) 函数，函数返回 a + b；2. 在项目根目录创建 test_e2e_add.js，使用 Node.js 内置 assert 模块，通过 require 引入 add 函数；3. 使用 assert.strictEqual 严格断言 add(2, 3) === 5 和 add(-1, 1) === 0；4. 两项断言全部通过后，使用 console.log 输出 TEST PASS；5. 不引入第三方依赖，不修改项目外部文件；6. 完成后检查文件结构，并实际执行 node test_e2e_add.js，确认测试通过。",
+-    "acceptance": "项目包含 src/e2e_add.js 和 test_e2e_add.js 两个指定文件，执行 node test_e2e_add.js 后两项严格断言全部通过且控制台输出 TEST PASS。"
++    "instruction": "在一个全新的 Node.js 项目目录中完成以下任务：1. 创建 src/e2e_add.js，使用 CommonJS 模块规范定义 add(a, b) 函数，返回 a + b，并通过 module.exports 导出函数；2. 在项目根目录创建 test_e2e_add.js，使用 Node.js 内置 assert 模块和 require 引入 add 函数；3. 使用 assert.strictEqual 严格断言 add(2, 3) === 5 和 add(-1, 1) === 0；4. 两项断言全部通过后，使用 console.log 输出 TEST PASS；5. 不引入第三方依赖，不修改项目外部文件；6. 完成后检查文件结构，并实际执行 node test_e2e_add.js，确认测试通过。",
++    "acceptance": "项目包含 src/e2e_add.js 和 test_e2e_add.js，执行 node test_e2e_add.js 后两项严格断言全部通过，进程退出码为 0，控制台输出 TEST PASS。"
+   },
+   "git": {
+-    "base_sha": "b9f130e981b2a7ef624d7075e28466007cd46aaf",
+-    "commit_sha": "747197f8eaf788ca66b253c064dc880259b8ccda",
++    "base_sha": "ff3bde8fd9fe35ea6cc6b619007c846308732432",
++    "commit_sha": "f0b48418fe973a851fed8fbf4be204ad9ee0cdc0",
+     "branch": "feature/AIEO-E2E-001",
+     "clean": true
+   },
+   "review": {
+     "result": "PASS",
+     "findings": [],
+-    "summary": "代码符合 T-E2E-001 全部实现要求，CommonJS 导出正确，两项 assert.strictEqual 严格断言完整，测试通过后输出 TEST PASS；从 Diff 看未发现问题。"
++    "summary": "Diff 符合 T-E2E-001 全部代码要求，CommonJS 导出正确，两项严格断言完整，测试成功后输出 TEST PASS；未发现代码缺陷，建议通过审查。"
+   }
+ }
+\ No newline at end of file
+diff --git a/phase0/logs/e2e-run.log b/phase0/logs/e2e-run.log
+index 7c782e1..f4e2490 100644
+--- a/phase0/logs/e2e-run.log
++++ b/phase0/logs/e2e-run.log
+@@ -94,3 +94,45 @@ TEST PASS
+ [2026-11-11T17:29:41.375Z] 审查结论: PASS — 代码符合 T-E2E-001 全部实现要求，CommonJS 导出正确，两项 assert.strictEqual 严格断言完整，测试通过后输出 TEST PASS；从 Diff 看未发现问题。
+ [2026-11-11T17:29:41.975Z] 验收条件: {"plan_json_valid":true,"plan_generation_confirmed":true,"zcode_files_present":true,"dev_test_pass":true,"worktree_clean":true,"review_result_strict_pass":true,"review_generation_confirmed":true,"all":true}
+ [2026-11-11T17:29:41.975Z] === POC-05 端到端闭环 PASS ===（证据: D:\AIEO\phase0\logs\e2e-evidence.json）
++[2026-11-11T17:47:51.113Z] === POC-05 端到端闭环开始 ===
++[2026-11-11T17:47:51.763Z] e2e 仓库基线: ff3bde8fd9fe35ea6cc6b619007c846308732432
++[2026-11-11T17:47:54.917Z] Chrome 已启动（pid=23040）
++[2026-11-11T17:47:58.348Z] 页面就绪
++[2026-11-11T17:47:58.451Z] [plan] 基线尾部: role=assistant uuid=undefined
++[2026-11-11T17:47:59.872Z] [plan] 发送双验通过
++[2026-11-11T17:48:00.155Z] 截图: e2e-sent-plan.png
++[2026-11-11T17:48:08.269Z] [plan] 生成状态跟踪: observed=true ended=true
++[2026-11-11T17:49:26.316Z] [plan] 完成判定6项: {"generation_observed":true,"generation_ended":true,"final_stop_button_not_visible":true,"tail_is_assistant":true,"dil_uuid_present":true,"uuid_stable":true,"composer_empty":true}
++[2026-11-11T17:49:26.323Z] [plan] COMPLETED（生成态确认结束），回复 521 字符
++[2026-11-11T17:49:26.472Z] 截图: e2e-reply-plan.png
++[2026-11-11T17:49:26.473Z] GPT 规划回复（前 200 字）: {
++"task_id": "T-E2E-001",
++"instruction": "在一个全新的 Node.js 项目目录中完成以下任务：1. 创建 src/e2e_add.js，使用 CommonJS 模块规范定义 add(a, b) 函数，返回 a + b，并通过 module.exports 导出函数；2. 在项目根目录创建 test_e2e_add.js，使用 Node.js 内置 ass
++[2026-11-11T17:49:26.473Z] 任务 JSON 有效: task_id=T-E2E-001
++[2026-11-11T17:49:26.473Z] 外部触发 ZCode（CLI --prompt）...
++[2026-11-11T17:49:59.587Z] ZCode 会话完成: sess_e30db73b-2a55-4bec-98e4-afed9a854210 状态=idle
++[2026-11-11T17:49:59.587Z] ZCode 返回（前 300 字）: 已创建：
++- `src/e2e_add.js`：CommonJS 导出 `add(a, b)`。
++- `test_e2e_add.js`：完成两项严格断言。
++
++实际执行 `node test_e2e_add.js`，测试通过，输出：
++
++```text
++TEST PASS
++```
++[2026-11-11T17:50:00.061Z] Git 提交: f0b48418fe973a851fed8fbf4be204ad9ee0cdc0（干净=true，diff 24 行）
++[2026-11-11T17:50:00.063Z] [review] 基线尾部: role=assistant uuid=c3c88ace
++[2026-11-11T17:50:01.184Z] [review] 发送双验通过
++[2026-11-11T17:50:01.332Z] 截图: e2e-sent-review.png
++[2026-11-11T17:50:09.389Z] [review] 生成状态跟踪: observed=true ended=true
++[2026-11-11T17:51:27.431Z] [review] 完成判定6项: {"generation_observed":true,"generation_ended":true,"final_stop_button_not_visible":true,"tail_is_assistant":true,"dil_uuid_present":true,"uuid_stable":true,"composer_empty":true}
++[2026-11-11T17:51:27.437Z] [review] COMPLETED（生成态确认结束），回复 132 字符
++[2026-11-11T17:51:27.552Z] 截图: e2e-reply-review.png
++[2026-11-11T17:51:27.552Z] GPT 审查回复（前 300 字）: {
++"result": "PASS",
++"findings": [],
++"summary": "Diff 符合 T-E2E-001 全部代码要求，CommonJS 导出正确，两项严格断言完整，测试成功后输出 TEST PASS；未发现代码缺陷，建议通过审查。"
++}
++[2026-11-11T17:51:27.552Z] 审查结论: PASS — Diff 符合 T-E2E-001 全部代码要求，CommonJS 导出正确，两项严格断言完整，测试成功后输出 TEST PASS；未发现代码缺陷，建议通过审查。
++[2026-11-11T17:51:28.187Z] 验收条件: {"plan_json_valid":true,"plan_generation_confirmed":true,"zcode_files_present":true,"dev_test_pass":true,"worktree_clean":true,"review_result_strict_pass":true,"review_generation_confirmed":true,"all":true}
++[2026-11-11T17:51:28.187Z] === POC-05 端到端闭环 PASS ===（证据: D:\AIEO\phase0\logs\e2e-evidence.json）
+diff --git a/phase0/logs/rework2-judge-tests.json b/phase0/logs/rework2-judge-tests.json
+new file mode 100644
+index 0000000..3d3ac3a
+--- /dev/null
++++ b/phase0/logs/rework2-judge-tests.json
+@@ -0,0 +1,38 @@
++{
++  "test_target": "phase0/e2e-poc/completion_judge.mjs（生产判定函数，sendAndCollect 同源）",
++  "method": "依赖注入（fake clock / isGenVisible 序列）黑盒驱动真实代码；浏览器异常注入未在真实 Chrome 上模拟，见报告未实测声明",
++  "executed_at": "2026-11-11T17:47:46.773Z",
++  "all_pass": true,
++  "scenarios": [
++    {
++      "name": "1 正常生成结束",
++      "pass": true,
++      "detail": "tracker={observed:true,ended:true} confirmed=true, checks={\"generation_observed\":true,\"generation_ended\":true,\"final_stop_button_not_visible\":true,\"tail_is_assistant\":true,\"dil_uuid_present\":true,\"uuid_stable\":true,\"composer_empty\":true}"
++    },
++    {
++      "name": "2 等待300秒仍未结束",
++      "pass": true,
++      "detail": "抛 GENERATION_TIMEOUT，轮询 150 次后按 deadline 终止，exit 路径=1"
++    },
++    {
++      "name": "3 最终停止按钮仍可见",
++      "pass": true,
++      "detail": "抛 COMPLETION_NOT_CONFIRMED，未满足项=[final_stop_button_not_visible]"
++    },
++    {
++      "name": "4 assistant UUID 不稳定",
++      "pass": true,
++      "detail": "抛 COMPLETION_NOT_CONFIRMED，uuid_stable=false"
++    },
++    {
++      "name": "5 Composer 非空",
++      "pass": true,
++      "detail": "抛 COMPLETION_NOT_CONFIRMED，composer_empty=false"
++    },
++    {
++      "name": "6 从未观察到生成状态（everGenerating 硬编码问题的根修验证）",
++      "pass": true,
++      "detail": "confirmed=false，generation_observed/ended=false 被正确拒绝"
++    }
++  ]
++}
+\ No newline at end of file
+diff --git a/phase0/logs/rework2-judge-tests.log b/phase0/logs/rework2-judge-tests.log
+new file mode 100644
+index 0000000..4dccdce
+--- /dev/null
++++ b/phase0/logs/rework2-judge-tests.log
+@@ -0,0 +1,7 @@
++[PASS] 1 正常生成结束 — tracker={observed:true,ended:true} confirmed=true, checks={"generation_observed":true,"generation_ended":true,"final_stop_button_not_visible":true,"tail_is_assistant":true,"dil_uuid_present":true,"uuid_stable":true,"composer_empty":true}
++[PASS] 2 等待300秒仍未结束 — 抛 GENERATION_TIMEOUT，轮询 150 次后按 deadline 终止，exit 路径=1
++[PASS] 3 最终停止按钮仍可见 — 抛 COMPLETION_NOT_CONFIRMED，未满足项=[final_stop_button_not_visible]
++[PASS] 4 assistant UUID 不稳定 — 抛 COMPLETION_NOT_CONFIRMED，uuid_stable=false
++[PASS] 5 Composer 非空 — 抛 COMPLETION_NOT_CONFIRMED，composer_empty=false
++[PASS] 6 从未观察到生成状态（everGenerating 硬编码问题的根修验证） — confirmed=false，generation_observed/ended=false 被正确拒绝
++JUDGE TESTS: ALL PASS
+diff --git a/phase0/reports/rework2-2026-11-12.md b/phase0/reports/rework2-2026-11-12.md
+new file mode 100644
+index 0000000..03bee95
+--- /dev/null
++++ b/phase0/reports/rework2-2026-11-12.md
+@@ -0,0 +1,74 @@
++# AIEO Phase 0 二次返工报告（回应 GPT 第二轮复审 REWORK）
++
++**分支：** `fix/AIEO-PHASE0-REVIEW-R2`（基于 `fix/AIEO-PHASE0-REVIEW`，R1 记录全部保留；未修改 main，未合并任何分支）
++**日期：** 2026-11-12
++**范围：** 仅处理唯一阻断项 MAJOR-001（sendAndCollect 生成完成判定不严格）。
++
++---
++
++## 1. 四点问题的修复（实际代码，非报告文字）
++
++**问题 → 修复对照（`phase0/e2e-poc/completion_judge.mjs` + `phase0/e2e-poc/e2e_orchestrate.mjs`）：**
++
++| # | 审查指出的问题 | 修复 |
++|---|---|---|
++| 1 | `everGenerating` 初始化 `true`，不能证明本轮观察到生成 | 删除该变量。改为 `tracker.generationObserved`：初始值来自发送双验真实观察到的 `stopOk`（该阶段已确认停止按钮出现），随后由 `waitForGenerationEnd` 持续观察更新（`trackGeneration`）。从未观察到生成 → `generation_observed=false` → 判定失败（反向测试场景 6 验证） |
++| 2 | 300 秒等待循环超时后无失败处理，直接继续 | `waitForGenerationEnd()` 内置 deadline：300 秒内未确认"可见→不可见"翻转即抛 `Error(code=GENERATION_TIMEOUT)`，由 main catch 捕获 → `e2e_loop_pass=false`、exit 1（反向测试场景 2 真实执行了 150 次轮询直至超时分支） |
++| 3 | `completionConfirmed` 未复查停止按钮 | 确认窗（75s）后重新调用 `stopButtonVisible(page)` 得到 `finalStopVisible`，作为 `verifyCompletion` 的 `final_stop_button_not_visible` 条件参与判定 |
++| 4 | 生成超时/生成态仍存在时可能误判完成 | `completionConfirmed` 现必须同时满足 6 项（见 §2），任何一项不满足 → `finalizeCompletion` 抛 `COMPLETION_NOT_CONFIRMED`（携带逐项 checks）→ exit 1 |
++
++## 2. 最终完成判定（6 项条件，全部写入结构化 evidence）
++
++`verifyCompletion` 返回的 `checks`（`e2e-evidence.json` → `steps[n].completion_checks`）：
++
++1. `generation_observed`：本轮确实观察到生成状态（停止按钮可见过）
++2. `generation_ended`：已观察到生成状态结束（可见→不可见真实翻转）
++3. `final_stop_button_not_visible`：确认窗后复查，停止按钮不可见
++4. `tail_is_assistant`：尾部 unit 为 assistant
++5. `dil_uuid_present`：DIL UUID 存在
++6. `uuid_stable`：UUID 两次读取一致；外加 `composer_empty`（Composer 为空）
++
++审查要求的 6 条全部覆盖（第 5、6 条合并为 5/6 两项 + composer_empty 共 7 个布尔，语义一一对应，无遗漏）。
++
++## 3. 反向测试（真实执行生产判定代码）
++
++**测试方式：** 判定逻辑抽为纯函数模块 `completion_judge.mjs`（`waitForGenerationEnd` 支持注入 `sleep`/`now`/`isGenVisible`），测试文件 `test_completion_judge.mjs` 用注入时钟与按钮可见性序列**黑盒驱动同一份生产代码**。这不是伪造浏览器测试——被测对象就是 `sendAndCollect` 调用的函数本体。
++
++| 场景（审查要求） | 结果 | 证据 |
++|---|---|---|
++| 正常生成结束 | PASS | tracker={observed:true,ended:true}，6 项 checks 全 true，confirmed=true |
++| 等待 300 秒仍未结束 | FAILED→exit 1 | 真实执行 150 次轮询（300000/2000）后抛 `GENERATION_TIMEOUT` |
++| 最终停止按钮仍可见 | FAILED→exit 1 | 抛 `COMPLETION_NOT_CONFIRMED`，未满足项 `[final_stop_button_not_visible]` |
++| assistant UUID 不稳定 | FAILED→exit 1 | 抛 `COMPLETION_NOT_CONFIRMED`，`uuid_stable=false` |
++| Composer 非空 | FAILED→exit 1 | 抛 `COMPLETION_NOT_CONFIRMED`，`composer_empty=false` |
++| （附加）从未观察到生成状态 | FAILED | `confirmed=false`——直接验证 everGenerating=true 硬编码问题的根修 |
++
++**运行记录：** `logs/rework2-judge-tests.log`（6/6 PASS，JUDGE_TESTS_EXIT=0）、`logs/rework2-judge-tests.json`（结构化结果）。
++
++### 未实测声明（如实标注，不伪造）
++
++以下两种异常**未在真实 Chrome/ChatGPT 上注入模拟**（无法可靠令线上 GPT 生成超过 300 秒或令停止按钮在回复完成后持续可见）：
++- 真实浏览器中的 300 秒生成超时；
++- 真实浏览器中确认窗后停止按钮重现。
++
++这两类的**判定代码路径**已由注入式反向测试真实执行覆盖（场景 2/3）；浏览器侧仅有全链正常路径回归（run3）。若审查要求真实浏览器异常注入，需要 GPT 会话侧配合构造长任务，可在 Phase 1 用测试桩会话实现。
++
++## 4. 真实浏览器全链回归（run3，修复后代码）
++
++- 全链重跑（两条真实 GPT 消息 + 外部 ZCode `sess_e30db73b-2a55-4bec-98e4-afed9a854210`）：
++  - 两条消息的生成状态跟踪均真实记录：`observed=true ended=true`
++  - 两条消息的 6 项判定（含最终停止按钮复查）全部 true（`e2e-evidence.json` → `steps[1].completion_checks`、`steps[5].completion_checks`）
++  - 新提交 **f0b48418fe973a851fed8fbf4be204ad9ee0cdc0**（基线 ff3bde8f，diff 24 行，工作区干净）
++  - GPT 审查结论 `PASS`（严格等于）；7 项验收条件全 true（计算值）；**exit 0**
++- 主会话独立复核：仓库文件与 `node test_e2e_add.js` 复跑 PASS（exit 0）
++- 提交存档：`logs/e2e-commit-evidence-f0b48418/`（源码+diff.patch+元数据+SHA256+provenance）
++
++## 5. Git 交付
++
++- 分支：`fix/AIEO-PHASE0-REVIEW-R2`（基于 `fix/AIEO-PHASE0-REVIEW` @ 559f627，R1 记录保留）
++- Commit SHA：见本次提交（分支 HEAD）
++- 变更：`e2e_orchestrate.mjs`（重构）、`completion_judge.mjs`（新增）、`test_completion_judge.mjs`（新增）、`logs/rework2-*`（测试证据）、`logs/e2e-commit-evidence-f0b48418/`（run3 存档）、本报告
++
++## 6. 结论（自评）
++
++MAJOR-001 补充修复已完成并通过两级验证（注入式反向测试 6/6 + 真实浏览器全链回归 exit 0）；判定结果已写入结构化 evidence。未自行宣布 Phase 0 PASS——等待 GPT 第三轮独立审查。
+diff --git a/phase0/screenshots/e2e-reply-plan.png b/phase0/screenshots/e2e-reply-plan.png
+index 5f0a29f..e344f14 100644
+Binary files a/phase0/screenshots/e2e-reply-plan.png and b/phase0/screenshots/e2e-reply-plan.png differ
+diff --git a/phase0/screenshots/e2e-reply-review.png b/phase0/screenshots/e2e-reply-review.png
+index ae02217..e6b4a19 100644
+Binary files a/phase0/screenshots/e2e-reply-review.png and b/phase0/screenshots/e2e-reply-review.png differ
+diff --git a/phase0/screenshots/e2e-sent-plan.png b/phase0/screenshots/e2e-sent-plan.png
+index 78e62a2..de06818 100644
+Binary files a/phase0/screenshots/e2e-sent-plan.png and b/phase0/screenshots/e2e-sent-plan.png differ
+diff --git a/phase0/screenshots/e2e-sent-review.png b/phase0/screenshots/e2e-sent-review.png
+index cf7b348..3c3ef7c 100644
+Binary files a/phase0/screenshots/e2e-sent-review.png and b/phase0/screenshots/e2e-sent-review.png differ
