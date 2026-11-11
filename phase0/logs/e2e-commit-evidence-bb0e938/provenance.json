@@ -1,0 +1,6 @@
+{
+  "source": "run12（R10 返工后全链回归，锁 v6 OS 句柄方案）",
+  "commit_sha": "bb0e938d2089704a28fa4c22a99ce4a70ceca9fc",
+  "branch": "feature/AIEO-E2E-001",
+  "zcode_session": "sess (见 e2e-run.log)"
+}

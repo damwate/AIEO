@@ -1,0 +1,24 @@
+diff --git a/src/e2e_add.js b/src/e2e_add.js
+new file mode 100644
+index 0000000..aa666c9
+--- /dev/null
++++ b/src/e2e_add.js
+@@ -0,0 +1,5 @@
++function add(a, b) {
++  return a + b;
++}
++
++module.exports = add;
+diff --git a/test_e2e_add.js b/test_e2e_add.js
+new file mode 100644
+index 0000000..930ea3b
+--- /dev/null
++++ b/test_e2e_add.js
+@@ -0,0 +1,7 @@
++const assert = require('assert');
++const add = require('./src/e2e_add.js');
++
++assert.strictEqual(add(2, 3), 5);
++assert.strictEqual(add(-1, 1), 0);
++
++console.log('TEST PASS');
