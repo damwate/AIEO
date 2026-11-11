@@ -1,0 +1,62 @@
+[2026-11-11T16:30:11.759Z] === POC-03 setup：启动独立配置的系统 Chrome（代理 http://127.0.0.1:10391）===
+[2026-11-11T16:30:19.564Z] 截图: poc3-01-initial.png
+[2026-11-11T16:30:19.565Z] 请在弹出的浏览器窗口中：1) 登录 ChatGPT（如需要）；2) 打开或新建一个测试会话（发过一条消息出现 /c/ 链接即可）。
+[2026-11-11T16:30:20.403Z] 截图: poc3-setup-waiting.png
+[2026-11-11T16:31:20.629Z] 截图: poc3-setup-waiting.png
+[2026-11-11T16:35:18.478Z] 致命错误: page.waitForTimeout: Target page, context or browser has been closed
+[2026-11-11T16:37:12.394Z] === POC-03 setup：普通方式启动专用 Chrome（调试端口 127.0.0.1:9222，无自动化标记）===
+[2026-11-11T16:37:22.233Z] Chrome 已以普通方式启动并开放本机调试端口 9222（pid=19492）
+[2026-11-11T16:37:28.686Z] 截图: poc3-01-initial-cdp.png
+[2026-11-11T16:37:28.687Z] 请在弹出的浏览器窗口中：1) 登录 ChatGPT（邮箱+密码/验证码方式，Google 按钮会被 Google 拒绝）；2) 打开或新建一个测试会话（发过一条消息出现 /c/ 链接即可）。
+[2026-11-11T16:43:40.714Z] === POC-03 run：目标会话 https://chatgpt.com/c/6af49ad6-4c0c-83ee-9485-0d32deb63df7 ===
+[2026-11-11T16:43:46.655Z] Chrome 已以普通方式启动并开放本机调试端口 9222（pid=10212）
+[2026-11-11T16:44:28.871Z] 截图: poc3-error-not-ready.png
+[2026-11-11T16:44:28.873Z] 页面 40 秒内未就绪（可能登录失效或验证页），停止，不重发。请人工检查 screenshots/poc3-error-not-ready.png
+[2026-11-11T16:45:19.746Z] === POC-03 run：目标会话 https://chatgpt.com/c/6af49ad6-4c0c-83ee-9485-0d32deb63df7 ===
+[2026-11-11T16:45:19.770Z] 复用已运行的调试端口 9222
+[2026-11-11T16:45:30.376Z] 页面就绪。
+[2026-11-11T16:45:30.548Z] 截图: poc3-03-ready.png
+[2026-11-11T16:45:30.557Z] [msg1] 基线尾部: role=assistant key=lback-turn-0:1:assistant uuid=acddacc3
+[2026-11-11T16:45:30.781Z] [msg1] 填充并回读一致（38 字符）。
+[2026-11-11T16:45:30.914Z] 截图: poc3-04-filled-msg1.png
+[2026-11-11T16:45:31.532Z] 截图: poc3-05-sent-msg1.png
+[2026-11-11T16:45:31.532Z] [msg1] 发送双验通过。
+[2026-11-11T16:45:35.561Z] [msg1] 检测到生成→空闲翻转，进入确认窗 75s。
+[2026-11-11T16:46:53.592Z] [msg1] 完成判定: {"tail_role":"assistant","assistant_uuid":"de41abe9-017c-4080-b4af-a53192a18d4b","uuid_stable":true,"composer_empty":true} => COMPLETED
+[2026-11-11T16:46:53.712Z] 截图: poc3-06-reply-msg1.png
+[2026-11-11T16:46:58.733Z] [msg2] 基线尾部: role=assistant key=lback-turn-1:1:assistant uuid=de41abe9
+[2026-11-11T16:46:59.287Z] [msg2] 填充并回读一致（46 字符）。
+[2026-11-11T16:46:59.566Z] 截图: poc3-04-filled-msg2.png
+[2026-11-11T16:47:00.720Z] 截图: poc3-05-sent-msg2.png
+[2026-11-11T16:47:00.720Z] [msg2] 发送双验通过。
+[2026-11-11T16:47:05.019Z] [msg2] 检测到生成→空闲翻转，进入确认窗 75s。
+[2026-11-11T16:48:23.061Z] [msg2] 完成判定: {"tail_role":"assistant","assistant_uuid":"8585c49e-4a9c-4165-a1de-489e8f913491","uuid_stable":true,"composer_empty":true} => COMPLETED
+[2026-11-11T16:48:23.241Z] 截图: poc3-06-reply-msg2.png
+[2026-11-11T16:48:23.242Z] 上下文连续性: FAIL
+[2026-11-11T16:48:23.243Z] msg1 回复头: 
+[2026-11-11T16:48:23.243Z] msg2 回复头: 
+[2026-11-11T16:48:26.670Z] === POC-03 run PARTIAL/FAIL（详见 JSON） ===
+[2026-11-11T16:49:23.693Z] === POC-03 run：目标会话 https://chatgpt.com/c/6af49ad6-4c0c-83ee-9485-0d32deb63df7 ===
+[2026-11-11T16:49:28.512Z] Chrome 已以普通方式启动并开放本机调试端口 9222（pid=14712）
+[2026-11-11T16:49:34.774Z] 页面就绪。
+[2026-11-11T16:49:35.807Z] 截图: poc3-03-ready.png
+[2026-11-11T16:49:35.854Z] [msg1] 基线尾部: role=assistant key=lback-turn-2:1:assistant uuid=8585c49e
+[2026-11-11T16:49:36.403Z] [msg1] 填充并回读一致（38 字符）。
+[2026-11-11T16:49:36.613Z] 截图: poc3-04-filled-msg1.png
+[2026-11-11T16:49:37.224Z] 截图: poc3-05-sent-msg1.png
+[2026-11-11T16:49:37.224Z] [msg1] 发送双验通过。
+[2026-11-11T16:49:41.357Z] [msg1] 检测到生成→空闲翻转，进入确认窗 75s。
+[2026-11-11T16:50:59.397Z] [msg1] 完成判定: {"tail_role":"assistant","assistant_uuid":"8e3a57a7-29a6-41a1-82c0-9687dfafb816","uuid_stable":true,"composer_empty":true} => COMPLETED
+[2026-11-11T16:50:59.518Z] 截图: poc3-06-reply-msg1.png
+[2026-11-11T16:51:04.529Z] [msg2] 基线尾部: role=assistant key=lback-turn-3:1:assistant uuid=8e3a57a7
+[2026-11-11T16:51:04.770Z] [msg2] 填充并回读一致（46 字符）。
+[2026-11-11T16:51:05.020Z] 截图: poc3-04-filled-msg2.png
+[2026-11-11T16:51:05.635Z] 截图: poc3-05-sent-msg2.png
+[2026-11-11T16:51:05.636Z] [msg2] 发送双验通过。
+[2026-11-11T16:51:11.674Z] [msg2] 检测到生成→空闲翻转，进入确认窗 75s。
+[2026-11-11T16:52:29.705Z] [msg2] 完成判定: {"tail_role":"assistant","assistant_uuid":"f893e52e-98a2-4a03-b3e5-2249ba5df546","uuid_stable":true,"composer_empty":true} => COMPLETED
+[2026-11-11T16:52:29.820Z] 截图: poc3-06-reply-msg2.png
+[2026-11-11T16:52:29.821Z] 上下文连续性: PASS（msg2 回复包含 msg1 指定词）
+[2026-11-11T16:52:29.821Z] msg1 回复头: 确认
+[2026-11-11T16:52:29.822Z] msg2 回复头: 确认
+[2026-11-11T16:52:31.832Z] === POC-03 run PASS ===

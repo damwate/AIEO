@@ -1,0 +1,72 @@
+{
+  "started_at": "2026-11-11T16:49:23.694Z",
+  "target_url": "https://chatgpt.com/c/6af49ad6-4c0c-83ee-9485-0d32deb63df7",
+  "messages": [
+    {
+      "label": "msg1",
+      "text_preview": "你好，这是 AIEO Phase 0 的自动化测试消息。请只回复一个词：确认",
+      "sent_at": "2026-11-11T16:49:36.642Z",
+      "baseline_tail": {
+        "role": "assistant",
+        "key": "fallback-turn-2:1:assistant",
+        "assistantUuid": "8585c49e-4a9c-4165-a1de-489e8f913491",
+        "text": "ChatGPT 说："
+      },
+      "readback_ok": true,
+      "send_button": {
+        "found": true,
+        "disabled": null,
+        "ariaDisabled": null
+      },
+      "accepted": {
+        "tail_advanced_to_user": true,
+        "stop_button_appeared": true
+      },
+      "completion": {
+        "tail_role": "assistant",
+        "assistant_uuid": "8e3a57a7-29a6-41a1-82c0-9687dfafb816",
+        "uuid_stable": true,
+        "composer_empty": true
+      },
+      "completed": true,
+      "reply_units": 1,
+      "reply_text": "确认",
+      "reply_head": "确认"
+    },
+    {
+      "label": "msg2",
+      "text_preview": "第二条测试（验证上下文连续性）：我上一条消息要求你只回复的那个词是什么？请只回复那个词本身。",
+      "sent_at": "2026-11-11T16:51:05.042Z",
+      "baseline_tail": {
+        "role": "assistant",
+        "key": "fallback-turn-3:1:assistant",
+        "assistantUuid": "8e3a57a7-29a6-41a1-82c0-9687dfafb816",
+        "text": "ChatGPT 说：\n\n确认"
+      },
+      "readback_ok": true,
+      "send_button": {
+        "found": true,
+        "disabled": null,
+        "ariaDisabled": null
+      },
+      "accepted": {
+        "tail_advanced_to_user": true,
+        "stop_button_appeared": true
+      },
+      "completion": {
+        "tail_role": "assistant",
+        "assistant_uuid": "f893e52e-98a2-4a03-b3e5-2249ba5df546",
+        "uuid_stable": true,
+        "composer_empty": true
+      },
+      "completed": true,
+      "reply_units": 1,
+      "reply_text": "确认",
+      "reply_head": "确认"
+    }
+  ],
+  "mode": "cdp-attach",
+  "ready": true,
+  "finished_at": "2026-11-11T16:52:29.820Z",
+  "context_continuity": true
+}

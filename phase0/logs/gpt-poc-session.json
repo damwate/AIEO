@@ -1,0 +1,6 @@
+{
+  "conversation_url": "https://chatgpt.com/c/6af49ad6-4c0c-83ee-9485-0d32deb63df7",
+  "captured_at": "2026-11-11T16:45:00+08:00",
+  "page_title": "ChatGPT（人工登录后经 CDP /json 捕获）",
+  "note": "setup 脚本 Page 句柄跨域导航后陈旧，改由 CDP /json 端点直接读取落盘"
+}
