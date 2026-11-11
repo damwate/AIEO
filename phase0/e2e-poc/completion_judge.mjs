@@ -87,3 +87,53 @@ export function finalizeCompletion(input) {
   }
   return { confirmed, checks };
 }
+
+/**
+ * 发送双验（R3 修复，回应第三轮审查 MAJOR-001-1）：
+ * 严格时序语义——本轮 user 消息确认出现（tailOk）**之后**重新观察到的停止按钮可见，
+ * 才允许作为本轮生成状态观察（stopOkAfterTail）。
+ * tailOk 之前出现的停止按钮（stopSeenBeforeTail，可能来自历史/上一轮生成）被记录但**排除**，
+ * 不参与 generationObserved 初始化。
+ *
+ * @param {{getTail: () => Promise<{role: string, key: string}|null>,
+ *          isStopVisible: () => Promise<boolean>,
+ *          baselineKey: string|undefined,
+ *          deadlineMs?: number, intervalMs?: number,
+ *          sleep?: (ms:number)=>Promise<void>, now?: () => number}} p
+ * @returns {{accepted: boolean, tailOk: boolean, stopOkAfterTail: boolean,
+ *            stopSeenBeforeTail: number, stopObservationsAfterTail: number, polls: number, lastTail: object|null}}
+ *          accepted=false 时调用方必须按 UNCERTAIN 终止（不重发）。
+ */
+export async function verifySendAcceptance(p) {
+  const deadlineMs = p.deadlineMs ?? 30000;
+  const intervalMs = p.intervalMs ?? 1000;
+  const sleep = p.sleep ?? ((ms) => new Promise((r) => setTimeout(r, ms)));
+  const now = p.now ?? Date.now;
+  let tailOk = false;
+  let stopOkAfterTail = false;
+  let stopSeenBeforeTail = 0;   // tail 确认前观察到停止按钮的次数（只记录，不采用）
+  let stopObservationsAfterTail = 0;
+  let polls = 0;
+  let lastTail = null;
+  const t0 = now();
+  while (now() - t0 < deadlineMs) {
+    polls++;
+    const tail = await p.getTail();
+    lastTail = tail;
+    if (!tailOk && tail && tail.role === "user" && tail.key !== p.baselineKey) {
+      tailOk = true; // 本轮 user 消息已确认出现在 DOM（key 前进）
+    }
+    const stopNow = await p.isStopVisible();
+    if (tailOk) {
+      stopObservationsAfterTail++;
+      if (stopNow) stopOkAfterTail = true; // 仅 tail 确认后的可见观察才计入
+    } else if (stopNow) {
+      stopSeenBeforeTail++; // tail 确认前的可见观察：排除，只记录
+    }
+    if (tailOk && stopOkAfterTail) {
+      return { accepted: true, tailOk, stopOkAfterTail, stopSeenBeforeTail, stopObservationsAfterTail, polls, lastTail };
+    }
+    await sleep(intervalMs);
+  }
+  return { accepted: false, tailOk, stopOkAfterTail, stopSeenBeforeTail, stopObservationsAfterTail, polls, lastTail };
+}

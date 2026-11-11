@@ -136,3 +136,49 @@ TEST PASS
 [2026-11-11T17:51:27.552Z] 审查结论: PASS — Diff 符合 T-E2E-001 全部代码要求，CommonJS 导出正确，两项严格断言完整，测试成功后输出 TEST PASS；未发现代码缺陷，建议通过审查。
 [2026-11-11T17:51:28.187Z] 验收条件: {"plan_json_valid":true,"plan_generation_confirmed":true,"zcode_files_present":true,"dev_test_pass":true,"worktree_clean":true,"review_result_strict_pass":true,"review_generation_confirmed":true,"all":true}
 [2026-11-11T17:51:28.187Z] === POC-05 端到端闭环 PASS ===（证据: D:\AIEO\phase0\logs\e2e-evidence.json）
+[2026-11-11T18:02:55.436Z] === POC-05 端到端闭环开始 ===
+[2026-11-11T18:02:56.090Z] e2e 仓库基线: 77566e614612ae0dfd7b7542edddc1a5cffe6d9c
+[2026-11-11T18:02:59.150Z] Chrome 已启动（pid=24312）
+[2026-11-11T18:03:02.433Z] 页面就绪
+[2026-11-11T18:03:02.631Z] [plan] 基线尾部: role=assistant uuid=undefined
+[2026-11-11T18:03:03.983Z] [plan] 发送双验: accepted=true tailOk=true stopOkAfterTail=true stopSeenBeforeTail(排除)=0 polls=1
+[2026-11-11T18:03:04.249Z] 截图: e2e-sent-plan.png
+[2026-11-11T18:03:12.485Z] [plan] 生成状态跟踪: observed=true ended=true
+[2026-11-11T18:04:30.529Z] [plan] 完成判定6项: {"generation_observed":true,"generation_ended":true,"final_stop_button_not_visible":true,"tail_is_assistant":true,"dil_uuid_present":true,"uuid_stable":true,"composer_empty":true}
+[2026-11-11T18:04:30.532Z] [plan] COMPLETED（生成态确认结束），回复 538 字符
+[2026-11-11T18:04:30.689Z] 截图: e2e-reply-plan.png
+[2026-11-11T18:04:30.690Z] GPT 规划回复（前 200 字）: {
+"task_id": "T-E2E-001",
+"instruction": "在一个全新的 Node.js 项目目录中完成以下开发任务：1. 创建 src/e2e_add.js，使用 CommonJS 模块规范定义 add(a, b) 函数，函数返回 a + b，并通过 module.exports 导出；2. 在项目根目录创建 test_e2e_add.js，使用 Node.js 内置 a
+[2026-11-11T18:04:30.690Z] 任务 JSON 有效: task_id=T-E2E-001
+[2026-11-11T18:04:30.690Z] 外部触发 ZCode（CLI --prompt）...
+[2026-11-11T18:05:03.267Z] ZCode 会话完成: sess_dc945560-635b-4da3-9c38-9c58aa6faecd 状态=idle
+[2026-11-11T18:05:03.267Z] ZCode 返回（前 300 字）: 已完成：
+
+- 创建 `src/e2e_add.js`，导出 CommonJS `add(a, b)` 函数。
+- 创建 `test_e2e_add.js`，包含两项严格断言。
+- 文件结构检查通过，未创建其他文件。
+
+实际执行 `node test_e2e_add.js`：
+
+```text
+TEST PASS
+```
+
+进程退出码为 `0`，两项断言全部通过。
+[2026-11-11T18:05:03.677Z] Git 提交: 9d96444c0f87e3295f39e91cb0eb3445d9df0626（干净=true，diff 24 行）
+[2026-11-11T18:05:03.680Z] [review] 基线尾部: role=assistant uuid=50ab545a
+[2026-11-11T18:05:04.786Z] [review] 发送双验: accepted=true tailOk=true stopOkAfterTail=true stopSeenBeforeTail(排除)=0 polls=1
+[2026-11-11T18:05:04.943Z] 截图: e2e-sent-review.png
+[2026-11-11T18:05:10.995Z] [review] 生成状态跟踪: observed=true ended=true
+[2026-11-11T18:06:29.038Z] [review] 完成判定6项: {"generation_observed":true,"generation_ended":true,"final_stop_button_not_visible":true,"tail_is_assistant":true,"dil_uuid_present":true,"uuid_stable":true,"composer_empty":true}
+[2026-11-11T18:06:29.041Z] [review] COMPLETED（生成态确认结束），回复 142 字符
+[2026-11-11T18:06:29.160Z] 截图: e2e-reply-review.png
+[2026-11-11T18:06:29.160Z] GPT 审查回复（前 300 字）: {
+"result": "PASS",
+"findings": [],
+"summary": "Diff 符合 T-E2E-001 的全部代码要求，add 函数正确导出，两项严格断言完整，测试通过后输出 TEST PASS；未发现代码缺陷，但实际进程退出码仍需通过运行测试确认。"
+}
+[2026-11-11T18:06:29.160Z] 审查结论: PASS — Diff 符合 T-E2E-001 的全部代码要求，add 函数正确导出，两项严格断言完整，测试通过后输出 TEST PASS；未发现代码缺陷，但实际进程退出码仍需通过运行测试确认。
+[2026-11-11T18:06:29.761Z] 验收条件: {"plan_json_valid":true,"plan_generation_confirmed":true,"zcode_files_present":true,"dev_test_pass":true,"worktree_clean":true,"review_result_strict_pass":true,"review_generation_confirmed":true,"all":true}
+[2026-11-11T18:06:29.761Z] === POC-05 端到端闭环 PASS ===（证据: D:\AIEO\phase0\logs\e2e-evidence.json）

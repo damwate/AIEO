@@ -15,6 +15,7 @@ import {
   waitForGenerationEnd,
   verifyCompletion,
   finalizeCompletion,
+  verifySendAcceptance,
 } from "./completion_judge.mjs";
 
 function makeFakeClock() {
@@ -140,6 +141,81 @@ async function main() {
     assert.equal(checks.generation_observed, false);
     assert.equal(checks.generation_ended, false);
     record("6 从未观察到生成状态（everGenerating 硬编码问题的根修验证）", true, `confirmed=false，generation_observed/ended=false 被正确拒绝`);
+  }
+
+  // ---------- 场景 7（第三轮审查点名）：stopOk 提前出现（先于本轮 user 确认）不得污染 generationObserved ----------
+  {
+    // 时序：poll1 停止按钮已可见（历史/上一轮状态）但尾部仍是基线 → 只记录 stopSeenBeforeTail，不采用；
+    //       poll2 本轮 user 消息确认（tailOk）且此时停止按钮不可见；
+    //       poll3 tail 确认后重新观察到停止按钮可见 → stopOkAfterTail=true（唯一合法来源）。
+    const clock = makeFakeClock();
+    const tails = [
+      { role: "user", key: "fallback-turn-0:0:user" },   // 基线尾部（== baselineKey，未前进）
+      { role: "user", key: "fallback-turn-1:0:user" },   // 本轮消息前进 → tailOk
+      { role: "user", key: "fallback-turn-1:0:user" },
+    ];
+    const stops = [true, false, true]; // 与三次轮询一一对应
+    const acc = await verifySendAcceptance({
+      getTail: () => Promise.resolve(tails.shift()),
+      isStopVisible: () => Promise.resolve(stops.shift() ?? false),
+      baselineKey: "fallback-turn-0:0:user",
+      deadlineMs: 30000, intervalMs: 1000, ...clock,
+    });
+    assert.equal(acc.accepted, true, "tail 确认后观察到停止按钮 → 应通过");
+    assert.equal(acc.stopSeenBeforeTail, 1, "tail 前的停止按钮观察应被记录且排除");
+    assert.equal(acc.stopOkAfterTail, true);
+    // 以 stopOkAfterTail（而非 pre-tail 观察）初始化 tracker，随后首次观察即不可见 → 正常结束
+    const tracker = await waitForGenerationEnd(() => Promise.resolve(false), {
+      deadlineMs: 300000, intervalMs: 2000, ...clock,
+      tracker: createGenerationTracker({ initialObserved: acc.stopOkAfterTail }),
+    });
+    assert.equal(tracker.generationObserved, true);
+    assert.equal(tracker.generationEnded, true);
+    record("7 stopOk 提前出现（先于 user 确认）不污染 generationObserved", true,
+      `pre-tail 观察 1 次被排除，stopOkAfterTail 仅来自 tail 确认后的观察；tracker 初始化与结束判定正常`);
+  }
+
+  // ---------- 场景 8：停止按钮仅在 tail 确认前出现、tail 后再不可见 → 发送双验必须失败 ----------
+  {
+    const clock = makeFakeClock();
+    const tails = [
+      { role: "user", key: "fallback-turn-0:0:user" },  // poll1: 基线尾部，停止按钮可见（历史状态）
+      { role: "user", key: "fallback-turn-1:0:user" },  // poll2: tail 前进，但停止按钮已不可见
+      { role: "user", key: "fallback-turn-1:0:user" },
+      { role: "user", key: "fallback-turn-1:0:user" },
+    ];
+    const stops = [true, false, false, false]; // poll1 可见（历史），tail 确认后从未再可见
+    const acc = await verifySendAcceptance({
+      getTail: () => Promise.resolve(tails.shift() ?? { role: "user", key: "fallback-turn-1:0:user" }),
+      isStopVisible: () => Promise.resolve(stops.shift() ?? false),
+      baselineKey: "fallback-turn-0:0:user",
+      deadlineMs: 5000, intervalMs: 1000, ...clock, // 缩短 deadline 加速测试，语义同 30s
+    });
+    assert.equal(acc.accepted, false, "tail 确认后无停止按钮观察 → 不得通过（fail-safe）");
+    assert.equal(acc.stopOkAfterTail, false);
+    assert.equal(acc.stopSeenBeforeTail, 1, "poll1 的历史可见被记录但排除");
+    record("8 停止按钮仅在 tail 前出现，tail 后不可见 → 验收失败（UNCERTAIN，不误判成功）", true,
+      `accepted=false；生产路径将抛错 exit 1，历史生成状态无法通过本轮判定`);
+  }
+
+  // ---------- 场景 9：正常顺序（tail 先确认，停止按钮随后出现） ----------
+  {
+    const clock = makeFakeClock();
+    const tails = [
+      { role: "user", key: "fallback-turn-1:0:user" },  // tail 立即前进
+      { role: "user", key: "fallback-turn-1:0:user" },  // 随后停止按钮可见
+    ];
+    const stops = [false, true];
+    const acc = await verifySendAcceptance({
+      getTail: () => Promise.resolve(tails.shift() ?? tails[tails.length - 1]),
+      isStopVisible: () => Promise.resolve(stops.shift() ?? true),
+      baselineKey: "fallback-turn-0:0:user",
+      deadlineMs: 30000, intervalMs: 1000, ...clock,
+    });
+    assert.equal(acc.accepted, true);
+    assert.equal(acc.stopSeenBeforeTail, 0, "无 pre-tail 观察");
+    assert.equal(acc.stopOkAfterTail, true);
+    record("9 正常顺序（tail 先确认，停止按钮随后出现）", true, `accepted=true，stop_seen_before_tail=0`);
   }
 
   const allPass = scenarios.every((s) => s.pass);

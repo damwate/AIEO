@@ -16,7 +16,7 @@ import { spawn, execFile } from "node:child_process";
 import { existsSync, mkdirSync, writeFileSync, appendFileSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { createGenerationTracker, waitForGenerationEnd, finalizeCompletion } from "./completion_judge.mjs";
+import { createGenerationTracker, waitForGenerationEnd, finalizeCompletion, verifySendAcceptance } from "./completion_judge.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const AIEO_ROOT = join(__dirname, "..", "..");
@@ -167,26 +167,29 @@ async function sendAndCollect(page, text, label) {
   if ((await sendBtn.count()) === 0) throw new Error(`[${label}] 发送按钮不存在，STOP`);
   await c.focus();
   await page.keyboard.press("Enter");
-  let tailOk = false, stopOk = false;
-  const t0 = Date.now();
-  while (Date.now() - t0 < SEND_ACCEPT_TIMEOUT_MS) {
-    const tail = await readTailUnit(page);
-    if (tail && tail.role === "user" && tail.key !== baseline?.key) tailOk = true;
-    if (await stopButtonVisible(page)) stopOk = true;
-    if (tailOk && stopOk) break;
-    await page.waitForTimeout(1000);
+
+  // 发送双验（R3 修复，回应第三轮审查 MAJOR-001-1）：
+  // stopOkAfterTail 仅在本轮 user 消息确认（tailOk）之后重新观察到停止按钮可见才置位；
+  // tail 确认前的停止按钮观察（可能来自历史生成）只记录（stopSeenBeforeTail）并排除。
+  const acceptance = await verifySendAcceptance({
+    getTail: () => readTailUnit(page),
+    isStopVisible: () => stopButtonVisible(page),
+    baselineKey: baseline?.key,
+    deadlineMs: SEND_ACCEPT_TIMEOUT_MS,
+    intervalMs: 1000,
+  });
+  log(`[${label}] 发送双验: accepted=${acceptance.accepted} tailOk=${acceptance.tailOk} stopOkAfterTail=${acceptance.stopOkAfterTail} stopSeenBeforeTail(排除)=${acceptance.stopSeenBeforeTail} polls=${acceptance.polls}`);
+  if (!acceptance.accepted) {
+    throw new Error(`[${label}] 发送双验未通过（tailOk=${acceptance.tailOk} stopOkAfterTail=${acceptance.stopOkAfterTail}），UNCERTAIN，不重发`);
   }
-  if (!(tailOk && stopOk)) throw new Error(`[${label}] 发送双验未通过（tail=${tailOk} stop=${stopOk}），UNCERTAIN，不重发`);
-  log(`[${label}] 发送双验通过`);
   await shot(page, `e2e-sent-${label}.png`);
 
-  // 生成等待：真实观察生成状态（R2 修复——不再硬编码 everGenerating=true）
-  // tracker 以发送双验的 stopOk 为初始 observed（该阶段已确认停止按钮出现），
-  // 随后由 waitForGenerationEnd 持续观察"可见→不可见"翻转；300 秒未结束即抛 GENERATION_TIMEOUT（exit 1）。
+  // 生成等待：generationObserved 初始值严格来自 tail 确认后的本轮观察（R3）。
+  // waitForGenerationEnd 持续观察"可见→不可见"翻转；300 秒未结束即抛 GENERATION_TIMEOUT（exit 1）。
   const tracker = await waitForGenerationEnd(() => stopButtonVisible(page), {
     deadlineMs: 300000,
     intervalMs: 2000,
-    tracker: createGenerationTracker({ initialObserved: stopOk }),
+    tracker: createGenerationTracker({ initialObserved: acceptance.stopOkAfterTail }),
   });
   log(`[${label}] 生成状态跟踪: observed=${tracker.generationObserved} ended=${tracker.generationEnded}`);
   await page.waitForTimeout(CONFIRM_WINDOW_MS);
@@ -210,7 +213,7 @@ async function sendAndCollect(page, text, label) {
   const reply = units.map((u) => u.text).join("\n").trim();
   log(`[${label}] COMPLETED（生成态确认结束），回复 ${reply.length} 字符`);
   await shot(page, `e2e-reply-${label}.png`);
-  return { reply, assistant_uuid: tailAfter.assistantUuid, baseline, completion_confirmed: completionConfirmed, completion_checks: completionChecks };
+  return { reply, assistant_uuid: tailAfter.assistantUuid, baseline, completion_confirmed: completionConfirmed, completion_checks: completionChecks, send_acceptance: { tail_ok: acceptance.tailOk, stop_ok_after_tail: acceptance.stopOkAfterTail, stop_seen_before_tail_excluded: acceptance.stopSeenBeforeTail, polls: acceptance.polls } };
 }
 
 // ---------- 外部进程工具 ----------
@@ -259,7 +262,7 @@ async function main() {
     "需求：在一个全新的 Node.js 目录中实现 src/e2e_add.js，导出函数 add(a,b) 返回 a+b；并创建 test_e2e_add.js，用 assert 严格断言 add(2,3)===5 且 add(-1,1)===0，node 直接运行打印 TEST PASS。";
   const plan = await sendAndCollect(page, planAsk, "plan");
   log(`GPT 规划回复（前 200 字）: ${plan.reply.slice(0, 200)}`);
-  step("gpt_plan", { raw_reply_head: plan.reply.slice(0, 500), assistant_uuid: plan.assistant_uuid, completion_confirmed: plan.completion_confirmed, completion_checks: plan.completion_checks });
+  step("gpt_plan", { raw_reply_head: plan.reply.slice(0, 500), assistant_uuid: plan.assistant_uuid, completion_confirmed: plan.completion_confirmed, completion_checks: plan.completion_checks, send_acceptance: plan.send_acceptance });
 
   // 2. 提取 JSON（容忍 ```json 围栏）
   const m = plan.reply.match(/\{[\s\S]*\}/);
@@ -312,7 +315,7 @@ async function main() {
   if (!rm) throw new Error("GPT 审查回复中未找到 JSON，停止");
   let verdict;
   try { verdict = JSON.parse(rm[0]); } catch (e) { throw new Error(`审查 JSON 解析失败: ${e.message}; 原文头: ${rm[0].slice(0, 200)}`); }
-  step("gpt_review", { verdict, assistant_uuid: review.assistant_uuid, completion_confirmed: review.completion_confirmed, completion_checks: review.completion_checks });
+  step("gpt_review", { verdict, assistant_uuid: review.assistant_uuid, completion_confirmed: review.completion_confirmed, completion_checks: review.completion_checks, send_acceptance: review.send_acceptance });
   log(`审查结论: ${verdict.result} — ${verdict.summary || ""}`);
 
   await browser.close().catch(() => {});
