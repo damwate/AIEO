@@ -339,3 +339,45 @@ TEST PASS
 [2026-11-11T18:33:29.112Z] 验收条件: {"plan_json_valid":true,"plan_generation_confirmed":true,"zcode_files_present":true,"dev_test_pass":true,"worktree_clean":true,"review_result_strict_pass":true,"review_generation_confirmed":true,"all":true}
 [2026-11-11T18:33:29.113Z] === POC-05 端到端闭环 PASS ===（证据: D:\AIEO\phase0\logs\e2e-evidence.json）
 [2026-11-11T18:33:29.114Z] 会话锁已释放
+[2026-11-11T18:41:06.944Z] 会话锁已获取 pid=18132 lock=D:\AIEO\runtime\locks\gpt-session.lock
+[2026-11-11T18:41:06.946Z] === POC-05 端到端闭环开始 ===
+[2026-11-11T18:41:07.598Z] e2e 仓库基线: f0c0882a9e4ee1876e97d7eda02050aef5aee7f0
+[2026-11-11T18:41:10.659Z] Chrome 已启动（pid=23424）
+[2026-11-11T18:41:13.909Z] 页面就绪
+[2026-11-11T18:41:14.058Z] [plan] 基线尾部: role=assistant uuid=undefined
+[2026-11-11T18:41:15.318Z] [plan] 发送双验: accepted=true reason=- tailOk=true stopOkAfterTail=true stopSeenBeforeTail=0 polls=1
+[2026-11-11T18:41:15.585Z] 截图: e2e-sent-plan.png
+[2026-11-11T18:41:23.626Z] [plan] 生成状态跟踪: observed=true ended=true
+[2026-11-11T18:42:41.656Z] [plan] 完成判定6项: {"generation_observed":true,"generation_ended":true,"final_stop_button_not_visible":true,"tail_is_assistant":true,"dil_uuid_present":true,"uuid_stable":true,"composer_empty":true}
+[2026-11-11T18:42:41.659Z] [plan] COMPLETED（生成态确认结束），回复 721 字符
+[2026-11-11T18:42:41.821Z] 截图: e2e-reply-plan.png
+[2026-11-11T18:42:41.821Z] GPT 规划回复（前 200 字）: {
+"task_id": "T-E2E-001",
+"instruction": "在一个全新的 Node.js 项目目录中完成以下开发任务：1. 创建 src/e2e_add.js，使用 CommonJS 模块规范定义 add(a, b) 函数，返回 a + b，并通过 module.exports 导出；2. 在项目根目录创建 test_e2e_add.js，使用 Node.js 内置 ass
+[2026-11-11T18:42:41.822Z] 任务 JSON 有效: task_id=T-E2E-001
+[2026-11-11T18:42:41.822Z] 外部触发 ZCode（CLI --prompt）...
+[2026-11-11T18:43:15.068Z] ZCode 会话完成: sess_a93be101-4734-42ad-a611-341cfeee6e5b 状态=idle
+[2026-11-11T18:43:15.068Z] ZCode 返回（前 300 字）: 已创建 `src/e2e_add.js` 和 `test_e2e_add.js`，并实际执行 `node test_e2e_add.js`。
+
+```text
+TEST PASS
+```
+
+退出码：`0`。按硬性约束，未执行任何 Git 命令。
+[2026-11-11T18:43:15.480Z] Git 提交: 117beef920807ee08048ed3615660d4811b4e61f（干净=true，diff 24 行）
+[2026-11-11T18:43:15.482Z] [review] 基线尾部: role=assistant uuid=cb027800
+[2026-11-11T18:43:16.610Z] [review] 发送双验: accepted=true reason=- tailOk=true stopOkAfterTail=true stopSeenBeforeTail=0 polls=1
+[2026-11-11T18:43:16.784Z] 截图: e2e-sent-review.png
+[2026-11-11T18:43:22.818Z] [review] 生成状态跟踪: observed=true ended=true
+[2026-11-11T18:44:40.878Z] [review] 完成判定6项: {"generation_observed":true,"generation_ended":true,"final_stop_button_not_visible":true,"tail_is_assistant":true,"dil_uuid_present":true,"uuid_stable":true,"composer_empty":true}
+[2026-11-11T18:44:40.885Z] [review] COMPLETED（生成态确认结束），回复 214 字符
+[2026-11-11T18:44:41.025Z] 截图: e2e-reply-review.png
+[2026-11-11T18:44:41.026Z] GPT 审查回复（前 300 字）: {
+"result": "PASS",
+"findings": [],
+"summary": "T-E2E-001 全部验收标准通过：两个指定文件实现正确，两项严格断言经 AIEO 端独立复跑通过，退出码为 0 且输出 TEST PASS，已在独立分支 feature/AIEO-E2E-001 提交完整 Commit SHA 117beef920807ee08048ed3615660d4811b4e61f，工作区干净。"
+}
+[2026-11-11T18:44:41.026Z] 审查结论: PASS — T-E2E-001 全部验收标准通过：两个指定文件实现正确，两项严格断言经 AIEO 端独立复跑通过，退出码为 0 且输出 TEST PASS，已在独立分支 feature/AIEO-E2E-001 提交完整 Commit SHA 117beef920807ee08048ed3615660d4811b4e61f，工作区干净。
+[2026-11-11T18:44:41.600Z] 验收条件: {"plan_json_valid":true,"plan_generation_confirmed":true,"zcode_files_present":true,"dev_test_pass":true,"worktree_clean":true,"review_result_strict_pass":true,"review_generation_confirmed":true,"all":true}
+[2026-11-11T18:44:41.600Z] === POC-05 端到端闭环 PASS ===（证据: D:\AIEO\phase0\logs\e2e-evidence.json）
+[2026-11-11T18:44:41.602Z] 会话锁已释放

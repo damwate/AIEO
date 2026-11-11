@@ -1,23 +1,24 @@
-// AIEO Phase 0 返工 R5 — 共享 ChatGPT 会话的跨进程独占锁
+// AIEO Phase 0 返工 R6 — 共享 ChatGPT 会话跨进程独占锁 v2
 //
-// 回应第五轮审查 MAJOR：pre-send 生成门依赖"同一会话同一时刻仅一个在途任务"，
-// 但该纪律此前未被代码强制——两个自动化实例可同时通过 pre-send 检查并各自发送。
+// 回应第六轮审查 MAJOR（v1 的两个竞态）：
+//   竞态1（初始化窗口）：v1 先 wx 建空文件、再按"路径"写内容——窗口内他人读到空文件
+//          会误判 stale 并 unlink，导致双重持锁。
+//   → v2 修复：内容**先在内存组装**，openSync(wx) 后立即经**同一 fd writeSync 写入**再关闭；
+//          极小残留窗口内的空/损坏锁对竞争者 **fail-closed**（LOCK_CORRUPT_OR_INITIALIZING），
+//          绝不删除（按审查要求）。
+//   竞态2（stale 回收）：v1 "读 PID→unlink" 非原子，多个回收者可删掉他人新建的锁。
+//   → v2 修复：意图票据（intent ticket）仲裁——回收候选者先原子创建自己的 intent 文件
+//          （wx），仅当不存在"更早创建且进程仍存活"的其他 intent 时才成为唯一回收者；
+//          回收者在 unlink 前**重读锁内容并二次验证 PID 仍死亡**；非回收者一律 fail-closed
+//          拒绝。最终持锁只能由 wx 原子创建决定——两个进程不可能同时进入临界区。
 //
-// 机制：
-//   - 锁文件 runtime/locks/gpt-session.lock，O_EXCL（wx）原子创建；
-//   - 内容 JSON：{ pid, holder, acquired_at }；
-//   - 冲突判定：锁存在且其 pid 仍存活 → SESSION_LOCK_CONFLICT，**拒绝执行**（不等待、不抢占）；
-//   - 死进程残留锁（pid 已不存在）→ 视为 stale，安全回收并留痕；
-//   - 获取时机：连接/操作共享 Chrome 之前；持有覆盖 pre-send 检查、发送、完整回复收集；finally 释放。
-//
-// 边界（如实声明）：本锁只保证"自动化实例之间"互斥。人工在共享浏览器窗口上的并发操作
-// 不受锁保护，仍依赖结构性判定（pre-send 生成门、完成 6 项判定）兜底并可能触发 fail-safe。
+// 失败语义（fail-closed 优先）：任何无法证明安全的情形都抛错拒绝执行，绝不删除可疑锁。
+// 边界：本锁保证自动化实例间互斥；人工在共享窗口的并发操作由结构性判定兜底（如实声明）。
 
-import { openSync, closeSync, readFileSync, writeFileSync, unlinkSync, mkdirSync, existsSync } from "node:fs";
+import { openSync, writeSync, closeSync, readFileSync, writeFileSync, unlinkSync, mkdirSync, existsSync, readdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
-// 默认锁路径：由本模块位置推导（AIEO 根/runtime/locks/），不依赖调用方 cwd
 export const LOCK_PATH_DEFAULT = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "runtime", "locks", "gpt-session.lock");
 
 function pidAlive(pid) {
@@ -25,89 +26,152 @@ function pidAlive(pid) {
     process.kill(pid, 0);
     return true;
   } catch (e) {
-    return e.code === "EPERM"; // 存在但无权限 → 视为存活
+    return e.code === "EPERM";
   }
 }
 
+function randTag() {
+  return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
+}
+
+/** 通过 wx 句柄原子创建并经同一 fd 写入完整内容（消除初始化窗口的主要内容竞争） */
+function createExclusiveWithContent(path, content) {
+  const fd = openSync(path, "wx"); // EEXIST → 他人抢先（原子裁决点）
+  try {
+    writeSync(fd, content);
+  } finally {
+    closeSync(fd);
+  }
+}
+
+/** 读取并解析锁文件；空/损坏返回 null（调用方必须 fail-closed） */
+function readLockFile(path) {
+  try {
+    const raw = readFileSync(path, "utf8");
+    if (!raw.trim()) return null;
+    const parsed = JSON.parse(raw);
+    if (!parsed || typeof parsed.pid !== "number") return null;
+    return parsed;
+  } catch {
+    return null; // 读取中消失/损坏
+  }
+}
+
+function intentDirOf(lockPath) {
+  return join(dirname(lockPath), "intents");
+}
+
+/** 列出当前所有 intent（文件名含随机数避免覆盖），解析失败的忽略 */
+function listIntents(lockPath) {
+  const dir = intentDirOf(lockPath);
+  if (!existsSync(dir)) return [];
+  return readdirSync(dir)
+    .filter((f) => f.startsWith("intent-") && f.endsWith(".json"))
+    .map((f) => {
+      try {
+        const j = JSON.parse(readFileSync(join(dir, f), "utf8"));
+        return { file: f, ...j };
+      } catch {
+        return null;
+      }
+    })
+    .filter(Boolean);
+}
+
+function isLowerOrder(a, b) {
+  // 越早创建越优先；同刻比 PID，保证全序
+  if (a.born_at !== b.born_at) return a.born_at < b.born_at;
+  return a.pid < b.pid;
+}
+
 /**
- * 获取会话独占锁。
- * @param {{lockPath?: string, holder?: string}} opts
+ * 获取会话独占锁（v2 协议）。
  * @returns {{lockPath: string, info: object, release: () => void}}
- * @throws Error(code=SESSION_LOCK_CONFLICT) 当锁被存活进程持有时（必须拒绝执行）
+ * @throws Error(code=SESSION_LOCK_CONFLICT | LOCK_CORRUPT_OR_INITIALIZING) —— 均为 fail-closed，调用方必须拒绝执行
  */
 export function acquireSessionLock(opts = {}) {
   const lockPath = opts.lockPath ?? LOCK_PATH_DEFAULT;
   mkdirSync(dirname(lockPath), { recursive: true });
+  const MAX_ATTEMPTS = 3;
 
-  if (existsSync(lockPath)) {
-    let info = null;
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
+    // ---- 第 1 步：wx 原子创建（唯一持锁裁决点），内容经同一 fd 写入 ----
+    const info = { pid: process.pid, holder: opts.holder ?? "unknown", born_at: new Date().toISOString(), rand: randTag() };
     try {
-      info = JSON.parse(readFileSync(lockPath, "utf8"));
-    } catch {
-      info = null; // 内容损坏也按 stale 处理（无法证明持有者存活）
+      createExclusiveWithContent(lockPath, JSON.stringify(info, null, 2));
+      return {
+        lockPath,
+        info,
+        release() {
+          try {
+            const cur = readLockFile(lockPath);
+            if (cur && cur.pid === process.pid && cur.rand === info.rand) unlinkSync(lockPath); // 只释放自己
+          } catch {
+            try { unlinkSync(lockPath); } catch { /* 已不存在 */ }
+          }
+        },
+      };
+    } catch (e) {
+      if (e.code !== "EEXIST") throw e;
     }
-    if (info && typeof info.pid === "number" && pidAlive(info.pid)) {
+
+    // ---- 第 2 步：锁已被占——读取并裁决（空/损坏 → fail-closed，绝不删除） ----
+    const cur = readLockFile(lockPath);
+    if (!cur) {
       const err = new Error(
-        `SESSION_LOCK_CONFLICT: 会话锁被存活进程持有 pid=${info.pid} holder=${info.holder || "?"} acquired_at=${info.acquired_at}。同一 ChatGPT 会话同一时刻只允许一个在途任务，本次拒绝执行。`
+        `LOCK_CORRUPT_OR_INITIALIZING: 锁文件为空或损坏（可能正被其他进程初始化，或遭外部破坏）。按 fail-closed 原则拒绝执行，未删除任何文件。`
       );
-      err.code = "SESSION_LOCK_CONFLICT";
-      err.holder = info;
+      err.code = "LOCK_CORRUPT_OR_INITIALIZING";
       throw err;
     }
-    // stale：持锁进程已死亡（或锁内容损坏）→ 回收
-    try { unlinkSync(lockPath); } catch { /* 下一步 wx 创建会给出真实结果 */ }
-  }
-
-  const info = {
-    pid: process.pid,
-    holder: opts.holder ?? "unknown",
-    acquired_at: new Date().toISOString(),
-  };
-  let fd;
-  try {
-    fd = openSync(lockPath, "wx"); // O_EXCL：已存在则抛 EEXIST（与其他进程竞争的原子裁决点）
-  } catch (e) {
-    if (e.code === "EEXIST") {
-      // 极小窗口内被他人抢先：按冲突处理（读取其 pid 再次裁决，存活则拒）
-      try {
-        const other = JSON.parse(readFileSync(lockPath, "utf8"));
-        if (other && typeof other.pid === "number" && pidAlive(other.pid)) {
-          const err = new Error(`SESSION_LOCK_CONFLICT: 会话锁被存活进程持有 pid=${other.pid} holder=${other.holder || "?"}。本次拒绝执行。`);
-          err.code = "SESSION_LOCK_CONFLICT";
-          err.holder = other;
-          throw err;
-        }
-        // 抢到 stale 锁的进程已死 → 回收后由调用方重试一次
-        const err = new Error("SESSION_LOCK_STALE_RACE: 竞争到 stale 锁，请重试获取");
-        err.code = "SESSION_LOCK_STALE_RACE";
-        throw err;
-      } catch (inner) {
-        if (inner.code === "SESSION_LOCK_CONFLICT" || inner.code === "SESSION_LOCK_STALE_RACE") throw inner;
-        const err = new Error("SESSION_LOCK_STALE_RACE: 竞争到无法解析的锁，请重试获取");
-        err.code = "SESSION_LOCK_STALE_RACE";
-        throw err;
-      }
+    if (pidAlive(cur.pid)) {
+      const err = new Error(
+        `SESSION_LOCK_CONFLICT: 会话锁被存活进程持有 pid=${cur.pid} holder=${cur.holder || "?"} born_at=${cur.born_at}。同一 ChatGPT 会话同一时刻只允许一个在途任务，本次拒绝执行。`
+      );
+      err.code = "SESSION_LOCK_CONFLICT";
+      err.holder = cur;
+      throw err;
     }
-    throw e;
-  }
-  writeFileSync(lockPath, JSON.stringify(info, null, 2), "utf8");
-  if (fd !== undefined) { try { closeSync(fd); } catch { /* 已写完即关闭失败无碍 */ } }
 
-  let released = false;
-  return {
-    lockPath,
-    info,
-    release() {
-      if (released) return;
-      released = true;
-      try {
-        const cur = JSON.parse(readFileSync(lockPath, "utf8"));
-        if (cur.pid === process.pid) unlinkSync(lockPath); // 只释放自己的锁
-      } catch {
-        try { unlinkSync(lockPath); } catch { /* 已不存在 */ }
+    // ---- 第 3 步：stale 锁（PID 已死）→ 意图票据仲裁，仅唯一回收者可行动 ----
+    mkdirSync(intentDirOf(lockPath), { recursive: true });
+    const myIntent = { pid: process.pid, born_at: new Date().toISOString(), rand: randTag(), holder: opts.holder ?? "unknown" };
+    const myIntentFile = join(intentDirOf(lockPath), `intent-${process.pid}-${info.rand}-${attempt}.json`);
+    createExclusiveWithContent(myIntentFile, JSON.stringify(myIntent, null, 2)); // 原子登记
+    try {
+      const rivals = listIntents(lockPath).filter((i) => i.pid !== process.pid && pidAlive(i.pid));
+      const lower = rivals.find((i) => isLowerOrder(i, myIntent));
+      if (lower) {
+        const err = new Error(
+          `SESSION_LOCK_CONFLICT: 检测到 stale 锁，且回收权归属更早的存活竞争者 pid=${lower.pid}。本次拒绝执行（fail-closed）。`
+        );
+        err.code = "SESSION_LOCK_CONFLICT";
+        err.holder = lower;
+        throw err;
       }
-    },
-  };
+      // 我是唯一回收者：unlink 前重读锁，二次验证 PID 仍死亡
+      const again = readLockFile(lockPath);
+      if (!again || pidAlive(again.pid)) {
+        // 锁已消失或被存活者重建：回到第 1 步重试（有限次）
+        continue;
+      }
+      try { unlinkSync(lockPath); } catch { /* 已消失，进入重试 */ }
+      // 清理死进程遗留的 intent（含本次目标）
+      for (const i of listIntents(lockPath)) {
+        if (!pidAlive(i.pid)) {
+          try { unlinkSync(join(intentDirOf(lockPath), i.file)); } catch { /* 竞争删除无碍 */ }
+        }
+      }
+      // 回到循环第 1 步：wx 创建成为唯一持锁裁决
+    } finally {
+      // 无论结果如何，清理自己的 intent（若有）
+      try { unlinkSync(myIntentFile); } catch { /* 已被回收或不存在 */ }
+    }
+  }
+
+  const err = new Error(`SESSION_LOCK_CONFLICT: ${MAX_ATTEMPTS} 次尝试未能获取会话锁（持续竞争/异常状态），本次拒绝执行。`);
+  err.code = "SESSION_LOCK_CONFLICT";
+  throw err;
 }
 
 /** 便捷封装：withSessionLock(async () => {...})，finally 自动释放。 */
