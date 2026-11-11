@@ -3,13 +3,14 @@
 import { spawn } from "node:child_process";
 import fs from "node:fs";
 import { join, dirname } from "node:path";
-import { pathToFileURL } from "node:url";
+import { tmpdir } from "node:os";
+import { pathToFileURL, fileURLToPath } from "node:url";
 
-const dir = fs.mkdtempSync("C:/Users/youting/AppData/Local/Temp/s4scen-");
+const dir = fs.mkdtempSync(join(tmpdir(), "s4scen-")); // 动态临时目录（第十一轮 MINOR 整改）
 const CHILD = join(dir, "holder_child.mjs");
 const result = { scenario: "S4", steps: [] };
 const out = process.argv[2];
-fs.writeFileSync(CHILD, `import { acquireSessionLock } from ${JSON.stringify(pathToFileURL("D:/AIEO/phase0/e2e-poc/session_lock.mjs").href)};
+fs.writeFileSync(CHILD, `import { acquireSessionLock } from ${JSON.stringify(pathToFileURL(join(dirname(fileURLToPath(import.meta.url)), "session_lock.mjs")).href)};
 import { writeFileSync } from "node:fs";
 const lock = acquireSessionLock({ lockPath: process.argv[3], holder: "holder-child" });
 writeFileSync(process.argv[2], "acquired");
@@ -40,7 +41,7 @@ result.steps.push({ step: "sigkill", pass: true });
 await new Promise((r) => setTimeout(r, 2000));
 let takeover = false;
 try {
-  const { acquireSessionLock } = await import(pathToFileURL("D:/AIEO/phase0/e2e-poc/session_lock.mjs").href);
+  const { acquireSessionLock } = await import(pathToFileURL(join(dirname(fileURLToPath(import.meta.url)), "session_lock.mjs")).href);
   const lock = acquireSessionLock({ lockPath, holder: "next-instance" });
   takeover = true;
   lock.release();
