@@ -1,50 +1,68 @@
 {
-  "started_at": "2026-11-11T17:25:46.338Z",
+  "started_at": "2026-11-11T17:47:51.113Z",
   "steps": [
     {
       "name": "repo_baseline",
-      "at": "2026-11-11T17:25:46.961Z",
-      "base_sha": "b9f130e981b2a7ef624d7075e28466007cd46aaf"
+      "at": "2026-11-11T17:47:51.763Z",
+      "base_sha": "ff3bde8fd9fe35ea6cc6b619007c846308732432"
     },
     {
       "name": "gpt_plan",
-      "at": "2026-11-11T17:27:21.181Z",
-      "raw_reply_head": "{\n\"task_id\": \"T-E2E-001\",\n\"instruction\": \"在一个全新的 Node.js 项目目录中完成以下开发任务：1. 创建 src/e2e_add.js，使用 CommonJS 模块规范定义并导出 add(a, b) 函数，函数返回 a + b；2. 在项目根目录创建 test_e2e_add.js，使用 Node.js 内置 assert 模块，通过 require 引入 add 函数；3. 使用 assert.strictEqual 严格断言 add(2, 3) === 5 和 add(-1, 1) === 0；4. 两项断言全部通过后，使用 console.log 输出 TEST PASS；5. 不引入第三方依赖，不修改项目外部文件；6. 完成后检查文件结构，并实际执行 node test_e2e_add.js，确认测试通过。\",\n\"acceptance\": \"项目包含 src/e2e_add.js 和 test_e2e_add.js 两个指定文件，执行 node test_e2e_add.js 后两项严格断言全部通过且控制台输出 TEST PASS",
-      "assistant_uuid": "181be645-6370-47aa-bc9e-5048a3b38afa",
-      "completion_confirmed": true
+      "at": "2026-11-11T17:49:26.473Z",
+      "raw_reply_head": "{\n\"task_id\": \"T-E2E-001\",\n\"instruction\": \"在一个全新的 Node.js 项目目录中完成以下任务：1. 创建 src/e2e_add.js，使用 CommonJS 模块规范定义 add(a, b) 函数，返回 a + b，并通过 module.exports 导出函数；2. 在项目根目录创建 test_e2e_add.js，使用 Node.js 内置 assert 模块和 require 引入 add 函数；3. 使用 assert.strictEqual 严格断言 add(2, 3) === 5 和 add(-1, 1) === 0；4. 两项断言全部通过后，使用 console.log 输出 TEST PASS；5. 不引入第三方依赖，不修改项目外部文件；6. 完成后检查文件结构，并实际执行 node test_e2e_add.js，确认测试通过。\",\n\"acceptance\": \"项目包含 src/e2e_add.js 和 test_e2e_add.js，执行 node test_e2e_add.js 后两项严格断言全部通过，进程退出码为 ",
+      "assistant_uuid": "c3c88ace-3089-4f22-a309-f48ba701e681",
+      "completion_confirmed": true,
+      "completion_checks": {
+        "generation_observed": true,
+        "generation_ended": true,
+        "final_stop_button_not_visible": true,
+        "tail_is_assistant": true,
+        "dil_uuid_present": true,
+        "uuid_stable": true,
+        "composer_empty": true
+      }
     },
     {
       "name": "plan_json_valid",
-      "at": "2026-11-11T17:27:21.181Z",
+      "at": "2026-11-11T17:49:26.473Z",
       "task_id": "T-E2E-001"
     },
     {
       "name": "zcode_exec",
-      "at": "2026-11-11T17:28:13.435Z",
-      "session_id": "sess_c867a00a-4736-4ffb-9b49-5df78be8567e",
-      "response_head": "已完成：\n\n- 创建 `src/e2e_add.js`，以 CommonJS 导出 `add(a, b)`。\n- 创建 `test_e2e_add.js`，包含两项严格断言。\n- 未引入第三方依赖，未修改其他文件。\n- 实际执行 `node test_e2e_add.js`，测试通过，输出：\n\n```text\nTEST PASS\n```"
+      "at": "2026-11-11T17:49:59.588Z",
+      "session_id": "sess_e30db73b-2a55-4bec-98e4-afed9a854210",
+      "response_head": "已创建：\n- `src/e2e_add.js`：CommonJS 导出 `add(a, b)`。\n- `test_e2e_add.js`：完成两项严格断言。\n\n实际执行 `node test_e2e_add.js`，测试通过，输出：\n\n```text\nTEST PASS\n```"
     },
     {
       "name": "git_collect",
-      "at": "2026-11-11T17:28:13.872Z",
-      "base_sha": "b9f130e981b2a7ef624d7075e28466007cd46aaf",
-      "commit_sha": "747197f8eaf788ca66b253c064dc880259b8ccda",
+      "at": "2026-11-11T17:50:00.061Z",
+      "base_sha": "ff3bde8fd9fe35ea6cc6b619007c846308732432",
+      "commit_sha": "f0b48418fe973a851fed8fbf4be204ad9ee0cdc0",
       "clean": true,
       "diff_lines": 24
     },
     {
       "name": "gpt_review",
-      "at": "2026-11-11T17:29:41.375Z",
+      "at": "2026-11-11T17:51:27.552Z",
       "verdict": {
         "result": "PASS",
         "findings": [],
-        "summary": "代码符合 T-E2E-001 全部实现要求，CommonJS 导出正确，两项 assert.strictEqual 严格断言完整，测试通过后输出 TEST PASS；从 Diff 看未发现问题。"
+        "summary": "Diff 符合 T-E2E-001 全部代码要求，CommonJS 导出正确，两项严格断言完整，测试成功后输出 TEST PASS；未发现代码缺陷，建议通过审查。"
       },
-      "assistant_uuid": "db23e558-98e2-4a9b-9503-3f80ff7d59d1",
-      "completion_confirmed": true
+      "assistant_uuid": "e0ea8d8e-c08a-4eb9-9dd9-7ac9b42ac045",
+      "completion_confirmed": true,
+      "completion_checks": {
+        "generation_observed": true,
+        "generation_ended": true,
+        "final_stop_button_not_visible": true,
+        "tail_is_assistant": true,
+        "dil_uuid_present": true,
+        "uuid_stable": true,
+        "composer_empty": true
+      }
     }
   ],
-  "finished_at": "2026-11-11T17:29:41.975Z",
+  "finished_at": "2026-11-11T17:51:28.186Z",
   "acceptance": {
     "plan_json_valid": true,
     "plan_generation_confirmed": true,
@@ -58,18 +76,18 @@
   "e2e_loop_pass": true,
   "task": {
     "task_id": "T-E2E-001",
-    "instruction": "在一个全新的 Node.js 项目目录中完成以下开发任务：1. 创建 src/e2e_add.js，使用 CommonJS 模块规范定义并导出 add(a, b) 函数，函数返回 a + b；2. 在项目根目录创建 test_e2e_add.js，使用 Node.js 内置 assert 模块，通过 require 引入 add 函数；3. 使用 assert.strictEqual 严格断言 add(2, 3) === 5 和 add(-1, 1) === 0；4. 两项断言全部通过后，使用 console.log 输出 TEST PASS；5. 不引入第三方依赖，不修改项目外部文件；6. 完成后检查文件结构，并实际执行 node test_e2e_add.js，确认测试通过。",
-    "acceptance": "项目包含 src/e2e_add.js 和 test_e2e_add.js 两个指定文件，执行 node test_e2e_add.js 后两项严格断言全部通过且控制台输出 TEST PASS。"
+    "instruction": "在一个全新的 Node.js 项目目录中完成以下任务：1. 创建 src/e2e_add.js，使用 CommonJS 模块规范定义 add(a, b) 函数，返回 a + b，并通过 module.exports 导出函数；2. 在项目根目录创建 test_e2e_add.js，使用 Node.js 内置 assert 模块和 require 引入 add 函数；3. 使用 assert.strictEqual 严格断言 add(2, 3) === 5 和 add(-1, 1) === 0；4. 两项断言全部通过后，使用 console.log 输出 TEST PASS；5. 不引入第三方依赖，不修改项目外部文件；6. 完成后检查文件结构，并实际执行 node test_e2e_add.js，确认测试通过。",
+    "acceptance": "项目包含 src/e2e_add.js 和 test_e2e_add.js，执行 node test_e2e_add.js 后两项严格断言全部通过，进程退出码为 0，控制台输出 TEST PASS。"
   },
   "git": {
-    "base_sha": "b9f130e981b2a7ef624d7075e28466007cd46aaf",
-    "commit_sha": "747197f8eaf788ca66b253c064dc880259b8ccda",
+    "base_sha": "ff3bde8fd9fe35ea6cc6b619007c846308732432",
+    "commit_sha": "f0b48418fe973a851fed8fbf4be204ad9ee0cdc0",
     "branch": "feature/AIEO-E2E-001",
     "clean": true
   },
   "review": {
     "result": "PASS",
     "findings": [],
-    "summary": "代码符合 T-E2E-001 全部实现要求，CommonJS 导出正确，两项 assert.strictEqual 严格断言完整，测试通过后输出 TEST PASS；从 Diff 看未发现问题。"
+    "summary": "Diff 符合 T-E2E-001 全部代码要求，CommonJS 导出正确，两项严格断言完整，测试成功后输出 TEST PASS；未发现代码缺陷，建议通过审查。"
   }
 }

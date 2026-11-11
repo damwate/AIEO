@@ -1,0 +1,7 @@
+[PASS] 1 正常生成结束 — tracker={observed:true,ended:true} confirmed=true, checks={"generation_observed":true,"generation_ended":true,"final_stop_button_not_visible":true,"tail_is_assistant":true,"dil_uuid_present":true,"uuid_stable":true,"composer_empty":true}
+[PASS] 2 等待300秒仍未结束 — 抛 GENERATION_TIMEOUT，轮询 150 次后按 deadline 终止，exit 路径=1
+[PASS] 3 最终停止按钮仍可见 — 抛 COMPLETION_NOT_CONFIRMED，未满足项=[final_stop_button_not_visible]
+[PASS] 4 assistant UUID 不稳定 — 抛 COMPLETION_NOT_CONFIRMED，uuid_stable=false
+[PASS] 5 Composer 非空 — 抛 COMPLETION_NOT_CONFIRMED，composer_empty=false
+[PASS] 6 从未观察到生成状态（everGenerating 硬编码问题的根修验证） — confirmed=false，generation_observed/ended=false 被正确拒绝
+JUDGE TESTS: ALL PASS

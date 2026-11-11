@@ -16,6 +16,7 @@ import { spawn, execFile } from "node:child_process";
 import { existsSync, mkdirSync, writeFileSync, appendFileSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { createGenerationTracker, waitForGenerationEnd, finalizeCompletion } from "./completion_judge.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const AIEO_ROOT = join(__dirname, "..", "..");
@@ -178,29 +179,38 @@ async function sendAndCollect(page, text, label) {
   if (!(tailOk && stopOk)) throw new Error(`[${label}] 发送双验未通过（tail=${tailOk} stop=${stopOk}），UNCERTAIN，不重发`);
   log(`[${label}] 发送双验通过`);
   await shot(page, `e2e-sent-${label}.png`);
-  let everGenerating = true;
-  const t1 = Date.now();
-  while (Date.now() - t1 < 300000) {
-    const gen = await stopButtonVisible(page);
-    if (gen) everGenerating = true;
-    if (everGenerating && !gen) break;
-    await page.waitForTimeout(2000);
-  }
+
+  // 生成等待：真实观察生成状态（R2 修复——不再硬编码 everGenerating=true）
+  // tracker 以发送双验的 stopOk 为初始 observed（该阶段已确认停止按钮出现），
+  // 随后由 waitForGenerationEnd 持续观察"可见→不可见"翻转；300 秒未结束即抛 GENERATION_TIMEOUT（exit 1）。
+  const tracker = await waitForGenerationEnd(() => stopButtonVisible(page), {
+    deadlineMs: 300000,
+    intervalMs: 2000,
+    tracker: createGenerationTracker({ initialObserved: stopOk }),
+  });
+  log(`[${label}] 生成状态跟踪: observed=${tracker.generationObserved} ended=${tracker.generationEnded}`);
   await page.waitForTimeout(CONFIRM_WINDOW_MS);
+
+  // 最终判定（R2 修复）：确认窗后必须复查停止按钮；6 项条件全部满足才算完成
+  const finalStopVisible = await stopButtonVisible(page);
   const tailAfter = await readTailUnit(page);
   await page.waitForTimeout(3000);
   const tailAgain = await readTailUnit(page);
   const composerEmpty = ((await c.innerText().catch(() => "x")) || "").trim() === "";
-  // 生成态真正结束的判定：尾部为 assistant + DIL UUID 两次读取稳定 + Composer 空
-  const completionConfirmed = tailAfter?.role === "assistant" && !!tailAfter?.assistantUuid &&
-    tailAfter.assistantUuid === tailAgain?.assistantUuid && composerEmpty;
-  if (!completionConfirmed) throw new Error(`[${label}] 生成态未真正结束: ${JSON.stringify({ tailAfter, composerEmpty })}`);
+  const { confirmed: completionConfirmed, checks: completionChecks } = finalizeCompletion({
+    tracker,
+    finalStopVisible,
+    tailAfter,
+    tailAgain,
+    composerEmpty,
+  });
+  log(`[${label}] 完成判定6项: ${JSON.stringify(completionChecks)}`);
   const marker = text.replace(/\s+/g, "").slice(0, 18);
   const units = (await readReplyAfterOwnMessage(page, marker)) || [];
   const reply = units.map((u) => u.text).join("\n").trim();
   log(`[${label}] COMPLETED（生成态确认结束），回复 ${reply.length} 字符`);
   await shot(page, `e2e-reply-${label}.png`);
-  return { reply, assistant_uuid: tailAfter.assistantUuid, baseline, completion_confirmed: completionConfirmed };
+  return { reply, assistant_uuid: tailAfter.assistantUuid, baseline, completion_confirmed: completionConfirmed, completion_checks: completionChecks };
 }
 
 // ---------- 外部进程工具 ----------
@@ -249,7 +259,7 @@ async function main() {
     "需求：在一个全新的 Node.js 目录中实现 src/e2e_add.js，导出函数 add(a,b) 返回 a+b；并创建 test_e2e_add.js，用 assert 严格断言 add(2,3)===5 且 add(-1,1)===0，node 直接运行打印 TEST PASS。";
   const plan = await sendAndCollect(page, planAsk, "plan");
   log(`GPT 规划回复（前 200 字）: ${plan.reply.slice(0, 200)}`);
-  step("gpt_plan", { raw_reply_head: plan.reply.slice(0, 500), assistant_uuid: plan.assistant_uuid, completion_confirmed: plan.completion_confirmed });
+  step("gpt_plan", { raw_reply_head: plan.reply.slice(0, 500), assistant_uuid: plan.assistant_uuid, completion_confirmed: plan.completion_confirmed, completion_checks: plan.completion_checks });
 
   // 2. 提取 JSON（容忍 ```json 围栏）
   const m = plan.reply.match(/\{[\s\S]*\}/);
@@ -302,7 +312,7 @@ async function main() {
   if (!rm) throw new Error("GPT 审查回复中未找到 JSON，停止");
   let verdict;
   try { verdict = JSON.parse(rm[0]); } catch (e) { throw new Error(`审查 JSON 解析失败: ${e.message}; 原文头: ${rm[0].slice(0, 200)}`); }
-  step("gpt_review", { verdict, assistant_uuid: review.assistant_uuid, completion_confirmed: review.completion_confirmed });
+  step("gpt_review", { verdict, assistant_uuid: review.assistant_uuid, completion_confirmed: review.completion_confirmed, completion_checks: review.completion_checks });
   log(`审查结论: ${verdict.result} — ${verdict.summary || ""}`);
 
   await browser.close().catch(() => {});

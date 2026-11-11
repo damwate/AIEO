@@ -1,0 +1,38 @@
+{
+  "test_target": "phase0/e2e-poc/completion_judge.mjs（生产判定函数，sendAndCollect 同源）",
+  "method": "依赖注入（fake clock / isGenVisible 序列）黑盒驱动真实代码；浏览器异常注入未在真实 Chrome 上模拟，见报告未实测声明",
+  "executed_at": "2026-11-11T17:47:46.773Z",
+  "all_pass": true,
+  "scenarios": [
+    {
+      "name": "1 正常生成结束",
+      "pass": true,
+      "detail": "tracker={observed:true,ended:true} confirmed=true, checks={\"generation_observed\":true,\"generation_ended\":true,\"final_stop_button_not_visible\":true,\"tail_is_assistant\":true,\"dil_uuid_present\":true,\"uuid_stable\":true,\"composer_empty\":true}"
+    },
+    {
+      "name": "2 等待300秒仍未结束",
+      "pass": true,
+      "detail": "抛 GENERATION_TIMEOUT，轮询 150 次后按 deadline 终止，exit 路径=1"
+    },
+    {
+      "name": "3 最终停止按钮仍可见",
+      "pass": true,
+      "detail": "抛 COMPLETION_NOT_CONFIRMED，未满足项=[final_stop_button_not_visible]"
+    },
+    {
+      "name": "4 assistant UUID 不稳定",
+      "pass": true,
+      "detail": "抛 COMPLETION_NOT_CONFIRMED，uuid_stable=false"
+    },
+    {
+      "name": "5 Composer 非空",
+      "pass": true,
+      "detail": "抛 COMPLETION_NOT_CONFIRMED，composer_empty=false"
+    },
+    {
+      "name": "6 从未观察到生成状态（everGenerating 硬编码问题的根修验证）",
+      "pass": true,
+      "detail": "confirmed=false，generation_observed/ended=false 被正确拒绝"
+    }
+  ]
+}
