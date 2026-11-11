@@ -1,25 +1,36 @@
-// AIEO Phase 0 返工 R6 — 共享 ChatGPT 会话跨进程独占锁 v2
+// AIEO Phase 0 返工 R7 — 共享 ChatGPT 会话跨进程独占锁 v3
 //
-// 回应第六轮审查 MAJOR（v1 的两个竞态）：
-//   竞态1（初始化窗口）：v1 先 wx 建空文件、再按"路径"写内容——窗口内他人读到空文件
-//          会误判 stale 并 unlink，导致双重持锁。
-//   → v2 修复：内容**先在内存组装**，openSync(wx) 后立即经**同一 fd writeSync 写入**再关闭；
-//          极小残留窗口内的空/损坏锁对竞争者 **fail-closed**（LOCK_CORRUPT_OR_INITIALIZING），
-//          绝不删除（按审查要求）。
-//   竞态2（stale 回收）：v1 "读 PID→unlink" 非原子，多个回收者可删掉他人新建的锁。
-//   → v2 修复：意图票据（intent ticket）仲裁——回收候选者先原子创建自己的 intent 文件
-//          （wx），仅当不存在"更早创建且进程仍存活"的其他 intent 时才成为唯一回收者；
-//          回收者在 unlink 前**重读锁内容并二次验证 PID 仍死亡**；非回收者一律 fail-closed
-//          拒绝。最终持锁只能由 wx 原子创建决定——两个进程不可能同时进入临界区。
+// 回应第七轮审查 MAJOR（v2 残留两竞态）：
+//   竞态1：intent 文件自身有"wx 建空文件→writeSync"窗口，listIntents 遇解析失败静默忽略
+//          → 双回收者。→ v3 **彻底取消 intent/选举机制**。
+//   竞态2："重读→unlink" TOCTOU：二次验证与 unlink 之间他人可建新锁，迟到回收者按路径
+//          unlink 会删除新锁。→ v3 **回收不再对锁路径执行 unlink**，改为 rename 原子换出。
 //
-// 失败语义（fail-closed 优先）：任何无法证明安全的情形都抛错拒绝执行，绝不删除可疑锁。
+// v3 回收协议（rename 换出 + 世代验证）：
+//   1. 读锁内容 S（含创建时唯一 rand）→ PID 已死才进入回收；
+//   2. renameSync(lockPath → quarantine-<S.rand>-<myRand>.tmp)：原子；
+//      - 成功：锁路径上"我读到的那个世代"被整体移走（不是按内容删，是按路径整体迁移）；
+//      - ENOENT：他人已换出/释放 → 重试循环；
+//   3. 验证 quarantine 内容 === S（世代校验）。协议内不可能不匹配（锁内容从不原地修改，
+//      只能被整体换出）——若不匹配即外部篡改，fail-closed 报 LOCK_QUARANTINE_MISMATCH；
+//   4. 回到 wx 原子创建（唯一持锁裁决点，两进程不可能同时进入临界区）。
+//
+// 不变量：unlink 只发生在 (a) 持有者 release（校验 pid+rand 归属）、(b) 持有者对"自己换出的
+// quarantine 文件"的清理。任何进程都不会对"锁路径"执行无条件 unlink——迟到回收者面对的
+// 要么是 ENOENT（旧锁已走），要么是 LIVE 内容（冲突拒绝），不可能删除新锁。
+//
+// 失败语义：空/损坏锁 fail-closed（LOCK_CORRUPT_OR_INITIALIZING，有限内重试后仍失败则抛出，
+// 绝不删除）；世代不匹配 fail-closed（LOCK_QUARANTINE_MISMATCH）。
 // 边界：本锁保证自动化实例间互斥；人工在共享窗口的并发操作由结构性判定兜底（如实声明）。
 
-import { openSync, writeSync, closeSync, readFileSync, writeFileSync, unlinkSync, mkdirSync, existsSync, readdirSync } from "node:fs";
+import { openSync, writeSync, closeSync, readFileSync, unlinkSync, mkdirSync, renameSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
 export const LOCK_PATH_DEFAULT = join(dirname(fileURLToPath(import.meta.url)), "..", "..", "runtime", "locks", "gpt-session.lock");
+const QUARANTINE_PREFIX = "quarantine-";
+const MAX_ATTEMPTS = 5;
+const CORRUPT_RETRY_MS = 150;
 
 function pidAlive(pid) {
   try {
@@ -34,9 +45,9 @@ function randTag() {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`;
 }
 
-/** 通过 wx 句柄原子创建并经同一 fd 写入完整内容（消除初始化窗口的主要内容竞争） */
+/** wx 原子创建并经同一 fd 写入完整内容 */
 function createExclusiveWithContent(path, content) {
-  const fd = openSync(path, "wx"); // EEXIST → 他人抢先（原子裁决点）
+  const fd = openSync(path, "wx");
   try {
     writeSync(fd, content);
   } finally {
@@ -44,7 +55,7 @@ function createExclusiveWithContent(path, content) {
   }
 }
 
-/** 读取并解析锁文件；空/损坏返回 null（调用方必须 fail-closed） */
+/** 读取并解析锁文件；空/损坏返回 null */
 function readLockFile(path) {
   try {
     const raw = readFileSync(path, "utf8");
@@ -53,59 +64,40 @@ function readLockFile(path) {
     if (!parsed || typeof parsed.pid !== "number") return null;
     return parsed;
   } catch {
-    return null; // 读取中消失/损坏
+    return null;
   }
 }
 
-function intentDirOf(lockPath) {
-  return join(dirname(lockPath), "intents");
-}
-
-/** 列出当前所有 intent（文件名含随机数避免覆盖），解析失败的忽略 */
-function listIntents(lockPath) {
-  const dir = intentDirOf(lockPath);
-  if (!existsSync(dir)) return [];
-  return readdirSync(dir)
-    .filter((f) => f.startsWith("intent-") && f.endsWith(".json"))
-    .map((f) => {
-      try {
-        const j = JSON.parse(readFileSync(join(dir, f), "utf8"));
-        return { file: f, ...j };
-      } catch {
-        return null;
-      }
-    })
-    .filter(Boolean);
-}
-
-function isLowerOrder(a, b) {
-  // 越早创建越优先；同刻比 PID，保证全序
-  if (a.born_at !== b.born_at) return a.born_at < b.born_at;
-  return a.pid < b.pid;
-}
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 /**
- * 获取会话独占锁（v2 协议）。
+ * 获取会话独占锁（v3）。
  * @returns {{lockPath: string, info: object, release: () => void}}
- * @throws Error(code=SESSION_LOCK_CONFLICT | LOCK_CORRUPT_OR_INITIALIZING) —— 均为 fail-closed，调用方必须拒绝执行
+ * @throws Error(code=SESSION_LOCK_CONFLICT | LOCK_CORRUPT_OR_INITIALIZING | LOCK_QUARANTINE_MISMATCH)
  */
 export function acquireSessionLock(opts = {}) {
   const lockPath = opts.lockPath ?? LOCK_PATH_DEFAULT;
   mkdirSync(dirname(lockPath), { recursive: true });
-  const MAX_ATTEMPTS = 3;
 
+  let myQuarantine = null; // 本进程换出的 stale 世代隔离文件（成功持锁后清理）
   for (let attempt = 1; attempt <= MAX_ATTEMPTS; attempt++) {
-    // ---- 第 1 步：wx 原子创建（唯一持锁裁决点），内容经同一 fd 写入 ----
     const info = { pid: process.pid, holder: opts.holder ?? "unknown", born_at: new Date().toISOString(), rand: randTag() };
+
+    // ---- 第 1 步：wx 原子创建（唯一持锁裁决点），内容经同一 fd 写入 ----
     try {
       createExclusiveWithContent(lockPath, JSON.stringify(info, null, 2));
+      // 成功持锁：清理本进程换出的隔离文件（名字含唯一 myRand，仅本进程会触碰）
+      if (myQuarantine) {
+        try { unlinkSync(myQuarantine); } catch { /* 已不存在 */ }
+        myQuarantine = null;
+      }
       return {
         lockPath,
         info,
         release() {
           try {
             const cur = readLockFile(lockPath);
-            if (cur && cur.pid === process.pid && cur.rand === info.rand) unlinkSync(lockPath); // 只释放自己
+            if (cur && cur.pid === process.pid && cur.rand === info.rand) unlinkSync(lockPath);
           } catch {
             try { unlinkSync(lockPath); } catch { /* 已不存在 */ }
           }
@@ -115,15 +107,22 @@ export function acquireSessionLock(opts = {}) {
       if (e.code !== "EEXIST") throw e;
     }
 
-    // ---- 第 2 步：锁已被占——读取并裁决（空/损坏 → fail-closed，绝不删除） ----
-    const cur = readLockFile(lockPath);
-    if (!cur) {
-      const err = new Error(
-        `LOCK_CORRUPT_OR_INITIALIZING: 锁文件为空或损坏（可能正被其他进程初始化，或遭外部破坏）。按 fail-closed 原则拒绝执行，未删除任何文件。`
-      );
-      err.code = "LOCK_CORRUPT_OR_INITIALIZING";
-      throw err;
+    // ---- 第 2 步：读取并裁决。空/损坏 → 有限重试后 fail-closed，绝不删除 ----
+    let cur = null;
+    let corruptStrikes = 0;
+    while (!(cur = readLockFile(lockPath))) {
+      corruptStrikes++;
+      if (corruptStrikes >= 3) {
+        const err = new Error(
+          `LOCK_CORRUPT_OR_INITIALIZING: 锁文件为空或损坏（可能正被其他进程初始化，或遭外部破坏）。按 fail-closed 原则拒绝执行，未删除任何文件。`
+        );
+        err.code = "LOCK_CORRUPT_OR_INITIALIZING";
+        throw err;
+      }
+      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, CORRUPT_RETRY_MS); // 同步等待
     }
+
+    // ---- 第 3 步：存活持有者 → 冲突拒绝 ----
     if (pidAlive(cur.pid)) {
       const err = new Error(
         `SESSION_LOCK_CONFLICT: 会话锁被存活进程持有 pid=${cur.pid} holder=${cur.holder || "?"} born_at=${cur.born_at}。同一 ChatGPT 会话同一时刻只允许一个在途任务，本次拒绝执行。`
@@ -133,48 +132,40 @@ export function acquireSessionLock(opts = {}) {
       throw err;
     }
 
-    // ---- 第 3 步：stale 锁（PID 已死）→ 意图票据仲裁，仅唯一回收者可行动 ----
-    mkdirSync(intentDirOf(lockPath), { recursive: true });
-    const myIntent = { pid: process.pid, born_at: new Date().toISOString(), rand: randTag(), holder: opts.holder ?? "unknown" };
-    const myIntentFile = join(intentDirOf(lockPath), `intent-${process.pid}-${info.rand}-${attempt}.json`);
-    createExclusiveWithContent(myIntentFile, JSON.stringify(myIntent, null, 2)); // 原子登记
+    // ---- 第 4 步：stale → rename 原子换出 + 世代验证（不对锁路径 unlink） ----
+    const myRand = randTag();
+    const quarantinePath = join(dirname(lockPath), `${QUARANTINE_PREFIX}${cur.rand}-${myRand}.tmp`);
+    myQuarantine = quarantinePath;
     try {
-      const rivals = listIntents(lockPath).filter((i) => i.pid !== process.pid && pidAlive(i.pid));
-      const lower = rivals.find((i) => isLowerOrder(i, myIntent));
-      if (lower) {
-        const err = new Error(
-          `SESSION_LOCK_CONFLICT: 检测到 stale 锁，且回收权归属更早的存活竞争者 pid=${lower.pid}。本次拒绝执行（fail-closed）。`
-        );
-        err.code = "SESSION_LOCK_CONFLICT";
-        err.holder = lower;
-        throw err;
-      }
-      // 我是唯一回收者：unlink 前重读锁，二次验证 PID 仍死亡
-      const again = readLockFile(lockPath);
-      if (!again || pidAlive(again.pid)) {
-        // 锁已消失或被存活者重建：回到第 1 步重试（有限次）
-        continue;
-      }
-      try { unlinkSync(lockPath); } catch { /* 已消失，进入重试 */ }
-      // 清理死进程遗留的 intent（含本次目标）
-      for (const i of listIntents(lockPath)) {
-        if (!pidAlive(i.pid)) {
-          try { unlinkSync(join(intentDirOf(lockPath), i.file)); } catch { /* 竞争删除无碍 */ }
-        }
-      }
-      // 回到循环第 1 步：wx 创建成为唯一持锁裁决
-    } finally {
-      // 无论结果如何，清理自己的 intent（若有）
-      try { unlinkSync(myIntentFile); } catch { /* 已被回收或不存在 */ }
+      renameSyncAtomic(lockPath, quarantinePath); // ENOENT → 他人已换出/释放
+    } catch (e) {
+      if (e.code === "ENOENT") continue; // 锁已消失，重试
+      throw e;
     }
+    // 世代校验：换出的必须是我读到的那个世代（协议内必然成立；不匹配=外部篡改）
+    const moved = readLockFile(quarantinePath);
+    if (!moved || moved.rand !== cur.rand || moved.pid !== cur.pid) {
+      const err = new Error(
+        `LOCK_QUARANTINE_MISMATCH: 换出的锁内容与验证世代不一致（疑似外部篡改或协议外写入）。已保留现场 quarantine=${quarantinePath}，拒绝继续。`
+      );
+      err.code = "LOCK_QUARANTINE_MISMATCH";
+      err.quarantine = quarantinePath;
+      throw err;
+    }
+    // 换出成功 → lockPath 已不存在 → 回到第 1 步（与其他进程公平竞争 wx 创建）
   }
 
-  const err = new Error(`SESSION_LOCK_CONFLICT: ${MAX_ATTEMPTS} 次尝试未能获取会话锁（持续竞争/异常状态），本次拒绝执行。`);
+  const err = new Error(`SESSION_LOCK_CONFLICT: ${MAX_ATTEMPTS} 次尝试未能获取会话锁，本次拒绝执行。`);
   err.code = "SESSION_LOCK_CONFLICT";
   throw err;
 }
 
-/** 便捷封装：withSessionLock(async () => {...})，finally 自动释放。 */
+/** 同目录原子 rename（同卷保证原子；目标名含唯一随机数，绝不覆盖他人文件） */
+function renameSyncAtomic(from, to) {
+  renameSync(from, to);
+}
+
+/** 便捷封装 */
 export async function withSessionLock(fn, opts = {}) {
   const lock = acquireSessionLock(opts);
   try {

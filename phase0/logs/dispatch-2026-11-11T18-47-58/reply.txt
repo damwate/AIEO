@@ -1,0 +1,10 @@
+{
+"result": "REWORK",
+"findings": [
+{
+"severity": "MAJOR",
+"description": "R6 仍存在 stale 回收的并发竞态，意图票据仲裁并未构成可靠的唯一回收者选举。`createExclusiveWithContent()` 虽然改为同一 fd 写入，但 intent 文件仍然经历“wx 创建空文件→writeSync 写入内容”的短暂窗口；`listIntents()` 遇到 JSON 解析失败时直接返回 null 并忽略该票据，而不是 fail-closed。可复现的危险交错：进程 A 创建 intent 文件但尚未写完；进程 B 创建并写完自己的 intent，扫描时忽略 A 的空文件，因而认为自己没有更早的竞争者；A 随后写完并扫描，看到 B 的票据较晚，也认为自己有回收权。两者均可能通过二次 PID 检查并执行 unlink。更危险的是，二次读取与 unlink 之间仍不是原子操作：A unlink 旧锁后，另一个进程可能成功 wx 创建新锁，B 随后按路径 unlink 就可能删除这个新锁。现有 8 项测试没有强制暂停在 intent 创建与写入之间，也没有验证两个回收者同时通过仲裁、二次检查与 unlink 交错的情形，因此不能证明 stale 回收安全。建议将 intent 的初始化状态纳入严格协议：未完成或损坏的 intent 必须阻止回收；并使用不会对路径执行无条件 unlink 的原子所有权/替换机制，确保回收者只能删除自己确认过的那一代锁。增加可控屏障的多进程测试，覆盖上述交错及“旧锁被新锁替换后，迟到回收者不得删除新锁”的反向场景。"
+}
+],
+"summary": "已审查指定 commit 的锁 v2、e2e_orchestrate、gpt_dispatch、8 项多进程测试和 run8 证据；fd 写入及空锁 fail-closed 已改善初始化安全，但 intent 仲裁忽略未完成票据且 stale unlink 仍有 TOCTOU 竞态，故并发独占保证尚未成立，本轮不通过。"
+}
