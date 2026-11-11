@@ -17,6 +17,7 @@ import { existsSync, mkdirSync, writeFileSync, appendFileSync, readFileSync } fr
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createGenerationTracker, waitForGenerationEnd, finalizeCompletion, verifySendAcceptance } from "./completion_judge.mjs";
+import { acquireSessionLock } from "./session_lock.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const AIEO_ROOT = join(__dirname, "..", "..");
@@ -240,6 +241,19 @@ const evidence = { started_at: new Date().toISOString(), steps: [] };
 function step(name, data) { evidence.steps.push({ name, at: new Date().toISOString(), ...data }); }
 
 async function main() {
+  // R5：会话级跨进程独占锁——连接/操作共享 Chrome 之前获取，持有覆盖 pre-send 检查、
+  // 发送、完整回复收集；锁被存活进程持有时 SESSION_LOCK_CONFLICT 拒绝执行（fail-closed）。
+  const lock = acquireSessionLock({ holder: "e2e_orchestrate" });
+  log(`会话锁已获取 pid=${process.pid} lock=${lock.lockPath}`);
+  try {
+    return await mainLocked(lock);
+  } finally {
+    lock.release();
+    log("会话锁已释放");
+  }
+}
+
+async function mainLocked(lock) {
   log("=== POC-05 端到端闭环开始 ===");
   if (!existsSync(SESSION_JSON)) throw new Error("缺少会话配置，请先完成 POC-03 setup");
   const { conversation_url: targetUrl } = JSON.parse(readFileSync(SESSION_JSON, "utf8"));
@@ -353,15 +367,17 @@ async function main() {
   log(acceptance.all
     ? `=== POC-05 端到端闭环 PASS ===（证据: ${EVIDENCE_JSON}）`
     : `=== POC-05 验收未全部满足（e2e_loop_pass=false），如实落盘 ===`);
-  process.exit(acceptance.all ? 0 : 1);
+  return acceptance.all ? 0 : 1;
 }
 
-main().catch((e) => {
-  evidence.error = String(e.message || e);
-  evidence.e2e_loop_pass = false;
-  evidence.finished_at = new Date().toISOString();
-  writeFileSync(EVIDENCE_JSON, JSON.stringify(evidence, null, 2), "utf8");
-  log(`致命错误: ${e.message}`);
-  console.error(e);
-  process.exit(1);
-});
+main()
+  .then((code) => process.exit(code))
+  .catch((e) => {
+    evidence.error = String(e.message || e);
+    evidence.e2e_loop_pass = false;
+    evidence.finished_at = new Date().toISOString();
+    writeFileSync(EVIDENCE_JSON, JSON.stringify(evidence, null, 2), "utf8");
+    log(`致命错误: ${e.message}`);
+    console.error(e);
+    process.exit(1);
+  });

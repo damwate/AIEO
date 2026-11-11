@@ -19,6 +19,7 @@ import { spawn, execFile } from "node:child_process";
 import { existsSync, mkdirSync, writeFileSync, readFileSync, appendFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { acquireSessionLock } from "../e2e-poc/session_lock.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const AIEO_ROOT = join(__dirname, "..", "..");
@@ -226,6 +227,18 @@ async function sendAndCollect(page, text, label) {
 
 // ---------- 主流程 ----------
 async function main() {
+  // R5：会话级跨进程独占锁（与 e2e_orchestrate 同一把锁，互斥自动化实例）
+  const lock = acquireSessionLock({ holder: "gpt_dispatch" });
+  log(`会话锁已获取 pid=${process.pid}`);
+  try {
+    await mainLocked();
+  } finally {
+    lock.release();
+    log("会话锁已释放");
+  }
+}
+
+async function mainLocked() {
   log(`=== GPT 派单（${newSession ? "新建会话" : "已有会话"}，消息 ${msgBytes} 字节）===`);
   writeFileSync(join(EV_DIR, "request.txt"), message, "utf8");
 
