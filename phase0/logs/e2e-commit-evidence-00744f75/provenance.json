@@ -1,0 +1,18 @@
+{
+  "repo_path": "runtime/e2e-repo（gitignored 一次性仓库，此处为存档副本）",
+  "base_sha": "607e6a6f8d53b48a46f75db320240de58b2f1fb2",
+  "commit_sha": "00744f75387802606f5a213d4d66b83dfed0bebf",
+  "branch": "feature/AIEO-E2E-001",
+  "source": "Phase 0 第一次端到端运行（run1）",
+  "copied_at": "2026-11-12",
+  "files": [
+    "e2e_add.js",
+    "test_e2e_add.js",
+    "diff.patch",
+    "commit-info.txt",
+    "SHA256SUMS.txt",
+    "e2e-evidence.run1.json",
+    "e2e-run.run1.log"
+  ],
+  "note": "审查者可用 diff.patch 与两份源文件独立核验该 Commit 的实际代码"
+}

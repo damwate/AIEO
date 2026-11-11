@@ -35,3 +35,62 @@ TEST PASS
 }
 [2026-11-11T16:58:05.916Z] 审查结论: PASS — 代码符合 T-E2E-001 的实现要求，使用 CommonJS 正确导出 add 函数，测试采用 assert.strictEqual 严格断言两组用例，并在全部通过后输出 TEST PASS。
 [2026-11-11T16:58:07.310Z] === POC-05 端到端闭环 PASS ===（证据: D:\AIEO\phase0\logs\e2e-evidence.json）
+[2026-11-11T17:24:39.579Z] === POC-05 端到端闭环开始 ===
+[2026-11-11T17:24:39.989Z] 致命错误: Command failed: powershell -NoProfile -Command Remove-Item -Recurse -Force 'D:\AIEO\runtime\e2e-repo'
+Remove-Item : �޷�ɾ���� D:\AIEO\runtime\e2e-repo: �ļ���D:\AIEO\runtime\e2e-repo��������һ����ʹ�ã���˸ý����޷����ʴ�
+�ļ���
+����λ�� ��:1 �ַ�: 1
++ Remove-Item -Recurse -Force 'D:\AIEO\runtime\e2e-repo'
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : WriteError: (D:\AIEO\runtime\e2e-repo:DirectoryInfo) [Remove-Item], IOException
+    + FullyQualifiedErrorId : RemoveFileSystemItemIOError,Microsoft.PowerShell.Commands.RemoveItemCommand
+
+[2026-11-11T17:25:10.666Z] === POC-05 端到端闭环开始 ===
+[2026-11-11T17:25:11.023Z] 致命错误: Command failed: powershell -NoProfile -Command Remove-Item -Recurse -Force 'D:\AIEO\runtime\e2e-repo'
+Remove-Item : �޷�ɾ���� D:\AIEO\runtime\e2e-repo: �ļ���D:\AIEO\runtime\e2e-repo��������һ����ʹ�ã���˸ý����޷����ʴ�
+�ļ���
+����λ�� ��:1 �ַ�: 1
++ Remove-Item -Recurse -Force 'D:\AIEO\runtime\e2e-repo'
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : WriteError: (D:\AIEO\runtime\e2e-repo:DirectoryInfo) [Remove-Item], IOException
+    + FullyQualifiedErrorId : RemoveFileSystemItemIOError,Microsoft.PowerShell.Commands.RemoveItemCommand
+
+[2026-11-11T17:25:46.339Z] === POC-05 端到端闭环开始 ===
+[2026-11-11T17:25:46.961Z] e2e 仓库基线: b9f130e981b2a7ef624d7075e28466007cd46aaf
+[2026-11-11T17:25:50.044Z] Chrome 已启动（pid=20944）
+[2026-11-11T17:25:53.801Z] 页面就绪
+[2026-11-11T17:25:53.977Z] [plan] 基线尾部: role=assistant uuid=undefined
+[2026-11-11T17:25:55.611Z] [plan] 发送双验通过
+[2026-11-11T17:25:56.938Z] 截图: e2e-sent-plan.png
+[2026-11-11T17:27:21.041Z] [plan] COMPLETED（生成态确认结束），回复 504 字符
+[2026-11-11T17:27:21.179Z] 截图: e2e-reply-plan.png
+[2026-11-11T17:27:21.181Z] GPT 规划回复（前 200 字）: {
+"task_id": "T-E2E-001",
+"instruction": "在一个全新的 Node.js 项目目录中完成以下开发任务：1. 创建 src/e2e_add.js，使用 CommonJS 模块规范定义并导出 add(a, b) 函数，函数返回 a + b；2. 在项目根目录创建 test_e2e_add.js，使用 Node.js 内置 assert 模块，通过 require
+[2026-11-11T17:27:21.181Z] 任务 JSON 有效: task_id=T-E2E-001
+[2026-11-11T17:27:21.181Z] 外部触发 ZCode（CLI --prompt）...
+[2026-11-11T17:28:13.434Z] ZCode 会话完成: sess_c867a00a-4736-4ffb-9b49-5df78be8567e 状态=idle
+[2026-11-11T17:28:13.435Z] ZCode 返回（前 300 字）: 已完成：
+
+- 创建 `src/e2e_add.js`，以 CommonJS 导出 `add(a, b)`。
+- 创建 `test_e2e_add.js`，包含两项严格断言。
+- 未引入第三方依赖，未修改其他文件。
+- 实际执行 `node test_e2e_add.js`，测试通过，输出：
+
+```text
+TEST PASS
+```
+[2026-11-11T17:28:13.872Z] Git 提交: 747197f8eaf788ca66b253c064dc880259b8ccda（干净=true，diff 24 行）
+[2026-11-11T17:28:13.874Z] [review] 基线尾部: role=assistant uuid=181be645
+[2026-11-11T17:28:14.975Z] [review] 发送双验通过
+[2026-11-11T17:28:15.127Z] 截图: e2e-sent-review.png
+[2026-11-11T17:29:41.241Z] [review] COMPLETED（生成态确认结束），回复 148 字符
+[2026-11-11T17:29:41.375Z] 截图: e2e-reply-review.png
+[2026-11-11T17:29:41.375Z] GPT 审查回复（前 300 字）: {
+"result": "PASS",
+"findings": [],
+"summary": "代码符合 T-E2E-001 全部实现要求，CommonJS 导出正确，两项 assert.strictEqual 严格断言完整，测试通过后输出 TEST PASS；从 Diff 看未发现问题。"
+}
+[2026-11-11T17:29:41.375Z] 审查结论: PASS — 代码符合 T-E2E-001 全部实现要求，CommonJS 导出正确，两项 assert.strictEqual 严格断言完整，测试通过后输出 TEST PASS；从 Diff 看未发现问题。
+[2026-11-11T17:29:41.975Z] 验收条件: {"plan_json_valid":true,"plan_generation_confirmed":true,"zcode_files_present":true,"dev_test_pass":true,"worktree_clean":true,"review_result_strict_pass":true,"review_generation_confirmed":true,"all":true}
+[2026-11-11T17:29:41.975Z] === POC-05 端到端闭环 PASS ===（证据: D:\AIEO\phase0\logs\e2e-evidence.json）

@@ -1,0 +1,4 @@
+=== AFTER 修复（package.json 移除 type:module）===
+$ node test_greet.js
+test_greet: PASS
+REAL_EXIT_CODE=0

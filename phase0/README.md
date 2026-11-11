@@ -47,3 +47,4 @@ node gpt_roundtrip.mjs --run                                  # 之后：自动�
 | POC-05 端到端 | ✅ PASS（全链 6 步） | reports/phase0-final-report.md |
 
 **总体结论：PASS_WITH_CONSTRAINTS** —— 等待 GPT 独立审查后再进入 Phase 1。
+**返工记录：** GPT 首轮审查 REWORK（MAJOR-001/002）已在 `fix/AIEO-PHASE0-REVIEW` 分支修复并重跑验证，见 `reports/rework-2026-11-12.md`。

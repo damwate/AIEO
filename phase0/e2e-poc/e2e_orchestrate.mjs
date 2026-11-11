@@ -191,15 +191,16 @@ async function sendAndCollect(page, text, label) {
   await page.waitForTimeout(3000);
   const tailAgain = await readTailUnit(page);
   const composerEmpty = ((await c.innerText().catch(() => "x")) || "").trim() === "";
-  const ok = tailAfter?.role === "assistant" && !!tailAfter?.assistantUuid &&
-             tailAfter.assistantUuid === tailAgain?.assistantUuid && composerEmpty;
-  if (!ok) throw new Error(`[${label}] 完成判定未通过: ${JSON.stringify({ tailAfter, composerEmpty })}`);
+  // 生成态真正结束的判定：尾部为 assistant + DIL UUID 两次读取稳定 + Composer 空
+  const completionConfirmed = tailAfter?.role === "assistant" && !!tailAfter?.assistantUuid &&
+    tailAfter.assistantUuid === tailAgain?.assistantUuid && composerEmpty;
+  if (!completionConfirmed) throw new Error(`[${label}] 生成态未真正结束: ${JSON.stringify({ tailAfter, composerEmpty })}`);
   const marker = text.replace(/\s+/g, "").slice(0, 18);
   const units = (await readReplyAfterOwnMessage(page, marker)) || [];
   const reply = units.map((u) => u.text).join("\n").trim();
-  log(`[${label}] COMPLETED，回复 ${reply.length} 字符`);
+  log(`[${label}] COMPLETED（生成态确认结束），回复 ${reply.length} 字符`);
   await shot(page, `e2e-reply-${label}.png`);
-  return { reply, assistant_uuid: tailAfter.assistantUuid, baseline };
+  return { reply, assistant_uuid: tailAfter.assistantUuid, baseline, completion_confirmed: completionConfirmed };
 }
 
 // ---------- 外部进程工具 ----------
@@ -248,7 +249,7 @@ async function main() {
     "需求：在一个全新的 Node.js 目录中实现 src/e2e_add.js，导出函数 add(a,b) 返回 a+b；并创建 test_e2e_add.js，用 assert 严格断言 add(2,3)===5 且 add(-1,1)===0，node 直接运行打印 TEST PASS。";
   const plan = await sendAndCollect(page, planAsk, "plan");
   log(`GPT 规划回复（前 200 字）: ${plan.reply.slice(0, 200)}`);
-  step("gpt_plan", { raw_reply_head: plan.reply.slice(0, 500), assistant_uuid: plan.assistant_uuid });
+  step("gpt_plan", { raw_reply_head: plan.reply.slice(0, 500), assistant_uuid: plan.assistant_uuid, completion_confirmed: plan.completion_confirmed });
 
   // 2. 提取 JSON（容忍 ```json 围栏）
   const m = plan.reply.match(/\{[\s\S]*\}/);
@@ -301,20 +302,35 @@ async function main() {
   if (!rm) throw new Error("GPT 审查回复中未找到 JSON，停止");
   let verdict;
   try { verdict = JSON.parse(rm[0]); } catch (e) { throw new Error(`审查 JSON 解析失败: ${e.message}; 原文头: ${rm[0].slice(0, 200)}`); }
-  step("gpt_review", { verdict, assistant_uuid: review.assistant_uuid });
+  step("gpt_review", { verdict, assistant_uuid: review.assistant_uuid, completion_confirmed: review.completion_confirmed });
   log(`审查结论: ${verdict.result} — ${verdict.summary || ""}`);
 
   await browser.close().catch(() => {});
   await killProfileChrome();
 
-  // 6. 汇总
+  // 6. 汇总：e2e_loop_pass 必须由真实验收条件计算（MAJOR-001 修复），不得硬编码
+  const acceptance = {
+    plan_json_valid: !!(task && task.task_id === "T-E2E-001" && typeof task.instruction === "string" && task.instruction.length > 0),
+    plan_generation_confirmed: plan.completion_confirmed === true,
+    zcode_files_present: filesOk === true,
+    dev_test_pass: testPass === true,
+    worktree_clean: statusClean === true,                       // git status --porcelain 非空 → 不通过
+    review_result_strict_pass: verdict.result === "PASS",       // 严格等于 "PASS"，REWORK/BLOCKED 均不通过
+    review_generation_confirmed: review.completion_confirmed === true,
+  };
+  acceptance.all = Object.entries(acceptance).every(([, v]) => v === true);
   evidence.finished_at = new Date().toISOString();
-  evidence.e2e_loop_pass = true;
+  evidence.acceptance = { ...acceptance };
+  evidence.e2e_loop_pass = acceptance.all;                      // 计算值，非声明值
   evidence.task = task;
   evidence.git = { base_sha: baseSha, commit_sha: commitSha, branch: "feature/AIEO-E2E-001", clean: statusClean };
   evidence.review = verdict;
   writeFileSync(EVIDENCE_JSON, JSON.stringify(evidence, null, 2), "utf8");
-  log(`=== POC-05 端到端闭环 PASS ===（证据: ${EVIDENCE_JSON}）`);
+  log(`验收条件: ${JSON.stringify(evidence.acceptance)}`);
+  log(acceptance.all
+    ? `=== POC-05 端到端闭环 PASS ===（证据: ${EVIDENCE_JSON}）`
+    : `=== POC-05 验收未全部满足（e2e_loop_pass=false），如实落盘 ===`);
+  process.exit(acceptance.all ? 0 : 1);
 }
 
 main().catch((e) => {

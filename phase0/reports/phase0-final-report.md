@@ -50,19 +50,22 @@ AIEO MCP Server（stdio，受控工具集）→ ~/.zcode/cli/config.json mcp.ser
 ### 3.3 Git 采集（POC-04）
 `git_collect.py` 演示了状态检查/基线/分支/提交/SHA/Diff/干净检查全链，9/9 PASS，可封装为 AIEO Git Worker。
 
-## 4. 端到端闭环实录（POC-05，总耗时约 3.5 分钟）
+## 4. 端到端闭环实录（POC-05）
 
-| 步骤 | 实测结果 |
-|---|---|
-| 1. AIEO 脚本向 GPT 会话派规划任务 | 发送双验通过 |
-| 2. GPT-01 返回结构化任务 | JSON 有效：T-E2E-001，instruction+acceptance |
-| 3. 官方 CLI 外部触发 ZCode 新会话 | sess_72a9ef82；产出 src/e2e_add.js + test_e2e_add.js；自测 TEST PASS |
-| 4. AIEO Git 采集 | 分支 feature/AIEO-E2E-001；基线 607e6a6 → 提交 **00744f75387802606f5a213d4d66b83dfed0bebf**；工作区干净；Diff 24 行 |
-| 5. 将 Diff 发回 GPT 审查 | 发送双验通过 |
-| 6. GPT-03 返回审查 JSON | `{"result":"PASS","findings":[],"summary":"代码符合 T-E2E-001..."}` |
-| 7. 证据落盘 | logs/e2e-evidence.json + 4 张截图 + 全程日志 |
+**验收链统一口径：六步**（与 `logs/e2e-evidence.json` 的 steps 字段一一对应）：
 
-主会话独立复核：文件真实存在、`node test_e2e_add.js` 复跑 PASS、git log 与证据一致。
+| 步骤（step 名） | 内容 | run1 实测结果（历史记录） |
+|---|---|---|
+| 1 `repo_baseline` | 创建一次性 e2e 仓库并落基线 | 基线 607e6a6 |
+| 2 `gpt_plan` | AIEO 脚本向 GPT 会话派规划任务并收取回复 | 发送双验 + 生成态确认通过 |
+| 3 `plan_json_valid` | 提取并校验 GPT 结构化任务 | T-E2E-001，instruction+acceptance |
+| 4 `zcode_exec` | 官方 CLI 外部触发 ZCode 新会话开发 | sess_72a9ef82；自测 TEST PASS |
+| 5 `git_collect` | AIEO Git 采集：分支/提交/SHA/Diff/干净检查 | 提交 00744f75（24 行 Diff，工作区干净） |
+| 6 `gpt_review` | Diff 发回 GPT 审查并收取 JSON 结论 | `{"result":"PASS","findings":[],"summary":"..."}` |
+
+证据落盘（`logs/e2e-evidence.json` + 4 张截图 + 全程日志）随第 6 步完成，不单独计步。
+run1 的提交 `00744f75` 源码与 Diff 存档于 `logs/e2e-commit-evidence-00744f75/`。
+GPT 独立审查（REWORK，MAJOR-001/002）后，已在 `fix/AIEO-PHASE0-REVIEW` 分支修复判定逻辑并重跑（run2）：新提交 **747197f8eaf788ca66b253c064dc880259b8ccda**（基线 b9f130e9），七项验收条件均为计算值 true（含工作区干净、审查结论严格等于 PASS、生成态确认结束），exit 0，证据 `logs/e2e-evidence.json` + 存档 `logs/e2e-commit-evidence-747197f8/`；详见 `reports/rework-2026-11-12.md`。
 
 ## 5. 技术限制与约束（必须写入 Phase 1 设计）
 
