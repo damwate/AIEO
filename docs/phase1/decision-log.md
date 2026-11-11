@@ -68,10 +68,10 @@
 
 ## Phase 1 条目（待续记）
 
-<!-- Phase 1 开工后按模板追加：DEC-011 起 -->
+<!-- Phase 1 起按 DEC-001~010 格式续记 -->
 
-| 编号 | 日期 | 决策内容 | 依据（commit/报告路径） | 版本 |
-|---|---|---|---|---|
-| DEC-011 |  |  |  |  |
-| DEC-012 |  |  |  |  |
-| DEC-013 |  |  |  |  |
+### DEC-011 平台公共契约 v1.0 冻结（C1-C8 全部 v1.0.0）
+
+- **决策内容：** 平台公共契约 C1-C8 冻结为 v1.0.0（`docs/phase1/platform-contract-v1.0.md`）：C1 API 协议（消息字段规则 + REST 端点表 + /messages 投递/ACK/重试/Dead Letter 语义 + C1/C7 边界）；C2 数据模型（16 张表字段/约束/索引/UTC/删除策略 + 实体关系与返工历史保留）；C3 错误码（统一错误响应 Schema + 九组 27 条编号表全量采纳 + HTTP 映射）；C4 日志规范（27 字段必填分级清单全量采纳 + NDJSON + `logs/phase1/<service>/` 落盘 + audit_logs 独立持久化 + 脱敏 + 审计同事务）；C5 分支策略（任务 ID `T-P1-<序号>`、分支正则、集成分支 `integration/phase1`、合并人工审批、可自动检查的提交信息规范）；C6 配置命名（`AIEO_` 前缀、env/文件映射、默认值表、秘密不进 Git、启动校验）；C7 认证授权（127.0.0.1 绑定、Argon2id、Session Cookie 三属性、CSRF、单 OWNER、MCP/CLI 独立本机身份、审计）；C8 版本兼容（契约版本与应用版本分离、supported_versions/minimum_supported_version、REQ-0003 拒绝、迁移窗口、migration version 独立、历史数据版本化解析）。配套：契约测试要求（机器可读 Schema 于 `contracts/v1.0/`，四模块引用同一版本禁止复制修改）；责任边界定稿（共享 ORM 归属 M1、迁移脚本归属 M1、锁服务由 M1 提供全部模块使用含 janitor、Git Worker 与 M1 事务边界、跨进程只经 M1 服务接口、Python 签名不构成公共契约）。**遗留 BLOCKED 一项**：M2 网页投递长 payload 分块选型（待开工会议）；批准待用户追认。子 Agent 不得私改本契约（agent-contract §6-1）。
+- **依据：** `phase0/logs/dispatch-2026-11-11T21-10-19/reply.txt`（GPT 契约讨论完整产出：17 项 gaps、C3 错误码表、C4 日志字段清单、C7 认证方案、C8 版本机制、summary）；`docs/phase1/platform-contract-v1.0.md`（契约正文 v1.0.0，随本条目同批提交，对应 commit 即冻结 commit）；`docs/立项/03-任务消息与报告协议.md` v0.1、`docs/立项/04-任务状态机数据库与Git规范.md` v0.1（设计来源）；`docs/phase1/module-boundaries.md` @ commit `555fd44`（冻结基线）。
+- **约束衍生：** 四模块并行实现公共接口前必须以本契约 v1.0.0 为准；变更走统一变更申请并更新兼容矩阵（契约 §1/§9.6）。
