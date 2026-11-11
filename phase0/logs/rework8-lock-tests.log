@@ -1,0 +1,9 @@
+[PASS] S1 基础语义 — 获取/互斥/释放正常
+[PASS] S2 空/初始化中锁 fail-closed — 不删除
+[PASS] S3 损坏锁 fail-closed — 不删除，等待人工
+[PASS] S4 stale 回收 + 票据清理 — 唯一回收者完成 unlink 并清理自己的票据
+[PASS] S5 并发 stale 回收 — 1 胜（pid=12932）3 拒；票据唯一性保证单回收者
+[PASS] S6 临界区独占 — 持锁 800ms 观察者 0 获取
+[PASS] S7 屏障交错：票据持有者对已替换新锁放弃 unlink — outcome=changed；N 字节级不变；C 获取冲突（B 的锁始终留在 lockPath）
+[PASS] S8 多轮竞争 + 票据零残留 — 3 轮 × 3 竞争者，绝无同时双持
+LOCK V4 TESTS: ALL PASS
