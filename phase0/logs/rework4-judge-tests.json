@@ -1,0 +1,63 @@
+{
+  "test_target": "phase0/e2e-poc/completion_judge.mjs（生产判定函数，sendAndCollect 同源）",
+  "method": "依赖注入（fake clock / isGenVisible 序列）黑盒驱动真实代码；浏览器异常注入未在真实 Chrome 上模拟，见报告未实测声明",
+  "executed_at": "2026-11-11T18:13:54.137Z",
+  "all_pass": true,
+  "scenarios": [
+    {
+      "name": "1 正常生成结束",
+      "pass": true,
+      "detail": "tracker={observed:true,ended:true} confirmed=true, checks={\"generation_observed\":true,\"generation_ended\":true,\"final_stop_button_not_visible\":true,\"tail_is_assistant\":true,\"dil_uuid_present\":true,\"uuid_stable\":true,\"composer_empty\":true}"
+    },
+    {
+      "name": "2 等待300秒仍未结束",
+      "pass": true,
+      "detail": "抛 GENERATION_TIMEOUT，轮询 150 次后按 deadline 终止，exit 路径=1"
+    },
+    {
+      "name": "3 最终停止按钮仍可见",
+      "pass": true,
+      "detail": "抛 COMPLETION_NOT_CONFIRMED，未满足项=[final_stop_button_not_visible]"
+    },
+    {
+      "name": "4 assistant UUID 不稳定",
+      "pass": true,
+      "detail": "抛 COMPLETION_NOT_CONFIRMED，uuid_stable=false"
+    },
+    {
+      "name": "5 Composer 非空",
+      "pass": true,
+      "detail": "抛 COMPLETION_NOT_CONFIRMED，composer_empty=false"
+    },
+    {
+      "name": "6 从未观察到生成状态（everGenerating 硬编码问题的根修验证）",
+      "pass": true,
+      "detail": "confirmed=false，generation_observed/ended=false 被正确拒绝"
+    },
+    {
+      "name": "7 stop 可见于 tail 确认之前（R4：pre-send 门下归因本轮，计数留痕）",
+      "pass": true,
+      "detail": "accepted=true，stopSeenBeforeTail=1 仅审计；generationObserved 依赖 preSendStopVisible=false 建立可靠关联"
+    },
+    {
+      "name": "8 停止按钮仅在 tail 前出现，tail 后不可见 → 验收失败（UNCERTAIN，不误判成功）",
+      "pass": true,
+      "detail": "accepted=false；生产路径将抛错 exit 1，历史生成状态无法通过本轮判定"
+    },
+    {
+      "name": "9 正常顺序（tail 先确认，停止按钮随后出现）",
+      "pass": true,
+      "detail": "accepted=true，stop_seen_before_tail=0"
+    },
+    {
+      "name": "10 preSendStopVisible=true（含 true→true 持续可见）→ 拒收",
+      "pass": true,
+      "detail": "reason=PRE_SEND_STOP_VISIBLE，polls=0；生产路径在 Enter 前即终止且不发送"
+    },
+    {
+      "name": "11 preSend=false 时 true→true 持续可见 → 合法接受",
+      "pass": true,
+      "detail": "可靠关联由 pre-send 不可见基线建立（审查建议的路径一），无需观测瞬时转换"
+    }
+  ]
+}

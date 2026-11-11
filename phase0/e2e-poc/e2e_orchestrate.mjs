@@ -166,21 +166,28 @@ async function sendAndCollect(page, text, label) {
   const sendBtn = page.locator('button[aria-label="发送"], button[aria-label="Send"], button[data-testid="send-button"]').first();
   if ((await sendBtn.count()) === 0) throw new Error(`[${label}] 发送按钮不存在，STOP`);
   await c.focus();
+
+  // pre-send 生成门（R4 修复，回应第四轮审查 MAJOR）：Enter 前停止按钮必须不可见。
+  // 若可见说明上一轮生成仍在进行（或异常状态），不发送，fail-safe 终止。
+  // 该不变量 + 单会话单任务纪律 = 本轮内任何停止按钮可见均可归因于本次发送。
+  const preSendStopVisible = await stopButtonVisible(page);
+  if (preSendStopVisible) {
+    throw new Error(`[${label}] PRE_SEND_GENERATION_ACTIVE_STOP：Enter 前停止按钮可见（上一轮生成未结束），不发送`);
+  }
   await page.keyboard.press("Enter");
 
-  // 发送双验（R3 修复，回应第三轮审查 MAJOR-001-1）：
-  // stopOkAfterTail 仅在本轮 user 消息确认（tailOk）之后重新观察到停止按钮可见才置位；
-  // tail 确认前的停止按钮观察（可能来自历史生成）只记录（stopSeenBeforeTail）并排除。
+  // 发送双验（R4）：以 pre-send 不可见基线建立可靠关联，任何 post-Enter 可见均属本轮
   const acceptance = await verifySendAcceptance({
     getTail: () => readTailUnit(page),
     isStopVisible: () => stopButtonVisible(page),
+    preSendStopVisible,
     baselineKey: baseline?.key,
     deadlineMs: SEND_ACCEPT_TIMEOUT_MS,
     intervalMs: 1000,
   });
-  log(`[${label}] 发送双验: accepted=${acceptance.accepted} tailOk=${acceptance.tailOk} stopOkAfterTail=${acceptance.stopOkAfterTail} stopSeenBeforeTail(排除)=${acceptance.stopSeenBeforeTail} polls=${acceptance.polls}`);
+  log(`[${label}] 发送双验: accepted=${acceptance.accepted} reason=${acceptance.reason || "-"} tailOk=${acceptance.tailOk} stopOkAfterTail=${acceptance.stopOkAfterTail} stopSeenBeforeTail=${acceptance.stopSeenBeforeTail} polls=${acceptance.polls}`);
   if (!acceptance.accepted) {
-    throw new Error(`[${label}] 发送双验未通过（tailOk=${acceptance.tailOk} stopOkAfterTail=${acceptance.stopOkAfterTail}），UNCERTAIN，不重发`);
+    throw new Error(`[${label}] 发送双验未通过（tailOk=${acceptance.tailOk} stopOkAfterTail=${acceptance.stopOkAfterTail} reason=${acceptance.reason}），UNCERTAIN，不重发`);
   }
   await shot(page, `e2e-sent-${label}.png`);
 
@@ -213,7 +220,7 @@ async function sendAndCollect(page, text, label) {
   const reply = units.map((u) => u.text).join("\n").trim();
   log(`[${label}] COMPLETED（生成态确认结束），回复 ${reply.length} 字符`);
   await shot(page, `e2e-reply-${label}.png`);
-  return { reply, assistant_uuid: tailAfter.assistantUuid, baseline, completion_confirmed: completionConfirmed, completion_checks: completionChecks, send_acceptance: { tail_ok: acceptance.tailOk, stop_ok_after_tail: acceptance.stopOkAfterTail, stop_seen_before_tail_excluded: acceptance.stopSeenBeforeTail, polls: acceptance.polls } };
+  return { reply, assistant_uuid: tailAfter.assistantUuid, baseline, completion_confirmed: completionConfirmed, completion_checks: completionChecks, send_acceptance: { pre_send_stop_visible: preSendStopVisible, tail_ok: acceptance.tailOk, stop_ok_after_tail: acceptance.stopOkAfterTail, stop_seen_before_tail: acceptance.stopSeenBeforeTail, polls: acceptance.polls, reason: acceptance.reason || null } };
 }
 
 // ---------- 外部进程工具 ----------
@@ -304,11 +311,14 @@ async function main() {
   log(`Git 提交: ${commitSha}（干净=${statusClean}，diff ${diff.split("\n").length} 行）`);
 
   // 5. GPT 代码审查（同一测试会话，GPT-03 角色）
+  // R4 补强：按文档 03 §6，审查请求必须附带完整证据（测试执行记录 + 完整 SHA），不仅 Diff。
   const reviewAsk =
-    "你现在担任 AIEO 代码审查员（GPT-03）。请审查以下 Git Diff，**只输出一个 JSON 对象，不要其他文字**。" +
+    "你现在担任 AIEO 代码审查员（GPT-03）。请审查以下 Git Diff 与随附执行证据，**只输出一个 JSON 对象，不要其他文字**。" +
     '格式：{"result":"PASS|REWORK|BLOCKED","findings":[{"severity":"MAJOR|MINOR","description":"..."}],"summary":"一句话总结"}。' +
     `审查上下文：任务 ${task.task_id}，验收标准：${task.acceptance || "实现 add 并有断言测试"}。` +
-    "Diff（基线 " + baseSha.slice(0, 8) + " → " + commitSha.slice(0, 8) + "）：\n```diff\n" + diff + "\n```";
+    `Git 信息：分支 feature/AIEO-E2E-001，基线 ${baseSha}，提交 ${commitSha}，工作区干净（git status --porcelain 为空）。` +
+    `测试执行证据（AIEO 端独立复跑）：命令 node test_e2e_add.js，退出码 ${testRun.exitCode ?? 0}，标准输出：${testRun.stdout.trim()}。` +
+    "Diff：\n```diff\n" + diff + "\n```";
   const review = await sendAndCollect(page, reviewAsk, "review");
   log(`GPT 审查回复（前 300 字）: ${review.reply.slice(0, 300)}`);
   const rm = review.reply.match(/\{[\s\S]*\}/);

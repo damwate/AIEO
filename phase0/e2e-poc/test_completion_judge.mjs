@@ -5,7 +5,7 @@
 // 而是对判定代码本身的黑盒驱动测试；真实浏览器回归由 e2e 全链重跑承担（见报告）。
 //
 // 运行：node test_completion_judge.mjs
-// 输出：逐场景 PASS/FAIL + logs/rework2-judge-tests.json；任何失败 exit 1。
+// 输出：逐场景 PASS/FAIL + logs/rework4-judge-tests.json；任何失败 exit 1。
 
 import { strict as assert } from "node:assert";
 import { writeFileSync } from "node:fs";
@@ -158,6 +158,7 @@ async function main() {
     const acc = await verifySendAcceptance({
       getTail: () => Promise.resolve(tails.shift()),
       isStopVisible: () => Promise.resolve(stops.shift() ?? false),
+      preSendStopVisible: false,
       baselineKey: "fallback-turn-0:0:user",
       deadlineMs: 30000, intervalMs: 1000, ...clock,
     });
@@ -171,8 +172,8 @@ async function main() {
     });
     assert.equal(tracker.generationObserved, true);
     assert.equal(tracker.generationEnded, true);
-    record("7 stopOk 提前出现（先于 user 确认）不污染 generationObserved", true,
-      `pre-tail 观察 1 次被排除，stopOkAfterTail 仅来自 tail 确认后的观察；tracker 初始化与结束判定正常`);
+    record("7 stop 可见于 tail 确认之前（R4：pre-send 门下归因本轮，计数留痕）", true,
+      `accepted=true，stopSeenBeforeTail=1 仅审计；generationObserved 依赖 preSendStopVisible=false 建立可靠关联`);
   }
 
   // ---------- 场景 8：停止按钮仅在 tail 确认前出现、tail 后再不可见 → 发送双验必须失败 ----------
@@ -188,6 +189,7 @@ async function main() {
     const acc = await verifySendAcceptance({
       getTail: () => Promise.resolve(tails.shift() ?? { role: "user", key: "fallback-turn-1:0:user" }),
       isStopVisible: () => Promise.resolve(stops.shift() ?? false),
+      preSendStopVisible: false,
       baselineKey: "fallback-turn-0:0:user",
       deadlineMs: 5000, intervalMs: 1000, ...clock, // 缩短 deadline 加速测试，语义同 30s
     });
@@ -209,6 +211,7 @@ async function main() {
     const acc = await verifySendAcceptance({
       getTail: () => Promise.resolve(tails.shift() ?? tails[tails.length - 1]),
       isStopVisible: () => Promise.resolve(stops.shift() ?? true),
+      preSendStopVisible: false,
       baselineKey: "fallback-turn-0:0:user",
       deadlineMs: 30000, intervalMs: 1000, ...clock,
     });
@@ -216,6 +219,44 @@ async function main() {
     assert.equal(acc.stopSeenBeforeTail, 0, "无 pre-tail 观察");
     assert.equal(acc.stopOkAfterTail, true);
     record("9 正常顺序（tail 先确认，停止按钮随后出现）", true, `accepted=true，stop_seen_before_tail=0`);
+  }
+
+  // ---------- 场景 10（第四轮审查点名）：preSendStopVisible=true（无法证明发送前无生成）→ 必须拒收 ----------
+  {
+    const clock = makeFakeClock();
+    const acc = await verifySendAcceptance({
+      getTail: () => Promise.resolve({ role: "user", key: "fallback-turn-1:0:user" }),
+      isStopVisible: () => Promise.resolve(true),   // 持续可见 true→true
+      preSendStopVisible: true,                      // 发送前停止按钮已可见——无法建立本轮关联
+      baselineKey: "fallback-turn-0:0:user",
+      deadlineMs: 30000, intervalMs: 1000, ...clock,
+    });
+    assert.equal(acc.accepted, false, "pre-send 可见 → 必须拒收（true→true 不得直接接受）");
+    assert.equal(acc.reason, "PRE_SEND_STOP_VISIBLE");
+    assert.equal(acc.polls, 0, "拒收发生在任何轮询之前");
+    record("10 preSendStopVisible=true（含 true→true 持续可见）→ 拒收", true,
+      `reason=PRE_SEND_STOP_VISIBLE，polls=0；生产路径在 Enter 前即终止且不发送`);
+  }
+
+  // ---------- 场景 11：preSend=false 时 true→true 持续可见 → 合法接受（可靠关联语义） ----------
+  {
+    const clock = makeFakeClock();
+    const tails = [
+      { role: "user", key: "fallback-turn-0:0:user" },  // poll1: 尾部未前进，停止按钮已可见（本轮生成先于 tail 确认启动）
+      { role: "user", key: "fallback-turn-1:0:user" },  // poll2: tail 确认，停止按钮持续可见
+    ];
+    const acc = await verifySendAcceptance({
+      getTail: () => Promise.resolve(tails.shift() ?? tails[tails.length - 1]),
+      isStopVisible: () => Promise.resolve(true),       // 持续可见
+      preSendStopVisible: false,                         // Enter 前实测不可见（生产 pre-send 门保证）
+      baselineKey: "fallback-turn-0:0:user",
+      deadlineMs: 30000, intervalMs: 1000, ...clock,
+    });
+    assert.equal(acc.accepted, true, "pre-send 不可见基线 + 单任务纪律 => post-Enter 可见均属本轮");
+    assert.equal(acc.stopSeenBeforeTail, 1, "tail 前的可见被计数留痕（属本轮）");
+    assert.equal(acc.stopOkAfterTail, true);
+    record("11 preSend=false 时 true→true 持续可见 → 合法接受", true,
+      `可靠关联由 pre-send 不可见基线建立（审查建议的路径一），无需观测瞬时转换`);
   }
 
   const allPass = scenarios.every((s) => s.pass);
@@ -226,7 +267,7 @@ async function main() {
     all_pass: allPass,
     scenarios,
   };
-  writeFileSync(new URL("./../logs/rework2-judge-tests.json", import.meta.url), JSON.stringify(out, null, 2), "utf8");
+  writeFileSync(new URL("./../logs/rework4-judge-tests.json", import.meta.url), JSON.stringify(out, null, 2), "utf8");
   console.log(allPass ? "JUDGE TESTS: ALL PASS" : "JUDGE TESTS: HAS FAIL");
   process.exit(allPass ? 0 : 1);
 }
@@ -234,7 +275,7 @@ async function main() {
 main().catch((e) => {
   console.error("测试框架自身异常:", e);
   record("测试框架异常", false, String(e.message || e));
-  writeFileSync(new URL("./../logs/rework2-judge-tests.json", import.meta.url),
+  writeFileSync(new URL("./../logs/rework4-judge-tests.json", import.meta.url),
     JSON.stringify({ all_pass: false, scenarios, framework_error: String(e.message || e) }, null, 2), "utf8");
   process.exit(1);
 });

@@ -89,29 +89,37 @@ export function finalizeCompletion(input) {
 }
 
 /**
- * 发送双验（R3 修复，回应第三轮审查 MAJOR-001-1）：
- * 严格时序语义——本轮 user 消息确认出现（tailOk）**之后**重新观察到的停止按钮可见，
- * 才允许作为本轮生成状态观察（stopOkAfterTail）。
- * tailOk 之前出现的停止按钮（stopSeenBeforeTail，可能来自历史/上一轮生成）被记录但**排除**，
- * 不参与 generationObserved 初始化。
+ * 发送双验（R4 修复，回应第四轮审查 MAJOR：持续可见的"true→true"漏洞）：
+ *
+ * 可靠关联建立方式：preSendStopVisible 必须 === false（生产在 Enter 前实测：
+ * 停止按钮不可见才允许发送——否则上一轮生成仍在进行，直接拒绝发送）。
+ * 结合"同一会话同一时刻仅一个在途任务"纪律，Enter 之后任何停止按钮可见
+ * 都必然由本轮发送引起——因此 tail 确认前/后的可见观察（含持续可见 true→true）
+ * 都可安全归因于本轮，无需观测到"不可见→可见"的瞬时转换。
+ *
+ * 调用方若无法证明 preSendStopVisible===false，本函数 fail-closed 拒收。
  *
  * @param {{getTail: () => Promise<{role: string, key: string}|null>,
  *          isStopVisible: () => Promise<boolean>,
+ *          preSendStopVisible: boolean,
  *          baselineKey: string|undefined,
  *          deadlineMs?: number, intervalMs?: number,
  *          sleep?: (ms:number)=>Promise<void>, now?: () => number}} p
- * @returns {{accepted: boolean, tailOk: boolean, stopOkAfterTail: boolean,
+ * @returns {{accepted: boolean, reason?: string, tailOk: boolean, stopOkAfterTail: boolean,
  *            stopSeenBeforeTail: number, stopObservationsAfterTail: number, polls: number, lastTail: object|null}}
- *          accepted=false 时调用方必须按 UNCERTAIN 终止（不重发）。
  */
 export async function verifySendAcceptance(p) {
+  // R4：pre-send 生成门——无法证明发送瞬间停止按钮不可见，一律拒收
+  if (p.preSendStopVisible !== false) {
+    return { accepted: false, reason: "PRE_SEND_STOP_VISIBLE", tailOk: false, stopOkAfterTail: false, stopSeenBeforeTail: 0, stopObservationsAfterTail: 0, polls: 0, lastTail: null };
+  }
   const deadlineMs = p.deadlineMs ?? 30000;
   const intervalMs = p.intervalMs ?? 1000;
   const sleep = p.sleep ?? ((ms) => new Promise((r) => setTimeout(r, ms)));
   const now = p.now ?? Date.now;
   let tailOk = false;
   let stopOkAfterTail = false;
-  let stopSeenBeforeTail = 0;   // tail 确认前观察到停止按钮的次数（只记录，不采用）
+  let stopSeenBeforeTail = 0;   // tail 确认前观察到停止按钮的次数（发送后出现，属本轮；记录供审计）
   let stopObservationsAfterTail = 0;
   let polls = 0;
   let lastTail = null;
@@ -126,14 +134,14 @@ export async function verifySendAcceptance(p) {
     const stopNow = await p.isStopVisible();
     if (tailOk) {
       stopObservationsAfterTail++;
-      if (stopNow) stopOkAfterTail = true; // 仅 tail 确认后的可见观察才计入
+      if (stopNow) stopOkAfterTail = true;
     } else if (stopNow) {
-      stopSeenBeforeTail++; // tail 确认前的可见观察：排除，只记录
+      stopSeenBeforeTail++;
     }
     if (tailOk && stopOkAfterTail) {
       return { accepted: true, tailOk, stopOkAfterTail, stopSeenBeforeTail, stopObservationsAfterTail, polls, lastTail };
     }
     await sleep(intervalMs);
   }
-  return { accepted: false, tailOk, stopOkAfterTail, stopSeenBeforeTail, stopObservationsAfterTail, polls, lastTail };
+  return { accepted: false, reason: "SEND_ACCEPT_TIMEOUT", tailOk, stopOkAfterTail, stopSeenBeforeTail, stopObservationsAfterTail, polls, lastTail };
 }
