@@ -17,6 +17,7 @@ import { assertPreSendGate, insertAndVerifyComposer, verifySendAcceptance, sendW
 import { waitForGenerationEnd } from "../src/generation.mjs";
 import { detectContextLimit, stopIfContextLimit, rotateIfContextLimit, beginFreshBlankSession, CONTEXT_LIMIT_MARKER } from "../src/context_limit.mjs";
 import { readReplySnapshot } from "../src/dom_view.mjs";
+import { sha256Hex } from "../src/inbound_reply.mjs";
 import { SessionStore } from "../src/session_store.mjs";
 import { buildGitPointerManifest, createGitPointer } from "../src/git_pointer.mjs";
 import {
@@ -603,6 +604,169 @@ test("全管线：非法 key 元素快照（null/空串/重复）骗过稳定性
     assert.equal(error.details.decision, "DEC-017");
     assert.equal(events.sendCalled, 1);
     // 不写成功结果。
+    assert.ok(!existsSync(join(tmp, "result.json")));
+  } finally {
+    cleanupTempDir(tmp);
+  }
+});
+
+// ---------- F-402（第 5 轮审查）：units 结构一致性——空 units/不一致/reply 脱钩/非法角色/伪造摘要 ----------
+
+// 合法 units 元素（真实摘要与字节数），供手搓"除目标缺口外全部合法"的快照。
+function forgedUnit(key, text, overrides = {}) {
+  const bytes = Buffer.from(text, "utf8");
+  return {
+    key,
+    role: "assistant",
+    text,
+    text_sha256: sha256Hex(bytes),
+    size_bytes: bytes.length,
+    assistant_uuid: ASSISTANT_UUID,
+    ...overrides,
+  };
+}
+
+function forgedSnapshotFactory({ units, unitKeys, reply, assistantUuid = ASSISTANT_UUID }) {
+  return () => ({
+    user_unit_key: "u1000:user",
+    next_user_unit_key: null,
+    unit_keys: unitKeys,
+    unit_count: unitKeys.length,
+    assistant_uuid: assistantUuid,
+    units,
+    reply,
+    range_proof: { complete: true, end_reason: "DOM_BOTTOM" },
+    read_started_at: new Date().toISOString(),
+    read_finished_at: new Date().toISOString(),
+  });
+}
+
+test("全管线：空 units 快照骗过稳定性比较 → 稳定性层新检查拦截（T-P1-901 F-402）", async () => {
+  const { page, events } = smallScenario();
+  // F-402 核心绕过：unit_count=1/keys 一致/uuid 非空，但 units=[]——修复前 compare 因两次相同而放行。
+  // 修复后 unit_text_sha256 长度必须与 unit_count 一致：0 !== 1 → INBOUND_UNSTABLE_READ（稳定性层先拦）。
+  const factory = forgedSnapshotFactory({ units: [], unitKeys: ["a1001:assistant"], reply: "" });
+  const tmp = newTempDir("gptc-e2e-emptyunits");
+  try {
+    const error = await assertRejectsWith(
+      runDispatch({
+        view: page,
+        message: "请审查模块边界文档 §2 并给出结论。",
+        configOverrides: dispatchConfig(tmp),
+        lock: fakeLock(),
+        outputDir: tmp,
+        readReplySnapshot: factory,
+      }),
+      "INBOUND_UNSTABLE_READ",
+    );
+    assert.equal(error.details.checks.unit_text_hashes_length_matches_count, false);
+    assert.equal(events.sendCalled, 1);
+    assert.ok(!existsSync(join(tmp, "result.json")));
+  } finally {
+    cleanupTempDir(tmp);
+  }
+});
+
+test("全管线：units 元素 key 与 unit_keys 错位骗过稳定性比较 → 最终防线拒绝（T-P1-901 F-402）", async () => {
+  const { page, events } = smallScenario();
+  // 两次读取一致（compare 通过），但元素 key 与 unit_keys[0] 错位 → gate MALFORMED。
+  const units = [forgedUnit("a9999:assistant", "{\"ok\":true}")];
+  const factory = forgedSnapshotFactory({ units, unitKeys: ["a1001:assistant"], reply: "{\"ok\":true}" });
+  const tmp = newTempDir("gptc-e2e-keymismatch");
+  try {
+    const error = await assertRejectsWith(
+      runDispatch({
+        view: page,
+        message: "请审查模块边界文档 §2 并给出结论。",
+        configOverrides: dispatchConfig(tmp),
+        lock: fakeLock(),
+        outputDir: tmp,
+        readReplySnapshot: factory,
+      }),
+      "INBOUND_REPLY_SNAPSHOT_MALFORMED",
+    );
+    assert.equal(error.details.units_length, 1);
+    assert.equal(error.details.decision, "DEC-017");
+    assert.equal(events.sendCalled, 1);
+    assert.ok(!existsSync(join(tmp, "result.json")));
+  } finally {
+    cleanupTempDir(tmp);
+  }
+});
+
+test("全管线：reply 与 units 文本脱钩骗过稳定性比较 → 最终防线拒绝（T-P1-901 F-402）", async () => {
+  const { page, events } = smallScenario();
+  // compare 不校验 reply 内容；篡改 reply 后结构仍"稳定"→ gate 按拼接约定拒绝。
+  const text = "{\"ok\":true}";
+  const units = [forgedUnit("a1001:assistant", text)];
+  const factory = forgedSnapshotFactory({ units, unitKeys: ["a1001:assistant"], reply: "与 units 无关的伪造回复" });
+  const tmp = newTempDir("gptc-e2e-replydetach");
+  try {
+    const error = await assertRejectsWith(
+      runDispatch({
+        view: page,
+        message: "请审查模块边界文档 §2 并给出结论。",
+        configOverrides: dispatchConfig(tmp),
+        lock: fakeLock(),
+        outputDir: tmp,
+        readReplySnapshot: factory,
+      }),
+      "INBOUND_REPLY_SNAPSHOT_MALFORMED",
+    );
+    assert.equal(error.details.decision, "DEC-017");
+    assert.equal(events.sendCalled, 1);
+    assert.ok(!existsSync(join(tmp, "result.json")));
+  } finally {
+    cleanupTempDir(tmp);
+  }
+});
+
+test("全管线：units 元素非法角色（user）骗过稳定性比较 → 最终防线拒绝（T-P1-901 F-402）", async () => {
+  const { page, events } = smallScenario();
+  // 角色不合法的元素即使摘要自洽也不得通过最终防线。
+  const units = [forgedUnit("a1001:assistant", "{\"ok\":true}", { role: "user" })];
+  const factory = forgedSnapshotFactory({ units, unitKeys: ["a1001:assistant"], reply: "{\"ok\":true}" });
+  const tmp = newTempDir("gptc-e2e-badrole");
+  try {
+    const error = await assertRejectsWith(
+      runDispatch({
+        view: page,
+        message: "请审查模块边界文档 §2 并给出结论。",
+        configOverrides: dispatchConfig(tmp),
+        lock: fakeLock(),
+        outputDir: tmp,
+        readReplySnapshot: factory,
+      }),
+      "INBOUND_REPLY_SNAPSHOT_MALFORMED",
+    );
+    assert.equal(error.details.decision, "DEC-017");
+    assert.equal(events.sendCalled, 1);
+    assert.ok(!existsSync(join(tmp, "result.json")));
+  } finally {
+    cleanupTempDir(tmp);
+  }
+});
+
+test("全管线：伪造 text_sha256 骗过稳定性比较 → 最终防线拒绝（T-P1-901 F-402）", async () => {
+  const { page, events } = smallScenario();
+  // 摘要与文本不自洽（sha 属于另一段文本）→ gate 逐字节自洽校验拒绝。
+  const units = [forgedUnit("a1001:assistant", "{\"ok\":true}", { text_sha256: sha256Hex(Buffer.from("完全不同的文本", "utf8")) })];
+  const factory = forgedSnapshotFactory({ units, unitKeys: ["a1001:assistant"], reply: "{\"ok\":true}" });
+  const tmp = newTempDir("gptc-e2e-forgedsha");
+  try {
+    const error = await assertRejectsWith(
+      runDispatch({
+        view: page,
+        message: "请审查模块边界文档 §2 并给出结论。",
+        configOverrides: dispatchConfig(tmp),
+        lock: fakeLock(),
+        outputDir: tmp,
+        readReplySnapshot: factory,
+      }),
+      "INBOUND_REPLY_SNAPSHOT_MALFORMED",
+    );
+    assert.equal(error.details.decision, "DEC-017");
+    assert.equal(events.sendCalled, 1);
     assert.ok(!existsSync(join(tmp, "result.json")));
   } finally {
     cleanupTempDir(tmp);

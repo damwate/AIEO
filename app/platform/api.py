@@ -39,6 +39,7 @@ from .security import (
     SESSION_COOKIE,
     Principal,
     authenticate,
+    authorize_principal,
     bootstrap_admin,
     create_session,
     enforce_csrf,
@@ -143,6 +144,8 @@ def build_app(ctx: PlatformContext) -> FastAPI:
         with ctx.db.transaction() as conn:
             principal = authenticate(request, conn, ctx.settings)
             enforce_csrf(request, principal)
+        # C7 §8.6 服务身份权限白名单：认证/CSRF 之后统一授权，白名单外默认拒绝。
+        authorize_principal(request, principal)
         return principal
 
     # ---- health (no auth, C1 §2.1 / C8 §9.3) ----

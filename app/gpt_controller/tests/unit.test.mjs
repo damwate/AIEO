@@ -388,12 +388,28 @@ test("⑥ DEC-017 扩展门禁：多 assistant unit 默认 fail-closed，显式�
   assert.deepEqual(relaxed.unit_keys, ["a1:assistant", "a2:assistant", "a3:assistant"]);
 });
 
-test("⑥ DEC-017 最终防线（T-P1-901 F-101）：assertInboundExtensionGate 单 unit 放行、多 unit/畸形快照一律 fail-closed", async () => {
-  const snapshotOf = (unit_count, unit_keys, units) => ({ unit_count, unit_keys, units: units ?? [], reply: "r", assistant_uuid: "uuid-a1" });
-  // 单 assistant unit 核心路径：不抛。
-  assert.doesNotThrow(() => assertInboundExtensionGate(snapshotOf(1, ["a1:assistant"])));
+test("⑥ DEC-017 最终防线（T-P1-901 F-101/F-402）：assertInboundExtensionGate 完整合法快照放行，多 unit/畸形/结构不一致一律 fail-closed", async () => {
+  // F-402 起最终防线验证完整快照结构：合法 units 元素必须带真实 text 与自洽摘要/大小。
+  const validUnitOf = (key, text) => ({
+    key,
+    role: "assistant",
+    text,
+    text_sha256: sha256Hex(Buffer.from(text, "utf8")),
+    size_bytes: Buffer.byteLength(text, "utf8"),
+    assistant_uuid: "uuid-a1",
+  });
+  const validSnapshotOf = (keys, texts) => ({
+    unit_count: keys.length,
+    unit_keys: keys,
+    units: keys.map((key, index) => validUnitOf(key, texts[index])),
+    reply: texts.join("\n"),
+    assistant_uuid: "uuid-a1",
+  });
+  const singleText = "回复正文 {\"ok\":true}";
+  // 单 assistant unit 核心路径：完整合法快照不抛。
+  assert.doesNotThrow(() => assertInboundExtensionGate(validSnapshotOf(["a1:assistant"], [singleText])));
   // 多 unit：即使上游已放宽（模拟 selectInboundReply(maxAssistantUnits=8) 的产物），最终防线仍拦截。
-  const multi = snapshotOf(3, ["a1:assistant", "a2:assistant", "a3:assistant"]);
+  const multi = validSnapshotOf(["a1:assistant", "a2:assistant", "a3:assistant"], ["t1", "t2", "t3"]);
   const gateError = await assertRejectsWith((async () => assertInboundExtensionGate(multi))(), "INBOUND_MULTI_UNIT_EXTENSION_GATE_BLOCKED");
   assert.equal(gateError.details.unit_count, 3);
   assert.equal(gateError.details.max_assistant_units, 1);
@@ -401,20 +417,39 @@ test("⑥ DEC-017 最终防线（T-P1-901 F-101）：assertInboundExtensionGate 
   // 畸形快照：缺字段/类型非法/内部矛盾 → INBOUND_REPLY_SNAPSHOT_MALFORMED，不给绕过空间。
   const malformedCases = [
     ["缺 unit_count", {}],
-    ["unit_count undefined", snapshotOf(undefined, ["a1:assistant"])],
-    ["unit_count 非整数", snapshotOf(2.5, ["a1:assistant", "a2:assistant"])],
-    ["unit_count 负数", snapshotOf(-1, [])],
-    ["unit_count NaN", snapshotOf(Number.NaN, [])],
-    ["unit_count 字符串", snapshotOf("3", ["a1", "a2", "a3"])],
+    ["unit_count undefined", { unit_count: undefined, unit_keys: ["a1:assistant"], units: [validUnitOf("a1:assistant", "t")], reply: "t", assistant_uuid: "uuid-a1" }],
+    ["unit_count 非整数", { unit_count: 2.5, unit_keys: ["a1:assistant", "a2:assistant"], units: [validUnitOf("a1:assistant", "t"), validUnitOf("a2:assistant", "t")], reply: "t\nt", assistant_uuid: "uuid-a1" }],
+    ["unit_count 负数", { unit_count: -1, unit_keys: [], units: [], reply: "", assistant_uuid: "uuid-a1" }],
+    ["unit_count NaN", { unit_count: Number.NaN, unit_keys: [], units: [], reply: "", assistant_uuid: "uuid-a1" }],
+    ["unit_count 字符串", { unit_count: "3", unit_keys: ["a1", "a2", "a3"], units: [], reply: "", assistant_uuid: "uuid-a1" }],
     ["缺 unit_keys", { unit_count: 1 }],
-    ["unit_keys 非数组", snapshotOf(1, "a1:assistant")],
-    ["unit_keys 与 unit_count 不一致", snapshotOf(3, ["a1:assistant"])],
+    ["unit_keys 非数组", { unit_count: 1, unit_keys: "a1:assistant", units: [validUnitOf("a1:assistant", "t")], reply: "t", assistant_uuid: "uuid-a1" }],
+    ["unit_keys 与 unit_count 不一致", { unit_count: 3, unit_keys: ["a1:assistant"], units: [], reply: "", assistant_uuid: "uuid-a1" }],
     // F-201 补充边界（第 3 轮审查）：零数量、null 元素、空字符串、重复 key、非字符串元素。
-    ["unit_count 零（无 assistant unit）", snapshotOf(0, [])],
-    ["unit_keys 含 null 元素", snapshotOf(1, [null])],
-    ["unit_keys 含空字符串元素", snapshotOf(1, [""])],
-    ["unit_keys 重复 key", snapshotOf(2, ["a1:assistant", "a1:assistant"])],
-    ["unit_keys 含非字符串元素", snapshotOf(2, ["a1:assistant", 123])],
+    ["unit_count 零（无 assistant unit）", { unit_count: 0, unit_keys: [], units: [], reply: "", assistant_uuid: "uuid-a1" }],
+    ["unit_keys 含 null 元素", { unit_count: 1, unit_keys: [null], units: [], reply: "", assistant_uuid: "uuid-a1" }],
+    ["unit_keys 含空字符串元素", { unit_count: 1, unit_keys: [""], units: [], reply: "", assistant_uuid: "uuid-a1" }],
+    ["unit_keys 重复 key", { unit_count: 2, unit_keys: ["a1:assistant", "a1:assistant"], units: [], reply: "", assistant_uuid: "uuid-a1" }],
+    ["unit_keys 含非字符串元素", { unit_count: 2, unit_keys: ["a1:assistant", 123], units: [], reply: "", assistant_uuid: "uuid-a1" }],
+    // F-402 补充边界（第 5 轮审查）：units 结构一致性——空 units、长度不符、元素非法、摘要伪造、reply 脱钩。
+    ["units 空数组但 unit_count=1（F-402 核心绕过）", { unit_count: 1, unit_keys: ["a1:assistant"], units: [], reply: "", assistant_uuid: "uuid-a1" }],
+    ["units 长度与 unit_count 不一致", { unit_count: 1, unit_keys: ["a1:assistant"], units: [validUnitOf("a1:assistant", "t"), validUnitOf("a2:assistant", "t")], reply: "t", assistant_uuid: "uuid-a1" }],
+    ["units 元素 null", { unit_count: 1, unit_keys: ["a1:assistant"], units: [null], reply: "t", assistant_uuid: "uuid-a1" }],
+    ["units 元素非对象", { unit_count: 1, unit_keys: ["a1:assistant"], units: ["a1:assistant"], reply: "t", assistant_uuid: "uuid-a1" }],
+    ["units 元素 role 非法（user）", { unit_count: 1, unit_keys: ["a1:assistant"], units: [{ ...validUnitOf("a1:assistant", "t"), role: "user" }], reply: "t", assistant_uuid: "uuid-a1" }],
+    ["units 元素 role 缺失", { unit_count: 1, unit_keys: ["a1:assistant"], units: [{ key: "a1:assistant", text: "t", text_sha256: sha256Hex(Buffer.from("t", "utf8")), size_bytes: 1, assistant_uuid: "uuid-a1" }], reply: "t", assistant_uuid: "uuid-a1" }],
+    ["units 元素 key 与 unit_keys 不一致", { unit_count: 1, unit_keys: ["a1:assistant"], units: [validUnitOf("a2:assistant", "t")], reply: "t", assistant_uuid: "uuid-a1" }],
+    ["units 元素 key 空", { unit_count: 1, unit_keys: ["a1:assistant"], units: [validUnitOf("", "t")], reply: "t", assistant_uuid: "uuid-a1" }],
+    ["units 元素 text 空", { unit_count: 1, unit_keys: ["a1:assistant"], units: [validUnitOf("a1:assistant", "")], reply: "", assistant_uuid: "uuid-a1" }],
+    ["units 元素 text 非字符串", { unit_count: 1, unit_keys: ["a1:assistant"], units: [{ key: "a1:assistant", role: "assistant", text: 123, text_sha256: "a".repeat(64), size_bytes: 3, assistant_uuid: "uuid-a1" }], reply: "123", assistant_uuid: "uuid-a1" }],
+    ["units 元素 text_sha256 非 64 位十六进制", { unit_count: 1, unit_keys: ["a1:assistant"], units: [{ ...validUnitOf("a1:assistant", "t"), text_sha256: "deadbeef" }], reply: "t", assistant_uuid: "uuid-a1" }],
+    ["units 元素 text_sha256 与 text 不匹配（伪造摘要）", { unit_count: 1, unit_keys: ["a1:assistant"], units: [{ ...validUnitOf("a1:assistant", "t"), text_sha256: sha256Hex(Buffer.from("伪造", "utf8")) }], reply: "t", assistant_uuid: "uuid-a1" }],
+    ["units 元素 size_bytes 与 text 不匹配", { unit_count: 1, unit_keys: ["a1:assistant"], units: [{ ...validUnitOf("a1:assistant", "t"), size_bytes: 999 }], reply: "t", assistant_uuid: "uuid-a1" }],
+    ["units 元素 size_bytes 非正整数", { unit_count: 1, unit_keys: ["a1:assistant"], units: [{ ...validUnitOf("a1:assistant", "t"), size_bytes: 0 }], reply: "t", assistant_uuid: "uuid-a1" }],
+    ["快照级 assistant_uuid 缺失", { ...validSnapshotOf(["a1:assistant"], [singleText]), assistant_uuid: undefined }],
+    ["快照级 assistant_uuid 空字符串", { ...validSnapshotOf(["a1:assistant"], [singleText]), assistant_uuid: "" }],
+    ["reply 与 units 拼接不一致（脱钩 reply）", { ...validSnapshotOf(["a1:assistant"], [singleText]), reply: "被篡改的回复" }],
+    ["reply 非字符串", { ...validSnapshotOf(["a1:assistant"], [singleText]), reply: 123 }],
   ];
   for (const [label, snapshot] of malformedCases) {
     const error = await assertRejectsWith((async () => assertInboundExtensionGate(snapshot))(), "INBOUND_REPLY_SNAPSHOT_MALFORMED");

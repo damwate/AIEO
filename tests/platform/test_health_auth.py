@@ -65,14 +65,21 @@ def test_service_agent_bearer_token_authenticates_without_cookie(tmp_path):
     })
     token = created["service_token"]
     assert token.startswith("ait_")
-    # bearer token works on protected endpoints; no cookie, no CSRF needed
+    # bearer token authenticates; authorization follows the C7 §8.6 service whitelist
+    # (T-P1-901 F-403): /projects is outside the allowlist → 403 for both read and write.
     response = client.get("/api/v1/projects",
                           headers={"Authorization": f"Bearer {token}"})
-    assert response.status_code == 200
+    assert response.status_code == 403
+    assert response.json()["code"] == "AUTH-0002"
     response = client.post("/api/v1/projects",
                            json={"project_id": "PROJ-TOKEN", "name": "token-made"},
                            headers={"Authorization": f"Bearer {token}"})
-    assert response.status_code == 201
+    assert response.status_code == 403
+    assert response.json()["code"] == "AUTH-0002"
+    # whitelisted workflow endpoint (whoami) still works with bearer only
+    whoami = client.get("/api/v1/auth/session", headers={"Authorization": f"Bearer {token}"})
+    assert whoami.status_code == 200
+    assert whoami.json()["kind"] == "service"
     # invalid token rejected
     response = client.get("/api/v1/projects", headers={"Authorization": "Bearer ait_bogus"})
     assert response.status_code == 401

@@ -2,8 +2,8 @@
   "transport": "git_pointer_manifest",
   "contract_version": "1.0",
   "task_id": "T-P1-901",
-  "execution_id": "EXEC-905",
-  "purpose": "Phase1 module review input materials (round 5): M1 platform + M2 gpt_controller (incl. F-001/F-101/F-201 rework) + M4 git_worker source, tests, test evidence logs, round-3/4 review evidence and verification report",
+  "execution_id": "EXEC-906",
+  "purpose": "Phase1 module review input materials (round 6): M1 platform (incl. F-403 rework service whitelist) + M2 gpt_controller (incl. F-001/F-101/F-201/F-402 rework) + M4 git_worker source, tests, test evidence logs, round-3/4/5 review evidence and verification report",
   "files": [
     {
       "path": "app/frontend/index.html",
@@ -169,8 +169,8 @@
     },
     {
       "path": "app/gpt_controller/src/inbound_reply.mjs",
-      "artifact_sha256": "a65c1bf324a8c0844d6a91475e39ed92472b51c8df5e4c0eab508315d0a86374",
-      "size_bytes": 27468,
+      "artifact_sha256": "6603b7c50c310c001f7abd7621a29ec8cc00b30c1c2be1bd052abb874d13b26d",
+      "size_bytes": 29896,
       "media_type": "text/plain"
     },
     {
@@ -217,8 +217,8 @@
     },
     {
       "path": "app/gpt_controller/tests/browser_simulation.test.mjs",
-      "artifact_sha256": "229dd1c6a2330ddc5a99017e07d3057e298ce1819b721824cb13ab860446bf02",
-      "size_bytes": 31558,
+      "artifact_sha256": "f2d48791da553473262e3139e763888c831fd3a269de6b923502794bc59f4891",
+      "size_bytes": 38069,
       "media_type": "text/plain"
     },
     {
@@ -247,8 +247,8 @@
     },
     {
       "path": "app/gpt_controller/tests/unit.test.mjs",
-      "artifact_sha256": "73fcc885b7430e080df8890be5fa6bc1c3c17fcdfe4ee64848854b71b4e23c7e",
-      "size_bytes": 41837,
+      "artifact_sha256": "08dedd8800e8954bf83069db8cb2cef867eea043aae00d3c0757e9089f58df24",
+      "size_bytes": 46673,
       "media_type": "text/plain"
     },
     {
@@ -259,8 +259,8 @@
     },
     {
       "path": "app/platform/api.py",
-      "artifact_sha256": "ee0546c0e868a275fcd372c74defae5453625665ba35cf0e06520a8723b45387",
-      "size_bytes": 26769,
+      "artifact_sha256": "d4c244c8df8242808778a0fe808086902a32950c90603b2458e485b8ce20efe9",
+      "size_bytes": 26952,
       "media_type": "text/plain"
     },
     {
@@ -343,8 +343,8 @@
     },
     {
       "path": "app/platform/security.py",
-      "artifact_sha256": "df09ffd14726bccb208a141d36459940cd61e19b6e4f2374bec7d2ff3c2fb5e4",
-      "size_bytes": 8234,
+      "artifact_sha256": "a8a4781449957354305788c32191170d956e8b3735608bcf0a5d785ee532a648",
+      "size_bytes": 9986,
       "media_type": "text/plain"
     },
     {
@@ -361,8 +361,8 @@
     },
     {
       "path": "docs/AI-DEV-LESSONS.md",
-      "artifact_sha256": "500d4555eece7423902235baebc622b240f7975740133dec845c72a686afb09b",
-      "size_bytes": 71137,
+      "artifact_sha256": "ae6fd1ee922a9a7d6bc1ca8071764c8326f874a1085e0f4a602b45f426453d27",
+      "size_bytes": 79537,
       "media_type": "text/plain"
     },
     {
@@ -403,8 +403,8 @@
     },
     {
       "path": "handoff/PHASE1-MODULE-REVIEW.md",
-      "artifact_sha256": "e970d04d8027eaf9b713c6b3f3bd08cf4e9cc9347801a82ba4d2f4a8fbdce68f",
-      "size_bytes": 13283,
+      "artifact_sha256": "5283c8823b00e6e17467cb2d833213cb61058abc4fc5a73e7237b60671a904eb",
+      "size_bytes": 17885,
       "media_type": "text/plain"
     },
     {
@@ -510,16 +510,58 @@
       "media_type": "text/plain"
     },
     {
+      "path": "phase0/logs/dispatch-2026-11-12T18-15-47/m1-registration.json",
+      "artifact_sha256": "f8d4787ed44b8dd07576532bc0241e398cc81398802fdf8c54a3df5a39330543",
+      "size_bytes": 9120,
+      "media_type": "application/json"
+    },
+    {
+      "path": "phase0/logs/dispatch-2026-11-12T18-15-47/raw-units.json",
+      "artifact_sha256": "80dc42fc4ab724e17c267a41220ffc394a82d6ac18edb73079d3e1fc9b176ddc",
+      "size_bytes": 9992,
+      "media_type": "application/json"
+    },
+    {
+      "path": "phase0/logs/dispatch-2026-11-12T18-15-47/reply.txt",
+      "artifact_sha256": "54844e4c5115a7bbcc6e2cf85b1389285251a39fc3109dc2816718cc669b156c",
+      "size_bytes": 7138,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "phase0/logs/dispatch-2026-11-12T18-15-47/request.txt",
+      "artifact_sha256": "9fa7c594a5c46b02c95c157f1df9a54600bcde11858a1ea6eb09273a45b1707c",
+      "size_bytes": 1171,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "phase0/logs/dispatch-2026-11-12T18-15-47/result.json",
+      "artifact_sha256": "ea596b3908fdf3b073b91f10e6bd6814fdc843a1e2223bd54c207a964c722e54",
+      "size_bytes": 13107,
+      "media_type": "application/json"
+    },
+    {
+      "path": "phase0/logs/dispatch-2026-11-12T18-15-47/run.log",
+      "artifact_sha256": "05ced682135b2e7c20d14b97eb1634fd95e8dae03824db62bd20073c9beb6848",
+      "size_bytes": 1128,
+      "media_type": "text/plain"
+    },
+    {
       "path": "phase0/logs/gpt-reviewer-session.json",
-      "artifact_sha256": "5eb92349968984a618cbf268633e16ec9a8fd72708f6297a82a2e41cc3c1f86e",
+      "artifact_sha256": "fc6c554bf8669011c79070427bb9e0e084fbdd733fa545cc7ad3ce312818368d",
       "size_bytes": 153,
       "media_type": "application/json"
     },
     {
       "path": "phase0/logs/m1-artifact-registry.json",
-      "artifact_sha256": "789b3280f2bec4e8cb34746db1c4303a3d80eb7f383a85051ab637cbd1a85edd",
-      "size_bytes": 35158,
+      "artifact_sha256": "302964645ccd8f83380c6450470901354369c3cfc9780cacc99f5ea559c0cfc2",
+      "size_bytes": 43389,
       "media_type": "application/json"
+    },
+    {
+      "path": "phase1/logs/m1-platform-20261113/f403-rework/pytest-f403-rework.log",
+      "artifact_sha256": "c381ee957af485961d1b6dea0a75f63920342316f4c4f299ebb117e5c13595e2",
+      "size_bytes": 689,
+      "media_type": "text/plain"
     },
     {
       "path": "phase1/logs/m1-platform-20261113/npm-build-20261113-003103.log",
@@ -606,6 +648,12 @@
       "media_type": "text/plain"
     },
     {
+      "path": "phase1/logs/m2-gpt-controller-20261113/f402-rework/node-test-f402-rework.log",
+      "artifact_sha256": "33378c66e0904dba2517669c58e7848c3991fe7d33cad40247b26c07c0deba32",
+      "size_bytes": 7310,
+      "media_type": "text/plain"
+    },
+    {
       "path": "phase1/logs/m2-gpt-controller-20261113/lock_mutex-20261113-run1.log",
       "artifact_sha256": "1fcd7f2e8714ad98813cc9b3c40d00302828c8cc49a095cd03263cac1f8d8438",
       "size_bytes": 533,
@@ -643,8 +691,8 @@
     },
     {
       "path": "tests/platform/test_health_auth.py",
-      "artifact_sha256": "48008c19ec603c76bbc1c429e40edbae462d0ddd86c71957d79175e952744095",
-      "size_bytes": 3256,
+      "artifact_sha256": "8f94506e1445a9f7cf9b8030209e9232ee0e01954a72f7fd9d900420ebd6c3bf",
+      "size_bytes": 3711,
       "media_type": "text/plain"
     },
     {
