@@ -300,7 +300,14 @@ PENDING 可被发送方取消 → CANCELLED（终态）
 | 短指令网页投递 | 已完成；当前继承会话收到短指令并返回结构化审查结果 | 同上；证明本次实际投递成功，不扩展宣称所有长度/网络条件均已验证 |
 | 超过 1200 字节的网页回复完整提取 | 已完成；提取结果为 **4023 个 UTF-8 解码后字符、8854 字节**，包含完整可解析 JSON、`result=BLOCKED`、15 项 `required_boundaries` 和 16 项 `failure_paths` | 原始文件 `phase0/logs/payload-choice-inherited-reply.txt`；实测 SHA-256 `ce1ca55c5d6397995043b42a5a327fef7879a80306301fa9b61f170e0c7a5c71`。证明入站可超过 1200 字节，不能把出站限制套用于 DOM 回复 |
 
-**本次没有执行、不得记为 PASS 的测试：** 新 GitPointer/manifest Schema 的自动生成与端到端派发、多文件部分读取、私有仓库权限、网络退避耗尽、SHA/路径/hash/size/范围负例、秘密扫描、超限边界、M1 artifact 登记失败后的幂等补登记、受控写回仓库。现有 POC 只支持“公开仓库指定 commit 阅读 + 短指令投递 + 长回复完整提取”的有限结论，**BLOCKED-1 仍为“修订中，待复审”**。
+**本次没有执行、不得记为 PASS 的测试：** 多文件部分读取、私有仓库权限、网络退避耗尽、SHA/路径/hash/size/范围负例、秘密扫描、超限边界、M1 artifact 登记失败后的幂等补登记、受控写回仓库。现有 POC 只支持“公开仓库指定 commit 阅读 + 短指令投递 + 长回复完整提取”的有限结论，**BLOCKED-1 仍为“修订中，待复审”**。
+
+#### 2.6.10 Schema 与入站实现补充证据（复审 BLOCKED 后新增）
+
+- 机器 Schema 已落地：`contracts/v1.0/git-pointer.schema.json`、`git-pointer-manifest.schema.json`、`review-report.schema.json`；Ajv 正/负例测试 **30/30** 通过（`phase0/tools/test_schemas.mjs`、`phase0/logs/schema-tests.log`）。
+- 入站实现已补齐：`phase0/tools/gpt_dispatch.mjs` 记录本次 user unit key，提取其后至下一 user 前的全部 assistant unit；两次完整读取比较 key 列表、数量、逐 unit 全文 SHA-256 和尾部 UUID；先保存 `raw-units.json` 与 `reply.txt` 并回读校验，再写 `result.json`。本地负例测试 **9/9** 通过（`phase0/tools/test_inbound_reply.mjs`、`phase0/logs/rework-inbound-tests.{log,json}`）。
+- 真实网页 POC：`phase0/logs/dispatch-2026-11-12T04-00-43/`。请求 493 UTF-8 字节，真实回复 **6625 UTF-8 字节**（>1200），assistant UUID `8535d4f2-1c41-4091-817f-7b7c0f3f314a`；两次完整读取间隔 3020ms；`reply.txt` SHA-256 `27c6c9e3c3e644cd6abcf0ebab932793d5f6c5dc3fb92aedbcc15e2b5f230af7`。工具退出后独立回读校验全部通过（`independent-verification.json`，17 项 checks 全 true）。详见 `phase0/logs/inbound-real-poc.md`。
+- 证据边界：真实网页 POC 为单 assistant unit；真实多 unit、虚拟列表裁切和网页故障注入未执行，仅由本地自动化覆盖。M1 artifact 登记、ACK、幂等补登记仍未实现/验证；GitPointer 实际发布/读取、私有权限、网络退耗、秘密扫描等端到端测试未执行。上述未验证项不得被本记录掩盖，BLOCKED-1 需由复审决定是否解除。
 
 ---
 

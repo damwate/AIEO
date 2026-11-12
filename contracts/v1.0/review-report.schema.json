@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aieo.local/contracts/v1.0/review-report.schema.json",
+  "title": "AIEO review report v1.0",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "contract_version",
+    "task_id",
+    "execution_id",
+    "correlation_id",
+    "reviewer_agent_id",
+    "reviewed_commit",
+    "input_material_commit",
+    "input_material_manifest_path",
+    "input_material_manifest_sha256",
+    "task_package_hash",
+    "base_commit",
+    "engineering_standard_version",
+    "knowledge_base_commit",
+    "result",
+    "summary"
+  ],
+  "properties": {
+    "contract_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+$" },
+    "task_id": { "type": "string", "pattern": "^T-(P[0-9]+-)?[0-9]{3,}$" },
+    "execution_id": { "type": "string", "pattern": "^EXEC-[0-9]{3,}$" },
+    "correlation_id": {
+      "type": "string",
+      "maxLength": 64,
+      "anyOf": [
+        { "pattern": "^CORR-[0-9]{3,}$" },
+        { "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$" }
+      ]
+    },
+    "reviewer_agent_id": { "type": "string", "pattern": "^[A-Z0-9-]{1,32}$" },
+    "reviewed_commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "input_material_commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "input_material_manifest_path": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^(?!/)(?!^[A-Za-z][A-Za-z0-9+.-]*:)(?!.*\\\\)(?!.*(?:^|/)\\.\\.?(?:/|$))(?!.*(?:^|/)\\.git(?:/|$))(?!.*/$).+$"
+    },
+    "input_material_manifest_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "task_package_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "base_commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "engineering_standard_version": { "type": "string", "minLength": 1, "maxLength": 100 },
+    "knowledge_base_commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "result": { "type": "string", "enum": ["PASS", "REWORK", "BLOCKED"] },
+    "summary": { "type": "string", "minLength": 1 },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["finding_id", "severity", "description"],
+        "properties": {
+          "finding_id": { "type": "string", "minLength": 1 },
+          "severity": { "type": "string", "enum": ["BLOCKER", "CRITICAL", "MAJOR", "MINOR", "INFO"] },
+          "file": { "type": "string" },
+          "line": { "type": "integer", "minimum": 1 },
+          "category": { "type": "string" },
+          "description": { "type": "string", "minLength": 1 },
+          "impact": { "type": "string" },
+          "recommendation": { "type": "string" }
+        }
+      }
+    },
+    "required_boundaries": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "failure_paths": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "remaining_findings": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "unblocked": { "type": "boolean" }
+  }
+}

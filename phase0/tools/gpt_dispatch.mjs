@@ -4,11 +4,15 @@
 //   node gpt_dispatch.mjs --new-session --message-file <txt>   # 新建审查会话并发送首条消息
 //   node gpt_dispatch.mjs --message-file <txt>                 # 向已保存会话发送
 //   node gpt_dispatch.mjs --message "<文本>"                   # 直接传文本
+//   可选绑定：--task-id <T-P1-001> --execution-id <EXEC-001> --correlation-id <CORR-001>
 //
 // 行为：
-//   - 复用 POC-03 验证过的 CDP 接管模式与 DOM 契约（结构化判定、发送双验、75s 确认窗、特征串提取）
-//   - 单条消息强制 ≤1200 UTF-8 字节（ego 手册硬上限；超限即拒绝，不做静默截断）
-//   - 证据落盘 logs/dispatch-<ts>/：request.txt / reply.txt / result.json / 截图
+//   - 复用 POC-03 验证过的 CDP 接管模式与 DOM 契约（结构化判定、发送双验、75s 确认窗）
+//   - 单条消息强制 ≤1200 UTF-8 字节；超限即拒绝，不截断、不自动拆分、不做网页长文本降级
+//   - 以发送双验确认的 user unit key 为起点，提取下一 user 前的全部 assistant unit
+//   - 确认窗后至少间隔 3 秒做两次完整读取，核对 key 列表、数量、逐 unit 全文 SHA-256 和尾部 UUID
+//   - 证据落盘 logs/dispatch-<ts>/：request.txt / raw-units.json / reply.txt / result.json / 截图
+//   - raw-units.json 与 reply.txt 先落盘并回读验证原始字节，成功后才写 result.json
 //   - 新会话发送后自动捕获 /c/<uuid> 存入 logs/gpt-reviewer-session.json
 //
 // 注：判定辅助函数与本脚本内联（而非 import e2e_orchestrate），
@@ -20,11 +24,16 @@ import { existsSync, mkdirSync, writeFileSync, readFileSync, appendFileSync } fr
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { acquireSessionLock } from "../e2e-poc/session_lock.mjs";
+import {
+  MIN_STABLE_READ_INTERVAL_MS,
+  compareInboundSnapshots,
+  persistInboundArtifacts,
+  selectInboundReply,
+} from "./inbound_reply.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const AIEO_ROOT = join(__dirname, "..", "..");
 const PROFILE_DIR = join(AIEO_ROOT, "runtime", "chrome_profiles", "gpt-poc");
-const SHOT_DIR = join(__dirname, "..", "screenshots");
 const LOG_DIR = join(__dirname, "..", "logs");
 const REVIEWER_SESSION = join(LOG_DIR, "gpt-reviewer-session.json");
 const SESSION_JSON = join(LOG_DIR, "gpt-poc-session.json");
@@ -33,10 +42,17 @@ const CHROME = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
 const DEBUG_PORT = 9222;
 const CDP_URL = `http://127.0.0.1:${DEBUG_PORT}`;
 const CHATGPT_HOME = "https://chatgpt.com/";
-const CONFIRM_WINDOW_MS = Number(process.env.AIEO_CONFIRM_WINDOW_MS || 75000);
+const CONFIRM_WINDOW_MS = Number(
+  process.env.AIEO_GPT_CONTROLLER_CONFIRM_WINDOW_MS || process.env.AIEO_CONFIRM_WINDOW_MS || 75000,
+);
+const STABLE_READ_INTERVAL_MS = Math.max(
+  MIN_STABLE_READ_INTERVAL_MS,
+  Number(process.env.AIEO_GPT_CONTROLLER_STABLE_READ_INTERVAL_MS || MIN_STABLE_READ_INTERVAL_MS),
+);
+const GENERATION_TIMEOUT_MS = Number(process.env.AIEO_GPT_CONTROLLER_GENERATION_TIMEOUT_MS || 300000);
 const READY_TIMEOUT_MS = 40000;
 const SEND_ACCEPT_TIMEOUT_MS = 30000;
-const MAX_MSG_BYTES = 1200; // ego 手册硬上限（单块 insertText）
+const MAX_MSG_BYTES = 1200; // 网页 insertText 硬上限，不适用于入站回复
 
 const args = process.argv.slice(2);
 const newSession = args.includes("--new-session");
@@ -45,18 +61,47 @@ const fileIdx = args.indexOf("--message-file");
 let message = null;
 if (fileIdx >= 0) message = readFileSync(args[fileIdx + 1], "utf8").trim();
 else if (msgIdx >= 0) message = args[msgIdx + 1];
-if (!message) { console.error("用法: node gpt_dispatch.mjs [--new-session] --message-file <txt> | --message <文本>"); process.exit(2); }
+if (!message) {
+  console.error("用法: node gpt_dispatch.mjs [--new-session] --message-file <txt> | --message <文本> [--task-id <id>] [--execution-id <id>] [--correlation-id <id>]");
+  process.exit(2);
+}
+
+function optionalArg(flag) {
+  const index = args.indexOf(flag);
+  if (index < 0) return null;
+  const value = args[index + 1];
+  if (!value || value.startsWith("--")) {
+    console.error(`${flag} 缺少值`);
+    process.exit(2);
+  }
+  return value;
+}
+const optionalIds = {
+  task_id: optionalArg("--task-id"),
+  execution_id: optionalArg("--execution-id"),
+  correlation_id: optionalArg("--correlation-id"),
+};
+const idRules = {
+  task_id: /^T-(P[0-9]+-)?[0-9]{3,}$/,
+  execution_id: /^EXEC-[0-9]{3,}$/,
+  correlation_id: /^(CORR-[0-9]{3,}|[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})$/,
+};
+for (const [field, value] of Object.entries(optionalIds)) {
+  if (value !== null && !idRules[field].test(value)) {
+    console.error(`${field} 格式不合法: ${value}`);
+    process.exit(2);
+  }
+}
 
 const msgBytes = Buffer.byteLength(message, "utf8");
 if (msgBytes > MAX_MSG_BYTES) {
-  console.error(`消息 ${msgBytes} 字节，超过单块上限 ${MAX_MSG_BYTES}。请拆分或精简（分块投递属 Phase 1 范围）。`);
+  console.error(`消息 ${msgBytes} 字节，超过单条上限 ${MAX_MSG_BYTES}。请缩短指令或改用 GitPointer；不自动拆分，不做网页长文本降级。`);
   process.exit(2);
 }
 
 const stamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
 const EV_DIR = join(LOG_DIR, `dispatch-${stamp}`);
 mkdirSync(EV_DIR, { recursive: true });
-mkdirSync(SHOT_DIR, { recursive: true });
 
 function log(msg) {
   const line = `[${new Date().toISOString()}] ${msg}`;
@@ -64,7 +109,6 @@ function log(msg) {
   appendFileSync(join(EV_DIR, "run.log"), line + "\n", "utf8");
 }
 async function shot(page, name) {
-  await page.screenshot({ path: join(SHOT_DIR, name) }).catch(() => {});
   await page.screenshot({ path: join(EV_DIR, name) }).catch(() => {});
   log(`截图: ${name}`);
 }
@@ -100,7 +144,7 @@ async function attachPage() {
   return { browser, page };
 }
 
-// ---------- DOM 契约（与已验证版本一致） ----------
+// ---------- DOM 契约 ----------
 async function readTailUnit(page) {
   return page.evaluate(() => {
     const units = Array.from(document.querySelectorAll("[data-content-search-unit-key]")).filter(
@@ -111,33 +155,52 @@ async function readTailUnit(page) {
     const role = key.split(":").pop();
     let assistantUuid = null;
     if (role === "assistant") {
-      const dil = last.querySelector("[data-dil-response][data-dil-message-id]");
-      assistantUuid = dil ? dil.getAttribute("data-dil-message-id") : null;
+      const dils = Array.from(last.querySelectorAll("[data-dil-response][data-dil-message-id]"));
+      if (dils.length === 1) {
+        const id = dils[0].getAttribute("data-dil-message-id") || "";
+        assistantUuid = id.length > 0 ? id : null;
+      }
     }
     return { role, key, assistantUuid };
   });
 }
-async function readReplyAfterOwnMessage(page, marker) {
-  return page.evaluate((marker) => {
-    const units = Array.from(document.querySelectorAll("[data-content-search-unit-key]")).filter(
-      (el) => el.offsetParent !== null || el.getClientRects().length > 0);
-    const norm = (s) => (s || "").replace(/\s+/g, "");
-    let lastUserIdx = -1;
-    for (let i = 0; i < units.length; i++) {
-      const key = units[i].getAttribute("data-content-search-unit-key") || "";
-      if (key.split(":").pop() === "user" && norm(units[i].innerText).includes(marker)) lastUserIdx = i;
+
+// 完整读取当前 DOM 渲染集合，不用文本 marker，也不只取尾部或可视片段。
+async function readDomUnits(page) {
+  return page.evaluate(() => Array.from(document.querySelectorAll("[data-content-search-unit-key]")).map((el) => {
+    const key = el.getAttribute("data-content-search-unit-key") || "";
+    const role = key.split(":").pop();
+    const dils = Array.from(el.querySelectorAll("[data-dil-response][data-dil-message-id]"));
+    let assistantUuid = null;
+    if (role === "assistant" && dils.length === 1) {
+      const id = dils[0].getAttribute("data-dil-message-id") || "";
+      assistantUuid = id.length > 0 ? id : null;
     }
-    if (lastUserIdx < 0) return null;
-    const out = [];
-    for (const el of units.slice(lastUserIdx + 1)) {
-      const key = el.getAttribute("data-content-search-unit-key") || "";
-      if (key.split(":").pop() === "assistant") {
-        out.push({ key, text: (el.innerText || "").replace(/^ChatGPT 说：\s*/i, "").trim() });
-      }
-    }
-    return out;
-  }, marker);
+    return {
+      key,
+      role,
+      text: el.innerText ?? "",
+      assistantUuid,
+      visible: el.offsetParent !== null || el.getClientRects().length > 0,
+    };
+  }));
 }
+
+async function readReplySnapshot(page, userUnitKey) {
+  const readStartedAt = Date.now();
+  const domUnits = await readDomUnits(page);
+  const selected = selectInboundReply(domUnits, userUnitKey);
+  const visibleUnits = domUnits.filter((unit) => unit.visible);
+  const tail = visibleUnits.length > 0 ? visibleUnits[visibleUnits.length - 1] : null;
+  return {
+    ...selected,
+    read_started_at: new Date(readStartedAt).toISOString(),
+    read_finished_at: new Date().toISOString(),
+    rendered_unit_keys: domUnits.map((unit) => unit.key),
+    tail: tail ? { key: tail.key, role: tail.role, assistantUuid: tail.assistantUuid } : null,
+  };
+}
+
 async function stopButtonVisible(page) {
   return page.evaluate(() => {
     const candidates = document.querySelectorAll(
@@ -152,27 +215,19 @@ async function stopButtonVisible(page) {
   });
 }
 
-// ---------- 会话上限迁移 ----------
-async function rotateIfContextLimit(page) {
+// ---------- 会话上限安全停止 ----------
+async function stopIfContextLimit(page) {
   // 上限横幅可能晚于 unit/composer 就绪出现，不能只做一次即时检查
   const limited = await page
     .waitForFunction(() => (document.body?.innerText || "").includes("上下文窗口已达上限"), null, { timeout: 5000 })
     .then(() => true)
     .catch(() => false);
   if (!limited) return false;
-  log("检测到上下文窗口已达上限：不继承旧会话，改为 Git 交接包 + 全新空白会话");
-  // 不带自动摘要：长会话继承可能把上下文负担带入新会话。统一从首页新建空白会话，
-  // 由自包含简报指向仓库中的交接文档恢复上下文。
-  await page.goto(CHATGPT_HOME, { waitUntil: "domcontentloaded", timeout: 60000 });
-  await page.waitForTimeout(3000);
-  const composer = page.locator('[aria-label="询问 ChatGPT"], [aria-label="Ask ChatGPT"], #prompt-textarea').filter({ visible: true }).first();
-  await composer.waitFor({ state: "visible", timeout: 30000 });
-  log(`已创建空白新会话（未继承摘要）: ${page.url()}`);
-  await shot(page, "session-rotated-blank-by-limit.png");
-  return true;
+  await shot(page, "session-context-limit-stop.png");
+  throw new Error("CONTEXT_LIMIT_STOP: 上下文窗口已达上限，已停止自动化；请由主会话换会话，不重发、不自动迁移");
 }
 
-// ---------- 发送并收集（判定逻辑与 e2e_orchestrate 同语义） ----------
+// ---------- 发送并收集 ----------
 async function sendAndCollect(page, text, label) {
   const findComposer = async () => {
     const loc = page.locator('[aria-label="询问 ChatGPT"], [aria-label="Ask ChatGPT"], #prompt-textarea').filter({ visible: true }).first();
@@ -190,59 +245,77 @@ async function sendAndCollect(page, text, label) {
   await c.focus();
   await page.keyboard.press("Enter");
 
-  // 发送双验（R3 语义）：tail 确认后观察停止按钮
-  let tailOk = false, stopOkAfterTail = false, polls = 0;
+  // 发送双验：记录本次新 user unit key，并在 tail 确认后观察停止按钮。
+  let tailOk = false;
+  let stopOkAfterTail = false;
+  let sentUserUnitKey = null;
+  let polls = 0;
   const t0 = Date.now();
   while (Date.now() - t0 < SEND_ACCEPT_TIMEOUT_MS) {
     polls++;
     const tail = await readTailUnit(page);
-    if (!tailOk && tail && tail.role === "user" && tail.key !== baseline?.key) tailOk = true;
+    if (!tailOk && tail && tail.role === "user" && tail.key && tail.key !== baseline?.key) {
+      tailOk = true;
+      sentUserUnitKey = tail.key;
+    }
     if (tailOk && (await stopButtonVisible(page))) stopOkAfterTail = true;
     if (tailOk && stopOkAfterTail) break;
     await page.waitForTimeout(1000);
   }
-  if (!(tailOk && stopOkAfterTail)) {
-    throw new Error(`发送双验未通过（tailOk=${tailOk} stopOkAfterTail=${stopOkAfterTail}），UNCERTAIN，不重发`);
+  if (!(tailOk && stopOkAfterTail && sentUserUnitKey)) {
+    throw new Error(`发送双验未通过（tailOk=${tailOk} stopOkAfterTail=${stopOkAfterTail} userUnitKey=${sentUserUnitKey || "missing"}），UNCERTAIN，不重发`);
   }
-  log(`[${label}] 发送双验通过（polls=${polls}，tail 后观察）`);
+  log(`[${label}] 发送双验通过（polls=${polls}，user_unit_key=${sentUserUnitKey}，tail 后观察）`);
   await shot(page, `sent-${label}.png`);
 
-  // 生成等待 + 300s 超时
-  let generationObserved = stopOkAfterTail, generationEnded = false;
+  // 生成等待 + 默认 300s 超时
+  let generationObserved = stopOkAfterTail;
+  let generationEnded = false;
   const t1 = Date.now();
-  while (Date.now() - t1 < 300000) {
+  while (Date.now() - t1 < GENERATION_TIMEOUT_MS) {
     const gen = await stopButtonVisible(page);
     if (gen) generationObserved = true;
     if (generationObserved && !gen) { generationEnded = true; break; }
     await page.waitForTimeout(2000);
   }
-  if (!generationEnded) throw new Error(`GENERATION_TIMEOUT: 300s 内未确认生成结束`);
+  if (!generationEnded) throw new Error(`GENERATION_TIMEOUT: ${GENERATION_TIMEOUT_MS}ms 内未确认生成结束`);
   await page.waitForTimeout(CONFIRM_WINDOW_MS);
 
-  // 最终 6 项判定
+  // 确认窗后进行两次完整 unit 读取；任何全文、key、数量或 UUID 变化都会抛错。
   const finalStopVisible = await stopButtonVisible(page);
-  const tailAfter = await readTailUnit(page);
-  await page.waitForTimeout(3000);
-  const tailAgain = await readTailUnit(page);
+  const firstReadStartedMs = Date.now();
+  const firstSnapshot = await readReplySnapshot(page, sentUserUnitKey);
+  await page.waitForTimeout(STABLE_READ_INTERVAL_MS);
+  const secondReadStartedMs = Date.now();
+  const secondSnapshot = await readReplySnapshot(page, sentUserUnitKey);
+  const stability = compareInboundSnapshots(firstSnapshot, secondSnapshot, secondReadStartedMs - firstReadStartedMs);
+  const tailAfter = firstSnapshot.tail;
+  const tailAgain = secondSnapshot.tail;
+  const finalStopVisibleAgain = await stopButtonVisible(page);
   const composerEmpty = ((await c.innerText().catch(() => "x")) || "").trim() === "";
   const checks = {
     generation_observed: generationObserved === true,
     generation_ended: generationEnded === true,
-    final_stop_button_not_visible: finalStopVisible === false,
-    tail_is_assistant: tailAfter?.role === "assistant",
+    final_stop_button_not_visible: finalStopVisible === false && finalStopVisibleAgain === false,
+    tail_is_assistant: tailAfter?.role === "assistant" && tailAgain?.role === "assistant",
     dil_uuid_present: typeof tailAfter?.assistantUuid === "string" && tailAfter.assistantUuid.length > 0,
     uuid_stable: typeof tailAfter?.assistantUuid === "string" && tailAfter.assistantUuid === tailAgain?.assistantUuid,
+    target_tail_matches_overall:
+      firstSnapshot.assistant_uuid === tailAfter?.assistantUuid && secondSnapshot.assistant_uuid === tailAgain?.assistantUuid,
+    stable_unit_read: stability.stable === true,
     composer_empty: composerEmpty === true,
   };
   if (!Object.values(checks).every(Boolean)) {
     throw new Error(`完成判定未通过: ${JSON.stringify(checks)}`);
   }
-  const marker = text.replace(/\s+/g, "").slice(0, 18);
-  const units = (await readReplyAfterOwnMessage(page, marker)) || [];
-  const reply = units.map((u) => u.text).join("\n").trim();
-  log(`[${label}] COMPLETED，回复 ${reply.length} 字符`);
+  log(`[${label}] COMPLETED，${secondSnapshot.unit_count} 个 assistant unit，回复 ${Buffer.byteLength(secondSnapshot.reply, "utf8")} UTF-8 字节`);
   await shot(page, `reply-${label}.png`);
-  return { reply, assistant_uuid: tailAfter.assistantUuid, checks };
+  return {
+    snapshot: secondSnapshot,
+    assistant_uuid: secondSnapshot.assistant_uuid,
+    checks,
+    stability,
+  };
 }
 
 // ---------- 主流程 ----------
@@ -295,35 +368,69 @@ async function mainLocked() {
     log(`会话就绪: ${targetUrl}`);
   }
 
-  await rotateIfContextLimit(page);
+  await stopIfContextLimit(page);
 
-  const { reply, assistant_uuid, checks } = await sendAndCollect(page, message, "dispatch");
+  const { snapshot, assistant_uuid, checks, stability } = await sendAndCollect(page, message, "dispatch");
 
-  // 无论新建还是上限迁移，均保存当前真实会话 URL（local-chatgpt 草稿态跳过）
+  // 保存当前真实会话 URL（local-chatgpt 草稿态跳过；上限已在发送前安全停止）
+  let conversationUrl = null;
+  let sessionId = null;
   for (let i = 0; i < 10; i++) {
-    const m = page.url().match(/chatgpt\.com\/(c\/[0-9a-f-]{36})/i);
+    const m = page.url().match(/chatgpt\.com\/(?:.*\/)?c\/([0-9a-f-]{36})/i);
     if (m) {
-      const session = { conversation_url: `https://chatgpt.com/${m[1]}`, captured_at: new Date().toISOString(), role: "reviewer" };
+      sessionId = m[1];
+      conversationUrl = `https://chatgpt.com/c/${sessionId}`;
+      const session = { conversation_url: conversationUrl, captured_at: new Date().toISOString(), role: "reviewer" };
       writeFileSync(REVIEWER_SESSION, JSON.stringify(session, null, 2), "utf8");
       log(`审查会话已保存: ${session.conversation_url}`);
       break;
     }
     await page.waitForTimeout(1000);
   }
+  if (!conversationUrl || !sessionId) throw new Error("SESSION_URL_UNAVAILABLE: 未取得真实会话 URL，拒绝写成功结果");
 
-  const result = { at: new Date().toISOString(), message_bytes: msgBytes, reply, assistant_uuid, completion_checks: checks };
+  // 原始 unit 与合成回复先落盘、回读核验；任一失败都不会写 result.json。
+  const extractedAt = new Date().toISOString();
+  const artifacts = persistInboundArtifacts({ directory: EV_DIR, snapshot, extractedAt });
+  const result = {
+    at: extractedAt,
+    message_bytes: msgBytes,
+    reply: snapshot.reply,
+    user_unit_key: snapshot.user_unit_key,
+    next_user_unit_key: snapshot.next_user_unit_key,
+    unit_keys: snapshot.unit_keys,
+    unit_count: snapshot.unit_count,
+    assistant_uuid,
+    stability,
+    artifact_sha256: artifacts.reply.artifact_sha256,
+    size_bytes: artifacts.reply.size_bytes,
+    reply_path: artifacts.reply.path,
+    reply_readback_sha256: artifacts.reply.readback_sha256,
+    raw_units_path: artifacts.raw_units.path,
+    raw_units_sha256: artifacts.raw_units.artifact_sha256,
+    raw_units_size_bytes: artifacts.raw_units.size_bytes,
+    raw_units_readback_sha256: artifacts.raw_units.readback_sha256,
+    session_id: sessionId,
+    conversation_url: conversationUrl,
+    completion_checks: {
+      ...checks,
+      raw_units_artifact_readback: artifacts.raw_units.readback_verified === true,
+      reply_artifact_readback: artifacts.reply.readback_verified === true,
+    },
+    ...Object.fromEntries(Object.entries(optionalIds).filter(([, value]) => value !== null)),
+  };
   writeFileSync(join(EV_DIR, "result.json"), JSON.stringify(result, null, 2), "utf8");
-  writeFileSync(join(EV_DIR, "reply.txt"), reply, "utf8");
   await browser.close().catch(() => {});
   await killProfileChrome();
-  log("=== 派单完成 ===");
+  log(`=== 派单完成，artifact_sha256=${result.artifact_sha256} size_bytes=${result.size_bytes} ===`);
   console.log("\n=====REPLY_BEGIN=====");
-  console.log(reply);
+  console.log(snapshot.reply);
   console.log("=====REPLY_END=====");
 }
 
 main().catch((e) => {
-  log(`致命错误: ${e.message}`);
+  const details = e.details === undefined ? "" : ` details=${JSON.stringify(e.details)}`;
+  log(`致命错误: ${e.message}${details}`);
   console.error(e);
   process.exit(1);
 });

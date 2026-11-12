@@ -83,3 +83,9 @@
 - **真实 POC 与状态：** 当前继承 GPT 审查会话已实际完成公开 GitHub 指定 commit 文件阅读、短指令投递和 4023 字符完整网页回复提取；原始回复为 8854 UTF-8 字节、SHA-256 `ce1ca55c5d6397995043b42a5a327fef7879a80306301fa9b61f170e0c7a5c71`，内容是可解析的完整 JSON，证明入站可超过 1200 字节。未宣称新 Schema、多文件、私有权限、故障注入、超限或写回测试已经执行。**BLOCKED-1 保持“修订中，待复审”，本条目不构成 PASS。**
 - **依据：** `phase0/logs/payload-choice-inherited-reply.txt`（真实 GPT 审查：`result=BLOCKED`，15 项 `required_boundaries`、16 项 `failure_paths`，本修订逐条响应）；`docs/phase1/platform-contract-v1.0.md` §2.2/§2.6/§10/§12/§13 本修订；原审查对象 commit `81d63f71ef0c5efa65766c9da0331d4f449d06f2`（仅为修订前基线，不冒充本修订 SHA）。**本修订 commit 由主会话统一验收提交生成，与 DEC-012 同批；当前不预填或虚构 SHA，复审时必须以该实际提交的完整 40 位 SHA 为审查基线。**
 - **关联与约束衍生：** 本条目细化 DEC-007 的 Git 指针方向并关闭其“分块或 Git 指针待选型”的开放口径，承接 DEC-011 的 BLOCKED-1，但不覆盖或改写历史条目。复审须按本修订 commit 逐项核对 GPT 全部要求及 POC 真实范围；复审 PASS 后由主会话另行记录结果并推进 §10 机器 Schema/契约测试落地，子 Agent 不得自行解除阻塞。
+
+### DEC-013 入站完整性与机器 Schema 实现证据（BLOCKED-1 待复审）
+
+- **决策内容：** 将 §2.6.7 从设计要求落实为可执行实现：`gpt_dispatch.mjs` 以本次 user unit key 为起点收集完整 assistant unit 区间，确认窗后两次完整读取比较 key 列表、数量、逐 unit 全文哈希及尾部 UUID；原始 `raw-units.json`/`reply.txt` 先落盘、回读校验 SHA-256/size 后再写 `result.json`。机器 Schema 统一放 `contracts/v1.0/`，正/负例使用 Ajv 验证。网页出站超限只缩短指令或改用 GitPointer，不再保留自动分块提示。
+- **测试证据：** Schema 30/30（`phase0/logs/schema-tests.log`）；入站本地测试 9/9（`phase0/logs/rework-inbound-tests.{log,json}`）；真实网页 POC 回复 6625 UTF-8 字节，assistant UUID `8535d4f2-1c41-4091-817f-7b7c0f3f314a`，`reply.txt` SHA-256 `27c6c9e3c3e644cd6abcf0ebab932793d5f6c5dc3fb92aedbcc15e2b5f230af7`，证据目录 `phase0/logs/dispatch-2026-11-12T04-00-43/`，独立核验 17 项全 true（`independent-verification.json`），报告 `phase0/logs/inbound-real-poc.md`。
+- **边界：** 真实 POC 为单 assistant unit；真实多 unit、虚拟列表裁切、网页故障注入、M1 登记/ACK/幂等补登记、私有权限和 GitPointer 端到端发布读取尚未验证。BLOCKED-1 仍待复审，本条目不构成 PASS。

@@ -1,0 +1,52 @@
+{
+  "started_at": "2026-11-12T04:11:59.237Z",
+  "finished_at": "2026-11-12T04:11:59.253Z",
+  "node": "v24.14.0",
+  "total": 9,
+  "passed": 9,
+  "failed": 0,
+  "artifact_evidence": {
+    "reply_bytes": 4530,
+    "reply_sha256": "d72176a20e6e17b90100b2c4a4dbf86685b723d842ce0bbf728a82d1ec1153c1",
+    "raw_units_bytes": 5087,
+    "raw_units_sha256": "6cb5d7a336d264487533dc9ae121adf133cc22e14e1122dc47242289e979a409"
+  },
+  "tests": [
+    {
+      "name": "正常单 assistant unit，保留原始文本并截断于下一 user",
+      "result": "PASS"
+    },
+    {
+      "name": "多 assistant unit 按 DOM 顺序以单换行合成且忽略 tool unit",
+      "result": "PASS"
+    },
+    {
+      "name": "发送起点因虚拟列表缺失时失败",
+      "result": "PASS"
+    },
+    {
+      "name": "unit 文本变化时全文稳定比较失败",
+      "result": "PASS"
+    },
+    {
+      "name": "unit 新增或 key 列表变化时稳定比较失败",
+      "result": "PASS"
+    },
+    {
+      "name": "尾部 assistant UUID 变化或读取间隔不足均失败",
+      "result": "PASS"
+    },
+    {
+      "name": "相同完整快照双读通过并记录每个全文哈希",
+      "result": "PASS"
+    },
+    {
+      "name": "长回复 artifact 原文不截断且 raw/reply 回读 hash size 一致",
+      "result": "PASS"
+    },
+    {
+      "name": "写盘后内容被改动时 hash size 回读负例必须失败",
+      "result": "PASS"
+    }
+  ]
+}

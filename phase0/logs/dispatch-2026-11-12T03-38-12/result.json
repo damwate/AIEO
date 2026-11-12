@@ -1,0 +1,15 @@
+{
+  "at": "2026-11-12T03:40:47.146Z",
+  "message_bytes": 917,
+  "reply": "{\n\"result\": \"BLOCKED\",\n\"remaining_findings\": [\n\"设计层面已基本补齐上轮要求，但尚不能认定全部满足。指定 commit `27999da0e2ad8490567519d4e97d7a01a7acd069` 与父 commit `81d63f71ef0c5efa65766c9da0331d4f449d06f2` 的关系已核实：仅领先 1 个 commit，父提交正确。\",\n\"C1 §2.6.2 正文声明 `contracts/v1.0/git-pointer.schema.json` 必须存在并与文档一致，但在指定 commit 下读取该路径未找到文件；`git-pointer-manifest.schema.json` 和 `review-report.schema.json` 也未找到。正文 Schema 示例不能替代机器可执行 Schema。需要补齐实际文件，并验证它们与文档字段、必填项、格式和版本规则一致。\",\n\"最关键的实现缺口：`phase0/tools/gpt_dispatch.mjs` 仍是旧版回复提取实现。`readReplyAfterOwnMessage()` 只收集当前可见 DOM unit，没有实现 §2.6.7 要求的从本次 user unit 到下一 user unit 之前的完整 unit 区间读取，也没有对全部 unit key、数量及全文哈希做两次稳定性比较。当前完成判定主要比较尾部 assistant UUID，不能证明整份长回复完整稳定。\",\n\"`gpt_dispatch.mjs` 目前只在收集完成后写入 `reply.txt` 和 `result.json`，没有实现先持久化原始 unit artifact、回读验证 SHA-256/size，再进行 JSON Schema 和任务绑定校验的完整顺序；也没有看到向 M1 artifact 接口幂等登记的实现证据。因此 §2.6.7 的设计要求尚未由代码落实。\",\n\"本次所谓真实长回复 POC 的证据 `phase0/logs/payload-choice-inherited-reply.txt` 确实包含上一轮 BLOCKED 回复全文，但它证明的是该回复曾经出现在当前审查会话并被保存入仓，不足以单独证明 M2 当前 `wait_reply()` 实现能够按 §2.6.7 完整提取、稳定复读、先落盘及校验。应补充与本次修订实现对应的原始运行日志、unit key/UUID/全文哈希记录和 artifact 回读校验结果。\",\n\"§2.6.9 已明确承认新 Schema 自动生成、多文件部分读取、私有仓库权限、网络退避耗尽、SHA/路径/hash/size/范围负例、秘密扫描、超限边界及 M1 登记失败幂等补登记尚未执行。它们不必全部阻止 GitPointer 方向的设计决策，但在宣称 BLOCKED-1 完全解除前，至少需要对核心读取和完整性路径提供可复现的端到端证据，并将未测故障注入明确列为后续门禁。\",\n\"`phase0/tools/gpt_dispatch.mjs` 的文件头注释及超限错误提示仍有“请拆分”“分块投递属 Phase 1 范围”等旧表述，与 §2.6.1、§2.6.8 明确禁止自动拆分和网页长文本降级相矛盾。应统一注释和错误提示，避免后续 Agent 按旧说明实现。\",\n\"§2.6.7 要求生成结束后进行确认窗、两次完整 unit 读取和全文稳定校验；现有实现只对尾部状态做有限复核。应补充对长回复、多 assistant unit、虚拟列表/滚动加载、DOM unit 新增或消失、提取中断和 artifact 写盘失败的真实测试。\",\n\"DEC-012 将当前继承会话的真实读取和长回复提取记录为有限 POC，并明确没有宣称新 Schema、多文件及私有权限等测试已通过，这一证据边界处理正确；但 DEC-012 本身仍标注“修订中，待复审”，不能作为 BLOCKED-1 已解除的批准记录。\"\n],\n\"unblocked\": false,\n\"summary\": \"GitPointer 优先的架构选择、双向 payload 边界、完整 SHA 定位、manifest 规则、输入材料 commit 与 reviewed_commit 分离、权限与只读边界、材料完整性时序、失败语义及不可信材料约束，已覆盖上轮提出的大部分设计要求。特别是 1200 UTF-8 字节仅限制 insertText 出站、DOM 入站允许长回复的澄清是正确的；4023 字符回复证据也支持入站不应套用出站上限。但本轮审查发现机器可执行 Schema 文件缺失，且当前 gpt_dispatch.mjs 尚未实现 §2.6.7 规定的完整 unit 提取、全文稳定性校验、原始 artifact 先落盘及哈希验证。现有长回复文件不能替代这些实现与端到端证据。因此认可设计方向和大部分边界修订，但 BLOCKED-1 暂不能解除；补齐 Schema、实现与测试上述入站链路，并清理旧分块提示后，再进行最终复审。\"\n}",
+  "assistant_uuid": "6be22868-8f1c-47d0-aca2-42615d42f944",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "composer_empty": true
+  }
+}
