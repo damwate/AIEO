@@ -375,16 +375,15 @@ def build_app(ctx: PlatformContext) -> FastAPI:
 
     @app.get("/api/v1/messages/dead-letter")
     def dead_letter(request: Request, principal: Principal = Depends(get_principal)):
+        # F-501: strictly read-only. Outbox sweeps mutate message state and are
+        # human-only management operations (POST /api/v1/messages/sweep, outside
+        # the service whitelist) — a dead-letter query must never sweep.
         page, size, offset, sort = _paging(request, "messages")
-        with ctx.db.transaction() as conn:
-            counts = messaging.sweep(conn, ctx.settings, logger=ctx.logger)
+        with ctx.db.reading() as conn:
             items, total = messaging.list_messages(
                 conn, direction=None, target_agent_id=None, status="DEAD_LETTER",
                 task_id=None, correlation_id=None,
                 page=page, page_size=size, offset=offset, sort_clause=sort)
-        if any(counts.values()):
-            ctx.logger.info("outbox_swept", f"dead-letter sweep delivered={counts['delivered']} retrying={counts['retrying']} dead={counts['dead_lettered']}",
-                            operation="sweep", result="SUCCESS")
         return _envelope(items, page, size, total)
 
     @app.get("/api/v1/messages/{message_id}")

@@ -1,19 +1,19 @@
 {
   "report_version": "1.2",
   "task_id": "T-P1-901",
-  "execution_id": "EXEC-906",
+  "execution_id": "EXEC-907",
   "generated_by": "main session (local execution environment), per handoff §3 protocol v2 division of labor",
   "manifest_path": "phase1/manifests/T-P1-901-input-manifest.json",
-  "manifest_sha256": "2f295fbd2bb94b62d8b33a66bbeb360fe7f791c7a50f7617bda92bd99aca8375",
+  "manifest_sha256": "fd2d9b9917bd179232c946a422edd89b8f8963a278d57406d6ed41627d175fdc",
   "method": "disk bytes SHA-256 per file vs manifest artifact_sha256; post-commit git blob recheck recorded in phase0/logs/blob-recheck-T-P1-901-r6/ (amend-only-evidence-dir flow with review-anchor tag, per handoff §3 F-301/F-404 remediation)",
   "commands": [
     "node -e: crypto.createHash('sha256').update(fs.readFileSync(<repo>/<path>)).digest('hex') for each manifest file",
-    "git ls-tree -r <reviewed_commit> --name-only  # all 120 paths existence (post-commit, see blob-recheck evidence)",
-    "git cat-file blob <reviewed_commit>:<path>    # post-commit blob SHA-256 recheck, all 120 (see blob-recheck evidence)"
+    "git ls-tree -r <reviewed_commit> --name-only  # all 128 paths existence (post-commit, see blob-recheck evidence)",
+    "git cat-file blob <reviewed_commit>:<path>    # post-commit blob SHA-256 recheck, all 128 (see blob-recheck evidence)"
   ],
   "exit_code": 0,
-  "total_files": 120,
-  "matched_files": 120,
+  "total_files": 128,
+  "matched_files": 128,
   "mismatched_files": 0,
   "per_file": [
     {
@@ -207,9 +207,9 @@
     },
     {
       "path": "app/gpt_controller/src/inbound_reply.mjs",
-      "disk_sha256": "6603b7c50c310c001f7abd7621a29ec8cc00b30c1c2be1bd052abb874d13b26d",
-      "manifest_sha256": "6603b7c50c310c001f7abd7621a29ec8cc00b30c1c2be1bd052abb874d13b26d",
-      "size_bytes": 29896,
+      "disk_sha256": "982637d4a682664063bce312b3cff2fcc96a3ab91e960239248ec5cc3ae12947",
+      "manifest_sha256": "982637d4a682664063bce312b3cff2fcc96a3ab91e960239248ec5cc3ae12947",
+      "size_bytes": 30483,
       "match": true
     },
     {
@@ -263,9 +263,9 @@
     },
     {
       "path": "app/gpt_controller/tests/browser_simulation.test.mjs",
-      "disk_sha256": "f2d48791da553473262e3139e763888c831fd3a269de6b923502794bc59f4891",
-      "manifest_sha256": "f2d48791da553473262e3139e763888c831fd3a269de6b923502794bc59f4891",
-      "size_bytes": 38069,
+      "disk_sha256": "334d5619dfce9dc5866798cc8cfafc921cfce0ca84b053cc8176bdc40f29da23",
+      "manifest_sha256": "334d5619dfce9dc5866798cc8cfafc921cfce0ca84b053cc8176bdc40f29da23",
+      "size_bytes": 40272,
       "match": true
     },
     {
@@ -298,9 +298,9 @@
     },
     {
       "path": "app/gpt_controller/tests/unit.test.mjs",
-      "disk_sha256": "08dedd8800e8954bf83069db8cb2cef867eea043aae00d3c0757e9089f58df24",
-      "manifest_sha256": "08dedd8800e8954bf83069db8cb2cef867eea043aae00d3c0757e9089f58df24",
-      "size_bytes": 46673,
+      "disk_sha256": "9b7f7cf9850a419e7663146a6254fd8f64bf83aed2139cf2ad02aff65c56c18f",
+      "manifest_sha256": "9b7f7cf9850a419e7663146a6254fd8f64bf83aed2139cf2ad02aff65c56c18f",
+      "size_bytes": 47667,
       "match": true
     },
     {
@@ -312,9 +312,9 @@
     },
     {
       "path": "app/platform/api.py",
-      "disk_sha256": "d4c244c8df8242808778a0fe808086902a32950c90603b2458e485b8ce20efe9",
-      "manifest_sha256": "d4c244c8df8242808778a0fe808086902a32950c90603b2458e485b8ce20efe9",
-      "size_bytes": 26952,
+      "disk_sha256": "a16a97b796406766b6afb4a9d7c9259580a5d1bf5e551c498e83a6f5dea50fb6",
+      "manifest_sha256": "a16a97b796406766b6afb4a9d7c9259580a5d1bf5e551c498e83a6f5dea50fb6",
+      "size_bytes": 26851,
       "match": true
     },
     {
@@ -431,9 +431,9 @@
     },
     {
       "path": "docs/AI-DEV-LESSONS.md",
-      "disk_sha256": "ae6fd1ee922a9a7d6bc1ca8071764c8326f874a1085e0f4a602b45f426453d27",
-      "manifest_sha256": "ae6fd1ee922a9a7d6bc1ca8071764c8326f874a1085e0f4a602b45f426453d27",
-      "size_bytes": 79537,
+      "disk_sha256": "48ffd359c75f3fab73a76b983b6af42b5484c1a85b27304243dcf7d4afcf443c",
+      "manifest_sha256": "48ffd359c75f3fab73a76b983b6af42b5484c1a85b27304243dcf7d4afcf443c",
+      "size_bytes": 83202,
       "match": true
     },
     {
@@ -480,9 +480,9 @@
     },
     {
       "path": "handoff/PHASE1-MODULE-REVIEW.md",
-      "disk_sha256": "5283c8823b00e6e17467cb2d833213cb61058abc4fc5a73e7237b60671a904eb",
-      "manifest_sha256": "5283c8823b00e6e17467cb2d833213cb61058abc4fc5a73e7237b60671a904eb",
-      "size_bytes": 17885,
+      "disk_sha256": "e28dbc5b976bc9af6a5c7a5995b78c3e3b59628e9008842721be4ed5708da082",
+      "manifest_sha256": "e28dbc5b976bc9af6a5c7a5995b78c3e3b59628e9008842721be4ed5708da082",
+      "size_bytes": 19928,
       "match": true
     },
     {
@@ -647,23 +647,65 @@
       "match": true
     },
     {
+      "path": "phase0/logs/dispatch-2026-11-12T18-43-54/raw-units.json",
+      "disk_sha256": "0c2a27caa8c6ba5400dcc165fbaf81e48f88cb52af4493e6c7f9e656cfa16b69",
+      "manifest_sha256": "0c2a27caa8c6ba5400dcc165fbaf81e48f88cb52af4493e6c7f9e656cfa16b69",
+      "size_bytes": 5881,
+      "match": true
+    },
+    {
+      "path": "phase0/logs/dispatch-2026-11-12T18-43-54/reply.txt",
+      "disk_sha256": "1ba5891ce39d7fe04c4747bdfc81c7011f24fdf65ee04cab1c65370a208fa092",
+      "manifest_sha256": "1ba5891ce39d7fe04c4747bdfc81c7011f24fdf65ee04cab1c65370a208fa092",
+      "size_bytes": 3164,
+      "match": true
+    },
+    {
+      "path": "phase0/logs/dispatch-2026-11-12T18-43-54/request.txt",
+      "disk_sha256": "fbf63bcda628f00f0aca7d53d3032a09897ba42142f094355f5c6e10bef377f6",
+      "manifest_sha256": "fbf63bcda628f00f0aca7d53d3032a09897ba42142f094355f5c6e10bef377f6",
+      "size_bytes": 1105,
+      "match": true
+    },
+    {
+      "path": "phase0/logs/dispatch-2026-11-12T18-43-54/result.json",
+      "disk_sha256": "70e3d372c7ced8213b748c602b023a2349451dcf76450f68e019b7c039bb6083",
+      "manifest_sha256": "70e3d372c7ced8213b748c602b023a2349451dcf76450f68e019b7c039bb6083",
+      "size_bytes": 8996,
+      "match": true
+    },
+    {
+      "path": "phase0/logs/dispatch-2026-11-12T18-43-54/run.log",
+      "disk_sha256": "843b5a0400043044fc47582fca1bf52304e9a2652e40c373267aba461e197ec2",
+      "manifest_sha256": "843b5a0400043044fc47582fca1bf52304e9a2652e40c373267aba461e197ec2",
+      "size_bytes": 1128,
+      "match": true
+    },
+    {
       "path": "phase0/logs/gpt-reviewer-session.json",
-      "disk_sha256": "fc6c554bf8669011c79070427bb9e0e084fbdd733fa545cc7ad3ce312818368d",
-      "manifest_sha256": "fc6c554bf8669011c79070427bb9e0e084fbdd733fa545cc7ad3ce312818368d",
+      "disk_sha256": "dae2bdfae26b3053df12fd57ad7186b1130f63aa0a2fad522c5397585bb17c39",
+      "manifest_sha256": "dae2bdfae26b3053df12fd57ad7186b1130f63aa0a2fad522c5397585bb17c39",
       "size_bytes": 153,
       "match": true
     },
     {
       "path": "phase0/logs/m1-artifact-registry.json",
-      "disk_sha256": "302964645ccd8f83380c6450470901354369c3cfc9780cacc99f5ea559c0cfc2",
-      "manifest_sha256": "302964645ccd8f83380c6450470901354369c3cfc9780cacc99f5ea559c0cfc2",
-      "size_bytes": 43389,
+      "disk_sha256": "35be385a57288e98eea41d80030181980a79ad4cc51e1912433f658463924f77",
+      "manifest_sha256": "35be385a57288e98eea41d80030181980a79ad4cc51e1912433f658463924f77",
+      "size_bytes": 47504,
       "match": true
     },
     {
       "path": "phase1/logs/m1-platform-20261113/f403-rework/pytest-f403-rework.log",
       "disk_sha256": "c381ee957af485961d1b6dea0a75f63920342316f4c4f299ebb117e5c13595e2",
       "manifest_sha256": "c381ee957af485961d1b6dea0a75f63920342316f4c4f299ebb117e5c13595e2",
+      "size_bytes": 689,
+      "match": true
+    },
+    {
+      "path": "phase1/logs/m1-platform-20261113/f501-rework/pytest-f501-rework.log",
+      "disk_sha256": "f7f71c74f5cd612a1b0e47b4dca9592774a925412b96807c16391eefd386e97c",
+      "manifest_sha256": "f7f71c74f5cd612a1b0e47b4dca9592774a925412b96807c16391eefd386e97c",
       "size_bytes": 689,
       "match": true
     },
@@ -773,6 +815,13 @@
       "match": true
     },
     {
+      "path": "phase1/logs/m2-gpt-controller-20261113/f502-rework/node-test-f502-rework.log",
+      "disk_sha256": "1d578042a97708d85fc9bcf0e967da9a7130385b552dfa566bef53c7aaf547ee",
+      "manifest_sha256": "1d578042a97708d85fc9bcf0e967da9a7130385b552dfa566bef53c7aaf547ee",
+      "size_bytes": 7575,
+      "match": true
+    },
+    {
       "path": "phase1/logs/m2-gpt-controller-20261113/lock_mutex-20261113-run1.log",
       "disk_sha256": "1fcd7f2e8714ad98813cc9b3c40d00302828c8cc49a095cd03263cac1f8d8438",
       "manifest_sha256": "1fcd7f2e8714ad98813cc9b3c40d00302828c8cc49a095cd03263cac1f8d8438",
@@ -847,6 +896,13 @@
       "disk_sha256": "5423ea0d16d9e3d5b78e9bfabccb3987e41f38c5be9d2ad09d0d055d522d0655",
       "manifest_sha256": "5423ea0d16d9e3d5b78e9bfabccb3987e41f38c5be9d2ad09d0d055d522d0655",
       "size_bytes": 4412,
+      "match": true
+    },
+    {
+      "path": "tests/platform/test_service_authorization.py",
+      "disk_sha256": "b653d2d292e2cf0678cd016a64f640b675664c9275f1771f4ea1e05893f06411",
+      "manifest_sha256": "b653d2d292e2cf0678cd016a64f640b675664c9275f1771f4ea1e05893f06411",
+      "size_bytes": 6765,
       "match": true
     },
     {

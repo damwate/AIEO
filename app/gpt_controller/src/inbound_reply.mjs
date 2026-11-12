@@ -438,7 +438,7 @@ export function assertInboundExtensionGate(snapshot) {
       },
     );
   }
-  // F-402：units 与 unit_count/unit_keys 的结构一致性（正整数 count 已保证 units 至少 1 项才可能一致）。
+  // F-402/F-502：units 与 unit_count/unit_keys/快照级 UUID 的结构一致性（正整数 count 已保证 units 至少 1 项才可能一致）。
   const unitsMalformed =
     !Array.isArray(units) ||
     units.length !== count ||
@@ -449,11 +449,16 @@ export function assertInboundExtensionGate(snapshot) {
       if (typeof unit.text !== "string" || unit.text.length === 0) return true;
       if (typeof unit.text_sha256 !== "string" || !/^[0-9a-f]{64}$/.test(unit.text_sha256)) return true;
       if (!Number.isInteger(unit.size_bytes) || unit.size_bytes < 1) return true;
+      // F-502：unit 级 assistant_uuid 必须为非空字符串（上游 selectInboundReply 已有 INBOUND_ASSISTANT_UUID_MISSING，
+      // 此处为最终防线兜底：unit 级缺失/伪造而快照级合法的结构矛盾不得绕过）。
+      if (typeof unit.assistant_uuid !== "string" || unit.assistant_uuid.length === 0) return true;
       const textBytes = Buffer.from(unit.text, "utf8");
       return sha256Hex(textBytes) !== unit.text_sha256 || textBytes.length !== unit.size_bytes;
     }) ||
     typeof snapshot.assistant_uuid !== "string" ||
     snapshot.assistant_uuid.length === 0 ||
+    // F-502：快照级 assistant_uuid 必须与最后一个 unit 的 assistant_uuid 一致（selectInboundReply 即取末位 unit 构造）。
+    snapshot.assistant_uuid !== units[units.length - 1].assistant_uuid ||
     snapshot.reply !== units.map((unit) => unit.text).join("\n");
   if (unitsMalformed) {
     throw inboundError(

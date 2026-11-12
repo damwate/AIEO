@@ -859,6 +859,22 @@
 - **当前遗留问题：** 第 6 轮复审结论未出；M3 未提交；契约批准人追认/DEC-017 门禁保持原状；main 未合并。
 - **下一步建议与验证标准：** 第 6 轮派发（finding_id F-501 起，EXEC-906）；若 PASS，进入 M3 提交与四模块集成提交（不合并 main）与集成审查。
 
+### DEV-20261113-007 T-P1-901 第 6 轮审查 REWORK（F-501/F-502）与整改
+
+- **任务目标：** 处理第 6 轮复审结论（REWORK：F-501/F-502 各一项 MAJOR）；整改后发起第 7 轮复审。
+- **环境与版本：** 分支 fix/AIEO-PHASE0-REVIEW-R10；第 6 轮对象 commit 7872e86（manifest 120 文件，amend 链 + tag `review-anchor/T-P1-901-r6` 送审，审查方已确认 F-404 整改成立）。
+- **发生与处理：**
+  1. 第 6 轮回复单段 JSON、3164 字节、reviewed_commit 40 位完整且与派单一致；审查方确认材料核验 120/120 通过、C1' tag compare 仅差证据目录（F-401/F-404 关闭）、M4 无新 MAJOR。
+  2. **F-501（MAJOR，M1）**：`GET /api/v1/messages/dead-letter` 在白名单内但端点内部调用 `messaging.sweep()`（PENDING→SENT、重试推进、DEAD_LETTER 转换）——service 身份借"查询"端点执行了人类专属管理操作，绕过 POST /messages/sweep 的 403。整改：dead-letter 端点只读化（去 sweep 调用、事务改 `db.reading()`），查询与维护彻底分离；新增测试证明 service token 调 GET dead-letter 前后 PENDING 消息状态不变。**教训：白名单审到端点不等于审到行为——只读端点内不得内嵌管理副作用（sweep 是把 GET dead-letter 当"顺带清理"用引入的，授权建模按端点方法+路径，副作用藏在函数调用里就绕过了白名单语义）。**
+  3. **F-502（MAJOR，M2）**：F-402 修复验证了 units 元素的 role/key/text/text_sha256/size_bytes，但漏了元素级 `assistant_uuid`——只检查快照级 UUID 非空，未检查 unit 级缺失/伪造、未检查快照级与 unit 级一致性（selectInboundReply 构造的 unit 元素本就带 assistant_uuid 且快照级取自末位 unit）。整改：gate 增加 unit 级 assistant_uuid 非空校验 + 快照级===末位 unit 一致性校验；纯函数负例 32→36 类（缺失/空串/非字符串/顶层与 unit 不一致）+ 注入式全管线 +2（unit 级缺失、两级不一致均骗过稳定性比较后被最终防线拒绝）。**教训：F-402"声明—实体对应"教训同样有层次——实体（unit）自身的身份字段（assistant_uuid）也是声明的一部分，元素级字段要逐个过一遍"谁声明了它、哪里构造它、两侧是否一致"，漏一个字段就是漏一条绕过路径。上游已有 INBOUND_ASSISTANT_UUID_MISSING 不代表最终防线可以省（F-101 纵深防御同理）。**
+- **验证结果：** M2 **65/65** 退出码 0（`phase1/logs/m2-gpt-controller-20261113/f502-rework/`）；M1 **43/43** 退出码 0（`phase1/logs/m1-platform-20261113/f501-rework/`，含新 dead-letter 只读测试）；M4 回归 **24/24** 无破坏。
+- **问题根因分析：** 白名单/结构校验两类整改都存在"最后一层"缺口：授权建模按端点签名、结构校验按显眼字段，而绕过路径恰好藏在端点内部行为与元素级身份字段里；审查方逐层穿透后这些缺口成为仅剩 finding。
+- **本次新增的开发经验：**
+  1. 只读端点不得内嵌管理副作用；查询与维护分离，授权测试要断言状态前后不变而不仅是 HTTP 状态码。
+  2. 元素级身份字段纳入结构一致性校验并与声明侧对齐；上游门禁存在不豁免最终防线复核。
+- **当前遗留问题：** 第 7 轮复审结论未出；M3 未提交；契约批准人追认/DEC-017 门禁保持原状；main 未合并。
+- **下一步建议与验证标准：** 第 7 轮派发（finding_id F-601 起，EXEC-907）；若 PASS，进入 M3 提交与四模块集成提交（不合并 main）与集成审查。
+
 ---
 
 ## 8. AI 能力边界与工具切换记录
