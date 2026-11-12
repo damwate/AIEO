@@ -1,7 +1,7 @@
 {
   "format_version": "1.0",
   "adapter": "M1_MINIMAL_LOCAL_JSON",
-  "next_sequence": 10,
+  "next_sequence": 11,
   "records": [
     {
       "artifact_id": "ART-M1-000001",
@@ -327,6 +327,22 @@
       "artifact_kind": "GPT_REPLY_TEXT",
       "schema_validation": "NOT_REQUESTED_EXISTING_ARTIFACT_RECOVERY",
       "content": "ChatGPT 说：\n\n{\n\"result\": \"BLOCKED\",\n\"reviewed_commit\": \"8780b9d2da3b958a60e0244afb65556877ed878d\",\n\"findings\": [\n{\n\"finding_id\": \"F-601\",\n\"severity\": \"MAJOR\",\n\"file\": \"phase1/manifests/T-P1-901-verification-report.json\",\n\"description\": \"核验报告的证据来源元数据与本轮实际交接材料不一致。报告 method 字段仍指向 phase0/logs/blob-recheck-T-P1-901-r6/，但本轮 §3 明确要求使用 blob-recheck-T-P1-901-r7/，其 recheck-result.json 声明锚定 commit 为 744dc9d9bb91fc9833a83db2c228e95e7ac43459。报告本身声明 128/128、0 mismatch、exit_code=0，manifest SHA-256 与派单值一致；r7 复核文件也确实存在，声明 128/128 路径存在、128/128 blob 匹配。但报告没有正确指向本轮复核证据，导致报告与实际证据链的对应关系不明确。按照 §3 核验协议，不能忽略核验报告的证据描述不一致而直接判定材料核验通过。\",\n\"recommendation\": \"重新生成 verification-report.json，将 method 中的 r6 修正为 r7，明确记录 commit_sha256_anchored=744dc9d9bb91fc9833a83db2c228e95e7ac43459，并确认报告、manifest、r7 recheck-result.json 三者的 SHA-256 与覆盖数量一致。随后重新提交并提供可复核的证据链。\"\n}\n],\n\"constraints\": [\n\"本轮审查对象严格限定为 commit 8780b9d2da3b958a60e0244afb65556877ed878。\",\n\"manifest 声明 SHA-256 为 fd2d9b9917bd179232c946a422edd89b8f8963a278d57406d6ed41627d175fdc；核验报告实际读取确认 128 条记录、128 个唯一路径、128 匹配、0 不匹配、退出码 0。\",\n\"r7 blob 复核文件已实读：锚定 commit 744dc9d9bb91fc9833a83db2c228e95e7ac43459，声明 128/128 路径存在、128/128 blob 匹配、退出码 0。审查方未独立执行本地 SHA-256 计算。\",\n\"M1：F-501 整改成立。dead-letter GET 使用只读数据库上下文，不再调用 sweep；sweep 独立为 POST /api/v1/messages/sweep。服务身份白名单不包含该管理端点。新增测试验证查询前后 PENDING 状态及 delivered_at 不变。\",\n\"M2：F-502 整改成立。assertInboundExtensionGate 检查每个 unit 的 assistant_uuid 非空字符串，并检查快照级 UUID 与末位 unit UUID 一致。两项注入式全管线负例均验证最终防线拒绝，且不产生 result.json。\",\n\"M2 其他关键纵深防御仍存在：正整数 unit_count、keys 唯一性、units 结构一致性、文本 SHA-256 与 UTF-8 字节数复核、reply 一致性，以及 DEC-017 多 unit 默认拒绝。\",\n\"M4：已抽查 Git 白名单、shell=False、环境变量隔离、main/master 保护、分支命名及 M1Client 注入边界。24 项 pytest 全部通过。\",\n\"M1 测试证据：43 passed；M2 测试证据：65 passed；M4 测试证据：24 passed，均为退出码 0。\",\n\"M3 明确不在本轮范围。四模块集成验收、真实 chatgpt.com 收发、真实 broker 投递及其他 DEC-017 扩展场景均未因此获得验收或解除限制。\",\n\"本轮 BLOCKED 的直接原因是核验报告证据元数据不一致，并非认定 F-501 或 F-502 整改失败。\"\n],\n\"summary\": \"M1、M2、M4 模块级实质审查未发现新的 MAJOR 代码缺陷。第六轮 F-501、F-502 整改均已通过代码与针对性测试复核；三模块测试分别为 43/43、65/65、24/24。但 verification-report.json 仍引用 r6 而非本轮 r7 blob 复核证据，违反材料核验协议的证据一致性要求，因此本轮判定 BLOCKED。修正核验报告并重新核对证据链后，可进入下一轮复审；本结论不代表 Phase 1 集成验收通过。\"\n}",
+      "unit_metadata": {}
+    },
+    {
+      "artifact_id": "ART-M1-000010",
+      "registered_at": "2026-11-12T19:06:45.591Z",
+      "task_id": "T-P1-901",
+      "execution_id": "EXEC-908",
+      "correlation_id": "CORR-908",
+      "artifact_sha256": "74b957f96e7c7386ff7d847d77f3c9ab39261ab081caaf452cd89c048977ba7e",
+      "idempotency_key": "{\"task_id\":\"T-P1-901\",\"execution_id\":\"EXEC-908\",\"correlation_id\":\"CORR-908\",\"artifact_sha256\":\"74b957f96e7c7386ff7d847d77f3c9ab39261ab081caaf452cd89c048977ba7e\"}",
+      "content_sha256": "74b957f96e7c7386ff7d847d77f3c9ab39261ab081caaf452cd89c048977ba7e",
+      "size_bytes": 2250,
+      "artifact_path": "D:/AIEO/phase0/logs/dispatch-2026-11-12T19-03-26/reply.txt",
+      "artifact_kind": "GPT_REPLY_TEXT",
+      "schema_validation": "NOT_REQUESTED_EXISTING_ARTIFACT_RECOVERY",
+      "content": "ChatGPT 说：\n\n{\n\"result\": \"PASS\",\n\"reviewed_commit\": \"a9233c76318aebaf415c8a8c179f226802adef53\",\n\"findings\": [],\n\"constraints\": [\n\"本次 PASS 仅代表 M1、M2、M4 模块级独立审查通过，不代表 Phase 1 四模块集成验收通过。\",\n\"M3 不在本轮审查范围，必须保留其独立验收结论。\",\n\"M2 继续执行 DEC-017 单 assistant unit fail-closed 限制；真实多 unit 场景须完成扩展验收及独立审查后才能解除。\",\n\"M1 当前仍采用 SQLite 和模拟 sweep 投递，不得将其视为真实消息 Broker 或完整生产投递系统。\",\n\"M2 真实 chatgpt.com 收发及私有仓库 GitPointer 实际拉取尚未完成验证。\",\n\"M4 Git 集成锁、自动 merge、git push 和强制测试门禁仍属于未实现边界。\",\n\"后续必须单独执行四模块集成测试及 BLOCKED-1 扩展场景验收，不得直接将本次模块级 PASS 升级为整体 PASS。\"\n],\n\"summary\": \"第 8 轮独立复审通过。首先实读核验报告，确认 manifest SHA-256 为 508b358641d796fb166e263716aa45ffd08ba40ec6e15833137ef92c86cbb902，覆盖 133/133，matched_files=133、mismatched_files=0、exit_code=0。报告明确引用本轮 blob-recheck-T-P1-901-r8。进一步实读 recheck-result.json，确认 commit_sha256_anchored=225b1d5c2fe8290b8017fb05afb412b9d4a8655e，manifest SHA 一致，133/133 路径存在且 blob 全部匹配。核对 review-anchor/T-P1-901-r8 指向上述完整 SHA，并通过 Git Tree 逐路径比较锚定 commit 与最终送审 commit：差异仅为新增的 recheck-result.json、recheck-run.log 及其目录，共 3 个新增对象；原有 133 个 manifest 文件的 Git blob 均保持一致。F-601 整改成立，本轮未发现证据链完整性阻塞。实质审查抽样覆盖 M1 security.py、api.py、messaging.py 及服务身份权限白名单、Dead Letter 只读整改；M2 inbound_reply.mjs、dispatch.mjs 及快照结构一致性、UUID 校验、稳定性比较和最终 fail-closed 门禁；M4 worker.py、test_git_worker.py 及 Git argv 白名单、仓库根目录校验、分支保护、文件作用域和提交验证。代码实现与交接材料申报基本一致，未发现新的 MAJOR 或以上问题。审查结论：M1、M2、M4 模块级 PASS。\"\n}",
       "unit_metadata": {}
     }
   ]
