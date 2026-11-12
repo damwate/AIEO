@@ -394,13 +394,17 @@ export function selectInboundReply(domUnits, userUnitKey, { maxAssistantUnits = 
   };
 }
 
-// DEC-017 扩展门禁收敛复核（T-P1-901 F-001/F-101/F-201）：dispatch 最终防线的独立函数，供直接测试。
+// DEC-017 扩展门禁收敛复核（T-P1-901 F-001/F-101/F-201/F-402）：dispatch 最终防线的独立函数，供直接测试。
 // 上游（selectInboundReply/readReplySnapshot）即使被放宽或失效，本函数仍无条件复核。
 // 畸形快照 fail-closed（F-201 收紧）：unit_count 必须为正整数（回复必含 ≥1 个 assistant unit）；
 // unit_keys 必须为等长数组、元素全部为非空字符串且无重复——任何一项不满足都无法证明安全，一律拒绝。
+// units 结构一致性（F-402 收紧）：units 必须为与 unit_count 等长的非空数组，元素 role=assistant、
+// key 与 unit_keys 按序一致且唯一、text 非空、text_sha256/size_bytes 与 text 逐字节自洽、
+// reply 严格等于 units 文本按约定拼接、快照级 assistant_uuid 非空——伪造摘要或脱钩 reply 同样拒绝。
 export function assertInboundExtensionGate(snapshot) {
   const count = snapshot?.unit_count;
   const keys = snapshot?.unit_keys;
+  const units = snapshot?.units;
   const malformed =
     typeof count !== "number" ||
     !Number.isInteger(count) ||
@@ -434,6 +438,36 @@ export function assertInboundExtensionGate(snapshot) {
       },
     );
   }
+  // F-402：units 与 unit_count/unit_keys 的结构一致性（正整数 count 已保证 units 至少 1 项才可能一致）。
+  const unitsMalformed =
+    !Array.isArray(units) ||
+    units.length !== count ||
+    units.some((unit, index) => {
+      if (!unit || typeof unit !== "object") return true;
+      if (unit.role !== "assistant") return true;
+      if (typeof unit.key !== "string" || unit.key.length === 0 || unit.key !== keys[index]) return true;
+      if (typeof unit.text !== "string" || unit.text.length === 0) return true;
+      if (typeof unit.text_sha256 !== "string" || !/^[0-9a-f]{64}$/.test(unit.text_sha256)) return true;
+      if (!Number.isInteger(unit.size_bytes) || unit.size_bytes < 1) return true;
+      const textBytes = Buffer.from(unit.text, "utf8");
+      return sha256Hex(textBytes) !== unit.text_sha256 || textBytes.length !== unit.size_bytes;
+    }) ||
+    typeof snapshot.assistant_uuid !== "string" ||
+    snapshot.assistant_uuid.length === 0 ||
+    snapshot.reply !== units.map((unit) => unit.text).join("\n");
+  if (unitsMalformed) {
+    throw inboundError(
+      "INBOUND_REPLY_SNAPSHOT_MALFORMED",
+      "回复快照的 units 结构与 unit_count/unit_keys/reply 不一致或摘要自洽性不成立，无法证明真实 assistant unit，fail-closed",
+      {
+        unit_count: count,
+        units_type: Array.isArray(units) ? "array" : typeof units,
+        units_length: Array.isArray(units) ? units.length : null,
+        decision: "DEC-017",
+        remediation: "修复快照读取逻辑，使其返回 units/keys/reply/摘要相互一致的快照后重试",
+      },
+    );
+  }
 }
 
 function stabilitySummary(snapshot) {
@@ -454,6 +488,8 @@ function stabilitySummary(snapshot) {
 }
 
 // 两次完整读取比较：间隔 ≥3s、key 列表、数量、逐 unit 全文 SHA-256、尾部 UUID、边界全部一致。
+// F-402 收紧：逐 unit 摘要列表长度必须与 unit_count 一致——堵住 units 为空数组但 unit_count>0
+// 的"稳定但结构性矛盾"快照双次通过稳定性比较的缺口。
 export function compareInboundSnapshots(first, second, intervalMs) {
   if (!first || !second) {
     throw inboundError("INBOUND_STABILITY_SNAPSHOT_MISSING", "两次完整读取均必须存在");
@@ -466,6 +502,9 @@ export function compareInboundSnapshots(first, second, intervalMs) {
     second_range_complete: second.range_proof?.complete === true,
     unit_key_list_equal: JSON.stringify(firstSummary.unit_keys) === JSON.stringify(secondSummary.unit_keys),
     unit_count_equal: firstSummary.unit_count === secondSummary.unit_count,
+    unit_text_hashes_length_matches_count:
+      firstSummary.unit_text_sha256.length === firstSummary.unit_count &&
+      secondSummary.unit_text_sha256.length === secondSummary.unit_count,
     unit_text_hashes_equal:
       firstSummary.unit_text_sha256.length === secondSummary.unit_text_sha256.length &&
       firstSummary.unit_text_sha256.every((unit, index) => {

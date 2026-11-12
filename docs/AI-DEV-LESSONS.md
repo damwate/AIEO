@@ -821,6 +821,44 @@
 - **当前遗留问题：** 第 4 轮复审结论未出；M1/M4/契约批准人追认/DEC-017 门禁均保持原状；main 未合并。
 - **下一步建议与验证标准：** 第 4 轮派发（finding_id F-301 起）；若 PASS，进入四模块集成提交（不合并 main）与集成审查（按 L-005/L-006 评估主会话轮换）。
 
+### DEV-20261113-005 T-P1-901 第 4 轮审查 BLOCKED（F-301）与复核证据 amend 链机制
+
+- **任务目标：** 处理第 4 轮复审结论（BLOCKED + F-301）；整改后发起第 5 轮复审。
+- **环境与版本：** 分支 fix/AIEO-PHASE0-REVIEW-R10；第 4 轮对象 commit e3e5fab（manifest 106 文件）。
+- **发生与处理：**
+  1. 第 4 轮流程本身顺利：全新会话、回复 3528 字节（前一轮空回复异常未复发）、reviewed_commit 40 位完整、JSON 可解析。审查方确认核验报告 106/106、0 mismatch、退出码 0，并确认 F-201 正向值域收紧、14 类纯函数负例、4 类注入全管线负例全部通过静态核对——**代码与测试层面已无 finding**。
+  2. 唯一 finding F-301（MAJOR）：核验报告引用的 post-commit blob 复核证据 `phase0/logs/blob-recheck-T-P1-901-r4/` 未随 commit 提交（GitHub 404），manifest 中也只有 r3 证据——审查方无法独立确认"manifest 所列文件与本 commit 的 Git blob 一致"，按"材料缺失即 BLOCKED"判阻塞。
+  3. 根因：blob 复核必须在 commit 之后执行，其证据天然晚于被复核内容；第 4 轮按"证据随下一轮提交"的旧模式处理，但报告 method 字段已把 r4 目录写为本轮证据路径，形成对审查方不可读的引用。期间还发现并修复一个自引用循环：核验报告引用 manifest_sha256，若把报告再列入 manifest 则 manifest 含报告 SHA——首跑 blob 复核 mismatch 1 实证后，报告与 r4 证据均显式排除出 manifest。
+  4. F-301 整改（amend 链）：① 产生含全部审查材料与 manifest 的 commit C1（6476bdc，manifest 112 文件）；② 对 C1 执行 blob 复核 112/112 exit 0（证据内 `commit_sha256_anchored` 锚定 C1）；③ `git commit --amend` 仅新增证据目录生成送审 commit C2（f73b054）；④ `git diff C1..C2 --stat` 验证仅差证据目录 2 文件，manifest 所列文件 blob 在 C1/C2 逐字节相同（Git 内容寻址保证，GitHub compare 可验）；⑤ `git push --force-with-lease`（分支专属、lease 保护）。
+- **验证结果：** manifest 机械核验 112/112；blob 复核 112/112 exit 0 锚定 C1；C1→C2 diff 仅含证据目录；C2 已推送。
+- **问题根因分析：** "commit 后才能产生的证据要引用回该 commit"是一个时序自引用问题；解法不是放弃证据，而是把锚定与内容分离——证据锚定 C1，amend 只追加证据不改内容，Git 内容寻址保证引用有效，diff 与 compare 让"仅追加"可被独立验证。
+- **本次新增的开发经验：**
+  1. post-commit 证据（复核、报告、审计回执）入仓用 amend 链：锚定 C1 → amend 仅新增证据目录成 C2 → diff 可验；不要用"证据留到下一轮"（引用路径当轮 404）或把证据硬塞进 manifest（时序矛盾）。
+  2. 自包含数据结构（报告引用 manifest SHA、manifest 含报告）出现循环时，把一环移出列表、改用"经 commit 提交 + 路径实读"引用；发现手段正是 post-commit 全量复核（首跑 mismatch 1 即此问题）。
+  3. 回复质量与结论分离：第 4 轮回复格式、绑定、覆盖面全部合格，BLOCKED 仅因证据可读性——"结论阻塞"不等于"材料全部不合格"，整改应精确指向缺口本身。
+- **当前遗留问题：** 第 5 轮复审结论未出；M3 未提交；契约批准人追认/DEC-017 门禁保持原状；main 未合并。
+- **下一步建议与验证标准：** 第 5 轮派发（finding_id F-401 起，EXEC-905）；若 PASS，进入 M3 提交与四模块集成提交（不合并 main）与集成审查（按 L-005/L-006 评估主会话轮换）。
+
+### DEV-20261113-006 T-P1-901 第 5 轮审查 BLOCKED（F-401~F-404）与三线整改
+
+- **任务目标：** 处理第 5 轮复审结论（BLOCKED：F-401 MINOR + F-402/F-403/F-404 MAJOR）；整改后发起第 6 轮复审。
+- **环境与版本：** 分支 fix/AIEO-PHASE0-REVIEW-R10；第 5 轮对象 commit f73b054（manifest 112 文件，amend 链送审）。
+- **发生与处理：**
+  1. 回复含两段 JSON（模型先给初步结论又继续深入给出最终完整结论）；按"以最终/最完整输出为准"处理第二段；reviewed_commit 40 位完整。amend 链 C1=6476bdc 立即以 tag `review-anchor/T-P1-901-r5` 推送补救 F-404 的 GitHub 可读性。
+  2. **F-402（MAJOR，M2）**：F-201 修复只验证 unit_count/unit_keys，未验证 units 结构——unit_count=1/keys 一致/units=[]/reply="" 的快照可通过最终防线（compare 只比较哈希数组长度相等，不验证与 unit_count 一致）。整改：① `assertInboundExtensionGate` 增加 units 完整结构验证（非空等长数组、role=assistant、key 与 unit_keys 按序一致、text 非空、text_sha256/size_bytes 与 text 逐字节自洽、reply 严格等于拼接、快照级 assistant_uuid 非空）；② `compareInboundSnapshots` 增加摘要列表长度与 unit_count 一致性检查（空 units 在稳定性层即被拦）；③ 纯函数负例 14→32 类 + 注入式全管线 +5（空 units/key 错位/reply 脱钩/非法角色/伪造摘要）。**教训：F-201 的"正向值域"教训只应用到了 unit_count/unit_keys，没有应用到快照其余字段——结构性验证必须覆盖声明与实体的对应关系（宣称 1 个 unit 必须有 1 个可验证的 unit 实体），单字段合法 ≠ 快照合法。**
+  3. **F-403（MAJOR，M1）**：C7 §8.6 要求服务身份权限白名单，但 `get_principal` 只做认证+CSRF——有效服务令牌可调全部管理 API（含 POST /agents 自助注册+签发新令牌）。整改：security.py 新增 `SERVICE_ALLOWED_ENDPOINTS`（17 个工作流端点：任务读/claim/events、报告、工件、commit、消息 ack、board、whoami）+ `authorize_principal`（默认拒绝，route 模板匹配）；api.py `get_principal` 收敛点统一接入。越权测试 7 个（越权注册/自助签发/项目管理/审计/消息管理/审批全 403 + 白名单内 e2e 流 + 人类会话不受限）；现有 service token 测试断言按契约同步修正。
+  4. **F-404（MAJOR，流程）**：amend 链的 C1 在 force push 后成 dangling 对象——GitHub 无 ref 指向则不保留，审查方 compare 不可得。整改：C1 tag 推送永久锚定；第 6 轮起收尾链固化为"C1' commit → tag C1' → blob 复核 C1' → amend 证据成 C2' → force-with-lease push（tag+C2'）"。**教训：amend 产生的旧 commit 不会被远端自动保留，"GitHub compare 可验"必须以 ref（tag/分支）真实推送为前提，不能只写在文档里。**
+  5. **F-401（MINOR，文档）**：交接包 §3/§6 残留上一轮"106 文件"口径未随 manifest 112 更新。教训：manifest 数量是交接包多处引用的强耦合数字，每次重生成后必须全局 grep 旧数字。
+- **验证结果：** M2 **63/63** 退出码 0（`phase1/logs/m2-gpt-controller-20261113/f402-rework/`）；M1 **42/42** 退出码 0（`phase1/logs/m1-platform-20261113/f403-rework/`，含 7 个新授权测试）；M4 回归 **24/24** 无破坏。
+- **问题根因分析：** 第 5 轮是"审查深入度升级"——前四轮聚焦门禁存在性与数据核验，第 5 轮开始做结构一致性与契约授权层的实质穿透；随审查收敛，finding 粒度从"缺机制"演进到"机制有缺口"。
+- **本次新增的开发经验：**
+  1. fail-closed 的结构性验证要覆盖"声明—实体对应"：unit_count/unit_keys 合法但 units 空/不一致仍是绕过；比较器（compare）也要验证长度一致性，不能只验证两次相等。
+  2. 权限模型必须在认证收敛点统一接入授权层（默认拒绝 + 白名单），逐路由分散检查必然漏；契约条款（§8.6）引用要落到代码常量并被越权测试穿透。
+  3. amend 链必须配 tag：证据锚定的 commit 与"仅追加"关系都以 ref 可达为前提。
+  4. 回复含多段 JSON 时以最完整的最终段为准，但要如实记录异常本身。
+- **当前遗留问题：** 第 6 轮复审结论未出；M3 未提交；契约批准人追认/DEC-017 门禁保持原状；main 未合并。
+- **下一步建议与验证标准：** 第 6 轮派发（finding_id F-501 起，EXEC-906）；若 PASS，进入 M3 提交与四模块集成提交（不合并 main）与集成审查。
+
 ---
 
 ## 8. AI 能力边界与工具切换记录

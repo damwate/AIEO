@@ -209,6 +209,42 @@ def enforce_csrf(request: Request, principal: Principal) -> None:
         raise forbidden("AUTH-0002 FORBIDDEN: missing or invalid CSRF token for state-changing request")
 
 
+# C7 §8.6：MCP/CLI 本机服务身份使用独立身份及权限白名单——白名单外的端点一律拒绝（默认拒绝）。
+# 白名单只覆盖本地服务 agent 的任务/报告/工件/提交/消息确认工作流；管理操作（agent 注册、
+# 服务令牌签发、项目/仓库/批次创建、消息 requeue/cancel/sweep、审批、审计查询）仅限人类用户。
+SERVICE_ALLOWED_ENDPOINTS: frozenset[tuple[str, str]] = frozenset({
+    ("GET", "/api/v1/auth/session"),
+    ("GET", "/api/v1/tasks/{task_id}"),
+    ("GET", "/api/v1/tasks/{task_id}/dependencies"),
+    ("POST", "/api/v1/tasks/{task_id}/events"),
+    ("POST", "/api/v1/tasks/{task_id}/claim"),
+    ("POST", "/api/v1/reports/development"),
+    ("POST", "/api/v1/reports/review"),
+    ("POST", "/api/v1/reports/test"),
+    ("GET", "/api/v1/reports"),
+    ("POST", "/api/v1/artifacts"),
+    ("GET", "/api/v1/artifacts/{artifact_id}"),
+    ("POST", "/api/v1/commits"),
+    ("GET", "/api/v1/commits"),
+    ("GET", "/api/v1/messages"),
+    ("GET", "/api/v1/messages/dead-letter"),
+    ("POST", "/api/v1/messages/{message_id}/ack"),
+    ("GET", "/api/v1/board"),
+})
+
+
+def authorize_principal(request: Request, principal: Principal) -> None:
+    """C7 §8.6 service-identity permission whitelist: default deny outside the allowlist."""
+    if principal.kind != "service":
+        return  # human session (single-user local OWNER mode) keeps existing access
+    route = request.scope.get("route")
+    route_path = getattr(route, "path", None) or request.url.path
+    if (request.method, route_path) not in SERVICE_ALLOWED_ENDPOINTS:
+        raise forbidden(
+            "AUTH-0002 FORBIDDEN: service identity is restricted to the C7 §8.6 permission whitelist"
+        )
+
+
 def audit_login(conn: sqlite3.Connection, *, username: str, success: bool, correlation_id: str | None,
                 details: dict[str, Any] | None = None) -> None:
     audit(
