@@ -1,0 +1,495 @@
+{
+  "transport": "git_pointer_manifest",
+  "contract_version": "1.0",
+  "task_id": "T-P1-901",
+  "execution_id": "EXEC-901",
+  "purpose": "Phase1 module review input materials: M1 platform + M2 gpt_controller source, tests and test evidence logs",
+  "files": [
+    {
+      "path": "app/frontend/index.html",
+      "artifact_sha256": "b834ac0579bb3401ac24a4f421b67633b3075a75f3bab18030ae93a8c3b9c78c",
+      "size_bytes": 305,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/frontend/package-lock.json",
+      "artifact_sha256": "c2d297d0522fee8f33a985e940ce513c5ac88465b2d8e174a16ee2cbaa924e2e",
+      "size_bytes": 43440,
+      "media_type": "application/json"
+    },
+    {
+      "path": "app/frontend/package.json",
+      "artifact_sha256": "97bac33efc7e2c9f36591c743da5f6c5e844a1c66b5a3c709245e78f620d2867",
+      "size_bytes": 296,
+      "media_type": "application/json"
+    },
+    {
+      "path": "app/frontend/src/App.vue",
+      "artifact_sha256": "9f72c252e59a6fa746e8ca57dacad98ff06913627815997b7d802c8e367f389e",
+      "size_bytes": 5953,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/frontend/src/api.js",
+      "artifact_sha256": "af444267e161f4e08e09c96ac9aba236266a736afbef0bd3d5a0c5e709dfa204",
+      "size_bytes": 1182,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/frontend/src/main.js",
+      "artifact_sha256": "1297cf214fa1b84a364b43b5f05c9c364beb4c5385b7c8aa05c48a9bf41323ce",
+      "size_bytes": 93,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/frontend/vite.config.js",
+      "artifact_sha256": "4e91e16f4832c0057c0a5b3a566b8f3de45bcce7bea0dd2c1ad1a4d44bbdb9cd",
+      "size_bytes": 281,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/gpt_controller/package.json",
+      "artifact_sha256": "8f01ec6b6af75deef33464883d287641c4e8b7d82afe7c5543ae5084c4f65ef7",
+      "size_bytes": 536,
+      "media_type": "application/json"
+    },
+    {
+      "path": "app/gpt_controller/src/browser_session.mjs",
+      "artifact_sha256": "1fb0da48c5544423dca5a21a9e3227d210b5a1fcc050576c205bb2422da59cc6",
+      "size_bytes": 5012,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/gpt_controller/src/cli.mjs",
+      "artifact_sha256": "6a641a8863c42292944bb1502050b519e1a79737ec3f6db8f4d9ce0c9c03d938",
+      "size_bytes": 3931,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/gpt_controller/src/config.mjs",
+      "artifact_sha256": "af5e3de5f3777b389f9978ce5c3e5a13c62f39ce2303af389942eca28c98b057",
+      "size_bytes": 2638,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/gpt_controller/src/context_limit.mjs",
+      "artifact_sha256": "8b8a2f6d49ac78dd1d8c469018c42496f66b18a83aa9857a580289eaa5dda9f4",
+      "size_bytes": 4700,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/gpt_controller/src/dispatch.mjs",
+      "artifact_sha256": "340a62b5464b1b88fdf7aaf467650f93263e0c666b9b9273d92dd8c4c07408cf",
+      "size_bytes": 15188,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/gpt_controller/src/dom_contract.mjs",
+      "artifact_sha256": "0f503bf0db0ed3ee45c50b0e4b4f14772a0f00f1739ce39606fa5ffdc16c2c3b",
+      "size_bytes": 1701,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/gpt_controller/src/dom_extract.mjs",
+      "artifact_sha256": "95ac9e2607e5dbff16b6d0d0690df2766182048c8cf6d4e3b6598ff163f1aded",
+      "size_bytes": 5700,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/gpt_controller/src/dom_view.mjs",
+      "artifact_sha256": "ef10d2e82710236576428b8f0595c3167e0477283ab423a09ca6350cf34610d9",
+      "size_bytes": 7535,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/gpt_controller/src/errors.mjs",
+      "artifact_sha256": "dd837994e075f20648f3531f5303ea4e45ce000d2c420b7cc76e39a1f2a18588",
+      "size_bytes": 2388,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/gpt_controller/src/generation.mjs",
+      "artifact_sha256": "d3c3189d82703267964c6e2c03e4a3467eebb40e04a26c804c0a8fce13dacca6",
+      "size_bytes": 2531,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/gpt_controller/src/git_handoff.mjs",
+      "artifact_sha256": "565f172f65047982a694511a351bab0ec94c31042a8deb6540885a3b05f23cfd",
+      "size_bytes": 3682,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/gpt_controller/src/git_pointer.mjs",
+      "artifact_sha256": "353e81588e089ebb9085bf94c259e9fe9da407fdded3d1a6e5092c96a9239755",
+      "size_bytes": 22444,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/gpt_controller/src/inbound_reply.mjs",
+      "artifact_sha256": "b6905e9aed6c425b0d76a746c19b7bd29a4bfbce950b84efe6bb032f4856005b",
+      "size_bytes": 24758,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/gpt_controller/src/logging.mjs",
+      "artifact_sha256": "0ea5ce8bf3c6e2db7c58a1a567f8f472fe70defe23700f5b78d2359034ad1e5e",
+      "size_bytes": 5425,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/gpt_controller/src/m1_registration.mjs",
+      "artifact_sha256": "510915b5d986e7a368339843378fd1c025b2c023012f97da646605e08769e88f",
+      "size_bytes": 10206,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/gpt_controller/src/outbound.mjs",
+      "artifact_sha256": "3ec0a9ce23c5ceaf804013baaca3dd03f00f2e1b412626d8fc3a5472ab00445f",
+      "size_bytes": 2921,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/gpt_controller/src/send_acceptance.mjs",
+      "artifact_sha256": "dc3c54525aa0648a99ea26f145149e5386db41df52c010cc22c54bbaccc40c29",
+      "size_bytes": 4681,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/gpt_controller/src/session_lock.mjs",
+      "artifact_sha256": "842dafd43d4c801f5b0df615fe8a81887f86c703200d75d22a32f428953f481f",
+      "size_bytes": 6222,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/gpt_controller/src/session_store.mjs",
+      "artifact_sha256": "766bd3b9c4fe34dee8e99eeba1728f61d29e139c72169718dbf861cd96b722c4",
+      "size_bytes": 9917,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/gpt_controller/src/validation.mjs",
+      "artifact_sha256": "1228f12ae38030cf8e2e4b51924ce1b677d2a146571c8008fe4e11f36da5278e",
+      "size_bytes": 2637,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/gpt_controller/tests/browser_simulation.test.mjs",
+      "artifact_sha256": "fb141c3de3ba321285e67fb2b6319008486597c2e9981fa0aeaeb50901586959",
+      "size_bytes": 23426,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/gpt_controller/tests/fixtures/reply.schema.json",
+      "artifact_sha256": "2cd8ee189d6d210746c4151a2e70cc56642317b3d579909696d0dee8b29a2646",
+      "size_bytes": 562,
+      "media_type": "application/json"
+    },
+    {
+      "path": "app/gpt_controller/tests/helpers.mjs",
+      "artifact_sha256": "e0a7574955c686e167bc0e97d2f8f2692d761ae08d664caf8fc3d2c7980bfd26",
+      "size_bytes": 5279,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/gpt_controller/tests/lock_child.mjs",
+      "artifact_sha256": "f3f793ee30b38ead344eadadfbe277dd51d90f850122296d748fcff1d2a4148e",
+      "size_bytes": 1454,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/gpt_controller/tests/lock_mutex.test.mjs",
+      "artifact_sha256": "45b6b909f12ebafadfc59e9d9fa5ba80c065fdd4c636b8cda28cd9eeed8d202b",
+      "size_bytes": 6149,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/gpt_controller/tests/unit.test.mjs",
+      "artifact_sha256": "ede9b49b0a86d5f63613601ae1952359f404b29dfd129a2a8b8188b4e7f3eb1e",
+      "size_bytes": 38132,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/platform/__init__.py",
+      "artifact_sha256": "aa89d8e099eff6bcb55242ed86ba332e85163b79dd6d09cc52b34538ca9c5b23",
+      "size_bytes": 90,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/platform/api.py",
+      "artifact_sha256": "ee0546c0e868a275fcd372c74defae5453625665ba35cf0e06520a8723b45387",
+      "size_bytes": 26769,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/platform/board.py",
+      "artifact_sha256": "3db31a35a3b0881301d34f0c5aa22d57a660023b6d52c6042750eab8fcf35a18",
+      "size_bytes": 3351,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/platform/config.py",
+      "artifact_sha256": "fbe97676a556841d316b88e2082c4be50c17df18c8bbaf909fe072d86f248061",
+      "size_bytes": 5170,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/platform/database.py",
+      "artifact_sha256": "1bf3ed7963a737019f205e7efcd745408137bbd368e7577c23ca99cdc806b557",
+      "size_bytes": 4804,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/platform/errors.py",
+      "artifact_sha256": "e3af3fbc8a5aa3b76ddb76cd59b67e8a9ecbcc763cf00ce18a84cc96b95bef31",
+      "size_bytes": 6583,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/platform/logging_setup.py",
+      "artifact_sha256": "8693cb142aa34bef42e86cc999f4297972a0ebf549b6e3ac3add0f6bc78a08b5",
+      "size_bytes": 4811,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/platform/main.py",
+      "artifact_sha256": "5a16f21ae6ef33e3551817cb7e65645360a8e5eff116229865d12eed4109ea3e",
+      "size_bytes": 1790,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/platform/messaging.py",
+      "artifact_sha256": "132b936ad9335799a542a334fd3847e3b1a79805a604db55df2fe81a843c6ffd",
+      "size_bytes": 20753,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/platform/migrations/001_init.sql",
+      "artifact_sha256": "a084bb90ff8bc43b900be3800db079536452b5a54a75584629a7e74c72280dfa",
+      "size_bytes": 14009,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/platform/registry.py",
+      "artifact_sha256": "ba75f128070d2e6ed1262a116ad65f4a4921c527a3a2c3cee328e31d7bf3f1e5",
+      "size_bytes": 8385,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/platform/reports.py",
+      "artifact_sha256": "7e6998b47b992df97fb9821fcfb77e03b4a362d48bec8513ef66535b94d1d633",
+      "size_bytes": 24735,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/platform/requirements-dev.txt",
+      "artifact_sha256": "fd876fd27caa4d8d129025a320b8b5fbeb3ecf51f4a831f9b8ab33e917a2419c",
+      "size_bytes": 48,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/platform/requirements.txt",
+      "artifact_sha256": "680f4ad51629356b4bace796e7b558f55d2f04f863cd3e0d3b25ec7e7a7f6b25",
+      "size_bytes": 95,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/platform/schemas.py",
+      "artifact_sha256": "4fc763600c35329e2d69e3a47419c546e9001ef9914b95be8af6680c6f1d008b",
+      "size_bytes": 8711,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/platform/security.py",
+      "artifact_sha256": "df09ffd14726bccb208a141d36459940cd61e19b6e4f2374bec7d2ff3c2fb5e4",
+      "size_bytes": 8234,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/platform/state_machine.py",
+      "artifact_sha256": "c4fecce35968d1ed87db12dd053f686c2a3943a979431b456bd7df85901ad80c",
+      "size_bytes": 8682,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/platform/tasks.py",
+      "artifact_sha256": "54c0ab7840a60368f239bfdc17e7a7611d243db8454e861c5b35173a0e8509e8",
+      "size_bytes": 10697,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "docs/phase1/agent-contract.md",
+      "artifact_sha256": "61a7ecd030ed55e21c736e10a71955320023804d4253075f8f6bb6020b905c52",
+      "size_bytes": 11946,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/phase1/decision-log.md",
+      "artifact_sha256": "6fddb952fc80699c582f7a6fbe32d99ea06c2844d23583526fa9263659eb9cec",
+      "size_bytes": 19561,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/phase1/handoff-template.md",
+      "artifact_sha256": "d16253df1addb9c6fb1a74d2488c63cc4ab3028e07f0eead4fa7b22382e69457",
+      "size_bytes": 5534,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/phase1/module-boundaries.md",
+      "artifact_sha256": "4b3dd0e70dc09b5759f3e03d3eda237843814d47b9cb747502d8eef28e53c418",
+      "size_bytes": 11424,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/phase1/platform-contract-v1.0.md",
+      "artifact_sha256": "c6f91374bc82f385dc2a65fe1e775fbabadaf8317d6c2b048f48ad36f485b7a9",
+      "size_bytes": 87872,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "docs/phase1/review-protocol.md",
+      "artifact_sha256": "28f67c3665bac020794e07612c0d80f51905aed0bb7ca74f88aa3b22d8139070",
+      "size_bytes": 7951,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "phase1/logs/m1-platform-20261113/npm-build-20261113-003103.log",
+      "artifact_sha256": "b2447967a4eaacae5fc48849d7c4c86be9098cdac391dc9e6a2622ec4491f2a7",
+      "size_bytes": 567,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "phase1/logs/m1-platform-20261113/npm-install-20261113-003424.log",
+      "artifact_sha256": "ce7bf91f54adc7390cff6bf1c2572fd00ce9cfbd0611637e273059c4710a80c9",
+      "size_bytes": 18,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "phase1/logs/m1-platform-20261113/pytest-20261113-002402.log",
+      "artifact_sha256": "db4b9508702314c1b02da10934af9a6b10e378238c771f206af7ca8d7996c35d",
+      "size_bytes": 10031,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "phase1/logs/m1-platform-20261113/pytest-20261113-002727.log",
+      "artifact_sha256": "6ae62386199260489de9a2633c0472e974c902d12ff36fc1812d87be7e63df39",
+      "size_bytes": 5324,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "phase1/logs/m1-platform-20261113/pytest-20261113-002824.log",
+      "artifact_sha256": "e5cf6e4fc3e608c7527e3b0fcbe4b6cf1ec02efd94079fe0660a3b2a43fb9d20",
+      "size_bytes": 4275,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "phase1/logs/m1-platform-20261113/pytest-20261113-003232.log",
+      "artifact_sha256": "b8a81e6b0e38474fa5f115f14169bea65c1562974622d28dc5e4139cab7cdf7e",
+      "size_bytes": 689,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "phase1/logs/m2-gpt-controller-20261113/all-20261113-final.log",
+      "artifact_sha256": "0b2510cd990ca5346dcffa44694017bc4fd287734dd19d937f62a10a67ec1f9d",
+      "size_bytes": 5870,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "phase1/logs/m2-gpt-controller-20261113/browser_simulation-20261113-run1.log",
+      "artifact_sha256": "d020a4e854ae2f3fc0cfcc550c641c6f8183a6fb2b278e10cc627385aace9863",
+      "size_bytes": 11620,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "phase1/logs/m2-gpt-controller-20261113/browser_simulation-20261113-run2.log",
+      "artifact_sha256": "ab4fa957bdfee3e3d49af5301dd12d5595736b02019407543efe8d81c2e68c9f",
+      "size_bytes": 9172,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "phase1/logs/m2-gpt-controller-20261113/browser_simulation-20261113-run3.log",
+      "artifact_sha256": "36d82ac5fc9116d79f035f65a5d63626353cbad6263252f221ca8b7f43f16cd0",
+      "size_bytes": 3404,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "phase1/logs/m2-gpt-controller-20261113/browser_simulation-20261113-run4.log",
+      "artifact_sha256": "db96383c70f6e9bf461e751bf1203244fde809bbfa9a3f334949ecf96925f4cb",
+      "size_bytes": 2032,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "phase1/logs/m2-gpt-controller-20261113/lock_mutex-20261113-run1.log",
+      "artifact_sha256": "1fcd7f2e8714ad98813cc9b3c40d00302828c8cc49a095cd03263cac1f8d8438",
+      "size_bytes": 533,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "phase1/logs/m2-gpt-controller-20261113/unit-20261113-run1.log",
+      "artifact_sha256": "cd500a86e3dbec78581e7621ab62646a141806b13b428a5c7b30daec1ec9acbc",
+      "size_bytes": 1311,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "phase1/logs/m2-gpt-controller-20261113/unit-20261113-run2.log",
+      "artifact_sha256": "946bf147f397ea808971c0aa8a43de6031325f054d1492d467c0fca5a6fa78f1",
+      "size_bytes": 8749,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "phase1/logs/m2-gpt-controller-20261113/unit-20261113-run3.log",
+      "artifact_sha256": "239670625f2aa19d362ff00bf65dda0ce40cdd874f02a31e6208686d5d7f2754",
+      "size_bytes": 3405,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "tests/platform/conftest.py",
+      "artifact_sha256": "54fbf0f87beecf652d088af9974204a59fc4b57c03c6729634c5a4aec1ca1cf7",
+      "size_bytes": 4753,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "tests/platform/test_artifacts_audit.py",
+      "artifact_sha256": "d4f466ad97c7a5e56a4b9afa211aabfb798e366d8778f94945aac2bc9cd71f24",
+      "size_bytes": 5150,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "tests/platform/test_health_auth.py",
+      "artifact_sha256": "48008c19ec603c76bbc1c429e40edbae462d0ddd86c71957d79175e952744095",
+      "size_bytes": 3256,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "tests/platform/test_messages.py",
+      "artifact_sha256": "4ccd9de6d4955d57773cf8ef26186f638bd567b3b3a57303cacbfcdc200b6a7b",
+      "size_bytes": 8542,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "tests/platform/test_projects_batches.py",
+      "artifact_sha256": "a2c95f3e473d14daaf0d02d312427cc1d1865cd6941201da5db4aa5b373942e8",
+      "size_bytes": 2461,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "tests/platform/test_reports_board.py",
+      "artifact_sha256": "c5961a7ff6fce256c0dad52b76464ce0c87d05d3441fa5f3b79bdf47a49b8d50",
+      "size_bytes": 8713,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "tests/platform/test_restart_persistence.py",
+      "artifact_sha256": "5423ea0d16d9e3d5b78e9bfabccb3987e41f38c5be9d2ad09d0d055d522d0655",
+      "size_bytes": 4412,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "tests/platform/test_tasks.py",
+      "artifact_sha256": "90c425969ee3c8f1ad3e23c3d09e9c3b59f7e1042807236ec81f016eff155ef8",
+      "size_bytes": 9816,
+      "media_type": "text/plain"
+    }
+  ]
+}

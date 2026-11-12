@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AIEO test reply schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["status", "task_id", "execution_id", "correlation_id", "summary"],
+  "properties": {
+    "status": { "type": "string", "enum": ["SUCCESS", "BLOCKED"] },
+    "task_id": { "type": "string", "pattern": "^T-" },
+    "execution_id": { "type": "string", "pattern": "^EXEC-" },
+    "correlation_id": { "type": "string", "pattern": "^CORR-" },
+    "summary": { "type": "string", "minLength": 1 }
+  }
+}

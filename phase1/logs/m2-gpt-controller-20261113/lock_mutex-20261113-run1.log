@@ -1,0 +1,12 @@
+✔ ⑨ 两进程竞争同一把锁：一胜一 SESSION_LOCK_CONFLICT；释放后第三方立即可获取 (4939.7916ms)
+✔ ⑨ 同进程：持锁期间重复获取被拒；释放后可重新获取（内容不被仲裁） (1926.1169ms)
+✔ ⑨ 锁错误映射：SESSION_LOCK_CONFLICT → RES-0002，status=BLOCKED，不可重试 (1242.2923ms)
+✔ ⑨ 默认锁路径指向 runtime/locks/gpt-session.lockfile (0.2963ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8260.6095

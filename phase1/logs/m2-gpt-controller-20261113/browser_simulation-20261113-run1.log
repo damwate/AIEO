@@ -1,0 +1,172 @@
+✖ ③ 反向门：preSendStopVisible=true 时拒绝发送（PRE_SEND_GENERATION_ACTIVE） (7.7575ms)
+✔ ③ 严格时序：停止按钮先于新 user unit 可见不计数；tail 确认后才验收 (1.5211ms)
+✔ ③ 严格时序：停止按钮可见但始终无新 user unit → SEND_ACCEPTANCE_UNCERTAIN（不重发） (0.7055ms)
+✖ ③ 发送双验一站式：插入回读一致 → Enter → 验收回执 (0.7531ms)
+✖ ③ 生成等待：观察生成 → 结束；从未观察即结束也要求先观察 (0.4372ms)
+✖ ④ 生成超时：300s 窗口内未确认生成结束 → GENERATION_TIMEOUT（gpt_resend_required=false） (1.5925ms)
+✖ ⑧ 上限检测：横幅文本命中即 CONTEXT_LIMIT_STOP；无横幅持续检测后放行 (0.5265ms)
+✔ ⑧ 派单前上限检测：横幅出现 → 拒绝派单且不发送 (1.08ms)
+✖ ⑧ 轮换执行：GitPointer 交接 + 旧轮已终结 → 跳转主页开全新空白会话 (9.605ms)
+✔ ⑧ 轮换决策 fail-closed：摘要交接/旧轮未终结 → BLOCKED 且不做任何页面动作 (13.9978ms)
+✖ 全管线（不登记）：发送双验 → 生成 → 确认窗 → 两次读取 → artifact 落盘回读 → 完成判定全绿 (2.2455ms)
+✖ 全管线（M1 登记）：三 ID + Schema 绑定 + 回读 artifact 登记 REGISTERED + 会话 URL 捕获 (9.0894ms)
+✖ 全管线：两次完整读取之间回复被改写 → INBOUND_UNSTABLE_READ fail-closed，不写成功结果 (1.1101ms)
+✔ 禁止盲发：DOM 契约自检失败（composer 缺失）→ 拒绝派单且不插入任何文本 (0.9105ms)
+✔ 出站超限：1200 字节上限在接触浏览器前拒绝（不插文本、不回车、不加 unit） (0.7613ms)
+✔ ⑧ 可滚动虚拟列表：分窗向上定位 + 向下拼接 + 独立逻辑序列证明完整 (3.3583ms)
+✖ ⑧ 可滚动虚拟列表：集合变化且无独立序列 → INBOUND_WINDOW_COMPLETENESS_UNPROVEN (1.7167ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 7
+ℹ fail 10
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 316.4096
+
+✖ failing tests:
+
+test at tests\browser_simulation.test.mjs:68:1
+✖ ③ 反向门：preSendStopVisible=true 时拒绝发送（PRE_SEND_GENERATION_ACTIVE） (7.7575ms)
+  Error: 期望错误 code=PRE_SEND_GENERATION_ACTIVE，实际 code=CONTEXT_LIMIT_STOP：CONTEXT_LIMIT_STOP: 上下文窗口已达上限，已停止自动化；请由主会话换会话，不重发、不自动迁移
+      at assertRejectsWith (file:///D:/AIEO/app/gpt_controller/tests/helpers.mjs:126:13)
+      at async TestContext.<anonymous> (file:///D:/AIEO/app/gpt_controller/tests/browser_simulation.test.mjs:79:5)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:358:3)
+
+test at tests\browser_simulation.test.mjs:138:1
+✖ ③ 发送双验一站式：插入回读一致 → Enter → 验收回执 (0.7531ms)
+  Error [GptControllerError]: COMPOSER_READBACK_MISMATCH: composer 回读不一致，STOP（不发送）
+      at controllerError (file:///D:/AIEO/app/gpt_controller/src/errors.mjs:49:10)
+      at sendError (file:///D:/AIEO/app/gpt_controller/src/send_acceptance.mjs:15:10)
+      at insertAndVerifyComposer (file:///D:/AIEO/app/gpt_controller/src/send_acceptance.mjs:46:11)
+      at async sendWithAcceptance (file:///D:/AIEO/app/gpt_controller/src/send_acceptance.mjs:93:18)
+      at async TestContext.<anonymous> (file:///D:/AIEO/app/gpt_controller/tests/browser_simulation.test.mjs:141:28)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    code: 'COMPOSER_READBACK_MISMATCH',
+    c3_code: 'PROVIDER-0004',
+    status: 'BLOCKED',
+    retryable: false,
+    details: { expected_bytes: 10, readback_bytes: 0 }
+  }
+
+test at tests\browser_simulation.test.mjs:162:1
+✖ ③ 生成等待：观察生成 → 结束；从未观察即结束也要求先观察 (0.4372ms)
+  Error [GptControllerError]: COMPOSER_READBACK_MISMATCH: composer 回读不一致，STOP（不发送）
+      at controllerError (file:///D:/AIEO/app/gpt_controller/src/errors.mjs:49:10)
+      at sendError (file:///D:/AIEO/app/gpt_controller/src/send_acceptance.mjs:15:10)
+      at insertAndVerifyComposer (file:///D:/AIEO/app/gpt_controller/src/send_acceptance.mjs:46:11)
+      at async sendWithAcceptance (file:///D:/AIEO/app/gpt_controller/src/send_acceptance.mjs:93:18)
+      at async TestContext.<anonymous> (file:///D:/AIEO/app/gpt_controller/tests/browser_simulation.test.mjs:165:3)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    code: 'COMPOSER_READBACK_MISMATCH',
+    c3_code: 'PROVIDER-0004',
+    status: 'BLOCKED',
+    retryable: false,
+    details: { expected_bytes: 10, readback_bytes: 0 }
+  }
+
+test at tests\browser_simulation.test.mjs:173:1
+✖ ④ 生成超时：300s 窗口内未确认生成结束 → GENERATION_TIMEOUT（gpt_resend_required=false） (1.5925ms)
+  Error: 期望错误 code=GENERATION_TIMEOUT，实际 code=CONTEXT_LIMIT_STOP：CONTEXT_LIMIT_STOP: 上下文窗口已达上限，已停止自动化；请由主会话换会话，不重发、不自动迁移
+      at assertRejectsWith (file:///D:/AIEO/app/gpt_controller/tests/helpers.mjs:126:13)
+      at async TestContext.<anonymous> (file:///D:/AIEO/app/gpt_controller/tests/browser_simulation.test.mjs:188:19)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7)
+
+test at tests\browser_simulation.test.mjs:224:1
+✖ ⑧ 上限检测：横幅文本命中即 CONTEXT_LIMIT_STOP；无横幅持续检测后放行 (0.5265ms)
+  Error [GptControllerError]: CONTEXT_LIMIT_STOP: 上下文窗口已达上限，已停止自动化；请由主会话换会话，不重发、不自动迁移
+      at controllerError (file:///D:/AIEO/app/gpt_controller/src/errors.mjs:49:10)
+      at contextLimitError (file:///D:/AIEO/app/gpt_controller/src/context_limit.mjs:17:10)
+      at stopIfContextLimit (file:///D:/AIEO/app/gpt_controller/src/context_limit.mjs:31:13)
+      at async TestContext.<anonymous> (file:///D:/AIEO/app/gpt_controller/tests/browser_simulation.test.mjs:236:16)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    code: 'CONTEXT_LIMIT_STOP',
+    c3_code: 'PROVIDER-0003',
+    status: 'BLOCKED',
+    retryable: false,
+    details: { detected_at: '2026-11-12T16:44:48.264Z', session_rotation_required: true }
+  }
+
+test at tests\browser_simulation.test.mjs:254:1
+✖ ⑧ 轮换执行：GitPointer 交接 + 旧轮已终结 → 跳转主页开全新空白会话 (9.605ms)
+  Error: ENOENT: no such file or directory, open 'D:\AIEO\app\gpt_controller\tests\fixtures\chatgpt-home-blank.html'
+      at readFileSync (node:fs:440:20)
+      at loadFixtureHtml (file:///D:/AIEO/app/gpt_controller/tests/helpers.mjs:13:10)
+      at TestContext.<anonymous> (file:///D:/AIEO/app/gpt_controller/tests/browser_simulation.test.mjs:261:22)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    errno: -4058,
+    code: 'ENOENT',
+    syscall: 'open',
+    path: 'D:\\AIEO\\app\\gpt_controller\\tests\\fixtures\\chatgpt-home-blank.html'
+  }
+
+test at tests\browser_simulation.test.mjs:328:1
+✖ 全管线（不登记）：发送双验 → 生成 → 确认窗 → 两次读取 → artifact 落盘回读 → 完成判定全绿 (2.2455ms)
+  Error [GptControllerError]: CONTEXT_LIMIT_STOP: 上下文窗口已达上限，已停止自动化；请由主会话换会话，不重发、不自动迁移
+      at controllerError (file:///D:/AIEO/app/gpt_controller/src/errors.mjs:49:10)
+      at contextLimitError (file:///D:/AIEO/app/gpt_controller/src/context_limit.mjs:17:10)
+      at stopIfContextLimit (file:///D:/AIEO/app/gpt_controller/src/context_limit.mjs:31:13)
+      at async runDispatchLocked (file:///D:/AIEO/app/gpt_controller/src/dispatch.mjs:149:3)
+      at async runDispatch (file:///D:/AIEO/app/gpt_controller/src/dispatch.mjs:116:12)
+      at async TestContext.<anonymous> (file:///D:/AIEO/app/gpt_controller/tests/browser_simulation.test.mjs:334:20)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    code: 'CONTEXT_LIMIT_STOP',
+    c3_code: 'PROVIDER-0003',
+    status: 'BLOCKED',
+    retryable: false,
+    details: { detected_at: '2026-11-12T16:44:48.291Z', session_rotation_required: true }
+  }
+
+test at tests\browser_simulation.test.mjs:364:1
+✖ 全管线（M1 登记）：三 ID + Schema 绑定 + 回读 artifact 登记 REGISTERED + 会话 URL 捕获 (9.0894ms)
+  Error [GptControllerError]: CONTEXT_LIMIT_STOP: 上下文窗口已达上限，已停止自动化；请由主会话换会话，不重发、不自动迁移
+      at controllerError (file:///D:/AIEO/app/gpt_controller/src/errors.mjs:49:10)
+      at contextLimitError (file:///D:/AIEO/app/gpt_controller/src/context_limit.mjs:17:10)
+      at stopIfContextLimit (file:///D:/AIEO/app/gpt_controller/src/context_limit.mjs:31:13)
+      at async runDispatchLocked (file:///D:/AIEO/app/gpt_controller/src/dispatch.mjs:149:3)
+      at async runDispatch (file:///D:/AIEO/app/gpt_controller/src/dispatch.mjs:116:12)
+      at async TestContext.<anonymous> (file:///D:/AIEO/app/gpt_controller/tests/browser_simulation.test.mjs:370:20)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    code: 'CONTEXT_LIMIT_STOP',
+    c3_code: 'PROVIDER-0003',
+    status: 'BLOCKED',
+    retryable: false,
+    details: { detected_at: '2026-11-12T16:44:48.300Z', session_rotation_required: true }
+  }
+
+test at tests\browser_simulation.test.mjs:403:1
+✖ 全管线：两次完整读取之间回复被改写 → INBOUND_UNSTABLE_READ fail-closed，不写成功结果 (1.1101ms)
+  Error: 期望错误 code=INBOUND_UNSTABLE_READ，实际 code=CONTEXT_LIMIT_STOP：CONTEXT_LIMIT_STOP: 上下文窗口已达上限，已停止自动化；请由主会话换会话，不重发、不自动迁移
+      at assertRejectsWith (file:///D:/AIEO/app/gpt_controller/tests/helpers.mjs:126:13)
+      at async TestContext.<anonymous> (file:///D:/AIEO/app/gpt_controller/tests/browser_simulation.test.mjs:407:19)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7)
+
+test at tests\browser_simulation.test.mjs:529:1
+✖ ⑧ 可滚动虚拟列表：集合变化且无独立序列 → INBOUND_WINDOW_COMPLETENESS_UNPROVEN (1.7167ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  false !== true
+  
+      at TestContext.<anonymous> (file:///D:/AIEO/app/gpt_controller/tests/browser_simulation.test.mjs:537:10)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
