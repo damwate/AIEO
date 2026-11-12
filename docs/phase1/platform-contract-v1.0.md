@@ -327,6 +327,13 @@ PENDING 可被发送方取消 → CANCELLED（终态）
 - 全量回归 10/10（`phase0/logs/third-round-regression-2026-11-12T05-17-03/result.json`）。
 - 边界：真实 ChatGPT 多 assistant unit/动态裁切仍未实测；M1 REST/数据库/ACK、私有权限与真实网络故障注入未验证。BLOCKED-1 由复审决定。
 
+#### 2.6.13 真实页面可滚动与 M1 核心绑定修正
+
+- 修正过度保守：容器可滚动不等于实际虚拟裁切。`inbound_reply.mjs` 现在只有滚动中实际观察到渲染 unit 集合变化且缺少独立逻辑序列时才抛 `INBOUND_WINDOW_COMPLETENESS_UNPROVEN`；集合未变化时以 `STABLE_RENDERED_UNIT_SET` 通过，明确不宣称证明持续隐藏 unit 或所有未来虚拟化行为。这样保留真实 ChatGPT 的可用入站路径，同时在观察到裁切时 fail-closed。
+- M1 核心登记入口现强制 `execution_id`、`correlation_id`，不再只依赖 `dispatch_options.mjs` 的上游校验；缺任一分别返回 `M1_EXECUTION_ID_REQUIRED`、`M1_CORRELATION_ID_REQUIRED`。`REVIEW_REPORT` 仍必须 `schema_validation=PASS`。
+- 测试：全量回归 10/10（`phase0/logs/third-round-regression-2026-11-12T05-33-03/result.json`）；M1 顺序与新增核心 ID 负例 **8/8**（`phase0/logs/m1-registry-tests.{log,json}`）。
+- 证据边界不变：真实 ChatGPT 多 assistant unit/动态裁切恢复、M1 REST/数据库/ACK、私有权限与真实网络故障注入未验证。
+
 ---
 
 ## 3. C2 数据模型

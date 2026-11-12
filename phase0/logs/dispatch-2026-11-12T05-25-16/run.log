@@ -1,0 +1,9 @@
+[2026-11-12T05:25:17.147Z] 会话锁已获取 pid=16292
+[2026-11-12T05:25:17.151Z] === GPT 派单（已有会话，消息 1103 字节）===
+[2026-11-12T05:25:20.470Z] Chrome 已启动 pid=22840
+[2026-11-12T05:25:26.341Z] 会话就绪: https://chatgpt.com/c/6af52d27-e44c-83ee-95a4-888c1709afcb
+[2026-11-12T05:25:31.350Z] [dispatch] 基线尾部: {"role":"assistant","key":"fallback-turn-4:2:assistant","assistantUuid":"3447748b-8c49-4aa7-8627-f0dc5f91955e"}
+[2026-11-12T05:25:32.090Z] [dispatch] 发送双验通过（polls=1，user_unit_key=fallback-turn-5:0:user，tail 后观察）
+[2026-11-12T05:25:32.355Z] 截图: sent-dispatch.png
+[2026-11-12T05:28:30.969Z] 会话锁已释放
+[2026-11-12T05:28:30.970Z] 致命错误: INBOUND_WINDOW_COMPLETENESS_UNPROVEN: BLOCKED: 相邻窗口重叠只能证明已观察 key 连续，不能证明单个或全部窗口没有持续遗漏中间 unit；缺少独立逻辑序列时拒绝判定完整 details={"materialized_unit_keys":["fallback-turn-5:0:user","fallback-turn-5:2:assistant"],"remediation":"提供可信的完整逻辑 unit 序列，或在非虚拟化静态 DOM 上重新读取"}

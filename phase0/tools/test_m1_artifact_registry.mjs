@@ -119,6 +119,20 @@ const tests = [
     })));
     assert.equal(existsSync(registryPath), false);
   }],
+  ["核心登记入口缺少 execution_id 必须失败，不能绕过上派单校验", () => {
+    const registryPath = join(tempDir, "missing-execution-registry.json");
+    const artifactPath = artifact("missing-execution.txt", "缺少执行ID");
+    const { execution_id, ...withoutExecution } = ids;
+    expectCode("M1_EXECUTION_ID_REQUIRED", () => registerArtifact(options(registryPath, artifactPath, { execution_id: null })));
+    assert.equal(existsSync(registryPath), false);
+  }],
+  ["核心登记入口缺少 correlation_id 必须失败，不能绕过上派单校验", () => {
+    const registryPath = join(tempDir, "missing-correlation-registry.json");
+    const artifactPath = artifact("missing-correlation.txt", "缺少关联ID");
+    const { correlation_id, ...withoutCorrelation } = ids;
+    expectCode("M1_CORRELATION_ID_REQUIRED", () => registerArtifact(options(registryPath, artifactPath, { correlation_id: null })));
+    assert.equal(existsSync(registryPath), false);
+  }],
 ];
 
 for (const [name, fn] of tests) {

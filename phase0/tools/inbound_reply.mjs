@@ -106,6 +106,7 @@ export function createInboundRangeCollector(userUnitKey, { expectedUnitKeys = nu
   let started = false;
   let complete = false;
   let sawScrollableWindow = false;
+  let virtualizationObserved = false;
   let stitched = [];
   let startIndex = -1;
   let endIndex = -1;
@@ -131,6 +132,16 @@ export function createInboundRangeCollector(userUnitKey, { expectedUnitKeys = nu
       started = true;
     } else {
       overlapProof = proveAdjacentWindowOverlap(previousWindow, domUnits);
+      // “容器可滚动”不等于“发生虚拟裁切”。只有实际观察到渲染 unit 集合
+      // 随窗口变化（新增/消失），才要求独立逻辑序列；稳定渲染集合可走真实页面。
+      if (scrollable) {
+        const beforeKeys = new Set(previousWindow.map((unit) => unit.key));
+        const currentKeys = new Set(domUnits.map((unit) => unit.key));
+        const changed = beforeKeys.size !== currentKeys.size ||
+          [...beforeKeys].some((key) => !currentKeys.has(key)) ||
+          [...currentKeys].some((key) => !beforeKeys.has(key));
+        if (changed) virtualizationObserved = true;
+      }
       const offsets = new Set();
       for (let previousIndex = 0; previousIndex < previousWindow.length; previousIndex += 1) {
         const currentIndex = domUnits.findIndex((unit) => unit.key === previousWindow[previousIndex].key);
@@ -248,17 +259,19 @@ export function createInboundRangeCollector(userUnitKey, { expectedUnitKeys = nu
         expected_unit_count: expectedKeys.length,
         materialized_unit_count: actualKeys.length,
       };
-    } else if (sawScrollableWindow) {
+    } else if (virtualizationObserved) {
       throw inboundError(
         "INBOUND_WINDOW_COMPLETENESS_UNPROVEN",
-        "BLOCKED: 相邻窗口重叠只能证明已观察 key 连续，不能证明单个或全部窗口没有持续遗漏中间 unit；缺少独立逻辑序列时拒绝判定完整",
+        "BLOCKED: 滚动中实际观察到渲染 unit 集合变化，且缺少独立逻辑序列，不能排除持续遗漏中间 unit",
         { materialized_unit_keys: actualKeys, remediation: "提供可信的完整逻辑 unit 序列，或在非虚拟化静态 DOM 上重新读取" },
       );
     } else {
       windowIntegrity = {
         complete: true,
-        method: "STATIC_NON_SCROLLABLE_DOM",
-        limitation: "仅适用于 DOM 契约下无滚动虚拟列表的静态完整窗口",
+        method: sawScrollableWindow ? "STABLE_RENDERED_UNIT_SET" : "STATIC_NON_SCROLLABLE_DOM",
+        scrollable_window_observed: sawScrollableWindow,
+        virtualization_observed: virtualizationObserved,
+        limitation: "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为",
       };
     }
     return {

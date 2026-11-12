@@ -102,3 +102,9 @@
 - **测试证据：** 全量回归 10/10（`phase0/logs/third-round-regression-2026-11-12T05-17-03/result.json`）；三 ID 12/12、M1 并发 3/3、真实 Chrome 虚拟列表仿真 4/4（`phase0/logs/browser-virtual-list-2026-11-12T05-14-59/`，明确不是 ChatGPT 多 unit）、GitPointer 本地 21/21。
 - **真实远程 POC：** commit `26ed31009ccb17d0ddf525e19b6d085d2f5193a8`，manifest 与两个材料通过 GitHub raw 按完整 SHA 回读均 200，`all_files_verified=true`；独立 hash/size 一致。报告 `phase0/logs/git-pointer-remote-poc.md`，结构化结果 `phase0/logs/git-pointer-remote-read-result.json`。首次 404 为 build root 使用错误，已如实记录并修正，没有改写读取语义。
 - **边界：** 真实 ChatGPT 多 assistant unit/动态裁切仍未实测；M1 REST/数据库/ACK、私有权限及真实网络故障注入未验证。BLOCKED-1 待复审，不自行标 PASS。
+
+### DEC-016 可滚动页面可用性与 M1 核心三 ID 强制（待复审）
+
+- **决策内容：** 不再把所有可滚动 ChatGPT 页面视为发生虚拟裁切。滚动中实际观察到 unit 集合变化且缺少独立逻辑序列才 BLOCKED；集合稳定时以 `STABLE_RENDERED_UNIT_SET` 记录有限证据。M1 `registerArtifactLocked` 核心入口强制三 ID，防止绕过 `dispatch_options.mjs`；`REVIEW_REPORT` 仍强制 Schema PASS。
+- **证据：** 全量回归 10/10（`phase0/logs/third-round-regression-2026-11-12T05-33-03/result.json`）；M1 核心 ID 负例补齐后 8/8（`phase0/logs/m1-registry-tests.{log,json}`）。此前真实派单曾被过度保守规则阻断，实际 GPT 回复保存于 `phase0/logs/latest-review-dom.json`，没有将该次标为成功提取。
+- **边界：** 当前仍未提供独立完整逻辑 unit 序列，不宣称排除持续隐藏 unit；真实多 assistant unit/动态裁切恢复未实测。M1 REST/数据库/ACK、私有权限和真实网络故障注入未验证。BLOCKED-1 待复审。

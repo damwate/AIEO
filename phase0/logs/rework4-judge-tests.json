@@ -1,7 +1,7 @@
 {
   "test_target": "phase0/e2e-poc/completion_judge.mjs（生产判定函数，sendAndCollect 同源）",
   "method": "依赖注入（fake clock / isGenVisible 序列）黑盒驱动真实代码；浏览器异常注入未在真实 Chrome 上模拟，见报告未实测声明",
-  "executed_at": "2026-11-12T05:17:24.536Z",
+  "executed_at": "2026-11-12T05:33:24.811Z",
   "all_pass": true,
   "scenarios": [
     {

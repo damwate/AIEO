@@ -1,18 +1,18 @@
 {
   "worker": "w3",
-  "pid": 8780,
+  "pid": 24516,
   "result": "SUCCESS",
   "registration": {
     "status": "REGISTERED",
-    "artifact_id": "ART-M1-000004",
+    "artifact_id": "ART-M1-000002",
     "duplicate": false,
     "retry_count": 0,
     "idempotency_key": "{\"task_id\":\"T-P1-932\",\"execution_id\":\"EXEC-932\",\"correlation_id\":\"CORR-932\",\"artifact_sha256\":\"1a84617d8ff3b1a9976bf4831a2d2189b0873194954c558dd1ff9b34a5a78267\"}",
     "registry_path": "D:\\AIEO\\phase0\\logs\\m1-concurrency-evidence\\distinct-registry.json",
-    "record_count": 4,
+    "record_count": 2,
     "record": {
-      "artifact_id": "ART-M1-000004",
-      "registered_at": "2026-11-12T05:17:12.607Z",
+      "artifact_id": "ART-M1-000002",
+      "registered_at": "2026-11-12T05:33:11.447Z",
       "task_id": "T-P1-932",
       "execution_id": "EXEC-932",
       "correlation_id": "CORR-932",

@@ -1,9 +1,9 @@
 {
-  "started_at": "2026-11-12T05:17:04.867Z",
-  "finished_at": "2026-11-12T05:17:10.020Z",
+  "started_at": "2026-11-12T05:37:22.283Z",
+  "finished_at": "2026-11-12T05:37:28.672Z",
   "node": "v24.14.0",
-  "total": 6,
-  "passed": 6,
+  "total": 8,
+  "passed": 8,
   "failed": 0,
   "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM",
   "tests": [
@@ -29,6 +29,14 @@
     },
     {
       "name": "未通过 Schema 的任意文本不得登记为审查报告",
+      "result": "PASS"
+    },
+    {
+      "name": "核心登记入口缺少 execution_id 必须失败，不能绕过上派单校验",
+      "result": "PASS"
+    },
+    {
+      "name": "核心登记入口缺少 correlation_id 必须失败，不能绕过上派单校验",
       "result": "PASS"
     }
   ]

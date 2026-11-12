@@ -1,12 +1,12 @@
 PASS schemas exit=0 duration_ms=333
-PASS inbound-reply exit=0 duration_ms=365
-PASS dispatch-binding exit=0 duration_ms=592
-PASS m1-registry exit=0 duration_ms=5364
-PASS m1-concurrency exit=0 duration_ms=7979
-PASS browser-virtual-list-simulation exit=0 duration_ms=4880
-PASS git-pointer-local exit=0 duration_ms=1547
-PASS baseline-completion-judge exit=0 duration_ms=94
+PASS inbound-reply exit=0 duration_ms=353
+PASS dispatch-binding exit=0 duration_ms=599
+PASS m1-registry exit=0 duration_ms=5340
+PASS m1-concurrency exit=0 duration_ms=8136
+PASS browser-virtual-list-simulation exit=0 duration_ms=5020
+PASS git-pointer-local exit=0 duration_ms=1555
+PASS baseline-completion-judge exit=0 duration_ms=78
 PASS baseline-greet exit=0 duration_ms=73
-PASS baseline-current-os-session-lock exit=0 duration_ms=11408
-[2026-11-12T05:17:36.028Z] SUMMARY total=10 passed=10 failed=0
-统一回归结果: D:\AIEO\phase0\logs\third-round-regression-2026-11-12T05-17-03\result.json
+PASS baseline-current-os-session-lock exit=0 duration_ms=11428
+[2026-11-12T05:33:36.323Z] SUMMARY total=10 passed=10 failed=0
+统一回归结果: D:\AIEO\phase0\logs\third-round-regression-2026-11-12T05-33-03\result.json

@@ -1,0 +1,30 @@
+$ C:\Program Files\nodejs\node.exe D:\AIEO\phase0\tools\test_inbound_reply.mjs
+[2026-11-12T05:33:03.732Z] START
+[2026-11-12T05:33:03.924Z] 入站本地测试开始 node=v24.14.0
+[2026-11-12T05:33:03.927Z] PASS 正常单 assistant unit，保留原始文本并截断于下一 user
+[2026-11-12T05:33:03.927Z] PASS 多 assistant unit 按 DOM 顺序以单换行合成且忽略 tool unit
+[2026-11-12T05:33:03.928Z] PASS 发送起点因虚拟列表缺失时失败
+[2026-11-12T05:33:03.930Z] PASS 多窗口多 assistant unit 以重叠 key 实体化并保序
+[2026-11-12T05:33:03.930Z] PASS 没有下一 user 时必须真实到底才完成
+[2026-11-12T05:33:03.930Z] PASS 起点存在但中间 assistant unit 被裁掉时窗口跳跃必须失败
+[2026-11-12T05:33:03.931Z] PASS 中间 unit 在所有重叠窗口持续缺失时独立逻辑序列必须拒绝
+[2026-11-12T05:33:03.931Z] PASS 可滚动窗口即使重叠完整，没有独立逻辑序列也必须保守 BLOCKED
+[2026-11-12T05:33:03.931Z] PASS 残缺 DOM 即使两次 key/hash 相同，没有完整区间证明也不得 stable
+[2026-11-12T05:33:03.932Z] PASS 可滚动单窗口即使起点和尾部都在 DOM 也不能直接判完整
+[2026-11-12T05:33:03.932Z] PASS 窗口无重叠、重叠顺序矛盾或重叠原文变化均失败
+[2026-11-12T05:33:03.932Z] PASS 不连续采集失败后不得续用，重新完整连续采集可恢复
+[2026-11-12T05:33:03.932Z] PASS unit 文本变化时全文稳定比较失败
+[2026-11-12T05:33:03.933Z] PASS unit 新增或 key 列表变化时稳定比较失败
+[2026-11-12T05:33:03.933Z] PASS 尾部 assistant UUID 变化或读取间隔不足均失败
+[2026-11-12T05:33:03.933Z] PASS 相同完整快照双读通过并记录每个全文哈希与连续证明
+[2026-11-12T05:33:03.938Z] PASS 长回复 artifact 原文不截断且 raw/reply 回读 hash size 一致
+[2026-11-12T05:33:03.939Z] PASS 无区间证明的 artifact 不得进入成功持久化
+[2026-11-12T05:33:03.941Z] PASS 写盘后内容被改动时 hash size 回读负例必须失败
+[2026-11-12T05:33:03.996Z] PASS 精确 ChatGPT 辅助前缀可移除，全文 JSON/POC Schema/三个 ID 绑定通过
+[2026-11-12T05:33:03.996Z] PASS JSON 不从第一个左括号截取，额外前后文本均失败
+[2026-11-12T05:33:04.070Z] PASS Schema 失败和任一任务 ID 绑定不一致均失败
+[2026-11-12T05:33:04.071Z] PASS 未提供 Schema 时 JSON/Schema/绑定全部 NOT_REQUESTED
+[2026-11-12T05:33:04.072Z] SUMMARY total=23 passed=23 failed=0
+测试报告: D:\AIEO\phase0\logs\rework-inbound-tests.json
+
+[2026-11-12T05:33:04.085Z] EXIT code=0 signal=null timed_out=false

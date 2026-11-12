@@ -1,7 +1,7 @@
 {
   "test_target": "phase0/e2e-poc/session_lock.mjs v6（PowerShell FileShare.None 守护进程，OS 句柄互斥，无 unlink/无内容判定）",
   "method": "真实多进程 spawn；S4 为硬杀持有者验证内核自动释放（内容型锁无法提供的性质）",
-  "executed_at": "2026-11-12T05:17:36.011Z",
+  "executed_at": "2026-11-12T05:33:36.298Z",
   "all_pass": true,
   "scenarios": [
     {
@@ -12,7 +12,7 @@
     {
       "name": "S2 双实例真实竞争",
       "pass": true,
-      "detail": "1 胜（pid=24520）+ 2 conflict（OS 句柄裁决）"
+      "detail": "1 胜（pid=24264）+ 2 conflict（OS 句柄裁决）"
     },
     {
       "name": "S3 临界区独占",

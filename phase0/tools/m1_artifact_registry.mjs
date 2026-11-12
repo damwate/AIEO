@@ -142,6 +142,13 @@ function registerArtifactLocked({
   if (typeof task_id !== "string" || task_id.length === 0) {
     throw m1Error("M1_TASK_ID_REQUIRED", "最小登记适配器要求 task_id 参与幂等键");
   }
+  // 核心入口也必须强制三 ID，不能仅依赖上游 CLI 参数解析（复审 MAJOR）。
+  if (typeof execution_id !== "string" || execution_id.length === 0) {
+    throw m1Error("M1_EXECUTION_ID_REQUIRED", "M1 登记必须提供 execution_id，禁止上游绕过三 ID 绑定");
+  }
+  if (typeof correlation_id !== "string" || correlation_id.length === 0) {
+    throw m1Error("M1_CORRELATION_ID_REQUIRED", "M1 登记必须提供 correlation_id，禁止上游绕过三 ID 绑定");
+  }
   if (artifact_kind === "REVIEW_REPORT" && schema_validation !== "PASS") {
     throw m1Error("M1_UNVALIDATED_REVIEW_REPORT", "未通过 Schema 的文本不得登记为审查报告");
   }
