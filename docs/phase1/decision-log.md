@@ -108,3 +108,9 @@
 - **决策内容：** 不再把所有可滚动 ChatGPT 页面视为发生虚拟裁切。滚动中实际观察到 unit 集合变化且缺少独立逻辑序列才 BLOCKED；集合稳定时以 `STABLE_RENDERED_UNIT_SET` 记录有限证据。M1 `registerArtifactLocked` 核心入口强制三 ID，防止绕过 `dispatch_options.mjs`；`REVIEW_REPORT` 仍强制 Schema PASS。
 - **证据：** 全量回归 10/10（`phase0/logs/third-round-regression-2026-11-12T05-33-03/result.json`）；M1 核心 ID 负例补齐后 8/8（`phase0/logs/m1-registry-tests.{log,json}`）。此前真实派单曾被过度保守规则阻断，实际 GPT 回复保存于 `phase0/logs/latest-review-dom.json`，没有将该次标为成功提取。
 - **边界：** 当前仍未提供独立完整逻辑 unit 序列，不宣称排除持续隐藏 unit；真实多 assistant unit/动态裁切恢复未实测。M1 REST/数据库/ACK、私有权限和真实网络故障注入未验证。BLOCKED-1 待复审。
+
+### DEC-017 BLOCKED-1 核心路径 PASS_WITH_CONSTRAINTS，允许 Phase 1 开工
+
+- **决策内容：** 接受新审查会话的范围拆分结论：已验证核心路径允许开工，扩展场景不解除限制。允许范围：短指令、公开 GitHub 指定完整 40 位 SHA 材料读取、单 assistant unit 长回复与稳定 DOM 集合、Schema/三 ID、M1 最小本地幂等及 OS 句柄并发锁。任何集合变化、完整性不明、私有权限不足、登记异常均 fail-closed/BLOCKED。不得据此直接合并 main或宣称 BLOCKED-1 全场景通过。
+- **后续独立验收门禁：** 真实 ChatGPT 多 assistant unit、真实动态虚拟列表裁切恢复、私有仓库权限、真实网络故障注入与退避耗尽、多文件部分读取失败、M1 REST/数据库/ACK 与完整平台并发验证；每项需可复现证据并绑定 commit SHA 经独立审查。
+- **依据：** `phase0/logs/dispatch-2026-11-12T05-45-15/reply.txt`（新空白审查会话通过 Git 交接包给出 `result=PASS` 与 13 条约束）；`handoff/REVIEWER-BOOTSTRAP.md`；`platform-contract-v1.0.md` §2.6、§12；实现与测试证据 DEC-012–DEC-016。
