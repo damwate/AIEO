@@ -448,6 +448,11 @@ test("⑥ DEC-017 最终防线（T-P1-901 F-101/F-402）：assertInboundExtensio
     ["units 元素 size_bytes 非正整数", { unit_count: 1, unit_keys: ["a1:assistant"], units: [{ ...validUnitOf("a1:assistant", "t"), size_bytes: 0 }], reply: "t", assistant_uuid: "uuid-a1" }],
     ["快照级 assistant_uuid 缺失", { ...validSnapshotOf(["a1:assistant"], [singleText]), assistant_uuid: undefined }],
     ["快照级 assistant_uuid 空字符串", { ...validSnapshotOf(["a1:assistant"], [singleText]), assistant_uuid: "" }],
+    // F-502 补充边界（第 6 轮审查）：unit 级 assistant_uuid 与快照级一致性——unit 级缺失/伪造而快照级合法不得绕过。
+    ["units 元素 assistant_uuid 缺失", { unit_count: 1, unit_keys: ["a1:assistant"], units: [{ key: "a1:assistant", role: "assistant", text: "t", text_sha256: sha256Hex(Buffer.from("t", "utf8")), size_bytes: 1 }], reply: "t", assistant_uuid: "uuid-a1" }],
+    ["units 元素 assistant_uuid 空字符串", { unit_count: 1, unit_keys: ["a1:assistant"], units: [{ ...validUnitOf("a1:assistant", "t"), assistant_uuid: "" }], reply: "t", assistant_uuid: "uuid-a1" }],
+    ["units 元素 assistant_uuid 非字符串", { unit_count: 1, unit_keys: ["a1:assistant"], units: [{ ...validUnitOf("a1:assistant", "t"), assistant_uuid: 123 }], reply: "t", assistant_uuid: "uuid-a1" }],
+    ["快照级 assistant_uuid 与 unit 不一致（F-502 核心绕过）", { ...validSnapshotOf(["a1:assistant"], [singleText]), assistant_uuid: "uuid-forged" }],
     ["reply 与 units 拼接不一致（脱钩 reply）", { ...validSnapshotOf(["a1:assistant"], [singleText]), reply: "被篡改的回复" }],
     ["reply 非字符串", { ...validSnapshotOf(["a1:assistant"], [singleText]), reply: 123 }],
   ];

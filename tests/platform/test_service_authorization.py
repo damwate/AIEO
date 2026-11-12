@@ -119,6 +119,22 @@ def test_service_token_blocked_from_approval_creation(tmp_path):
     }, headers=bearer(token)).status_code == 403
 
 
+def test_service_token_dead_letter_query_is_read_only(tmp_path):
+    # F-501: the whitelisted dead-letter query must never sweep the outbox.
+    client, harness, token = service_client(tmp_path)
+    task_id = harness.create_task(harness.setup_project()["batch_id"], "dlq read")["task_id"]
+    harness.drive_to_ready(task_id, "T-DL")
+    message_id = harness.claim(task_id)["dispatch_message_id"]
+    before = harness.get(f"/api/v1/messages/{message_id}")
+    assert before["status"] == "PENDING"
+    response = client.get("/api/v1/messages/dead-letter", headers=bearer(token))
+    assert response.status_code == 200
+    after = harness.get(f"/api/v1/messages/{message_id}")
+    # the pending outbox message must be untouched by the dead-letter read
+    assert after["status"] == "PENDING"
+    assert after["delivered_at"] is None
+
+
 def test_human_session_keeps_full_access(tmp_path):
     client, harness, _ = service_client(tmp_path)
     # the human OWNER session is unaffected by the service whitelist

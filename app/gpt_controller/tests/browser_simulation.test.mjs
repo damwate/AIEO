@@ -773,6 +773,58 @@ test("全管线：伪造 text_sha256 骗过稳定性比较 → 最终防线拒�
   }
 });
 
+test("全管线：unit 级 assistant_uuid 缺失骗过稳定性比较 → 最终防线拒绝（T-P1-901 F-502）", async () => {
+  const { page, events } = smallScenario();
+  // unit 级 UUID 缺失、快照级 UUID 合法：两次读取一致（compare 通过）→ gate unit 级校验拒绝。
+  const units = [forgedUnit("a1001:assistant", "{\"ok\":true}", { assistant_uuid: undefined })];
+  const factory = forgedSnapshotFactory({ units, unitKeys: ["a1001:assistant"], reply: "{\"ok\":true}" });
+  const tmp = newTempDir("gptc-e2e-nounituuid");
+  try {
+    const error = await assertRejectsWith(
+      runDispatch({
+        view: page,
+        message: "请审查模块边界文档 §2 并给出结论。",
+        configOverrides: dispatchConfig(tmp),
+        lock: fakeLock(),
+        outputDir: tmp,
+        readReplySnapshot: factory,
+      }),
+      "INBOUND_REPLY_SNAPSHOT_MALFORMED",
+    );
+    assert.equal(error.details.decision, "DEC-017");
+    assert.equal(events.sendCalled, 1);
+    assert.ok(!existsSync(join(tmp, "result.json")));
+  } finally {
+    cleanupTempDir(tmp);
+  }
+});
+
+test("全管线：快照级与 unit 级 assistant_uuid 不一致骗过稳定性比较 → 最终防线拒绝（T-P1-901 F-502）", async () => {
+  const { page, events } = smallScenario();
+  // 快照级 UUID 伪造（两次读取稳定一致）但与 unit 级不匹配 → gate 一致性校验拒绝。
+  const units = [forgedUnit("a1001:assistant", "{\"ok\":true}")];
+  const factory = forgedSnapshotFactory({ units, unitKeys: ["a1001:assistant"], reply: "{\"ok\":true}", assistantUuid: "uuid-forged" });
+  const tmp = newTempDir("gptc-e2e-uuidmismatch");
+  try {
+    const error = await assertRejectsWith(
+      runDispatch({
+        view: page,
+        message: "请审查模块边界文档 §2 并给出结论。",
+        configOverrides: dispatchConfig(tmp),
+        lock: fakeLock(),
+        outputDir: tmp,
+        readReplySnapshot: factory,
+      }),
+      "INBOUND_REPLY_SNAPSHOT_MALFORMED",
+    );
+    assert.equal(error.details.decision, "DEC-017");
+    assert.equal(events.sendCalled, 1);
+    assert.ok(!existsSync(join(tmp, "result.json")));
+  } finally {
+    cleanupTempDir(tmp);
+  }
+});
+
 test("禁止盲发：DOM 契约自检失败（composer 缺失）→ 拒绝派单且不插入任何文本", async () => {
   const noComposerHtml = `<html><body><header>仿真页（composer 缺失）</header>
     <div id="thread">
