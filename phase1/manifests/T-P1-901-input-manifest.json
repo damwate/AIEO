@@ -2,8 +2,8 @@
   "transport": "git_pointer_manifest",
   "contract_version": "1.0",
   "task_id": "T-P1-901",
-  "execution_id": "EXEC-901",
-  "purpose": "Phase1 module review input materials (round 2): M1 platform + M2 gpt_controller (incl. F-001 rework: DEC-017 multi-assistant-unit runtime gate) + M4 git_worker source, tests and test evidence logs",
+  "execution_id": "EXEC-903",
+  "purpose": "Phase1 module review input materials (round 3): M1 platform + M2 gpt_controller (incl. F-001/F-101 rework) + M4 git_worker source, tests, test evidence logs and review handoff",
   "files": [
     {
       "path": "app/frontend/index.html",
@@ -121,8 +121,8 @@
     },
     {
       "path": "app/gpt_controller/src/dispatch.mjs",
-      "artifact_sha256": "68ca289796886ddee682be59e167d5dc6be25a79f690f8aaa10c6dd1ab870f6f",
-      "size_bytes": 16038,
+      "artifact_sha256": "b310710ce181afa4977bd20f962b1ee2e6904877448d82e376b6b4d096c73876",
+      "size_bytes": 16186,
       "media_type": "text/plain"
     },
     {
@@ -169,8 +169,8 @@
     },
     {
       "path": "app/gpt_controller/src/inbound_reply.mjs",
-      "artifact_sha256": "bc06ad62c4c19109577bc94033c69680accf158b84144875dedf6508535b4a90",
-      "size_bytes": 25601,
+      "artifact_sha256": "ca96b95203d354995cf4d4898f003b625530575d97c645b0f0ea79c3f5cec39c",
+      "size_bytes": 27220,
       "media_type": "text/plain"
     },
     {
@@ -217,8 +217,8 @@
     },
     {
       "path": "app/gpt_controller/tests/browser_simulation.test.mjs",
-      "artifact_sha256": "1342fba832db413cf6c348ff87fae8cf15ec1e059099769d318db05582bfe6d1",
-      "size_bytes": 25396,
+      "artifact_sha256": "cf93b4cc208867f30beb872106c1c8ea3a209a1b8c8f9951b723fde26c4a71fb",
+      "size_bytes": 28775,
       "media_type": "text/plain"
     },
     {
@@ -247,8 +247,8 @@
     },
     {
       "path": "app/gpt_controller/tests/unit.test.mjs",
-      "artifact_sha256": "902e45b1b7003216af4f4f703795a4d41a0aa4df862abb6c3721ccf34d27f17d",
-      "size_bytes": 39464,
+      "artifact_sha256": "656c0a118cd44b4e500cec8a7332e96e121964b5cf7e1f5693e520c8353117db",
+      "size_bytes": 41367,
       "media_type": "text/plain"
     },
     {
@@ -361,8 +361,8 @@
     },
     {
       "path": "docs/AI-DEV-LESSONS.md",
-      "artifact_sha256": "fe383bb98c6c4011e080ebf3eaaf85a9e60f9e4171fc649fe73a2c7ff4159bcc",
-      "size_bytes": 63637,
+      "artifact_sha256": "82c16ebefa7fe9fa8ed02cf551fa0852b564e8951c6d71271c1794238f29969f",
+      "size_bytes": 68496,
       "media_type": "text/plain"
     },
     {
@@ -399,6 +399,12 @@
       "path": "docs/phase1/review-protocol.md",
       "artifact_sha256": "28f67c3665bac020794e07612c0d80f51905aed0bb7ca74f88aa3b22d8139070",
       "size_bytes": 7951,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "handoff/PHASE1-MODULE-REVIEW.md",
+      "artifact_sha256": "bf8e3444dd835251d6dfb3ef071bbae8f8756f910d1b53ad6bb23837771ee0f0",
+      "size_bytes": 11033,
       "media_type": "text/plain"
     },
     {
@@ -471,6 +477,12 @@
       "path": "phase1/logs/m2-gpt-controller-20261113/f001-rework/node-test-f001-rework.log",
       "artifact_sha256": "f621cec45a643a8ed8757b0b1ab720ba5f517d494d8ff4cfa36240d3d9b44564",
       "size_bytes": 6122,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "phase1/logs/m2-gpt-controller-20261113/f101-rework/node-test-f101-rework.log",
+      "artifact_sha256": "a9a242f3fa1a1161995398bab24971bb83cea1630e47f31b1d178c1061d10223",
+      "size_bytes": 6567,
       "media_type": "text/plain"
     },
     {

@@ -14,6 +14,7 @@ import { assertPreSendGate, insertAndVerifyComposer, verifySendAcceptance } from
 import { waitForGenerationEnd, assertFinalQuietness } from "./generation.mjs";
 import { stopIfContextLimit } from "./context_limit.mjs";
 import {
+  assertInboundExtensionGate,
   compareInboundSnapshots,
   persistInboundArtifacts,
   validateInboundJsonArtifact,
@@ -86,6 +87,9 @@ export async function runDispatch(deps = {}) {
     conversationUrlResolver = null,
     logger = null,
     requireUnitsForContract = true,
+    // deps.readReplySnapshot 仅供测试注入（模拟上游门禁被放宽/失效，验证 dispatch 收敛点纵深防御，
+    // T-P1-901 F-101）；生产路径不传，恒用真实 readReplySnapshot。
+    readReplySnapshot: injectedReplyReader = null,
   } = deps;
 
   if (!view) throw dispatchError("DISPATCH_VIEW_REQUIRED", "必须提供 DOM 视图（真实浏览器或仿真）");
@@ -115,7 +119,7 @@ export async function runDispatch(deps = {}) {
   try {
     return await runDispatchLocked({
       view, request, metering, cfg, log, sessionStore, sessionId, outputDir,
-      expectedUnitKeys, conversationUrlResolver, requireUnitsForContract,
+      expectedUnitKeys, conversationUrlResolver, requireUnitsForContract, replyReader: injectedReplyReader,
     });
   } finally {
     if (!lock) sessionLock.release();
@@ -125,6 +129,8 @@ export async function runDispatch(deps = {}) {
 async function runDispatchLocked({
   view, request, metering, cfg, log, sessionStore, sessionId, outputDir,
   expectedUnitKeys, conversationUrlResolver, requireUnitsForContract,
+  // replyReader：测试注入的回复读取器（null = 生产真实 readReplySnapshot，T-P1-901 F-101）。
+  replyReader: injectedReplyReader = null,
 }) {
   // 2. 五角色会话绑定：同一会话同一时刻仅一个在途任务。
   const dispatchId = `DISPATCH-${new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19)}`;
@@ -185,28 +191,19 @@ async function runDispatchLocked({
   const quietness = await assertFinalQuietness({ view });
 
   // 8. 确认窗后两次完整读取（间隔 ≥3s），比较 key/数量/逐 unit 哈希/UUID。
+  const replyReader = injectedReplyReader ?? readReplySnapshot;
   const firstReadStartedMs = view.now();
-  const firstSnapshot = await readReplySnapshot(view, send_receipt.user_unit_key, { expectedUnitKeys });
+  const firstSnapshot = await replyReader(view, send_receipt.user_unit_key, { expectedUnitKeys });
   await view.sleep(cfg.stableReadIntervalMs);
   const secondReadStartedMs = view.now();
-  const secondSnapshot = await readReplySnapshot(view, send_receipt.user_unit_key, { expectedUnitKeys });
+  const secondSnapshot = await replyReader(view, send_receipt.user_unit_key, { expectedUnitKeys });
   const stability = compareInboundSnapshots(firstSnapshot, secondSnapshot, secondReadStartedMs - firstReadStartedMs);
   const snapshot = secondSnapshot;
-  // DEC-017 扩展门禁收敛点（T-P1-901 F-001）：真实浏览器路径的唯一强制复核点。
-  // 即使上游 readReplySnapshot/selectInboundReply 的门禁被显式放宽，此处无条件复核；
-  // 多 assistant unit 一律 fail-closed（错误码 INBOUND_ 前缀 → C3 PROVIDER-0004：外部网页行为超出已验证契约）。
-  if (snapshot.unit_count > 1) {
-    throw dispatchError(
-      "INBOUND_MULTI_UNIT_EXTENSION_GATE_BLOCKED",
-      "真实浏览器路径检测到多个 assistant unit，超出 DEC-017 已验收单 unit 核心路径，fail-closed",
-      {
-        unit_count: snapshot.unit_count,
-        unit_keys: snapshot.unit_keys,
-        decision: "DEC-017",
-        remediation: "真实多 assistant unit 场景必须先通过 DEC-017 扩展验收门禁并经独立审查解除限制",
-      },
-    );
-  }
+  // DEC-017 扩展门禁收敛点（T-P1-901 F-001/F-101）：真实浏览器路径的唯一强制复核点。
+  // 独立函数 assertInboundExtensionGate 可被直接测试；即使上游 readReplySnapshot/selectInboundReply
+  // 的门禁被放宽或失效，此处仍无条件复核；畸形快照同样 fail-closed。
+  // 错误码 INBOUND_ 前缀 → C3 PROVIDER-0004（外部网页行为超出已验证契约）。
+  assertInboundExtensionGate(snapshot);
   log.log({
     event: "dispatch.reply_stable",
     message: `完成判定通过，${snapshot.unit_count} 个 assistant unit，回复 ${Buffer.byteLength(snapshot.reply, "utf8")} UTF-8 字节`,

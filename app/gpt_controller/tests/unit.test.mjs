@@ -19,7 +19,7 @@ import {
 } from "../src/outbound.mjs";
 import { meterOutboundMessage, normalizeDispatchRequest } from "../src/dispatch.mjs";
 import { normalizeIds, ID_RULES } from "../src/validation.mjs";
-import { compareInboundSnapshots, createInboundRangeCollector, selectInboundReply, sha256Hex, persistInboundArtifacts, verifyArtifactFile, validateInboundJsonArtifact, extractCompleteJson } from "../src/inbound_reply.mjs";
+import { compareInboundSnapshots, createInboundRangeCollector, selectInboundReply, assertInboundExtensionGate, sha256Hex, persistInboundArtifacts, verifyArtifactFile, validateInboundJsonArtifact, extractCompleteJson } from "../src/inbound_reply.mjs";
 import {
   buildGitPointerManifest,
   createGitPointer,
@@ -386,6 +386,34 @@ test("⑥ DEC-017 扩展门禁：多 assistant unit 默认 fail-closed，显式�
   // 单 assistant unit 核心路径不受门禁影响（已由其他用例覆盖），此处验证放宽参数可用。
   const relaxed = selectInboundReply(units, "u0:user", { maxAssistantUnits: 8 });
   assert.deepEqual(relaxed.unit_keys, ["a1:assistant", "a2:assistant", "a3:assistant"]);
+});
+
+test("⑥ DEC-017 最终防线（T-P1-901 F-101）：assertInboundExtensionGate 单 unit 放行、多 unit/畸形快照一律 fail-closed", async () => {
+  const snapshotOf = (unit_count, unit_keys, units) => ({ unit_count, unit_keys, units: units ?? [], reply: "r", assistant_uuid: "uuid-a1" });
+  // 单 assistant unit 核心路径：不抛。
+  assert.doesNotThrow(() => assertInboundExtensionGate(snapshotOf(1, ["a1:assistant"])));
+  // 多 unit：即使上游已放宽（模拟 selectInboundReply(maxAssistantUnits=8) 的产物），最终防线仍拦截。
+  const multi = snapshotOf(3, ["a1:assistant", "a2:assistant", "a3:assistant"]);
+  const gateError = await assertRejectsWith((async () => assertInboundExtensionGate(multi))(), "INBOUND_MULTI_UNIT_EXTENSION_GATE_BLOCKED");
+  assert.equal(gateError.details.unit_count, 3);
+  assert.equal(gateError.details.max_assistant_units, 1);
+  assert.equal(gateError.details.decision, "DEC-017");
+  // 畸形快照：缺字段/类型非法/内部矛盾 → INBOUND_REPLY_SNAPSHOT_MALFORMED，不给绕过空间。
+  const malformedCases = [
+    ["缺 unit_count", {}],
+    ["unit_count undefined", snapshotOf(undefined, ["a1:assistant"])],
+    ["unit_count 非整数", snapshotOf(2.5, ["a1:assistant", "a2:assistant"])],
+    ["unit_count 负数", snapshotOf(-1, [])],
+    ["unit_count NaN", snapshotOf(Number.NaN, [])],
+    ["unit_count 字符串", snapshotOf("3", ["a1", "a2", "a3"])],
+    ["缺 unit_keys", { unit_count: 1 }],
+    ["unit_keys 非数组", snapshotOf(1, "a1:assistant")],
+    ["unit_keys 与 unit_count 不一致", snapshotOf(3, ["a1:assistant"])],
+  ];
+  for (const [label, snapshot] of malformedCases) {
+    const error = await assertRejectsWith((async () => assertInboundExtensionGate(snapshot))(), "INBOUND_REPLY_SNAPSHOT_MALFORMED");
+    assert.equal(error.details.decision, "DEC-017", label);
+  }
 });
 
 // ---------- ⑦ artifact 落盘回读 + JSON/Schema/三 ID 绑定 ----------

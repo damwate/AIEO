@@ -394,6 +394,45 @@ export function selectInboundReply(domUnits, userUnitKey, { maxAssistantUnits = 
   };
 }
 
+// DEC-017 扩展门禁收敛复核（T-P1-901 F-001/F-101）：dispatch 最终防线的独立函数，供直接测试。
+// 上游（selectInboundReply/readReplySnapshot）即使被放宽或失效，本函数仍无条件复核。
+// 畸形快照（缺/非法 unit_count 或 unit_keys、二者不一致）无法证明安全 → 一律 fail-closed，不给绕过空间。
+export function assertInboundExtensionGate(snapshot) {
+  const count = snapshot?.unit_count;
+  const keys = snapshot?.unit_keys;
+  const malformed =
+    typeof count !== "number" ||
+    !Number.isInteger(count) ||
+    count < 0 ||
+    !Array.isArray(keys) ||
+    keys.length !== count;
+  if (malformed) {
+    throw inboundError(
+      "INBOUND_REPLY_SNAPSHOT_MALFORMED",
+      "回复快照缺少或携带非法的 unit_count/unit_keys，无法安全判定扩展门禁，fail-closed",
+      {
+        unit_count: count === undefined ? null : count,
+        unit_keys_type: Array.isArray(keys) ? "array" : typeof keys,
+        decision: "DEC-017",
+        remediation: "修复快照读取与选择逻辑，使其返回一致的 unit_count/unit_keys 后重试",
+      },
+    );
+  }
+  if (count > 1) {
+    throw inboundError(
+      "INBOUND_MULTI_UNIT_EXTENSION_GATE_BLOCKED",
+      "检测到多个 assistant unit，超出 DEC-017 已验收单 unit 核心路径，fail-closed",
+      {
+        unit_count: count,
+        max_assistant_units: 1,
+        unit_keys: keys,
+        decision: "DEC-017",
+        remediation: "真实多 assistant unit 场景必须先通过 DEC-017 扩展验收门禁并经独立审查解除限制",
+      },
+    );
+  }
+}
+
 function stabilitySummary(snapshot) {
   return {
     read_started_at: snapshot.read_started_at ?? null,

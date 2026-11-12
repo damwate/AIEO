@@ -1,0 +1,2 @@
+# 日志文件按字节处理，不做 EOL 转换；审查 manifest 的 SHA-256 基准=磁盘字节=Git blob 字节（L-011.7）
+*.log binary

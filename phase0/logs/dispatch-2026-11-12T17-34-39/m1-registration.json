@@ -1,0 +1,41 @@
+{
+  "verified_at": "2026-11-12T17:39:50.294Z",
+  "registration": {
+    "status": "REGISTERED",
+    "artifact_id": "ART-M1-000004",
+    "duplicate": false,
+    "retry_count": 0,
+    "idempotency_key": "{\"task_id\":\"T-P1-901\",\"execution_id\":\"EXEC-902\",\"correlation_id\":\"CORR-902\",\"artifact_sha256\":\"f14cac61c975d29a85f596e0b4d75d7a09b08c2360803fe00f3c5a04d15086c4\"}",
+    "registry_path": "D:\\AIEO\\phase0\\logs\\m1-artifact-registry.json",
+    "record_count": 4,
+    "record": {
+      "artifact_id": "ART-M1-000004",
+      "registered_at": "2026-11-12T17:39:50.161Z",
+      "task_id": "T-P1-901",
+      "execution_id": "EXEC-902",
+      "correlation_id": "CORR-902",
+      "artifact_sha256": "f14cac61c975d29a85f596e0b4d75d7a09b08c2360803fe00f3c5a04d15086c4",
+      "idempotency_key": "{\"task_id\":\"T-P1-901\",\"execution_id\":\"EXEC-902\",\"correlation_id\":\"CORR-902\",\"artifact_sha256\":\"f14cac61c975d29a85f596e0b4d75d7a09b08c2360803fe00f3c5a04d15086c4\"}",
+      "content_sha256": "f14cac61c975d29a85f596e0b4d75d7a09b08c2360803fe00f3c5a04d15086c4",
+      "size_bytes": 3953,
+      "artifact_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-12T17-34-39\\reply.txt",
+      "artifact_kind": "GPT_REPLY_TEXT",
+      "schema_validation": "NOT_REQUESTED_EXISTING_ARTIFACT_RECOVERY",
+      "content": "ChatGPT 说：\n\n{\n\"result\": \"BLOCKED\",\n\"reviewed_commit\": \"040571efa85d45389d0d06884b6cb01e0b45d11\",\n\"findings\": [\n{\n\"finding_id\": \"F-101\",\n\"severity\": \"MAJOR\",\n\"file\": \"app/gpt_controller/tests/browser_simulation.test.mjs\",\n\"description\": \"F-001 的 DEC-017 三层门禁在源码中均能找到对应实现：selectInboundReply 默认 maxAssistantUnits=1；readReplySnapshot 默认值为 1 并透传；dispatch.mjs 在两次快照稳定性比较后、artifact 持久化及 M1 登记之前再次无条件检查 unit_count>1。但现有多 assistant unit 全管线测试在第一次 readReplySnapshot/selectInboundReply 时即被拦截，未独立证明 dispatch 收敛点能够在上游门禁被放宽或失效时继续 fail-closed。纯函数显式放宽测试也不能替代真实编排路径的纵深防御测试。因此，三层实现具备源码证据，但三层独立有效性的测试闭环尚未充分证明。\",\n\"recommendation\": \"增加针对 dispatch 最终收敛门禁的独立测试：通过可控快照注入或提取独立门禁函数，模拟上游 selectInboundReply 和 readReplySnapshot 已允许多个 assistant unit 的情况，验证 dispatch 仍返回 INBOUND_MULTI_UNIT_EXTENSION_GATE_BLOCKED，且不产生成功日志、artifact、result.json 或 M1 登记。另覆盖 unit_count 异常、缺失等非法快照输入，确保不会绕过门禁。\"\n}\n],\n\"constraints\": [\n\"已读取指定 commit 的 handoff/PHASE1-MODULE-REVIEW.md，确认 reviewed_commit 为派单指定的完整 SHA。\",\n\"已读取输入 manifest，确认其声明 90 个文件，文件数量与交接包申报一致。\",\n\"已读取 M1、M2、M4、contracts、decision-log 及测试材料中的多个实际文件，覆盖三个审查模块及相关契约。\",\n\"未能独立完成 manifest 原始字节 SHA-256 与 be1ad77def9c9e32a34e3d6e5933a53436dad77c3be7a7fcc9a4d5a4d25639b4 的核对。因此不能声明 manifest 内容锚定通过。\",\n\"未能取得指定 commit 的完整递归 Git tree API 结果，不能声明 90 个路径全部存在。\",\n\"虽然已读取超过 10 个材料文件，但没有完成 §3 要求的至少 10 个文件逐项 SHA-256 独立计算及 manifest.artifact_sha256 比对。材料核验协议尚未通过。\",\n\"M1：已检查状态机、依赖门禁、接受证据校验及部分测试代码。交接包申报的 35 passed 尚未通过独立重新执行完整测试验证。\",\n\"M2：已检查 DEC-017 三处源码实现及相关测试。返工日志显示 53 tests、53 pass、0 fail，但测试日志真实性及完整测试覆盖尚未独立执行验证。\",\n\"M2 真实 chatgpt.com 多 assistant unit、私有仓库权限及其他 DEC-017 扩展场景仍未获得真实运行证据，不得据本次模块级源码检查解除 BLOCKED-1。\",\n\"M4：已检查 Git 命令白名单、shell=False、环境变量隔离、main/master 保护、commit 前后验证及测试执行入口。交接包申报的 24 passed 尚未独立重新执行验证。\",\n\"M4 的 Git 集成锁、强制测试门禁、真实 M1 落库及 C4 trace_id 等申报边界仍须在后续集成审查中处理或确认。\",\n\"M3 不在本次审查范围。\",\n\"本次为模块级独立审查，不构成 M1/M2/M4 集成验收，不授权合并 main，不解除 BLOCKED-1。\"\n],\n\"summary\": \"已对指定 commit 的 M1、M2、M4 开展源码及部分测试证据审查。发现 F-001 返工的三层门禁源码均有实现，但缺少独立验证 dispatch 最终防线的测试，登记为 MAJOR。M1 状态机与依赖门禁、M2 入站门禁、M4 Git 命令执行边界均已检查部分关键实现，暂未据此认定存在其他 MAJOR 实现缺陷。但 §3 材料核验协议未完成：manifest SHA-256 未独立验证，90 文件全量路径存在性未核验，抽样文件 SHA-256 比对亦未完成。按照审查要求，最终判定 BLOCKED，而非 PASS 或 REWORK。必须先补齐材料核验及 F-101 测试闭环，再进行独立复审。\"\n}",
+      "unit_metadata": {}
+    },
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM",
+    "attempts": [
+      {
+        "attempt": 1,
+        "result": "SUCCESS"
+      }
+    ],
+    "attempt_count": 1,
+    "gpt_resend_count": 0
+  },
+  "recovery_scope": "EXISTING_ARTIFACT_ONLY_NO_GPT_DISPATCH",
+  "gpt_send_double_verification_count_before": 23,
+  "gpt_send_double_verification_count_after": 23,
+  "no_new_gpt_send": true
+}

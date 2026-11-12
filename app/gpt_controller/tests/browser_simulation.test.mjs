@@ -459,6 +459,81 @@ test("全管线：DEC-017 多 assistant unit 扩展门禁 → INBOUND_MULTI_UNIT
   }
 });
 
+test("全管线：上游门禁被放宽（deps 注入模拟失效）→ dispatch 收敛点仍 fail-closed（T-P1-901 F-101 纵深防御）", async () => {
+  const { page, events } = smallScenario({
+    viewportUnits: 8,
+    extraAssistants: [
+      { key: "a1002:assistant", text: "（额外 assistant unit，超出已验收核心路径）", assistantUuid: "aaaaaaaa-0000-4000-8000-000000001002" },
+      { key: "a1003:assistant", text: "（额外 assistant unit 2）", assistantUuid: "aaaaaaaa-0000-4000-8000-000000001003" },
+    ],
+  });
+  // 注入放宽版 reader（等价于上游 selectInboundReply(maxAssistantUnits=8) 的产物）：
+  // 第一/二层门禁被绕过，dispatch 最终防线必须仍拦截多 unit 快照。
+  const relaxedReader = (view, userUnitKey, opts) => readReplySnapshot(view, userUnitKey, { ...opts, maxAssistantUnits: 8 });
+  const tmp = newTempDir("gptc-e2e-finalgate");
+  try {
+    const error = await assertRejectsWith(
+      runDispatch({
+        view: page,
+        message: "请审查模块边界文档 §2 并给出结论。",
+        configOverrides: dispatchConfig(tmp),
+        lock: fakeLock(),
+        outputDir: tmp,
+        readReplySnapshot: relaxedReader,
+      }),
+      "INBOUND_MULTI_UNIT_EXTENSION_GATE_BLOCKED",
+    );
+    assert.equal(error.details.unit_count, 3);
+    assert.equal(error.details.max_assistant_units, 1);
+    assert.equal(error.details.decision, "DEC-017");
+    assert.equal(events.sendCalled, 1);
+    // 不写成功结果。
+    assert.ok(!existsSync(join(tmp, "result.json")));
+  } finally {
+    cleanupTempDir(tmp);
+  }
+});
+
+test("全管线：内部矛盾快照（unit_keys/unit_count 不一致）骗过稳定性比较 → 最终防线 INBOUND_REPLY_SNAPSHOT_MALFORMED", async () => {
+  const { page, events } = smallScenario();
+  // 手搓快照满足稳定性比较的全部相等性检查，但 unit_keys 与 unit_count 内部矛盾——
+  // 证明最终防线对畸形快照不给绕过空间（T-P1-901 F-101 recommendation：非法快照不得绕过门禁）。
+  const contradictory = () => ({
+    user_unit_key: "u1000:user",
+    next_user_unit_key: null,
+    unit_keys: ["a1001:assistant"], // 仅 1 个 key
+    unit_count: 3, // 宣称 3 个 —— 内部矛盾
+    assistant_uuid: ASSISTANT_UUID,
+    units: [1, 2, 3].map((i) => ({ key: `a100${i}:assistant`, role: "assistant", text: `t${i}`, text_sha256: `h${i}`, size_bytes: 2, assistantUuid: ASSISTANT_UUID })),
+    reply: "t1\nt2\nt3",
+    range_proof: { complete: true, end_reason: "DOM_BOTTOM" },
+    read_started_at: new Date().toISOString(),
+    read_finished_at: new Date().toISOString(),
+  });
+  const tmp = newTempDir("gptc-e2e-malformed");
+  try {
+    const error = await assertRejectsWith(
+      runDispatch({
+        view: page,
+        message: "请审查模块边界文档 §2 并给出结论。",
+        configOverrides: dispatchConfig(tmp),
+        lock: fakeLock(),
+        outputDir: tmp,
+        readReplySnapshot: contradictory,
+      }),
+      "INBOUND_REPLY_SNAPSHOT_MALFORMED",
+    );
+    assert.equal(error.details.unit_count, 3);
+    assert.equal(error.details.unit_keys_type, "array");
+    assert.equal(error.details.decision, "DEC-017");
+    assert.equal(events.sendCalled, 1);
+    // 不写成功结果。
+    assert.ok(!existsSync(join(tmp, "result.json")));
+  } finally {
+    cleanupTempDir(tmp);
+  }
+});
+
 test("禁止盲发：DOM 契约自检失败（composer 缺失）→ 拒绝派单且不插入任何文本", async () => {
   const noComposerHtml = `<html><body><header>仿真页（composer 缺失）</header>
     <div id="thread">
