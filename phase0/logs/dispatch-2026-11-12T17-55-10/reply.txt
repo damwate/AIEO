@@ -1,0 +1,28 @@
+ChatGPT 说：
+
+{
+"result": "REWORK",
+"reviewed_commit": "c0226eea0c54c3af1befa9cceb9c25b9263588c7",
+"findings": [
+{
+"finding_id": "F-201",
+"severity": "MAJOR",
+"file": "app/gpt_controller/src/inbound_reply.mjs",
+"description": "F-101 第二项整改尚未完全闭合。assertInboundExtensionGate() 对 unit_count 的检查仅拒绝非数字、非整数和负数，没有拒绝 0；同时只检查 unit_keys 是数组且长度匹配，没有验证元素是非空字符串及 key 唯一性。因此 unit_count=0、unit_keys=[] 的快照，以及 unit_count=1、unit_keys=[null] 等结构异常快照均可能通过最终防线。结合 dispatch.mjs 的执行顺序，最终防线通过后仍会继续稳定性比较和 artifact 持久化；persistInboundArtifacts() 也没有要求 units 非空。由此存在异常读取结果被当作成功回复继续处理的路径，与畸形快照 fail-closed 的整改目标不完全一致。现有 9 类畸形快照测试没有覆盖这些边界。",
+"recommendation": "将 unit_count 的合法范围收紧为正整数；要求 unit_keys 为非空数组，所有元素均为非空字符串且无重复。补充 assertInboundExtensionGate 单元测试，覆盖零数量、空数组、null 元素、空字符串和重复 key；同时增加 dispatch 注入式全管线测试，证明这些异常快照最终均被拒绝，且不产生 result.json。"
+}
+],
+"constraints": [
+"本次材料核验报告已实读：manifest 92 文件，SHA-256 声明为 27d65605d048116ac18db0d647afe3709e3935ca73b809995b4b2803d4051bb8。",
+"报告覆盖核对：total_files=92、matched_files=92、mismatched_files=0、per_file=92、路径唯一数=92；全部逐文件 match=true，报告路径与 manifest 路径集合一致。",
+"已抽查 M1、M2、M4 多个原始文件及测试日志。M1：35 passed；M2 F-101 返工日志：56 passed、0 failed；M4：24 passed。测试日志与交接包申报的数量一致。",
+"F-101 第一项整改已验证：assertInboundExtensionGate 独立导出，dispatch 收敛点直接调用。",
+"F-101 第三项整改已验证：deps.readReplySnapshot 经 replyReader 传递，默认回退真实 readReplySnapshot；注入式全管线测试覆盖上游放宽后仍由最终防线拦截。",
+"M1 已抽查状态机 ACCEPTED 证据检查、消息幂等及重试、认证与 CSRF 相关实现；未发现足以形成 MAJOR 的申报不实。",
+"M4 已抽查 Git 命令白名单、shell=False、危险 GIT 环境变量清理、main/master 保护、提交分支检查及 M1 登记失败不回滚机制；未发现足以形成 MAJOR 的申报不实。",
+"M3 不在审查范围。",
+"BLOCKED-1 仍然受原有核心路径约束：真实多 unit、动态虚拟化扩展、私有仓库权限及完整 M1 REST/ACK 集成尚未验收。",
+"本次仅为模块级审查，不代表四模块集成验收，不授权合并 main。"
+],
+"summary": "核验报告覆盖完整，92/92 文件申报一致；M1、M4 未发现 MAJOR 级问题，M2 的 F-101 三项整改中第一项和第三项闭合，但第二项畸形快照 fail-closed 仍存在零 unit 数量及非法 key 绕过缺口。判定 REWORK。修复 F-201 并补充边界测试后重新提交独立复审。"
+}

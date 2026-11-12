@@ -534,6 +534,81 @@ test("全管线：内部矛盾快照（unit_keys/unit_count 不一致）骗过�
   }
 });
 
+test("全管线：零 unit 数量快照骗过稳定性比较 → 最终防线拒绝（T-P1-901 F-201）", async () => {
+  const { page, events } = smallScenario();
+  // unit_count=0/keys=[] 是 F-201 指出的绕过缺口：合法整数、长度一致，但"回复必含 ≥1 assistant unit"。
+  const zeroUnit = () => ({
+    user_unit_key: "u1000:user",
+    next_user_unit_key: null,
+    unit_keys: [],
+    unit_count: 0,
+    assistant_uuid: ASSISTANT_UUID,
+    units: [],
+    reply: "",
+    range_proof: { complete: true, end_reason: "DOM_BOTTOM" },
+    read_started_at: new Date().toISOString(),
+    read_finished_at: new Date().toISOString(),
+  });
+  const tmp = newTempDir("gptc-e2e-zerounit");
+  try {
+    const error = await assertRejectsWith(
+      runDispatch({
+        view: page,
+        message: "请审查模块边界文档 §2 并给出结论。",
+        configOverrides: dispatchConfig(tmp),
+        lock: fakeLock(),
+        outputDir: tmp,
+        readReplySnapshot: zeroUnit,
+      }),
+      "INBOUND_REPLY_SNAPSHOT_MALFORMED",
+    );
+    assert.equal(error.details.unit_count, 0);
+    assert.equal(error.details.decision, "DEC-017");
+    assert.equal(events.sendCalled, 1);
+    // 不写成功结果。
+    assert.ok(!existsSync(join(tmp, "result.json")));
+  } finally {
+    cleanupTempDir(tmp);
+  }
+});
+
+test("全管线：非法 key 元素快照（null/空串/重复）骗过稳定性比较 → 最终防线拒绝（T-P1-901 F-201）", async () => {
+  const { page, events } = smallScenario();
+  // F-201 指出的绕过缺口：keys 元素未验证非空字符串与唯一性。
+  const illegalKeys = () => ({
+    user_unit_key: "u1000:user",
+    next_user_unit_key: null,
+    unit_keys: [null, ""], // 元素非法且含空串
+    unit_count: 2,
+    assistant_uuid: ASSISTANT_UUID,
+    units: [1, 2].map((i) => ({ key: `a100${i}:assistant`, role: "assistant", text: `t${i}`, text_sha256: `h${i}`, size_bytes: 2, assistantUuid: ASSISTANT_UUID })),
+    reply: "t1\nt2",
+    range_proof: { complete: true, end_reason: "DOM_BOTTOM" },
+    read_started_at: new Date().toISOString(),
+    read_finished_at: new Date().toISOString(),
+  });
+  const tmp = newTempDir("gptc-e2e-badkeys");
+  try {
+    const error = await assertRejectsWith(
+      runDispatch({
+        view: page,
+        message: "请审查模块边界文档 §2 并给出结论。",
+        configOverrides: dispatchConfig(tmp),
+        lock: fakeLock(),
+        outputDir: tmp,
+        readReplySnapshot: illegalKeys,
+      }),
+      "INBOUND_REPLY_SNAPSHOT_MALFORMED",
+    );
+    assert.equal(error.details.decision, "DEC-017");
+    assert.equal(events.sendCalled, 1);
+    // 不写成功结果。
+    assert.ok(!existsSync(join(tmp, "result.json")));
+  } finally {
+    cleanupTempDir(tmp);
+  }
+});
+
 test("禁止盲发：DOM 契约自检失败（composer 缺失）→ 拒绝派单且不插入任何文本", async () => {
   const noComposerHtml = `<html><body><header>仿真页（composer 缺失）</header>
     <div id="thread">

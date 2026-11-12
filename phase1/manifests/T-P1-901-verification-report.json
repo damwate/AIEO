@@ -1,19 +1,19 @@
 {
-  "report_version": "1.0",
+  "report_version": "1.1",
   "task_id": "T-P1-901",
-  "execution_id": "EXEC-903",
+  "execution_id": "EXEC-904",
   "generated_by": "main session (local execution environment), per handoff §3 protocol v2 division of labor",
   "manifest_path": "phase1/manifests/T-P1-901-input-manifest.json",
-  "manifest_sha256": "27d65605d048116ac18db0d647afe3709e3935ca73b809995b4b2803d4051bb8",
-  "method": "disk bytes SHA-256 per file vs manifest artifact_sha256; post-commit git blob recheck recorded separately in phase0/logs/blob-recheck-T-P1-901-r3/",
+  "manifest_sha256": "f02babdcf93161bb2ec74166a785cede6957a0dfe7b34cfe3f78caa7b908d5f4",
+  "method": "disk bytes SHA-256 per file vs manifest artifact_sha256; post-commit git blob recheck recorded separately in phase0/logs/blob-recheck-T-P1-901-r4/",
   "commands": [
     "node -e: crypto.createHash('sha256').update(fs.readFileSync(<repo>/<path>)).digest('hex') for each manifest file",
-    "git ls-tree -r <reviewed_commit> --name-only  # 92 paths existence (post-commit, see blob-recheck evidence)",
-    "git cat-file blob <reviewed_commit>:<path>    # post-commit blob SHA-256 recheck, 92/92 (see blob-recheck evidence)"
+    "git ls-tree -r <reviewed_commit> --name-only  # all 106 paths existence (post-commit, see blob-recheck evidence)",
+    "git cat-file blob <reviewed_commit>:<path>    # post-commit blob SHA-256 recheck, all 106 (see blob-recheck evidence)"
   ],
   "exit_code": 0,
-  "total_files": 92,
-  "matched_files": 92,
+  "total_files": 106,
+  "matched_files": 106,
   "mismatched_files": 0,
   "per_file": [
     {
@@ -207,9 +207,9 @@
     },
     {
       "path": "app/gpt_controller/src/inbound_reply.mjs",
-      "disk_sha256": "ca96b95203d354995cf4d4898f003b625530575d97c645b0f0ea79c3f5cec39c",
-      "manifest_sha256": "ca96b95203d354995cf4d4898f003b625530575d97c645b0f0ea79c3f5cec39c",
-      "size_bytes": 27220,
+      "disk_sha256": "a65c1bf324a8c0844d6a91475e39ed92472b51c8df5e4c0eab508315d0a86374",
+      "manifest_sha256": "a65c1bf324a8c0844d6a91475e39ed92472b51c8df5e4c0eab508315d0a86374",
+      "size_bytes": 27468,
       "match": true
     },
     {
@@ -263,9 +263,9 @@
     },
     {
       "path": "app/gpt_controller/tests/browser_simulation.test.mjs",
-      "disk_sha256": "cf93b4cc208867f30beb872106c1c8ea3a209a1b8c8f9951b723fde26c4a71fb",
-      "manifest_sha256": "cf93b4cc208867f30beb872106c1c8ea3a209a1b8c8f9951b723fde26c4a71fb",
-      "size_bytes": 28775,
+      "disk_sha256": "229dd1c6a2330ddc5a99017e07d3057e298ce1819b721824cb13ab860446bf02",
+      "manifest_sha256": "229dd1c6a2330ddc5a99017e07d3057e298ce1819b721824cb13ab860446bf02",
+      "size_bytes": 31558,
       "match": true
     },
     {
@@ -298,9 +298,9 @@
     },
     {
       "path": "app/gpt_controller/tests/unit.test.mjs",
-      "disk_sha256": "656c0a118cd44b4e500cec8a7332e96e121964b5cf7e1f5693e520c8353117db",
-      "manifest_sha256": "656c0a118cd44b4e500cec8a7332e96e121964b5cf7e1f5693e520c8353117db",
-      "size_bytes": 41367,
+      "disk_sha256": "73fcc885b7430e080df8890be5fa6bc1c3c17fcdfe4ee64848854b71b4e23c7e",
+      "manifest_sha256": "73fcc885b7430e080df8890be5fa6bc1c3c17fcdfe4ee64848854b71b4e23c7e",
+      "size_bytes": 41837,
       "match": true
     },
     {
@@ -431,9 +431,9 @@
     },
     {
       "path": "docs/AI-DEV-LESSONS.md",
-      "disk_sha256": "82c16ebefa7fe9fa8ed02cf551fa0852b564e8951c6d71271c1794238f29969f",
-      "manifest_sha256": "82c16ebefa7fe9fa8ed02cf551fa0852b564e8951c6d71271c1794238f29969f",
-      "size_bytes": 68496,
+      "disk_sha256": "500d4555eece7423902235baebc622b240f7975740133dec845c72a686afb09b",
+      "manifest_sha256": "500d4555eece7423902235baebc622b240f7975740133dec845c72a686afb09b",
+      "size_bytes": 71137,
       "match": true
     },
     {
@@ -480,9 +480,100 @@
     },
     {
       "path": "handoff/PHASE1-MODULE-REVIEW.md",
-      "disk_sha256": "bf8e3444dd835251d6dfb3ef071bbae8f8756f910d1b53ad6bb23837771ee0f0",
-      "manifest_sha256": "bf8e3444dd835251d6dfb3ef071bbae8f8756f910d1b53ad6bb23837771ee0f0",
-      "size_bytes": 11033,
+      "disk_sha256": "8961e3aa8688971712f83a4db5e5ee3bcc9226960cb9b90b48cfc7e4e2bf9e3c",
+      "manifest_sha256": "8961e3aa8688971712f83a4db5e5ee3bcc9226960cb9b90b48cfc7e4e2bf9e3c",
+      "size_bytes": 12325,
+      "match": true
+    },
+    {
+      "path": "phase0/logs/blob-recheck-T-P1-901-r3/recheck-result.json",
+      "disk_sha256": "4b56ef3dec7e02ab49ea6c8826c83e75d813703bd442470cb67ea1e959be6591",
+      "manifest_sha256": "4b56ef3dec7e02ab49ea6c8826c83e75d813703bd442470cb67ea1e959be6591",
+      "size_bytes": 27938,
+      "match": true
+    },
+    {
+      "path": "phase0/logs/blob-recheck-T-P1-901-r3/recheck-run.log",
+      "disk_sha256": "40cd9fde7ff0b649d7745e507e7e7010d872d272a46aea7edb9341b840b0eaa4",
+      "manifest_sha256": "40cd9fde7ff0b649d7745e507e7e7010d872d272a46aea7edb9341b840b0eaa4",
+      "size_bytes": 208,
+      "match": true
+    },
+    {
+      "path": "phase0/logs/dispatch-2026-11-12T17-51-04/reply.txt",
+      "disk_sha256": "6b86968ec1780354e929156f2cc9a5b132e7eefb6d56317d0b3734666704849a",
+      "manifest_sha256": "6b86968ec1780354e929156f2cc9a5b132e7eefb6d56317d0b3734666704849a",
+      "size_bytes": 14,
+      "match": true
+    },
+    {
+      "path": "phase0/logs/dispatch-2026-11-12T17-51-04/result.json",
+      "disk_sha256": "3fc75f196eb93f6f0895a200442c7ff09507580b72dca230b73c8dd882468c26",
+      "manifest_sha256": "3fc75f196eb93f6f0895a200442c7ff09507580b72dca230b73c8dd882468c26",
+      "size_bytes": 5751,
+      "match": true
+    },
+    {
+      "path": "phase0/logs/dispatch-2026-11-12T17-55-10/dispatch-message.txt",
+      "disk_sha256": "61341fb6fcf9ce18add316648148fe667345ba58aa0cfd1b1808bf404814e089",
+      "manifest_sha256": "61341fb6fcf9ce18add316648148fe667345ba58aa0cfd1b1808bf404814e089",
+      "size_bytes": 1168,
+      "match": true
+    },
+    {
+      "path": "phase0/logs/dispatch-2026-11-12T17-55-10/m1-registration.json",
+      "disk_sha256": "e92aa7624d1faa2ff4f9806be2fceedba76e71b913bd3f48ecff8f36540ab629",
+      "manifest_sha256": "e92aa7624d1faa2ff4f9806be2fceedba76e71b913bd3f48ecff8f36540ab629",
+      "size_bytes": 5046,
+      "match": true
+    },
+    {
+      "path": "phase0/logs/dispatch-2026-11-12T17-55-10/raw-units.json",
+      "disk_sha256": "6cd5d3b5174695cb240087fe3d70ebbdb31bd1656871f2b1276b2e5df0d70b81",
+      "manifest_sha256": "6cd5d3b5174695cb240087fe3d70ebbdb31bd1656871f2b1276b2e5df0d70b81",
+      "size_bytes": 5923,
+      "match": true
+    },
+    {
+      "path": "phase0/logs/dispatch-2026-11-12T17-55-10/reply.txt",
+      "disk_sha256": "23b5137ca4e2e1afadd1d150d1df8d2d8780906ac502f697115a2c01a15f2a0a",
+      "manifest_sha256": "23b5137ca4e2e1afadd1d150d1df8d2d8780906ac502f697115a2c01a15f2a0a",
+      "size_bytes": 3212,
+      "match": true
+    },
+    {
+      "path": "phase0/logs/dispatch-2026-11-12T17-55-10/request.txt",
+      "disk_sha256": "e845817ff10fec9946dc798b6d7331796c5a83fe597fe4aa7666db173ef9a1b6",
+      "manifest_sha256": "e845817ff10fec9946dc798b6d7331796c5a83fe597fe4aa7666db173ef9a1b6",
+      "size_bytes": 1167,
+      "match": true
+    },
+    {
+      "path": "phase0/logs/dispatch-2026-11-12T17-55-10/result.json",
+      "disk_sha256": "26f5765bbd152cd603aca449d10402daf232eb32713376c3bd983f56edfb6809",
+      "manifest_sha256": "26f5765bbd152cd603aca449d10402daf232eb32713376c3bd983f56edfb6809",
+      "size_bytes": 9038,
+      "match": true
+    },
+    {
+      "path": "phase0/logs/dispatch-2026-11-12T17-55-10/run.log",
+      "disk_sha256": "aaf0fc58afe860965b1b6cb5672e9f8a78800fbec75cda55cc63c1d5abc68cd2",
+      "manifest_sha256": "aaf0fc58afe860965b1b6cb5672e9f8a78800fbec75cda55cc63c1d5abc68cd2",
+      "size_bytes": 1128,
+      "match": true
+    },
+    {
+      "path": "phase0/logs/gpt-reviewer-session.json",
+      "disk_sha256": "def0309e5edeaebf7e78b2f24f5f95a5b170798030d7b30b18f8861c2ed3d224",
+      "manifest_sha256": "def0309e5edeaebf7e78b2f24f5f95a5b170798030d7b30b18f8861c2ed3d224",
+      "size_bytes": 153,
+      "match": true
+    },
+    {
+      "path": "phase0/logs/m1-artifact-registry.json",
+      "disk_sha256": "9c8375eb833154b8b3c9510036ab130f4e15a86e3309b1cf663a0002df46f4c2",
+      "manifest_sha256": "9c8375eb833154b8b3c9510036ab130f4e15a86e3309b1cf663a0002df46f4c2",
+      "size_bytes": 30680,
       "match": true
     },
     {
@@ -574,6 +665,13 @@
       "disk_sha256": "a9a242f3fa1a1161995398bab24971bb83cea1630e47f31b1d178c1061d10223",
       "manifest_sha256": "a9a242f3fa1a1161995398bab24971bb83cea1630e47f31b1d178c1061d10223",
       "size_bytes": 6567,
+      "match": true
+    },
+    {
+      "path": "phase1/logs/m2-gpt-controller-20261113/f201-rework/node-test-f201-rework.log",
+      "disk_sha256": "db7fff3edc78753145c26d241f987f72800fce8957e4d8e8383c2ed7d38762cc",
+      "manifest_sha256": "db7fff3edc78753145c26d241f987f72800fce8957e4d8e8383c2ed7d38762cc",
+      "size_bytes": 6819,
       "match": true
     },
     {

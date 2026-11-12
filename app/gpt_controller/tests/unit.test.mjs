@@ -409,6 +409,12 @@ test("⑥ DEC-017 最终防线（T-P1-901 F-101）：assertInboundExtensionGate 
     ["缺 unit_keys", { unit_count: 1 }],
     ["unit_keys 非数组", snapshotOf(1, "a1:assistant")],
     ["unit_keys 与 unit_count 不一致", snapshotOf(3, ["a1:assistant"])],
+    // F-201 补充边界（第 3 轮审查）：零数量、null 元素、空字符串、重复 key、非字符串元素。
+    ["unit_count 零（无 assistant unit）", snapshotOf(0, [])],
+    ["unit_keys 含 null 元素", snapshotOf(1, [null])],
+    ["unit_keys 含空字符串元素", snapshotOf(1, [""])],
+    ["unit_keys 重复 key", snapshotOf(2, ["a1:assistant", "a1:assistant"])],
+    ["unit_keys 含非字符串元素", snapshotOf(2, ["a1:assistant", 123])],
   ];
   for (const [label, snapshot] of malformedCases) {
     const error = await assertRejectsWith((async () => assertInboundExtensionGate(snapshot))(), "INBOUND_REPLY_SNAPSHOT_MALFORMED");

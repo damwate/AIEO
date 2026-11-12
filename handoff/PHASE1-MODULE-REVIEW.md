@@ -1,24 +1,24 @@
-# Phase 1 模块级审查交接包（T-P1-901 第 3 轮，2026-11-13）
+# Phase 1 模块级审查交接包（T-P1-901 第 4 轮，2026-11-13）
 
 **用途：** 供全新、空白 GPT 审查会话使用。**不依赖任何旧会话记忆。**
-**审查历史：** 第 1 轮（commit 7093458，M1+M2）BLOCKED：F-001（MAJOR，DEC-017 多 unit 门禁缺失）→ 已整改。第 2 轮（commit 040571e，M1+M2+M4）BLOCKED：F-101（MAJOR，dispatch 收敛点无独立测试；材料核验协议未完成）→ F-101 已整改；核验协议已按双方真实执行能力重构（见 §3）。
-**范围：** M1 平台基座 + M2 GPT 控制器（含 F-001/F-101 返工）+ M4 Git Worker 的**模块级**审查。M3 仍在开发、未提交，**不在本次范围**；四模块集成验收另行安排。
+**审查历史：** 第 1 轮（7093458）BLOCKED：F-001 → 已整改。第 2 轮（040571e）BLOCKED：F-101 → 已整改。第 3 轮（c0226ee）REWORK：F-201（MAJOR，畸形快照防御仍有零数量与非法 key 绕过）→ 已整改；同轮确认核验协议 v2 通过、F-101 第 1/3 项整改闭合、M1/M4 无 MAJOR 申报不实。
+**范围：** M1 平台基座 + M2 GPT 控制器（含 F-001/F-101/F-201 返工）+ M4 Git Worker 的**模块级**审查。M3 已完成并验收（49/49 退出码 0）但**本轮仍不在审查范围**；四模块集成验收另行安排。
 
 ## 1. 仓库与基线【事实】
 
 - 仓库：`damwate/AIEO`（公开 GitHub）
 - 分支：`fix/AIEO-PHASE0-REVIEW-R10`
 - **审查对象 commit（reviewed_commit = input_material_commit）：本交接包所在 commit，完整 40 位 SHA 以派单消息为准；回写时必须逐字符复制全部 40 位（第 2 轮曾截断为 39 位）**
-- 前序 commit：`040571efa85d45389d0d06884b6cb01e0b45d11d`（第 2 轮被审对象）、`7093458fa82228329264d81489fec98506eee7e0`（第 1 轮）
-- 第 1 轮回复证据：`phase0/logs/dispatch-2026-11-12T17-11-35/reply.txt`；第 2 轮回复证据：`phase0/logs/dispatch-2026-11-12T17-34-39/reply.txt`（F-101 原文所在，均已登记 M1）
+- 前序 commit：`040571efa85d45389d0d06884b6cb01e0b45d11d`（第 2 轮）、`7093458fa82228329264d81489fec98506eee7e0`（第 1 轮）；第 3 轮对象 commit 以第 3 轮证据 `phase0/logs/dispatch-2026-11-12T17-55-10/reply.txt` 中 reviewed_commit 为准
+- 第 1 轮回复证据：`phase0/logs/dispatch-2026-11-12T17-11-35/reply.txt`；第 2 轮：`phase0/logs/dispatch-2026-11-12T17-34-39/reply.txt`；第 3 轮：`phase0/logs/dispatch-2026-11-12T17-55-10/reply.txt`（F-201 原文所在，均已登记 M1）
 - main 未合并任何 Phase 0/Phase 1 分支。
 
 ## 2. 审查材料与绑定值【以派单消息 SHA 为准实读】
 
-- 输入材料 manifest：`phase1/manifests/T-P1-901-input-manifest.json`（**92 个文件**，仓库根相对路径）
+- 输入材料 manifest：`phase1/manifests/T-P1-901-input-manifest.json`（**106 个文件**，仓库根相对路径；含第 3 轮审查回复证据、blob 复核证据与 F-201 返工测试日志；核验报告本身不入 manifest——其引用 manifest SHA 会自引用，报告经本 commit 提交、按下述路径实读）
 - manifest SHA-256：**以派单消息为准**
 - 契约版本：`1.0`；工程标准：`platform-contract-v1.0`
-- 任务 ID：`T-P1-901`；执行 ID：`EXEC-903`（本轮）；关联 ID：`CORR-903`
+- 任务 ID：`T-P1-901`；执行 ID：`EXEC-904`（本轮）；关联 ID：`CORR-904`
 - 审查者 ID：`GPT-REVIEWER`
 - knowledge_base_commit：本交接包所在 commit（`docs/AI-DEV-LESSONS.md` 含 DEV-20261113-001/002/003、L-013、CAP-20261112-001、CAP-20261113-001）
 
@@ -28,8 +28,8 @@
 
 分工如下：
 
-1. **开发方（已执行，全量）：** 主会话对 manifest 全部 92 文件执行机械核验——① 每文件磁盘字节 SHA-256 与 manifest `artifact_sha256` 逐项比对（92/92）；② commit 后对 `git cat-file blob` 重新全量比对（92/92，证明 manifest 描述的即为本 commit 内容）；③ `git ls-tree -r` 核对 92 路径全部存在于本 commit。**报告：`phase1/manifests/T-P1-901-verification-report.json`**（含命令、退出码、逐文件结果）；blob 复核证据 `phase0/logs/blob-recheck-T-P1-901-r3/`。
-2. **审查方（本轮请你执行）：** ① 实读上述核验报告，核对覆盖面（92/92、mismatch 为空、退出码）；② 按你的判断**抽样直接读取** raw.githubusercontent.com 上本 commit 的材料文件，核对其内容与申报一致（第 2 轮你已实读超 10 文件，本轮继续）；③ 抽查核验报告所列哈希与你的实读是否自洽——若发现报告与实读不符（如文件内容与哈希所述状态矛盾），按 MAJOR+ 处理。
+1. **开发方（已执行，全量）：** 主会话对 manifest 全部 106 文件执行机械核验——① 每文件磁盘字节 SHA-256 与 manifest `artifact_sha256` 逐项比对（106/106）；② commit 后对 `git cat-file blob` 重新全量比对（106/106，证明 manifest 描述的即为本 commit 内容）；③ `git ls-tree -r` 核对 106 路径全部存在于本 commit。**报告：`phase1/manifests/T-P1-901-verification-report.json`**（含命令、退出码、逐文件结果）；blob 复核证据 `phase0/logs/blob-recheck-T-P1-901-r4/`（第 3 轮 r3 证据同目录系列留证）。
+2. **审查方（本轮请你执行）：** ① 实读上述核验报告，核对覆盖面（106/106、mismatch 为空、退出码）；② 按你的判断**抽样直接读取** raw.githubusercontent.com 上本 commit 的材料文件，核对其内容与申报一致（前几轮你已实读超 10 文件，本轮继续）；③ 抽查核验报告所列哈希与你的实读是否自洽——若发现报告与实读不符（如文件内容与哈希所述状态矛盾），按 MAJOR+ 处理。
 3. **诚实条款：** 若报告缺失、覆盖不足或内容与实读矛盾→判 BLOCKED 并写入 findings；你无需也无法重复机械哈希计算，这部分由报告与 Git commit 锚定共同保证。
 
 ## 4. 被审查交付【事实，材料均在 manifest 中】
@@ -54,7 +54,11 @@
   2. **畸形快照 fail-closed**：unit_count 缺失/undefined/非整数/负数/NaN/字符串、unit_keys 缺失/非数组/与 unit_count 不一致 → `INBOUND_REPLY_SNAPSHOT_MALFORMED`（修复原 `unit_count > 1` 判断对 undefined/负数静默放行的缺口）。
   3. **测试注入点**：`runDispatch` 的 `deps.readReplySnapshot` 仅供测试注入（模拟上游门禁被放宽或失效），生产路径不传、恒用真实 reader；`runDispatchLocked` 内部经 `replyReader` 参数传递。
   4. 测试 +3：最终防线纯函数（单 unit 放行/多 unit 拦截/9 种畸形快照全部 fail-closed）；注入式全管线（上游放宽 → 收敛点仍 `INBOUND_MULTI_UNIT_EXTENSION_GATE_BLOCKED` 且无 result.json）；矛盾快照骗过稳定性比较 → 最终防线 `INBOUND_REPLY_SNAPSHOT_MALFORMED`。
-- 测试证据：node --test **56/56 通过** 退出码 0（53 + 3 门禁闭环新增）；F-101 返工日志 `phase1/logs/m2-gpt-controller-20261113/f101-rework/`；F-001 返工日志 `…/f001-rework/`；首轮历史日志 `…/`（留证）。
+- **F-201 返工（本轮变更核心，涉及 3 文件：inbound_reply.mjs / 两测试文件）**：
+  1. `assertInboundExtensionGate` 边界收紧：unit_count 合法范围为**正整数**（`count < 1` 一律 `INBOUND_REPLY_SNAPSHOT_MALFORMED`——回复必含 ≥1 个 assistant unit，堵住 unit_count=0/空 keys 绕过）；unit_keys 元素全部**非空字符串**且**无重复**（堵住 [null]/[""]/重复 key 绕过）。
+  2. 纯函数负例 9→**14 类**（新增：零数量、null 元素、空字符串、重复 key、非字符串元素）。
+  3. 注入式全管线 +2：零 unit 快照、非法 key 快照骗过稳定性比较后均被最终防线以 `INBOUND_REPLY_SNAPSHOT_MALFORMED` 拒绝，且无 result.json（不产生成功日志/artifact/M1 登记）。
+- 测试证据：node --test **58/58 通过** 退出码 0（56 + 2 门禁边界新增）；F-201 返工日志 `phase1/logs/m2-gpt-controller-20261113/f201-rework/`；F-101 返工日志 `…/f101-rework/`；F-001 返工日志 `…/f001-rework/`；首轮历史日志 `…/`（留证）。
 
 ### M4 Git Worker（app/git_worker/）
 
@@ -79,7 +83,7 @@
 ## 6. 审查要求
 
 1. 核对代码与上述申报一致；发现申报不实（宣称已实现但无代码/无证据）按 MAJOR 及以上处理
-2. 核对 platform-contract-v1.0.md C1-C8 的模块级落点、module-boundaries.md §2 职责边界、DEC-017 约束（尤其 fail-closed 路径）；**重点复核 F-101 三项整改**（独立函数可直测、畸形快照 fail-closed、注入点仅测试可用且生产默认不变）
+2. 核对 platform-contract-v1.0.md C1-C8 的模块级落点、module-boundaries.md §2 职责边界、DEC-017 约束（尤其 fail-closed 路径）；**重点复核 F-201 边界收紧**（正整数数量、非空字符串唯一 key）与 14 类纯函数负例 + 4 个注入式全管线负例的闭合性
 3. 先按 §3 核验协议 v2 执行审查方侧核验；报告缺失/覆盖不足/与实读矛盾→BLOCKED
 4. **本审查为模块级，不构成 Phase 1 集成验收或 BLOCKED-1 扩展场景解除**
 
@@ -93,7 +97,7 @@
  "summary":"结论摘要"}
 ```
 
-findings 超过 8 条时仅列 severity≥MAJOR 的前 8 条，其余在 summary 中计数说明。finding_id 从 F-201 起编（避免与 F-001/F-101 混淆）。reviewed_commit 必须为完整 40 位十六进制字符（第 2 轮曾回写 39 位截断）。
+findings 超过 8 条时仅列 severity≥MAJOR 的前 8 条，其余在 summary 中计数说明。finding_id 从 F-301 起编（避免与 F-001/F-101/F-201 混淆）。reviewed_commit 必须为完整 40 位十六进制字符（逐字符复制）。
 
 ## 8. 会话管理约束【决策】
 

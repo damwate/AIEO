@@ -394,18 +394,21 @@ export function selectInboundReply(domUnits, userUnitKey, { maxAssistantUnits = 
   };
 }
 
-// DEC-017 扩展门禁收敛复核（T-P1-901 F-001/F-101）：dispatch 最终防线的独立函数，供直接测试。
+// DEC-017 扩展门禁收敛复核（T-P1-901 F-001/F-101/F-201）：dispatch 最终防线的独立函数，供直接测试。
 // 上游（selectInboundReply/readReplySnapshot）即使被放宽或失效，本函数仍无条件复核。
-// 畸形快照（缺/非法 unit_count 或 unit_keys、二者不一致）无法证明安全 → 一律 fail-closed，不给绕过空间。
+// 畸形快照 fail-closed（F-201 收紧）：unit_count 必须为正整数（回复必含 ≥1 个 assistant unit）；
+// unit_keys 必须为等长数组、元素全部为非空字符串且无重复——任何一项不满足都无法证明安全，一律拒绝。
 export function assertInboundExtensionGate(snapshot) {
   const count = snapshot?.unit_count;
   const keys = snapshot?.unit_keys;
   const malformed =
     typeof count !== "number" ||
     !Number.isInteger(count) ||
-    count < 0 ||
+    count < 1 ||
     !Array.isArray(keys) ||
-    keys.length !== count;
+    keys.length !== count ||
+    keys.some((key) => typeof key !== "string" || key.length === 0) ||
+    new Set(keys).size !== keys.length;
   if (malformed) {
     throw inboundError(
       "INBOUND_REPLY_SNAPSHOT_MALFORMED",
