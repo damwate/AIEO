@@ -15,8 +15,8 @@
 //   - raw-units.json 与 reply.txt 先落盘并回读验证原始字节，成功后才写 result.json
 //   - 新会话发送后自动捕获 /c/<uuid> 存入 logs/gpt-reviewer-session.json
 //
-// 注：判定辅助函数与本脚本内联（而非 import e2e_orchestrate），
-//     因 e2e_orchestrate.mjs/completion_judge.mjs 正处于审查冻结的 Commit 中，不得改动。
+// 注：完成判定辅助函数与本脚本内联；DOM 窗口采集由 inbound_dom.mjs 与真实浏览器仿真测试共享，
+//     区间完整性纯函数由 inbound_reply.mjs 统一提供，避免测试复制另一套算法。
 
 import { chromium } from "playwright";
 import { spawn, execFile } from "node:child_process";
@@ -27,13 +27,12 @@ import { acquireSessionLock } from "../e2e-poc/session_lock.mjs";
 import {
   MIN_STABLE_READ_INTERVAL_MS,
   compareInboundSnapshots,
-  createInboundRangeCollector,
   persistInboundArtifacts,
-  proveAdjacentWindowOverlap,
-  selectInboundReply,
   validateInboundJsonArtifact,
 } from "./inbound_reply.mjs";
 import { registerArtifactWithRetry } from "./m1_artifact_registry.mjs";
+import { parseDispatchOptions } from "./dispatch_options.mjs";
+import { readReplySnapshot, readTailUnit } from "./inbound_dom.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const AIEO_ROOT = join(__dirname, "..", "..");
@@ -58,45 +57,21 @@ const READY_TIMEOUT_MS = 40000;
 const SEND_ACCEPT_TIMEOUT_MS = 30000;
 const MAX_MSG_BYTES = 1200; // 网页 insertText 硬上限，不适用于入站回复
 
-const args = process.argv.slice(2);
-const newSession = args.includes("--new-session");
-const msgIdx = args.indexOf("--message");
-const fileIdx = args.indexOf("--message-file");
-let message = null;
-if (fileIdx >= 0) message = readFileSync(args[fileIdx + 1], "utf8").trim();
-else if (msgIdx >= 0) message = args[msgIdx + 1];
-if (!message) {
-  console.error("用法: node gpt_dispatch.mjs [--new-session] --message-file <txt> | --message <文本> [--task-id <id>] [--execution-id <id>] [--correlation-id <id>] [--schema <path>]");
-  process.exit(2);
+let dispatchOptions;
+try {
+  dispatchOptions = parseDispatchOptions(process.argv.slice(2));
+} catch (error) {
+  console.error(error.message);
+  if (error.details !== undefined) console.error(JSON.stringify(error.details));
+  process.exit(error.exitCode ?? 2);
 }
-
-function optionalArg(flag) {
-  const index = args.indexOf(flag);
-  if (index < 0) return null;
-  const value = args[index + 1];
-  if (!value || value.startsWith("--")) {
-    console.error(`${flag} 缺少值`);
-    process.exit(2);
-  }
-  return value;
-}
-const optionalIds = {
-  task_id: optionalArg("--task-id"),
-  execution_id: optionalArg("--execution-id"),
-  correlation_id: optionalArg("--correlation-id"),
-};
-const schemaPath = optionalArg("--schema");
-const idRules = {
-  task_id: /^T-(P[0-9]+-)?[0-9]{3,}$/,
-  execution_id: /^EXEC-[0-9]{3,}$/,
-  correlation_id: /^(CORR-[0-9]{3,}|[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12})$/,
-};
-for (const [field, value] of Object.entries(optionalIds)) {
-  if (value !== null && !idRules[field].test(value)) {
-    console.error(`${field} 格式不合法: ${value}`);
-    process.exit(2);
-  }
-}
+const {
+  message,
+  newSession,
+  ids: optionalIds,
+  schemaPath,
+  m1RegistrationRequested,
+} = dispatchOptions;
 
 const msgBytes = Buffer.byteLength(message, "utf8");
 if (msgBytes > MAX_MSG_BYTES) {
@@ -147,156 +122,6 @@ async function attachPage() {
   const ctx = browser.contexts()[0];
   const page = ctx.pages().find((p) => p.url().includes("chatgpt.com")) || ctx.pages()[0] || (await ctx.newPage());
   return { browser, page };
-}
-
-// ---------- DOM 契约 ----------
-async function readTailUnit(page) {
-  return page.evaluate(() => {
-    const units = Array.from(document.querySelectorAll("[data-content-search-unit-key]")).filter(
-      (el) => el.offsetParent !== null || el.getClientRects().length > 0);
-    if (!units.length) return null;
-    const last = units[units.length - 1];
-    const key = last.getAttribute("data-content-search-unit-key") || "";
-    const role = key.split(":").pop();
-    let assistantUuid = null;
-    if (role === "assistant") {
-      const dils = Array.from(last.querySelectorAll("[data-dil-response][data-dil-message-id]"));
-      if (dils.length === 1) {
-        const id = dils[0].getAttribute("data-dil-message-id") || "";
-        assistantUuid = id.length > 0 ? id : null;
-      }
-    }
-    return { role, key, assistantUuid };
-  });
-}
-
-// 完整读取当前 DOM 渲染集合，不用文本 marker，也不只取尾部或可视片段。
-async function readDomUnits(page) {
-  return page.evaluate(() => Array.from(document.querySelectorAll("[data-content-search-unit-key]")).map((el) => {
-    const key = el.getAttribute("data-content-search-unit-key") || "";
-    const role = key.split(":").pop();
-    const dils = Array.from(el.querySelectorAll("[data-dil-response][data-dil-message-id]"));
-    let assistantUuid = null;
-    if (role === "assistant" && dils.length === 1) {
-      const id = dils[0].getAttribute("data-dil-message-id") || "";
-      assistantUuid = id.length > 0 ? id : null;
-    }
-    return {
-      key,
-      role,
-      text: el.innerText ?? "",
-      assistantUuid,
-      visible: el.offsetParent !== null || el.getClientRects().length > 0,
-    };
-  }));
-}
-
-async function readDomWindow(page) {
-  const units = await readDomUnits(page);
-  const scroll = await page.evaluate(() => {
-    const candidates = Array.from(document.querySelectorAll("[data-content-search-unit-key]"));
-    const anchor = candidates.find((el) => el.offsetParent !== null || el.getClientRects().length > 0) || candidates[0];
-    let scroller = anchor?.parentElement ?? null;
-    while (scroller && scroller !== document.body) {
-      const style = getComputedStyle(scroller);
-      if (/(auto|scroll|overlay)/.test(style.overflowY) && scroller.scrollHeight > scroller.clientHeight) break;
-      scroller = scroller.parentElement;
-    }
-    const target = scroller && scroller !== document.body ? scroller : document.scrollingElement;
-    if (!target) return { at_top: true, at_bottom: true, scrollable: false, scroll_top: 0, scroll_height: 0, client_height: 0 };
-    return {
-      at_top: target.scrollTop <= 1,
-      at_bottom: target.scrollTop + target.clientHeight >= target.scrollHeight - 2,
-      scrollable: target.scrollHeight > target.clientHeight + 2,
-      scroll_top: target.scrollTop,
-      scroll_height: target.scrollHeight,
-      client_height: target.clientHeight,
-    };
-  });
-  return { units, ...scroll };
-}
-
-async function scrollDomWindow(page, direction) {
-  const result = await page.evaluate(({ direction }) => {
-    const candidates = Array.from(document.querySelectorAll("[data-content-search-unit-key]"));
-    const anchor = candidates.find((el) => el.offsetParent !== null || el.getClientRects().length > 0) || candidates[0];
-    let scroller = anchor?.parentElement ?? null;
-    while (scroller && scroller !== document.body) {
-      const style = getComputedStyle(scroller);
-      if (/(auto|scroll|overlay)/.test(style.overflowY) && scroller.scrollHeight > scroller.clientHeight) break;
-      scroller = scroller.parentElement;
-    }
-    const target = scroller && scroller !== document.body ? scroller : document.scrollingElement;
-    if (!target) return { before: 0, after: 0 };
-    const before = target.scrollTop;
-    const delta = Math.max(200, target.clientHeight * 0.65) * direction;
-    target.scrollTop = Math.max(0, Math.min(target.scrollHeight - target.clientHeight, before + delta));
-    return { before, after: target.scrollTop };
-  }, { direction });
-  await page.waitForTimeout(250);
-  return result;
-}
-
-function findStartIndex(windowUnits, userUnitKey) {
-  return windowUnits.findIndex((unit) => unit.key === userUnitKey && unit.role === "user");
-}
-
-// 两段式实体化：先向上逐窗定位起点，再向下逐窗收集至下一 user 或真实底部。
-// 起点搜索和回复采集的每一次窗口转换都必须有相同 key 重叠；跳窗直接失败。
-async function readReplySnapshot(page, userUnitKey) {
-  const readStartedAt = Date.now();
-  const maxWindowTransitions = Number(process.env.AIEO_GPT_CONTROLLER_MAX_RANGE_SCROLLS || 200);
-  let current = await readDomWindow(page);
-  if (current.units.length === 0) throw new Error("INBOUND_WINDOW_EMPTY: 页面没有已渲染 unit");
-  let previousSearch = null;
-  const searchProof = [];
-  let transitions = 0;
-
-  while (true) {
-    if (previousSearch) {
-      const overlap = proveAdjacentWindowOverlap(previousSearch.units, current.units);
-      searchProof.push({ unit_keys: current.units.map((unit) => unit.key), ...overlap });
-    } else {
-      searchProof.push({ unit_keys: current.units.map((unit) => unit.key), overlap_keys: [] });
-    }
-    const startFound = findStartIndex(current.units, userUnitKey) >= 0;
-    // 可滚动页面即使起点和尾部同屏 DOM 存在，也先向上离开底部，再向下分段复核。
-    if (startFound && (!current.at_bottom || !current.scrollable)) break;
-    if (current.at_top) {
-      throw new Error(`INBOUND_START_UNIT_MISSING: 连续向上搜索到顶部仍未找到可分段读取的 ${userUnitKey}`);
-    }
-    if (transitions >= maxWindowTransitions) throw new Error("INBOUND_RANGE_SCROLL_LIMIT: 起点搜索超过窗口转换上限");
-    const moved = await scrollDomWindow(page, -1);
-    transitions += 1;
-    previousSearch = current;
-    current = await readDomWindow(page);
-    if (moved.before === moved.after) throw new Error("INBOUND_START_SEARCH_NO_PROGRESS: 向上滚动无位移且尚未到顶部");
-  }
-
-  const collector = createInboundRangeCollector(userUnitKey);
-  let collectionState = collector.ingest(current.units, { atBottom: current.at_bottom, scrollable: current.scrollable });
-  while (!collectionState.complete) {
-    if (current.at_bottom) throw new Error("INBOUND_RANGE_INCOMPLETE: 已到底但未形成完整目标区间");
-    if (transitions >= maxWindowTransitions) throw new Error("INBOUND_RANGE_SCROLL_LIMIT: 区间采集超过窗口转换上限");
-    const moved = await scrollDomWindow(page, 1);
-    transitions += 1;
-    current = await readDomWindow(page);
-    if (moved.before === moved.after) throw new Error("INBOUND_RANGE_SCROLL_NO_PROGRESS: 向下滚动无位移且尚未到终点");
-    collectionState = collector.ingest(current.units, { atBottom: current.at_bottom, scrollable: current.scrollable });
-  }
-
-  const materialized = collector.build();
-  const selected = selectInboundReply(materialized.units, userUnitKey);
-  const visibleUnits = current.units.filter((unit) => unit.visible);
-  const tail = visibleUnits.length > 0 ? visibleUnits[visibleUnits.length - 1] : null;
-  return {
-    ...selected,
-    range_proof: { ...materialized.range_proof, start_search_windows: searchProof, window_transitions: transitions },
-    read_started_at: new Date(readStartedAt).toISOString(),
-    read_finished_at: new Date().toISOString(),
-    rendered_unit_keys: current.units.map((unit) => unit.key),
-    tail: tail ? { key: tail.key, role: tail.role, assistantUuid: tail.assistantUuid } : null,
-  };
 }
 
 async function stopButtonVisible(page) {
@@ -504,7 +329,7 @@ async function mainLocked() {
 
   // 只有原始 artifact 与请求的校验全部通过后才登记；失败只重试本地登记，绝不重发 GPT。
   let m1Registration;
-  if (optionalIds.task_id) {
+  if (m1RegistrationRequested) {
     const artifactKind = schemaPath
       ? (schemaPath.replaceAll("\\", "/").endsWith("/review-report.schema.json") ? "REVIEW_REPORT" : "GPT_SCHEMA_VALIDATED_JSON")
       : "GPT_REPLY_TEXT";
@@ -527,10 +352,10 @@ async function mainLocked() {
   } else {
     m1Registration = {
       status: "NOT_REQUESTED",
-      reason: "task_id 未提供；未请求 M1 业务 artifact 登记",
+      reason: "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
       adapter_scope: "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM",
     };
-    log("M1 本地登记: NOT_REQUESTED（未提供 task_id）");
+    log("M1 本地登记: NOT_REQUESTED（三 ID 均未提供，通用非登记派单）");
   }
 
   const result = {

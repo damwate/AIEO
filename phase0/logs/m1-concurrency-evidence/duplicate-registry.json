@@ -1,0 +1,26 @@
+{
+  "format_version": "1.0",
+  "adapter": "M1_MINIMAL_LOCAL_JSON",
+  "next_sequence": 2,
+  "records": [
+    {
+      "artifact_id": "ART-M1-000001",
+      "registered_at": "2026-11-12T05:17:13.444Z",
+      "task_id": "T-P1-940",
+      "execution_id": "EXEC-940",
+      "correlation_id": "CORR-940",
+      "artifact_sha256": "0e6e141cffc6707797ab8d1828a1f33171da9ba836d4a103e1156dc52e367337",
+      "idempotency_key": "{\"task_id\":\"T-P1-940\",\"execution_id\":\"EXEC-940\",\"correlation_id\":\"CORR-940\",\"artifact_sha256\":\"0e6e141cffc6707797ab8d1828a1f33171da9ba836d4a103e1156dc52e367337\"}",
+      "content_sha256": "0e6e141cffc6707797ab8d1828a1f33171da9ba836d4a103e1156dc52e367337",
+      "size_bytes": 37,
+      "artifact_path": "D:\\AIEO\\phase0\\logs\\m1-concurrency-evidence\\same.txt",
+      "artifact_kind": "GPT_REPLY_TEXT",
+      "schema_validation": "NOT_REQUESTED",
+      "content": "四个进程共享同一原始字节\n",
+      "unit_metadata": {
+        "worker": "w4",
+        "source": "REAL_MULTIPROCESS_TEST"
+      }
+    }
+  ]
+}

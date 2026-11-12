@@ -1,15 +1,15 @@
 {
-  "started_at": "2026-11-12T04:46:23.606Z",
-  "finished_at": "2026-11-12T04:46:23.758Z",
+  "started_at": "2026-11-12T05:17:03.929Z",
+  "finished_at": "2026-11-12T05:17:04.071Z",
   "node": "v24.14.0",
-  "total": 21,
-  "passed": 21,
+  "total": 23,
+  "passed": 23,
   "failed": 0,
   "artifact_evidence": {
     "reply_bytes": 4530,
     "reply_sha256": "d72176a20e6e17b90100b2c4a4dbf86685b723d842ce0bbf728a82d1ec1153c1",
-    "raw_units_bytes": 5749,
-    "raw_units_sha256": "472bf41a784aaa43e768d476f2c62088a01993fd8450d666b20be2a2fe42a7f9"
+    "raw_units_bytes": 5942,
+    "raw_units_sha256": "deabf7ebd4a8ffba5fdce64063e9cdb1e1a7694f2c49b917ed768d676b5c6c75"
   },
   "tests": [
     {
@@ -34,6 +34,14 @@
     },
     {
       "name": "起点存在但中间 assistant unit 被裁掉时窗口跳跃必须失败",
+      "result": "PASS"
+    },
+    {
+      "name": "中间 unit 在所有重叠窗口持续缺失时独立逻辑序列必须拒绝",
+      "result": "PASS"
+    },
+    {
+      "name": "可滚动窗口即使重叠完整，没有独立逻辑序列也必须保守 BLOCKED",
       "result": "PASS"
     },
     {

@@ -89,12 +89,23 @@ export function proveAdjacentWindowOverlap(previousWindow, currentWindow) {
 
 // 从包含本次 user unit 的窗口开始向下实体化。每次滚动必须用重叠 key 对齐并合并；
 // 下一 user 是明确终点；没有下一 user 时只有真实滚动到底才允许结束。
-export function createInboundRangeCollector(userUnitKey) {
+export function createInboundRangeCollector(userUnitKey, { expectedUnitKeys = null } = {}) {
   if (typeof userUnitKey !== "string" || userUnitKey.length === 0) {
     throw inboundError("INBOUND_USER_UNIT_KEY_MISSING", "发送双验未记录本次 user unit key");
   }
+  if (expectedUnitKeys !== null) {
+    if (!Array.isArray(expectedUnitKeys) || expectedUnitKeys.length === 0 ||
+        expectedUnitKeys.some((key) => typeof key !== "string" || key.length === 0) ||
+        new Set(expectedUnitKeys).size !== expectedUnitKeys.length) {
+      throw inboundError("INBOUND_EXPECTED_UNIT_SEQUENCE_INVALID", "独立逻辑 unit 序列必须是非空、无重复 key 的数组");
+    }
+    if (!expectedUnitKeys.includes(userUnitKey)) {
+      throw inboundError("INBOUND_EXPECTED_UNIT_SEQUENCE_INVALID", "独立逻辑 unit 序列不包含本次 user unit key");
+    }
+  }
   let started = false;
   let complete = false;
+  let sawScrollableWindow = false;
   let stitched = [];
   let startIndex = -1;
   let endIndex = -1;
@@ -107,6 +118,7 @@ export function createInboundRangeCollector(userUnitKey) {
   function ingest(domUnits, { atBottom = false, scrollable = false } = {}) {
     if (complete) throw inboundError("INBOUND_RANGE_ALREADY_COMPLETE", "完整区间已结束，不得继续合并窗口");
     validateWindow(domUnits);
+    sawScrollableWindow ||= scrollable === true;
     let overlapProof = null;
     let currentWindowOffset = 0;
 
@@ -204,6 +216,51 @@ export function createInboundRangeCollector(userUnitKey) {
       throw inboundError("INBOUND_RANGE_INCOMPLETE", "目标区间未到下一 user 或真实底部，拒绝判定完整");
     }
     const targetUnits = stitched.slice(startIndex, endIndex + 1);
+    const actualKeys = targetUnits.map((unit) => unit.key);
+    let windowIntegrity;
+    if (expectedUnitKeys !== null) {
+      const expectedStart = expectedUnitKeys.indexOf(userUnitKey);
+      let expectedEnd;
+      if (endReason === "NEXT_USER") {
+        expectedEnd = expectedUnitKeys.indexOf(nextUserUnitKey, expectedStart + 1);
+        if (expectedEnd < 0) throw inboundError("INBOUND_WINDOW_COMPLETENESS_FAILED", "实体化终点不在独立逻辑 unit 序列中");
+      } else {
+        expectedEnd = expectedUnitKeys.length - 1;
+      }
+      const expectedKeys = expectedUnitKeys.slice(expectedStart, expectedEnd + 1);
+      if (JSON.stringify(actualKeys) !== JSON.stringify(expectedKeys)) {
+        const actualSet = new Set(actualKeys);
+        const expectedSet = new Set(expectedKeys);
+        throw inboundError(
+          "INBOUND_WINDOW_COMPLETENESS_FAILED",
+          "实体化区间与独立逻辑 unit 序列不一致；中间 unit 可能在所有窗口中持续缺失，拒绝误判完整",
+          {
+            missing_unit_keys: expectedKeys.filter((key) => !actualSet.has(key)),
+            unexpected_unit_keys: actualKeys.filter((key) => !expectedSet.has(key)),
+            expected_unit_keys: expectedKeys,
+            actual_unit_keys: actualKeys,
+          },
+        );
+      }
+      windowIntegrity = {
+        complete: true,
+        method: "INDEPENDENT_LOGICAL_UNIT_SEQUENCE",
+        expected_unit_count: expectedKeys.length,
+        materialized_unit_count: actualKeys.length,
+      };
+    } else if (sawScrollableWindow) {
+      throw inboundError(
+        "INBOUND_WINDOW_COMPLETENESS_UNPROVEN",
+        "BLOCKED: 相邻窗口重叠只能证明已观察 key 连续，不能证明单个或全部窗口没有持续遗漏中间 unit；缺少独立逻辑序列时拒绝判定完整",
+        { materialized_unit_keys: actualKeys, remediation: "提供可信的完整逻辑 unit 序列，或在非虚拟化静态 DOM 上重新读取" },
+      );
+    } else {
+      windowIntegrity = {
+        complete: true,
+        method: "STATIC_NON_SCROLLABLE_DOM",
+        limitation: "仅适用于 DOM 契约下无滚动虚拟列表的静态完整窗口",
+      };
+    }
     return {
       units: targetUnits,
       range_proof: {
@@ -212,7 +269,8 @@ export function createInboundRangeCollector(userUnitKey) {
         next_user_unit_key: nextUserUnitKey,
         end_reason: endReason,
         windows: windowProofs,
-        materialized_unit_keys: targetUnits.map((unit) => unit.key),
+        materialized_unit_keys: actualKeys,
+        window_integrity: windowIntegrity,
       },
     };
   }

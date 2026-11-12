@@ -1,9 +1,8 @@
-[2026-11-12T04:46:23.967Z] M1 本地登记测试开始 node=v24.14.0
-[2026-11-12T04:46:23.975Z] PASS 登记成功并持久化原文、hash、unit 元数据与完整幂等键
-[2026-11-12T04:46:23.980Z] PASS AIEO_M1_FAIL_FIRST 首次失败后使用同 artifact/correlation 重试成功
-[2026-11-12T04:46:23.983Z] PASS 重复登记返回已有 artifact_id 且不新增记录
-[2026-11-12T04:46:23.988Z] PASS 原始 hash 变化时拒绝复用旧记录且不新增
-[2026-11-12T04:46:23.993Z] PASS 登记失败与补登记路径不调用 GPT 发送
-[2026-11-12T04:46:23.993Z] PASS 未通过 Schema 的任意文本不得登记为审查报告
-[2026-11-12T04:46:23.993Z] SUMMARY total=6 passed=6 failed=0
-测试报告: D:\AIEO\phase0\logs\m1-registry-tests.json
+[2026-11-12T05:17:04.867Z] M1 本地登记测试开始 node=v24.14.0
+[2026-11-12T05:17:05.458Z] PASS 登记成功并持久化原文、hash、unit 元数据与完整幂等键
+[2026-11-12T05:17:06.611Z] PASS AIEO_M1_FAIL_FIRST 首次失败后使用同 artifact/correlation 重试成功
+[2026-11-12T05:17:07.183Z] PASS 重复登记返回已有 artifact_id 且不新增记录
+[2026-11-12T05:17:07.750Z] PASS 原始 hash 变化时拒绝复用旧记录且不新增
+[2026-11-12T05:17:09.452Z] PASS 登记失败与补登记路径不调用 GPT 发送
+[2026-11-12T05:17:10.020Z] PASS 未通过 Schema 的任意文本不得登记为审查报告
+[2026-11-12T05:17:10.020Z] SUMMARY total=6 passed=6 failed=0

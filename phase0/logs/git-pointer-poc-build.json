@@ -1,0 +1,23 @@
+{
+  "command": "build",
+  "manifest_path": "handoff/manifest.json",
+  "output_path": "D:\\AIEO\\phase0\\poc-material\\handoff\\manifest.json",
+  "artifact_sha256": "2138cce0bb7cfc904ff41cc4881f4af2a911b87ff7c773893765d0bf457a51c6",
+  "size_bytes": 548,
+  "total_bytes": 1063,
+  "files": [
+    {
+      "path": "handoff/task.md",
+      "artifact_sha256": "1eeb624052bfd441c5f8cf00d71328771f280e2dcee333a3703c647b8cae177d",
+      "size_bytes": 354,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "handoff/data.json",
+      "artifact_sha256": "e19841dff0bcdbca7ccb67bcf3f69a205b178b1033b2e08742d1228a582399be",
+      "size_bytes": 161,
+      "media_type": "application/json"
+    }
+  ],
+  "git_write_performed": false
+}

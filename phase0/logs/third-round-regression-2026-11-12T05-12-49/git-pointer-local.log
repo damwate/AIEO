@@ -1,0 +1,28 @@
+$ C:\Program Files\nodejs\node.exe D:\AIEO\phase0\tools\test_git_pointer.mjs
+[2026-11-12T05:13:08.793Z] START
+[2026-11-12T05:13:09.272Z] GitPointer 本地测试开始；不访问真实 GitHub，不执行 commit/push
+[2026-11-12T05:13:10.277Z] PASS 正例：多文件 manifest、每文件/manifest hash size 与指定 SHA 全量读取
+[2026-11-12T05:13:10.277Z] PASS 路径穿越、绝对路径、盘符与 .git 均在网络前拒绝
+[2026-11-12T05:13:10.277Z] PASS 短 SHA 不可读取且不得回退分支
+[2026-11-12T05:13:10.277Z] PASS 重复 path 在构造与远程 manifest Schema 校验均拒绝
+[2026-11-12T05:13:10.277Z] PASS password/cookie/token/API key/私钥扫描拒绝且诊断不回显秘密
+[2026-11-12T05:13:10.277Z] PASS 文件数超限拒绝
+[2026-11-12T05:13:10.277Z] PASS 单文件大小超限拒绝
+[2026-11-12T05:13:10.277Z] PASS manifest 大小超限拒绝
+[2026-11-12T05:13:10.277Z] PASS manifest 与材料总大小超限拒绝
+[2026-11-12T05:13:10.277Z] PASS 文件 hash 不符（同长度篡改）拒绝
+[2026-11-12T05:13:10.277Z] PASS 文件 size 不符拒绝
+[2026-11-12T05:13:10.277Z] PASS manifest hash/size 不符均拒绝且不读取材料
+[2026-11-12T05:13:10.277Z] PASS 多文件部分缺失立即 BLOCKED，不返回部分完整结果
+[2026-11-12T05:13:10.277Z] PASS 暂时 503 有限退避后成功且只读指定 URL
+[2026-11-12T05:13:10.277Z] PASS 网络异常重试耗尽：最多首次+maxRetries 次
+[2026-11-12T05:13:10.277Z] PASS 持续 503 重试耗尽且没有无限循环
+[2026-11-12T05:13:10.277Z] PASS 403 权限拒绝不可重试、不可换源
+[2026-11-12T05:13:10.277Z] PASS manifest 与指针 task/execution/version 绑定不一致拒绝
+[2026-11-12T05:13:10.277Z] PASS 任务允许路径范围不可被 manifest 扩大
+[2026-11-12T05:13:10.277Z] PASS 标准代理 env 创建 EnvHttpProxyAgent，无代理 env 返回 null
+[2026-11-12T05:13:10.277Z] PASS 本地 CLI build+pointer 正例，不执行 git 写操作
+[2026-11-12T05:13:10.277Z] SUMMARY total=21 passed=21 failed=0
+测试报告: D:\AIEO\phase0\logs\git-pointer-tests.json
+
+[2026-11-12T05:13:10.298Z] EXIT code=0 signal=null timed_out=false

@@ -1,0 +1,12 @@
+[2026-11-12T05:14:44.669Z] 第三轮统一回归开始 node=v24.14.0
+[2026-11-12T05:14:45.001Z] PASS schemas exit=0 signal=null timed_out=false log=D:\AIEO\phase0\logs\third-round-regression-2026-11-12T05-14-44\schemas.log
+[2026-11-12T05:14:45.354Z] PASS inbound-reply exit=0 signal=null timed_out=false log=D:\AIEO\phase0\logs\third-round-regression-2026-11-12T05-14-44\inbound-reply.log
+[2026-11-12T05:14:45.963Z] PASS dispatch-binding exit=0 signal=null timed_out=false log=D:\AIEO\phase0\logs\third-round-regression-2026-11-12T05-14-44\dispatch-binding.log
+[2026-11-12T05:14:51.330Z] PASS m1-registry exit=0 signal=null timed_out=false log=D:\AIEO\phase0\logs\third-round-regression-2026-11-12T05-14-44\m1-registry.log
+[2026-11-12T05:14:59.173Z] PASS m1-concurrency exit=0 signal=null timed_out=false log=D:\AIEO\phase0\logs\third-round-regression-2026-11-12T05-14-44\m1-concurrency.log
+[2026-11-12T05:15:03.909Z] PASS browser-virtual-list-simulation exit=0 signal=null timed_out=false log=D:\AIEO\phase0\logs\third-round-regression-2026-11-12T05-14-44\browser-virtual-list-simulation.log
+[2026-11-12T05:15:05.405Z] PASS git-pointer-local exit=0 signal=null timed_out=false log=D:\AIEO\phase0\logs\third-round-regression-2026-11-12T05-14-44\git-pointer-local.log
+[2026-11-12T05:15:05.483Z] PASS baseline-completion-judge exit=0 signal=null timed_out=false log=D:\AIEO\phase0\logs\third-round-regression-2026-11-12T05-14-44\baseline-completion-judge.log
+[2026-11-12T05:15:05.553Z] PASS baseline-greet exit=0 signal=null timed_out=false log=D:\AIEO\phase0\logs\third-round-regression-2026-11-12T05-14-44\baseline-greet.log
+[2026-11-12T05:15:17.174Z] PASS baseline-current-os-session-lock exit=0 signal=null timed_out=false log=D:\AIEO\phase0\logs\third-round-regression-2026-11-12T05-14-44\baseline-current-os-session-lock.log
+[2026-11-12T05:15:17.175Z] SUMMARY total=10 passed=10 failed=0

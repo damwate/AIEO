@@ -50,8 +50,8 @@ function completeSnapshot(dom = baseDom, userUnitKey = "turn-1:user", atBottom =
   return { ...selectInboundReply(materialized.units, userUnitKey), range_proof: materialized.range_proof };
 }
 
-function snapshotFromWindows(windows, userUnitKey = "turn-1:user", bottomAtLast = false) {
-  const collector = createInboundRangeCollector(userUnitKey);
+function snapshotFromWindows(windows, userUnitKey = "turn-1:user", bottomAtLast = false, expectedUnitKeys = null) {
+  const collector = createInboundRangeCollector(userUnitKey, { expectedUnitKeys });
   windows.forEach((window, index) => collector.ingest(window, { atBottom: bottomAtLast && index === windows.length - 1 }));
   const materialized = collector.build();
   return { ...selectInboundReply(materialized.units, userUnitKey), range_proof: materialized.range_proof };
@@ -106,7 +106,7 @@ const tests = [
       [baseDom[2], a, b],
       [b, c, d],
       [d, next],
-    ]);
+    ], "turn-1:user", false, ["turn-1:user", "a", "b", "c", "d", "next:user"]);
     assert.deepEqual(snapshot.unit_keys, ["a", "b", "c", "d"]);
     assert.equal(snapshot.reply, "甲\n乙\n丙\n丁");
     assert.equal(snapshot.next_user_unit_key, "next:user");
@@ -116,7 +116,9 @@ const tests = [
   }],
   ["没有下一 user 时必须真实到底才完成", () => {
     const tail = { ...baseDom[4], key: "tail", assistantUuid: "55555555-5555-4555-8555-555555555555" };
-    const collector = createInboundRangeCollector("turn-1:user");
+    const collector = createInboundRangeCollector("turn-1:user", {
+      expectedUnitKeys: ["turn-1:user", "turn-1:assistant:0", "tail"],
+    });
     const state = collector.ingest([baseDom[2], baseDom[3]], { atBottom: false });
     assert.equal(state.complete, false);
     expectCode("INBOUND_RANGE_INCOMPLETE", () => collector.build());
@@ -133,6 +135,27 @@ const tests = [
     // b 被虚拟列表裁掉，下一窗直接从 c 开始；无重叠不能宣称连续。
     expectCode("INBOUND_WINDOW_DISCONTINUOUS", () => collector.ingest([c], { atBottom: true }));
     expectCode("INBOUND_RANGE_INCOMPLETE", () => collector.build());
+  }],
+  ["中间 unit 在所有重叠窗口持续缺失时独立逻辑序列必须拒绝", () => {
+    const a = { key: "a", role: "assistant", text: "甲", assistantUuid: null };
+    const c = { key: "c", role: "assistant", text: "丙", assistantUuid: "66666666-6666-4666-8666-666666666666" };
+    const next = { key: "next:user", role: "user", text: "下一问", assistantUuid: null };
+    const windows = [[baseDom[2], a], [a, c], [c, next]];
+    const collector = createInboundRangeCollector("turn-1:user", {
+      expectedUnitKeys: ["turn-1:user", "a", "b", "c", "next:user"],
+    });
+    windows.forEach((window, index) => collector.ingest(window, { atBottom: index === 2, scrollable: true }));
+    expectCode("INBOUND_WINDOW_COMPLETENESS_FAILED", () => collector.build());
+  }],
+  ["可滚动窗口即使重叠完整，没有独立逻辑序列也必须保守 BLOCKED", () => {
+    const a = { key: "a", role: "assistant", text: "甲", assistantUuid: null };
+    const c = { key: "c", role: "assistant", text: "丙", assistantUuid: "66666666-6666-4666-8666-666666666666" };
+    const next = { key: "next:user", role: "user", text: "下一问", assistantUuid: null };
+    const collector = createInboundRangeCollector("turn-1:user");
+    collector.ingest([baseDom[2], a], { scrollable: true });
+    collector.ingest([a, c], { scrollable: true });
+    collector.ingest([c, next], { atBottom: true, scrollable: true });
+    expectCode("INBOUND_WINDOW_COMPLETENESS_UNPROVEN", () => collector.build());
   }],
   ["残缺 DOM 即使两次 key/hash 相同，没有完整区间证明也不得 stable", () => {
     const cropped = [baseDom[2], baseDom[4]];
@@ -173,7 +196,12 @@ const tests = [
     bad.ingest([baseDom[2], a], { atBottom: false });
     expectCode("INBOUND_WINDOW_DISCONTINUOUS", () => bad.ingest([c], { atBottom: true }));
     expectCode("INBOUND_RANGE_INCOMPLETE", () => bad.build());
-    const recovered = snapshotFromWindows([[baseDom[2], a, b], [b, c]], "turn-1:user", true);
+    const recovered = snapshotFromWindows(
+      [[baseDom[2], a, b], [b, c]],
+      "turn-1:user",
+      true,
+      ["turn-1:user", "a", "b", "c"],
+    );
     assert.deepEqual(recovered.unit_keys, ["a", "b", "c"]);
     assert.equal(recovered.range_proof.complete, true);
   }],

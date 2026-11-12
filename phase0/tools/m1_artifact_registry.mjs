@@ -15,6 +15,7 @@ import {
 } from "node:fs";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { acquireSessionLock } from "../e2e-poc/session_lock.mjs";
 
 const injectedFailureKeys = new Set();
 const RETRYABLE_INJECTION = "M1_INJECTED_FIRST_FAILURE";
@@ -63,6 +64,10 @@ function writeRegistryAtomic(registryPath, registry) {
       throw new Error("registry readback mismatch");
     }
     renameSync(tempPath, registryPath);
+    const committedReadback = JSON.parse(readFileSync(registryPath, "utf8"));
+    if (JSON.stringify(committedReadback) !== JSON.stringify(registry)) {
+      throw new Error("committed registry readback mismatch");
+    }
   } catch (error) {
     rmSync(tempPath, { force: true });
     if (error.code?.startsWith?.("M1_")) throw error;
@@ -95,7 +100,30 @@ function maybeInjectFailure(registryPath) {
   }
 }
 
-export function registerArtifact({
+function acquireRegistryLock(registryPath) {
+  const normalizedRegistryPath = resolve(registryPath);
+  const timeoutMs = Number(process.env.AIEO_M1_REGISTRY_LOCK_TIMEOUT_MS || 60000);
+  const startedAt = Date.now();
+  for (;;) {
+    try {
+      return acquireSessionLock({
+        lockPath: `${normalizedRegistryPath}.lockfile`,
+        holder: `m1-registry:${process.pid}`,
+      });
+    } catch (error) {
+      if (error.code !== "SESSION_LOCK_CONFLICT" || Date.now() - startedAt >= timeoutMs) {
+        throw m1Error("M1_REGISTRY_LOCK_UNAVAILABLE", "登记簿 OS 句柄锁获取失败，拒绝无互斥登记", {
+          registry_path: registryPath,
+          cause: error.message,
+        });
+      }
+      // 只等待内核句柄释放；不读取、解释或仲裁锁文件内容。
+      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 50 + Math.floor(Math.random() * 50));
+    }
+  }
+}
+
+function registerArtifactLocked({
   registryPath,
   artifactPath,
   task_id,
@@ -188,6 +216,20 @@ export function registerArtifact({
     record,
     adapter_scope: "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM",
   };
+}
+
+// 每个 registry 使用独立 OS 句柄 lockfile；读登记簿、分配序号、写入及最终回读均在同一临界区。
+export function registerArtifact(options) {
+  const registryPath = options?.registryPath;
+  if (typeof registryPath !== "string" || registryPath.length === 0) {
+    return registerArtifactLocked(options);
+  }
+  const lock = acquireRegistryLock(registryPath);
+  try {
+    return registerArtifactLocked(options);
+  } finally {
+    lock.release();
+  }
 }
 
 // 仅对同一已提取 artifact 做最多一次补登记；本函数没有浏览器或发送依赖。
