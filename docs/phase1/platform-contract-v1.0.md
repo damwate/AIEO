@@ -318,6 +318,15 @@ PENDING 可被发送方取消 → CANCELLED（终态）
 - 恢复证据：`phase0/logs/m1-recovery-retry.json` 记录首次登记失败后以同一 artifact 重试成功；`m1-recovery-duplicate.json` 证明重复登记不新增；恢复前后发送双验日志计数均为 16，`no_new_gpt_send=true`，未重新向 GPT 发消息。
 - 仍未实测：真实多 assistant unit、真实页面动态裁切恢复、M1 REST/数据库/ACK/并发控制、GitPointer 私有权限与故障注入。上述边界继续保留，BLOCKED-1 由复审决定。
 
+#### 2.6.12 并发绑定与真实 GitHub 回读补充证据
+
+- 三 ID 强制：请求 M1 登记时 task/execution/correlation 与 Schema 必须齐全，缺一直接失败；三 ID 12/12 测试通过（`phase0/logs/dispatch-binding-tests.{log,json}`）。
+- M1 并发互斥：各 registry 以 OS 句柄锁保护整个登记临界区，4 进程不同 artifact 得到 4 个唯一 ID，同一 artifact 仅 1 条记录，hash 冲突被拒绝（`phase0/logs/m1-concurrency-tests.json`）。
+- 真实浏览器虚拟列表仿真：5 个 assistant unit 正例、持续裁掉中间 unit 负例、恢复后正例均通过；无可信逻辑序列时保守 `INBOUND_WINDOW_COMPLETENESS_UNPROVEN`。证据 `phase0/logs/browser-virtual-list-2026-11-12T05-14-59/`，**是本地仿真 DOM，不是 ChatGPT 多 unit 证据**。
+- 真实 GitHub 回读：commit `26ed31009ccb17d0ddf525e19b6d085d2f5193a8`，manifest 及两个材料按完整 SHA 经 raw.githubusercontent.com 全部 200 读取，`all_files_verified=true`，独立 hash/size 一致。报告 `phase0/logs/git-pointer-remote-poc.md`，结果 `phase0/logs/git-pointer-remote-read-result.json`。
+- 全量回归 10/10（`phase0/logs/third-round-regression-2026-11-12T05-17-03/result.json`）。
+- 边界：真实 ChatGPT 多 assistant unit/动态裁切仍未实测；M1 REST/数据库/ACK、私有权限与真实网络故障注入未验证。BLOCKED-1 由复审决定。
+
 ---
 
 ## 3. C2 数据模型

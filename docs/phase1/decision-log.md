@@ -95,3 +95,10 @@
 - **决策内容：** 入站完整性不得只凭当前可见 DOM 双读一致判定。区间采集必须证明连续：相邻窗口重叠 unit key 且原文/角色/UUID 一致，缺起点、跳窗、顺序冲突或未到终点均失败。报告成功前增加全文 JSON parse、Ajv Schema 与 task/execution/correlation 精确绑定。M1 采用最小本地登记适配器，幂等键包含 task_id/execution_id/correlation_id/artifact_sha256；恢复只重试登记，不重跑 GPT。
 - **测试证据：** 本地入站 21/21（含中间 unit 裁切负例）；M1 登记 6/6；Schema 37/37。最终真实 POC `phase0/logs/dispatch-2026-11-12T04-41-46/`：回复 4072 字节，两个窗口完整重叠，双读 3553ms，JSON/Schema/ID 绑定通过，M1 `ART-M1-000002`，独立核验 23 项全 true。恢复文件 `phase0/logs/m1-recovery-retry.json`、`m1-recovery-duplicate.json`：首次失败重试成功、重复不新增，`no_new_gpt_send=true`。
 - **边界：** M1 为最小本地 JSON 适配器，不是完整平台；真实多 assistant unit、真实动态裁切恢复、REST/数据库/ACK/并发与 GitPointer 私有权限/故障注入未验证。BLOCKED-1 仍待 GPT 复审。
+
+### DEC-015 三 ID 强制、M1 并发互斥与 GitPointer 真实远程回读（待复审）
+
+- **决策内容：** 请求 M1 登记时三 ID 与 Schema 必须齐全，缺一失败；M1 各 registry 以 OS 句柄锁保护整个读取-分配-写入-回读临界区，不使用内容仲裁。可滚动窗口若缺少独立逻辑 unit 序列，保守返回 `INBOUND_WINDOW_COMPLETENESS_UNPROVEN`，不把窗口重叠当成完整证明。GitPointer 材料文件项统一为仓库根相对 POSIX 路径。
+- **测试证据：** 全量回归 10/10（`phase0/logs/third-round-regression-2026-11-12T05-17-03/result.json`）；三 ID 12/12、M1 并发 3/3、真实 Chrome 虚拟列表仿真 4/4（`phase0/logs/browser-virtual-list-2026-11-12T05-14-59/`，明确不是 ChatGPT 多 unit）、GitPointer 本地 21/21。
+- **真实远程 POC：** commit `26ed31009ccb17d0ddf525e19b6d085d2f5193a8`，manifest 与两个材料通过 GitHub raw 按完整 SHA 回读均 200，`all_files_verified=true`；独立 hash/size 一致。报告 `phase0/logs/git-pointer-remote-poc.md`，结构化结果 `phase0/logs/git-pointer-remote-read-result.json`。首次 404 为 build root 使用错误，已如实记录并修正，没有改写读取语义。
+- **边界：** 真实 ChatGPT 多 assistant unit/动态裁切仍未实测；M1 REST/数据库/ACK、私有权限及真实网络故障注入未验证。BLOCKED-1 待复审，不自行标 PASS。

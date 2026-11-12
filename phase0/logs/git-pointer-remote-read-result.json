@@ -1,0 +1,59 @@
+{
+  "command": "read",
+  "status": "COMPLETE",
+  "output_path": "D:\\AIEO\\runtime\\git-pointer-poc-read-26ed310",
+  "commit_sha": "26ed31009ccb17d0ddf525e19b6d085d2f5193a8",
+  "manifest_path": "phase0/poc-material/handoff/manifest.json",
+  "manifest_sha256": "8fdf3b93638c063ac008e1788a81496a93f1c455db82347f16f1a846be7d3a3c",
+  "manifest_size_bytes": 588,
+  "files": [
+    {
+      "path": "phase0/poc-material/handoff/task.md",
+      "artifact_sha256": "1eeb624052bfd441c5f8cf00d71328771f280e2dcee333a3703c647b8cae177d",
+      "size_bytes": 354,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "phase0/poc-material/handoff/data.json",
+      "artifact_sha256": "e19841dff0bcdbca7ccb67bcf3f69a205b178b1033b2e08742d1228a582399be",
+      "size_bytes": 161,
+      "media_type": "application/json"
+    }
+  ],
+  "request_audit": [
+    {
+      "kind": "manifest",
+      "path": "phase0/poc-material/handoff/manifest.json",
+      "attempts": [
+        {
+          "attempt": 1,
+          "outcome": "SUCCESS",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "kind": "material",
+      "path": "phase0/poc-material/handoff/task.md",
+      "attempts": [
+        {
+          "attempt": 1,
+          "outcome": "SUCCESS",
+          "status": 200
+        }
+      ]
+    },
+    {
+      "kind": "material",
+      "path": "phase0/poc-material/handoff/data.json",
+      "attempts": [
+        {
+          "attempt": 1,
+          "outcome": "SUCCESS",
+          "status": 200
+        }
+      ]
+    }
+  ],
+  "all_files_verified": true
+}
