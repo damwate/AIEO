@@ -39,14 +39,17 @@ const REPLY_SCHEMA_PATH = fileURLToPath(new URL("./fixtures/reply.schema.json", 
 const REPLY_JSON = JSON.stringify({ status: "SUCCESS", ...VALID_IDS, summary: "审查完成：模块边界与平台契约一致" });
 
 // 非滚动小会话（2 个初始 unit，viewport 4）；发送后共 4 个 unit。
-function smallScenario({ replyText = REPLY_JSON, mutateAtMs = null, onSend = null } = {}) {
+// extraAssistants 追加额外 assistant unit，专供 DEC-017 扩展门禁负例（默认空，保持单 unit 核心路径）；
+// viewportUnits 同步放大可让多 unit 页面保持静态不可滚动，避免采集层完整性错误先于门禁触发。
+function smallScenario({ replyText = REPLY_JSON, mutateAtMs = null, onSend = null, extraAssistants = [], viewportUnits = 4 } = {}) {
   const events = { sendCalled: 0, sentText: null };
   const page = createFixturePage({
     html: sessionHtml({ units: baseSessionUnits() }),
+    viewportUnits,
     onSend: onSend ?? (({ text, page: p }) => {
       events.sendCalled += 1;
       events.sentText = text;
-      replyScript({ replyText, mutateAtMs })({ text, page: p });
+      replyScript({ replyText, mutateAtMs, extraAssistants })({ text, page: p });
     }),
   });
   return { page, events };
@@ -424,6 +427,38 @@ test("全管线：两次完整读取之间回复被改写 → INBOUND_UNSTABLE_R
   }
 });
 
+test("全管线：DEC-017 多 assistant unit 扩展门禁 → INBOUND_MULTI_UNIT_EXTENSION_GATE_BLOCKED fail-closed，不写成功结果", async () => {
+  // 真实路径 readReplySnapshot 默认 maxAssistantUnits=1（T-P1-901 F-001），多 assistant unit 在第一次读取即被拦截。
+  const { page, events } = smallScenario({
+    viewportUnits: 8, // 6 unit 全可见、静态不可滚动，确保失败点在门禁而非采集完整性
+    extraAssistants: [
+      { key: "a1002:assistant", text: "（额外 assistant unit，超出已验收核心路径）", assistantUuid: "aaaaaaaa-0000-4000-8000-000000001002" },
+      { key: "a1003:assistant", text: "（额外 assistant unit 2）", assistantUuid: "aaaaaaaa-0000-4000-8000-000000001003" },
+    ],
+  });
+  const tmp = newTempDir("gptc-e2e-multigate");
+  try {
+    const error = await assertRejectsWith(
+      runDispatch({
+        view: page,
+        message: "请审查模块边界文档 §2 并给出结论。",
+        configOverrides: dispatchConfig(tmp),
+        lock: fakeLock(),
+        outputDir: tmp,
+      }),
+      "INBOUND_MULTI_UNIT_EXTENSION_GATE_BLOCKED",
+    );
+    assert.equal(error.details.unit_count, 3);
+    assert.equal(error.details.max_assistant_units, 1);
+    assert.equal(error.details.decision, "DEC-017");
+    assert.equal(events.sendCalled, 1);
+    // 不写成功结果。
+    assert.ok(!existsSync(join(tmp, "result.json")));
+  } finally {
+    cleanupTempDir(tmp);
+  }
+});
+
 test("禁止盲发：DOM 契约自检失败（composer 缺失）→ 拒绝派单且不插入任何文本", async () => {
   const noComposerHtml = `<html><body><header>仿真页（composer 缺失）</header>
     <div id="thread">
@@ -514,8 +549,10 @@ test("⑧ 可滚动虚拟列表：分窗向上定位 + 向下拼接 + 独立逻�
   page.onSend({ page });
   page.advance(3000);
   assert.equal(page.allUnits.length, 15); // 10 初始 + user + 4 assistant
+  // 多 assistant unit fixture：显式放宽 DEC-017 门禁（仅测试；真实路径默认 1 且 dispatch 收敛点无条件复核）。
   const snapshot = await readReplySnapshot(page, "u1000:user", {
     expectedUnitKeys: ["u1000:user", "a1001:assistant", "a1002:assistant", "a1003:assistant", "a1004:assistant"],
+    maxAssistantUnits: 8,
   });
   assert.deepEqual(snapshot.unit_keys, ["a1001:assistant", "a1002:assistant", "a1003:assistant", "a1004:assistant"]);
   assert.equal(snapshot.range_proof.window_integrity.method, "INDEPENDENT_LOGICAL_UNIT_SEQUENCE");

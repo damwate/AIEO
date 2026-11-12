@@ -430,6 +430,21 @@
 
 **依据：** `chatgpt-web-dispatch` skill 及其 `references/EGO-LITE-HANDBOOK.md`；AIEO 实测 `phase0/reports/gpt-browser-validation.md`。
 
+### L-013 扩展门禁默认收紧、显式解锁，真实路径另设无条件收敛复核
+
+**scope:** GLOBAL（fail-closed 扩展门禁设计原则）；AIEO（DEC-017 扩展门禁与 M2 三层实现）  
+**status:** ACTIVE  
+**验证结果：** T-P1-901 F-001 返工实施并全绿（53/53，退出码 0）  
+**有效经验：**
+
+1. 未验收的能力形态默认 fail-closed；验收过的能力由调用方**显式传参**解锁，默认值永远是最保守形态。
+2. 真实路径（生产入口）不得放宽门禁，并在关键收敛点**无条件复核**同一约束——纵深防御不依赖单点；两层使用同一错误码与决策标注（如 decision: DEC-017），便于追溯。
+3. 构造全管线负例时必须确认"哪个门先触发"：fail-closed 体系内多层校验按执行顺序抛错，负例要保证目标层是首个触发点；否则测试实际覆盖的是另一个门，目标门零覆盖。
+4. fixture 环境参数（如 viewport 决定 scrollable）会改变代码路径分支；构造特定分支负例需同步控制这些环境参数。
+5. 错误 details 应携带 unit_count/max_assistant_units/decision/remediation，让 fail-closed 报错自解释且可断言。
+
+**证据：** `app/gpt_controller/src/inbound_reply.mjs`（门禁）、`dom_view.mjs`（透传）、`dispatch.mjs`（收敛复核）；返工测试日志 `phase1/logs/m2-gpt-controller-20261113/f001-rework/`；审查 finding `phase0/logs/dispatch-2026-11-12T17-11-35/reply.txt`（F-001）。
+
 ---
 
 ## 4. 昨晚至今的关键节点与失败档案
@@ -516,6 +531,7 @@
 - [ ] 当前工作区存在未跟踪 `app/`；它不属于上述已审查 Commit，不得纳入已验收成果，除非后续单独提交、测试和审查。
 - [ ] main 尚未合并 Phase 0/Phase 1；`PASS_WITH_CONSTRAINTS` 不允许据此直接合并 main 或修改冻结契约。
 - [x] v0.1 已由 GPT 独立审阅，原文归档于 `docs/reviews/AI-DEV-LESSONS-v0.1-review.md`；v0.2 按审阅意见补充标签、能力边界与跨项目迁移机制。
+- [x] 2026-11-13：M1/M2 已随 `7093458` 提交推送，"未跟踪 app/" 对 M1/M2 部分解除；M3（app/zcode_bridge/）、M4（app/git_worker/）仍在开发中，其未跟踪产出继续适用本条，不得纳入已验收成果。
 
 ### 5.3 需要共同评估时再升级，而非硬撑
 
@@ -698,6 +714,76 @@
 #### 8. 下一步建议与验证标准
 
 提交本批文档并提供实际 Commit SHA；后续正常开发不为文档优化中断。若再次修订标签或迁移通用经验，重复本节标签、路径、重复标题和过度泛化检查，并记录独立审查证据。
+
+### DEV-20261113-001 M1/M2 模块验收、提交与 T-P1-901 模块级提前送审
+
+- **Task ID / 模块：** T-P1-901（审查）/ M1 平台基座、M2 GPT 控制器（实现由子 Agent 承接）
+- **时间与时区：** 2026-11-13（UTC+8）
+- **状态：** M1/M2 实现完成且初验通过；GPT 模块级审查 `IN_PROGRESS`（结论未出，不预填）
+- **分支与基线：** `fix/AIEO-PHASE0-REVIEW-R10` / `d580b5bc923db9e21600604ca2b7c1c3b4ac1856`
+- **结果 Commit：** `7093458fa82228329264d81489fec98506eee7e0`（M1/M2 交付 + 测试证据 + 交接包 + manifest，已推送）
+- **工作区状态：** M3/M4 子 Agent 仍在写入 `app/zcode_bridge/`、`app/git_worker/`（未跟踪，不属于本 Commit）
+
+#### 1. 本次完成内容
+
+前序 4 个子 Agent 因配额耗尽中断且不可恢复，按原任务单重派 4 个全新子 Agent（受并发上限约束改为滚动重派：M1→M3→M4 依次占用释放槽位）。M1（FastAPI+SQLite 平台基座 + Vue3 前端）与 M2（GPT 控制器整理为可调用模块）完成并验收；生成了 81 文件输入材料 manifest（逐文件 SHA-256）、自包含审查交接包 `handoff/PHASE1-MODULE-REVIEW.md`，并以 878 字节短指令向全新空白 GPT 会话派发模块级审查（沿用 Phase 0 已验证纯派单路径，未绑 review-report Schema，回复到达后由主会话校验绑定）。审查范围显式声明为模块级，不构成集成验收。
+
+#### 2. 测试及验收结果
+
+- M1：pytest 35 passed 退出码 0（7 类场景含重启持久化/重复消息/非法转换/进度只按 ACCEPTED/审计）；`npm run build` 退出码 0。主会话实查：日志尾部、关键文件存在性、`git diff HEAD` 为空（未动跟踪文件）。
+- M2：node --test 51/51 通过 0 失败，退出码 0（9 项覆盖含真实 PowerShell 双进程锁竞争）。主会话实查：终版日志计数行、`src/cli.mjs` 实际路径（报告写根目录，小出入已核正）。
+- 测试层级：unit / simulation / local；`real_chatgpt` 收发与真实 broker ACK 均 NOT_EXECUTED（DEC-017 扩展门禁）。
+- 证据目录：`phase1/logs/m1-platform-20261113/`、`phase1/logs/m2-gpt-controller-20261113/`（含失败中间轮，留证）；manifest `phase1/manifests/T-P1-901-input-manifest.json` SHA-256 `ad056151181d4672b12bf020270bcb03fcd6e59c3622221e114c731d4132b00a`。
+- 独立审查：reviewed_commit=`7093458`，结论 IN_PROGRESS；原始回复未产生，到达后另记。
+
+#### 3. 遇到的问题
+
+- 旧子 Agent 中断后无法续跑（会话注册表清空），SendMessage 返回无活动任务；重派为唯一路径，已在任务单中加入"盘点前任产出、说明处置"要求，两位接任 Agent 均如实执行。
+- 账号并发上限 2：一次性派 4 个 Agent 有 2 个被"concurrency limit exceeded"拦截；改为滚动占用释放槽位，无功能损失但拉长总时长。
+- 已知证据缺口：pytest/node 日志正文未内嵌被测 Commit SHA（测试先于提交执行），当前靠 manifest 逐文件哈希 + 派单 SHA 绑定补偿；后续新运行按 §5.2 首项在日志内容中写入完整 SHA。
+
+#### 4. 根因与尝试过的方案
+
+中断恢复：先尝试 SendMessage 续跑（失败，任务不存在）→ 改全新重派（成功）。与上一方案本质区别：放弃依赖已销毁的会话内上下文，任务单自包含 + 要求盘点磁盘遗留产出。无连续同类失败，未触发止损。
+
+#### 5. 是否触发返工止损机制
+
+否。并发拦截属于环境容量约束（见 CAP-20261113-001），非方案失败。
+
+#### 6. 本次新增的开发经验
+
+- 子 Agent 中断后，"SendMessage 续跑"与"全新重派+盘点前任磁盘产出"是两条恢复路径；后者不依赖会话内上下文，与 L-005 仓库交接原则同构。
+- 提前送审（模块级）可与后续模块开发并行：交接包必须显式声明审查范围与"不构成集成验收"，防止审查结论被扩大解释（呼应 L-010.7 范围拆分）。
+
+#### 7. 当前遗留问题
+
+- GPT 审查结论未出；REWORK/BLOCKED 时按流程返工并重新送审，新 Commit 使本条目审查对象失效。
+- M3/M4 未完成；DEC-017 全部扩展门禁保持原状；main 未合并；契约批准人仍"待用户追认"。
+
+#### 8. 下一步建议与验证标准
+
+等待三项在途结果（GPT 审查回复、M3、M4）；到达后逐项验收：M3/M4 以真实退出码 + 日志实查为准；GPT 回复先校验 JSON 结构与 reviewed_commit 绑定再处理 findings。集成提交后按 L-006 阶段边界轮换主会话（生成交接包，新会话实读 Git）。
+
+---
+
+### DEV-20261113-002 T-P1-901 首轮审查 BLOCKED（F-001）与定向返工
+
+- **任务目标：** 处理 T-P1-901 首轮模块级审查结论；完成 findings 整改并重新送审。
+- **环境与版本：** 分支 fix/AIEO-PHASE0-REVIEW-R10；首轮审查对象 commit 7093458；返工后 M2 代码与测试变更（见 §6）。
+- **发生与处理：**
+  1. GPT 审查回复（3610 字节，SHA-256 `4eaa8fd2…a3236db`，已登记 M1，m1_registration SUCCESS）结论 **BLOCKED**：1 finding（F-001，MAJOR——DEC-017 多 assistant unit 扩展场景缺运行时门禁）+ 10 constraints（含"GPT 无法独立核验 81 文件全部哈希"如实申报）。
+  2. F-001 判定为真实缺口，按三层门禁设计定向返工：`inbound_reply.mjs` `selectInboundReply` 默认 `maxAssistantUnits=1` fail-closed（纯函数测试可显式放宽）→ `dom_view.mjs` `readReplySnapshot` 透传 → `dispatch.mjs` 快照收敛点无条件复核（真实路径唯一强制点，错误码 `INBOUND_MULTI_UNIT_EXTENSION_GATE_BLOCKED`，经 `^INBOUND_` 前缀映射 C3 PROVIDER-0004）。
+  3. 测试同步改造：`unit.test.mjs` 多 unit fixture 显式放宽 + 新增门禁正/负例；`browser_simulation.test.mjs` smallScenario 透传 `extraAssistants`/`viewportUnits` + 新增全管线多 unit BLOCKED 负例 + ⑧ 滚动直测放宽。
+  4. 返工后 M2 全量测试 **53/53 通过，退出码 0**（`phase1/logs/m2-gpt-controller-20261113/f001-rework/`）。
+  5. 首负例首跑失败：多 unit 使 fixture 页面可滚动，采集层 `INBOUND_WINDOW_COMPLETENESS_UNPROVEN` 先于门禁抛出——放大 `viewportUnits` 保持静态 DOM 后直达门禁层（教训见 §6-3）。
+- **验证结果：** 实跑证据为准；M4 Git Worker 同期验收通过（实跑 24/24 退出码 0，fail-closed 抽查属实）。
+- **问题根因分析：** M2 原实现把"多 assistant unit"当作采集能力测试场景而非真实路径风险；DEC-017 的 fail-closed 精神要求默认拒绝未验收形态，验收过的能力必须显式解锁。
+- **本次新增的开发经验：**
+  1. （L-013）扩展门禁默认收紧、显式解锁：未验收的能力形态默认 fail-closed，测试 fixture 需要时显式传参放宽，且真实路径另设无条件收敛复核点（纵深防御，不依赖单点）。
+  2. 全管线负例要注意"哪个门先触发"：fail-closed 体系内多层校验按执行顺序抛错，负例必须保证目标层是首个触发点，否则测到的是别的门。
+  3. fixture 的 viewport 大小决定 scrollable，进而决定走哪条完整性证明分支——构造静态多 unit 页面需同步放大 viewport。
+- **当前遗留问题：** 复审材料核验协议需在交接包明确（commit SHA 锚点 + manifest 自身哈希 + 抽样核验指令），不构成降低标准；M3 未完成；契约批准人仍"待用户追认"；DEC-017 扩展门禁全部保持原状。
+- **下一步建议与验证标准：** 返工 commit 推送后按核验协议重新派发模块复审；复审结论仍以 JSON+绑定校验为准。
 
 ---
 

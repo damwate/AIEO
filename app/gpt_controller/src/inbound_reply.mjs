@@ -297,7 +297,10 @@ export function createInboundRangeCollector(userUnitKey, { expectedUnitKeys = nu
 }
 
 // domUnits 必须按 DOM 顺序提供已证明连续的完整目标区间；text 是未经清理的原始 innerText。
-export function selectInboundReply(domUnits, userUnitKey) {
+// DEC-017 扩展门禁（T-P1-901 F-001）：默认只放行单 assistant unit 核心路径（maxAssistantUnits=1）。
+// 纯函数/fixture 测试可显式传入更大的 maxAssistantUnits 覆盖多 unit 采集能力；
+// 真实浏览器路径（dispatch.mjs）不得放宽，且在快照收敛点另有无条件复核。
+export function selectInboundReply(domUnits, userUnitKey, { maxAssistantUnits = 1 } = {}) {
   if (!Array.isArray(domUnits)) {
     throw inboundError("INBOUND_DOM_UNITS_INVALID", "DOM unit 集合不是数组");
   }
@@ -358,6 +361,18 @@ export function selectInboundReply(domUnits, userUnitKey) {
       user_unit_key: userUnitKey,
       next_user_unit_key: nextUserUnitKey,
     });
+  }
+  if (units.length > maxAssistantUnits) {
+    throw inboundError(
+      "INBOUND_MULTI_UNIT_EXTENSION_GATE_BLOCKED",
+      "检测到多个 assistant unit，超出 DEC-017 已验收单 unit 核心路径，fail-closed",
+      {
+        unit_count: units.length,
+        max_assistant_units: maxAssistantUnits,
+        decision: "DEC-017",
+        remediation: "真实多 assistant unit 场景必须先通过 DEC-017 扩展验收门禁并经独立审查解除限制",
+      },
+    );
   }
   const assistantUuid = units[units.length - 1].assistant_uuid;
   if (!assistantUuid) {

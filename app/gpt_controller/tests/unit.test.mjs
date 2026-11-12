@@ -317,7 +317,8 @@ test("⑥ 区间采集：多窗口拼接 + 独立逻辑序列 → 完整证明",
   assert.equal(built.range_proof.window_integrity.method, "INDEPENDENT_LOGICAL_UNIT_SEQUENCE");
   assert.equal(built.range_proof.end_reason, "NEXT_USER");
 
-  const selected = selectInboundReply(built.units, "u0:user");
+  // DEC-017 扩展门禁（T-P1-901 F-001）：默认 maxAssistantUnits=1，多 assistant unit fixture 测试须显式放宽。
+  const selected = selectInboundReply(built.units, "u0:user", { maxAssistantUnits: 8 });
   assert.deepEqual(selected.unit_keys, ["a1:assistant", "a2:assistant", "a3:assistant"]);
   assert.equal(selected.next_user_unit_key, "u4:user");
   assert.equal(selected.assistant_uuid, "uuid-a3:assistant");
@@ -371,6 +372,20 @@ test("⑥ selectInboundReply：起点缺失/无 assistant/缺 DIL UUID 均 fail-
   await assertRejectsWith((async () => selectInboundReply([unitOf("u0:user"), unitOf("u9:user")], "u0:user"))(), "INBOUND_ASSISTANT_UNITS_MISSING");
   const noUuid = [{ key: "u0:user", role: "user", text: "q", assistantUuid: null }, { key: "a1:assistant", role: "assistant", text: "r", assistantUuid: null }];
   await assertRejectsWith((async () => selectInboundReply(noUuid, "u0:user"))(), "INBOUND_ASSISTANT_UUID_MISSING");
+});
+
+test("⑥ DEC-017 扩展门禁：多 assistant unit 默认 fail-closed，显式放宽后放行", async () => {
+  const units = [unitOf("u0:user"), unitOf("a1:assistant"), unitOf("a2:assistant"), unitOf("a3:assistant"), unitOf("u4:user")];
+  // 默认（真实路径参数）：超过 1 个 assistant unit → INBOUND_MULTI_UNIT_EXTENSION_GATE_BLOCKED。
+  const gateError = await assertRejectsWith((async () => selectInboundReply(units, "u0:user"))(), "INBOUND_MULTI_UNIT_EXTENSION_GATE_BLOCKED");
+  assert.equal(gateError.details.unit_count, 3);
+  assert.equal(gateError.details.max_assistant_units, 1);
+  assert.equal(gateError.details.decision, "DEC-017");
+  // maxAssistantUnits=1 显式传入与默认等价，仍拒绝。
+  await assertRejectsWith((async () => selectInboundReply(units, "u0:user", { maxAssistantUnits: 1 }))(), "INBOUND_MULTI_UNIT_EXTENSION_GATE_BLOCKED");
+  // 单 assistant unit 核心路径不受门禁影响（已由其他用例覆盖），此处验证放宽参数可用。
+  const relaxed = selectInboundReply(units, "u0:user", { maxAssistantUnits: 8 });
+  assert.deepEqual(relaxed.unit_keys, ["a1:assistant", "a2:assistant", "a3:assistant"]);
 });
 
 // ---------- ⑦ artifact 落盘回读 + JSON/Schema/三 ID 绑定 ----------

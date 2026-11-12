@@ -1,0 +1,145 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-8.3.5, pluggy-1.7.0 -- C:\Users\youting\AppData\Local\Programs\Python\Python312\python.exe
+cachedir: .pytest_cache
+rootdir: D:\AIEO
+plugins: anyio-4.16.0
+collecting ... collected 24 items
+
+app/git_worker/tests/test_git_worker.py::test_repo_status_clean_and_branch PASSED [  4%]
+app/git_worker/tests/test_git_worker.py::test_repo_status_rejects_non_repo PASSED [  8%]
+app/git_worker/tests/test_git_worker.py::test_repo_path_must_be_repo_root PASSED [ 12%]
+app/git_worker/tests/test_git_worker.py::test_record_baseline_returns_full_sha PASSED [ 16%]
+app/git_worker/tests/test_git_worker.py::test_create_branch_new_and_conflict PASSED [ 20%]
+app/git_worker/tests/test_git_worker.py::test_create_branch_rejects_invalid_and_protected_names FAILED [ 25%]
+app/git_worker/tests/test_git_worker.py::test_commit_and_collect_sha_and_diff FAILED [ 29%]
+app/git_worker/tests/test_git_worker.py::test_commit_and_collect_default_signature FAILED [ 33%]
+app/git_worker/tests/test_git_worker.py::test_check_clean_dirty_and_clean PASSED [ 37%]
+app/git_worker/tests/test_git_worker.py::test_read_diff_between_two_commits PASSED [ 41%]
+app/git_worker/tests/test_git_worker.py::test_read_diff_rejects_unknown_revision PASSED [ 45%]
+app/git_worker/tests/test_git_worker.py::test_main_commit_rejected FAILED [ 50%]
+app/git_worker/tests/test_git_worker.py::test_merge_fail_closed FAILED   [ 54%]
+app/git_worker/tests/test_git_worker.py::test_subcommand_whitelist_rejects FAILED [ 58%]
+app/git_worker/tests/test_git_worker.py::test_git_path_injection_uses_configured_executable PASSED [ 62%]
+app/git_worker/tests/test_git_worker.py::test_git_command_timeout_maps_to_sys_0003 PASSED [ 66%]
+app/git_worker/tests/test_git_worker.py::test_missing_git_executable_fails_fast PASSED [ 70%]
+app/git_worker/tests/test_git_worker.py::test_c3_error_schema FAILED     [ 75%]
+app/git_worker/tests/test_git_worker.py::test_c3_mappings_git_group FAILED [ 79%]
+app/git_worker/tests/test_git_worker.py::test_m1_registration_records_commit_artifact_audit FAILED [ 83%]
+app/git_worker/tests/test_git_worker.py::test_m1_registration_failure_does_not_rollback_git FAILED [ 87%]
+app/git_worker/tests/test_git_worker.py::test_m1_registration_skipped_without_client FAILED [ 91%]
+app/git_worker/tests/test_git_worker.py::test_m1_without_context_fails_closed PASSED [ 95%]
+app/git_worker/tests/test_git_worker.py::test_c4_ndjson_default_log_dir PASSED [100%]
+
+================================== FAILURES ===================================
+___________ test_create_branch_rejects_invalid_and_protected_names ____________
+app\git_worker\tests\test_git_worker.py:134: in test_create_branch_rejects_invalid_and_protected_names
+    worker.create_branch(repo, protected)
+app\git_worker\worker.py:905: in create_branch
+    return self._create_branch(repo, name, base_commit=base_commit, context=context)
+app\git_worker\worker.py:933: in _create_branch
+    raise GitWorkerError(
+app\git_worker\worker.py:154: in __init__
+    raise ValueError(f"invalid C3 error code: {code!r}")
+E   ValueError: invalid C3 error code: 'AUTH-0002'
+____________________ test_commit_and_collect_sha_and_diff _____________________
+app\git_worker\tests\test_git_worker.py:166: in test_commit_and_collect_sha_and_diff
+    evidence = worker.commit_and_collect(
+app\git_worker\worker.py:1418: in commit_and_collect
+    evidence = self._commit_and_collect(
+app\git_worker\worker.py:1489: in _commit_and_collect
+    base = self._default_baseline(path)
+app\git_worker\worker.py:1384: in _default_baseline
+    raise GitWorkerError(
+E   app.git_worker.worker.GitWorkerError: BASE_COMMIT_REQUIRED
+__________________ test_commit_and_collect_default_signature __________________
+app\git_worker\tests\test_git_worker.py:190: in test_commit_and_collect_default_signature
+    ev1 = worker.commit_and_collect(repo, "feat(git_worker): first note")
+app\git_worker\worker.py:1418: in commit_and_collect
+    evidence = self._commit_and_collect(
+app\git_worker\worker.py:1489: in _commit_and_collect
+    base = self._default_baseline(path)
+app\git_worker\worker.py:1384: in _default_baseline
+    raise GitWorkerError(
+E   app.git_worker.worker.GitWorkerError: BASE_COMMIT_REQUIRED
+__________________________ test_main_commit_rejected __________________________
+app\git_worker\tests\test_git_worker.py:281: in test_main_commit_rejected
+    assert ei.value.code == "AUTH-0002"
+E   AssertionError: assert 'REQ-0001' == 'AUTH-0002'
+E     
+E     - AUTH-0002
+E     + REQ-0001
+___________________________ test_merge_fail_closed ____________________________
+app\git_worker\tests\test_git_worker.py:290: in test_merge_fail_closed
+    worker.merge(
+app\git_worker\worker.py:1735: in merge
+    error = GitWorkerError(
+app\git_worker\worker.py:154: in __init__
+    raise ValueError(f"invalid C3 error code: {code!r}")
+E   ValueError: invalid C3 error code: 'AUTH-0002'
+______________________ test_subcommand_whitelist_rejects ______________________
+app\git_worker\tests\test_git_worker.py:326: in test_subcommand_whitelist_rejects
+    worker._run_git_at(path, bad_args)
+app\git_worker\worker.py:605: in _run_git_at
+    self._validate_git_argv(args)
+app\git_worker\worker.py:588: in _validate_git_argv
+    raise GitWorkerError(
+app\git_worker\worker.py:154: in __init__
+    raise ValueError(f"invalid C3 error code: {code!r}")
+E   ValueError: invalid C3 error code: 'AUTH-0002'
+____________________________ test_c3_error_schema _____________________________
+app\git_worker\tests\test_git_worker.py:425: in test_c3_error_schema
+    assert ei.value.code == "AUTH-0002"
+E   AssertionError: assert 'REQ-0001' == 'AUTH-0002'
+E     
+E     - AUTH-0002
+E     + REQ-0001
+_________________________ test_c3_mappings_git_group __________________________
+app\git_worker\tests\test_git_worker.py:496: in test_c3_mappings_git_group
+    assert ei.value.code == "GIT-0003"
+E   AssertionError: assert 'REQ-0001' == 'GIT-0003'
+E     
+E     - GIT-0003
+E     + REQ-0001
+_____________ test_m1_registration_records_commit_artifact_audit ______________
+app\git_worker\tests\test_git_worker.py:519: in test_m1_registration_records_commit_artifact_audit
+    evidence = w.commit_and_collect(
+app\git_worker\worker.py:1418: in commit_and_collect
+    evidence = self._commit_and_collect(
+app\git_worker\worker.py:1489: in _commit_and_collect
+    base = self._default_baseline(path)
+app\git_worker\worker.py:1384: in _default_baseline
+    raise GitWorkerError(
+E   app.git_worker.worker.GitWorkerError: BASE_COMMIT_REQUIRED
+_____________ test_m1_registration_failure_does_not_rollback_git ______________
+app\git_worker\tests\test_git_worker.py:575: in test_m1_registration_failure_does_not_rollback_git
+    evidence = w.commit_and_collect(
+app\git_worker\worker.py:1418: in commit_and_collect
+    evidence = self._commit_and_collect(
+app\git_worker\worker.py:1489: in _commit_and_collect
+    base = self._default_baseline(path)
+app\git_worker\worker.py:1384: in _default_baseline
+    raise GitWorkerError(
+E   app.git_worker.worker.GitWorkerError: BASE_COMMIT_REQUIRED
+_________________ test_m1_registration_skipped_without_client _________________
+app\git_worker\tests\test_git_worker.py:590: in test_m1_registration_skipped_without_client
+    evidence = worker.commit_and_collect(repo, "docs(git_worker): note")
+app\git_worker\worker.py:1418: in commit_and_collect
+    evidence = self._commit_and_collect(
+app\git_worker\worker.py:1489: in _commit_and_collect
+    base = self._default_baseline(path)
+app\git_worker\worker.py:1384: in _default_baseline
+    raise GitWorkerError(
+E   app.git_worker.worker.GitWorkerError: BASE_COMMIT_REQUIRED
+=========================== short test summary info ===========================
+FAILED app/git_worker/tests/test_git_worker.py::test_create_branch_rejects_invalid_and_protected_names
+FAILED app/git_worker/tests/test_git_worker.py::test_commit_and_collect_sha_and_diff
+FAILED app/git_worker/tests/test_git_worker.py::test_commit_and_collect_default_signature
+FAILED app/git_worker/tests/test_git_worker.py::test_main_commit_rejected - A...
+FAILED app/git_worker/tests/test_git_worker.py::test_merge_fail_closed - Valu...
+FAILED app/git_worker/tests/test_git_worker.py::test_subcommand_whitelist_rejects
+FAILED app/git_worker/tests/test_git_worker.py::test_c3_error_schema - Assert...
+FAILED app/git_worker/tests/test_git_worker.py::test_c3_mappings_git_group - ...
+FAILED app/git_worker/tests/test_git_worker.py::test_m1_registration_records_commit_artifact_audit
+FAILED app/git_worker/tests/test_git_worker.py::test_m1_registration_failure_does_not_rollback_git
+FAILED app/git_worker/tests/test_git_worker.py::test_m1_registration_skipped_without_client
+======================= 11 failed, 13 passed in 18.65s ========================

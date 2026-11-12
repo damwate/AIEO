@@ -31,3 +31,6 @@ build/
 # 系统
 Thumbs.db
 .DS_Store
+
+# M1 登记 OS 锁残留（运行时 sidecar，非证据）
+*.lockfile

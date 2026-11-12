@@ -118,7 +118,8 @@ function findStartIndex(windowUnits, userUnitKey) {
 // 两段式实体化（port 自 phase0/tools/inbound_dom.mjs readReplySnapshot）：
 // 先向上逐窗定位起点，再向下逐窗收集至下一 user 或真实底部。
 // expectedUnitKeys 必须来自独立于渲染 DOM 的逻辑序列（仅测试/已有可信清单可提供）。
-export async function readReplySnapshot(view, userUnitKey, { expectedUnitKeys = null, maxWindowTransitions = 200 } = {}) {
+// maxAssistantUnits 透传 DEC-017 扩展门禁（默认 1）；仅测试可放宽，真实路径由 dispatch.mjs 收敛点无条件复核。
+export async function readReplySnapshot(view, userUnitKey, { expectedUnitKeys = null, maxWindowTransitions = 200, maxAssistantUnits = 1 } = {}) {
   const readStartedAt = view.now();
   let current = await readDomWindow(view);
   if (current.units.length === 0) throw windowError("INBOUND_WINDOW_EMPTY", "页面没有已渲染 unit");
@@ -164,7 +165,7 @@ export async function readReplySnapshot(view, userUnitKey, { expectedUnitKeys = 
   }
 
   const materialized = collector.build();
-  const selected = selectInboundReply(materialized.units, userUnitKey);
+  const selected = selectInboundReply(materialized.units, userUnitKey, { maxAssistantUnits });
   const visibleUnits = current.units.filter((unit) => unit.visible);
   const tail = visibleUnits.length > 0 ? visibleUnits[visibleUnits.length - 1] : null;
   return {

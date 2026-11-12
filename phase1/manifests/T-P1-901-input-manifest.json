@@ -3,7 +3,7 @@
   "contract_version": "1.0",
   "task_id": "T-P1-901",
   "execution_id": "EXEC-901",
-  "purpose": "Phase1 module review input materials: M1 platform + M2 gpt_controller source, tests and test evidence logs",
+  "purpose": "Phase1 module review input materials (round 2): M1 platform + M2 gpt_controller (incl. F-001 rework: DEC-017 multi-assistant-unit runtime gate) + M4 git_worker source, tests and test evidence logs",
   "files": [
     {
       "path": "app/frontend/index.html",
@@ -24,15 +24,15 @@
       "media_type": "application/json"
     },
     {
-      "path": "app/frontend/src/App.vue",
-      "artifact_sha256": "9f72c252e59a6fa746e8ca57dacad98ff06913627815997b7d802c8e367f389e",
-      "size_bytes": 5953,
-      "media_type": "text/plain"
-    },
-    {
       "path": "app/frontend/src/api.js",
       "artifact_sha256": "af444267e161f4e08e09c96ac9aba236266a736afbef0bd3d5a0c5e709dfa204",
       "size_bytes": 1182,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/frontend/src/App.vue",
+      "artifact_sha256": "9f72c252e59a6fa746e8ca57dacad98ff06913627815997b7d802c8e367f389e",
+      "size_bytes": 5953,
       "media_type": "text/plain"
     },
     {
@@ -45,6 +45,48 @@
       "path": "app/frontend/vite.config.js",
       "artifact_sha256": "4e91e16f4832c0057c0a5b3a566b8f3de45bcce7bea0dd2c1ad1a4d44bbdb9cd",
       "size_bytes": 281,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/git_worker/__init__.py",
+      "artifact_sha256": "68758ba2238994f9540fd896e360aed1987aa64a0641cb5e67697f3f9d755952",
+      "size_bytes": 591,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/git_worker/test-logs/pytest-run-1.log",
+      "artifact_sha256": "5812b7844c97de6025303089014a41bea7bd5e5cd6e43c7651728ce9ad13e243",
+      "size_bytes": 8999,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/git_worker/test-logs/pytest-run-2.log",
+      "artifact_sha256": "1d75d6bfd44a7ffc8dca8ab76e46c8e30eb6600cf01766306d4f76e9d7196cc1",
+      "size_bytes": 2644,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/git_worker/test-logs/pytest-run-final.log",
+      "artifact_sha256": "3a741d964eff39f2e8ecd812ab7d0bb3168d7c0b4f769dabed13a0fc5385cb2d",
+      "size_bytes": 2644,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/git_worker/tests/conftest.py",
+      "artifact_sha256": "9ef56dd256235846e76328b6f6582430997d75a0cd7b69b7b96bfc4291a9b599",
+      "size_bytes": 7974,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/git_worker/tests/test_git_worker.py",
+      "artifact_sha256": "9cd27675fe90231b561c8c76938665e51c0c54c5fe664d708d01803e8ca44b3f",
+      "size_bytes": 25944,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/git_worker/worker.py",
+      "artifact_sha256": "67a6ea12a00106c258ecf8cc202a55a47da1cf4017afbee3aca1260f7e3149ef",
+      "size_bytes": 64175,
       "media_type": "text/plain"
     },
     {
@@ -79,8 +121,8 @@
     },
     {
       "path": "app/gpt_controller/src/dispatch.mjs",
-      "artifact_sha256": "340a62b5464b1b88fdf7aaf467650f93263e0c666b9b9273d92dd8c4c07408cf",
-      "size_bytes": 15188,
+      "artifact_sha256": "68ca289796886ddee682be59e167d5dc6be25a79f690f8aaa10c6dd1ab870f6f",
+      "size_bytes": 16038,
       "media_type": "text/plain"
     },
     {
@@ -97,8 +139,8 @@
     },
     {
       "path": "app/gpt_controller/src/dom_view.mjs",
-      "artifact_sha256": "ef10d2e82710236576428b8f0595c3167e0477283ab423a09ca6350cf34610d9",
-      "size_bytes": 7535,
+      "artifact_sha256": "286562f523ef89b6c590414f689b8719446436da363e2050271eb8cd60eea665",
+      "size_bytes": 7724,
       "media_type": "text/plain"
     },
     {
@@ -127,8 +169,8 @@
     },
     {
       "path": "app/gpt_controller/src/inbound_reply.mjs",
-      "artifact_sha256": "b6905e9aed6c425b0d76a746c19b7bd29a4bfbce950b84efe6bb032f4856005b",
-      "size_bytes": 24758,
+      "artifact_sha256": "bc06ad62c4c19109577bc94033c69680accf158b84144875dedf6508535b4a90",
+      "size_bytes": 25601,
       "media_type": "text/plain"
     },
     {
@@ -175,8 +217,8 @@
     },
     {
       "path": "app/gpt_controller/tests/browser_simulation.test.mjs",
-      "artifact_sha256": "fb141c3de3ba321285e67fb2b6319008486597c2e9981fa0aeaeb50901586959",
-      "size_bytes": 23426,
+      "artifact_sha256": "1342fba832db413cf6c348ff87fae8cf15ec1e059099769d318db05582bfe6d1",
+      "size_bytes": 25396,
       "media_type": "text/plain"
     },
     {
@@ -205,8 +247,8 @@
     },
     {
       "path": "app/gpt_controller/tests/unit.test.mjs",
-      "artifact_sha256": "ede9b49b0a86d5f63613601ae1952359f404b29dfd129a2a8b8188b4e7f3eb1e",
-      "size_bytes": 38132,
+      "artifact_sha256": "902e45b1b7003216af4f4f703795a4d41a0aa4df862abb6c3721ccf34d27f17d",
+      "size_bytes": 39464,
       "media_type": "text/plain"
     },
     {
@@ -318,40 +360,46 @@
       "media_type": "text/plain"
     },
     {
+      "path": "docs/AI-DEV-LESSONS.md",
+      "artifact_sha256": "fe383bb98c6c4011e080ebf3eaaf85a9e60f9e4171fc649fe73a2c7ff4159bcc",
+      "size_bytes": 63637,
+      "media_type": "text/plain"
+    },
+    {
       "path": "docs/phase1/agent-contract.md",
       "artifact_sha256": "61a7ecd030ed55e21c736e10a71955320023804d4253075f8f6bb6020b905c52",
       "size_bytes": 11946,
-      "media_type": "text/markdown"
+      "media_type": "text/plain"
     },
     {
       "path": "docs/phase1/decision-log.md",
       "artifact_sha256": "6fddb952fc80699c582f7a6fbe32d99ea06c2844d23583526fa9263659eb9cec",
       "size_bytes": 19561,
-      "media_type": "text/markdown"
+      "media_type": "text/plain"
     },
     {
       "path": "docs/phase1/handoff-template.md",
       "artifact_sha256": "d16253df1addb9c6fb1a74d2488c63cc4ab3028e07f0eead4fa7b22382e69457",
       "size_bytes": 5534,
-      "media_type": "text/markdown"
+      "media_type": "text/plain"
     },
     {
       "path": "docs/phase1/module-boundaries.md",
       "artifact_sha256": "4b3dd0e70dc09b5759f3e03d3eda237843814d47b9cb747502d8eef28e53c418",
       "size_bytes": 11424,
-      "media_type": "text/markdown"
+      "media_type": "text/plain"
     },
     {
       "path": "docs/phase1/platform-contract-v1.0.md",
       "artifact_sha256": "c6f91374bc82f385dc2a65fe1e775fbabadaf8317d6c2b048f48ad36f485b7a9",
       "size_bytes": 87872,
-      "media_type": "text/markdown"
+      "media_type": "text/plain"
     },
     {
       "path": "docs/phase1/review-protocol.md",
       "artifact_sha256": "28f67c3665bac020794e07612c0d80f51905aed0bb7ca74f88aa3b22d8139070",
       "size_bytes": 7951,
-      "media_type": "text/markdown"
+      "media_type": "text/plain"
     },
     {
       "path": "phase1/logs/m1-platform-20261113/npm-build-20261113-003103.log",
@@ -417,6 +465,12 @@
       "path": "phase1/logs/m2-gpt-controller-20261113/browser_simulation-20261113-run4.log",
       "artifact_sha256": "db96383c70f6e9bf461e751bf1203244fde809bbfa9a3f334949ecf96925f4cb",
       "size_bytes": 2032,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "phase1/logs/m2-gpt-controller-20261113/f001-rework/node-test-f001-rework.log",
+      "artifact_sha256": "f621cec45a643a8ed8757b0b1ab720ba5f517d494d8ff4cfa36240d3d9b44564",
+      "size_bytes": 6122,
       "media_type": "text/plain"
     },
     {

@@ -1,0 +1,33 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-8.3.5, pluggy-1.7.0 -- C:\Users\youting\AppData\Local\Programs\Python\Python312\python.exe
+cachedir: .pytest_cache
+rootdir: D:\AIEO
+plugins: anyio-4.16.0
+collecting ... collected 24 items
+
+app/git_worker/tests/test_git_worker.py::test_repo_status_clean_and_branch PASSED [  4%]
+app/git_worker/tests/test_git_worker.py::test_repo_status_rejects_non_repo PASSED [  8%]
+app/git_worker/tests/test_git_worker.py::test_repo_path_must_be_repo_root PASSED [ 12%]
+app/git_worker/tests/test_git_worker.py::test_record_baseline_returns_full_sha PASSED [ 16%]
+app/git_worker/tests/test_git_worker.py::test_create_branch_new_and_conflict PASSED [ 20%]
+app/git_worker/tests/test_git_worker.py::test_create_branch_rejects_invalid_and_protected_names PASSED [ 25%]
+app/git_worker/tests/test_git_worker.py::test_commit_and_collect_sha_and_diff PASSED [ 29%]
+app/git_worker/tests/test_git_worker.py::test_commit_and_collect_default_signature PASSED [ 33%]
+app/git_worker/tests/test_git_worker.py::test_check_clean_dirty_and_clean PASSED [ 37%]
+app/git_worker/tests/test_git_worker.py::test_read_diff_between_two_commits PASSED [ 41%]
+app/git_worker/tests/test_git_worker.py::test_read_diff_rejects_unknown_revision PASSED [ 45%]
+app/git_worker/tests/test_git_worker.py::test_main_commit_rejected PASSED [ 50%]
+app/git_worker/tests/test_git_worker.py::test_merge_fail_closed PASSED   [ 54%]
+app/git_worker/tests/test_git_worker.py::test_subcommand_whitelist_rejects PASSED [ 58%]
+app/git_worker/tests/test_git_worker.py::test_git_path_injection_uses_configured_executable PASSED [ 62%]
+app/git_worker/tests/test_git_worker.py::test_git_command_timeout_maps_to_sys_0003 PASSED [ 66%]
+app/git_worker/tests/test_git_worker.py::test_missing_git_executable_fails_fast PASSED [ 70%]
+app/git_worker/tests/test_git_worker.py::test_c3_error_schema PASSED     [ 75%]
+app/git_worker/tests/test_git_worker.py::test_c3_mappings_git_group PASSED [ 79%]
+app/git_worker/tests/test_git_worker.py::test_m1_registration_records_commit_artifact_audit PASSED [ 83%]
+app/git_worker/tests/test_git_worker.py::test_m1_registration_failure_does_not_rollback_git PASSED [ 87%]
+app/git_worker/tests/test_git_worker.py::test_m1_registration_skipped_without_client PASSED [ 91%]
+app/git_worker/tests/test_git_worker.py::test_m1_without_context_fails_closed PASSED [ 95%]
+app/git_worker/tests/test_git_worker.py::test_c4_ndjson_default_log_dir PASSED [100%]
+
+============================= 24 passed in 23.86s =============================
