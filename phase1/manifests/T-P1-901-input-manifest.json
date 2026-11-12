@@ -2,8 +2,8 @@
   "transport": "git_pointer_manifest",
   "contract_version": "1.0",
   "task_id": "T-P1-901",
-  "execution_id": "EXEC-904",
-  "purpose": "Phase1 module review input materials (round 4): M1 platform + M2 gpt_controller (incl. F-001/F-101/F-201 rework) + M4 git_worker source, tests, test evidence logs, round-3 review evidence and verification report",
+  "execution_id": "EXEC-905",
+  "purpose": "Phase1 module review input materials (round 5): M1 platform + M2 gpt_controller (incl. F-001/F-101/F-201 rework) + M4 git_worker source, tests, test evidence logs, round-3/4 review evidence and verification report",
   "files": [
     {
       "path": "app/frontend/index.html",
@@ -403,8 +403,8 @@
     },
     {
       "path": "handoff/PHASE1-MODULE-REVIEW.md",
-      "artifact_sha256": "8961e3aa8688971712f83a4db5e5ee3bcc9226960cb9b90b48cfc7e4e2bf9e3c",
-      "size_bytes": 12325,
+      "artifact_sha256": "e970d04d8027eaf9b713c6b3f3bd08cf4e9cc9347801a82ba4d2f4a8fbdce68f",
+      "size_bytes": 13283,
       "media_type": "text/plain"
     },
     {
@@ -474,15 +474,51 @@
       "media_type": "text/plain"
     },
     {
+      "path": "phase0/logs/dispatch-2026-11-12T18-08-58/m1-registration.json",
+      "artifact_sha256": "a593cb3dcd5c07ddf71c0012a3dc7841201eff7148d709ea5b38a8b08a021c17",
+      "size_bytes": 5367,
+      "media_type": "application/json"
+    },
+    {
+      "path": "phase0/logs/dispatch-2026-11-12T18-08-58/raw-units.json",
+      "artifact_sha256": "75cb544487e3113556673f51b2a24499bcfbc91fba79f3b9fa419b3d3589356a",
+      "size_bytes": 6239,
+      "media_type": "application/json"
+    },
+    {
+      "path": "phase0/logs/dispatch-2026-11-12T18-08-58/reply.txt",
+      "artifact_sha256": "c9c2e8396aa71a1484b7ec2a35c93d483e283ba93a9986bde33513202aa9c4ff",
+      "size_bytes": 3528,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "phase0/logs/dispatch-2026-11-12T18-08-58/request.txt",
+      "artifact_sha256": "845b0bb96d8e0e15924cdfc1b6472d27574f9e7c9f7916480ef9a08790d835a5",
+      "size_bytes": 1119,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "phase0/logs/dispatch-2026-11-12T18-08-58/result.json",
+      "artifact_sha256": "bec4a42806aedbd8b1b18e7b98aa5f8885d064e08a1c4aef45ef2a054da878d3",
+      "size_bytes": 9354,
+      "media_type": "application/json"
+    },
+    {
+      "path": "phase0/logs/dispatch-2026-11-12T18-08-58/run.log",
+      "artifact_sha256": "31b15497f8b67e47de0dc6db93341805339101ba29bbefc86474e2880e2fdef1",
+      "size_bytes": 1127,
+      "media_type": "text/plain"
+    },
+    {
       "path": "phase0/logs/gpt-reviewer-session.json",
-      "artifact_sha256": "def0309e5edeaebf7e78b2f24f5f95a5b170798030d7b30b18f8861c2ed3d224",
+      "artifact_sha256": "5eb92349968984a618cbf268633e16ec9a8fd72708f6297a82a2e41cc3c1f86e",
       "size_bytes": 153,
       "media_type": "application/json"
     },
     {
       "path": "phase0/logs/m1-artifact-registry.json",
-      "artifact_sha256": "9c8375eb833154b8b3c9510036ab130f4e15a86e3309b1cf663a0002df46f4c2",
-      "size_bytes": 30680,
+      "artifact_sha256": "789b3280f2bec4e8cb34746db1c4303a3d80eb7f383a85051ab637cbd1a85edd",
+      "size_bytes": 35158,
       "media_type": "application/json"
     },
     {
