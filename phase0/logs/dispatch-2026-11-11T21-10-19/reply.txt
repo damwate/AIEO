@@ -1,0 +1,168 @@
+{
+"gaps": [
+"当前读取的是 `damwate/AIEO` 仓库中 commit `555fd440bd1483e81036d40310a191fb918362e5` 的 `docs/phase1/module-boundaries.md`。§2 和 §5 仍明确标注 v0.1 初稿及开工会议定稿，不能直接视为已冻结的 v1.0。",
+"C1：03 号文档提供了消息 JSON 示例和消息类型，但没有完整 REST API 契约。必须补齐每个端点的 HTTP 方法、路径、请求/响应 Schema、状态码、分页、排序、过滤、幂等规则和权限要求。尤其 `/messages` 的投递、ACK、重试、Dead Letter 操作不能只写成查询与投递。",
+"C1：03 号文档要求 `schema_version`、`message_id`、`correlation_id`，但没有明确消息字段类型、长度、时区、枚举、必填规则、未知字段处理及 payload 的版本约束。需要统一 JSON Schema 或等效机器可校验定义。",
+"C1/C7：当前将 API 协议中的认证与独立认证授权契约 C7 分开列出，却没有说明边界。应明确 C1 只定义认证凭证如何传输及错误响应，C7 定义身份、会话、权限和凭证生命周期，避免两个契约重复或冲突。",
+"C2：04 号文档列出 16 张核心表及核心字段，但还不足以直接建库。必须补齐字段类型、主外键、唯一约束、索引、NULL 规则、默认值、时间字段统一时区、删除策略、状态枚举及迁移策略。特别是 messages 去重键、Outbox 状态、ACK、重试次数和 Dead Letter 字段不能缺失。",
+"C2：04 号文档的 `tasks`、`task_executions`、`messages`、`artifacts`、`git_commits`、`review_reports`、`test_reports` 等实体之间，需要明确一对多关系和历史保留规则。返工产生新 execution_id，不能覆盖旧执行、审查和测试记录。",
+"C3：03 号文档只给出 ProviderTimeoutError 的语义示例，没有统一错误结构、编号空间、HTTP 状态映射、重试规则或跨模块错误转换规范。必须补齐编号表及统一响应 Schema。",
+"C4：§6 目前只有锁资源边界，没有实际日志字段表。必须补齐结构化格式、字段类型、必填级别、日志级别、时间格式、关联 ID、落盘位置、轮转与保留策略，以及敏感信息脱敏规则。",
+"C4：业务操作审计不能只依赖普通应用日志。应明确 `audit_logs` 是持久化审计记录，记录操作者、动作、目标、结果和时间；普通运行日志负责诊断，两者不可互相替代。",
+"C5：04 号文档定义了 main、feature 和 fix 分支，但 module-boundaries 没有明确任务 ID 格式、分支命名大小写、短名称字符集、集成分支命名、合并策略及提交信息规范。应将这些规则写成可自动检查的约束。",
+"C6：目前完全没有配置命名规范。必须定义统一前缀、大小写、环境变量映射、默认值、必填项、秘密配置处理、配置校验和配置文件提交规则，否则四个模块容易各自采用不同命名。",
+"C7：单机单用户不代表无需认证。至少需要防止同机其他本地进程或局域网用户直接调用管理 API；同时需要区分人类用户身份与 MCP/CLI 内部执行身份。",
+"C8：03 号文档定义了 `schema_version`，04 号文档定义了工程规范版本，但没有明确协议版本与应用版本的区别、兼容矩阵、废弃周期、旧消息处理方式和升级失败策略。",
+"模块职责仍有交叉待定项：共享 ORM 模型归属、数据库迁移脚本归属、锁服务归属、Git Worker 与平台基座的事务边界均未最终定稿。应在冻结时明确唯一责任模块，禁止两个模块各自维护同一套模型或迁移。",
+"模块接口草案目前使用 Python 风格函数签名，但没有说明它们是 Python 包内接口、HTTP API 还是 MCP 工具接口。建议明确模块间只通过 M1 的稳定服务接口协作，内部函数签名不构成跨模块公共契约。",
+"缺少统一的契约测试要求。C1-C8 冻结后应提供机器可读 Schema、示例请求/响应、错误用例和契约测试；四模块必须引用同一版本，不能分别复制后自行修改。",
+"需要增加冻结元数据：契约版本、冻结日期、适用模块、批准人、源文档版本、变更记录和对应 commit SHA。未完成定稿的条目应明确标记 BLOCKED，不应以 v1.0 名义提前冻结。"
+],
+"c3_error_codes": [
+{
+"code": "SYS-0001",
+"meaning": "INTERNAL_ERROR：未分类的内部错误；HTTP 500；不自动重试，记录完整服务端异常但不向客户端暴露堆栈。"
+},
+{
+"code": "SYS-0002",
+"meaning": "SERVICE_UNAVAILABLE：服务暂不可用；HTTP 503；允许按 retryable 和 Retry-After 决定重试。"
+},
+{
+"code": "SYS-0003",
+"meaning": "OPERATION_TIMEOUT：平台内部操作超时；HTTP 504；先查询操作状态，禁止未经幂等保护直接重复执行。"
+},
+{
+"code": "REQ-0001",
+"meaning": "INVALID_ARGUMENT：请求字段缺失、类型错误或格式不合法；HTTP 400；修正请求后重试。"
+},
+{
+"code": "REQ-0002",
+"meaning": "SCHEMA_VALIDATION_FAILED：消息或报告不符合对应 Schema；HTTP 422；返回字段级校验错误。"
+},
+{
+"code": "REQ-0003",
+"meaning": "UNSUPPORTED_VERSION：请求使用不支持的契约主版本；HTTP 400；客户端升级或使用受支持版本。"
+},
+{
+"code": "AUTH-0001",
+"meaning": "UNAUTHENTICATED：未提供有效身份凭证；HTTP 401；重新登录或刷新凭证。"
+},
+{
+"code": "AUTH-0002",
+"meaning": "FORBIDDEN：身份有效但无权执行该操作；HTTP 403；不自动重试。"
+},
+{
+"code": "AUTH-0003",
+"meaning": "SESSION_EXPIRED：用户会话已过期；HTTP 401；重新登录。"
+},
+{
+"code": "RES-0001",
+"meaning": "RESOURCE_NOT_FOUND：项目、任务、仓库、消息或附件不存在；HTTP 404。"
+},
+{
+"code": "RES-0002",
+"meaning": "RESOURCE_CONFLICT：资源状态或唯一约束冲突；HTTP 409；先查询最新状态。"
+},
+{
+"code": "RES-0003",
+"meaning": "DUPLICATE_MESSAGE：message_id 已处理；HTTP 409 或按幂等接口返回原处理结果；不得重复执行副作用。"
+},
+{
+"code": "TASK-0001",
+"meaning": "INVALID_STATE_TRANSITION：任务状态转换不合法；HTTP 409；由 M1 状态机拒绝。"
+},
+{
+"code": "TASK-0002",
+"meaning": "DEPENDENCY_NOT_READY：任务依赖尚未满足；HTTP 409；等待依赖任务完成。"
+},
+{
+"code": "TASK-0003",
+"meaning": "TASK_ALREADY_CLAIMED：任务已被其他执行端领取或租约有效；HTTP 409；不得并发重复领取。"
+},
+{
+"code": "MSG-0001",
+"meaning": "MESSAGE_DELIVERY_FAILED：消息投递失败；HTTP 502；由 Outbox 重试机制处理，达到上限进入 Dead Letter。"
+},
+{
+"code": "MSG-0002",
+"meaning": "ACK_TIMEOUT：消息 ACK 超时；不是任务失败；先查询接收端状态，再按协议重试。"
+},
+{
+"code": "PROVIDER-0001",
+"meaning": "PROVIDER_TIMEOUT：GPT、ZCode 或其他外部执行端响应超时；HTTP 504；必须标记执行状态待核验，不得直接判定任务失败或重复派发。"
+},
+{
+"code": "PROVIDER-0002",
+"meaning": "PROVIDER_UNAVAILABLE：外部执行端不可用；HTTP 503；可重试，但需遵守供应端限流和退避策略。"
+},
+{
+"code": "PROVIDER-0003",
+"meaning": "PROVIDER_AUTH_FAILED：外部执行端登录失效、认证失败或需要人工验证；HTTP 502；停止自动重试并进入 OFFLINE/人工接管流程。"
+},
+{
+"code": "PROVIDER-0004",
+"meaning": "PROVIDER_CONTRACT_CHANGED：外部网页 DOM、MCP Schema 或 CLI 行为与已验证契约不一致；HTTP 502；停止盲目操作，等待契约自检或人工处理。"
+},
+{
+"code": "PROVIDER-0005",
+"meaning": "PROVIDER_RATE_LIMITED：外部执行端限流；HTTP 429；遵守 Retry-After，采用退避策略。"
+},
+{
+"code": "GIT-0001",
+"meaning": "GIT_WORKTREE_DIRTY：工作区存在未提交修改；HTTP 409；禁止继续提交或集成，先核查变更。"
+},
+{
+"code": "GIT-0002",
+"meaning": "GIT_BASE_MISMATCH：实际基线 commit 与任务单预期基线不一致；HTTP 409；停止交付核验。"
+},
+{
+"code": "GIT-0003",
+"meaning": "GIT_SCOPE_VIOLATION：Diff 超出任务单允许修改范围；HTTP 422；退回整改。"
+},
+{
+"code": "ART-0001",
+"meaning": "ARTIFACT_NOT_FOUND：引用的报告、日志或附件不存在；HTTP 404。"
+},
+{
+"code": "ART-0002",
+"meaning": "ARTIFACT_HASH_MISMATCH：附件 SHA-256 与登记值不一致；HTTP 422；拒绝作为验收证据。"
+}
+],
+"c4_log_fields": [
+"timestamp：必填，ISO 8601 带时区，存储统一使用 UTC；展示时可转换本地时区。",
+"level：必填，DEBUG、INFO、WARNING、ERROR、CRITICAL。",
+"service：必填，服务名称，如 platform、gpt_controller、zcode_bridge、git_worker。",
+"module：必填，模块标识 M1/M2/M3/M4。",
+"event：必填，稳定的机器可检索事件名称，不以自由文本代替。",
+"message：必填，人类可读摘要；不得包含密码、Cookie、Token 或完整敏感 payload。",
+"task_id：可选；任务相关事件必须填写。",
+"execution_id：可选；执行相关事件必须填写。",
+"project_id、batch_id：可选；存在业务上下文时填写。",
+"message_id：可选；消息收发、ACK、重试、去重事件必须填写。",
+"correlation_id：建议必填；跨模块请求链路必须保持一致。",
+"trace_id：建议必填；用于一次完整调用链追踪，与 correlation_id 分工明确。",
+"agent_id、agent_type：可选；涉及 Agent 执行或消息路由时填写。",
+"session_id：可选；GPT 会话、ZCode CLI/MCP 会话相关事件填写，不记录会话 Cookie 或凭证。",
+"repository_id、branch：可选；Git 操作事件填写。",
+"base_commit、commit_sha：可选；涉及 Git 基线、提交、Diff、审查或测试证据时填写完整 SHA，不使用短 SHA 代替。",
+"artifact_id、artifact_sha256：可选；涉及日志、报告、附件登记和验收时填写。",
+"operation：可选；记录操作名称，如 claim_task、send_message、commit_and_collect。",
+"result：可选；统一使用 SUCCESS、FAILURE、RETRY、BLOCKED、SKIPPED 等结果枚举。",
+"duration_ms：可选；耗时操作必须填写，非负整数。",
+"error_code：可选；失败事件必须使用 C3 统一错误码。",
+"retryable：可选；布尔值，错误事件必须填写。",
+"attempt：可选；重试或执行轮次，从 1 开始的正整数。",
+"http_status：可选；HTTP 请求或响应事件填写。",
+"process_id、exit_code：可选；外部 CLI、浏览器子进程及 Worker 生命周期事件填写。",
+"source_file、source_line：可选；开发调试环境可填写，生产环境不强制。",
+"环境标识 env：必填，如 development、test、production；不得记录真实密钥或个人敏感信息。",
+"日志格式统一为一行一个 JSON 对象的 NDJSON；禁止模块自行发明不同的日志格式。",
+"普通运行日志建议落盘 `logs/phase1/<service>/`，按日期或大小轮转；具体路径通过配置指定，禁止硬编码机器绝对路径。",
+"audit_logs 独立持久化，至少包含 timestamp、actor_id、actor_type、action、target_type、target_id、result、reason、correlation_id；关键状态变更、权限变更、人工审批和 Git 集成操作必须写审计记录。",
+"敏感字段统一脱敏：Authorization、Cookie、密码、API Key、访问令牌、邮箱登录凭据及完整网页会话内容不得写入日志；必要时仅记录凭证类型或不可逆摘要。",
+"日志写入失败不得静默吞掉关键审计事件；审计写入与对应业务状态变更应处于同一事务或采用可靠 Outbox 机制。"
+],
+"c7_auth": "建议采用单机单用户、默认仅本机访问的最小方案：FastAPI 默认绑定 127.0.0.1，不监听 0.0.0.0；首次启动执行一次性管理员初始化，用户密码使用 Argon2id 哈希保存，禁止明文和可逆加密存储；登录后签发随机高熵 Session ID，服务端保存会话状态，浏览器使用 HttpOnly、SameSite=Lax、按 HTTPS 环境启用 Secure 的 Cookie；修改数据的请求启用 CSRF 防护；设置空闲超时和绝对过期时间，支持主动注销及会话撤销。首期只设一个固定 OWNER 角色，不实现复杂 RBAC，但所有管理 API 均要求有效会话。MCP stdio 和本机 CLI 不应伪装成浏览器用户，可使用独立的本机服务身份及权限白名单；凭证放在当前操作系统用户可访问的配置或系统凭据存储中，文件权限最小化，禁止写入 Git。若未来必须开放局域网访问，再单独增加 HTTPS、访问来源限制和服务身份认证，不应把本机单用户模式直接暴露到网络。登录失败、初始化、注销、凭证轮换及敏感操作均写入 audit_logs。注意：C1 只规定认证头/Cookie 的传输和 401/403 响应；C7 负责身份建立、会话生命周期和授权规则。",
+"c8_versioning": "首期采用最小化的语义版本兼容机制，且区分应用版本与契约版本。应用版本使用 SemVer；公共 API、消息和报告协议分别维护独立的 contract_version，消息中的 schema_version 保留为协议 Schema 版本标识。建议 v1.0.0：主版本变化表示不兼容变更，次版本变化只允许向后兼容的新增字段/可选能力，修订版本只修正文档或不改变 Schema 语义的细节。每个消息、任务包、开发报告、审查报告和测试报告必须携带适用的契约版本；接收端必须验证主版本，支持的主版本不匹配时返回 `REQ-0003 UNSUPPORTED_VERSION`，不得静默猜测或降级解析。v1.x 接收端应忽略未知可选字段，发送端不得依赖接收端理解新增字段；新增必填字段、删除/重命名字段、改变字段类型或状态语义均视为主版本不兼容变更。服务端公布 `supported_versions` 和 `minimum_supported_version`；废弃旧版本先公告、记录迁移说明，至少保留一个明确迁移窗口，窗口结束后拒绝旧版本并给出错误码。数据库结构版本独立使用 migration version，启动时执行向前迁移，禁止模块自行改表；旧消息和报告按原版本保留并通过版本化解析器读取，不批量覆盖历史数据。每次契约冻结或变更必须更新 Schema、契约测试、decision-log、兼容矩阵和版本号，并绑定 Git commit SHA。",
+"summary": "已读取指定 commit 的 module-boundaries.md §2/§5，以及其引用的 03 号任务消息协议、04 号状态机数据库与 Git 规范。C1/C2/C5 有设计来源，但仍缺机器可执行细节；C3/C4/C6/C7/C8 目前不能仅凭现有文档直接冻结。建议先补齐统一错误响应、NDJSON 日志与审计字段、配置命名、单机认证边界和独立契约版本机制，再形成 C1-C8 v1.0 冻结文件。尤其应把错误码、日志字段、Schema 和兼容规则做成可被四模块共同引用的单一规范，并配套契约测试；在这些内容和责任边界确认前，四模块不宜开始并行实现公共接口。"
+}

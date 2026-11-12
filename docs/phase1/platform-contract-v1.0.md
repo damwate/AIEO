@@ -2,7 +2,7 @@
 
 **契约版本：** v1.0.0
 **冻结日期：** 2026-11-12
-**状态：** 已冻结（C1-C8 全部 v1.0.0；未定稿子项在 §12 显式标 BLOCKED，不以 v1.0 名义静默冻结）
+**状态：** v1.0.0 基线已冻结；当前工作区包含 BLOCKED-1 修订稿，状态为“修订中，待复审”，复审通过前不构成新冻结版本（见 §2.6、§12）
 **适用范围：** M1 平台基座、M2 GPT 控制器、M3 ZCode Bridge、M4 Git Worker（Web 前端经 M1 REST API 间接受本契约约束）
 
 ---
@@ -25,12 +25,13 @@
 | 版本 | 日期 | 变更内容 | 批准 |
 |---|---|---|---|
 | v1.0.0 | 2026-11-12 | 初次冻结：C1-C8 全节定稿；BLOCKED 子项见 §12 | 主会话（待用户追认） |
+| 未冻结工作区修订 | 2026-11-12 | BLOCKED-1：补入 GitPointer/manifest、双向 payload 边界、失败语义与真实 POC 记录；待复审 | 待 GPT 复审与主会话验收 |
 
 **各契约项冻结状态：**
 
 | # | 契约项 | 冻结版本 | 状态 |
 |---|---|---|---|
-| C1 | API 协议（消息结构、端点、认证边界） | v1.0.0 | 已冻结（§2；1 项 BLOCKED 子项见 §12） |
+| C1 | API 协议（消息结构、端点、认证边界） | v1.0.0 | 基线已冻结；BLOCKED-1 修订中，待复审（§2.6、§12） |
 | C2 | 数据模型（16 张核心表及字段） | v1.0.0 | 已冻结（§3） |
 | C3 | 错误码（统一错误结构、编号表、HTTP 映射） | v1.0.0 | 已冻结（§4） |
 | C4 | 日志格式（字段表、NDJSON、落盘、审计、脱敏） | v1.0.0 | 已冻结（§5） |
@@ -70,7 +71,7 @@
 | `batch_id` | string | 条件必填 | 格式 `BATCH-<序号>`；任务级与批次级消息必填，仅项目级事件允许为 null |
 | `task_id` | string | 条件必填 | 格式 `T-<序号>`（Phase 1 为 `T-P1-<序号>`）；任务相关消息必填 |
 | `correlation_id` | string | 必填 | `CORR-<序号>` 或 UUIDv4；≤64 字符；一次交互的请求与响应必须一致（03-协议 §9-7） |
-| `payload` | object | 必填 | 可为 `{}`；Schema 由 `message_type` 决定（§10 契约测试）；序列化后 ≥4 KB 建议走 Git 指针（DEC-007），上限 256 KB |
+| `payload` | object | 必填 | 可为 `{}`；Schema 由 `message_type` 决定（§10 契约测试）；序列化后 ≥4 KB 建议使用 GitPointer manifest（§2.6；DEC-007/DEC-012）；M1 消息 payload 上限 256 KB。4 KB 是材料传输建议阈值，不是网页消息上限；256 KB 不是网页 `insertText` 上限，也不是 Git 材料文件上限 |
 
 补齐规则（对应 GPT gap 2/3）：
 
@@ -154,6 +155,152 @@ PENDING 可被发送方取消 → CANCELLED（终态）
 - **C1 只规定**：认证凭证如何传输（会话 Cookie / Authorization 头的位置与格式），以及认证失败时统一返回 `AUTH-0001/0002/0003`（401/403，§4 统一错误 Schema）。
 - **C7 负责**：身份建立、口令存储、会话生命周期（签发/过期/撤销）、CSRF、角色与授权规则、MCP/CLI 本机服务身份。
 - C1 端点表不重复定义认证语义；两契约若出现表述冲突：身份/授权语义**以 C7 为准**，传输与错误响应格式**以 C1 为准**。
+
+### 2.6 M2 网页与 GitPointer 双向 payload 契约（BLOCKED-1 修订稿）
+
+> **状态：修订中，待复审。** 本小节依据真实 GPT 审查回复 `phase0/logs/payload-choice-inherited-reply.txt`（`result=BLOCKED`）编写，关联 DEC-007/DEC-011/DEC-012。选型确定为：**出站长材料使用 GitPointer，网页只发短指令；入站回复通过结构化 DOM 完整提取并持久化，不以网页分块或反复长文本粘贴作为降级路径。** 复审通过前不得将本小节标记为 PASS 或新冻结基线。
+
+#### 2.6.1 双向通道与 1200 字节边界
+
+1. **出站硬上限仅适用于网页发送。** 对最终传给 `document.execCommand("insertText", false, text)` 的完整 `text`，在本地以 UTF-8 编码后的实际字节数计量，必须 **≤1200 字节**。计量范围包含该字符串中的全部内容：消息信封、任务说明、GitPointer、路径、验收标准、输出 JSON 要求、`task_id`、`execution_id`、`correlation_id`、空白与换行；不得只计算指针或只计算汉字字符数。
+2. 发送前必须完成计量与 composer 回读一致性校验。超过 1200 字节时，本地发送前失败，**不得点击发送、不得静默截断、不得自动拆成多条网页消息、不得改为反复粘贴长材料**；只能缩短指令或改用指向 manifest 的 GitPointer，并返回可诊断错误。
+3. **入站不适用 1200 字节上限。** `wait_reply()`/回复提取得到的 `reply_text`、审查 JSON、任务计划或测试报告可以超过 1200 UTF-8 字节；不得要求“长回复必须 ≤1200”，也不得按 1200 字节截取、只保留末尾 unit 或把部分 JSON 当作成功报告。入站完整性以 §2.6.7 的生成结束、结构化 unit、UUID/内容稳定、全文 artifact/hash 和 Schema 校验为准。
+4. `payload` 序列化后 **≥4 KB 建议使用 GitPointer** 是材料传输建议阈值，不是网页消息上限；**256 KB 是 M1 通用消息 payload 上限**，既不是 Git 单文件上限，也不是 GPT 网页回复上限。Git 材料与网页回复分别受 §2.6.6 的独立配置约束。
+
+#### 2.6.2 GitPointer 与统一 manifest Schema
+
+`GitPointer` 是 M1 派发记录和网页短指令携带的定位对象。其 JSON Schema 最低要求如下；`contracts/v1.0/git-pointer.schema.json` 必须与此保持一致：
+
+```json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": [
+    "transport", "owner", "repo", "branch", "commit_sha",
+    "path", "artifact_sha256", "size_bytes", "media_type",
+    "contract_version", "task_id", "execution_id"
+  ],
+  "properties": {
+    "transport": { "const": "git_pointer" },
+    "owner": { "type": "string", "minLength": 1, "maxLength": 100 },
+    "repo": { "type": "string", "minLength": 1, "maxLength": 100 },
+    "branch": { "type": "string", "minLength": 1, "maxLength": 200 },
+    "commit_sha": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "path": { "type": "string", "minLength": 1, "maxLength": 512 },
+    "artifact_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "size_bytes": { "type": "integer", "minimum": 1 },
+    "media_type": { "type": "string", "minLength": 1, "maxLength": 100 },
+    "contract_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+$" },
+    "task_id": { "type": "string", "pattern": "^T-(P[0-9]+-)?[0-9]{3,}$" },
+    "execution_id": { "type": "string", "pattern": "^EXEC-[0-9]{3,}$" }
+  }
+}
+```
+
+字段语义与统一 manifest 规则：
+
+1. **根指针只指向 manifest。** 派发时 `path` 是仓库内 manifest 的相对路径，`media_type` 必须为 `application/vnd.aieo.git-material-manifest+json`；`artifact_sha256` 与 `size_bytes` 分别对应该 manifest 的**原始文件字节**和字节数，不是 Git blob SHA，也不是材料总大小。
+2. **单文件与多文件材料统一使用 manifest。** manifest 文件保存于同一 `owner/repo@commit_sha`，其根字段为 `transport: git_pointer_manifest`、`contract_version`、`task_id`、`execution_id` 和 `files`；`files` 至少一项。单文件材料使用恰好一项，多文件材料使用多项，不允许绕过 manifest 直接派发裸文件路径。
+3. 每个 `files` 项必须包含 `path`、`artifact_sha256`、`size_bytes`、`media_type`。文件项继承根 GitPointer 的 `owner/repo/branch/commit_sha` 和 manifest 的 `contract_version/task_id/execution_id`；“公共定位字段 + 文件项”共同构成该实际文件的完整逻辑 GitPointer。所有文件项的 `path` 必须唯一，不允许嵌套 manifest。
+4. `commit_sha` 是 GitPointer 的外部传输元数据，**不要求写入处于该 commit 内的 manifest 本体**，避免材料 commit 自引用；读取方必须把外部指针中的完整 SHA 作为所有 manifest 文件项的唯一读取版本。`contract_version`、`task_id`、`execution_id` 在指针与 manifest 中重复携带并必须完全一致。
+5. `commit_sha` 必须为实际读取依据的完整 40 位 SHA。`branch` 仅用于人工定位、发布时包含关系与可读性校验；禁止依赖默认分支、分支最新 HEAD、短 SHA 或标签代替指定 commit。读取地址语义固定为 `owner/repo@commit_sha:path`。
+6. v1 支持的实际材料 `media_type` 为 `text/plain`、`text/markdown`、`application/json`、`application/x-ndjson`；其他类型、二进制内容、符号链接、Git 子模块、Git LFS 指针和外部 URL 不得被当作已读取材料。文本必须是合法 UTF-8；哈希与大小均针对未经网页空白规范化、未经行尾转换的原始仓库文件字节。
+7. 未知可选字段按 §2.2 的兼容规则忽略，但不得因此放宽必填字段、路径、版本、大小、哈希或范围校验。
+8. GitPointer 与 manifest 的 `contract_version` 使用 `MAJOR.MINOR` 标识本传输 Schema 版本，按 C8 校验主版本；它不是应用 SemVer，也不得与仓库 commit、任务包版本或 `reviewed_commit` 互相替代。
+
+#### 2.6.3 输入材料版本与 `reviewed_commit` 分离
+
+1. GitPointer 的 `commit_sha` 是**任务包/审查输入材料 commit**，只证明输入材料版本；`reviewed_commit` 是**被审查代码版本**。二者是不同字段，不得互相复制、推断或混用。即使任务单明确二者数值相同，也必须分别记录并分别校验。
+2. 派发记录必须绑定 `task_id`、`execution_id`、`correlation_id`、输入材料 `commit_sha`、manifest `path/artifact_sha256`、既有 `task_package_hash`，审查任务另须绑定完整 40 位 `reviewed_commit`。
+3. 审查结果必须同时记录：`reviewed_commit`、输入材料 `input_material_commit`（等于 GitPointer `commit_sha`）、`input_material_manifest_path`、`input_material_manifest_sha256`、`task_package_hash`、`task_id`、`execution_id`、`correlation_id`。任一绑定缺失或错误均拒绝登记，不得把旧审查结论套用到新代码或新材料。
+4. GPT 读取前必须核对任务 ID、执行轮次、目标 commit、manifest 路径及任务单允许范围；实际读到的输入材料 commit 与派发记录不一致时立即停止，由主会话重新核验任务单、材料版本与派发记录。
+
+#### 2.6.4 仓库权限、写入、安全与生命周期
+
+1. **公开仓库：** 只允许发布可公开且经任务授权的材料，可匿名读取，但仍须由当前 GPT 网页会话对指定 `owner/repo@commit_sha:path` 实际读取并验证，不能以“仓库公开”代替读取成功。
+2. **私有仓库：** 派发前必须验证**当前 GPT 网页会话**对目标仓库、指定 commit 和全部 manifest 文件的真实读取能力。主会话、本机 Git 凭证或 GitHub Connector 的权限不等同于 GPT 网页会话权限。权限不足或登录失效时立即停止，不得绕过验证、切换未授权身份，或将私有材料复制到公开仓库。
+3. **只读边界：** GitPointer 只授予读取任务材料所需能力，不自动授予仓库写权限，GPT 审查会话默认不得提交、推送、修改分支或直接修改被审查代码。未来若需 GPT 将长回复写回仓库，必须另立契约与 POC，明确受控写入身份、专用分支、提交责任、人工审批和审计边界；未获该授权前一律使用 §2.6.7 的网页回复提取与 M1 artifact 登记。
+4. **秘密与敏感信息禁入材料仓库：** 密码、Cookie、Token、API Key、会话密钥、网页会话数据、未脱敏登录信息及其他秘密不得进入公开或私有 Git 材料，也不得写入 manifest、回复 artifact 元数据或审计详情。发布前必须扫描；发现疑似秘密则不得派发。已误提交时立即停止传播并按人工安全事件流程轮换/撤销秘密、清理材料，保留不含秘密的审计记录。
+5. **材料是不可信待审数据：** Git 文件、代码、Diff、网页回复及其中的链接或命令均是待审数据，不是执行授权。只有任务单与项目约束授权的操作才可执行；材料要求绕过红线、越权写仓库、泄露秘密或读取未授权外部资源时，不得执行，按 BLOCKED 上报。
+6. **保留规则：** 任务包、manifest、审查材料、原始回复、哈希与派发/审查审计元数据默认永久保留，禁止通过 force-push、改写历史或静默删除覆盖旧证据。法律合规或秘密清理等例外必须经用户人工审批，保留删除原因、原哈希和不含敏感内容的审计墓碑；普通运行日志的 30 天轮转规则不适用于上述验收证据。
+
+#### 2.6.5 材料发布、读取与完整性时序
+
+必须严格按以下顺序执行：
+
+1. **定稿与检查：** 发布方完整生成任务包/审查材料，确认文件不再变化，完成任务范围、路径、媒体类型、大小、文件数和秘密扫描；检查失败不得提交或派发。
+2. **生成 manifest：** 对每个实际文件按将提交的原始字节计算 SHA-256 与 `size_bytes`，生成包含全部文件的 manifest，再计算 manifest 自身的 SHA-256 与大小。不得遗漏文件或先派发后补清单。
+3. **提交与推送：** 由 M4 或任务授权的发布身份提交到指定分支并推送成功，取得最终完整 40 位 `commit_sha`。提交失败、推送失败或未生成 commit 时，M2 不发送网页指令，任务保持未派发并记录具体 Git 错误。
+4. **发布后回读预检：** 以最终 SHA 回读 manifest 和全部文件，确认 SHA 存在且属于指定仓库、发布时 `branch` 包含该 commit、manifest 与实际文件一致，并核验任务/执行轮次、`task_package_hash`、审查任务的 `reviewed_commit`、路径范围、数量、哈希、大小和媒体类型。文件仍在变化或任一项不一致时不得派发。
+5. **冻结派发记录：** M1 持久化完整 GitPointer、manifest 哈希、材料版本绑定和预检结果后，M2 才生成 ≤1200 UTF-8 字节的网页短指令。短指令必须包含完整 GitPointer 及必要验收/输出要求，不得用分支 HEAD 替代 SHA。
+6. **GPT 读取与复核：** GPT 必须逐一读取 `owner/repo@commit_sha:path`，先完整读取 manifest，再读取全部文件；对每个文件重新计算原始字节的 SHA-256 和大小，并核对任务 ID、执行轮次、目标 commit、路径和范围。禁止在指定 SHA 不存在、路径不存在或内容不完整时改读其他分支、默认分支、最新版本或相似路径。
+7. **范围与全量门槛：** 路径必须是规范化仓库相对 POSIX 路径，禁止绝对路径、盘符、`..` 路径穿越、空路径、`.git` 内容、未授权子模块、符号链接和外部链接。所有路径必须位于任务单明示允许的材料范围；外部链接不自动抓取。只有 manifest 中全部文件均读取并验证成功后才能开始处理，部分读取不得给出 PASS。
+
+#### 2.6.6 大小、文件数、重试与超时配置
+
+以下为首期默认值，均按 C6 规则支持“环境变量 > 配置文件 > 内置默认值”；调整不改变 1200 字节出站硬约束。超限不得静默截断，必须在读取/发送前或完整提取后按失败语义处理。
+
+| 环境变量 | 文件键 | 默认值 | 含义 |
+|---|---|---:|---|
+| `AIEO_GIT_POINTER_MAX_FILES` | git_pointer.max_files | `50` | 单个 manifest 的实际材料文件数上限，不含 manifest 自身 |
+| `AIEO_GIT_POINTER_MAX_FILE_BYTES` | git_pointer.max_file_bytes | `2097152`（2 MiB） | 单个实际材料文件的原始字节上限 |
+| `AIEO_GIT_POINTER_MAX_MANIFEST_BYTES` | git_pointer.max_manifest_bytes | `131072`（128 KiB） | 单个 manifest 原始字节上限 |
+| `AIEO_GIT_POINTER_MAX_TOTAL_BYTES` | git_pointer.max_total_bytes | `10485760`（10 MiB） | manifest 与全部实际材料的合计原始字节上限 |
+| `AIEO_GIT_POINTER_HTTP_MAX_RETRIES` | git_pointer.http_max_retries | `3` | 暂时性 GitHub 访问失败在首次请求后的最大重试次数，即最多 4 次尝试 |
+| `AIEO_GIT_POINTER_HTTP_RETRY_BASE_SECONDS` | git_pointer.http_retry_base_seconds | `2` | GitHub 暂时性失败的指数退避基间隔，倍率 2、±20% 抖动 |
+| `AIEO_GPT_CONTROLLER_MAX_REPLY_BYTES` | gpt_controller.max_reply_bytes | `1048576`（1 MiB） | 单次原始回复 artifact 的安全资源上限；不是 1200 字节限制，超限保留已提取证据并 BLOCKED |
+| `AIEO_GPT_CONTROLLER_GENERATION_TIMEOUT_MS` | gpt_controller.generation_timeout_ms | `300000` | 等待 GPT 生成结束的超时，沿用真实 POC 的 300 秒默认值 |
+| `AIEO_GPT_CONTROLLER_CONFIRM_WINDOW_MS` | gpt_controller.confirm_window_ms | `75000` | 生成结束后的确认窗，沿用 Phase 0 的 75 秒默认值 |
+| `AIEO_GPT_CONTROLLER_STABLE_READ_INTERVAL_MS` | gpt_controller.stable_read_interval_ms | `3000` | 最终两次完整 unit/UUID 读取的最小间隔 |
+
+#### 2.6.7 入站完整回复、artifact 与确认语义
+
+1. **结构化定位：** 以本次发送双验确认的 user `data-content-search-unit-key` 为起点，收集其后、下一 user unit 之前的全部 assistant unit；不得只用消息文本前缀、页面正文、`body.innerText`、截图或最后一个可视片段代替。按 DOM 顺序记录每个 unit key 与原始 `innerText`，多 unit 回复保留顺序并以单个换行符合成 `reply_text`。
+2. **生成完成：** 必须确认已观察生成、生成已结束、停止按钮最终不可见、尾部为 assistant、composer 为空，并经过确认窗。会话失效、安全验证、上下文上限或 DOM 契约自检失败时立即暂停自动化，按既有人工接管边界处理，不得伪造完成。
+3. **UUID 与全文稳定：** 尾部 assistant 必须具有非空 `data-dil-message-id`（`assistant_uuid`）；确认窗后间隔至少 3 秒进行两次完整读取，目标 unit key 列表、assistant UUID、unit 数量及各 unit 全文哈希必须一致。读取期间出现 unit 新增/消失、UUID 改变、文本变化或虚拟列表只渲染部分内容，均视为未完成或提取不完整。
+4. **原始 artifact 先落盘：** 在 JSON 解析、Schema 校验和 M1 报告登记之前，将完整原始 unit 文本与合成 `reply_text` 以 UTF-8 持久化；不得空白折叠、按长度截断或只保存解析后的摘要。展示时可移除已验证的辅助标签，但原始 artifact 必须保留提取原貌。
+5. **哈希与元数据：** 对最终 `reply.txt` 的原始字节计算 `artifact_sha256` 和 `size_bytes`，同时记录 `task_id`、`execution_id`、`correlation_id`、`session_id`/会话 URL、unit key 列表、unit 数量、`assistant_uuid`、提取时间、完成判定和原始文件路径。M2 通过 M1 artifact 接口登记原文及哈希；后续引用必须能复核同一 artifact，禁止以另一段文本替换。
+6. **截断与格式检测：** 生成未结束、稳定读取失败、目标 unit 缺失、DOM 结构变化、原始 artifact 写盘/回读哈希不一致，均为提取失败。任务要求 JSON 时，还必须完成全文 JSON 解析、对应 Schema 和必填字段校验，并核对 `task_id`、`execution_id`、`correlation_id` 及版本绑定；解析失败、明显不完整或绑定不匹配不得登记成功 ACK 或推进任务状态。
+7. **超时不等于失败：** 回复提取/生成超时后先查询当前会话、unit、任务与报告状态，避免重复派发；能够确认完成的只补提取/登记，无法确认是否完成或只能取得部分文本时返回 BLOCKED，并保存现有证据，不得盲目重发任务。
+8. **登记失败不重做 GPT：** 网页回复已完整提取但 M1 报告登记或 ACK 失败时，保留原始回复、artifact 哈希和 `correlation_id`，按 `message_id`/`execution_id` 等既有幂等键重试登记；不得重新触发 GPT 执行来代替报告补登记。
+
+#### 2.6.8 统一失败与降级边界
+
+下表中的 BLOCKED 均须记录具体错误、已完成的读取/发送步骤、材料 commit（如已生成）、关联 ID 和解除条件；不得把外部访问问题误记为 GPT 审查不通过。
+
+| 失败点 | 必须行为 | 禁止行为与解除条件 |
+|---|---|---|
+| 材料生成、提交、推送或 commit 生成失败 | 不发送网页指令，任务保持未派发，记录 Git 错误并阻塞派发 | 不得以旧 commit 派发；重新生成并完整预检后解除 |
+| 网页出站指令 >1200 UTF-8 字节 | 本地发送前校验失败，返回可诊断错误 | 不截断、不拆多条、不反复粘贴；缩短指令或改用 manifest 指针 |
+| 仓库暂时不可达、连接/超时/重置或 GitHub 502/503/504 | 按 §2.6.6 做有限指数退避；耗尽后 BLOCKED，保留任务与材料 commit | 不得无限重试或误判为 GPT 未完成；网络恢复后从读取预检继续 |
+| 私有仓库权限拒绝、登录失效、仓库不可见 | 立即停止读取和审查并 BLOCKED | 不重试绕过、不换未授权身份、不复制到公开仓库；当前 GPT 会话获得真实权限后解除 |
+| 指定 SHA 不存在、不可访问、不属于指定仓库或指针/commit 绑定不一致 | 判定指针无效并 BLOCKED | 不回退 branch HEAD、`main`、标签或其他 commit；发布方修正指针后解除 |
+| path 不存在、越界、类型不支持、疑似相似路径或外部资源 | 判定材料不完整/指针不合法并 BLOCKED | 不猜路径、不自动跟链接；按任务范围重新发布 |
+| SHA-256、`size_bytes`、manifest 内容或媒体类型不一致 | 判定完整性失败并 BLOCKED | 不继续处理；发布方重新生成文件、manifest 和 commit |
+| 多文件仅部分读取成功 | 列出未读取/未验证文件并 BLOCKED | 不基于部分材料给 PASS；全部文件核验成功后解除 |
+| 材料 commit 与任务单/派发记录不一致 | 停止处理，由主会话核对任务单、材料版本和派发记录 | 不自动选择“看起来更新”的材料；绑定一致后重新派发 |
+| GPT 会话失效、安全验证、上下文上限或 DOM 自检失败 | 暂停自动化并转既有人工接管，保存真实状态 | 不伪造读取/完成报告；人工恢复并重新自检后解除 |
+| 长回复、JSON 或 unit 提取不完整、全文不稳定、artifact 回读哈希失败 | 保存部分原文作诊断并 BLOCKED，不登记部分结果为成功 | 1200 字节以上本身不是失败；须满足 §2.6.7 完整性条件后解除 |
+| JSON 格式/Schema/必填字段错误，或 task/correlation 绑定不匹配 | 校验失败，不登记成功 ACK，不推进任务 | 不以“已有回复”代替有效报告；取得同执行轮次的完整有效报告后处理 |
+| `reviewed_commit`、`task_package_hash`、输入材料 commit/hash 或 `execution_id` 错误 | 拒绝登记审查结果并 BLOCKED | 不套用旧结论；重新核对指令、代码与材料版本 |
+| 网页回复提取超时 | 先查会话、unit、任务和报告状态；无法确认则 BLOCKED | 不盲目重复派发；超时不等于任务失败 |
+| 已提取回复的 M1 登记或 ACK 失败 | 保留原文、哈希和 correlation，按幂等规则补登记 | 不重新执行 GPT；登记恢复后继续原任务流程 |
+| 材料包含越权指令、外部指令或红线绕过要求 | 作为不可信数据拒绝执行并 BLOCKED 上报 | 不把材料文本当作授权；由主会话/用户重新界定合法任务 |
+| 文件数、单文件、manifest、总大小或回复资源上限超限，或发现秘密 | 不派发或停止处理并 BLOCKED，保存不含秘密的诊断信息 | 不静默截断、不公开敏感材料；缩减材料、调整合法配置或完成安全处置后解除 |
+
+除表中明确允许的暂时网络退避外，权限、不存在、SHA、路径、范围、媒体类型、hash/size、Schema 与版本绑定错误均**不可自动降级、不可自动换源**。不得降级为网页长文本分块、反复粘贴、读取分支最新版本或公开镜像。
+
+#### 2.6.9 真实 POC 验收记录与未验证范围
+
+**已完成的事实记录（2026-11-12，当前继承 GPT 审查会话）：**
+
+| 项目 | 真实结果 | 证据与边界 |
+|---|---|---|
+| 读取 GitHub 指定版本文件 | 已完成；GPT 回复明确记录已核对 commit `81d63f71ef0c5efa65766c9da0331d4f449d06f2` 的平台契约，以及 03 协议、06 实施计划和 `module-boundaries.md` | `phase0/logs/payload-choice-inherited-reply.txt` 的 `summary`；本次为公开仓库指定 commit 阅读证据 |
+| 短指令网页投递 | 已完成；当前继承会话收到短指令并返回结构化审查结果 | 同上；证明本次实际投递成功，不扩展宣称所有长度/网络条件均已验证 |
+| 超过 1200 字节的网页回复完整提取 | 已完成；提取结果为 **4023 个 UTF-8 解码后字符、8854 字节**，包含完整可解析 JSON、`result=BLOCKED`、15 项 `required_boundaries` 和 16 项 `failure_paths` | 原始文件 `phase0/logs/payload-choice-inherited-reply.txt`；实测 SHA-256 `ce1ca55c5d6397995043b42a5a327fef7879a80306301fa9b61f170e0c7a5c71`。证明入站可超过 1200 字节，不能把出站限制套用于 DOM 回复 |
+
+**本次没有执行、不得记为 PASS 的测试：** 新 GitPointer/manifest Schema 的自动生成与端到端派发、多文件部分读取、私有仓库权限、网络退避耗尽、SHA/路径/hash/size/范围负例、秘密扫描、超限边界、M1 artifact 登记失败后的幂等补登记、受控写回仓库。现有 POC 只支持“公开仓库指定 commit 阅读 + 短指令投递 + 长回复完整提取”的有限结论，**BLOCKED-1 仍为“修订中，待复审”**。
 
 ---
 
@@ -748,12 +895,14 @@ C1 只规定认证头/Cookie 的传输和 401/403 响应；C7 负责身份建立
 
 ## 10. 契约测试要求
 
-1. **机器可读 Schema**：`contracts/v1.0/` 目录存放 JSON Schema（消息信封、各 message_type payload、开发/审查/测试报告、统一错误响应、API 请求/响应体），四模块共同引用该目录；
+1. **机器可读 Schema**：`contracts/v1.0/` 目录存放 JSON Schema（消息信封、各 message_type payload、开发/审查/测试报告、统一错误响应、API 请求/响应体，以及 §2.6 的 `git-pointer.schema.json`、`git-material-manifest.schema.json`、`gpt-reply-artifact-meta.schema.json`），四模块共同引用该目录；
 2. **示例请求/响应**：每个 REST 端点至少一组合法示例；每个 `message_type` 至少一组合法消息示例；
 3. **错误用例**：C3 每个错误码至少一条触发用例（含期望 HTTP 状态与响应 Schema 校验）；
 4. **单一版本引用**：四模块必须引用同一版本（`contracts/v1.0/`），**禁止复制后自行修改**；集成检查核验各模块引用路径与文件哈希一致；
 5. **归属**：契约文件与契约测试基线由 M1 维护（与 §11.1/§11.2 责任一致）；各模块在自己的 `tests/<module>/` 内引用并运行契约测试；
 6. **版本绑定**：契约测试结果写入交付包与测试报告，注明契约版本与被测 commit SHA。
+7. **BLOCKED-1 修订测试矩阵**：必须覆盖 GitPointer 全必填字段与完整 40 位 SHA、单/多文件 manifest、文件数与大小边界、非法路径/外部链接、输入材料 commit 与 `reviewed_commit` 分离、公开/私有仓库权限、指定 SHA 读取、禁止 HEAD 回退、hash/size 不符、部分文件读取、有限网络退避，以及出站 1200 字节边界、入站 >1200 字节完整提取、unit/UUID 稳定、回复 artifact 哈希、超时、JSON/Schema/correlation/版本绑定失败和登记幂等。
+8. **真实证据不替代自动化：** §2.6.9 已完成的 POC 仅作为对应条目的真实证据；其余矩阵项在实现后必须保留独立测试日志，未执行不得写成 PASS。机器可读 Schema 与测试实现属于本修订后续落地项，本次文档修订不声称已经完成。
 
 ---
 
@@ -776,9 +925,9 @@ C1 只规定认证头/Cookie 的传输和 401/403 响应；C7 负责身份建立
 
 | 编号 | 事项 | 所涉契约 | 阻塞原因 | 需要的输入 | 解除路径 |
 |---|---|---|---|---|---|
-| BLOCKED-1 | M2 网页投递长 payload 机制选型：分块投递（ego 手册 R2.6-F）或 Git 指针（`gpt_dispatch.mjs` 单条 1200 字节上限） | C1（关联 DEC-007 关联待办、`module-boundaries.md` §7） | 两种方案对 M2 投递协议的影响不同，本轮无实测数据支撑选型 | 开工会议选型决策（结合 Phase 0 实测约束） | 选型后走契约变更申请，补入 C1 |
+| BLOCKED-1 | M2 GitPointer 出站长材料与 DOM 入站长回复的双向 payload 契约 | C1 §2.2/§2.6/§10（关联 DEC-007、DEC-011、DEC-012 与 `module-boundaries.md` §7） | GPT 对原方案返回 `result=BLOCKED`，要求补齐双向边界、统一 Schema、权限、完整性、安全和失败路径；本修订已逐项写入，但尚未由独立 GPT 复审确认 | 主会话统一验收提交本修订并取得完整 40 位 commit SHA；复审会话基于该 SHA、§2.6、真实 POC 证据及 `payload-choice-inherited-reply.txt` 逐项复核 | **修订中，待复审。** 复审须覆盖全部 `required_boundaries`/`failure_paths`，确认 POC 证据表述未超范围；复审 PASS 后由主会话更新本项状态并落实 §10 Schema/测试，不得由本子 Agent 自行解除 |
 
-除上表外，C1-C8 其余子项均已定稿，**无其他 BLOCKED 项**。注意：本契约冻结不依赖 BLOCKED-1——C1 已冻结的通用规则（payload ≥4 KB 建议 Git 指针、上限 256 KB）与网页通道分块协议相互独立。
+除上表外，C1-C8 其余子项保持原冻结状态。BLOCKED-1 的传输选型已在本修订中确定为“GitPointer 出站 + 完整 DOM 回复入站”，不再以网页分块为默认备选；但§2.6 仍是待复审修订稿，原 GPT 的 BLOCKED 结论不得被改写为 PASS。C1 v1.0.0 基线的其他通用规则不受该待复审状态影响。
 
 ---
 
@@ -788,7 +937,7 @@ C1 只规定认证头/Cookie 的传输和 401/403 响应；C7 负责身份建立
 |---|---|---|---|
 | 1 | 本契约冻结追认 | 批准人当前为主会话（智谱），按治理规则需用户追认后生效 | 随时（追认即生效） |
 | 2 | 模块目录命名 `app/<module>/` 与工作区路径 `workspaces/<module>/` | `module-boundaries.md` §2/§4 标注 [开工会议定稿]；不在 C1-C8 范围，但影响 C6 默认值（`AIEO_WORKSPACE_ROOT`） | 开工会议 |
-| 3 | BLOCKED-1：网页投递长 payload 选型 | 见 §12 | 开工会议 |
+| 3 | BLOCKED-1 修订复审与本修订 commit 绑定 | GitPointer 出站与 DOM 长回复入站方向已写入 §2.6；真实 POC 已证明公开仓库指定 commit 阅读、短指令投递及 4023 字符回复提取，但修订尚未经独立 GPT 复审，不能标 PASS | 主会话提交后，由复审会话按完整 40 位修订 commit 复核；主会话据真实结果验收 |
 | 4 | C7 局域网开放的未来扩展 | HTTPS、访问来源限制、服务身份认证的触发条件与时机（C7 §8.8 明确首期不做） | 出现远程访问需求时 |
 | 5 | 数据库迁移工具与远期目标 | 迁移机制采用版本化脚本（建议 Alembic，M1 实现期可选等效工具）；SQLite → PostgreSQL 远期兼容审计（业务逻辑不得依赖 SQLite 特有行为，04-规范 §5） | M1 实现期 |
 | 6 | 契约测试执行载体 | 合并前契约兼容检查由主会话执行（`module-boundaries.md` §4-3）；脚本化形态（本地脚本 / CI runner）实现期确定 | M1 实现期 |

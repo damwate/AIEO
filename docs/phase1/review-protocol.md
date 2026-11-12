@@ -91,17 +91,24 @@
 
 ### 5.3 轮换操作
 
+**触发硬条件：页面出现“上下文窗口已达上限”，或当前会话长期无有效反馈时，不在旧会话重试。** 不使用“带摘要继承”作为默认迁移方式：长会话继承可能把上下文负担带入新会话。默认执行：
+
+1. 生成并提交《会话交接包》（可用 `handoff/REVIEWER-BOOTSTRAP.md` 模板）；
+2. 开启**全新空白会话**，首条消息自包含：仓库、分支、目标 commit、交接文档路径、任务、验收标准、输出 JSON 格式；
+3. 新会话建立后，将新的会话 URL 与配置更新到 `phase0/logs/gpt-reviewer-session.json`（沿用现有 JSON 结构：conversation_url / captured_at / role）。
+
 ```bash
 node phase0/tools/gpt_dispatch.mjs --new-session --message-file <审查启动简报文件>
 ```
 
-- 简报文件注意单条 1200 字节上限（closeout §5 待办）：超长内容拆分投递或走 Git 指针（文件路径），选型 [待确认，开工会议定稿]；
-- 新会话建立后，将新的会话 URL 与配置更新到 `phase0/logs/gpt-reviewer-session.json`（沿用现有 JSON 结构：conversation_url / captured_at / role）。
+- 网页 `insertText` 出站单条 ≤1200 UTF-8 字节；长材料走 GitPointer，不反复粘贴长文本（详见 `platform-contract-v1.0.md` §2.6）；
+- 入站 DOM 回复不受 1200 字节限制，必须完整提取并保存 artifact/hash；读取失败或证据不全返回 BLOCKED，不宣称已审查；
+- 若当前会话已经返回有效结果，可直接使用该结果，不为轮换而轮换；失效或再次达上限时立即按本节约换，不反复死磕同一路径。
 
 ### 5.4 当前审查会话（截至 2026-11-12，事实）
 
-- URL：`https://chatgpt.com/c/6af4af83-0718-83e8-be08-e427bfb06b96`（Phase 0 十一轮审查会话，配置存于 `phase0/logs/gpt-reviewer-session.json`）；
-- Phase 1 开工后由新建会话接替；本条仅作历史记录。
+- Phase 0 十一轮审查旧会话 `https://chatgpt.com/c/6af4af83-0718-83e8-be08-e427bfb06b96` 已显示“上下文窗口已达上限”，停止向其继续派发；
+- 当前候选会话 `https://chatgpt.com/c/6af52d27-e44c-83ee-95a4-888c1709afcb` 已返回 BLOCKED-1 首轮有效反馈（`phase0/logs/payload-choice-inherited-reply.txt`）；若其失效，按 §5.3 使用 `handoff/REVIEWER-BOOTSTRAP.md` 开启全新会话，不继承摘要。
 
 ## 6. 归档要求
 

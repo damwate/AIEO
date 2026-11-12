@@ -152,10 +152,30 @@ async function stopButtonVisible(page) {
   });
 }
 
+// ---------- 会话上限迁移 ----------
+async function rotateIfContextLimit(page) {
+  // 上限横幅可能晚于 unit/composer 就绪出现，不能只做一次即时检查
+  const limited = await page
+    .waitForFunction(() => (document.body?.innerText || "").includes("上下文窗口已达上限"), null, { timeout: 5000 })
+    .then(() => true)
+    .catch(() => false);
+  if (!limited) return false;
+  log("检测到上下文窗口已达上限：不继承旧会话，改为 Git 交接包 + 全新空白会话");
+  // 不带自动摘要：长会话继承可能把上下文负担带入新会话。统一从首页新建空白会话，
+  // 由自包含简报指向仓库中的交接文档恢复上下文。
+  await page.goto(CHATGPT_HOME, { waitUntil: "domcontentloaded", timeout: 60000 });
+  await page.waitForTimeout(3000);
+  const composer = page.locator('[aria-label="询问 ChatGPT"], [aria-label="Ask ChatGPT"], #prompt-textarea').filter({ visible: true }).first();
+  await composer.waitFor({ state: "visible", timeout: 30000 });
+  log(`已创建空白新会话（未继承摘要）: ${page.url()}`);
+  await shot(page, "session-rotated-blank-by-limit.png");
+  return true;
+}
+
 // ---------- 发送并收集（判定逻辑与 e2e_orchestrate 同语义） ----------
 async function sendAndCollect(page, text, label) {
   const findComposer = async () => {
-    const loc = page.locator('[aria-label="询问 ChatGPT"], [aria-label="Ask ChatGPT"], #prompt-textarea').first();
+    const loc = page.locator('[aria-label="询问 ChatGPT"], [aria-label="Ask ChatGPT"], #prompt-textarea').filter({ visible: true }).first();
     await loc.waitFor({ state: "visible", timeout: 10000 });
     return loc;
   };
@@ -275,20 +295,20 @@ async function mainLocked() {
     log(`会话就绪: ${targetUrl}`);
   }
 
+  await rotateIfContextLimit(page);
+
   const { reply, assistant_uuid, checks } = await sendAndCollect(page, message, "dispatch");
 
-  if (newSession) {
-    // 发送后等真实会话 URL（跳过 local-chatgpt 草稿态）
-    for (let i = 0; i < 10; i++) {
-      await page.waitForTimeout(1000);
-      const m = page.url().match(/chatgpt\.com\/(c\/[0-9a-f-]{36})/i);
-      if (m) {
-        const session = { conversation_url: `https://chatgpt.com/${m[1]}`, captured_at: new Date().toISOString(), role: "reviewer" };
-        writeFileSync(REVIEWER_SESSION, JSON.stringify(session, null, 2), "utf8");
-        log(`审查会话已保存: ${session.conversation_url}`);
-        break;
-      }
+  // 无论新建还是上限迁移，均保存当前真实会话 URL（local-chatgpt 草稿态跳过）
+  for (let i = 0; i < 10; i++) {
+    const m = page.url().match(/chatgpt\.com\/(c\/[0-9a-f-]{36})/i);
+    if (m) {
+      const session = { conversation_url: `https://chatgpt.com/${m[1]}`, captured_at: new Date().toISOString(), role: "reviewer" };
+      writeFileSync(REVIEWER_SESSION, JSON.stringify(session, null, 2), "utf8");
+      log(`审查会话已保存: ${session.conversation_url}`);
+      break;
     }
+    await page.waitForTimeout(1000);
   }
 
   const result = { at: new Date().toISOString(), message_bytes: msgBytes, reply, assistant_uuid, completion_checks: checks };

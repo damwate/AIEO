@@ -1,5 +1,6 @@
 {
-  "conversation_url": "https://chatgpt.com/c/6af4af83-0718-83e8-be08-e427bfb06b96",
-  "captured_at": "2026-11-11T18:11:58.297Z",
-  "role": "reviewer"
+  "conversation_url": "https://chatgpt.com/c/6af52d27-e44c-83ee-95a4-888c1709afcb",
+  "captured_at": "2026-11-12T03:15:00+08:00",
+  "role": "reviewer",
+  "note": "旧会话达上限后由页面“新聊天”产生的会话，已有 BLOCKED-1 首轮审查反馈；后续若失效则改用 handoff/REVIEWER-BOOTSTRAP.md 全新会话"
 }
