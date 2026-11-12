@@ -1,0 +1,140 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-12T05:42:45.721Z",
+  "user_unit_key": "fallback-turn-5:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-5:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "05dfdc7f-9380-47ff-ab6f-4d482e8e73e8",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-5:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "335db8c9bad06bf358935652d5374d2f12d47a1d47e94376f1b9afbda73f6ae9",
+          "2fded5cb51268548da8669d4aa9732f890b2067ff447527e9969328766749751",
+          "d87f9277d02a41fabbed8e3d1b472fc6b0ce5176c07500588fd19529a8419c71",
+          "161f91e0c9e2eb62516839f9382265e798bcc6988aa2cbb69b5a3efe1ab58f03",
+          "32f98c33ca1cb2e756266e5403c2fcf3b1eb18a41ed6e6f6724c553d1360de0d",
+          "3f6c83e6c1745085d1fc5c2fbab75d8fd5c1816b91c0e28b4046d9d3d4ae2760",
+          "1dd86faf67d8d5ccde5fa4050697b68f223deffe233df98602e8e0c5e791353f",
+          "b338f5e0253341073aa3de90f529749232c4088bbd037d6f5a19de20cdb13528"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "335db8c9bad06bf358935652d5374d2f12d47a1d47e94376f1b9afbda73f6ae9",
+          "2fded5cb51268548da8669d4aa9732f890b2067ff447527e9969328766749751",
+          "d87f9277d02a41fabbed8e3d1b472fc6b0ce5176c07500588fd19529a8419c71",
+          "161f91e0c9e2eb62516839f9382265e798bcc6988aa2cbb69b5a3efe1ab58f03",
+          "32f98c33ca1cb2e756266e5403c2fcf3b1eb18a41ed6e6f6724c553d1360de0d",
+          "3f6c83e6c1745085d1fc5c2fbab75d8fd5c1816b91c0e28b4046d9d3d4ae2760",
+          "1dd86faf67d8d5ccde5fa4050697b68f223deffe233df98602e8e0c5e791353f",
+          "b338f5e0253341073aa3de90f529749232c4088bbd037d6f5a19de20cdb13528"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-5:0:user",
+      "fallback-turn-5:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-5:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n{\n\"result\": \"BLOCKED\",\n\"remaining_findings\": [\n\"MAJOR：真实 ChatGPT 多 assistant unit 与动态虚拟列表裁切恢复仍未验证。当前实现已修正“所有可滚动页面一律阻断”的问题：滚动期间集合稳定时可按 STABLE_RENDERED_UNIT_SET 继续；实际观察到集合变化且没有独立逻辑序列时则 fail-closed。代码逻辑与本地 Chrome 仿真 4/4 证据一致，但仿真中的独立逻辑序列来自 fixture，真实派单 readReplySnapshot(page, sentUserUnitKey) 没有传入 expectedUnitKeys。真实页面一旦发生集合变化，仍会阻断；集合稳定也只能证明当前观察到的 DOM 集合稳定，不能证明没有持续隐藏的 unit。尚不能据此确认真实 ChatGPT 的完整多 unit 入站路径满足 §2.6.7。\",\n\"MAJOR：§10 第 7、8 项规定的 BLOCKED-1 测试矩阵尚未完成。现有 GitPointer 远程 POC 只覆盖公开仓库、指定 SHA、manifest 与两个材料的正常读取；私有仓库会话权限、部分文件读取失败、真实网络故障与有限退避耗尽等仍未验证。现有本地负例不能替代这些真实边界验证。契约明确要求未执行的矩阵项不得写成 PASS，因此不能据当前证据解除 BLOCKED-1。\",\n\"边界说明：M1 核心登记入口的 execution_id、correlation_id 强制校验已落实，REVIEW_REPORT 的 Schema PASS 门禁仍在；8/8 测试支持该修复，上一轮 M1 核心绕过问题可关闭。M1 当前仍是本地 JSON 适配器，REST、数据库持久化与 ACK 闭环未实现或验证；这不否定本轮核心登记修复，但不能将本地登记测试表述为完整 M1 服务闭环。\"\n],\n\"unblocked\": false,\n\"summary\": \"已核实 b48696437c1b5b317d2bf105b947a0a03a8e4667 是 a3b8ecfc5d81240b37879d72783400197c1a11a8 的单一后继提交。两项代码整改均有实际实现和测试证据支持：滚动集合稳定时不再误阻断，M1 核心入口强制三 ID；全量回归 10/10，Chrome 本地仿真 4/4，M1 核心登记测试 8/8。GitPointer 公开仓库指定 SHA 回读证据也成立。但真实 ChatGPT 多 unit/动态裁切路径及 §10 要求的关键故障与权限测试仍缺证据。当前修复可确认，BLOCKED-1 尚不能解除。\"\n}",
+      "text_sha256": "b338f5e0253341073aa3de90f529749232c4088bbd037d6f5a19de20cdb13528",
+      "size_bytes": 2256,
+      "assistant_uuid": "05dfdc7f-9380-47ff-ab6f-4d482e8e73e8"
+    }
+  ]
+}

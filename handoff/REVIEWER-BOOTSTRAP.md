@@ -7,7 +7,7 @@
 
 - 仓库：`damwate/AIEO`（公开 GitHub）
 - 当前工作分支：`fix/AIEO-PHASE0-REVIEW-R10`
-- 本交接包对应基线 commit：`81d63f71ef0c5efa65766c9da0331d4f449d06f2`
+- 本交接包对应基线 commit：`b48696437c1b5b317d2bf105b947a0a03a8e4667`
 - main 未合并任何 Phase 0/Phase 1 分支。
 
 ## 2. 已完成【事实，可按下述路径核验】
@@ -27,18 +27,30 @@
    - `docs/phase1/platform-contract-v1.0.md`
    - 决策记录 DEC-011：`docs/phase1/decision-log.md`
 
-## 3. 当前唯一待讨论项
+## 3. 当前待讨论项：范围拆分（不是要求放宽证据）
 
-`platform-contract-v1.0.md` §12 的 **BLOCKED-1：M2 长 payload 投递方式**。
+`platform-contract-v1.0.md` §12 的 BLOCKED-1 已历经多轮实现与复审。最新代码与证据见 §2.6.6–§2.6.13、DEC-012–DEC-016。
 
-候选建议：**Git 指针优先**。任务包/审查材料提交仓库并生成 commit；网页仅发短指令，包含 owner/repo、分支、完整 SHA、路径、验收标准与输出格式；GPT 直接读取 GitHub 实际文件核验。短消息（≤1200 UTF-8 字节）继续走已验证的 CDP 通道。仓库不可达或材料不可核验时返回 BLOCKED；不降级为反复长文本粘贴，不逆向接口，不绕过验证。附件/分块通道如确有需要，另立 POC，不默认可用。
+### 已验证核心路径【有仓库证据】
 
-## 4. 请新审查会话执行
+- 短指令网页收发与生成完成判定；单 assistant unit 长回复（>1200 字节）提取、两次完整读取、artifact/hash 回读。
+- 公开 GitHub 仓库指定完整 SHA 的 manifest 与多文件回读：`phase0/logs/git-pointer-remote-poc.md`。
+- GitPointer 三份机器 Schema 与 Ajv 测试、JSON/Schema/三 ID 绑定。
+- M1 最小本地登记幂等、首次失败补登记且不重新发送 GPT、OS 句柄锁多进程并发。
+- 真实 Chrome 虚拟列表仿真（明确不是 ChatGPT 多 unit）：`phase0/logs/browser-virtual-list-2026-11-12T05-14-59/`。
+- 全量回归 10/10：`phase0/logs/third-round-regression-2026-11-12T05-33-03/result.json`。
 
-1. 阅读上述仓库文件，尤其是 `platform-contract-v1.0.md` §12 与 §13、03 号协议、06 号实施计划；
-2. 评估“Git 指针优先”能否解除 BLOCKED-1，列出必要边界与异常路径；
-3. 只输出一个 JSON 对象：
-   `{"result":"PASS|REWORK|BLOCKED","required_boundaries":["..."],"failure_paths":["..."],"summary":""}`
+### 尚未验证扩展场景【不得当作已测】
+
+- 真实 ChatGPT 多 assistant unit、真实动态虚拟列表裁切恢复；
+- 私有仓库权限、真实网络故障注入与退避耗尽、真实多文件部分读取失败；
+- M1 REST、数据库持久化与 ACK 完整服务闭环。
+
+### 请新会话评估
+
+是否允许以 **PASS_WITH_CONSTRAINTS** 解除 Phase 1 开工阻塞：只在已验证场景运行；遇集合变化、无法证明完整、权限不足或登记异常均 fail-closed/BLOCKED；扩展场景列为后续验收门禁，不宣称当前已测。请给出必须写入上线约束的清单，只输出：
+
+`{"result":"PASS|REWORK|BLOCKED","constraints":["..."],"summary":""}`
 
 ## 5. 会话管理约束【决策】
 
