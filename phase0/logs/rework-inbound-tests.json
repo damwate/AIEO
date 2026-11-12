@@ -1,15 +1,15 @@
 {
-  "started_at": "2026-11-12T04:11:59.237Z",
-  "finished_at": "2026-11-12T04:11:59.253Z",
+  "started_at": "2026-11-12T04:46:23.606Z",
+  "finished_at": "2026-11-12T04:46:23.758Z",
   "node": "v24.14.0",
-  "total": 9,
-  "passed": 9,
+  "total": 21,
+  "passed": 21,
   "failed": 0,
   "artifact_evidence": {
     "reply_bytes": 4530,
     "reply_sha256": "d72176a20e6e17b90100b2c4a4dbf86685b723d842ce0bbf728a82d1ec1153c1",
-    "raw_units_bytes": 5087,
-    "raw_units_sha256": "6cb5d7a336d264487533dc9ae121adf133cc22e14e1122dc47242289e979a409"
+    "raw_units_bytes": 5749,
+    "raw_units_sha256": "472bf41a784aaa43e768d476f2c62088a01993fd8450d666b20be2a2fe42a7f9"
   },
   "tests": [
     {
@@ -25,6 +25,34 @@
       "result": "PASS"
     },
     {
+      "name": "多窗口多 assistant unit 以重叠 key 实体化并保序",
+      "result": "PASS"
+    },
+    {
+      "name": "没有下一 user 时必须真实到底才完成",
+      "result": "PASS"
+    },
+    {
+      "name": "起点存在但中间 assistant unit 被裁掉时窗口跳跃必须失败",
+      "result": "PASS"
+    },
+    {
+      "name": "残缺 DOM 即使两次 key/hash 相同，没有完整区间证明也不得 stable",
+      "result": "PASS"
+    },
+    {
+      "name": "可滚动单窗口即使起点和尾部都在 DOM 也不能直接判完整",
+      "result": "PASS"
+    },
+    {
+      "name": "窗口无重叠、重叠顺序矛盾或重叠原文变化均失败",
+      "result": "PASS"
+    },
+    {
+      "name": "不连续采集失败后不得续用，重新完整连续采集可恢复",
+      "result": "PASS"
+    },
+    {
       "name": "unit 文本变化时全文稳定比较失败",
       "result": "PASS"
     },
@@ -37,7 +65,7 @@
       "result": "PASS"
     },
     {
-      "name": "相同完整快照双读通过并记录每个全文哈希",
+      "name": "相同完整快照双读通过并记录每个全文哈希与连续证明",
       "result": "PASS"
     },
     {
@@ -45,7 +73,27 @@
       "result": "PASS"
     },
     {
+      "name": "无区间证明的 artifact 不得进入成功持久化",
+      "result": "PASS"
+    },
+    {
       "name": "写盘后内容被改动时 hash size 回读负例必须失败",
+      "result": "PASS"
+    },
+    {
+      "name": "精确 ChatGPT 辅助前缀可移除，全文 JSON/POC Schema/三个 ID 绑定通过",
+      "result": "PASS"
+    },
+    {
+      "name": "JSON 不从第一个左括号截取，额外前后文本均失败",
+      "result": "PASS"
+    },
+    {
+      "name": "Schema 失败和任一任务 ID 绑定不一致均失败",
+      "result": "PASS"
+    },
+    {
+      "name": "未提供 Schema 时 JSON/Schema/绑定全部 NOT_REQUESTED",
       "result": "PASS"
     }
   ]

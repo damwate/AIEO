@@ -1,11 +1,14 @@
-// AIEO Phase 1 入站回复：完整 unit 区间、全文稳定比较与原始 artifact 回读校验。
-// 本模块不接触浏览器；DOM 采集与纯函数测试共用同一份选择和校验逻辑。
+// AIEO Phase 1 入站回复：虚拟列表区间实体化、全文稳定比较、JSON/Schema/绑定与原始 artifact 回读校验。
+// 本模块不接触浏览器；DOM 窗口采集与纯函数测试共用同一份连续性证明逻辑。
 
 import { createHash } from "node:crypto";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
+import Ajv2020 from "ajv/dist/2020.js";
+import addFormats from "ajv-formats";
 
 export const MIN_STABLE_READ_INTERVAL_MS = 3000;
+export const CHATGPT_AUX_PREFIX = "ChatGPT 说：";
 
 function inboundError(code, message, details = undefined) {
   const error = new Error(`${code}: ${message}`);
@@ -22,7 +25,202 @@ function asUtf8Buffer(data) {
   return Buffer.isBuffer(data) ? data : Buffer.from(String(data), "utf8");
 }
 
-// domUnits 必须按 DOM 顺序提供完整渲染集合；text 是未经清理的原始 innerText。
+function unitIdentity(unit) {
+  return {
+    key: unit?.key ?? null,
+    role: unit?.role ?? null,
+    text: unit?.text ?? null,
+    assistantUuid: unit?.assistantUuid ?? null,
+  };
+}
+
+function sameUnitIdentity(first, second) {
+  return JSON.stringify(unitIdentity(first)) === JSON.stringify(unitIdentity(second));
+}
+
+function validateWindow(domUnits) {
+  if (!Array.isArray(domUnits) || domUnits.length === 0) {
+    throw inboundError("INBOUND_WINDOW_EMPTY", "虚拟列表窗口为空，无法证明目标区间连续");
+  }
+  const keys = new Set();
+  for (const unit of domUnits) {
+    if (!unit || typeof unit.key !== "string" || unit.key.length === 0) {
+      throw inboundError("INBOUND_UNIT_KEY_MISSING", "窗口内 unit 缺少有效 key");
+    }
+    if (keys.has(unit.key)) {
+      throw inboundError("INBOUND_WINDOW_DUPLICATE_KEY", "同一窗口存在重复 unit key", { unit_key: unit.key });
+    }
+    keys.add(unit.key);
+  }
+}
+
+// 搜索起点时也必须逐窗连续；只允许相同 key 且身份/原文完全一致的窗口衔接。
+export function proveAdjacentWindowOverlap(previousWindow, currentWindow) {
+  validateWindow(previousWindow);
+  validateWindow(currentWindow);
+  const currentByKey = new Map(currentWindow.map((unit, index) => [unit.key, { unit, index }]));
+  const overlaps = [];
+  for (let previousIndex = 0; previousIndex < previousWindow.length; previousIndex += 1) {
+    const previous = previousWindow[previousIndex];
+    const current = currentByKey.get(previous.key);
+    if (current) overlaps.push({ key: previous.key, previous_index: previousIndex, current_index: current.index });
+  }
+  if (overlaps.length === 0) {
+    throw inboundError("INBOUND_WINDOW_DISCONTINUOUS", "相邻虚拟列表窗口没有重叠 unit key，可能裁掉中间内容", {
+      previous_unit_keys: previousWindow.map((unit) => unit.key),
+      current_unit_keys: currentWindow.map((unit) => unit.key),
+    });
+  }
+  const offsets = new Set(overlaps.map((item) => item.previous_index - item.current_index));
+  if (offsets.size !== 1) {
+    throw inboundError("INBOUND_WINDOW_OVERLAP_INCONSISTENT", "相邻窗口重叠 key 的相对顺序不一致", { overlaps });
+  }
+  for (const item of overlaps) {
+    const previous = previousWindow[item.previous_index];
+    const current = currentWindow[item.current_index];
+    if (!sameUnitIdentity(previous, current)) {
+      throw inboundError("INBOUND_WINDOW_OVERLAP_CHANGED", "重叠 unit 的角色、UUID 或原文发生变化", {
+        unit_key: item.key,
+      });
+    }
+  }
+  return { overlap_keys: overlaps.map((item) => item.key), relative_offset: [...offsets][0] };
+}
+
+// 从包含本次 user unit 的窗口开始向下实体化。每次滚动必须用重叠 key 对齐并合并；
+// 下一 user 是明确终点；没有下一 user 时只有真实滚动到底才允许结束。
+export function createInboundRangeCollector(userUnitKey) {
+  if (typeof userUnitKey !== "string" || userUnitKey.length === 0) {
+    throw inboundError("INBOUND_USER_UNIT_KEY_MISSING", "发送双验未记录本次 user unit key");
+  }
+  let started = false;
+  let complete = false;
+  let stitched = [];
+  let startIndex = -1;
+  let endIndex = -1;
+  let endReason = null;
+  let nextUserUnitKey = null;
+  let previousWindow = null;
+  let previousWindowOffset = 0;
+  const windowProofs = [];
+
+  function ingest(domUnits, { atBottom = false, scrollable = false } = {}) {
+    if (complete) throw inboundError("INBOUND_RANGE_ALREADY_COMPLETE", "完整区间已结束，不得继续合并窗口");
+    validateWindow(domUnits);
+    let overlapProof = null;
+    let currentWindowOffset = 0;
+
+    if (!started) {
+      startIndex = domUnits.findIndex((unit) => unit.key === userUnitKey && unit.role === "user");
+      if (startIndex < 0) {
+        throw inboundError("INBOUND_START_UNIT_MISSING", "起点搜索尚未定位本次 user unit", { user_unit_key: userUnitKey });
+      }
+      stitched = structuredClone(domUnits);
+      started = true;
+    } else {
+      overlapProof = proveAdjacentWindowOverlap(previousWindow, domUnits);
+      const offsets = new Set();
+      for (let previousIndex = 0; previousIndex < previousWindow.length; previousIndex += 1) {
+        const currentIndex = domUnits.findIndex((unit) => unit.key === previousWindow[previousIndex].key);
+        if (currentIndex >= 0) offsets.add(previousWindowOffset + previousIndex - currentIndex);
+      }
+      if (offsets.size !== 1) {
+        throw inboundError("INBOUND_WINDOW_OVERLAP_INCONSISTENT", "无法以唯一偏移对齐相邻窗口");
+      }
+      currentWindowOffset = [...offsets][0];
+      if (currentWindowOffset < 0 || currentWindowOffset > stitched.length) {
+        throw inboundError("INBOUND_WINDOW_OFFSET_INVALID", "向下采集出现回退或空洞", {
+          current_window_offset: currentWindowOffset,
+          materialized_count: stitched.length,
+        });
+      }
+      for (let currentIndex = 0; currentIndex < domUnits.length; currentIndex += 1) {
+        const globalIndex = currentWindowOffset + currentIndex;
+        const current = domUnits[currentIndex];
+        if (globalIndex < stitched.length) {
+          if (!sameUnitIdentity(stitched[globalIndex], current)) {
+            throw inboundError("INBOUND_MATERIALIZED_UNIT_CONFLICT", "重叠区域与已实体化 unit 不一致", {
+              unit_key: current.key,
+              global_index: globalIndex,
+            });
+          }
+        } else if (globalIndex === stitched.length) {
+          stitched.push(structuredClone(current));
+        } else {
+          throw inboundError("INBOUND_WINDOW_DISCONTINUOUS", "合并窗口会产生未实体化空洞");
+        }
+      }
+    }
+
+    windowProofs.push({
+      index: windowProofs.length,
+      unit_keys: domUnits.map((unit) => unit.key),
+      unit_text_sha256: domUnits.map((unit) => sha256Hex(asUtf8Buffer(unit.text ?? ""))),
+      window_offset: currentWindowOffset,
+      at_bottom: atBottom === true,
+      overlap_keys: overlapProof?.overlap_keys ?? [],
+    });
+    previousWindow = structuredClone(domUnits);
+    previousWindowOffset = currentWindowOffset;
+
+    const nextUserIndex = stitched.findIndex((unit, index) => index > startIndex && unit.role === "user");
+    const endpointAvailable = nextUserIndex >= 0 || atBottom;
+    if (scrollable && windowProofs.length < 2 && endpointAvailable) {
+      return {
+        started,
+        complete: false,
+        deferred_endpoint: true,
+        end_reason: null,
+        next_user_unit_key: null,
+        materialized_count: stitched.length,
+      };
+    }
+    if (nextUserIndex >= 0) {
+      endIndex = nextUserIndex;
+      nextUserUnitKey = stitched[nextUserIndex].key;
+      endReason = "NEXT_USER";
+      complete = true;
+    } else if (atBottom) {
+      if (stitched[stitched.length - 1]?.role !== "assistant") {
+        throw inboundError("INBOUND_END_BOUNDARY_INVALID", "已到底但目标区间尾部不是 assistant，且没有下一 user 边界");
+      }
+      endIndex = stitched.length - 1;
+      endReason = "DOM_BOTTOM";
+      complete = true;
+    }
+
+    return {
+      started,
+      complete,
+      end_reason: endReason,
+      next_user_unit_key: nextUserUnitKey,
+      materialized_count: stitched.length,
+    };
+  }
+
+  function build() {
+    if (!started) throw inboundError("INBOUND_START_UNIT_MISSING", "未定位本次 user unit，不能构造完整区间");
+    if (!complete || endIndex < startIndex) {
+      throw inboundError("INBOUND_RANGE_INCOMPLETE", "目标区间未到下一 user 或真实底部，拒绝判定完整");
+    }
+    const targetUnits = stitched.slice(startIndex, endIndex + 1);
+    return {
+      units: targetUnits,
+      range_proof: {
+        complete: true,
+        user_unit_key: userUnitKey,
+        next_user_unit_key: nextUserUnitKey,
+        end_reason: endReason,
+        windows: windowProofs,
+        materialized_unit_keys: targetUnits.map((unit) => unit.key),
+      },
+    };
+  }
+
+  return { ingest, build };
+}
+
+// domUnits 必须按 DOM 顺序提供已证明连续的完整目标区间；text 是未经清理的原始 innerText。
 export function selectInboundReply(domUnits, userUnitKey) {
   if (!Array.isArray(domUnits)) {
     throw inboundError("INBOUND_DOM_UNITS_INVALID", "DOM unit 集合不是数组");
@@ -37,7 +235,7 @@ export function selectInboundReply(domUnits, userUnitKey) {
   if (startIndex < 0) {
     throw inboundError(
       "INBOUND_START_UNIT_MISSING",
-      "本次 user unit 不在当前 DOM 中，可能被虚拟列表裁出，拒绝部分提取",
+      "本次 user unit 不在已实体化区间中，可能被虚拟列表裁出，拒绝部分提取",
       { user_unit_key: userUnitKey, rendered_unit_keys: domUnits.map((unit) => unit?.key ?? null) },
     );
   }
@@ -117,6 +315,8 @@ function stabilitySummary(snapshot) {
       size_bytes: unit.size_bytes,
     })),
     assistant_uuid: snapshot.assistant_uuid,
+    next_user_unit_key: snapshot.next_user_unit_key ?? null,
+    range_end_reason: snapshot.range_proof?.end_reason ?? null,
   };
 }
 
@@ -128,6 +328,8 @@ export function compareInboundSnapshots(first, second, intervalMs) {
   const secondSummary = stabilitySummary(second);
   const checks = {
     interval_at_least_3000ms: Number.isFinite(intervalMs) && intervalMs >= MIN_STABLE_READ_INTERVAL_MS,
+    first_range_complete: first.range_proof?.complete === true,
+    second_range_complete: second.range_proof?.complete === true,
     unit_key_list_equal: JSON.stringify(firstSummary.unit_keys) === JSON.stringify(secondSummary.unit_keys),
     unit_count_equal: firstSummary.unit_count === secondSummary.unit_count,
     unit_text_hashes_equal:
@@ -140,6 +342,8 @@ export function compareInboundSnapshots(first, second, intervalMs) {
       typeof firstSummary.assistant_uuid === "string" && firstSummary.assistant_uuid.length > 0 &&
       typeof secondSummary.assistant_uuid === "string" && secondSummary.assistant_uuid.length > 0,
     assistant_uuid_stable: firstSummary.assistant_uuid === secondSummary.assistant_uuid,
+    next_user_boundary_stable: firstSummary.next_user_unit_key === secondSummary.next_user_unit_key,
+    range_end_reason_stable: firstSummary.range_end_reason === secondSummary.range_end_reason,
   };
   const result = {
     stable: Object.values(checks).every(Boolean),
@@ -149,7 +353,7 @@ export function compareInboundSnapshots(first, second, intervalMs) {
     second: secondSummary,
   };
   if (!result.stable) {
-    throw inboundError("INBOUND_UNSTABLE_READ", "完整 unit 区间两次读取不稳定，拒绝成功返回", result);
+    throw inboundError("INBOUND_UNSTABLE_READ", "完整区间证明或两次读取稳定性未通过，拒绝成功返回", result);
   }
   return result;
 }
@@ -201,22 +405,116 @@ export function persistInboundArtifacts({ directory, snapshot, extractedAt }) {
   if (!snapshot || !Array.isArray(snapshot.units) || typeof snapshot.reply !== "string") {
     throw inboundError("ARTIFACT_SNAPSHOT_INVALID", "缺少可持久化的完整入站快照");
   }
+  if (snapshot.range_proof?.complete !== true) {
+    throw inboundError("ARTIFACT_RANGE_INCOMPLETE", "缺少虚拟列表完整区间证明，拒绝持久化为成功 artifact");
+  }
   mkdirSync(directory, { recursive: true });
   const rawDocument = {
-    format_version: "1.0",
+    format_version: "1.1",
     extracted_at: extractedAt,
     user_unit_key: snapshot.user_unit_key,
     next_user_unit_key: snapshot.next_user_unit_key,
     unit_keys: snapshot.unit_keys,
     unit_count: snapshot.unit_count,
     assistant_uuid: snapshot.assistant_uuid,
+    range_proof: snapshot.range_proof,
     units: snapshot.units,
   };
-  // 先写原始 unit，再写原始合成文本；两者都回读通过后才允许调用方写 result.json。
   const rawUnits = writeAndVerify(
     join(directory, "raw-units.json"),
     Buffer.from(JSON.stringify(rawDocument, null, 2), "utf8"),
   );
   const reply = writeAndVerify(join(directory, "reply.txt"), Buffer.from(snapshot.reply, "utf8"));
   return { raw_units: rawUnits, reply };
+}
+
+export function extractCompleteJson(rawArtifact) {
+  const raw = Buffer.isBuffer(rawArtifact) ? rawArtifact.toString("utf8") : String(rawArtifact);
+  const prefixRemoved = raw.startsWith(CHATGPT_AUX_PREFIX);
+  // 只允许移除精确辅助前缀；不得从第一个 { 截取或忽略其他非 JSON 文本。
+  const jsonText = prefixRemoved ? raw.slice(CHATGPT_AUX_PREFIX.length) : raw;
+  try {
+    return { value: JSON.parse(jsonText), prefix_removed: prefixRemoved, json_text: jsonText };
+  } catch (error) {
+    throw inboundError("INBOUND_JSON_PARSE_FAILED", "完整原始 artifact 不是单一可解析 JSON", {
+      prefix_removed: prefixRemoved,
+      cause: error.message,
+    });
+  }
+}
+
+export function validateInboundJsonArtifact({ artifactPath, schemaPath = null, expectedIds = {} }) {
+  if (!schemaPath) {
+    return {
+      status: "NOT_REQUESTED",
+      json: { status: "NOT_REQUESTED" },
+      schema: { status: "NOT_REQUESTED" },
+      binding: {
+        status: "NOT_REQUESTED",
+        task_id: "NOT_REQUESTED",
+        execution_id: "NOT_REQUESTED",
+        correlation_id: "NOT_REQUESTED",
+      },
+      parsed_json: null,
+    };
+  }
+
+  const artifactBytes = readFileSync(artifactPath);
+  const extracted = extractCompleteJson(artifactBytes);
+  let schema;
+  try {
+    schema = JSON.parse(readFileSync(schemaPath, "utf8"));
+  } catch (error) {
+    throw inboundError("INBOUND_SCHEMA_READ_FAILED", "Schema 文件读取或解析失败", { cause: error.message });
+  }
+  const ajv = new Ajv2020({ allErrors: true, strict: true });
+  addFormats(ajv);
+  let validate;
+  try {
+    validate = ajv.compile(schema);
+  } catch (error) {
+    throw inboundError("INBOUND_SCHEMA_COMPILE_FAILED", "Schema 编译失败", { cause: error.message });
+  }
+  const schemaValid = validate(extracted.value) === true;
+  if (!schemaValid) {
+    throw inboundError("INBOUND_SCHEMA_VALIDATION_FAILED", "回复 JSON 不符合指定 Schema", {
+      errors: validate.errors ?? [],
+    });
+  }
+
+  const bindings = {};
+  for (const field of ["task_id", "execution_id", "correlation_id"]) {
+    const expected = expectedIds?.[field];
+    if (expected === null || expected === undefined) {
+      bindings[field] = "NOT_REQUESTED";
+      continue;
+    }
+    const actual = extracted.value?.[field];
+    if (actual !== expected) {
+      throw inboundError("INBOUND_TASK_BINDING_MISMATCH", `${field} 与本次派发绑定不完全一致`, {
+        field,
+        expected,
+        actual: actual ?? null,
+      });
+    }
+    bindings[field] = "PASS";
+  }
+  const requestedBindings = Object.values(bindings).filter((value) => value !== "NOT_REQUESTED");
+  return {
+    status: "PASS",
+    json: {
+      status: "PASS",
+      artifact_path: artifactPath,
+      artifact_sha256: sha256Hex(artifactBytes),
+      auxiliary_prefix_removed: extracted.prefix_removed,
+      auxiliary_prefix: extracted.prefix_removed ? CHATGPT_AUX_PREFIX : null,
+      full_document_parsed: true,
+    },
+    schema: { status: "PASS", schema_path: schemaPath, errors: [] },
+    binding: {
+      status: requestedBindings.length > 0 ? "PASS" : "NOT_REQUESTED",
+      ...bindings,
+    },
+    parsed_json: extracted.value,
+  };
 }

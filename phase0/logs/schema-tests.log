@@ -28,4 +28,11 @@ PASS [review-report.schema.json] reviewed_commit 非完整 SHA -> false (/review
 PASS [review-report.schema.json] 缺输入 manifest hash 绑定 -> false (/ must have required property 'input_material_manifest_sha256')
 PASS [review-report.schema.json] correlation_id 格式错误 -> false (/correlation_id must match pattern "^CORR-[0-9]{3,}$"; /correlation_id must match pattern "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"; /correlation_id must match a schema in anyOf)
 PASS [review-report.schema.json] unblocked 类型错误 -> false (/unblocked must be boolean)
-SCHEMA_TEST_SUMMARY total=30 passed=30 failed=0
+PASS [gpt-inbound-poc.schema.json] 入站 POC 1000 汉字正例 -> true (valid)
+PASS [gpt-inbound-poc.schema.json] 入站 POC 1500 汉字上界 -> true (valid)
+PASS [gpt-inbound-poc.schema.json] 入站 POC text 不足 1000 -> false (/text must NOT have fewer than 1000 characters)
+PASS [gpt-inbound-poc.schema.json] 入站 POC text 超 1500 -> false (/text must NOT have more than 1500 characters)
+PASS [gpt-inbound-poc.schema.json] 入站 POC text 混入非汉字 -> false (/text must match pattern "^[\p{Script=Han}]+$")
+PASS [gpt-inbound-poc.schema.json] 入站 POC test 标识错误 -> false (/test must be equal to constant)
+PASS [gpt-inbound-poc.schema.json] 入站 POC 缺 correlation_id -> false (/ must have required property 'correlation_id')
+SCHEMA_TEST_SUMMARY total=37 passed=37 failed=0

@@ -89,3 +89,9 @@
 - **决策内容：** 将 §2.6.7 从设计要求落实为可执行实现：`gpt_dispatch.mjs` 以本次 user unit key 为起点收集完整 assistant unit 区间，确认窗后两次完整读取比较 key 列表、数量、逐 unit 全文哈希及尾部 UUID；原始 `raw-units.json`/`reply.txt` 先落盘、回读校验 SHA-256/size 后再写 `result.json`。机器 Schema 统一放 `contracts/v1.0/`，正/负例使用 Ajv 验证。网页出站超限只缩短指令或改用 GitPointer，不再保留自动分块提示。
 - **测试证据：** Schema 30/30（`phase0/logs/schema-tests.log`）；入站本地测试 9/9（`phase0/logs/rework-inbound-tests.{log,json}`）；真实网页 POC 回复 6625 UTF-8 字节，assistant UUID `8535d4f2-1c41-4091-817f-7b7c0f3f314a`，`reply.txt` SHA-256 `27c6c9e3c3e644cd6abcf0ebab932793d5f6c5dc3fb92aedbcc15e2b5f230af7`，证据目录 `phase0/logs/dispatch-2026-11-12T04-00-43/`，独立核验 17 项全 true（`independent-verification.json`），报告 `phase0/logs/inbound-real-poc.md`。
 - **边界：** 真实 POC 为单 assistant unit；真实多 unit、虚拟列表裁切、网页故障注入、M1 登记/ACK/幂等补登记、私有权限和 GitPointer 端到端发布读取尚未验证。BLOCKED-1 仍待复审，本条目不构成 PASS。
+
+### DEC-014 虚拟列表连续性与 M1 最小登记闭环（BLOCKED-1 待复审）
+
+- **决策内容：** 入站完整性不得只凭当前可见 DOM 双读一致判定。区间采集必须证明连续：相邻窗口重叠 unit key 且原文/角色/UUID 一致，缺起点、跳窗、顺序冲突或未到终点均失败。报告成功前增加全文 JSON parse、Ajv Schema 与 task/execution/correlation 精确绑定。M1 采用最小本地登记适配器，幂等键包含 task_id/execution_id/correlation_id/artifact_sha256；恢复只重试登记，不重跑 GPT。
+- **测试证据：** 本地入站 21/21（含中间 unit 裁切负例）；M1 登记 6/6；Schema 37/37。最终真实 POC `phase0/logs/dispatch-2026-11-12T04-41-46/`：回复 4072 字节，两个窗口完整重叠，双读 3553ms，JSON/Schema/ID 绑定通过，M1 `ART-M1-000002`，独立核验 23 项全 true。恢复文件 `phase0/logs/m1-recovery-retry.json`、`m1-recovery-duplicate.json`：首次失败重试成功、重复不新增，`no_new_gpt_send=true`。
+- **边界：** M1 为最小本地 JSON 适配器，不是完整平台；真实多 assistant unit、真实动态裁切恢复、REST/数据库/ACK/并发与 GitPointer 私有权限/故障注入未验证。BLOCKED-1 仍待 GPT 复审。

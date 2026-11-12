@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aieo.local/contracts/v1.0/gpt-inbound-poc.schema.json",
+  "title": "AIEO GPT inbound Schema and binding POC",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "test",
+    "text",
+    "task_id",
+    "execution_id",
+    "correlation_id"
+  ],
+  "properties": {
+    "test": { "const": "INBOUND_SCHEMA_M1_POC" },
+    "text": {
+      "type": "string",
+      "minLength": 1000,
+      "maxLength": 1500,
+      "pattern": "^[\\p{Script=Han}]+$"
+    },
+    "task_id": { "type": "string", "pattern": "^T-(P[0-9]+-)?[0-9]{3,}$" },
+    "execution_id": { "type": "string", "pattern": "^EXEC-[0-9]{3,}$" },
+    "correlation_id": {
+      "type": "string",
+      "maxLength": 64,
+      "anyOf": [
+        { "pattern": "^CORR-[0-9]{3,}$" },
+        { "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$" }
+      ]
+    }
+  }
+}

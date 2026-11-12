@@ -309,6 +309,15 @@ PENDING 可被发送方取消 → CANCELLED（终态）
 - 真实网页 POC：`phase0/logs/dispatch-2026-11-12T04-00-43/`。请求 493 UTF-8 字节，真实回复 **6625 UTF-8 字节**（>1200），assistant UUID `8535d4f2-1c41-4091-817f-7b7c0f3f314a`；两次完整读取间隔 3020ms；`reply.txt` SHA-256 `27c6c9e3c3e644cd6abcf0ebab932793d5f6c5dc3fb92aedbcc15e2b5f230af7`。工具退出后独立回读校验全部通过（`independent-verification.json`，17 项 checks 全 true）。详见 `phase0/logs/inbound-real-poc.md`。
 - 证据边界：真实网页 POC 为单 assistant unit；真实多 unit、虚拟列表裁切和网页故障注入未执行，仅由本地自动化覆盖。M1 artifact 登记、ACK、幂等补登记仍未实现/验证；GitPointer 实际发布/读取、私有权限、网络退耗、秘密扫描等端到端测试未执行。上述未验证项不得被本记录掩盖，BLOCKED-1 需由复审决定是否解除。
 
+#### 2.6.11 虚拟列表连续性与 M1 最小登记闭环补充证据
+
+- 区间实体化读取：`phase0/tools/inbound_reply.mjs` 现要求相邻采集窗口存在重叠 unit key，并校验重叠原文、角色和 UUID；起点缺失、窗口跳跃/顺序冲突、无法到达终点均失败。新增“起点存在但中间 assistant unit 被裁掉”负例，双读一致也不能覆盖不连续区间。本地测试 **21/21** 通过（`phase0/logs/rework-inbound-tests.{log,json}`）。
+- JSON/Schema/绑定：`gpt_dispatch.mjs` 支持 `--schema` 及三个关联 ID 参数；仅移除精确 `ChatGPT 说：` 前缀后全文 parse，Ajv 校验及 ID 精确绑定均在写成功 `result.json` 前完成。Schema 测试 **37/37** 通过（`phase0/logs/schema-tests.log`）。
+- M1 最小本地登记：`phase0/tools/m1_artifact_registry.mjs` 持久化原文/hash/unit 元数据和幂等键；重复登记不新增，hash 变化拒绝复用。测试 **6/6** 通过（`phase0/logs/m1-registry-tests.{log,json}`）。这是 `MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM`，不代表 REST/数据库/完整 M1 已实现。
+- 最终真实 POC：`phase0/logs/dispatch-2026-11-12T04-41-46/`，回复 4072 UTF-8 字节，两个采集窗口完整重叠，双读间隔 3553ms；JSON/Schema/三个 ID 绑定全部通过，M1 登记 `ART-M1-000002`。独立核验 23 项全 true（`independent-verification.json`）。
+- 恢复证据：`phase0/logs/m1-recovery-retry.json` 记录首次登记失败后以同一 artifact 重试成功；`m1-recovery-duplicate.json` 证明重复登记不新增；恢复前后发送双验日志计数均为 16，`no_new_gpt_send=true`，未重新向 GPT 发消息。
+- 仍未实测：真实多 assistant unit、真实页面动态裁切恢复、M1 REST/数据库/ACK/并发控制、GitPointer 私有权限与故障注入。上述边界继续保留，BLOCKED-1 由复审决定。
+
 ---
 
 ## 3. C2 数据模型

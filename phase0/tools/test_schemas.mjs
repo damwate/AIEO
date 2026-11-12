@@ -12,6 +12,7 @@ const schemaNames = [
   "git-pointer.schema.json",
   "git-pointer-manifest.schema.json",
   "review-report.schema.json",
+  "gpt-inbound-poc.schema.json",
 ];
 
 const ajv = new Ajv2020({ allErrors: true, strict: true });
@@ -74,6 +75,14 @@ const review = {
   knowledge_base_commit: commitC,
   result: "PASS",
   summary: "审查通过",
+};
+
+const poc = {
+  test: "INBOUND_SCHEMA_M1_POC",
+  text: "汉".repeat(1000),
+  task_id: "T-P1-901",
+  execution_id: "EXEC-901",
+  correlation_id: "CORR-901",
 };
 
 const cases = [];
@@ -141,6 +150,14 @@ invalid("review-report.schema.json", "reviewed_commit 非完整 SHA", changed(re
 invalid("review-report.schema.json", "缺输入 manifest hash 绑定", changed(review, (v) => delete v.input_material_manifest_sha256));
 invalid("review-report.schema.json", "correlation_id 格式错误", changed(review, (v) => { v.correlation_id = "corr-1"; }));
 invalid("review-report.schema.json", "unblocked 类型错误", changed(review, (v) => { v.unblocked = "false"; }));
+
+valid("gpt-inbound-poc.schema.json", "入站 POC 1000 汉字正例", poc);
+valid("gpt-inbound-poc.schema.json", "入站 POC 1500 汉字上界", changed(poc, (v) => { v.text = "汉".repeat(1500); }));
+invalid("gpt-inbound-poc.schema.json", "入站 POC text 不足 1000", changed(poc, (v) => { v.text = "汉".repeat(999); }));
+invalid("gpt-inbound-poc.schema.json", "入站 POC text 超 1500", changed(poc, (v) => { v.text = "汉".repeat(1501); }));
+invalid("gpt-inbound-poc.schema.json", "入站 POC text 混入非汉字", changed(poc, (v) => { v.text = `${"汉".repeat(999)}A`; }));
+invalid("gpt-inbound-poc.schema.json", "入站 POC test 标识错误", changed(poc, (v) => { v.test = "OTHER"; }));
+invalid("gpt-inbound-poc.schema.json", "入站 POC 缺 correlation_id", changed(poc, (v) => { delete v.correlation_id; }));
 
 let passed = 0;
 let failed = 0;

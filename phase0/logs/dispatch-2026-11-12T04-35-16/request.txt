@@ -1,0 +1,1 @@
+上一次 POC 的 text 为 1586 字，超出 Schema。重新执行一次，只输出一个 JSON 对象，不要 Markdown 或解释。字段原样为：test="INBOUND_SCHEMA_M1_POC"，task_id="T-P1-902"，execution_id="EXEC-902"，correlation_id="CORR-902"。text 必须恰好 1200 个中文汉字，生成后自行逐字计数，少补多删；只能含汉字，不要数字、字母、标点、空格或换行。内容连贯说明完整提取、窗口连续、全文校验、任务绑定、幂等登记及失败只补登记不重发。不得增加字段。

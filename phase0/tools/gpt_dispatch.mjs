@@ -4,7 +4,7 @@
 //   node gpt_dispatch.mjs --new-session --message-file <txt>   # 新建审查会话并发送首条消息
 //   node gpt_dispatch.mjs --message-file <txt>                 # 向已保存会话发送
 //   node gpt_dispatch.mjs --message "<文本>"                   # 直接传文本
-//   可选绑定：--task-id <T-P1-001> --execution-id <EXEC-001> --correlation-id <CORR-001>
+//   可选绑定/校验：--task-id <T-P1-001> --execution-id <EXEC-001> --correlation-id <CORR-001> --schema <path>
 //
 // 行为：
 //   - 复用 POC-03 验证过的 CDP 接管模式与 DOM 契约（结构化判定、发送双验、75s 确认窗）
@@ -27,9 +27,13 @@ import { acquireSessionLock } from "../e2e-poc/session_lock.mjs";
 import {
   MIN_STABLE_READ_INTERVAL_MS,
   compareInboundSnapshots,
+  createInboundRangeCollector,
   persistInboundArtifacts,
+  proveAdjacentWindowOverlap,
   selectInboundReply,
+  validateInboundJsonArtifact,
 } from "./inbound_reply.mjs";
+import { registerArtifactWithRetry } from "./m1_artifact_registry.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const AIEO_ROOT = join(__dirname, "..", "..");
@@ -62,7 +66,7 @@ let message = null;
 if (fileIdx >= 0) message = readFileSync(args[fileIdx + 1], "utf8").trim();
 else if (msgIdx >= 0) message = args[msgIdx + 1];
 if (!message) {
-  console.error("用法: node gpt_dispatch.mjs [--new-session] --message-file <txt> | --message <文本> [--task-id <id>] [--execution-id <id>] [--correlation-id <id>]");
+  console.error("用法: node gpt_dispatch.mjs [--new-session] --message-file <txt> | --message <文本> [--task-id <id>] [--execution-id <id>] [--correlation-id <id>] [--schema <path>]");
   process.exit(2);
 }
 
@@ -81,6 +85,7 @@ const optionalIds = {
   execution_id: optionalArg("--execution-id"),
   correlation_id: optionalArg("--correlation-id"),
 };
+const schemaPath = optionalArg("--schema");
 const idRules = {
   task_id: /^T-(P[0-9]+-)?[0-9]{3,}$/,
   execution_id: /^EXEC-[0-9]{3,}$/,
@@ -186,17 +191,110 @@ async function readDomUnits(page) {
   }));
 }
 
+async function readDomWindow(page) {
+  const units = await readDomUnits(page);
+  const scroll = await page.evaluate(() => {
+    const candidates = Array.from(document.querySelectorAll("[data-content-search-unit-key]"));
+    const anchor = candidates.find((el) => el.offsetParent !== null || el.getClientRects().length > 0) || candidates[0];
+    let scroller = anchor?.parentElement ?? null;
+    while (scroller && scroller !== document.body) {
+      const style = getComputedStyle(scroller);
+      if (/(auto|scroll|overlay)/.test(style.overflowY) && scroller.scrollHeight > scroller.clientHeight) break;
+      scroller = scroller.parentElement;
+    }
+    const target = scroller && scroller !== document.body ? scroller : document.scrollingElement;
+    if (!target) return { at_top: true, at_bottom: true, scrollable: false, scroll_top: 0, scroll_height: 0, client_height: 0 };
+    return {
+      at_top: target.scrollTop <= 1,
+      at_bottom: target.scrollTop + target.clientHeight >= target.scrollHeight - 2,
+      scrollable: target.scrollHeight > target.clientHeight + 2,
+      scroll_top: target.scrollTop,
+      scroll_height: target.scrollHeight,
+      client_height: target.clientHeight,
+    };
+  });
+  return { units, ...scroll };
+}
+
+async function scrollDomWindow(page, direction) {
+  const result = await page.evaluate(({ direction }) => {
+    const candidates = Array.from(document.querySelectorAll("[data-content-search-unit-key]"));
+    const anchor = candidates.find((el) => el.offsetParent !== null || el.getClientRects().length > 0) || candidates[0];
+    let scroller = anchor?.parentElement ?? null;
+    while (scroller && scroller !== document.body) {
+      const style = getComputedStyle(scroller);
+      if (/(auto|scroll|overlay)/.test(style.overflowY) && scroller.scrollHeight > scroller.clientHeight) break;
+      scroller = scroller.parentElement;
+    }
+    const target = scroller && scroller !== document.body ? scroller : document.scrollingElement;
+    if (!target) return { before: 0, after: 0 };
+    const before = target.scrollTop;
+    const delta = Math.max(200, target.clientHeight * 0.65) * direction;
+    target.scrollTop = Math.max(0, Math.min(target.scrollHeight - target.clientHeight, before + delta));
+    return { before, after: target.scrollTop };
+  }, { direction });
+  await page.waitForTimeout(250);
+  return result;
+}
+
+function findStartIndex(windowUnits, userUnitKey) {
+  return windowUnits.findIndex((unit) => unit.key === userUnitKey && unit.role === "user");
+}
+
+// 两段式实体化：先向上逐窗定位起点，再向下逐窗收集至下一 user 或真实底部。
+// 起点搜索和回复采集的每一次窗口转换都必须有相同 key 重叠；跳窗直接失败。
 async function readReplySnapshot(page, userUnitKey) {
   const readStartedAt = Date.now();
-  const domUnits = await readDomUnits(page);
-  const selected = selectInboundReply(domUnits, userUnitKey);
-  const visibleUnits = domUnits.filter((unit) => unit.visible);
+  const maxWindowTransitions = Number(process.env.AIEO_GPT_CONTROLLER_MAX_RANGE_SCROLLS || 200);
+  let current = await readDomWindow(page);
+  if (current.units.length === 0) throw new Error("INBOUND_WINDOW_EMPTY: 页面没有已渲染 unit");
+  let previousSearch = null;
+  const searchProof = [];
+  let transitions = 0;
+
+  while (true) {
+    if (previousSearch) {
+      const overlap = proveAdjacentWindowOverlap(previousSearch.units, current.units);
+      searchProof.push({ unit_keys: current.units.map((unit) => unit.key), ...overlap });
+    } else {
+      searchProof.push({ unit_keys: current.units.map((unit) => unit.key), overlap_keys: [] });
+    }
+    const startFound = findStartIndex(current.units, userUnitKey) >= 0;
+    // 可滚动页面即使起点和尾部同屏 DOM 存在，也先向上离开底部，再向下分段复核。
+    if (startFound && (!current.at_bottom || !current.scrollable)) break;
+    if (current.at_top) {
+      throw new Error(`INBOUND_START_UNIT_MISSING: 连续向上搜索到顶部仍未找到可分段读取的 ${userUnitKey}`);
+    }
+    if (transitions >= maxWindowTransitions) throw new Error("INBOUND_RANGE_SCROLL_LIMIT: 起点搜索超过窗口转换上限");
+    const moved = await scrollDomWindow(page, -1);
+    transitions += 1;
+    previousSearch = current;
+    current = await readDomWindow(page);
+    if (moved.before === moved.after) throw new Error("INBOUND_START_SEARCH_NO_PROGRESS: 向上滚动无位移且尚未到顶部");
+  }
+
+  const collector = createInboundRangeCollector(userUnitKey);
+  let collectionState = collector.ingest(current.units, { atBottom: current.at_bottom, scrollable: current.scrollable });
+  while (!collectionState.complete) {
+    if (current.at_bottom) throw new Error("INBOUND_RANGE_INCOMPLETE: 已到底但未形成完整目标区间");
+    if (transitions >= maxWindowTransitions) throw new Error("INBOUND_RANGE_SCROLL_LIMIT: 区间采集超过窗口转换上限");
+    const moved = await scrollDomWindow(page, 1);
+    transitions += 1;
+    current = await readDomWindow(page);
+    if (moved.before === moved.after) throw new Error("INBOUND_RANGE_SCROLL_NO_PROGRESS: 向下滚动无位移且尚未到终点");
+    collectionState = collector.ingest(current.units, { atBottom: current.at_bottom, scrollable: current.scrollable });
+  }
+
+  const materialized = collector.build();
+  const selected = selectInboundReply(materialized.units, userUnitKey);
+  const visibleUnits = current.units.filter((unit) => unit.visible);
   const tail = visibleUnits.length > 0 ? visibleUnits[visibleUnits.length - 1] : null;
   return {
     ...selected,
+    range_proof: { ...materialized.range_proof, start_search_windows: searchProof, window_transitions: transitions },
     read_started_at: new Date(readStartedAt).toISOString(),
     read_finished_at: new Date().toISOString(),
-    rendered_unit_keys: domUnits.map((unit) => unit.key),
+    rendered_unit_keys: current.units.map((unit) => unit.key),
     tail: tail ? { key: tail.key, role: tail.role, assistantUuid: tail.assistantUuid } : null,
   };
 }
@@ -303,12 +401,14 @@ async function sendAndCollect(page, text, label) {
     target_tail_matches_overall:
       firstSnapshot.assistant_uuid === tailAfter?.assistantUuid && secondSnapshot.assistant_uuid === tailAgain?.assistantUuid,
     stable_unit_read: stability.stable === true,
+    target_range_materialized:
+      firstSnapshot.range_proof?.complete === true && secondSnapshot.range_proof?.complete === true,
     composer_empty: composerEmpty === true,
   };
   if (!Object.values(checks).every(Boolean)) {
     throw new Error(`完成判定未通过: ${JSON.stringify(checks)}`);
   }
-  log(`[${label}] COMPLETED，${secondSnapshot.unit_count} 个 assistant unit，回复 ${Buffer.byteLength(secondSnapshot.reply, "utf8")} UTF-8 字节`);
+  log(`[${label}] COMPLETED，${secondSnapshot.unit_count} 个 assistant unit，回复 ${Buffer.byteLength(secondSnapshot.reply, "utf8")} UTF-8 字节，区间窗口 ${secondSnapshot.range_proof.windows.length} 个`);
   await shot(page, `reply-${label}.png`);
   return {
     snapshot: secondSnapshot,
@@ -392,6 +492,47 @@ async function mainLocked() {
   // 原始 unit 与合成回复先落盘、回读核验；任一失败都不会写 result.json。
   const extractedAt = new Date().toISOString();
   const artifacts = persistInboundArtifacts({ directory: EV_DIR, snapshot, extractedAt });
+
+  // 从已回读的原始 artifact 做全文 JSON 解析；未请求 Schema 时明确 NOT_REQUESTED。
+  const validationWithJson = validateInboundJsonArtifact({
+    artifactPath: artifacts.reply.path,
+    schemaPath,
+    expectedIds: optionalIds,
+  });
+  const { parsed_json: parsedJson, ...validation } = validationWithJson;
+  log(`JSON/Schema/绑定校验: ${validation.status}`);
+
+  // 只有原始 artifact 与请求的校验全部通过后才登记；失败只重试本地登记，绝不重发 GPT。
+  let m1Registration;
+  if (optionalIds.task_id) {
+    const artifactKind = schemaPath
+      ? (schemaPath.replaceAll("\\", "/").endsWith("/review-report.schema.json") ? "REVIEW_REPORT" : "GPT_SCHEMA_VALIDATED_JSON")
+      : "GPT_REPLY_TEXT";
+    m1Registration = registerArtifactWithRetry({
+      registryPath: join(LOG_DIR, "m1-artifact-registry.json"),
+      artifactPath: artifacts.reply.path,
+      ...optionalIds,
+      artifact_kind: artifactKind,
+      schema_validation: validation.schema.status,
+      unit_metadata: {
+        user_unit_key: snapshot.user_unit_key,
+        next_user_unit_key: snapshot.next_user_unit_key,
+        unit_keys: snapshot.unit_keys,
+        unit_count: snapshot.unit_count,
+        assistant_uuid,
+        range_proof: snapshot.range_proof,
+      },
+    });
+    log(`M1 本地登记: ${m1Registration.status} artifact_id=${m1Registration.artifact_id} attempts=${m1Registration.attempt_count}`);
+  } else {
+    m1Registration = {
+      status: "NOT_REQUESTED",
+      reason: "task_id 未提供；未请求 M1 业务 artifact 登记",
+      adapter_scope: "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM",
+    };
+    log("M1 本地登记: NOT_REQUESTED（未提供 task_id）");
+  }
+
   const result = {
     at: extractedAt,
     message_bytes: msgBytes,
@@ -402,6 +543,9 @@ async function mainLocked() {
     unit_count: snapshot.unit_count,
     assistant_uuid,
     stability,
+    range_proof: snapshot.range_proof,
+    json_schema_binding: validation,
+    m1_registration: m1Registration,
     artifact_sha256: artifacts.reply.artifact_sha256,
     size_bytes: artifacts.reply.size_bytes,
     reply_path: artifacts.reply.path,
@@ -416,6 +560,8 @@ async function mainLocked() {
       ...checks,
       raw_units_artifact_readback: artifacts.raw_units.readback_verified === true,
       reply_artifact_readback: artifacts.reply.readback_verified === true,
+      json_schema_binding: validation.status === "PASS" || validation.status === "NOT_REQUESTED",
+      m1_registration: ["REGISTERED", "RECOVERED", "DUPLICATE", "NOT_REQUESTED"].includes(m1Registration.status),
     },
     ...Object.fromEntries(Object.entries(optionalIds).filter(([, value]) => value !== null)),
   };

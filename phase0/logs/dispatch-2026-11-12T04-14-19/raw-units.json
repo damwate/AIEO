@@ -1,0 +1,21 @@
+{
+  "format_version": "1.0",
+  "extracted_at": "2026-11-12T04:17:51.567Z",
+  "user_unit_key": "fallback-turn-3:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-3:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "a2c0ea43-057c-4fb1-887b-14376643347b",
+  "units": [
+    {
+      "key": "fallback-turn-3:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n{\n\"result\": \"BLOCKED\",\n\"remaining_findings\": [\n\"指定 commit `d98bf50c6fe427d338d053659486b74d9b8c7405` 相对 `27999da0e2ad8490567519d4e97d7a01a7acd069` 已核实为 ahead 1、behind 0，修订提交关系正确。三份机器 Schema 均已实际存在；Ajv 测试 30/30、本地入站测试 9/9 均有日志支持。真实网页 POC 的 6625 字节回复、两次读取间隔 3020ms、逐 unit 哈希、UUID、原始文件回读及独立核验结果也相互吻合。这些修订确实解决了上轮的 Schema 缺失、基础提取实现缺失和长回复证据不足问题。\",\n\"仍有一个关键完整性风险：`readDomUnits()` 读取的是当前页面 DOM 中已经渲染的 unit 集合，`selectInboundReply()` 只在本次 user unit 起点缺失时拒绝提取。如果虚拟列表保留了起点，却裁掉了中间某个 assistant unit，两次读取仍可能得到相同的残缺 unit 列表、数量和哈希，从而错误判定 stable。当前本地测试只覆盖起点缺失，没有覆盖起点存在但中间 assistant unit 被裁掉的情况；真实 POC 又只有一个 assistant unit，无法证明多 unit 和虚拟列表场景安全。契约 §2.6.7 明确要求虚拟列表只渲染部分内容时不得判定完整。需要增加中间 unit 缺失负例，并实现能够证明目标区间完整的检测或加载机制；无法证明时必须 BLOCKED。\",\n\"§2.6.7 规定原始 artifact 落盘后，还必须进行全文 JSON 解析、对应 Schema 校验及 task_id、execution_id、correlation_id 和版本绑定校验，之后才能登记报告或 ACK。本次 `gpt_dispatch.mjs` 的实际流程在 artifact 回读后直接写入 `result.json`，没有看到上述解析、Schema 和任务绑定校验，也没有看到与后续 M1 校验环节的可执行集成证据。真实 POC 报告还说明原始文本含有 `ChatGPT 说：` 辅助标签，独立验证从第一个 `{` 起解析 JSON；这证明 JSON 主体可解析，但不能替代对完整原始回复及已验证辅助标签处理规则的校验。\",\n\"M1 artifact 登记、ACK 和登记失败后的幂等补登记仍未实现或验证，而 §2.6.7 第 5、8 项将其列为正式链路要求。原始文件落盘成功不等于 M1 已可靠接收并持久化同一 artifact。解除整个 BLOCKED-1 前，至少需要明确该接口的实现归属、幂等键和失败恢复行为，并提供可复现的登记成功及失败补登记证据。\",\n\"9/9 本地测试主要验证纯函数和文件回读，不等同于真实浏览器多 unit、虚拟列表、DOM 动态裁切及写盘故障的端到端测试。当前证据边界在 DEC-013 中披露得较诚实，但尚不足以证明契约规定的所有入站完整性条件都已由实现保障。\"\n],\n\"unblocked\": false,\n\"summary\": \"本轮已实质性修复上轮的大部分缺口：机器 Schema 已落地并通过 30/30 测试，入站提取、双读稳定比较、原始 artifact 先保存及回读校验已有代码实现；6625 字节真实网页回复也有独立核验支持。出站 1200 字节限制与入站长回复边界处理正确，旧分块提示已清理。但当前 DOM 读取仍无法排除虚拟列表造成的中间 unit 静默缺失，完整 JSON/任务绑定校验及 M1 登记和幂等恢复也未形成可验证闭环。因此认可本次实现进展，但 BLOCKED-1 仍不能解除；优先补齐虚拟列表完整性保障和负例，再完成报告校验与 M1 登记恢复链路后复审。\"\n}",
+      "text_sha256": "d5035285b179fe121aa86fa2f5e735370608af9760990ab4ca1c3ba50a854d3f",
+      "size_bytes": 3490,
+      "assistant_uuid": "a2c0ea43-057c-4fb1-887b-14376643347b"
+    }
+  ]
+}

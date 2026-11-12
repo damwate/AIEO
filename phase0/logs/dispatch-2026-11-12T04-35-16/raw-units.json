@@ -1,0 +1,75 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-12T04:38:05.505Z",
+  "user_unit_key": "fallback-turn-5:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-5:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "bdbcd7bf-6085-480a-80ae-a80fa75a23be",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-5:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "fa707b816b2f6a911d48683007c3c7c98034a992ec0e8b345f9a84501021ccdc",
+          "27c6c9e3c3e644cd6abcf0ebab932793d5f6c5dc3fb92aedbcc15e2b5f230af7",
+          "48e252eb983b17a23593624ad587983281d443753b20a17bf47fd72ed3e599b8",
+          "d5035285b179fe121aa86fa2f5e735370608af9760990ab4ca1c3ba50a854d3f",
+          "2ab67077490303fa7b80d72d5615698498d3e022eb67fdc468544afd69f0dcf1",
+          "72033f207b3731f6b64b766d9b51a527ff893a6da08cf44e46e05b6546182208",
+          "7290d6b1b878d958d928b24cb7a4fde7d4fa7b7b3f336fb247fa098687325856",
+          "271071cf92a99046149d256a95f2732b2b422dd824f191887e669567aca42223"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": []
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-5:0:user",
+      "fallback-turn-5:2:assistant"
+    ],
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant"
+        ],
+        "overlap_keys": []
+      }
+    ],
+    "window_transitions": 0
+  },
+  "units": [
+    {
+      "key": "fallback-turn-5:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n{\"test\":\"INBOUND_SCHEMA_M1_POC\",\"task_id\":\"T-P1-902\",\"execution_id\":\"EXEC-902\",\"correlation_id\":\"CORR-902\",\"text\":\"本次入站处理必须以当前任务已经确认的用户消息为起点并以紧随其后的下一条用户消息为终点建立唯一提取窗口窗口边界应由稳定的消息标识确定不能仅凭页面上暂时可见的文字位置推测范围提取时应收集窗口内全部属于助手的回复单元按照页面原始顺序排列并保留每个单元的完整原始文本不得遗漏较早单元不得把工具消息误认为助手最终回复也不得把多个单元随意改写成摘要如果一次回复由多个连续单元组成应逐一读取后再按既定规则连接同时保留单元清单以便复核网页可能采用虚拟列表只把部分消息节点放入当前文档因此屏幕上看见的内容不等于窗口内的全部内容提取程序应检查起始单元是否存在并确认窗口范围内的消息顺序连续对于尚未加载的区域应使用受控滚动或页面提供的历史加载方式逐段读取每次加载后重新核对消息标识避免跳过中间单元也避免重复收集同一单元若页面无法证明中间区间已经完整覆盖就必须报告不完整而不能用首尾内容看似衔接来代替连续性证明完整提取完成后应在不同时间进行两次独立读取两次读取都必须覆盖相同窗口并比较单元数量单元标识排列助手身份标识以及每个单元全文的摘要值只有所有项目一致且页面状态稳定时才可认定读取结果稳定任何新增单元缺失单元顺序变化或全文摘要不同都意味着内容尚未稳定应重新读取并记录原因不能选择其中一次结果继续执行全文校验还应确认连接后的回复与原始单元逐字对应不得擅自修正空白字符换行或特殊符号原始数据与规范化数据应明确区分避免规范化过程掩盖内容变化稳定读取后应立即保存原始单元集合和按规则连接的完整回复保存动作必须先于解析校验和登记原始文件应记录任务标识执行标识关联标识窗口起止位置单元数量字符长度和摘要值保存完成后重新从持久化位置读取文件重新计算长度与摘要并逐项比对只有回读结果与写入前完全一致才能证明原始材料可靠若文件缺失长度不符摘要不符或写入过程异常应停止后续流程保留现场并报告失败不得从页面临时内容拼接出一个未经验证的替代文件原始回复通过完整性校验后才能进入结构解析和任务绑定阶段解析应针对完整回复执行不能只截取看似有效的局部对象也不能忽略对象前后的异常内容随后应依照既定结构规则检查字段名称字段类型必需字段以及额外字段限制并确认测试名称任务标识执行标识和关联标识均与本次派发记录完全一致任务绑定必须同时核对三个标识不能因为其中一个相同就推定属于同一任务任何标识缺失不一致或格式不合规则都应拒绝登记并保留原始回复和校验结果以供调查通过结构与绑定校验后才允许向登记模块提交原始回复及其摘要登记请求应使用稳定的幂等键该键由本次任务执行关联信息和原始内容摘要共同确定同一份材料重复提交时必须返回已有登记结果而不能创建重复记录登记模块应保存材料位置摘要值校验状态以及对应的任务关系并返回可核验的登记凭据调用方收到成功响应后还应查询登记状态确认记录确实存在且内容摘要一致不能只凭网络请求已经发出就宣称登记成功失败只补登记绝不重新触发生成\"}",
+      "text_sha256": "271071cf92a99046149d256a95f2732b2b422dd824f191887e669567aca42223",
+      "size_bytes": 3733,
+      "assistant_uuid": "bdbcd7bf-6085-480a-80ae-a80fa75a23be"
+    }
+  ]
+}
