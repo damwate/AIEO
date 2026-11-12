@@ -1,7 +1,7 @@
 {
   "format_version": "1.0",
   "adapter": "M1_MINIMAL_LOCAL_JSON",
-  "next_sequence": 6,
+  "next_sequence": 7,
   "records": [
     {
       "artifact_id": "ART-M1-000001",
@@ -263,6 +263,22 @@
       "artifact_kind": "GPT_REPLY_TEXT",
       "schema_validation": "NOT_REQUESTED_EXISTING_ARTIFACT_RECOVERY",
       "content": "ChatGPT 说：\n\n{\n\"result\": \"REWORK\",\n\"reviewed_commit\": \"c0226eea0c54c3af1befa9cceb9c25b9263588c7\",\n\"findings\": [\n{\n\"finding_id\": \"F-201\",\n\"severity\": \"MAJOR\",\n\"file\": \"app/gpt_controller/src/inbound_reply.mjs\",\n\"description\": \"F-101 第二项整改尚未完全闭合。assertInboundExtensionGate() 对 unit_count 的检查仅拒绝非数字、非整数和负数，没有拒绝 0；同时只检查 unit_keys 是数组且长度匹配，没有验证元素是非空字符串及 key 唯一性。因此 unit_count=0、unit_keys=[] 的快照，以及 unit_count=1、unit_keys=[null] 等结构异常快照均可能通过最终防线。结合 dispatch.mjs 的执行顺序，最终防线通过后仍会继续稳定性比较和 artifact 持久化；persistInboundArtifacts() 也没有要求 units 非空。由此存在异常读取结果被当作成功回复继续处理的路径，与畸形快照 fail-closed 的整改目标不完全一致。现有 9 类畸形快照测试没有覆盖这些边界。\",\n\"recommendation\": \"将 unit_count 的合法范围收紧为正整数；要求 unit_keys 为非空数组，所有元素均为非空字符串且无重复。补充 assertInboundExtensionGate 单元测试，覆盖零数量、空数组、null 元素、空字符串和重复 key；同时增加 dispatch 注入式全管线测试，证明这些异常快照最终均被拒绝，且不产生 result.json。\"\n}\n],\n\"constraints\": [\n\"本次材料核验报告已实读：manifest 92 文件，SHA-256 声明为 27d65605d048116ac18db0d647afe3709e3935ca73b809995b4b2803d4051bb8。\",\n\"报告覆盖核对：total_files=92、matched_files=92、mismatched_files=0、per_file=92、路径唯一数=92；全部逐文件 match=true，报告路径与 manifest 路径集合一致。\",\n\"已抽查 M1、M2、M4 多个原始文件及测试日志。M1：35 passed；M2 F-101 返工日志：56 passed、0 failed；M4：24 passed。测试日志与交接包申报的数量一致。\",\n\"F-101 第一项整改已验证：assertInboundExtensionGate 独立导出，dispatch 收敛点直接调用。\",\n\"F-101 第三项整改已验证：deps.readReplySnapshot 经 replyReader 传递，默认回退真实 readReplySnapshot；注入式全管线测试覆盖上游放宽后仍由最终防线拦截。\",\n\"M1 已抽查状态机 ACCEPTED 证据检查、消息幂等及重试、认证与 CSRF 相关实现；未发现足以形成 MAJOR 的申报不实。\",\n\"M4 已抽查 Git 命令白名单、shell=False、危险 GIT 环境变量清理、main/master 保护、提交分支检查及 M1 登记失败不回滚机制；未发现足以形成 MAJOR 的申报不实。\",\n\"M3 不在审查范围。\",\n\"BLOCKED-1 仍然受原有核心路径约束：真实多 unit、动态虚拟化扩展、私有仓库权限及完整 M1 REST/ACK 集成尚未验收。\",\n\"本次仅为模块级审查，不代表四模块集成验收，不授权合并 main。\"\n],\n\"summary\": \"核验报告覆盖完整，92/92 文件申报一致；M1、M4 未发现 MAJOR 级问题，M2 的 F-101 三项整改中第一项和第三项闭合，但第二项畸形快照 fail-closed 仍存在零 unit 数量及非法 key 绕过缺口。判定 REWORK。修复 F-201 并补充边界测试后重新提交独立复审。\"\n}",
+      "unit_metadata": {}
+    },
+    {
+      "artifact_id": "ART-M1-000006",
+      "registered_at": "2026-11-12T18:12:58.535Z",
+      "task_id": "T-P1-901",
+      "execution_id": "EXEC-904",
+      "correlation_id": "CORR-904",
+      "artifact_sha256": "c9c2e8396aa71a1484b7ec2a35c93d483e283ba93a9986bde33513202aa9c4ff",
+      "idempotency_key": "{\"task_id\":\"T-P1-901\",\"execution_id\":\"EXEC-904\",\"correlation_id\":\"CORR-904\",\"artifact_sha256\":\"c9c2e8396aa71a1484b7ec2a35c93d483e283ba93a9986bde33513202aa9c4ff\"}",
+      "content_sha256": "c9c2e8396aa71a1484b7ec2a35c93d483e283ba93a9986bde33513202aa9c4ff",
+      "size_bytes": 3528,
+      "artifact_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-12T18-08-58\\reply.txt",
+      "artifact_kind": "GPT_REPLY_TEXT",
+      "schema_validation": "NOT_REQUESTED_EXISTING_ARTIFACT_RECOVERY",
+      "content": "ChatGPT 说：\n\n{\n\"result\": \"BLOCKED\",\n\"reviewed_commit\": \"e3e5fabcc1fab38248c066ebe00c08ceaa6b0c68\",\n\"findings\": [\n{\n\"finding_id\": \"F-301\",\n\"severity\": \"MAJOR\",\n\"file\": \"phase0/logs/blob-recheck-T-P1-901-r4/\",\n\"description\": \"核验协议 v2 的开发方全量机械核验尚缺少可直接复核的关键证据。已成功读取 verification-report.json，确认 manifest_sha256 为 f02babdcf93161bb2ec74166a785cede6957a0dfe7b34cfe3f78caa7b908d5f4，total_files=106、matched_files=106、mismatched_files=0、exit_code=0，per_file 数量也是 106，且全部 match=true。但报告明确将 post-commit git cat-file blob 复核结果指向 phase0/logs/blob-recheck-T-P1-901-r4/。该目录下的 recheck-result.json 和 recheck-run.log 均无法读取，返回 404。进一步核对 input-manifest，发现其中只有 blob-recheck-T-P1-901-r3/ 的两个文件，没有任何 r4 证据。由此只能确认磁盘文件与 manifest 声明的 SHA-256 一致，不能独立确认 manifest 所列 106 个文件均与指定 commit 的 Git blob 一致，也不能确认 git ls-tree 的 106 路径核验结果。该缺口直接影响 §3 核验协议 v2 的完整性要求。\",\n\"recommendation\": \"将第 4 轮真实执行的 blob-recheck-result.json、recheck-run.log 提交至当前审查 commit，包含 106 个文件逐项 Git blob SHA-256 对照、git ls-tree 路径存在性结果、实际执行命令和退出码；同步修正 verification-report.json 中的证据路径，并重新生成 manifest 和 SHA-256 核验报告。\"\n}\n],\n\"constraints\": [\n\"本轮严格遵循核验协议 v2：审查方不声称自行执行了本地 SHA-256 或 Git cat-file 全量计算。\",\n\"verification-report.json 已实读，106/106、0 mismatch、退出码 0、逐文件记录数量 106 均已确认。\",\n\"input-manifest.json 已实读，确认包含 106 个文件；但 r4 blob-recheck 证据未包含在 manifest 中，指定目录也无法读取。\",\n\"M2 已实读 inbound_reply.mjs、dispatch.mjs、unit.test.mjs、browser_simulation.test.mjs 及 F-201 测试日志。\",\n\"F-201 正向合法值域实现已确认：unit_count 必须为正整数；unit_keys 必须为等长数组，元素全部为非空字符串且不存在重复。\",\n\"F-201 的 14 类纯函数负例已在测试源码中逐项确认；其中包括零数量、null、空字符串、重复 key 和非字符串元素。\",\n\"全管线负例已在日志中确认共 4 类：F-101 上游门禁放宽、内部矛盾快照；F-201 零 unit 快照、非法 key 快照。均报告 fail-closed，且不产生成功结果。\",\n\"M1 已抽查 state_machine.py、messaging.py；M4 已抽查 worker.py、test_git_worker.py。未据现有抽样材料确认其他 MAJOR 缺陷。\",\n\"M3 不在本轮范围。\",\n\"本结论为材料核验阻塞，不代表已确认 M1、M2、M4 的全部代码存在功能缺陷；也不构成 Phase 1 集成验收或 BLOCKED-1 扩展场景解除。\"\n],\n\"summary\": \"第 4 轮审查对象 SHA 已确认。核验报告及 106 文件 manifest 的声明数据完整，M2 F-201 的正向合法值域收紧、14 类纯函数负例和 4 类注入式全管线负例均已通过静态材料核对。但 handoff 与核验报告引用的 r4 Git blob 全量复核证据不存在于指定路径，manifest 中也只有 r3 证据，无法完成 §3 协议要求的 commit 内容全量绑定核验。依据材料缺失即 BLOCKED 的明确规则，本轮结论为 BLOCKED。修复 F-301 后应重新执行材料核验及模块审查，不应直接据此放行 Phase 1。\"\n}",
       "unit_metadata": {}
     }
   ]
