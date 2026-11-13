@@ -3,7 +3,7 @@
   "contract_version": "1.0",
   "task_id": "T-P1-903",
   "execution_id": "EXEC-922",
-  "purpose": "T-P1-903 DEC-012 GitPointer 契约修订复审 r5 输入材料（r4 会务决议+用户批准：对象身份门禁+双层保证——manifest 增每文件 git_blob_sha1 供独立审查者零计算 tree 身份比对，字节级完整性由主会话本地 manifest_tool/bundle_gate 机器核验入库；三轮 BLOCKED 后按新协议复审）：复审引导包 r5+契约修订文本+decision-log（DEC-012~020）+审查协议+三份机器 Schema+前任 BLOCKED 审查原始 JSON+§2.6.9-2.6.13 申报的全部 POC 证据+证据链工具",
+  "purpose": "T-P1-903 DEC-012 GitPointer 契约修订复审 r6 输入材料（对象身份门禁+双层保证 r5 修正版：派单区分 material_commit/bundle_baseline_commit 双 SHA，I3 改与材料 commit 常量一致，BYTE_INTEGRITY 证据 amend 进基线、绑定 amend 前聚合包 commit；r5 身份门禁本体 95/95+14/14+3/3 通过、因两处准备缺陷 BLOCKED，会务已确认 r6 修正）：复审引导包 r6+契约修订文本+decision-log（DEC-012~020）+审查协议+三份机器 Schema+前任 BLOCKED 审查原始 JSON+§2.6.9-2.6.13 申报的全部 POC 证据+证据链工具",
   "files": [
     {
       "path": "contracts/v1.0/git-pointer-manifest.schema.json",
@@ -56,9 +56,9 @@
     },
     {
       "path": "handoff/DEC012-REVIEW-BOOTSTRAP.md",
-      "artifact_sha256": "4b8d045222feb4bb3451fa5297e4d6fe5c0b502fe7d8c296e0f16987029c59d7",
-      "git_blob_sha1": "90c70f302e35392c04226523607a712c1e3ebd26",
-      "size_bytes": 9890,
+      "artifact_sha256": "d4b0ea4c3cca5ef9ca1bd3a139516af876ef5ef272c24cc40f78e0973958c13c",
+      "git_blob_sha1": "f6b2a024b97dbe13679ff6131d2b3bd16ee5efad",
+      "size_bytes": 11761,
       "media_type": "text/plain"
     },
     {

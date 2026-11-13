@@ -1,8 +1,8 @@
-# T-P1-903 复审启动交接包：DEC-012 GitPointer 契约修订复审（r5，2026-11-14）
+# T-P1-903 复审启动交接包：DEC-012 GitPointer 契约修订复审（r6，2026-11-14）
 
 **用途：** 供全新、空白 GPT 审查会话独立复审，**不继承旧会话摘要，不依赖旧会话记忆**。
 **性质：** 这是**契约修订文档复审**，不是模块代码审查轮次。审查对象是 `platform-contract-v1.0.md` §2.6 等修订文本的完备性与 POC 申报真实性。
-**轮次沿革：** r1 因审查环境 GitHub 工具调用额度不足无法逐文件实测，判 BLOCKED（F-805）；r2 采用 A+ 聚合包协议，环境对二进制 TAR 返回空正文，BLOCKED；r3 按 128KiB 分片 base64 传输，审查者成功读取引导包/双索引/manifest 并取得 14/14 分片 tree blob SHA-1 与分片索引一致，但实测环境**无本地字节处理与密码学计算能力**（不能 base64 解码、算 SHA-256/SHA-1、重建 TAR、解包），按 A1-A5 判 BLOCKED——三轮均 BLOCKED_NOT_MATERIAL_DEFECT，未进实质审查。r4 经会务决议（`phase0/logs/dispatch-2026-11-13T17-57-41/reply.txt`）并经用户拍板批准，采用**方案 A：对象身份门禁 + 双层保证**（见 §2.5），本引导包为其后的 r5 复审版本。
+**轮次沿革：** r1 因审查环境 GitHub 工具调用额度不足无法逐文件实测，判 BLOCKED（F-805）；r2 采用 A+ 聚合包协议，环境对二进制 TAR 返回空正文，BLOCKED；r3 按 128KiB 分片 base64 传输，审查者取得 14/14 分片 tree blob SHA-1 与分片索引一致，但实测环境**无本地字节处理与密码学计算能力**，判 BLOCKED——前三轮均 BLOCKED_NOT_MATERIAL_DEFECT，未进实质审查。r4 经会务决议（`phase0/logs/dispatch-2026-11-13T17-57-41/reply.txt`）并经用户拍板批准，采用**方案 A：对象身份门禁 + 双层保证**（见 §2.5）。r5 首次按新协议复审：**OBJECT_IDENTITY_GATE 本体通过**（递归 tree 一次调用，manifest 95/95 git_blob_sha1+size 一致、14/14 分片一致、TAR+双索引 3/3），但两处主会话准备缺陷判 BLOCKED——I3 误写 bundle_source_commit 与派单基线一致（两阶段设计下该字段指向材料 commit，基线为聚合包 commit，必然不一致）、BYTE_INTEGRITY 记录在 tag 后 commit 中基线不可见（404）（`phase0/logs/dispatch-2026-11-13T18-12-56/reply.txt`）；r6 修正经会务确认（`phase0/logs/dispatch-2026-11-13T18-19-28/reply.txt`）：派单区分 material_commit 与 bundle_baseline_commit 两个 SHA、I3 改为与材料 commit 常量一致、证据 amend 进基线，r5 保持 BLOCKED 历史，本引导包为 r6 版。
 
 ## 1. 你的角色
 
@@ -12,7 +12,7 @@
 ## 2. 仓库与审查对象
 
 - 仓库：`damwate/AIEO`（公开 GitHub）；分支：`main`；
-- **审查基线 commit：以派单消息给出的完整 40 位 SHA 为准**（tag `review-anchor/T-P1-903-r5` 指向该 commit）；只允许按完整 40 位 SHA 读取，禁止回退分支 HEAD 或其他版本；
+- **审查基线（bundle_baseline_commit）：以派单消息给出的完整 40 位 SHA 为准**（tag `review-anchor/T-P1-903-r6` 指向该 commit）；派单同时给出 **material_commit**（聚合包导出源材料 commit）。两阶段关系：material_commit 经 `git archive` 导出聚合包，聚合包/分片/索引/BYTE_INTEGRITY 证据在其后的 bundle_baseline_commit 上追加，**两 commit 的 manifest 95 路径 blob 完全相同**；只允许按完整 40 位 SHA 读取，禁止回退分支 HEAD 或其他版本；审查过程中基线固定，不得静默替换；
 - 输入材料 manifest：`phase1/manifests/T-P1-903-input-manifest.json`（同 commit，95 文件，**每文件含 git_blob_sha1 字段**）。**必须先按 §2.5 对象身份门禁完成入口核验后再开展审查；任一不符 → BLOCKED**；
 - 辅助材料（身份核验用，非判定依据）：聚合包本体 `phase1/manifests/T-P1-903-input-bundle.tar`、分片 `phase1/manifests/bundle-parts/part-00.b64 … part-13.b64`、分片索引 `bundle-parts.index.json`、主索引 `T-P1-903-input-bundle.index.json`——唯一判定基准仍是 manifest；
 - 审查对象：`docs/phase1/platform-contract-v1.0.md` §2.6（GitPointer 双向 payload 修订稿，当前标注"修订中，待复审"）及关联 §2.2/§10/§12/§13；`docs/phase1/decision-log.md` DEC-012~DEC-020。
@@ -27,10 +27,10 @@
 
 1. **(I1) 全量对象身份**：对审查基线 commit 执行**一次** tree 获取（如 GitHub API `GET /repos/damwate/AIEO/git/trees/<40位SHA>?recursive=1`），取得全部路径的 blob SHA-1 与 size；
 2. **(I2) manifest 逐项比对**：manifest 95 个文件路径逐项比对 tree——blob SHA-1 与 manifest `git_blob_sha1` 一致、size 与 `size_bytes` 一致、无缺失/无重复/无额外声明路径；任一不符 → **直接 BLOCKED**；
-3. **(I3) 辅助材料身份**：14 个分片 + TAR 本体 + 两个索引文件共 17 个路径，其 tree blob SHA-1 与分片索引声明逐项比对（防索引清单被单独替换）；主索引 `bundle_source_commit` 与派单 commit 一致；
-4. **(I4) 如实登记**：报告 JSON `object_identity_gate` 字段记录 tree 获取方式、95/95 文件比对结果、14/14 分片、缺失/额外计数；不得把身份核验解释为已读取或已解码任何内容。
+3. **(I3) 辅助材料身份**：14 个分片 + TAR 本体 + 两个索引文件共 17 个路径，其 tree blob SHA-1 与分片索引声明逐项比对（防索引清单被单独替换）；主索引/分片索引 `bundle_source_commit` 与派单声明的 **material_commit** 一致（两阶段设计，见 §2，不得要求其等于 bundle_baseline_commit）；可选增强核验：对 material_commit 再取一次 tree，核对其 95 个 manifest 路径的 blob SHA-1 与 manifest 声明一致（不作强制门禁）；
+4. **(I4) 如实登记**：报告 JSON `object_identity_gate` 字段记录 tree 获取方式、95/95 文件比对结果、14/14 分片、缺失/额外计数；不得把身份核验解释为已读取或已解码任何内容。**身份门禁与证据完整性分离登记**：身份核验通过不代表 BYTE_INTEGRITY 证据完整，两者各自记录。
 
-**字节级完整性（不由你执行）：** 主会话本地 `manifest_tool.mjs`（recheck：commit blob SHA-256 全量重比 + tree blob SHA-1 身份；verify：磁盘字节 SHA-256）与 `bundle_gate.mjs`（分片逐项核验→按序拼接→解码→TAR 三项总哈希→解包→95/95 SHA-256/size）已执行并入库 `phase0/logs/blob-recheck-*`、`phase0/logs/bundle-gate-*`，记录绑定 commit 与 manifest SHA。你在报告中以 `byte_integrity_gate_reference` 引用这些记录路径与结论，**不重算、不背书其正确性**；若记录缺失或自相矛盾 → BLOCKED。
+**字节级完整性（不由你执行）：** 主会话本地 `manifest_tool.mjs`（recheck：commit blob SHA-256 全量重比 + tree blob SHA-1 身份；verify：磁盘字节 SHA-256）与 `bundle_gate.mjs`（分片逐项核验→按序拼接→解码→TAR 三项总哈希→解包→95/95 SHA-256/size）已执行并入库（路径见 §4 `byte_integrity_gate_reference`），记录的 `commit_sha256_anchored` 绑定 **amend 前聚合包 commit**（派单消息给出该 40 位 SHA 常量）；其与审查基线的差异仅为追加的证据目录，**输入材料 blob 完全相同**（可用 tree 比对自行验证，可选不强制）；原始门禁记录在生成后不被修改，以保持真实时间顺序。你在报告中以 `byte_integrity_gate_reference` 引用这些记录路径与结论，**不重算、不背书其正确性**；若记录缺失或自相矛盾 → BLOCKED。
 
 **不得扩大解释（r3 会话确认，继续有效）：** Git blob SHA-1 仅为 Git 对象身份标识——不等价于 SHA-256 字节级完整性证明；不表示内容已被直接读取；不表示二进制内容已审查；不表示已排除碰撞或供应链攻击。
 
@@ -61,7 +61,7 @@
   "input_material_manifest_path": "phase1/manifests/T-P1-903-input-manifest.json",
   "input_material_manifest_sha256": "",
   "object_identity_gate": {"tree_call": "GET /repos/damwate/AIEO/git/trees/<sha>?recursive=1", "files_matched": "95/95", "sizes_matched": "95/95", "parts_matched": "14/14", "tar_and_indexes_matched": "3/3", "missing": 0, "extra": 0},
-  "byte_integrity_gate_reference": {"recheck": "phase0/logs/blob-recheck-T-P1-903-r4/recheck-result.json", "bundle_gate": "phase0/logs/bundle-gate-T-P1-903-r4/bundle-gate-result.json", "records_present_and_consistent": true, "note": "引用不背书：主会话本地机器核验，审查者不重算"},
+  "byte_integrity_gate_reference": {"recheck": "phase0/logs/blob-recheck-T-P1-903-r6/recheck-result.json", "bundle_gate": "phase0/logs/bundle-gate-T-P1-903-r6/bundle-gate-result.json", "records_present_and_consistent": true, "note": "引用不背书：主会话本地机器核验，审查者不重算；记录绑定 amend 前聚合包 commit（派单常量）"},
   "required_boundaries_check": [{"id": 1, "status": "ADDRESSED|GAP", "note": ""}],
   "failure_paths_check": [{"id": 1, "status": "ADDRESSED|GAP", "note": ""}],
   "poc_scope_check": {"all_claims_verified": true, "overclaims": []},
@@ -74,6 +74,7 @@
 ## 5. 环境与约束
 
 - 公开仓库 GitHub 读取；`phase0/logs/**`、`phase1/logs/**` 为字节化证据（.gitattributes binary），以 blob 原始字节为准；
+- 基线固定：审查引用的 commit/tag/manifest 在审查过程中不得静默替换（禁止隐式基线漂移）；
 - tree 获取方式不限（GitHub API / 网页连接器均可），但必须覆盖基线 commit 全量路径且记录获取方式；无需任何本地解码/哈希/解包能力；
 - 不要求重跑任何测试或历史 POC；浏览器环境事实不可假设；
 - 1200 字节上限仅约束派单出站消息，你的 JSON 回复不受此限；
