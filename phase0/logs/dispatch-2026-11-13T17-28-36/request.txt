@@ -1,0 +1,12 @@
+T-P1-903 r2 后能力探测（非审查，无三态结论）
+
+背景：r2 BLOCKED——你方环境 fetch 对 1.71MB 二进制 TAR 返回空，仅能读文本。同一聚合包已转 base64 文本入库。
+
+请实测并逐项报告：
+1. fetch damwate/AIEO@ea4da5cf（完整 SHA 见下）的 phase1/manifests/T-P1-903-input-bundle.tar.b64：能否取回完整文本？报告字符数、是否截断；
+2. 若 1 失败：fetch phase1/manifests/probe-b64-sample.txt（200KB 样本）能否完整取回？
+3. 取回文本去换行→base64 解码→TAR 字节：报告字节数、SHA-256、Git blob SHA-1（SHA1("blob "+len+"\0"+内容)）、能否 untar；
+4. 结论：你方环境能否完成 文本取回→解码→全量哈希→解包 全链路？若可，r3 用单文件还是分片、每片多大？
+
+commit：ea4da5cfc49e98c734984d02d6ec66faedeec6ff
+基准：TAR 字节数 1710080；SHA-256 前缀 6e758b991bbefa66；blob SHA-1 75ffe15541770f7cfa0ba0f81b62e317d1c0d372
