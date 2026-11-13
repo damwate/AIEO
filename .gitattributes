@@ -1,3 +1,7 @@
+# 全局文本文件统一 LF（blob 与工作区一致）：autocrlf=true 检出会把文本写成 CRLF，
+# 导致磁盘字节 ≠ blob 字节、manifest 复核必然失败（L-011.7 文本版陷阱，T-P1-903 r1 修复）；
+# 本规则须置于 binary 规则之前，证据目录由后置 binary 规则覆盖、保持字节原样
+* text=auto eol=lf
 # 日志文件按字节处理，不做 EOL 转换；审查 manifest 的 SHA-256 基准=磁盘字节=Git blob 字节（L-011.7）
 *.log binary
 # 证据目录整体字节化（T-P1-902 集成验收）：证据 JSON/NDJSON/patch 等按磁盘字节原样入库，
