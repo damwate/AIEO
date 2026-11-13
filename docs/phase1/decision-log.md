@@ -124,3 +124,10 @@
 - **关联决策（同批用户拍板，2026-11-14）：** Phase 1 收尾路线采纳 GPT 会务建议（`phase0/logs/dispatch-2026-11-13T16-31-45/reply.txt`，会话 6af73baa）并修正为 **A 契约追认 → B main 合并（先准备后审批）→ C1 DEC-012 复审 → D M2 真实链路工程化（拆 D1/D2）→ C2 扩展场景分批复审逐项解除 → E Phase 1 验收清单核对**；main 合并策略=A 完成后单独准备与审批；BLOCKED-1 策略=分批复审、逐项解除限制。
 - **依据：** 用户拍板记录（2026-11-14，本会话 AskUserQuestion 三项决策："全部按建议批准"/"A 后单独准备与审批"/"分批复审逐项解除"）；GPT 会务建议 reply.txt（10606 字节，reply SHA-256 `f469208bea1d00defde93bedadf589b40f146d26845e8cf2bb4a8070078a1059`，dispatch 目录 `phase0/logs/dispatch-2026-11-13T16-31-45/`）；契约 §1 批准人字段、§13-1（追认即生效）。
 - **生效操作：** 契约 §1 批准人更新、变更记录表追加、§13-1 关闭、agent-contract 状态转正，与本条目同批提交。
+
+### DEC-019 main 合并执行：Phase 0/Phase 1 全部成果入库（2026-11-14，用户审批）
+
+- **决策内容：** 经用户 2026-11-14 审批，`fix/AIEO-PHASE0-REVIEW-R10` 以 `--no-ff` 合并进 `main`，merge commit **`971a3710f7ca1b7d410163f01c1d215c661daec1`**（48 commits：Phase 0 POC-01~05 与十一轮审查闭环、Phase 1 治理与 BLOCKED-1 各轮、T-P1-901 模块级八轮 PASS、T-P1-902 集成两轮 PASS、收尾治理文档）。合并前核对（merge-proposal @ `fbf0b5b`）：main 为 HEAD 祖先无分叉、零文件删除、无未验收/来历不明提交（最后代码变更 `064f214` 经 T-P1-902 审查）；合并前回归四模块全绿不低于基线（M1 43 / M2 65 / M3 53 / M4 24，exit=0，日志 `phase1/logs/merge-prep-20261114/`）。**本合并不构成 BLOCKED-1 任何扩展场景的解除授权**（DEC-017/DEC-018 边界不变）。
+- **回滚：** `git revert -m 1 971a371`（普通 merge 提交，不改写历史）。
+- **依据：** 用户审批记录（2026-11-14 本会话"批准合并"）；审批材料 `phase1/logs/merge-prep-20261114/merge-proposal.md`（commit `fbf0b5b`）；GPT 会务建议 `phase0/logs/dispatch-2026-11-13T16-31-45/reply.txt`（B 项合并前置检查清单）；DEC-010 人工审批铁律、platform-contract C5 §6.3-2、agent-contract §6-2。
+- **关联：** 同批恢复 `phase0/logs/gpt-reviewer-session.json` 会话指针（GPT 会务会话 `6af73baa-2060-83ec-a9cd-8e144f9f508b`，dispatch-2026-11-13T16-31-45 新建）；此后治理/文档工作以 main 为集成基线提交，代码任务按 C5 §6.1 开独立分支。
