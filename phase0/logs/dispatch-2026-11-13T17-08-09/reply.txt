@@ -1,0 +1,33 @@
+ChatGPT 说：
+
+{
+"result": "BLOCKED",
+"reviewed_commit": "fdb64a324a6ccd291135c1e9f6437c70e7b36476",
+"input_material_commit": "fdb64a324a6ccd291135c1e9f6437c70e7b36476",
+"input_material_manifest_path": "phase1/manifests/T-P1-903-input-manifest.json",
+"input_material_manifest_sha256": "",
+"required_boundaries_check": [],
+"failure_paths_check": [],
+"poc_scope_check": {
+"all_claims_verified": false,
+"overclaims": []
+},
+"findings": [
+{
+"id": "F-805",
+"severity": "BLOCKER",
+"title": "输入材料 manifest 的逐文件 SHA-256/size 核验未完成",
+"description": "已按指定完整 40 位 commit SHA 读取审查引导包和输入 manifest，确认 manifest 声明 95 个输入文件。已获取该 commit 的 Git tree，并成功读取部分文件。但当前执行环境的 GitHub 工具调用额度限制导致无法完成 95 个文件的逐文件 SHA-256 与 size_bytes 实测核验。不能将 Git blob SHA-1 或 Git tree 中的 size 信息替代 manifest 要求的 SHA-256 核验。",
+"required_action": "在能够完成全部 95 个文件原始字节读取及 SHA-256/size 核验的环境中重新执行本轮审查。"
+}
+],
+"constraints": [
+"严格锁定 commit fdb64a324a6ccd291135c1e9f6437c70e7b36476，未使用 HEAD 或其他版本替代。",
+"未完成 manifest 全量完整性核验，因此未进入 31 项 required_boundaries/failure_paths 实质审查。",
+"未对 §2.6.9–§2.6.13 的 POC 申报作出真实性结论。",
+"未对 §2.6.1–§2.6.8 与关联章节及机器 Schema 的一致性作出结论。",
+"本次 BLOCKED 不代表契约修订存在缺陷，也不代表前任 31 项要求已经解决。",
+"不得据此解除 §2.6 修订中标注或授权后续契约落地。"
+],
+"summary": "T-P1-903 DEC-012 GitPointer 契约修订复审 r1：BLOCKED。审查基线及 manifest 已定位，但 95 项输入材料的 SHA-256/size 全量核验未完成。根据引导包 §2、§4 的强制门禁，必须停止后续实质审查，不得推定材料完整或输出 PASS。需要在具备完整字节读取及校验能力的环境重新执行。"
+}

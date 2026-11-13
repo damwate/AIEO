@@ -1,0 +1,14 @@
+T-P1-903 派单：DEC-012 GitPointer 契约修订复审 r1
+
+你是独立审查者，全新空白会话。先读仓库 handoff/DEC012-REVIEW-BOOTSTRAP.md（自包含引导包：角色/31 项核对/三态判定/输出 JSON，以它为准），再开始。
+
+仓库 github.com/damwate/AIEO 分支 main。
+审查基线 commit：
+fdb64a324a6ccd291135c1e9f6437c70e7b36476
+tag review-anchor/T-P1-903-r1 指向它。
+输入材料 manifest：phase1/manifests/T-P1-903-input-manifest.json（95 文件，同 commit）。
+第一步必做：按 manifest 逐文件核验 blob SHA-256/size，任一不符即 BLOCKED；只按上述 40 位 SHA 读，禁用 HEAD。
+
+对象：platform-contract §2.6 修订稿（关联 §2.2/§10/§12/§13）、decision-log DEC-012~017、前任 BLOCKED 的 15 required_boundaries+16 failure_paths 逐项判定、POC §2.6.9-2.6.13 真实范围核对。
+
+回复只输出引导包 §4 的单一 JSON，无包裹文本。
