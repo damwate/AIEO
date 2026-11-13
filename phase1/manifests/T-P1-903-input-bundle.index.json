@@ -2,10 +2,10 @@
   "index_version": "1.2",
   "note": "辅助索引，仅便于审查者自动化核对与定位差异，不是判定依据；唯一判定基准是 T-P1-903-input-manifest.json；本文件自身须按审查 commit tree 的 blob SHA-1 做身份核验",
   "task_id": "T-P1-903",
-  "bundle_source_commit": "21ff2a95cf961e238c35bf6299cd6f61e4204a44",
+  "bundle_source_commit": "572c21ad4feb215bda9429f7d7db5dbf3fbb9003",
   "bundle_generation": "git archive --format=tar <bundle_source_commit> -- <manifest 95 路径>；r4 起传输层聚合包仅作本地字节级机器核验（bundle_gate）与对象身份辅助核对，独立审查者入口门禁改为 tree blob SHA-1 身份比对（见引导包 §2.5 r5）",
   "manifest_path": "phase1/manifests/T-P1-903-input-manifest.json",
-  "manifest_sha256": "77185837394b9306719dd6a4ddb0d184e1b414bfdd9cf36ee29341a962ae3f48",
+  "manifest_sha256": "dff71b26b6ce97edc46f3f28f727d6ff069005ecb4a5b91879973d4115131461",
   "manifest_file_count": 95,
   "files": [
     {
@@ -52,9 +52,9 @@
     },
     {
       "path": "handoff/DEC012-REVIEW-BOOTSTRAP.md",
-      "size_bytes": 9890,
-      "artifact_sha256": "4b8d045222feb4bb3451fa5297e4d6fe5c0b502fe7d8c296e0f16987029c59d7",
-      "git_blob_sha1": "90c70f302e35392c04226523607a712c1e3ebd26"
+      "size_bytes": 11761,
+      "artifact_sha256": "d4b0ea4c3cca5ef9ca1bd3a139516af876ef5ef272c24cc40f78e0973958c13c",
+      "git_blob_sha1": "f6b2a024b97dbe13679ff6131d2b3bd16ee5efad"
     },
     {
       "path": "phase0/logs/browser-virtual-list-2026-11-12T05-14-59/01-multi-assistant-positive-dom.html",
@@ -582,8 +582,8 @@
   "tar": {
     "path": "phase1/manifests/T-P1-903-input-bundle.tar",
     "total_bytes": 1720320,
-    "sha256": "6e294fb76d2799cb97986133ac3cdeb8d053d9332b16075d9f53a00b41c02145",
-    "git_blob_sha1": "c84ae0c291636491c0defc0b1903af8a0f31d601"
+    "sha256": "f887cb4f6f66fe1894b5136721cb794013164306e48a7151879492903e26c99d",
+    "git_blob_sha1": "fa2f14770ea09a2a34353ca1c77a10800ae1e3c0"
   },
   "parts_index_path": "phase1/manifests/bundle-parts.index.json",
   "parts_total": 14
