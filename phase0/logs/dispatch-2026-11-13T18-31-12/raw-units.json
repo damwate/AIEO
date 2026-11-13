@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-13T18:34:57.186Z",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "dc0c839e-f71a-4c50-9137-b451e79ac9a7",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "cb2f06bfca50aa7d44acba1dcb5ba14bd61a349a551f0a344a12385afe02f2e2",
+          "76435077fa95d2f53eb39a63e2a7ea1f3ff0a935252a1c5325d7ec59743d9306"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "cb2f06bfca50aa7d44acba1dcb5ba14bd61a349a551f0a344a12385afe02f2e2",
+          "76435077fa95d2f53eb39a63e2a7ea1f3ff0a935252a1c5325d7ec59743d9306"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-0:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n我的建议是：选择方案 (a)，采用「契约基础先行、扩展测试随 C2 分批落地」的两阶段策略。\n\n这次 T-P1-903 r6 PASS 已经解决 DEC-012 契约身份与完整性审查问题。DEC-021 §2.6 生效后，下一步应当把契约从「可审查的文档和材料」推进到「可自动验证的机器契约」。\n\n但要严格区分：契约基础完成，不代表扩展场景完成，更不代表具备合并或发布授权。\n\n一、执行顺序：选 (a)，分两阶段\n\n推荐方案 A 先完成 §10-1~6，再逐批补齐 §10-7。\n\n我建议这样拆：\n\n阶段一：契约机器化\n\n现在执行\n\n§10-1 ~ §10-6\n\n建立统一 Schema 目录。\n\n完成消息信封及 message_type payload Schema。\n\n完成报告 Schema。\n\n完成统一错误响应 Schema。\n\n建立端点请求、响应示例。\n\n建立 C3 错误码触发用例。\n\n四模块统一版本引用及哈希一致性检查。\n\n契约测试基线纳入 M1 维护。\n\n各模块 tests 引用并执行契约测试。\n\n测试结果记录契约版本与被测 commit。\n\n阶段二：扩展场景测试\n\n等待 C2 批次\n\n§10-7 BLOCKED-1\n\n私有权限测试。\n\n网络故障注入。\n\n超时测试。\n\n幂等补登记。\n\n受控写回。\n\n多文件部分读取。\n\n按 C2 扩展能力实现进度，逐批增加测试，不提前将未实现能力纳入 PASS。\n\n为什么不选纯方案 (b)？\n\n因为 §10-1~6 与 §10-7 的依赖性质不同：\n\n§10-1~6 主要解决契约定义、版本一致性和基础验证，属于基础设施。\n\n§10-7 主要验证系统扩展能力，依赖实际实现。\n\n两者同时推进会让基础契约建设被扩展能力拖住。\n\n如果等待 C2 全部完成才建设 Schema，后续 M2、M4 等模块就缺少统一的机器验证依据。\n\n因此，应该先建立完整的测试目录和矩阵，但只执行当前具备实现条件的测试。\n\n特别注意：PENDING 不计入 PASS，也不能用跳过测试的方式制造全绿结果。\n\n二、M1 仓内目录及测试工具建议\n\n我建议采用以下结构。\n\n1. 契约目录\n\n建议由 M1 维护唯一权威契约源：\n\n纯文本\nM1/\n├── contracts/\n│   └── v1/\n│       ├── common/\n│       │   ├── message-envelope.schema.json\n│       │   ├── error-response.schema.json\n│       │   └── report.schema.json\n│       │\n│       ├── messages/\n│       │   ├── <message-type-1>.schema.json\n│       │   └── <message-type-2>.schema.json\n│       │\n│       ├── endpoints/\n│       │   ├── requests/\n│       │   ├── responses/\n│       │   └── examples/\n│       │\n│       └── errors/\n│           ├── error-codes.json\n│           └── triggers/\n│\n├── tests/\n│   └── contract/\n│       ├── schema-validation/\n│       ├── compatibility/\n│       ├── error-cases/\n│       ├── fixtures/\n│       ├── matrix.json\n│       └── run-contract-tests\n│\n└── contract-version.json\n\n这里有两个原则：\n\ncontracts/v1/ 是唯一权威定义，不允许四个模块各自维护一份 Schema 副本。\n\ntests/contract/ 是契约测试基线，由 M1 负责维护，各模块负责引用和运行。\n\n具体文件名可以在派单阶段根据现有契约命名调整，不建议为了目录统一而修改已经生效的协议字段。\n\n2. 集成检查脚本\n\n我的建议是：\n\n优先 Python + JSON Schema Validator + SHA-256。\n\n不建议为了这项工作单独给整个项目引入 Node.js + AJV，除非 M1 现有测试体系本身就是 Node.js。\n\n理由：\n\n检查内容\n\n\t\n\n建议实现\n\n\n\n\nJSON Schema 校验\n\n\t\n\nPython jsonschema\n\n\n\n\nSchema 版本检查\n\n\t\n\nPython\n\n\n\n\n四模块引用路径检查\n\n\t\n\nPython\n\n\n\n\n文件 SHA-256 校验\n\n\t\n\nPython hashlib\n\n\n\n\n测试矩阵状态检查\n\n\t\n\nPython\n\n\n\n\n测试结果生成\n\n\t\n\nJSON\n\n如果 M1 已经使用 Node.js，AJV 也完全可以，关键是遵循统一的 JSON Schema Draft 2020-12 标准。\n\n我更看重的是测试工具不产生新的运行环境依赖，而不是选择哪种语言。\n\n3. 四模块版本一致性\n\n这里我建议增加一个明确的版本锁定文件。\n\n例如：\n\nJSON\n{\n  \"contract_version\": \"v1\",\n  \"source_module\": \"M1\",\n  \"schema_manifest\": \"contracts/v1/manifest.json\",\n  \"schema_manifest_sha256\": \"...\",\n  \"modules\": {\n    \"M1\": {\n      \"contract_version\": \"v1\"\n    },\n    \"M2\": {\n      \"contract_version\": \"v1\"\n    },\n    \"M3\": {\n      \"contract_version\": \"v1\"\n    },\n    \"M4\": {\n      \"contract_version\": \"v1\"\n    }\n  }\n}\n\n这是结构示意，不是最终 Schema。\n\n集成检查至少验证：\n\n四模块引用的契约版本相同。\n\n引用路径实际存在。\n\n引用指向同一权威契约源。\n\nSchema manifest 哈希一致。\n\nmanifest 中每个文件的 SHA-256 一致。\n\n不允许模块私自修改契约副本。\n\n不允许缺失版本信息的模块通过检查。\n\n注意：哈希一致只证明引用内容一致，不代表契约语义正确。Schema 本身还必须通过独立校验。\n\n三、§10-7 测试矩阵怎么处理？\n\n建议在阶段一就建立完整矩阵。\n\n例如：\n\n测试场景\n\n\t\n\n当前状态\n\n\t\n\nPASS 规则\n\n\n\n\n消息信封校验\n\n\t\n\nREADY\n\n\t\n\n实际执行\n\n\n\n\npayload 校验\n\n\t\n\nREADY\n\n\t\n\n实际执行\n\n\n\n\n报告校验\n\n\t\n\nREADY\n\n\t\n\n实际执行\n\n\n\n\n统一错误响应\n\n\t\n\nREADY\n\n\t\n\n实际执行\n\n\n\n\nC3 错误码触发\n\n\t\n\nREADY\n\n\t\n\n实际执行\n\n\n\n\n私有权限\n\n\t\n\nPENDING\n\n\t\n\n等待能力实现\n\n\n\n\n网络故障注入\n\n\t\n\nPENDING\n\n\t\n\n等待能力实现\n\n\n\n\n超时处理\n\n\t\n\nPENDING\n\n\t\n\n等待能力实现\n\n\n\n\n幂等补登记\n\n\t\n\nPENDING\n\n\t\n\n等待能力实现\n\n\n\n\n受控写回\n\n\t\n\nPENDING\n\n\t\n\n等待能力实现\n\n\n\n\n多文件部分读取\n\n\t\n\nPENDING\n\n\t\n\n等待能力实现\n\n我还建议给矩阵增加四个字段：\n\nrequired_capability：依赖哪项能力。\n\nimplementation_status：能力是否实现。\n\ntest_status：测试状态。\n\nacceptance_batch：对应哪个 C2 批次。\n\n这样可以避免出现一个常见问题：\n\n功能尚未实现，但测试因为没有执行而被统计为通过。\n\n矩阵整体状态应该允许：\n\nPASS：全部当前要求的测试通过。\n\nPARTIAL：基础测试通过，扩展项仍有 PENDING。\n\nBLOCKED：必要测试因能力或证据缺失无法执行。\n\nFAIL：实际测试发现缺陷。\n\n不要将 PARTIAL 或 BLOCKED 转换为 PASS。\n\n四、与 D1（M2 真实网页收发工程化）的先后关系\n\n我的建议是：\n\n契约基础先行，D1 随后并行推进\n\n不建议等 §10-7 全部完成才启动 D1。\n\n原因是 D1 与 §10-7 并非完全相同的工作。\n\n工作\n\n\t\n\n主要目标\n\n\t\n\n依赖关系\n\n\n\n\n§10-1~6\n\n\t\n\n机器契约和基础测试\n\n\t\n\n先完成\n\n\n\n\nD1\n\n\t\n\nM2 真实网页收发工程化\n\n\t\n\n依赖已冻结的相关契约\n\n\n\n\n§10-7\n\n\t\n\n扩展场景自动化测试\n\n\t\n\n按 C2 批次\n\n\n\n\nD1 与 §10-7 集成\n\n\t\n\n真实收发的扩展场景验证\n\n\t\n\n分批进行\n\n具体执行顺序：\n\n完成 §10-1~6\n\n冻结当前契约版本，M1 基础测试通过。\n\n启动 D1\n\nM2 按统一契约实现真实网页消息收发，记录实际运行证据。\n\nC2 分批实现\n\n每实现一批扩展能力，就增加相应的 §10-7 测试。\n\n交叉验收\n\n验证真实网页收发与相应扩展场景的契约兼容性。\n\n这里有一个必须保留的边界：\n\n此前 M1 仍然是 SQLite + 模拟投递，并不等于真实 broker 生产投递；M2 的真实 chatgpt.com 收发以及私有 GitPointer 获取也尚未获得完整验收。因此，D1 的完成不能自动代表系统整体通过验收。\n\n五、我建议最终形成三个独立派单\n\n不要把这些工作塞进一个大任务，否则容易出现基础契约、真实网页收发和扩展能力相互污染。\n\n派单\n\n\t\n\n工作内容\n\n\t\n\n交付目标\n\n\n\n\nT-P1-904\n\n\t\n\n§10-1~6 契约机器化\n\n\t\n\nSchema + 测试基线 + 四模块一致性检查\n\n\n\n\nT-P1-905\n\n\t\n\nD1 M2 真实网页收发工程化\n\n\t\n\n真实收发及可复核证据\n\n\n\n\nT-P1-906\n\n\t\n\n§10-7 / C2 第一批扩展测试\n\n\t\n\n按已实现能力增加测试\n\nT-P1-906 不必等 T-P1-905 全部完成，但涉及真实网页收发的测试必须等对应能力具备。\n\n六、额外增加三个验收约束\n\n我建议在 T-P1-904 派单中明确：\n\n1. 测试可追溯\n\n每次测试结果至少记录：\n\n纯文本\ncontract_version\ncontract_manifest_sha256\ntested_commit\ntest_suite_version\nexecution_timestamp\npassed\nfailed\npending\nblocked\n\n2. 契约修改必须受控\n\n任何 Schema 修改都必须有版本变更记录，不能因为某个模块实现不方便就单方面修改公共契约。\n\n3. 不产生隐式授权\n\nT-P1-904 PASS 仅代表机器契约和基础契约测试通过，不代表：\n\nC2 扩展场景全部完成。\n\nM2 真实网页收发验收通过。\n\nM4 合并、推送及发布门禁通过。\n\n获得系统扩展、合并或发布授权。\n\n最终决策建议\n建议采用的执行方案\n推荐\n\n方案 A：基础契约先行，扩展测试分批补齐。\n\n§10-1~6：立即执行。\n\n§10-7：现在建立完整矩阵，未实现项全部 PENDING。\n\nM1：维护唯一权威 Schema 和契约测试基线。\n\n工具：优先 Python + JSON Schema + SHA-256。\n\nD1：基础契约冻结后启动，不等待 C2 全部完成。\n\n验收：各任务独立 PASS，不相互继承授权。\n\n我建议下一步直接派发 T-P1-904。 先把机器契约这层基础设施做扎实，再让 D1 和 C2 建立在同一套可执行契约上。",
+      "text_sha256": "76435077fa95d2f53eb39a63e2a7ea1f3ff0a935252a1c5325d7ec59743d9306",
+      "size_bytes": 9510,
+      "assistant_uuid": "dc0c839e-f71a-4c50-9137-b451e79ac9a7"
+    }
+  ]
+}
