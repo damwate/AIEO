@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-13T17:26:29.604Z",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "b6d1a773-9b9e-4eae-901a-6e88b9802416",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "b718fe9840a2c61f606f0562c0da0f87baefc2c6af51d77e847f9994c290bda5",
+          "98be36cb86ac50396c131fae398ab8425b45661013fa7a7139aae4868c4b1e81"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "b718fe9840a2c61f606f0562c0da0f87baefc2c6af51d77e847f9994c290bda5",
+          "98be36cb86ac50396c131fae398ab8425b45661013fa7a7139aae4868c4b1e81"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-0:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n{\n\"result\": \"BLOCKED\",\n\"reviewed_commit\": \"ea4da5cfc49e98c734984d02d6ec66faedeec6ff\",\n\"input_material_commit\": \"ea4da5cfc49e98c734984d02d6ec66faedeec6ff\",\n\"input_material_manifest_path\": \"phase1/manifests/T-P1-903-input-manifest.json\",\n\"input_material_manifest_sha256\": \"\",\n\"required_boundaries_check\": [],\n\"failure_paths_check\": [],\n\"poc_scope_check\": {\n\"all_claims_verified\": false,\n\"overclaims\": []\n},\n\"bundle_verification\": {\n\"bundle_sha256\": \"\",\n\"bundle_git_blob_sha1\": \"75ffe15541770f7cfa0ba0f81b62e317d1c0d372\",\n\"tar_file_count\": null,\n\"hash_match\": \"NOT_VERIFIED\",\n\"spot_check_count\": 0,\n\"spot_check_identical\": 0,\n\"missing\": null,\n\"extra\": null,\n\"random_seed\": \"\"\n},\n\"findings\": [],\n\"constraints\": [\n{\n\"id\": \"F-805\",\n\"type\": \"ENVIRONMENT_BLOCKER\",\n\"description\": \"已按指定的完整 40 位 commit SHA 读取 r2 引导包、manifest 和聚合包索引。GitHub fetch_file 返回的聚合包 blob SHA-1 为 75ffe15541770f7cfa0ba0f81b62e317d1c0d372，与 manifest 声明一致。但 GitHub 文件读取接口对 1.71MB TAR 二进制文件返回空内容，无法取得聚合包原始字节。\",\n\"impact\": \"无法计算聚合包 SHA-256 和 Git blob SHA-1 的独立实测值，无法解包，无法完成 95/95 文件 SHA-256/size 核验，也无法完成至少 15 个 GitHub 原始字节独立抽查。\",\n\"classification\": \"BLOCKED_NOT_MATERIAL_DEFECT\",\n\"action\": \"需要提供可供审查环境直接下载的聚合包原始字节，或提供具备二进制文件下载能力的 GitHub 读取环境。取得文件后重新执行 §2.5 四步核验。\"\n},\n{\n\"id\": \"ENTRY_GATE\",\n\"type\": \"MANDATORY_VERIFICATION_INCOMPLETE\",\n\"description\": \"§2.5 四步入口核验未全部完成。\",\n\"impact\": \"按照 r2 引导包要求，不得进入 §3 的 31 项实质审查、POC 真实性审查和文本自洽审查。\",\n\"classification\": \"BLOCKED\"\n}\n],\n\"summary\": \"T-P1-903 DEC-012 GitPointer 契约修订复审 r2：BLOCKED。已确认指定基线和聚合包 Git blob SHA-1，但当前审查环境无法获取 TAR 原始字节。未执行全量哈希核验及独立抽查，因此不进入实质审查。本结果不代表材料存在缺陷，不代表 r1 的 BLOCKED 已解除，也不构成 REWORK 或 PASS。\"\n}",
+      "text_sha256": "98be36cb86ac50396c131fae398ab8425b45661013fa7a7139aae4868c4b1e81",
+      "size_bytes": 2232,
+      "assistant_uuid": "b6d1a773-9b9e-4eae-901a-6e88b9802416"
+    }
+  ]
+}

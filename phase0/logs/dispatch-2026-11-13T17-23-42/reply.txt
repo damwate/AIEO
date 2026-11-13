@@ -1,0 +1,45 @@
+ChatGPT 说：
+
+{
+"result": "BLOCKED",
+"reviewed_commit": "ea4da5cfc49e98c734984d02d6ec66faedeec6ff",
+"input_material_commit": "ea4da5cfc49e98c734984d02d6ec66faedeec6ff",
+"input_material_manifest_path": "phase1/manifests/T-P1-903-input-manifest.json",
+"input_material_manifest_sha256": "",
+"required_boundaries_check": [],
+"failure_paths_check": [],
+"poc_scope_check": {
+"all_claims_verified": false,
+"overclaims": []
+},
+"bundle_verification": {
+"bundle_sha256": "",
+"bundle_git_blob_sha1": "75ffe15541770f7cfa0ba0f81b62e317d1c0d372",
+"tar_file_count": null,
+"hash_match": "NOT_VERIFIED",
+"spot_check_count": 0,
+"spot_check_identical": 0,
+"missing": null,
+"extra": null,
+"random_seed": ""
+},
+"findings": [],
+"constraints": [
+{
+"id": "F-805",
+"type": "ENVIRONMENT_BLOCKER",
+"description": "已按指定的完整 40 位 commit SHA 读取 r2 引导包、manifest 和聚合包索引。GitHub fetch_file 返回的聚合包 blob SHA-1 为 75ffe15541770f7cfa0ba0f81b62e317d1c0d372，与 manifest 声明一致。但 GitHub 文件读取接口对 1.71MB TAR 二进制文件返回空内容，无法取得聚合包原始字节。",
+"impact": "无法计算聚合包 SHA-256 和 Git blob SHA-1 的独立实测值，无法解包，无法完成 95/95 文件 SHA-256/size 核验，也无法完成至少 15 个 GitHub 原始字节独立抽查。",
+"classification": "BLOCKED_NOT_MATERIAL_DEFECT",
+"action": "需要提供可供审查环境直接下载的聚合包原始字节，或提供具备二进制文件下载能力的 GitHub 读取环境。取得文件后重新执行 §2.5 四步核验。"
+},
+{
+"id": "ENTRY_GATE",
+"type": "MANDATORY_VERIFICATION_INCOMPLETE",
+"description": "§2.5 四步入口核验未全部完成。",
+"impact": "按照 r2 引导包要求，不得进入 §3 的 31 项实质审查、POC 真实性审查和文本自洽审查。",
+"classification": "BLOCKED"
+}
+],
+"summary": "T-P1-903 DEC-012 GitPointer 契约修订复审 r2：BLOCKED。已确认指定基线和聚合包 Git blob SHA-1，但当前审查环境无法获取 TAR 原始字节。未执行全量哈希核验及独立抽查，因此不进入实质审查。本结果不代表材料存在缺陷，不代表 r1 的 BLOCKED 已解除，也不构成 REWORK 或 PASS。"
+}

@@ -1,0 +1,14 @@
+T-P1-903 派单：DEC-012 GitPointer 契约修订复审 r2
+
+你是独立审查者，全新空白会话。先读仓库 handoff/DEC012-REVIEW-BOOTSTRAP.md（r2，自包含引导包；§2.5 为 A+ 聚合包核验协议），以它为准。
+
+仓库 github.com/damwate/AIEO 分支 main。
+审查基线 commit：
+ea4da5cfc49e98c734984d02d6ec66faedeec6ff
+tag review-anchor/T-P1-903-r2 指向它。
+manifest：phase1/manifests/T-P1-903-input-manifest.json（95 文件）
+聚合包：phase1/manifests/T-P1-903-input-bundle.tar（1.71MB，git archive 导出，辅助 index 同目录）
+r1 因审查环境额度 BLOCKED/F-805 未进实质审查；r2 入口核验按 §2.5 四步：包身份双记录→95/95 全量哈希→≥15 独立抽查→如实记录 bundle_verification；环境障碍判 BLOCKED。
+只按上述 40 位 SHA 读仓库，禁用 HEAD。
+
+实质审查（前任 31 项逐项核对/POC 真实范围/三态判定）与输出单一 JSON 格式均见引导包，无包裹文本。
