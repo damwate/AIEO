@@ -1,0 +1,181 @@
+{
+  "at": "2026-11-13T20:07:06.031Z",
+  "message_bytes": 1194,
+  "reply": "ChatGPT 说：\nAIEO T-P1-904 独立交付复核\n\n审查对象：damwate/AIEO · 固定 Commit 审查 · DEC-023 号段方案 A\n\n当前结论：REWORK\n\n发现一项明确的 Schema 与实际接口模型不一致，需要修订后复核。\n\n这不是测试失败，也不代表整个机器化方案不可行。交付范围、Git 变更边界和主要测试证据目前表现良好，但在接口字段一致性上还不能给出 PASS。\n\n一、审查基准与变更清单\n\n严格使用指定完整 SHA：\n\n交付：bd07098a6c23acf4a8e4fc3c6530b9efe2d2e668\n\n基线：7f7f29908fdcc159dff2d3f1d63c125b896aafaa\n\n分支：feature/T-P1-904-contract-machinization\n\nGit Compare 实际核验结果：\n\n检查项\n\n\t\n\n实际结果\n\n\n\n\nCommit 数量\n\n\t\n\n1\n\n\n\n\n新增 Schema\n\n\t\n\n19\n\n\n\n\n新增 matrix.json\n\n\t\n\n1\n\n\n\n\n修改测试 harness\n\n\t\n\n1\n\n\n\n\n新增测试日志\n\n\t\n\n2\n\n\n\n\n总变更文件\n\n\t\n\n23\n\n\n\n\n删除文件\n\n\t\n\n0\n\n\n\n\napp 业务代码变更\n\n\t\n\n0\n\n20 个契约交付文件均位于 contracts/v1.0/。\n\n另外，测试 harness 和两份日志属于机器化验证及证据，不计入固定 20 个契约文件。\n\n第①项：PASS。\n\n没有发现超出申报范围的业务代码修改、冻结契约文本修改或未记录文件删除。\n\n二、Schema 与实际接口一致性\nREWORK · 发现明确缺陷\n\n已抽查以下实际实现：\n\napp/platform/schemas.py\n\napp/platform/messaging.py\n\napp/platform/errors.py\n\napp/platform/migrations/001_init.sql\n\napp/platform/tasks.py\n\napp/platform/reports.py\n\n对应的 19 份 Schema\n\nF-01：test-report 的 artifact_id 类型不一致\n\n必须修订\n\n文件：\n\ncontracts/v1.0/test-report.schema.json\n\n当前定义：\n\nJSON\n\"artifact_id\": {\n  \"type\": \"string\",\n  \"pattern\": \"^ART-[A-Z0-9-]+$\"\n}\n\n实际 Pydantic 定义：\n\nPython\n运行\nartifact_id: str | None = Field(\n    default=None,\n    pattern=r\"^ART-[A-Z0-9-]+$\"\n)\n\n存在差异：\n\n输入\n\n\t\n\n实际接口\n\n\t\n\n当前 Schema\n\n\n\n\n字段省略\n\n\t\n\n接受\n\n\t\n\n接受\n\n\n\n\n合法 ART ID\n\n\t\n\n接受\n\n\t\n\n接受\n\n\n\n\n显式 null\n\n\t\n\n接受\n\n\t\n\n拒绝\n\n\n\n\n非法 ART ID\n\n\t\n\n拒绝\n\n\t\n\n拒绝\n\n修订要求：\n\n将 Schema 调整为：\n\nJSON\n\"artifact_id\": {\n  \"type\": [\"string\", \"null\"],\n  \"pattern\": \"^ART-[A-Z0-9-]+$\"\n}\n\n并补充显式 null 正例、非法 ID 负例。\n\n注意：reports-test.schema.json 已正确允许 null，不要误改已经一致的文件。\n\n其他一致性检查\n\n检查范围\n\n\t\n\n结果\n\n\n\n\n16 种 message_type 枚举\n\n\t\n\nPASS\n\n\n\n\n信封 task/batch/project 条件必填\n\n\t\n\nPASS\n\n\n\n\nagent_type 枚举\n\n\t\n\nPASS\n\n\n\n\nID 与 Git SHA 格式\n\n\t\n\nPASS\n\n\n\n\nTask 状态 14 值枚举\n\n\t\n\nPASS\n\n\n\n\nTask 创建请求及响应结构\n\n\t\n\nPASS\n\n\n\n\ndependencies/latest_execution/allowed_events\n\n\t\n\nPASS\n\n\n\n\nmessages 状态及 ACK 结构\n\n\t\n\nPASS\n\n\n\n\ndevelopment report 状态枚举\n\n\t\n\nPASS\n\n\n\n\ntest execution_result 五值枚举\n\n\t\n\nPASS\n\n\n\n\nC3 错误码九组四位编号\n\n\t\n\nPASS\n\n\n\n\n报告列表三种形态\n\n\t\n\nPASS\n\n第②项：REWORK。\n\n目前确认一项字段类型不一致，不应在未修复前认定全部 19 份 Schema 已经与接口完全一致。\n\n三、READY 认定与测试证据\n证据基本通过\n\n核验两个实际提交的日志：\n\n1. Ajv Schema 测试\n\nphase1/logs/t-p1-904-20261114/schema-tests.log\n\n日志末尾：\n\n纯文本\nSCHEMA_TEST_SUMMARY total=139 passed=139 failed=0\nexit=0\n\n检查结果：\n\n23 份 Schema 参与测试。\n\n139 个正负例全部通过。\n\n包含请求与响应形态测试。\n\n包含信封条件必填测试。\n\n包含外部 $ref 解析测试。\n\n包含错误输入拒绝测试。\n\n2. M1 回归测试\n\nphase1/logs/t-p1-904-20261114/m1-regression.log\n\n纯文本\n43 passed, 1 warning\nexit=0\n\n没有发现业务回归失败的证据。\n\n这里需要明确一个审查边界：我核验的是指定 Commit 中的测试 harness 和已提交日志，未在独立运行环境重新执行完整测试。因此，139/139 和 43 passed 可以认定为有提交证据支持，但不能表述为本审查环境重新实跑。\n\nmatrix.json 检查\n\n四个字段严格一致。\n\n19 条能力记录。\n\n没有额外状态字段。\n\ntest_status=READY 有对应正负例日志支持。\n\nacceptance_batch=T-P1-905 是计划批次，不是验收通过证明。\n\n第③项：有条件通过。\n\nF-01 修订后，需要补齐对应测试证据，才能最终确认所有 READY 条目。\n\n四、授权与变更边界\nPASS\n\n边界\n\n\t\n\n核验结果\n\n\n\n\n不解除 DEC-017\n\n\t\n\n保持有效\n\n\n\n\n不修改冻结契约文本\n\n\t\n\n未发现修改\n\n\n\n\n不修改既有 4 份 GitPointer Schema\n\n\t\n\n未发现修改\n\n\n\n\n不修改 app 业务代码\n\n\t\n\n未发现修改\n\n\n\n\n不合并 main\n\n\t\n\n未合并\n\n\n\n\n不授权后续发布\n\n\t\n\n未授权\n\n\n\n\n不将 T-P1-905 计划视为验收完成\n\n\t\n\n符合\n\n本次交付没有产生任何 main 合并授权。\n\n五、最终审查意见\nresult = REWORK\n\n编号\n\n\t\n\n审查项目\n\n\t\n\n结果\n\n\n\n\n①\n\n\t\n\n清单忠实性\n\n\t\n\nPASS\n\n\n\n\n②\n\n\t\n\nSchema 与接口一致性\n\n\t\n\nREWORK\n\n\n\n\n③\n\n\t\n\nREADY 与测试证据\n\n\t\n\n有条件通过\n\n\n\n\n④\n\n\t\n\n授权及变更边界\n\n\t\n\nPASS\n\n唯一明确返工项\n\nF-01：修订 test-report.schema.json 中 artifact_id 的 nullable 定义，并补充测试。\n\n建议返工验收条件\n\n不扩大固定 20 文件契约交付范围。\n\n不修改任何冻结契约文本。\n\n不修改 app 业务代码。\n\n只修订 F-01 涉及的 Schema 和测试 harness。\n\n重新执行 Ajv 全量测试，确保原有 139 例和新增测试全部通过。\n\n重新执行 M1 回归，确保 43 passed。\n\n提交新的完整 SHA，供独立复核。\n\n可直接转交智谱的返工指令\n写作\n\nT-P1-904 独立复核结果：REWORK。\n\n仅发现一项明确问题 F-01：\n\ncontracts/v1.0/test-report.schema.json 的 artifact_id 当前仅允许 string，但 app/platform/schemas.py 的 TestReportIn 定义为 str | None，显式 null 应当合法。\n\n修订要求：\n\nartifact_id 改为允许 string/null，保留现有 ART ID pattern。\n\n增加显式 null 正例及非法 ART ID 负例。\n\n不扩大 20 文件契约交付范围，不修改冻结契约文本、既有 GitPointer Schema 或 app 业务代码。\n\n重新执行 Ajv 全量测试及 M1 回归测试。\n\n更新测试日志，提交新的完整 SHA。\n\n原有 139/139 和 43 passed 证据保留，不得通过删除原有测试用例解决问题。\n\n本次 REWORK 不解除 DEC-017，不构成 main 合并、发布或 T-P1-905 验收授权。\n\n审查结论：目前不通过终验。只需针对 F-01 修订，不建议推翻本次缩编方案，也不建议重新扩大 Schema 覆盖范围。",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "c9f4d825-d6b5-4989-85aa-2ed95d21f637",
+  "stability": {
+    "stable": true,
+    "interval_ms": 5788,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-13T20:06:59.441Z",
+      "read_finished_at": "2026-11-13T20:07:02.213Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "a6cc45e795f37913dc0dc05527f608a98754f02baf576f3caefa8e58f971c45b",
+          "size_bytes": 6516
+        }
+      ],
+      "assistant_uuid": "c9f4d825-d6b5-4989-85aa-2ed95d21f637",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-13T20:07:05.229Z",
+      "read_finished_at": "2026-11-13T20:07:05.786Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "a6cc45e795f37913dc0dc05527f608a98754f02baf576f3caefa8e58f971c45b",
+          "size_bytes": 6516
+        }
+      ],
+      "assistant_uuid": "c9f4d825-d6b5-4989-85aa-2ed95d21f637",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "0c12bd4cb060f30d35bdcedabb1db1ae3fa14bd305ab60b2a683f331c92e6631",
+          "a6cc45e795f37913dc0dc05527f608a98754f02baf576f3caefa8e58f971c45b"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "0c12bd4cb060f30d35bdcedabb1db1ae3fa14bd305ab60b2a683f331c92e6631",
+          "a6cc45e795f37913dc0dc05527f608a98754f02baf576f3caefa8e58f971c45b"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "a6cc45e795f37913dc0dc05527f608a98754f02baf576f3caefa8e58f971c45b",
+  "size_bytes": 6516,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-13T20-02-56\\reply.txt",
+  "reply_readback_sha256": "a6cc45e795f37913dc0dc05527f608a98754f02baf576f3caefa8e58f971c45b",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-13T20-02-56\\raw-units.json",
+  "raw_units_sha256": "2a365d7920ed9382e53e72fbedfdc3c9f1cc8274d3bda1b4ae39677df7ae3d2f",
+  "raw_units_size_bytes": 9810,
+  "raw_units_readback_sha256": "2a365d7920ed9382e53e72fbedfdc3c9f1cc8274d3bda1b4ae39677df7ae3d2f",
+  "session_id": "6af76d24-11b0-83e8-82c9-031558b97865",
+  "conversation_url": "https://chatgpt.com/c/6af76d24-11b0-83e8-82c9-031558b97865",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}
