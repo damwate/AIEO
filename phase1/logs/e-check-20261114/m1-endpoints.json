@@ -1,0 +1,215 @@
+{
+  "generated": "2026-11-14",
+  "purpose": "E 验收核对：M1 端点机器清单（会务复核意见 §2.1 要求）",
+  "code_baseline_commit": "e19c000f73fcb38bc390194546c7f5b72ce92733",
+  "method": "create_app() 实例化后遍历 app.routes（method×path，排除 HEAD/OPTIONS）",
+  "total_method_endpoints": 41,
+  "unique_paths": 33,
+  "endpoints": [
+    {
+      "method": "GET",
+      "path": "/api/v1/agents",
+      "handler": "list_agents"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/agents",
+      "handler": "create_agent"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/approvals",
+      "handler": "list_approvals"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/approvals",
+      "handler": "create_approval"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/artifacts",
+      "handler": "register_artifact"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/artifacts/{artifact_id}",
+      "handler": "get_artifact"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/audit",
+      "handler": "query_audit"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/login",
+      "handler": "login"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/auth/logout",
+      "handler": "logout"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/auth/session",
+      "handler": "whoami"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/batches",
+      "handler": "list_batches"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/batches",
+      "handler": "create_batch"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/batches/{batch_id}",
+      "handler": "get_batch"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/board",
+      "handler": "get_board"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/commits",
+      "handler": "list_commits"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/commits",
+      "handler": "register_commit"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/health",
+      "handler": "health"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/messages",
+      "handler": "list_messages"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/messages",
+      "handler": "submit_message"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/messages/dead-letter",
+      "handler": "dead_letter"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/messages/sweep",
+      "handler": "sweep_outbox"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/messages/{message_id}",
+      "handler": "get_message"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/messages/{message_id}/ack",
+      "handler": "ack_message"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/messages/{message_id}/cancel",
+      "handler": "cancel_message"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/messages/{message_id}/requeue",
+      "handler": "requeue_message"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/projects",
+      "handler": "list_projects"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/projects",
+      "handler": "create_project"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/projects/{project_id}",
+      "handler": "get_project"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/reports",
+      "handler": "list_reports"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/reports/development",
+      "handler": "register_dev_report"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/reports/review",
+      "handler": "register_review_report"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/reports/test",
+      "handler": "register_test_report"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/repositories",
+      "handler": "list_repositories"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/repositories",
+      "handler": "create_repository"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks",
+      "handler": "list_tasks"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/tasks",
+      "handler": "create_task"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/{task_id}",
+      "handler": "get_task"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/tasks/{task_id}/claim",
+      "handler": "claim_task"
+    },
+    {
+      "method": "GET",
+      "path": "/api/v1/tasks/{task_id}/dependencies",
+      "handler": "get_dependencies"
+    },
+    {
+      "method": "POST",
+      "path": "/api/v1/tasks/{task_id}/events",
+      "handler": "submit_event"
+    },
+    {
+      "method": "GET",
+      "path": "/openapi.json",
+      "handler": "openapi"
+    }
+  ]
+}

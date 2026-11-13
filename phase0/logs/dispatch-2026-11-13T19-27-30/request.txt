@@ -1,0 +1,9 @@
+AIEO 复盘交付物会务独立复核（DEC-022 授权期）。
+仓库 damwate/AIEO main，commit 824188c270c721cde02ce111640e5c3b8021d0ca（只按此完整 SHA 读，禁 HEAD）。
+读四份草案：docs/PROJECT-MASTER-PLAN.md；docs/PHASE-STATUS.md（含 E 验收核对矩阵）；docs/FEASIBILITY-REGISTER.md；docs/立项/06-MVP实施计划与验收标准.md §10。
+背景按需：docs/phase1/decision-log.md DEC-022；docs/reviews/2026-11-14-总体规划与可行性复盘-主会话盘点.md；docs/AI-DEV-LESSONS.md §10.1（EXP-PLANNING-001）。
+复核要求（EXP §六）：
+1.五份交付物（第五份=06 §10.3 任务清单）：完整性、与 EXP 一致性、引用真实性、有无越权表述；
+2.E 核对矩阵口径与结论是否诚实（41 端点 vs 登记 45、20 表 vs 契约 16 核心两处注记方式）；
+3.裁定号段：A=T-P1-904 缩编版先行、905=D1′、906=C2 首批；B=904 并入 D1′ 按需建 Schema。选 A/B 或替代案，并确认 904 子集文件清单与 matrix.json 四字段。
+回复：result=PASS/REWORK/BLOCKED+逐项意见+号段裁定+下一步。边界：不解除 DEC-017、不改冻结契约；审查意见≠项目变更授权。

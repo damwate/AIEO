@@ -1,0 +1,48 @@
+{
+  "generated": "2026-11-14",
+  "purpose": "E 验收核对：M1 实建表分组清单（会务复核意见 §2.2 要求）",
+  "code_baseline_commit": "e19c000f73fcb38bc390194546c7f5b72ce92733",
+  "sources": {
+    "c2_contract": "docs/phase1/platform-contract-v1.0.md §3.3 十六张核心表定义",
+    "migration": "app/platform/migrations/001_init.sql"
+  },
+  "c2_core_16_declared": [
+    "projects",
+    "repositories",
+    "batches",
+    "tasks",
+    "task_dependencies",
+    "task_executions",
+    "agents",
+    "agent_sessions",
+    "messages",
+    "artifacts",
+    "git_commits",
+    "development_reports",
+    "review_reports",
+    "test_reports",
+    "approvals",
+    "audit_logs"
+  ],
+  "c2_core_16_missing_in_migration": [],
+  "additional_tables": [
+    {
+      "name": "platform_users",
+      "purpose": "C7 认证授权：平台用户账号（Argon2id）"
+    },
+    {
+      "name": "service_credentials",
+      "purpose": "C7 认证授权：服务身份凭证"
+    },
+    {
+      "name": "task_events",
+      "purpose": "状态机事件记录（event_id 幂等，from/to_status，actor）"
+    },
+    {
+      "name": "user_sessions",
+      "purpose": "C7 认证授权：会话管理"
+    }
+  ],
+  "total_actual_tables": 20,
+  "note": "16 张为 C2 冻结契约核心口径；额外 4 表为认证授权与状态机事件实现需要，不属于 C2 契约新增内容"
+}

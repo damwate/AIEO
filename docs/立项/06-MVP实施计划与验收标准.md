@@ -214,14 +214,49 @@ P0-B  D1′：真实端到端垂直切片（T-P1-905，待会务确认号段）
 
 ### 10.3 下阶段任务清单（有限清单，每会话 1-3 项交付）
 
-| 建议号段（待会务确认） | 任务 | 前置 | 交付 |
-|---|---|---|---|
-| T-P1-904（缩编版） | 契约机器化——D1′ 消费子集 15-20 文件（信封/错误响应/开发·测试报告/messages·tasks·reports 端点）+ matrix.json（READY/PENDING 四字段：required_capability/implementation_status/test_status/acceptance_batch），其余挂 PENDING 随消费者补 | 五份交付物+号段对齐完成 | Schema 子集+矩阵；具体文件清单经会务确认后开工 |
-| T-P1-905 | D1′ 真实端到端垂直切片任务定义与执行（§10.2 P0-B） | ①五份交付物+号段对齐完成；②904 缩编或按需即时建设就绪 | 一单真实低风险需求全链证据，绑定 commit |
-| T-P1-906 | C2 扩展场景分批复审第一批（DEC-017 逐项解除，BLOCKED-1） | D1′ 通过 | 首批扩展场景可复现证据+独立审查 |
-| —（D1′ 后补位） | 测试执行 Worker 最小任务（真实测试执行+日志证据采集，TEST 节点） | D1′ 通过 | F-003 关闭或降级 |
+> **号段已会务裁定（2026-11-14，`phase0/logs/dispatch-2026-11-13T19-27-30/reply.txt` §四/§五）：选方案 A**——T-P1-904 缩编版先行 → T-P1-905 D1′ → T-P1-906 C2 第一批；随后依序登记 DEC-023。
 
-> 号段 904/905/906 为建议，最终以 ChatGPT 会务确认后登记 decision-log（DEC-023 预留）为准。
+| 号段（会务已确认） | 任务 | 前置依赖 | 交付 |
+|---|---|---|---|
+| **T-P1-904**（先行） | 契约机器化缩编版：**固定 20 文件**（§10.3.1），全部限定 `contracts/v1.0/` | 本清单+DEC-023 登记 | 19 个契约 Schema+示例 + matrix.json；不扩展到 130+ 文件 |
+| **T-P1-905**（核心验证） | D1′ 真实端到端垂直切片（§10.2 P0-B；任务书 `docs/phase1/D1PRIME-VERTICAL-SLICE-BRIEF.md`） | **T-P1-904 完成** | 一单真实低风险需求全链证据，绑定 commit |
+| **T-P1-906**（后置） | C2 扩展场景分批复审第一批（DEC-017 逐项解除，**不批量解除**） | **T-P1-905 通过** | 首批扩展场景可复现证据+独立审查 |
+| 独立任务（D1′ 通过后立项） | 测试执行 Worker 最小任务（真实测试执行+日志证据采集，TEST 节点，处理 F-003） | T-P1-905 通过 | F-003 关闭或降级 |
+
+#### 10.3.1 T-P1-904 固定范围：20 文件（会务裁定 2026-11-14）
+
+全部限定在 `contracts/v1.0/`，不修改既有冻结契约文本；既有 GitPointer 三份机器 Schema 继续保留不重复创建；第 1~19 项均含与实际接口一致的 Schema 及代表性合法示例；TASK_PLAN_REQUEST、TASK_PLAN_SUBMITTED、DEVELOPMENT_COMPLETED 为先覆盖的消息类型（不代表其他 13 种 message_type 取消）；只覆盖 D1′ 实际需要的端点，不扩展登录/审批/审计/附件等无关接口；实施前若发现某 Schema 非 D1′ 必需，可调整清单但必须留原因与矩阵记录。
+
+| # | 文件 | 用途 | # | 文件 | 用途 |
+|---|---|---|---|---|---|
+| 1 | message-envelope.schema.json | 消息通用信封 | 11 | tasks-event.schema.json | 任务状态事件请求/响应 |
+| 2 | task-plan-request.payload.schema.json | GPT 任务规划请求 | 12 | tasks-detail-response.schema.json | 任务详情响应 |
+| 3 | task-plan-submitted.payload.schema.json | GPT 任务规划结果 | 13 | tasks-list-response.schema.json | 任务列表响应 |
+| 4 | development-completed.payload.schema.json | 开发完成消息 | 14 | messages-create.schema.json | 消息提交请求/响应 |
+| 5 | development-report.schema.json | 开发报告 | 15 | messages-ack.schema.json | 消息 ACK 请求/响应 |
+| 6 | test-report.schema.json | 测试报告 | 16 | messages-list-response.schema.json | 消息列表响应 |
+| 7 | error-response.schema.json | C3 统一错误响应 | 17 | reports-development.schema.json | 开发报告登记请求/响应 |
+| 8 | projects-create.schema.json | 项目创建请求/响应 | 18 | reports-test.schema.json | 测试报告登记请求/响应 |
+| 9 | batches-create.schema.json | 批次创建请求/响应 | 19 | reports-list-response.schema.json | 报告查询响应 |
+| 10 | tasks-create.schema.json | 任务创建请求/响应 | 20 | matrix.json | 契约覆盖与实施状态矩阵 |
+
+**matrix.json 字段定义（会务确认，严格四字段，不增加第五个状态字段）：**
+
+```json
+{
+  "required_capability": "message-envelope",
+  "implementation_status": "READY",
+  "test_status": "READY",
+  "acceptance_batch": "T-P1-905"
+}
+```
+
+- `required_capability`（string）：所需契约能力标识；
+- `implementation_status`（enum READY/PENDING）：READY 必须有对应契约实现或机器定义，**不能仅凭 Schema 文件存在认定**；
+- `test_status`（enum READY/PENDING）：READY 必须有实际执行的正例、负例测试证据；
+- `acceptance_batch`（string/null）：计划由哪个批次验证，**不代表验收已通过**；D1′ 首批能力归属 `T-P1-905`；未安排的扩展能力保持 PENDING 且验收批次为空。
+
+> 本节为会务建议冻结的**工作范围**，不是对契约文本的修改授权。
 
 ### 10.4 暂缓与冻结项（2026-11-14 复盘裁定，原则批准）
 
