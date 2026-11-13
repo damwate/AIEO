@@ -2,7 +2,8 @@
 
 **用途：** 供全新、空白 GPT 审查会话使用。**不依赖任何旧会话记忆。**
 **审查历史：** T-P1-901 模块级审查 8 轮闭环 PASS（M1/M2/M4 findings 空）。本轮任务 T-P1-902 为**四模块集成级独立验收**——独立会话、独立结论，不继承、不推翻模块级 PASS。
-**第 1 轮集成审查（r1）结论：REWORK + 2 项 MAJOR（F-801/F-802，均为集成套件自身缺陷，模块代码零缺陷记录）。** r1 审查对象 commit f1c47941b49a6ba68ab8eb50d094a260de38a2fe（锚定 tag `review-anchor/T-P1-902-r1`→f3d00684110f9406476b34698a249ff9bdbcb7b1），派单证据 `phase0/logs/dispatch-2026-11-13T15-51-30/`（reply.txt 为原始结论 JSON，其 constraints 对申报边界的确认在本轮继续有效）。两项 finding 已整改并全量重跑（见 §4.4）。**本轮（r2）为整改后的独立复审：重点复核两项整改为真修复，其余按 §6 全量要求执行。**
+**第 1 轮集成审查（r1）结论：REWORK + 2 项 MAJOR（F-801/F-802，均为集成套件自身缺陷，模块代码零缺陷记录）。** r1 审查对象 commit f1c47941b49a6ba68ab8eb50d094a260de38a2fe（锚定 tag `review-anchor/T-P1-902-r1`→f3d00684110f9406476b34698a249ff9bdbcb7b1），派单证据 `phase0/logs/dispatch-2026-11-13T15-51-30/`（reply.txt 为原始结论 JSON，其 constraints 对申报边界的确认在本轮继续有效）。两项 finding 已整改并全量重跑（见 §4.4）。
+**第 2 轮集成审查（r2）结论：PASS（2026-11-13，独立新会话）。** r2 审查对象 commit c13b642770d2e4a6b2f1f1dd2bc5681cb4e906bb（锚定 tag `review-anchor/T-P1-902-r2`→af79e68711fdc10958a5c8d9590731d8cc25181b），派单证据 `phase0/logs/dispatch-2026-11-13T16-13-14/`（reply.txt 原始 JSON，登记 ART-M1-000011）。F-801/F-802 均确认为真修复；余 2 项 MINOR：F-803（本文件 §3 覆盖数字残留 r1 值 42/42——已修正为 50/50，随登记 commit 提交）、F-804（测试子进程 text 模式留证为 UTF-8 文本表示而非原始字节——非阻断改进，登记 lessons DEV-20261113-012，待后续套件变更时实施）。**r2 PASS 为四模块集成级验收通过；不构成 Phase 1 最终验收结论，不解除 BLOCKED-1 扩展场景（约束全文见 reply.txt）。**
 **范围：** 集成套件 `tests/integration/`（真实进程 E2E 覆盖 06-计划 §2 验收七条）+ 集成期 5 项跨模块契约缝隙修复（M1×2 文件、M3×6 文件、M4×2 文件）+ E2E/回归证据 + r1 REWORK 整改。模块级已审事项不重开；若集成事实与模块级申报矛盾，按 MAJOR+ 处理。
 
 ## 1. 仓库与基线【事实】
@@ -32,7 +33,7 @@
 1. **开发方（已执行，全量）：** 主会话对 manifest 全部 50 文件执行机械核验——① 每文件磁盘字节 SHA-256 与 manifest `artifact_sha256` 逐项比对；② commit 后对 `git cat-file blob` 重新全量比对（证明 manifest 描述的即为本 commit 内容）；③ `git ls-tree -r` 核对全部路径存在于本 commit。**报告：`phase1/manifests/T-P1-902-verification-report.json`**（含命令、退出码、逐文件结果）；blob 复核证据 `phase0/logs/blob-recheck-T-P1-902-r2/`（r1 轮复核证据 `phase0/logs/blob-recheck-T-P1-902-r1/` 及其失败留档 `-pre-fix-36of41/` 随 r1 链留档，tag r1 锚定）。
    **EOL 字节化前提（L-011.7 延伸）：** 证据目录经 `.gitattributes` 的 `phase1/logs/** binary`（r1 起）与 `phase0/logs/** binary`（r2 起，r1 派单证据本轮首次入 manifest）按磁盘字节原样入库，autocrlf 不做提交时规范化——否则 JSON/NDJSON 类证据（磁盘 CRLF）会被规范化为 LF blob，manifest 核验必然失败（r1 首轮 recheck 曾因此 36/41，失败证据留档 `phase0/logs/blob-recheck-T-P1-902-r1-pre-fix-36of41/`，属规则缺失而非证据篡改，已机制修复）。
    **amend 机制说明（F-301/F-404 整改延续）：** blob 复核必须在 commit 之后执行，其证据无法与被复核内容同一次生成。流程为：先产生含全部审查材料与 manifest 的 commit C1，对 C1 执行 blob 复核（证据内 `commit_sha256_anchored` 字段锚定 C1），再以 amend 方式将证据目录与核验报告并入生成最终送审 commit C2——amend **仅新增证据目录与报告**，manifest 所列全部文件在 C1 与 C2 中的 Git blob 逐字节相同（Git 内容寻址保证，可用 GitHub compare 验证 diff 仅含证据新增）。**C1 以 `review-anchor/T-P1-902-r2` 格式的 tag 锚定并推送**（force push 后裸 SHA 不再被引用，GitHub compare 不可得）。**F-601 整改延续：核验报告 method 字段指向本轮 `blob-recheck-T-P1-902-r2/`，锚定 commit 以该证据 `recheck-result.json` 的 `commit_sha256_anchored` 字段为准（报告不硬编码随 amend 变化的 SHA）**。
-2. **审查方（本轮请你执行）：** ① 实读上述核验报告，核对覆盖面（42/42、mismatch 为空、退出码），并核对报告引用的复核证据目录与实际提交的 `blob-recheck-T-P1-902-r1/` 一致（F-601 同轮引用）；② 按你的判断**抽样直接读取** raw.githubusercontent.com 上本 commit 的材料文件，核对其内容与申报一致；③ 抽查核验报告所列哈希与你的实读是否自洽——若发现报告与实读不符，按 MAJOR+ 处理。
+2. **审查方（本轮请你执行）：** ① 实读上述核验报告，核对覆盖面（50/50、mismatch 为空、退出码），并核对报告引用的复核证据目录与实际提交的 `blob-recheck-T-P1-902-r2/` 一致（F-601 同轮引用）；② 按你的判断**抽样直接读取** raw.githubusercontent.com 上本 commit 的材料文件，核对其内容与申报一致；③ 抽查核验报告所列哈希与你的实读是否自洽——若发现报告与实读不符，按 MAJOR+ 处理。
 3. **诚实条款：** 若报告缺失、覆盖不足或内容与实读矛盾→判 BLOCKED 并写入 findings；你无需也无法重复机械哈希计算，这部分由报告与 Git commit 锚定共同保证。
 
 ## 4. 被审查交付【事实，材料均在 manifest 中】
