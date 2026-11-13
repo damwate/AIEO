@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-13T17:19:14.109Z",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:1:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "805269b6-22ac-4cff-a149-3fcbacb14869",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "c0893f1fe1139f9c16a53501488fbb720ed3fe93e7728c7d47642713f2e8ff7e",
+          "a97ed944a8c0d74f23b513d44b0e748cbd2b4739d292b9968ab2b6ba7a63dedf"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "c0893f1fe1139f9c16a53501488fbb720ed3fe93e7728c7d47642713f2e8ff7e",
+          "a97ed944a8c0d74f23b513d44b0e748cbd2b4739d292b9968ab2b6ba7a63dedf"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:1:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:1:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:1:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:1:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:1:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-0:1:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n我的建议是：选择 A，但采用“A+强化独立抽查”的方案；不建议 B、C、D 作为主要路线。\n\n这次 r1 的 BLOCKED 是审查环境的能力问题，不是材料质量问题。真正需要解决的是：如何把 95 个文件的原始字节核验，从 95 次 GitHub 文件读取，变成一次聚合包下载、一次本地批量 SHA-256 校验，同时保留审查者独立验证 GitHub 原始内容的能力。\n\n一、四种方案比较\n\n方案\n\n\t\n\n优点\n\n\t\n\n主要问题\n\n\t\n\n建议\n\n\n\n\nA 聚合包\n\n\t\n\n一次下载，完整覆盖 95 个文件\n\n\t\n\n存在聚合包与 Git 仓库不一致的风险\n\n\t\n\n首选\n\n\n\n\nB 缩减至 30-40 文件\n\n\t\n\n降低核验工作量\n\n\t\n\n95 文件覆盖率被破坏，容易遗漏关键证据\n\n\t\n\n不建议\n\n\n\n\nC 拆分会话\n\n\t\n\n降低单次调用压力\n\n\t\n\n多会话结果汇总、完整性和一致性管理复杂\n\n\t\n\n备用\n\n\n\n\nD 等额度重置\n\n\t\n\n不改变原审查流程\n\n\t\n\nr1 已经证明这种方式存在重复阻塞风险\n\n\t\n\n不建议\n\n特别强调：\n\n不能为了让审查通过而缩减 manifest。\n\nDEC-012 复审的入口门禁既然要求 95 个文件完整核验，就应保留完整的 95 文件判定范围。\n\n二、A 方案需要增加的独立性约束\n\n我建议将 A 升级为 A+，增加以下六项约束。\n\n1. 聚合包必须绑定审查 commit\n\n聚合包必须满足：\n\n来源必须是本次指定的 Git commit。\n\n使用 git archive 从指定 commit 导出。\n\n包内路径必须与 manifest 中的 95 个路径完全一致。\n\n不允许从工作区直接打包。\n\n不允许打包后修改文件内容。\n\n聚合包必须提交到仓库，并随指定 commit 固化。\n\n例如：\n\nBash\ngit archive \\\n  --format=tar \\\n  --output=phase1/manifests/T-P1-903-input-bundle.tar \\\n  <COMMIT> \\\n  <95个指定路径>\n\n注意：如果聚合包本身也在该 commit 中，就会产生自引用问题。\n\n因此应采用两阶段设计：\n\n先生成输入聚合包。\n\n将聚合包加入仓库，形成最终审查 commit。\n\nmanifest 明确记录原始文件哈希，聚合包记录独立 blob SHA。\n\n不能要求聚合包包含自身。\n\n2. 必须核验聚合包自身 Git Blob\n\n不能仅凭 GitHub 页面显示的文件名、大小或下载成功就信任聚合包。\n\n引导包必须明确要求：\n\n获取聚合包对应的 Git Blob SHA。\n\n从指定 commit 的 Git Tree 确认聚合包路径。\n\n核验其 blob 对象身份。\n\n下载聚合包原始字节。\n\n独立计算 SHA-256。\n\n记录下载字节数和 SHA-256。\n\n这里需要区分：\n\nGit Blob SHA-1 与 SHA-256 文件摘要不是同一个概念。\n\nGit Blob SHA-1 应按 Git 对象规则计算：\n\n纯文本\nSHA1(\"blob \" + size + \"\\0\" + content)\n\n文件 SHA-256 则直接对原始文件字节计算。\n\n两者都应记录，不能混为一谈。\n\n3. 必须完整核验 95 个文件\n\n这是 A+ 的核心。\n\n审查者下载 tar 后，必须：\n\n解包到隔离目录。\n\n检查实际文件数量。\n\n检查文件路径集合。\n\n检查是否有重复路径。\n\n检查是否有额外文件。\n\n检查是否有缺失文件。\n\n对全部 95 个文件逐一计算 SHA-256。\n\n对照 manifest 中的 SHA-256 和 size。\n\n通过标准：\n\n95/95 全部一致\n\n不能用抽查代替全量哈希核验。\n\n4. 强制独立抽查 GitHub 原文\n\n这是防止聚合包成为唯一信任来源的关键。\n\n我建议最低抽查：\n\n15 个文件\n\n即 95 个文件中至少抽查 15 个，约 15.8%。\n\n抽查规则：\n\n至少 5 个核心契约或入口文件。\n\n至少 5 个实现或测试证据文件。\n\n至少 5 个随机文件。\n\n随机抽取必须由审查者在下载聚合包之后自行决定，不能由提交者预先指定。\n\n建议使用以下方法：\n\nPython\n运行\nimport random\n\n\nrandom.seed()\nselected = random.sample(manifest_files, 15)\n\n但这里还有一个改进：\n\n随机种子应由审查者自行生成并记录，不能使用固定种子。\n\n抽查时必须从 GitHub 指定 commit 获取原始文件字节，并与聚合包对应文件逐字节比较。\n\n不能只比较网页显示的文本，也不能只比较文件大小。\n\n5. 抽查结果必须记录\n\n要求审查报告输出：\n\n项目\n\n\t\n\n要求\n\n\n\n\n聚合包 SHA-256\n\n\t\n\n必须\n\n\n\n\n聚合包 Git Blob SHA\n\n\t\n\n必须\n\n\n\n\nmanifest 文件数\n\n\t\n\n95\n\n\n\n\n聚合包实际文件数\n\n\t\n\n95\n\n\n\n\n全量 SHA-256 比对\n\n\t\n\n95/95\n\n\n\n\n独立 GitHub 抽查\n\n\t\n\n至少 15\n\n\n\n\n抽查字节一致\n\n\t\n\n15/15\n\n\n\n\n缺失文件\n\n\t\n\n0\n\n\n\n\n额外文件\n\n\t\n\n0\n\n\n\n\n路径冲突\n\n\t\n\n0\n\n抽查发现任何一个文件不一致：\n\n直接 BLOCKED。\n\n不能通过重新打包、重新抽样或者忽略差异继续审查。\n\n6. 必须保留原来的三态判定\n\n这点非常重要。\n\n不能因为增加聚合包，就降低原来的审查门槛。\n\n仍然保持：\n\nPASS：入口核验完整通过，且实质审查符合要求。\n\nREWORK：发现材料或实现存在明确缺陷。\n\nBLOCKED：入口核验无法完成，或独立性验证失败。\n\n特别是：\n\n聚合包下载失败、GitHub 抽查额度不足、哈希计算环境不可用，都只能判定 BLOCKED，不能判定 REWORK。\n\n三、我建议增加一个额外防护：独立文件清单\n\nA+ 还可以再做一项改进。\n\n在聚合包旁边增加：\n\nT-P1-903-input-bundle.index.json\n\n内容包含：\n\n最终审查 commit SHA。\n\nmanifest 路径。\n\n95 个文件的相对路径。\n\n每个文件的 size。\n\n每个文件的 SHA-256。\n\n聚合包 SHA-256。\n\n聚合包 Git Blob SHA。\n\n但是注意：\n\nindex.json 只是辅助索引，不是新的判定依据。\n\n唯一判定基准仍然是原始 manifest。\n\nindex 的作用是方便审查者自动化检查和定位差异。\n\n四、推荐的 r2 审查流程\nT-P1-903 r2 入口核验流程\n\n锁定审查对象\n\n确认指定 commit、manifest 和聚合包 Git Blob 身份。\n\n一次下载聚合包\n\n获取完整 tar 原始字节，计算包级 SHA-256。\n\n全量本地核验\n\n解包，核验路径、文件数量、95 个文件的 SHA-256 和 size。\n\n独立 GitHub 抽查\n\n审查者自行选择至少 15 个文件，逐字节对照 GitHub 原始文件。\n\n入口门禁判定\n\n全部满足才进入 DEC-012 实质审查。\n\n实质审查\n\n按原 handoff 的核对项、判定规则和 JSON 输出要求执行。\n\n五、最终建议\n\n我的优先级是：\n\nA+：聚合包全量核验 + 15 文件独立抽查。\n\nC：如果网页审查环境连单次聚合包下载都无法完成，再考虑拆分。\n\nD：仅作为基础设施恢复后的备用方案。\n\nB：不采用，除非项目负责人正式修改审查范围和门禁标准。\n\n还有一个细节：建议把抽查数量设计成硬性最低值，而不是建议值。95 个文件中，15 个独立抽查是比较合理的折中；如果存在特别关键的 GitPointer 契约文件，则这些文件必须全部纳入抽查，不能被随机抽样规则遗漏。\n\n我的核心判断：A+ 能同时解决额度瓶颈、95 文件完整性和审查独立性三个问题，比简单拆分会话更干净，也更容易形成可复用的审查基础设施。\n\n下一步建议直接修改 DEC012-REVIEW-BOOTSTRAP.md，增加一个独立的「聚合包核验协议」章节，保留原来的 31 项审查标准和三态判定，不改变实质审查范围。",
+      "text_sha256": "a97ed944a8c0d74f23b513d44b0e748cbd2b4739d292b9968ab2b6ba7a63dedf",
+      "size_bytes": 7246,
+      "assistant_uuid": "805269b6-22ac-4cff-a149-3fcbacb14869"
+    }
+  ]
+}
