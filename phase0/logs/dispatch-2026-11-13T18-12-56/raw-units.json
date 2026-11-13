@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-13T18:16:55.197Z",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "a839685b-5af6-4f24-a5f1-59c4e6482c0c",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "36632d05e8af7ad8408b422a9cac84210bf61fdc6cbc9ac10fc467b196aeeb46",
+          "6f53ea3204af94c70a04683c2f420d55648396238f4da23f2cb51dca222428fc"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "36632d05e8af7ad8408b422a9cac84210bf61fdc6cbc9ac10fc467b196aeeb46",
+          "6f53ea3204af94c70a04683c2f420d55648396238f4da23f2cb51dca222428fc"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-0:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n{\n\"result\": \"BLOCKED\",\n\"reviewed_commit\": \"1f077eeac38c83dd088f11604bb3d1fc1c650dee\",\n\"input_material_commit\": \"1f077eeac38c83dd088f11604bb3d1fc1c650dee\",\n\"input_material_manifest_path\": \"phase1/manifests/T-P1-903-input-manifest.json\",\n\"input_material_manifest_sha256\": \"77185837394b9306719dd6a4ddb0d184e1b414bfdd9cf36ee29341a962ae3f48\",\n\"object_identity_gate\": {\n\"tree_call\": \"GET /repos/damwate/AIEO/git/trees/1f077eeac38c83dd088f11604bb3d1fc1c650dee?recursive=1\",\n\"files_matched\": \"95/95\",\n\"sizes_matched\": \"95/95\",\n\"parts_matched\": \"14/14\",\n\"tar_and_indexes_matched\": \"3/3\",\n\"missing\": 0,\n\"extra\": 0,\n\"tree_truncated\": false,\n\"observations\": [\n\"一次递归 tree 调用成功，取得完整 tree，未截断。\",\n\"manifest 95 个文件的 git_blob_sha1 和 size_bytes 均与 tree 一致。\",\n\"14 个分片的 tree blob SHA-1 与 bundle-parts.index.json 声明逐项一致。\",\n\"TAR 与两个索引文件均取得对应 tree 对象身份。\",\n\"发现主索引及分片索引的 bundle_source_commit 均为 21ff2a95cf961e238c35bf6299cd6f61e4204a44，与本次派单指定的审查基线 1f077eeac38c83dd088f11604bb3d1fc1c650dee 不一致。按 I3 要求，该项不能登记为通过。\",\n\"Git blob SHA-1 仅证明 Git 对象身份，不代表已读取或核验二进制正文。\"\n]\n},\n\"byte_integrity_gate_reference\": {\n\"recheck\": \"phase0/logs/blob-recheck-T-P1-903-r4/recheck-result.json\",\n\"bundle_gate\": \"phase0/logs/bundle-gate-T-P1-903-r4/bundle-gate-result.json\",\n\"records_present_and_consistent\": false,\n\"note\": \"按 r5 引导包指定路径读取两份记录，均返回 GitHub 404 NOT_FOUND。未能取得主会话本地机器核验记录，因此无法确认 BYTE_INTEGRITY_GATE。未自行重算、未背书任何字节级完整性结论。\"\n},\n\"required_boundaries_check\": [],\n\"failure_paths_check\": [],\n\"poc_scope_check\": {\n\"all_claims_verified\": false,\n\"overclaims\": [\n\"入口门禁未全部通过，未进入 31 项实质审查。\",\n\"未对 POC 证据及其申报范围作出完整独立验证。\",\n\"未对契约正文 §2.6.1–§2.6.13 作出完整实质审查。\",\n\"不得将对象身份核验结果解释为二进制内容已审查。\"\n]\n},\n\"findings\": [],\n\"constraints\": [\n\"BLOCKED 是审查入口及证据可用性阻断，不代表契约修订存在材料缺陷。\",\n\"OBJECT_IDENTITY_GATE 的 manifest 95/95 和分片 14/14 身份比对已完成，但 I3 的 bundle_source_commit 一致性仍有不符合项。\",\n\"BYTE_INTEGRITY_GATE 的两份指定记录均未能读取，不能登记 PASS。\",\n\"31 项 required_boundaries 与 failure_paths 未开展实质审查，不得推导 ADDRESSED 或 GAP。\",\n\"本次不产生 F-805 及后续材料缺陷编号。\",\n\"不改变 DEC-017 的 PASS_WITH_CONSTRAINTS 状态，不授权解除任何扩展场景限制。\"\n],\n\"summary\": \"T-P1-903 DEC-012 r5 复审结论：BLOCKED。已按指定完整 40 位 SHA 成功执行一次完整递归 tree 获取，manifest 95/95 文件的 Git blob SHA-1 与 size 全部匹配，14/14 分片身份匹配。但 I3 检测到两个辅助索引声明的 bundle_source_commit 与派单审查基线不一致；同时，r5 指定的 blob-recheck-T-P1-903-r4 和 bundle-gate-T-P1-903-r4 两份字节完整性记录均返回 404。入口双层保证未能全部成立，按 §2.5 必须停止，不进入 31 项实质审查。本结论不代表材料质量缺陷，也不代表 PASS。建议主会话先核对索引来源 commit 与派单基线的绑定关系，并将缺失的 BYTE_INTEGRITY_GATE 记录按指定路径入库，再重新派审。\"\n}",
+      "text_sha256": "6f53ea3204af94c70a04683c2f420d55648396238f4da23f2cb51dca222428fc",
+      "size_bytes": 3556,
+      "assistant_uuid": "a839685b-5af6-4f24-a5f1-59c4e6482c0c"
+    }
+  ]
+}
