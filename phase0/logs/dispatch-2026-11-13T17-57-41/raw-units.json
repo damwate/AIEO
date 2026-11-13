@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-13T18:00:52.832Z",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:1:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "0ddd5efe-58b3-4c84-a138-01254783c857",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "08bee7d782ecc908de4f278dc8e52c313b8936e2f0a7279bdc0d9891db1e35e4",
+          "51d8773c1c0c6f5ce200d45baf00a11121c1a4e3fe1a9b75e37c6c73adb3b293"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "08bee7d782ecc908de4f278dc8e52c313b8936e2f0a7279bdc0d9891db1e35e4",
+          "51d8773c1c0c6f5ce200d45baf00a11121c1a4e3fe1a9b75e37c6c73adb3b293"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:1:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:1:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:1:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:1:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:1:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-0:1:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nT-P1-903 / DEC-012 复审 r4 路由建议\n推荐 A：对象身份门禁 + 双层保证\n\n我的建议是：选择 A，正式调整 DEC-012 的审查治理契约，不再要求当前审查环境承担它客观上无法完成的字节级全量核验。\n\n这不是降低审查标准，而是重新划分保证责任。\n\n三轮 BLOCKED 已经提供了足够的环境能力证据。继续执行原 A+ 全哈希门禁，只会重复消耗审查资源，不会增加实质保证。\n\nB 可以作为未来环境升级方向，但不应该成为当前项目的前置条件。C 没有实际推进价值。\n\n一、为什么推荐 A\n\n三个方案的实质区别：\n\n方案\n\n\t\n\n可执行性\n\n\t\n\n保证能力\n\n\t\n\n建议\n\n\n\n\nA 对象身份门禁\n\n\t\n\n当前已验证可行\n\n\t\n\n分层保证\n\n\t\n\n采用\n\n\n\n\nB 更换执行环境\n\n\t\n\n未验证\n\n\t\n\n理论上可保留全量核验\n\n\t\n\n后续升级\n\n\n\n\nC 维持现状\n\n\t\n\n已证明不可行\n\n\t\n\n持续 BLOCKED\n\n\t\n\n否决\n\nA 的核心价值是把两个不同的问题分开：\n\n材料是不是那一批材料？ 由审查环境验证。\n\n材料的字节内容是否完整、未损坏、符合入库要求？ 由主会话本地工具验证。\n\n这两项保证不能混为一谈。\n\n尤其要避免把 Git blob SHA-1 的身份验证包装成 SHA-256 字节级完整性验证。\n\n二、治理陈述：哪些保证保留，哪些保证转移\n\n建议在 DEC-012 修订中明确以下内容。\n\n1. 保留的保证\n\n保证项目\n\n\t\n\n实施方式\n\n\t\n\n责任方\n\n\n\n\n审查对象身份\n\n\t\n\nGit blob SHA-1 与 manifest 逐项比对\n\n\t\n\n独立审查者\n\n\n\n\n文件集合完整性\n\n\t\n\n95/95 文件身份比对\n\n\t\n\n独立审查者\n\n\n\n\n分片身份\n\n\t\n\n14/14 分片 blob SHA-1 比对\n\n\t\n\n独立审查者\n\n\n\n\n索引身份\n\n\t\n\n索引文件 blob SHA-1 比对\n\n\t\n\n独立审查者\n\n\n\n\n锚点不可变性\n\n\t\n\n固定 commit / tag\n\n\t\n\n主会话及仓库治理\n\n\n\n\n实质审查\n\n\t\n\n直接读取相关文本源文件\n\n\t\n\n独立审查者\n\n\n\n\n字节级完整性\n\n\t\n\nSHA-256、size、解包验证\n\n\t\n\n主会话本地 manifest_tool\n\n这里有一个重要区别：\n\n独立审查者仍然负责确认自己审查的是正确的 Git 对象，而不是负责重新证明整个对象的字节级完整性。\n\n2. 转移的保证\n\n原来 A+ 门禁包含：\n\nb64 解码；\n\n分片重组；\n\nSHA-256 计算；\n\nTAR 解包；\n\n95/95 文件 SHA-256 计算；\n\n文件大小核对。\n\n这些工作转移至主会话本地受控环境。\n\n但转移不意味着取消。\n\n必须保留可追溯的机器验证记录，包括：\n\nmanifest_tool 版本；\n\n输入 commit；\n\nmanifest 文件身份；\n\nrecheck 结果；\n\nverify 结果；\n\n95/95 文件核验结果；\n\n分片解码与解包结果；\n\n执行时间及最终退出码。\n\n主会话负责字节级保证，独立审查者负责对象身份与实质审查。\n\n3. 不得扩大解释的部分\n\nGit blob SHA-1 只能作为 Git 对象身份标识使用。\n\n不能据此宣称：\n\nSHA-1 等价于 SHA-256；\n\n已经完成文件字节级独立核验；\n\n已经完成二进制内容审查；\n\n已经排除所有恶意碰撞或供应链攻击；\n\n14/14 分片身份匹配等于 14/14 分片内容已经独立解码验证。\n\n建议把这段写进治理文件，避免未来审查者误读。\n\n三、A 方案强制约束清单\n\n以下约束建议全部列为 MUST，而不是 SHOULD。\n\nA. Manifest 约束\n\n每个文件必须有唯一相对路径。\n\n每个文件必须有 Git blob SHA-1。\n\n每个文件必须有预期 size。\n\n每个文件必须有 SHA-256。\n\nmanifest 必须记录固定 commit。\n\nmanifest 必须与固定 tag / commit 锚点绑定。\n\n文件路径不得重复。\n\n不允许通过通配符、模糊匹配或目录级匹配代替逐文件身份核验。\n\nB. 独立审查者入口门禁\n\n必须读取正式 bootstrap。\n\n必须读取索引及 manifest。\n\n必须执行一次完整 tree 身份获取。\n\n必须逐项比对 95/95 文件 blob SHA-1。\n\n必须比对全部 14/14 分片身份。\n\n必须比对索引身份。\n\n任意一项不匹配，立即 BLOCKED。\n\n缺少文件、重复文件、额外文件均不得静默忽略。\n\n不得将无法读取的二进制正文声明为已审查。\n\n入口身份门禁通过后，才允许进入实质审查。\n\nC. 主会话本地完整性门禁\n\n必须在受控本地环境执行 manifest_tool recheck。\n\n必须执行 verify。\n\n必须完成全部分片解码。\n\n必须完成 TAR 解包。\n\n必须完成 95/95 文件 SHA-256 与 size 核验。\n\n任意文件不匹配，不得发布正式审查材料。\n\n必须保存机器验证结果。\n\n必须将验证结果绑定到对应 commit 和 tag。\n\n重新打包或修改任何材料后，必须重新执行完整验证。\n\n不得以 GitHub 页面显示成功代替本地验证。\n\nD. 实质审查约束\n\n审查者必须直接读取审查对象的原始文本文件。\n\n不得仅依据 bootstrap 摘要作出通过结论。\n\n不得把身份核验通过等同于实质审查通过。\n\n二进制材料只能报告身份已核验，不能报告内容已审查。\n\n发现实质问题仍然按照原三态规则判定。\n\n不得因为环境能力限制而降低缺陷严重程度。\n\n不得把入口 BLOCKED 解释成材料缺陷。\n\n四、建议增加的治理边界\n\n我认为还需要补充三个容易被忽略的问题。\n\n1. 两个验证结果必须独立记录。\n\n建议最终审查报告明确区分：\n\nOBJECT_IDENTITY_GATE：审查者完成。\n\nBYTE_INTEGRITY_GATE：主会话本地工具完成。\n\n两者分别记录 PASS / FAIL / BLOCKED。\n\n不能合并成一个笼统的 PASS。\n\n2. 主会话验证不能冒充独立审查。\n\n主会话可以证明材料符合入库完整性要求，但不能替代独立审查者对实质内容的判断。\n\n这是治理独立性的关键。\n\n3. 环境能力变化应允许重新升级门禁。\n\n如果未来审查环境具备代码执行、二进制读取和本地哈希能力，可以恢复 A+ 字节级独立核验。\n\nA 不应该成为永久降低标准的理由，而应该是当前环境条件下的正式执行协议。\n\n五、建议的最终决议\n\n建议把下面这段作为 r4 会务决议提交：\n\n写作\nDEC-012 r4 路由决议建议\n\n决议：采用方案 A——对象身份门禁与双层完整性保证。\n\n鉴于 r1、r2、r3 三轮独立审查均因审查环境能力限制而 BLOCKED，且已确认当前环境不具备大文本及二进制正文完整读取、本地代码执行、SHA-256 计算和 TAR 解包能力，原 A+ 全哈希独立核验门禁在当前环境不可执行。\n\n因此调整保证责任：\n\n主会话本地受控环境承担字节级完整性保证，包括分片解码、解包、SHA-256、size 核验及 manifest_tool recheck/verify。\n\n独立审查者承担 Git 对象身份保证，包括固定锚点、manifest、索引及全部 95 个文件和 14 个分片的 Git blob SHA-1 逐项比对。\n\n独立审查者通过对象身份门禁后，直接读取相关原始文本材料，开展实质审查。\n\nGit blob SHA-1 仅用于 Git 对象身份识别，不得解释为 SHA-256 字节级完整性证明。\n\n主会话本地完整性验证与独立审查者对象身份验证必须分别记录，不得互相替代。\n\n二进制正文未被独立读取的，不得声称已经完成二进制内容审查。\n\n任一门禁失败、材料身份不匹配或验证证据缺失，均不得进入正式 PASS。\n\n未来审查环境具备完整计算能力后，可重新评估恢复 A+ 全哈希独立核验。\n\n本次调整属于验证责任重新分配，不属于降低实质审查标准，也不改变原有三态判定及缺陷严重程度规则。\n\n最终原则：材料完整性由主会话证明，审查对象身份由独立审查者证明，实质质量由独立审查者判断。\n\n六、我的最终判断\n\n推荐路线\n\nA\nGO\n\n允许进入 r4 契约修订，不代表 DEC-012 已经通过实质复审。\n\nr1–r3：继续保持 BLOCKED 历史记录。\n\nr4：修改治理契约及入口门禁。\n\nr5：按新协议重新执行独立审查。\n\n最终结论：只能由新一轮实际审查产生。\n\n特别强调：不要把三轮 BLOCKED 改写成 REWORK，也不要把采用 A 直接记成 DEC-012 PASS。\n\n我建议这次彻底解决审查环境与核验协议不匹配的问题，不再继续做 r4、r5、r6 式的传输方案试错。 先固定责任边界，再执行一次真正的实质复审。",
+      "text_sha256": "51d8773c1c0c6f5ce200d45baf00a11121c1a4e3fe1a9b75e37c6c73adb3b293",
+      "size_bytes": 8345,
+      "assistant_uuid": "0ddd5efe-58b3-4c84-a138-01254783c857"
+    }
+  ]
+}
