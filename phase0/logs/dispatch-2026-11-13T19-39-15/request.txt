@@ -1,0 +1,8 @@
+AIEO 复盘交付物修订复核（承接你上一轮 REWORK，dispatch-2026-11-13T19-27-30）。
+仓库 damwate/AIEO main，commit 4797dcf5d0667df1b0e2d5c06e88b4d7d3715cf6（只按此完整 SHA 读，禁 HEAD）。
+按你三项要求修订：
+1.PHASE-STATUS §2.4：41 端点机器清单+20 表分组清单已落 phase1/logs/e-check-20261114/（两 JSON），45 标注历史登记口径；§1 补代码基线 e19c000 与文档 commit 区分声明；§2.3 补 4 项⚠️不得因 D1′ 通过自动升级纪律。
+2.06 §10.3 重写：号段表=方案 A 已确认+依赖递进 904→905→906；新增 §10.3.1=904 固定 20 文件表+matrix.json 四字段定义（含 READY 认定与批次语义边界）。
+3.D1′ 任务书 docs/phase1/D1PRIME-VERTICAL-SLICE-BRIEF.md v0.2：回填 T-P1-905、开工条件=904 验收通过、契约子集由 904 固定范围供给防范围漂移。
+请独立复核：三项修订是否忠实落实你的 REWORK 意见；904 清单与四字段转写是否准确无扩张。
+回复：result=PASS/REWORK+逐项意见。边界不变：不解除 DEC-017、不改冻结契约。
