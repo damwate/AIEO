@@ -19,9 +19,9 @@ python tests/integration/e2e_four_modules.py
 | 01 | 启动真实 M1 uvicorn 子进程（临时 DB/日志/工件，空闲端口）+ OWNER 登录 + agents/项目/仓库/批次 + 父子任务 | ①② |
 | 02 | 依赖门禁负例：父未 ACCEPTED 时子任务 PASS→READY 被拒（409 TASK-0002）、claim 被拒（409 TASK-0001）、READY 上 PASS 非法转换（409 TASK-0001） | ②③ |
 | 03 | M3 leg（上）：真实 MCP stdio server 子进程（http 模式 + 服务令牌）claim_task（base_commit 必填）→ 重复 claim 409 TASK-0003 → START → report_progress（显式 project_id/batch_id） | ③④ |
-| 04 | M4 leg：真实 GitWorker + 真实 git commit（scratch 仓库）→ GIT-0002 非祖先负例 → DIFF 工件/git_commit 登记 REGISTERED → 工件/commit 幂等 → 哈希不匹配 422 ART-0002 负例 | ③⑦ |
+| 04 | M4 leg：真实 GitWorker + 真实 git commit（scratch 仓库）→ GIT-0002 非祖先负例 → DIFF 工件/git_commit 登记 REGISTERED → 工件/commit 幂等 → 哈希不匹配 422 ART-0002 负例 → **真实测试执行**（pytest 实跑，TEST_LOG 工件=该 run 输出原始字节，统计同源解析，登记后回读 SHA-256 比对，F-802 整改） | ③⑦ |
 | 05 | M3 leg（下）：submit_result（真实 commit_sha）→ DEV_REPORTED → 重复提交幂等（duplicate=true，不投第二条消息） | ③④ |
-| 06 | GIT_VALIDATE→PASS→review report PASS→TEST_ACCEPTANCE→test report PASS+EXECUTED_PASS → **ACCEPTED**（同执行同事务证据门） | ③ |
+| 06 | 证据门负例（F-801 整改）：父任务 DEV_REPORTED（真实 execution，未经 review 证据链）提交 test report → 精确 409 TASK-0001 "requires TEST_ACCEPTANCE" → GIT_VALIDATE→PASS→review report PASS→TEST_ACCEPTANCE→test report PASS+EXECUTED_PASS → **ACCEPTED**（同执行同事务证据门） | ③ |
 | 07 | M2 leg：headless 全管线（13 步 runDispatch，本地 DOM fixture）→ 本地登记簿产物桥接登记真实 M1 → 工件回读逐字节比对 | ①⑦ |
 | 08 | 依赖解除：父 ACCEPTED 后子任务 PASS→READY→claim 成功 → BLOCKED 报告收尾；board 只计 ACCEPTED（completion=2/3≈66.67%） | ②⑥ |
 | 09 | 消息幂等：同 message_id 不同内容 409 RES-0003 且不落第二条 → ACK 幂等 → dead-letter 严格只读（查询前后 PENDING 状态不变）→ sweep PENDING→SENT（人类专属）→ 服务身份 sweep/requeue/projects 403 | ④ |
@@ -43,6 +43,13 @@ python tests/integration/e2e_four_modules.py
 4. **M1 服务白名单缺 `POST /api/v1/messages`**：03-协议 §3 要求服务 agent 投递 TASK_ACCEPTED/PROGRESS_UPDATED/DEVELOPMENT_COMPLETED，白名单缺它则消息流全断。修复：`security.py` 白名单补投递端点（管理操作 sweep/requeue/cancel 仍人类专属，`test_service_authorization.py` 补正例）。
 5. **M4 DIFF 工件登记绝对路径**：M1 `validate_artifact_path` 要求仓库相对 POSIX 路径，M4 登记本地 diff_dir 绝对 Windows 路径 → 真实 M1 拒收。修复：登记确定性身份路径 `git-worker/diffs/<task_id>/diff-<sha>.patch`（本地 diff_dir 物理留证不变；M4 测试断言同步 + 路径格式锁定）。
 
+## 第 1 轮集成审查 REWORK 整改（2026-11-13，r1 派单 dispatch-2026-11-13T15-51-30）
+
+第 1 轮独立审查结论 REWORK，2 项 MAJOR，均属实并已整改（套件缺陷，非模块代码缺陷）：
+
+1. **F-801 证据门负例未真实命中门禁**：原负例用子任务 + 伪造 execution_id（EXEC-90299），实际 404 RES-0001 止步于 `_require_execution`，且断言接受 400/404/409 任意状态——只证明"被拒"，未证明证据门工作。整改：负例改为步骤 06 开头对**父任务**（真实 execution_id，DEV_REPORTED、未经 review 证据链）提交 EXECUTED_PASS test report——请求通过执行存在性校验后真实命中状态门禁，精确断言 `409 TASK-0001` + 拒绝原因含 "requires TEST_ACCEPTANCE"。
+2. **F-802 TEST_LOG 工件为人工构造字符串**：原步骤 04 登记硬编码内容 `integration e2e test run: ALL PASS` 为 TEST_LOG，而开发报告声称 `python tests/integration/e2e_four_modules.py` passed=11——统计与工件内容无同源绑定（且对运行中的 E2E 自引用）。整改：步骤 04 **实跑一次真实 pytest**（`tests/platform/test_service_authorization.py`，子进程），TEST_LOG 工件 = 该 run 输出的原始字节（磁盘留证 `dev-test-run/devtest-run.log`），开发报告的 commands/passed/failed 从同一输出解析，登记后 GET 回读验证内容逐字节一致 + SHA-256 一致。
+
 ## 证据布局（每次运行一个目录）
 
 ```
@@ -54,6 +61,7 @@ phase1/logs/integration-<UTC>/
 ├── m2-leg/                # M2 headless 产物：request/reply/raw-units/result.json + 本地登记簿
 ├── m2-artifacts/          # M2 产物桥接登记前留存
 ├── m4-logs/ m4-diffs/     # M4 git worker NDJSON 日志与 DIFF patch
+├── dev-test-run/          # 步骤 04 真实测试执行留证（devtest-run.log，TEST_LOG 工件的字节源）
 ├── m4-audit-local.ndjson  # M4 本地审计（AUDIT_LOCAL_ONLY 标注）
 ├── scratch-repos.json     # scratch 仓库基线 SHA/分支
 └── work-dir-archive.json  # work_dir 归档清单

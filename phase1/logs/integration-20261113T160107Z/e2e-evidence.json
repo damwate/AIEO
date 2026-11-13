@@ -1,0 +1,404 @@
+{
+  "evidence_version": "1.0",
+  "task_id": "T-P1-902",
+  "purpose": "T-P1-902 four-module integration acceptance E2E (agent-contract §7; 06-计划 §2 验收七条)",
+  "generated_at": "2026-11-13T16:01:35.183Z",
+  "work_dir": "C:\\Users\\youting\\AppData\\Local\\Temp\\aieo-int-902-5rnpg0g5",
+  "steps": [
+    {
+      "name": "01_boot_and_setup",
+      "ok": true,
+      "duration_s": 10.156,
+      "details": {
+        "agents": {
+          "AIEO-ORCHESTRATOR": "AIEO-ORCHESTRATOR",
+          "ZCODE-01": null,
+          "REVIEWER-01": null,
+          "GIT-WORKER-01": null
+        },
+        "project_id": "AI-IMAGE-SERVICE",
+        "repository_id": "REPO-001",
+        "batch_id": "BATCH-001",
+        "parent_base_sha": "27b2187f93a24d4ef7b1180bfa15e7ccf0ca3df9",
+        "child_base_sha": "c75d5439d4bec9d8b197d20ace91ce59f09470e5",
+        "parent_task_id": "T-P1-001",
+        "child_task_id": "T-P1-002",
+        "parent_package_hash": "73f521e03c6faac985ad153d19d2aad00f8dbf6399061cfecbf89afd88689136",
+        "parent_status_after_setup": "READY",
+        "child_dependencies": {
+          "task_id": "T-P1-002",
+          "dependencies": [
+            {
+              "depends_on_task_id": "T-P1-001",
+              "status": "READY",
+              "title": "集成验收父任务：平台契约核心链路"
+            }
+          ],
+          "dependencies_satisfied": false,
+          "pending": [
+            {
+              "task_id": "T-P1-001",
+              "status": "READY"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "02_dependency_gate_negative",
+      "ok": true,
+      "duration_s": 0.078,
+      "details": {
+        "child_pass_blocked_by_dependency": {
+          "code": "TASK-0002",
+          "message": "DEPENDENCY_NOT_READY: every dependency must be ACCEPTED",
+          "retryable": false,
+          "correlation_id": "0974aaa6-9a37-4ac2-bb73-885eb3077b25",
+          "details": {
+            "task_id": "T-P1-002",
+            "pending_dependencies": [
+              {
+                "task_id": "T-P1-001",
+                "status": "READY"
+              }
+            ]
+          }
+        },
+        "pending_dependencies": [
+          {
+            "task_id": "T-P1-001",
+            "status": "READY"
+          }
+        ],
+        "child_claim_blocked_not_ready": {
+          "code": "TASK-0001",
+          "message": "INVALID_STATE_TRANSITION: task T-P1-002 must be READY to claim (status=ARCH_REVIEW)",
+          "retryable": false,
+          "correlation_id": "eff5fba7-1646-42ad-9d81-57777daa227c",
+          "details": {
+            "task_id": "T-P1-002",
+            "status": "ARCH_REVIEW"
+          }
+        },
+        "invalid_transition_negative": {
+          "code": "TASK-0001",
+          "message": "INVALID_STATE_TRANSITION: READY does not accept PASS",
+          "retryable": false,
+          "correlation_id": "22e879c5-aec3-4a8b-9f11-3a69aa754df9",
+          "details": {
+            "field": "event",
+            "current_status": "READY",
+            "event": "PASS"
+          }
+        }
+      }
+    },
+    {
+      "name": "03_m3_claim_and_progress",
+      "ok": true,
+      "duration_s": 1.516,
+      "details": {
+        "mcp_handshake": "aieo-zcode-bridge",
+        "claim": {
+          "execution_id": "EXEC-001",
+          "status": "DISPATCHED"
+        },
+        "duplicate_claim": {
+          "code": "TASK-0003",
+          "message": "TASK_ALREADY_CLAIMED: task T-P1-001 is not claimable (status=DISPATCHED)",
+          "retryable": false,
+          "correlation_id": "626ece8c-b769-49c9-9833-20d2d9bc41af",
+          "details": {
+            "task_id": "T-P1-001",
+            "status": "DISPATCHED"
+          }
+        },
+        "start_transition": {
+          "task_id": "T-P1-001",
+          "event_id": "EVT-START-PARENT",
+          "event": "START",
+          "from_status": "DISPATCHED",
+          "to_status": "IN_PROGRESS",
+          "duplicate": false,
+          "processed_at": "2026-11-13T16:01:18.748Z"
+        },
+        "progress_message_id": "MSG-20261113-767809"
+      }
+    },
+    {
+      "name": "04_m4_commit_and_collect",
+      "ok": true,
+      "duration_s": 9.296,
+      "details": {
+        "base_mismatch_negative": {
+          "code": "GIT-0002",
+          "message": "GIT_BASE_MISMATCH"
+        },
+        "commit_sha": "217dca7671fe5f080cd84a40ab2e27d7c8b7d9a5",
+        "m1_registration": {
+          "status": "REGISTERED",
+          "artifact_id": "ART-DIFF-001",
+          "git_commit_id": "1",
+          "audit_id": true
+        },
+        "changed_files": [
+          "src/impl.py"
+        ],
+        "diff_sha256": "a16a88e44e8d26e1778b5eb13d50c1bd3873704ed839049601c03c5806c1a070",
+        "artifact_duplicate_idempotent": "ART-DIFF-001",
+        "commit_duplicate_idempotent": "1",
+        "dev_test_run": {
+          "command": "C:\\Users\\youting\\AppData\\Local\\Programs\\Python\\Python312\\python.exe -m pytest tests/platform/test_service_authorization.py -q --no-header -p no:cacheprovider",
+          "exit_code": 0,
+          "passed": 8,
+          "failed": 0,
+          "log_file": "dev-test-run/devtest-run.log",
+          "log_sha256": "a9ea8301e6c82f3a80bc844ed5749ce672c6ca10489aaf3efbf2fd597f5a1061"
+        },
+        "test_log_artifact_id": "ART-TEST-001",
+        "test_log_readback": {
+          "content_identical": true,
+          "sha256_match": true
+        },
+        "hash_mismatch_negative": {
+          "code": "ART-0002",
+          "message": "ARTIFACT_HASH_MISMATCH: content sha256 d0a1902086f365612f9aa66a32250b9a6252a0f57afcc1a77ae617fe7cdbcb8d does not match registered aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+          "retryable": false,
+          "correlation_id": "383ff43a-8ef3-42c9-8aa8-5b98761cff37",
+          "details": {
+            "field": "sha256",
+            "expected": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "actual": "d0a1902086f365612f9aa66a32250b9a6252a0f57afcc1a77ae617fe7cdbcb8d"
+          }
+        }
+      }
+    },
+    {
+      "name": "05_m3_submit_result",
+      "ok": true,
+      "duration_s": 0.11,
+      "details": {
+        "submit_result": {
+          "dev_report_id": null,
+          "message_id": "MSG-20261113-768809"
+        },
+        "task_status_after_submit": "DEV_REPORTED",
+        "duplicate_submit_result": {
+          "registered": true,
+          "duplicate": true,
+          "dev_report_id": null
+        }
+      }
+    },
+    {
+      "name": "06_git_validate_and_accept",
+      "ok": true,
+      "duration_s": 0.281,
+      "details": {
+        "accepted_evidence_gate_negative": {
+          "status_code": 409,
+          "code": "TASK-0001",
+          "message": "INVALID_STATE_TRANSITION: test report requires TEST_ACCEPTANCE (task is DEV_REPORTED)",
+          "task_status_at_attempt": "DEV_REPORTED",
+          "execution_id": "EXEC-001"
+        },
+        "after_git_pass": "CODE_REVIEW",
+        "review_report": {
+          "task_id": "T-P1-001",
+          "execution_id": "EXEC-001",
+          "reviewed_commit": "217dca7671fe5f080cd84a40ab2e27d7c8b7d9a5",
+          "result": "PASS",
+          "transition": {
+            "task_id": "T-P1-001",
+            "event_id": "EVT-REVIEW-EXEC-001-217dca7671fe",
+            "event": "PASS",
+            "from_status": "CODE_REVIEW",
+            "to_status": "TEST_ACCEPTANCE",
+            "duplicate": false,
+            "processed_at": "2026-11-13T16:01:28.371Z"
+          },
+          "created_at": "2026-11-13T16:01:28.371Z",
+          "duplicate": false
+        },
+        "test_report": {
+          "task_id": "T-P1-001",
+          "execution_id": "EXEC-001",
+          "commit_sha": "217dca7671fe5f080cd84a40ab2e27d7c8b7d9a5",
+          "execution_result": "EXECUTED_PASS",
+          "result": "PASS",
+          "transition": {
+            "task_id": "T-P1-001",
+            "event_id": "EVT-TEST-EXEC-001-217dca7671fe",
+            "event": "PASS",
+            "from_status": "TEST_ACCEPTANCE",
+            "to_status": "ACCEPTED",
+            "duplicate": false,
+            "processed_at": "2026-11-13T16:01:28.446Z"
+          },
+          "created_at": "2026-11-13T16:01:28.445Z",
+          "duplicate": false
+        },
+        "final_status": "ACCEPTED"
+      }
+    },
+    {
+      "name": "07_m2_leg_and_bridge",
+      "ok": true,
+      "duration_s": 2.109,
+      "details": {
+        "m2_summary": {
+          "ok": true,
+          "dispatch_id": "DISPATCH-2026-11-13T16-01-29",
+          "session_id": "3f2a7b8c-1c41-4091-817f-7b7c0f3f314a",
+          "conversation_url": "https://chatgpt.com/c/3f2a7b8c-1c41-4091-817f-7b7c0f3f314a",
+          "user_unit_key": "u1000:user",
+          "unit_keys": [
+            "a1001:assistant"
+          ],
+          "reply_sha256": "a73124d58900b35562b7e50cd148882cbebd30fc2fb498f3f1fbbf6bc1c3c1ac",
+          "reply_bytes": 173,
+          "registry_artifact_id": "ART-M1-000001",
+          "registry_artifact_sha256": "a73124d58900b35562b7e50cd148882cbebd30fc2fb498f3f1fbbf6bc1c3c1ac",
+          "registry_path": "D:\\AIEO\\phase1\\logs\\integration-20261113T160107Z\\m2-leg\\m1-artifact-registry.json",
+          "result_path": "D:\\AIEO\\phase1\\logs\\integration-20261113T160107Z\\m2-leg\\DISPATCH-2026-11-13T16-01-29\\result.json"
+        },
+        "bridge_artifact_id": "ART-REV-001",
+        "bridge_roundtrip": "content identical"
+      }
+    },
+    {
+      "name": "08_child_unblock_and_board",
+      "ok": true,
+      "duration_s": 0.266,
+      "details": {
+        "child_unblocked_to_ready": {
+          "task_id": "T-P1-002",
+          "event_id": "EVT-CHILD-PASS-UNBLOCKED",
+          "event": "PASS",
+          "from_status": "ARCH_REVIEW",
+          "to_status": "READY",
+          "duplicate": false,
+          "processed_at": "2026-11-13T16:01:30.640Z"
+        },
+        "child_claim": {
+          "execution_id": "EXEC-002",
+          "status": "DISPATCHED"
+        },
+        "child_dependencies_satisfied": {
+          "task_id": "T-P1-002",
+          "dependencies": [
+            {
+              "depends_on_task_id": "T-P1-001",
+              "status": "ACCEPTED",
+              "title": "集成验收父任务：平台契约核心链路"
+            }
+          ],
+          "dependencies_satisfied": true,
+          "pending": []
+        },
+        "child_blocked_report": true,
+        "board": {
+          "accepted_tasks": 1,
+          "completion_percent": 66.67,
+          "status_counts": {
+            "DRAFT": 0,
+            "PLANNING": 0,
+            "ARCH_REVIEW": 0,
+            "READY": 0,
+            "DISPATCHED": 0,
+            "IN_PROGRESS": 0,
+            "DEV_REPORTED": 0,
+            "GIT_VALIDATING": 0,
+            "CODE_REVIEW": 0,
+            "TEST_ACCEPTANCE": 0,
+            "REWORK": 0,
+            "BLOCKED": 1,
+            "ACCEPTED": 1,
+            "CANCELLED": 0
+          }
+        }
+      }
+    },
+    {
+      "name": "09_messages_dedup_and_sweep",
+      "ok": true,
+      "duration_s": 0.297,
+      "details": {
+        "duplicate_message": {
+          "first": "PENDING",
+          "second_code": "RES-0003",
+          "rows": 1
+        },
+        "dead_letter_readonly": {
+          "dead_letter_total": 0,
+          "pending_before": 6,
+          "pending_after": 6
+        },
+        "ack_idempotent": "PROCESSED",
+        "service_forbidden_negatives": [
+          "sweep",
+          "requeue",
+          "projects_create"
+        ],
+        "sweep": {
+          "delivered": 2,
+          "outbox_pending_before": 2,
+          "outbox_pending_after": 0
+        }
+      }
+    },
+    {
+      "name": "10_restart_persistence",
+      "ok": true,
+      "duration_s": 3.984,
+      "details": {
+        "compared_keys": [
+          "task_T-P1-001",
+          "task_T-P1-002",
+          "commits_parent",
+          "reports_dev",
+          "reports_test",
+          "messages_total",
+          "board_percent"
+        ],
+        "restart": "terminate + restart same DB path, all keys identical",
+        "service_token_survives_restart": true
+      }
+    },
+    {
+      "name": "11_audit_trail",
+      "ok": true,
+      "duration_s": 0.016,
+      "details": {
+        "audit_rows_total": 47,
+        "audit_actions": [
+          "admin_initialized",
+          "agent_registered",
+          "artifact_registered",
+          "batch_created",
+          "claim_task",
+          "git_commit_registered",
+          "login_success",
+          "message_ack",
+          "message_registered",
+          "project_created",
+          "report_registered",
+          "repository_created",
+          "service_credential_issued",
+          "task_created",
+          "task_transition"
+        ],
+        "audit_actors": [
+          "GIT-WORKER-01",
+          "OWNER",
+          "REVIEWER-01",
+          "ZCODE-01",
+          "system"
+        ]
+      }
+    }
+  ],
+  "all_ok": true,
+  "finished": true,
+  "exit_code": 0
+}

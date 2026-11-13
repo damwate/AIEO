@@ -923,6 +923,22 @@
 - **当前遗留问题：** 集成独立审查派单未完成（handoff+manifest_tool+证据链进行中）；契约批准人追认、DEC-017 扩展门禁、main 合并保持原状。
 - **下一步建议与验证标准：** `handoff/PHASE1-INTEGRATION-REVIEW.md` + `phase1/tools/manifest_tool.mjs`（manifest/verify/recheck 三子命令）完成证据链：manifest→commit→tag `review-anchor/T-P1-902-r1`→blob recheck→amend 仅证据目录+核验报告→派单全新空白审查会话（review-protocol §5.1 阶段边界轮换）；结论以 dispatch 目录 reply.txt 原始 JSON 为准，reviewed_commit 逐字符复制 40 位。
 
+### DEV-20261113-011 T-P1-902 第 1 轮集成审查 REWORK（F-801/F-802）与整改
+
+- **任务目标：** 集成验收第 1 轮独立审查（派单 `phase0/logs/dispatch-2026-11-13T15-51-30/`，全新空白会话，`gpt_dispatch.mjs --new-session`，消息 1182 字节）→ 结论 REWORK + 2 项 MAJOR → 属实性核实 → 整改 → 重跑全绿 → 证据链 r2 → 轮换派单 r2。
+- **环境与版本：** r1 审查对象 commit f1c47941b49a6ba68ab8eb50d094a260de38a2fe（tag `review-anchor/T-P1-902-r1` 锚定 f3d00684110f9406476b34698a249ff9bdbcb7b1）；审查会话 https://chatgpt.com/c/6af73230-fbfc-83e8-a81d-b0008a5eeb36；整改后 E2E 证据 `phase1/logs/integration-20261113T160107Z/`。
+- **发生与处理：** 审查方两项 MAJOR 均核实属实，均为**套件自身缺陷**（非模块代码缺陷）：
+  1. **F-801 证据门负例未真实命中门禁**：原负例对子任务用伪造 execution_id（EXEC-90299）提交 test report，实际 404 RES-0001 止步于 M1 `_require_execution`（reports.py 中执行存在性校验先于状态门禁），且断言接受 400/404/409 任意状态——只证明"被拒"，未证明"证据门工作"。整改：负例移至步骤 06 开头，对**父任务**（真实 execution_id，DEV_REPORTED、未经 review 证据链）提交 EXECUTED_PASS test report → 精确断言 409 TASK-0001 且拒绝原因含 "requires TEST_ACCEPTANCE"。
+  2. **F-802 TEST_LOG 工件为人工构造字符串**：原步骤 04 登记硬编码 `integration e2e test run: ALL PASS` 为 TEST_LOG，开发报告却声称 `python tests/integration/e2e_four_modules.py` passed=11——统计与工件无同源绑定，且对运行中的 E2E 自引用。整改：步骤 04 **实跑一次真实 pytest**（`tests/platform/test_service_authorization.py` 子进程），TEST_LOG 工件=该 run 输出原始字节（磁盘留证 `dev-test-run/devtest-run.log`），开发报告 commands/passed/failed 从同一输出解析（实跑 8 passed/0 failed），登记后 GET 回读验证内容逐字节一致 + SHA-256 一致。
+- **验证结果：** 整改后 E2E 一次通过 exit=0（11 步 all_ok）；四模块回归 M1 43 / M2 65 / M3 53 / M4 24 与 r1 基线逐项一致（整改未触碰模块代码）；evidence 中 dev_test_run/回读/门禁负例逐项可查（`steps[3].details`、`steps[5].details.accepted_evidence_gate_negative`）。
+- **问题根因分析：** 两项同一根因——负例与测试证据"写成了能通过的样子"，而非"构造真实命中目标的场景"：负例选了个必先死于更早校验的靶子、断言放宽到能吃下任何拒绝；TEST_LOG 则是绕开"运行中的编排无法引用自身完整日志"的鸡生蛋问题而手造了一个假日志。
+- **本次新增的开发经验：**
+  1. 负例必须证明"拒绝发生在目标校验层"：先读被测代码的校验**顺序**（`_require_execution` → 重复检查 → 状态门禁），确认请求能穿过前序校验到达目标层，再断言精确错误码+原因文案；"任意 4xx/409 都算过"的负例等于没测。
+  2. 测试证据工件与统计必须同源：登记的 log 工件=真实子进程输出的原始字节，报告里的 passed/failed 从同一输出解析——不可引用"编排自身尚不存在的完整日志"（自引用必然造假），改为在运行中实跑一条真实测试命令作为证据源。
+  3. E2E 里模拟"开发方提交测试证据"时，用一次真实的最小测试执行（pytest 单文件）替代手写摘要串，既保真又可追溯（磁盘留证 + SHA + 回读三重绑定）。
+- **当前遗留问题：** r2 独立审查派单进行中（finding_id 从 F-803 起）；契约批准人追认、DEC-017 扩展门禁、main 合并保持原状。
+- **下一步建议与验证标准：** 证据链 r2（manifest 重生成→commit→tag `review-anchor/T-P1-902-r2`→blob recheck→amend 仅证据目录+核验报告→push→轮换派单）；结论以 dispatch 目录 reply.txt 原始 JSON 为准。
+
 ---
 
 ## 8. AI 能力边界与工具切换记录

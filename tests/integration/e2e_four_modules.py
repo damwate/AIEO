@@ -24,13 +24,15 @@
 用法：python tests/integration/e2e_four_modules.py
 退出码 0 = 十一步全过；evidence JSON 全步骤 ok=true。
 证据：phase1/logs/integration-<UTC 时间戳>/（e2e-evidence.json / e2e-run.log /
-m1-server.log / m3-mcp-ndjson/ / m2-leg/ / m4-logs/ / scratch 仓库留证清单）。
+m1-server.log / m3-mcp-ndjson/ / m2-leg/ / m4-logs/ / dev-test-run/ / scratch 仓库留证清单）。
 """
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
+import re
 import shutil
 import socket
 import subprocess
@@ -545,16 +547,50 @@ class E2E:
             base_commit=self.parent_base_sha, diff_artifact_id=self.diff_artifact_id)
         details["commit_duplicate_idempotent"] = dup
 
-        # TEST_LOG 工件（供 dev report / test report 引用）
+        # TEST_LOG 工件（供 dev report / test report 引用）——真实测试执行的字节留证，
+        # 非人工构造字符串（F-802 整改）：此处实跑一次真实 pytest（M1 授权模块测试），
+        # 工件内容 = 该进程输出的原始字节，dev report 统计从同一输出解析，登记后回读
+        # 验证内容与 SHA-256 一致——测试证据可完整追溯到同一次真实执行。
+        devtest_dir = self.evidence_dir / "dev-test-run"
+        devtest_dir.mkdir(parents=True, exist_ok=True)
+        devtest_cmd = [sys.executable, "-m", "pytest", "tests/platform/test_service_authorization.py",
+                       "-q", "--no-header", "-p", "no:cacheprovider"]
+        devtest = subprocess.run(devtest_cmd, cwd=str(REPO_ROOT), capture_output=True,
+                                 text=True, encoding="utf-8", errors="replace", timeout=300)
+        devtest_log = (devtest.stdout or "") + (devtest.stderr or "")
+        devtest_log_path = devtest_dir / "devtest-run.log"
+        with open(devtest_log_path, "w", encoding="utf-8", newline="") as fh:
+            fh.write(devtest_log)
+        m_pass = re.search(r"(\d+) passed", devtest_log)
+        m_fail = re.search(r"(\d+) failed", devtest_log)
+        devtest_passed = int(m_pass.group(1)) if m_pass else 0
+        devtest_failed = int(m_fail.group(1)) if m_fail else 0
+        self.expect(devtest.returncode == 0 and devtest_passed > 0 and devtest_failed == 0,
+                    f"开发侧真实测试执行失败 exit={devtest.returncode}: {devtest_log[-600:]}")
+        devtest_sha = hashlib.sha256(devtest_log.encode("utf-8")).hexdigest()
+        details["dev_test_run"] = {"command": " ".join(devtest_cmd), "exit_code": devtest.returncode,
+                                   "passed": devtest_passed, "failed": devtest_failed,
+                                   "log_file": "dev-test-run/devtest-run.log", "log_sha256": devtest_sha}
+        self.dev_test_stats = {"commands": [" ".join(devtest_cmd)],
+                               "passed": devtest_passed, "failed": devtest_failed}
         resp = self.git_worker_session.post("/api/v1/artifacts", {
             "task_id": self.parent_task_id, "type": "TEST_LOG",
             "path": f"phase1/logs/integration/m4-test-logs/e2e-{self.execution_id}.log",
-            "sha256": __import__("hashlib").sha256(b"integration e2e test run: ALL PASS").hexdigest(),
-            "content": "integration e2e test run: ALL PASS",
+            "sha256": devtest_sha,
+            "content": devtest_log,
         })
         self.expect(resp.status_code == 201, f"TEST_LOG 工件登记: {resp.status_code} {resp.text[:300]}")
         self.test_log_artifact_id = resp.json()["artifact_id"]
         details["test_log_artifact_id"] = self.test_log_artifact_id
+
+        # 回读验证：M1 存储内容与本次真实执行字节 SHA-256 一致（证据可追溯闭环）
+        fetched = self.git_worker_session.get(f"/api/v1/artifacts/{self.test_log_artifact_id}")
+        self.expect(fetched.status_code == 200, f"TEST_LOG 回读: {fetched.status_code}")
+        self.expect(fetched.json().get("content") == devtest_log,
+                    "TEST_LOG 回读内容与真实执行输出不一致")
+        self.expect(hashlib.sha256(fetched.json()["content"].encode("utf-8")).hexdigest() == devtest_sha,
+                    "TEST_LOG 回读内容 SHA-256 与登记值不一致")
+        details["test_log_readback"] = {"content_identical": True, "sha256_match": True}
 
         # 工件哈希不匹配负例：422 ART-0002 ARTIFACT_HASH_MISMATCH（inline content 与 sha256 不符）
         resp = self.git_worker_session.post("/api/v1/artifacts", {
@@ -586,8 +622,9 @@ class E2E:
                 "commit_sha": self.commit_sha,
                 "changed_files": ["src/impl.py"],
             },
-            "tests": {"executed": True, "commands": ["python tests/integration/e2e_four_modules.py"],
-                      "passed": 11, "failed": 0, "log_artifact_id": self.test_log_artifact_id},
+            "tests": {"executed": True, "commands": self.dev_test_stats["commands"],
+                      "passed": self.dev_test_stats["passed"], "failed": self.dev_test_stats["failed"],
+                      "log_artifact_id": self.test_log_artifact_id},
             "known_issues": [],
             "knowledge_updates_required": False,
             "self_assessment": "集成验收 M3 leg 提交，等待独立审查",
@@ -619,6 +656,24 @@ class E2E:
     def step_git_validate_and_accept(self, details: dict) -> None:
         """验收③：GIT_VALIDATE→PASS→CODE_REVIEW→review report(PASS)→TEST_ACCEPTANCE→test report(PASS+EXECUTED_PASS)→ACCEPTED。"""
         h = self.human
+
+        # ACCEPTED 证据门负例（F-801 整改：必须真实命中门禁，而非止步于执行存在性校验）：
+        # 父任务持真实 execution_id（claim 建立的有效执行），当前 DEV_REPORTED——尚未经
+        # review PASS 证据链，绝无 TEST_ACCEPTANCE 状态。此时提交 EXECUTED_PASS 的 test
+        # report，请求应通过 _require_execution 校验后命中状态门禁，精确 409 TASK-0001。
+        resp = self.reviewer.post("/api/v1/reports/test", {
+            "task_id": self.parent_task_id, "execution_id": self.execution_id,
+            "commit_sha": self.commit_sha, "execution_result": "EXECUTED_PASS", "result": "PASS",
+        })
+        self.expect(resp.status_code == 409 and resp.json().get("code") == "TASK-0001",
+                    f"TEST_ACCEPTANCE 之前的 test report 应 409 TASK-0001: {resp.status_code} {resp.text[:300]}")
+        self.expect("requires TEST_ACCEPTANCE" in resp.json().get("message", ""),
+                    f"拒绝原因应指明 TEST_ACCEPTANCE 门禁: {resp.json().get('message')}")
+        details["accepted_evidence_gate_negative"] = {
+            "status_code": resp.status_code, "code": resp.json().get("code"),
+            "message": resp.json().get("message"), "task_status_at_attempt": "DEV_REPORTED",
+            "execution_id": self.execution_id,
+        }
         for event in ("GIT_VALIDATE", "PASS"):
             resp = h.post(f"/api/v1/tasks/{self.parent_task_id}/events", {
                 "event": event, "event_id": f"EVT-GIT-{event}", "correlation_id": "CORR-90210",
@@ -649,17 +704,6 @@ class E2E:
         status = h.get(f"/api/v1/tasks/{self.parent_task_id}").json()["status"]
         self.expect(status == "ACCEPTED", f"test PASS+EXECUTED_PASS 后应 ACCEPTED，实际 {status}")
         details["final_status"] = status
-
-        # ACCEPTED 证据门负例：缺 review/test 证据时 test report PASS 被拒 —— 用子任务验证：
-        # 子任务仍在 READY（无任何报告），直接提交 EXECUTED_PASS 的 test report 应 409
-        resp = self.reviewer.post("/api/v1/reports/test", {
-            "task_id": self.child_task_id, "execution_id": "EXEC-90299",
-            "commit_sha": self.child_base_sha, "execution_result": "EXECUTED_PASS", "result": "PASS",
-        })
-        self.expect(resp.status_code in (400, 404, 409),
-                    f"无证据 test report 应被拒: {resp.status_code} {resp.text[:300]}")
-        details["accepted_evidence_gate_negative"] = {"status_code": resp.status_code,
-                                                      "code": resp.json().get("code")}
 
     def step_m2_leg_and_bridge(self, details: dict) -> None:
         """M2 leg：headless 全管线 + 本地登记簿 → 编排侧桥接登记真实 M1 + 回读比对。"""

@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-13T15:54:46.416Z",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "c84792ae-7c13-4d24-a5a9-d5b138216249",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "7bcaca90b06bc5fd56ae755e312d5b63f5de23f2b43e27bd86c3ae330c4ddb87",
+          "200863469e15106b82790758203cb37638c9f980ba1dec08002fe80118670d7e"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "7bcaca90b06bc5fd56ae755e312d5b63f5de23f2b43e27bd86c3ae330c4ddb87",
+          "200863469e15106b82790758203cb37638c9f980ba1dec08002fe80118670d7e"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-0:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n{\n\"result\": \"REWORK\",\n\"reviewed_commit\": \"f1c47941b49a6ba68ab8eb50d094a260de38a2fe\",\n\"findings\": [\n{\n\"finding_id\": \"F-801\",\n\"severity\": \"MAJOR\",\n\"file\": \"tests/integration/e2e_four_modules.py\",\n\"description\": \"步骤 06 的 ACCEPTED 证据门负例没有真正验证缺少 review/test 证据时的拒绝逻辑。测试直接使用尚未领取的子任务 T-P1-002，并传入任意 execution_id EXEC-90299，最终实际得到 404 RES-0001。断言却接受 400、404、409 中任意状态码。因此当前证据只能证明请求被拒绝，不能证明目标证据门正常工作。该步骤的验收描述与实际测试覆盖不一致。\",\n\"recommendation\": \"先为子任务建立有效 execution，再在缺少 review/test 报告的前提下提交 PASS 测试报告。断言精确的预期错误码、HTTP 状态及拒绝原因，确保请求确实到达证据门禁逻辑。\"\n},\n{\n\"finding_id\": \"F-802\",\n\"severity\": \"MAJOR\",\n\"file\": \"tests/integration/e2e_four_modules.py\",\n\"description\": \"步骤 04 创建 TEST_LOG 工件时，直接使用硬编码内容 integration e2e test run: ALL PASS，并将其登记为测试日志。步骤 05 开发报告却声明执行命令为 python tests/integration/e2e_four_modules.py、passed=11、failed=0，并引用该工件 ID。实际完整运行日志位于独立的 e2e-run.log，两者没有建立内容或 SHA-256 绑定。由此 M1 的 TEST_ACCEPTANCE 流程接受的是人工构造的摘要字符串，而非实际运行日志，无法证明平台验收记录引用的测试证据与真实执行结果一致。\",\n\"recommendation\": \"使用真实 e2e-run.log 或对应完整测试报告作为 TEST_LOG 工件，按实际文件字节计算 SHA-256，登记后回读验证内容和哈希一致。开发报告中的测试统计必须能够追溯到同一次运行的原始证据。\"\n}\n],\n\"constraints\": [\n\"本次结论仅针对 T-P1-902 四模块集成级验收，不继承模块级 PASS，也不构成 Phase 1 最终验收结论。\",\n\"M2 使用本地 fixture DOM，不代表真实 chatgpt.com 收发链路已经通过验收。\",\n\"M2 到 M1 的工件传递由集成编排侧桥接，不代表 M2 模块已经具备直接连接 M1 的能力。\",\n\"M4 record_audit 使用本地 NDJSON 留证，不代表 M4 审计已经写入 M1 服务端审计表。\",\n\"M1 消息投递仍为 sweep 模拟，不代表真实消息 broker 已经接入。\",\n\"真实 ZCode 上游客户端会话启动不在本轮验收范围。\",\n\"blob 复核报告显示 42/42 匹配、0 mismatch、退出码 0；复核锚点为 f3d00684110f9406476b34698a249ff9bdbcb7b1。已确认 review-anchor/T-P1-902-r1 存在，并抽查多个 manifest 文件在锚点与送审 commit 间 Git blob SHA 一致。本轮未独立重复全部 42 项 SHA-256 计算。\",\n\"四模块回归报告分别为 M1 43 passed、M2 65/65、M3 53/53、M4 24 passed。E2E 证据记录 11 步 all_ok=true、exit_code=0，但不能替代上述两项存在缺口的实质验收。\",\n\"DEV-20261113-010 中派单未完成的历史表述不作为本轮判定依据，以本轮实际交接及材料为准。\"\n],\n\"summary\": \"材料核验覆盖 42/42，抽样原始代码、E2E 证据、MCP NDJSON、M4 Git diff、授权白名单及四模块回归结果。五项集成修复整体具有实际代码落点，未发现明显的权限白名单扩大或 changed_files 类型校验弱化。E2E 主链路具备较完整的真实进程和 HTTP 交互证据。但步骤 06 的证据门负例没有验证目标门禁，且 TEST_LOG 工件与真实执行日志没有建立证据绑定，构成两项 MAJOR。判定 REWORK。修复后须形成新 commit、新证据及新一轮独立集成复审。\"\n}",
+      "text_sha256": "200863469e15106b82790758203cb37638c9f980ba1dec08002fe80118670d7e",
+      "size_bytes": 3675,
+      "assistant_uuid": "c84792ae-7c13-4d24-a5a9-d5b138216249"
+    }
+  ]
+}

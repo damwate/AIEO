@@ -1,0 +1,26 @@
+[2026-11-13T16:01:07.051Z] ===== STEP 01_boot_and_setup 开始 =====
+[2026-11-13T16:01:11.415Z] M1 uvicorn 已启动 port=1472 health={"status": "ok", "contract_version": "1.0.0", "supported_versions": ["1.0"], "minimum_supported_version": "1.0", "service": "platform", "module": "M1", "env": "test"}
+[2026-11-13T16:01:17.210Z] ===== STEP 01_boot_and_setup PASS (10.156s) =====
+[2026-11-13T16:01:17.211Z] ===== STEP 02_dependency_gate_negative 开始 =====
+[2026-11-13T16:01:17.279Z] ===== STEP 02_dependency_gate_negative PASS (0.078s) =====
+[2026-11-13T16:01:17.280Z] ===== STEP 03_m3_claim_and_progress 开始 =====
+[2026-11-13T16:01:18.802Z] ===== STEP 03_m3_claim_and_progress PASS (1.516s) =====
+[2026-11-13T16:01:18.803Z] ===== STEP 04_m4_commit_and_collect 开始 =====
+[2026-11-13T16:01:28.089Z] ===== STEP 04_m4_commit_and_collect PASS (9.296s) =====
+[2026-11-13T16:01:28.089Z] ===== STEP 05_m3_submit_result 开始 =====
+[2026-11-13T16:01:28.196Z] ===== STEP 05_m3_submit_result PASS (0.11s) =====
+[2026-11-13T16:01:28.196Z] ===== STEP 06_git_validate_and_accept 开始 =====
+[2026-11-13T16:01:28.492Z] ===== STEP 06_git_validate_and_accept PASS (0.281s) =====
+[2026-11-13T16:01:28.492Z] ===== STEP 07_m2_leg_and_bridge 开始 =====
+[2026-11-13T16:01:30.598Z] ===== STEP 07_m2_leg_and_bridge PASS (2.109s) =====
+[2026-11-13T16:01:30.598Z] ===== STEP 08_child_unblock_and_board 开始 =====
+[2026-11-13T16:01:30.858Z] ===== STEP 08_child_unblock_and_board PASS (0.266s) =====
+[2026-11-13T16:01:30.858Z] ===== STEP 09_messages_dedup_and_sweep 开始 =====
+[2026-11-13T16:01:31.162Z] ===== STEP 09_messages_dedup_and_sweep PASS (0.297s) =====
+[2026-11-13T16:01:31.162Z] ===== STEP 10_restart_persistence 开始 =====
+[2026-11-13T16:01:31.470Z] M1 进程已 terminate，开始重启（同 DB 路径）
+[2026-11-13T16:01:35.134Z] ===== STEP 10_restart_persistence PASS (3.984s) =====
+[2026-11-13T16:01:35.134Z] ===== STEP 11_audit_trail 开始 =====
+[2026-11-13T16:01:35.158Z] ===== STEP 11_audit_trail PASS (0.016s) =====
+[2026-11-13T16:01:35.192Z] work_dir 产物已归档: {'m1-server': ['m1-server-run1.log', 'm1-server-run2.log'], 'm4-logs': ['git_worker-20261113.ndjson'], 'm4-diffs': ['diff-217dca7671fe5f080cd84a40ab2e27d7c8b7d9a5.patch']}
+[2026-11-13T16:01:35.194Z] ===== E2E 结束 exit=0 总耗时 28.1s work_dir=C:\Users\youting\AppData\Local\Temp\aieo-int-902-5rnpg0g5 =====
