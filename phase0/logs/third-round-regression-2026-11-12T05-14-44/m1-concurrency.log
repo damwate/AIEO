@@ -1,0 +1,22 @@
+$ C:\Program Files\nodejs\node.exe D:\AIEO\phase0\tools\test_m1_concurrency.mjs
+[2026-11-12T05:14:51.331Z] START
+[2026-11-12T05:14:51.400Z] M1 真实多进程并发测试开始 node=v24.14.0 pid=10780
+[2026-11-12T05:14:59.161Z] PASS 4 个真实进程并发登记不同 artifact：ID 唯一且记录不丢失
+[2026-11-12T05:14:59.161Z] PASS 4 个真实进程并发登记同一 artifact：返回同一 ID 且仅一条记录
+[2026-11-12T05:14:59.161Z] PASS 4 个真实进程以同一身份并发提交不同 hash：仅一个登记，其余拒绝冲突
+[2026-11-12T05:14:59.161Z] WORKER group=distinct worker=w1 pid=2892 exit=0 status=REGISTERED artifact_id=ART-M1-000002
+[2026-11-12T05:14:59.161Z] WORKER group=distinct worker=w2 pid=16596 exit=0 status=REGISTERED artifact_id=ART-M1-000001
+[2026-11-12T05:14:59.161Z] WORKER group=distinct worker=w3 pid=9320 exit=0 status=REGISTERED artifact_id=ART-M1-000004
+[2026-11-12T05:14:59.161Z] WORKER group=distinct worker=w4 pid=11056 exit=0 status=REGISTERED artifact_id=ART-M1-000003
+[2026-11-12T05:14:59.161Z] WORKER group=duplicate worker=w1 pid=23088 exit=0 status=REGISTERED artifact_id=ART-M1-000001
+[2026-11-12T05:14:59.161Z] WORKER group=duplicate worker=w2 pid=3080 exit=0 status=DUPLICATE artifact_id=ART-M1-000001
+[2026-11-12T05:14:59.161Z] WORKER group=duplicate worker=w3 pid=22884 exit=0 status=DUPLICATE artifact_id=ART-M1-000001
+[2026-11-12T05:14:59.161Z] WORKER group=duplicate worker=w4 pid=7916 exit=0 status=DUPLICATE artifact_id=ART-M1-000001
+[2026-11-12T05:14:59.161Z] WORKER group=conflict worker=w1 pid=24240 exit=0 status=REGISTERED artifact_id=ART-M1-000001
+[2026-11-12T05:14:59.161Z] WORKER group=conflict worker=w2 pid=7212 exit=1 status=M1_ARTIFACT_HASH_CONFLICT artifact_id=none
+[2026-11-12T05:14:59.162Z] WORKER group=conflict worker=w3 pid=18420 exit=1 status=M1_ARTIFACT_HASH_CONFLICT artifact_id=none
+[2026-11-12T05:14:59.162Z] WORKER group=conflict worker=w4 pid=22984 exit=1 status=M1_ARTIFACT_HASH_CONFLICT artifact_id=none
+[2026-11-12T05:14:59.161Z] SUMMARY total=3 passed=3 failed=0
+测试报告: D:\AIEO\phase0\logs\m1-concurrency-tests.json
+
+[2026-11-12T05:14:59.173Z] EXIT code=0 signal=null timed_out=false

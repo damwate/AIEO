@@ -1,0 +1,77 @@
+✔ ②-1 正常领取：READY 任务可领取，返回租约 (53.2022ms)
+✔ ②-2 同会话重复领取：TASK-0003 拒绝（单会话单任务 fail-closed） (14.9501ms)
+✔ ②-3 跨会话重复领取：TASK-0003 拒绝（独占租约） (17.4559ms)
+✔ ②-4 submit_result 结束任务后，同会话可再次领取（幂等生命周期闭环） (48.9414ms)
+✔ ②-5 未知任务：RES-0001；任务 ID 格式非法：REQ-0001 (6.12ms)
+✖ ②-6 失败调用写入 C3 错误日志（error_code=TASK-0003） (13.098ms)
+✔ ④-1 参数拼装与 --json 解析：prompt/cwd/mode 按 POC-02 形态交付 (178.8532ms)
+✔ ④-2 噪声容忍：stdout 混入非 JSON 行仍能提取最终结构 (190.7027ms)
+✔ ④-3 MINOR-004 风险→mode 映射与白名单（纯函数，无进程） (1.4993ms)
+✔ ④-4 超时 → 软取消标记文件 → 宽限期 → 进程树终止兜底（DEC-006 全链路） (986.9555ms)
+✔ ④-5 软取消被 Agent 响应：宽限期内自行收尾退出 → 返回结果且 cancelled=true (429.2474ms)
+✔ ④-6 工作区写锁（可注入）：运行期间持锁，结束后释放；锁被占时 fail-closed 拒绝 (82.8535ms)
+✔ ④-7 缺少 correlationId / 任务包缺字段：REQ-0001 (0.7059ms)
+✔ ①-1 initialize 握手：serverInfo 为 aieo-zcode-bridge (825.9613ms)
+✔ ①-2 tools/list：恰好暴露受控三工具，无高权限能力 (13.4204ms)
+✔ ①-3 claim_task：领取预置任务，返回任务包与租约会话 (21.2484ms)
+✔ ①-4 report_progress：进度消息投递入假 M1 Inbox (8.8384ms)
+✔ ①-5 submit_result：03-协议 §6 报告登记 + DEVELOPMENT_COMPLETED 入 Inbox (11.3792ms)
+✔ ①-6 MINOR-003：server 子进程落盘 C4 NDJSON，包含 mcp.tool.call 调用记录 (15.8558ms)
+✔ ⑦-1 合法信封：格式字段全部落位（message_id/created_at/schema_version） (4.6459ms)
+✔ ⑦-2 message_type 必须在 03-协议 §3 的 16 种之内 (2.2776ms)
+✔ ⑦-3 主版本不匹配：REQ-0002 语义拒绝（发送端固定 1.0，不得改动） (0.4335ms)
+✔ ⑦-4 任务级消息 batch_id/task_id 条件必填（缺失 → 字段错误） (0.3158ms)
+✔ ⑦-5 ID 格式负例：project/batch/task/message/correlation (0.6224ms)
+✔ ⑦-6 payload 内不得重复携带 schema_version（C1 §2.2-5） (0.4048ms)
+✔ ⑦-7 correlation_id ≤64 字符与 agent_type 枚举 (0.3331ms)
+[zcode_bridge][log-missing-required] e3: 缺 env
+✔ ⑤-1 真实落盘：每行合法 JSON，必填字段齐全，字段集 ⊆ C4 字段表 (7.6929ms)
+✔ ⑤-2 表外字段 fail-closed：拒绝整条写入并降级记录 field_rejected (0.5541ms)
+✔ ⑤-3 非法 result 枚举与缺必填字段：原记录不落盘，降级写拒绝记录 (1.0859ms)
+✔ ⑤-4 脱敏（C4 §5.4）：敏感键整值丢弃 (0.6555ms)
+✔ ⑤-5 C6 落盘路径解析：AIEO_ZCODE_BRIDGE_LOG_DIR > AIEO_LOG_DIR > 默认 runtime/logs/zcode_bridge (0.8177ms)
+✔ ⑤-6 保留期轮转清理：过期 bridge-*.ndjson 被删除，30 天内保留 (5.4349ms)
+✔ ③-1 合法报告（03-协议 §6 示例同构）登记成功并投递 DEVELOPMENT_COMPLETED (28.053ms)
+✔ ③-2 缺失必填字段：REQ-0002 + 字段级明细 (1.7671ms)
+✔ ③-3 commit_sha 非完整 40 位 SHA：REQ-0002（禁止短 SHA） (4.8029ms)
+✔ ③-4 status 枚举外取值：REQ-0002 (1.2211ms)
+✔ ③-5 status=BLOCKED 且 known_issues 为空：REQ-0002（阻塞必须记录原因） (1.4561ms)
+✔ ③-6 同一报告重复提交：幂等返回原登记结果（duplicate=true），不重复执行副作用 (14.811ms)
+✔ ③-7 同 execution_id 不同内容：RES-0003 拒绝覆盖（历史保留，不覆盖旧记录） (12.2097ms)
+✔ ③-8 跨任务提交：本会话在途任务不一致 → RES-0002（单会话单任务） (14.6145ms)
+✔ ⑥-1 正常获取/释放/再获取（release 信号路径） (1227.3028ms)
+✔ ⑥-2 双方并发争抢：后来者 RES-0002 fail-closed（内核裁决，无内容仲裁） (844.794ms)
+✔ ⑥-3 每工作区一把：不同工作区可并行持锁 (906.9722ms)
+✔ ⑥-4 持有进程死亡：OS 句柄随进程退出释放，后来者可接管 (917.9739ms)
+✔ ⑥-5 TTL 到期兜底：守护进程超时自退释放句柄 (2648.8518ms)
+✔ ⑥-6 janitor：残留 lockwork-* 目录按 mtime 清理 (2.4239ms)
+✔ ⑥-7 withWorkspaceLock：异常路径也释放 (905.1141ms)
+✔ ⑥-8 InMemoryWorkspaceLock（注入用）：冲突与释放语义一致 (0.6778ms)
+✔ ⑥-9 锁文件名映射稳定且防路径非法字符 (0.241ms)
+ℹ tests 49
+ℹ suites 0
+ℹ pass 48
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 16036.0723
+
+✖ failing tests:
+
+test at test\claim_idempotency.test.mjs:121:1
+✖ ②-6 失败调用写入 C3 错误日志（error_code=TASK-0003） (13.098ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  2 !== 1
+  
+      at TestContext.<anonymous> (file:///D:/AIEO/app/zcode_bridge/test/claim_idempotency.test.mjs:127:10)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 2,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

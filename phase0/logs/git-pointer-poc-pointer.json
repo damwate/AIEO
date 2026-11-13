@@ -1,0 +1,14 @@
+{
+  "transport": "git_pointer",
+  "owner": "damwate",
+  "repo": "AIEO",
+  "branch": "fix/AIEO-PHASE0-REVIEW-R10",
+  "commit_sha": "26ed31009ccb17d0ddf525e19b6d085d2f5193a8",
+  "path": "phase0/poc-material/handoff/manifest.json",
+  "artifact_sha256": "8fdf3b93638c063ac008e1788a81496a93f1c455db82347f16f1a846be7d3a3c",
+  "size_bytes": 588,
+  "media_type": "application/vnd.aieo.git-material-manifest+json",
+  "contract_version": "1.0",
+  "task_id": "T-P1-001",
+  "execution_id": "EXEC-001"
+}

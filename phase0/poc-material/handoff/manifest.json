@@ -1,0 +1,20 @@
+{
+  "transport": "git_pointer_manifest",
+  "contract_version": "1.0",
+  "task_id": "T-P1-001",
+  "execution_id": "EXEC-001",
+  "files": [
+    {
+      "path": "phase0/poc-material/handoff/task.md",
+      "artifact_sha256": "1eeb624052bfd441c5f8cf00d71328771f280e2dcee333a3703c647b8cae177d",
+      "size_bytes": 354,
+      "media_type": "text/markdown"
+    },
+    {
+      "path": "phase0/poc-material/handoff/data.json",
+      "artifact_sha256": "e19841dff0bcdbca7ccb67bcf3f69a205b178b1033b2e08742d1228a582399be",
+      "size_bytes": 161,
+      "media_type": "application/json"
+    }
+  ]
+}

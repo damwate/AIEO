@@ -1,0 +1,40 @@
+{
+  "generated_at": "2026-11-13T16:40:00Z",
+  "purpose": "T-P1-902 r2（第 1 轮集成审查 REWORK 整改后）四模块回归复跑留证；套件整改仅改 tests/integration，模块代码零改动，回归应与 r1 基线一致",
+  "baseline_reference": "phase1/logs/integration-20261113T003810Z/regression/summary.json（r1，M1 43 / M2 65 / M3 53 / M4 24）",
+  "modules": [
+    {
+      "module": "M1 平台基座",
+      "command": "python -m pytest tests/platform/ app/platform/tests/ -q",
+      "cwd": "仓库根",
+      "exit_code": 0,
+      "result": "43 passed, 1 warning",
+      "log": "m1-pytest.log"
+    },
+    {
+      "module": "M2 GPT 控制器",
+      "command": "node --test tests/unit.test.mjs tests/browser_simulation.test.mjs tests/lock_mutex.test.mjs",
+      "cwd": "app/gpt_controller",
+      "exit_code": 0,
+      "result": "pass 65 / fail 0",
+      "log": "m2-node.log"
+    },
+    {
+      "module": "M3 ZCode Bridge",
+      "command": "node --test test/*.test.mjs",
+      "cwd": "app/zcode_bridge",
+      "exit_code": 0,
+      "result": "pass 53 / fail 0（50 + 3 集成缝隙回归）",
+      "log": "m3-node.log"
+    },
+    {
+      "module": "M4 Git Worker",
+      "command": "python -m pytest tests/ -q",
+      "cwd": "app/git_worker",
+      "exit_code": 0,
+      "result": "24 passed",
+      "log": "m4-pytest.log"
+    }
+  ],
+  "notes": "与 r1 基线逐项一致（43/65/53/24，退出码全 0）；整改未触碰任何模块代码与模块测试。"
+}

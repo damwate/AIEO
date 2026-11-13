@@ -1,0 +1,80 @@
+{
+  "poc": "POC-04 Git 自动采集",
+  "executed_at": "2026-11-12T00:20:33.553754+08:00",
+  "duration_sec": 1.73,
+  "repo": "D:\\AIEO\\runtime\\git-poc-test-repo",
+  "all_pass": true,
+  "steps": [
+    {
+      "step": 1,
+      "name": "检查工作区状态",
+      "pass": true,
+      "detail": "git status --porcelain 输出为空（干净），rc=0"
+    },
+    {
+      "step": 2,
+      "name": "记录基线 Commit",
+      "pass": true,
+      "detail": "基线=c9bd71a5b17a0dfc85778e5a0d59312dba2f0b3d 分支=main"
+    },
+    {
+      "step": 3,
+      "name": "创建任务分支",
+      "pass": true,
+      "detail": "当前分支=feature/AIEO-POC-001"
+    },
+    {
+      "step": 4,
+      "name": "修改测试文件",
+      "pass": true,
+      "detail": "新增 src/calc.py，status 显示: '?? src/'"
+    },
+    {
+      "step": 5,
+      "name": "执行简单测试",
+      "pass": true,
+      "detail": "exit=0, stdout='TEST PASS: 2/2 assertions'"
+    },
+    {
+      "step": 6,
+      "name": "提交 Git",
+      "pass": true,
+      "detail": "[feature/AIEO-POC-001 772172a] feat(POC-001): add calc.py add() 实现与自测"
+    },
+    {
+      "step": 7,
+      "name": "读取 Commit SHA",
+      "pass": true,
+      "detail": "SHA=772172a981033c420ce003a015acd5ec1ae71f78"
+    },
+    {
+      "step": 8,
+      "name": "读取 Git Diff",
+      "pass": true,
+      "detail": "变更文件=['src/calc.py']"
+    },
+    {
+      "step": 9,
+      "name": "工作区干净检查",
+      "pass": true,
+      "detail": "能检出未提交文件=True; 清理后干净=True"
+    }
+  ],
+  "evidence": {
+    "base_commit": "c9bd71a5b17a0dfc85778e5a0d59312dba2f0b3d",
+    "base_branch": "main",
+    "task_branch": "feature/AIEO-POC-001",
+    "test": {
+      "command": "python test_calc.py",
+      "exit_code": 0,
+      "stdout": "TEST PASS: 2/2 assertions"
+    },
+    "commit_sha": "772172a981033c420ce003a015acd5ec1ae71f78",
+    "commit_log": "772172a feat(POC-001): add calc.py add() 实现与自测",
+    "diff_stat": "src/calc.py | 3 +++\n 1 file changed, 3 insertions(+)",
+    "changed_files": [
+      "src/calc.py"
+    ],
+    "diff_full_lines": 9
+  }
+}

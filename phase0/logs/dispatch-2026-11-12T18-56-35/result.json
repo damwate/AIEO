@@ -1,0 +1,181 @@
+{
+  "at": "2026-11-12T18:59:28.792Z",
+  "message_bytes": 1104,
+  "reply": "ChatGPT 说：\n\n{\n\"result\": \"BLOCKED\",\n\"reviewed_commit\": \"8780b9d2da3b958a60e0244afb65556877ed878d\",\n\"findings\": [\n{\n\"finding_id\": \"F-601\",\n\"severity\": \"MAJOR\",\n\"file\": \"phase1/manifests/T-P1-901-verification-report.json\",\n\"description\": \"核验报告的证据来源元数据与本轮实际交接材料不一致。报告 method 字段仍指向 phase0/logs/blob-recheck-T-P1-901-r6/，但本轮 §3 明确要求使用 blob-recheck-T-P1-901-r7/，其 recheck-result.json 声明锚定 commit 为 744dc9d9bb91fc9833a83db2c228e95e7ac43459。报告本身声明 128/128、0 mismatch、exit_code=0，manifest SHA-256 与派单值一致；r7 复核文件也确实存在，声明 128/128 路径存在、128/128 blob 匹配。但报告没有正确指向本轮复核证据，导致报告与实际证据链的对应关系不明确。按照 §3 核验协议，不能忽略核验报告的证据描述不一致而直接判定材料核验通过。\",\n\"recommendation\": \"重新生成 verification-report.json，将 method 中的 r6 修正为 r7，明确记录 commit_sha256_anchored=744dc9d9bb91fc9833a83db2c228e95e7ac43459，并确认报告、manifest、r7 recheck-result.json 三者的 SHA-256 与覆盖数量一致。随后重新提交并提供可复核的证据链。\"\n}\n],\n\"constraints\": [\n\"本轮审查对象严格限定为 commit 8780b9d2da3b958a60e0244afb65556877ed878。\",\n\"manifest 声明 SHA-256 为 fd2d9b9917bd179232c946a422edd89b8f8963a278d57406d6ed41627d175fdc；核验报告实际读取确认 128 条记录、128 个唯一路径、128 匹配、0 不匹配、退出码 0。\",\n\"r7 blob 复核文件已实读：锚定 commit 744dc9d9bb91fc9833a83db2c228e95e7ac43459，声明 128/128 路径存在、128/128 blob 匹配、退出码 0。审查方未独立执行本地 SHA-256 计算。\",\n\"M1：F-501 整改成立。dead-letter GET 使用只读数据库上下文，不再调用 sweep；sweep 独立为 POST /api/v1/messages/sweep。服务身份白名单不包含该管理端点。新增测试验证查询前后 PENDING 状态及 delivered_at 不变。\",\n\"M2：F-502 整改成立。assertInboundExtensionGate 检查每个 unit 的 assistant_uuid 非空字符串，并检查快照级 UUID 与末位 unit UUID 一致。两项注入式全管线负例均验证最终防线拒绝，且不产生 result.json。\",\n\"M2 其他关键纵深防御仍存在：正整数 unit_count、keys 唯一性、units 结构一致性、文本 SHA-256 与 UTF-8 字节数复核、reply 一致性，以及 DEC-017 多 unit 默认拒绝。\",\n\"M4：已抽查 Git 白名单、shell=False、环境变量隔离、main/master 保护、分支命名及 M1Client 注入边界。24 项 pytest 全部通过。\",\n\"M1 测试证据：43 passed；M2 测试证据：65 passed；M4 测试证据：24 passed，均为退出码 0。\",\n\"M3 明确不在本轮范围。四模块集成验收、真实 chatgpt.com 收发、真实 broker 投递及其他 DEC-017 扩展场景均未因此获得验收或解除限制。\",\n\"本轮 BLOCKED 的直接原因是核验报告证据元数据不一致，并非认定 F-501 或 F-502 整改失败。\"\n],\n\"summary\": \"M1、M2、M4 模块级实质审查未发现新的 MAJOR 代码缺陷。第六轮 F-501、F-502 整改均已通过代码与针对性测试复核；三模块测试分别为 43/43、65/65、24/24。但 verification-report.json 仍引用 r6 而非本轮 r7 blob 复核证据，违反材料核验协议的证据一致性要求，因此本轮判定 BLOCKED。修正核验报告并重新核对证据链后，可进入下一轮复审；本结论不代表 Phase 1 集成验收通过。\"\n}",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "db84aa91-24ed-4b75-b227-1c19e5c00902",
+  "stability": {
+    "stable": true,
+    "interval_ms": 3583,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-12T18:59:24.454Z",
+      "read_finished_at": "2026-11-12T18:59:25.027Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "00e33f56a646a4f83c26f8da41ea0a71c52caea33077e4561a83ab37850beab7",
+          "size_bytes": 3569
+        }
+      ],
+      "assistant_uuid": "db84aa91-24ed-4b75-b227-1c19e5c00902",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-12T18:59:28.036Z",
+      "read_finished_at": "2026-11-12T18:59:28.596Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "00e33f56a646a4f83c26f8da41ea0a71c52caea33077e4561a83ab37850beab7",
+          "size_bytes": 3569
+        }
+      ],
+      "assistant_uuid": "db84aa91-24ed-4b75-b227-1c19e5c00902",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "5f9cddd7a2635fe2227d80c424792f196290934d55ea48df8109429d4d4c6594",
+          "00e33f56a646a4f83c26f8da41ea0a71c52caea33077e4561a83ab37850beab7"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "5f9cddd7a2635fe2227d80c424792f196290934d55ea48df8109429d4d4c6594",
+          "00e33f56a646a4f83c26f8da41ea0a71c52caea33077e4561a83ab37850beab7"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "00e33f56a646a4f83c26f8da41ea0a71c52caea33077e4561a83ab37850beab7",
+  "size_bytes": 3569,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-12T18-56-35\\reply.txt",
+  "reply_readback_sha256": "00e33f56a646a4f83c26f8da41ea0a71c52caea33077e4561a83ab37850beab7",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-12T18-56-35\\raw-units.json",
+  "raw_units_sha256": "d9e184b991b0da9c4265c8dc81e1b64a9e139182355feb93dcfce355dd3fa969",
+  "raw_units_size_bytes": 6280,
+  "raw_units_readback_sha256": "d9e184b991b0da9c4265c8dc81e1b64a9e139182355feb93dcfce355dd3fa969",
+  "session_id": "6af60c17-f6f8-83ee-94a8-f85fb56b10ee",
+  "conversation_url": "https://chatgpt.com/c/6af60c17-f6f8-83ee-94a8-f85fb56b10ee",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}

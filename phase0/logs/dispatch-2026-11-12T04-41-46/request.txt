@@ -1,0 +1,1 @@
+最终入站链路 POC，只输出一个 JSON 对象，不要 Markdown 或解释。字段原样为：test="INBOUND_SCHEMA_M1_POC"，task_id="T-P1-904"，execution_id="EXEC-904"，correlation_id="CORR-904"。text 必须恰好 1200 个中文汉字，生成后自行逐字计数，少补多删；只能含汉字，不要数字、字母、标点、空格或换行。内容连贯说明完整提取、虚拟列表连续、全文校验、任务绑定、幂等登记及失败只补登记不重发。不得增加字段。

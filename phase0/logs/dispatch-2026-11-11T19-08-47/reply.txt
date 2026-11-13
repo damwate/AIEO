@@ -1,0 +1,18 @@
+{
+"result": "REWORK",
+"findings": [
+{
+"severity": "MAJOR",
+"description": "v4 重现了第六轮 intent 票据初始化竞态，尚未真正实现同一世代唯一回收者。`createReapTicket()` 使用 `createExclusiveWithContent()` 创建票据，该函数仍然是 `openSync(path, \"wx\")` 后再 `writeSync(fd, content)`，因此票据存在短暂的空文件窗口。另一个回收者遇到 EEXIST 后执行 `readJsonFile(ticketPath)`；如果此时票据尚未写完，返回 null，代码便将其视为死票据并执行 `unlinkSync(ticketPath)`，随后可能创建自己的票据。原创建者仍会继续写入已被 unlink 的 fd，并认为自己持有回收权。两个回收者因此可能同时通过票据阶段。之后两者都可能读取到同一个 stale 世代并执行 unlink；其中一个删除 S 后，另一个可能在新锁 N 创建后删除 N。必须将空票据、损坏票据和初始化中的票据一律视为状态不明并 fail-closed，不能仅凭解析失败就删除；同时需要设计可恢复的票据所有权协议，确保初始化中的活票据不会被其他进程回收。"
+},
+{
+"severity": "MAJOR",
+"description": "S7 没有覆盖票据初始化竞态，也没有完整复现两个生产回收者的竞争。测试是在 `createReapTicket()` 已成功返回、票据写入完成后才暂停子进程；父进程随后直接 `writeFileSync(lockPath, nBytes)` 模拟新锁，而不是由另一个真实回收者通过生产 acquire/reap 流程完成回收并取得新锁。因此该测试只能证明 completeReap 在复核时看到不同世代会返回 changed，不能证明票据唯一性，也不能证明两个回收者不会同时执行 unlink。应增加可控屏障，暂停在票据 wx 创建与 writeSync 之间，让第二个真实进程执行 createReapTicket，并验证它绝不能删除第一个进程的活票据；还应覆盖双回收者在票据竞争、复核及新锁创建之间的完整交错。"
+},
+{
+"severity": "MINOR",
+"description": "`readJsonFile()` 只校验 `pid` 是 number，未校验锁世代必需字段 `rand`、`born_at` 等。语法有效但字段缺失的损坏锁，例如只有 `{ \"pid\": 999999999 }`，会被当作有效 stale 锁处理，而不是按报告承诺 fail-closed；其回收票据还会落到 `tomb-undefined.json`。应严格校验锁对象的完整 schema，字段缺失、类型错误或世代标识无效时均拒绝回收并保留现场，并补充相应测试。"
+}
+],
+"summary": "已检查指定 commit 的 v4 锁实现、两个自动化入口、屏障测试、测试记录及返工报告。unlink 前世代复核确实能拦截已发生的世代变化，但票据创建窗口仍可被其他回收者误判为死票据并删除，唯一回收者保证因此不成立；测试也未覆盖这一关键交错，故本轮不通过。"
+}

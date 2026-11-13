@@ -1,0 +1,471 @@
+{
+  "started_at": "2026-11-12T05:17:18.521Z",
+  "finished_at": "2026-11-12T05:17:22.882Z",
+  "evidence_scope": "REAL_CHROME_PLAYWRIGHT_LOCAL_SIMULATED_DOM_NOT_CHATGPT",
+  "real_chrome": true,
+  "real_chatgpt_multi_unit": false,
+  "remote_chatgpt_evidence": false,
+  "fixture_path": "D:\\AIEO\\phase0\\tools\\virtual-list-fixture.html",
+  "chrome_executable": "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+  "chrome_version": "157.0.8103.39",
+  "node": "v24.14.0",
+  "total": 4,
+  "passed": 4,
+  "failed": 0,
+  "tests": [
+    {
+      "name": "01-multi-assistant-positive",
+      "simulation_only": true,
+      "started_at": "2026-11-12T05:17:19.120Z",
+      "before": {
+        "mode": "normal",
+        "renderCount": 3,
+        "scrollTop": 580,
+        "scrollHeight": 840
+      },
+      "after": {
+        "mode": "normal",
+        "renderCount": 8,
+        "scrollTop": 580,
+        "scrollHeight": 840
+      },
+      "snapshot": {
+        "user_unit_key": "target:user",
+        "next_user_unit_key": "next:user",
+        "unit_keys": [
+          "target-a0:assistant",
+          "target-a1:assistant",
+          "target-a2:assistant",
+          "target-a3:assistant",
+          "target-a4:assistant"
+        ],
+        "unit_count": 5,
+        "assistant_uuid": "44444444-4444-4444-8444-444444444444",
+        "units": [
+          {
+            "key": "target-a0:assistant",
+            "role": "assistant",
+            "text": "assistant 第 0 段",
+            "text_sha256": "79c4cb48b7b082a12163ad5c600457b9819ba63b500aec3fc998b049fcea1a6f",
+            "size_bytes": 19,
+            "assistant_uuid": null
+          },
+          {
+            "key": "target-a1:assistant",
+            "role": "assistant",
+            "text": "assistant 第 1 段",
+            "text_sha256": "225eeeda48f4ac978ffee77880a5a2caa8dc41f4daabdde2a1470ce0eb7d1e64",
+            "size_bytes": 19,
+            "assistant_uuid": null
+          },
+          {
+            "key": "target-a2:assistant",
+            "role": "assistant",
+            "text": "assistant 第 2 段（持续裁切负例目标）",
+            "text_sha256": "6fc2a030f55a32aaf4e1faaae621a79c4f257d486c75814efbd9309299cba730",
+            "size_bytes": 49,
+            "assistant_uuid": null
+          },
+          {
+            "key": "target-a3:assistant",
+            "role": "assistant",
+            "text": "assistant 第 3 段",
+            "text_sha256": "d6803743d8bff7bce7afb8c8ca75d2cea4880e04e52844a749b5af29ae44b33e",
+            "size_bytes": 19,
+            "assistant_uuid": null
+          },
+          {
+            "key": "target-a4:assistant",
+            "role": "assistant",
+            "text": "assistant 第 4 段",
+            "text_sha256": "c16b35851d04246a10f1a65f05827d8d6193833338d537d403cce0efcbfcf2c0",
+            "size_bytes": 19,
+            "assistant_uuid": "44444444-4444-4444-8444-444444444444"
+          }
+        ],
+        "reply": "assistant 第 0 段\nassistant 第 1 段\nassistant 第 2 段（持续裁切负例目标）\nassistant 第 3 段\nassistant 第 4 段",
+        "range_proof": {
+          "complete": true,
+          "user_unit_key": "target:user",
+          "next_user_unit_key": "next:user",
+          "end_reason": "NEXT_USER",
+          "windows": [
+            {
+              "index": 0,
+              "unit_keys": [
+                "target:user",
+                "target-a0:assistant",
+                "target-a1:assistant",
+                "target-a2:assistant",
+                "target-a3:assistant"
+              ],
+              "unit_text_sha256": [
+                "f49b822f55053cec3947b104b2a7e95fd5a3b037745c0add7526c273edb28983",
+                "79c4cb48b7b082a12163ad5c600457b9819ba63b500aec3fc998b049fcea1a6f",
+                "225eeeda48f4ac978ffee77880a5a2caa8dc41f4daabdde2a1470ce0eb7d1e64",
+                "6fc2a030f55a32aaf4e1faaae621a79c4f257d486c75814efbd9309299cba730",
+                "d6803743d8bff7bce7afb8c8ca75d2cea4880e04e52844a749b5af29ae44b33e"
+              ],
+              "window_offset": 0,
+              "at_bottom": false,
+              "overlap_keys": []
+            },
+            {
+              "index": 1,
+              "unit_keys": [
+                "target-a3:assistant",
+                "target-a4:assistant",
+                "next:user",
+                "next-a:assistant"
+              ],
+              "unit_text_sha256": [
+                "d6803743d8bff7bce7afb8c8ca75d2cea4880e04e52844a749b5af29ae44b33e",
+                "c16b35851d04246a10f1a65f05827d8d6193833338d537d403cce0efcbfcf2c0",
+                "ea5f6a7a4465f724c2419a0e1b034dd6ee0fd0933f456a704aa000f3dc98f510",
+                "27668dd51cc282f88aeb420daa811169c1c622d08c87d4f0bdab266db421fb43"
+              ],
+              "window_offset": 4,
+              "at_bottom": true,
+              "overlap_keys": [
+                "target-a3:assistant"
+              ]
+            }
+          ],
+          "materialized_unit_keys": [
+            "target:user",
+            "target-a0:assistant",
+            "target-a1:assistant",
+            "target-a2:assistant",
+            "target-a3:assistant",
+            "target-a4:assistant",
+            "next:user"
+          ],
+          "window_integrity": {
+            "complete": true,
+            "method": "INDEPENDENT_LOGICAL_UNIT_SEQUENCE",
+            "expected_unit_count": 7,
+            "materialized_unit_count": 7
+          },
+          "start_search_windows": [
+            {
+              "unit_keys": [
+                "target-a3:assistant",
+                "target-a4:assistant",
+                "next:user",
+                "next-a:assistant"
+              ],
+              "overlap_keys": []
+            },
+            {
+              "unit_keys": [
+                "target-a1:assistant",
+                "target-a2:assistant",
+                "target-a3:assistant",
+                "target-a4:assistant",
+                "next:user"
+              ],
+              "overlap_keys": [
+                "target-a3:assistant",
+                "target-a4:assistant",
+                "next:user"
+              ],
+              "relative_offset": -2
+            },
+            {
+              "unit_keys": [
+                "target:user",
+                "target-a0:assistant",
+                "target-a1:assistant",
+                "target-a2:assistant",
+                "target-a3:assistant"
+              ],
+              "overlap_keys": [
+                "target-a1:assistant",
+                "target-a2:assistant",
+                "target-a3:assistant"
+              ],
+              "relative_offset": -2
+            }
+          ],
+          "window_transitions": 3
+        },
+        "read_started_at": "2026-11-12T05:17:19.129Z",
+        "read_finished_at": "2026-11-12T05:17:19.966Z",
+        "rendered_unit_keys": [
+          "target-a3:assistant",
+          "target-a4:assistant",
+          "next:user",
+          "next-a:assistant"
+        ],
+        "tail": {
+          "key": "next-a:assistant",
+          "role": "assistant",
+          "assistantUuid": "55555555-5555-4555-8555-555555555555"
+        }
+      },
+      "result": "PASS",
+      "finished_at": "2026-11-12T05:17:19.974Z",
+      "dom_path": "D:\\AIEO\\phase0\\logs\\browser-virtual-list-2026-11-12T05-17-18\\01-multi-assistant-positive-dom.html",
+      "screenshot_path": "D:\\AIEO\\phase0\\logs\\browser-virtual-list-2026-11-12T05-17-18\\01-multi-assistant-positive.png"
+    },
+    {
+      "name": "02-persistent-middle-crop-negative",
+      "simulation_only": true,
+      "started_at": "2026-11-12T05:17:20.095Z",
+      "outcome": "BLOCKED",
+      "observed_error": {
+        "code": "INBOUND_WINDOW_COMPLETENESS_FAILED",
+        "message": "INBOUND_WINDOW_COMPLETENESS_FAILED: 实体化区间与独立逻辑 unit 序列不一致；中间 unit 可能在所有窗口中持续缺失，拒绝误判完整",
+        "details": {
+          "missing_unit_keys": [
+            "target-a2:assistant"
+          ],
+          "unexpected_unit_keys": [],
+          "expected_unit_keys": [
+            "target:user",
+            "target-a0:assistant",
+            "target-a1:assistant",
+            "target-a2:assistant",
+            "target-a3:assistant",
+            "target-a4:assistant",
+            "next:user"
+          ],
+          "actual_unit_keys": [
+            "target:user",
+            "target-a0:assistant",
+            "target-a1:assistant",
+            "target-a3:assistant",
+            "target-a4:assistant",
+            "next:user"
+          ]
+        }
+      },
+      "final_rendered_units": [
+        "target-a3:assistant",
+        "target-a4:assistant",
+        "next:user",
+        "next-a:assistant"
+      ],
+      "result": "PASS",
+      "finished_at": "2026-11-12T05:17:20.911Z",
+      "dom_path": "D:\\AIEO\\phase0\\logs\\browser-virtual-list-2026-11-12T05-17-18\\02-persistent-middle-crop-negative-dom.html",
+      "screenshot_path": "D:\\AIEO\\phase0\\logs\\browser-virtual-list-2026-11-12T05-17-18\\02-persistent-middle-crop-negative.png"
+    },
+    {
+      "name": "03-restored-middle-positive",
+      "simulation_only": true,
+      "started_at": "2026-11-12T05:17:21.004Z",
+      "snapshot": {
+        "user_unit_key": "target:user",
+        "next_user_unit_key": "next:user",
+        "unit_keys": [
+          "target-a0:assistant",
+          "target-a1:assistant",
+          "target-a2:assistant",
+          "target-a3:assistant",
+          "target-a4:assistant"
+        ],
+        "unit_count": 5,
+        "assistant_uuid": "44444444-4444-4444-8444-444444444444",
+        "units": [
+          {
+            "key": "target-a0:assistant",
+            "role": "assistant",
+            "text": "assistant 第 0 段",
+            "text_sha256": "79c4cb48b7b082a12163ad5c600457b9819ba63b500aec3fc998b049fcea1a6f",
+            "size_bytes": 19,
+            "assistant_uuid": null
+          },
+          {
+            "key": "target-a1:assistant",
+            "role": "assistant",
+            "text": "assistant 第 1 段",
+            "text_sha256": "225eeeda48f4ac978ffee77880a5a2caa8dc41f4daabdde2a1470ce0eb7d1e64",
+            "size_bytes": 19,
+            "assistant_uuid": null
+          },
+          {
+            "key": "target-a2:assistant",
+            "role": "assistant",
+            "text": "assistant 第 2 段（持续裁切负例目标）",
+            "text_sha256": "6fc2a030f55a32aaf4e1faaae621a79c4f257d486c75814efbd9309299cba730",
+            "size_bytes": 49,
+            "assistant_uuid": null
+          },
+          {
+            "key": "target-a3:assistant",
+            "role": "assistant",
+            "text": "assistant 第 3 段",
+            "text_sha256": "d6803743d8bff7bce7afb8c8ca75d2cea4880e04e52844a749b5af29ae44b33e",
+            "size_bytes": 19,
+            "assistant_uuid": null
+          },
+          {
+            "key": "target-a4:assistant",
+            "role": "assistant",
+            "text": "assistant 第 4 段",
+            "text_sha256": "c16b35851d04246a10f1a65f05827d8d6193833338d537d403cce0efcbfcf2c0",
+            "size_bytes": 19,
+            "assistant_uuid": "44444444-4444-4444-8444-444444444444"
+          }
+        ],
+        "reply": "assistant 第 0 段\nassistant 第 1 段\nassistant 第 2 段（持续裁切负例目标）\nassistant 第 3 段\nassistant 第 4 段",
+        "range_proof": {
+          "complete": true,
+          "user_unit_key": "target:user",
+          "next_user_unit_key": "next:user",
+          "end_reason": "NEXT_USER",
+          "windows": [
+            {
+              "index": 0,
+              "unit_keys": [
+                "target:user",
+                "target-a0:assistant",
+                "target-a1:assistant",
+                "target-a2:assistant",
+                "target-a3:assistant"
+              ],
+              "unit_text_sha256": [
+                "f49b822f55053cec3947b104b2a7e95fd5a3b037745c0add7526c273edb28983",
+                "79c4cb48b7b082a12163ad5c600457b9819ba63b500aec3fc998b049fcea1a6f",
+                "225eeeda48f4ac978ffee77880a5a2caa8dc41f4daabdde2a1470ce0eb7d1e64",
+                "6fc2a030f55a32aaf4e1faaae621a79c4f257d486c75814efbd9309299cba730",
+                "d6803743d8bff7bce7afb8c8ca75d2cea4880e04e52844a749b5af29ae44b33e"
+              ],
+              "window_offset": 0,
+              "at_bottom": false,
+              "overlap_keys": []
+            },
+            {
+              "index": 1,
+              "unit_keys": [
+                "target-a3:assistant",
+                "target-a4:assistant",
+                "next:user",
+                "next-a:assistant"
+              ],
+              "unit_text_sha256": [
+                "d6803743d8bff7bce7afb8c8ca75d2cea4880e04e52844a749b5af29ae44b33e",
+                "c16b35851d04246a10f1a65f05827d8d6193833338d537d403cce0efcbfcf2c0",
+                "ea5f6a7a4465f724c2419a0e1b034dd6ee0fd0933f456a704aa000f3dc98f510",
+                "27668dd51cc282f88aeb420daa811169c1c622d08c87d4f0bdab266db421fb43"
+              ],
+              "window_offset": 4,
+              "at_bottom": true,
+              "overlap_keys": [
+                "target-a3:assistant"
+              ]
+            }
+          ],
+          "materialized_unit_keys": [
+            "target:user",
+            "target-a0:assistant",
+            "target-a1:assistant",
+            "target-a2:assistant",
+            "target-a3:assistant",
+            "target-a4:assistant",
+            "next:user"
+          ],
+          "window_integrity": {
+            "complete": true,
+            "method": "INDEPENDENT_LOGICAL_UNIT_SEQUENCE",
+            "expected_unit_count": 7,
+            "materialized_unit_count": 7
+          },
+          "start_search_windows": [
+            {
+              "unit_keys": [
+                "target-a3:assistant",
+                "target-a4:assistant",
+                "next:user",
+                "next-a:assistant"
+              ],
+              "overlap_keys": []
+            },
+            {
+              "unit_keys": [
+                "target-a1:assistant",
+                "target-a2:assistant",
+                "target-a3:assistant",
+                "target-a4:assistant",
+                "next:user"
+              ],
+              "overlap_keys": [
+                "target-a3:assistant",
+                "target-a4:assistant",
+                "next:user"
+              ],
+              "relative_offset": -2
+            },
+            {
+              "unit_keys": [
+                "target:user",
+                "target-a0:assistant",
+                "target-a1:assistant",
+                "target-a2:assistant",
+                "target-a3:assistant"
+              ],
+              "overlap_keys": [
+                "target-a1:assistant",
+                "target-a2:assistant",
+                "target-a3:assistant"
+              ],
+              "relative_offset": -2
+            }
+          ],
+          "window_transitions": 3
+        },
+        "read_started_at": "2026-11-12T05:17:21.013Z",
+        "read_finished_at": "2026-11-12T05:17:21.826Z",
+        "rendered_unit_keys": [
+          "target-a3:assistant",
+          "target-a4:assistant",
+          "next:user",
+          "next-a:assistant"
+        ],
+        "tail": {
+          "key": "next-a:assistant",
+          "role": "assistant",
+          "assistantUuid": "55555555-5555-4555-8555-555555555555"
+        }
+      },
+      "final_rendered_units": [
+        "target-a3:assistant",
+        "target-a4:assistant",
+        "next:user",
+        "next-a:assistant"
+      ],
+      "result": "PASS",
+      "finished_at": "2026-11-12T05:17:21.827Z",
+      "dom_path": "D:\\AIEO\\phase0\\logs\\browser-virtual-list-2026-11-12T05-17-18\\03-restored-middle-positive-dom.html",
+      "screenshot_path": "D:\\AIEO\\phase0\\logs\\browser-virtual-list-2026-11-12T05-17-18\\03-restored-middle-positive.png"
+    },
+    {
+      "name": "04-no-independent-sequence-conservative-blocked",
+      "simulation_only": true,
+      "started_at": "2026-11-12T05:17:21.875Z",
+      "outcome": "BLOCKED",
+      "observed_error": {
+        "code": "INBOUND_WINDOW_COMPLETENESS_UNPROVEN",
+        "message": "INBOUND_WINDOW_COMPLETENESS_UNPROVEN: BLOCKED: 相邻窗口重叠只能证明已观察 key 连续，不能证明单个或全部窗口没有持续遗漏中间 unit；缺少独立逻辑序列时拒绝判定完整",
+        "details": {
+          "materialized_unit_keys": [
+            "target:user",
+            "target-a0:assistant",
+            "target-a1:assistant",
+            "target-a2:assistant",
+            "target-a3:assistant",
+            "target-a4:assistant",
+            "next:user"
+          ],
+          "remediation": "提供可信的完整逻辑 unit 序列，或在非虚拟化静态 DOM 上重新读取"
+        }
+      },
+      "boundary": "窗口重叠不能证明所有窗口均未持续遗漏同一中间 unit；无可信逻辑序列时拒绝完整判定",
+      "result": "PASS",
+      "finished_at": "2026-11-12T05:17:22.684Z",
+      "dom_path": "D:\\AIEO\\phase0\\logs\\browser-virtual-list-2026-11-12T05-17-18\\04-no-independent-sequence-conservative-blocked-dom.html",
+      "screenshot_path": "D:\\AIEO\\phase0\\logs\\browser-virtual-list-2026-11-12T05-17-18\\04-no-independent-sequence-conservative-blocked.png"
+    }
+  ]
+}

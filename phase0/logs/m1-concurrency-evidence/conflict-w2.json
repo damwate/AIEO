@@ -1,0 +1,7 @@
+{
+  "worker": "w2",
+  "pid": 17648,
+  "result": "FAILURE",
+  "error_code": "M1_ARTIFACT_HASH_CONFLICT",
+  "message": "M1_ARTIFACT_HASH_CONFLICT: 同一 task/execution/correlation 的原始 hash 已变化，拒绝复用旧 artifact 记录"
+}

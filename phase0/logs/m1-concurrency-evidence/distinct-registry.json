@@ -1,0 +1,83 @@
+{
+  "format_version": "1.0",
+  "adapter": "M1_MINIMAL_LOCAL_JSON",
+  "next_sequence": 5,
+  "records": [
+    {
+      "artifact_id": "ART-M1-000001",
+      "registered_at": "2026-11-12T05:33:10.819Z",
+      "task_id": "T-P1-931",
+      "execution_id": "EXEC-931",
+      "correlation_id": "CORR-931",
+      "artifact_sha256": "94357b3ad556593037718b26a2e25e77df776e7db29709ffa466261178f9ee61",
+      "idempotency_key": "{\"task_id\":\"T-P1-931\",\"execution_id\":\"EXEC-931\",\"correlation_id\":\"CORR-931\",\"artifact_sha256\":\"94357b3ad556593037718b26a2e25e77df776e7db29709ffa466261178f9ee61\"}",
+      "content_sha256": "94357b3ad556593037718b26a2e25e77df776e7db29709ffa466261178f9ee61",
+      "size_bytes": 18,
+      "artifact_path": "D:\\AIEO\\phase0\\logs\\m1-concurrency-evidence\\distinct-2.txt",
+      "artifact_kind": "GPT_REPLY_TEXT",
+      "schema_validation": "NOT_REQUESTED",
+      "content": "独立 artifact 2\n",
+      "unit_metadata": {
+        "worker": "w2",
+        "source": "REAL_MULTIPROCESS_TEST"
+      }
+    },
+    {
+      "artifact_id": "ART-M1-000002",
+      "registered_at": "2026-11-12T05:33:11.447Z",
+      "task_id": "T-P1-932",
+      "execution_id": "EXEC-932",
+      "correlation_id": "CORR-932",
+      "artifact_sha256": "1a84617d8ff3b1a9976bf4831a2d2189b0873194954c558dd1ff9b34a5a78267",
+      "idempotency_key": "{\"task_id\":\"T-P1-932\",\"execution_id\":\"EXEC-932\",\"correlation_id\":\"CORR-932\",\"artifact_sha256\":\"1a84617d8ff3b1a9976bf4831a2d2189b0873194954c558dd1ff9b34a5a78267\"}",
+      "content_sha256": "1a84617d8ff3b1a9976bf4831a2d2189b0873194954c558dd1ff9b34a5a78267",
+      "size_bytes": 18,
+      "artifact_path": "D:\\AIEO\\phase0\\logs\\m1-concurrency-evidence\\distinct-3.txt",
+      "artifact_kind": "GPT_REPLY_TEXT",
+      "schema_validation": "NOT_REQUESTED",
+      "content": "独立 artifact 3\n",
+      "unit_metadata": {
+        "worker": "w3",
+        "source": "REAL_MULTIPROCESS_TEST"
+      }
+    },
+    {
+      "artifact_id": "ART-M1-000003",
+      "registered_at": "2026-11-12T05:33:12.033Z",
+      "task_id": "T-P1-933",
+      "execution_id": "EXEC-933",
+      "correlation_id": "CORR-933",
+      "artifact_sha256": "66eb63f70e9b7496613d6a41623d8ee49b0008254c2a80495cb262a167043ec8",
+      "idempotency_key": "{\"task_id\":\"T-P1-933\",\"execution_id\":\"EXEC-933\",\"correlation_id\":\"CORR-933\",\"artifact_sha256\":\"66eb63f70e9b7496613d6a41623d8ee49b0008254c2a80495cb262a167043ec8\"}",
+      "content_sha256": "66eb63f70e9b7496613d6a41623d8ee49b0008254c2a80495cb262a167043ec8",
+      "size_bytes": 18,
+      "artifact_path": "D:\\AIEO\\phase0\\logs\\m1-concurrency-evidence\\distinct-4.txt",
+      "artifact_kind": "GPT_REPLY_TEXT",
+      "schema_validation": "NOT_REQUESTED",
+      "content": "独立 artifact 4\n",
+      "unit_metadata": {
+        "worker": "w4",
+        "source": "REAL_MULTIPROCESS_TEST"
+      }
+    },
+    {
+      "artifact_id": "ART-M1-000004",
+      "registered_at": "2026-11-12T05:33:12.650Z",
+      "task_id": "T-P1-930",
+      "execution_id": "EXEC-930",
+      "correlation_id": "CORR-930",
+      "artifact_sha256": "7bc2f2cf22202546006760507407693d85ecd9e9b77de24fc77137ae397df16a",
+      "idempotency_key": "{\"task_id\":\"T-P1-930\",\"execution_id\":\"EXEC-930\",\"correlation_id\":\"CORR-930\",\"artifact_sha256\":\"7bc2f2cf22202546006760507407693d85ecd9e9b77de24fc77137ae397df16a\"}",
+      "content_sha256": "7bc2f2cf22202546006760507407693d85ecd9e9b77de24fc77137ae397df16a",
+      "size_bytes": 18,
+      "artifact_path": "D:\\AIEO\\phase0\\logs\\m1-concurrency-evidence\\distinct-1.txt",
+      "artifact_kind": "GPT_REPLY_TEXT",
+      "schema_validation": "NOT_REQUESTED",
+      "content": "独立 artifact 1\n",
+      "unit_metadata": {
+        "worker": "w1",
+        "source": "REAL_MULTIPROCESS_TEST"
+      }
+    }
+  ]
+}

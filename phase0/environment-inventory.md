@@ -29,15 +29,17 @@
 | 外部任务启动方式 | CLI 官方支持 `--prompt <text>`（无界面运行单条提示）、`--cwd`、`--mode <build|edit|plan|yolo|guarded>`、`--json`、`--resume <sess_...>`、`-c`（继续最近会话）、`--target`、`app-server`（stdio 协议服务器） |
 | Bot Channel | CLI 帮助与命令列表中**未见** Bot Channel 命令 |
 
-## 3. Playwright 现状
+## 3. Playwright 现状（2026-11-12 二次修订：补查本地项目安装）
 
 | 项目 | 实际值 |
 |---|---|
-| npm 全局 playwright | 未安装 |
+| npm 全局 playwright | 未安装（全局仅 @anthropic-ai、cc-connect、cline、openclaw） |
 | Python playwright | 未安装 |
-| 浏览器缓存 | `~/AppData/Local/ms-playwright/` 已有 `chromium-1243`、`chromium_headless_shell-1243`、`ffmpeg-1011`（说明本机曾安装过某版本的 Playwright 浏览器） |
+| **本地项目安装（初次盘点遗漏，已补查）** | `D:\Garden-Design-Calculator\src\frontend`：playwright 1.63.0 + @playwright/test 1.63.0（声明 ^1.55.0），含 playwright.config.ts；VSCode 扩展 vscjava.migrate-java-to-azure 内置 playwright 1.57.0 |
+| 浏览器缓存 | `~/AppData/Local/ms-playwright/` 有 chromium-1243、chromium_headless_shell-1243、ffmpeg-1011（2026-10-12 安装，与 Garden 项目 1.63 匹配） |
+| AIEO POC 使用 | `phase0/gpt-browser-poc` 内独立安装 **playwright 1.65.0**（npm 源直连可达） |
 
-结论：POC-03 需在项目内 `npm install playwright`（或 python -m pip install playwright），并可复用 `launchPersistentContext` + 本机 Chrome。
+**说明：** 初次盘点仅检查了 npm 全局与 Python 包，遗漏本地项目安装，用户纠正后补查更正。AIEO POC-03 按设计文档要求使用 `executablePath` 驱动**系统 Chrome 157**（独立用户数据目录），不依赖 playwright 自带 chromium，故 1243/1254 build 差异无影响，无需下载浏览器。
 
 ## 4. 网络与代理（对 ChatGPT 访问至关重要）
 

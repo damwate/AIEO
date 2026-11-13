@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-12T05:47:47.623Z",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "cda71abd-88de-453d-8cab-bbc2a5a0b888",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "5ca00b61186cbd95809703f115e0bbb5d112dc4d77065abba233517cbe7c02b9",
+          "819be0860ecb9334b68d4af033de3fee77c16fc782f503ebc89c20fac0e5fc39"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "5ca00b61186cbd95809703f115e0bbb5d112dc4d77065abba233517cbe7c02b9",
+          "819be0860ecb9334b68d4af033de3fee77c16fc782f503ebc89c20fac0e5fc39"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-0:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n{\n\"result\": \"PASS\",\n\"constraints\": [\n\"本次 PASS_WITH_CONSTRAINTS 仅解除 Phase 1 在已验证核心场景下的开工阻塞，不代表 BLOCKED-1 所有扩展场景通过验收。\",\n\"GPT 网页入站仅允许运行在已验证的单 assistant unit 核心路径。必须确认生成结束、目标 unit 完整、全文稳定、UUID 一致、artifact 写盘及 SHA-256 回读一致。不能证明回复区间完整时立即 BLOCKED。\",\n\"严格执行 DEC-016：容器可滚动不等于发生虚拟裁切；只有滚动中实际观察到渲染 unit 集合变化且缺少独立逻辑序列时，才判定 INBOUND_WINDOW_COMPLETENESS_UNPROVEN。集合稳定可记录 STABLE_RENDERED_UNIT_SET，但不得据此宣称已经证明不存在隐藏 unit。\",\n\"任何 unit 集合变化、中间 unit 缺失、顺序冲突、无法证明完整、DOM 契约异常、生成状态不确定或全文读取不稳定，必须 fail-closed/BLOCKED。禁止将部分回复登记为成功报告。\",\n\"GitPointer 仅允许使用已验证的公开仓库指定完整 40 位 commit SHA 路径。必须完整读取 manifest 和全部材料，独立核验 SHA-256、size_bytes、路径及版本绑定。禁止回退 branch HEAD、main 或其他 commit。\",\n\"私有仓库权限、登录失效或指定材料不可读取时立即 BLOCKED。不得切换未授权身份、复制到公开仓库或绕过权限验证。\",\n\"出站网页指令严格限制为不超过 1200 UTF-8 字节，必须发送前完整计量及回读验证。超限不得发送、截断、自动分块或改用长文本反复粘贴。\",\n\"M1 仅允许使用已验证的最小本地登记实现。核心入口必须强制 execution_id、correlation_id；REVIEW_REPORT 必须通过 Schema 校验。幂等登记、重复登记拒绝及登记失败后的原 artifact 补登记不得重新触发 GPT。\",\n\"M1 登记异常、ID 缺失、Schema 失败、hash 冲突、持久化或回读异常、并发互斥异常均必须 fail-closed/BLOCKED，不得绕过核心登记入口。\",\n\"当前已验证的真实 GitHub 远程回读、网页短指令投递、长回复提取、机器 Schema、M1 最小登记及本地并发测试，不得扩大解释为完整生产服务验收。\",\n\"以下扩展场景必须列为后续独立验收门禁，不得宣称已经测试通过：真实 ChatGPT 多 assistant unit、真实动态虚拟列表裁切及恢复、私有仓库权限、真实网络故障注入及退避耗尽、多文件部分读取失败、M1 REST 服务、数据库持久化、ACK 完整闭环及完整平台级并发验证。\",\n\"扩展场景必须分别提供可复现的测试记录、原始执行证据及绑定 commit SHA，经独立审查通过后才能解除相应限制。不得因为 Phase 1 已获准开工而自动扩大运行范围。\",\n\"Phase 1 四模块可以并行开工，但必须遵守 platform-contract-v1.0.md 的公共契约、模块边界及变更治理流程。不得将本次审查解释为允许修改 C1-C8 冻结契约或直接合并 main。\"\n],\n\"summary\": \"PASS_WITH_CONSTRAINTS。已核对指定 commit 227b72e9cd4fa79249c50dc59d3593013c463288 的 REVIEWER-BOOTSTRAP.md、platform-contract-v1.0.md §2.6.13 和 decision-log.md DEC-016。现有证据支持公开 GitHub 指定 SHA 材料读取、短指令投递、已验证入站回复提取、Schema 校验、M1 最小本地幂等登记、失败补登记及并发互斥等有限核心路径。DEC-016 对可滚动页面的修正合理，避免将普通滚动误判为虚拟裁切；但 STABLE_RENDERED_UNIT_SET 不是隐藏 unit 不存在的证明。必须保留完整性不确定即 BLOCKED 的安全边界。真实多 unit、动态裁切恢复、私有权限、真实网络故障注入及完整 M1 服务闭环均未验证，不能纳入本次 PASS。建议解除 Phase 1 核心路径开工阻塞，采用明确范围限制和后续扩展验收门禁，不宣称 BLOCKED-1 全场景已经通过。\"\n}",
+      "text_sha256": "819be0860ecb9334b68d4af033de3fee77c16fc782f503ebc89c20fac0e5fc39",
+      "size_bytes": 3929,
+      "assistant_uuid": "cda71abd-88de-453d-8cab-bbc2a5a0b888"
+    }
+  ]
+}

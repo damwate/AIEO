@@ -1,0 +1,36 @@
+{
+  "task_id": "T-P1-902",
+  "purpose": "四模块回归复跑留证（含 T-P1-902 集成缝隙修复后的模块代码，全数通过）",
+  "executed_at": "2026-11-13T00:42-00:44Z",
+  "modules": [
+    {
+      "module": "M1 平台基座",
+      "command": "python -m pytest tests/platform/ app/platform/tests/ -q  (cwd=仓库根)",
+      "result": "43 passed, 1 warning",
+      "exit_code": 0,
+      "log": "m1-pytest.log"
+    },
+    {
+      "module": "M2 GPT 控制器",
+      "command": "node --test tests/unit.test.mjs tests/browser_simulation.test.mjs tests/lock_mutex.test.mjs  (cwd=app/gpt_controller)",
+      "result": "tests 65 / pass 65 / fail 0",
+      "exit_code": 0,
+      "log": "m2-node.log"
+    },
+    {
+      "module": "M3 ZCode Bridge",
+      "command": "node --test test/*.test.mjs  (cwd=app/zcode_bridge)",
+      "result": "tests 53 / pass 53 / fail 0",
+      "exit_code": 0,
+      "log": "m3-node.log"
+    },
+    {
+      "module": "M4 Git Worker",
+      "command": "python -m pytest tests/ -q  (cwd=app/git_worker)",
+      "result": "24 passed",
+      "exit_code": 0,
+      "log": "m4-pytest.log"
+    }
+  ],
+  "notes": "M3 由 50→53（新增 ①-5b report_progress 参数透传、③-9 changed_files=[] 两类集成缝隙回归）；M1 43 与 M4 24 含 T-P1-902 修复断言。E2E 全链见上级目录 e2e-evidence.json（11 步 all_ok=true）。"
+}

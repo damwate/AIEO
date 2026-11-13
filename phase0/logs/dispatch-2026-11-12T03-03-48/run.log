@@ -1,0 +1,11 @@
+[2026-11-12T03:03:48.529Z] 会话锁已获取 pid=22200
+[2026-11-12T03:03:48.530Z] === GPT 派单（已有会话，消息 883 字节）===
+[2026-11-12T03:03:48.549Z] 复用已运行调试端口 9222
+[2026-11-12T03:03:52.446Z] 会话就绪: https://chatgpt.com/c/6af4af83-0718-83e8-be08-e427bfb06b96
+[2026-11-12T03:03:53.552Z] 检测到上下文窗口已达上限：按页面“新聊天”迁移（带自动摘要），不在旧会话重试
+[2026-11-12T03:04:29.766Z] 会话锁已释放
+[2026-11-12T03:04:29.767Z] 致命错误: locator.waitFor: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('[aria-label="询问 ChatGPT"], [aria-label="Ask ChatGPT"], #prompt-textarea').first() to be visible[22m
+[2m    62 × locator resolved to hidden <div dir="auto" tabindex="0" role="textbox" translate="no" spellcheck="true" class="ProseMirror" aria-multiline="true" contenteditable="true" aria-label="询问 ChatGPT" data-composer-markdown="" data-virtualkeyboard="true">…</div>[22m
+

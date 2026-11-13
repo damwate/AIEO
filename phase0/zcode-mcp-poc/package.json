@@ -1,0 +1,14 @@
+{
+  "name": "aieo-mcp-poc-server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "AIEO Phase 0 POC-01: 最小 AIEO MCP Server（stdio，仅三个无破坏性工具）",
+  "main": "server.mjs",
+  "scripts": {
+    "start": "node server.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.20.0"
+  }
+}

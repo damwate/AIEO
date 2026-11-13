@@ -1,0 +1,9 @@
+[PASS] 1 v2 基础语义（获取/互斥/释放） — 同进程二次获取 SESSION_LOCK_CONFLICT
+[PASS] 2 空/初始化中锁 → LOCK_CORRUPT_OR_INITIALIZING 且不删除 — fail-closed 生效，文件字节未变
+[PASS] 3 损坏锁 → fail-closed 且不删除 — 无 sideload 清理，等待人工
+[PASS] 4 完整 stale 锁回收 — 死 PID 锁被唯一回收者替换
+[PASS] 5 并发 stale 回收（4 进程） — 恰好 1 胜（pid=24140），3 拒；终态锁归属胜者，无双持
+[PASS] 6 临界区独占（持锁 800ms 期间观察者 0 获取） — 冲突 6/6，获取 0
+[PASS] 7 多轮竞争（3 轮 × 3 竞争者） — 每轮恰好 1 持有者，全部正常释放，绝无同时双持
+[PASS] 8 双实例竞争回归（R5 语义） — acquired pid=3680，rejected pid=19976
+LOCK V2 TESTS: ALL PASS

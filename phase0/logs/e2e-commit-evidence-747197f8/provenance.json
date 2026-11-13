@@ -1,0 +1,8 @@
+{
+  "repo_path": "runtime/e2e-repo（gitignored，此为存档副本）",
+  "base_sha": "b9f130e981b2a7ef624d7075e28466007cd46aaf",
+  "commit_sha": "747197f8eaf788ca66b253c064dc880259b8ccda",
+  "branch": "feature/AIEO-E2E-001",
+  "source": "Phase 0 返工后重跑（run2，修复 MAJOR-001 判定后的 e2e_orchestrate.mjs）",
+  "copied_at": "2026-11-12"
+}

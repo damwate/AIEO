@@ -1,0 +1,132 @@
+✔ ③ 反向门：preSendStopVisible=true 时拒绝发送（PRE_SEND_GENERATION_ACTIVE） (12.0374ms)
+✔ ③ 严格时序：停止按钮先于新 user unit 可见不计数；tail 确认后才验收 (1.3514ms)
+✔ ③ 严格时序：停止按钮可见但始终无新 user unit → SEND_ACCEPTANCE_UNCERTAIN（不重发） (1.16ms)
+✖ ③ 发送双验一站式：插入回读一致 → Enter → 验收回执 (0.8952ms)
+✖ ③ 生成等待：观察生成 → 结束；从未观察即结束也要求先观察 (0.5049ms)
+✖ ④ 生成超时：300s 窗口内未确认生成结束 → GENERATION_TIMEOUT（gpt_resend_required=false） (2.3355ms)
+✔ ⑧ 上限检测：横幅文本命中即 CONTEXT_LIMIT_STOP；无横幅持续检测后放行 (2.6147ms)
+✔ ⑧ 派单前上限检测：横幅出现 → 拒绝派单且不发送 (2.2788ms)
+✖ ⑧ 轮换执行：GitPointer 交接 + 旧轮已终结 → 跳转主页开全新空白会话 (26.549ms)
+✔ ⑧ 轮换决策 fail-closed：摘要交接/旧轮未终结 → BLOCKED 且不做任何页面动作 (13.2383ms)
+✖ 全管线（不登记）：发送双验 → 生成 → 确认窗 → 两次读取 → artifact 落盘回读 → 完成判定全绿 (1.8247ms)
+✖ 全管线（M1 登记）：三 ID + Schema 绑定 + 回读 artifact 登记 REGISTERED + 会话 URL 捕获 (14.4049ms)
+✖ 全管线：两次完整读取之间回复被改写 → INBOUND_UNSTABLE_READ fail-closed，不写成功结果 (1.9035ms)
+✔ 禁止盲发：DOM 契约自检失败（composer 缺失）→ 拒绝派单且不插入任何文本 (1.4602ms)
+✔ 出站超限：1200 字节上限在接触浏览器前拒绝（不插文本、不回车、不加 unit） (2.1073ms)
+✔ ⑧ 可滚动虚拟列表：分窗向上定位 + 向下拼接 + 独立逻辑序列证明完整 (5.3854ms)
+✔ ⑧ 可滚动虚拟列表：集合变化且无独立序列 → INBOUND_WINDOW_COMPLETENESS_UNPROVEN (1.3456ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 10
+ℹ fail 7
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 465.4943
+
+✖ failing tests:
+
+test at tests\browser_simulation.test.mjs:138:1
+✖ ③ 发送双验一站式：插入回读一致 → Enter → 验收回执 (0.8952ms)
+  Error [GptControllerError]: COMPOSER_READBACK_MISMATCH: composer 回读不一致，STOP（不发送）
+      at controllerError (file:///D:/AIEO/app/gpt_controller/src/errors.mjs:49:10)
+      at sendError (file:///D:/AIEO/app/gpt_controller/src/send_acceptance.mjs:15:10)
+      at insertAndVerifyComposer (file:///D:/AIEO/app/gpt_controller/src/send_acceptance.mjs:46:11)
+      at async sendWithAcceptance (file:///D:/AIEO/app/gpt_controller/src/send_acceptance.mjs:93:18)
+      at async TestContext.<anonymous> (file:///D:/AIEO/app/gpt_controller/tests/browser_simulation.test.mjs:141:28)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    code: 'COMPOSER_READBACK_MISMATCH',
+    c3_code: 'PROVIDER-0004',
+    status: 'BLOCKED',
+    retryable: false,
+    details: { expected_bytes: 10, readback_bytes: 0 }
+  }
+
+test at tests\browser_simulation.test.mjs:162:1
+✖ ③ 生成等待：观察生成 → 结束；从未观察即结束也要求先观察 (0.5049ms)
+  Error [GptControllerError]: COMPOSER_READBACK_MISMATCH: composer 回读不一致，STOP（不发送）
+      at controllerError (file:///D:/AIEO/app/gpt_controller/src/errors.mjs:49:10)
+      at sendError (file:///D:/AIEO/app/gpt_controller/src/send_acceptance.mjs:15:10)
+      at insertAndVerifyComposer (file:///D:/AIEO/app/gpt_controller/src/send_acceptance.mjs:46:11)
+      at async sendWithAcceptance (file:///D:/AIEO/app/gpt_controller/src/send_acceptance.mjs:93:18)
+      at async TestContext.<anonymous> (file:///D:/AIEO/app/gpt_controller/tests/browser_simulation.test.mjs:165:3)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    code: 'COMPOSER_READBACK_MISMATCH',
+    c3_code: 'PROVIDER-0004',
+    status: 'BLOCKED',
+    retryable: false,
+    details: { expected_bytes: 10, readback_bytes: 0 }
+  }
+
+test at tests\browser_simulation.test.mjs:173:1
+✖ ④ 生成超时：300s 窗口内未确认生成结束 → GENERATION_TIMEOUT（gpt_resend_required=false） (2.3355ms)
+  Error: 期望错误 code=GENERATION_TIMEOUT，实际 code=COMPOSER_READBACK_MISMATCH：COMPOSER_READBACK_MISMATCH: composer 回读不一致，STOP（不发送）
+      at assertRejectsWith (file:///D:/AIEO/app/gpt_controller/tests/helpers.mjs:127:13)
+      at async TestContext.<anonymous> (file:///D:/AIEO/app/gpt_controller/tests/browser_simulation.test.mjs:188:19)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7)
+
+test at tests\browser_simulation.test.mjs:254:1
+✖ ⑧ 轮换执行：GitPointer 交接 + 旧轮已终结 → 跳转主页开全新空白会话 (26.549ms)
+  Error [GptControllerError]: FRESH_SESSION_NOT_READY: 新会话页面在超时前未就绪（composer/空白判定未通过）
+      at controllerError (file:///D:/AIEO/app/gpt_controller/src/errors.mjs:49:10)
+      at contextLimitError (file:///D:/AIEO/app/gpt_controller/src/context_limit.mjs:17:10)
+      at beginFreshBlankSession (file:///D:/AIEO/app/gpt_controller/src/context_limit.mjs:100:13)
+      at async rotateIfContextLimit (file:///D:/AIEO/app/gpt_controller/src/context_limit.mjs:75:5)
+      at async TestContext.<anonymous> (file:///D:/AIEO/app/gpt_controller/tests/browser_simulation.test.mjs:267:21)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    code: 'FRESH_SESSION_NOT_READY',
+    c3_code: 'SYS-0001',
+    status: 'BLOCKED',
+    retryable: false,
+    details: { ready: false, user_units: 0, composer_present: true, body_length: 294 }
+  }
+
+test at tests\browser_simulation.test.mjs:328:1
+✖ 全管线（不登记）：发送双验 → 生成 → 确认窗 → 两次读取 → artifact 落盘回读 → 完成判定全绿 (1.8247ms)
+  Error [GptControllerError]: COMPOSER_READBACK_MISMATCH: composer 回读不一致，STOP（不发送）
+      at controllerError (file:///D:/AIEO/app/gpt_controller/src/errors.mjs:49:10)
+      at sendError (file:///D:/AIEO/app/gpt_controller/src/send_acceptance.mjs:15:10)
+      at insertAndVerifyComposer (file:///D:/AIEO/app/gpt_controller/src/send_acceptance.mjs:46:11)
+      at async file:///D:/AIEO/app/gpt_controller/src/dispatch.mjs:155:20
+      at async runDispatchLocked (file:///D:/AIEO/app/gpt_controller/src/dispatch.mjs:153:28)
+      at async runDispatch (file:///D:/AIEO/app/gpt_controller/src/dispatch.mjs:116:12)
+      at async TestContext.<anonymous> (file:///D:/AIEO/app/gpt_controller/tests/browser_simulation.test.mjs:334:20)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    code: 'COMPOSER_READBACK_MISMATCH',
+    c3_code: 'PROVIDER-0004',
+    status: 'BLOCKED',
+    retryable: false,
+    details: { expected_bytes: 50, readback_bytes: 0 }
+  }
+
+test at tests\browser_simulation.test.mjs:364:1
+✖ 全管线（M1 登记）：三 ID + Schema 绑定 + 回读 artifact 登记 REGISTERED + 会话 URL 捕获 (14.4049ms)
+  Error [GptControllerError]: COMPOSER_READBACK_MISMATCH: composer 回读不一致，STOP（不发送）
+      at controllerError (file:///D:/AIEO/app/gpt_controller/src/errors.mjs:49:10)
+      at sendError (file:///D:/AIEO/app/gpt_controller/src/send_acceptance.mjs:15:10)
+      at insertAndVerifyComposer (file:///D:/AIEO/app/gpt_controller/src/send_acceptance.mjs:46:11)
+      at async file:///D:/AIEO/app/gpt_controller/src/dispatch.mjs:155:20
+      at async runDispatchLocked (file:///D:/AIEO/app/gpt_controller/src/dispatch.mjs:153:28)
+      at async runDispatch (file:///D:/AIEO/app/gpt_controller/src/dispatch.mjs:116:12)
+      at async TestContext.<anonymous> (file:///D:/AIEO/app/gpt_controller/tests/browser_simulation.test.mjs:370:20)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    code: 'COMPOSER_READBACK_MISMATCH',
+    c3_code: 'PROVIDER-0004',
+    status: 'BLOCKED',
+    retryable: false,
+    details: { expected_bytes: 41, readback_bytes: 0 }
+  }
+
+test at tests\browser_simulation.test.mjs:403:1
+✖ 全管线：两次完整读取之间回复被改写 → INBOUND_UNSTABLE_READ fail-closed，不写成功结果 (1.9035ms)
+  Error: 期望错误 code=INBOUND_UNSTABLE_READ，实际 code=COMPOSER_READBACK_MISMATCH：COMPOSER_READBACK_MISMATCH: composer 回读不一致，STOP（不发送）
+      at assertRejectsWith (file:///D:/AIEO/app/gpt_controller/tests/helpers.mjs:127:13)
+      at async TestContext.<anonymous> (file:///D:/AIEO/app/gpt_controller/tests/browser_simulation.test.mjs:407:19)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7)

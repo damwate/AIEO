@@ -1,0 +1,38 @@
+✔ ① 出站计量：1200 字节边界（ASCII 与多字节汉字）正/负例 (2.1679ms)
+✔ ① 出站计量：多字节 1203 字节拒发；meterOutboundMessage 与 assertOutboundWithinLimit 同口径 (0.6672ms)
+✔ ① 出站计量：buildOutboundMessage 组合并整体计量；超限整体拒绝（不截断/不拆分） (4.3417ms)
+✔ GitPointer：Schema 校验正/负例（完整 40 位 SHA、路径规则、manifest 媒体类型） (1.0958ms)
+✔ GitPointer：指定完整 SHA 全量读取（manifest+文件 size/SHA 核对）正例与回读不一致负例 (2.6646ms)
+✔ GitPointer：404/403 fail-closed（不回退 HEAD、不重试权限错误）与暂时 503 有限重试 (2.1031ms)
+✔ GitPointer：秘密扫描拒止（不回显秘密值） (0.2832ms)
+✔ ② 三 ID：normalizeIds 缺一（required）/部分提供/格式非法即拒 (1.4157ms)
+✔ ② 三 ID：normalizeDispatchRequest 请求登记/部分 ID 缺 schema 均发送前拒绝 (0.6807ms)
+✔ ⑤ 两次读取比较：完全一致 + 间隔≥3000ms 判稳定 (1.7944ms)
+✔ ⑤ 两次读取比较：间隔不足/文本变化/UUID 变化/区间不完整 任一即 INBOUND_UNSTABLE_READ (1.0322ms)
+✔ ⑥ 区间采集：多窗口拼接 + 独立逻辑序列 → 完整证明 (1.533ms)
+✔ ⑥ 区间采集：滚动中集合变化且无独立序列 → INBOUND_WINDOW_COMPLETENESS_UNPROVEN（fail-closed） (0.4054ms)
+✔ ⑥ 区间采集：独立序列含未渲染中间 unit → INBOUND_WINDOW_COMPLETENESS_FAILED（列出缺失） (0.7183ms)
+✔ ⑥ 区间采集：相邻窗口无重叠/重叠原文被改 → fail-closed (0.3668ms)
+✔ ⑥ 区间采集：非滚动静态 DOM 单窗到底；到底但尾为 user → INBOUND_END_BOUNDARY_INVALID (0.2123ms)
+✔ ⑥ selectInboundReply：起点缺失/无 assistant/缺 DIL UUID 均 fail-closed (0.2268ms)
+✔ ⑦ artifact：先落盘回读 SHA-256/size 一致；篡改后回读 → ARTIFACT_READBACK_MISMATCH (7.7977ms)
+✔ ⑦ JSON/Schema/三 ID 绑定：PASS、前缀剥离、绑定不一致、Schema 违规、NOT_REQUESTED (75.7791ms)
+✔ M1 登记：REGISTERED → 同 artifact 幂等 DUPLICATE；核心入口缺 execution/correlation 即拒 (2392.2977ms)
+✔ M1 登记：同身份不同原文 → M1_ARTIFACT_HASH_CONFLICT（不重试）；未验证报告拒登记 (1610.2815ms)
+✔ M1 登记：首次登记失败注入 → 同 artifact 重试恢复 RECOVERED，gpt_resend_count=0 (1153.2015ms)
+✔ Git 交接包：summary/history/messages 禁止；三 ID 与 GitPointer 绑定一致；短指令 ≤1200 (1.2529ms)
+✔ 会话存储：同 agent 单 ACTIVE、在途任务互斥、URL 捕获不一致拒绝、完成清位 (23.2106ms)
+✔ 轮换决策：GitPointer 交接 + 旧轮已终结 → ROTATE；摘要/未终结/原因不符 → BLOCKED (0.5466ms)
+✔ 会话轮换：stop → rotate 生成新空白会话（不继承 URL/摘要），旧会话 EXPIRED (12.8774ms)
+✔ C3 映射：内部 code → 平台错误码（顺序敏感映射表抽查） (0.5409ms)
+✔ C4 日志：NDJSON 必填字段、敏感字段拒写、event/level 校验、审计写失败抛错 (2.6763ms)
+✔ 配置：stableReadIntervalMs < 3000 拒绝；env 覆盖优先于默认值 (0.4856ms)
+✔ 包入口：公共 API 可导入（编排/双验/采集/锁/登记/GitPointer） (0.1689ms)
+ℹ tests 30
+ℹ suites 0
+ℹ pass 30
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5599.1258

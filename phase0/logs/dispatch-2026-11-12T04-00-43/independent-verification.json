@@ -1,0 +1,33 @@
+{
+  "verified_at": "2026-11-12T04:04:25.927Z",
+  "checks": {
+    "reply_size_matches": true,
+    "reply_sha_matches": true,
+    "reply_readback_matches": true,
+    "raw_size_matches": true,
+    "raw_sha_matches": true,
+    "raw_readback_matches": true,
+    "raw_units_recompose_exactly": true,
+    "result_reply_exact": true,
+    "unit_metadata_consistent": true,
+    "stability_complete": true,
+    "completion_checks_complete": true,
+    "optional_ids_not_fabricated": true,
+    "reply_over_1200_bytes": true,
+    "json_keys_exact": true
+  },
+  "reply_bytes": 6625,
+  "reply_sha256": "27c6c9e3c3e644cd6abcf0ebab932793d5f6c5dc3fb92aedbcc15e2b5f230af7",
+  "raw_units_bytes": 7217,
+  "raw_units_sha256": "5871f6f348febc008b98a880148e5c0811de4fb1871a9a4b598f9b6a568d15de",
+  "unit_count": 1,
+  "unit_keys": [
+    "fallback-turn-2:2:assistant"
+  ],
+  "assistant_uuid": "8535d4f2-1c41-4091-817f-7b7c0f3f314a",
+  "stable_read_interval_ms": 3020,
+  "json_test": "INBOUND_LONG_REPLY",
+  "json_text_code_points": 2212,
+  "json_text_han_characters": 2013,
+  "all_checks_pass": true
+}

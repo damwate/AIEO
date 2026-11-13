@@ -1,0 +1,7 @@
+{
+  "task_id": "T-P1-001",
+  "execution_id": "EXEC-001",
+  "purpose": "git_pointer_remote_read_poc",
+  "expected_files": 2,
+  "sensitive_data_included": false
+}

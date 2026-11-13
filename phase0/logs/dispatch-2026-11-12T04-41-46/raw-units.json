@@ -1,0 +1,133 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-12T04:44:34.936Z",
+  "user_unit_key": "fallback-turn-5:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-5:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "e85bceb0-d929-4f97-937c-8d16def055b8",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-5:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "48e252eb983b17a23593624ad587983281d443753b20a17bf47fd72ed3e599b8",
+          "d5035285b179fe121aa86fa2f5e735370608af9760990ab4ca1c3ba50a854d3f",
+          "2ab67077490303fa7b80d72d5615698498d3e022eb67fdc468544afd69f0dcf1",
+          "72033f207b3731f6b64b766d9b51a527ff893a6da08cf44e46e05b6546182208",
+          "7290d6b1b878d958d928b24cb7a4fde7d4fa7b7b3f336fb247fa098687325856",
+          "271071cf92a99046149d256a95f2732b2b422dd824f191887e669567aca42223",
+          "335db8c9bad06bf358935652d5374d2f12d47a1d47e94376f1b9afbda73f6ae9",
+          "2fded5cb51268548da8669d4aa9732f890b2067ff447527e9969328766749751"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "48e252eb983b17a23593624ad587983281d443753b20a17bf47fd72ed3e599b8",
+          "d5035285b179fe121aa86fa2f5e735370608af9760990ab4ca1c3ba50a854d3f",
+          "2ab67077490303fa7b80d72d5615698498d3e022eb67fdc468544afd69f0dcf1",
+          "72033f207b3731f6b64b766d9b51a527ff893a6da08cf44e46e05b6546182208",
+          "7290d6b1b878d958d928b24cb7a4fde7d4fa7b7b3f336fb247fa098687325856",
+          "271071cf92a99046149d256a95f2732b2b422dd824f191887e669567aca42223",
+          "335db8c9bad06bf358935652d5374d2f12d47a1d47e94376f1b9afbda73f6ae9",
+          "2fded5cb51268548da8669d4aa9732f890b2067ff447527e9969328766749751"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-5:0:user",
+      "fallback-turn-5:2:assistant"
+    ],
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-5:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n{\"test\":\"INBOUND_SCHEMA_M1_POC\",\"task_id\":\"T-P1-904\",\"execution_id\":\"EXEC-904\",\"correlation_id\":\"CORR-904\",\"text\":\"本次入站处理以已经确认的用户消息作为窗口起点以紧随其后的下一条用户消息作为窗口终点依据稳定消息标识确定边界不得凭页面当前显示位置猜测范围提取程序应检查起始单元是否存在并确认中间消息连续对于尚未加载的区域应通过受控滚动或页面历史加载机制逐段读取每次加载后重新检查标识顺序和已收集范围对暂时缺失的单元继续加载并核实其前后关系只有窗口内所有应有单元均已覆盖且顺序连续才能认定提取完整若页面无法证明中间区域已经加载或者无法确认是否存在遗漏必须停止流程明确报告不完整不能用首尾文字相连代替连续性证据网页可能使用虚拟列表只将部分消息节点放入当前文档因此当前可见节点数量不能代表窗口内的真实单元数量程序应检查起始单元是否存在并确认中间消息连续对于尚未加载的区域应通过受控滚动或页面历史加载机制逐段读取每次加载后重新检查消息标识顺序和已收集范围对暂时缺失的单元继续加载并核实其前后关系只有窗口内所有应有单元均已覆盖且顺序连续才能认定提取完整若页面无法证明中间区域已经加载或者无法确认是否存在遗漏必须停止流程明确报告不完整不能用首尾文字相连代替连续性证据完成首次提取后应在页面状态稳定的条件下再次独立读取整个窗口两次读取必须具有相同的起止标识并比较单元数量标识顺序助手身份以及每个单元全文摘要任何一项不同都说明内容尚未稳定应重新读取不能挑选较短的一次继续处理全文校验还应确认连接后的回复与原始单元逐字对应不得擅自修正空白字符换行或特殊符号原始数据与规范化数据应明确区分避免规范化过程掩盖内容变化对连接结果重新计算长度和摘要并与原始单元顺序及内容对应关系核验确保没有截断重复拼接或遗漏稳定读取后应先保存完整原始单元集合和连接后的原始回复再进行解析和登记保存记录应包含任务标识执行标识关联标识窗口边界单元数量内容长度和摘要值保存完成后必须重新读取持久化文件重新计算长度与摘要并与写入前比较只有回读内容完全一致才能证明保存可靠若文件缺失长度不同摘要不符或读取失败应停止后续操作保留现场和错误证据不得使用页面残留文本拼凑未经验证的替代材料原始回复通过完整性校验后才能进行结构解析和任务绑定解析对象必须来自完整回复不得只截取局部内容或忽略异常前后文本随后依照约定规则检查字段名称字段类型必需字段和额外字段限制并核对测试名称任务标识执行标识及关联标识必须与本次派发记录完全一致三个标识缺一不可任何缺失不一致或格式错误都应拒绝登记并保留原始材料校验结果和失败原因通过解析和任务绑定后才允许向登记模块提交经过验证的原始材料及其摘要登记请求应使用稳定幂等键由任务执行关联信息和内容摘要共同确定相同材料重复提交时应返回已有登记结果不得创建重复记录登记模块应保存材料位置摘要校验状态和任务关系并返回可核验凭据不能仅凭请求已经发出就认定成功若登记请求超时或响应丢失应先按幂等键查询当前状态如果记录已经成功则继续使用原记录如果确认尚未登记才可使用同一幂等键和同一份原始材料补做登记不得重新触发回复生成不得更换摘要或另建任务若材料校验失败任务绑定失败或登记状态无法确认应暂停推进保留证据并报告失败整个流程只有在完整提取全文校验任务绑定和幂等登记均得到确认后才能返回成功状态\"}",
+      "text_sha256": "2fded5cb51268548da8669d4aa9732f890b2067ff447527e9969328766749751",
+      "size_bytes": 4072,
+      "assistant_uuid": "e85bceb0-d929-4f97-937c-8d16def055b8"
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+✔ ① 出站计量：1200 字节边界（ASCII 与多字节汉字）正/负例 (1.8725ms)
+✔ ① 出站计量：多字节 1203 字节拒发；meterOutboundMessage 与 assertOutboundWithinLimit 同口径 (0.3427ms)
+✔ ① 出站计量：buildOutboundMessage 组合并整体计量；超限整体拒绝（不截断/不拆分） (4.0908ms)
+✔ GitPointer：Schema 校验正/负例（完整 40 位 SHA、路径规则、manifest 媒体类型） (0.9634ms)
+✖ GitPointer：指定完整 SHA 全量读取（manifest+文件 size/SHA 核对）正例与回读不一致负例 (4.1969ms)
+✖ GitPointer：404/403 fail-closed（不回退 HEAD、不重试权限错误）与暂时 503 有限重试 (3.0214ms)
+✔ GitPointer：秘密扫描拒止（不回显秘密值） (0.2833ms)
+✔ ② 三 ID：normalizeIds 缺一（required）/部分提供/格式非法即拒 (2.1127ms)
+✔ ② 三 ID：normalizeDispatchRequest 请求登记/部分 ID 缺 schema 均发送前拒绝 (0.5483ms)
+✔ ⑤ 两次读取比较：完全一致 + 间隔≥3000ms 判稳定 (1.5298ms)
+✔ ⑤ 两次读取比较：间隔不足/文本变化/UUID 变化/区间不完整 任一即 INBOUND_UNSTABLE_READ (0.7712ms)
+✔ ⑥ 区间采集：多窗口拼接 + 独立逻辑序列 → 完整证明 (2.6288ms)
+✔ ⑥ 区间采集：滚动中集合变化且无独立序列 → INBOUND_WINDOW_COMPLETENESS_UNPROVEN（fail-closed） (0.353ms)
+✔ ⑥ 区间采集：独立序列含未渲染中间 unit → INBOUND_WINDOW_COMPLETENESS_FAILED（列出缺失） (0.6642ms)
+✔ ⑥ 区间采集：相邻窗口无重叠/重叠原文被改 → fail-closed (0.3265ms)
+✔ ⑥ 区间采集：非滚动静态 DOM 单窗到底；到底但尾为 user → INBOUND_END_BOUNDARY_INVALID (0.2028ms)
+✔ ⑥ selectInboundReply：起点缺失/无 assistant/缺 DIL UUID 均 fail-closed (0.2405ms)
+✔ ⑦ artifact：先落盘回读 SHA-256/size 一致；篡改后回读 → ARTIFACT_READBACK_MISMATCH (9.4908ms)
+✔ ⑦ JSON/Schema/三 ID 绑定：PASS、前缀剥离、绑定不一致、Schema 违规、NOT_REQUESTED (70.4793ms)
+✔ M1 登记：REGISTERED → 同 artifact 幂等 DUPLICATE；核心入口缺 execution/correlation 即拒 (3082.1253ms)
+✔ M1 登记：同身份不同原文 → M1_ARTIFACT_HASH_CONFLICT（不重试）；未验证报告拒登记 (1495.4519ms)
+✔ M1 登记：首次登记失败注入 → 同 artifact 重试恢复 RECOVERED，gpt_resend_count=0 (1031.4266ms)
+✖ Git 交接包：summary/history/messages 禁止；三 ID 与 GitPointer 绑定一致；短指令 ≤1200 (2.2879ms)
+✔ 会话存储：同 agent 单 ACTIVE、在途任务互斥、URL 捕获不一致拒绝、完成清位 (37.1774ms)
+✔ 轮换决策：GitPointer 交接 + 旧轮已终结 → ROTATE；摘要/未终结/原因不符 → BLOCKED (0.6623ms)
+✔ 会话轮换：stop → rotate 生成新空白会话（不继承 URL/摘要），旧会话 EXPIRED (18.5054ms)
+✔ C3 映射：内部 code → 平台错误码（顺序敏感映射表抽查） (1.1197ms)
+✔ C4 日志：NDJSON 必填字段、敏感字段拒写、event/level 校验、审计写失败抛错 (7.3872ms)
+✔ 配置：stableReadIntervalMs < 3000 拒绝；env 覆盖优先于默认值 (1.0032ms)
+✔ 包入口：公共 API 可导入（编排/双验/采集/锁/登记/GitPointer） (0.3328ms)
+ℹ Error: Test "GitPointer：Schema 校验正/负例（完整 40 位 SHA、路径规则、manifest 媒体类型）" at tests\unit.test.mjs:120:1 generated asynchronous activity after the test ended. This activity created the error "Error: 期望错误 code=GIT_POINTER_PATH_INVALID，实际 code=GIT_POINTER_SCHEMA_INVALID：GIT_POINTER_SCHEMA_INVALID: GitPointer 不符合 v1.0 Schema" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "GitPointer：Schema 校验正/负例（完整 40 位 SHA、路径规则、manifest 媒体类型）" at tests\unit.test.mjs:120:1 generated asynchronous activity after the test ended. This activity created the error "Error: 期望错误 code=GIT_POINTER_PATH_INVALID，实际 code=GIT_POINTER_SCHEMA_INVALID：GIT_POINTER_SCHEMA_INVALID: GitPointer 不符合 v1.0 Schema" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "GitPointer：Schema 校验正/负例（完整 40 位 SHA、路径规则、manifest 媒体类型）" at tests\unit.test.mjs:120:1 generated asynchronous activity after the test ended. This activity created the error "Error: 期望错误 code=GIT_POINTER_PATH_INVALID，实际 code=GIT_POINTER_SCHEMA_INVALID：GIT_POINTER_SCHEMA_INVALID: GitPointer 不符合 v1.0 Schema" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "GitPointer：Schema 校验正/负例（完整 40 位 SHA、路径规则、manifest 媒体类型）" at tests\unit.test.mjs:120:1 generated asynchronous activity after the test ended. This activity created the error "Error: 期望错误 code=GIT_POINTER_MANIFEST_MEDIA_INVALID，实际 code=GIT_POINTER_SCHEMA_INVALID：GIT_POINTER_SCHEMA_INVALID: GitPointer 不符合 v1.0 Schema" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "② 三 ID：normalizeDispatchRequest 请求登记/部分 ID 缺 schema 均发送前拒绝" at tests\unit.test.mjs:234:1 generated asynchronous activity after the test ended. This activity created the error "Error: 期望错误 code=DISPATCH_M1_BINDING_INCOMPLETE，实际 code=DISPATCH_BINDING_INCOMPLETE：DISPATCH_BINDING_INCOMPLETE: task_id、execution_id、correlation_id 必须同时提供或同时省略" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ Error: Test "C4 日志：NDJSON 必填字段、敏感字段拒写、event/level 校验、审计写失败抛错" at tests\unit.test.mjs:627:1 generated asynchronous activity after the test ended. This activity created the error "Error: 期望抛出 code=LOG_SENSITIVE_FIELD_FORBIDDEN 的错误，但调用成功了" and would have caused the test to fail, but instead triggered an unhandledRejection event.
+ℹ tests 30
+ℹ suites 0
+ℹ pass 27
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6092.7689
+
+✖ failing tests:
+
+test at tests\unit.test.mjs:134:1
+✖ GitPointer：指定完整 SHA 全量读取（manifest+文件 size/SHA 核对）正例与回读不一致负例 (4.1969ms)
+  Error: 期望错误 code=GIT_POINTER_FILE_HASH_MISMATCH，实际 code=GIT_POINTER_FILE_SIZE_MISMATCH：GIT_POINTER_FILE_SIZE_MISMATCH: 材料原始字节数与 manifest 不一致
+      at assertRejectsWith (file:///D:/AIEO/app/gpt_controller/tests/helpers.mjs:126:13)
+      at async TestContext.<anonymous> (file:///D:/AIEO/app/gpt_controller/tests/unit.test.mjs:151:3)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7)
+
+test at tests\unit.test.mjs:181:1
+✖ GitPointer：404/403 fail-closed（不回退 HEAD、不重试权限错误）与暂时 503 有限重试 (3.0214ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  3 !== 2
+  
+      at TestContext.<anonymous> (file:///D:/AIEO/app/gpt_controller/tests/unit.test.mjs:210:10)
+      at async Test.run (node:internal/test_runner/test:1125:7)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:787:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 3,
+    expected: 2,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at tests\unit.test.mjs:506:1
+✖ Git 交接包：summary/history/messages 禁止；三 ID 与 GitPointer 绑定一致；短指令 ≤1200 (2.2879ms)
+  Error [GptControllerError]: GIT_POINTER_SCHEMA_INVALID: GitPointer 不符合 v1.0 Schema
+      at controllerError (file:///D:/AIEO/app/gpt_controller/src/errors.mjs:49:10)
+      at gitPointerError (file:///D:/AIEO/app/gpt_controller/src/git_pointer.mjs:59:10)
+      at validateGitPointer (file:///D:/AIEO/app/gpt_controller/src/git_pointer.mjs:169:11)
+      at normalizeGitHandoff (file:///D:/AIEO/app/gpt_controller/src/git_handoff.mjs:14:3)
+      at TestContext.<anonymous> (file:///D:/AIEO/app/gpt_controller/tests/unit.test.mjs:523:21)
+      at Test.runInAsyncScope (node:async_hooks:228:14)
+      at Test.run (node:internal/test_runner/test:1118:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:787:18)
+      at Test.postRun (node:internal/test_runner/test:1247:19)
+      at Test.run (node:internal/test_runner/test:1175:12) {
+    code: 'GIT_POINTER_SCHEMA_INVALID',
+    c3_code: 'GIT-0002',
+    status: 'BLOCKED',
+    retryable: false,
+    details: { errors: [ [Object] ] }
+  }

@@ -1,0 +1,122 @@
+<!DOCTYPE html><html lang="zh-CN"><head>
+  <meta charset="utf-8">
+  <title>AIEO 本地虚拟列表仿真（不是 ChatGPT）</title>
+  <style>
+    body { font-family: sans-serif; margin: 20px; background: #f5f5f5; color: #222; }
+    .warning { padding: 10px; background: #fff3cd; border: 1px solid #d6b656; font-weight: bold; }
+    button { margin: 8px 8px 8px 0; padding: 8px; }
+    #scroller { height: 260px; overflow-y: auto; border: 2px solid #456; background: white; }
+    .unit { box-sizing: border-box; height: 84px; padding: 12px; border-bottom: 1px solid #ccd; white-space: pre-wrap; }
+    .user { background: #e8f2ff; }
+    .assistant { background: #f0fff0; }
+    #status { margin-top: 12px; font-family: monospace; white-space: pre-wrap; }
+  </style>
+</head>
+<body>
+  <div class="warning">真实浏览器仿真 DOM，不是 ChatGPT 真实多 unit。此页只验证采集算法与动态裁切控制。</div>
+  <div>
+    <button id="normal">正常动态裁切</button>
+    <button id="hide">持续裁掉中间 target-a2</button>
+    <button id="restore">恢复中间 unit</button>
+    <button id="bottom">滚到底部</button>
+  </div>
+  <div id="scroller" aria-label="本地仿真滚动窗口" data-test-virtual-list="true">
+    <div id="top-spacer" style="height: 504px;"></div>
+    <div id="rendered"><div class="unit assistant" data-content-search-unit-key="target-a3:assistant">assistant 第 3 段</div><div class="unit assistant" data-content-search-unit-key="target-a4:assistant">assistant 第 4 段<span data-dil-response="" data-dil-message-id="44444444-4444-4444-8444-444444444444"></span></div><div class="unit user" data-content-search-unit-key="next:user">下一问题，目标区间终点</div><div class="unit assistant" data-content-search-unit-key="next-a:assistant">不得混入目标区间<span data-dil-response="" data-dil-message-id="55555555-5555-4555-8555-555555555555"></span></div></div>
+    <div id="bottom-spacer" style="height: 0px;"></div>
+  </div>
+  <div id="status">{
+  "mode": "normal",
+  "start": 6,
+  "end": 10,
+  "scrollTop": 580,
+  "scrollHeight": 840,
+  "rendered": [
+    "target-a3:assistant",
+    "target-a4:assistant",
+    "next:user",
+    "next-a:assistant"
+  ],
+  "renderCount": 21
+}</div>
+  <script>
+    (() => {
+      const ITEM_HEIGHT = 84;
+      const WINDOW_SIZE = 5;
+      const units = [
+        { key: "old:user", role: "user", text: "旧问题" },
+        { key: "old-a:assistant", role: "assistant", text: "旧回复", uuid: "00000000-0000-4000-8000-000000000000" },
+        { key: "target:user", role: "user", text: "本次仿真问题" },
+        { key: "target-a0:assistant", role: "assistant", text: "assistant 第 0 段" },
+        { key: "target-a1:assistant", role: "assistant", text: "assistant 第 1 段" },
+        { key: "target-a2:assistant", role: "assistant", text: "assistant 第 2 段（持续裁切负例目标）" },
+        { key: "target-a3:assistant", role: "assistant", text: "assistant 第 3 段" },
+        { key: "target-a4:assistant", role: "assistant", text: "assistant 第 4 段", uuid: "44444444-4444-4444-8444-444444444444" },
+        { key: "next:user", role: "user", text: "下一问题，目标区间终点" },
+        { key: "next-a:assistant", role: "assistant", text: "不得混入目标区间", uuid: "55555555-5555-4555-8555-555555555555" },
+      ];
+      const scroller = document.getElementById("scroller");
+      const rendered = document.getElementById("rendered");
+      const topSpacer = document.getElementById("top-spacer");
+      const bottomSpacer = document.getElementById("bottom-spacer");
+      const status = document.getElementById("status");
+      let mode = "normal";
+      let renderCount = 0;
+
+      function render() {
+        const start = Math.max(0, Math.min(units.length - 1, Math.floor(scroller.scrollTop / ITEM_HEIGHT)));
+        const end = Math.min(units.length, start + WINDOW_SIZE);
+        const slice = units.slice(start, end).filter((unit) => !(mode === "hide-middle" && unit.key === "target-a2:assistant"));
+        rendered.replaceChildren();
+        for (const unit of slice) {
+          const el = document.createElement("div");
+          el.className = `unit ${unit.role}`;
+          el.setAttribute("data-content-search-unit-key", unit.key);
+          el.textContent = unit.text;
+          if (unit.uuid) {
+            const dil = document.createElement("span");
+            dil.setAttribute("data-dil-response", "");
+            dil.setAttribute("data-dil-message-id", unit.uuid);
+            el.appendChild(dil);
+          }
+          rendered.appendChild(el);
+        }
+        topSpacer.style.height = `${start * ITEM_HEIGHT}px`;
+        // 隐藏中间 unit 也保持逻辑滚动高度，确保它可以在所有窗口持续缺失。
+        bottomSpacer.style.height = `${(units.length - start - slice.length) * ITEM_HEIGHT}px`;
+        renderCount += 1;
+        const state = {
+          mode, start, end, scrollTop: scroller.scrollTop, scrollHeight: scroller.scrollHeight,
+          rendered: slice.map((unit) => unit.key), renderCount,
+        };
+        status.textContent = JSON.stringify(state, null, 2);
+        console.log(`fixture-render ${JSON.stringify(state)}`);
+      }
+
+      function setMode(nextMode) {
+        if (!["normal", "hide-middle"].includes(nextMode)) throw new Error("unknown mode");
+        mode = nextMode;
+        render();
+      }
+      function goBottom() {
+        scroller.scrollTop = scroller.scrollHeight;
+        render();
+      }
+      document.getElementById("normal").addEventListener("click", () => setMode("normal"));
+      document.getElementById("hide").addEventListener("click", () => setMode("hide-middle"));
+      document.getElementById("restore").addEventListener("click", () => setMode("normal"));
+      document.getElementById("bottom").addEventListener("click", goBottom);
+      scroller.addEventListener("scroll", render);
+      window.fixture = {
+        setMode,
+        goBottom,
+        logicalUnitKeys: () => units.map((unit) => unit.key),
+        renderedUnitKeys: () => Array.from(document.querySelectorAll("[data-content-search-unit-key]")).map((el) => el.getAttribute("data-content-search-unit-key")),
+        state: () => ({ mode, renderCount, scrollTop: scroller.scrollTop, scrollHeight: scroller.scrollHeight }),
+      };
+      render();
+    })();
+  </script>
+
+
+</body></html>

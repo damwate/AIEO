@@ -1,0 +1,18 @@
+{
+  "name": "aieo-zcode-bridge",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "AIEO Phase 1 M3 ZCode Bridge: AIEO MCP Server (stdio) + ZCode CLI 外部启动适配器 + 取消链路 + 工作区写锁",
+  "main": "src/index.mjs",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node bin/aieo-zcode-mcp.mjs",
+    "test": "node --test test/"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.32.2"
+  }
+}

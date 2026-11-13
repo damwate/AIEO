@@ -1,0 +1,11 @@
+commit 00744f75387802606f5a213d4d66b83dfed0bebf
+branch: feature/AIEO-E2E-001
+base: 607e6a6f8d53b48a46f75db320240de58b2f1fb2
+
+ src/e2e_add.js  | 5 +++++
+ test_e2e_add.js | 7 +++++++
+ 2 files changed, 12 insertions(+)
+00744f75387802606f5a213d4d66b83dfed0bebf
+AIEO-E2E <aieo-e2e@example.local>
+Thu Nov 12 00:56:42 2026 +0800
+feat(T-E2E-001): e2e_add 实现与测试（AIEO 端到端演示）

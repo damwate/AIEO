@@ -1,0 +1,97 @@
+{
+  "started_at": "2026-11-12T05:33:23.724Z",
+  "finished_at": "2026-11-12T05:33:24.719Z",
+  "node": "v24.14.0",
+  "network_scope": "INJECTED_LOCAL_HTTP_RESPONSES_ONLY_NO_REAL_GITHUB",
+  "real_remote_git_pointer_verified": false,
+  "git_commit_or_push_performed": false,
+  "total": 21,
+  "passed": 21,
+  "failed": 0,
+  "tests": [
+    {
+      "name": "正例：多文件 manifest、每文件/manifest hash size 与指定 SHA 全量读取",
+      "result": "PASS"
+    },
+    {
+      "name": "路径穿越、绝对路径、盘符与 .git 均在网络前拒绝",
+      "result": "PASS"
+    },
+    {
+      "name": "短 SHA 不可读取且不得回退分支",
+      "result": "PASS"
+    },
+    {
+      "name": "重复 path 在构造与远程 manifest Schema 校验均拒绝",
+      "result": "PASS"
+    },
+    {
+      "name": "password/cookie/token/API key/私钥扫描拒绝且诊断不回显秘密",
+      "result": "PASS"
+    },
+    {
+      "name": "文件数超限拒绝",
+      "result": "PASS"
+    },
+    {
+      "name": "单文件大小超限拒绝",
+      "result": "PASS"
+    },
+    {
+      "name": "manifest 大小超限拒绝",
+      "result": "PASS"
+    },
+    {
+      "name": "manifest 与材料总大小超限拒绝",
+      "result": "PASS"
+    },
+    {
+      "name": "文件 hash 不符（同长度篡改）拒绝",
+      "result": "PASS"
+    },
+    {
+      "name": "文件 size 不符拒绝",
+      "result": "PASS"
+    },
+    {
+      "name": "manifest hash/size 不符均拒绝且不读取材料",
+      "result": "PASS"
+    },
+    {
+      "name": "多文件部分缺失立即 BLOCKED，不返回部分完整结果",
+      "result": "PASS"
+    },
+    {
+      "name": "暂时 503 有限退避后成功且只读指定 URL",
+      "result": "PASS"
+    },
+    {
+      "name": "网络异常重试耗尽：最多首次+maxRetries 次",
+      "result": "PASS"
+    },
+    {
+      "name": "持续 503 重试耗尽且没有无限循环",
+      "result": "PASS"
+    },
+    {
+      "name": "403 权限拒绝不可重试、不可换源",
+      "result": "PASS"
+    },
+    {
+      "name": "manifest 与指针 task/execution/version 绑定不一致拒绝",
+      "result": "PASS"
+    },
+    {
+      "name": "任务允许路径范围不可被 manifest 扩大",
+      "result": "PASS"
+    },
+    {
+      "name": "标准代理 env 创建 EnvHttpProxyAgent，无代理 env 返回 null",
+      "result": "PASS"
+    },
+    {
+      "name": "本地 CLI build+pointer 正例，不执行 git 写操作",
+      "result": "PASS"
+    }
+  ]
+}

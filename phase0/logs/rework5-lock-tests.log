@@ -1,0 +1,6 @@
+[PASS] 1 同进程二次获取被拒 — SESSION_LOCK_CONFLICT，holder pid=18156
+[PASS] 2 释放后可重新获取 — release 删除锁文件，重新获取成功
+[PASS] 3 死进程残留锁被回收 — pid=999999999 不存在，stale 锁被安全回收
+[PASS] 4 双实例跨进程竞争：持锁期间第二实例被拒 — acquired pid=15856, rejected pid=21104（SESSION_LOCK_CONFLICT，先于任何浏览器操作终止）
+[PASS] 5 锁释放后新实例可正常获取 — child3 acquired pid=21368
+LOCK TESTS: ALL PASS

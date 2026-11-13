@@ -1,0 +1,365 @@
+{
+  "format_version": "1.0",
+  "adapter": "M1_MINIMAL_LOCAL_JSON",
+  "next_sequence": 12,
+  "records": [
+    {
+      "artifact_id": "ART-M1-000001",
+      "registered_at": "2026-11-12T04:38:05.564Z",
+      "task_id": "T-P1-902",
+      "execution_id": "EXEC-902",
+      "correlation_id": "CORR-902",
+      "artifact_sha256": "271071cf92a99046149d256a95f2732b2b422dd824f191887e669567aca42223",
+      "idempotency_key": "{\"task_id\":\"T-P1-902\",\"execution_id\":\"EXEC-902\",\"correlation_id\":\"CORR-902\",\"artifact_sha256\":\"271071cf92a99046149d256a95f2732b2b422dd824f191887e669567aca42223\"}",
+      "content_sha256": "271071cf92a99046149d256a95f2732b2b422dd824f191887e669567aca42223",
+      "size_bytes": 3733,
+      "artifact_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-12T04-35-16\\reply.txt",
+      "artifact_kind": "GPT_SCHEMA_VALIDATED_JSON",
+      "schema_validation": "PASS",
+      "content": "ChatGPT 说：\n\n{\"test\":\"INBOUND_SCHEMA_M1_POC\",\"task_id\":\"T-P1-902\",\"execution_id\":\"EXEC-902\",\"correlation_id\":\"CORR-902\",\"text\":\"本次入站处理必须以当前任务已经确认的用户消息为起点并以紧随其后的下一条用户消息为终点建立唯一提取窗口窗口边界应由稳定的消息标识确定不能仅凭页面上暂时可见的文字位置推测范围提取时应收集窗口内全部属于助手的回复单元按照页面原始顺序排列并保留每个单元的完整原始文本不得遗漏较早单元不得把工具消息误认为助手最终回复也不得把多个单元随意改写成摘要如果一次回复由多个连续单元组成应逐一读取后再按既定规则连接同时保留单元清单以便复核网页可能采用虚拟列表只把部分消息节点放入当前文档因此屏幕上看见的内容不等于窗口内的全部内容提取程序应检查起始单元是否存在并确认窗口范围内的消息顺序连续对于尚未加载的区域应使用受控滚动或页面提供的历史加载方式逐段读取每次加载后重新核对消息标识避免跳过中间单元也避免重复收集同一单元若页面无法证明中间区间已经完整覆盖就必须报告不完整而不能用首尾内容看似衔接来代替连续性证明完整提取完成后应在不同时间进行两次独立读取两次读取都必须覆盖相同窗口并比较单元数量单元标识排列助手身份标识以及每个单元全文的摘要值只有所有项目一致且页面状态稳定时才可认定读取结果稳定任何新增单元缺失单元顺序变化或全文摘要不同都意味着内容尚未稳定应重新读取并记录原因不能选择其中一次结果继续执行全文校验还应确认连接后的回复与原始单元逐字对应不得擅自修正空白字符换行或特殊符号原始数据与规范化数据应明确区分避免规范化过程掩盖内容变化稳定读取后应立即保存原始单元集合和按规则连接的完整回复保存动作必须先于解析校验和登记原始文件应记录任务标识执行标识关联标识窗口起止位置单元数量字符长度和摘要值保存完成后重新从持久化位置读取文件重新计算长度与摘要并逐项比对只有回读结果与写入前完全一致才能证明原始材料可靠若文件缺失长度不符摘要不符或写入过程异常应停止后续流程保留现场并报告失败不得从页面临时内容拼接出一个未经验证的替代文件原始回复通过完整性校验后才能进入结构解析和任务绑定阶段解析应针对完整回复执行不能只截取看似有效的局部对象也不能忽略对象前后的异常内容随后应依照既定结构规则检查字段名称字段类型必需字段以及额外字段限制并确认测试名称任务标识执行标识和关联标识均与本次派发记录完全一致任务绑定必须同时核对三个标识不能因为其中一个相同就推定属于同一任务任何标识缺失不一致或格式不合规则都应拒绝登记并保留原始回复和校验结果以供调查通过结构与绑定校验后才允许向登记模块提交原始回复及其摘要登记请求应使用稳定的幂等键该键由本次任务执行关联信息和原始内容摘要共同确定同一份材料重复提交时必须返回已有登记结果而不能创建重复记录登记模块应保存材料位置摘要值校验状态以及对应的任务关系并返回可核验的登记凭据调用方收到成功响应后还应查询登记状态确认记录确实存在且内容摘要一致不能只凭网络请求已经发出就宣称登记成功失败只补登记绝不重新触发生成\"}",
+      "unit_metadata": {
+        "user_unit_key": "fallback-turn-5:0:user",
+        "next_user_unit_key": null,
+        "unit_keys": [
+          "fallback-turn-5:2:assistant"
+        ],
+        "unit_count": 1,
+        "assistant_uuid": "bdbcd7bf-6085-480a-80ae-a80fa75a23be",
+        "range_proof": {
+          "complete": true,
+          "user_unit_key": "fallback-turn-5:0:user",
+          "next_user_unit_key": null,
+          "end_reason": "DOM_BOTTOM",
+          "windows": [
+            {
+              "index": 0,
+              "unit_keys": [
+                "fallback-turn-2:0:user",
+                "fallback-turn-2:2:assistant",
+                "fallback-turn-3:0:user",
+                "fallback-turn-3:2:assistant",
+                "fallback-turn-4:0:user",
+                "fallback-turn-4:2:assistant",
+                "fallback-turn-5:0:user",
+                "fallback-turn-5:2:assistant"
+              ],
+              "unit_text_sha256": [
+                "fa707b816b2f6a911d48683007c3c7c98034a992ec0e8b345f9a84501021ccdc",
+                "27c6c9e3c3e644cd6abcf0ebab932793d5f6c5dc3fb92aedbcc15e2b5f230af7",
+                "48e252eb983b17a23593624ad587983281d443753b20a17bf47fd72ed3e599b8",
+                "d5035285b179fe121aa86fa2f5e735370608af9760990ab4ca1c3ba50a854d3f",
+                "2ab67077490303fa7b80d72d5615698498d3e022eb67fdc468544afd69f0dcf1",
+                "72033f207b3731f6b64b766d9b51a527ff893a6da08cf44e46e05b6546182208",
+                "7290d6b1b878d958d928b24cb7a4fde7d4fa7b7b3f336fb247fa098687325856",
+                "271071cf92a99046149d256a95f2732b2b422dd824f191887e669567aca42223"
+              ],
+              "window_offset": 0,
+              "at_bottom": true,
+              "overlap_keys": []
+            }
+          ],
+          "materialized_unit_keys": [
+            "fallback-turn-5:0:user",
+            "fallback-turn-5:2:assistant"
+          ],
+          "start_search_windows": [
+            {
+              "unit_keys": [
+                "fallback-turn-2:0:user",
+                "fallback-turn-2:2:assistant",
+                "fallback-turn-3:0:user",
+                "fallback-turn-3:2:assistant",
+                "fallback-turn-4:0:user",
+                "fallback-turn-4:2:assistant",
+                "fallback-turn-5:0:user",
+                "fallback-turn-5:2:assistant"
+              ],
+              "overlap_keys": []
+            }
+          ],
+          "window_transitions": 0
+        }
+      }
+    },
+    {
+      "artifact_id": "ART-M1-000002",
+      "registered_at": "2026-11-12T04:44:34.996Z",
+      "task_id": "T-P1-904",
+      "execution_id": "EXEC-904",
+      "correlation_id": "CORR-904",
+      "artifact_sha256": "2fded5cb51268548da8669d4aa9732f890b2067ff447527e9969328766749751",
+      "idempotency_key": "{\"task_id\":\"T-P1-904\",\"execution_id\":\"EXEC-904\",\"correlation_id\":\"CORR-904\",\"artifact_sha256\":\"2fded5cb51268548da8669d4aa9732f890b2067ff447527e9969328766749751\"}",
+      "content_sha256": "2fded5cb51268548da8669d4aa9732f890b2067ff447527e9969328766749751",
+      "size_bytes": 4072,
+      "artifact_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-12T04-41-46\\reply.txt",
+      "artifact_kind": "GPT_SCHEMA_VALIDATED_JSON",
+      "schema_validation": "PASS",
+      "content": "ChatGPT 说：\n\n{\"test\":\"INBOUND_SCHEMA_M1_POC\",\"task_id\":\"T-P1-904\",\"execution_id\":\"EXEC-904\",\"correlation_id\":\"CORR-904\",\"text\":\"本次入站处理以已经确认的用户消息作为窗口起点以紧随其后的下一条用户消息作为窗口终点依据稳定消息标识确定边界不得凭页面当前显示位置猜测范围提取程序应检查起始单元是否存在并确认中间消息连续对于尚未加载的区域应通过受控滚动或页面历史加载机制逐段读取每次加载后重新检查标识顺序和已收集范围对暂时缺失的单元继续加载并核实其前后关系只有窗口内所有应有单元均已覆盖且顺序连续才能认定提取完整若页面无法证明中间区域已经加载或者无法确认是否存在遗漏必须停止流程明确报告不完整不能用首尾文字相连代替连续性证据网页可能使用虚拟列表只将部分消息节点放入当前文档因此当前可见节点数量不能代表窗口内的真实单元数量程序应检查起始单元是否存在并确认中间消息连续对于尚未加载的区域应通过受控滚动或页面历史加载机制逐段读取每次加载后重新检查消息标识顺序和已收集范围对暂时缺失的单元继续加载并核实其前后关系只有窗口内所有应有单元均已覆盖且顺序连续才能认定提取完整若页面无法证明中间区域已经加载或者无法确认是否存在遗漏必须停止流程明确报告不完整不能用首尾文字相连代替连续性证据完成首次提取后应在页面状态稳定的条件下再次独立读取整个窗口两次读取必须具有相同的起止标识并比较单元数量标识顺序助手身份以及每个单元全文摘要任何一项不同都说明内容尚未稳定应重新读取不能挑选较短的一次继续处理全文校验还应确认连接后的回复与原始单元逐字对应不得擅自修正空白字符换行或特殊符号原始数据与规范化数据应明确区分避免规范化过程掩盖内容变化对连接结果重新计算长度和摘要并与原始单元顺序及内容对应关系核验确保没有截断重复拼接或遗漏稳定读取后应先保存完整原始单元集合和连接后的原始回复再进行解析和登记保存记录应包含任务标识执行标识关联标识窗口边界单元数量内容长度和摘要值保存完成后必须重新读取持久化文件重新计算长度与摘要并与写入前比较只有回读内容完全一致才能证明保存可靠若文件缺失长度不同摘要不符或读取失败应停止后续操作保留现场和错误证据不得使用页面残留文本拼凑未经验证的替代材料原始回复通过完整性校验后才能进行结构解析和任务绑定解析对象必须来自完整回复不得只截取局部内容或忽略异常前后文本随后依照约定规则检查字段名称字段类型必需字段和额外字段限制并核对测试名称任务标识执行标识及关联标识必须与本次派发记录完全一致三个标识缺一不可任何缺失不一致或格式错误都应拒绝登记并保留原始材料校验结果和失败原因通过解析和任务绑定后才允许向登记模块提交经过验证的原始材料及其摘要登记请求应使用稳定幂等键由任务执行关联信息和内容摘要共同确定相同材料重复提交时应返回已有登记结果不得创建重复记录登记模块应保存材料位置摘要校验状态和任务关系并返回可核验凭据不能仅凭请求已经发出就认定成功若登记请求超时或响应丢失应先按幂等键查询当前状态如果记录已经成功则继续使用原记录如果确认尚未登记才可使用同一幂等键和同一份原始材料补做登记不得重新触发回复生成不得更换摘要或另建任务若材料校验失败任务绑定失败或登记状态无法确认应暂停推进保留证据并报告失败整个流程只有在完整提取全文校验任务绑定和幂等登记均得到确认后才能返回成功状态\"}",
+      "unit_metadata": {
+        "user_unit_key": "fallback-turn-5:0:user",
+        "next_user_unit_key": null,
+        "unit_keys": [
+          "fallback-turn-5:2:assistant"
+        ],
+        "unit_count": 1,
+        "assistant_uuid": "e85bceb0-d929-4f97-937c-8d16def055b8",
+        "range_proof": {
+          "complete": true,
+          "user_unit_key": "fallback-turn-5:0:user",
+          "next_user_unit_key": null,
+          "end_reason": "DOM_BOTTOM",
+          "windows": [
+            {
+              "index": 0,
+              "unit_keys": [
+                "fallback-turn-2:0:user",
+                "fallback-turn-2:2:assistant",
+                "fallback-turn-3:0:user",
+                "fallback-turn-3:2:assistant",
+                "fallback-turn-4:0:user",
+                "fallback-turn-4:2:assistant",
+                "fallback-turn-5:0:user",
+                "fallback-turn-5:2:assistant"
+              ],
+              "unit_text_sha256": [
+                "48e252eb983b17a23593624ad587983281d443753b20a17bf47fd72ed3e599b8",
+                "d5035285b179fe121aa86fa2f5e735370608af9760990ab4ca1c3ba50a854d3f",
+                "2ab67077490303fa7b80d72d5615698498d3e022eb67fdc468544afd69f0dcf1",
+                "72033f207b3731f6b64b766d9b51a527ff893a6da08cf44e46e05b6546182208",
+                "7290d6b1b878d958d928b24cb7a4fde7d4fa7b7b3f336fb247fa098687325856",
+                "271071cf92a99046149d256a95f2732b2b422dd824f191887e669567aca42223",
+                "335db8c9bad06bf358935652d5374d2f12d47a1d47e94376f1b9afbda73f6ae9",
+                "2fded5cb51268548da8669d4aa9732f890b2067ff447527e9969328766749751"
+              ],
+              "window_offset": 0,
+              "at_bottom": false,
+              "overlap_keys": []
+            },
+            {
+              "index": 1,
+              "unit_keys": [
+                "fallback-turn-2:0:user",
+                "fallback-turn-2:2:assistant",
+                "fallback-turn-3:0:user",
+                "fallback-turn-3:2:assistant",
+                "fallback-turn-4:0:user",
+                "fallback-turn-4:2:assistant",
+                "fallback-turn-5:0:user",
+                "fallback-turn-5:2:assistant"
+              ],
+              "unit_text_sha256": [
+                "48e252eb983b17a23593624ad587983281d443753b20a17bf47fd72ed3e599b8",
+                "d5035285b179fe121aa86fa2f5e735370608af9760990ab4ca1c3ba50a854d3f",
+                "2ab67077490303fa7b80d72d5615698498d3e022eb67fdc468544afd69f0dcf1",
+                "72033f207b3731f6b64b766d9b51a527ff893a6da08cf44e46e05b6546182208",
+                "7290d6b1b878d958d928b24cb7a4fde7d4fa7b7b3f336fb247fa098687325856",
+                "271071cf92a99046149d256a95f2732b2b422dd824f191887e669567aca42223",
+                "335db8c9bad06bf358935652d5374d2f12d47a1d47e94376f1b9afbda73f6ae9",
+                "2fded5cb51268548da8669d4aa9732f890b2067ff447527e9969328766749751"
+              ],
+              "window_offset": 0,
+              "at_bottom": true,
+              "overlap_keys": [
+                "fallback-turn-2:0:user",
+                "fallback-turn-2:2:assistant",
+                "fallback-turn-3:0:user",
+                "fallback-turn-3:2:assistant",
+                "fallback-turn-4:0:user",
+                "fallback-turn-4:2:assistant",
+                "fallback-turn-5:0:user",
+                "fallback-turn-5:2:assistant"
+              ]
+            }
+          ],
+          "materialized_unit_keys": [
+            "fallback-turn-5:0:user",
+            "fallback-turn-5:2:assistant"
+          ],
+          "start_search_windows": [
+            {
+              "unit_keys": [
+                "fallback-turn-2:0:user",
+                "fallback-turn-2:2:assistant",
+                "fallback-turn-3:0:user",
+                "fallback-turn-3:2:assistant",
+                "fallback-turn-4:0:user",
+                "fallback-turn-4:2:assistant",
+                "fallback-turn-5:0:user",
+                "fallback-turn-5:2:assistant"
+              ],
+              "overlap_keys": []
+            },
+            {
+              "unit_keys": [
+                "fallback-turn-2:0:user",
+                "fallback-turn-2:2:assistant",
+                "fallback-turn-3:0:user",
+                "fallback-turn-3:2:assistant",
+                "fallback-turn-4:0:user",
+                "fallback-turn-4:2:assistant",
+                "fallback-turn-5:0:user",
+                "fallback-turn-5:2:assistant"
+              ],
+              "overlap_keys": [
+                "fallback-turn-2:0:user",
+                "fallback-turn-2:2:assistant",
+                "fallback-turn-3:0:user",
+                "fallback-turn-3:2:assistant",
+                "fallback-turn-4:0:user",
+                "fallback-turn-4:2:assistant",
+                "fallback-turn-5:0:user",
+                "fallback-turn-5:2:assistant"
+              ],
+              "relative_offset": 0
+            }
+          ],
+          "window_transitions": 2
+        }
+      }
+    },
+    {
+      "artifact_id": "ART-M1-000003",
+      "registered_at": "2026-11-12T17:17:28.104Z",
+      "task_id": "T-P1-901",
+      "execution_id": "EXEC-901",
+      "correlation_id": "CORR-901",
+      "artifact_sha256": "4eaa8fd2fb482ef3d9682cf9bd369bc39d236a8871295e5d9607c89e7a3236db",
+      "idempotency_key": "{\"task_id\":\"T-P1-901\",\"execution_id\":\"EXEC-901\",\"correlation_id\":\"CORR-901\",\"artifact_sha256\":\"4eaa8fd2fb482ef3d9682cf9bd369bc39d236a8871295e5d9607c89e7a3236db\"}",
+      "content_sha256": "4eaa8fd2fb482ef3d9682cf9bd369bc39d236a8871295e5d9607c89e7a3236db",
+      "size_bytes": 3610,
+      "artifact_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-12T17-11-35\\reply.txt",
+      "artifact_kind": "GPT_REPLY_TEXT",
+      "schema_validation": "NOT_REQUESTED_EXISTING_ARTIFACT_RECOVERY",
+      "content": "ChatGPT 说：\n\n{\n\"result\": \"BLOCKED\",\n\"reviewed_commit\": \"7093458fa82228329264d81489fec98506eee7e0\",\n\"findings\": [\n{\n\"finding_id\": \"F-001\",\n\"severity\": \"MAJOR\",\n\"file\": \"app/gpt_controller/src/inbound_reply.mjs\",\n\"description\": \"DEC-017 将真实 ChatGPT 多 assistant unit 列为尚未解除的独立验收门禁，但当前生产代码没有对此实施运行时限制。selectInboundReply() 会遍历本次 user unit 与下一 user unit 之间的全部 assistant unit，并将多个 unit 合并为一条回复。dispatch.mjs 也没有针对真实 Playwright 会话实施单 assistant unit 限制。因此，真实浏览器出现多 assistant unit 时，当前代码可能直接进入稳定性校验、artifact 持久化及成功完成流程。现有 browser_simulation.test.mjs 的仿真通过不能证明该扩展场景已通过真实浏览器验收。这与 DEC-017 扩展场景尚未解除的约束存在执行边界缺口。\",\n\"recommendation\": \"在真实浏览器执行路径增加 DEC-017 能力门禁：扩展场景未正式验收前，检测到多个 assistant unit 必须返回 BLOCKED，不得登记成功结果。保留纯函数和 fixture 的多 unit 测试能力，但不得将仿真能力等同于真实浏览器能力。待真实 ChatGPT 多 assistant unit 独立验收通过后再解除限制。\"\n}\n],\n\"constraints\": [\n\"当前结论仅针对 M1 平台基座与 M2 GPT 控制器模块级实现，不构成 Phase 1 集成验收，不解除 BLOCKED-1 扩展场景限制。\",\n\"已读取指定 commit 的 PHASE1-MODULE-REVIEW.md、输入 manifest、主要契约、模块边界、DEC-017、M1/M2 关键源码、测试代码及测试日志。\",\n\"输入 manifest 声明 81 个文件，manifest SHA-256 为 ad056151181d4672b12bf020270bcb03fcd6e59c3622221e114c731d4132b00a。但本次无法完成 manifest 自身及全部 81 个文件的独立 SHA-256 逐项重算，因此不能声明 §2 哈希核验通过。\",\n\"M1 最终 pytest 日志显示 35 passed；中间轮存在 8 项失败及后续 2 项失败，最终轮显示全部通过。中间失败记录与最终通过记录应分别保留，不得混淆。\",\n\"M2 最终测试日志显示 51 tests、51 pass、0 fail。测试主要采用本地 fixture 和仿真 DOM，不构成真实 chatgpt.com 收发验收。\",\n\"M1 的 Outbox sweep 目前是轮询投递模拟，不是真实 broker/HTTP push；接收端自动 ACK 尚未实现。\",\n\"M2 的 M1 登记使用本地 JSON registry 与 OS 句柄锁，不得宣称已经完成 M1 REST/数据库完整集成。\",\n\"真实 chatgpt.com 收发、私有仓库权限、动态虚拟列表、多文件部分读取失败、真实网络故障注入及完整 M1 并发验证仍属于独立验收范围。\",\n\"C1-C8 已能在 M1/M2 中找到相应模块级实现落点，但模块级落点及仿真测试通过不能替代跨模块契约集成验证。\",\n\"本次未执行代码修改、提交、合并或部署。\"\n],\n\"summary\": \"已对指定 commit 的 M1、M2 主要实现及测试证据进行独立检查。M1 状态机、依赖门禁、事务审计、消息幂等、认证及 Outbox 模拟具备相应实现；M2 出站计量、发送双验、入站完整性检查、artifact 回读、GitPointer 指定 SHA 读取及权限失败关闭等具备相应实现和仿真测试。发现 DEC-017 多 assistant unit 扩展门禁缺少真实浏览器运行时限制，属于 MAJOR。另因无法独立完成 manifest 全部 SHA-256 核验，按审查要求判定 BLOCKED，而非宣称 PASS。后续须先完成材料哈希核验及 F-001 整改，再进行模块复审；本结论不代表 M1/M2 集成验收通过。\"\n}",
+      "unit_metadata": {}
+    },
+    {
+      "artifact_id": "ART-M1-000004",
+      "registered_at": "2026-11-12T17:39:50.161Z",
+      "task_id": "T-P1-901",
+      "execution_id": "EXEC-902",
+      "correlation_id": "CORR-902",
+      "artifact_sha256": "f14cac61c975d29a85f596e0b4d75d7a09b08c2360803fe00f3c5a04d15086c4",
+      "idempotency_key": "{\"task_id\":\"T-P1-901\",\"execution_id\":\"EXEC-902\",\"correlation_id\":\"CORR-902\",\"artifact_sha256\":\"f14cac61c975d29a85f596e0b4d75d7a09b08c2360803fe00f3c5a04d15086c4\"}",
+      "content_sha256": "f14cac61c975d29a85f596e0b4d75d7a09b08c2360803fe00f3c5a04d15086c4",
+      "size_bytes": 3953,
+      "artifact_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-12T17-34-39\\reply.txt",
+      "artifact_kind": "GPT_REPLY_TEXT",
+      "schema_validation": "NOT_REQUESTED_EXISTING_ARTIFACT_RECOVERY",
+      "content": "ChatGPT 说：\n\n{\n\"result\": \"BLOCKED\",\n\"reviewed_commit\": \"040571efa85d45389d0d06884b6cb01e0b45d11\",\n\"findings\": [\n{\n\"finding_id\": \"F-101\",\n\"severity\": \"MAJOR\",\n\"file\": \"app/gpt_controller/tests/browser_simulation.test.mjs\",\n\"description\": \"F-001 的 DEC-017 三层门禁在源码中均能找到对应实现：selectInboundReply 默认 maxAssistantUnits=1；readReplySnapshot 默认值为 1 并透传；dispatch.mjs 在两次快照稳定性比较后、artifact 持久化及 M1 登记之前再次无条件检查 unit_count>1。但现有多 assistant unit 全管线测试在第一次 readReplySnapshot/selectInboundReply 时即被拦截，未独立证明 dispatch 收敛点能够在上游门禁被放宽或失效时继续 fail-closed。纯函数显式放宽测试也不能替代真实编排路径的纵深防御测试。因此，三层实现具备源码证据，但三层独立有效性的测试闭环尚未充分证明。\",\n\"recommendation\": \"增加针对 dispatch 最终收敛门禁的独立测试：通过可控快照注入或提取独立门禁函数，模拟上游 selectInboundReply 和 readReplySnapshot 已允许多个 assistant unit 的情况，验证 dispatch 仍返回 INBOUND_MULTI_UNIT_EXTENSION_GATE_BLOCKED，且不产生成功日志、artifact、result.json 或 M1 登记。另覆盖 unit_count 异常、缺失等非法快照输入，确保不会绕过门禁。\"\n}\n],\n\"constraints\": [\n\"已读取指定 commit 的 handoff/PHASE1-MODULE-REVIEW.md，确认 reviewed_commit 为派单指定的完整 SHA。\",\n\"已读取输入 manifest，确认其声明 90 个文件，文件数量与交接包申报一致。\",\n\"已读取 M1、M2、M4、contracts、decision-log 及测试材料中的多个实际文件，覆盖三个审查模块及相关契约。\",\n\"未能独立完成 manifest 原始字节 SHA-256 与 be1ad77def9c9e32a34e3d6e5933a53436dad77c3be7a7fcc9a4d5a4d25639b4 的核对。因此不能声明 manifest 内容锚定通过。\",\n\"未能取得指定 commit 的完整递归 Git tree API 结果，不能声明 90 个路径全部存在。\",\n\"虽然已读取超过 10 个材料文件，但没有完成 §3 要求的至少 10 个文件逐项 SHA-256 独立计算及 manifest.artifact_sha256 比对。材料核验协议尚未通过。\",\n\"M1：已检查状态机、依赖门禁、接受证据校验及部分测试代码。交接包申报的 35 passed 尚未通过独立重新执行完整测试验证。\",\n\"M2：已检查 DEC-017 三处源码实现及相关测试。返工日志显示 53 tests、53 pass、0 fail，但测试日志真实性及完整测试覆盖尚未独立执行验证。\",\n\"M2 真实 chatgpt.com 多 assistant unit、私有仓库权限及其他 DEC-017 扩展场景仍未获得真实运行证据，不得据本次模块级源码检查解除 BLOCKED-1。\",\n\"M4：已检查 Git 命令白名单、shell=False、环境变量隔离、main/master 保护、commit 前后验证及测试执行入口。交接包申报的 24 passed 尚未独立重新执行验证。\",\n\"M4 的 Git 集成锁、强制测试门禁、真实 M1 落库及 C4 trace_id 等申报边界仍须在后续集成审查中处理或确认。\",\n\"M3 不在本次审查范围。\",\n\"本次为模块级独立审查，不构成 M1/M2/M4 集成验收，不授权合并 main，不解除 BLOCKED-1。\"\n],\n\"summary\": \"已对指定 commit 的 M1、M2、M4 开展源码及部分测试证据审查。发现 F-001 返工的三层门禁源码均有实现，但缺少独立验证 dispatch 最终防线的测试，登记为 MAJOR。M1 状态机与依赖门禁、M2 入站门禁、M4 Git 命令执行边界均已检查部分关键实现，暂未据此认定存在其他 MAJOR 实现缺陷。但 §3 材料核验协议未完成：manifest SHA-256 未独立验证，90 文件全量路径存在性未核验，抽样文件 SHA-256 比对亦未完成。按照审查要求，最终判定 BLOCKED，而非 PASS 或 REWORK。必须先补齐材料核验及 F-101 测试闭环，再进行独立复审。\"\n}",
+      "unit_metadata": {}
+    },
+    {
+      "artifact_id": "ART-M1-000005",
+      "registered_at": "2026-11-12T17:59:13.077Z",
+      "task_id": "T-P1-901",
+      "execution_id": "EXEC-903",
+      "correlation_id": "CORR-903",
+      "artifact_sha256": "23b5137ca4e2e1afadd1d150d1df8d2d8780906ac502f697115a2c01a15f2a0a",
+      "idempotency_key": "{\"task_id\":\"T-P1-901\",\"execution_id\":\"EXEC-903\",\"correlation_id\":\"CORR-903\",\"artifact_sha256\":\"23b5137ca4e2e1afadd1d150d1df8d2d8780906ac502f697115a2c01a15f2a0a\"}",
+      "content_sha256": "23b5137ca4e2e1afadd1d150d1df8d2d8780906ac502f697115a2c01a15f2a0a",
+      "size_bytes": 3212,
+      "artifact_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-12T17-55-10\\reply.txt",
+      "artifact_kind": "GPT_REPLY_TEXT",
+      "schema_validation": "NOT_REQUESTED_EXISTING_ARTIFACT_RECOVERY",
+      "content": "ChatGPT 说：\n\n{\n\"result\": \"REWORK\",\n\"reviewed_commit\": \"c0226eea0c54c3af1befa9cceb9c25b9263588c7\",\n\"findings\": [\n{\n\"finding_id\": \"F-201\",\n\"severity\": \"MAJOR\",\n\"file\": \"app/gpt_controller/src/inbound_reply.mjs\",\n\"description\": \"F-101 第二项整改尚未完全闭合。assertInboundExtensionGate() 对 unit_count 的检查仅拒绝非数字、非整数和负数，没有拒绝 0；同时只检查 unit_keys 是数组且长度匹配，没有验证元素是非空字符串及 key 唯一性。因此 unit_count=0、unit_keys=[] 的快照，以及 unit_count=1、unit_keys=[null] 等结构异常快照均可能通过最终防线。结合 dispatch.mjs 的执行顺序，最终防线通过后仍会继续稳定性比较和 artifact 持久化；persistInboundArtifacts() 也没有要求 units 非空。由此存在异常读取结果被当作成功回复继续处理的路径，与畸形快照 fail-closed 的整改目标不完全一致。现有 9 类畸形快照测试没有覆盖这些边界。\",\n\"recommendation\": \"将 unit_count 的合法范围收紧为正整数；要求 unit_keys 为非空数组，所有元素均为非空字符串且无重复。补充 assertInboundExtensionGate 单元测试，覆盖零数量、空数组、null 元素、空字符串和重复 key；同时增加 dispatch 注入式全管线测试，证明这些异常快照最终均被拒绝，且不产生 result.json。\"\n}\n],\n\"constraints\": [\n\"本次材料核验报告已实读：manifest 92 文件，SHA-256 声明为 27d65605d048116ac18db0d647afe3709e3935ca73b809995b4b2803d4051bb8。\",\n\"报告覆盖核对：total_files=92、matched_files=92、mismatched_files=0、per_file=92、路径唯一数=92；全部逐文件 match=true，报告路径与 manifest 路径集合一致。\",\n\"已抽查 M1、M2、M4 多个原始文件及测试日志。M1：35 passed；M2 F-101 返工日志：56 passed、0 failed；M4：24 passed。测试日志与交接包申报的数量一致。\",\n\"F-101 第一项整改已验证：assertInboundExtensionGate 独立导出，dispatch 收敛点直接调用。\",\n\"F-101 第三项整改已验证：deps.readReplySnapshot 经 replyReader 传递，默认回退真实 readReplySnapshot；注入式全管线测试覆盖上游放宽后仍由最终防线拦截。\",\n\"M1 已抽查状态机 ACCEPTED 证据检查、消息幂等及重试、认证与 CSRF 相关实现；未发现足以形成 MAJOR 的申报不实。\",\n\"M4 已抽查 Git 命令白名单、shell=False、危险 GIT 环境变量清理、main/master 保护、提交分支检查及 M1 登记失败不回滚机制；未发现足以形成 MAJOR 的申报不实。\",\n\"M3 不在审查范围。\",\n\"BLOCKED-1 仍然受原有核心路径约束：真实多 unit、动态虚拟化扩展、私有仓库权限及完整 M1 REST/ACK 集成尚未验收。\",\n\"本次仅为模块级审查，不代表四模块集成验收，不授权合并 main。\"\n],\n\"summary\": \"核验报告覆盖完整，92/92 文件申报一致；M1、M4 未发现 MAJOR 级问题，M2 的 F-101 三项整改中第一项和第三项闭合，但第二项畸形快照 fail-closed 仍存在零 unit 数量及非法 key 绕过缺口。判定 REWORK。修复 F-201 并补充边界测试后重新提交独立复审。\"\n}",
+      "unit_metadata": {}
+    },
+    {
+      "artifact_id": "ART-M1-000006",
+      "registered_at": "2026-11-12T18:12:58.535Z",
+      "task_id": "T-P1-901",
+      "execution_id": "EXEC-904",
+      "correlation_id": "CORR-904",
+      "artifact_sha256": "c9c2e8396aa71a1484b7ec2a35c93d483e283ba93a9986bde33513202aa9c4ff",
+      "idempotency_key": "{\"task_id\":\"T-P1-901\",\"execution_id\":\"EXEC-904\",\"correlation_id\":\"CORR-904\",\"artifact_sha256\":\"c9c2e8396aa71a1484b7ec2a35c93d483e283ba93a9986bde33513202aa9c4ff\"}",
+      "content_sha256": "c9c2e8396aa71a1484b7ec2a35c93d483e283ba93a9986bde33513202aa9c4ff",
+      "size_bytes": 3528,
+      "artifact_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-12T18-08-58\\reply.txt",
+      "artifact_kind": "GPT_REPLY_TEXT",
+      "schema_validation": "NOT_REQUESTED_EXISTING_ARTIFACT_RECOVERY",
+      "content": "ChatGPT 说：\n\n{\n\"result\": \"BLOCKED\",\n\"reviewed_commit\": \"e3e5fabcc1fab38248c066ebe00c08ceaa6b0c68\",\n\"findings\": [\n{\n\"finding_id\": \"F-301\",\n\"severity\": \"MAJOR\",\n\"file\": \"phase0/logs/blob-recheck-T-P1-901-r4/\",\n\"description\": \"核验协议 v2 的开发方全量机械核验尚缺少可直接复核的关键证据。已成功读取 verification-report.json，确认 manifest_sha256 为 f02babdcf93161bb2ec74166a785cede6957a0dfe7b34cfe3f78caa7b908d5f4，total_files=106、matched_files=106、mismatched_files=0、exit_code=0，per_file 数量也是 106，且全部 match=true。但报告明确将 post-commit git cat-file blob 复核结果指向 phase0/logs/blob-recheck-T-P1-901-r4/。该目录下的 recheck-result.json 和 recheck-run.log 均无法读取，返回 404。进一步核对 input-manifest，发现其中只有 blob-recheck-T-P1-901-r3/ 的两个文件，没有任何 r4 证据。由此只能确认磁盘文件与 manifest 声明的 SHA-256 一致，不能独立确认 manifest 所列 106 个文件均与指定 commit 的 Git blob 一致，也不能确认 git ls-tree 的 106 路径核验结果。该缺口直接影响 §3 核验协议 v2 的完整性要求。\",\n\"recommendation\": \"将第 4 轮真实执行的 blob-recheck-result.json、recheck-run.log 提交至当前审查 commit，包含 106 个文件逐项 Git blob SHA-256 对照、git ls-tree 路径存在性结果、实际执行命令和退出码；同步修正 verification-report.json 中的证据路径，并重新生成 manifest 和 SHA-256 核验报告。\"\n}\n],\n\"constraints\": [\n\"本轮严格遵循核验协议 v2：审查方不声称自行执行了本地 SHA-256 或 Git cat-file 全量计算。\",\n\"verification-report.json 已实读，106/106、0 mismatch、退出码 0、逐文件记录数量 106 均已确认。\",\n\"input-manifest.json 已实读，确认包含 106 个文件；但 r4 blob-recheck 证据未包含在 manifest 中，指定目录也无法读取。\",\n\"M2 已实读 inbound_reply.mjs、dispatch.mjs、unit.test.mjs、browser_simulation.test.mjs 及 F-201 测试日志。\",\n\"F-201 正向合法值域实现已确认：unit_count 必须为正整数；unit_keys 必须为等长数组，元素全部为非空字符串且不存在重复。\",\n\"F-201 的 14 类纯函数负例已在测试源码中逐项确认；其中包括零数量、null、空字符串、重复 key 和非字符串元素。\",\n\"全管线负例已在日志中确认共 4 类：F-101 上游门禁放宽、内部矛盾快照；F-201 零 unit 快照、非法 key 快照。均报告 fail-closed，且不产生成功结果。\",\n\"M1 已抽查 state_machine.py、messaging.py；M4 已抽查 worker.py、test_git_worker.py。未据现有抽样材料确认其他 MAJOR 缺陷。\",\n\"M3 不在本轮范围。\",\n\"本结论为材料核验阻塞，不代表已确认 M1、M2、M4 的全部代码存在功能缺陷；也不构成 Phase 1 集成验收或 BLOCKED-1 扩展场景解除。\"\n],\n\"summary\": \"第 4 轮审查对象 SHA 已确认。核验报告及 106 文件 manifest 的声明数据完整，M2 F-201 的正向合法值域收紧、14 类纯函数负例和 4 类注入式全管线负例均已通过静态材料核对。但 handoff 与核验报告引用的 r4 Git blob 全量复核证据不存在于指定路径，manifest 中也只有 r3 证据，无法完成 §3 协议要求的 commit 内容全量绑定核验。依据材料缺失即 BLOCKED 的明确规则，本轮结论为 BLOCKED。修复 F-301 后应重新执行材料核验及模块审查，不应直接据此放行 Phase 1。\"\n}",
+      "unit_metadata": {}
+    },
+    {
+      "artifact_id": "ART-M1-000007",
+      "registered_at": "2026-11-12T18:19:51.775Z",
+      "task_id": "T-P1-901",
+      "execution_id": "EXEC-905",
+      "correlation_id": "CORR-905",
+      "artifact_sha256": "54844e4c5115a7bbcc6e2cf85b1389285251a39fc3109dc2816718cc669b156c",
+      "idempotency_key": "{\"task_id\":\"T-P1-901\",\"execution_id\":\"EXEC-905\",\"correlation_id\":\"CORR-905\",\"artifact_sha256\":\"54844e4c5115a7bbcc6e2cf85b1389285251a39fc3109dc2816718cc669b156c\"}",
+      "content_sha256": "54844e4c5115a7bbcc6e2cf85b1389285251a39fc3109dc2816718cc669b156c",
+      "size_bytes": 7138,
+      "artifact_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-12T18-15-47\\reply.txt",
+      "artifact_kind": "GPT_REPLY_TEXT",
+      "schema_validation": "NOT_REQUESTED_EXISTING_ARTIFACT_RECOVERY",
+      "content": "ChatGPT 说：\n\n{\n\"result\": \"BLOCKED\",\n\"reviewed_commit\": \"f73b0549594baa3161ebcbde55fe3f1fa1e1b2fa\",\n\"findings\": [\n{\n\"finding_id\": \"F-401\",\n\"severity\": \"MAJOR\",\n\"file\": \"handoff/PHASE1-MODULE-REVIEW.md §3\",\n\"description\": \"本轮材料核验存在明确的数量口径冲突：§3 第1、2步仍写106文件，且要求报告覆盖106/106；但实际提交的 verification-report.json 和 r4 recheck-result.json 均记录112文件、112/112匹配。manifest SHA-256 与派单给定值一致，报告中的112条逐文件记录也显示匹配。该冲突使交接协议自身的核验标准与实际报告不一致，不能直接认定报告缺失或112文件核验失败，但必须澄清106是过期口径还是另有排除规则。\"\n}\n],\n\"constraints\": [\n\"当前已实读核验报告及r4复核证据；二者均申报112/112、mismatch为0、exit_code为0。\",\n\"r4证据锚定commit为6476bdc19db5a0c35c1089a6d869cfb11de20594；尚未完成GitHub compare对最终commit的独立确认。\",\n\"模块级审查仍需完成M1、M2、M4源代码及测试的抽样实质核验；M3不在范围。\",\n\"本轮结论不构成Phase 1集成验收或BLOCKED-1扩展场景解除。\"\n],\n\"summary\": \"核验材料已可读取，报告和r4证据均覆盖112个文件且自报全匹配；但交接协议仍残留106文件口径，且amend-only证据目录差异尚未独立验证。模块实质审查继续进行，现阶段不能给出PASS。\"\n}\n\n{\n\"result\": \"BLOCKED\",\n\"reviewed_commit\": \"f73b0549594baa3161ebcbde55fe3f1fa1e1b2fa\",\n\"findings\": [\n{\n\"finding_id\": \"F-401\",\n\"severity\": \"MINOR\",\n\"file\": \"handoff/PHASE1-MODULE-REVIEW.md §3、§6\",\n\"description\": \"交接文件存在过期数量口径。manifest、verification-report.json 和 r4 recheck-result.json 均明确为112个文件，但§3及§6仍多处写106/106。实际报告覆盖112/112、mismatch为0、exit_code为0，manifest SHA-256与派单一致。属于文档同步缺陷，不构成实际覆盖不足。\",\n\"recommendation\": \"统一修订交接协议中的106为112，并同步检查所有核验数量描述。\"\n},\n{\n\"finding_id\": \"F-402\",\n\"severity\": \"MAJOR\",\n\"file\": \"app/gpt_controller/src/inbound_reply.mjs\",\n\"description\": \"F-201最终防线仍存在未覆盖的畸形快照绕过。assertInboundExtensionGate只检查unit_count和unit_keys，没有验证snapshot.units的类型、数量、元素key与unit_keys一致性，也没有验证reply与units文本一致。构造unit_count=1、unit_keys=[\\\"u1\\\"]、units=[]、reply=\\\"\\\"、assistant_uuid为非空字符串的快照，可以通过最终防线。compareInboundSnapshots也允许两次相同的空units快照通过，因为它只比较units.map产生的哈希数组，不验证其长度与unit_count一致。persistInboundArtifacts只要求units是数组，不要求非空或数量一致。由此，上游读取器失效或被放宽时，最终防线仍可能接受没有实际assistant unit的快照，破坏F-101/F-201要求的纵深fail-closed保证。\",\n\"recommendation\": \"在assertInboundExtensionGate中增加完整快照结构验证：units必须是非空数组且长度等于unit_count；每个元素必须是assistant角色、具有非空唯一key，且按顺序与unit_keys完全一致；验证text、text_sha256及size_bytes相互一致，并验证reply严格等于units文本按约定拼接的结果。增加注入式全管线测试，覆盖空units、units与unit_keys不一致、reply与units不一致、非法角色及伪造摘要，确保均不产生成功result.json。\"\n},\n{\n\"finding_id\": \"F-403\",\n\"severity\": \"MAJOR\",\n\"file\": \"app/platform/api.py、app/platform/security.py\",\n\"description\": \"C7 §8.6要求MCP/CLI本机服务身份使用独立身份及权限白名单，但当前get_principal只执行身份认证和CSRF检查，没有根据Principal.kind、agent_id或agent_type实施授权策略。所有依赖该认证的管理API均接受有效service bearer token。例如POST /api/v1/agents允许已有服务身份创建任意agent，并通过issue_service_token签发新的服务令牌；其他管理接口也没有服务身份权限限制。这意味着内部服务令牌实际获得了平台管理API的广泛访问能力，不符合C7冻结的服务身份权限边界。\",\n\"recommendation\": \"建立明确的服务身份权限白名单，在路由或统一授权依赖层强制检查Principal.kind及agent身份。默认拒绝未授权操作；agent注册、服务令牌签发及敏感管理操作应限制为OWNER身份。增加跨agent越权、服务令牌自助签发和未授权管理API访问测试。\"\n},\n{\n\"finding_id\": \"F-404\",\n\"severity\": \"MAJOR\",\n\"file\": \"phase0/logs/blob-recheck-T-P1-901-r4/recheck-result.json\",\n\"description\": \"F-301的amend关系仍未获得可独立复核的GitHub证据。r4报告明确锚定C1=6476bdc19db5a0c35c1089a6d869cfb11de20594，申报112/112 blob匹配；但通过GitHub读取该C1时返回No commit found，C1...C2 compare也无法取得有效结果。最终C2的父提交是e3e5fabcc1fab38248c066ebe00c08ceaa6b0c68，C2相对该父提交的变更不止r4证据目录，还包含manifest、核验报告及其他审查材料。因此不能用父提交与C2的差异替代C1与C2的比较，也无法独立确认C1与C2之间manifest所列112个文件的blob逐字节不变。r4证据文件虽然已经随最终commit提交且可读，但其锚定关系仍缺少可验证的Git对象链。\",\n\"recommendation\": \"使C1成为GitHub可读取的提交对象，例如通过临时可访问ref保留C1，再提供C1与C2的compare结果，证明差异仅为r4证据目录新增。同时确认112个manifest文件在两提交中的blob完全一致。保留比较结果及完整SHA作为审查材料。\"\n}\n],\n\"constraints\": [\n\"verification-report.json已实读，manifest SHA-256为b794d24ca2b536aa3da4d99146d0efeb145de4ee0381e5276380590a067cb86f，报告申报112/112匹配、0 mismatch、exit_code=0。\",\n\"r4 recheck-result.json和recheck-run.log均已实读，申报C1上的112/112 blob匹配，0 mismatch，exit_code=0。\",\n\"manifest及r4证据中的逐文件SHA声明与抽样读取的源文件内容没有发现明显矛盾；本轮没有重复执行开发方本地SHA-256机械核验。\",\n\"F-301的C1/C2 amend关系尚未独立验证，因此材料核验闭环不能判定完成。\",\n\"M2的F-201边界检查仍有units/reply一致性缺口；之前已确认的14类纯函数负例不能覆盖这一结构性缺陷。\",\n\"M1服务身份权限白名单未落实，必须完成授权隔离及越权测试。\",\n\"M3不在本次审查范围；不得将本次模块审查结论视为四模块集成验收。\",\n\"BLOCKED-1扩展场景仍受DEC-017约束，不能因本轮模块审查而解除。\"\n],\n\"summary\": \"第5轮复审结论：BLOCKED。核验报告和r4证据均可读取，112文件覆盖声明内部一致，但F-301要求的C1/C2 GitHub比较无法完成。实质审查另发现M2最终入站门禁仍允许空units畸形快照绕过，以及M1服务身份缺少权限白名单两项MAJOR缺陷。M4抽查未发现足以单独判定MAJOR的新增问题。建议先修复F-402、F-403并补齐F-301可验证证据，再进行新一轮独立复审。\"\n}",
+      "unit_metadata": {}
+    },
+    {
+      "artifact_id": "ART-M1-000008",
+      "registered_at": "2026-11-12T18:48:06.774Z",
+      "task_id": "T-P1-901",
+      "execution_id": "EXEC-906",
+      "correlation_id": "CORR-906",
+      "artifact_sha256": "1ba5891ce39d7fe04c4747bdfc81c7011f24fdf65ee04cab1c65370a208fa092",
+      "idempotency_key": "{\"task_id\":\"T-P1-901\",\"execution_id\":\"EXEC-906\",\"correlation_id\":\"CORR-906\",\"artifact_sha256\":\"1ba5891ce39d7fe04c4747bdfc81c7011f24fdf65ee04cab1c65370a208fa092\"}",
+      "content_sha256": "1ba5891ce39d7fe04c4747bdfc81c7011f24fdf65ee04cab1c65370a208fa092",
+      "size_bytes": 3164,
+      "artifact_path": "D:/AIEO/phase0/logs/dispatch-2026-11-12T18-43-54/reply.txt",
+      "artifact_kind": "GPT_REPLY_TEXT",
+      "schema_validation": "NOT_REQUESTED_EXISTING_ARTIFACT_RECOVERY",
+      "content": "ChatGPT 说：\n\n{\n\"result\": \"REWORK\",\n\"reviewed_commit\": \"7872e869352d910862b4602ea12412d6ccb12839\",\n\"findings\": [\n{\n\"finding_id\": \"F-501\",\n\"severity\": \"MAJOR\",\n\"file\": \"app/platform/api.py\",\n\"description\": \"F-403 服务身份白名单仍存在间接越权路径。GET /api/v1/messages/dead-letter 虽然被加入 SERVICE_ALLOWED_ENDPOINTS，但该路由内部直接调用 messaging.sweep()，会执行 Outbox 状态修改，包括 PENDING→SENT、RETRYING→PENDING、ACK 超时重试及 DEAD_LETTER 转换。结果是 service 身份虽然不能调用 POST /api/v1/messages/sweep，却可以通过 GET /api/v1/messages/dead-letter 执行相同的管理操作。现有测试只验证 POST sweep 返回 403，没有验证 GET dead-letter 的副作用。违反 F-403 声明的管理操作仅限人类用户。\",\n\"recommendation\": \"将 dead-letter 查询与 sweep 操作彻底分离。GET /api/v1/messages/dead-letter 只允许读取现有记录，不得调用 messaging.sweep()；需要维护时使用独立的人类授权管理端点。增加 service token 调用 GET dead-letter 的数据库状态前后对比测试，证明不会触发任何 Outbox 状态变更。\"\n},\n{\n\"finding_id\": \"F-502\",\n\"severity\": \"MAJOR\",\n\"file\": \"app/gpt_controller/src/inbound_reply.mjs\",\n\"description\": \"F-402 的 units 结构一致性校验仍不完整。assertInboundExtensionGate() 对 units 元素检查了 role、key、text、text_sha256 和 size_bytes，但没有检查 unit.assistant_uuid。只检查 snapshot.assistant_uuid 非空，未验证其与 units 中对应 assistant_uuid 一致。因此，unit 内 UUID 缺失或伪造、而快照顶层 UUID 保持合法的结构矛盾仍可能通过最终防线。交接包 §4 对 F-402 的整改声明明确要求每个 unit 的 assistant_uuid 为非空字符串。\",\n\"recommendation\": \"在 unitsMalformed 校验中增加每个 unit.assistant_uuid 的非空字符串校验，并要求 snapshot.assistant_uuid 与单 unit 核心路径对应的 unit.assistant_uuid 完全一致。增加缺失、空字符串、类型错误及顶层与 unit UUID 不一致的注入式全管线负例，确认均返回 INBOUND_REPLY_SNAPSHOT_MALFORMED 且不生成 result.json。\"\n}\n],\n\"constraints\": [\n\"本轮仅审查 M1、M2、M4 模块，不包含 M3，也不构成四模块集成验收。\",\n\"真实 chatgpt.com 收发、私有 GitPointer 实际拉取及 M1 真实 broker/自动 ACK 仍未验收，DEC-017 扩展场景继续保持 fail-closed。\",\n\"F-501、F-502 修复后必须生成新 commit，并针对最终 commit 重新执行受影响模块测试和独立复审。\"\n],\n\"summary\": \"材料核验通过：manifest SHA 与申报一致，120/120 文件覆盖，120/120 Git blob 匹配，0 mismatch，退出码 0。C1 锚定 tag review-anchor/T-P1-901-r6 可达，指向 3eb432ebc6a04f4cfc7c62a6c96b0388917b428c；通过比较两个 commit 的 Git tree，确认差异仅为新增 blob-recheck 证据目录，F-404 整改成立。实读 M1、M2、M4 核心实现及测试证据，确认 M1 F-403 和 M2 F-402 仍各存在一项 MAJOR 缺陷。M1 F-403、M2 F-402 不予关闭；M4 未发现新的可复现 MAJOR 缺陷。最终判定 REWORK。\"\n}",
+      "unit_metadata": {}
+    },
+    {
+      "artifact_id": "ART-M1-000009",
+      "registered_at": "2026-11-12T19:00:14.481Z",
+      "task_id": "T-P1-901",
+      "execution_id": "EXEC-907",
+      "correlation_id": "CORR-907",
+      "artifact_sha256": "00e33f56a646a4f83c26f8da41ea0a71c52caea33077e4561a83ab37850beab7",
+      "idempotency_key": "{\"task_id\":\"T-P1-901\",\"execution_id\":\"EXEC-907\",\"correlation_id\":\"CORR-907\",\"artifact_sha256\":\"00e33f56a646a4f83c26f8da41ea0a71c52caea33077e4561a83ab37850beab7\"}",
+      "content_sha256": "00e33f56a646a4f83c26f8da41ea0a71c52caea33077e4561a83ab37850beab7",
+      "size_bytes": 3569,
+      "artifact_path": "D:/AIEO/phase0/logs/dispatch-2026-11-12T18-56-35/reply.txt",
+      "artifact_kind": "GPT_REPLY_TEXT",
+      "schema_validation": "NOT_REQUESTED_EXISTING_ARTIFACT_RECOVERY",
+      "content": "ChatGPT 说：\n\n{\n\"result\": \"BLOCKED\",\n\"reviewed_commit\": \"8780b9d2da3b958a60e0244afb65556877ed878d\",\n\"findings\": [\n{\n\"finding_id\": \"F-601\",\n\"severity\": \"MAJOR\",\n\"file\": \"phase1/manifests/T-P1-901-verification-report.json\",\n\"description\": \"核验报告的证据来源元数据与本轮实际交接材料不一致。报告 method 字段仍指向 phase0/logs/blob-recheck-T-P1-901-r6/，但本轮 §3 明确要求使用 blob-recheck-T-P1-901-r7/，其 recheck-result.json 声明锚定 commit 为 744dc9d9bb91fc9833a83db2c228e95e7ac43459。报告本身声明 128/128、0 mismatch、exit_code=0，manifest SHA-256 与派单值一致；r7 复核文件也确实存在，声明 128/128 路径存在、128/128 blob 匹配。但报告没有正确指向本轮复核证据，导致报告与实际证据链的对应关系不明确。按照 §3 核验协议，不能忽略核验报告的证据描述不一致而直接判定材料核验通过。\",\n\"recommendation\": \"重新生成 verification-report.json，将 method 中的 r6 修正为 r7，明确记录 commit_sha256_anchored=744dc9d9bb91fc9833a83db2c228e95e7ac43459，并确认报告、manifest、r7 recheck-result.json 三者的 SHA-256 与覆盖数量一致。随后重新提交并提供可复核的证据链。\"\n}\n],\n\"constraints\": [\n\"本轮审查对象严格限定为 commit 8780b9d2da3b958a60e0244afb65556877ed878。\",\n\"manifest 声明 SHA-256 为 fd2d9b9917bd179232c946a422edd89b8f8963a278d57406d6ed41627d175fdc；核验报告实际读取确认 128 条记录、128 个唯一路径、128 匹配、0 不匹配、退出码 0。\",\n\"r7 blob 复核文件已实读：锚定 commit 744dc9d9bb91fc9833a83db2c228e95e7ac43459，声明 128/128 路径存在、128/128 blob 匹配、退出码 0。审查方未独立执行本地 SHA-256 计算。\",\n\"M1：F-501 整改成立。dead-letter GET 使用只读数据库上下文，不再调用 sweep；sweep 独立为 POST /api/v1/messages/sweep。服务身份白名单不包含该管理端点。新增测试验证查询前后 PENDING 状态及 delivered_at 不变。\",\n\"M2：F-502 整改成立。assertInboundExtensionGate 检查每个 unit 的 assistant_uuid 非空字符串，并检查快照级 UUID 与末位 unit UUID 一致。两项注入式全管线负例均验证最终防线拒绝，且不产生 result.json。\",\n\"M2 其他关键纵深防御仍存在：正整数 unit_count、keys 唯一性、units 结构一致性、文本 SHA-256 与 UTF-8 字节数复核、reply 一致性，以及 DEC-017 多 unit 默认拒绝。\",\n\"M4：已抽查 Git 白名单、shell=False、环境变量隔离、main/master 保护、分支命名及 M1Client 注入边界。24 项 pytest 全部通过。\",\n\"M1 测试证据：43 passed；M2 测试证据：65 passed；M4 测试证据：24 passed，均为退出码 0。\",\n\"M3 明确不在本轮范围。四模块集成验收、真实 chatgpt.com 收发、真实 broker 投递及其他 DEC-017 扩展场景均未因此获得验收或解除限制。\",\n\"本轮 BLOCKED 的直接原因是核验报告证据元数据不一致，并非认定 F-501 或 F-502 整改失败。\"\n],\n\"summary\": \"M1、M2、M4 模块级实质审查未发现新的 MAJOR 代码缺陷。第六轮 F-501、F-502 整改均已通过代码与针对性测试复核；三模块测试分别为 43/43、65/65、24/24。但 verification-report.json 仍引用 r6 而非本轮 r7 blob 复核证据，违反材料核验协议的证据一致性要求，因此本轮判定 BLOCKED。修正核验报告并重新核对证据链后，可进入下一轮复审；本结论不代表 Phase 1 集成验收通过。\"\n}",
+      "unit_metadata": {}
+    },
+    {
+      "artifact_id": "ART-M1-000010",
+      "registered_at": "2026-11-12T19:06:45.591Z",
+      "task_id": "T-P1-901",
+      "execution_id": "EXEC-908",
+      "correlation_id": "CORR-908",
+      "artifact_sha256": "74b957f96e7c7386ff7d847d77f3c9ab39261ab081caaf452cd89c048977ba7e",
+      "idempotency_key": "{\"task_id\":\"T-P1-901\",\"execution_id\":\"EXEC-908\",\"correlation_id\":\"CORR-908\",\"artifact_sha256\":\"74b957f96e7c7386ff7d847d77f3c9ab39261ab081caaf452cd89c048977ba7e\"}",
+      "content_sha256": "74b957f96e7c7386ff7d847d77f3c9ab39261ab081caaf452cd89c048977ba7e",
+      "size_bytes": 2250,
+      "artifact_path": "D:/AIEO/phase0/logs/dispatch-2026-11-12T19-03-26/reply.txt",
+      "artifact_kind": "GPT_REPLY_TEXT",
+      "schema_validation": "NOT_REQUESTED_EXISTING_ARTIFACT_RECOVERY",
+      "content": "ChatGPT 说：\n\n{\n\"result\": \"PASS\",\n\"reviewed_commit\": \"a9233c76318aebaf415c8a8c179f226802adef53\",\n\"findings\": [],\n\"constraints\": [\n\"本次 PASS 仅代表 M1、M2、M4 模块级独立审查通过，不代表 Phase 1 四模块集成验收通过。\",\n\"M3 不在本轮审查范围，必须保留其独立验收结论。\",\n\"M2 继续执行 DEC-017 单 assistant unit fail-closed 限制；真实多 unit 场景须完成扩展验收及独立审查后才能解除。\",\n\"M1 当前仍采用 SQLite 和模拟 sweep 投递，不得将其视为真实消息 Broker 或完整生产投递系统。\",\n\"M2 真实 chatgpt.com 收发及私有仓库 GitPointer 实际拉取尚未完成验证。\",\n\"M4 Git 集成锁、自动 merge、git push 和强制测试门禁仍属于未实现边界。\",\n\"后续必须单独执行四模块集成测试及 BLOCKED-1 扩展场景验收，不得直接将本次模块级 PASS 升级为整体 PASS。\"\n],\n\"summary\": \"第 8 轮独立复审通过。首先实读核验报告，确认 manifest SHA-256 为 508b358641d796fb166e263716aa45ffd08ba40ec6e15833137ef92c86cbb902，覆盖 133/133，matched_files=133、mismatched_files=0、exit_code=0。报告明确引用本轮 blob-recheck-T-P1-901-r8。进一步实读 recheck-result.json，确认 commit_sha256_anchored=225b1d5c2fe8290b8017fb05afb412b9d4a8655e，manifest SHA 一致，133/133 路径存在且 blob 全部匹配。核对 review-anchor/T-P1-901-r8 指向上述完整 SHA，并通过 Git Tree 逐路径比较锚定 commit 与最终送审 commit：差异仅为新增的 recheck-result.json、recheck-run.log 及其目录，共 3 个新增对象；原有 133 个 manifest 文件的 Git blob 均保持一致。F-601 整改成立，本轮未发现证据链完整性阻塞。实质审查抽样覆盖 M1 security.py、api.py、messaging.py 及服务身份权限白名单、Dead Letter 只读整改；M2 inbound_reply.mjs、dispatch.mjs 及快照结构一致性、UUID 校验、稳定性比较和最终 fail-closed 门禁；M4 worker.py、test_git_worker.py 及 Git argv 白名单、仓库根目录校验、分支保护、文件作用域和提交验证。代码实现与交接材料申报基本一致，未发现新的 MAJOR 或以上问题。审查结论：M1、M2、M4 模块级 PASS。\"\n}",
+      "unit_metadata": {}
+    },
+    {
+      "artifact_id": "ART-M1-000011",
+      "registered_at": "2026-11-13T16:17:40.845Z",
+      "task_id": "T-P1-902",
+      "execution_id": "EXEC-921",
+      "correlation_id": "CORR-921",
+      "artifact_sha256": "91355f6860d4bb46d3bbc1c4c54de2012d75b93df62e089e7a09fe37d8a84418",
+      "idempotency_key": "{\"task_id\":\"T-P1-902\",\"execution_id\":\"EXEC-921\",\"correlation_id\":\"CORR-921\",\"artifact_sha256\":\"91355f6860d4bb46d3bbc1c4c54de2012d75b93df62e089e7a09fe37d8a84418\"}",
+      "content_sha256": "91355f6860d4bb46d3bbc1c4c54de2012d75b93df62e089e7a09fe37d8a84418",
+      "size_bytes": 4240,
+      "artifact_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-13T16-13-14\\reply.txt",
+      "artifact_kind": "GPT_REPLY_TEXT",
+      "schema_validation": "NOT_REQUESTED_EXISTING_ARTIFACT_RECOVERY",
+      "content": "ChatGPT 说：\n\n{\n\"result\": \"PASS\",\n\"reviewed_commit\": \"c13b642770d2e4a6b2f1f1dd2bc5681cb4e906bb\",\n\"findings\": [\n{\n\"finding_id\": \"F-803\",\n\"severity\": \"MINOR\",\n\"file\": \"handoff/PHASE1-INTEGRATION-REVIEW.md\",\n\"description\": \"§3.2 要求核对覆盖面为 42/42，但本轮 r2 manifest 实际包含 50 个文件。核验报告与 blob 复核证据均一致记录 50/50、0 mismatch、exit_code=0。42/42 属于沿用 r1 数字造成的交接文档未更新，不构成实际材料覆盖缺失。\",\n\"recommendation\": \"将 §3.2 的 42/42 更新为 50/50，并确保后续轮次的覆盖数量统一引用本轮 manifest。\"\n},\n{\n\"finding_id\": \"F-804\",\n\"severity\": \"MINOR\",\n\"file\": \"tests/integration/e2e_four_modules.py\",\n\"description\": \"F-802 整改已建立真实测试执行与 TEST_LOG 工件的同源关系，但 subprocess 使用 capture_output=True、text=True，经过文本解码及换行转换后才写入文件。因此严格来说，工件是实际执行输出的 UTF-8 文本表示，而非子进程 stdout 的原始字节。当前统计解析、文件留证、登记内容、回读内容及 SHA-256 均保持一致，不影响本次 F-802 实质修复成立。\",\n\"recommendation\": \"后续可改用 capture_output=True 的字节模式，直接保存 stdout/stderr 原始字节，再从解码副本解析统计，进一步保证原始执行证据的字节级可追溯性。\"\n}\n],\n\"constraints\": [\n\"本结论仅针对 T-P1-902 四模块集成验收第 2 轮，不构成 Phase 1 最终验收，也不解除 BLOCKED-1 扩展场景限制。\",\n\"r2 manifest SHA-256 与派单值一致：c67cee528a8a17e74af7c647117bfae3bdfadda772e09a3afc54c1b3f67ec2f3。\",\n\"核验报告：50/50 matched，0 mismatched，exit_code=0；同轮 blob 复核：50/50 matched，0 mismatched，0 missing，exit_code=0。\",\n\"review-anchor/T-P1-902-r2 已验证指向 af79e68711fdc10958a5c8d9590731d8cc25181b。与送审 commit 比较，仅涉及 blob 复核结果、复核日志、manifest 和核验报告四个文件，符合 amend 仅更新复核材料的申报。\",\n\"F-801 真修复成立：使用父任务真实 execution_id EXEC-001，在 DEV_REPORTED 状态提交 EXECUTED_PASS 测试报告；真实命中 reports.py 的 TEST_ACCEPTANCE 状态门禁，精确返回 409 TASK-0001，并断言拒绝原因。排除了原先伪造 execution_id 导致的前置 404。\",\n\"F-802 真修复成立：步骤 04 实际执行 pytest，取得 8 passed、0 failed；TEST_LOG ART-TEST-001 来源于该次真实执行输出，开发报告统计同源解析，登记后回读内容及 SHA-256 均一致。\",\n\"E2E 十一步全部 ok=true，all_ok=true，exit_code=0。验收七条具有对应的真实进程、HTTP 交互、状态转换及证据记录。\",\n\"五项集成期跨模块修复具有实际代码落点。M1 服务白名单新增 POST /api/v1/messages，管理操作仍维持默认拒绝；M4 路径身份化不影响物理 diff 留证及 SHA-256；M3 changed_files=[] 修复保留元素类型校验；claim_task 和 report_progress 参数契约修复有对应回归测试。\",\n\"四模块回归结果：M1 43 passed、M2 65/65、M3 53/53、M4 24 passed，退出码全部为 0。\",\n\"继续保留既有申报边界：M2 使用本地 fixture DOM，不代表真实 chatgpt.com 收发已验收；M2→M1 采用编排侧桥接；M4 record_audit 为本地 NDJSON；消息投递仍为 sweep 模拟；不覆盖真实 ZCode 上游会话启动。\",\n\"F-803、F-804 均为非阻断性证据表达及文档一致性改进，不影响本轮验收通过。\"\n],\n\"summary\": \"PASS。完成 r2 指定 commit 实读、manifest 核验报告检查、同轮 blob 复核证据检查、r1 原始 REWORK JSON 复核，以及集成代码和 E2E 原始证据抽样审查。50 个文件的 manifest、核验报告和 blob 复核结果相互一致；锚点 tag 与送审 commit 的差异符合申报。重点复核的 F-801 和 F-802 均已实质修复，不是放宽断言或伪造证据：前者真实命中 TEST_ACCEPTANCE 门禁，后者建立真实 pytest 执行、TEST_LOG 登记、统计解析及回读哈希验证的证据链。四模块集成主链路和回归证据达到本轮验收要求。记录两项 MINOR 改进，不存在需要 REWORK 或 BLOCKED 的 MAJOR 及以上缺陷。\"\n}",
+      "unit_metadata": {}
+    }
+  ]
+}

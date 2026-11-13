@@ -1,0 +1,12 @@
+ChatGPT 说：
+
+{
+"result": "BLOCKED",
+"remaining_findings": [
+"MAJOR：真实 ChatGPT 多 assistant unit 与动态虚拟列表裁切恢复仍未验证。当前实现已修正“所有可滚动页面一律阻断”的问题：滚动期间集合稳定时可按 STABLE_RENDERED_UNIT_SET 继续；实际观察到集合变化且没有独立逻辑序列时则 fail-closed。代码逻辑与本地 Chrome 仿真 4/4 证据一致，但仿真中的独立逻辑序列来自 fixture，真实派单 readReplySnapshot(page, sentUserUnitKey) 没有传入 expectedUnitKeys。真实页面一旦发生集合变化，仍会阻断；集合稳定也只能证明当前观察到的 DOM 集合稳定，不能证明没有持续隐藏的 unit。尚不能据此确认真实 ChatGPT 的完整多 unit 入站路径满足 §2.6.7。",
+"MAJOR：§10 第 7、8 项规定的 BLOCKED-1 测试矩阵尚未完成。现有 GitPointer 远程 POC 只覆盖公开仓库、指定 SHA、manifest 与两个材料的正常读取；私有仓库会话权限、部分文件读取失败、真实网络故障与有限退避耗尽等仍未验证。现有本地负例不能替代这些真实边界验证。契约明确要求未执行的矩阵项不得写成 PASS，因此不能据当前证据解除 BLOCKED-1。",
+"边界说明：M1 核心登记入口的 execution_id、correlation_id 强制校验已落实，REVIEW_REPORT 的 Schema PASS 门禁仍在；8/8 测试支持该修复，上一轮 M1 核心绕过问题可关闭。M1 当前仍是本地 JSON 适配器，REST、数据库持久化与 ACK 闭环未实现或验证；这不否定本轮核心登记修复，但不能将本地登记测试表述为完整 M1 服务闭环。"
+],
+"unblocked": false,
+"summary": "已核实 b48696437c1b5b317d2bf105b947a0a03a8e4667 是 a3b8ecfc5d81240b37879d72783400197c1a11a8 的单一后继提交。两项代码整改均有实际实现和测试证据支持：滚动集合稳定时不再误阻断，M1 核心入口强制三 ID；全量回归 10/10，Chrome 本地仿真 4/4，M1 核心登记测试 8/8。GitPointer 公开仓库指定 SHA 回读证据也成立。但真实 ChatGPT 多 unit/动态裁切路径及 §10 要求的关键故障与权限测试仍缺证据。当前修复可确认，BLOCKED-1 尚不能解除。"
+}

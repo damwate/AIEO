@@ -1,0 +1,65 @@
+
+> @aieo/gpt-controller@0.1.0 test
+> node --test tests/unit.test.mjs tests/browser_simulation.test.mjs tests/lock_mutex.test.mjs
+
+✔ ③ 反向门：preSendStopVisible=true 时拒绝发送（PRE_SEND_GENERATION_ACTIVE） (15.344ms)
+✔ ③ 严格时序：停止按钮先于新 user unit 可见不计数；tail 确认后才验收 (1.618ms)
+✔ ③ 严格时序：停止按钮可见但始终无新 user unit → SEND_ACCEPTANCE_UNCERTAIN（不重发） (1.2248ms)
+✔ ③ 发送双验一站式：插入回读一致 → Enter → 验收回执 (2.216ms)
+✔ ③ 生成等待：观察生成 → 结束；从未观察即结束也要求先观察 (1.6829ms)
+✔ ④ 生成超时：300s 窗口内未确认生成结束 → GENERATION_TIMEOUT（gpt_resend_required=false） (2.6444ms)
+✔ ⑧ 上限检测：横幅文本命中即 CONTEXT_LIMIT_STOP；无横幅持续检测后放行 (1.0874ms)
+✔ ⑧ 派单前上限检测：横幅出现 → 拒绝派单且不发送 (2.2311ms)
+✔ ⑧ 轮换执行：GitPointer 交接 + 旧轮已终结 → 跳转主页开全新空白会话 (24.8304ms)
+✔ ⑧ 轮换决策 fail-closed：摘要交接/旧轮未终结 → BLOCKED 且不做任何页面动作 (12.6011ms)
+✔ 全管线（不登记）：发送双验 → 生成 → 确认窗 → 两次读取 → artifact 落盘回读 → 完成判定全绿 (15.5464ms)
+✔ 全管线（M1 登记）：三 ID + Schema 绑定 + 回读 artifact 登记 REGISTERED + 会话 URL 捕获 (742.6351ms)
+✔ 全管线：两次完整读取之间回复被改写 → INBOUND_UNSTABLE_READ fail-closed，不写成功结果 (4.3071ms)
+✔ 全管线：DEC-017 多 assistant unit 扩展门禁 → INBOUND_MULTI_UNIT_EXTENSION_GATE_BLOCKED fail-closed，不写成功结果 (4.3945ms)
+✔ 禁止盲发：DOM 契约自检失败（composer 缺失）→ 拒绝派单且不插入任何文本 (1.7189ms)
+✔ 出站超限：1200 字节上限在接触浏览器前拒绝（不插文本、不回车、不加 unit） (1.4842ms)
+✔ ⑧ 可滚动虚拟列表：分窗向上定位 + 向下拼接 + 独立逻辑序列证明完整 (2.5178ms)
+✔ ⑧ 可滚动虚拟列表：集合变化且无独立序列 → INBOUND_WINDOW_COMPLETENESS_UNPROVEN (0.9984ms)
+✔ ⑨ 两进程竞争同一把锁：一胜一 SESSION_LOCK_CONFLICT；释放后第三方立即可获取 (3973.0063ms)
+✔ ⑨ 同进程：持锁期间重复获取被拒；释放后可重新获取（内容不被仲裁） (1551.0114ms)
+✔ ⑨ 锁错误映射：SESSION_LOCK_CONFLICT → RES-0002，status=BLOCKED，不可重试 (1008.0915ms)
+✔ ⑨ 默认锁路径指向 runtime/locks/gpt-session.lockfile (0.2423ms)
+✔ ① 出站计量：1200 字节边界（ASCII 与多字节汉字）正/负例 (1.5772ms)
+✔ ① 出站计量：多字节 1203 字节拒发；meterOutboundMessage 与 assertOutboundWithinLimit 同口径 (0.3772ms)
+✔ ① 出站计量：buildOutboundMessage 组合并整体计量；超限整体拒绝（不截断/不拆分） (6.9593ms)
+✔ GitPointer：Schema 校验正/负例（完整 40 位 SHA、路径规则、manifest 媒体类型） (2.0473ms)
+✔ GitPointer：指定完整 SHA 全量读取（manifest+文件 size/SHA 核对）正例与回读不一致负例 (3.5374ms)
+✔ GitPointer：404/403 fail-closed（不回退 HEAD、不重试权限错误）与暂时 503 有限重试 (1.5589ms)
+✔ GitPointer：秘密扫描拒止（不回显秘密值） (0.2575ms)
+✔ ② 三 ID：normalizeIds 缺一（required）/部分提供/格式非法即拒 (1.3564ms)
+✔ ② 三 ID：normalizeDispatchRequest 请求登记/部分 ID 缺 schema 均发送前拒绝 (1.6115ms)
+✔ ⑤ 两次读取比较：完全一致 + 间隔≥3000ms 判稳定 (2.3857ms)
+✔ ⑤ 两次读取比较：间隔不足/文本变化/UUID 变化/区间不完整 任一即 INBOUND_UNSTABLE_READ (1.3153ms)
+✔ ⑥ 区间采集：多窗口拼接 + 独立逻辑序列 → 完整证明 (2.0789ms)
+✔ ⑥ 区间采集：滚动中集合变化且无独立序列 → INBOUND_WINDOW_COMPLETENESS_UNPROVEN（fail-closed） (0.4809ms)
+✔ ⑥ 区间采集：独立序列含未渲染中间 unit → INBOUND_WINDOW_COMPLETENESS_FAILED（列出缺失） (0.8393ms)
+✔ ⑥ 区间采集：相邻窗口无重叠/重叠原文被改 → fail-closed (0.4016ms)
+✔ ⑥ 区间采集：非滚动静态 DOM 单窗到底；到底但尾为 user → INBOUND_END_BOUNDARY_INVALID (0.2238ms)
+✔ ⑥ selectInboundReply：起点缺失/无 assistant/缺 DIL UUID 均 fail-closed (0.2417ms)
+✔ ⑥ DEC-017 扩展门禁：多 assistant unit 默认 fail-closed，显式放宽后放行 (0.5982ms)
+✔ ⑦ artifact：先落盘回读 SHA-256/size 一致；篡改后回读 → ARTIFACT_READBACK_MISMATCH (11.6123ms)
+✔ ⑦ JSON/Schema/三 ID 绑定：PASS、前缀剥离、绑定不一致、Schema 违规、NOT_REQUESTED (98.3476ms)
+✔ M1 登记：REGISTERED → 同 artifact 幂等 DUPLICATE；核心入口缺 execution/correlation 即拒 (2233.9404ms)
+✔ M1 登记：同身份不同原文 → M1_ARTIFACT_HASH_CONFLICT（不重试）；未验证报告拒登记 (1662.7044ms)
+✔ M1 登记：首次登记失败注入 → 同 artifact 重试恢复 RECOVERED，gpt_resend_count=0 (1105.0859ms)
+✔ Git 交接包：summary/history/messages 禁止；三 ID 与 GitPointer 绑定一致；短指令 ≤1200 (3.8555ms)
+✔ 会话存储：同 agent 单 ACTIVE、在途任务互斥、URL 捕获不一致拒绝、完成清位 (51.9348ms)
+✔ 轮换决策：GitPointer 交接 + 旧轮已终结 → ROTATE；摘要/未终结/原因不符 → BLOCKED (0.6275ms)
+✔ 会话轮换：stop → rotate 生成新空白会话（不继承 URL/摘要），旧会话 EXPIRED (14.0029ms)
+✔ C3 映射：内部 code → 平台错误码（顺序敏感映射表抽查） (0.585ms)
+✔ C4 日志：NDJSON 必填字段、敏感字段拒写、event/level 校验、审计写失败抛错 (3.1865ms)
+✔ 配置：stableReadIntervalMs < 3000 拒绝；env 覆盖优先于默认值 (0.6346ms)
+✔ 包入口：公共 API 可导入（编排/双验/采集/锁/登记/GitPointer） (0.2857ms)
+ℹ tests 53
+ℹ suites 0
+ℹ pass 53
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6648.2971

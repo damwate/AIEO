@@ -1,0 +1,12 @@
+[2026-11-12T04:32:20.097Z] 会话锁已获取 pid=24024
+[2026-11-12T04:32:20.098Z] === GPT 派单（已有会话，消息 549 字节）===
+[2026-11-12T04:32:23.356Z] Chrome 已启动 pid=9736
+[2026-11-12T04:32:27.665Z] 会话就绪: https://chatgpt.com/c/6af52d27-e44c-83ee-95a4-888c1709afcb
+[2026-11-12T04:32:32.689Z] [dispatch] 基线尾部: {"role":"assistant","key":"fallback-turn-3:2:assistant","assistantUuid":"a2c0ea43-057c-4fb1-887b-14376643347b"}
+[2026-11-12T04:32:34.782Z] [dispatch] 发送双验通过（polls=1，user_unit_key=fallback-turn-4:0:user，tail 后观察）
+[2026-11-12T04:32:35.028Z] 截图: sent-dispatch.png
+[2026-11-12T04:34:27.966Z] [dispatch] COMPLETED，1 个 assistant unit，回复 4902 UTF-8 字节，区间窗口 1 个
+[2026-11-12T04:34:28.133Z] 截图: reply-dispatch.png
+[2026-11-12T04:34:28.134Z] 审查会话已保存: https://chatgpt.com/c/6af52d27-e44c-83ee-95a4-888c1709afcb
+[2026-11-12T04:34:28.300Z] 会话锁已释放
+[2026-11-12T04:34:28.300Z] 致命错误: INBOUND_SCHEMA_VALIDATION_FAILED: 回复 JSON 不符合指定 Schema details={"errors":[{"instancePath":"/text","schemaPath":"#/properties/text/maxLength","keyword":"maxLength","params":{"limit":1500},"message":"must NOT have more than 1500 characters"}]}

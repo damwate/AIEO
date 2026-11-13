@@ -1,0 +1,124 @@
+============================= test session starts =============================
+platform win32 -- Python 3.12.10, pytest-8.3.5, pluggy-1.7.0 -- C:\Users\youting\AppData\Local\Programs\Python\Python312\python.exe
+cachedir: .pytest_cache
+rootdir: D:\AIEO
+plugins: anyio-4.16.0
+collecting ... collected 35 items
+
+tests/platform/test_artifacts_audit.py::test_artifact_inline_content_hash_and_roundtrip PASSED [  2%]
+tests/platform/test_artifacts_audit.py::test_audit_records_appended_for_key_actions PASSED [  5%]
+tests/platform/test_artifacts_audit.py::test_audit_login_failure_recorded FAILED [  8%]
+tests/platform/test_health_auth.py::test_health_is_open_and_reports_contract_version PASSED [ 11%]
+tests/platform/test_health_auth.py::test_protected_endpoint_requires_session PASSED [ 14%]
+tests/platform/test_health_auth.py::test_login_failure_is_rejected_and_audited PASSED [ 17%]
+tests/platform/test_health_auth.py::test_login_success_sets_session_cookie_and_csrf PASSED [ 20%]
+tests/platform/test_health_auth.py::test_logout_revokes_session PASSED   [ 22%]
+tests/platform/test_health_auth.py::test_service_agent_bearer_token_authenticates_without_cookie PASSED [ 25%]
+tests/platform/test_messages.py::test_duplicate_message_not_double_processed PASSED [ 28%]
+tests/platform/test_messages.py::test_unknown_fields_are_ignored_and_version_checked PASSED [ 31%]
+tests/platform/test_messages.py::test_conditional_mandatory_fields_by_message_type PASSED [ 34%]
+tests/platform/test_messages.py::test_ack_is_idempotent_and_dead_letter_requeue_requires_human PASSED [ 37%]
+tests/platform/test_messages.py::test_outbox_sweep_retry_then_dead_letter_then_requeue PASSED [ 40%]
+tests/platform/test_projects_batches.py::test_create_project_and_batch PASSED [ 42%]
+tests/platform/test_projects_batches.py::test_duplicate_project_name_conflicts PASSED [ 45%]
+tests/platform/test_projects_batches.py::test_repository_uniqueness PASSED [ 48%]
+tests/platform/test_projects_batches.py::test_invalid_project_slug_rejected PASSED [ 51%]
+tests/platform/test_projects_batches.py::test_agent_registration PASSED  [ 54%]
+tests/platform/test_reports_board.py::test_board_completion_counts_only_accepted FAILED [ 57%]
+tests/platform/test_reports_board.py::test_dev_report_and_duplicate_report_idempotency PASSED [ 60%]
+tests/platform/test_reports_board.py::test_review_rework_creates_new_execution_round PASSED [ 62%]
+tests/platform/test_reports_board.py::test_board_requires_known_project PASSED [ 65%]
+tests/platform/test_restart_persistence.py::test_state_persists_across_engine_restart FAILED [ 68%]
+tests/platform/test_restart_persistence.py::test_admin_rebootstrap_is_idempotent PASSED [ 71%]
+tests/platform/test_tasks.py::test_parent_child_dependency_blocks_child_until_parent_accepted FAILED [ 74%]
+tests/platform/test_tasks.py::test_unknown_dependency_rejected FAILED    [ 77%]
+tests/platform/test_tasks.py::test_parent_must_exist FAILED              [ 80%]
+tests/platform/test_tasks.py::test_legal_transition_chain_and_duplicate_event_idempotency PASSED [ 82%]
+tests/platform/test_tasks.py::test_illegal_transitions_rejected_with_task_0001 PASSED [ 85%]
+tests/platform/test_tasks.py::test_agent_cannot_set_accepted_directly FAILED [ 88%]
+tests/platform/test_tasks.py::test_blocked_requires_reason_owner_and_condition FAILED [ 91%]
+tests/platform/test_tasks.py::test_cancel_records_operator_and_reason PASSED [ 94%]
+tests/platform/test_tasks.py::test_claim_conflict_and_dependency_not_ready_codes PASSED [ 97%]
+tests/platform/test_tasks.py::test_task_listing_filters PASSED           [100%]
+
+================================== FAILURES ===================================
+______________________ test_audit_login_failure_recorded ______________________
+tests\platform\test_artifacts_audit.py:117: in test_audit_login_failure_recorded
+    assert audit["total"] == 1
+E   assert 0 == 1
+_________________ test_board_completion_counts_only_accepted __________________
+tests\platform\test_reports_board.py:56: in test_board_completion_counts_only_accepted
+    harness.event(blocked["task_id"], "BLOCKED", "g1-blocked",
+tests\platform\conftest.py:101: in event
+    return self.post(f"/api/v1/tasks/{task_id}/events", body, expect)
+tests\platform\conftest.py:55: in post
+    assert response.status_code == expect, (url, response.status_code, response.text)
+E   AssertionError: ('/api/v1/tasks/T-P1-003/events', 409, '{"code":"TASK-0001","message":"INVALID_STATE_TRANSITION: PLANNING does not accept BLOCKED","retryable":false,"correlation_id":"787acf7c-6262-4575-8ae8-3fe8d8962393","details":{"field":"event","current_status":"PLANNING","event":"BLOCKED"}}')
+E   assert 409 == 200
+E    +  where 409 = <Response [409 Conflict]>.status_code
+__________________ test_state_persists_across_engine_restart __________________
+tests\platform\test_restart_persistence.py:41: in test_state_persists_across_engine_restart
+    assert harness2.get("/api/v1/agents/ZCODE-01")["agent_id"] == "ZCODE-01"
+tests\platform\conftest.py:60: in get
+    assert response.status_code == expect, (url, response.status_code, response.text)
+E   AssertionError: ('/api/v1/agents/ZCODE-01', 404, '{"code":"RES-0001","message":"RESOURCE_NOT_FOUND: endpoint or resource not found","retryable":false,"correlation_id":"31156664-2334-4c1e-94c6-ee1a488815dd"}')
+E   assert 404 == 200
+E    +  where 404 = <Response [404 Not Found]>.status_code
+_______ test_parent_child_dependency_blocks_child_until_parent_accepted _______
+tests\platform\test_tasks.py:26: in test_parent_child_dependency_blocks_child_until_parent_accepted
+    harness.drive_to_ready(child["task_id"], "child")
+tests\platform\conftest.py:106: in drive_to_ready
+    self.event(task_id, "PASS", f"{prefix}-pass")
+tests\platform\conftest.py:101: in event
+    return self.post(f"/api/v1/tasks/{task_id}/events", body, expect)
+tests\platform\conftest.py:55: in post
+    assert response.status_code == expect, (url, response.status_code, response.text)
+E   AssertionError: ('/api/v1/tasks/T-P1-002/events', 409, '{"code":"TASK-0002","message":"DEPENDENCY_NOT_READY: every dependency must be ACCEPTED","retryable":false,"correlation_id":"a7ac6d5a-f27b-4456-b0cc-83d0f449e928","details":{"task_id":"T-P1-002","pending_dependencies":[{"task_id":"T-P1-001","status":"DRAFT"}]}}')
+E   assert 409 == 200
+E    +  where 409 = <Response [409 Conflict]>.status_code
+______________________ test_unknown_dependency_rejected _______________________
+tests\platform\test_tasks.py:67: in test_unknown_dependency_rejected
+    harness.create_task(env["batch_id"], "Orphan", dependencies=["T-P1-999"], expect=404)
+tests\platform\conftest.py:96: in create_task
+    return self.post("/api/v1/tasks", body)
+tests\platform\conftest.py:55: in post
+    assert response.status_code == expect, (url, response.status_code, response.text)
+E   AssertionError: ('/api/v1/tasks', 404, '{"code":"RES-0001","message":"RESOURCE_NOT_FOUND: dependency task T-P1-999 does not exist","retryable":false,"correlation_id":"6c4ed166-3c0a-4819-8a3b-029820434784","details":{"resource":"dependency task","id":"T-P1-999"}}')
+E   assert 404 == 201
+E    +  where 404 = <Response [404 Not Found]>.status_code
+___________________________ test_parent_must_exist ____________________________
+tests\platform\test_tasks.py:72: in test_parent_must_exist
+    harness.create_task(env["batch_id"], "Orphan", parent_id="T-P1-999", expect=404)
+tests\platform\conftest.py:96: in create_task
+    return self.post("/api/v1/tasks", body)
+tests\platform\conftest.py:55: in post
+    assert response.status_code == expect, (url, response.status_code, response.text)
+E   AssertionError: ('/api/v1/tasks', 404, '{"code":"RES-0001","message":"RESOURCE_NOT_FOUND: parent task T-P1-999 does not exist","retryable":false,"correlation_id":"3e273794-7028-43f3-9435-1befb5940a6f","details":{"resource":"parent task","id":"T-P1-999"}}')
+E   assert 404 == 201
+E    +  where 404 = <Response [404 Not Found]>.status_code
+___________________ test_agent_cannot_set_accepted_directly ___________________
+tests\platform\test_tasks.py:120: in test_agent_cannot_set_accepted_directly
+    assert result.status_code == 409
+E   assert 200 == 409
+E    +  where 200 = <Response [200 OK]>.status_code
+______________ test_blocked_requires_reason_owner_and_condition _______________
+tests\platform\test_tasks.py:133: in test_blocked_requires_reason_owner_and_condition
+    assert result.status_code == 422
+E   assert 409 == 422
+E    +  where 409 = <Response [409 Conflict]>.status_code
+============================== warnings summary ===============================
+C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\site-packages\starlette\testclient.py:37
+  C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\site-packages\starlette\testclient.py:37: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = typing.Callable[[], typing.ContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/platform/test_artifacts_audit.py::test_audit_login_failure_recorded
+FAILED tests/platform/test_reports_board.py::test_board_completion_counts_only_accepted
+FAILED tests/platform/test_restart_persistence.py::test_state_persists_across_engine_restart
+FAILED tests/platform/test_tasks.py::test_parent_child_dependency_blocks_child_until_parent_accepted
+FAILED tests/platform/test_tasks.py::test_unknown_dependency_rejected - Asser...
+FAILED tests/platform/test_tasks.py::test_parent_must_exist - AssertionError:...
+FAILED tests/platform/test_tasks.py::test_agent_cannot_set_accepted_directly
+FAILED tests/platform/test_tasks.py::test_blocked_requires_reason_owner_and_condition
+================== 8 failed, 27 passed, 1 warning in 22.06s ===================

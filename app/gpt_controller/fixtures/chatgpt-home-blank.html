@@ -1,0 +1,22 @@
+<!doctype html>
+<!-- AIEO M2 新会话落地页夹具（chatgpt.com 主页等价物：无 user unit、composer 就绪、body 文本充分）。 -->
+<html lang="zh-CN">
+  <body>
+    <header>ChatGPT 仿真主页</header>
+    <main>
+      <h1>准备就绪</h1>
+      <p>AIEO 新会话落地页仿真。此页面没有任何会话 unit，用于验证"跳转主页开全新空白会话"的
+        轮换语义：composer 可用、无历史消息、页面主体文本超过就绪阈值。此处填充文本用于满足
+        新会话就绪判定对 body 文本长度的要求，内容本身没有业务含义，仅用于本地仿真测试。</p>
+      <p>补充说明：AIEO 平台契约 v1.0 对新会话的要求是不继承任何摘要、历史或旧提示词，
+        交接材料只允许通过 GitPointer 指向仓库中固定 commit 的 manifest 与文件。
+        就绪判定还要求页面主体文本充分、composer 存在且没有任何 user unit，
+        全部满足后才允许在新会话继续派单，否则按未就绪继续等待直至超时失败。</p>
+    </main>
+    <form>
+      <button type="button" data-testid="stop-button" aria-label="Stop" style="display:none">停止</button>
+    </form>
+    <div id="context-limit-banner" role="alert" style="display:none">上下文窗口已达上限</div>
+    <div aria-label="Ask ChatGPT" contenteditable="true" id="prompt-textarea"></div>
+  </body>
+</html>

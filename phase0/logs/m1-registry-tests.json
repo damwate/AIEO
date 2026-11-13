@@ -1,0 +1,43 @@
+{
+  "started_at": "2026-11-12T05:37:22.283Z",
+  "finished_at": "2026-11-12T05:37:28.672Z",
+  "node": "v24.14.0",
+  "total": 8,
+  "passed": 8,
+  "failed": 0,
+  "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM",
+  "tests": [
+    {
+      "name": "登记成功并持久化原文、hash、unit 元数据与完整幂等键",
+      "result": "PASS"
+    },
+    {
+      "name": "AIEO_M1_FAIL_FIRST 首次失败后使用同 artifact/correlation 重试成功",
+      "result": "PASS"
+    },
+    {
+      "name": "重复登记返回已有 artifact_id 且不新增记录",
+      "result": "PASS"
+    },
+    {
+      "name": "原始 hash 变化时拒绝复用旧记录且不新增",
+      "result": "PASS"
+    },
+    {
+      "name": "登记失败与补登记路径不调用 GPT 发送",
+      "result": "PASS"
+    },
+    {
+      "name": "未通过 Schema 的任意文本不得登记为审查报告",
+      "result": "PASS"
+    },
+    {
+      "name": "核心登记入口缺少 execution_id 必须失败，不能绕过上派单校验",
+      "result": "PASS"
+    },
+    {
+      "name": "核心登记入口缺少 correlation_id 必须失败，不能绕过上派单校验",
+      "result": "PASS"
+    }
+  ]
+}

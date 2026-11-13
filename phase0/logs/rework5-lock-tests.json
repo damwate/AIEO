@@ -1,0 +1,33 @@
+{
+  "test_target": "phase0/e2e-poc/session_lock.mjs（生产锁模块，两个生产脚本同源接入）",
+  "method": "场景1-3 同进程/文件注入；场景4-5 真实 spawn 独立 node 子进程跨进程竞争",
+  "executed_at": "2026-11-11T18:29:22.934Z",
+  "all_pass": true,
+  "scenarios": [
+    {
+      "name": "1 同进程二次获取被拒",
+      "pass": true,
+      "detail": "SESSION_LOCK_CONFLICT，holder pid=18156"
+    },
+    {
+      "name": "2 释放后可重新获取",
+      "pass": true,
+      "detail": "release 删除锁文件，重新获取成功"
+    },
+    {
+      "name": "3 死进程残留锁被回收",
+      "pass": true,
+      "detail": "pid=999999999 不存在，stale 锁被安全回收"
+    },
+    {
+      "name": "4 双实例跨进程竞争：持锁期间第二实例被拒",
+      "pass": true,
+      "detail": "acquired pid=15856, rejected pid=21104（SESSION_LOCK_CONFLICT，先于任何浏览器操作终止）"
+    },
+    {
+      "name": "5 锁释放后新实例可正常获取",
+      "pass": true,
+      "detail": "child3 acquired pid=21368"
+    }
+  ]
+}

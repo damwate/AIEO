@@ -1,0 +1,11 @@
+[00:20:31] === POC-04 Git 自动采集开始 ===
+[00:20:32] 一次性测试仓库已建立: D:\AIEO\runtime\git-poc-test-repo
+[00:20:32] 步骤1 [检查工作区状态] PASS - git status --porcelain 输出为空（干净），rc=0
+[00:20:32] 步骤2 [记录基线 Commit] PASS - 基线=c9bd71a5b17a0dfc85778e5a0d59312dba2f0b3d 分支=main
+[00:20:32] 步骤3 [创建任务分支] PASS - 当前分支=feature/AIEO-POC-001
+[00:20:32] 步骤4 [修改测试文件] PASS - 新增 src/calc.py，status 显示: '?? src/'
+[00:20:32] 步骤5 [执行简单测试] PASS - exit=0, stdout='TEST PASS: 2/2 assertions'
+[00:20:32] 步骤6 [提交 Git] PASS - [feature/AIEO-POC-001 772172a] feat(POC-001): add calc.py add() 实现与自测
+[00:20:33] 步骤7 [读取 Commit SHA] PASS - SHA=772172a981033c420ce003a015acd5ec1ae71f78
+[00:20:33] 步骤8 [读取 Git Diff] PASS - 变更文件=['src/calc.py']
+[00:20:33] 步骤9 [工作区干净检查] PASS - 能检出未提交文件=True; 清理后干净=True

@@ -1,0 +1,25 @@
+✔ ③ 反向门：preSendStopVisible=true 时拒绝发送（PRE_SEND_GENERATION_ACTIVE） (14.3478ms)
+✔ ③ 严格时序：停止按钮先于新 user unit 可见不计数；tail 确认后才验收 (2.7265ms)
+✔ ③ 严格时序：停止按钮可见但始终无新 user unit → SEND_ACCEPTANCE_UNCERTAIN（不重发） (2.311ms)
+✔ ③ 发送双验一站式：插入回读一致 → Enter → 验收回执 (3.1185ms)
+✔ ③ 生成等待：观察生成 → 结束；从未观察即结束也要求先观察 (2.7023ms)
+✔ ④ 生成超时：300s 窗口内未确认生成结束 → GENERATION_TIMEOUT（gpt_resend_required=false） (4.6082ms)
+✔ ⑧ 上限检测：横幅文本命中即 CONTEXT_LIMIT_STOP；无横幅持续检测后放行 (1.6395ms)
+✔ ⑧ 派单前上限检测：横幅出现 → 拒绝派单且不发送 (2.6645ms)
+✔ ⑧ 轮换执行：GitPointer 交接 + 旧轮已终结 → 跳转主页开全新空白会话 (44.1109ms)
+✔ ⑧ 轮换决策 fail-closed：摘要交接/旧轮未终结 → BLOCKED 且不做任何页面动作 (25.1938ms)
+✔ 全管线（不登记）：发送双验 → 生成 → 确认窗 → 两次读取 → artifact 落盘回读 → 完成判定全绿 (28.02ms)
+✔ 全管线（M1 登记）：三 ID + Schema 绑定 + 回读 artifact 登记 REGISTERED + 会话 URL 捕获 (920.9544ms)
+✔ 全管线：两次完整读取之间回复被改写 → INBOUND_UNSTABLE_READ fail-closed，不写成功结果 (4.8244ms)
+✔ 禁止盲发：DOM 契约自检失败（composer 缺失）→ 拒绝派单且不插入任何文本 (1.155ms)
+✔ 出站超限：1200 字节上限在接触浏览器前拒绝（不插文本、不回车、不加 unit） (1.0271ms)
+✔ ⑧ 可滚动虚拟列表：分窗向上定位 + 向下拼接 + 独立逻辑序列证明完整 (1.6476ms)
+✔ ⑧ 可滚动虚拟列表：集合变化且无独立序列 → INBOUND_WINDOW_COMPLETENESS_UNPROVEN (2.8798ms)
+ℹ tests 17
+ℹ suites 0
+ℹ pass 17
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1566.4318

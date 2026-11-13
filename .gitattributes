@@ -1,0 +1,7 @@
+# 日志文件按字节处理，不做 EOL 转换；审查 manifest 的 SHA-256 基准=磁盘字节=Git blob 字节（L-011.7）
+*.log binary
+# 证据目录整体字节化（T-P1-902 集成验收）：证据 JSON/NDJSON/patch 等按磁盘字节原样入库，
+# autocrlf 不得在提交时规范化，否则 blob ≠ 磁盘字节、manifest 核验必然失败
+phase1/logs/** binary
+# 派单/复核证据目录同理字节化（T-P1-902 r2 起 phase0/logs 证据入 manifest）
+phase0/logs/** binary

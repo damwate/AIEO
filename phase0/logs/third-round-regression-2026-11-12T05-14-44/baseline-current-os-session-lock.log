@@ -1,0 +1,11 @@
+$ C:\Program Files\nodejs\node.exe D:\AIEO\phase0\e2e-poc\test_session_lock_v6.mjs
+[2026-11-12T05:15:05.553Z] START
+[PASS] S1 基础互斥/释放 — OS 句柄互斥 + 正常释放
+[PASS] S2 双实例真实竞争 — 1 胜（pid=2216）+ 2 conflict（OS 句柄裁决）
+[PASS] S3 临界区独占 — 父进程持锁期间观察者 0 获取、冲突 3/3（子进程经完整生产 acquire 尝试）
+[PASS] S4 持有者硬杀 → 内核自动释放 — SIGKILL 无 release，下一实例 ~2s 内成功接管（独立进程树场景）
+[PASS] S5 释放后重取 + 审计更新 — 句柄关闭即释放；内容仅审计
+[PASS] S6 多轮竞争 — 3 轮 × 3 竞争者绝无同时双持
+LOCK V6 TESTS: ALL PASS
+
+[2026-11-12T05:15:17.174Z] EXIT code=0 signal=null timed_out=false

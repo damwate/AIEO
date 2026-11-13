@@ -1,0 +1,67 @@
+{
+  "verified_at": "2026-11-12T04:46:36.027Z",
+  "dispatch_directory": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-12T04-41-46",
+  "checks": {
+    "reply_size_matches": true,
+    "reply_sha_matches": true,
+    "reply_readback_matches": true,
+    "raw_size_matches": true,
+    "raw_sha_matches": true,
+    "raw_readback_matches": true,
+    "raw_units_recompose_exactly": true,
+    "result_reply_exact": true,
+    "unit_metadata_consistent": true,
+    "complete_range_proof_persisted": true,
+    "stability_complete": true,
+    "completion_checks_complete": true,
+    "reply_over_1200_bytes": true,
+    "json_schema_binding_pass": true,
+    "parsed_text_poc_length": true,
+    "m1_record_exists": true,
+    "m1_record_content_exact": true,
+    "m1_record_hash_exact": true,
+    "m1_record_size_exact": true,
+    "m1_record_ids_exact": true,
+    "m1_record_units_exact": true,
+    "m1_status_success": true,
+    "m1_scope_honest": true
+  },
+  "reply_bytes": 4072,
+  "reply_sha256": "2fded5cb51268548da8669d4aa9732f890b2067ff447527e9969328766749751",
+  "raw_units_bytes": 8708,
+  "raw_units_sha256": "473cf7c660c6c43fb4956a31ecc9f701d9548d860e897332e80ba4fd0b5ff33e",
+  "unit_count": 1,
+  "unit_keys": [
+    "fallback-turn-5:2:assistant"
+  ],
+  "assistant_uuid": "e85bceb0-d929-4f97-937c-8d16def055b8",
+  "range_windows": 2,
+  "range_end_reason": "DOM_BOTTOM",
+  "stable_read_interval_ms": 3553,
+  "json_schema_binding": {
+    "status": "PASS",
+    "json": {
+      "status": "PASS",
+      "artifact_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-12T04-41-46\\reply.txt",
+      "artifact_sha256": "2fded5cb51268548da8669d4aa9732f890b2067ff447527e9969328766749751",
+      "auxiliary_prefix_removed": true,
+      "auxiliary_prefix": "ChatGPT 说：",
+      "full_document_parsed": true
+    },
+    "schema": {
+      "status": "PASS",
+      "schema_path": "D:/AIEO/contracts/v1.0/gpt-inbound-poc.schema.json",
+      "errors": []
+    },
+    "binding": {
+      "status": "PASS",
+      "task_id": "PASS",
+      "execution_id": "PASS",
+      "correlation_id": "PASS"
+    }
+  },
+  "poc_text_code_points": 1313,
+  "m1_artifact_id": "ART-M1-000002",
+  "m1_registry_record_count": 2,
+  "all_checks_pass": true
+}

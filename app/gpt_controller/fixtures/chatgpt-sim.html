@@ -1,0 +1,24 @@
+<!doctype html>
+<!-- AIEO M2 本地 DOM 契约夹具（仿真 HTML，不是 ChatGPT 真实页面）。
+     结构契约与 src/dom_extract.mjs 一致：
+       - unit 锚点 [data-content-search-unit-key]，key = "<id>:<role>"
+       - assistant unit 内唯一 [data-dil-response][data-dil-message-id]
+       - composer [aria-label="Ask ChatGPT"]
+       - 停止按钮 [data-testid="stop-button"]（生成中才可见）
+       - 上下文上限横幅 #context-limit-banner（默认隐藏） -->
+<html lang="zh-CN">
+  <body>
+    <header>AIEO 仿真会话</header>
+    <div id="thread" style="overflow-y:auto">
+      <div data-content-search-unit-key="u0001:user" data-role="user">请审查模块边界文档 §2。</div>
+      <div data-content-search-unit-key="a0002:assistant" data-role="assistant">
+        <div data-dil-response data-dil-message-id="3f2a7b8c-1c41-4091-817f-000000000001">已读取 §2，等待审查材料 GitPointer。</div>
+      </div>
+    </div>
+    <form>
+      <button type="button" data-testid="stop-button" aria-label="Stop" style="display:none">停止</button>
+    </form>
+    <div id="context-limit-banner" role="alert" style="display:none">上下文窗口已达上限</div>
+    <div aria-label="Ask ChatGPT" contenteditable="true" id="prompt-textarea"></div>
+  </body>
+</html>

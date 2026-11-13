@@ -1,0 +1,28 @@
+ChatGPT 说：
+
+{
+"result": "REWORK",
+"reviewed_commit": "7872e869352d910862b4602ea12412d6ccb12839",
+"findings": [
+{
+"finding_id": "F-501",
+"severity": "MAJOR",
+"file": "app/platform/api.py",
+"description": "F-403 服务身份白名单仍存在间接越权路径。GET /api/v1/messages/dead-letter 虽然被加入 SERVICE_ALLOWED_ENDPOINTS，但该路由内部直接调用 messaging.sweep()，会执行 Outbox 状态修改，包括 PENDING→SENT、RETRYING→PENDING、ACK 超时重试及 DEAD_LETTER 转换。结果是 service 身份虽然不能调用 POST /api/v1/messages/sweep，却可以通过 GET /api/v1/messages/dead-letter 执行相同的管理操作。现有测试只验证 POST sweep 返回 403，没有验证 GET dead-letter 的副作用。违反 F-403 声明的管理操作仅限人类用户。",
+"recommendation": "将 dead-letter 查询与 sweep 操作彻底分离。GET /api/v1/messages/dead-letter 只允许读取现有记录，不得调用 messaging.sweep()；需要维护时使用独立的人类授权管理端点。增加 service token 调用 GET dead-letter 的数据库状态前后对比测试，证明不会触发任何 Outbox 状态变更。"
+},
+{
+"finding_id": "F-502",
+"severity": "MAJOR",
+"file": "app/gpt_controller/src/inbound_reply.mjs",
+"description": "F-402 的 units 结构一致性校验仍不完整。assertInboundExtensionGate() 对 units 元素检查了 role、key、text、text_sha256 和 size_bytes，但没有检查 unit.assistant_uuid。只检查 snapshot.assistant_uuid 非空，未验证其与 units 中对应 assistant_uuid 一致。因此，unit 内 UUID 缺失或伪造、而快照顶层 UUID 保持合法的结构矛盾仍可能通过最终防线。交接包 §4 对 F-402 的整改声明明确要求每个 unit 的 assistant_uuid 为非空字符串。",
+"recommendation": "在 unitsMalformed 校验中增加每个 unit.assistant_uuid 的非空字符串校验，并要求 snapshot.assistant_uuid 与单 unit 核心路径对应的 unit.assistant_uuid 完全一致。增加缺失、空字符串、类型错误及顶层与 unit UUID 不一致的注入式全管线负例，确认均返回 INBOUND_REPLY_SNAPSHOT_MALFORMED 且不生成 result.json。"
+}
+],
+"constraints": [
+"本轮仅审查 M1、M2、M4 模块，不包含 M3，也不构成四模块集成验收。",
+"真实 chatgpt.com 收发、私有 GitPointer 实际拉取及 M1 真实 broker/自动 ACK 仍未验收，DEC-017 扩展场景继续保持 fail-closed。",
+"F-501、F-502 修复后必须生成新 commit，并针对最终 commit 重新执行受影响模块测试和独立复审。"
+],
+"summary": "材料核验通过：manifest SHA 与申报一致，120/120 文件覆盖，120/120 Git blob 匹配，0 mismatch，退出码 0。C1 锚定 tag review-anchor/T-P1-901-r6 可达，指向 3eb432ebc6a04f4cfc7c62a6c96b0388917b428c；通过比较两个 commit 的 Git tree，确认差异仅为新增 blob-recheck 证据目录，F-404 整改成立。实读 M1、M2、M4 核心实现及测试证据，确认 M1 F-403 和 M2 F-402 仍各存在一项 MAJOR 缺陷。M1 F-403、M2 F-402 不予关闭；M4 未发现新的可复现 MAJOR 缺陷。最终判定 REWORK。"
+}
