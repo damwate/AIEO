@@ -1,0 +1,77 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aieo.local/contracts/v1.0/development-report.schema.json",
+  "title": "AIEO Development Report v1.0 (03-协议 §6)",
+  "description": "智谱开发报告本体（03-协议 §6 结构）；登记接口请求/响应见 reports-development.schema.json。status 与 DevReportIn 枚举一致（COMPLETED/BLOCKED）；git 与 tests 为报告自述字段——AIEO 必须自行执行 Git 检查与测试取证（03-协议 §6：报告中的数字不能替代系统实际采集的证据）。",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["task_id", "execution_id", "status", "implementation_summary"],
+  "properties": {
+    "task_id": { "type": "string", "pattern": "^T-(P\\d+-)?\\d{3,}$" },
+    "execution_id": { "type": "string", "pattern": "^EXEC-\\d{3,}$" },
+    "status": { "enum": ["COMPLETED", "BLOCKED"] },
+    "implementation_summary": { "type": "string", "minLength": 1 },
+    "git": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["repository", "branch", "base_commit", "commit_sha"],
+      "properties": {
+        "repository": { "type": "string", "minLength": 1 },
+        "branch": { "type": "string", "minLength": 1 },
+        "base_commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "commit_sha": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "changed_files": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "tests": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["executed"],
+      "properties": {
+        "executed": { "type": "boolean" },
+        "commands": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "passed": { "type": "integer", "minimum": 0 },
+        "failed": { "type": "integer", "minimum": 0 },
+        "log_artifact_id": { "type": "string", "pattern": "^ART-[A-Z0-9-]+$" }
+      }
+    },
+    "blocked_reason": { "type": "string" },
+    "blocked_owner": { "type": "string" },
+    "unblock_condition": { "type": "string" },
+    "known_issues": { "type": "array", "items": { "type": "string" } },
+    "knowledge_updates_required": { "type": "boolean" },
+    "self_assessment": { "type": "string" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "status": { "const": "BLOCKED" } } },
+      "then": {
+        "required": ["blocked_reason", "blocked_owner", "unblock_condition"],
+        "properties": {
+          "blocked_reason": { "type": "string" },
+          "blocked_owner": { "type": "string" },
+          "unblock_condition": { "type": "string" }
+        }
+      }
+    }
+  ],
+  "examples": [
+    {
+      "task_id": "T-P1-001",
+      "execution_id": "EXEC-001",
+      "status": "COMPLETED",
+      "implementation_summary": "完成供应商接口适配器",
+      "git": {
+        "repository": "AI-IMAGE-SERVICE",
+        "branch": "feature/T-P1-001-provider-adapter",
+        "base_commit": "0000000000000000000000000000000000000000",
+        "commit_sha": "1111111111111111111111111111111111111111",
+        "changed_files": ["src/providers/base.py"]
+      },
+      "tests": { "executed": true, "commands": ["pytest tests/providers -q"], "passed": 25, "failed": 0 },
+      "known_issues": [],
+      "knowledge_updates_required": true,
+      "self_assessment": "实现完成，等待独立审查"
+    }
+  ]
+}

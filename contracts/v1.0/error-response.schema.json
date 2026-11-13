@@ -1,0 +1,16 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aieo.local/contracts/v1.0/error-response.schema.json",
+  "title": "AIEO Unified Error Response v1.0 (C3 §4.2)",
+  "description": "统一错误响应体；与 app/platform/errors.py error_body() 实装一致。code 为 C3 九组编号（SYS/REQ/AUTH/RES/TASK/MSG/PROVIDER/GIT/ART-4 位序号）；details 可选（REQ-0002 必须给字段级明细）；correlation_id 必填（透传或服务端生成回填）。",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["code", "message", "retryable", "correlation_id"],
+  "properties": {
+    "code": { "type": "string", "pattern": "^(SYS|REQ|AUTH|RES|TASK|MSG|PROVIDER|GIT|ART)-\\d{4}$" },
+    "message": { "type": "string", "minLength": 1 },
+    "details": { "type": "object" },
+    "retryable": { "type": "boolean" },
+    "correlation_id": { "type": "string", "minLength": 1, "maxLength": 64 }
+  }
+}

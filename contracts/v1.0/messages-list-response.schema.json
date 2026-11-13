@@ -1,0 +1,83 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aieo.local/contracts/v1.0/messages-list-response.schema.json",
+  "title": "AIEO Message List Response v1.0",
+  "description": "GET /api/v1/messages（含 dead-letter 查询）响应：_envelope 分页信封；items 为 message_view 行（与 messages-create.schema.json 的 response 同构）。过滤参数 direction/target_agent_id/status/task_id/correlation_id。",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["items", "page", "page_size", "total"],
+  "properties": {
+    "items": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["message_id", "schema_version", "message_type", "direction", "source_agent_id", "target_agent_id", "project_id", "correlation_id", "payload", "status", "retry_count", "max_retries", "created_at", "updated_at"],
+        "properties": {
+          "message_id": { "type": "string", "pattern": "^MSG-\\d{8}-\\d{6}$" },
+          "schema_version": { "type": "string", "pattern": "^\\d+\\.\\d+$" },
+          "message_type": { "enum": ["TASK_PLAN_REQUEST", "TASK_PLAN_SUBMITTED", "ARCH_REVIEW_REQUEST", "ARCH_REVIEW_SUBMITTED", "TASK_ASSIGNED", "TASK_ACCEPTED", "PROGRESS_UPDATED", "BLOCKER_REPORTED", "DEVELOPMENT_COMPLETED", "CODE_REVIEW_REQUEST", "CODE_REVIEW_SUBMITTED", "TEST_ACCEPTANCE_REQUEST", "TEST_ACCEPTANCE_SUBMITTED", "AUDIT_REQUEST", "AUDIT_SUBMITTED", "APPROVAL_REQUIRED"] },
+          "direction": { "enum": ["INBOUND", "OUTBOUND"] },
+          "source_agent_id": { "type": "string", "pattern": "^[A-Z0-9-]{1,32}$" },
+          "target_agent_id": { "type": "string", "pattern": "^[A-Z0-9-]{1,32}$" },
+          "project_id": { "type": "string", "pattern": "^[A-Z0-9-]{1,32}$" },
+          "batch_id": { "type": ["string", "null"], "pattern": "^BATCH-\\d{3,}$" },
+          "task_id": { "type": ["string", "null"], "pattern": "^T-(P\\d+-)?\\d{3,}$" },
+          "correlation_id": { "type": "string", "minLength": 1, "maxLength": 64 },
+          "payload": { "type": "object" },
+          "status": { "enum": ["PENDING", "SENT", "ACKED", "RETRYING", "DEAD_LETTER", "CANCELLED"] },
+          "retry_count": { "type": "integer", "minimum": 0 },
+          "max_retries": { "type": "integer", "minimum": 0 },
+          "next_retry_at": { "type": ["string", "null"], "format": "date-time" },
+          "last_error_code": { "type": ["string", "null"] },
+          "last_error_message": { "type": ["string", "null"] },
+          "delivered_at": { "type": ["string", "null"], "format": "date-time" },
+          "acked_at": { "type": ["string", "null"], "format": "date-time" },
+          "dead_lettered_at": { "type": ["string", "null"], "format": "date-time" },
+          "processing_status": { "oneOf": [{ "type": "null" }, { "enum": ["PENDING", "PROCESSING", "PROCESSED", "PROCESS_FAILED"] }] },
+          "processed_at": { "type": ["string", "null"], "format": "date-time" },
+          "created_at": { "type": "string", "format": "date-time" },
+          "updated_at": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "page": { "type": "integer", "minimum": 1 },
+    "page_size": { "type": "integer", "minimum": 1 },
+    "total": { "type": "integer", "minimum": 0 }
+  },
+  "examples": [
+    {
+      "items": [
+        {
+          "message_id": "MSG-20261114-000001",
+          "schema_version": "1.0",
+          "message_type": "DEVELOPMENT_COMPLETED",
+          "direction": "INBOUND",
+          "source_agent_id": "ZCODE-01",
+          "target_agent_id": "AIEO-ORCHESTRATOR",
+          "project_id": "AI-IMAGE-SERVICE",
+          "batch_id": "BATCH-001",
+          "task_id": "T-P1-001",
+          "correlation_id": "CORR-001",
+          "payload": { "task_id": "T-P1-001", "execution_id": "EXEC-001", "status": "COMPLETED", "implementation_summary": "完成" },
+          "status": "PENDING",
+          "retry_count": 0,
+          "max_retries": 8,
+          "next_retry_at": null,
+          "last_error_code": null,
+          "last_error_message": null,
+          "delivered_at": null,
+          "acked_at": null,
+          "dead_lettered_at": null,
+          "processing_status": "PENDING",
+          "processed_at": null,
+          "created_at": "2026-11-14T00:00:00.000000+00:00",
+          "updated_at": "2026-11-14T00:00:00.000000+00:00"
+        }
+      ],
+      "page": 1,
+      "page_size": 50,
+      "total": 1
+    }
+  ]
+}

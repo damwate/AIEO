@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aieo.local/contracts/v1.0/batches-create.schema.json",
+  "title": "AIEO Batch Create Request/Response v1.0",
+  "description": "POST /api/v1/batches 请求（BatchCreate）与响应（batches 表行）。batch_id 服务端生成（BATCH-<序号>）；初始状态 PLANNING；requirement+工程规范版本固定（04-规范 §7）。",
+  "anyOf": [
+    { "$ref": "#/$defs/request" },
+    { "$ref": "#/$defs/response" }
+  ],
+  "$defs": {
+    "request": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["project_id", "requirement", "engineering_standard_version", "knowledge_base_commit"],
+      "properties": {
+        "project_id": { "type": "string", "pattern": "^[A-Z0-9-]{1,32}$" },
+        "requirement": { "type": "string", "minLength": 1 },
+        "engineering_standard_version": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "knowledge_base_commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" }
+      }
+    },
+    "response": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["batch_id", "project_id", "requirement", "status", "engineering_standard_version", "knowledge_base_commit", "created_at", "updated_at"],
+      "properties": {
+        "batch_id": { "type": "string", "pattern": "^BATCH-\\d{3,}$" },
+        "project_id": { "type": "string", "pattern": "^[A-Z0-9-]{1,32}$" },
+        "requirement": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["PLANNING", "PLANNED", "EXECUTING", "COMPLETED", "CANCELLED"] },
+        "engineering_standard_version": { "type": "string", "minLength": 1 },
+        "knowledge_base_commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "created_at": { "type": "string", "format": "date-time" },
+        "updated_at": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "examples": [
+    {
+      "project_id": "AI-IMAGE-SERVICE",
+      "requirement": "增加一个生图供应商并支持故障切换",
+      "engineering_standard_version": "v1.0.0",
+      "knowledge_base_commit": "0000000000000000000000000000000000000000"
+    },
+    {
+      "batch_id": "BATCH-001",
+      "project_id": "AI-IMAGE-SERVICE",
+      "requirement": "增加一个生图供应商并支持故障切换",
+      "status": "PLANNING",
+      "engineering_standard_version": "v1.0.0",
+      "knowledge_base_commit": "0000000000000000000000000000000000000000",
+      "created_at": "2026-11-14T00:00:00.000000+00:00",
+      "updated_at": "2026-11-14T00:00:00.000000+00:00"
+    }
+  ]
+}

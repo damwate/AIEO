@@ -1,0 +1,100 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aieo.local/contracts/v1.0/reports-list-response.schema.json",
+  "title": "AIEO Report List Response v1.0",
+  "description": "GET /api/v1/reports?type=development|review|test 响应：_envelope 分页信封；items 为 reports.list_reports 混合报告条目（三形态 oneOf，与实装逐字段一致：development 的 result 字段取自 status 列 COMPLETED/BLOCKED；review/test 的 result 为 PASS/REWORK/BLOCKED）。",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["items", "page", "page_size", "total"],
+  "properties": {
+    "items": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          { "$ref": "#/$defs/development_item" },
+          { "$ref": "#/$defs/review_item" },
+          { "$ref": "#/$defs/test_item" }
+        ]
+      }
+    },
+    "page": { "type": "integer", "minimum": 1 },
+    "page_size": { "type": "integer", "minimum": 1 },
+    "total": { "type": "integer", "minimum": 0 }
+  },
+  "$defs": {
+    "development_item": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["type", "task_id", "execution_id", "result", "payload", "created_at"],
+      "properties": {
+        "type": { "const": "development" },
+        "task_id": { "type": "string", "pattern": "^T-(P\\d+-)?\\d{3,}$" },
+        "execution_id": { "type": "string", "pattern": "^EXEC-\\d{3,}$" },
+        "result": { "enum": ["COMPLETED", "BLOCKED"] },
+        "payload": { "type": "object" },
+        "created_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "review_item": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["type", "task_id", "execution_id", "reviewed_commit", "reviewer", "result", "task_package_hash", "base_commit", "payload", "created_at"],
+      "properties": {
+        "type": { "const": "review" },
+        "task_id": { "type": "string", "pattern": "^T-(P\\d+-)?\\d{3,}$" },
+        "execution_id": { "type": "string", "pattern": "^EXEC-\\d{3,}$" },
+        "reviewed_commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "reviewer": { "type": "string", "pattern": "^[A-Z0-9-]{1,32}$" },
+        "result": { "enum": ["PASS", "REWORK", "BLOCKED"] },
+        "task_package_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "base_commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "payload": { "type": "object" },
+        "created_at": { "type": "string", "format": "date-time" }
+      }
+    },
+    "test_item": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["type", "task_id", "execution_id", "commit_sha", "execution_result", "result", "payload", "created_at"],
+      "properties": {
+        "type": { "const": "test" },
+        "task_id": { "type": "string", "pattern": "^T-(P\\d+-)?\\d{3,}$" },
+        "execution_id": { "type": "string", "pattern": "^EXEC-\\d{3,}$" },
+        "commit_sha": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "execution_result": { "enum": ["EXECUTED_PASS", "EXECUTED_FAIL", "NOT_EXECUTED", "CLAIMED_ONLY", "BLOCKED"] },
+        "result": { "enum": ["PASS", "REWORK", "BLOCKED"] },
+        "artifact_id": { "type": ["string", "null"], "pattern": "^ART-[A-Z0-9-]+$" },
+        "payload": { "type": "object" },
+        "created_at": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "examples": [
+    {
+      "items": [
+        {
+          "type": "development",
+          "task_id": "T-P1-001",
+          "execution_id": "EXEC-001",
+          "result": "COMPLETED",
+          "payload": { "implementation_summary": "完成" },
+          "created_at": "2026-11-14T00:00:00.000000+00:00"
+        },
+        {
+          "type": "test",
+          "task_id": "T-P1-001",
+          "execution_id": "EXEC-001",
+          "commit_sha": "1111111111111111111111111111111111111111",
+          "execution_result": "EXECUTED_PASS",
+          "result": "PASS",
+          "artifact_id": null,
+          "payload": {},
+          "created_at": "2026-11-14T00:00:00.000000+00:00"
+        }
+      ],
+      "page": 1,
+      "page_size": 50,
+      "total": 2
+    }
+  ]
+}

@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aieo.local/contracts/v1.0/development-completed.payload.schema.json",
+  "title": "AIEO DEVELOPMENT_COMPLETED Payload v1.0",
+  "description": "ZCode→AIEO 开发完成消息 payload（03-协议 §3 DEVELOPMENT_COMPLETED）。实际构造见 app/zcode_bridge/src/mcp_server.mjs submit_result：payload={...开发报告(03-协议 §6 结构), session_id}；报告本体先经 POST /api/v1/reports/development 登记（幂等），消息随后入 Inbox。git.commit_sha 为 40 位十六进制（与 git_commits.sha 实装一致）。",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["task_id", "execution_id", "status", "implementation_summary"],
+  "properties": {
+    "task_id": { "type": "string", "pattern": "^T-(P\\d+-)?\\d{3,}$" },
+    "execution_id": { "type": "string", "pattern": "^EXEC-\\d{3,}$" },
+    "status": { "enum": ["COMPLETED", "BLOCKED"] },
+    "implementation_summary": { "type": "string", "minLength": 1 },
+    "git": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["repository", "branch", "base_commit", "commit_sha"],
+      "properties": {
+        "repository": { "type": "string", "minLength": 1 },
+        "branch": { "type": "string", "minLength": 1 },
+        "base_commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "commit_sha": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "changed_files": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      }
+    },
+    "tests": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["executed"],
+      "properties": {
+        "executed": { "type": "boolean" },
+        "commands": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+        "passed": { "type": "integer", "minimum": 0 },
+        "failed": { "type": "integer", "minimum": 0 },
+        "log_artifact_id": { "type": "string", "pattern": "^ART-[A-Z0-9-]+$" }
+      }
+    },
+    "blocked_reason": { "type": "string" },
+    "blocked_owner": { "type": "string" },
+    "unblock_condition": { "type": "string" },
+    "known_issues": { "type": "array", "items": { "type": "string" } },
+    "knowledge_updates_required": { "type": "boolean" },
+    "self_assessment": { "type": "string" },
+    "session_id": { "type": "string" }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "status": { "const": "BLOCKED" } } },
+      "then": {
+        "required": ["blocked_reason", "blocked_owner", "unblock_condition"],
+        "properties": {
+          "blocked_reason": { "type": "string" },
+          "blocked_owner": { "type": "string" },
+          "unblock_condition": { "type": "string" }
+        }
+      }
+    }
+  ],
+  "examples": [
+    {
+      "task_id": "T-P1-001",
+      "execution_id": "EXEC-001",
+      "status": "COMPLETED",
+      "implementation_summary": "完成供应商接口适配器",
+      "git": {
+        "repository": "AI-IMAGE-SERVICE",
+        "branch": "feature/T-P1-001-provider-adapter",
+        "base_commit": "0000000000000000000000000000000000000000",
+        "commit_sha": "1111111111111111111111111111111111111111",
+        "changed_files": ["src/providers/base.py", "src/providers/new_provider.py"]
+      },
+      "tests": {
+        "executed": true,
+        "commands": ["pytest tests/providers -q"],
+        "passed": 25,
+        "failed": 0,
+        "log_artifact_id": "ART-TEST-001"
+      },
+      "known_issues": [],
+      "knowledge_updates_required": true,
+      "self_assessment": "实现完成，等待独立审查",
+      "session_id": "SESS-001"
+    }
+  ]
+}

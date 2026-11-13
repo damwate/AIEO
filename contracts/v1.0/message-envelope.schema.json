@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aieo.local/contracts/v1.0/message-envelope.schema.json",
+  "title": "AIEO Message Envelope v1.0 (C1 §2.2)",
+  "description": "16 message_type 的通用消息信封；字段规则逐字段对应 C1 §2.2 冻结表与 app/platform/schemas.py MessageIn。条件必填由 message_type 决定（app/platform/messaging.py register_inbound_message 实装）：task 级必须携带 batch_id+task_id；batch 级必须携带 batch_id 且不得携带 task_id；project 级 batch_id/task_id 均须为空。未知字段接收端必须忽略（C1 §2.2 规则 4），故顶层 additionalProperties 为 true。payload 上限 256 KB（M1 实装 MESSAGE_PAYLOAD_MAX_BYTES），体积约束不在 JSON Schema 表达范围。",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "schema_version",
+    "message_id",
+    "message_type",
+    "created_at",
+    "source",
+    "target",
+    "project_id",
+    "correlation_id",
+    "payload"
+  ],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^\\d+\\.\\d+$", "maxLength": 16 },
+    "message_id": { "type": "string", "pattern": "^MSG-\\d{8}-\\d{6}$", "maxLength": 64 },
+    "message_type": {
+      "enum": [
+        "TASK_PLAN_REQUEST", "TASK_PLAN_SUBMITTED",
+        "ARCH_REVIEW_REQUEST", "ARCH_REVIEW_SUBMITTED",
+        "TASK_ASSIGNED", "TASK_ACCEPTED", "PROGRESS_UPDATED", "BLOCKER_REPORTED",
+        "DEVELOPMENT_COMPLETED", "CODE_REVIEW_REQUEST", "CODE_REVIEW_SUBMITTED",
+        "TEST_ACCEPTANCE_REQUEST", "TEST_ACCEPTANCE_SUBMITTED",
+        "AUDIT_REQUEST", "AUDIT_SUBMITTED", "APPROVAL_REQUIRED"
+      ]
+    },
+    "created_at": { "type": "string", "format": "date-time" },
+    "source": { "$ref": "#/$defs/agent_ref" },
+    "target": { "$ref": "#/$defs/agent_ref" },
+    "project_id": { "type": "string", "pattern": "^[A-Z0-9-]{1,32}$" },
+    "batch_id": { "type": ["string", "null"], "pattern": "^BATCH-\\d{3,}$" },
+    "task_id": { "type": ["string", "null"], "pattern": "^T-(P\\d+-)?\\d{3,}$" },
+    "correlation_id": { "type": "string", "pattern": "^(CORR-\\d{3,}|[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$", "maxLength": 64 },
+    "payload": { "type": "object" }
+  },
+  "$defs": {
+    "agent_ref": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["agent_id", "agent_type"],
+      "properties": {
+        "agent_id": { "type": "string", "pattern": "^[A-Z0-9-]{1,32}$" },
+        "agent_type": { "enum": ["system", "developer", "reviewer", "tester", "auditor", "user"] }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "message_type": { "enum": ["TASK_ASSIGNED", "TASK_ACCEPTED", "PROGRESS_UPDATED", "BLOCKER_REPORTED", "DEVELOPMENT_COMPLETED", "CODE_REVIEW_REQUEST", "CODE_REVIEW_SUBMITTED", "TEST_ACCEPTANCE_REQUEST", "TEST_ACCEPTANCE_SUBMITTED"] } } },
+      "then": {
+        "required": ["batch_id", "task_id"],
+        "properties": { "batch_id": { "type": "string" }, "task_id": { "type": "string" } }
+      }
+    },
+    {
+      "if": { "properties": { "message_type": { "enum": ["TASK_PLAN_REQUEST", "TASK_PLAN_SUBMITTED", "ARCH_REVIEW_REQUEST", "ARCH_REVIEW_SUBMITTED", "AUDIT_REQUEST", "AUDIT_SUBMITTED"] } } },
+      "then": {
+        "required": ["batch_id"],
+        "properties": { "batch_id": { "type": "string" }, "task_id": { "const": null } }
+      }
+    },
+    {
+      "if": { "properties": { "message_type": { "const": "APPROVAL_REQUIRED" } } },
+      "then": {
+        "properties": { "batch_id": { "const": null }, "task_id": { "const": null } }
+      }
+    }
+  ]
+}

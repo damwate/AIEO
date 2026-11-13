@@ -1,0 +1,21 @@
+[
+  { "required_capability": "message-envelope", "implementation_status": "READY", "test_status": "READY", "acceptance_batch": "T-P1-905" },
+  { "required_capability": "task-plan-request.payload", "implementation_status": "READY", "test_status": "READY", "acceptance_batch": "T-P1-905" },
+  { "required_capability": "task-plan-submitted.payload", "implementation_status": "READY", "test_status": "READY", "acceptance_batch": "T-P1-905" },
+  { "required_capability": "development-completed.payload", "implementation_status": "READY", "test_status": "READY", "acceptance_batch": "T-P1-905" },
+  { "required_capability": "development-report", "implementation_status": "READY", "test_status": "READY", "acceptance_batch": "T-P1-905" },
+  { "required_capability": "test-report", "implementation_status": "READY", "test_status": "READY", "acceptance_batch": "T-P1-905" },
+  { "required_capability": "error-response", "implementation_status": "READY", "test_status": "READY", "acceptance_batch": "T-P1-905" },
+  { "required_capability": "projects-create", "implementation_status": "READY", "test_status": "READY", "acceptance_batch": "T-P1-905" },
+  { "required_capability": "batches-create", "implementation_status": "READY", "test_status": "READY", "acceptance_batch": "T-P1-905" },
+  { "required_capability": "tasks-create", "implementation_status": "READY", "test_status": "READY", "acceptance_batch": "T-P1-905" },
+  { "required_capability": "tasks-event", "implementation_status": "READY", "test_status": "READY", "acceptance_batch": "T-P1-905" },
+  { "required_capability": "tasks-detail-response", "implementation_status": "READY", "test_status": "READY", "acceptance_batch": "T-P1-905" },
+  { "required_capability": "tasks-list-response", "implementation_status": "READY", "test_status": "READY", "acceptance_batch": "T-P1-905" },
+  { "required_capability": "messages-create", "implementation_status": "READY", "test_status": "READY", "acceptance_batch": "T-P1-905" },
+  { "required_capability": "messages-ack", "implementation_status": "READY", "test_status": "READY", "acceptance_batch": "T-P1-905" },
+  { "required_capability": "messages-list-response", "implementation_status": "READY", "test_status": "READY", "acceptance_batch": "T-P1-905" },
+  { "required_capability": "reports-development", "implementation_status": "READY", "test_status": "READY", "acceptance_batch": "T-P1-905" },
+  { "required_capability": "reports-test", "implementation_status": "READY", "test_status": "READY", "acceptance_batch": "T-P1-905" },
+  { "required_capability": "reports-list-response", "implementation_status": "READY", "test_status": "READY", "acceptance_batch": "T-P1-905" }
+]

@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aieo.local/contracts/v1.0/tasks-list-response.schema.json",
+  "title": "AIEO Task List Response v1.0",
+  "description": "GET /api/v1/tasks 响应：api.py _envelope 分页信封 {items, page, page_size, total}；items 为 _task_view 任务对象（与 tasks-detail-response.schema.json 同构）。过滤参数 batch_id/status/parent_id；非法 status 过滤值→REQ-0001。",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["items", "page", "page_size", "total"],
+  "properties": {
+    "items": {
+      "type": "array",
+      "items": { "$ref": "https://aieo.local/contracts/v1.0/tasks-detail-response.schema.json" }
+    },
+    "page": { "type": "integer", "minimum": 1 },
+    "page_size": { "type": "integer", "minimum": 1 },
+    "total": { "type": "integer", "minimum": 0 }
+  },
+  "examples": [
+    {
+      "items": [
+        {
+          "task_id": "T-P1-001",
+          "batch_id": "BATCH-001",
+          "parent_id": null,
+          "title": "新增供应商接口适配器",
+          "status": "READY",
+          "priority": "P1",
+          "weight": 1.0,
+          "files_scope": ["src/providers/"],
+          "acceptance_criteria": ["实现统一接口"],
+          "engineering_standard_items": ["implementation", "testing"],
+          "engineering_standard_version": "v1.0.0",
+          "knowledge_base_commit": "0000000000000000000000000000000000000000",
+          "created_at": "2026-11-14T00:00:00.000000+00:00",
+          "updated_at": "2026-11-14T00:00:00.000000+00:00",
+          "dependencies": [],
+          "latest_execution": null,
+          "allowed_events": ["arch_review_pass"]
+        }
+      ],
+      "page": 1,
+      "page_size": 50,
+      "total": 1
+    }
+  ]
+}

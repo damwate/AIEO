@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aieo.local/contracts/v1.0/reports-development.schema.json",
+  "title": "AIEO Development Report Registration Request/Response v1.0",
+  "description": "POST /api/v1/reports/development（201）请求（DevReportIn）与响应（reports.register_dev_report 返回）。幂等：execution_id 唯一（development_reports 表 UNIQUE），重复→RES-0003 返回原登记结果 duplicate=true；BLOCKED 必带 blocked_reason/blocked_owner/unblock_condition（实装 REQ-0002）；登记成功由状态机推进 IN_PROGRESS→DEV_REPORTED。",
+  "anyOf": [
+    { "$ref": "#/$defs/request" },
+    { "$ref": "#/$defs/response" }
+  ],
+  "$defs": {
+    "request": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["task_id", "execution_id", "status"],
+      "properties": {
+        "task_id": { "type": "string", "pattern": "^T-(P\\d+-)?\\d{3,}$" },
+        "execution_id": { "type": "string", "pattern": "^EXEC-\\d{3,}$" },
+        "status": { "enum": ["COMPLETED", "BLOCKED"] },
+        "blocked_reason": { "type": ["string", "null"] },
+        "blocked_owner": { "type": ["string", "null"] },
+        "unblock_condition": { "type": ["string", "null"] },
+        "payload": { "type": "object" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "status": { "const": "BLOCKED" } } },
+          "then": {
+            "required": ["blocked_reason", "blocked_owner", "unblock_condition"],
+            "properties": {
+              "blocked_reason": { "type": "string" },
+              "blocked_owner": { "type": "string" },
+              "unblock_condition": { "type": "string" }
+            }
+          }
+        }
+      ]
+    },
+    "response": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["task_id", "execution_id", "status", "transition", "created_at", "duplicate"],
+      "properties": {
+        "task_id": { "type": "string", "pattern": "^T-(P\\d+-)?\\d{3,}$" },
+        "execution_id": { "type": "string", "pattern": "^EXEC-\\d{3,}$" },
+        "status": { "enum": ["COMPLETED", "BLOCKED"] },
+        "transition": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": true,
+              "required": ["from_status", "to_status"],
+              "properties": {
+                "from_status": { "type": "string", "minLength": 1 },
+                "to_status": { "type": "string", "minLength": 1 }
+              }
+            }
+          ]
+        },
+        "created_at": { "type": "string", "format": "date-time" },
+        "duplicate": { "type": "boolean" }
+      }
+    }
+  },
+  "examples": [
+    {
+      "task_id": "T-P1-001",
+      "execution_id": "EXEC-001",
+      "status": "COMPLETED",
+      "payload": { "implementation_summary": "完成供应商接口适配器" }
+    },
+    {
+      "task_id": "T-P1-001",
+      "execution_id": "EXEC-001",
+      "status": "COMPLETED",
+      "transition": { "from_status": "IN_PROGRESS", "to_status": "DEV_REPORTED" },
+      "created_at": "2026-11-14T00:00:00.000000+00:00",
+      "duplicate": false
+    }
+  ]
+}
