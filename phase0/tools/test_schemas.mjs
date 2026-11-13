@@ -335,6 +335,8 @@ const testReportFull = {
   payload: { commands: ["pytest tests/providers -q"], passed: 25, failed: 0 },
 };
 valid("test-report.schema.json", "测试报告正例", testReportFull);
+valid("test-report.schema.json", "测试报告 artifact_id 显式 null 正例（TestReportIn str|None）", changed(testReportFull, (v) => { v.artifact_id = null; }));
+invalid("test-report.schema.json", "测试报告 artifact_id 非法格式", changed(testReportFull, (v) => { v.artifact_id = "art-test-001"; }));
 invalid("test-report.schema.json", "测试报告 execution_result 非法", changed(testReportFull, (v) => { v.execution_result = "PASSED"; }));
 invalid("test-report.schema.json", "测试报告 result 非法", changed(testReportFull, (v) => { v.result = "SUCCESS"; }));
 invalid("test-report.schema.json", "测试报告 commit_sha 短 SHA", changed(testReportFull, (v) => { v.commit_sha = "abc123"; }));

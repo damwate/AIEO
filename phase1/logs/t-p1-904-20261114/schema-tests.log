@@ -76,6 +76,8 @@ PASS [development-report.schema.json] 开发报告 BLOCKED 带三字段正例 ->
 PASS [development-report.schema.json] 开发报告 BLOCKED 缺 unblock_condition -> false (/ must have required property 'unblock_condition'; / must match "then" schema)
 PASS [development-report.schema.json] 开发报告缺 task_id -> false (/ must have required property 'task_id')
 PASS [test-report.schema.json] 测试报告正例 -> true (valid)
+PASS [test-report.schema.json] 测试报告 artifact_id 显式 null 正例（TestReportIn str|None） -> true (valid)
+PASS [test-report.schema.json] 测试报告 artifact_id 非法格式 -> false (/artifact_id must match pattern "^ART-[A-Z0-9-]+$")
 PASS [test-report.schema.json] 测试报告 execution_result 非法 -> false (/execution_result must be equal to one of the allowed values)
 PASS [test-report.schema.json] 测试报告 result 非法 -> false (/result must be equal to one of the allowed values)
 PASS [test-report.schema.json] 测试报告 commit_sha 短 SHA -> false (/commit_sha must match pattern "^[0-9a-f]{40}$")
@@ -137,5 +139,5 @@ PASS [reports-list-response.schema.json] 报告列表三形态正例 -> true (va
 PASS [reports-list-response.schema.json] 报告列表 development result 枚举非法 -> false (/items/0/result must be equal to one of the allowed values; /items/0 must have required property 'reviewed_commit'; /items/0 must have required property 'reviewer'; /items/0 must have required property 'task_package_hash'; /items/0 must have required property 'base_commit'; /items/0/type must be equal to constant; /items/0 must have required property 'commit_sha'; /items/0 must have required property 'execution_result'; /items/0/type must be equal to constant; /items/0 must match exactly one schema in oneOf)
 PASS [reports-list-response.schema.json] 报告列表 review 缺 task_package_hash -> false (/items/0/type must be equal to constant; /items/0/result must be equal to one of the allowed values; /items/0 must have required property 'task_package_hash'; /items/0 must have required property 'commit_sha'; /items/0 must have required property 'execution_result'; /items/0/type must be equal to constant; /items/0 must match exactly one schema in oneOf)
 PASS [reports-list-response.schema.json] 报告列表缺 page_size -> false (/ must have required property 'page_size')
-SCHEMA_TEST_SUMMARY total=139 passed=139 failed=0
+SCHEMA_TEST_SUMMARY total=141 passed=141 failed=0
 exit=0

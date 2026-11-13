@@ -12,7 +12,7 @@
     "commit_sha": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
     "execution_result": { "enum": ["EXECUTED_PASS", "EXECUTED_FAIL", "NOT_EXECUTED", "CLAIMED_ONLY", "BLOCKED"] },
     "result": { "enum": ["PASS", "REWORK", "BLOCKED"] },
-    "artifact_id": { "type": "string", "pattern": "^ART-[A-Z0-9-]+$" },
+    "artifact_id": { "type": ["string", "null"], "pattern": "^ART-[A-Z0-9-]+$" },
     "payload": { "type": "object" }
   },
   "examples": [
