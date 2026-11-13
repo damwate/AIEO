@@ -1,0 +1,160 @@
+ChatGPT 说：
+AIEO T-P1-904 · F-01 限定复核
+
+审查对象：damwate/AIEO
+
+分支：feature/T-P1-904-contract-machinization
+
+指定审查 SHA：62e992fae19c863561b217d93e187e1dc0e05409
+
+返工依据：dispatch-2026-11-13T20-02-56
+
+审查范围：仅 F-01 四项修订忠实性。
+
+HEAD：不使用。
+
+本次只判断原 REWORK 是否已被完整修复，不重新扩大 T-P1-904 的审查范围。
+
+result=PASS
+
+F-01 四项修订全部忠实落实，没有发现需要继续返工的问题。
+
+核验项
+
+	
+
+实际核验结果
+
+	
+
+结论
+
+
+
+
+1. Schema nullable
+
+	
+
+type: ["string","null"]，原 pattern 完整保留
+
+	
+
+PASS
+
+
+
+
+2. Harness 测试
+
+	
+
+显式 null 正例、非法 ART ID 负例各增加一例
+
+	
+
+PASS
+
+
+
+
+3. 测试证据
+
+	
+
+Ajv 141/141、M1 43 passed，均 exit=0
+
+	
+
+PASS
+
+
+
+
+4. 修改边界
+
+	
+
+无额外 F-01 业务代码修改，无冻结契约修改
+
+	
+
+PASS
+
+一、关键证据
+
+1. Schema
+
+实际读取指定 SHA 中的：
+
+contracts/v1.0/test-report.schema.json
+
+确认：
+
+artifact_id 接受 string 和 null。
+
+^ART-[A-Z0-9-]+$ 保留。
+
+原有字段结构没有因本次修订而改变。
+
+2. Harness
+
+实际核验 phase0/tools/test_schemas.mjs 的 c16a654 修订差异：
+
+新增显式 null 正例。
+
+新增非法格式负例。
+
+原有 139 个用例没有删除。
+
+3. 测试日志
+
+Ajv Schema 全量测试
+
+141 / 141
+
+SCHEMA_TEST_SUMMARY · failed=0 · exit=0
+
+M1 回归测试
+
+43 passed
+
+1 warning · exit=0 · 53.12s
+
+实际读取了两份指定 SHA 下的日志。这里确认的是提交证据，不冒充本审查环境重新执行测试。
+
+二、提交范围核验
+
+进一步核验了两个提交之间的关系：
+
+c16a654b3afbaa13457c8bbb50dc225d7c19177d：F-01 修订。
+
+62e992fae19c863561b217d93e187e1dc0e05409：其后增加首轮复核证据归档。
+
+c16a654 的实际修订仅涉及 Schema、Harness 和两份测试日志；后续归档提交没有继续修改 F-01 实现。
+
+reports-test.schema.json 未被本次 F-01 修订误改。
+
+三、最终意见
+
+原 REWORK 唯一问题已经解决。
+
+不要求再次返工 F-01。
+
+本次结论严格限定为：
+
+F-01 修订：PASS。
+
+不解除 DEC-017。
+
+不授权合并 main。
+
+不授权发布。
+
+不代表 T-P1-905 验收通过。
+
+result=PASS
+
+审查对象：62e992fae19c863561b217d93e187e1dc0e05409
+
+本次 F-01 限定复核结束。
