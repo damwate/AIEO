@@ -157,9 +157,9 @@ PENDING 可被发送方取消 → CANCELLED（终态）
 - **C7 负责**：身份建立、口令存储、会话生命周期（签发/过期/撤销）、CSRF、角色与授权规则、MCP/CLI 本机服务身份。
 - C1 端点表不重复定义认证语义；两契约若出现表述冲突：身份/授权语义**以 C7 为准**，传输与错误响应格式**以 C1 为准**。
 
-### 2.6 M2 网页与 GitPointer 双向 payload 契约（BLOCKED-1 修订稿）
+### 2.6 M2 网页与 GitPointer 双向 payload 契约（BLOCKED-1 核心路径修订稿，2026-11-14 复审 PASS 生效）
 
-> **状态：修订中，待复审。** 本小节依据真实 GPT 审查回复 `phase0/logs/payload-choice-inherited-reply.txt`（`result=BLOCKED`）编写，关联 DEC-007/DEC-011/DEC-012。选型确定为：**出站长材料使用 GitPointer，网页只发短指令；入站回复通过结构化 DOM 完整提取并持久化，不以网页分块或反复长文本粘贴作为降级路径。** 复审通过前不得将本小节标记为 PASS 或新冻结基线。
+> **状态：复审 PASS，本小节生效为契约文本。** 本小节依据真实 GPT 审查回复 `phase0/logs/payload-choice-inherited-reply.txt`（`result=BLOCKED`）编写，关联 DEC-007/DEC-011/DEC-012。选型确定为：**出站长材料使用 GitPointer，网页只发短指令；入站回复通过结构化 DOM 完整提取并持久化，不以网页分块或反复长文本粘贴作为降级路径。** 独立复审 r6 于 2026-11-14 通过（新空白审查会话，审查基线 `54bcf6f081f6c952e8ae7b66b3568a2bbe3133da`，tag `review-anchor/T-P1-903-r6`；31 项 required_boundaries/failure_paths 全部 ADDRESSED、POC 申报无 overclaim、文本自洽；证据 `phase0/logs/dispatch-2026-11-13T18-25-03/reply.txt`，登记见 decision-log DEC-021）。**PASS 效果边界：** 仅解除本小节"修订中，待复审"标注使其生效并授权 §10 机器 Schema/契约测试落地；不解除 DEC-017 任何扩展场景限制，不授权合并或发布。
 
 #### 2.6.1 双向通道与 1200 字节边界
 
@@ -301,7 +301,7 @@ PENDING 可被发送方取消 → CANCELLED（终态）
 | 短指令网页投递 | 已完成；当前继承会话收到短指令并返回结构化审查结果 | 同上；证明本次实际投递成功，不扩展宣称所有长度/网络条件均已验证 |
 | 超过 1200 字节的网页回复完整提取 | 已完成；提取结果为 **4023 个 UTF-8 解码后字符、8854 字节**，包含完整可解析 JSON、`result=BLOCKED`、15 项 `required_boundaries` 和 16 项 `failure_paths` | 原始文件 `phase0/logs/payload-choice-inherited-reply.txt`；实测 SHA-256 `ce1ca55c5d6397995043b42a5a327fef7879a80306301fa9b61f170e0c7a5c71`。证明入站可超过 1200 字节，不能把出站限制套用于 DOM 回复 |
 
-**本次没有执行、不得记为 PASS 的测试：** 多文件部分读取、私有仓库权限、网络退避耗尽、SHA/路径/hash/size/范围负例、秘密扫描、超限边界、M1 artifact 登记失败后的幂等补登记、受控写回仓库。现有 POC 只支持“公开仓库指定 commit 阅读 + 短指令投递 + 长回复完整提取”的有限结论，**BLOCKED-1 仍为“修订中，待复审”**。
+**本次没有执行、不得记为 PASS 的测试：** 多文件部分读取、私有仓库权限、网络退避耗尽、SHA/路径/hash/size/范围负例、秘密扫描、超限边界、M1 artifact 登记失败后的幂等补登记、受控写回仓库。现有 POC 只支持“公开仓库指定 commit 阅读 + 短指令投递 + 长回复完整提取”的有限结论；**2026-11-14 r6 独立复审 PASS 后本节修订文本生效（DEC-021），但上述扩展场景测试仍未执行，BLOCKED-1 扩展场景限制依 DEC-017 逐项待验收，不因此解除**。
 
 #### 2.6.10 Schema 与入站实现补充证据（复审 BLOCKED 后新增）
 

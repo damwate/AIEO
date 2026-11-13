@@ -1,0 +1,13 @@
+T-P1-903 派单：DEC-012 GitPointer 契约修订复审 r6
+你是独立审查者（新空白会话）。先读 handoff/DEC012-REVIEW-BOOTSTRAP.md（r6；§2.5 对象身份门禁+双层保证），以它为准。
+仓库 github.com/damwate/AIEO main。
+bundle_baseline_commit（审查基线）：
+54bcf6f081f6c952e8ae7b66b3568a2bbe3133da
+tag review-anchor/T-P1-903-r6。
+material_commit（聚合包导出源）：
+572c21ad4feb215bda9429f7d7db5dbf3fbb9003
+BYTE_INTEGRITY 绑定常量（amend 前聚合包 commit）：
+ca3e5cfe7d56a4951a74e1663443310c4455dc4a
+manifest：phase1/manifests/T-P1-903-input-manifest.json（95 文件，含 git_blob_sha1）。
+入口零计算（§2.5）：一次 tree 取基线全量 blob 身份，比对 95/95 文件 git_blob_sha1+size+14 分片+TAR+双索引；I3=bundle_source_commit==material_commit；可选二次 tree 核材料 commit；BYTE_INTEGRITY 记录在基线内（§4），绑定上述常量，amend 仅追加证据目录，只引用不背书，两门禁分开登记。
+实质审查（前任 31 项/POC 真实范围/文本自洽）直接读文本文件；二进制仅身份。只按 40 位 SHA 读，禁 HEAD；基线固定。输出单一 JSON 见引导包。

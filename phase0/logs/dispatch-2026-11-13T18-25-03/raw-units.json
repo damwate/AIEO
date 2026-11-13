@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-13T18:28:55.114Z",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "98f9200b-be74-4fa8-9187-29fb9c2a1e91",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "b39e3ec558e8f2c7bdc202ac705edb8da6850a27ed3658b5c5ffae270a00c517",
+          "ccd006dbbc5d97f16ab24e6cdbbdf7baca523d178605c7e7cf8d473d22f6987b"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "b39e3ec558e8f2c7bdc202ac705edb8da6850a27ed3658b5c5ffae270a00c517",
+          "ccd006dbbc5d97f16ab24e6cdbbdf7baca523d178605c7e7cf8d473d22f6987b"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-0:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n{\n\"result\": \"PASS\",\n\"reviewed_commit\": \"54bcf6f081f6c952e8ae7b66b3568a2bbe3133da\",\n\"input_material_commit\": \"572c21ad4feb215bda9429f7d7db5dbf3fbb9003\",\n\"input_material_manifest_path\": \"phase1/manifests/T-P1-903-input-manifest.json\",\n\"input_material_manifest_sha256\": \"dff71b26b6ce97edc46f3f28f727d6ff069005ecb4a5b91879973d4115131461\",\n\"object_identity_gate\": {\n\"tree_call\": \"GET /repos/damwate/AIEO/git/trees/54bcf6f081f6c952e8ae7b66b3568a2bbe3133da?recursive=1\",\n\"files_matched\": \"95/95\",\n\"sizes_matched\": \"95/95\",\n\"parts_matched\": \"14/14\",\n\"tar_and_indexes_matched\": \"3/3\",\n\"missing\": 0,\n\"extra\": 0,\n\"mismatches\": 0,\n\"tree_truncated\": false,\n\"tree_blob_count\": 948,\n\"i3_bundle_source_commit\": {\n\"main_index\": \"572c21ad4feb215bda9429f7d7db5dbf3fbb9003\",\n\"parts_index\": \"572c21ad4feb215bda9429f7d7db5dbf3fbb9003\",\n\"matches_material_commit\": true\n},\n\"tar_identity\": {\n\"tree_blob_sha1\": \"fa2f14770ea09a2a34353ca1c77a10800ae1e3c0\",\n\"size_bytes\": 1720320,\n\"matched\": true\n},\n\"indexes\": {\n\"main_index_tree_blob_sha1\": \"d69afc6779664271f29cf8f603f061f4beedcae6\",\n\"parts_index_tree_blob_sha1\": \"0076a5a27df57e831c454eaaedac9d02f21b1ba3\",\n\"both_matched\": true\n},\n\"result\": \"PASS\",\n\"note\": \"固定基线一次递归 tree 获取后，逐项比对 manifest 95 个路径的 git_blob_sha1 与 size_bytes，全部一致。14 个分片、TAR 和两个索引均完成对象身份核对。未读取或解码二进制内容。\"\n},\n\"byte_integrity_gate_reference\": {\n\"recheck\": \"phase0/logs/blob-recheck-T-P1-903-r6/recheck-result.json\",\n\"bundle_gate\": \"phase0/logs/bundle-gate-T-P1-903-r6/bundle-gate-result.json\",\n\"records_present_and_consistent\": true,\n\"recheck_result\": {\n\"commit_sha256_anchored\": \"ca3e5cfe7d56a4951a74e1663443310c4455dc4a\",\n\"manifest_sha256\": \"dff71b26b6ce97edc46f3f28f727d6ff069005ecb4a5b91879973d4115131461\",\n\"total_files\": 95,\n\"paths_present_in_tree\": 95,\n\"blob_matched\": 95,\n\"blob_mismatched\": 0,\n\"git_blob_identity_checked\": 95,\n\"git_blob_identity_matched\": 95,\n\"git_blob_identity_mismatched\": 0,\n\"exit_code\": 0\n},\n\"bundle_gate_result\": {\n\"commit_sha256_anchored\": \"ca3e5cfe7d56a4951a74e1663443310c4455dc4a\",\n\"manifest_file_count\": 95,\n\"parts\": \"14/14\",\n\"parts_sha256_matched\": true,\n\"parts_git_blob_sha1_matched\": true,\n\"tar_bytes_matched\": true,\n\"tar_sha256\": \"f887cb4f6f66fe1894b5136721cb794013164306e48a7151879492903e26c99d\",\n\"tar_sha256_matched\": true,\n\"tar_git_blob_sha1_matched\": true,\n\"extracted_count\": 95,\n\"missing\": [],\n\"extra\": [],\n\"sha256_matched\": 95,\n\"sha256_mismatched\": 0,\n\"exit_code\": 0\n},\n\"note\": \"引用不背书：主会话本地受控环境机器核验，独立审查者不重新计算、不宣称亲自验证磁盘字节。BYTE_INTEGRITY 绑定派单指定的 amend 前聚合包 commit；OBJECT_IDENTITY_GATE 独立绑定审查基线。两层保证分别成立，不合并为单一完整性证明。\"\n},\n\"required_boundaries_check\": [\n{\n\"id\": 1,\n\"status\": \"ADDRESSED\",\n\"note\": \"§2.6 总体选型及 §2.6.1、§2.6.5 明确 GitPointer 优先，网页仅发送短指令，禁止网页长文本分块及反复粘贴。\"\n},\n{\n\"id\": 2,\n\"status\": \"ADDRESSED\",\n\"note\": \"§2.6.1.3、§2.6.7 完整定义入站长回复提取、稳定性、原始 artifact、持久化、Schema 校验及失败处理。\"\n},\n{\n\"id\": 3,\n\"status\": \"ADDRESSED\",\n\"note\": \"§2.6.2 定义完整 GitPointer Schema、统一 manifest、单文件与多文件格式及 SHA-256、size_bytes 字段。\"\n},\n{\n\"id\": 4,\n\"status\": \"ADDRESSED\",\n\"note\": \"§2.6.2.5、§2.6.5.4-.7 明确完整 40 位 commit_sha 是唯一读取依据，branch 仅用于定位和包含关系校验，禁止回退 HEAD。\"\n},\n{\n\"id\": 5,\n\"status\": \"ADDRESSED\",\n\"note\": \"§2.6.4.1-.2 明确公开与私有仓库权限前提，要求当前 GPT 网页会话真实验证访问权限，不混淆主会话及 Connector 权限。\"\n},\n{\n\"id\": 6,\n\"status\": \"ADDRESSED\",\n\"note\": \"§2.6.5 明确先定稿、生成 manifest、计算 SHA-256、提交推送、取得最终 SHA、回读预检，最后才允许派发。\"\n},\n{\n\"id\": 7,\n\"status\": \"ADDRESSED\",\n\"note\": \"§2.6.2、§2.6.3、§2.6.5、§2.6.8 覆盖任务身份、文件范围、路径安全、全量读取、哈希、大小及版本绑定。\"\n},\n{\n\"id\": 8,\n\"status\": \"ADDRESSED\",\n\"note\": \"§2.6.3 明确区分输入材料 commit 与 reviewed_commit，审查报告同时记录材料 commit、manifest SHA-256、任务包哈希及三个关联 ID。\"\n},\n{\n\"id\": 9,\n\"status\": \"ADDRESSED\",\n\"note\": \"§2.6.4.3 明确只读边界，不自动授予写权限；未来受控写回必须另立契约、POC、审批和审计规则。\"\n},\n{\n\"id\": 10,\n\"status\": \"ADDRESSED\",\n\"note\": \"§2.6.1.1-.2 将 1200 字节定义为最终网页发送字符串的 UTF-8 实际字节数，计量完整消息并在发送前回读校验。\"\n},\n{\n\"id\": 11,\n\"status\": \"ADDRESSED\",\n\"note\": \"§2.6.1.4、§2.6.6 区分 4 KB 建议阈值、256 KB M1 消息限制和独立材料资源限制，增加文件数、单文件、manifest、总大小及回复上限。\"\n},\n{\n\"id\": 12,\n\"status\": \"ADDRESSED\",\n\"note\": \"§2.6.6、§2.6.8 定义有限指数退避、错误分类、权限失败、SHA 不存在、路径错误、哈希不一致及 BLOCKED 处理。\"\n},\n{\n\"id\": 13,\n\"status\": \"ADDRESSED\",\n\"note\": \"§2.6.4.4-.6 覆盖秘密禁入、材料不可信原则、证据生命周期、默认永久保留及人工审批删除例外。\"\n},\n{\n\"id\": 14,\n\"status\": \"ADDRESSED\",\n\"note\": \"§2.6 已正式进入 C1 契约；三份相关机器 Schema、契约测试及 DEC-012 至 DEC-020 形成关联治理记录。schema-tests.log 实际为 37/37，通过。\"\n},\n{\n\"id\": 15,\n\"status\": \"ADDRESSED\",\n\"note\": \"§2.6.9-.13 分别披露真实 GPT 网页投递、长回复、指定 SHA GitHub 回读、Schema、入站、M1 最小登记、并发测试及未验证范围，没有将本地仿真冒充真实 ChatGPT 多 unit 测试。\"\n}\n],\n\"failure_paths_check\": [\n{\n\"id\": 1,\n\"status\": \"ADDRESSED\",\n\"note\": \"§2.6.8 第一行：材料生成、提交或推送失败，不派发，不使用旧 commit。\"\n},\n{\n\"id\": 2,\n\"status\": \"ADDRESSED\",\n\"note\": \"§2.6.8 第二行：超过 1200 UTF-8 字节，本地拒绝发送，不截断、不拆分。\"\n},\n{\n\"id\": 3,\n\"status\": \"ADDRESSED\",\n\"note\": \"§2.6.6、§2.6.8 第三行：网络暂时故障有限指数退避，耗尽后 BLOCKED。\"\n},\n{\n\"id\": 4,\n\"status\": \"ADDRESSED\",\n\"note\": \"§2.6.4.2、§2.6.8 第四行：私有仓库权限不足立即停止，不绕过或公开复制。\"\n},\n{\n\"id\": 5,\n\"status\": \"ADDRESSED\",\n\"note\": \"§2.6.2.5、§2.6.8 第五行：指定 SHA 不存在或绑定错误直接 BLOCKED，禁止回退。\"\n},\n{\n\"id\": 6,\n\"status\": \"ADDRESSED\",\n\"note\": \"§2.6.5.7、§2.6.8 第六行：路径不存在、越界及不支持类型直接失败，不猜测路径。\"\n},\n{\n\"id\": 7,\n\"status\": \"ADDRESSED\",\n\"note\": \"§2.6.5.6、§2.6.8 第七行：SHA-256、size_bytes、manifest 不一致时拒绝继续。\"\n},\n{\n\"id\": 8,\n\"status\": \"ADDRESSED\",\n\"note\": \"§2.6.5.7、§2.6.8 第八行：多文件部分读取不得 PASS，必须全部验证。\"\n},\n{\n\"id\": 9,\n\"status\": \"ADDRESSED\",\n\"note\": \"§2.6.3.4、§2.6.8 第九行：材料 commit 与任务单不一致立即停止。\"\n},\n{\n\"id\": 10,\n\"status\": \"ADDRESSED\",\n\"note\": \"§2.6.7.2、§2.6.8 第十行：会话失效、安全验证、上下文上限及 DOM 自检异常暂停自动化。\"\n},\n{\n\"id\": 11,\n\"status\": \"ADDRESSED\",\n\"note\": \"§2.6.1.3、§2.6.7、§2.6.8 第十一行：长回复允许超过 1200 字节，但不完整或不稳定时 BLOCKED。\"\n},\n{\n\"id\": 12,\n\"status\": \"ADDRESSED\",\n\"note\": \"§2.6.7.6、§2.6.8 第十二行：JSON、Schema、必填字段和任务关联 ID 绑定失败不登记成功。\"\n},\n{\n\"id\": 13,\n\"status\": \"ADDRESSED\",\n\"note\": \"§2.6.3、§2.6.8 第十三行：reviewed_commit、task_package_hash、材料 commit 和 execution_id 错误拒绝登记。\"\n},\n{\n\"id\": 14,\n\"status\": \"ADDRESSED\",\n\"note\": \"§2.6.7.7、§2.6.8 第十四行：提取超时先查询现有状态，不盲目重复派发。\"\n},\n{\n\"id\": 15,\n\"status\": \"ADDRESSED\",\n\"note\": \"§2.6.7.8、§2.6.8 第十五行：登记或 ACK 失败使用原 artifact 和幂等键补登记，不重新执行 GPT。\"\n},\n{\n\"id\": 16,\n\"status\": \"ADDRESSED\",\n\"note\": \"§2.6.4.5、§2.6.8 第十六行：材料中的外部指令属于不可信数据，不能覆盖任务授权和项目红线。\"\n}\n],\n\"poc_scope_check\": {\n\"all_claims_verified\": true,\n\"overclaims\": [],\n\"verified_claims\": [\n{\n\"claim\": \"指定 commit 的 GitPointer 真实远程回读\",\n\"evidence\": \"phase0/logs/git-pointer-remote-poc.md; phase0/logs/git-pointer-remote-read-result.json\",\n\"result\": \"COMPLETE\",\n\"details\": \"公开仓库，manifest 和两个文本文件按完整 SHA 读取，全部 HTTP 200，SHA-256 与 size 一致。首次错误 404 被如实记录，修正后成功。\"\n},\n{\n\"claim\": \"真实网页短指令投递和超过 1200 字节的长回复提取\",\n\"evidence\": \"phase0/logs/payload-choice-inherited-reply.txt; phase0/logs/dispatch-2026-11-12T04-00-43/\",\n\"result\": \"VERIFIED\",\n\"details\": \"继承审查回复 8854 字节，包含完整 JSON、15 项 required_boundaries 和 16 项 failure_paths。\"\n},\n{\n\"claim\": \"入站完整性、Schema 和 ID 绑定\",\n\"evidence\": \"phase0/logs/rework-inbound-tests.log; phase0/logs/dispatch-2026-11-12T04-41-46/independent-verification.json; phase0/logs/schema-tests.log\",\n\"result\": \"VERIFIED\",\n\"details\": \"入站测试 23/23、Schema 测试 37/37；真实网页 POC 回复 4072 字节，双读间隔 3553ms，完整性、Schema 和三个 ID 绑定均通过。\"\n},\n{\n\"claim\": \"M1 最小本地登记、失败恢复和重复登记\",\n\"evidence\": \"phase0/logs/m1-registry-tests.log; phase0/logs/m1-recovery-retry.json; phase0/logs/m1-recovery-duplicate.json\",\n\"result\": \"VERIFIED\",\n\"details\": \"登记测试 8/8；首次失败后使用原 artifact 重试成功；重复登记不新增记录；GPT resend count 为 0。\"\n},\n{\n\"claim\": \"M1 多进程并发互斥\",\n\"evidence\": \"phase0/logs/third-round-regression-2026-11-12T05-33-03/m1-concurrency.log\",\n\"result\": \"VERIFIED\",\n\"details\": \"四个真实进程分别验证不同 artifact 唯一登记、相同 artifact 幂等登记及相同身份不同 hash 冲突拒绝，3/3 通过。\"\n},\n{\n\"claim\": \"浏览器虚拟列表行为测试\",\n\"evidence\": \"phase0/logs/browser-virtual-list-2026-11-12T05-14-59/result.json\",\n\"result\": \"VERIFIED_WITH_LIMITATION\",\n\"details\": \"真实 Chrome + Playwright 本地模拟 DOM，4/4 通过。证据明确标记 REAL_CHROME_PLAYWRIGHT_LOCAL_SIMULATED_DOM_NOT_CHATGPT。\"\n},\n{\n\"claim\": \"第三轮全量回归\",\n\"evidence\": \"phase0/logs/third-round-regression-2026-11-12T05-33-03/result.json\",\n\"result\": \"VERIFIED\",\n\"details\": \"10/10 通过，且明确 real_chatgpt_multi_unit=false、real_remote_git_pointer=false；没有将本地回归冒充真实远程测试。\"\n}\n]\n},\n\"findings\": [],\n\"constraints\": [\n\"PASS 仅解除 platform-contract-v1.0.md §2.6 修订中、待复审标注，使该契约文本具备生效条件；不代表 BLOCKED-1 所有扩展场景验收完成。\",\n\"真实 GitPointer 远程 POC 仅覆盖公开仓库、两个文本文件及正常网络，不能推导私有仓库权限、网络故障注入和多文件部分失败已经通过。\",\n\"真实 ChatGPT 多 assistant unit 尚未实测。现有真实网页 POC 是单 assistant unit；浏览器虚拟列表证据是本地模拟 DOM，不是 ChatGPT 多 unit 实测。\",\n\"§2.6.13 的 STABLE_RENDERED_UNIT_SET 只证明观察期间渲染集合稳定，不证明不存在持续隐藏的 unit。观察到实际虚拟裁切且缺少独立逻辑序列时必须继续 BLOCKED。\",\n\"M1 当前为 MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM。REST、数据库持久化、ACK 完整闭环及完整平台级并发仍须独立验收。\",\n\"私有仓库权限、真实网络故障及退避耗尽、多文件部分读取失败、秘密扫描等端到端场景仍是后续独立验收门禁。\",\n\"T-P1-903 本次身份核验只覆盖 Git 对象身份。PNG、TAR 等二进制内容未由独立审查者读取或审查；不得扩大解释为二进制内容审查完成。\",\n\"PASS 不解除 DEC-017 扩展场景限制，不授权 main 合并、发布或其他未经单独审批的操作。\"\n],\n\"summary\": \"PASS。已固定审查基线 54bcf6f081f6c952e8ae7b66b3568a2bbe3133da，完成对象身份门禁：递归 tree 未截断，manifest 95/95 文件 SHA-1 与 size 全部匹配，14/14 分片及 TAR、双索引 3/3 身份匹配，I3 两个 bundle_source_commit 均正确指向 material_commit 572c21ad4feb215bda9429f7d7db5dbf3fbb9003。r6 修复了 r5 的两项会务准备缺陷：I3 不再错误要求材料 commit 等于审查基线，BYTE_INTEGRITY 证据现已存在于审查基线内并绑定 amend 前聚合包 commit ca3e5cfe7d56a4951a74e1663443310c4455dc4a。两层门禁分开登记，未将 Git SHA-1 身份证明扩大解释为字节级 SHA-256 保证。实质审查方面，15 项 required_boundaries 全部 ADDRESSED，16 项 failure_paths 全部 ADDRESSED；§2.6.1-.8 的双向传输、Schema、版本绑定、安全、生命周期、完整性、失败语义与机器 Schema 一致；§2.6.9-.13 的 POC 申报与实际证据相符，没有发现 overclaim。未发现 MAJOR 或 MINOR 阻断问题。PASS 的授权边界严格限于 DEC-012 契约修订生效及后续 §10 Schema/契约测试落地，不解除 DEC-017 扩展场景限制，不授权合并或发布。\"\n}",
+      "text_sha256": "ccd006dbbc5d97f16ab24e6cdbbdf7baca523d178605c7e7cf8d473d22f6987b",
+      "size_bytes": 13297,
+      "assistant_uuid": "98f9200b-be74-4fa8-9187-29fb9c2a1e91"
+    }
+  ]
+}
