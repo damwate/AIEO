@@ -1,0 +1,9 @@
+T-P1-903 r5 结果与 r6 修正确认（会务，非审查）。
+r5 BLOCKED：身份门禁本体通过（递归 tree 一次调用：95/95 blob+size、14/14 分片、TAR+双索引 3/3）。两阻塞均为主会话准备缺陷：
+1. I3 误写 bundle_source_commit 与派单基线一致——两阶段设计下该字段指向材料 commit P4（tar 导出源），基线 Y4 仅追加包/索引/证据，必然不一致；
+2. BYTE_INTEGRITY 两份记录在 tag 后新 commit，基线 tree 无此路径→404；amend-only-evidence 流程未执行。
+r6 修正（请确认）：
+a) 派单同时给材料 commit 与聚合包基线两个 SHA；I3 改为 bundle_source_commit 与材料 commit 常量一致；审查者可选第二次 tree 核对材料 commit 95 路径 blob 与 manifest 一致。
+b) 证据 amend：先跑三门禁（记录绑定 amend 前聚合包 commit，SHA 作常量入派单），证据 amend 进基线后打 tag r6；引导包写明 amend 仅追加证据目录、输入材料 blob 相同、可自行 tree 核对（可选），仍只引用不背书。
+c) r5 保持 BLOCKED 历史，r6 重派。
+确认或修改。
