@@ -1,0 +1,181 @@
+{
+  "at": "2026-11-13T17:49:40.487Z",
+  "message_bytes": 1096,
+  "reply": "ChatGPT 说：\n\n{\n\"result\": \"BLOCKED\",\n\"reviewed_commit\": \"a24a510b1c4bb87ce90f4d201e8bf6491f21dd09\",\n\"input_material_commit\": \"a24a510b1c4bb87ce90f4d201e8bf6491f21dd09\",\n\"input_material_manifest_path\": \"phase1/manifests/T-P1-903-input-manifest.json\",\n\"input_material_manifest_sha256\": \"\",\n\"required_boundaries_check\": [],\n\"failure_paths_check\": [],\n\"poc_scope_check\": {\n\"all_claims_verified\": false,\n\"overclaims\": [],\n\"status\": \"NOT_STARTED\"\n},\n\"bundle_verification\": {\n\"tar_total_bytes\": 1710080,\n\"tar_sha256\": \"\",\n\"tar_git_blob_sha1\": \"a47a0777268ffe38f8e5b26d512e9bc01357f371\",\n\"chunk_count\": 14,\n\"chunks_verified\": \"14/14 tree blob SHA-1 identities retrieved and matched index; payload verification incomplete\",\n\"hash_match\": \"NOT_EXECUTED\",\n\"spot_check_count\": 0,\n\"spot_check_identical\": 0,\n\"spot_check_binary_blob_identity\": 0,\n\"missing\": 0,\n\"extra\": 0,\n\"random_seed\": \"\"\n},\n\"findings\": [\n{\n\"id\": \"F-805\",\n\"severity\": \"BLOCKER\",\n\"category\": \"ENVIRONMENT\",\n\"title\": \"A+ 分片入口核验无法完成\",\n\"description\": \"已按指定完整 commit SHA 读取 r3 引导包、分片索引、主 manifest、主索引及 14 个分片。14/14 分片均成功取得 GitHub 返回的 tree blob SHA-1，且与分片索引声明一致。但当前执行环境无法提供可用的本地字节处理及密码学计算能力，无法完成分片 base64 解码、原始字节 SHA-256、TAR 拼接后的总 SHA-256、TAR blob 身份重建、解包以及 95/95 文件全量核验。\",\n\"impact\": \"A1-A5 入口门禁未全部通过，不具备进入 31 项实质审查的资格。\",\n\"classification\": \"BLOCKED_NOT_MATERIAL_DEFECT\"\n}\n],\n\"constraints\": [\n\"严格使用指定的 40 位 commit a24a510b1c4bb87ce90f4d201e8bf6491f21dd09，未使用 HEAD。\",\n\"已读取 r3 bootstrap，确认 §2.5 A1-A7 是强制入口协议。\",\n\"14 个分片均成功取得，Git blob SHA-1 与索引声明一致。\",\n\"尚未验证分片解码后的原始字节 SHA-256。\",\n\"尚未完成 TAR 三项总哈希核验及实际解包。\",\n\"尚未完成 manifest 95/95 文件 SHA-256 和 size 全量核验。\",\n\"尚未完成至少 15 个独立文件抽查。\",\n\"未开展 31 项 required_boundaries/failure_paths 实质审查。\",\n\"未对 POC 申报真实性作出结论。\",\n\"本次 BLOCKED 是审查环境能力限制，不代表修订材料存在缺陷，也不代表 PASS。\"\n],\n\"summary\": \"T-P1-903 DEC-012 r3 复审：BLOCKED。已完成指定 commit 的引导包读取、索引读取及 14/14 分片 Git blob SHA-1 身份初步核对，但无法执行 A+ 分片协议要求的解码、密码学哈希、TAR 解包及 95 文件全量核验。依据 bootstrap §2.5 A6-A7 和 §4，必须停止实质审查。建议更换具备本地文件处理及 SHA-256/SHA-1 计算能力的独立审查环境，重新执行完整入口核验；不得将本次结果解释为材料 REWORK 或 PASS。\"\n}",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "16fb8435-cbb1-46c4-8d92-e9462faf1c61",
+  "stability": {
+    "stable": true,
+    "interval_ms": 3544,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-13T17:49:36.245Z",
+      "read_finished_at": "2026-11-13T17:49:36.779Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "67bbe2aafe9014804fbfab1febd3e9ea6aeeb825107bd0b055d8d323fa506e13",
+          "size_bytes": 2856
+        }
+      ],
+      "assistant_uuid": "16fb8435-cbb1-46c4-8d92-e9462faf1c61",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-13T17:49:39.789Z",
+      "read_finished_at": "2026-11-13T17:49:40.327Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "67bbe2aafe9014804fbfab1febd3e9ea6aeeb825107bd0b055d8d323fa506e13",
+          "size_bytes": 2856
+        }
+      ],
+      "assistant_uuid": "16fb8435-cbb1-46c4-8d92-e9462faf1c61",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "3d05741f42e4c81711fc99ce750ef23842fff63ab94f89cd86e620ddca1468e9",
+          "67bbe2aafe9014804fbfab1febd3e9ea6aeeb825107bd0b055d8d323fa506e13"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "3d05741f42e4c81711fc99ce750ef23842fff63ab94f89cd86e620ddca1468e9",
+          "67bbe2aafe9014804fbfab1febd3e9ea6aeeb825107bd0b055d8d323fa506e13"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "67bbe2aafe9014804fbfab1febd3e9ea6aeeb825107bd0b055d8d323fa506e13",
+  "size_bytes": 2856,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-13T17-45-33\\reply.txt",
+  "reply_readback_sha256": "67bbe2aafe9014804fbfab1febd3e9ea6aeeb825107bd0b055d8d323fa506e13",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-13T17-45-33\\raw-units.json",
+  "raw_units_sha256": "b89ebbe55519cba5f4baa63fc82afe219b16384cff9035b860cc8286db0938d3",
+  "raw_units_size_bytes": 5663,
+  "raw_units_readback_sha256": "b89ebbe55519cba5f4baa63fc82afe219b16384cff9035b860cc8286db0938d3",
+  "session_id": "6af74cf0-5f78-83e8-afe9-4e12ff02b981",
+  "conversation_url": "https://chatgpt.com/c/6af74cf0-5f78-83e8-afe9-4e12ff02b981",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}

@@ -1,0 +1,54 @@
+ChatGPT 说：
+
+{
+"result": "BLOCKED",
+"reviewed_commit": "a24a510b1c4bb87ce90f4d201e8bf6491f21dd09",
+"input_material_commit": "a24a510b1c4bb87ce90f4d201e8bf6491f21dd09",
+"input_material_manifest_path": "phase1/manifests/T-P1-903-input-manifest.json",
+"input_material_manifest_sha256": "",
+"required_boundaries_check": [],
+"failure_paths_check": [],
+"poc_scope_check": {
+"all_claims_verified": false,
+"overclaims": [],
+"status": "NOT_STARTED"
+},
+"bundle_verification": {
+"tar_total_bytes": 1710080,
+"tar_sha256": "",
+"tar_git_blob_sha1": "a47a0777268ffe38f8e5b26d512e9bc01357f371",
+"chunk_count": 14,
+"chunks_verified": "14/14 tree blob SHA-1 identities retrieved and matched index; payload verification incomplete",
+"hash_match": "NOT_EXECUTED",
+"spot_check_count": 0,
+"spot_check_identical": 0,
+"spot_check_binary_blob_identity": 0,
+"missing": 0,
+"extra": 0,
+"random_seed": ""
+},
+"findings": [
+{
+"id": "F-805",
+"severity": "BLOCKER",
+"category": "ENVIRONMENT",
+"title": "A+ 分片入口核验无法完成",
+"description": "已按指定完整 commit SHA 读取 r3 引导包、分片索引、主 manifest、主索引及 14 个分片。14/14 分片均成功取得 GitHub 返回的 tree blob SHA-1，且与分片索引声明一致。但当前执行环境无法提供可用的本地字节处理及密码学计算能力，无法完成分片 base64 解码、原始字节 SHA-256、TAR 拼接后的总 SHA-256、TAR blob 身份重建、解包以及 95/95 文件全量核验。",
+"impact": "A1-A5 入口门禁未全部通过，不具备进入 31 项实质审查的资格。",
+"classification": "BLOCKED_NOT_MATERIAL_DEFECT"
+}
+],
+"constraints": [
+"严格使用指定的 40 位 commit a24a510b1c4bb87ce90f4d201e8bf6491f21dd09，未使用 HEAD。",
+"已读取 r3 bootstrap，确认 §2.5 A1-A7 是强制入口协议。",
+"14 个分片均成功取得，Git blob SHA-1 与索引声明一致。",
+"尚未验证分片解码后的原始字节 SHA-256。",
+"尚未完成 TAR 三项总哈希核验及实际解包。",
+"尚未完成 manifest 95/95 文件 SHA-256 和 size 全量核验。",
+"尚未完成至少 15 个独立文件抽查。",
+"未开展 31 项 required_boundaries/failure_paths 实质审查。",
+"未对 POC 申报真实性作出结论。",
+"本次 BLOCKED 是审查环境能力限制，不代表修订材料存在缺陷，也不代表 PASS。"
+],
+"summary": "T-P1-903 DEC-012 r3 复审：BLOCKED。已完成指定 commit 的引导包读取、索引读取及 14/14 分片 Git blob SHA-1 身份初步核对，但无法执行 A+ 分片协议要求的解码、密码学哈希、TAR 解包及 95 文件全量核验。依据 bootstrap §2.5 A6-A7 和 §4，必须停止实质审查。建议更换具备本地文件处理及 SHA-256/SHA-1 计算能力的独立审查环境，重新执行完整入口核验；不得将本次结果解释为材料 REWORK 或 PASS。"
+}
