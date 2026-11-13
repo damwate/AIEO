@@ -18,7 +18,8 @@ import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync, mkdirSync, mkdtempSync, readdirSync, statSync, rmSync } from "node:fs";
 import { join } from "node:path";
 import { spawnSync } from "node:child_process";
-import { argv, exit, tmpdir } from "node:process";
+import { argv, exit } from "node:process";
+import { tmpdir } from "node:os";
 
 const RE_SHA40 = /^[0-9a-f]{40}$/;
 const sha256 = (buf) => createHash("sha256").update(buf).digest("hex");
@@ -124,7 +125,18 @@ if (!(checks.tar.total_bytes.match && checks.tar.sha256.match && checks.tar.git_
 if (failed === 0) {
   const extractRoot = mkdtempSync(join(tmpdir(), "bundle-gate-"));
   try {
-    const t = runCmd("tar", ["-xf", opts.tar, "-C", extractRoot]);
+    // GNU tar（Git Bash/MSYS）：C:\ 绝对路径会被反斜杠转义破坏，转成 MSYS POSIX 路径（cygpath -u）；
+    // bsdtar（System32）原生接受 Windows 路径。短选项与 -f 必须分离（-xf 会吃掉后续参数当归档名）。
+    const tarFlavor = runCmd("tar", ["--version"]).stdout.toString();
+    let extractDir = extractRoot;
+    if (/gnu/i.test(tarFlavor)) {
+      const conv = runCmd("cygpath", ["-u", extractRoot]);
+      extractDir = conv.status === 0 && conv.stdout.toString().trim()
+        ? conv.stdout.toString().trim()
+        : extractRoot.replace(/^([A-Za-z]):/, (m, d) => `/${d.toLowerCase()}`).replace(/\\/g, "/");
+    }
+    const tarArgs = ["-x", "-f", opts.tar, "-C", extractDir];
+    const t = runCmd("tar", tarArgs);
     if (t.status !== 0) {
       checks.unpack.error = `tar 解包退出码 ${t.status}: ${t.stderr}`;
       failed += 1;
