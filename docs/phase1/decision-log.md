@@ -131,3 +131,15 @@
 - **回滚：** `git revert -m 1 971a371`（普通 merge 提交，不改写历史）。
 - **依据：** 用户审批记录（2026-11-14 本会话"批准合并"）；审批材料 `phase1/logs/merge-prep-20261114/merge-proposal.md`（commit `fbf0b5b`）；GPT 会务建议 `phase0/logs/dispatch-2026-11-13T16-31-45/reply.txt`（B 项合并前置检查清单）；DEC-010 人工审批铁律、platform-contract C5 §6.3-2、agent-contract §6-2。
 - **关联：** 同批恢复 `phase0/logs/gpt-reviewer-session.json` 会话指针（GPT 会务会话 `6af73baa-2060-83ec-a9cd-8e144f9f508b`，dispatch-2026-11-13T16-31-45 新建）；此后治理/文档工作以 main 为集成基线提交，代码任务按 C5 §6.1 开独立分支。
+
+### DEC-020 DEC-012 复审入口门禁重划分：对象身份门禁 + 双层保证（r4 会务决议，2026-11-14，用户批准）
+
+- **决策内容：** T-P1-903 DEC-012 复审 r1/r2/r3 三轮独立审查均因审查环境能力限制 BLOCKED（r1 逐文件额度不足；r2 二进制正文不可读；r3 分片 base64 后 14/14 分片 tree blob SHA-1 身份核对可行但环境无本地字节处理与密码学计算能力，不能解码/哈希/解包），均 BLOCKED_NOT_MATERIAL_DEFECT 未进实质审查。经会务决议（方案 A，GO）并经用户 2026-11-14 拍板批准，调整保证责任（**验证责任重新分配，非降低实质审查标准，三态判定与缺陷严重程度规则不变**）：
+  1. **主会话本地受控环境承担字节级完整性保证（BYTE_INTEGRITY_GATE）：** 分片逐项核验、按索引片序拼接、base64 解码、TAR 三项总哈希、解包、95/95 文件 SHA-256/size 核验、manifest_tool recheck（commit blob SHA-256+tree blob SHA-1）与 verify（磁盘字节 SHA-256），机器核验记录绑定 commit+manifest SHA 入库存证（`phase0/logs/blob-recheck-*`、`phase0/logs/bundle-gate-*`，工具 `phase1/tools/manifest_tool.mjs` r4 版、`phase1/tools/bundle_gate.mjs`）；
+  2. **独立审查者承担 Git 对象身份保证（OBJECT_IDENTITY_GATE，零计算）：** 对固定审查基线 commit 一次 tree 获取，manifest 95 文件 `git_blob_sha1`/size 逐项字符串比对 + 14 分片 + TAR + 双索引身份核验，缺失/重复/额外/不符任一即 BLOCKED；通过后直接读取文本审查对象开展实质审查；
+  3. **两门禁分开登记，不得互相替代，不得合并成笼统 PASS**；审查者对 BYTE_INTEGRITY_GATE 记录只引用不背书；任一门禁失败或记录缺失/矛盾不得进入正式 PASS；
+  4. **不得扩大解释：** Git blob SHA-1 仅为对象身份标识，不等价 SHA-256 完整性证明、不表示内容已读取/已审查、不表示排除碰撞或供应链攻击；二进制正文未被独立读取的不得声称完成二进制内容审查；
+  5. **升级条款：** 未来审查环境具备本地计算能力后可重新评估恢复 A+ 全哈希独立核验；本协议是当前环境条件下的正式执行协议，不是永久降级。
+- **轮次纪律：** r1–r3 保持 BLOCKED 历史记录，不改写为 REWORK；r4 为治理契约与入口门禁修订轮（本条目 + 引导包 r5 版 + manifest r4 版含 `git_blob_sha1` 字段 + 聚合包/索引刷新）；r5 按新协议重新执行独立复审；**采纳本决议不等于 DEC-012 PASS**，最终结论只能由 r5 实际审查产生。
+- **依据：** `phase0/logs/dispatch-2026-11-13T17-57-41/reply.txt`（会务 r4 路由决议：推荐 A/GO，含保留/转移保证清单、MUST 约束清单 A-D、治理边界三项、决议文本；reply.txt SHA-256 `51d8773c1c0c6f5ce200d45baf00a11121c1a4e3fe1a9b75e37c6c73adb3b293`）；r3 审查记录 `phase0/logs/dispatch-2026-11-13T17-45-33/reply.txt`（BLOCKED/F-805 ENVIRONMENT，reply SHA-256 `67bbe2aafe9014804fbfab1febd3e9ea6aeeb825107bd0b055d8d323fa506e13`）；用户拍板记录（2026-11-14 本会话 AskUserQuestion"批准方案 A"）。
+- **关联与约束衍生：** 细化 DEC-012 复审机制而不改变其审查对象与 31 项实质审查标准；r5 引导包 `handoff/DEC012-REVIEW-BOOTSTRAP.md` §2.5 为新协议文本；BLOCKED-1 状态与 DEC-017/DEC-018 边界不变。

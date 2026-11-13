@@ -1,10 +1,12 @@
 #!/usr/bin/env node
 // AIEO Phase 1 证据链工具（T-P1-902 起替代 T-P1-901 第 8 轮的 inline 一行脚本）。
+// r4 起 manifest/verify/recheck 增 Git blob SHA-1 对象身份字段（T-P1-903 r4 决议：
+// 对象身份门禁+双层保证——身份核验供独立审查者零计算比对，字节级完整性仍由本地机器承担）。
 // 三个子命令，对应交接包 §3 材料核验协议 v2 的开发方机械核验三步：
-//   manifest — 生成输入材料 manifest（逐文件磁盘字节 SHA-256 / size / media_type）
-//   verify   — 磁盘字节 vs manifest 逐文件比对 → 核验报告 JSON（不入 manifest，
-//              报告引用 manifest SHA 会自引用；method 指向同轮 blob 复核目录，F-601）
-//   recheck  — commit 后对 git blob 全量重比（ls-tree 存在性 + cat-file blob SHA-256）
+//   manifest — 生成输入材料 manifest（逐文件磁盘字节 SHA-256 / git blob SHA-1 / size / media_type）
+//   verify   — 磁盘字节 vs manifest 逐文件比对（SHA-256 + blob 身份）→ 核验报告 JSON
+//              （不入 manifest，报告引用 manifest SHA 会自引用；method 指向同轮 blob 复核目录，F-601）
+//   recheck  — commit 后对 git blob 全量重比（ls-tree 存在性+blob SHA-1 身份 + cat-file blob SHA-256）
 //              → phase0/logs/blob-recheck-<tag>/ 证据（受 amend 时序约束，不入 manifest）
 // 本工具自身入 manifest 可审。仓库根执行；路径一律仓库根相对 POSIX（禁绝对/反斜杠/../）。
 //
@@ -25,6 +27,11 @@ import { argv, exit } from "node:process";
 
 const RE_SHA40 = /^[0-9a-f]{40}$/;
 const sha256 = (buf) => createHash("sha256").update(buf).digest("hex");
+const sha1 = (buf) => createHash("sha1").update(buf).digest("hex");
+// Git blob 对象身份 = SHA1("blob <字节数>\0" + 内容)。
+// 仅作对象身份标识（T-P1-903 r4 决议：独立审查者零计算核验身份用），
+// 不是 SHA-256 字节级完整性证明，不得扩大解释。
+const gitBlobSha1 = (buf) => sha1(Buffer.concat([Buffer.from(`blob ${buf.length}\0`, "utf8"), buf]));
 const mediaTypeOf = (path) => (extname(path).toLowerCase() === ".json" ? "application/json" : "text/plain");
 
 function die(msg) {
@@ -106,7 +113,13 @@ function cmdManifest() {
   if (positionals.length === 0) die("manifest 需在 -- 后给出至少一个输入路径");
   const files = expandInputs(positionals).map((path) => {
     const buf = readFileSync(path);
-    return { path, artifact_sha256: sha256(buf), size_bytes: buf.length, media_type: mediaTypeOf(path) };
+    return {
+      path,
+      artifact_sha256: sha256(buf),
+      git_blob_sha1: gitBlobSha1(buf),
+      size_bytes: buf.length,
+      media_type: mediaTypeOf(path),
+    };
   });
   const manifest = {
     transport: "git_pointer_manifest",
@@ -135,17 +148,25 @@ function cmdVerify() {
     assertSafeRelPath(entry.path);
     const buf = readFileSync(entry.path);
     const disk = sha256(buf);
+    // git_blob_sha1 为可选字段（r4 起新 manifest 才有）；磁盘字节重建 blob 身份与 manifest 声明比对
+    const diskBlobSha1 = gitBlobSha1(buf);
+    const identityMatch = entry.git_blob_sha1 == null ? null : diskBlobSha1 === entry.git_blob_sha1;
     return {
       path: entry.path,
       disk_sha256: disk,
       manifest_sha256: entry.artifact_sha256,
+      disk_git_blob_sha1: diskBlobSha1,
+      manifest_git_blob_sha1: entry.git_blob_sha1 ?? null,
+      git_blob_match: identityMatch,
       size_bytes: buf.length,
       match: disk === entry.artifact_sha256 && buf.length === entry.size_bytes,
     };
   });
   const mismatched = perFile.filter((f) => !f.match);
+  const identityChecked = perFile.filter((f) => f.git_blob_match !== null);
+  const identityMismatched = identityChecked.filter((f) => !f.git_blob_match);
   const report = {
-    report_version: "1.3",
+    report_version: "1.4",
     task_id: manifest.task_id,
     execution_id: manifest.execution_id,
     generated_by: "main session (local execution environment), per handoff §3 protocol v2 division of labor",
@@ -153,21 +174,24 @@ function cmdVerify() {
     manifest_sha256: sha256(manifestBuf),
     // F-601 整改延续：method 必须指向本轮（同轮）blob 复核证据目录；
     // 锚定 commit 以该证据 recheck-result.json 的 commit_sha256_anchored 字段为准，不硬编码随 amend 变化的 SHA。
-    method: `disk bytes SHA-256 per file vs manifest artifact_sha256; post-commit git blob recheck recorded in ${opts["recheck-dir"]}/ (amend-only-evidence-dir flow with review-anchor tag, per handoff §3 F-301/F-404 remediation); the anchoring commit of that recheck is recorded in its commit_sha256_anchored field (F-601: this report must reference the recheck evidence directory of the same round)`,
+    method: `disk bytes SHA-256 per file vs manifest artifact_sha256; disk-bytes git blob SHA-1 identity rebuild vs manifest git_blob_sha1 (object identity only, not SHA-256 integrity proof — T-P1-903 r4); post-commit git blob recheck recorded in ${opts["recheck-dir"]}/ (amend-only-evidence-dir flow with review-anchor tag, per handoff §3 F-301/F-404 remediation); the anchoring commit of that recheck is recorded in its commit_sha256_anchored field (F-601: this report must reference the recheck evidence directory of the same round)`,
     commands: [
       "node phase1/tools/manifest_tool.mjs manifest …  # generate manifest (each file disk-byte sha256)",
       "node phase1/tools/manifest_tool.mjs verify --manifest <manifest> --recheck-dir <same-round recheck dir> --output <report>",
       "git ls-tree -r <reviewed_commit> --name-only  # all paths existence (post-commit, see blob-recheck evidence)",
       "git cat-file blob <reviewed_commit>:<path>    # post-commit blob SHA-256 recheck, all files (see blob-recheck evidence)",
     ],
-    exit_code: mismatched.length === 0 ? 0 : 1,
+    exit_code: mismatched.length === 0 && identityMismatched.length === 0 ? 0 : 1,
     total_files: perFile.length,
     matched_files: perFile.length - mismatched.length,
     mismatched_files: mismatched.length,
+    git_blob_identity_checked: identityChecked.length,
+    git_blob_identity_matched: identityChecked.length - identityMismatched.length,
+    git_blob_identity_mismatched: identityMismatched.length,
     per_file: perFile,
   };
   writeFileSync(opts.output, `${JSON.stringify(report, null, 2)}\n`, "utf8");
-  console.log(`verify: ${report.matched_files}/${report.total_files} match, mismatch=${report.mismatched_files} -> ${opts.output}`);
+  console.log(`verify: ${report.matched_files}/${report.total_files} match, mismatch=${report.mismatched_files}, blob-identity=${report.git_blob_identity_matched}/${report.git_blob_identity_checked} -> ${opts.output}`);
   exit(report.exit_code);
 }
 
@@ -181,48 +205,69 @@ function cmdRecheck() {
   if (!RE_SHA40.test(commit)) die("recheck --commit 必须为完整 40 位 SHA");
   const manifest = JSON.parse(readFileSync(opts.manifest, "utf8"));
   const manifestSha = sha256(readFileSync(opts.manifest));
-  // ① 存在性：一次 ls-tree 取全量路径集合
-  const ls = runGit(["ls-tree", "-r", commit, "--name-only"]);
+  // ① 存在性 + 对象身份：一次 ls-tree -r 取全量 <mode> <type> <blob SHA-1> \t <path>
+  const ls = runGit(["ls-tree", "-r", commit]);
   if (ls.status !== 0) die(`git ls-tree 退出码 ${ls.status}: ${ls.stderr.toString().trim()}`);
-  const inTree = new Set(ls.stdout.toString("utf8").split("\n").filter(Boolean));
-  // ② 内容：逐文件 cat-file blob 重算 SHA-256（全量，无抽样）
+  const tree = new Map(); // path -> blob SHA-1
+  for (const line of ls.stdout.toString("utf8").split("\n")) {
+    if (!line) continue;
+    const m = /^(\d+) (\w+) ([0-9a-f]{40})\t(.+)$/.exec(line);
+    if (m) tree.set(m[4], m[3]);
+  }
+  // ② 内容：逐文件 cat-file blob 重算 SHA-256（全量，无抽样）；③ 身份：tree blob SHA-1 vs manifest git_blob_sha1
   const perFile = manifest.files.map((entry) => {
     assertSafeRelPath(entry.path);
-    const present = inTree.has(entry.path);
+    const present = tree.has(entry.path);
     let blobSha = null;
     let match = false;
+    let gitBlobMatch = null;
     if (present) {
+      if (entry.git_blob_sha1 != null) gitBlobMatch = tree.get(entry.path) === entry.git_blob_sha1;
       const cat = runGit(["cat-file", "blob", `${commit}:${entry.path}`]);
       if (cat.status === 0) {
         blobSha = sha256(cat.stdout);
         match = blobSha === entry.artifact_sha256 && cat.stdout.length === entry.size_bytes;
       }
     }
-    return { path: entry.path, blob_sha256: blobSha, manifest_sha256: entry.artifact_sha256, size_bytes: entry.size_bytes, match };
+    return {
+      path: entry.path,
+      tree_blob_sha1: present ? tree.get(entry.path) : null,
+      manifest_git_blob_sha1: entry.git_blob_sha1 ?? null,
+      git_blob_match: gitBlobMatch,
+      blob_sha256: blobSha,
+      manifest_sha256: entry.artifact_sha256,
+      size_bytes: entry.size_bytes,
+      match,
+    };
   });
   const missing = perFile.filter((f) => f.blob_sha256 === null).map((f) => f.path);
   const mismatched = perFile.filter((f) => f.blob_sha256 !== null && !f.match);
-  const code = missing.length === 0 && mismatched.length === 0 ? 0 : 1;
+  const identityChecked = perFile.filter((f) => f.git_blob_match !== null);
+  const identityMismatched = identityChecked.filter((f) => !f.git_blob_match);
+  const code = missing.length === 0 && mismatched.length === 0 && identityMismatched.length === 0 ? 0 : 1;
   mkdirSync(opts["output-dir"], { recursive: true });
   const result = {
-    recheck_version: "1.0",
+    recheck_version: "1.1",
     task_id: manifest.task_id,
     execution_id: manifest.execution_id,
     commit_sha256_anchored: commit,
     manifest_sha256: manifestSha,
-    method: "git ls-tree -r <commit> --name-only (existence) + git cat-file blob <commit>:<path> SHA-256 (content), all files, no sampling",
+    method: "git ls-tree -r <commit> (existence + tree blob SHA-1, one call) vs manifest git_blob_sha1 (object identity) + git cat-file blob <commit>:<path> SHA-256 (content), all files, no sampling",
     exit_code: code,
     total_files: perFile.length,
     paths_present_in_tree: perFile.length - missing.length,
     paths_missing_in_tree: missing,
     blob_matched: perFile.length - missing.length - mismatched.length,
     blob_mismatched: mismatched.length,
+    git_blob_identity_checked: identityChecked.length,
+    git_blob_identity_matched: identityChecked.length - identityMismatched.length,
+    git_blob_identity_mismatched: identityMismatched.length,
     per_file: perFile,
   };
   const outJson = join(opts["output-dir"], "recheck-result.json");
   const outLog = join(opts["output-dir"], "recheck-run.log");
   writeFileSync(outJson, `${JSON.stringify(result, null, 2)}\n`, "utf8");
-  const line = `[${new Date().toISOString()}] commit=${commit} tree=${result.paths_present_in_tree}/${result.total_files} blob=${result.blob_matched}/${result.total_files} exit=${code}\n`;
+  const line = `[${new Date().toISOString()}] commit=${commit} tree=${result.paths_present_in_tree}/${result.total_files} blob=${result.blob_matched}/${result.total_files} identity=${result.git_blob_identity_matched}/${result.git_blob_identity_checked} exit=${code}\n`;
   writeFileSync(outLog, line, "utf8");
   console.log(line.trim());
   console.log(`recheck: -> ${outJson.replace(/\\/g, "/")}`);
