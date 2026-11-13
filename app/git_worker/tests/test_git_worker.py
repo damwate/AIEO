@@ -529,13 +529,18 @@ def test_m1_registration_records_commit_artifact_audit(
     assert row["execution_id"] == "EXEC-001"
     assert row["branch"] == TASK_BRANCH
     assert row["base_commit"] == evidence["base_commit"]
-    # artifacts row: DIFF with matching sha256, file really written
+    # artifacts row: DIFF with matching sha256; registered identity path is
+    # repo-relative POSIX (M1 validate_artifact_path; T-P1-902 integration fix),
+    # physical patch still written under the worker's diff dir.
     arts = list(m1.artifacts.values())
     assert len(arts) == 1
     assert arts[0]["type"] == "DIFF"
     assert arts[0]["sha256"] == evidence["diff_sha256"]
     assert row["diff_artifact_id"] == arts[0]["artifact_id"]
-    diff_file = Path(arts[0]["path"])
+    reg_path = arts[0]["path"]
+    assert reg_path == f"git-worker/diffs/T-P1-001/diff-{evidence['commit_sha']}.patch"
+    assert not re.match(r"^[A-Za-z]:|^[/\\]", reg_path) and "\\" not in reg_path
+    diff_file = tmp_path / "logs" / "diffs" / f"diff-{evidence['commit_sha']}.patch"
     assert diff_file.exists()
     assert hashlib.sha256(diff_file.read_bytes()).hexdigest() == evidence["diff_sha256"]
     # audit trail covers branch creation and commit collection

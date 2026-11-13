@@ -1,0 +1,161 @@
+{
+  "at": "2026-11-13T00:38:20.614Z",
+  "dispatch_id": "DISPATCH-2026-11-13T00-38-20",
+  "message_bytes": 41,
+  "send_receipt": {
+    "ok": true,
+    "user_unit_key": "u1000:user",
+    "polls": 3,
+    "stop_observed_after_tail": true,
+    "stop_button_visible_after_tail": true,
+    "pre_send_stop_visible": false,
+    "composer_readback_verified": true,
+    "message_bytes": 41
+  },
+  "generation": {
+    "generation_observed": true,
+    "generation_ended": true
+  },
+  "quietness": {
+    "final_stop_button_not_visible": true,
+    "composer_empty": true
+  },
+  "reply": "{\"status\":\"SUCCESS\",\"task_id\":\"T-P1-001\",\"execution_id\":\"EXEC-001\",\"correlation_id\":\"CORR-90210\",\"summary\":\"集成验收：模块边界与平台契约一致，审查完成\"}",
+  "user_unit_key": "u1000:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "a1001:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "9a1b2c3d-4e5f-4a60-8b70-1c2d3e4f5a60",
+  "stability": {
+    "stable": true,
+    "interval_ms": 3000,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_length_matches_count": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "u1000:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "u0001:user",
+          "a0002:assistant",
+          "u1000:user",
+          "a1001:assistant"
+        ],
+        "unit_text_sha256": [
+          "9bab79d84db16c3351bd3819ee6770abd9cfa34a4cca204b544612a673ad81b7",
+          "2687398957fc62503d4f4e1b7cf4868605273c64ea8157ec37916f8048f0bf95",
+          "60111eb6534c3223e1a2400ba4fc55863bdfd53ad1a5ddcc004de3fc7c705681",
+          "a73124d58900b35562b7e50cd148882cbebd30fc2fb498f3f1fbbf6bc1c3c1ac"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": []
+      }
+    ],
+    "materialized_unit_keys": [
+      "u1000:user",
+      "a1001:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STATIC_NON_SCROLLABLE_DOM",
+      "scrollable_window_observed": false,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "u0001:user",
+          "a0002:assistant",
+          "u1000:user",
+          "a1001:assistant"
+        ],
+        "overlap_keys": []
+      }
+    ],
+    "window_transitions": 0
+  },
+  "json_schema_binding": {
+    "status": "PASS",
+    "json": {
+      "status": "PASS",
+      "artifact_path": "D:\\AIEO\\phase1\\logs\\integration-20261113T003810Z\\m2-leg\\DISPATCH-2026-11-13T00-38-20\\reply.txt",
+      "artifact_sha256": "a73124d58900b35562b7e50cd148882cbebd30fc2fb498f3f1fbbf6bc1c3c1ac",
+      "auxiliary_prefix_removed": false,
+      "auxiliary_prefix": null,
+      "full_document_parsed": true
+    },
+    "schema": {
+      "status": "PASS",
+      "schema_path": "D:\\AIEO\\app\\gpt_controller\\tests\\fixtures\\reply.schema.json",
+      "errors": []
+    },
+    "binding": {
+      "status": "PASS",
+      "task_id": "PASS",
+      "execution_id": "PASS",
+      "correlation_id": "PASS"
+    },
+    "parsed_json": {
+      "status": "SUCCESS",
+      "task_id": "T-P1-001",
+      "execution_id": "EXEC-001",
+      "correlation_id": "CORR-90210",
+      "summary": "集成验收：模块边界与平台契约一致，审查完成"
+    }
+  },
+  "m1_registration": {
+    "status": "REGISTERED",
+    "artifact_id": "ART-M1-000001",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM",
+    "attempts": [
+      {
+        "attempt": 1,
+        "result": "SUCCESS"
+      }
+    ]
+  },
+  "artifact_sha256": "a73124d58900b35562b7e50cd148882cbebd30fc2fb498f3f1fbbf6bc1c3c1ac",
+  "size_bytes": 173,
+  "reply_path": "D:\\AIEO\\phase1\\logs\\integration-20261113T003810Z\\m2-leg\\DISPATCH-2026-11-13T00-38-20\\reply.txt",
+  "raw_units_path": "D:\\AIEO\\phase1\\logs\\integration-20261113T003810Z\\m2-leg\\DISPATCH-2026-11-13T00-38-20\\raw-units.json",
+  "raw_units_sha256": "747619bdffdde3c6569a143ba98f50be6a9c13dc4464efbb00c0e80c2052a078",
+  "session_id": "3f2a7b8c-1c41-4091-817f-7b7c0f3f314a",
+  "conversation_url": "https://chatgpt.com/c/3f2a7b8c-1c41-4091-817f-7b7c0f3f314a",
+  "completion_checks": {
+    "dom_contract_ok": true,
+    "pre_send_stop_visible": true,
+    "send_double_verified": true,
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "composer_empty": true,
+    "stable_unit_read": true,
+    "reply_artifact_readback": true,
+    "raw_units_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  },
+  "task_id": "T-P1-001",
+  "execution_id": "EXEC-001",
+  "correlation_id": "CORR-90210"
+}

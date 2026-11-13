@@ -20,7 +20,9 @@ import { aieoError, httpStatusToC3 } from "./errors.mjs";
 /**
  * @typedef {Object} M1Client
  * @property {(req: {task_id: string, agent_id: string, agent_type: string,
- *                     correlation_id: string, session_id: string, claimed_at: string}) => Promise<object>} claimTask
+ *                     base_commit: string, correlation_id: string,
+ *                     session_id: string, claimed_at: string}) => Promise<object>} claimTask
+ *   base_commit 必填（M1 ClaimRequest 必填字段，绑定执行基线；缺失时 M1 422）。
  *   领取任务（非幂等独占租约）：已被领取时必须抛 TASK-0003；任务不存在抛 RES-0001。
  * @property {(envelope: object) => Promise<{message_id: string, status: string, duplicate?: boolean}>} submitMessage
  *   消息投递统一入口：message_id 主键去重；重复时返回原处理结果（duplicate=true），不重复执行副作用。
@@ -90,6 +92,7 @@ export class HttpM1Client {
     return this._request("POST", `/api/v1/tasks/${encodeURIComponent(req.task_id)}/claim`, {
       agent_id: req.agent_id,
       agent_type: req.agent_type,
+      base_commit: req.base_commit,
       correlation_id: req.correlation_id,
       session_id: req.session_id,
       claimed_at: req.claimed_at,

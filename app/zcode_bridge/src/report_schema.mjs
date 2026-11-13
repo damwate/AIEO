@@ -49,8 +49,10 @@ export function validateDevReport(report) {
     if (typeof git.branch !== "string" || git.branch.length === 0) add("git.branch", "必填非空字符串");
     if (typeof git.base_commit !== "string" || !RE_SHA40.test(git.base_commit)) add("git.base_commit", "必须为完整 40 位 SHA（禁止短 SHA）");
     if (typeof git.commit_sha !== "string" || !RE_SHA40.test(git.commit_sha)) add("git.commit_sha", "必须为完整 40 位 SHA（禁止短 SHA）");
-    if (!Array.isArray(git.changed_files) || git.changed_files.length === 0 || !git.changed_files.every((f) => typeof f === "string" && f.length > 0)) {
-      add("git.changed_files", "必填非空字符串数组（允许为 []，但字段必须存在且为数组）");
+    // changed_files 允许为 []（BLOCKED 报告没有实现变更，03-协议 §6 只约束字段存在与元素类型；
+    // T-P1-902 集成缝隙修复：此前实现把 length===0 一并拒绝，与其自带文案"允许为 []"矛盾）。
+    if (!Array.isArray(git.changed_files) || !git.changed_files.every((f) => typeof f === "string" && f.length > 0)) {
+      add("git.changed_files", "必填字符串数组（允许为 []，但字段必须存在、数组且每项为非空字符串）");
     }
   }
   // tests 子对象

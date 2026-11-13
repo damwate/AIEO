@@ -2,8 +2,10 @@
 //
 // 借鉴 POC-01（phase0/zcode-mcp-poc/server.mjs，MCP 6/6 PASS，SDK 1.32.2 同版）。
 // 受控工具集（module-boundaries §2 M3；跨进程契约，受契约版本管理 §11.5）：
-//   claim_task(task_id, correlation_id[, agent_id])
+//   claim_task(task_id, correlation_id, base_commit[, agent_id])
 //       → M1 POST /api/v1/tasks/{task_id}/claim；非幂等独占租约；重复领取 → TASK-0003。
+//         base_commit 必填（M1 ClaimRequest 绑定执行基线，M4 GIT-0002 校验其一致性），
+//         缺失时 REQ-0001 fail-closed，不触达 M1。
 //         本会话同时只允许一个在途领取（单会话单任务），重复领取同会话也按 TASK-0003 fail-closed。
 //   report_progress(task_id, correlation_id, stage[, detail, progress_percent])
 //       → PROGRESS_UPDATED 消息经 M1 POST /api/v1/messages 投递入 Inbox。
@@ -40,6 +42,8 @@ function nextMessageSeq() {
 }
 
 const RE_TASK_ID = /^T-(P\d+-)?\d{3,}$/;
+// M1 ClaimRequest.base_commit：40 位十六进制 Git SHA（schemas.py GIT_SHA_PATTERN）
+const RE_GIT_SHA = /^[0-9a-f]{40}$/;
 // 与 message_builder 保持一致：CORR- 前缀大小写敏感；UUIDv4 十六进制大小写均可
 const RE_CORRELATION = /^(CORR-[A-Z0-9]+|[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$/;
 
@@ -125,15 +129,16 @@ export function createAieoMcpServer(deps, opts = {}) {
     {
       title: "AIEO 任务领取",
       description:
-        "领取 AIEO 任务（M1 独占租约，仅 READY 且依赖满足）。重复领取（含本会话重复领取）将返回 TASK-0003 拒绝。",
+        "领取 AIEO 任务（M1 独占租约，仅 READY 且依赖满足）。base_commit 取自任务包（03-协议 §5），M1 绑定执行基线。重复领取（含本会话重复领取）将返回 TASK-0003 拒绝。",
       inputSchema: {
         task_id: z.string().min(1).describe("任务 ID，格式 T-(P\\d+-)?\\d{3,}"),
         correlation_id: z.string().min(1).describe("本次交互关联 ID（CORR-<序号> 或 UUIDv4）"),
+        base_commit: z.string().optional().describe("执行基线 commit（40 位十六进制 Git SHA，任务包 base_commit；缺失/非法 → REQ-0001 fail-closed）"),
         agent_id: z.string().optional().describe("执行端 agent_id（默认本服务身份 ZCODE-01）"),
       },
     },
     wrapTool("claim_task", async (args) => {
-      requireArgs(args, [["task_id", RE_TASK_ID], ["correlation_id", RE_CORRELATION]]);
+      requireArgs(args, [["task_id", RE_TASK_ID], ["correlation_id", RE_CORRELATION], ["base_commit", RE_GIT_SHA]]);
       if (activeClaim) {
         throw aieoError("TASK-0003", `TASK_ALREADY_CLAIMED: 本会话已领取任务 ${activeClaim.task_id}（单会话单任务），须先 submit_result 结束当前任务`, {
           details: { active_task: activeClaim.task_id, claimed_at: activeClaim.claimed_at },
@@ -145,6 +150,7 @@ export function createAieoMcpServer(deps, opts = {}) {
         task_id: args.task_id,
         agent_id: args.agent_id ?? agentId,
         agent_type: agentType,
+        base_commit: args.base_commit,
         correlation_id: args.correlation_id,
         session_id: sessionId,
         claimed_at: claimedAt,
@@ -199,6 +205,11 @@ export function createAieoMcpServer(deps, opts = {}) {
         stage: z.string().min(1).describe("阶段名，如 implementing / testing / blocked"),
         detail: z.string().optional().describe("进度说明（一句话，不含敏感信息）"),
         progress_percent: z.number().int().min(0).max(100).optional().describe("进度百分比 0-100"),
+        // T-P1-902 集成缝隙修复：M1 claim 响应的任务视图不含 project_id（tasks 表无该列），
+        // 领取缓存的 project_id 恒为 null；若不在 schema 中声明，MCP SDK 会剥离未声明参数，
+        // 调用方补充的上下文永远到不了处理器 → 真实 M1 下 report_progress 必然 REQ-0001。
+        project_id: z.string().optional().describe("项目 ID（领取缓存缺失时由此参数补充信封上下文）"),
+        batch_id: z.string().optional().describe("需求批次 ID（领取缓存缺失时由此参数补充信封上下文）"),
       },
     },
     wrapTool("report_progress", async (args) => {

@@ -118,10 +118,35 @@ test("③-7 同 execution_id 不同内容：RES-0003 拒绝覆盖（历史保留
 test("③-8 跨任务提交：本会话在途任务不一致 → RES-0002（单会话单任务）", async () => {
   // 当前会话在途任务为 T-P1-201（③-7 成功提交后已清除），先领取 T-P1-202 再提交 T-P1-203
   m1.seedTask({ ...validDevReport(), task_id: "T-P1-202", project_id: "AI-IMAGE-SERVICE", batch_id: "BATCH-001" });
-  const claim = await client.callTool({ name: "claim_task", arguments: { task_id: "T-P1-202", correlation_id: "CORR-202" } });
+  const claim = await client.callTool({ name: "claim_task", arguments: { task_id: "T-P1-202", correlation_id: "CORR-202", base_commit: "a".repeat(40) } });
   assert.equal(parseToolText(claim).accepted, true);
   const rep = validDevReport({ task_id: "T-P1-203", execution_id: "EXEC-203" });
   const res = await submit(rep);
   assert.equal(res.isError, true);
   assert.equal(parseToolText(res).code, "RES-0002");
+});
+
+test("③-9 changed_files=[] 合法（BLOCKED 报告无实现变更；T-P1-902 集成缝隙回归）", async () => {
+  // 此前校验器把 length===0 一并拒绝，与文案"允许为 []"矛盾——BLOCKED 报告本无实现变更，
+  // 强制伪造 changed_files 不合理。锁定 [] 通过、非字符串元素仍被拒两个语义。
+  // 注意 validDevReport 的 overrides 只做顶层展开，git 子对象需整体替换。
+  const gitBase = { repository: "AI-IMAGE-SERVICE", branch: "feature/T-P1-202-blocked",
+                    base_commit: "a".repeat(40), commit_sha: "b".repeat(40) };
+  const rep = validDevReport({
+    task_id: "T-P1-202", execution_id: "EXEC-204", status: "BLOCKED",
+    blocked_reason: "依赖缺失", blocked_owner: "OWNER", unblock_condition: "依赖就绪",
+    known_issues: ["阻断：上游依赖未就绪"],
+    git: { ...gitBase, changed_files: [] },
+  });
+  const res = await submit(rep);
+  const payload = parseToolText(res);
+  assert.equal(payload.accepted, true, "BLOCKED + changed_files=[] 应通过校验并登记");
+  assert.equal(payload.report_registry.registered, true);
+  const bad = validDevReport({
+    task_id: "T-P1-202", execution_id: "EXEC-205",
+    git: { ...gitBase, changed_files: ["ok.py", 42] },
+  });
+  const res2 = await submit(bad);
+  assert.equal(res2.isError, true);
+  assert.ok(parseToolText(res2).details.field_errors.some((f) => f.field === "git.changed_files"));
 });

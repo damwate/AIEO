@@ -210,8 +210,11 @@ def enforce_csrf(request: Request, principal: Principal) -> None:
 
 
 # C7 §8.6：MCP/CLI 本机服务身份使用独立身份及权限白名单——白名单外的端点一律拒绝（默认拒绝）。
-# 白名单只覆盖本地服务 agent 的任务/报告/工件/提交/消息确认工作流；管理操作（agent 注册、
+# 白名单覆盖本地服务 agent 的任务/报告/工件/提交/消息投递与确认工作流；管理操作（agent 注册、
 # 服务令牌签发、项目/仓库/批次创建、消息 requeue/cancel/sweep、审批、审计查询）仅限人类用户。
+# （T-P1-902 集成缝隙修复：补 POST /api/v1/messages —— 03-协议 §3 要求服务 agent 向平台
+# 投递 TASK_ACCEPTED / PROGRESS_UPDATED / DEVELOPMENT_COMPLETED / BLOCKER_REPORTED 等
+# 信封，消息投递是 agent 工作流本体而非管理操作；缺它则任何服务身份都无法履行 03-协议。）
 SERVICE_ALLOWED_ENDPOINTS: frozenset[tuple[str, str]] = frozenset({
     ("GET", "/api/v1/auth/session"),
     ("GET", "/api/v1/tasks/{task_id}"),
@@ -226,6 +229,7 @@ SERVICE_ALLOWED_ENDPOINTS: frozenset[tuple[str, str]] = frozenset({
     ("GET", "/api/v1/artifacts/{artifact_id}"),
     ("POST", "/api/v1/commits"),
     ("GET", "/api/v1/commits"),
+    ("POST", "/api/v1/messages"),
     ("GET", "/api/v1/messages"),
     ("GET", "/api/v1/messages/dead-letter"),
     ("POST", "/api/v1/messages/{message_id}/ack"),

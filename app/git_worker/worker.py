@@ -235,7 +235,10 @@ class M1Client(Protocol):
       on ``UNIQUE(repository_id, sha)`` (§11.4-④: re-registration after a
       failure must not duplicate rows).
     - ``register_artifact`` mirrors the ``artifacts`` table (``type='DIFF'``
-      for commit diffs) and is idempotent on unique ``path``.
+      for commit diffs) and is idempotent on unique ``path``.  ``path`` is a
+      repo-relative POSIX identity path (M1 ``validate_artifact_path`` rejects
+      absolute/backslash paths); the worker's local ``diff_dir`` file stays the
+      physical evidence location.
     - ``record_audit`` mirrors ``audit_logs`` (§5.3: 追责走审计，不靠运行日志).
     """
 
@@ -1641,6 +1644,13 @@ class GitWorker:
                 details={"diff_path": str(artifact_path)},
                 correlation_id=context.correlation_id,
             ) from exc
+        # T-P1-902 集成缝隙修复：M1 validate_artifact_path（app/platform/reports.py）
+        # 要求登记 path 为仓库相对 POSIX 路径（拒绝盘符/绝对/反斜杠路径），而本模块
+        # 此前把本地 diff_dir 的绝对物理路径原样登记，真实 M1 会以 REQ-0001 拒收。
+        # 登记改为确定性身份路径（task_id 与 commit sha 均不含路径分隔符，无碰撞）；
+        # 本地 diff_dir 仍是物理证据落盘位置，语义不变（M1 artifacts.path 为登记标识，
+        # 内容字节由 sha256 锚定，M1 按需以 inline content 存 blob）。
+        artifact_relpath = f"git-worker/diffs/{context.task_id}/diff-{commit_sha}.patch"
         if _sha256_bytes(diff_bytes) != diff_sha256:
             raise GitWorkerError(
                 "ART-0002",
@@ -1652,7 +1662,7 @@ class GitWorker:
             artifact_id = self.m1_client.register_artifact(
                 task_id=context.task_id,
                 artifact_type="DIFF",
-                path=str(artifact_path),
+                path=artifact_relpath,
                 sha256=diff_sha256,
             )
             git_commit_id = self.m1_client.register_commit(

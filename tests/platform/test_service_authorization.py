@@ -72,7 +72,8 @@ def test_service_token_blocked_from_message_admin_operations(tmp_path):
 
 def test_service_token_allowed_workflow_end_to_end(tmp_path):
     client, harness, token = service_client(tmp_path)
-    task_id = harness.create_task(harness.setup_project()["batch_id"], "whitelisted flow")["task_id"]
+    batch_id = harness.setup_project()["batch_id"]
+    task_id = harness.create_task(batch_id, "whitelisted flow")["task_id"]
     harness.drive_to_ready(task_id, "T-WL")
     # claim + event submission are whitelisted for the service identity
     claimed = client.post(f"/api/v1/tasks/{task_id}/claim",
@@ -107,7 +108,20 @@ def test_service_token_allowed_workflow_end_to_end(tmp_path):
         "sha": "b" * 40, "base_commit": "c" * 40, "diff_artifact_id": artifact_id,
     }, headers=bearer(token))
     assert commit.status_code == 201
-    # message ack is whitelisted; requeue is not
+    # message delivery + ack are whitelisted (03-协议 §3 agent→platform 信封投递,
+    # T-P1-902 集成缝隙修复：POST /api/v1/messages 补入白名单); requeue is not
+    message = client.post("/api/v1/messages", json={
+        "schema_version": "1.0",
+        "message_id": "MSG-20260101-000001",
+        "message_type": "PROGRESS_UPDATED",
+        "created_at": "2026-01-01T00:00:00.000Z",
+        "source": {"agent_id": "M4-WORKER", "agent_type": "system"},
+        "target": {"agent_id": "AIEO-ORCHESTRATOR", "agent_type": "system"},
+        "project_id": "PROJ-A", "batch_id": batch_id, "task_id": task_id,
+        "correlation_id": "CORR-901001",
+        "payload": {"stage": "implementing"},
+    }, headers=bearer(token))
+    assert message.status_code == 202, message.text
     assert client.get("/api/v1/messages", headers=bearer(token)).status_code == 200
 
 

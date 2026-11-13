@@ -905,6 +905,23 @@
 - **当前遗留问题：** 四模块集成验收（集成测试、集成 manifest、集成审查派单）未开始；契约批准人追认、DEC-017 扩展门禁、main 合并均保持原状。
 - **下一步建议与验证标准：** 新会话执行四模块集成验收（T-P1-902 或后续编号）：四模块交互端到端、契约 C1-C8 集成落点、集成审查派单（独立新会话，不继承模块级 PASS 结论）；本会话已完成 4 轮审查循环，按会话管理规则轮换。
 
+### DEV-20261113-010 T-P1-902 四模块集成验收：E2E 十一步全绿与 5 项跨模块契约缝隙修复
+
+- **任务目标：** T-P1-901 第 8 轮 PASS 后按 agent-contract §7 / review-protocol §7 执行四模块集成验收：真实进程跨模块 E2E（docs/立项/06 §2 验收七条）→ 集成期模块修复与回归 → 证据链与独立审查派单。
+- **环境与版本：** 分支 fix/AIEO-PHASE0-REVIEW-R10；集成证据 `phase1/logs/integration-20261113T003810Z/`（E2E exit=0，11 步全 ok，18 证据文件 + regression/ 四模块回归日志与 summary.json）。
+- **发生与处理：**
+  1. 新建 `tests/integration/` 四件套 + README：`e2e_four_modules.py` 主编排启动**真实 M1 uvicorn 子进程**（临时 DB/日志/工件、空闲端口、AIEO_ENV=test）+ 真实 MCP stdio 子进程（M3）+ 真实 GitWorker 与 scratch git 仓库（M4）+ headless runDispatch 13 步全管线（M2，本地 fixture DOM）；十一步逐一覆盖验收七条（含依赖门禁负例、消息幂等/dead-letter 只读/sweep/403 越权面、真实进程重启持久化、/audit 全动作断言），逐步 ok 判定、失败即停、证据 JSON+NDJSON 落盘。
+  2. 集成发现 **5 项跨模块契约缝隙**并修复（每项有模块测试回归锁定）：① M3 `claim_task` 未透传 M1 必填 `base_commit` → 真实 M1 422；② M3 `report_progress` 的 `project_id`/`batch_id` 未在 MCP zod inputSchema 声明，被 SDK 静默剥离（而 M1 claim 响应任务视图不含 project_id）→ 真实 M1 下必然 REQ-0001；③ M1 服务白名单缺 `POST /api/v1/messages` → 03-协议 §3 服务 agent 信封投递全断（管理操作保持人类专属）；④ M4 DIFF 工件登记本地绝对 Windows 路径 → M1 `validate_artifact_path` 拒收（改登记仓库相对身份路径 `git-worker/diffs/<task_id>/diff-<sha>.patch`，本地 diff_dir 物理留证不变）；⑤ M3 `changed_files=[]` 校验与自身文案"允许为 []"矛盾（BLOCKED 报告本无实现变更）→ 允许空数组、元素类型校验不变。
+  3. E2E 共跑 11 轮收敛（前 10 轮失败原因：AIEO-ORCHESTRATOR 预置重复、子任务依赖门禁比预期更严（PASS→READY 也被 TASK-0002 拦）、GIT-0002 探针需真实非祖先 commit、哈希不匹配实为 422 ART-0002 而非 400、无 START 不能交 BLOCKED 报告等——全部转为套件断言修正或编排步骤重排，未引入新模块改动）；失败轮证据目录即删，最终全绿。
+- **验证结果：** E2E exit=0（11 步 all_ok=true）；四模块回归 M1 43/43、M2 65/65、M3 53/53（50+3 集成缝隙回归）、M4 24/24，退出码全 0；四模块修改文件共 10 个（M1×2、M3×6、M4×2）。
+- **问题根因分析：** 5 项缝隙同一根因——模块级验收各自以 fake/进程内替身通过，模块间"真实对接面的字段级契约"（必填字段、白名单端点、工件路径格式、SDK 参数剥离行为）无人持有；进程内 TestClient 与 fake M1 永远不会暴露它们，真实进程+真实 HTTP+真实 git 是唯一手段。
+- **本次新增的开发经验：**
+  1. fake 替身通过的模块级测试不等于跨模块契约成立：一模块响应里"没有的字段"恰是另一模块必填的（claim 响应无 project_id ↔ report_progress 必填），集成期必须以真实对端复验每个交接点。
+  2. MCP SDK 的 zod inputSchema 是隐式 API 契约：未声明的入参被**静默剥离**而非报错，工具新增透传字段必须同步声明（M3 ①-5b 回归锁定）。
+  3. 工件登记路径是平台身份而非本地文件路径：M1 `validate_artifact_path` 强制仓库相对 POSIX，注册方（M4）登记"确定性身份路径"（由 task_id+commit_sha 推导，幂等可重放），物理存储位置另行留证。
+- **当前遗留问题：** 集成独立审查派单未完成（handoff+manifest_tool+证据链进行中）；契约批准人追认、DEC-017 扩展门禁、main 合并保持原状。
+- **下一步建议与验证标准：** `handoff/PHASE1-INTEGRATION-REVIEW.md` + `phase1/tools/manifest_tool.mjs`（manifest/verify/recheck 三子命令）完成证据链：manifest→commit→tag `review-anchor/T-P1-902-r1`→blob recheck→amend 仅证据目录+核验报告→派单全新空白审查会话（review-protocol §5.1 阶段边界轮换）；结论以 dispatch 目录 reply.txt 原始 JSON 为准，reviewed_commit 逐字符复制 40 位。
+
 ---
 
 ## 8. AI 能力边界与工具切换记录
