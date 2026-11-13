@@ -1,0 +1,261 @@
+{
+  "transport": "git_pointer_manifest",
+  "contract_version": "1.0",
+  "task_id": "T-P1-902",
+  "execution_id": "EXEC-921",
+  "purpose": "Phase1 four-module integration acceptance input materials (T-P1-902): tests/integration E2E suite (11 steps over acceptance checklist) + integration-gap module fixes (M1 whitelist / M3 claim-progress-schema / M4 artifact path) + E2E evidence logs + four-module regression logs + handoff + lessons",
+  "files": [
+    {
+      "path": ".gitattributes",
+      "artifact_sha256": "6a3f7290f1a6e43b92339bbad44e0e3eb23238dc8e57d7b69946f12b6bd88898",
+      "size_bytes": 382,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/git_worker/tests/test_git_worker.py",
+      "artifact_sha256": "df888c793bfdbeec1cd89c33eaac7615a22c9421bb8bc5690c6d8f25643ae676",
+      "size_bytes": 26344,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/git_worker/worker.py",
+      "artifact_sha256": "77805dd5fd077bba0c74c26430f4e2eeaeab60cca656b18162e74234cc1e08c1",
+      "size_bytes": 65093,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/platform/security.py",
+      "artifact_sha256": "e727a50dca6e71824de13817d3bf9dddc7566445ed99424b42d9e0f198ac8c17",
+      "size_bytes": 10354,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/zcode_bridge/src/m1_client.mjs",
+      "artifact_sha256": "b96a211e01c15e974f85b1f682e5bad95522230ec03e40ce4d38621004e4d3df",
+      "size_bytes": 6429,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/zcode_bridge/src/mcp_server.mjs",
+      "artifact_sha256": "3a3372126d10290cd53a420b74c7d415097437cb2775da293d596e99b1e64d35",
+      "size_bytes": 17870,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/zcode_bridge/src/report_schema.mjs",
+      "artifact_sha256": "9f44586da961af1767d92675834272071075fffca48d20c8bae9aca4470ccde4",
+      "size_bytes": 6096,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/zcode_bridge/test/claim_idempotency.test.mjs",
+      "artifact_sha256": "6c3856987be63ef0907f3495196d8eb1bc609f7736176c5b040b26c6e3da0b1d",
+      "size_bytes": 9277,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/zcode_bridge/test/mcp_stdio_smoke.test.mjs",
+      "artifact_sha256": "265092449d71cd1364e18a077261eea6a4284738a4713004b470d7fa301619c2",
+      "size_bytes": 7470,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "app/zcode_bridge/test/submit_result_schema.test.mjs",
+      "artifact_sha256": "37dde963aec1b353036c7ecc3fa6b34f8dd977f4fc40cd388e4e11f04a83e336",
+      "size_bytes": 7305,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "docs/AI-DEV-LESSONS.md",
+      "artifact_sha256": "48daaba1fbc0ce141fd33b422e45bcd22fddd0f89cee10094c3e51ad9c20744f",
+      "size_bytes": 93550,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "handoff/PHASE1-INTEGRATION-REVIEW.md",
+      "artifact_sha256": "f83537b77ec7dadc2b3a7e258532c4189e36a537dabf8b774ddd5b4d9ad79fc7",
+      "size_bytes": 16137,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "phase1/logs/integration-20261113T003810Z/e2e-evidence.json",
+      "artifact_sha256": "500d5b766ae66e97487acd9c1d9c6962d1415270b98250bc1469b8cbd2b481f9",
+      "size_bytes": 12575,
+      "media_type": "application/json"
+    },
+    {
+      "path": "phase1/logs/integration-20261113T003810Z/e2e-run.log",
+      "artifact_sha256": "54cf08b78db099ae1fce0a5b47ee67e4bae53392201de49de1b96c0dcb2f0718",
+      "size_bytes": 2417,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "phase1/logs/integration-20261113T003810Z/m1-server/m1-server-run1.log",
+      "artifact_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "phase1/logs/integration-20261113T003810Z/m1-server/m1-server-run2.log",
+      "artifact_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "phase1/logs/integration-20261113T003810Z/m2-artifacts/DISPATCH-2026-11-13T00-38-20-reply.json",
+      "artifact_sha256": "a73124d58900b35562b7e50cd148882cbebd30fc2fb498f3f1fbbf6bc1c3c1ac",
+      "size_bytes": 173,
+      "media_type": "application/json"
+    },
+    {
+      "path": "phase1/logs/integration-20261113T003810Z/m2-leg/DISPATCH-2026-11-13T00-38-20/raw-units.json",
+      "artifact_sha256": "747619bdffdde3c6569a143ba98f50be6a9c13dc4464efbb00c0e80c2052a078",
+      "size_bytes": 2184,
+      "media_type": "application/json"
+    },
+    {
+      "path": "phase1/logs/integration-20261113T003810Z/m2-leg/DISPATCH-2026-11-13T00-38-20/reply.txt",
+      "artifact_sha256": "a73124d58900b35562b7e50cd148882cbebd30fc2fb498f3f1fbbf6bc1c3c1ac",
+      "size_bytes": 173,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "phase1/logs/integration-20261113T003810Z/m2-leg/DISPATCH-2026-11-13T00-38-20/request.txt",
+      "artifact_sha256": "ab36da80a34ea345df79c973bbdbe3848a8e8c8336eb0033bdb7a7c0e38c9644",
+      "size_bytes": 41,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "phase1/logs/integration-20261113T003810Z/m2-leg/DISPATCH-2026-11-13T00-38-20/result.json",
+      "artifact_sha256": "23d42b772ec9d664db29fa4b64261ed0104018b931d3d4ca2d86d4d7e027e364",
+      "size_bytes": 5224,
+      "media_type": "application/json"
+    },
+    {
+      "path": "phase1/logs/integration-20261113T003810Z/m2-leg/m1-artifact-registry.json",
+      "artifact_sha256": "18095f959360a8d32d7362e3816feaec806e78ce7eff397b4be4157f27a832da",
+      "size_bytes": 3159,
+      "media_type": "application/json"
+    },
+    {
+      "path": "phase1/logs/integration-20261113T003810Z/m2-leg/m2-leg-stderr.log",
+      "artifact_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "size_bytes": 0,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "phase1/logs/integration-20261113T003810Z/m2-leg/m2-leg-stdout.log",
+      "artifact_sha256": "1fab8ddeada0b1b642ccf68577e00c2bbfaa351745a67143187ca47ae128b8d9",
+      "size_bytes": 922,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "phase1/logs/integration-20261113T003810Z/m3-mcp-ndjson/bridge-2026-11-13.ndjson",
+      "artifact_sha256": "cdac4db529f36cb0caf3342e09a86dd1b51e4579e3f0a8b568ab88b6e8109bff",
+      "size_bytes": 2825,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "phase1/logs/integration-20261113T003810Z/m4-audit-local.ndjson",
+      "artifact_sha256": "124129fd176b4d4c6569a0e328ec1165e25474c0103c0eb2cfd4d55529225d99",
+      "size_bytes": 616,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "phase1/logs/integration-20261113T003810Z/m4-diffs/diff-dc500230ef69872756d8ad2169541b08063a1769.patch",
+      "artifact_sha256": "a16a88e44e8d26e1778b5eb13d50c1bd3873704ed839049601c03c5806c1a070",
+      "size_bytes": 160,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "phase1/logs/integration-20261113T003810Z/m4-logs/git_worker-20261113.ndjson",
+      "artifact_sha256": "950da10f0653dbc500fe4ffb3aec72c15bc4f035b21c18f7dde1e7e8037b02de",
+      "size_bytes": 1332,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "phase1/logs/integration-20261113T003810Z/regression/m1-pytest.log",
+      "artifact_sha256": "c37b7641d59c762e56e08a252a6fbeff86e050ed9edef3c18d6cd0ba021e30e6",
+      "size_bytes": 689,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "phase1/logs/integration-20261113T003810Z/regression/m2-node.log",
+      "artifact_sha256": "eca7a35947ed97f3eda356e41588b97fcc00a93158983ddb1f5955456f523bc9",
+      "size_bytes": 7577,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "phase1/logs/integration-20261113T003810Z/regression/m3-node.log",
+      "artifact_sha256": "9b84f700db6b962b9bc5da0a8bf1bec2e476dcc7ee158a8a8e30686365208d0d",
+      "size_bytes": 5030,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "phase1/logs/integration-20261113T003810Z/regression/m4-pytest.log",
+      "artifact_sha256": "59dde93492c8084a2be76a447fa88899a8e6ab7f95229abbdefa23cbf46a1d76",
+      "size_bytes": 102,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "phase1/logs/integration-20261113T003810Z/regression/summary.json",
+      "artifact_sha256": "61048b23338353e17858224faaa12bc42c81fcfab336db3c702bf96be51caa7c",
+      "size_bytes": 1375,
+      "media_type": "application/json"
+    },
+    {
+      "path": "phase1/logs/integration-20261113T003810Z/scratch-repos.json",
+      "artifact_sha256": "7024fa2a6e5518cb824f78bde006ddadb45f8c102efb5d7a7672f1aff80f93d5",
+      "size_bytes": 281,
+      "media_type": "application/json"
+    },
+    {
+      "path": "phase1/logs/integration-20261113T003810Z/work-dir-archive.json",
+      "artifact_sha256": "ddedb0118ca342fa342cbfe507eb08a7b11e31f7d79c4b2345857f4835f9e277",
+      "size_bytes": 346,
+      "media_type": "application/json"
+    },
+    {
+      "path": "phase1/tools/manifest_tool.mjs",
+      "artifact_sha256": "6d757ce2495fec1083f1536d5f0c9f9e14c6e044073ee60e48601398607a34e1",
+      "size_bytes": 11478,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "tests/integration/README.md",
+      "artifact_sha256": "a6a84fa3be8789cf82eab72bee8fdc922f46ac428215b2f7e80a12b94cc21d69",
+      "size_bytes": 6996,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "tests/integration/e2e_four_modules.py",
+      "artifact_sha256": "15bb6a21798a9e5736468b5f42b08e204deb937745cd0c795eff02d10df5b9ed",
+      "size_bytes": 55937,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "tests/integration/m1_rest_client_for_m4.py",
+      "artifact_sha256": "36d6e0a4ee377c27de82ebbc77a38ab83fae1bd2d73971fb2d2351eb2a3e4621",
+      "size_bytes": 5900,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "tests/integration/m2_leg.mjs",
+      "artifact_sha256": "c4833ef4f2676d215c4da943110163611b73e73f0877de29f2a4562eb4409d10",
+      "size_bytes": 6451,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "tests/integration/mcp_stdio_client.py",
+      "artifact_sha256": "2bf53f9977e2d1e5bd952b797516ee8261c976edd557f43e9cdf6b241894553a",
+      "size_bytes": 6344,
+      "media_type": "text/plain"
+    },
+    {
+      "path": "tests/platform/test_service_authorization.py",
+      "artifact_sha256": "57dbed34fe2fdb65be14e2134d65f5659e50382ccfa0292e20ebb9caf419bcf0",
+      "size_bytes": 7536,
+      "media_type": "text/plain"
+    }
+  ]
+}

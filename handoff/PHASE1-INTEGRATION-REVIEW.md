@@ -15,7 +15,7 @@
 
 ## 2. 审查材料与绑定值【以派单消息 SHA 为准实读】
 
-- 输入材料 manifest：`phase1/manifests/T-P1-902-input-manifest.json`（**41 个文件**，仓库根相对路径；含集成套件 5 文件、集成期修复模块文件 12 个、`docs/AI-DEV-LESSONS.md`（含 DEV-20261113-010）、`handoff/PHASE1-INTEGRATION-REVIEW.md`（本文件）、证据链工具 `phase1/tools/manifest_tool.mjs`、E2E+回归证据 23 文件；核验报告与 blob 复核证据**不入 manifest**——报告引用 manifest SHA 会自引用，复核证据受 amend 时序约束，二者均经本 commit 提交、按下述路径实读）
+- 输入材料 manifest：`phase1/manifests/T-P1-902-input-manifest.json`（**42 个文件**，仓库根相对路径；含集成套件 5 文件、集成期修复模块文件 12 个、`docs/AI-DEV-LESSONS.md`（含 DEV-20261113-010）、`handoff/PHASE1-INTEGRATION-REVIEW.md`（本文件）、证据链工具 `phase1/tools/manifest_tool.mjs`、字节化规则 `.gitattributes`（`phase1/logs/** binary`：证据目录按磁盘字节入库，manifest SHA-256 基准=磁盘字节=Git blob 字节，L-011.7 延伸）、E2E+回归证据 23 文件；核验报告与 blob 复核证据**不入 manifest**——报告引用 manifest SHA 会自引用，复核证据受 amend 时序约束，二者均经本 commit 提交、按下述路径实读）
 - manifest SHA-256：**以派单消息为准**
 - 契约版本：`1.0`；工程标准：`platform-contract-v1.0`
 - 任务 ID：`T-P1-902`；执行 ID：`EXEC-921`（避免与 T-P1-901 各轮 EXEC-901~908 混淆）；关联 ID：`CORR-921`
@@ -28,9 +28,10 @@
 
 分工如下：
 
-1. **开发方（已执行，全量）：** 主会话对 manifest 全部 41 文件执行机械核验——① 每文件磁盘字节 SHA-256 与 manifest `artifact_sha256` 逐项比对；② commit 后对 `git cat-file blob` 重新全量比对（证明 manifest 描述的即为本 commit 内容）；③ `git ls-tree -r` 核对全部路径存在于本 commit。**报告：`phase1/manifests/T-P1-902-verification-report.json`**（含命令、退出码、逐文件结果）；blob 复核证据 `phase0/logs/blob-recheck-T-P1-902-r1/`。
+1. **开发方（已执行，全量）：** 主会话对 manifest 全部 42 文件执行机械核验——① 每文件磁盘字节 SHA-256 与 manifest `artifact_sha256` 逐项比对；② commit 后对 `git cat-file blob` 重新全量比对（证明 manifest 描述的即为本 commit 内容）；③ `git ls-tree -r` 核对全部路径存在于本 commit。**报告：`phase1/manifests/T-P1-902-verification-report.json`**（含命令、退出码、逐文件结果）；blob 复核证据 `phase0/logs/blob-recheck-T-P1-902-r1/`。
+   **EOL 字节化前提（L-011.7 延伸）：** 证据目录经 `.gitattributes` 的 `phase1/logs/** binary` 按磁盘字节原样入库，autocrlf 不做提交时规范化——否则 JSON/NDJSON 类证据（磁盘 CRLF）会被规范化为 LF blob，manifest 核验必然失败（本轮首轮 recheck 曾因此 36/41，锚定 commit 与失败证据留档 `phase0/logs/blob-recheck-T-P1-902-r1-pre-fix-36of41/`，属规则缺失而非证据篡改，已机制修复）。
    **amend 机制说明（F-301/F-404 整改延续）：** blob 复核必须在 commit 之后执行，其证据无法与被复核内容同一次生成。流程为：先产生含全部审查材料与 manifest 的 commit C1，对 C1 执行 blob 复核（证据内 `commit_sha256_anchored` 字段锚定 C1），再以 amend 方式将证据目录与核验报告并入生成最终送审 commit C2——amend **仅新增证据目录与报告**，manifest 所列全部文件在 C1 与 C2 中的 Git blob 逐字节相同（Git 内容寻址保证，可用 GitHub compare 验证 diff 仅含证据新增）。**C1 以 `review-anchor/T-P1-902-r1` 格式的 tag 锚定并推送**（force push 后裸 SHA 不再被引用，GitHub compare 不可得）。**F-601 整改延续：核验报告 method 字段指向本轮 `blob-recheck-T-P1-902-r1/`，锚定 commit 以该证据 `recheck-result.json` 的 `commit_sha256_anchored` 字段为准（报告不硬编码随 amend 变化的 SHA）**。
-2. **审查方（本轮请你执行）：** ① 实读上述核验报告，核对覆盖面（41/41、mismatch 为空、退出码），并核对报告引用的复核证据目录与实际提交的 `blob-recheck-T-P1-902-r1/` 一致（F-601 同轮引用）；② 按你的判断**抽样直接读取** raw.githubusercontent.com 上本 commit 的材料文件，核对其内容与申报一致；③ 抽查核验报告所列哈希与你的实读是否自洽——若发现报告与实读不符，按 MAJOR+ 处理。
+2. **审查方（本轮请你执行）：** ① 实读上述核验报告，核对覆盖面（42/42、mismatch 为空、退出码），并核对报告引用的复核证据目录与实际提交的 `blob-recheck-T-P1-902-r1/` 一致（F-601 同轮引用）；② 按你的判断**抽样直接读取** raw.githubusercontent.com 上本 commit 的材料文件，核对其内容与申报一致；③ 抽查核验报告所列哈希与你的实读是否自洽——若发现报告与实读不符，按 MAJOR+ 处理。
 3. **诚实条款：** 若报告缺失、覆盖不足或内容与实读矛盾→判 BLOCKED 并写入 findings；你无需也无法重复机械哈希计算，这部分由报告与 Git commit 锚定共同保证。
 
 ## 4. 被审查交付【事实，材料均在 manifest 中】
