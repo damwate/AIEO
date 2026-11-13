@@ -919,6 +919,7 @@
   1. fake 替身通过的模块级测试不等于跨模块契约成立：一模块响应里"没有的字段"恰是另一模块必填的（claim 响应无 project_id ↔ report_progress 必填），集成期必须以真实对端复验每个交接点。
   2. MCP SDK 的 zod inputSchema 是隐式 API 契约：未声明的入参被**静默剥离**而非报错，工具新增透传字段必须同步声明（M3 ①-5b 回归锁定）。
   3. 工件登记路径是平台身份而非本地文件路径：M1 `validate_artifact_path` 强制仓库相对 POSIX，注册方（M4）登记"确定性身份路径"（由 task_id+commit_sha 推导，幂等可重放），物理存储位置另行留证。
+  4. 证据文件的 SHA-256 基准=磁盘字节=Git blob 字节（L-011.7）在 Windows+autocrlf 下会被打破：Python 在 Windows 写 JSON/NDJSON 默认落 CRLF，git 提交文本类文件时规范化为 LF blob → manifest 核验首轮 36/41。修复为机制级：`.gitattributes` 增 `phase1/logs/** binary`（证据目录整体按磁盘字节入库，不改证据字节本身）；后续新增证据目录类型时同步扩规则，勿事后转换证据 EOL。
 - **当前遗留问题：** 集成独立审查派单未完成（handoff+manifest_tool+证据链进行中）；契约批准人追认、DEC-017 扩展门禁、main 合并保持原状。
 - **下一步建议与验证标准：** `handoff/PHASE1-INTEGRATION-REVIEW.md` + `phase1/tools/manifest_tool.mjs`（manifest/verify/recheck 三子命令）完成证据链：manifest→commit→tag `review-anchor/T-P1-902-r1`→blob recheck→amend 仅证据目录+核验报告→派单全新空白审查会话（review-protocol §5.1 阶段边界轮换）；结论以 dispatch 目录 reply.txt 原始 JSON 为准，reviewed_commit 逐字符复制 40 位。
 
