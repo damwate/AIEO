@@ -1,0 +1,181 @@
+{
+  "at": "2026-11-13T16:34:52.098Z",
+  "message_bytes": 1070,
+  "reply": "ChatGPT 说：\nAIEO Phase 1 收尾优先级建议\n\n我的建议：原则上支持开发方提出的 A → B → D → C，但需要增加两个条件：B 必须设置合并前置检查，C 必须拆成分批验收，而不是等五类场景全部完成后才统一处理。\n\n另外，我认为 A、B、D、C 并不是四项完全独立的工作，而是三个层次：\n\n治理基线确认：A\n\n阶段成果归档与主干整合：B\n\n技术边界解除与能力扩展：D、C\n\n我按照指定的 commit 37b0a3d6c354ac297bba2382c0117205df34feaf 读取了两份定档材料，没有将本轮作为审查轮次，也没有产生 finding。\n\n一、四项工作优先级\n\n第一优先级：A 契约追认\n\nP0\nA\n\n原因：确立治理基线。\n\nDEC-011 已经冻结 platform-contract v1.0.0，但批准人仍然是用户。现在四个模块已经完成独立审查和集成验收，实际上已经产生了大量依赖这份契约的代码。\n\n这时候继续开发而不追认，会产生一个问题：实现已经落地，但其设计依据尚未得到最终授权。\n\n建议：\n\n先审阅 platform-contract-v1.0。\n\n明确批准、附条件批准或要求修改。\n\n对遗留 BLOCKED 项目单独记录，不要把契约追认误解为全部扩展场景通过。\n\n必要时新增 DEC-018，记录正式追认结果及适用边界。\n\n第二优先级：B main 合并\n\nP0\nB\n\n原因：形成正式阶段基线。\n\n当前分支领先 47 commits，Phase 1 的模块和集成验收已经闭环。\n\n长期让已验收成果停留在开发分支，会增加后续维护、分支漂移和版本基线不一致的成本。\n\n但这里有一个重要前提：\n\n47 commits 不代表 47 个提交都已经获得合并授权。\n\n建议：\n\n对比 main 与目标分支完整差异。\n\n检查是否混入未验收或不属于本阶段的变更。\n\n核对 Phase 0、Phase 1 的合并边界。\n\n确认 CI、回归测试、数据库迁移及配置兼容性。\n\n用户明确审批后，由授权人员执行合并。\n\n绝不能因为 T-P1-902 PASS 就自动推导出 main 合并授权。这与 DEC-010、agent-contract §6 的铁律一致。\n\n第三优先级：D M2 真实网页链路工程化\n\nP1\nD\n\n原因：补齐真实运行环境的验证能力。\n\n当前 DEC-017 明确限定了 Phase 1 的通过范围：\n\n已验证单 assistant unit 长回复。\n\n已验证稳定 DOM 集合。\n\n已验证公开 GitHub 指定 SHA 读取。\n\n未验证真实多 assistant unit 和动态虚拟列表裁切恢复。\n\n当前 headless fixture DOM 不能代替真实 chatgpt.com 链路。\n\n建议优先实现：\n\n真实页面 DOM 结构适配。\n\n多 assistant unit 完整提取。\n\n虚拟列表滚动及连续性检测。\n\n真实发送、生成结束和确认窗。\n\n原始回复持久化、哈希和完整性验证。\n\n页面异常、网络中断和登录失效处理。\n\n注意：工程化完成不等于自动取得 BLOCKED-1 扩展场景 PASS，仍需要独立取证和审查。\n\n第四优先级：C BLOCKED-1 扩展场景\n\nP1/P2\nC\n\n原因：这是范围最大、取证成本最高的一项。\n\nDEC-012～016 目前均待复审，DEC-017 只是核心路径 PASS_WITH_CONSTRAINTS，并未解除扩展场景限制。\n\n建议不要一次性把所有场景打包成一个大型任务。\n\n应当先完成 DEC-012 复审，再按风险和依赖分批推进：\n\nGitPointer 契约修订。\n\n多 unit 与虚拟列表。\n\n私有仓库权限。\n\n网络故障注入及退避耗尽。\n\n多文件部分读取失败。\n\nM1 REST、数据库、ACK 和完整平台并发。\n\n每项独立保留证据、测试结果及 commit SHA。\n\n二、D 先于 C 是否成立？\n结论：有条件成立\n\n我认为开发方的判断有道理，但需要纠正一个容易产生的理解：\n\nD 是 C 中部分真实网页场景的工程基础，不是整个 C 的前置条件。\n\n具体关系如下：\n\nC 的验证内容\n\n\t\n\n是否依赖 D\n\n\n\n\nDEC-012 GitPointer 契约复审\n\n\t\n\n不依赖\n\n\n\n\n多 assistant unit\n\n\t\n\n强依赖\n\n\n\n\n真实虚拟列表裁切\n\n\t\n\n强依赖\n\n\n\n\n私有仓库权限\n\n\t\n\n不直接依赖\n\n\n\n\n网络故障注入\n\n\t\n\n部分依赖\n\n\n\n\n多文件读取失败\n\n\t\n\n不直接依赖\n\n\n\n\nM1 REST/DB/ACK\n\n\t\n\n不直接依赖\n\n这里有一个很重要的区别：\n\nD 解决的是：真实网页环境下，M2 能不能可靠完成输入、发送、提取和持久化。\n\nC 解决的是：整个系统在各种边界条件下，是否符合已经定义的契约。\n\n如果没有 D，部分 C 场景只能依赖 fixture 或模拟环境取证，不能证明真实网页链路的行为。\n\n但如果先做 D，再做全部 C，也可能浪费时间，因为 GitPointer 契约复审、私有仓库权限和部分 M1 验证并不需要等待 D。\n\n我的优化建议：D 与 C 分批交叉推进\n\n阶段 1：先完成独立于 D 的工作\n\nDEC-012 独立复审。\n通过后推进机器 Schema 和契约测试。\n梳理私有仓库权限与 GitPointer 失败路径。\n\n阶段 2：完成 D\n\n建立真实 chatgpt.com 工程化链路，并通过真实环境测试。\n\n阶段 3：完成依赖真实网页的 C\n\n多 unit、虚拟列表、真实网络故障注入等。\n\n阶段 4：完成剩余 C\n\nM1 REST/DB/ACK、私有权限、多文件部分失败等，并进行独立验收。\n\n这样比严格串行的 A→B→D→C 更有效率。\n\n三、我认为还有五个容易遗漏的风险\n\n这些不是 finding，而是收尾规划中应该提前考虑的事项。\n\n1. 契约追认不能等同于 1001 行逐字审阅\n\n开发方提到 platform-contract 有 1001 行待用户审阅。\n\n我不建议把这件事变成用户从第一行读到最后一行的人工负担。\n\n建议准备三层材料：\n\n材料\n\n\t\n\n用途\n\n\n\n\n契约决策摘要\n\n\t\n\n用户理解整体设计和批准范围\n\n\n\n\nC1～C8 变更及关键条款\n\n\t\n\n识别重要架构决策\n\n\n\n\n未决事项与风险清单\n\n\t\n\n明确需要用户拍板的地方\n\n重点关注：\n\nC1：消息协议与 GitPointer。\n\nC2：数据库模型及数据生命周期。\n\nC4：审计日志及安全要求。\n\nC5：分支与合并权限。\n\nC7：身份认证、权限与本地安全。\n\nC8：版本兼容及迁移机制。\n\n尤其是 C7、C8，不应该因为 Phase 1 测试通过就被视为已经完成生产安全验证。\n\n2. main 合并可能涉及 Phase 0 和 Phase 1 两个阶段\n\n交接文件明确指出：\n\nPhase 0/Phase 1 分支均未合并 main。\n\n所以 B 不是简单地将当前分支合并进去。\n\n需要先确定：\n\nPhase 0 的哪些成果已经属于当前分支？\n\nPhase 1 是否依赖 Phase 0 尚未进入 main 的修改？\n\n是否存在两个分支之间的提交重复、冲突或依赖关系？\n\n是否需要一次合并，还是分阶段合并？\n\n建议把 47 commits 做成可追溯的合并清单。\n\n尤其要防止把尚未验收的内容顺带带进 main。\n\n3. D 的工程化范围需要防止无限扩大\n\n开发方估计 1～3 会话日，我认为可以作为初步估算，但不能作为承诺。\n\n建议把 D 拆成两个目标：\n\nD1：真实网页基础收发能力，达到可重复执行。\n\nD2：复杂网页场景适配，包括多 unit、虚拟列表、异常恢复。\n\n其中 D1 是工程化基础，D2 与 C 的真实场景验证有交叉。\n\n不要把 D2 全部塞进 D，否则容易与 C 重复建设。\n\n4. C 必须有明确的退出条件\n\n这是我认为最值得补充的风险。\n\nBLOCKED-1 的扩展场景可能不断增加。\n\n如果不设定范围，项目可能一直处于：\n\n开发 → 测试 → 发现新边界 → 扩展 → 再测试。\n\n建议对 DEC-017 的每项扩展场景建立明确验收标准：\n\n验证目标。\n\n正常路径。\n\n负例。\n\n故障恢复。\n\n原始证据。\n\n对应 commit SHA。\n\n独立审查结论。\n\n通过后才解除对应约束。\n\n没有必要要求所有扩展场景通过后，才允许已经通过的能力继续使用。\n\n5. Phase 1 最终验收清单尚未完成\n\n这个风险容易被忽略。\n\n交接文件 §4 和 §13 明确指出，06-计划 §7 的 MVP 最终验收清单还没有逐项划分 Phase 1 范围内外。\n\n我建议增加一项独立的收尾工作：\n\nE：Phase 1 范围与最终验收清单核对。\n\n它不一定要在 A、B、D、C 前面执行，但应在最终宣布 Phase 1 全部收尾之前完成。\n\n需要明确：\n\n哪些属于 Phase 1 必须完成。\n\n哪些属于 MVP 后续工作。\n\n哪些已经通过审查。\n\n哪些仍然 PASS_WITH_CONSTRAINTS。\n\n哪些尚未实施。\n\n否则将来很容易把模块级和集成级 PASS 误认为整个 MVP 已经完成。\n\n四、最终推荐执行顺序\n\n我建议采用下面这个版本：\n\nPhase 1 收尾路线图\n\nA：契约追认\n\n首要决策\n\n用户审阅 C1～C8，明确批准范围、遗留约束及变更授权。\n\nB：main 合并准备与审批\n\n第二优先级\n\n先完成 47 commits 差异核对、合并方案和回归检查，再由用户明确批准合并。\n\nC1：DEC-012 复审与机器契约落地\n\n可提前并行准备\n\n不必等待 D，先解除 GitPointer 契约层面的不确定性。\n\nD：M2 真实网页链路工程化\n\n第三优先级\n\n建立真实网页环境下可重复的收发与持久化能力。\n\nC2：剩余 BLOCKED-1 扩展场景\n\n分批完成\n\n依据真实环境能力和模块依赖逐项取证、独立验收。\n\nE：Phase 1 最终验收\n\n收尾门禁\n\n核对 06-计划 §7，形成最终范围矩阵和未完成事项清单。\n\n五、建议先由用户拍板的三个问题\n\n我不建议现在就让开发方开始 A、B、D、C 的实施。先把下面三个决策明确下来。\n\n决策 1：契约追认方式\n\n完整审阅后一次性批准\n按 C1～C8 分项审阅，允许附条件批准（推荐）\n暂不追认，先补充材料\n\n决策 2：main 合并策略\n\nA 完成后，B 单独准备和审批（推荐）\n等 D 完成后再合并\n暂缓合并，继续在开发分支推进\n\n决策 3：BLOCKED-1 扩展策略\n\n分批复审，允许部分能力逐项解除限制（推荐）\n五类场景全部完成后统一验收\n暂时维持 PASS_WITH_CONSTRAINTS，只做必要场景\n提交我的决策\n\n最后一个判断： T-P1-901 和 T-P1-902 已经证明四模块在既定验收范围内具备可接受的工程质量。现在最重要的不是继续增加审查轮次，而是把已经验证的成果正式确权、归档，并有控制地解除剩余技术约束。\n\n我支持开发方的总体方向，但更推荐：\n\nA → B（准备与审批）→ C1（独立复审）→ D → C2（分批扩展）→ E。\n\n这既不会让 D 阻塞所有 C，也不会让 C 的扩展工作无限期拖延 Phase 1 收尾。\n\n本轮仅提供会务建议，不修改仓库、不创建任务、不产生审查结论。",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "d1ccd1f1-5d55-4e1e-86a9-e89202ff8bfa",
+  "stability": {
+    "stable": true,
+    "interval_ms": 6188,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-13T16:34:45.208Z",
+      "read_finished_at": "2026-11-13T16:34:48.381Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "f469208bea1d00defde93bedadf589b40f146d26845e8cf2bb4a8070078a1059",
+          "size_bytes": 10606
+        }
+      ],
+      "assistant_uuid": "d1ccd1f1-5d55-4e1e-86a9-e89202ff8bfa",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-13T16:34:51.395Z",
+      "read_finished_at": "2026-11-13T16:34:51.926Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "f469208bea1d00defde93bedadf589b40f146d26845e8cf2bb4a8070078a1059",
+          "size_bytes": 10606
+        }
+      ],
+      "assistant_uuid": "d1ccd1f1-5d55-4e1e-86a9-e89202ff8bfa",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "9d72971b821aceda211a6658bf7a77fdfb6ad64e824ebad39cd895a6af5a4495",
+          "f469208bea1d00defde93bedadf589b40f146d26845e8cf2bb4a8070078a1059"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "9d72971b821aceda211a6658bf7a77fdfb6ad64e824ebad39cd895a6af5a4495",
+          "f469208bea1d00defde93bedadf589b40f146d26845e8cf2bb4a8070078a1059"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "f469208bea1d00defde93bedadf589b40f146d26845e8cf2bb4a8070078a1059",
+  "size_bytes": 10606,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-13T16-31-45\\reply.txt",
+  "reply_readback_sha256": "f469208bea1d00defde93bedadf589b40f146d26845e8cf2bb4a8070078a1059",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-13T16-31-45\\raw-units.json",
+  "raw_units_sha256": "fc75ed130f3a012f9aa00a9e05ac7a4a24252bf73284f4270c1ee336de963ce5",
+  "raw_units_size_bytes": 13712,
+  "raw_units_readback_sha256": "fc75ed130f3a012f9aa00a9e05ac7a4a24252bf73284f4270c1ee336de963ce5",
+  "session_id": "6af73baa-2060-83ec-a9cd-8e144f9f508b",
+  "conversation_url": "https://chatgpt.com/c/6af73baa-2060-83ec-a9cd-8e144f9f508b",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}
