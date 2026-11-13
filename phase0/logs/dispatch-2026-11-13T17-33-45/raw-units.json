@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-13T17:36:49.400Z",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "8c3957e0-4829-4423-8915-c90ac8b234f0",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "0a8c82fcbd95a043a50c0618fb67a9b0aa9e774779d42807d2456ddf635668c6",
+          "3c51dc32eaf7a887e03c2223afb166919afaae88fe4c62ee41904d7a1481b8a0"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "0a8c82fcbd95a043a50c0618fb67a9b0aa9e774779d42807d2456ddf635668c6",
+          "3c51dc32eaf7a887e03c2223afb166919afaae88fe4c62ee41904d7a1481b8a0"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-0:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nT-P1-903 r2 后能力探测 v2 — 实测结果\n\n部分能力验证成功 非审查结论\n\n测试目标：commit 5ee12e090c459e30ecd464b1dc56a2ee1793c619\n\n1. 完整 Base64 聚合包取回\n\n文件：\n\nphase1/manifests/T-P1-903-input-bundle.tar.b64\n\n失败\n\n检测项\n\n\t\n\n实测结果\n\n\n\n\nGitHub fetch 调用\n\n\t\n\n成功返回\n\n\n\n\n文件 Blob SHA-1\n\n\t\n\n8cd6d129eee8985a38e8a2bb446caa63e71dbd09\n\n\n\n\n返回字符数\n\n\t\n\n0\n\n\n\n\n内容是否完整\n\n\t\n\n否\n\n\n\n\n是否截断\n\n\t\n\n返回空内容，无法判断截断位置\n\n注意：GitHub 返回了文件的 Blob SHA-1，但没有返回文件正文。\n\n2. 200KB 样本文件取回\n\n文件：\n\nphase1/manifests/probe-b64-sample.txt\n\n取回成功\n\n检测项\n\n\t\n\n实测结果\n\n\n\n\nGitHub fetch 调用\n\n\t\n\n成功\n\n\n\n\n返回字符数\n\n\t\n\n204,800\n\n\n\n\n预期样本大小\n\n\t\n\n200 KiB\n\n\n\n\n返回内容\n\n\t\n\n非空\n\n\n\n\n文件 Blob SHA-1\n\n\t\n\n6c1cbf2f16cc4e8e80d5494a32677b2c5d47f148\n\n\n\n\n是否截断\n\n\t\n\n未发现截断迹象\n\n实际取回内容具有正常 Base64 特征，开头：\n\n纯文本\ncGF4X2dsb2JhbF9oZWFkZXIAAAAAAAAA...\n\n结尾：\n\n纯文本\n...Y29uc29sZS5sb\n\n204,800 字符与样本标称大小一致。\n\n但需要区分：长度吻合不等于已经独立验证全部文件内容的 SHA-256。\n\n3. Base64 解码及 TAR 完整性验证\n\n目标基准：\n\n项目\n\n\t\n\n预期值\n\n\n\n\nTAR 字节数\n\n\t\n\n1,710,080\n\n\n\n\nSHA-256 前缀\n\n\t\n\n6e758b991bbefa66\n\n\n\n\nGit Blob SHA-1\n\n\t\n\n75ffe15541770f7cfa0ba0f81b62e317d1c0d372\n\n未完成\n\n原因：\n\n完整聚合包 fetch 返回空内容。\n\n200KB 样本不是完整 TAR 聚合包。\n\n因此不能把样本解码结果当成完整 TAR。\n\n没有取得完整 TAR 字节，不能报告其 SHA-256、Git Blob SHA-1 或 untar 成功。\n\n这里不提供推测性的哈希值，也不把未执行的解包报告为成功。\n\n4. 全链路能力结论\n\n能力\n\n\t\n\n实测结论\n\n\n\n\nGitHub 定位指定 commit\n\n\t\n\n成功\n\n\n\n\n取回大型 Base64 文本\n\n\t\n\n失败\n\n\n\n\n取回 200KB Base64 文本\n\n\t\n\n成功\n\n\n\n\n完整文本解码为 TAR\n\n\t\n\n未验证\n\n\n\n\n全量 SHA-256 校验\n\n\t\n\n未验证\n\n\n\n\nGit Blob SHA-1 独立校验\n\n\t\n\n未验证\n\n\n\n\nTAR 解包\n\n\t\n\n未验证\n\n结论：目前不能证明本环境能够完成文本取回 → 解码 → 全量哈希 → 解包的完整链路。\n\n但是已经证明：200KiB 级别的文本可以完整取回。\n\n5. r3 传输方案建议\n\n我建议采用分片，而不是继续尝试单个 2MB 以上的 Base64 文本文件。\n\n推荐：\n\n参数\n\n\t\n\n建议\n\n\n\n\n原始 TAR 分片大小\n\n\t\n\n128 KiB\n\n\n\n\nBase64 每片大小\n\n\t\n\n约 174,764 字符\n\n\n\n\n分片数量\n\n\t\n\n14 片\n\n\n\n\n最后一片\n\n\t\n\n按剩余字节数确定\n\n\n\n\nSHA-256\n\n\t\n\n对完整重组 TAR 计算\n\n\n\n\nGit Blob SHA-1\n\n\t\n\n对完整重组 TAR 计算\n\n\n\n\n解包\n\n\t\n\n全量哈希通过后执行\n\n建议每个分片另设 manifest，记录：\n\n分片序号\n\n原始字节长度\n\nBase64 字符长度\n\n分片 SHA-256\n\n总分片数量\n\n这样可以分别验证传输完整性和最终文件完整性。\n\n我的建议：r3 使用 128KiB 原始字节分片。 这是保守的工程建议，不代表已经实测证明 128KiB 分片能够完成完整解码及重组。\n\n最终能力探测状态：\n\nPARTIAL — 需要 r3 分片验证\n\n本次没有形成审查结论，不对 AIEO 仓库材料质量作任何判断。",
+      "text_sha256": "3c51dc32eaf7a887e03c2223afb166919afaae88fe4c62ee41904d7a1481b8a0",
+      "size_bytes": 3283,
+      "assistant_uuid": "8c3957e0-4829-4423-8915-c90ac8b234f0"
+    }
+  ]
+}
