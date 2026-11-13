@@ -3,7 +3,7 @@
   "contract_version": "1.0",
   "task_id": "T-P1-903",
   "execution_id": "EXEC-922",
-  "purpose": "T-P1-903 DEC-012 GitPointer 契约修订复审 r2 输入材料（A+ 聚合包协议，r1 BLOCKED/F-805 审查环境额度不足未进实质审查）：复审引导包 r2+契约修订文本+decision-log+审查协议+三份机器 Schema+前任 BLOCKED 审查原始 JSON+§2.6.9-2.6.13 申报的全部 POC 证据+证据链工具",
+  "purpose": "T-P1-903 DEC-012 GitPointer 契约修订复审 r3 输入材料（A+ 分片版协议：r1 额度 BLOCKED/r2 二进制正文不可读 BLOCKED 后按会务确认改 128KiB 分片 base64 传输）：复审引导包 r3+契约修订文本+decision-log+审查协议+三份机器 Schema+前任 BLOCKED 审查原始 JSON+§2.6.9-2.6.13 申报的全部 POC 证据+证据链工具",
   "files": [
     {
       "path": "contracts/v1.0/git-pointer-manifest.schema.json",
@@ -49,8 +49,8 @@
     },
     {
       "path": "handoff/DEC012-REVIEW-BOOTSTRAP.md",
-      "artifact_sha256": "31c463ca0b5bc0d65cecda3fcdf55fcbca7b675b086bbb4fb01cf1300483c9f5",
-      "size_bytes": 8036,
+      "artifact_sha256": "1c2ebaf52f14c072cab3cdf9c6299bc62339e866d6fed53047ae1d38c2640da8",
+      "size_bytes": 9248,
       "media_type": "text/plain"
     },
     {
