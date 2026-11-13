@@ -114,3 +114,13 @@
 - **决策内容：** 接受新审查会话的范围拆分结论：已验证核心路径允许开工，扩展场景不解除限制。允许范围：短指令、公开 GitHub 指定完整 40 位 SHA 材料读取、单 assistant unit 长回复与稳定 DOM 集合、Schema/三 ID、M1 最小本地幂等及 OS 句柄并发锁。任何集合变化、完整性不明、私有权限不足、登记异常均 fail-closed/BLOCKED。不得据此直接合并 main或宣称 BLOCKED-1 全场景通过。
 - **后续独立验收门禁：** 真实 ChatGPT 多 assistant unit、真实动态虚拟列表裁切恢复、私有仓库权限、真实网络故障注入与退避耗尽、多文件部分读取失败、M1 REST/数据库/ACK 与完整平台并发验证；每项需可复现证据并绑定 commit SHA 经独立审查。
 - **依据：** `phase0/logs/dispatch-2026-11-12T05-45-15/reply.txt`（新空白审查会话通过 Git 交接包给出 `result=PASS` 与 13 条约束）；`handoff/REVIEWER-BOOTSTRAP.md`；`platform-contract-v1.0.md` §2.6、§12；实现与测试证据 DEC-012–DEC-016。
+
+### DEC-018 平台公共契约与 Agent 协作契约用户追认（附条件批准，2026-11-14）
+
+- **决策内容：** 用户对 Phase 1 公共契约完成追认，方式=分项审阅附条件批准（审阅材料 `docs/phase1/contract-ratification-brief.md` 三层：决策摘要/C1-C8 审阅卡/未决风险清单）：
+  1. `platform-contract-v1.0.md` v1.0.0：**C1~C8 全部批准**；其中 **C1 附条件**——其 §2.6（GitPointer 双向 payload，BLOCKED-1 修订稿）以 **DEC-012 复审 PASS 为生效条件**，复审前按现行约束运行；**C7 附知情**——首期边界为单机单用户（127.0.0.1），Phase 1 测试通过不视为生产安全验证完成，局域网开放须另立方案（§8.8）；
+  2. `agent-contract.md` v0.1：**批准转正**（其 §7 独立集成验收已执行完毕，八条铁律经 T-P1-901 八轮 + T-P1-902 两轮实战验证）；
+  3. **追认不改变 BLOCKED-1 状态**（PASS_WITH_CONSTRAINTS，扩展场景未验收），不构成对任何扩展场景的解除授权。
+- **关联决策（同批用户拍板，2026-11-14）：** Phase 1 收尾路线采纳 GPT 会务建议（`phase0/logs/dispatch-2026-11-13T16-31-45/reply.txt`，会话 6af73baa）并修正为 **A 契约追认 → B main 合并（先准备后审批）→ C1 DEC-012 复审 → D M2 真实链路工程化（拆 D1/D2）→ C2 扩展场景分批复审逐项解除 → E Phase 1 验收清单核对**；main 合并策略=A 完成后单独准备与审批；BLOCKED-1 策略=分批复审、逐项解除限制。
+- **依据：** 用户拍板记录（2026-11-14，本会话 AskUserQuestion 三项决策："全部按建议批准"/"A 后单独准备与审批"/"分批复审逐项解除"）；GPT 会务建议 reply.txt（10606 字节，reply SHA-256 `f469208bea1d00defde93bedadf589b40f146d26845e8cf2bb4a8070078a1059`，dispatch 目录 `phase0/logs/dispatch-2026-11-13T16-31-45/`）；契约 §1 批准人字段、§13-1（追认即生效）。
+- **生效操作：** 契约 §1 批准人更新、变更记录表追加、§13-1 关闭、agent-contract 状态转正，与本条目同批提交。
