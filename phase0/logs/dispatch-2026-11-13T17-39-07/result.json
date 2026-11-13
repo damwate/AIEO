@@ -1,0 +1,181 @@
+{
+  "at": "2026-11-13T17:42:01.446Z",
+  "message_bytes": 1173,
+  "reply": "ChatGPT 说：\n\n确认 r3 方案，建议有条件通过。\n\n总体判断：r3 的传输层调整方向正确，不改变 A+ 聚合包的审查约束、实质审查标准和最终判定规则。尤其是二进制文件采用 Git 对象身份核验，可以解决审查环境无法读取 PNG 等二进制正文的问题。\n\n但建议补充几个强制约束，避免出现分片完整、整体却不可信的情况。\n\n一、分片大小：建议维持 128 KiB\n建议通过\n\n项目\n\n\t\n\n建议标准\n\n\n\n\n原始分片大小\n\n\t\n\n128 KiB（131072 字节）\n\n\n\n\n分片数量\n\n\t\n\n14 片（以实际 TAR 长度计算）\n\n\n\n\n编码\n\n\t\n\nBase64\n\n\n\n\n换行\n\n\t\n\n76 列\n\n\n\n\n最后一片\n\n\t\n\n允许不足 128 KiB\n\n\n\n\n文件命名\n\n\t\n\npart-00.b64 至 part-13.b64\n\n选择 128 KiB 的原因：\n\n明显低于已经实测成功的 200KB 文本读取上限。\n\n为 GitHub 正文读取、工具返回和编码差异预留空间。\n\n避免再次出现 2.31MB 聚合文本定位成功但正文返回 0 字符的问题。\n\n补充： 200KB 成功只是单次实测，不应当视为系统保证的上限。128KiB 是合理的保守值。\n\n二、二进制抽查：接受 Git Blob SHA-1 等效身份核验\n建议通过\n\nGit Blob SHA-1 的计算规则：\n\nPython\n运行\nimport hashlib\n\n\ndef git_blob_sha1(data: bytes) -> str:\n    header = f\"blob {len(data)}\\0\".encode()\n    return hashlib.sha1(header + data).hexdigest()\n\n审查规则：\n\n从指定 commit 的 tree 获取文件对应的 Git Blob SHA-1。\n\n从已通过 TAR 总哈希核验的聚合包中提取对应文件。\n\n本地计算 Git Blob SHA-1。\n\n两者完全一致，认定该文件身份一致。\n\n不一致则判定核验失败，不允许通过文件名、文件大小或其他元数据替代。\n\n这里有一个重要区别：\n\nGit Blob SHA-1 是对象身份核验，不是 SHA-256 意义上的密码学强完整性证明。\n\n因此建议：\n\nTAR 总体完整性继续使用 SHA-256。\n\n每个文件的独立 SHA-256 继续执行 manifest 核验。\n\nGit Blob SHA-1 仅作为 GitHub 无法返回二进制正文时的独立对象身份交叉验证。\n\n不得将 SHA-1 等效核验扩大解释为二进制内容已经被审查者直接读取。\n\n三、建议补充的 A+ 强制约束\n\n这部分我认为比调整分片大小更重要。\n\nA1：分片完整性\n\n每片必须同时核验：\n\nGitHub Blob SHA-1。\n\n解码前 Base64 实际字符长度。\n\nBase64 解码后的原始字节长度。\n\n原始字节 SHA-256。\n\n任何一项不一致，立即 BLOCKED。\n\nA2：分片顺序\n\n必须按照 index 文件指定的顺序拼接。\n\n不能依赖目录排序、文件上传顺序或人工判断。\n\nA3：总包完整性\n\n拼接解码后，必须同时核验：\n\nTAR 总字节数。\n\nTAR 总 SHA-256。\n\nTAR 总 Git Blob SHA-1。\n\n三项全部通过才能进入解包阶段。\n\nA4：全量清单核验\n\n解包后必须完成：\n\n95/95 文件数量核验。\n\n95/95 文件路径核验。\n\n95/95 文件大小核验。\n\n95/95 SHA-256 核验。\n\n不得因为二进制文件正文不可读而跳过其 SHA-256 核验。\n\nA5：独立抽查\n\n至少 15 个独立文件。\n\n建议覆盖：\n\n核心文本文件。\n\nJSON 配置。\n\nPython 源码。\n\n测试文件。\n\nPNG 等二进制文件。\n\n不同目录及不同模块。\n\n文本文件逐字节比对；二进制文件按前述 Git Blob 身份核验规则处理。\n\n注意：15 个文件必须是独立抽查，不得把同一文件的多次哈希计算计为多个样本。\n\n四、增加两个防止误判的约束\n\n建议增加以下两项：\n\nA6：传输层与审查层隔离\n\n传输成功只代表材料可用，不代表材料质量合格。\n\n必须继续执行原 r2 的全部 A+ 实质审查项目，不能因传输方案变化而降低审查要求。\n\nA7：失败状态明确区分\n\n状态\n\n\t\n\n含义\n\n\n\n\nPASS\n\n\t\n\n传输核验及实质审查全部通过\n\n\n\n\nREWORK\n\n\t\n\n材料本身存在需要整改的问题\n\n\n\n\nBLOCKED\n\n\t\n\n传输、读取或审查条件不足，无法完成核验\n\n特别强调：BLOCKED 不得推导为材料缺陷，也不得推导为 PASS。\n\n五、最终建议：r3 方案确认意见\n\nT-P1-903 / r3\n\n建议确认\n\n项目\n\n\t\n\n结论\n\n\n\n\n128 KiB 分片\n\n\t\n\n接受\n\n\n\n\nBase64 76 列换行\n\n\t\n\n接受\n\n\n\n\n14 片设计\n\n\t\n\n接受，按实际长度校验\n\n\n\n\n分片 SHA-256\n\n\t\n\n必须\n\n\n\n\n分片 Git Blob SHA-1\n\n\t\n\n必须\n\n\n\n\nTAR 双哈希\n\n\t\n\n必须\n\n\n\n\n95/95 全量 SHA-256\n\n\t\n\n必须\n\n\n\n\n≥15 独立抽查\n\n\t\n\n必须\n\n\n\n\n二进制 Git Blob 等效核验\n\n\t\n\n接受，有条件限制\n\n\n\n\n原 A+ 实质审查标准\n\n\t\n\n完全不变\n\n给派单方的最终意见：\n\nr3 可以作为下一轮传输方案实施。建议将以上 A1–A7 纳入 r3 引导包，尤其明确二进制 Git Blob SHA-1 仅为对象身份核验，不代表内容实质审查。\n\n另外，建议 index 文件本身也纳入指定 commit 的完整性保护，避免分片清单被单独替换。\n\n本回复属于会务技术方案确认，不构成仓库实测、材料审查或 PASS/REWORK/BLOCKED 正式结论。",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:1:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "3dea6a7f-f234-411c-bf17-55beb17b7c8a",
+  "stability": {
+    "stable": true,
+    "interval_ms": 4608,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-13T17:41:56.160Z",
+      "read_finished_at": "2026-11-13T17:41:57.768Z",
+      "unit_keys": [
+        "fallback-turn-0:1:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:1:assistant",
+          "sha256": "3ded381714851c47713fa7275954425aa3297b82dd5e78595ab56e1494d24434",
+          "size_bytes": 4983
+        }
+      ],
+      "assistant_uuid": "3dea6a7f-f234-411c-bf17-55beb17b7c8a",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-13T17:42:00.768Z",
+      "read_finished_at": "2026-11-13T17:42:01.301Z",
+      "unit_keys": [
+        "fallback-turn-0:1:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:1:assistant",
+          "sha256": "3ded381714851c47713fa7275954425aa3297b82dd5e78595ab56e1494d24434",
+          "size_bytes": 4983
+        }
+      ],
+      "assistant_uuid": "3dea6a7f-f234-411c-bf17-55beb17b7c8a",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "51ba9b6bc4eda72c538b57bb46b57fde2b6b07925c5ab3c10d893ef67628fe14",
+          "3ded381714851c47713fa7275954425aa3297b82dd5e78595ab56e1494d24434"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "51ba9b6bc4eda72c538b57bb46b57fde2b6b07925c5ab3c10d893ef67628fe14",
+          "3ded381714851c47713fa7275954425aa3297b82dd5e78595ab56e1494d24434"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:1:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:1:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:1:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:1:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:1:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "3ded381714851c47713fa7275954425aa3297b82dd5e78595ab56e1494d24434",
+  "size_bytes": 4983,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-13T17-39-07\\reply.txt",
+  "reply_readback_sha256": "3ded381714851c47713fa7275954425aa3297b82dd5e78595ab56e1494d24434",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-13T17-39-07\\raw-units.json",
+  "raw_units_sha256": "899b024a2188127d2d35c793ee01d6d6bf80cf0c4f6819c99c28a8fa10195a46",
+  "raw_units_size_bytes": 7984,
+  "raw_units_readback_sha256": "899b024a2188127d2d35c793ee01d6d6bf80cf0c4f6819c99c28a8fa10195a46",
+  "session_id": "6af74b72-97d0-83ee-98d9-52a831329735",
+  "conversation_url": "https://chatgpt.com/c/6af74b72-97d0-83ee-98d9-52a831329735",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}
