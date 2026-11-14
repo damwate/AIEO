@@ -70,6 +70,13 @@ function runCmd(cmd, args) {
 }
 
 // ------------------------------------------------------------------ main
+if (argv.includes("--version")) {
+  // T-P1-010（F-001 调度器验证任务 run ORCH-908011）：--version 输出版本行
+  // （与输出记录内 bundle_gate_version 元数据 "1.0" 一致），退出码 0；
+  // 不执行任何核验流程；其余参数行为不受影响。
+  console.log("bundle_gate version 1.0");
+  exit(0);
+}
 if (argv.includes("--help")) {
   // T-P1-001：--help 用法输出（仅输出用法，不执行任何核验流程，退出码 0）。
   console.log(`bundle_gate — AIEO Phase 1 聚合包机器核验工具（BYTE_INTEGRITY_GATE，T-P1-903 r4 决议新增）。
