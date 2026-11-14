@@ -1,0 +1,5 @@
+【AIEO阶段A复审R2】六项修正完成请复审(新会话)
+背景:D:\AIEO,main。R1(另一会话)裁定"需修正",清单:3P0(验收请求增代码绑定块[分支/基线/待验收/测试绑定commit/diff范围]+独立验收标准字段;30分钟条款=仅授权开工方案拍板,非改原始需求授权,冲突重交用户)+3P1(同一问题规则统一:同根因累计/多问题分别计数/复发恢复;BLOCKED非结论不得进下一步;登记D4首个验证任务+部署边界)。
+已全采纳,commit 418e614已推GitHub:验收请求增绑定块/标准字段/五项证据表;WORKFLOW:30分钟边界、BLOCKED非结论、同一问题规则、新节=首个验证任务(D4工具,阶段C对象)与部署边界(不依赖Standard运行时,新电脑需公共工具+环境初始化);任务书状态增阻塞;README六要素绑commit。
+请复审418e614下4文件:basic/WORKFLOW.md、basic/templates/task-brief.md、basic/templates/acceptance-request.md、basic/tasks/README.md,对照清单与D1-D5,不扩大范围。
+回复:逐条意见+末行单独"复审通过"或"需修正"。

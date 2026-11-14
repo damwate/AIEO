@@ -1,0 +1,5 @@
+【阶段A复审R3】最后一项P1修正完成(新会话)
+背景:D:\AIEO,main。R2复审(另一会话)对commit 418e614:六项修正5项通过、1项部分通过,剩P1=状态枚举不一致(WORKFLOW模块一当前状态缺"阻塞";任务书最终结果误列BLOCKED为结论)。
+已按最小修正完成,commit 3a4e29d已推GitHub:①WORKFLOW模块一当前状态枚举增"阻塞",与任务书/模块四统一;②task-brief最终结果改PASS/REJECT(完成前可暂空),BLOCKED只记当前状态不是结论;③另按同一口径修正tasks/README六要素⑥表述(BLOCKED登记于状态列非结论)——同口径一致性修正,非扩大范围;acceptance-request未动(规则保持)。
+请复审3a4e29d下三处:basic/WORKFLOW.md模块一、basic/templates/task-brief.md、basic/tasks/README.md,确认状态枚举全链一致:模块一=模块四=任务书=README;其余已通过项不必重审。
+回复:逐条意见+末行单独"复审通过"或"需修正"。

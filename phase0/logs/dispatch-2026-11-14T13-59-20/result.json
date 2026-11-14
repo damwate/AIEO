@@ -1,0 +1,181 @@
+{
+  "at": "2026-11-14T14:03:59.934Z",
+  "message_bytes": 1005,
+  "reply": "ChatGPT 说：\nAIEO 阶段 A 文档复审\n\n复审对象： damwate/AIEO\n指定基线： main，commit 4c6a3ba\n复审范围： 4 份 Basic v0.2 文档，并对照同一 commit 下的 DEC-045、handoff-template.md v0.3。\n\n一、总体判断\n\n四份文档的整体方向正确，DEC-045 的核心原则基本落地，没有发现推翻现有方案的架构性问题。\n\n尤其以下设计值得保留：\n\nWORKFLOW.md 集中承载六模块规则，不提前拆成 14 份模板，符合文档收敛原则。\n\nBasic 与 Standard 运行时隔离，允许复制成熟小功能，但禁止反向依赖。\n\n每一步开发后停止并交独立验收，避免执行者自我宣布通过。\n\n同一问题三轮止损，而不是简单按总返工次数计数。\n\n派单工具引用唯一权威源码，不重复维护。\n\n完工六查与七要素交付总结，能够形成基本闭环。\n\n不过，仍有几处规则边界需要修正，主要集中在验收证据、BLOCKED 状态和开工授权边界。\n\n二、逐条复审意见\n1. basic/WORKFLOW.md\n基本通过\n\n1.1 六模块覆盖：通过\n\n六个模块均已形成可执行的基本流程：\n\n任务管理：需求原文、任务书、版本选型。\n\n规划协商：双向讨论、用户拍板、步骤冻结。\n\n开发执行：逐步实施、逐步验收。\n\n独立验收：六查、证据核验。\n\n返工管理：同一问题三轮止损。\n\n交付管理：完工六查、七要素总结。\n\n符合 DEC-045 的主体设计。\n\n1.2 三轮止损：需要补充定义。\n\n目前写了同一问题计数，不同问题分别计数，但没有定义如何判定同一问题。\n\n建议明确：\n\n同一根因、同一缺陷，即使修改方案不同，也累计计数。\n\n一个 REJECT 包含多个相互独立的问题，分别建立问题记录。\n\n已解决的问题不再累计；后续出现同一根因的复发，应恢复原问题记录。\n\n第三次仍未通过，必须停止该问题的自动返工循环。\n\n否则不同执行者可能对计数产生不同理解。\n\n1.3 两道关口：需要消除授权边界歧义。\n\n目前同时存在：\n\n开工前需求原文必须经用户确认。\n\n30 分钟未反馈可以按 ChatGPT 意见执行。\n\n建议明确：\n\n30 分钟条款只授权开工方案拍板，不代表修改用户原始需求的授权，也不覆盖 main 合并、生产发布、数据删除。\n\n用户原始需求与方案发生冲突时，必须重新提交用户确认。\n\n1.4 独立验收：需要补充候选 commit 约束。\n\n目前要求验收方自行获取：\n\n用户拍板方案。\n\n验收标准。\n\n开发前基线 commit。\n\n实际代码 diff。\n\n测试结果及证据。\n\n但没有明确要求开发者提供本次待验收代码的 commit SHA。\n\n建议增加：\n\n待验收 commit SHA（完整 40 位）。\n\n待验收分支。\n\n测试对应的 commit SHA。\n\n验收时实际 diff 的基线与目标 commit。\n\n这是重要缺口。否则验收方可能读到不同版本的代码，造成验收结论无法准确绑定代码。\n\n1.5 D4 首个验证任务：缺少明确落位。\n\nDEC-045 明确指定首个真实闭环验证任务：\n\nPython 标准库实现的任务包完整性检查工具，检查任务目录记录完整性，输出 PASS/FAIL 和缺失项。\n\n当前 WORKFLOW 没有保留这一明确的首期验证任务。\n\n建议在首期不做清单之后增加一条：\n\n首个真实闭环验证任务为任务包完整性检查工具，作为阶段 C 的验证对象。\n\n1.6 派单工具链：需要说明独立部署边界。\n\n目前 Basic 依赖：\n\nphase0/tools/gpt_dispatch.mjs\n\nphase0/e2e-poc/session_lock.mjs\n\nruntime/chrome_profiles/gpt-poc\n\nNode、Playwright、Chrome 等环境。\n\n这与 Basic 独立于 Standard 运行时的原则并非必然冲突，因为 DEC-045 已批准公共工具引用不复制。\n\n但应明确：\n\nBasic 不依赖 Standard 业务运行时，但当前派单工具仍依赖 AIEO 仓库中的公共工具及其环境。\n\n复制到新电脑时需要保留仓库公共工具并完成环境初始化，不能理解为单独复制 basic/ 目录就能完整运行。\n\n2. basic/templates/task-brief.md\n基本通过\n\n2.1 DEC-045 字段：通过\n\n已经覆盖：\n\n任务ID。\n\n需求原文。\n\n执行者理解。\n\n验收目标。\n\n优先级。\n\n当前状态。\n\n当前步骤。\n\n最终结果。\n\n版本选型及批准信息。\n\n符合共识。\n\n2.2 版本选型：通过\n\nBasic 任务书默认选定 Basic 合理。\n\nS2 可以选择 Basic 或 Standard 的规则也已保留，没有错误地将 S2 固定为 Basic。\n\n2.3 状态字段：建议修正。\n\n当前状态没有 BLOCKED。\n\n而 WORKFLOW 明确允许因环境问题返回 BLOCKED。\n\n建议增加：\n\n当前状态：待规划 / 开发中 / 验收中 / 返工 / 阻塞 / 完成\n\n最终结果建议允许暂空，直到任务真正完成；如果需要记录最终阻断，则增加 BLOCKED。\n\n避免任务被阻断时被迫填写 PASS 或 REJECT。\n\n2.4 验收目标：通过，但建议强调可验证性。\n\n建议补充一句：\n\n验收目标应尽可能描述可观察结果，不仅写功能名称。\n\n例如，不只写「实现任务检查工具」，而是写「能够识别缺失文件，并输出明确的检查结果」。\n\n3. basic/templates/acceptance-request.md\n需要修正\n\n这是四份文件中最需要认真补充的一份。\n\n3.1 验收标准缺少独立字段。\n\n目前只有：\n\n本步骤目标（拍板原文照录）\n\n但目标和验收标准不是一回事。\n\n例如：\n\n目标：实现任务目录完整性检查。\n\n验收标准：缺少 requirement.md 时必须 FAIL，并明确列出缺失文件。\n\n建议增加：\n\n本步骤验收标准（明确可验证的通过条件）：\n\n否则验收方需要自行推断标准，容易造成争议。\n\n3.2 缺少待验收 commit SHA。\n\n建议增加：\n\n开发前基线 commit。\n\n本次待验收 commit。\n\n分支名称。\n\n测试所绑定的 commit。\n\n这与 DEC-010 的审查绑定明确 commit 的原则一致。\n\n3.3 自测证据应增加证据位置。\n\n目前有命令和输出摘要，但建议明确记录：\n\n实际执行命令。\n\n执行结果。\n\n原始测试日志路径。\n\n未测项目及原因。\n\n对应 commit SHA。\n\n不能仅凭开发者提供的测试摘要认定测试真实执行。\n\n3.4 两态结论的表述：建议规范化。\n\n当前写法是：\n\n「结论两态 PASS / REJECT；环境原因无法验收时 BLOCKED。」\n\n逻辑可以成立，但标题容易让人误解为有三个同级结论。\n\n建议改成：\n\n正常验收结论：PASS / REJECT。\n\n特殊阻断状态：BLOCKED，不属于通过或失败结论，不得进入下一步。\n\n这既保留 DEC-045 的两态结论共识，也不丢失环境阻断处理能力。\n\n3.5 三轮止损：通过。\n\n已经写入同一问题计数原则，建议与 WORKFLOW 统一采用同一套问题识别规则，不要在两个文件中形成不同定义。\n\n4. basic/tasks/README.md\n基本通过\n\n4.1 任务目录结构：通过\n\n当前采用：\n\nrequirement.md\n\ntask-brief.md\n\nsteps.md\n\nacceptance/\n\nhandoff.md\n\ndelivery.md\n\n结构轻量，没有提前制造复杂目录，符合文档收敛原则。\n\n4.2 steps.md 六要素：通过\n\n六项记录能够覆盖目标、修改、执行、测试和验收证据。\n\n建议增加待验收 commit SHA，确保每一步记录都能追溯具体代码版本。\n\n4.3 代码抽取登记：通过\n\n四项登记内容完整：\n\n来源文件路径。\n\n源 commit 完整 SHA。\n\n修改点。\n\n对应测试。\n\n禁止 import 中级版运行时模块也已明确。\n\n4.4 交接模板引用：通过\n\n引用 docs/phase1/handoff-template.md，没有复制第二份交接模板，避免权威来源分裂。\n\n4.5 建议补充一个小细节。\n\nREADME 中建议明确：\n\n每次验收的 PASS / REJECT / BLOCKED 结论都必须关联对应步骤、待验收 commit 和证据目录。\n\n这样 steps.md、acceptance/ 和 phase0/logs/ 三者才能完整对应。\n\n三、与 handoff-template.md v0.3 衔接审查\n通过\n\n核查项目\n\n\t\n\n结果\n\n\t\n\n说明\n\n\n\n\nBasic / Standard / Advanced\n\n\t\n\n通过\n\n\t\n\n版本名称一致\n\n\n\n\nS1→Basic\n\n\t\n\n通过\n\n\t\n\n一致\n\n\n\n\nS2→Basic 或 Standard\n\n\t\n\n通过\n\n\t\n\n没有旧映射错误\n\n\n\n\nS3→Standard\n\n\t\n\n通过\n\n\t\n\n一致\n\n\n\n\nS4/S5→Advanced\n\n\t\n\n通过\n\n\t\n\n一致\n\n\n\n\n选型理由\n\n\t\n\n通过\n\n\t\n\n两边都有\n\n\n\n\n用户批准人及日期\n\n\t\n\n通过\n\n\t\n\n两边都有\n\n\n\n\n全程不换轨\n\n\t\n\n通过\n\n\t\n\n都保留用户批准升级机制\n\n\n\n\n交接模板唯一权威\n\n\t\n\n通过\n\n\t\n\nREADME 正确引用\n\n有一个小建议：\n\ntask-brief.md 与交接模板中的版本选型字段可以继续保持不同形态：前者是 Basic 专用任务书，后者是跨版本通用交接模板。\n\n不需要为了字段完全相同而增加冗余内容。\n\n四、DEC-045 共识完整性核对\n\n共识\n\n\t\n\n落地情况\n\n\n\n\nD1：Basic 独立轻量版本\n\n\t\n\n已落地，部署依赖边界需说明\n\n\n\n\nD2：文档优先、人工可跑\n\n\t\n\n已落地\n\n\n\n\nD3：选择性抽取成熟功能\n\n\t\n\n已落地\n\n\n\n\nD4：首个真实验证任务\n\n\t\n\n缺少明确记录\n\n\n\n\nD5：开发纪律及独立验收\n\n\t\n\n已落地\n\n\n\n\n长期原则：禁止反向依赖\n\n\t\n\n已落地\n\n\n\n\n不建14份模板\n\n\t\n\n已落地\n\n\n\n\n复制件登记四要素\n\n\t\n\n已落地\n\n\n\n\n两道关口\n\n\t\n\n已落地，但授权边界需澄清\n\n\n\n\n三轮止损\n\n\t\n\n已落地，问题识别规则需细化\n\n\n\n\n验收六查\n\n\t\n\n已落地\n\n\n\n\n完工六查及七要素\n\n\t\n\n已落地\n\n五、最终修正清单\n\n我建议不要扩大修改范围，只处理以下六项：\n\n优先级\n\n\t\n\n修正事项\n\n\t\n\n文件\n\n\n\n\nP0\n\n\t\n\n增加待验收 commit SHA、分支及测试绑定\n\n\t\n\nacceptance-request.md\n\n\n\n\nP0\n\n\t\n\n增加明确的本步骤验收标准字段\n\n\t\n\nacceptance-request.md\n\n\n\n\nP0\n\n\t\n\n明确30分钟条款与原始需求确认的边界\n\n\t\n\nWORKFLOW.md\n\n\n\n\nP1\n\n\t\n\n统一同一问题的识别和计数规则\n\n\t\n\nWORKFLOW.md、acceptance-request.md\n\n\n\n\nP1\n\n\t\n\n增加 BLOCKED 状态的任务记录处理\n\n\t\n\nWORKFLOW.md、task-brief.md\n\n\n\n\nP1\n\n\t\n\n登记 D4 首个真实闭环验证任务，并说明公共工具部署依赖\n\n\t\n\nWORKFLOW.md\n\n过度设计检查： 没有必要新增模板、数据库、自动调度器、复杂状态机或自动验收系统。现有结构足以支撑 Basic MVP。\n\n最终裁定：需修正。\n\n修正上述六项即可重新提交复审，不建议借本轮复审扩大 Basic 首期范围。\n\n需修正",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "96e01d1f-4043-48e6-a81f-d512eb305b0c",
+  "stability": {
+    "stable": true,
+    "interval_ms": 6491,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-14T14:03:52.692Z",
+      "read_finished_at": "2026-11-14T14:03:56.168Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "907e1538058f478811a2d58021c2275cc67cbddc6cd7f565bd45e6531776eb8f",
+          "size_bytes": 10370
+        }
+      ],
+      "assistant_uuid": "96e01d1f-4043-48e6-a81f-d512eb305b0c",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-14T14:03:59.183Z",
+      "read_finished_at": "2026-11-14T14:03:59.727Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "907e1538058f478811a2d58021c2275cc67cbddc6cd7f565bd45e6531776eb8f",
+          "size_bytes": 10370
+        }
+      ],
+      "assistant_uuid": "96e01d1f-4043-48e6-a81f-d512eb305b0c",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "f71e700f73f339b81779e618600d404cdde99efb9dfa4ad5cc20e6eb41c96709",
+          "907e1538058f478811a2d58021c2275cc67cbddc6cd7f565bd45e6531776eb8f"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "f71e700f73f339b81779e618600d404cdde99efb9dfa4ad5cc20e6eb41c96709",
+          "907e1538058f478811a2d58021c2275cc67cbddc6cd7f565bd45e6531776eb8f"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "907e1538058f478811a2d58021c2275cc67cbddc6cd7f565bd45e6531776eb8f",
+  "size_bytes": 10370,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-14T13-59-20\\reply.txt",
+  "reply_readback_sha256": "907e1538058f478811a2d58021c2275cc67cbddc6cd7f565bd45e6531776eb8f",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-14T13-59-20\\raw-units.json",
+  "raw_units_sha256": "c1f875f43c37534f70d1a15ca8c4dd13926f66b813cfd82ca66d5cfdd5c053f5",
+  "raw_units_size_bytes": 13718,
+  "raw_units_readback_sha256": "c1f875f43c37534f70d1a15ca8c4dd13926f66b813cfd82ca66d5cfdd5c053f5",
+  "session_id": "6af86971-9f58-83ec-a74e-ff996864d55e",
+  "conversation_url": "https://chatgpt.com/c/6af86971-9f58-83ec-a74e-ff996864d55e",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}

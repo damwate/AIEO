@@ -1,0 +1,5 @@
+【AIEO阶段A复审】basic/细则文档v0.2(新会话)
+背景:D:\AIEO,main,commit 4c6a3ba。第二题共识(DEC-045)经用户拍板生效:D1-D5+长期原则+三点调整(文档收敛不建14模板/复制件登记来源SHA禁import中级版运行时/两道关口)。现执行阶段A:六模块细则落地为basic/WORKFLOW.md v0.2,承载验收六查/三轮止损按同一问题计数/完工六查+七要素/两道关口/代码抽取纪律/首期不做清单;同步templates/任务书(补验收目标优先级状态字段)、验收请求(两态结论+六查)、tasks/README(steps六要素+抽取登记)。
+请上GitHub复审该commit下4文件:basic/WORKFLOW.md、basic/templates/task-brief.md、basic/templates/acceptance-request.md、basic/tasks/README.md。
+复审要点:1)与DEC-045共识是否一致无遗漏;2)规则可执行无歧义;3)与docs/phase1/handoff-template.md v0.3版本选型字段衔接;4)过度设计或缺失项。
+回复格式:逐条意见+末行单独"复审通过"或"需修正"。

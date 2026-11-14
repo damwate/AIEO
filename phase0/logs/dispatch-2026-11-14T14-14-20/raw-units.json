@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-14T14:17:05.102Z",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "c5311ce4-c53c-4959-b5e0-5233428da0fb",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "d09bffbd9a6572476d05f0e2a37e39169035a5f8f6e5e2fd727d16a1253b38a3",
+          "d287517c0200f082dd4bc5cb490272f82d0883760d4c855994c18ff30aec0fa8"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "d09bffbd9a6572476d05f0e2a37e39169035a5f8f6e5e2fd727d16a1253b38a3",
+          "d287517c0200f082dd4bc5cb490272f82d0883760d4c855994c18ff30aec0fa8"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-0:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n阶段A复审 R3 结论\n复审通过\n\n已按指定 commit 3a4e29d 读取并逐项检查三个文件。本轮只审查状态枚举及其语义一致性，不重复审查此前已通过的项目。\n\n逐条复审意见\n\n1. basic/WORKFLOW.md 模块一、模块四\n\n通过\n\n模块一当前状态枚举已增加「阻塞」。\n\n模块四明确区分 PASS、REJECT 两种验收结论与 BLOCKED 特殊阻断状态。\n\nBLOCKED 不属于通过或失败结论。\n\n阻断解除后恢复验收，状态登记为「阻塞」。\n\n两模块的状态语义一致，没有把阻塞误当成验收结论。\n\n2. basic/templates/task-brief.md\n\n通过\n\n当前状态枚举：\n\n待规划 / 开发中 / 验收中 / 返工 / 阻塞 / 完成。\n\n最终结果枚举：\n\nPASS / REJECT。\n\n同时明确：\n\n完成前最终结果可以暂空。\n\nBLOCKED 只记入当前状态。\n\n阻塞不属于最终结论。\n\n与 WORKFLOW 模块一、模块四的规则一致。\n\n3. basic/tasks/README.md\n\n通过\n\n步骤六要素中的验收证据引用已经明确：\n\n结论为 PASS/REJECT。\n\nBLOCKED 登记于状态列，非结论。\n\n保留对应步骤、待验收 commit、dispatch 目录及 reply SHA。\n\n与任务书和 WORKFLOW 的状态管理规则一致，没有再把 BLOCKED 列为最终结论。\n\n最终核对\n\n核对项\n\n\t\n\n结果\n\n\n\n\n模块一当前状态包含阻塞\n\n\t\n\n通过\n\n\n\n\n模块四区分结论与阻断状态\n\n\t\n\n通过\n\n\n\n\n任务书状态与结论分离\n\n\t\n\n通过\n\n\n\n\nREADME 状态与结论分离\n\n\t\n\n通过\n\n\n\n\nBLOCKED 全链语义一致\n\n\t\n\n通过\n\n\n\n\n是否存在新的 P1 阻断问题\n\n\t\n\n未发现\n\n最终裁定：本轮 P1 修正符合要求。三个指定文件的状态管理语义一致，没有发现需要继续修正的问题。\n\n此前 R2 已通过的五项不重新审查，本轮也不扩大审查范围。\n\n复审通过",
+      "text_sha256": "d287517c0200f082dd4bc5cb490272f82d0883760d4c855994c18ff30aec0fa8",
+      "size_bytes": 1835,
+      "assistant_uuid": "c5311ce4-c53c-4959-b5e0-5233428da0fb"
+    }
+  ]
+}
