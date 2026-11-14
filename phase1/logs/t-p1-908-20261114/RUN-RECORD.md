@@ -155,3 +155,12 @@ security-scan.txt（SEC-SCAN-T-P1-908-001）：范围=本证据目录 + 18 个 d
 - **A7=交付缺陷（扫描器判定逻辑，审阅人命中）**：sec_scan_908.py git 树段 git_raw 恒 0（仅展示 git_hits 不入 total_raw）——git 树内 RAW 泄漏不会触发 LEAK-BLOCKED。**修复**：扫描器 v2（-n 逐行捕获，REDACTED 占位豁免与 disk 侧同语义，git 树 raw 命中入 total_raw）；历史扫描结果（全 0 命中）事实不受影响。重扫全树 CLEAN（见 security-scan.txt v3）。
 - **A8=环境受限（非证据缺陷）**：代码沙箱 DNS 仍不可达 github.com；raw/api 域名沙箱直连未测通；审阅人按通道③以完整 SHA 逐文件内容核验并逐项引用 SHA 前 16 位+如实标注"未自算SHA"。
 - **分支锚点（第 6 轮简报 v6 携带）**：scheduler=e47055d…；evidence=本轮补证后新 HEAD（round5 归档+探针+扫描器 v2+指南 A3/A7 修订+§14）。
+
+## 15. 独立验收第 6 轮（A1–A7 全 PASS；A8 FAIL 唯一修复项=指南锚点滞后）与通道异常记录（2026-11-14）
+
+- **第 6 轮派单（6a 通道异常）**：phase0/logs/dispatch-2026-11-14T10-08-27/——发送双验通过、回复已生成且 materialized，但完成判定 composer_empty:false（Composer 残留 2 字符，908001/908003 同型通道问题）致工具在归档 reply 前中止；request sha256=`ada957fb76fb695ec18f1b13017f3c07ff86225fcd7cc238f62efcdfabd9069a`（request.txt 与 run.log 归档 acceptance/round6/ 带 -6a- 后缀）。manual-composer-clean.mjs 清理（2→0 字符，刷新后稳定）后同简报重发。
+- **第 6 轮重发（6b）**：phase0/logs/dispatch-2026-11-14T10-12-37/（简报 v6 1198B 同文）。request sha256=`ada957fb76fb695ec18f1b13017f3c07ff86225fcd7cc238f62efcdfabd9069a`；reply sha256=`a16f38b9a8178007a06730ea530987fb97780a8ba191d7d787177645b6f0c821`（归档 acceptance/round6/）。
+- **判定：REJECT（仅 A8）——A1/A2/A3/A4/A5/A6/A7 全部 PASS，逐项引用证据 SHA**（A3 明确认可 e47055d 修复+探针 409+RES-0003+原行未变+旧 null 如实保留；A7 明确认可扫描器 v2 git 树入判定；A5 认可 931 条执行实测+151 组三件套）。审阅人通道说明：GitHub Blob 内容已读取核验（api.github.com/blob 通道可用）；未自算 SHA256；raw 域名沙箱直连 DNS 失败。
+- **A8 FAIL 两因**：①指南 v2 的 scheduler 锚点仍指 08c8e7c（第 5 轮修复后未随 e47055d 更新——包装缺陷，审阅人正确命中；reply 引指南 SHA ffcfe6c0f86887127d926ddd25bec27334af504c）；②SHA256 本地自算环境不可行（沙箱无网络，历轮已明示）。
+- **修复**：指南 v3——分支锚点行/A1 grep/A4 修复提交命令全部更新为 e47055d48cbba5217182bbcaf42d899e73abe85a，历史修复链保留注明；08c8e7c 余留引用均为历史链引用非锚点。
+- **第 7 轮**：简报 v7 携带修订后 evidence 新 HEAD；A1–A7 判定若不因指南锚点问题受累应维持；A8 字节自算若环境仍不可行，按历轮"环境受限非证据缺陷"如实标注。

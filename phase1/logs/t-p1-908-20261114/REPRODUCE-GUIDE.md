@@ -1,9 +1,10 @@
-# T-P1-908 独立验收重现指南（REPRODUCE-GUIDE v2）
+# T-P1-908 独立验收重现指南（REPRODUCE-GUIDE v3）
 
 - 目的：独立验收者按完整 40 位 SHA 读取分支后，可**自行执行**以下每条命令重现全部判定（任务书 §11 A8）。
 - v2（2026-11-14，验收第 2 轮 REJECT 后修订）：新增 §0 字节保真读取通道；修正 A2 指针（run-908019 子目录）；A3/A6 改为精确文件名+实际 JSON 键；A4 改指 ORCH-908022（scheduler 08c8e7c 修正记录后的最终向量 run）；A7 扫描器入库 acceptance/sec_scan_908.py。
+- v3（2026-11-14，验收第 6 轮 REJECT 唯一修复项）：scheduler 分支锚点与 A1/A4 命令由 08c8e7c 更新为现行 HEAD e47055d（第 5 轮 S4 A3 捕获修复提交）；A3 增补探针实证条目；A7 更新为扫描器 v2。
 - 读图顺序：本指南 §0 → RUN-RECORD.md → 任务书 §11（main@c6109921132d2df825e87d38e34ecd8e678b84b0 的 docs/phase1/F001-SCHEDULER-BRIEF.md）→ 逐项。
-- 分支锚点：scheduler=feature/T-P1-908-scheduler@08c8e7c366c708b219f3c737eef2c36abfcefc04；fixture=feature/T-P1-908-fixture@fda9183dafb77ca15578abb244b3b2d15999fafb；evidence=feature/T-P1-908-evidence（本文件所在分支；完整 SHA 见验收简报，HEAD 无法自指）。
+- 分支锚点：scheduler=feature/T-P1-908-scheduler@e47055d48cbba5217182bbcaf42d899e73abe85a（S4 A3 捕获修复后 HEAD；修复链 2b3e622→8f3a635→08c8e7c→e47055d）；fixture=feature/T-P1-908-fixture@fda9183dafb77ca15578abb244b3b2d15999fafb；evidence=feature/T-P1-908-evidence（本文件所在分支；完整 SHA 见验收简报，HEAD 无法自指）。
 - 所有命令在仓库根目录执行；`E` 代指证据目录 `phase1/logs/t-p1-908-20261114/`。
 
 ## §0 字节保真读取通道（先读，否则所有 sha256 都对不上）
@@ -21,7 +22,7 @@
 - `cat $E/acceptance/task-events-audit.json`——M1 REST 只读读回：tasks.T-P1-018.task_detail.status=`DEV_REPORTED`；artifacts.ART-OTH-011/ART-DIFF-005 均 http 200。
 - `grep task_event_submitted $E/acceptance/task-events-audit-serverlog.ndjson | grep T-P1-018`——M1 **服务端**审计（独立于调度器记录）：PLAN→PLANNING、ARCH_REVIEW→ARCH_REVIEW、PASS→READY、START→IN_PROGRESS 四次转换。
 - `cat $E/acceptance/zero-db-direct-modification-declaration.md`——零 DB 直改声明+三条支持证据。
-- `git show 08c8e7c366c708b219f3c737eef2c36abfcefc04:phase1/tools/scheduler.py | grep -c sqlite3`——调度器源码无任何 DB 直改通道（预期 0）。
+- `git show e47055d48cbba5217182bbcaf42d899e73abe85a:phase1/tools/scheduler.py | grep -c sqlite3`——调度器源码无任何 DB 直改通道（预期 0）。
 - 每步证据文件存在性：`$E/acceptance/triplet-audit.json`（22 个 run、151 组三件套、incomplete=0）；与 SHA256SUMS 一致性见 A5。
 
 **A2 闭环真实**：
@@ -36,7 +37,7 @@
 - S9 重放：`cat $E/executions/ORCH-908019/evidence-steps/s9-submit-replay-a3.json`——submit 已 accepted:true 且 report_registry.duplicate:true 不新增（bridge 把 duplicate 嵌套在 report_registry 下，见 scheduler 35c98f9 修复说明）。
 
 **A4 失败采集**（登记类故意缺参→真实 REQ-0001→该 run ORCHESTRATED_FAIL+五要素）：
-- 修复提交：`git show 08c8e7c366c708b219f3c737eef2c36abfcefc04 --stat`（--inject-a4 实现 2b3e622→8f3a635→08c8e7c 记录修正）。
+- 修复提交：`git show e47055d48cbba5217182bbcaf42d899e73abe85a --stat`（修复链 2b3e622/8f3a635 --inject-a4 实现→08c8e7c 记录修正→e47055d S4 A3 捕获修复）。
 - 最终向量 run=**ORCH-908022**（T-P1-021/BATCH-022）：`tail -8 $E/executions/ORCH-908022-scheduler-console.log`——真实链路 REQ-0001 原文（"report.correlation_id 缺失且当前会话无在途领取可继承"）+ RESULT=ORCHESTRATED_FAIL exit=1。
 - `cat $E/executions/ORCH-908022/failure-report.json`——五要素（run_id/failed_step=9/last_confirmed_state/completed_operations_with_entity_ids/evidence_pointers）。
 - `cat $E/executions/ORCH-908022/evidence-steps/s9-a4-inject-submit.json`——注入向量：结构完整报告体（过 assertValidDevReport）+ `deliberately_omitted:["report.correlation_id"]` 唯一缺参 + `placeholder_fields_declared` 占位字段如实申报 + 真实拒绝响应；该请求于 bridge 层被拒（mcp_server.mjs:282），不达 M1、零实体登记。
