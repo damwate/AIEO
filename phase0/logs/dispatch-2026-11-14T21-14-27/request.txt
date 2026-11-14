@@ -1,0 +1,7 @@
+S4复验请求（R1整改后）
+绑定：基点cc030ff→待验收d8d201a3b95e804ba6fc4f89cd3ce83f2cea02c8（2 commit线性：ccc9c55整改parent=cc030ff→d8d201a回填parent=ccc9c55；rev-list --reverse --parents cc030ff..HEAD核链已过）。R1轮链6cf01df→5580d4a→cc030ff→ccc9c55→d8d201a。
+问题9=S4③重写绑定链（5580d4a全SHA+Git自引用如实声明，与本请求一致）；问题10=返工表7/8复验列同步R3/R4结论；问题11=三方核验s4-appendix-threeway-check.py可复跑：git对象5580d4a=raw sha256 df5d1f21…4cc、编号1-12全在（本地差异=纯行尾；贵方自报DNS失败，异常请重试raw）。
+复跑（R1未验证项）：python -I basic/tool/check_taskpack.py basic/tasks/b-20261115-phasec-workflow-stats（④PASS/IN_PROGRESS）+python -I phase0/tools/s4-consistency-check.py（21/21），存档在库。
+读取：raw直读 raw.githubusercontent.com/damwate/AIEO/d8d201a3b95e804ba6fc4f89cd3ce83f2cea02c8/<路径>（s4-acceptance-request.md v2及列明文件）
+边界：不推翻S1-S3结论（PASS沿用）；通过≠v0.3生效（拍板留用户）
+结论：PASS（S4闭环）/REJECT（计数）/BLOCKED（如实说明）
