@@ -1,0 +1,181 @@
+{
+  "at": "2026-11-14T04:03:49.274Z",
+  "message_bytes": 832,
+  "reply": "ChatGPT 说：\nF-001 / T-P1-908 任务书 v0.2 第 2 轮会务复核\n\n文档主体：PASS 六项修订：均已落实\n\n评审基线： main=5c91c5a\n\n评审对象： docs/phase1/F001-SCHEDULER-BRIEF.md v0.2\n\n复核范围： 上轮六项 REWORK 意见、三项待拍板事项、任务书内部一致性及可执行验收性。\n\n本轮已读取指定基线上的任务书全文，而非仅凭版本历史或摘要判断。\n\n一、六项修订逐项复核\n\n编号\n\n\t\n\n复核内容\n\n\t\n\n结果\n\n\n\n\n①\n\n\t\n\nS7 半自动边界如实申报\n\n\t\n\nPASS\n\n\n\n\n②\n\n\t\n\nS0 零副作用、BLOCKED 限定\n\n\t\n\nPASS\n\n\n\n\n③\n\n\t\n\n幂等扩展、超时核实、单实例守卫\n\n\t\n\nPASS\n\n\n\n\n④\n\n\t\n\n失败报告、完整归档、RAW 泄漏阻断\n\n\t\n\nPASS\n\n\n\n\n⑤\n\n\t\n\n分步失败处置、禁止跨 run 续传\n\n\t\n\nPASS\n\n\n\n\n⑥\n\n\t\n\nA1–A8 可验收化、范围补充\n\n\t\n\nPASS\n\n① §1/§2：S7 半自动边界\n\nPASS。\n\n已明确：\n\nS1–S6、S8、S9 自动编排。\n\nS7 由编排会话（主会话 ZCode 腿）作为真实执行者。\n\n905 没有验证全自动开发。\n\nM3 真实领取不等于 M3 已独立启动开发执行者。\n\nM3 CLI 独立驱动 ZCode 是后续升级目标。\n\n这次修订纠正了自动化能力的过度申报，没有把真实领取、状态推进与实际开发执行混为一谈。\n\n② §2/§4：S0 PRECHECK 与 BLOCKED 边界\n\nPASS。\n\nS0 已包含 M1 可达性、令牌、夹具、Chrome profile/调试端口和单实例守卫检查。\n\n关键约束明确：\n\nPRECHECK 全部只读。\n\nS0 失败不创建任何实体。\n\nBLOCKED 仅允许发生于 S0。\n\nS0 通过后发生的失败一律归入 ORCHESTRATED_FAIL。\n\n状态分类清楚，避免出现已经创建业务实体，却仍将运行结果报告为 BLOCKED 的语义错误。\n\n③ §4：幂等、超时与单实例\n\nPASS。\n\n已将安全措施扩展到：\n\nS1 创建前同名实体查询。\n\nS4/S9 登记幂等。\n\nS5 状态推进失败后只读核实。\n\nS6 领取失败后只读核实。\n\nS8 commit/采集失败后只读核实。\n\n特别认可超时处理：\n\n超时不等于未成功；先只读核实，不能确认则停止，不盲目重放。\n\n单实例锁文件、残留锁人工清理、不自动抢占也已写明。\n\n这符合本任务的安全优先原则。\n\n④ §5–§7：失败报告、完整归档与 RAW 泄漏阻断\n\nPASS。\n\n三项均已落地：\n\n失败报告包含五要素：run_id、失败步号、最后确认状态、已完成操作清单（含实体 ID）、证据指针。\n\n失败 run 同样必须完整产出并归档，不允许只保存成功步骤。\n\nRAW 秘密泄漏时阻断 Git 归档，不允许通过静默修改原始字节制造 CLEAN 假象。\n\n特别认可 RAW 与 REDACTED 分离的处理方式。\n\n⑤ §10：分步处置与跨 run 隔离\n\nPASS（原则层面）。\n\n各步骤已有失败处置。\n\n超时先核实，不能确认则停止。\n\n登记请求使用幂等键重试。\n\n外部执行不自动重试。\n\n新 run 必须创建全新项目、批次、任务，不复用半建制状态。\n\n不过，S1 同名实体幂等查询与 §10 禁止跨 run 复用之间，还需要在实现契约中明确区分同一 run 重试和不同 run 的实体冲突。\n\n⑥ §11–§12：A1–A8 验收化及范围补充\n\nPASS（主体）。\n\nA1–A8 已从概念性要求转为可执行判定条件。\n\n我认可其中几项关键改进：\n\nA2：回复原始字节 SHA 三处一致。\n\nA3：明确 artifact、message、submit 三类重放结果。\n\nA4：使用真实 REQ-0001 拒绝验证失败处理。\n\nA5：使用 SHA256SUMS 校验。\n\nA6：明确两个冻结 Schema 的双重校验。\n\nA7：同时扫描磁盘和 Git HEAD 树。\n\nA8：要求独立验收者按完整 SHA 重现。\n\n§12 也补充了 M1/Chrome 启停、profile 锁抢占、janitor、分布式并发防护等边界。\n\n二、三项待拍板事项\n全部采纳认可\n\n事项\n\n\t\n\nv0.2 选择\n\n\t\n\n会务意见\n\n\n\n\nS7 开发腿\n\n\t\n\n方案 b：编排会话作为真实执行者\n\n\t\n\nPASS\n\n\n\n\n开发夹具\n\n\t\n\nbundle_gate --version\n\n\t\n\nPASS\n\n\n\n\n实现语言\n\n\t\n\nPython 标准库单文件\n\n\t\n\nPASS\n\n理由：\n\n方案 b 忠实于 905 已验证的真实执行方式，不虚报自动化程度。\n\n--version 任务边界小，适合调度器首次真实开发验证。\n\nPython 标准库降低依赖和部署复杂度，符合 F-003 的工程先例。\n\n这三项可以作为任务设计选择，但不代表用户已经授权开工。\n\n三、发现的遗留问题\n\n虽然六项修订均已落实，但全文复核还发现三个需要收口的地方。\n\nREWORK R1：S0 零副作用与锁文件操作存在文字歧义\n\n位置：§2 S0、§4 重复执行防护。\n\n当前规定 PRECHECK 全部只读，但又将 run 锁文件纳入 PRECHECK。\n\n锁文件的创建、写入本身就是文件系统副作用。\n\n建议明确：\n\n锁文件的原子获取属于运行协调操作，不属于业务副作用。\n\n明确锁获取和 PRECHECK 检查的先后关系。\n\nPRECHECK 失败时如何释放本次取得的锁。\n\n已存在残留锁时不得擅自删除或抢占。\n\n这样才能同时保证单实例安全与零业务副作用。\n\nREWORK R2：S1 同名实体幂等与跨 run 隔离需要明确\n\n位置：§2 S1、§4、§10。\n\n当前同时规定：\n\nS1 创建前查询同名实体。\n\n新 run 创建全新项目、批次、任务。\n\n不复用上次半建制状态。\n\n建议明确实体命名与 run_id 的关系：\n\n同一 run 内重复请求：允许幂等复用。\n\n不同 run：必须使用独立实体标识。\n\n新 run 发现已有同名实体：不得直接认领或复用，按冲突策略停止并登记。\n\n否则实现者可能将同名实体误认为本次 run 的既有资源。\n\nREWORK R3：§6 仍然写九步，与新增 S0 后的十步不一致\n\n位置：§2、§6。\n\n§2 已经明确执行步骤为 S0–S9，共十步。\n\n但是 §6 仍然规定：\n\nRUN-RECORD 九步 ID/SHA 绑定+复盘。\n\n建议修订为：\n\nRUN-RECORD 十步（S0–S9）ID/SHA 绑定+复盘。\n\n同时全文搜索相关的「九步」表述，区分历史上 905 的九步和当前调度器的十步，避免误改历史事实。\n\n四、最终三态结论\n\n六项修订落实情况\n\nPASS · 6/6\n\n三项设计选择\n\nPASS · 3/3\n\n任务书整体定稿状态\n\nREWORK\n遗留 R1–R3，均属于任务书文字和实现契约收口，不要求改变已经认可的总体架构。\n\n本轮不判 BLOCKED。\n\n没有发现需要推翻方案 b、Python 标准库或 --version 夹具的理由。\n\n五、是否可以提交用户开工拍板？\n\n当前不建议提交。\n\n建议先完成 R1–R3，形成 v0.3，再进行一次限定复核。\n\n复核只检查：\n\nS0 锁文件生命周期及零业务副作用边界。\n\nS1 同 run 幂等与跨 run 隔离。\n\n§6 十步记录与全文步数一致性。\n\n三项闭合后，如果没有新增问题，我建议直接 PASS，不再扩大评审范围。\n\n权责边界：\n\n会务负责任务书评审意见。\n\n用户负责最终开工授权。\n\n用户负责决定何时创建开发任务及执行。\n\n用户负责 main 合并审批。\n\n本轮没有替用户作出开工或合并决定。\n\n基线核验：5c91c5a5d8030e2f870c5c1b461138c9fb5eeff7。\n\n评审对象文件 Blob SHA：3281bdf467953d2f7b968c5b606dc81b42e74f76。\n\n查看本轮评审基线提交\n\n会务最终意见：REWORK，完成三项限定修订后再提交用户开工拍板。",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "d971d539-9f6d-4981-9009-4153566c39a9",
+  "stability": {
+    "stable": true,
+    "interval_ms": 5139,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-14T04:03:43.439Z",
+      "read_finished_at": "2026-11-14T04:03:45.569Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "5a1509435d0a89b4f3695bf3f7c5f1f40e3418c239a3fb84839ff92674b5ebe7",
+          "size_bytes": 7332
+        }
+      ],
+      "assistant_uuid": "d971d539-9f6d-4981-9009-4153566c39a9",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-14T04:03:48.578Z",
+      "read_finished_at": "2026-11-14T04:03:49.115Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "5a1509435d0a89b4f3695bf3f7c5f1f40e3418c239a3fb84839ff92674b5ebe7",
+          "size_bytes": 7332
+        }
+      ],
+      "assistant_uuid": "d971d539-9f6d-4981-9009-4153566c39a9",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "e1c164486a0e6ecc0f7100a732c31c04f848d88ff54b1e10220d2f6485bbb533",
+          "5a1509435d0a89b4f3695bf3f7c5f1f40e3418c239a3fb84839ff92674b5ebe7"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "e1c164486a0e6ecc0f7100a732c31c04f848d88ff54b1e10220d2f6485bbb533",
+          "5a1509435d0a89b4f3695bf3f7c5f1f40e3418c239a3fb84839ff92674b5ebe7"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "5a1509435d0a89b4f3695bf3f7c5f1f40e3418c239a3fb84839ff92674b5ebe7",
+  "size_bytes": 7332,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-14T04-00-35\\reply.txt",
+  "reply_readback_sha256": "5a1509435d0a89b4f3695bf3f7c5f1f40e3418c239a3fb84839ff92674b5ebe7",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-14T04-00-35\\raw-units.json",
+  "raw_units_sha256": "8664b4fe1be96814d12db0635b161376b35eb9ae55c7454de67b62b1482509cc",
+  "raw_units_size_bytes": 10376,
+  "raw_units_readback_sha256": "8664b4fe1be96814d12db0635b161376b35eb9ae55c7454de67b62b1482509cc",
+  "session_id": "6af7dd16-f688-83ee-8a21-b4a891b25342",
+  "conversation_url": "https://chatgpt.com/c/6af7dd16-f688-83ee-8a21-b4a891b25342",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}

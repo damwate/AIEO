@@ -1,0 +1,181 @@
+{
+  "at": "2026-11-14T03:58:16.221Z",
+  "message_bytes": 979,
+  "reply": "ChatGPT 说：\nF-001 / T-P1-908 任务书 v0.1：第1轮会务评审\n\n暂不建议定稿 已核验任务书完整 SHA\n\n评审基准：\n\n仓库：damwate/AIEO\n\n基线：d684ee4（DEC-031）\n\n评审对象：8c33ae5f17686a9c88ffbc55cfa08357615944a9\n\n文件：docs/phase1/F001-SCHEDULER-BRIEF.md\n\n当前评审权限：会务意见作为 DEC-031 指定窗口内的决策依据；不代替用户作最终开工或合并决定。\n\n初步判断：总体架构方向成立，九步自动化目标合理，M1 零修改应当保留。但目前存在几个需要在定稿前解决的工程边界问题，尤其是 S7 执行者真实性、失败后的任务状态处置，以及三态与实际 M1 状态之间的映射。\n\n一、逐项评审意见\n① 九步映射与 905 一致性\n原则通过\n\n逐项对照 RUN-RECORD.md §3，S1–S9 顺序及通道基本一致，没有发现遗漏的业务步骤。\n\n但有一个重要事实：\n\n905 的 S7 是编排会话自身作为真实 ZCode 执行者。\n\nM3 负责真实领取、进度和提交，不代表 M3 已经独立启动了开发执行者。\n\n因此，不能把 905 的实际执行形态描述成已经验证的全自动开发。\n\n意见： 九步映射保留，但必须明确 S7 是否人工参与。否则任务目标与实际自动化程度不一致。\n\n② 架构原则与代码归属\n通过\n\n调度器只编排、不仲裁：成立。\n\nM1 状态机唯一持有：必须保留。\n\nM1 零修改：必须保留。\n\nphase1/tools/scheduler.py：合理，符合 F-003 独立 CLI 工具的定位。\n\n不修改 module-boundaries：合理。\n\n建议补充：调度器不得自行推断或修正 M1 状态，只能通过 M1 正式接口读取和推进状态。\n\n③ 三态、fail-closed、幂等与失败策略\n需要修订\n\n发现四个漏洞：\n\nBLOCKED 定义为零执行，但 M1 不可达、令牌缺失等检查如果发生在 S1 之后，可能已经产生副作用。必须增加独立 PRECHECK 阶段。\n\n幂等目前只明确覆盖 S4、S9，S1 创建任务、S5 状态事件、S6 claim、S7 START、S8 commit 均缺少重复请求后的处置定义。\n\n超时不等于请求未成功。尤其 M1 REST 超时，必须先查询核实实际状态，不能直接重复创建或推进。\n\n无断点续传可以接受，但必须保证中途异常后仍能生成完整失败报告，不能只留下半截证据。\n\n建议明确：\n\nPRECHECK 失败：BLOCKED，零业务副作用。\n\nPRECHECK 通过后任一步失败：ORCHESTRATED_FAIL。\n\n不自动重试外部执行。\n\n不确定请求结果时，先只读核实，不盲目重放。\n\n失败报告必须记录 run_id、失败步骤、最后确认状态及已完成操作。\n\n④ §13 三项待拍板意见\n\n项目\n\n\t\n\n会务意见\n\n\t\n\n理由\n\n\n\n\nS7\n\n\t\n\n推荐 b\n\n\t\n\n忠实复现905已验证的真实执行形态\n\n\n\n\n夹具\n\n\t\n\n推荐 --version\n\n\t\n\n低风险、单文件、可验证\n\n\n\n\n语言\n\n\t\n\n推荐 Python\n\n\t\n\n与F-003一致，标准库足够\n\n特别说明：\n\nS7 推荐 b，不代表放弃 a。\n\n当前应优先交付可验证的八步自动编排加真实 ZCode 执行者参与。M3 CLI 独立驱动 ZCode 应作为后续升级目标，不能把 POC 的结构化返回能力直接等同于真实开发闭环能力。\n\n⑤ §12 不在范围及 §11 验收\n\n§12 基本完整，但建议增加：\n\n并发启动及重复启动防护。\n\nChrome 专用 profile 会话锁冲突处理。\n\n外部进程异常退出及资源清理。\n\nM1 服务及浏览器是否由调度器启动、停止。\n\n凭据泄漏时阻断归档，不允许静默修改原始证据。\n\n§11 A1–A8 方向正确，但尚不完全可验收：\n\nA3 应分别规定 S4、S9 幂等重放的预期结果。\n\nA4 应明确失败注入位置及预期三态。\n\nA5 应要求每步证据与实际执行结果、SHA 对应。\n\nA6 应明确两个冻结 Schema 的具体路径及双校验结果。\n\nA8 应要求独立验收者能够按完整 SHA 重现核验。\n\n二、修订清单\n\n建议 v0.2 至少落实以下六项：\n\n§2：明确 S7 半自动执行边界。\n\n§4：增加 PRECHECK、重复执行防护及超时后的只读核实。\n\n§5：明确 BLOCKED 与 ORCHESTRATED_FAIL 的分界。\n\n§6–7：补充失败报告、原始证据保护及秘密泄漏阻断规则。\n\n§10：补齐 S1–S9 各步骤失败后的状态处置和超时策略。\n\n§11：将 A1–A8 改为具有明确证据和判定条件的验收标准。\n\n三、最终会务结论\nREWORK：修订后复审\n\n我的判断：\n\nF-001 的立项方向成立，不需要推翻架构，也不需要修改 M1。\n\n当前不宜直接定稿，主要是调度器的异常恢复、幂等边界及 S7 自动化程度尚未形成足够严密的执行契约。\n\n权责方面：\n\n本轮意见按 DEC-031 窗口作为决策依据。\n\n三项技术建议如上，不代替用户最终拍板。\n\nv0.2 仍需会务复核。\n\n用户保留最终开工授权及 main 合并审批权。\n\n不建议现在进入代码开发。 先把执行边界写清楚，再启动 T-P1-908，可以避免后续出现真实任务已经创建、调度器却误判 BLOCKED 或重复提交的问题。",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "88d08800-bfc9-445e-8c51-c078c7f7476a",
+  "stability": {
+    "stable": true,
+    "interval_ms": 4077,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-14T03:58:11.457Z",
+      "read_finished_at": "2026-11-14T03:58:12.521Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "20b580d126744f53a541109a8dc6a079a4cee1e0674310c7a6882d206493d618",
+          "size_bytes": 5082
+        }
+      ],
+      "assistant_uuid": "88d08800-bfc9-445e-8c51-c078c7f7476a",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-14T03:58:15.534Z",
+      "read_finished_at": "2026-11-14T03:58:16.069Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "20b580d126744f53a541109a8dc6a079a4cee1e0674310c7a6882d206493d618",
+          "size_bytes": 5082
+        }
+      ],
+      "assistant_uuid": "88d08800-bfc9-445e-8c51-c078c7f7476a",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "66d495e5970926961cdf309ff2c3eab6b35cfdfd435073453556f44affb535c1",
+          "20b580d126744f53a541109a8dc6a079a4cee1e0674310c7a6882d206493d618"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "66d495e5970926961cdf309ff2c3eab6b35cfdfd435073453556f44affb535c1",
+          "20b580d126744f53a541109a8dc6a079a4cee1e0674310c7a6882d206493d618"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "20b580d126744f53a541109a8dc6a079a4cee1e0674310c7a6882d206493d618",
+  "size_bytes": 5082,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-14T03-54-34\\reply.txt",
+  "reply_readback_sha256": "20b580d126744f53a541109a8dc6a079a4cee1e0674310c7a6882d206493d618",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-14T03-54-34\\raw-units.json",
+  "raw_units_sha256": "50a17c2a9ab63bf78200cb732d3a0bf8c4cb5c465e90795065504da60e500f06",
+  "raw_units_size_bytes": 7911,
+  "raw_units_readback_sha256": "50a17c2a9ab63bf78200cb732d3a0bf8c4cb5c465e90795065504da60e500f06",
+  "session_id": "6af7dbb1-06b4-83ee-b9fd-faa0ff4ab2ec",
+  "conversation_url": "https://chatgpt.com/c/6af7dbb1-06b4-83ee-b9fd-faa0ff4ab2ec",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}
