@@ -1,6 +1,6 @@
 {
-  "audited_at_utc": "2026-11-14T08:43:47Z",
-  "scope": "21 execution dirs under phase1/logs/t-p1-908-20261114/executions/",
+  "audited_at_utc": "2026-11-14T09:11:48Z",
+  "scope": "22 execution dirs under phase1/logs/t-p1-908-20261114/executions/",
   "criterion": "brief §6 证据三件套 stdout/stderr/meta.json 每组齐全；§11 A5 每步三件套齐全",
   "results": [
     {
@@ -1023,11 +1023,32 @@
       "non_triplet_files": [
         "s9-a4-inject-submit.json"
       ]
+    },
+    {
+      "execution": "ORCH-908022",
+      "groups": [
+        {
+          "group": "s0-precheck",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s1-bootstrap",
+          "complete": true,
+          "missing": []
+        }
+      ],
+      "groups_total": 2,
+      "groups_incomplete": 0,
+      "missing_total": 0,
+      "non_triplet_files": [
+        "s9-a4-inject-submit.json"
+      ]
     }
   ],
   "summary": {
-    "executions": 21,
-    "total_groups": 149,
+    "executions": 22,
+    "total_groups": 151,
     "incomplete_groups": 0
   }
 }

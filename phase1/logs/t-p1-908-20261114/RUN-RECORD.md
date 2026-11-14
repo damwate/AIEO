@@ -50,7 +50,7 @@ PASS run 全程 4 分 24 秒（锁获取 07:57:11 → PASS 08:01:35）。console
 
 18 FAIL 全部按五要素留证（run_id/失败步号/最后确认状态/已完成操作含实体 ID/证据指针）：executions/ORCH-*/failure-report.json + evidence-steps/ + console log + 对应 dispatch dir。调度器三态分界遵守：BLOCKED 仅限 S0（全程未触发），其余失败均为 ORCHESTRATED_FAIL。
 
-> 后续追加 run：ORCH-908020（REQ-0002）/ORCH-908021（REQ-0001，A4 达标）为**验收第 1 轮 REJECT 后的 A4 修复演示 run**（--inject-a4 专用模式），详见 §10；不在本表执行期序列内。
+> 后续追加 run：ORCH-908020（REQ-0002）/ORCH-908021（REQ-0001，blob 记录修正前）/ORCH-908022（REQ-0001，记录修正后最终向量）为**独立验收轮次 REJECT 后的 A4 修复演示 run**（--inject-a4 专用模式），详见 §10；不在本表执行期序列内。
 
 ## 3. 调度器提交链（feature/T-P1-908-scheduler）
 
@@ -91,11 +91,11 @@ security-scan.txt（SEC-SCAN-T-P1-908-001）：范围=本证据目录 + 18 个 d
 
 | # | 任务书 §11 标准（原文） | 判定条件（原文） | 证据（REPRODUCE-GUIDE.md 有逐条重现命令） |
 |---|---|---|---|
-| A1 | 真实通道 | task_events 审计含 run 全部事件+零 DB 直改声明+每步证据文件存在且与 SHA256SUMS 一致 | acceptance/task-events-audit.json（REST 只读读回）+ task-events-audit-serverlog.ndjson（M1 服务端 28 行审计）+ zero-db-direct-modification-declaration.md；triplet-audit.json 149 组全齐 |
+| A1 | 真实通道 | task_events 审计含 run 全部事件+零 DB 直改声明+每步证据文件存在且与 SHA256SUMS 一致 | acceptance/task-events-audit.json（REST 只读读回）+ task-events-audit-serverlog.ndjson（M1 服务端 28 行审计）+ zero-db-direct-modification-declaration.md；triplet-audit.json 22 run 151 组全齐 |
 | A2 | 闭环真实 | M1 内任务终态 DEV_REPORTED+reply 原始字节 SHA 三处一致（dispatch unit hash/归档文件/M1 artifact 登记值） | audit JSON tasks.T-P1-018.status=DEV_REPORTED；s3-reply-raw.txt sha256=1b3a4dcfa93a…；ART-OTH-011 登记值 |
 | A3 | 幂等 | S4 重放→artifact `duplicate:true` 同 ID+message 重放→409 RES-0003 不新增；S9 重放→`accepted:true`+`duplicate:true` 不新增消息；各重放响应证据归档 | ORCH-908019 s4-*replay*（duplicate:true/409 RES-0003）+ s9-submit-replay-a3（report_registry.duplicate:true） |
-| A4 | 失败采集 | 失败注入=登记类故意缺参触发真实 REQ-0001 拒绝（905 §5-1 先例）；预期=该 run ORCHESTRATED_FAIL+失败报告五要素齐全 | ORCH-908021：--inject-a4（scheduler 提交 2b3e622+8f3a635）→真实链路 REQ-0001 原文→ORCHESTRATED_FAIL+failure-report.json 五要素；908020 REQ-0002 迭代如实留证；§10 |
-| A5 | 证据完整 | `sha256sum -c SHA256SUMS` 通过+每步三件套齐全 | acceptance/sha256sum-c-result.txt（21 run 全树实测 PASS）+ triplet-audit.json（149/149） |
+| A4 | 失败采集 | 失败注入=登记类故意缺参触发真实 REQ-0001 拒绝（905 §5-1 先例）；预期=该 run ORCHESTRATED_FAIL+失败报告五要素齐全 | ORCH-908022：--inject-a4（scheduler 提交 2b3e622+8f3a635→08c8e7c 记录修正）→真实链路 REQ-0001 原文→ORCHESTRATED_FAIL+failure-report.json 五要素；注入 blob s9-a4-inject-submit.json 记录实际向量（唯一缺参 correlation_id+占位如实申报）；908020/908021 迭代如实留证；§10 |
+| A5 | 证据完整 | `sha256sum -c SHA256SUMS` 通过+每步三件套齐全 | acceptance/sha256sum-c-result.txt（全树实测 PASS，条目数见该文件与清单头注）+ triplet-audit.json（151/151） |
 | A6 | 契约符合 | `contracts/v1.0/message-envelope.schema.json`+`contracts/v1.0/task-plan-submitted.payload.schema.json`（904 冻结）双 valid 0 errors+校验日志归档 | ORCH-908019 s4-*.json：Ajv envelope+payload 0 errors |
 | A7 | 安全 | `security-scan.txt` result: CLEAN（磁盘+git HEAD 树双范围）+扫描器可复现 | security-scan.txt（SEC-SCAN-T-P1-908-001，793 文件重扫）CLEAN；sec_scan_908.py 可复跑 |
 | A8 | 重现核验 | 独立验收按完整 SHA 读双分支可重现全部判定；验收 reply 逐项引用 SHA | REPRODUCE-GUIDE.md（逐条命令+预期输出）；round-2 派单简报明示逐项 SHA 引用要求 |
@@ -119,3 +119,16 @@ security-scan.txt（SEC-SCAN-T-P1-908-001）：范围=本证据目录 + 18 个 d
   - **A8=补证缺口**：新增 REPRODUCE-GUIDE.md（A1–A8 逐条可执行重现命令+预期输出）；round-2 派单简报将明示"reply 逐项引用证据文件 SHA"（任务书 §11 A8 原文后半句此前未写入简报要求）。
 - **补充扫描**：新增文件（审计导出/服务端日志抽取/round1 归档/演示 run 证据）后全树重扫——security-scan.txt 更新为 793 文件 disk+git 树双范围，result 仍 **CLEAN**（0 RAW 泄漏）。
 - **第 2 轮派单**：独立新空白会话另行发起（简报携带更新后分支 SHA+REPRODUCE-GUIDE 入口+逐项 SHA 引用要求）；合并拍板仍留用户（DEC-010 不松动）。
+
+## 11. 独立验收第 2 轮（REJECT）与修复闭环（2026-11-14）
+
+- **第 2 轮派单**：phase0/logs/dispatch-2026-11-14T08-54-21/（--new-session 新空白会话；1122B 简报，逐项 SHA 引用要求已写入）。request sha256=`d32405fd67e6a83b92c9dbc4af27f27e088dc4724cf9da7f19a7d35f74c2334d`；reply sha256=`07300bd8490d7511dcc611caef7521fe749e4e3af706509fb1387422a91fd823`（均归档 acceptance/round2/）。
+- **判定：REJECT（A1–A8 全部 FAIL）**，明示"尤其 A2、A4、A5 是实质性阻断"。
+- 逐项定性（零申辩；分**交付/包装缺陷**与**读取通道伪差**两类）：
+  - **A2=真缺陷（指针错）**：验收 reply 证顶层 s3-reply-raw.txt 内容实为 BATCH-008/T-P1-007——属实。该文件是 ORCH-908008 已提交历史遗留；REPRODUCE-GUIDE 初版误指顶层。**修复**：指南 v2 唯一指针改为 run-908019/s3-reply-raw.txt（sha256=`1b3a4dcfa93a27609680d52ee5ba1c32849286997e00601829d6cda7714dda5a`）并明示顶层文件勿用。
+  - **A4=真缺陷（证据记录与向量矛盾）**：reply 证注入 blob 声明遗漏五字段而设计为唯一缺 correlation_id——属实（ORCH-908021 blob 为初版五字段清单未随 8f3a635 向量修正）。**修复**：scheduler 提交 **08c8e7c**（a4_inject blob 记录 injected_report+deliberately_omitted=["report.correlation_id"]+placeholder_fields_declared）→ 重跑 **ORCH-908022**：真实 REQ-0001+ORCHESTRATED_FAIL+五要素+blob 与实际向量一致（已核 keys/omitted/commit_sha=000…0/EXEC-001）。
+  - **A7=真缺陷（扫描器不可达）**：扫描器在 gitignored runtime，验收人无法独立重跑——属实。**修复**：sec_scan_908.py 入库 acceptance/；指南 v2 给出 checkout 后独立重跑命令（python -I …sec_scan_908.py，预期 result: CLEAN）。
+  - **A1/A5/A8+SHA256SUMS"404"=读取通道伪差**：reply 所引各文件 SHA（c0911edd…/98562099…/079818b5… 等）与 git blob 实测全部不符；"SHA256SUMS 404"与该文件确实存在于 77a48d1 树（130941 字节）矛盾。实测全树 908/908 文件磁盘字节==git blob 字节（disk LF=blob LF）→ 伪差源头为浏览器 DOM 复制改写字节。**修复**：指南 v2 新增 §0 字节保真读取通道（git clone+checkout 完整 SHA 或 raw.githubusercontent.com/<完整SHA>/<path> 二选一），并在 A8 底线中声明以该通道计算 sha256。
+  - **A3/A6=指南引用不精确所致**：初版指南用 s4-\*replay\* 通配且未给实际 JSON 键，验收人按 DOM 通道+通配无法定位。**修复**：指南 v2 精确文件名（s4-replay-a3.json/s9-submit-replay-a3.json/s4-ajv-validation.json）+实际键值（artifact_replay_ok/message_replay_ok、report_registry.duplicate、envelope/payload valid:errors:[]）。
+- **修复后证据集**：ORCH-908022 执行目录+console 入 evidence 树；acceptance/round2/ 归档；triplet-audit 重跑（22 run/151 组/incomplete=0）；全树重扫+SHA256SUMS 重生成+sha256sum -c 全量实测（见 security-scan.txt 与 acceptance/sha256sum-c-result.txt 更新版）。
+- **第 3 轮派单**：简报 v3（携带 scheduler@08c8e7c366c708b219f3c737eef2c36abfcefc04 等新锚点+§0 字节保真读法+逐项 SHA 引用）；合并拍板仍留用户（DEC-010 不松动）。
