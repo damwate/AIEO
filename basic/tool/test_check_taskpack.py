@@ -313,6 +313,22 @@ class TestDuplicates(CLIBase):
         self.assertNotIn("Overall: PASS", out)
         self.assertEqual(code, 1)
 
+    def test_duplicate_brief_field_cross_format(self):
+        """跨格式重复字段（表格行+标题形式「任务ID」，无行内）→ ① FAIL+重复原因；
+        旧计数函数只统计表格+行内时此场景计数=1 漏判（复验R1 P1-1：计数须覆盖
+        extract_brief_field 支持的全部三种书写形式）"""
+        brief = BRIEF_TMPL.format(status="开发中", step="S2 规则实现")
+        brief = brief.replace("- **任务ID**：b-20261114-s3-test\n", "| 任务ID | b-20261114-s3-test |\n")
+        brief += "\n## 任务ID\nb-20261114-s3-test-dup2\n"
+        steps = "# 步骤清单：t\n\n## S1 骨架\n" + six_block(1)
+        d = self.make_task("dupcross", brief=brief, steps=steps)
+        out, code = self.run_cli(d)
+        self.assertEqual(self.item_status(out, 1), "FAIL")
+        self.assertIn("重复", out)
+        self.assertIn("任务ID", out)
+        self.assertNotIn("Overall: PASS", out)
+        self.assertEqual(code, 1)
+
     def test_duplicate_step_number(self):
         """steps.md 重复步骤编号（两个 S1 小节）→ ② FAIL+可识别重复编号原因，不静默接受"""
         steps = ("# 步骤清单：t\n\n## S1 骨架\n" + six_block(1)

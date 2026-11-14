@@ -185,11 +185,15 @@ def extract_brief_field(text: str, name: str):
 
 
 def count_brief_field_rows(text: str, name: str) -> int:
-    """统计字段在 task-brief.md 中作为字段行出现的次数（表格行+行内键各计），
+    """统计字段在 task-brief.md 中作为字段行出现的次数，覆盖 extract_brief_field
+    支持的全部三种书写形式（表格行+行内键+标题行，计数口径与提取口径一致——
+    复验R1 P1-1 整改：标题形式漏计致跨格式重复漏判），
     用于重复字段检测（拍板异常类"重复字段或编号"：重复字段不允许静默接受）"""
     table = len(re.findall(rf"^\|\s*{re.escape(name)}\s*\|", text, re.MULTILINE))
     inline = len(re.findall(rf"^\s*(?:[-*]\s*)?\**{re.escape(name)}\**\s*[：:]", text, re.MULTILINE))
-    return table + inline
+    heading = len(re.findall(
+        rf"^\s*#{{1,6}}\s*{re.escape(name)}\s*(?:（[^）]*）)?\s*[：:]?", text, re.MULTILINE))
+    return table + inline + heading
 
 
 def parse_current_step(task_dir: Path):
