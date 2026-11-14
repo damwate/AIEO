@@ -951,7 +951,9 @@ console.log(JSON.stringify({ envelope: { valid: !!evOk, errors: ev.errors ?? [] 
         # 调度器按 UTF-8 解析即崩（真实 run 908015 暴露）；统一强制 UTF-8 管道编码。
         env["PYTHONIOENCODING"] = "utf-8"
         env["PYTHONUTF8"] = "1"
-        proc = subprocess.run([sys.executable, "-I", str(invoker)],
+        # -I 隔离模式隐含 -E（忽略 PYTHON* 环境变量），上两行在子进程不生效（真实 run 908016 复现同字节失败）；
+        # 改用命令行旗标 -X utf8（-I 不屏蔽），强裙子进程 UTF-8 解码/编码。
+        proc = subprocess.run([sys.executable, "-I", "-X", "utf8", str(invoker)],
                               cwd=str(REPO_ROOT), env=env, capture_output=True, timeout=300)
         self.ev.triplet(8, "m4-invoker", proc.stdout, proc.stderr, {"exit_code": proc.returncode})
         if proc.returncode != 0:
