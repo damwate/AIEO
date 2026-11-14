@@ -1,0 +1,8 @@
+【Basic阶段C规划协商R1】仓库github.com/damwate/AIEO分支main，请读commit 5c8e772：basic/tasks/b-20261115-phasec-workflow-stats/（需求原文+任务书）、basic/WORKFLOW.md、basic/tasks/b-20261114-taskpack-checker/steps.md（统计原料）。
+需求（已拍板）：统计首任务四步全流程数据→修订WORKFLOW.md至v0.3→成文初级版验收清单；本任务自身走四步。
+执行者初步方案，请评审：
+S1统计报告：从steps.md六要素+29个dispatch目录提取：各步轮次(S1四/S2五/S3六/S4一)、10项返工问题根因归类、P0/P1分布、往返耗时、检查器可前移拦截占比。落位本任务目录workflow-stats.md。
+S2修订草案：WORKFLOW.md v0.3每处修订标注统计依据；验收清单初拟落位basic/ACCEPTANCE-CHECKLIST.md。
+S3独立复审：你复审统计+修订稿+清单，多轮至通过。
+S4整体校验交付：检查器六项自检+delivery.md+用户拍板生效。
+请评审：①统计维度充分/冗余 ②S1-S4拆分顺序 ③验收清单形态与框架 ④修订边界（templates三件套是否纳入） ⑤风险遗漏。结论给"共识达成"或"需要讨论"+意见。
