@@ -14,7 +14,7 @@
 - **main = `7f7f299`**（DEC-023 正式裁定登记 + 复盘交付物修订终验证据归档），origin/main 同步
 - **任务分支 `feature/T-P1-904-contract-machinization` = `3966491`**，提交链 `7f7f299 → bd07098（20 文件交付）→ c16a654（F-01 修订）→ 62e992f（首轮复核 REWORK 证据）→ 3966491（限定复核 PASS 证据）`，与 origin 同步，**全部 904 代码已提交并推送**
 - 工作区：clean（`.zcode/` 未跟踪勿提交）
-- 本包 commit：`<git log -- handoff/PHASE1-CLOSEOUT-HANDOFF-V4.md 最新 SHA>`（治理 commit 直推 main，沿 V3 e19c000 先例，非任务合并）
+- 本包归档 commit：**`6daa89a`**（治理 commit 直推 main，沿 V3 e19c000 先例，非任务合并），本 SHA 补记 commit 为其紧随后续（`git log -- handoff/PHASE1-CLOSEOUT-HANDOFF-V4.md` 首两条即本包两笔），origin/main 同步
 
 ## 3. 本会话完成事项【事实】
 
