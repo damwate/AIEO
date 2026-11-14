@@ -158,8 +158,17 @@ def _na_item(no: int) -> ItemResult:
 # ---- 六项独立检查函数（冻结口径 4：互不依赖执行顺序，各自结构化返回） ----
 
 def check_requirement(task_dir: Path) -> ItemResult:
-    """①需求记录：requirement.md 原文非空 + task-brief.md 必备字段非空非占位符"""
-    return _na_item(1)
+    """①需求记录：阶段读取失败（缺失/非法/占位符）=FAIL+可识别原因（冻结口径 1：
+    不猜阶段）；阶段正常时字段级检查实现于 S2（当前为 S1 骨架桩）"""
+    item = ItemResult(no=1, name=ITEM_NAMES[1])
+    phase_info = read_phase(task_dir)
+    if phase_info.phase == PHASE_UNKNOWN:
+        item.status = STATUS_FAIL
+        item.problems = list(phase_info.problems)
+        item.files = ["task-brief.md"]
+        return item
+    item.problems = ["字段级检查实现于 S2（当前为 S1 骨架桩）"]
+    return item
 
 
 def check_steps(task_dir: Path) -> ItemResult:
