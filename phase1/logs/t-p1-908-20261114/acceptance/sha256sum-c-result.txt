@@ -227,6 +227,7 @@ phase0/logs/dispatch-2026-11-14T07-57-15/sent-dispatch.png: OK
 phase1/logs/t-p1-908-20261114/REPRODUCE-GUIDE.md: OK
 phase1/logs/t-p1-908-20261114/RUN-RECORD.md: OK
 phase1/logs/t-p1-908-20261114/acceptance/audit_evidence_triplets.py: OK
+phase1/logs/t-p1-908-20261114/acceptance/blob-manifest.json: OK
 phase1/logs/t-p1-908-20261114/acceptance/export_task_events_audit.py: OK
 phase1/logs/t-p1-908-20261114/acceptance/round1/SHA256SUMS-round1.txt: OK
 phase1/logs/t-p1-908-20261114/acceptance/round1/dispatch-message.txt: OK
