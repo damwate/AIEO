@@ -229,7 +229,7 @@ b04c03c4ad76232e834274daa2d476128e20f78e58772e051d8e2e4cbfa2fd70 *phase1/logs/t-
 a4a8d9c173b9f2f26969499df187aa43ff8e647256b8b00d593dc800025bef05 *phase1/logs/t-p1-908-20261114/acceptance/a3-message-replay-probe.json
 cb4d00b34b5451bceb1098f038b72dd58937472ed38861d681f82489e1f6ba5b *phase1/logs/t-p1-908-20261114/acceptance/a3_replay_probe.py
 55c4708b673052171c68118ec7920d11c64338174c7b5643508e717b1ce34f6b *phase1/logs/t-p1-908-20261114/acceptance/audit_evidence_triplets.py
-b04b9b00450e720d5d3766b6a1a62426830c26f3a458b5ef7fe1620929c88d2f *phase1/logs/t-p1-908-20261114/acceptance/blob-manifest.json
+588d4503696b8c7bb5507cb216aff03eba8bf32a32c12c7303516bdca0ae5a4a *phase1/logs/t-p1-908-20261114/acceptance/blob-manifest.json
 1f46ec1570539677148b59663e2d3cb9c25600bac9d6493c32c471a84eee0238 *phase1/logs/t-p1-908-20261114/acceptance/export_task_events_audit.py
 cc42e1be5113d1a0ce45a1e9671c5bda9bf36c463b7337833aaa9dcfdc322419 *phase1/logs/t-p1-908-20261114/acceptance/round1/SHA256SUMS-round1.txt
 064489a777a03942764ea3b09c1754aed12beab1210bec2c6825d684683f9756 *phase1/logs/t-p1-908-20261114/acceptance/round1/dispatch-message.txt

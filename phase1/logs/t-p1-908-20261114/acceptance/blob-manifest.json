@@ -877,8 +877,10 @@
   "phase0/logs/third-round-regression-main.log": "25facd00762d208522d3e6771da7100c16b9d1de",
   "phase0/logs/zcode-external-launch.stderr.log": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391",
   "phase0/logs/zcode-external-launch.stdout.json": "f26e784e236a81647be6bf699cd95a1dc8f3a99d",
-  "phase1/logs/t-p1-908-20261114/REPRODUCE-GUIDE.md": "7d429d901b400833ae5522fbb9016c7d41a89f4c",
-  "phase1/logs/t-p1-908-20261114/RUN-RECORD.md": "7fc7220d74eb91d81c00852ab693f668773a3c13",
+  "phase1/logs/t-p1-908-20261114/REPRODUCE-GUIDE.md": "ffcfe6c0f86887127d926ddd25bec27334af504c",
+  "phase1/logs/t-p1-908-20261114/RUN-RECORD.md": "782671911d8ecbc7588dfae047c426cc89b3831f",
+  "phase1/logs/t-p1-908-20261114/acceptance/a3-message-replay-probe.json": "4abb964a3bdebf1b183046b359ab6105206d2655",
+  "phase1/logs/t-p1-908-20261114/acceptance/a3_replay_probe.py": "315af8eb51dfb9159dec6649438ffcdfa71c54bf",
   "phase1/logs/t-p1-908-20261114/acceptance/audit_evidence_triplets.py": "45a4d9eab9a1fb7c93de525075ecc25fee2b1be4",
   "phase1/logs/t-p1-908-20261114/acceptance/export_task_events_audit.py": "29613f74c10769bbdeef4dc421b258349ccbdf8f",
   "phase1/logs/t-p1-908-20261114/acceptance/round1/SHA256SUMS-round1.txt": "b422531d07fd5e8820ec6baed12c1372644aba7a",
@@ -895,7 +897,10 @@
   "phase1/logs/t-p1-908-20261114/acceptance/round4/reply.txt": "02b995897f0d29341fdf90db7c52359ba2309b14",
   "phase1/logs/t-p1-908-20261114/acceptance/round4/request.txt": "e27e070d9d055347df8c84dd4efd2e6df169e6db",
   "phase1/logs/t-p1-908-20261114/acceptance/round4/run.log": "6739dd533297c285fb13c10b586bb6ff42675216",
-  "phase1/logs/t-p1-908-20261114/acceptance/sec_scan_908.py": "f840072a67cdc835414dee869fa9b337acf441ad",
+  "phase1/logs/t-p1-908-20261114/acceptance/round5/reply.txt": "d38be6ff3dd53ad7541de9099fa61460952d0539",
+  "phase1/logs/t-p1-908-20261114/acceptance/round5/request.txt": "6381c753292b1f0bc6ea0d5cd5f4dc35df7e5368",
+  "phase1/logs/t-p1-908-20261114/acceptance/round5/run.log": "b7201303b372381530dd2b1d23f210b96f2fea85",
+  "phase1/logs/t-p1-908-20261114/acceptance/sec_scan_908.py": "4502532c02635ca8a161957d135374b0dfbdc366",
   "phase1/logs/t-p1-908-20261114/acceptance/task-events-audit-serverlog.ndjson": "44103a2a5b439149ba4662535ceb356586d64a6b",
   "phase1/logs/t-p1-908-20261114/acceptance/task-events-audit.json": "c415b24f8aa27f4c192e50215f9eb49f305679d0",
   "phase1/logs/t-p1-908-20261114/acceptance/triplet-audit.json": "c271d76403d7843fe76e6c950edd7524673435f1",
@@ -1580,7 +1585,7 @@
   "phase1/logs/t-p1-908-20261114/run-908021/orchestration-report.json": "eb37700d478ec563bbf3850ff67e8c363ea9434c",
   "phase1/logs/t-p1-908-20261114/run-908022/orchestration-report.json": "929f2711eabcbec6ace8aee76121707072ec5cd8",
   "phase1/logs/t-p1-908-20261114/s3-reply-raw.txt": "c0911edd2c942d9995f9152cfc3f1d4fb0092298",
-  "phase1/logs/t-p1-908-20261114/security-scan.txt": "a3632b035ae8479be976232fdd9e4d8db173304b"
+  "phase1/logs/t-p1-908-20261114/security-scan.txt": "67510bba6207bdba0783d861cb60530ebb3f64cb"
  },
  "note": "path->git blob SHA-1; api.github.com/repos/damwate/AIEO/git/blobs/<sha> 返回 base64 原始字节（blob ID 内容自校验）；自排除 blob-manifest.json/SHA256SUMS/sha256sum-c-result.txt"
 }
