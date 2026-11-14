@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-14T11:04:00.738Z",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "288e7c67-e422-4815-9a78-85f316d09a01",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "dd397e3e0e1b2ca908e25e7df0b12b43d040f3bd3aa4d34f1b89496a546f25ab",
+          "9dbdcc0698278818aa323036a51a3be87ee95b146741f9a6aa48d9a050ca454a"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "dd397e3e0e1b2ca908e25e7df0b12b43d040f3bd3aa4d34f1b89496a546f25ab",
+          "9dbdcc0698278818aa323036a51a3be87ee95b146741f9a6aa48d9a050ca454a"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-0:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\nT-P1-908 合并后复核：暂不能判定通过。\n\n已尝试按指定通道访问 GitHub API 的四个端点（B1、B2、B3、B4），当前审阅环境均返回不可访问。不能将无法读取认定为内容缺失，也不能把提交方提供的 SHA 当作独立核验结果。\n\n项目\n\n\t\n\n裁定\n\n\t\n\n证据\n\n\n\n\nB1 scheduler\n\n\t\n\n部分通过\n\n\t\n\nmain 指定 SHA 下源码可读，blob SHA 未独立验证。\nGitHub\n\n\n\n\nB2 任务书\n\n\t\n\n部分通过\n\n\t\n\nv0.3 契约存在，blob SHA 未独立验证。\nGitHub\n\n\n\n\nB3 证据目录\n\n\t\n\nPASS\n\n\t\n\n三份文件及 round7 归档均可读取；SHA256SUMS 有对应记录。\nGitHub\n+2\n\n\n\n\nB4 最近两条合并提交\n\n\t\n\n未验证\n\n\t\n\ncommits API 与 GitHub 提交页均不可访问。\n\n\n\n\nB5 七轮止步+A8\n\n\t\n\nPASS\n\n\t\n\n§16 明确记录 A1–A7 PASS、A8 环境限制及停止派单。\nGitHub\n\n最终裁定：REJECT（合并完整性尚未充分独立验证）。\n\n注意：这是审阅通道限制导致的证据不足，不代表发现合并缺陷。DEC-010 不推翻，第7轮验收结论不推翻。\n\n末行：REJECT",
+      "text_sha256": "9dbdcc0698278818aa323036a51a3be87ee95b146741f9a6aa48d9a050ca454a",
+      "size_bytes": 1087,
+      "assistant_uuid": "288e7c67-e422-4815-9a78-85f316d09a01"
+    }
+  ]
+}

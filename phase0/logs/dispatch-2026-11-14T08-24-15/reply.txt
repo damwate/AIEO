@@ -1,0 +1,21 @@
+ChatGPT 说：
+
+A1: FAIL——缺少可独立核验的 task_events 全事件审计及 SHA256SUMS 实际校验结果；仅有 console 确认记录。
+
+A2: PASS——908019 实达 DEV_REPORTED；S3 reply SHA 与派单、归档绑定，见 RUN-RECORD §1、orchestration-report.json。
+
+A3: PASS——S4 artifact/message 重放、S9 submit 重放均有真实响应证据，见 executions/ORCH-908019/evidence-steps/。
+
+A4: FAIL——实际注入是重复 claim→TASK-0003，不是任务书要求的缺参登记→REQ-0001。见 scheduler.py:s6_claim、claim-repeat-a4。
+
+A5: FAIL——存在 SHA256SUMS 清单，但未取得 sha256sum -c 成功的独立验证证据。
+
+A6: PASS——真实开发、M4 GitWorker commit_and_collect、真实 M1 登记成立；fixture commit=fda9183dafb77ca15578abb244b3b2d15999fafb。
+
+A7: PASS——security-scan.txt 明确 CLEAN，磁盘及 Git HEAD 双范围扫描，RAW 泄漏 0；M1 终态 DEV_REPORTED。
+
+A8: FAIL——三个分支完整 SHA 已指定，但证据哈希及全部验收条件尚不能独立重现。
+
+REJECT
+
+主要阻断：A1、A4、A5、A8。不得合并，等待补证及修复后重新独立验收。

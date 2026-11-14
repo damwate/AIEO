@@ -1,0 +1,26 @@
+ChatGPT 说：
+
+第4轮验收：尚不能判定 ACCEPT。
+
+通道①：git clone 失败，环境 DNS 无法解析 github.com。
+
+通道②：已成功打开 evidence 完整 SHA 对应的 raw.githubusercontent.com 重现指南，确认 §0、A1–A8 指令及 A2、A4、A7 修正指针。
+
+当前限制：网页读取结果不能替代本地原始字节下载及独立 SHA256 计算，不能据此伪报哈希验证通过。
+
+分支锚点已核对：scheduler 08c8e7c…efc04、fixture fda9183…9fafb、evidence 91b4b39…c2e3、任务书 c610992…84b0。指南及任务书可通过 raw 通道读取。
+GitHub
++3
+
+A1: FAIL（未完成独立字节核验；SHA未自算）
+A2: FAIL（未完成三处原始字节交叉核验；SHA未自算）
+A3: FAIL（未独立重放证据；SHA未自算）
+A4: FAIL（未独立核验 ORCH-908022；SHA未自算）
+A5: FAIL（无法执行 sha256sum -c；SHA未自算）
+A6: FAIL（未独立核验双 Schema；SHA未自算）
+A7: FAIL（未能独立执行扫描器；SHA未自算）
+A8: FAIL（无法满足独立 SHA256 自算要求）
+
+REJECT
+
+性质说明：本轮是审阅环境字节下载及哈希计算能力受限，不认定为仓库证据缺陷，也不推翻第2轮修复。未伪造 PASS 或 SHA。

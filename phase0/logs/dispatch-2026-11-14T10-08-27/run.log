@@ -1,0 +1,9 @@
+[2026-11-14T10:08:28.284Z] 会话锁已获取 pid=20340
+[2026-11-14T10:08:28.286Z] === GPT 派单（新建会话，消息 1198 字节）===
+[2026-11-14T10:08:32.162Z] Chrome 已启动 pid=16676
+[2026-11-14T10:09:14.815Z] 新聊天页面就绪
+[2026-11-14T10:09:19.834Z] [dispatch] 基线尾部: null
+[2026-11-14T10:09:21.761Z] [dispatch] 发送双验通过（polls=2，user_unit_key=fallback-turn-0:0:user，tail 后观察）
+[2026-11-14T10:09:21.985Z] 截图: sent-dispatch.png
+[2026-11-14T10:11:49.420Z] 会话锁已释放
+[2026-11-14T10:11:49.420Z] 致命错误: 完成判定未通过: {"generation_observed":true,"generation_ended":true,"final_stop_button_not_visible":true,"tail_is_assistant":true,"dil_uuid_present":true,"uuid_stable":true,"target_tail_matches_overall":true,"stable_unit_read":true,"target_range_materialized":true,"composer_empty":false}

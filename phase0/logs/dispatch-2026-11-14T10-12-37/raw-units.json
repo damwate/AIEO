@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-14T10:15:52.470Z",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "cddb1d5a-95d3-46e6-805d-dbfaae8518a2",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "ada957fb76fb695ec18f1b13017f3c07ff86225fcd7cc238f62efcdfabd9069a",
+          "a16f38b9a8178007a06730ea530987fb97780a8ba191d7d787177645b6f0c821"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "ada957fb76fb695ec18f1b13017f3c07ff86225fcd7cc238f62efcdfabd9069a",
+          "a16f38b9a8178007a06730ea530987fb97780a8ba191d7d787177645b6f0c821"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-0:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\nA1 PASS — REST终态DEV_REPORTED、服务端事件、零DB直改声明、151组三件套齐全。证据：c415b24f8aa27f4c192e50215f9eb49f305679d0、44103a2a5b439149ba4662535ceb356586d64a6b、c271d76403d7843fe76e6c950edd7524673435f1\n\nA2 PASS — T-P1-018终态及reply原始内容、三处SHA绑定指针成立。证据：3e1eedd6293936fdf9b0ae0662b7d6dc740363ec\n\nA3 PASS — e47055d修复状态码分离、平级code提取及RES-0003判据；探针409+RES-0003，原行未变。旧null如实保留。证据：e47055d48cbba5217182bbcaf42d899e73abe85a、4abb964a3bdebf1b183046b359ab6105206d2655\n\nA4 PASS — ORCH-908022真实REQ-0001、唯一缺参、失败报告五要素齐全。证据：f633930cff67deb9448127cab0db3bd131cf374a、a8b99da9c77f214bb0f4ed1c7dd5ef56c3e51046\n\nA5 PASS — SHA256SUMS执行结果全OK，151/151三件套。证据：4407ced042d755d3d38893573bc2b95344645968\n\nA6 PASS — envelope、payload双Schema均valid，errors=[]。证据：8290b40b5b511855c637d1ef8bdb363e045c6884\n\nA7 PASS — 扫描器v2已入库，git树RAW命中计入total_raw；双范围扫描CLEAN。证据：4502532c02635ca8a161957d135374b0dfbdc366、67510bba6207bdba0783d861cb60530ebb3f64cb\n\nA8 FAIL — 指南仍将scheduler锚点指向旧版08c8e7c，与本轮e47055d不一致；本次未完成SHA256本地自算。证据：指南ffcfe6c0f86887127d926ddd25bec27334af504c。\n\n通道说明： GitHub Blob内容已读取核验；未自算SHA256。raw域名直连DNS失败。\n\nREJECT",
+      "text_sha256": "a16f38b9a8178007a06730ea530987fb97780a8ba191d7d787177645b6f0c821",
+      "size_bytes": 1491,
+      "assistant_uuid": "cddb1d5a-95d3-46e6-805d-dbfaae8518a2"
+    }
+  ]
+}

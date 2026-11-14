@@ -1,23 +1,24 @@
-# AIEO 版本目录与工具包落位方案 v0.2（共识稿——待用户拍板）
+# AIEO 版本目录与工具包落位方案 v1.0（拍板实施稿）
 
 **日期：** 2026-11-14
-**依据：** DEC-037 纪要；DEC-039/DEC-040/DEC-041；用户 2026-11-14 指示（先规划目录再开发 Basic；小问题工具沉淀工具包）；**开工会议第一题共识轮**：dispatch-2026-11-14T13-20-09（会话 `6af8603f-d084-83ec-8780-4bb88cef8d7b`，reply 1692B sha256=`7ee616fc51a7e2f802e9d23a607d50c22f93642da2cb6ee387c47188d5baa6b9`，末行"共识达成"）。
-**状态：** v0.1 主会话草案 → ChatGPT 共识讨论四项意见全部采纳 → 本 v0.2 共识稿，**待用户拍板后实施**。
+**依据：** DEC-037 纪要；DEC-039/DEC-040/DEC-041；用户 2026-11-14 指示（先规划目录再开发 Basic；小问题工具沉淀工具包）；**开工会议第一题共识轮**：dispatch-2026-11-14T13-20-09（会话 `6af8603f-d084-83ec-8780-4bb88cef8d7b`，reply 1692B sha256=`7ee616fc51a7e2f802e9d23a607d50c22f93642da2cb6ee387c47188d5baa6b9`，末行"共识达成"）；**用户拍板"确定"通过 v0.2 并补充定位修正三条（DEC-044）：①现有已开发体系定位为中级版（Standard）基础，不得删除；②Basic 可直接从中级版复制初级功能；③与 ChatGPT 讨论从中级版哪里抽取代码。**
+**状态：** v0.1 草案 → v0.2 共识稿 → 用户拍板通过+定位修正 → **本 v1.0 实施稿，§6 清单已执行完毕（同日）**。
 
 ## 1. 设计原则
 
 1. **简单直白**：一级目录见版本名，clone 即知，跨电脑复用零额外解释。
-2. **不推倒重来**：现有高级版资产（app/ M1-M4、contracts/、phase1/ 治理）**不物理搬迁**，用 README 登记归属映射。
-3. **历史证据路径不失效**：phase0/、phase1/ 历史日志与工具目录原地不动，**不得移动、重命名**历史证据及现有工具。
-4. **版本目录按需生长**：Basic 目录先建"做什么+做过的记录"，工具目录有自有工具时再创建，不预建空壳（共识修正项）。
+2. **不推倒重来**：现有已开发体系定位为**中级版（Standard）基础**（用户拍板修正，DEC-044——app/ M1-M4、contracts/、phase1/ 治理、handoff/）**不物理搬迁、不得删除**，归属映射登记于 standard/README.md。
+3. **复用优先**：Basic 开发**可直接从中级版资产复制初级功能**（用户指示 DEC-044）；复制不得改动中级版资产本体；公共工具仍"引用不复制"。
+4. **历史证据路径不失效**：phase0/、phase1/ 历史日志与工具目录原地不动，**不得移动、重命名**历史证据及现有工具。
+5. **版本目录按需生长**：Basic 目录先建"做什么+做过的记录"，工具目录有自有工具时再创建，不预建空壳（共识修正项）。
 
 ## 2. 目录规划
 
 | 目录 | 归属 | 内容 |
 |---|---|---|
 | `basic/` | AIEO Basic 初级版 | `WORKFLOW.md` 六模块流程规范；`templates/` 任务书/验收请求/交接包模板；`tasks/<任务ID>/` 每任务全记录（需求-方案-步骤-验收-交付）。**不预建空 tools/**——Basic 需要自有工具时再创建（共识修正项） |
-| `standard/` | AIEO Standard 中级版 | 占位 README（定位一句话），迭代时填充，不预建复杂结构 |
-| `advanced/` | AIEO Advanced 高级版 | README 登记资产映射：调度器=`app/`、契约=`contracts/`、治理=`phase1/`——物理位置不动，归属在此指认 |
+| `standard/` | AIEO Standard 中级版 | **现有已开发体系即中级版基础（DEC-044 定位修正）**：README 登记资产映射（调度器=`app/`、契约=`contracts/`、治理=`phase1/`、交接=`handoff/`）——物理位置不动、不得删除；后续做中级版时大用 |
+| `advanced/` | AIEO Advanced 高级版 | 占位 README（S4/S5 面向，未来以中级版为起点演进），不预定义结构 |
 | `toolkit/` | 通用工具包（跨版本共用） | 环境与连接诊断等高频小问题工具，README 登记清单、依赖、用法与版本归属 |
 | 其余现有目录 | 现状不变 | docs/ 治理、phase0/ 与 phase1/ 历史证据、app/、contracts/、runtime/、tests/、handoff/ 各归其位 |
 
@@ -40,8 +41,8 @@
 4. **历史兼容**：不得移动、重命名历史证据及现有工具。
 5. **README**：明确版本归属、依赖关系和调用示例。
 
-## 6. 实施清单（拍板后执行）
+## 6. 实施清单（已执行，2026-11-14）
 
-1. 创建 `basic/`（WORKFLOW.md 六模块规范 + templates/ 三件套 + tasks/）、`standard/README.md`、`advanced/README.md`（资产映射）、`toolkit/README.md`。
-2. 实现 `toolkit/check-push.mjs`、`toolkit/check-env.mjs`（含共识附加约束）并实测。
-3. 全部提交推送后，进入 Basic MVP 六模块方案讨论（开工会议第二题）。
+1. ✅ 创建 `basic/`（WORKFLOW.md 六模块规范 + templates/ 三件套 + tasks/）、`standard/README.md`（资产映射，DEC-044 定位修正后）、`advanced/README.md`（占位）、`toolkit/README.md`。
+2. ✅ 实现 `toolkit/check-push.mjs`、`toolkit/check-env.mjs`（含共识附加约束）并实测（check-env 全项通过；check-push ahead=0 短路与直连 dry-run 路径通过，真实推送随 DEC-044 提交实测）。
+3. 全部提交推送后，进入 Basic MVP 六模块方案讨论 + **从中级版哪里抽取代码**（开工会议第二题，DEC-044 指示③）。

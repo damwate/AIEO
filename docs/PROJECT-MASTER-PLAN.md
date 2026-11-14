@@ -8,6 +8,8 @@
 ---
 
 > **【2026-11-14 战略方向调整挂注 · DEC-037】** 用户拍板：AIEO 转入**分级版本发展路线**（AIEO Basic / Standard / Advanced，**Basic MVP 优先**，"先实用，后完善"）。纪要全文：`docs/reviews/2026-11-14-AIEO分级版本发展战略与建设方向调整纪要-v0.1.md`。本文 v0.1 与该纪要冲突处（近期路线重心与优先级）**以纪要为准**；本文其余内容（架构边界、文档体系、治理纪律）继续有效。本文 v0.2 修订（分级路线落位）待用户主持的方案讨论会后再行制定——当前不开发、先讨论。
+>
+> **【2026-11-14 落位实施挂注 · DEC-044】** 用户拍板通过版本目录与工具包方案（v1.0 实施稿，`docs/phase1/version-directory-plan.md`）：basic/（Basic 工作流+模板+任务记录）、**standard/（现有已开发体系 app/contracts/phase1/handoff = 中级版基础，不得删除，Basic 可从中复制初级功能）**、advanced/（占位）、toolkit/（check-push/check-env）。Basic MVP 六模块方案讨论（会议第二题）进行中。
 
 ## 1. 项目最终目标
 

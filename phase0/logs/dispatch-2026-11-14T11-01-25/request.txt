@@ -1,0 +1,7 @@
+【合并后复核·T-P1-908】DEC-010 已拍板。scheduler=e47055d48cbba5217182bbcaf42d899e73abe85a；evidence=fa47463b796706f2e90b025aeab4f6b06db01d3e；main=3edf0aeb09a78a82879241195e4b984d1d60e5f7。任务=核验合并完整性（第7轮 A1-A7 已 PASS）。通道①api.github.com/repos/damwate/AIEO/contents/<路径>?ref=<main值> 读 JSON 的 sha 字段（=blob SHA）；②api.github.com/repos/damwate/AIEO/commits?sha=main&per_page=5；③raw.githubusercontent.com/<完整SHA>/<路径> 浏览。核对项：
+B1 phase1/tools/scheduler.py 在 main，sha=f9daf5b69e673906b5e4b2880ff184aedc1aeeca（同 blob）。
+B2 docs/phase1/F001-SCHEDULER-BRIEF.md sha=e84ae48104ff05bc94a53e02754654e9421c7c27（契约未改）。
+B3 phase1/logs/t-p1-908-20261114/：REPRODUCE-GUIDE.md sha=f34df5406e27306e7e8a87ed9f98feabb9b83652；RUN-RECORD.md sha=cc4349581369bd91897009b362203c9cd48b3deb；SHA256SUMS sha=161a4c461e2a1ba8964eb8dd8941fd12092a39f1；acceptance/round7 在位。
+B4 ②最近两条=两个 merge commit（消息含 DEC-010）。
+B5 RUN-RECORD.md §16 七轮止步+A8"环境限制"在位。
+每项 PASS/FAIL+证据；末行 ACCEPT/REJECT。回复≤500字。只裁定不改文件。

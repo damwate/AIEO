@@ -1,0 +1,25 @@
+ChatGPT 说：
+
+T-P1-908 第二轮独立验收：REJECT。
+
+按指定四个完整 SHA 锚定读取，未使用 HEAD，未修改任何文件。
+
+A1: FAIL — 审计 c415b24f8aa27f4c192e50215f9eb49f305679d0、服务端日志 44103a2a5b439149ba4662535ceb356586d64a6b、零直改声明 17f76ae9a888d94ed2b802adb576232f0091c147；SHA256SUMS 文件读取 404。
+
+A2: FAIL — s3-reply-raw.txt SHA c0911edd2c942d9995f9152cfc3f1d4fb0092298；内容实际是 BATCH-008/T-P1-007，不是 ORCH-908019 回复。
+
+A3: FAIL — S9 重放 b54d0eca6a0523c49fc13e43bdcf383a753dbfe3 有效；S4 重放证据未能按指南定位核实。
+
+A4: FAIL — REQ-0001 确实出现，console SHA 44a6621823621b630c1799e2142898a931cd5d63；但注入记录 9fdd31edf7535beee578d488f5a6a69f7d655af1 声明同时遗漏五个字段，与唯一缺 correlation_id 的验收设计矛盾。失败报告 SHA ac855f159d3be4bd9ab228831133411bcb8048be。
+
+A5: FAIL — 校验输出 98562099bb4b66db8103cdc10cf2e089ac7abd3c 声称908/908 OK，但 SHA256SUMS 文件无法读取；不能独立复现。
+
+A6: FAIL — 未能独立读取并核验完整 Ajv 双 Schema 0 errors 原始证据。
+
+A7: FAIL — 扫描报告 8814450b7718fdb062c39f0ce8cfc9e5b79c6ad0 声称 CLEAN，但扫描器位于 runtime，未能独立重跑。
+
+A8: FAIL — 指南 SHA 079818b5c8f67ddfcd07967cadb2e90871db4604；多条重现命令因证据文件缺失无法完成独立执行。
+
+REJECT
+
+不建议合并。尤其 A2、A4、A5 是实质性阻断，不接受以执行记录中的 PASS 声明替代独立验证。

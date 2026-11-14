@@ -1,0 +1,16 @@
+ChatGPT 说：
+
+本轮暂不能给出 ACCEPT。独立验收必须遵守字节保真要求，不能用 GitHub 文件预览、DOM 复制或未经验证的文件内容代替原始字节。
+
+已尝试 Git clone，但当前执行环境无法解析 github.com（DNS 失败）。因此尚未取得四个指定 SHA 的仓库对象，也没有伪造 SHA256 或 PASS 结论。
+
+A1: FAIL+证据SHA：未取得（无法字节保真核验）
+A2: FAIL+证据SHA：未取得（未验证三处原始字节一致）
+A3: FAIL+证据SHA：未取得（未读取重放证据）
+A4: FAIL+证据SHA：未取得（未读取 ORCH-908022 完整证据）
+A5: FAIL+证据SHA：未取得（未执行 sha256sum -c）
+A6: FAIL+证据SHA：未取得（未验证双 Schema）
+A7: FAIL+证据SHA：未取得（未能独立运行扫描器）
+A8: FAIL+证据SHA：未取得（无法完成独立字节哈希验收）
+
+REJECT
