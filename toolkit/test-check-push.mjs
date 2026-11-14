@@ -16,6 +16,7 @@ import {
   portsFromGitConfigEntries,
   isValidPort,
   probePort,
+  formatTcpSkipLog,
   runProbeSequence,
   probeCandidate,
 } from "./check-push.mjs";
@@ -364,4 +365,17 @@ test("probeCandidate：真实拒绝端口（默认 probePort）→ 'TCP 未监�
   assert.equal(r.tcpSkipped, true);
   assert.equal(r.tried[0].timedOut, false);
   assert.match(r.tried[0].stderr, /TCP 未监听（连接失败（ECONNREFUSED））/);
+});
+
+// ---------- formatTcpSkipLog（R3 复核遗留整改：日志两分支） ----------
+test("formatTcpSkipLog：timedOut=true → TCP 探测超时分支（≠永久不可用）", () => {
+  const s = formatTcpSkipLog(true, "代理 127.0.0.1:1111（来源: --ports）");
+  assert.match(s, /TCP 探测超时 → 跳过本次 dry-run（本次超时不代表路径永久不可用）/);
+  assert.doesNotMatch(s, /未监听/);
+});
+
+test("formatTcpSkipLog：timedOut=false → 未监听分支（共识 3）", () => {
+  const s = formatTcpSkipLog(false, "代理 127.0.0.1:2222（来源: netstat）");
+  assert.match(s, /未监听 → 跳过（配置\/git config 有值≠端口可用，共识 3）/);
+  assert.doesNotMatch(s, /超时/);
 });

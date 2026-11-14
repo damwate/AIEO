@@ -301,6 +301,13 @@ export async function probeCandidate({ candidate, tcpProbe = probePort, dryRun }
   };
 }
 
+// TCP 预筛跳过日志（R3 复核遗留整改：超时与未监听两分支分开，便于测试）：
+export function formatTcpSkipLog(timedOut, label) {
+  return timedOut
+    ? `${label}：TCP 探测超时 → 跳过本次 dry-run（本次超时不代表路径永久不可用）`
+    : `${label}：未监听 → 跳过（配置/git config 有值≠端口可用，共识 3）`;
+}
+
 // ============================================================
 // 主流程
 // ============================================================
@@ -411,7 +418,7 @@ async function main() {
         return { ok: rr.ok, timedOut: rr.timedOut, stderr: rr.stderr, ms };
       },
     });
-    if (r.tcpSkipped) console.log(`[check-push]   ${r.tried[0].label}：未监听 → 跳过（配置/git config 有值≠端口可用，共识 3）`);
+    if (r.tcpSkipped) console.log(`[check-push]   ${formatTcpSkipLog(r.tried[0].timedOut, r.tried[0].label)}`);
     return r;
   };
 
