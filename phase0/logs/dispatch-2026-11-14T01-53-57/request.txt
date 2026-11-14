@@ -1,0 +1,3 @@
+【会务·T-P1-905 D1′独立验收(双分支)】按完整SHA读仓库。基线main=e59e250(含DEC-025/026)。验收对象两分支(均未合并main)：①开发分支feature/T-P1-001-bundle-gate-help=916d8b2(base=c55c7f5,单文件phase1/tools/bundle_gate.mjs加--help用法输出)；②证据分支feature/T-P1-905-d1prime=a2895af(RUN-RECORD.md全链记录+33份运行证据+派单证据7份+FEASIBILITY v0.3/PHASE-STATUS v0.4)。任务书=docs/phase1/D1PRIME-VERTICAL-SLICE-BRIEF.md v0.3(DEC-024-C四约束)。
+核验四项：A开发分支改动符合任务范围、无越界扩张、提交规范；B证据分支足以独立支撑九步PASS(每步命令/输出/SHA可复现)；C SHA引用交叉一致(reply 7d04368f/请求9ac51191/diff 78dd19ec/commit 916d8b2/基线c55c7f5)；D无安全问题(秘密脱敏)、无夸大结论、无未登记事项。
+结论三态PASS/REWORK/BLOCKED,逐项给理由。约束：本验收不构成合并授权(DEC-010)；DEC-017不解除。

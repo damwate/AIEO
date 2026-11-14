@@ -58,7 +58,7 @@
 3. **gpt-inbound-poc.schema.json 澄清（任务书 §4 口径更新，非静默偏离）：** 该 Schema 为 POC 期夹具（const test 固定值+纯汉字 1000–1500 字符约束），不适用于真实规划回复；实际消费 **904 冻结交付**的 `message-envelope.schema.json`+`task-plan-submitted.payload.schema.json`（Ajv 2020，双 valid）。此为 904 机器化交付对 v0.2 草案文本的自然取代，登记于此。
 4. **Inbox 查询参数修正：** `direction=inbound` 小写 → 400 REQ-0001（须 INBOUND/OUTBOUND 大写），修正后复验通过——契约校验在真实链路中实际拦截了格式错误，属 fail-closed 生效正向证据。
 5. **幂等三重验证全过：** artifact 重放 `duplicate:true` 同 ID；message 重放 409 RES-0003；submit_result 重放 `duplicate:true`+消息跳过。DEC-024-C ②"登记先查幂等键、恢复只重试登记"在真实链路中成立。
-6. **证据脱敏登记（C6 红线处置）：** 归档前扫描发现 `s1-bootstrap.json` 含 GPT-01/ZCODE-01 两个明文服务令牌（M1 `AgentCreate(issue_service_token)` 的 201 响应原文），已按 C6"秘密不进 Git"在归档前脱敏为前 10 字符+`…REDACTED`（本目录复扫零残留）；令牌原文仅存 gitignored `runtime/d1prime-20261114/service-tokens.json`。另将 3 处 OWNER 会话 CSRF 令牌（s1/s4 响应与日志中的短期凭据）一并 `…REDACTED`。其余文件扫描无泄漏。
+6. **证据脱敏登记（C6 红线处置）：** 归档前扫描发现 `s1-bootstrap.json` 含 GPT-01/ZCODE-01 两个明文服务令牌（M1 `AgentCreate(issue_service_token)` 的 201 响应原文），已按 C6"秘密不进 Git"在归档前脱敏为前 10 字符+`…REDACTED`（本目录复扫零残留）；令牌原文仅存 gitignored `runtime/d1prime-20261114/service-tokens.json`。另将 3 处 OWNER 会话 CSRF 令牌（s1/s4 响应与日志中的短期凭据）一并 `…REDACTED`。**机器扫描证据（验收 F-03 补证）：** `security-scan.txt`（SHA-256 `13b52b0c473a80ed535d56c5853aa0340ed506f078e2a1fae60d44267599c25f`，2026-11-14T10:03Z，范围=本目录+派单证据目录的分支工作树与 git HEAD 树双覆盖，规则 R1 服务令牌/R2 CSRF/R3 管理口令/R4 会话密钥/R5 通用秘密赋值；结果 **CLEAN**：41 文件+git 树 3 命中均为 REDACTED 占位，原始泄漏 0）。
 
 ## 6. 验收标准对照（任务书 §6 六条）
 
@@ -75,6 +75,31 @@
 
 ## 7. 交付物与后续
 
-- 交付物 1（证据目录）=本目录 33 文件 + `phase0/logs/dispatch-2026-11-14T01-13-30/`（7 文件）；交付物 2（全链记录）=本文档；交付物 3（FEASIBILITY）/4（PHASE-STATUS）/5（复盘=§5）随证据分支归档。
+- 交付物 1（证据目录）=**本目录 32 文件**（31 份步骤/回归/扫描证据 + RUN-RECORD 本文档；初版登记"33"为笔误，验收 F-02 修正）+ `phase0/logs/dispatch-2026-11-14T01-13-30/`（7 文件）；交付物 2（全链记录）=本文档；交付物 3（FEASIBILITY）/4（PHASE-STATUS）/5（复盘=§5）随证据分支归档。
 - **分支拓扑（待独立验收+用户合并审批 DEC-010）：** 开发分支 `feature/T-P1-001-bundle-gate-help`（head `916d8b2`）；治理/证据分支 `feature/T-P1-905-d1prime`（本记录+文档更新+证据归档，自 main `c55c7f5` 切出）。**均未合并 main。**
 - 固定纪律重申：PASS 不等于授权；归档不等于定稿；下一任务不继承上一任务额外权限；完成后另行提交独立验收，不因开工授权获得合并或发布权限；DEC-017 扩展场景限制不解除。
+
+## 8. 基线差异说明（验收 F-01，2026-11-14 修订登记）
+
+**执行基线与验收基线不同，且不应等同：**
+
+- **执行时基线 = `c55c7f5`**（main 于 D1′ 九步执行期间的指针；本文档头部与 §3/S6 execution base 的 `c55c7f5bfc08e073b93750ae412d0b5d29278343` 均为该事实，不得改写）；
+- **验收时指定基线 = `e59e250`**（main 于验收派单时的指针）。两基线间 main 仅新增**治理文档类提交**：`38ee462`（DEC-025 登记：评估会指示）与 `e59e250`（DEC-026 登记：评估会三决议+USAGE-ISSUE-REGISTER v0.1+会务会议证据）——均不触及 `app/`、`tests/`、`contracts/`，不修改任务授权链；
+- **对执行授权的影响 = 零。** D1′ 执行的唯一授权依据是 DEC-024-C（开工四约束，先于两提交存在）；DEC-025/DEC-026 是执行**之后**的治理决议，对已完成的九步执行无追溯效力，仅约束其后的路线与验收安排（DEC-026 决议三：双分支独立验收→用户批合并）；
+- **证据分支拓扑：** `feature/T-P1-905-d1prime` 自 `c55c7f5` 切出（首提交 `a2895af`），与 main 在 `c55c7f5` 分叉属预期形态（任务分支不随 main 治理提交漂移）；本修订提交（见 §9）为第二提交，不重写 `a2895af` 历史；
+- 合并时（如用户批准）以 merge commit 方式处理双指针差异，指针冲突按最新保留（904 先例）。
+
+## 9. 独立验收与证据修订记录（2026-11-14，F-04）
+
+**首轮独立验收（dispatch-2026-11-14T01-53-57，新空白会话，assistant UUID `6d35cb71`，reply 8370 字节 SHA-256 `a20185da494aa888a18db321dd21d45c2697393dfd3a78d414a7e893ea98ad5f`，审查基线 main=`e59e250`）：** 整体 **BLOCKED**——A 开发分支 **PASS**（单文件单提交、范围符合、规范符合，无需返工）；B 证据分支 **BLOCKED**（基线差异未说明+文件计数待纠正）；C SHA 交叉一致性 **PASS**（reply/请求/diff/commit/基线五项一致）；D 安全与治理 **REWORK**（F-01～F-04）。
+
+**修订落实（本提交，只补证据、不重跑九步、不改开发分支、不重写 a2895af）：**
+
+| 编号 | 事项 | 落实 |
+|---|---|---|
+| F-01 | 基线差异说明 | 本文 §8 新增 |
+| F-02 | 证据计数 33→实数 | 本文 §7 修正为 **32 文件**（git ls-tree 实查），并注明笔误来源 |
+| F-03 | 脱敏扫描机器证据 | `security-scan.txt` + `.sha256`（结果 CLEAN，见 §5-6 指针） |
+| F-04 | 文档表述修订 | 本文 §7/§5-6/§8/§9 修订；PHASE-STATUS v0.4（本分支）无计数/基线错误表述，经查不需改 |
+
+**待限定复核：** 修订提交推送后按会务建议进行一次限定复核（只核 F-01～F-04 是否闭合，不重复首轮全量核验）；复核 PASS 后由用户决定是否批准合并（DEC-010）。
