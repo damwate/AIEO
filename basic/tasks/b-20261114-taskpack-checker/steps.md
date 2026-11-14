@@ -17,10 +17,10 @@
 
 ## S1 骨架：CLI+状态模型+六项检查函数桩（验收重点：结构正确）
 
-- [ ] CLI（`check_taskpack.py <task_dir>` + `--json`）与退出码约定
-- [ ] 状态模型：阶段映射读取 + 单项/整体状态枚举 + 汇总层
-- [ ] 六项检查函数桩（结构化返回，桩期 N/A）
-- [ ] 文本输出格式（共识样例样式）
+- [x] CLI（`check_taskpack.py <task_dir>` + `--json`）与退出码约定
+- [x] 状态模型：阶段映射读取 + 单项/整体状态枚举 + 汇总层
+- [x] 六项检查函数桩（结构化返回，桩期 N/A）
+- [x] 文本输出格式（共识样例样式）
 
 **六要素记录（步骤完成后填写）：**
 ①本步骤目标：S1 骨架=CLI+状态模型+六项检查函数桩（验收重点：结构正确）
@@ -28,7 +28,7 @@
 ③修改内容（本次待验收 commit 完整 SHA）：最终待验收 `553ed2d12455e6f30a2cee22616eeafb73ecf963`（=首验 `49c82b5` 新增 basic/tool/check_taskpack.py 274 行：argparse CLI+冻结口径常量+ItemResult/PhaseInfo 数据类+read_phase 五分支映射+六项检查函数桩+summarize 汇总层+文本/--json 共用同一结果对象+异常 fail-safe；`40c66d9` 返工问题1/2 统一 build_result+render_text 消费；`553ed2d` 返工问题4 ①项阶段读取失败=FAIL——详见下方返工记录；diff=9de95cc1→553ed2d）
 ④执行结果：自测通过——文本模式（本任务包实测：Phase=IN_PROGRESS 映射正确，六项 N/A，Overall=IN_PROGRESS，exit=1）；--json 同数据结构；目录不存在=FAIL+exit=1；阶段映射五分支（no-brief/bad-status/empty-status→UNKNOWN+problems 不猜阶段；待规划→PLANNING；阻塞→IN_PROGRESS）
 ⑤测试结果：手动自测 EXECUTED_PASS；unittest 正负例+11 类异常场景全套在 S3（未测项如实标注：S3 未测）
-⑥验收证据引用：待验收 commit `553ed2d12455e6f30a2cee22616eeafb73ecf963`；**验收结论链：首验 REJECT 两项P1（dispatch-2026-11-14T15-08-02，新会话；reply SHA 见该目录 result.json）→ 复验R1 静态PASS+BLOCKED缺动态证据（15-13-16）→ 动态证据v1落盘 a3f5d92 → 复验R2 REJECT问题3绑定不一致（15-24-07）→ 问题3修复 9ae394a → 复验R3 REJECT问题4阶段读取失败①项应FAIL（15-28-41）→ 问题4修复 553ed2d+动态证据v2 af3e9a7（被测553ed2d）**；首轮曾 BLOCKED（commit 未推送，dispatch-2026-11-14T15-05-29 会话），推送后按先例换新会话复验；返工修复见下方返工记录；本步当前待复验R4
+⑥验收证据引用：待验收 commit `553ed2d12455e6f30a2cee22616eeafb73ecf963`；**验收结论：PASS（复验R4，dispatch-2026-11-14T15-51-20，新会话；reply sha256=c2d621ac507487c1abe899a31c602d180deddbba2d81fabbd1e89bc6ac69f258）**——问题4修复符合冻结口径1、六项标准①-⑥全PASS、动态证据v2 8组核验通过（B/B2 ①FAIL+可识别原因+files登记正确、C 保留S1桩语义、stderr 已存、环境如实标注 Windows 非 Linux）、三 commit 全链绑定一致（49c82b5/40c66d9/553ed2d 均仅动 check_taskpack.py，含 9dcf116 材料更新核验）；验收历史链：首验 REJECT 两项P1（15-08-02）→ 复验R1 静态PASS+BLOCKED缺动态证据（15-13-16）→ 动态证据v1 a3f5d92 → 复验R2 REJECT问题3（15-24-07）→ 修复 9ae394a → 复验R3 REJECT问题4（15-28-41）→ 修复 553ed2d+证据v2 af3e9a7 → **复验R4 PASS（15-51-20）**；首轮曾 BLOCKED（commit 未推送，15-05-29 会话），推送后按先例换新会话复验；返工记录见下表；**本步闭环，允许进入 S2**
 
 ### 返工记录（REJECT/返工/问题编号三方关联）
 
@@ -37,7 +37,7 @@
 | 问题1 | 文本输出遗漏 phase_problems（UNKNOWN 无可识别原因） | render_text 独立传参未接收 PhaseInfo.problems | `40c66d9b17696f548603bb847e45190204a09674`（文本输出"阶段读取: <原因>"） | 复验R1静态PASS（15-13-16）；复验R2维持（15-24-07） |
 | 问题2 | 文本与 JSON 未真正共用完整结果对象（正常/目录不存在两路径各自拼装、schema 不一致） | main() 三处分别构造数据 | `40c66d9b17696f548603bb847e45190204a09674`（统一 build_result，render_text(data) 消费同一对象） | 复验R1静态PASS；复验R2维持 |
 | 问题3 | 验收请求文档代码绑定过时（返工后待验收 commit 仍写 49c82b5，动态证据绑定 40c66d9，两份代码混合认定风险） | 返工提交后未同步更新 acceptance/s1-acceptance-request.md 的绑定字段 | 文档更新（绑定=40c66d9，diff=9de95cc→40c66d9，附验收历史证据链） | 复验R3维持（15-28-41，R3未再指出绑定问题，另发现问题4） |
-| 问题4 | 冻结口径1"阶段读取失败=①项FAIL"实现却返回N/A（复验R3 dispatch-15-28-41 REJECT；执行者"桩期语义"辩护不成立，验收方正确） | check_requirement 依赖 read_phase 结果但未将 UNKNOWN 转为该项 FAIL，S1 骨架桩语义覆盖了冻结口径语义 | `553ed2d12455e6f30a2cee22616eeafb73ecf963`（check_requirement 内读阶段：UNKNOWN=FAIL+可识别原因+files登记task-brief.md；阶段正常仍N/A桩；整体FAIL优先不变；六项独立函数保持） | 待复验R4 |
+| 问题4 | 冻结口径1"阶段读取失败=①项FAIL"实现却返回N/A（复验R3 dispatch-15-28-41 REJECT；执行者"桩期语义"辩护不成立，验收方正确） | check_requirement 依赖 read_phase 结果但未将 UNKNOWN 转为该项 FAIL，S1 骨架桩语义覆盖了冻结口径语义 | `553ed2d12455e6f30a2cee22616eeafb73ecf963`（check_requirement 内读阶段：UNKNOWN=FAIL+可识别原因+files登记task-brief.md；阶段正常仍N/A桩；整体FAIL优先不变；六项独立函数保持） | **复验R4 PASS**（dispatch-15-51-20，问题4修复符合冻结口径，六项标准全过） |
 
 （问题1、2 相互独立各第 1 次返工；问题3、问题4 各与之独立，均第 1 次；采集器跳位致结论原文不可恢复按 DEC-043 先例换会话，属采集缺陷不计入本任务返工；另：af3e9a7 提交信息声称"steps.md登记问题4"但该提交 diff 实际未含 steps.md，问题4 登记在本 commit 补上）
 
