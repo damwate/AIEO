@@ -1,0 +1,152 @@
+{
+  "steps": [
+    {
+      "step": "login",
+      "status": 200,
+      "body": {
+        "username": "OWNER",
+        "csrf_token": "…REDACTED",
+        "expires_at": "2026-11-15T01:18:42.251Z"
+      }
+    },
+    {
+      "step": "create_agent_gpt01",
+      "status": 201,
+      "body": {
+        "agent": {
+          "agent_id": "GPT-01",
+          "agent_type": "reviewer",
+          "role": "gpt-01-planner",
+          "enabled": 1,
+          "capabilities": "{\"dispatch_tool\":\"phase0/tools/gpt_dispatch.mjs\",\"model_channel\":\"chatgpt-web\"}",
+          "created_at": "2026-11-14T01:18:42.281Z",
+          "updated_at": "2026-11-14T01:18:42.281Z"
+        }
+      }
+    },
+    {
+      "step": "register_artifact_first",
+      "status": 201,
+      "body": {
+        "artifact_id": "ART-OTH-001",
+        "task_id": "T-P1-001",
+        "type": "OTHER",
+        "path": "phase1/logs/t-p1-905-d1prime-20261114/s4-reply-raw.txt",
+        "sha256": "7d04368f7d3cb72a4ad644454c50bbe913cc5b08f685103ecffaa5c0037673dc",
+        "created_at": "2026-11-14T01:18:42.345Z",
+        "duplicate": false
+      }
+    },
+    {
+      "step": "register_artifact_replay",
+      "status": 201,
+      "body": {
+        "artifact_id": "ART-OTH-001",
+        "task_id": "T-P1-001",
+        "type": "OTHER",
+        "path": "phase1/logs/t-p1-905-d1prime-20261114/s4-reply-raw.txt",
+        "sha256": "7d04368f7d3cb72a4ad644454c50bbe913cc5b08f685103ecffaa5c0037673dc",
+        "created_at": "2026-11-14T01:18:42.345Z",
+        "duplicate": true
+      }
+    },
+    {
+      "step": "register_message_first",
+      "status": 202,
+      "body": {
+        "message_id": "MSG-20261114-000001",
+        "schema_version": "1.0",
+        "message_type": "TASK_PLAN_SUBMITTED",
+        "direction": "INBOUND",
+        "source_agent_id": "GPT-01",
+        "target_agent_id": "AIEO-ORCHESTRATOR",
+        "project_id": "AIEO-D1PRIME",
+        "batch_id": "BATCH-001",
+        "task_id": null,
+        "correlation_id": "CORR-905001",
+        "payload": {
+          "batch_id": "BATCH-001",
+          "open_questions": [],
+          "project_id": "AIEO-D1PRIME",
+          "requirement_summary": "为bundle_gate.mjs增加完整--help帮助输出，保持无参报错及其他文件不变。",
+          "result": "SUCCESS",
+          "tasks": [
+            {
+              "acceptance_criteria": [
+                "--help调用时向stdout输出工具用途说明。",
+                "帮助内容完整列出--commit、--parts-index、--tar、--manifest、--output-dir五个参数的含义及必选性。",
+                "帮助内容包含完整且可复制执行的调用示例。",
+                "帮助内容明确说明退出码0为成功、1为核验失败、2为参数错误。",
+                "--help调用退出码为0，且不执行实际核验流程。",
+                "无参调用维持现有报错行为及退出码。",
+                "正常参数调用的原有核验行为不发生回归。",
+                "仅修改phase1/tools/bundle_gate.mjs，不修改其他文件。"
+              ],
+              "dependencies": [],
+              "description": "1. 阅读phase1/tools/bundle_gate.mjs现有参数解析、校验流程及退出码处理逻辑。2. 在不改变现有业务行为的前提下增加--help参数识别。3. --help调用时向stdout输出工具用途说明、五个参数的名称及含义、各参数必选性、完整可执行调用示例，以及退出码约定。4. 帮助输出完成后以退出码0正常结束，不继续执行核验流程。5. 保持无参调用原有参数错误行为。6. 严格限制修改范围，仅修改指定文件。7. 执行针对帮助输出、参数错误及现有功能的回归验证。",
+              "files_scope": [
+                "phase1/tools/bundle_gate.mjs"
+              ],
+              "priority": "P2",
+              "task_id": "T-P1-001",
+              "title": "为bundle_gate.mjs增加--help用法说明"
+            }
+          ]
+        },
+        "status": "PENDING",
+        "retry_count": 0,
+        "max_retries": 8,
+        "next_retry_at": null,
+        "last_error_code": null,
+        "last_error_message": null,
+        "delivered_at": null,
+        "acked_at": null,
+        "dead_lettered_at": null,
+        "processing_status": "PENDING",
+        "processed_at": null,
+        "created_at": "2026-11-14T01:18:42.385Z",
+        "updated_at": "2026-11-14T01:18:42.385Z"
+      }
+    },
+    {
+      "step": "register_message_replay",
+      "status": 409,
+      "body": {
+        "code": "RES-0003",
+        "message": "DUPLICATE_MESSAGE: message MSG-20261114-000001 already registered; returning original result",
+        "retryable": false,
+        "correlation_id": "95b8b45c-7b90-4c54-9b96-223430d0f807",
+        "details": {
+          "message_id": "MSG-20261114-000001",
+          "status": "PENDING",
+          "processing_status": "PENDING",
+          "delivered_at": null,
+          "acked_at": null,
+          "created_at": "2026-11-14T01:18:42.385Z"
+        }
+      }
+    },
+    {
+      "step": "list_messages_inbox",
+      "status": 400,
+      "body": {
+        "code": "REQ-0001",
+        "message": "INVALID_ARGUMENT: direction must be INBOUND or OUTBOUND",
+        "retryable": false,
+        "correlation_id": "5ee78251-4e0a-411f-ba71-f1a6cc21b34f",
+        "details": {
+          "field": "direction"
+        }
+      }
+    }
+  ],
+  "artifact_idempotent": true,
+  "artifact_id": "ART-OTH-001",
+  "artifact_replay_same_id": true,
+  "message_status_first": 202,
+  "message_status_replay": 409,
+  "message_duplicate_flag_replay": null,
+  "message_id_same": false,
+  "inbox_has_task_plan_submitted": false,
+  "inbox_total_for_type": 0
+}

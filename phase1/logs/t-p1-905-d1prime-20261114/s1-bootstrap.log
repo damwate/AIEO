@@ -1,0 +1,9 @@
+health: HTTP 200
+owner_login: HTTP 200
+create_project: HTTP 201
+create_batch: HTTP 201
+create_task: HTTP 201
+create_agent_zcode: HTTP 201
+create_agent_gitworker: HTTP 201
+negative_noauth_create_project: HTTP 403
+S1 DONE project/batch/task/agents created; task_id=T-P1-921 batch=BATCH-001 project=AIEO-D1PRIME

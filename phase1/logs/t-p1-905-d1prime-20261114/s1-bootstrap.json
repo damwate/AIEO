@@ -1,0 +1,139 @@
+{
+  "kb_commit": "c55c7f5bfc08e073b93750ae412d0b5d29278343",
+  "steps": [
+    {
+      "step": "health",
+      "status": 200,
+      "body": {
+        "status": "ok",
+        "contract_version": "1.0.0",
+        "supported_versions": [
+          "1.0"
+        ],
+        "minimum_supported_version": "1.0",
+        "service": "platform",
+        "module": "M1",
+        "env": "development"
+      }
+    },
+    {
+      "step": "owner_login",
+      "status": 200,
+      "body": {
+        "username": "OWNER",
+        "csrf_token": "…REDACTED",
+        "expires_at": "2026-11-15T01:11:40.250Z"
+      }
+    },
+    {
+      "step": "create_project",
+      "status": 201,
+      "body": {
+        "project_id": "AIEO-D1PRIME",
+        "name": "D1′ 真实端到端垂直切片验证项目（T-P1-905）",
+        "description": "T-P1-905 D1′：一条真实低风险需求走最小闭环（任务书 v0.3，DEC-024-C）",
+        "status": "ACTIVE",
+        "knowledge_version": null,
+        "created_at": "2026-11-14T01:11:40.294Z",
+        "updated_at": "2026-11-14T01:11:40.294Z"
+      }
+    },
+    {
+      "step": "create_batch",
+      "status": 201,
+      "body": {
+        "batch_id": "BATCH-001",
+        "project_id": "AIEO-D1PRIME",
+        "requirement": "为 phase1/tools/bundle_gate.mjs 增加 --help 用法输出（低风险脚本级真实改进）",
+        "status": "PLANNING",
+        "engineering_standard_version": "v1.0.0",
+        "knowledge_base_commit": "c55c7f5bfc08e073b93750ae412d0b5d29278343",
+        "created_at": "2026-11-14T01:11:40.323Z",
+        "updated_at": "2026-11-14T01:11:40.323Z"
+      }
+    },
+    {
+      "step": "create_task",
+      "status": 201,
+      "body": {
+        "task_id": "T-P1-001",
+        "batch_id": "BATCH-001",
+        "parent_id": null,
+        "title": "为 phase1/tools/bundle_gate.mjs 增加 --help 用法输出",
+        "description": "以 --help 调用时向 stdout 输出工具用途、五个参数（--commit/--parts-index/--tar/--manifest/--output-dir）含义与必选性、一个完整调用示例、退出码约定（0 成功/1 核验失败/2 参数错误），并以退出码 0 正常结束；无参调用维持现有报错行为；不改变任何现有校验逻辑，不改其余文件。",
+        "status": "DRAFT",
+        "priority": "P2",
+        "weight": 1.0,
+        "files_scope": [
+          "phase1/tools/bundle_gate.mjs"
+        ],
+        "acceptance_criteria": [
+          "node phase1/tools/bundle_gate.mjs --help 输出含五个参数说明与调用示例",
+          "--help 退出码为 0",
+          "无参调用维持现有报错行为（exit 2）",
+          "不修改 bundle_gate.mjs 以外的任何文件"
+        ],
+        "engineering_standard_items": [],
+        "task_package_hash": "b43e1b3e955a2b315ee1e661b7b0f27f65b59e83778b846ef91a5f435777e1a8",
+        "engineering_standard_version": "v1.0.0",
+        "knowledge_base_commit": "c55c7f5bfc08e073b93750ae412d0b5d29278343",
+        "blocked_reason": null,
+        "blocked_owner": null,
+        "unblock_condition": null,
+        "cancelled_by": null,
+        "cancelled_reason": null,
+        "created_at": "2026-11-14T01:11:40.352Z",
+        "updated_at": "2026-11-14T01:11:40.352Z",
+        "dependencies": [],
+        "latest_execution": null,
+        "allowed_events": [
+          "CANCEL",
+          "PLAN"
+        ]
+      }
+    },
+    {
+      "step": "create_agent_zcode",
+      "status": 201,
+      "body": {
+        "agent": {
+          "agent_id": "ZCODE-01",
+          "agent_type": "developer",
+          "role": "zcode-dev-agent",
+          "enabled": 1,
+          "capabilities": null,
+          "created_at": "2026-11-14T01:11:40.381Z",
+          "updated_at": "2026-11-14T01:11:40.381Z"
+        },
+        "service_token": "ait_mBATts…REDACTED"
+      }
+    },
+    {
+      "step": "create_agent_gitworker",
+      "status": 201,
+      "body": {
+        "agent": {
+          "agent_id": "GIT-WORKER-01",
+          "agent_type": "developer",
+          "role": "git-worker",
+          "enabled": 1,
+          "capabilities": null,
+          "created_at": "2026-11-14T01:11:40.442Z",
+          "updated_at": "2026-11-14T01:11:40.442Z"
+        },
+        "service_token": "ait_tJWjAY…REDACTED"
+      }
+    },
+    {
+      "step": "negative_noauth_create_project",
+      "status": 403,
+      "body": {
+        "code": "AUTH-0002",
+        "message": "AUTH-0002 FORBIDDEN: missing or invalid CSRF token for state-changing request",
+        "retryable": false,
+        "correlation_id": "ed5587dd-0744-4239-a664-70933e74679d"
+      }
+    }
+  ],
+  "negative_noauth_expected_401": false
+}

@@ -1,0 +1,31 @@
+ChatGPT 说：
+
+{
+"result": "SUCCESS",
+"batch_id": "BATCH-001",
+"project_id": "AIEO-D1PRIME",
+"requirement_summary": "为bundle_gate.mjs增加完整--help帮助输出，保持无参报错及其他文件不变。",
+"tasks": [
+{
+"task_id": "T-P1-001",
+"title": "为bundle_gate.mjs增加--help用法说明",
+"description": "1. 阅读phase1/tools/bundle_gate.mjs现有参数解析、校验流程及退出码处理逻辑。2. 在不改变现有业务行为的前提下增加--help参数识别。3. --help调用时向stdout输出工具用途说明、五个参数的名称及含义、各参数必选性、完整可执行调用示例，以及退出码约定。4. 帮助输出完成后以退出码0正常结束，不继续执行核验流程。5. 保持无参调用原有参数错误行为。6. 严格限制修改范围，仅修改指定文件。7. 执行针对帮助输出、参数错误及现有功能的回归验证。",
+"priority": "P2",
+"dependencies": [],
+"files_scope": [
+"phase1/tools/bundle_gate.mjs"
+],
+"acceptance_criteria": [
+"--help调用时向stdout输出工具用途说明。",
+"帮助内容完整列出--commit、--parts-index、--tar、--manifest、--output-dir五个参数的含义及必选性。",
+"帮助内容包含完整且可复制执行的调用示例。",
+"帮助内容明确说明退出码0为成功、1为核验失败、2为参数错误。",
+"--help调用退出码为0，且不执行实际核验流程。",
+"无参调用维持现有报错行为及退出码。",
+"正常参数调用的原有核验行为不发生回归。",
+"仅修改phase1/tools/bundle_gate.mjs，不修改其他文件。"
+]
+}
+],
+"open_questions": []
+}

@@ -1,0 +1,46 @@
+{
+  "events": [
+    {
+      "event": "PLAN",
+      "event_id": "EVT-D1P-PLAN-001",
+      "status": 200
+    },
+    {
+      "event": "ARCH_REVIEW",
+      "event_id": "EVT-D1P-ARCH-001",
+      "status": 200
+    },
+    {
+      "event": "PASS",
+      "event_id": "EVT-D1P-ARCHPASS-001",
+      "status": 200
+    }
+  ],
+  "final_status": "READY",
+  "task_events_audit": [
+    [
+      "EVT-D1P-PLAN-001",
+      "PLAN",
+      "DRAFT",
+      "PLANNING",
+      "OWNER",
+      "2026-11-14T01:19:22.669Z"
+    ],
+    [
+      "EVT-D1P-ARCH-001",
+      "ARCH_REVIEW",
+      "PLANNING",
+      "ARCH_REVIEW",
+      "OWNER",
+      "2026-11-14T01:19:22.697Z"
+    ],
+    [
+      "EVT-D1P-ARCHPASS-001",
+      "PASS",
+      "ARCH_REVIEW",
+      "READY",
+      "OWNER",
+      "2026-11-14T01:19:22.724Z"
+    ]
+  ]
+}
