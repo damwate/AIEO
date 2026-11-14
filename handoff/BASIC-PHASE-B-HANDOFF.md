@@ -1,8 +1,8 @@
 # 会话交接包：主会话（AIEO Basic 开工日）→ 新主会话（阶段 B 开工）
 
-**生成时间：** 2026-11-14（阶段 A 复审通过当日生成）；**2026-11-15 凌晨更新**（同一会话，L-015 触发点：S1 阶段完成点+本会话已压缩一次——阶段 B 首任务 S1 闭环+代理共识落地，步骤推进至 S2 前夜）
+**生成时间：** 2026-11-14（阶段 A 复审通过当日生成）；**2026-11-15 更新**（同一会话，L-015 触发点：阶段 B 首任务四步全部闭环交付+本会话已多次压缩）
 **生成者：** ZCode 主会话（AI 执行者，Basic 工作流执行者角色）
-**交接目的：** 会话连续性保障（非轮换必需；当前会话继续在岗）。阶段 B 首任务 b-20261114-taskpack-checker 已完成 S1（四轮验收 PASS），下一步 S2；代理端口基本功共识已达成并落地（L-016+check-push 改造），独立复核在途。
+**交接目的：** 会话连续性保障（非轮换必需；当前会话继续在岗）。**阶段 B 首任务 b-20261114-taskpack-checker 四步（S1-S4）全部独立验收闭环、任务交付完成（S4 PASS 六查 6/6，自身包最终验证六项全 PASS exit=0——工具验证自身交付物）**；代理基本功共识闭环（check-push 复核 R4 PASS）+派单工具实战故障修复入库（7d019bc）。
 **使用规则（模板 §1）：** 新会话先核对实际仓库状态（git log / status / 文件存在性），以仓库为准；本包逐条标注 事实/决策/待确认。
 
 ## 1. 目标与阶段
@@ -20,9 +20,9 @@
 
 - 仓库：https://github.com/damwate/AIEO.git（origin）
 - 分支：main，与 origin/main 同步（ahead=0 behind=0，实查）
-- 基线 commit：`15c2a94bfa2a1add73c8acb4fec72fa8ea5eea82`（2026-11-14 深夜：check-push 共识改造落位；本交接包随其后的提交推送）
+- 基线 commit：`6b2288f`（2026-11-15 凌晨：S4 闭环交付完成——S4⑥ PASS 回填+brief 完成态+简报归档；本交接包随其后的提交推送）
 - 工作区：仅 `phase0/logs/gpt-reviewer-session.json`（派单会话指针，随派单自动更新）与未跟踪 `.zcode/`（ZCode 会话本地文件，**不提交**）
-- 本日提交链（全部已推 origin/main）：`62d1187` 目录落位 → `28b4642` 环境盘点 → `84c3b4e` DEC-045 → `4c6a3ba` 阶段 A 文档 → `418e614`/`3a4e29d`/`a1c97c2` 阶段 A 复审闭环 → `fab1b1b` DEC-047 → `d44459b` DEC-048 → `9de95cc` 任务包检查器方案冻结 → `49c82b5`/`40c66d9` S1 开发+首验返工 → `a3f5d92` 证据v1 → `9ae394a` 问题3修复 → `553ed2d` 问题4修复 → `af3e9a7` 证据v2 → `9dcf116` R4 材料更新 → `cb595a5` S1 闭环回填 → `aea9441` 代理共识文档落地（L-016+环境盘点§4）→ `15c2a94` check-push 改造+测试
+- 提交链（全部已推 origin/main，截至 6b2288f）：`62d1187` 目录落位 → `28b4642` 环境盘点 → `84c3b4e` DEC-045 → `4c6a3ba` 阶段 A 文档 → `418e614`/`3a4e29d`/`a1c97c2` 阶段 A 复审闭环 → `fab1b1b` DEC-047 → `d44459b` DEC-048 → `9de95cc` 任务包检查器方案冻结 → `49c82b5`/`40c66d9` S1 开发+首验返工 → `a3f5d92` 证据v1 → `9ae394a` 问题3修复 → `553ed2d` 问题4修复 → `af3e9a7` 证据v2 → `9dcf116` R4 材料更新 → `cb595a5` S1 闭环回填 → `aea9441` 代理共识文档落地（L-016+环境盘点§4）→ `15c2a94` check-push 改造+测试 → `a4399bf`/`e664e76`/`3a8975a` S2 开发+两轮整改+证据 v3 → `7d019bc` 派单工具故障修复+--attach → `3c3c1bc` S2 闭环（R3c 附件动态验收 PASS）→ `4818399` S3 测试套件 → `3191a34` S3 文档 → `941ee88`/`b1bd307` S3 两轮整改 → `86e5310`/`78c6cc8`/`75bd102` S3 复验回填与闭环 → `43cd5da` S4 文档交付 → `afecef5` SHA 回填 → `6b2288f` S4 闭环
 
 ## 3. 已完成事项（事实，附证据）
 
@@ -32,15 +32,18 @@
 4. **阶段 A 文档三轮复审闭环**：R1 需修正 6 项→`418e614` 全采纳；R2 剩 1 项（BLOCKED 是状态非结论）→`3a4e29d` 最小修正；R3 **复审通过**。用户拍板生效（2026-11-14"确认"）。证据：DEC-046、dispatch-13-59-20/14-09-51/14-14-20。
 5. **会话管理自管协议落地（DEC-048，`d44459b`）**：用户指示执行者自管会话并写入纪律；协议经 ChatGPT 共识定稿（新会话 `6af86f2b`，"共识达成"+七组修正）；**L-015**（docs/AI-DEV-LESSONS.md，GLOBAL）承载完整协议（压缩事件=唯一信号/L0-L2 分级/触发点必评估/交接四项判定/八项必填/双重事实来源/效率保护+执行者主动决策权），basic/WORKFLOW.md 增"会话管理"节。**新会话开工前必读 L-015**。
 6. **阶段 B 首任务 b-20261114-taskpack-checker S1 闭环（2026-11-14 深夜）**：需求原文用户拍板 → 方案协商共识（R2 "共识达成"）+用户拍板冻结 S1-S4 → S1 骨架开发 → **四轮验收闭环**：首验 REJECT 两项 P1（15-08-02）→`40c66d9` 修复 → 复验 R1 静态 PASS+BLOCKED 缺动态证据 → 动态证据 v1 `a3f5d92` → 复验 R2 REJECT 问题3 绑定不一致 →`9ae394a` → 复验 R3 REJECT 问题4（阶段读取失败①项应 FAIL，"桩期语义"辩护不成立）→`553ed2d`+证据 v2 `af3e9a7` → **复验 R4 PASS**（dispatch-15-51-20，reply sha256=c2d621ac…f258）。全部材料见 `basic/tasks/b-20261114-taskpack-checker/`（steps.md 六要素+返工记录表）。
-7. **代理端口基本功共识+落地（用户指令"代理的问题你跟chatgpt好好讨论下"）**：故障复盘（端口三迁 10391→2482→3572；Git Bash `reg query /v` 被 MSYS 转换吃掉误判"注册表无值"）→ ChatGPT 共识五条（dispatch-15-39-58"共识达成"：注册表首选发现源分协议解析/候选序直连→注册表→git config→netstat/配置提供候选实测判定可用性/严格只读/诊断失败三态区分）→ 落地：**L-016**（AI-DEV-LESSONS，GLOBAL）+环境盘点 §4 修订（`aea9441`）+ **check-push.mjs 改造**（发现/验证分离+注册表 PowerShell 直查三态+17 项单元测试全过+零手工参数实战推送成功，`15c2a94`）→ 独立复核派单（本包更新时在途，简报 `phase0/tools/checkpush-rework-r1.txt`）。
+7. **代理端口基本功共识+落地（用户指令"代理的问题你跟chatgpt好好讨论下"）**：故障复盘（端口三迁 10391→2482→3572；Git Bash `reg query /v` 被 MSYS 转换吃掉误判"注册表无值"）→ ChatGPT 共识五条（dispatch-15-39-58"共识达成"：注册表首选发现源分协议解析/候选序直连→注册表→git config→netstat/配置提供候选实测判定可用性/严格只读/诊断失败三态区分）→ 落地：**L-016**（AI-DEV-LESSONS，GLOBAL）+环境盘点 §4 修订（`aea9441`）+ **check-push.mjs 改造**（发现/验证分离+注册表 PowerShell 直查三态+17 项单元测试全过+零手工参数实战推送成功，`15c2a94`）→ 独立复核派单（简报 `phase0/tools/checkpush-rework-r1.txt`）。
+8. **阶段 B 首任务 b-20261114-taskpack-checker 四步全闭环交付（2026-11-14~15）**：S2 五轮（首验 REJECT 三项 P0/P1→`e664e76`→复验R2 REJECT 遗留④判定范围→`3a8975a`→R3/R3b BLOCKED 环境受限→**R3c 附件动态验收 PASS**——zip blob 逐字节提取+MANIFEST SHA256+验收方沙箱独立执行，首创模式）；S3 六轮（首验 REJECT 问题9 测试暴露工具"重复字段或编号"行为缺陷→`941ee88`→复验R1 REJECT 问题10 计数漏标题形式+绑定申报错误→`b1bd307`→复验R2 六查实质全 PASS+动态执行 33/33 OK（附件通道促⑤闭环）唯一遗留文档②④⑤未同步→`78c6cc8` 文档修正→**复验R3 PASS**）；S4 一次通过（**PASS 六查 6/6**，dispatch-18-23-58）；收尾：S4⑥ PASS 回填+brief 完成态+自身包最终验证六项全 PASS exit=0（`6b2288f`）。返工问题共 10 项全部闭环登记 steps.md。
+9. **check-push 复核闭环+派单工具实战故障修复（`7d019bc`）**：check-push 复核 R4 PASS（reply sha256=31b739eb…）；gpt_dispatch 三处实战故障修复（CDP Input.insertText 替代 execCommand/Lexical URL autolink 回读容错 normUrl/--attach 附件通道四步契约）+diag_composer/clear_composer_draft 归档排障脚本——fail-closed 行为全程正确无误发。
 
 ## 4. 未完成事项（事实）
 
-1. **阶段 B 任务包检查器剩余步骤（拍板冻结清单，下一步）**：**S2** 六项检查规则实现（验收重点：规则逐项通过）→ **S3** unittest 正负例+11 类异常场景+JSON 一致性 → **S4** 使用说明+delivery.md 七要素。每步独立验收派单（材料模板沿用 S1：验收请求+动态证据+steps.md 六要素回填）。
-2. **check-push 改造独立复核结论处理**：复核派单在途（dispatch 目录见 phase0/logs/ 最新，简报 `phase0/tools/checkpush-rework-r1.txt`）；"通过"则共识工作流闭环；"需要修改"则按意见返工重派。已知观察：直连挂起会吃满 180s 超时（--push 模式 GIT_TIMEOUT），可后续调小直连专用超时。
+1. **任务交付后使用**：任务包检查器已可投入使用——派单/申报前对自身任务包自检（`python -I basic/tool/check_taskpack.py basic/tasks/<任务ID>`）；README 落位 basic/tool/README.md。
+2. **agent-kit Issue 评估（低优先，暂缓）**：Lexical URL autolink 手册已有预见条款（normUrl 容错已落地），是否立 Issue 反馈待用户示意。
 3. **toolkit 待办（已登记未实施）**：phase0/tools/inbound_dom.mjs 采集器跳位缺陷修复（DEC-043 登记，DEC-046 复发一次）——修复须带测试+独立复核；现行规避=每轮复审用 --new-session 自包含简报。
 4. **PROJECT-MASTER-PLAN v0.2 修订**：分级路线落位后总纲待用户主持的方案讨论会修订（挂注已更新至 DEC-044 现状）。
-5. `docs/phase1/version-directory-plan.md` §6 第 3 条已全部完成，可在下次修订时归档标记。
+4. `docs/phase1/version-directory-plan.md` §6 第 3 条已全部完成，可在下次修订时归档标记。
+5. **阶段 B 抽取项**（原§8.6）：工具完成后按需复制并登记四要素（来源文件+源 commit SHA+修改点+测试，禁 import 中级版运行时）。
 
 ## 5. 架构决策（决策，详表见 docs/phase1/decision-log.md）
 
@@ -61,13 +64,12 @@
 
 - Windows 11（10.0.26300）/ node 24.14.0 / git 2.47.1 / Python 3.12.10；**系统代理端口动态变化**（2026-11-14 三迁：10391→2482→3572；客户端 SakuraCat VPN 单进程混合端口，重启即换端口并写回注册表 ProxyServer 分协议串）。**新版 check-push 已自动发现端口（注册表分协议解析），无需手工 --ports**：推送一律 `node toolkit/check-push.mjs --push --yes`（自动：直连→注册表→git config→netstat，只读）。诊断纪律见 **L-014/L-016**（AI-DEV-LESSONS）。
 - 派单纪律：单条 ≤1200 UTF-8 字节（超限工具拒绝，需精简）；简报自包含+指定 commit，每轮复审用 `--new-session`；会话 URL 不进命令行（守卫拒绝）；Chrome 启停走冻结工具。
-- ChatGPT 会话档案：第二题 `6af8662d`、阶段 A 复审 `6af86971`/`6af86be2`/`6af86cf2`、会话管理协议 `6af86f2b`、规划共识 R2 14-53-53、代理共识 15-39-58、S1 验收轮 15-08-02/15-13-16/15-24-07/15-28-41/**15-51-20（R4 PASS）**、check-push 复核（在途）；指针文件 phase0/logs/gpt-reviewer-session.json 随派单更新。
+- ChatGPT 会话档案：第二题 `6af8662d`、阶段 A 复审 `6af86971`/`6af86be2`/`6af86cf2`、会话管理协议 `6af86f2b`、规划共识 R2 14-53-53、代理共识 15-39-58、S1 验收轮 15-08-02/15-13-16/15-24-07/15-28-41/**15-51-20（R4 PASS）**、check-push 复核 R4 PASS、S2 验收轮 16-40-38/16-57-13/17-11-41/17-21-21/**17-27-15（R3c PASS）**、S3 验收轮 17-39-59/17-54-36/**18-04-51（R2 动态执行 PASS）**/18-13-02（R3 PASS）、S4 验收 **18-23-58（PASS 6/6）**；指针文件 phase0/logs/gpt-reviewer-session.json 随派单更新。
 
 ## 8. 下一步（新会话开工清单）
 
 1. 核对仓库状态（git log -5、git status）与本包第 2 节一致；
-2. 处理 check-push 改造独立复核结论（在途 dispatch，读最新 phase0/logs/dispatch-*/reply.txt 末行）："通过"→共识工作流闭环并在 steps.md 无关（工具性任务，不属 b-20261114-taskpack-checker）；"需要修改"→按意见返工重派；
-3. **S2 六项检查规则实现**（`basic/tool/check_taskpack.py`，按 steps.md S2 清单与冻结口径）：实现②-⑥规则+①字段级检查，保持六项独立函数/统一结果对象/占位符黑名单/SHA 格式校验/路径防穿越防符号链接；完成后按 S1 先例产出验收请求+动态证据，派独立验收；
-4. S3 unittest 正负例+11 类异常场景 → S4 文档+delivery.md，依冻结步骤推进，每步独立验收；
-5. 任务包检查器整体 PASS 后做交付管理（delivery.md 七要素）并考虑工具投入使用（检查自身任务包）；
-6. 阶段 B 抽取项在工具完成后按需复制并登记四要素（来源文件+源 commit SHA+修改点+测试，禁 import 中级版运行时）。
+2. 阶段 B 首任务已交付完成（b-20261114-taskpack-checker，delivery.md 七要素+S4 PASS）；新开发任务按 Basic 四步流程开工（需求原文先行呈用户拍板）；
+3. 任务包检查器投入日常使用：派单/申报前对自身任务包自检，提前暴露记录缺口（本任务 S4 预演即靠它抓出 3 处记录措辞问题）；
+4. 阶段 B 抽取项按需复制并登记四要素（来源文件+源 commit SHA+修改点+测试，禁 import 中级版运行时）；
+5. PROJECT-MASTER-PLAN v0.2 修订待用户主持的方案讨论会；agent-kit Issue 评估暂缓待用户示意。
