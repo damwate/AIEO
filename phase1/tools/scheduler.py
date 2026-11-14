@@ -926,9 +926,22 @@ console.log(JSON.stringify({ envelope: { valid: !!evOk, errors: ev.errors ?? [] 
             "local_path": str(self.fixture_repo),
             "default_branch": "main",
         })
-        resp = m1.expect(code, (200, 201), "register repository", resp)
-        repository_id = resp.get("repository_id") or resp.get("id")
-        self.rs.complete(8, "register repository", repository_id=repository_id)
+        if code == 409 and (resp.get("details") or {}).get("field") == "local_path":
+            # local_path 全局唯一（registry.py:58 同路径跨 run 409 RES-0002）：
+            # 复用既有登记（同 S1 平台级 agent 幂等复用先例）——同一物理 worktree 即同一实体
+            gcode, gresp = m1.get("/api/v1/repositories?page_size=200")
+            gresp = m1.expect(gcode, (200,), "list repositories for reuse", gresp)
+            match = [it for it in (gresp.get("items") or [])
+                     if it.get("local_path") == str(self.fixture_repo)]
+            if not match:
+                raise OrchestrationError(8, "409 local_path conflict but no matching repository listed")
+            repository_id = match[0].get("repository_id")
+            self.rs.complete(8, "repository local_path already registered by prior run; reused (agents precedent)",
+                             repository_id=repository_id)
+        else:
+            resp = m1.expect(code, (200, 201), "register repository", resp)
+            repository_id = resp.get("repository_id") or resp.get("id")
+            self.rs.complete(8, "register repository", repository_id=repository_id)
 
         # M4 复用不改：子进程真实调用 app.git_worker.worker（M1Client Protocol 适配器）
         invoker = RUNTIME_DIR / "m4_invoker.py"
