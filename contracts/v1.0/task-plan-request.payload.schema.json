@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aieo.local/contracts/v1.0/task-plan-request.payload.schema.json",
+  "title": "AIEO TASK_PLAN_REQUEST Payload v1.0",
+  "description": "GPT-01 任务规划请求 payload（03-协议 §3 TASK_PLAN_REQUEST：AIEO→GPT-01 请求拆解需求）。字段与 M1 BatchCreate（app/platform/schemas.py）及批次表列一致：携带批次规划上下文，GPT-01 据此产出 TASK_PLAN_SUBMITTED（task-plan-submitted.payload.schema.json）。",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["project_id", "batch_id", "requirement", "engineering_standard_version", "knowledge_base_commit"],
+  "properties": {
+    "project_id": { "type": "string", "pattern": "^[A-Z0-9-]{1,32}$" },
+    "batch_id": { "type": "string", "pattern": "^BATCH-\\d{3,}$" },
+    "requirement": { "type": "string", "minLength": 1 },
+    "engineering_standard_version": { "type": "string", "minLength": 1, "maxLength": 100 },
+    "knowledge_base_commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "planning_notes": { "type": "string" }
+  },
+  "examples": [
+    {
+      "project_id": "AI-IMAGE-SERVICE",
+      "batch_id": "BATCH-001",
+      "requirement": "增加一个生图供应商并支持故障切换",
+      "engineering_standard_version": "v1.0.0",
+      "knowledge_base_commit": "0000000000000000000000000000000000000000"
+    }
+  ]
+}

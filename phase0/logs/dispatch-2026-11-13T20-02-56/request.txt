@@ -1,0 +1,8 @@
+AIEO T-P1-904 契约机器化缩编版交付复核（DEC-023 号段方案 A 首任务）。
+分支 feature/T-P1-904-contract-machinization，交付 commit bd07098a6c23acf4a8e4fc3c6530b9efe2d2e668（只按此完整 SHA 读，禁 HEAD；基线 7f7f299=main）。
+交付：06 §10.3.1 固定 20 文件全在 contracts/v1.0/——19 Schema+matrix.json；既有 4 份 GitPointer Schema 保留未动；冻结契约文本零修改；零 app 代码变更。
+字段一致性依据：schemas.py patterns、001_init.sql 列、messaging.py 条件必填、errors.py、registry/tasks/reports 返回形状、03-协议 §4/§6/§8、C1 §2.2/C3 §4.2。
+证据：Ajv 23 Schema 139 正负例全绿 exit=0（phase1/logs/t-p1-904-20261114/schema-tests.log）；M1 回归 43 passed。
+matrix.json 严格四字段 19 条目；test_status=READY 有实跑正负例；acceptance_batch=T-P1-905 仅计划批次。
+请独立复核：①清单忠实性（无扩张/无未记录缩减）②Schema 与实际接口一致性 ③READY 认定与测试证据真实性 ④边界（不解除 DEC-017/不改冻结契约/不合并 main）。
+回复：result=PASS/REWORK/BLOCKED+逐项意见。本审查不构成 main 合并授权。

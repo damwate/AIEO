@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aieo.local/contracts/v1.0/messages-create.schema.json",
+  "title": "AIEO Message Submit Request/Response v1.0",
+  "description": "POST /api/v1/messages（202）请求（C1 §2.2 信封，MessageIn）与响应（messages 表行 message_view，payload 反序列化为对象）。幂等：message_id 主键去重，重复→RES-0003 返回原处理结果。请求条件必填规则与 message-envelope.schema.json 一致（task 级必须 batch_id+task_id；batch 级必须 batch_id 不得携带 task_id；project 级两者均须为空）。响应 source/target 落库为 source_agent_id/target_agent_id 两列。",
+  "anyOf": [
+    { "$ref": "#/$defs/request" },
+    { "$ref": "#/$defs/response" }
+  ],
+  "$defs": {
+    "agent_ref": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["agent_id", "agent_type"],
+      "properties": {
+        "agent_id": { "type": "string", "pattern": "^[A-Z0-9-]{1,32}$" },
+        "agent_type": { "enum": ["system", "developer", "reviewer", "tester", "auditor", "user"] }
+      }
+    },
+    "message_status": { "enum": ["PENDING", "SENT", "ACKED", "RETRYING", "DEAD_LETTER", "CANCELLED"] },
+    "request": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["schema_version", "message_id", "message_type", "created_at", "source", "target", "project_id", "correlation_id", "payload"],
+      "properties": {
+        "schema_version": { "type": "string", "pattern": "^\\d+\\.\\d+$", "maxLength": 16 },
+        "message_id": { "type": "string", "pattern": "^MSG-\\d{8}-\\d{6}$", "maxLength": 64 },
+        "message_type": {
+          "enum": ["TASK_PLAN_REQUEST", "TASK_PLAN_SUBMITTED", "ARCH_REVIEW_REQUEST", "ARCH_REVIEW_SUBMITTED", "TASK_ASSIGNED", "TASK_ACCEPTED", "PROGRESS_UPDATED", "BLOCKER_REPORTED", "DEVELOPMENT_COMPLETED", "CODE_REVIEW_REQUEST", "CODE_REVIEW_SUBMITTED", "TEST_ACCEPTANCE_REQUEST", "TEST_ACCEPTANCE_SUBMITTED", "AUDIT_REQUEST", "AUDIT_SUBMITTED", "APPROVAL_REQUIRED"]
+        },
+        "created_at": { "type": "string", "format": "date-time" },
+        "source": { "$ref": "#/$defs/agent_ref" },
+        "target": { "$ref": "#/$defs/agent_ref" },
+        "project_id": { "type": "string", "pattern": "^[A-Z0-9-]{1,32}$" },
+        "batch_id": { "type": ["string", "null"], "pattern": "^BATCH-\\d{3,}$" },
+        "task_id": { "type": ["string", "null"], "pattern": "^T-(P\\d+-)?\\d{3,}$" },
+        "correlation_id": { "type": "string", "pattern": "^(CORR-\\d{3,}|[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-4[0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12})$", "maxLength": 64 },
+        "payload": { "type": "object" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "message_type": { "enum": ["TASK_ASSIGNED", "TASK_ACCEPTED", "PROGRESS_UPDATED", "BLOCKER_REPORTED", "DEVELOPMENT_COMPLETED", "CODE_REVIEW_REQUEST", "CODE_REVIEW_SUBMITTED", "TEST_ACCEPTANCE_REQUEST", "TEST_ACCEPTANCE_SUBMITTED"] } } },
+          "then": {
+            "required": ["batch_id", "task_id"],
+            "properties": { "batch_id": { "type": "string" }, "task_id": { "type": "string" } }
+          }
+        },
+        {
+          "if": { "properties": { "message_type": { "enum": ["TASK_PLAN_REQUEST", "TASK_PLAN_SUBMITTED", "ARCH_REVIEW_REQUEST", "ARCH_REVIEW_SUBMITTED", "AUDIT_REQUEST", "AUDIT_SUBMITTED"] } } },
+          "then": {
+            "required": ["batch_id"],
+            "properties": { "batch_id": { "type": "string" }, "task_id": { "const": null } }
+          }
+        },
+        {
+          "if": { "properties": { "message_type": { "const": "APPROVAL_REQUIRED" } } },
+          "then": { "properties": { "batch_id": { "const": null }, "task_id": { "const": null } } }
+        }
+      ]
+    },
+    "response": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["message_id", "schema_version", "message_type", "direction", "source_agent_id", "target_agent_id", "project_id", "correlation_id", "payload", "status", "retry_count", "max_retries", "created_at", "updated_at"],
+      "properties": {
+        "message_id": { "type": "string", "pattern": "^MSG-\\d{8}-\\d{6}$" },
+        "schema_version": { "type": "string", "pattern": "^\\d+\\.\\d+$" },
+        "message_type": { "enum": ["TASK_PLAN_REQUEST", "TASK_PLAN_SUBMITTED", "ARCH_REVIEW_REQUEST", "ARCH_REVIEW_SUBMITTED", "TASK_ASSIGNED", "TASK_ACCEPTED", "PROGRESS_UPDATED", "BLOCKER_REPORTED", "DEVELOPMENT_COMPLETED", "CODE_REVIEW_REQUEST", "CODE_REVIEW_SUBMITTED", "TEST_ACCEPTANCE_REQUEST", "TEST_ACCEPTANCE_SUBMITTED", "AUDIT_REQUEST", "AUDIT_SUBMITTED", "APPROVAL_REQUIRED"] },
+        "direction": { "enum": ["INBOUND", "OUTBOUND"] },
+        "source_agent_id": { "type": "string", "pattern": "^[A-Z0-9-]{1,32}$" },
+        "target_agent_id": { "type": "string", "pattern": "^[A-Z0-9-]{1,32}$" },
+        "project_id": { "type": "string", "pattern": "^[A-Z0-9-]{1,32}$" },
+        "batch_id": { "type": ["string", "null"], "pattern": "^BATCH-\\d{3,}$" },
+        "task_id": { "type": ["string", "null"], "pattern": "^T-(P\\d+-)?\\d{3,}$" },
+        "correlation_id": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "payload": { "type": "object" },
+        "status": { "$ref": "#/$defs/message_status" },
+        "retry_count": { "type": "integer", "minimum": 0 },
+        "max_retries": { "type": "integer", "minimum": 0 },
+        "next_retry_at": { "type": ["string", "null"], "format": "date-time" },
+        "last_error_code": { "type": ["string", "null"] },
+        "last_error_message": { "type": ["string", "null"] },
+        "delivered_at": { "type": ["string", "null"], "format": "date-time" },
+        "acked_at": { "type": ["string", "null"], "format": "date-time" },
+        "dead_lettered_at": { "type": ["string", "null"], "format": "date-time" },
+        "processing_status": { "oneOf": [{ "type": "null" }, { "enum": ["PENDING", "PROCESSING", "PROCESSED", "PROCESS_FAILED"] }] },
+        "processed_at": { "type": ["string", "null"], "format": "date-time" },
+        "created_at": { "type": "string", "format": "date-time" },
+        "updated_at": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "examples": [
+    {
+      "schema_version": "1.0",
+      "message_id": "MSG-20261114-000001",
+      "message_type": "DEVELOPMENT_COMPLETED",
+      "created_at": "2026-11-14T00:00:00.000Z",
+      "source": { "agent_id": "ZCODE-01", "agent_type": "developer" },
+      "target": { "agent_id": "AIEO-ORCHESTRATOR", "agent_type": "system" },
+      "project_id": "AI-IMAGE-SERVICE",
+      "batch_id": "BATCH-001",
+      "task_id": "T-P1-001",
+      "correlation_id": "CORR-001",
+      "payload": { "task_id": "T-P1-001", "execution_id": "EXEC-001", "status": "COMPLETED", "implementation_summary": "完成" }
+    }
+  ]
+}

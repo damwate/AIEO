@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aieo.local/contracts/v1.0/test-report.schema.json",
+  "title": "AIEO Test Report v1.0 (03-协议 §8)",
+  "description": "测试验收报告本体；登记接口请求/响应见 reports-test.schema.json。execution_result 五值枚举与 TestReportIn（app/platform/schemas.py）及 03-协议 §8 一致：EXECUTED_PASS/EXECUTED_FAIL/NOT_EXECUTED/CLAIMED_ONLY/BLOCKED；result 与 review 三态一致（PASS/REWORK/BLOCKED）。幂等键 (execution_id, commit_sha)。",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["task_id", "execution_id", "commit_sha", "execution_result", "result"],
+  "properties": {
+    "task_id": { "type": "string", "pattern": "^T-(P\\d+-)?\\d{3,}$" },
+    "execution_id": { "type": "string", "pattern": "^EXEC-\\d{3,}$" },
+    "commit_sha": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "execution_result": { "enum": ["EXECUTED_PASS", "EXECUTED_FAIL", "NOT_EXECUTED", "CLAIMED_ONLY", "BLOCKED"] },
+    "result": { "enum": ["PASS", "REWORK", "BLOCKED"] },
+    "artifact_id": { "type": ["string", "null"], "pattern": "^ART-[A-Z0-9-]+$" },
+    "payload": { "type": "object" }
+  },
+  "examples": [
+    {
+      "task_id": "T-P1-001",
+      "execution_id": "EXEC-001",
+      "commit_sha": "1111111111111111111111111111111111111111",
+      "execution_result": "EXECUTED_PASS",
+      "result": "PASS",
+      "artifact_id": "ART-TEST-001",
+      "payload": { "commands": ["pytest tests/providers -q"], "passed": 25, "failed": 0 }
+    }
+  ]
+}

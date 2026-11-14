@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aieo.local/contracts/v1.0/tasks-create.schema.json",
+  "title": "AIEO Task Create Request/Response v1.0",
+  "description": "POST /api/v1/tasks 请求（TaskCreate）与响应（tasks 表行 + _task_view 派生字段：dependencies/latest_execution/allowed_events）。task_id 服务端生成；父任务与依赖存在性校验失败→RES-0001；响应 status 14 值枚举与 001_init.sql CHECK 一致；BLOCKED 必带三阻塞字段、CANCELLED 必带两取消字段（表级 CHECK 实装）。",
+  "anyOf": [
+    { "$ref": "#/$defs/request" },
+    { "$ref": "#/$defs/response" }
+  ],
+  "$defs": {
+    "request": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["batch_id", "title", "engineering_standard_version", "knowledge_base_commit"],
+      "properties": {
+        "batch_id": { "type": "string", "pattern": "^BATCH-\\d{3,}$" },
+        "parent_id": { "type": ["string", "null"], "pattern": "^T-(P\\d+-)?\\d{3,}$" },
+        "title": { "type": "string", "minLength": 1, "maxLength": 300 },
+        "description": { "type": ["string", "null"] },
+        "priority": { "enum": ["P0", "P1", "P2", "P3"], "default": "P2" },
+        "weight": { "type": "number", "exclusiveMinimum": 0, "default": 1.0 },
+        "files_scope": { "type": "array", "items": { "type": "string" } },
+        "acceptance_criteria": { "type": "array", "items": { "type": "string" } },
+        "engineering_standard_items": { "type": "array", "items": { "type": "string" } },
+        "engineering_standard_version": { "type": "string", "minLength": 1, "maxLength": 100 },
+        "knowledge_base_commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "dependencies": { "type": "array", "items": { "type": "string", "pattern": "^T-(P\\d+-)?\\d{3,}$" } }
+      }
+    },
+    "response": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["task_id", "batch_id", "title", "status", "priority", "weight", "files_scope", "acceptance_criteria", "engineering_standard_items", "engineering_standard_version", "knowledge_base_commit", "created_at", "updated_at", "dependencies", "latest_execution", "allowed_events"],
+      "properties": {
+        "task_id": { "type": "string", "pattern": "^T-(P\\d+-)?\\d{3,}$" },
+        "batch_id": { "type": "string", "pattern": "^BATCH-\\d{3,}$" },
+        "parent_id": { "type": ["string", "null"], "pattern": "^T-(P\\d+-)?\\d{3,}$" },
+        "title": { "type": "string", "minLength": 1 },
+        "description": { "type": ["string", "null"] },
+        "status": { "enum": ["DRAFT", "PLANNING", "ARCH_REVIEW", "READY", "DISPATCHED", "IN_PROGRESS", "DEV_REPORTED", "GIT_VALIDATING", "CODE_REVIEW", "TEST_ACCEPTANCE", "REWORK", "BLOCKED", "ACCEPTED", "CANCELLED"] },
+        "priority": { "enum": ["P0", "P1", "P2", "P3"] },
+        "weight": { "type": "number", "exclusiveMinimum": 0 },
+        "files_scope": { "type": "array", "items": { "type": "string" } },
+        "acceptance_criteria": { "type": "array", "items": { "type": "string" } },
+        "engineering_standard_items": { "type": "array", "items": { "type": "string" } },
+        "task_package_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+        "engineering_standard_version": { "type": "string", "minLength": 1 },
+        "knowledge_base_commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "blocked_reason": { "type": ["string", "null"] },
+        "blocked_owner": { "type": ["string", "null"] },
+        "unblock_condition": { "type": ["string", "null"] },
+        "cancelled_by": { "type": ["string", "null"] },
+        "cancelled_reason": { "type": ["string", "null"] },
+        "created_at": { "type": "string", "format": "date-time" },
+        "updated_at": { "type": "string", "format": "date-time" },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": true,
+            "required": ["depends_on_task_id", "status"],
+            "properties": {
+              "depends_on_task_id": { "type": "string", "pattern": "^T-(P\\d+-)?\\d{3,}$" },
+              "status": { "$ref": "#/$defs/response/properties/status" }
+            }
+          }
+        },
+        "latest_execution": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": true,
+              "required": ["execution_id", "task_id", "agent_id", "attempt", "base_commit", "status", "started_at", "created_at"],
+              "properties": {
+                "execution_id": { "type": "string", "pattern": "^EXEC-\\d{3,}$" },
+                "task_id": { "type": "string", "pattern": "^T-(P\\d+-)?\\d{3,}$" },
+                "agent_id": { "type": "string", "pattern": "^[A-Z0-9-]{1,32}$" },
+                "attempt": { "type": "integer", "minimum": 1 },
+                "base_commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+                "status": { "enum": ["RUNNING", "COMPLETED", "FAILED", "CANCELLED"] },
+                "started_at": { "type": "string", "format": "date-time" },
+                "ended_at": { "type": ["string", "null"], "format": "date-time" },
+                "created_at": { "type": "string", "format": "date-time" }
+              }
+            }
+          ]
+        },
+        "allowed_events": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      }
+    }
+  },
+  "examples": [
+    {
+      "batch_id": "BATCH-001",
+      "title": "新增供应商接口适配器",
+      "priority": "P1",
+      "files_scope": ["src/providers/"],
+      "acceptance_criteria": ["实现统一接口"],
+      "engineering_standard_items": ["implementation", "testing"],
+      "engineering_standard_version": "v1.0.0",
+      "knowledge_base_commit": "0000000000000000000000000000000000000000",
+      "dependencies": []
+    }
+  ]
+}

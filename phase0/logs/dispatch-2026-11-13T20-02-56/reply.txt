@@ -1,0 +1,593 @@
+ChatGPT 说：
+AIEO T-P1-904 独立交付复核
+
+审查对象：damwate/AIEO · 固定 Commit 审查 · DEC-023 号段方案 A
+
+当前结论：REWORK
+
+发现一项明确的 Schema 与实际接口模型不一致，需要修订后复核。
+
+这不是测试失败，也不代表整个机器化方案不可行。交付范围、Git 变更边界和主要测试证据目前表现良好，但在接口字段一致性上还不能给出 PASS。
+
+一、审查基准与变更清单
+
+严格使用指定完整 SHA：
+
+交付：bd07098a6c23acf4a8e4fc3c6530b9efe2d2e668
+
+基线：7f7f29908fdcc159dff2d3f1d63c125b896aafaa
+
+分支：feature/T-P1-904-contract-machinization
+
+Git Compare 实际核验结果：
+
+检查项
+
+	
+
+实际结果
+
+
+
+
+Commit 数量
+
+	
+
+1
+
+
+
+
+新增 Schema
+
+	
+
+19
+
+
+
+
+新增 matrix.json
+
+	
+
+1
+
+
+
+
+修改测试 harness
+
+	
+
+1
+
+
+
+
+新增测试日志
+
+	
+
+2
+
+
+
+
+总变更文件
+
+	
+
+23
+
+
+
+
+删除文件
+
+	
+
+0
+
+
+
+
+app 业务代码变更
+
+	
+
+0
+
+20 个契约交付文件均位于 contracts/v1.0/。
+
+另外，测试 harness 和两份日志属于机器化验证及证据，不计入固定 20 个契约文件。
+
+第①项：PASS。
+
+没有发现超出申报范围的业务代码修改、冻结契约文本修改或未记录文件删除。
+
+二、Schema 与实际接口一致性
+REWORK · 发现明确缺陷
+
+已抽查以下实际实现：
+
+app/platform/schemas.py
+
+app/platform/messaging.py
+
+app/platform/errors.py
+
+app/platform/migrations/001_init.sql
+
+app/platform/tasks.py
+
+app/platform/reports.py
+
+对应的 19 份 Schema
+
+F-01：test-report 的 artifact_id 类型不一致
+
+必须修订
+
+文件：
+
+contracts/v1.0/test-report.schema.json
+
+当前定义：
+
+JSON
+"artifact_id": {
+  "type": "string",
+  "pattern": "^ART-[A-Z0-9-]+$"
+}
+
+实际 Pydantic 定义：
+
+Python
+运行
+artifact_id: str | None = Field(
+    default=None,
+    pattern=r"^ART-[A-Z0-9-]+$"
+)
+
+存在差异：
+
+输入
+
+	
+
+实际接口
+
+	
+
+当前 Schema
+
+
+
+
+字段省略
+
+	
+
+接受
+
+	
+
+接受
+
+
+
+
+合法 ART ID
+
+	
+
+接受
+
+	
+
+接受
+
+
+
+
+显式 null
+
+	
+
+接受
+
+	
+
+拒绝
+
+
+
+
+非法 ART ID
+
+	
+
+拒绝
+
+	
+
+拒绝
+
+修订要求：
+
+将 Schema 调整为：
+
+JSON
+"artifact_id": {
+  "type": ["string", "null"],
+  "pattern": "^ART-[A-Z0-9-]+$"
+}
+
+并补充显式 null 正例、非法 ID 负例。
+
+注意：reports-test.schema.json 已正确允许 null，不要误改已经一致的文件。
+
+其他一致性检查
+
+检查范围
+
+	
+
+结果
+
+
+
+
+16 种 message_type 枚举
+
+	
+
+PASS
+
+
+
+
+信封 task/batch/project 条件必填
+
+	
+
+PASS
+
+
+
+
+agent_type 枚举
+
+	
+
+PASS
+
+
+
+
+ID 与 Git SHA 格式
+
+	
+
+PASS
+
+
+
+
+Task 状态 14 值枚举
+
+	
+
+PASS
+
+
+
+
+Task 创建请求及响应结构
+
+	
+
+PASS
+
+
+
+
+dependencies/latest_execution/allowed_events
+
+	
+
+PASS
+
+
+
+
+messages 状态及 ACK 结构
+
+	
+
+PASS
+
+
+
+
+development report 状态枚举
+
+	
+
+PASS
+
+
+
+
+test execution_result 五值枚举
+
+	
+
+PASS
+
+
+
+
+C3 错误码九组四位编号
+
+	
+
+PASS
+
+
+
+
+报告列表三种形态
+
+	
+
+PASS
+
+第②项：REWORK。
+
+目前确认一项字段类型不一致，不应在未修复前认定全部 19 份 Schema 已经与接口完全一致。
+
+三、READY 认定与测试证据
+证据基本通过
+
+核验两个实际提交的日志：
+
+1. Ajv Schema 测试
+
+phase1/logs/t-p1-904-20261114/schema-tests.log
+
+日志末尾：
+
+纯文本
+SCHEMA_TEST_SUMMARY total=139 passed=139 failed=0
+exit=0
+
+检查结果：
+
+23 份 Schema 参与测试。
+
+139 个正负例全部通过。
+
+包含请求与响应形态测试。
+
+包含信封条件必填测试。
+
+包含外部 $ref 解析测试。
+
+包含错误输入拒绝测试。
+
+2. M1 回归测试
+
+phase1/logs/t-p1-904-20261114/m1-regression.log
+
+纯文本
+43 passed, 1 warning
+exit=0
+
+没有发现业务回归失败的证据。
+
+这里需要明确一个审查边界：我核验的是指定 Commit 中的测试 harness 和已提交日志，未在独立运行环境重新执行完整测试。因此，139/139 和 43 passed 可以认定为有提交证据支持，但不能表述为本审查环境重新实跑。
+
+matrix.json 检查
+
+四个字段严格一致。
+
+19 条能力记录。
+
+没有额外状态字段。
+
+test_status=READY 有对应正负例日志支持。
+
+acceptance_batch=T-P1-905 是计划批次，不是验收通过证明。
+
+第③项：有条件通过。
+
+F-01 修订后，需要补齐对应测试证据，才能最终确认所有 READY 条目。
+
+四、授权与变更边界
+PASS
+
+边界
+
+	
+
+核验结果
+
+
+
+
+不解除 DEC-017
+
+	
+
+保持有效
+
+
+
+
+不修改冻结契约文本
+
+	
+
+未发现修改
+
+
+
+
+不修改既有 4 份 GitPointer Schema
+
+	
+
+未发现修改
+
+
+
+
+不修改 app 业务代码
+
+	
+
+未发现修改
+
+
+
+
+不合并 main
+
+	
+
+未合并
+
+
+
+
+不授权后续发布
+
+	
+
+未授权
+
+
+
+
+不将 T-P1-905 计划视为验收完成
+
+	
+
+符合
+
+本次交付没有产生任何 main 合并授权。
+
+五、最终审查意见
+result = REWORK
+
+编号
+
+	
+
+审查项目
+
+	
+
+结果
+
+
+
+
+①
+
+	
+
+清单忠实性
+
+	
+
+PASS
+
+
+
+
+②
+
+	
+
+Schema 与接口一致性
+
+	
+
+REWORK
+
+
+
+
+③
+
+	
+
+READY 与测试证据
+
+	
+
+有条件通过
+
+
+
+
+④
+
+	
+
+授权及变更边界
+
+	
+
+PASS
+
+唯一明确返工项
+
+F-01：修订 test-report.schema.json 中 artifact_id 的 nullable 定义，并补充测试。
+
+建议返工验收条件
+
+不扩大固定 20 文件契约交付范围。
+
+不修改任何冻结契约文本。
+
+不修改 app 业务代码。
+
+只修订 F-01 涉及的 Schema 和测试 harness。
+
+重新执行 Ajv 全量测试，确保原有 139 例和新增测试全部通过。
+
+重新执行 M1 回归，确保 43 passed。
+
+提交新的完整 SHA，供独立复核。
+
+可直接转交智谱的返工指令
+写作
+
+T-P1-904 独立复核结果：REWORK。
+
+仅发现一项明确问题 F-01：
+
+contracts/v1.0/test-report.schema.json 的 artifact_id 当前仅允许 string，但 app/platform/schemas.py 的 TestReportIn 定义为 str | None，显式 null 应当合法。
+
+修订要求：
+
+artifact_id 改为允许 string/null，保留现有 ART ID pattern。
+
+增加显式 null 正例及非法 ART ID 负例。
+
+不扩大 20 文件契约交付范围，不修改冻结契约文本、既有 GitPointer Schema 或 app 业务代码。
+
+重新执行 Ajv 全量测试及 M1 回归测试。
+
+更新测试日志，提交新的完整 SHA。
+
+原有 139/139 和 43 passed 证据保留，不得通过删除原有测试用例解决问题。
+
+本次 REWORK 不解除 DEC-017，不构成 main 合并、发布或 T-P1-905 验收授权。
+
+审查结论：目前不通过终验。只需针对 F-01 修订，不建议推翻本次缩编方案，也不建议重新扩大 Schema 覆盖范围。

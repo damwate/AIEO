@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aieo.local/contracts/v1.0/messages-ack.schema.json",
+  "title": "AIEO Message ACK Request/Response v1.0",
+  "description": "POST /api/v1/messages/{message_id}/ack 请求（AckRequest，agent_id 可选）与响应（message_view 行）。幂等：重复 ACK 返回当前状态不重复执行；响应 status=ACKED 且 acked_at 非空、INBOUND 消息 processing_status=PROCESSED（tests/platform/test_messages.py 实装）。",
+  "anyOf": [
+    { "$ref": "#/$defs/request" },
+    { "$ref": "#/$defs/response" }
+  ],
+  "$defs": {
+    "request": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "agent_id": { "type": ["string", "null"], "pattern": "^[A-Z0-9-]{1,32}$" }
+      }
+    },
+    "response": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["message_id", "schema_version", "message_type", "direction", "source_agent_id", "target_agent_id", "project_id", "correlation_id", "payload", "status", "retry_count", "max_retries", "created_at", "updated_at"],
+      "properties": {
+        "message_id": { "type": "string", "pattern": "^MSG-\\d{8}-\\d{6}$" },
+        "schema_version": { "type": "string", "pattern": "^\\d+\\.\\d+$" },
+        "message_type": { "enum": ["TASK_PLAN_REQUEST", "TASK_PLAN_SUBMITTED", "ARCH_REVIEW_REQUEST", "ARCH_REVIEW_SUBMITTED", "TASK_ASSIGNED", "TASK_ACCEPTED", "PROGRESS_UPDATED", "BLOCKER_REPORTED", "DEVELOPMENT_COMPLETED", "CODE_REVIEW_REQUEST", "CODE_REVIEW_SUBMITTED", "TEST_ACCEPTANCE_REQUEST", "TEST_ACCEPTANCE_SUBMITTED", "AUDIT_REQUEST", "AUDIT_SUBMITTED", "APPROVAL_REQUIRED"] },
+        "direction": { "enum": ["INBOUND", "OUTBOUND"] },
+        "source_agent_id": { "type": "string", "pattern": "^[A-Z0-9-]{1,32}$" },
+        "target_agent_id": { "type": "string", "pattern": "^[A-Z0-9-]{1,32}$" },
+        "project_id": { "type": "string", "pattern": "^[A-Z0-9-]{1,32}$" },
+        "batch_id": { "type": ["string", "null"], "pattern": "^BATCH-\\d{3,}$" },
+        "task_id": { "type": ["string", "null"], "pattern": "^T-(P\\d+-)?\\d{3,}$" },
+        "correlation_id": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "payload": { "type": "object" },
+        "status": { "enum": ["PENDING", "SENT", "ACKED", "RETRYING", "DEAD_LETTER", "CANCELLED"] },
+        "retry_count": { "type": "integer", "minimum": 0 },
+        "max_retries": { "type": "integer", "minimum": 0 },
+        "next_retry_at": { "type": ["string", "null"], "format": "date-time" },
+        "last_error_code": { "type": ["string", "null"] },
+        "last_error_message": { "type": ["string", "null"] },
+        "delivered_at": { "type": ["string", "null"], "format": "date-time" },
+        "acked_at": { "type": ["string", "null"], "format": "date-time" },
+        "dead_lettered_at": { "type": ["string", "null"], "format": "date-time" },
+        "processing_status": { "oneOf": [{ "type": "null" }, { "enum": ["PENDING", "PROCESSING", "PROCESSED", "PROCESS_FAILED"] }] },
+        "processed_at": { "type": ["string", "null"], "format": "date-time" },
+        "created_at": { "type": "string", "format": "date-time" },
+        "updated_at": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "examples": [
+    { "agent_id": "ZCODE-01" }
+  ]
+}

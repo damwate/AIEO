@@ -1,0 +1,8 @@
+AIEO T-P1-904 F-01 限定复核（承接你 REWORK，dispatch-2026-11-13T20-02-56）。
+分支 feature/T-P1-904-contract-machinization，新基线 62e992fae19c863561b217d93e187e1dc0e05409（只按此完整 SHA 读，禁 HEAD；含 F-01 修订 c16a654+首轮证据归档）。
+修订对照你返工指令四条：
+1.test-report.schema.json artifact_id 改 ["string","null"]，pattern 保留；未动 reports-test（本已正确）。
+2.harness 补显式 null 正例+非法定格式负例各一，原 139 例零删除（现 141）。
+3.Ajv 全量重跑 141/141 exit=0；M1 回归 43 passed exit=0（phase1/logs/t-p1-904-20261114/ 两日志已更新）。
+4.范围零扩张：仅 test-report.schema.json+harness+日志，冻结契约/既有 GitPointer Schema/app 代码零修改。
+请只核 F-01 是否忠实落实。回复：result=PASS/REWORK+意见。本审查不构成 main 合并或 T-P1-905 验收授权。

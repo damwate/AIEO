@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aieo.local/contracts/v1.0/reports-test.schema.json",
+  "title": "AIEO Test Report Registration Request/Response v1.0",
+  "description": "POST /api/v1/reports/test（201）请求（TestReportIn）与响应（reports.register_test_report 返回）。幂等：(execution_id, commit_sha) 唯一（test_reports 表 UNIQUE），重复→返回原登记结果 duplicate=true；execution_result 五值枚举（03-协议 §8：EXECUTED_PASS/EXECUTED_FAIL/NOT_EXECUTED/CLAIMED_ONLY/BLOCKED）。",
+  "anyOf": [
+    { "$ref": "#/$defs/request" },
+    { "$ref": "#/$defs/response" }
+  ],
+  "$defs": {
+    "request": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["task_id", "execution_id", "commit_sha", "execution_result", "result"],
+      "properties": {
+        "task_id": { "type": "string", "pattern": "^T-(P\\d+-)?\\d{3,}$" },
+        "execution_id": { "type": "string", "pattern": "^EXEC-\\d{3,}$" },
+        "commit_sha": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "execution_result": { "enum": ["EXECUTED_PASS", "EXECUTED_FAIL", "NOT_EXECUTED", "CLAIMED_ONLY", "BLOCKED"] },
+        "result": { "enum": ["PASS", "REWORK", "BLOCKED"] },
+        "artifact_id": { "type": ["string", "null"], "pattern": "^ART-[A-Z0-9-]+$" },
+        "payload": { "type": "object" }
+      }
+    },
+    "response": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["task_id", "execution_id", "commit_sha", "execution_result", "result", "transition", "created_at", "duplicate"],
+      "properties": {
+        "task_id": { "type": "string", "pattern": "^T-(P\\d+-)?\\d{3,}$" },
+        "execution_id": { "type": "string", "pattern": "^EXEC-\\d{3,}$" },
+        "commit_sha": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+        "execution_result": { "enum": ["EXECUTED_PASS", "EXECUTED_FAIL", "NOT_EXECUTED", "CLAIMED_ONLY", "BLOCKED"] },
+        "result": { "enum": ["PASS", "REWORK", "BLOCKED"] },
+        "transition": {
+          "oneOf": [
+            { "type": "null" },
+            {
+              "type": "object",
+              "additionalProperties": true,
+              "required": ["from_status", "to_status"],
+              "properties": {
+                "from_status": { "type": "string", "minLength": 1 },
+                "to_status": { "type": "string", "minLength": 1 }
+              }
+            }
+          ]
+        },
+        "created_at": { "type": "string", "format": "date-time" },
+        "duplicate": { "type": "boolean" }
+      }
+    }
+  },
+  "examples": [
+    {
+      "task_id": "T-P1-001",
+      "execution_id": "EXEC-001",
+      "commit_sha": "1111111111111111111111111111111111111111",
+      "execution_result": "EXECUTED_PASS",
+      "result": "PASS",
+      "payload": { "commands": ["pytest tests/providers -q"], "passed": 25, "failed": 0 }
+    }
+  ]
+}

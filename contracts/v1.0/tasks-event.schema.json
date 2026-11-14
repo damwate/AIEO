@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aieo.local/contracts/v1.0/tasks-event.schema.json",
+  "title": "AIEO Task Event Request/Response v1.0",
+  "description": "POST /api/v1/tasks/{task_id}/events 请求（TaskEventIn）与响应（state_machine.apply_event 返回）。Agent 只能提交事件，状态转换由 M1 状态机唯一执行（04-规范 §3）；幂等：event_id 去重（task_events 表主键，重复返回原响应）；非法转换→TASK-0001；进入 BLOCKED 必带 blocked_reason/blocked_owner/unblock_condition、CANCELLED 必带 cancelled_by/cancelled_reason（实装 422 REQ-0002）。",
+  "anyOf": [
+    { "$ref": "#/$defs/request" },
+    { "$ref": "#/$defs/response" }
+  ],
+  "$defs": {
+    "request": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["event", "event_id"],
+      "properties": {
+        "event": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "event_id": { "type": "string", "minLength": 1, "maxLength": 64 },
+        "correlation_id": { "type": ["string", "null"], "maxLength": 64 },
+        "blocked_reason": { "type": ["string", "null"] },
+        "blocked_owner": { "type": ["string", "null"] },
+        "unblock_condition": { "type": ["string", "null"] },
+        "cancelled_by": { "type": ["string", "null"] },
+        "cancelled_reason": { "type": ["string", "null"] }
+      }
+    },
+    "response": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["task_id", "event_id", "event", "from_status", "to_status", "duplicate", "processed_at"],
+      "properties": {
+        "task_id": { "type": "string", "pattern": "^T-(P\\d+-)?\\d{3,}$" },
+        "event_id": { "type": "string", "minLength": 1 },
+        "event": { "type": "string", "minLength": 1 },
+        "from_status": { "enum": ["DRAFT", "PLANNING", "ARCH_REVIEW", "READY", "DISPATCHED", "IN_PROGRESS", "DEV_REPORTED", "GIT_VALIDATING", "CODE_REVIEW", "TEST_ACCEPTANCE", "REWORK", "BLOCKED", "ACCEPTED", "CANCELLED"] },
+        "to_status": { "enum": ["DRAFT", "PLANNING", "ARCH_REVIEW", "READY", "DISPATCHED", "IN_PROGRESS", "DEV_REPORTED", "GIT_VALIDATING", "CODE_REVIEW", "TEST_ACCEPTANCE", "REWORK", "BLOCKED", "ACCEPTED", "CANCELLED"] },
+        "duplicate": { "type": "boolean" },
+        "processed_at": { "type": "string", "format": "date-time" }
+      }
+    }
+  },
+  "examples": [
+    { "event": "claim", "event_id": "EVT-001", "correlation_id": "CORR-001" },
+    {
+      "task_id": "T-P1-001",
+      "event_id": "EVT-001",
+      "event": "claim",
+      "from_status": "READY",
+      "to_status": "DISPATCHED",
+      "duplicate": false,
+      "processed_at": "2026-11-14T00:00:00.000000+00:00"
+    }
+  ]
+}
