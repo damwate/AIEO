@@ -732,7 +732,7 @@ class Scheduler:
 
         # message 登记（envelope 全量）
         code, msg1 = m1.post("/api/v1/messages", envelope)
-        msg1 = m1.expect(code, (200, 201), "register plan message", msg1)
+        msg1 = m1.expect(code, (200, 201, 202), "register plan message", msg1)  # 202=收件箱受理（真实 run 908007）
         message_id = msg1.get("message_id") or envelope["message_id"]
         self.rs.complete(4, "register plan message", message_id=message_id)
 
