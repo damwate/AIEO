@@ -270,3 +270,12 @@
   - 重扫：security-scan.txt 793 文件 disk+git 树双范围仍 **CLEAN**；evidence 分支补证提交 77a48d1。
 - **第 2 轮派单：** 另行发起（--new-session，简报携更新后完整 SHA+REPRODUCE-GUIDE 入口+reply 逐项引用证据 SHA 要求）；**合并 main 仍留用户拍板（DEC-010 不松动）**。
 - **关联：** DEC-034（执行完成）、DEC-028/DEC-033（执行形态）、DEC-010（合并审批保留）、T-P1-905 §5-1（A4 先例）。
+
+### DEC-036 T-P1-908 独立验收第 2–7 轮闭环、DEC-010 合并执行与合并后复核 ACCEPT 登记（2026-11-14 16:5x–19:1x 本地）
+
+- **第 2–7 轮验收闭环（每轮 reply 原始字节 SHA 均归档 acceptance/round2–round7/，RUN-RECORD §11–§16）**：R2 REJECT（A2 指针/A4 blob 矛盾/A7 扫描器不可达=真缺陷已修；其余哈希不符=审阅人 DOM 读取通道伪差，blob 全等实证——指南新增 §0 字节保真通道）；R3/R4 REJECT（审阅沙箱环境：DNS 失败→raw 浏览可读但无法自算哈希）；R5 REJECT 首实质判决（A1/A2/A4/A5/A6 PASS；A3 真缺陷=M1 错误体平级结构误读嵌套→scheduler e47055d 修复+真实链路探针 409+RES-0003+原行未变；A7 真缺陷=git 树命中恒 0→扫描器 v2）；R6 REJECT（A1–A7 全 PASS；A8=指南锚点滞后已修 v3+环境）；R7 REJECT（**A1–A7 全 PASS 逐项完整 64 位 SHA 引用；A8 FAIL 明示"环境限制"**）。第 3/4/6/7 轮反复证实审阅沙箱无网络自算不可行——属环境上限非证据缺陷，按预定规则止步派单，交用户拍板。
+- **合并执行（用户拍板，原话"合并之后让chatgpt检查"）**：--no-ff 两笔合入 main——49bd7fb3ec57ca8277e4fde60c1b440dc7947e9e（scheduler=e47055d48cbba5217182bbcaf42d899e73abe85a）、3edf0aeb09a78a82879241195e4b984d1d60e5f7（evidence=fa47463b796706f2e90b025aeab4f6b06db01d3e）；合并树复验 sha256sum -c 944/944 OK、scheduler.py blob f9daf5b69e673906b5e4b2880ff184aedc1aeeca 与分支一致、任务书 blob e84ae48104ff05bc94a53e02754654e9421c7c27 未变；18 个执行期 dispatch 目录未跟踪副本逐字节核验一致（111/111 文件）后移除（907 先例），8 个验收轮次原始 dispatch 目录留作未跟踪（关键工件已归档 round1-7）。
+- **合并后复核（用户新会话派单，两轮）**：R1 reply `9dbdcc0698278818aa323036a51a3be87ee95b146741f9a6aa48d9a050ca454a`——B3/B5 PASS、B1/B2 部分通过、B4 未验证，末行 REJECT 但明示"审阅通道限制导致的证据不足，不代表发现合并缺陷。DEC-010 不推翻，第7轮验收结论不推翻"（本轮审阅沙箱 api.github.com 不可达，通道波动）；R2（判定基准改双版本 raw 内容对比）reply `5f2c29c291583c6fe776ccb101516998da66e63a780d5d235aabfcbb96382986`——**ACCEPT**（B1/B2 PASS 未自算哈希如实注明、B4 PARTIAL 保留执行方留证边界，"未发现足以阻断合并验收的新问题"）。归档 acceptance/postmerge-round1-2/。
+- **复核记录并回 main（用户拍板，原话"都合并吧，然后交接给下个会话继续处理"）**：evidence=0fb5fa687d1fe9680676d678df4f2c2c198837c2 纯文档增量（RUN-RECORD §17+postmerge 归档+重扫 837 CLEAN+清单 950 全 OK+blob-manifest 1600）合入 main=2745d059a717ed1f9baa521cf379aa6c84edaec5。
+- **状态：T-P1-908 全链闭合**（执行 ORCHESTRATED_PASS → 七轮独立验收 A1–A7 全 PASS → 用户拍板合并 → 合并后复核 ACCEPT）；F-001 中央调度引擎最小版落地；合并后复核记录增量随后续 governance commit 在 main。
+- **关联：** DEC-035（第 1 轮）、DEC-034/DEC-033（执行与开工）、DEC-010（合并审批保留——本两项合并均经用户拍板）、DEC-028/DEC-033（执行形态）。
