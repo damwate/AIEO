@@ -23,7 +23,22 @@
 - [ ] 文本输出格式（共识样例样式）
 
 **六要素记录（步骤完成后填写）：**
-①本步骤目标：②修改文件：③修改内容（本次待验收 commit 完整 SHA）：④执行结果：⑤测试结果：⑥验收证据引用（结论 PASS/REJECT/BLOCKED 登记 + dispatch 目录 + reply SHA）：
+①本步骤目标：S1 骨架=CLI+状态模型+六项检查函数桩（验收重点：结构正确）
+②修改文件：basic/tool/check_taskpack.py（新建，274 行）；本 steps.md 登记六要素
+③修改内容（本次待验收 commit 完整 SHA）：`49c82b5fe61cd29a430c8f6ef952d42ac8213b46`——argparse CLI（task_dir 必选+--json）；冻结口径常量（PHASE_MAP 状态映射/占位符黑名单/必备字段表/SHA40+SHA64 正则）；ItemResult/PhaseInfo 数据类（统一字段：编号/名称/状态/问题描述/关联文件/步骤/证据）；read_phase 状态表解析+五分支映射；六项检查函数桩（N/A，S2 逐项替换）；summarize 汇总层（FAIL>IN_PROGRESS>PASS，退出码 PASS=0 其余=1）；文本+--json 共用同一结果对象；异常输入 fail-safe（目录不存在=FAIL+退出码 1；FileDecodeError 可识别错误）
+④执行结果：自测通过——文本模式（本任务包实测：Phase=IN_PROGRESS 映射正确，六项 N/A，Overall=IN_PROGRESS，exit=1）；--json 同数据结构；目录不存在=FAIL+exit=1；阶段映射五分支（no-brief/bad-status/empty-status→UNKNOWN+problems 不猜阶段；待规划→PLANNING；阻塞→IN_PROGRESS）
+⑤测试结果：手动自测 EXECUTED_PASS；unittest 正负例+11 类异常场景全套在 S3（未测项如实标注：S3 未测）
+⑥验收证据引用：待验收 commit `49c82b5fe61cd29a430c8f6ef952d42ac8213b46`；**验收结论：REJECT（第 1 次验收，dispatch-2026-11-14T15-08-02，新会话；reply SHA 见该目录 result.json）**——两项 P1（问题1：文本输出遗漏 phase_problems；问题2：文本与 JSON 未真正共用完整结果对象）；首轮曾 BLOCKED（commit 未推送，dispatch-2026-11-14T15-05-29 会话），推送后按先例换新会话复验；返工修复见下方返工记录
+
+### 返工记录（REJECT/返工/问题编号三方关联）
+
+| 问题编号 | 问题 | 根因 | 修复 commit | 复验 |
+|---|---|---|---|---|
+| 问题1 | 文本输出遗漏 phase_problems（UNKNOWN 无可识别原因） | render_text 独立传参未接收 PhaseInfo.problems | `40c66d9b17696f548603bb847e45190204a09674`（文本输出"阶段读取: <原因>"） | 复验R1静态PASS（15-13-16）；复验R2维持（15-24-07） |
+| 问题2 | 文本与 JSON 未真正共用完整结果对象（正常/目录不存在两路径各自拼装、schema 不一致） | main() 三处分别构造数据 | `40c66d9b17696f548603bb847e45190204a09674`（统一 build_result，render_text(data) 消费同一对象） | 复验R1静态PASS；复验R2维持 |
+| 问题3 | 验收请求文档代码绑定过时（返工后待验收 commit 仍写 49c82b5，动态证据绑定 40c66d9，两份代码混合认定风险） | 返工提交后未同步更新 acceptance/s1-acceptance-request.md 的绑定字段 | 文档更新（绑定=40c66d9，diff=9de95cc→40c66d9，附验收历史证据链） | 待复验R3 |
+
+（问题1、2 相互独立各第 1 次返工；问题3 与之独立，第 1 次；采集器跳位致结论原文不可恢复按 DEC-043 先例换会话，属采集缺陷不计入本任务返工）
 
 ## S2 六项检查规则实现（验收重点：规则逐项通过）
 
