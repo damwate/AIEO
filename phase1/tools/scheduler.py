@@ -531,6 +531,12 @@ class Scheduler:
 
         agents_out = []
         tokens: dict[str, str] = {}
+        tok_file = RUNTIME_DIR / "service-tokens.json"
+        if tok_file.exists():
+            try:
+                tokens = json.loads(tok_file.read_text(encoding="utf-8"))
+            except ValueError:
+                tokens = {}
         for aid, atype, role, issue in (
             ("GPT-01", "reviewer", "planner-session", False),
             ("ZCODE-01", "developer", "orchestration-dev-executor", True),
@@ -539,13 +545,20 @@ class Scheduler:
             code, resp = m1.post("/api/v1/agents", {
                 "agent_id": aid, "agent_type": atype, "role": role, "issue_service_token": issue,
             })
+            if code == 409 and isinstance(resp, dict) and resp.get("code") == "RES-0002":
+                # 代理=平台级服务身份（非 run 域实体，任务书 §4 跨 run 隔离仅约束
+                # run 域命名实体项目/批次/任务）：已注册→幂等复用（905 服务身份先例）；
+                # 服务令牌不可重复签发→自 gitignored runtime 令牌库复用。
+                agents_out.append({"agent_id": aid, "http": 409, "reused_existing": True})
+                continue
             resp = m1.expect(code, (200, 201), f"create agent {aid}", resp)
             agents_out.append({"agent_id": aid, "http": code, "service_token_issued": issue})
             if issue and resp.get("service_token"):
                 tokens[aid] = resp["service_token"]
         if "ZCODE-01" not in tokens:
-            raise OrchestrationError(1, "ZCODE-01 service token missing from M1 response")
-        tok_file = RUNTIME_DIR / "service-tokens.json"
+            raise OrchestrationError(1, "ZCODE-01 service token unavailable (not issued this run and none in runtime token store)")
+        if tok_file.exists():
+            self.rs.note("service tokens: reused existing runtime token store for pre-registered platform agents (C6, gitignored)")
         tok_file.write_text(json.dumps(tokens, indent=2), encoding="utf-8")
         os.chmod(tok_file, 0o600)
         self.rs.note("service tokens stored to gitignored runtime dir (C6)")
