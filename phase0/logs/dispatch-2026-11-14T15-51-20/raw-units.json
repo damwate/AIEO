@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-14T15:54:52.879Z",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "4fe31143-8d97-490c-84bc-7e9667a7b3a8",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "b727e211963e59237bdda84c2e2af315b98a56075955ff56df9fcad9dc0dad52",
+          "c2d621ac507487c1abe899a31c602d180deddbba2d81fabbd1e89bc6ac69f258"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "b727e211963e59237bdda84c2e2af315b98a56075955ff56df9fcad9dc0dad52",
+          "c2d621ac507487c1abe899a31c602d180deddbba2d81fabbd1e89bc6ac69f258"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-0:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n本轮已完成验收请求、冻结方案和待验收代码的静态交叉核对。\n\n问题4的核心代码修复成立。\n\n在 553ed2d 的 check_requirement() 中：\n\n独立调用 read_phase(task_dir)。\n\n阶段为 UNKNOWN 时，明确设置 status = FAIL。\n\n将阶段读取原因写入 problems。\n\n将 task-brief.md 登记到 files。\n\n阶段正常时仍保留 S1 的 N/A 桩，不提前实施 S2 字段检查。\n\n这与 steps.md 冻结口径1一致，修复没有把阶段正常时的 N/A 桩扩大为 S2 实现。\n\n此外，整体汇总仍然是 FAIL 优先，六个检查函数仍分别定义，没有发现问题4修复直接破坏原有结构的情况。\n\n六项验收标准\n\n#\n\n\t\n\n核验内容\n\n\t\n\n结论\n\n\n\n\n①\n\n\t\n\nCLI、文本输出、六项状态及退出码\n\n\t\n\nPASS\n\n\n\n\n②\n\n\t\n\n阶段读取及 UNKNOWN 处理\n\n\t\n\nPASS\n\n\n\n\n③\n\n\t\n\n文本与 JSON 共用结果对象\n\n\t\n\nPASS\n\n\n\n\n④\n\n\t\n\n任务目录不存在时的异常处理\n\n\t\n\nPASS\n\n\n\n\n⑤\n\n\t\n\nPython 标准库、无第三方依赖\n\n\t\n\nPASS\n\n\n\n\n⑥\n\n\t\n\n六项检查函数独立性及 S1 桩语义\n\n\t\n\nPASS\n\n动态证据核验\n8组证据核验通过\n\n证据提交：af3e9a7d1384e60b5ad23304c88d718b85a6ccc4\n\n场景\n\n\t\n\n文本模式\n\n\t\n\nJSON 模式\n\n\t\n\n核验结果\n\n\n\n\nA：目录不存在\n\n\t\n\nFAIL\n\n\t\n\nFAIL\n\n\t\n\nPASS\n\n\n\n\nB：缺少 task-brief.md\n\n\t\n\n① FAIL\n\n\t\n\n① FAIL\n\n\t\n\nPASS\n\n\n\n\nB2：非法阶段\n\n\t\n\n① FAIL\n\n\t\n\n① FAIL\n\n\t\n\nPASS\n\n\n\n\nC：正常任务包\n\n\t\n\n六项 N/A\n\n\t\n\n六项 N/A\n\n\t\n\nPASS\n\n8 组退出码均为 1，符合约定。\n\nB/B2 的错误原因可识别，且 files 登记正确。\n\nC 保留 S1 桩语义，没有提前执行 S2 字段检查。\n\nstderr 文件也已随证据提交保存。\n\n测试环境如实标记为 Windows 11 + Python 3.12.10，没有冒充 Linux 测试。\n\n全链绑定一致性\n绑定一致\n\n已核实三个关键提交：\n\n提交\n\n\t\n\n用途\n\n\t\n\n核验\n\n\n\n\n49c82b5\n\n\t\n\n初始 S1 骨架\n\n\t\n\n仅新增检查工具\n\n\n\n\n40c66d9\n\n\t\n\n问题1/2修复\n\n\t\n\n仅修改检查工具\n\n\n\n\n553ed2d\n\n\t\n\n问题4修复\n\n\t\n\n仅修改检查工具\n\n进一步核实：\n\n553ed2d 实际提交 diff 只有 basic/tool/check_taskpack.py。\n\n验收请求绑定完整 SHA 553ed2d12455e6f30a2cee22616eeafb73ecf963。\n\nENVIRONMENT.txt 声明的被测 SHA 完全一致。\n\n动态证据 v2 与代码提交分开保存，没有覆盖 v1 历史证据。\n\n9dcf116 更新验收请求和 steps.md，问题4登记完整，历史返工链没有混淆。\n\n问题3、问题4分别独立登记，均为各自第一次返工。\n\n相关记录：\n\n问题4代码修复提交\n\n动态证据 v2\n\nR4 验收材料更新\n\n最终裁定\nPASS\n\n问题4修复符合冻结口径，六项验收标准通过，代码与动态证据绑定一致。\n\nS1 骨架验收通过，允许进入 S2 六项检查规则实现。\n\nPASS",
+      "text_sha256": "c2d621ac507487c1abe899a31c602d180deddbba2d81fabbd1e89bc6ac69f258",
+      "size_bytes": 2785,
+      "assistant_uuid": "4fe31143-8d97-490c-84bc-7e9667a7b3a8"
+    }
+  ]
+}

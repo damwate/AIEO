@@ -1,0 +1,7 @@
+【AIEO·S3复验R1】前次REJECT(a741d1bc)三项整改完成。
+P1-1/P1-2:测试暴露被测工具缺陷——拍板异常类"重复字段或编号"未拒绝(重复任务ID行输出与基线一致/两个S1小节"2步记录完整PASS"静默接受),按你方允许条款修复工具:①逐字段计数>1次FAIL"重复出现N次";②按sid计数>1个小节FAIL"S1出现2个小节"。断言加强:①②FAIL+重复原因+Overall非PASS+exit=1。
+P2-1:test_json_missing_dir改走assert_json_matches_text补第三场景对照(六项状态+Overall+退出码)。
+待验收commit 941ee88(已推,diff=4818399→941ee88单commit:工具+测试+材料)。先读acceptance/s3-acceptance-request.md(复验R1版,整改对照表)与steps.md问题9。
+材料phase0/tools/s3-rework-r1-materials.txt:两项具体FAIL输出+JSON三场景对照记录(全部一致)。
+复跑32 tests OK(skipped=1);保留清单(第3次PASS/第4次FAIL/S2反例④FAIL⑤PASS/P1-1边界/路径三规则/符号链接skipTest)全不退化,已通过测试未重写。
+请按验收六查自查,末行单独PASS或REJECT(给具体要求)或BLOCKED。

@@ -1,0 +1,5 @@
+【AIEO·S2独立验收】b-20261114-taskpack-checker第2步(六项检查规则实现)。
+仓库 github.com/damwate/AIEO main。基线=553ed2d(S1终验通过)。待验收commit:3add8da1dbddb1756604d8e8d2d3b760e221ada9,已推origin/main。diff=553ed2d→3add8da单commit:check_taskpack.py六项实装+steps.md S2回填+acceptance/s2-fixtures三fixture+s2-runtime-evidence五组证据;另含steps.md问题3修复列短SHA补全9ae394a1一处记录修正。
+验收依据:acceptance/s2-acceptance-request.md与steps.md S2冻结口径(均在仓库,请先读)。裁决点:①按冻结清单9必备字段实现(当前状态走阶段映射/最终结果暂空不入占位检查)是否成立;③阶段规则与证据路径校验;④⑤三方关联+第4次FAIL+COMPLETED无返工空满足;⑥七要素其余NA。
+自测:A自身包IN_PROGRESS exit1/B good全PASS exit0/C rework4问题1第4次FAIL/D reject-no-table③④FAIL/E JSON同文本;证据s2-runtime-evidence/五组+fixtures可复跑。unittest全套在S3(分步未测)。
+请按验收六查自查(diff=553ed2d→3add8da)。回复分条,末行单独PASS或REJECT(给具体修改要求)或BLOCKED。

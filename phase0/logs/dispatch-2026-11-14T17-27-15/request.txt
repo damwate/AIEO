@@ -1,0 +1,4 @@
+【AIEO·S2复验R3c】动态执行材料已附件投递:s2-dynamic-acceptance-3a8975a.zip(27KB,30文件+MANIFEST)。
+内容:被测代码check_taskpack.py+七fixtures,全部git show从commit 3a8975a blob逐字节提取(非工作区),MANIFEST含每文件SHA256+运行命令+预期表。
+你方R3b静态审查已全过,剩动态执行——请在你方Python沙箱解压后独立执行MANIFEST所列7条命令(不依赖GitHub网络),核对预期结果,保存命令+stdout+exit为执行记录。A组自身包证据见仓库acceptance/s2-runtime-evidence-v3/(已读)。
+不要求新增代码commit。完成动态核验后末行单独PASS或REJECT(给具体要求)或BLOCKED。

@@ -1,0 +1,235 @@
+ChatGPT 说：
+AIEO·S2复验R3补验报告
+
+BLOCKED
+
+验收对象： damwate/AIEO
+
+目标 commit： a4399bf01c0b03d5208f6b41f9626326f691e3be
+
+复验范围： A-H 动态回归证据审查 + I 组独立核验。
+
+一、证据入口核验
+
+已通过 GitHub 仓库接口成功读取：
+
+A 组 run-a-own-pack.stdout
+
+B-H 组对应输出文件
+
+E 组 JSON 一致性证据
+
+I 组 run-i-reject-element-no-number.stdout
+
+basic/tool/check_taskpack.py
+
+steps.md
+
+I 组反例 fixture 的 steps.md
+
+另核对 Git 提交范围：
+
+PASS 提交范围核验
+
+3a8975a → a4399bf：
+
+ahead_by = 1
+
+total_commits = 1
+
+没有额外混入提交
+
+没有修改 check_taskpack.py
+
+本次提交涉及验收文档、fixture、证据及步骤记录。
+
+二、A-H 回归证据审查
+
+场景
+
+	
+
+预期结果
+
+	
+
+输出核验
+
+
+
+
+A 自身任务包
+
+	
+
+IN_PROGRESS
+
+	
+
+PASS
+
+
+
+
+B 完整完成包
+
+	
+
+六项全 PASS
+
+	
+
+PASS
+
+
+
+
+C 第四次返工
+
+	
+
+⑤ FAIL
+
+	
+
+PASS
+
+
+
+
+D REJECT 无记录表
+
+	
+
+③④ FAIL
+
+	
+
+PASS
+
+
+
+
+E JSON一致性
+
+	
+
+文本与JSON一致
+
+	
+
+PASS
+
+
+
+
+F IN_PROGRESS边界
+
+	
+
+1步PASS，其余N/A
+
+	
+
+PASS
+
+
+
+
+G PLANNING边界
+
+	
+
+全部N/A
+
+	
+
+PASS
+
+
+
+
+H 错误编号关联
+
+	
+
+③④ FAIL
+
+	
+
+PASS
+
+上述八组输出均已读取，输出结果与本次代码的判定逻辑相符。
+
+证据目录：
+
+打开 commit 锚定的 A-H/I 证据目录
+
+三、I 组独立核验
+逻辑核验通过
+
+反例核心：
+
+S2 的④执行结果包含 REJECT。
+
+④中的 REJECT 没有问题编号。
+
+⑤测试结果提及问题1。
+
+⑥验收证据引用也没有问题编号。
+
+返工表存在问题1有效记录。
+
+检查代码 check_rework_records()：
+
+step_reject_nums 只收集包含 REJECT 的要素值中的问题编号，以及⑥中的问题编号。
+
+不再允许⑤等其他无关要素中的问题编号替代。
+
+没有编号时明确产生 FAIL。
+
+⑤仍能独立统计已关联的有效返工记录。
+
+I 组预期输出：
+
+纯文本
+[FAIL] ④ REJECT返工记录
+[PASS] ⑤ 返工次数
+Overall: FAIL
+exit=1
+
+与实际留档一致。
+
+查看 I 组原始输出
+
+四、尚未完成的验收事项
+
+这里必须区分两件事：
+
+输出证据及代码逻辑审查： 已完成，未发现 I 组原遗留 P1 仍然存在。
+
+独立动态执行： 尚未完成。
+
+当前执行环境无法通过 GitHub 网络克隆仓库（DNS 解析失败），因此没有独立运行 A-H，也没有独立运行 I 的 Python 进程。
+
+不能把读取已有 stdout 证据等同于本次独立动态执行。
+
+五、最终裁定
+
+目前没有发现新的代码整改要求，也没有理由要求修改代码。
+
+但本次委托明确要求完成动态回归，不能用静态审查代替动态执行。
+
+解除 BLOCKED 只需要：
+
+在能够访问仓库的 Linux/Python 环境检出指定 commit。
+
+实际执行 A-H 八组测试。
+
+独立执行 I 组反例。
+
+保存本次执行的原始 stdout、退出码及 commit 绑定信息。
+
+本轮不要求新增代码 commit。
+
+BLOCKED

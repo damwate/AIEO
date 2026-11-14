@@ -1,0 +1,6 @@
+【AIEO·S1独立验收】任务b-20261114-taskpack-checker第1步(S1骨架,任务包完整性检查工具)。
+基线:github.com/damwate/AIEO main。开发前基线commit:9de95cc(方案冻结)。待验收commit:49c82b5fe61cd29a430c8f6ef952d42ac8213b46(diff=仅新增basic/tool/check_taskpack.py 274行)。
+拍板方案:basic/tasks/b-20261114-taskpack-checker/steps.md(冻结版)。
+本步验收标准:1.CLI可运行python basic/tool/check_taskpack.py <task_dir>[--json],文本含Taskpack/Phase/六项[状态]/Overall,退出码PASS=0其余=1;2.阶段五分支:缺task-brief/非法值/占位符→UNKNOWN+problems不猜阶段;待规划→PLANNING;阻塞→IN_PROGRESS;3.--json与文本共用同一结果对象(items七字段);4.目录不存在→FAIL+exit=1+可识别问题;5.仅Python标准库;6.六项为独立N/A桩(拍板分步设计,S2逐项替换,非缺陷)。
+自测:文本模式本任务包实测IN_PROGRESS/exit=1;JSON同结构;目录不存在FAIL;阶段五分支临时目录实测全过。unittest全套在S3(未测,拍板分步)。
+请按验收六查自查(方案=steps.md;diff=基线→待验收commit)。回复分条,末行单独PASS或REJECT(REJECT给具体修改要求)或BLOCKED。

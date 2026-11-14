@@ -1,0 +1,6 @@
+【AIEO·S3独立验收】b-20261114-taskpack-checker第3步(unittest正负例+11类异常+JSON输出)。
+仓库 github.com/damwate/AIEO main。前置:S1/S2均闭环(S2 R3c附件动态验收PASS)。待验收commit 4818399(已推,diff=3c3c1bc→4818399单commit,仅新增test_check_taskpack.py 472行);文档3191a34。请先读acceptance/s3-acceptance-request.md(含11类异常↔测试映射表)与steps.md S3冻结口径。
+四项拍板口径:①正例全PASS exit0 ②11类异常一一映射(目录不存在/缺文件/空文件/编码异常/重复字段编号/记录步骤不对应/证据不存在/非法阶段不猜/第3次PASS/第4次FAIL/路径穿越)③--json与文本判定一致三场景④异常可识别无Traceback。
+补充:符号链接无权限skipTest如实标注(skipped=1),路径三规则单元直调;S2遗留反例④FAIL⑤PASS与P1-1边界回归含内。
+执行者实跑:unittest discover→Ran 32 OK(skipped=1)。你方可跑Python请实际执行;否则静态审查+引用S2附件先例。
+请按验收六查自查,末行单独PASS或REJECT(给具体要求)或BLOCKED。

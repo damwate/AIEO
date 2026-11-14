@@ -1,0 +1,5 @@
+【AIEO·S1复验】b-20261114-taskpack-checker第1步返工后复验(第1次验收REJECT:两项P1)。
+仓库 github.com/damwate/AIEO main。上轮待验收:49c82b5(判REJECT轮)。本轮待验收commit:40c66d9b17696f548603bb847e45190204a09674,已推送origin/main。diff=49c82b5→40c66d9仅修改basic/tool/check_taskpack.py。
+两项修复:问题1文本输出phase_problems(UNKNOWN时文本给出"阶段读取: <原因>");问题2统一build_result结果对象(文本与JSON、正常与目录不存在两路径共用同一schema,render_text(data)消费同一对象,不再分别拼装)。均最小修改,保留六项N/A桩与S2分步范围。
+验收标准不变(上轮6条)。修复自测:目录不存在=统一schema{items:[],problems:[可识别原因],overall:FAIL}+exit=1;缺task-brief文本显示"阶段读取: task-brief.md 不存在";正常路径Phase=IN_PROGRESS/exit=1。
+请复验两问题修复+按验收六查自查。回复分条,末行单独PASS或REJECT(给具体修改要求)或BLOCKED。

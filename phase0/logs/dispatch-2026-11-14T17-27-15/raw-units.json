@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-14T17:31:03.465Z",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "ccc45952-6478-42f3-9e2f-1c2231c7e672",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "1135a5f075e9b03129ea397caf956409b84936f102cd2a9a5de2f0b6ad64c7cc",
+          "355e35e1b41626b49f4061e12257c47e518c89c56118007686d9f0446c7a6bf1"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "1135a5f075e9b03129ea397caf956409b84936f102cd2a9a5de2f0b6ad64c7cc",
+          "355e35e1b41626b49f4061e12257c47e518c89c56118007686d9f0446c7a6bf1"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-0:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nS2 复验 R3c — 动态执行验收报告\n\nPASS 七组动态测试全部符合 MANIFEST 预期。\n\n本次使用你投递的 ZIP 附件，在我的 Python 沙箱中独立解压、校验和执行。没有访问 GitHub，也没有依赖你方留档的运行结果。\n\n一、附件完整性核验\n\n检查项\n\n\t\n\n结果\n\n\n\n\n文件总数\n\n\t\n\n30\n\n\n\n\nSHA256 校验\n\n\t\n\n30/30 PASS\n\n\n\n\n文件字节数\n\n\t\n\n30/30 一致\n\n\n\n\n被测代码\n\n\t\n\ncheck_taskpack.py\n\n\n\n\n测试样例\n\n\t\n\n7 组\n\n\n\n\nGitHub 网络依赖\n\n\t\n\n无\n\n附件中全部 30 个文件的 SHA256 与 MANIFEST 一致。\n\n二、七组动态执行结果\n\n测试样例\n\n\t\n\n预期退出码\n\n\t\n\n实际退出码\n\n\t\n\n结果\n\n\n\n\ngood-completed\n\n\t\n\n0\n\n\t\n\n0\n\n\t\n\nPASS\n\n\n\n\nrework4\n\n\t\n\n1\n\n\t\n\n1\n\n\t\n\nPASS\n\n\n\n\nreject-no-table\n\n\t\n\n1\n\n\t\n\n1\n\n\t\n\nPASS\n\n\n\n\nreject-wrong-number\n\n\t\n\n1\n\n\t\n\n1\n\n\t\n\nPASS\n\n\n\n\nphase-boundary-inprogress\n\n\t\n\n1\n\n\t\n\n1\n\n\t\n\nPASS\n\n\n\n\nphase-boundary-planning\n\n\t\n\n1\n\n\t\n\n1\n\n\t\n\nPASS\n\n\n\n\nreject-element-no-number\n\n\t\n\n1\n\n\t\n\n1\n\n\t\n\nPASS\n\n关键行为核对\n\n正常完成： 六项全部 PASS，Overall: PASS。\n\n返工次数超限： ④ PASS，⑤ FAIL，准确识别第四次有效返工。\n\n缺失返工表： ③、④ FAIL，拒绝不完整验收材料。\n\n错误问题编号： 正确识别无效返工行及未被引用的问题编号。\n\n开发中阶段： 未到期项目正确显示 N/A，不误判为 FAIL。\n\n规划阶段： 六项阶段边界处理正确，Overall: IN_PROGRESS。\n\nR2 遗留反例： ④ FAIL，⑤ PASS，成功识别 REJECT 未关联问题编号的情况。\n\n三、执行环境说明\n\n所有七条命令均正常执行并得到预期退出码。\n\n有一项环境噪声需要记录：Python 启动时，沙箱的 artifact_tool 自动预热组件输出了异常堆栈（stderr）。该异常与被测脚本无关，七组脚本均正常输出结果，实际退出码和标准输出符合预期，不影响本次验收判断。\n\n四、执行记录归档\n\ns2-dynamic-execution-record.txt\n\n包含七条完整命令、stdout、stderr 和 exit code\n已生成\n\n下载完整动态执行记录\n\n五、最终裁定\n\nR3b 静态审查：沿用已通过结论。\n\nR3c 附件完整性：PASS。\n\nR3c 七组独立动态执行：PASS。\n\nR3c 预期与实际结果一致：PASS。\n\n新增代码提交：不要求。\n\n动态执行没有发现新的 P1 遗留问题。\n\n本次 S2 复验 R3c 动态验收通过。\n\nPASS\n\ns2-dynamic-execution-record.txt\n文档",
+      "text_sha256": "355e35e1b41626b49f4061e12257c47e518c89c56118007686d9f0446c7a6bf1",
+      "size_bytes": 2425,
+      "assistant_uuid": "ccc45952-6478-42f3-9e2f-1c2231c7e672"
+    }
+  ]
+}

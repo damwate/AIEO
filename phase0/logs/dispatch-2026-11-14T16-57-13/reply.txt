@@ -1,0 +1,136 @@
+ChatGPT 说：
+
+本次验收以 e664e76 为唯一待验收代码版本，复核范围限定为三项整改及首验已通过的维持项，不扩大到其他并行 commit。
+
+目前 GitHub 文件读取返回 404，尚未取得验收请求和冻结口径原文，因此不能把用户提供的整改说明当作代码实现及动态证据已经通过的证明。
+
+复验结果
+REJECT
+一、P0：代码绑定整改 — PASS
+
+已核实 GitHub compare：
+
+基线：955ffaa8b88ff972f149f05f06e0f53847905fd0
+
+待验收：e664e76b49be268739070b08aded9066e4b4908c
+
+ahead_by=1
+
+total_commits=1
+
+merge_base=955ffaa
+
+实际 diff 文件均属于本次 S2 工具、任务包 fixture 和证据范围，没有混入此前 8 个并行 commit。
+
+P0 整改成立。
+
+二、P1-1：③先判到期再评记录 — PASS
+
+静态检查 check_step_acceptance()：
+
+PLANNING：全部步骤 N/A。
+
+IN_PROGRESS：仅编号小于当前步骤的步骤进入记录检查。
+
+当前及以后步骤直接 N/A。
+
+COMPLETED：全部步骤进入记录检查。
+
+UNKNOWN：FAIL，不猜测阶段。
+
+确认到期判断位于六要素提取和 PASS 判定之前。
+
+动态证据：
+
+F：1 步 PASS、2 步未到期 N/A。
+
+G：PLANNING 全部 N/A。
+
+符合冻结口径，预填完整 PASS 不会提前通过。
+
+三、P1-2/P1-3：④⑤编号级关联 — 部分通过，存在遗留缺陷
+
+已通过的部分：
+
+REJECT 编号逐项查找对应有效返工行。
+
+有效返工行必须被步骤小节引用。
+
+无关返工行不能替代缺失编号。
+
+⑤只统计已关联的有效返工行。
+
+第四次返工仍正确判 FAIL。
+
+H 组正确检出问题1缺少对应返工行、问题2返工行未被引用。
+
+遗留 P1：④对 REJECT 无编号的判断范围错误。
+
+位置：basic/tool/check_taskpack.py → check_rework_records()。
+
+当前代码：
+
+Python
+运行
+if not extract_problem_numbers(body):
+    problems.append(
+        f"S{sid} 含 REJECT 结论但未引用问题编号..."
+    )
+
+这里检查的是整个步骤小节 body，而不是 REJECT 所在要素值与⑥验收证据引用。
+
+但前面实际提取 reject_nums 时，使用的是含 REJECT 的要素值和⑥。
+
+这造成判定范围不一致。
+
+可复现的反例：
+
+④执行结果包含 REJECT，但没有问题编号。
+
+①或⑤等其他要素提及问题1。
+
+返工表存在问题1有效行。
+
+该行也被步骤小节引用。
+
+此时：
+
+extract_problem_numbers(body) 非空；
+
+reject_nums 可能为空；
+
+不会触发 REJECT 无编号错误；
+
+有效返工表存在，最终④可能错误 PASS。
+
+这违反冻结要求：REJECT 无编号引用必须 FAIL。
+
+四、具体整改要求
+
+仅修改 check_rework_records()：
+
+对每一个含 REJECT 的要素值，独立提取问题编号。
+
+同时检查⑥验收证据引用中的问题编号。
+
+REJECT 所在要素值与⑥均无法提取编号时，必须 FAIL。
+
+不允许用同一小节其他无关要素中的问题编号替代。
+
+保留现有逐编号有效返工行检查及返工行引用检查。
+
+增加反例 fixture：REJECT 要素无编号，但其他要素提及问题1，返工表存在问题1有效行，预期④仍然 FAIL。
+
+原 H 组、D 组、C 组及 F/G 组回归不得退化。
+
+五、维持项
+
+①需求记录：维持 PASS。
+
+②步骤清单：维持 PASS。
+
+⑥交付记录：维持 PASS（首验已通过，本轮未修改）。
+
+本次只要求修复上述一个 P1，不扩大整改范围。
+
+REJECT

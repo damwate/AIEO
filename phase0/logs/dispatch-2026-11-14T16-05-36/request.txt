@@ -1,0 +1,8 @@
+【AIEO·check-push改造复核】按昨共识五条(dispatch-15-39-58)改造toolkit/check-push.mjs,commit 15c2a94(github.com/damwate/AIEO main已推):
+①发现/验证两模块分离:注册表/分协议解析/git config/netstat/候选队列为发现函数,runner可注入测试;probePort+git dry-run为验证;
+②候选序=直连→注册表(PowerShell execFile直查ProxyEnable+ProxyServer,分协议解析合并同端口,https优先)→git config→env/--ports→netstat末位(限6,滤<1024,标注"监听未证实代理");
+③注册表三态:query_failed/disabled/no_value/parse_failed/ok,查询失败≠无代理;
+④验证=TCP预筛+git dry-run真实探测(200非唯一判据);逐候选记录来源+失败原因;全程只读;
+⑤测试17项全过(test-check-push.mjs,含"查询失败但注册表实际有值"反例),抓出修复两缺陷(git config端口字符串、同端口多协议重复);
+⑥实战:零手工参数推送成功——注册表发现3572→直连FAIL(180s)→3572 dry-run OK→ahead=0。
+已知观察:直连挂起吃满180s超时。请审查与五条原则一致性+遗漏缺陷,末行单独"通过"或"需要修改"(给具体要求)。

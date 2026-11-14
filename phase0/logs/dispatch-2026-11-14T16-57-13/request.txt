@@ -1,0 +1,5 @@
+【AIEO·S2复验R2】b-20261114-taskpack-checker第2步,按S2首验REJECT(dispatch-16-40-38)三项整改。
+仓库 github.com/damwate/AIEO main。待验收代码commit e664e76(已推,diff=955ffaa→e664e76单commit,仅check_taskpack.py+steps.md+fixtures+证据v2);文档7cd06cf,请先读acceptance/s2-acceptance-request.md与steps.md S2冻结口径。
+整改:①P0绑定=待验收commit自身diff(parent→commit),首验区间其余8个并行commit已在请求列明不在范围;②P1-1③先判到期再评记录(PLANNING全N/A/IN_PROGRESS编号≥当前N/A/COMPLETED全到期,预填完整PASS记录不提前PASS);③P1-2/P1-3④编号级三方关联(REJECT要素值+⑥提取编号,每编号须有对应有效返工行,返工行须被步骤小节引用,无关行不替代,REJECT无编号=FAIL)+⑤只计已关联行。
+证据v2八组acceptance/s2-runtime-evidence-v2/(A-H),新增F inprogress③"1步PASS+2未到期"/G planning全N/A/H wrong-number④双问题FAIL;fixtures六场景可复跑:python basic/tool/check_taskpack.py .../s2-fixtures/fixture-<name>。
+首验①②⑥PASS未动。请仅复核三项整改+维持项,末行单独PASS或REJECT(给具体要求)或BLOCKED。

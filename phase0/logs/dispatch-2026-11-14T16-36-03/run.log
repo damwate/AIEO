@@ -1,0 +1,15 @@
+[2026-11-14T16:36:05.230Z] 致命错误: SESSION_LOCK_CONFLICT: 锁文件句柄被其他进程持有（OS 级互斥）。同一 ChatGPT 会话同一时刻只允许一个在途任务，本次拒绝执行。 详情: 使用“4”个参数调用“Open”时发生异常:“文件“D:\AIEO\runtime\locks\gpt-session.lockfile”正由另一进程使用，因此该进程无法访问此文件。”
+[2026-11-14T16:36:05.273Z] 会话锁已获取 pid=16024
+[2026-11-14T16:36:05.276Z] === GPT 派单（新建会话，消息 1194 字节）===
+[2026-11-14T16:36:08.942Z] Chrome 已启动 pid=22512
+[2026-11-14T16:36:52.035Z] 新聊天页面就绪
+[2026-11-14T16:36:57.057Z] [dispatch] 基线尾部: null
+[2026-11-14T16:36:59.864Z] [dispatch] 发送双验通过（polls=2，user_unit_key=fallback-turn-0:0:user，tail 后观察）
+[2026-11-14T16:37:00.053Z] 截图: sent-dispatch.png
+[2026-11-14T16:38:57.407Z] [dispatch] COMPLETED，1 个 assistant unit，回复 1584 UTF-8 字节，区间窗口 2 个
+[2026-11-14T16:38:57.535Z] 截图: reply-dispatch.png
+[2026-11-14T16:38:57.535Z] 审查会话已保存: https://chatgpt.com/c/6af88e2b-274c-83ec-b859-57c01029ff65
+[2026-11-14T16:38:57.542Z] JSON/Schema/绑定校验: NOT_REQUESTED
+[2026-11-14T16:38:57.543Z] M1 本地登记: NOT_REQUESTED（三 ID 均未提供，通用非登记派单）
+[2026-11-14T16:38:58.584Z] === 派单完成，artifact_sha256=ce8b1ce8623bb8375a407e5a41d7785d94d056f20c2e29ab8ce996c5701fb431 size_bytes=1584 ===
+[2026-11-14T16:38:58.687Z] 会话锁已释放

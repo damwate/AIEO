@@ -1,0 +1,4 @@
+【AIEO·check-push复验R4】按R3(dispatch-16-36-03"需要修改")唯一遗留最小整改,commit 955ffaa(已推github main):
+修复点:主流程TCP预筛跳过日志改两分支——提取formatTcpSkipLog(timedOut,label)导出函数;timedOut=true输出"TCP 探测超时 → 跳过本次 dry-run（本次超时不代表路径永久不可用）";timedOut=false才输出"未监听 → 跳过（配置/git config 有值≠端口可用，共识 3）";主流程if(r.tcpSkipped)改调该函数。
+测试30→32全过,新增2项:timedOut=true日志含超时分支且不含"未监听";timedOut=false含"未监听(共识3)"且不含"超时"(两分支互斥断言)。
+候选序/探测策略/五条共识未动,范围仅复核要求的一处日志。请仅复核本遗留项,末行单独"通过"或"需要修改"(给具体要求)。

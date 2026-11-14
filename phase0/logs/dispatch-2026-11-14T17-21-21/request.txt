@@ -1,0 +1,5 @@
+【AIEO·S2复验R3补验】R3(dispatch-17-11-41)BLOCKED唯一原因:证据v3九组404。经核文件已在commit a4399bf且路径正确,给可直接读取入口:
+①目录清单一次调用:https://api.github.com/repos/damwate/AIEO/contents/basic/tasks/b-20261114-taskpack-checker/acceptance/s2-runtime-evidence-v3?ref=a4399bf01c0b03d5208f6b41f9626326f691e3be 返回9文件(name+download_url+git_blob sha)。
+②raw样例(commit锚定,避开main缓存):https://raw.githubusercontent.com/damwate/AIEO/a4399bf01c0b03d5208f6b41f9626326f691e3be/basic/tasks/b-20261114-taskpack-checker/acceptance/s2-runtime-evidence-v3/run-a-own-pack.stdout 其余8组同目录同名(run-b…run-i-reject-element-no-number.stdout/.json)。
+本地已复测:API目录返回9文件全在;raw run-a/run-d/run-e均HTTP200;个别请求000为本机直连抖动,重试即可。
+代码未动无新commit。请仅完成A-H动态回归+I组独立核验,末行单独PASS或REJECT(给具体要求)或BLOCKED。

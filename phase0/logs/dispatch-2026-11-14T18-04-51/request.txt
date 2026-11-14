@@ -1,0 +1,6 @@
+【AIEO·S3复验R2】上轮REJECT(2da8c284)两项P1整改完成。
+P1-1:count_brief_field_rows扩三形式计数(表格+行内+标题,标题regex与extract_brief_field口径一致);新增跨格式反例test_duplicate_brief_field_cross_format(表格行+标题形式「任务ID」无行内,旧计数=1漏判→新=2→①FAIL+重复原因+exit=1)。
+P1-2绑定修正(如实):上轮申报"4818399→941ee88单commit"错误——941ee88 parent实为3191a34,区间2commits/5文件;根因凭记忆写基线未核parent/rev-list,与问题5同型已固化必核。本轮待验收b1bd307(parent=3e61af1),diff=3e61af1→b1bd307单commit仅2文件(工具+测试)。
+动态核验:附件s3-dynamic-acceptance-b1bd307.zip(17KB)=两py文件git show blob逐字节提取+MANIFEST(SHA256+命令+预期Ran 33 OK skipped=1),请解压独立执行促⑤(R3c先例,我方已自证解压实测OK)。
+先读acceptance/s3-acceptance-request.md(复验R2版,两轮整改对照表)与steps.md问题10。材料phase0/tools/s3-rework-r2-materials.txt(入库):跨格式FAIL输出+unittest完整结果。
+按验收六查自查,末行单独PASS或REJECT(给具体要求)或BLOCKED。

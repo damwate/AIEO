@@ -1,0 +1,122 @@
+ChatGPT 说：
+AIEO·S2复验R3 审查报告
+
+整改代码静态审查通过 动态回归证据未核实
+
+待验收 commit： 3a8975ac5d8e797be9c90309bcc56ceba3356d99
+
+1. 代码绑定：PASS
+
+已核实 GitHub compare：
+
+基线：7cd06cf
+
+待验收：3a8975a
+
+ahead_by=1
+
+total_commits=1
+
+实际仅涉及两个文件：
+
+basic/tool/check_taskpack.py
+
+fixture-reject-element-no-number/ 下四个文件。
+
+符合单 commit、限定修改范围的申报，没有发现并行任务混入。
+
+2. 唯一遗留 P1：整改符合要求
+
+已阅读 a4399bf 中的 s2-acceptance-request.md 和 steps.md S2 冻结口径。
+
+检查 check_rework_records()，确认：
+
+has_reject 只识别六要素值中的 REJECT。
+
+step_reject_nums 只从含 REJECT 的要素值及⑥验收证据引用提取问题编号。
+
+统一使用 if not step_reject_nums 判定无编号。
+
+无编号时明确产生 FAIL，错误信息符合要求。
+
+其他要素中的问题编号不能替代 REJECT 所在要素的编号。
+
+逐编号有效返工行检查没有被删除。
+
+返工行被步骤引用检查没有被删除。
+
+⑤返工次数统计逻辑没有修改。
+
+P1整改：静态PASS
+3. I组反例：逻辑符合预期
+
+已检查 fixture-reject-element-no-number/steps.md：
+
+④执行结果含 REJECT，但没有问题编号。
+
+⑤测试结果提及问题1。
+
+返工表存在问题1的有效行。
+
+⑥验收证据引用没有问题编号。
+
+按照新代码：
+
+检查项
+
+	
+
+预期结果
+
+
+
+
+④ REJECT编号关联
+
+	
+
+FAIL
+
+
+
+
+⑤ 返工次数
+
+	
+
+PASS
+
+
+
+
+整体结果
+
+	
+
+FAIL
+
+新实现能够拦截 R2 指定的旧实现误 PASS 场景，修复方向正确。
+
+4. A-H回归：尚未完成动态独立核验
+
+目前存在一个证据核验限制：
+
+已读取 A-H 的预期结果及冻结口径。
+
+已确认本次代码只修改 check_rework_records() 的目标判定逻辑。
+
+但通过 GitHub 文件接口获取 s2-runtime-evidence-v3/run-a 至 run-i 原始输出时均返回 404。
+
+因此无法独立核对九组原始运行输出及实际退出码。
+
+不能把验收请求中的自测结果直接视为独立复验通过。
+
+最终裁定
+
+本次唯一 P1 的代码整改符合要求，I 组反例逻辑也已静态核实。
+
+但 A-H 动态回归证据尚未独立验证，不能直接签发完整 PASS。
+
+建议补充： 将 acceptance/s2-runtime-evidence-v3/ 九组原始 stdout、JSON 文件及实际运行记录提供为可读取证据，再完成最后一轮核验。不要求修改代码。
+
+BLOCKED

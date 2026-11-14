@@ -1,0 +1,8 @@
+【AIEO·代理基本功讨论】(新会话)代理端口发现与推送恢复方案。
+背景:代码部署github,推送经toolkit/check-push.mjs。系统代理=SakuraCat VPN单进程混合端口,重启即换端口并写回注册表ProxyServer(分协议串"http=...;https=...;socks=...")。今日端口三迁:10391→2482→3572。
+故障链:①直连443超时(DNS正常)②check-push直连失败后仅探测git config遗留端口6822(死),未读注册表→误报"可用路径无"③执行者Git Bash下reg query /v参数被MSYS转换吃掉返回空→误判"注册表无值"→盲扫netstat监听端口全不可用绕远路;//v写法才对,拿到3572实测200推送成功。
+请讨论:
+Q1端口发现权威序:注册表ProxyServer(分协议解析)>git config遗留>netstat盲扫,对吗?注册表值与实际监听不一致以谁为准?
+Q2 check-push候选序列改为:直连→注册表→git config→netstat末位,只读不改配置,合理吗?有何风险(如过期端口)?
+Q3"诊断工具失败先怀疑调用方式再下'不存在'结论"如何固化?落点=环境盘点§4修订+AI-DEV-LESSONS新条目+check-push内建,恰当否?
+回复:分条+末行单独"共识达成"或"需要讨论"。

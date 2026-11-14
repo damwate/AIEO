@@ -1,0 +1,237 @@
+ChatGPT 说：
+AIEO·check-push 整改复验 R2
+需要修改
+
+复审对象： damwate/AIEO / main / 7239fea
+
+复审基准： R1（dispatch-16-05-36），基线 15c2a94。
+
+已读取本次提交的 toolkit/check-push.mjs、toolkit/test-check-push.mjs，并核对 GitHub 提交差异。
+
+总体判断：四项整改大部分已经落实，模块拆分、注入设计、端口过滤和候选继续机制均有实质改进。但发现一个仍未闭合的超时语义问题，涉及 P1-1，不能直接验收通过。
+
+一、四项整改复核
+
+整改项
+
+	
+
+复核结果
+
+	
+
+说明
+
+
+
+
+P1-1 超时分离
+
+	
+
+部分通过
+
+	
+
+三种 Git 操作超时已分离，但 TCP 探测超时语义丢失
+
+
+
+
+P1-2 注入补全
+
+	
+
+通过
+
+	
+
+发现函数、候选验证及探测序列均有注入接口
+
+
+
+
+P1-3 端口校验
+
+	
+
+基本通过
+
+	
+
+统一校验函数已覆盖主要入口
+
+
+
+
+P2-1 非本机地址
+
+	
+
+通过
+
+	
+
+git config 非本机地址有明确跳过原因
+
+二、必须修改的问题
+P1-1：TCP 探测超时被错误归类为「TCP 未监听」
+
+代码位置： toolkit/check-push.mjs
+
+当前 probePort()：
+
+JavaScript
+s.setTimeout(timeoutMs, () => done(false));
+s.once("connect", () => done(true));
+s.once("error", () => done(false));
+
+它只返回布尔值，导致以下两种情况无法区分：
+
+目标端口明确拒绝连接。
+
+2 秒内没有完成 TCP 连接，触发超时。
+
+随后 probeCandidate()：
+
+JavaScript
+const alive = await tcpProbe(candidate.port);
+if (!alive) {
+  return {
+    tried: [{
+      label,
+      port: candidate.port,
+      ok: false,
+      timedOut: false,
+      stderr: "TCP 未监听",
+      ms: 0
+    }],
+    win: null,
+    tcpSkipped: true
+  };
+}
+
+这里直接把所有 false 归类为「TCP 未监听」。
+
+问题性质：
+
+这与本次整改明确要求的：
+
+本次探测超时 ≠ 路径永久不可用。
+
+存在语义冲突。
+
+TCP 探测超时同样不能证明端口没有监听，更不能证明代理路径不可用。
+
+最小整改要求：
+
+probePort 返回结构化结果，至少区分连接成功、连接失败、超时。
+
+probeCandidate 保留 TCP 超时状态，不得统一标记为「TCP 未监听」。
+
+超时记录应明确标注本次探测超时，不代表路径永久不可用。
+
+TCP 超时仍然可以跳过本次 dry-run，继续下一候选，不改变候选顺序。
+
+增加实际覆盖 TCP 超时、连接拒绝、连接成功三种结果的测试。
+
+不要求扩大工具范围，也不要求改变现有发现与验证架构。
+
+三、其他整改复核
+
+P1-2：注入补全
+
+通过。
+
+discoverNetstatPorts({ runner }) 可注入。
+
+probeCandidate({ tcpProbe, dryRun }) 可注入。
+
+runProbeSequence({ directProbe, candidateProbe }) 可注入。
+
+注册表发现也保留 runner 注入。
+
+CLI 主流程有导入守卫，不会因测试导入而自动执行。
+
+发现与验证的职责分离符合此前共识。
+
+P1-3：端口统一校验
+
+基本通过。
+
+已检查：
+
+isValidPort() 整数范围校验。
+
+注册表分协议解析。
+
+git config。
+
+环境变量。
+
+--ports。
+
+netstat。
+
+候选队列二次过滤。
+
+非法候选的 rejected 诊断记录。
+
+复核所列的 0、65536、1.5、-1、Infinity 等边界都有测试覆盖。
+
+P2-1：非本机地址
+
+通过。
+
+portsFromGitConfigEntries() 对非本机地址保留跳过原因，注册表解析也保留 nonLocal 诊断信息。
+
+没有发现擅自把远程代理主机转换成本地代理端口的行为。
+
+四、测试覆盖评价
+测试设计基本通过
+
+本次测试从17项扩展到25项，覆盖方向正确。
+
+尤其值得肯定：
+
+直连超时后进入候选验证。
+
+首个候选超时后继续第二候选。
+
+TCP 预筛失败不执行 dry-run。
+
+多协议 HTTPS 优先。
+
+非法端口边界。
+
+netstat 发现失败记录。
+
+注入式测试不依赖真实代理环境。
+
+但有一个重要缺口：目前 TCP 预筛测试只模拟 tcpProbe 返回 false，没有验证真实 probePort 的超时是否被正确识别。
+
+因此，不能把现有测试通过等同于 P1-1 全部验收通过。
+
+说明：本次完成了 GitHub 提交代码与测试文件的静态复核，没有独立运行这25项测试。
+
+五、最终整改要求
+
+仅要求修复一项：
+
+P1-1：补齐 TCP 探测超时的独立状态识别、错误报告及测试。
+
+其他三项不要求返工，不要求重构，不要求改变五条共识，不扩大本次任务范围。
+
+修复后提交新 commit，提供：
+
+commit SHA；
+
+修改位置；
+
+TCP 三种结果的测试证据；
+
+原有25项测试及新增测试结果。
+
+届时只针对本次遗留问题进行复验，不重新扩大审查范围。
+
+需要修改

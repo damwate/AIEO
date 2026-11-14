@@ -1,0 +1,5 @@
+【AIEO·S1复验R4】b-20261114-taskpack-checker第1步(S1骨架)。问题4(复验R3 dispatch-15-28-41 REJECT:冻结口径1"阶段读取失败=①项FAIL"实现返回N/A)已修复:
+待验收代码=553ed2d12455e6f30a2cee22616eeafb73ecf963(github.com/damwate/AIEO main):check_requirement内读阶段,UNKNOWN=FAIL+可识别原因+files登记task-brief.md;阶段正常仍N/A桩(S2字段检查);整体FAIL优先不变;六项独立函数互不依赖。diff=9de95cc1→553ed2d(49c82b5新增274行+40c66d9问题1/2返工+553ed2d问题4返工,仅check_taskpack.py)。
+更新后验收请求:basic/tasks/b-20261114-taskpack-checker/acceptance/s1-acceptance-request.md(绑定553ed2d,附7步验收历史链)。steps.md补登问题4(独立第1次)+问题3复验R3维持。
+动态证据v2=af3e9a7(acceptance/s1-runtime-evidence-v2/,四场景×双模式8组+ENVIRONMENT.txt被测553ed2d;v1保留为40c66d9历史):A目录不存在/B缺brief/B2非法状态→①FAIL+UNKNOWN+原因,C正常包→IN_PROGRESS+六项N/A,退出码全1。
+请按验收请求六项标准核验问题4修复+全链绑定一致性,末行单独PASS或REJECT(给具体要求)或BLOCKED。

@@ -1,0 +1,108 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-14T15:22:46.641Z",
+  "user_unit_key": "fallback-turn-2:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-2:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "f75272d1-9722-44f7-9ce6-4133dcedf9ac",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-2:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "ec19c9b0cf0e69257c826b4a4429b46f9bad53517ab16217a0798345ad77f810",
+          "aa2ca37b6d18beb1830f13baa969b1666c91536947acc6cb1fe38e7aa85c5a89",
+          "b49477c52137ad918e7e5c63bfae4b226436624ef4f3dd54e4e553a7c3a95560",
+          "abece711b51a598954e1076a5a5bdc2dfa5a87f9ede647ca77fd939682a982e0"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "ec19c9b0cf0e69257c826b4a4429b46f9bad53517ab16217a0798345ad77f810",
+          "aa2ca37b6d18beb1830f13baa969b1666c91536947acc6cb1fe38e7aa85c5a89",
+          "b49477c52137ad918e7e5c63bfae4b226436624ef4f3dd54e4e553a7c3a95560",
+          "abece711b51a598954e1076a5a5bdc2dfa5a87f9ede647ca77fd939682a982e0"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-2:0:user",
+      "fallback-turn-2:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-2:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\nBLOCKED\n\n当前检索仅恢复到上轮回复的部分原文，内容在“## 二、八组动态执行结果 (8/8 通过预期)”处截断；后续八组结果表格、原验收六查、最终裁定及 S2 放行说明均未能恢复完整。\n\n你要求“不增不减不改写”，因此我不能根据验收记录重新拼写或补写剩余内容，并冒充原文。请将上轮回复粘贴到本会话，我可以原样完整重发。\n\nBLOCKED",
+      "text_sha256": "abece711b51a598954e1076a5a5bdc2dfa5a87f9ede647ca77fd939682a982e0",
+      "size_bytes": 464,
+      "assistant_uuid": "f75272d1-9722-44f7-9ce6-4133dcedf9ac"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+【AIEO·S2复验R3】b-20261114-taskpack-checker第2步,按复验R2(dispatch-16-57-13)唯一遗留P1整改。
+仓库 github.com/damwate/AIEO main。待验收代码commit 3a8975a(已推,diff=7cd06cf→3a8975a单commit,仅2文件:check_taskpack.py+反例fixture);文档a4399bf,请先读acceptance/s2-acceptance-request.md与steps.md S2冻结口径。
+R2结论:P0绑定/P1-1③到期优先均PASS,①②⑥维持,④⑤编号级关联部分通过;遗留P1=④"REJECT无编号"判定查整个body而提取用REJECT要素值+⑥,范围不一致可误PASS。
+整改(仅改check_rework_records):判定范围统一step_reject_nums=REJECT所在各要素值∪⑥,为空即FAIL"REJECT所在要素值与⑥均未引用问题编号",无关要素编号不替代;逐编号有效行/行被引用/⑤计数未动。
+验证:证据v3九组s2-runtime-evidence-v3/(A-I),I组=R2指定反例reject-element-no-number(④REJECT无编号+⑤提及问题1+表有问题1有效行→④FAIL且⑤PASS,旧实现漏判);A-H回归不退化。fixtures七场景可复跑:python basic/tool/check_taskpack.py .../s2-fixtures/fixture-<name>。
+请仅复核本遗留项+A-H回归,末行单独PASS或REJECT(给具体要求)或BLOCKED。
