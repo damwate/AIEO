@@ -1,25 +1,24 @@
 # 复审请求：b-20261115-phasec-workflow-stats 第 3 步（S3 统计+修订+清单整体独立复审）
 
-**版本：v2（S3 复验请求）。**
+**版本：v3（S3 复验请求，问题6 第 2 次整改后）。**
 
 - **v1（R1）历史：** 复审请求首发，绑定复审基点 9a2935cabddbb29b9b8d507f48580502b5c36e41，证据包 s3-evidence-v1.zip（ce8c3d5d68ff7f8a6ca8eccdac3905ade2626374，zip sha256=3cb8f4a389127d76eab4632b2c653cbb8a8a06fab9b51510dff5f165ac83a513）。R1 BLOCKED（验收方 GitHub 读取失败请求 ZIP；附件通道经四步诊断确认根因=账号级文件附件配额耗尽，非工具故障，如实报告）→ 按精确 raw URL 直读通道解除 → **R2 复审实际完成：NEEDS RECTIFICATION 3 项**（reply sha256=14a603837fe7487848c9373965a9858a6536f36262b820fe3091728b29700b98）：问题6 ST-01 parent 核验规则不够明确（P1）/ 问题7 清单三态与 BLOCKED 衔接缺规则（P1）/ 问题8 附录 ST-10/11 与统计 §十三不一致（P1）；五模块中"版本完整性""独立结论边界"两项 PASS，31 项清单结构独立重数核对 PASS。
-- **本 v2：** 三处整改已完成（整改 commit 355a9b146e6e2fabc7de37f90a6174ae438e749e），遵验收方整改边界指令（只改三问题/不重写 WORKFLOW/不改 31 项清单总体结构/不修改已通过统计数字/不改变 v0.2 现行状态），提交复验。
+- **v2 历史：** 三处整改 commit 355a9b1（单 commit，parent=ce8c3d5）→ **R3 复验**（reply sha256=47c9cce7cfecbf504748ea84073a90c21e601e8d0921c1409cc701eebd9fe064）：问题7（BLOCKED 边界）、问题8（ST-10/11 对齐）**PASS**，已通过项保护复核八项全过；唯问题6 仍未闭环——git show -s 仅见首末 parent、rev-list --count 仅核数量，不能证明多 commit 区间逐条线性无 merge，缺可复跑命令与逐项判定条件。
+- **本 v3：** 问题6 第 2 次整改完成（commit 09e7797，按 R3 验收方最小方案），问题7/8 已 PASS 内容未做任何改动，提交复验。问题6 返工计数=第 2 次（同问题最大 2 次）。
 
-## 绑定（v2 更新）
+## 绑定（v3 更新）
 
 - 分支：main（https://github.com/damwate/AIEO.git）
-- **复验基点 commit：`ce8c3d5d68ff7f8a6ca8eccdac3905ade2626374`**（R2 复审时的证据提交版本；原复审基点 9a2935c 的直接后继，R2 已核验 9a2935c→ce8c3d5 仅增复审请求+ZIP 证据两 commit）
-- **待验收 commit：`355a9b146e6e2fabc7de37f90a6174ae438e749e`**（S3 整改唯一 commit；申报前核验已跑：`git rev-list --count ce8c3d5..355a9b1`=1，parent=`git show -s --format='%H %P' 355a9b1`=ce8c3d5，符合 ST-01 单 commit 细则——本细则即问题6 整改内容，首次实操自证）
-- 整改涉及文件（5）：basic/WORKFLOW.md（模块四 ST-01 条款细化+附录 ST-10/11 行对齐统计）、basic/templates/acceptance-request.md（申报前核验条款同步）、basic/ACCEPTANCE-CHECKLIST.md（文件头增 BLOCKED 边界总体规则）、basic/tasks/b-20261115-phasec-workflow-stats/steps.md（S3 ④⑥ 登记+返工表问题6/7/8 行）、basic/tasks/b-20261115-phasec-workflow-stats/task-brief.md（状态更新）。
-- **绑定声明：** 其后的回填 commit（本 v2 复审请求+过程证据归档）不属验收 diff 范围（ST-01 条款④，承前任务 S4 先例 43cd5da→afecef5）。复审通过≠v0.3 生效——生效拍板留用户（代授权范围外）。
-- **读取通道：** 附件配额尚未重置（11月16日 1:29），请继续用 raw 直读：`https://raw.githubusercontent.com/damwate/AIEO/355a9b146e6e2fabc7de37f90a6174ae438e749e/<仓库路径>`（上表五文件+workflow-stats.md）。
+- **复验基点 commit：`a74db982484d3703cd6430edb27569034b891be4`**（R3 复验时的最新回填版本，含 v2 请求+证据归档；R3 已核验 ce8c3d5→355a9b1 单 commit 整改+将 a74db98 认定为不纳入验收 diff 的回填）
+- **待验收 commit：`09e7797c565fd1bfef9cf4151e4b14c0fbd6a786`**（S3 问题6 第 2 次整改唯一 commit；申报前核验已跑：`git rev-list --count a74db98..09e7797`=1，parent=`git show -s --format='%H %P' 09e7797`=a74db98，符合 ST-01 单 commit 分支；多 commit 分支命令语义已实测演示=`git rev-list --reverse --parents 9a2935c..a74db98` 四条线性全满足新通过条件——首条唯一 parent=9a2935c、逐条 parent=上一条、末条=a74db98）
+- 整改涉及文件（4）：basic/WORKFLOW.md（模块四 ST-01 条款多 commit 核链细则）、basic/templates/acceptance-request.md（申报前核验同步）、steps.md（④⑤⑥ 登记+返工表问题6 行）、task-brief.md（状态更新）。
+- **绑定声明：** 其后的回填 commit（本 v3 复审请求+过程证据归档）不属验收 diff 范围（ST-01 条款④，承前任务 S4 先例 43cd5da→afecef5）。复审通过≠v0.3 生效——生效拍板留用户（代授权范围外）。
+- **读取通道：** 附件配额尚未重置（11月16日 1:29），请继续用 raw 直读：`https://raw.githubusercontent.com/damwate/AIEO/09e7797c565fd1bfef9cf4151e4b14c0fbd6a786/<仓库路径>`（basic/WORKFLOW.md、basic/templates/acceptance-request.md、basic/tasks/b-20261115-phasec-workflow-stats/steps.md；问题7/8 落点未动如需复核同法读 basic/ACCEPTANCE-CHECKLIST.md）。
 
-## 复验重点（v2，四处）
+## 复验重点（v3，两处）
 
-1. **问题6 整改落地：** basic/WORKFLOW.md 模块四"绑定申报核验（ST-01）"条款已补 parent 核验细则——`git show -s --format='%H %P' <待验收commit>`；单 commit 申报 parent 必须等于申报基线；多 commit 申报首端=基线、尾端=待验收 commit 且链上无 merge commit（出现 merge 改报 diff 基线并单独说明）。basic/templates/acceptance-request.md"申报前核验"同步同样细则。
-2. **问题7 整改落地：** basic/ACCEPTANCE-CHECKLIST.md 文件头增第 4 条总体规则"BLOCKED 边界"——BLOCKED 是任务级验收阻断状态（WORKFLOW 模块四），不是清单第四种项目判定状态；环境原因无法完成检查时不得标 N/A 或 PASS，如实记录阻断原因，任务整体维持 BLOCKED，解除后继续检查。
-3. **问题8 整改落地：** basic/WORKFLOW.md 文末附录 ST-10/11 行已对齐 workflow-stats.md §十三 原文——ST-10=同问题最大返工次数 2、三轮止损未触发（维持）；ST-11=规划 2 轮 12 分钟收敛、效率良好（无修订信号，维持）；"六查机制有效性 10/10 集中独立验收"表述改归属为发现来源统计观察，不属 ST 编号条目。
-4. **已通过项未受影响核验：** v0.3 草案状态与版本管理未动（生效状态 blockquote 原文保留）；31 项清单总体结构未动（仅文件头增 1 条规则）；统计数字未动（workflow-stats.md 未修改）；v0.2 现行状态未动；附录差异记录 12 行编号未动。
+1. **问题6 第 2 次整改落地（唯一遗留）：** basic/WORKFLOW.md 模块四"绑定申报核验（ST-01）"② 多 commit 申报已增逐条核链命令 `git rev-list --reverse --parents <基线>..<待验收commit>` + 通过条件四则（第一条 commit 的唯一 parent 必须等于基线；后续每条只有一个 parent 且等于上一条 commit 的 SHA；最后一条等于待验收 commit；任一条出现多个 parent 即存在 merge commit，不得按普通线性多 commit 申报，应改报 diff 基线并单独说明），并明示 rev-list --count 仅核数量、git show -s 仅见首末 parent、均不能替代逐条链验证；basic/templates/acceptance-request.md"申报前核验"同步同套命令与条件。
+2. **已通过项未受影响核验：** R3 已 PASS 的问题7（清单 BLOCKED 边界规则）与问题8（附录 ST-10/11 对齐）本轮未做任何改动（diff 仅 ST-01 条款+模板核验句+流程登记）；31 项清单结构、统计数字、v0.2 现行状态、差异记录 12 行编号、v0.3 草案状态均未动。
 
 ## 复审标准（S3 出口条件，steps.md 冻结原文照录，不变）
 

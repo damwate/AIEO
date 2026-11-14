@@ -1,0 +1,7 @@
+[2026-11-14T20:40:04.019Z] 会话锁已获取（补采）
+[2026-11-14T20:40:04.159Z] 页面就位: https://chatgpt.com/c/6af8c0f7-e844-83ec-aa36-f259dee85486
+[2026-11-14T20:40:04.168Z] 静置门通过（units=2，无停止按钮）；额外静置 30000ms 供虚拟列表收敛
+[2026-11-14T20:40:38.301Z] checks={"final_stop_button_not_visible":true,"tail_is_assistant":true,"dil_uuid_present":true,"uuid_stable":true,"stable_unit_read":true,"target_range_materialized":true}
+[2026-11-14T20:40:38.306Z] reply 已落盘: D:\AIEO\phase0\logs\recoll-2026-11-14T20-40-03-680Z\reply.txt（5166 字节，1 unit）
+[2026-11-14T20:40:38.307Z] recoll COMPLETED
+[2026-11-14T20:40:38.420Z] 会话锁已释放（补采）

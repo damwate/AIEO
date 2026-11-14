@@ -1,0 +1,294 @@
+ChatGPT 说：
+
+已核对目标提交的 Git 历史：355a9b146e6e2fabc7de37f90a6174ae438e749e 相对基点 ce8c3d5d68ff7f8a6ca8eccdac3905ade2626374 恰好前进 1 个 commit，比较结果为 ahead_by=1、behind_by=0。实际 diff 涉及 5 个文件：WORKFLOW.md、ACCEPTANCE-CHECKLIST.md、验收请求模板、steps.md 和 task-brief.md；未见统计报告被改动。
+
+提交说明中的三项整改与本次申报一致。接下来我会逐条检查规则是否真正可执行，并复核整改是否引入新的口径冲突。
+
+S3 复验结论：NEEDS RECTIFICATION
+暂不进入 S4
+
+三项整改中，问题7、问题8通过；问题6仍未完全闭环。按原有“同一问题”计数规则，仍是 1 项遗留问题，不新增问题编号。
+
+一、绑定与提交核验
+
+核验项
+
+	
+
+结果
+
+
+
+
+基点
+
+	
+
+ce8c3d5d68ff7f8a6ca8eccdac3905ade2626374
+
+
+
+
+待验收 commit
+
+	
+
+355a9b146e6e2fabc7de37f90a6174ae438e749e
+
+
+
+
+compare
+
+	
+
+ahead 1 / behind 0
+
+
+
+
+rev-list 数量
+
+	
+
+1
+
+
+
+
+实际修改文件
+
+	
+
+5 个，与 v2 申报一致
+
+
+
+
+整改后回填
+
+	
+
+a74db98，不纳入本次验收 diff
+
+我也读取了 a74db98 上的 v2 复验请求，确认它明确绑定本次目标 commit，且将原 R2 的三项问题和复验重点记录完整。
+
+本次唯一 commit 的 parent 核验符合申报基线要求。这里要区分：本次单 commit 绑定正确，不代表新增的多 commit 通用规则已经足够可执行。
+
+二、三项整改逐项判定
+
+原问题
+
+	
+
+复验结果
+
+	
+
+判定
+
+
+
+
+问题6：ST-01 parent 核验细则
+
+	
+
+多 commit 核验步骤仍不完整
+
+	
+
+未通过
+
+
+
+
+问题7：清单 BLOCKED 边界
+
+	
+
+文件头新增规则，任务级与项目级状态区分明确
+
+	
+
+PASS
+
+
+
+
+问题8：ST-10/11 统计映射
+
+	
+
+附录已与统计 §十三 对齐
+
+	
+
+PASS
+
+问题6：ST-01 多 commit 核验仍有操作缺口
+
+已经通过的部分：
+
+增加 git show -s --format='%H %P' <待验收commit>。
+
+单 commit 明确要求 parent 等于申报基线。
+
+多 commit 明确要求首端为基线、尾端为待验收 commit，且链上不能有 merge commit。
+
+本次模板也同步增加了单 commit parent 和多 commit 无 merge 的要求。
+
+仍未通过的部分：
+
+git show -s --format='%H %P' <待验收commit> 只能直接显示待验收 commit 本身及其 parent，不能单独证明多 commit 区间内每一个 commit 都是线性连接，也不能证明中间没有 merge commit。
+
+当前条款没有给出多 commit 情况下的完整核验命令和逐项判定条件。git rev-list --count 只能核对数量，也不能替代 parent 链验证。
+
+模板中的多 commit 规则比 WORKFLOW 更简略，也没有补上这个缺口。
+
+最小整改建议：
+
+增加一条多 commit 核验命令，例如：
+
+Bash
+git rev-list --reverse --parents <基线>..<待验收commit>
+
+并明确通过条件：
+
+输出的第一条 commit，其唯一 parent 必须等于基线。
+
+后续每条 commit 必须只有一个 parent，且 parent 等于上一条 commit 的 SHA。
+
+最后一条 commit 必须等于待验收 commit。
+
+任意一条出现多个 parent，即存在 merge commit，不能按普通线性多 commit 申报；应按 WORKFLOW 要求改报 diff 基线并单独说明。
+
+将这套多 commit 核验方法同步到 acceptance-request.md 模板。
+
+这样才能让执行者拿到规则后直接复跑，而不是自行猜测如何检查。
+
+问题7：BLOCKED 边界
+PASS
+
+新增规则准确表达了：
+
+BLOCKED 是任务级阻断状态，不是清单第四种项目状态。
+
+环境阻断时不得把未完成检查标成 N/A 或 PASS。
+
+必须记录阻断原因，整体维持 BLOCKED。
+
+解除阻断后继续检查。
+
+没有破坏原有 PASS / FAIL / N/A 三态，也没有改变 31 项结构。
+
+问题8：ST-10/11 对齐
+PASS
+
+WORKFLOW 附录现在与 workflow-stats.md §十三 的含义一致：
+
+ST-10：同问题最大返工次数 2，三轮止损未触发，维持。
+
+ST-11：规划 2 轮、12 分钟收敛，规划效率良好，无修订信号，维持。
+
+六查机制有效性 10/10 已正确归为发现来源统计观察，不再冒充 ST-11。
+
+没有发现统计数字被修改或附录 12 行编号变化。
+
+三、原有通过项保护复核
+
+检查项
+
+	
+
+结果
+
+
+
+
+验收清单 31 项结构
+
+	
+
+PASS，A4/B4/C5/D5/E4/F5/G4
+
+
+
+
+每项六字段
+
+	
+
+PASS
+
+
+
+
+清单三态与检查器分工
+
+	
+
+PASS
+
+
+
+
+WORKFLOW 四步流程、两道关口、止损及交付条件
+
+	
+
+未发现新冲突
+
+
+
+
+ST-10/11 统计映射
+
+	
+
+PASS
+
+
+
+
+附录 12 行编号
+
+	
+
+未改变
+
+
+
+
+v0.2 仍为现行版本
+
+	
+
+未改变
+
+
+
+
+v0.3 生效拍板边界
+
+	
+
+未改变
+
+四、返工范围
+
+只需要继续整改原问题6，不需要重做问题7、问题8，也不需要重新设计 WORKFLOW。
+
+建议执行者完成后提交：
+
+WORKFLOW 多 commit parent 链核验的完整规则；
+
+acceptance-request 模板同步；
+
+新的唯一整改 commit；
+
+rev-list、parent 链核验结果；
+
+更新后的 S3 v3 复验请求。
+
+当前裁定：S3 尚未闭环，暂不进入 S4。 问题6复验通过后，S3 才正式闭环；即使届时 PASS，WORKFLOW.md v0.3 仍然是待用户最终拍板生效的版本。

@@ -1,0 +1,6 @@
+S3复验请求（R2三项整改后）
+绑定：基点ce8c3d5→待验收355a9b146e6e2fabc7de37f90a6174ae438e749e（唯一commit；rev-list ce8c3d5..355a9b1=1，parent=ce8c3d5）；其后回填a74db98（v2请求+归档）不属验收diff
+整改：①问题6=WORKFLOW模块四ST-01补parent核验细则（git show -s --format='%H %P'；单commit parent=基线；多commit无merge，有则改报diff基线）+acceptance-request模板同步 ②问题7=CHECKLIST文件头增第4条规则"BLOCKED边界"（任务级阻断≠第四种判定；环境阻断不得标N/A或PASS，维持BLOCKED解除后继续）③问题8=WORKFLOW附录ST-10/11对齐统计§十三（ST-10=止损未触发维持；ST-11=规划2轮12分钟收敛维持；六查观察不属ST条目）
+边界：只改三问题；未重写WORKFLOW；31项结构/统计数字/v0.2现行/12行编号均未动
+读取：附件配额未重置，请raw直读 raw.githubusercontent.com/damwate/AIEO/355a9b146e6e2fabc7de37f90a6174ae438e749e/<路径>，四对象路径+复验重点见同commit下 acceptance/s3-review-request.md（已升v2）
+结论：PASS（S3闭环进S4）/NEEDS RECTIFICATION（同一问题计数）/BLOCKED；通过≠v0.3生效
