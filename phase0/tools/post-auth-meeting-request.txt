@@ -1,0 +1,8 @@
+AIEO 授权期后工作会议（用户在场旁听）。按交接包 V4 §5 议程逐项请会务意见。仓库 github.com/damwate/AIEO。
+【事实】①复盘交付物五份+DEC-022：你终验 PASS 3/3（19-46-59 会话），归档 main 7f7f299。②T-P1-904：分支=3966491（bd07098 交付→c16a654 修订→62e992f→你限定复核 PASS 4/4 归档，reply SHA 476818bc）；Ajv 141/141、M1 43 passed（phase1/logs/t-p1-904-20261114/）。③V4 交接包在 main e330d7c。
+【请逐项给意见】
+Q1.T-P1-904 交付复核闭环可否正式关闭？
+Q2.904 合并 main（DEC-010 待用户批，用户在场）：建议方式 merge commit/squash/ff 保 4 commit？合并后登记要点（DEC-024/PHASE-STATUS/matrix acceptance_batch 语义）？
+Q3.905 D1′：前置"904 完成并通过验收"已满足，用户在场可拍板——可否开工？开工边界你要求哪些（真实外部资源/fail-closed/DEC-017 不解除）？
+Q4.五份交付物：用户已回归未逐字审阅，定稿流程建议（逐份审阅后定稿 or 终验版即生效）？
+回复：Q1-Q4 逐项结论+理由；结论将登记 DEC-024 起。
