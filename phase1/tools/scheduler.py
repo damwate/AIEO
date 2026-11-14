@@ -833,7 +833,14 @@ console.log(JSON.stringify({ envelope: { valid: !!evOk, errors: ev.errors ?? [] 
         if claim["is_error"] or not claim["parsed"]:
             raise OrchestrationError(6, f"claim_task failed: {claim['text'][:300]}")
         parsed = claim["parsed"]
-        self.execution_id = parsed.get("execution_id") or (parsed.get("claim") or {}).get("execution_id")
+        # claim 结果形状（真实 run 908010 证据）：{accepted, session_id,
+        # task:{task:{..., latest_execution:{execution_id: "EXEC-001", ...}}}}
+        self.execution_id = parsed.get("execution_id")
+        if not self.execution_id:
+            tt = ((parsed.get("task") or {}).get("task") or {})
+            self.execution_id = (tt.get("latest_execution") or {}).get("execution_id")
+        if not self.execution_id:
+            raise OrchestrationError(6, "execution_id not present in claim result (latest_execution missing)")
         # 只读核实 DISPATCHED（S6 失败处置形态）
         code, task = self.m1.get(f"/api/v1/tasks/{self.task_id}")
         status = task.get("status") if isinstance(task, dict) else "?"
