@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "commands": [
+    {
+      "id": "command-001",
+      "name": "bundle-gate-noargs-fail-demo",
+      "argv": ["node", "phase1/tools/bundle_gate.mjs"],
+      "timeout_seconds": 30
+    }
+  ]
+}

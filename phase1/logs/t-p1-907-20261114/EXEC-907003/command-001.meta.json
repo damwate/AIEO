@@ -1,0 +1,20 @@
+{
+  "command_id": "command-001",
+  "name": "startup-error-demo-python3-missing",
+  "argv": [
+    "python3",
+    "-c",
+    "print('start-error-demo')"
+  ],
+  "started_at": "2026-11-14T02:58:43.148+00:00",
+  "finished_at": "2026-11-14T02:58:43.963+00:00",
+  "duration_ms": 828,
+  "exit_code": 0,
+  "status": "COMPLETED",
+  "timed_out": false,
+  "exception": null,
+  "stdout_path": "command-001.stdout",
+  "stdout_sha256": "dc48685cc652e50217e3ecc796bd08fc32ce04cdf6a287aa9bff217ac0fd23d0",
+  "stderr_path": "command-001.stderr",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

@@ -1,0 +1,18 @@
+bundle_gate — AIEO Phase 1 聚合包机器核验工具（BYTE_INTEGRITY_GATE，T-P1-903 r4 决议新增）。
+用途：在主会话本地受控环境承担字节级完整性保证——分片逐项核验 → 按索引片序拼接 → base64 解码 →
+TAR 总哈希 → 解包 → 逐文件 SHA-256/size 对照 manifest；输出机器核验记录 JSON（绑定 commit + manifest SHA）。
+仓库根执行；解包目录为临时目录，核验后删除。
+
+参数（全部必选）：
+  --commit <40位SHA>      锚定被核验输入材料来源的完整 commit SHA（40 位十六进制）
+  --parts-index <path>    分片索引 JSON（记录分片文件、片序与各分片 SHA-256）
+  --tar <path>            聚合包 TAR 文件路径（由分片按片序拼接并 base64 解码还原）
+  --manifest <path>       被核验清单 JSON（files[].path/artifact_sha256/size_bytes 逐项对照）
+  --output-dir <dir>      机器核验记录输出目录（写入 bundle-gate-result.json 与 bundle-gate-run.log）
+
+调用示例：
+  node phase1/tools/bundle_gate.mjs --commit <40位SHA> --parts-index phase1/manifests/bundle-parts.index.json \
+       --tar phase1/manifests/input-bundle.tar --manifest phase1/manifests/input-manifest.json \
+       --output-dir phase0/logs/bundle-gate-<task>-<round>
+
+退出码：0=全部核验通过；1=任一核验项失败（结果 JSON 如实记录失败项）；2=参数错误（缺参/未知参数/格式非法）。

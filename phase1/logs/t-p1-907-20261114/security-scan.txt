@@ -1,0 +1,14 @@
+scan_id: SEC-SCAN-T-P1-907-001
+scope: (a) disk walk of evidence dir phase1/logs/t-p1-907-20261114; (b) same path in git HEAD tree of branch feature/T-P1-907-evidence (git grep -a -P; -a forces text mode so REDACTED values visible; PCRE because POSIX ERE lacks backslash-s)
+rules: R1 ait_ service token; R2 csrf_token values; R3 admin password; R4 session secret; R5 generic >=16 assignments
+method_note: reusing T-P1-905 F-03 method (phase0/tools/sec_scan_905.py precedent)
+
+
+git grep -P rule=R1-service-token hits=0 (raw flagged above if any)
+git grep -P rule=R2-csrf-token hits=0 (raw flagged above if any)
+git grep -P rule=R3-admin-password hits=0 (raw flagged above if any)
+git grep -P rule=R4-session-secret hits=0 (raw flagged above if any)
+git grep -P rule=R5-generic-secret-assign hits=0 (raw flagged above if any)
+
+summary: files_scanned(disk)=52 raw_secret_hits=0
+result: CLEAN

@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "commands": [
+    {
+      "id": "command-001",
+      "name": "shell-wrapper-rejected",
+      "argv": ["sh", "-c", "echo hi"],
+      "timeout_seconds": 10
+    }
+  ]
+}

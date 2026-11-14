@@ -1,0 +1,29 @@
+{
+  "command_id": "command-002",
+  "name": "bundle-gate-903-fixture-regression",
+  "argv": [
+    "node",
+    "phase1/tools/bundle_gate.mjs",
+    "--commit",
+    "ca3e5cfe7d56a4951a74e1663443310c4455dc4a",
+    "--parts-index",
+    "phase1/manifests/bundle-parts.index.json",
+    "--tar",
+    "phase1/manifests/T-P1-903-input-bundle.tar",
+    "--manifest",
+    "phase1/manifests/T-P1-903-input-manifest.json",
+    "--output-dir",
+    "runtime/t-p1-907/bundle-gate-regression"
+  ],
+  "started_at": "2026-11-14T02:58:42.084+00:00",
+  "finished_at": "2026-11-14T02:58:42.624+00:00",
+  "duration_ms": 546,
+  "exit_code": 0,
+  "status": "COMPLETED",
+  "timed_out": false,
+  "exception": null,
+  "stdout_path": "command-002.stdout",
+  "stdout_sha256": "5a265f69deb2bf01bdad7ac63e80bec334dcd82f8f18f7e62be668460fe9e106",
+  "stderr_path": "command-002.stderr",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}

@@ -1,0 +1,70 @@
+{
+  "task_id": "T-P1-907",
+  "execution_id": "EXEC-907001",
+  "commit_sha": "b711160d374b7a0dfc3f6445b393736a4949d1f6",
+  "execution_result": "EXECUTED_PASS",
+  "result": "PASS",
+  "artifact_id": null,
+  "payload": {
+    "worker_version": "0.1.0",
+    "worktree": "D:\\AIEO\\runtime\\t-p1-907\\wt-dev",
+    "head_verified": true,
+    "commands": [
+      {
+        "command_id": "command-001",
+        "name": "bundle-gate-help",
+        "argv": [
+          "node",
+          "phase1/tools/bundle_gate.mjs",
+          "--help"
+        ],
+        "exit_code": 0,
+        "status": "COMPLETED",
+        "timed_out": false,
+        "exception": null,
+        "duration_ms": 78
+      },
+      {
+        "command_id": "command-002",
+        "name": "bundle-gate-903-fixture-regression",
+        "argv": [
+          "node",
+          "phase1/tools/bundle_gate.mjs",
+          "--commit",
+          "ca3e5cfe7d56a4951a74e1663443310c4455dc4a",
+          "--parts-index",
+          "phase1/manifests/bundle-parts.index.json",
+          "--tar",
+          "phase1/manifests/T-P1-903-input-bundle.tar",
+          "--manifest",
+          "phase1/manifests/T-P1-903-input-manifest.json",
+          "--output-dir",
+          "runtime/t-p1-907/bundle-gate-regression"
+        ],
+        "exit_code": 0,
+        "status": "COMPLETED",
+        "timed_out": false,
+        "exception": null,
+        "duration_ms": 546
+      }
+    ],
+    "evidence_index": [
+      {
+        "command_id": "command-001",
+        "stdout_path": "command-001.stdout",
+        "stdout_sha256": "a4f69c24e8e2a589bbf8f0ee6634f7ccd05abdf5addd1ee5f61790a2dc453ebf",
+        "stderr_path": "command-001.stderr",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "meta_path": "command-001.meta.json"
+      },
+      {
+        "command_id": "command-002",
+        "stdout_path": "command-002.stdout",
+        "stdout_sha256": "5a265f69deb2bf01bdad7ac63e80bec334dcd82f8f18f7e62be668460fe9e106",
+        "stderr_path": "command-002.stderr",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "meta_path": "command-002.meta.json"
+      }
+    ]
+  }
+}

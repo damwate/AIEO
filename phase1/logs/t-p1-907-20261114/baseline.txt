@@ -1,0 +1,9 @@
+task: T-P1-907 (F-003 test execution worker minimal)
+brief: docs/phase1/F003-TEST-WORKER-BRIEF.md v0.5 finalized PASS (baseline commit e869d0d5160ac94e92c02351b054ccaeb5670932, blob 38aa2d9ac856eb1810371faf75333a35fe7e3316, DEC-028)
+plan_evidence: phase0/logs/dispatch-2026-11-14T02-49-55/reply.txt 19102B sha256 2920da047d43c6b984914a465b6e27d0cac4c928eb76f6bc716947b263b29d5d (GPT-01)
+main_base: c4a9dc22319868451ebe560ebfc58a72ccdb0085
+dev_branch: feature/T-P1-907-test-worker
+dev_commit: b711160d374b7a0dfc3f6445b393736a4949d1f6 (phase1/tools/test_worker.py, worktree HEAD verified by worker)
+tested_fixture_anchor: ca3e5cfe7d56a4951a74e1663443310c4455dc4a (905/903 regression, distinct from dev commit per plan)
+ajv_layer1: phase0/tools/test_schemas.mjs 141/141 PASS exit=0
+ajv_layer2: EXEC-907001 + EXEC-907002 test-report.json both PASS (Ajv2020 strict)

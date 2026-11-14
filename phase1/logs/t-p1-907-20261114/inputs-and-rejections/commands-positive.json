@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "commands": [
+    {
+      "id": "command-001",
+      "name": "bundle-gate-help",
+      "argv": ["node", "phase1/tools/bundle_gate.mjs", "--help"],
+      "timeout_seconds": 30
+    },
+    {
+      "id": "command-002",
+      "name": "bundle-gate-903-fixture-regression",
+      "argv": ["node", "phase1/tools/bundle_gate.mjs", "--commit", "ca3e5cfe7d56a4951a74e1663443310c4455dc4a", "--parts-index", "phase1/manifests/bundle-parts.index.json", "--tar", "phase1/manifests/T-P1-903-input-bundle.tar", "--manifest", "phase1/manifests/T-P1-903-input-manifest.json", "--output-dir", "runtime/t-p1-907/bundle-gate-regression"],
+      "timeout_seconds": 180
+    }
+  ]
+}
