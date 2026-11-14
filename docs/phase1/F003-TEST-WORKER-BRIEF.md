@@ -1,6 +1,6 @@
 # T-P1-907：F-003 测试执行 Worker 最小版任务书
 
-> v0.4（2026-11-14 定稿候选二）：v0.3 会务核对（dispatch-2026-11-14T02-35-59，reply 4879B SHA-256 `46f97ab1…`）——§4 通过/§10 原则通过/§5 需五行穷举闭合；本版按其终版映射表修订 §5（补 CLAIMED_ONLY→BLOCKED 行+Worker 不得自行生成 CLAIMED_ONLY）并统一 §4/§5/§10 边界定义。三项拍板定稿：①号段 T-P1-907（906 保留顺延不取消）②独立 CLI Worker ③REST 方案 B。本文件不构成开工授权，开工需用户拍板（比照 DEC-024-C）。
+> v0.5（2026-11-14 定稿候选三）：v0.4 会务终核对（dispatch-2026-11-14T02-40-28，reply 3406B SHA-256 `f507e745…`）——五行映射表/CLAIMED_ONLY 限制/超时与单条失败策略全部通过，唯一遗留为 NOT_EXECUTED 与 BLOCKED 边界交叉；本版按其建议采协议兼容态方案（F-003 不支持外部取消，NOT_EXECUTED 本 Worker 不主动生成+输入校验未通过一律 BLOCKED）。三项拍板定稿：①号段 T-P1-907（906 保留顺延不取消）②独立 CLI Worker ③REST 方案 B。本文件不构成开工授权，开工需用户拍板（比照 DEC-024-C）。
 
 ## 1. 目标与定位
 
@@ -46,12 +46,14 @@
 | 所有命令执行成功 | EXECUTED_PASS | PASS |
 | 命令非零退出、单条命令启动异常或超时 | EXECUTED_FAIL | REWORK |
 | Worker 自身无法启动或任务级执行被阻断 | BLOCKED | BLOCKED |
-| 未执行任何命令 | NOT_EXECUTED | BLOCKED |
+| 未执行任何命令（协议兼容状态，本 Worker 不主动生成） | NOT_EXECUTED | BLOCKED |
 | CLAIMED_ONLY 声明 | CLAIMED_ONLY | BLOCKED |
 
 允许值以冻结 Schema 为准（execution_result 五种枚举 EXECUTED_PASS/EXECUTED_FAIL/NOT_EXECUTED/CLAIMED_ONLY/BLOCKED 全列；result: PASS/REWORK/BLOCKED）。**以上五行映射为穷举映射，所有情况均有确定结果，不留下人工解释空间；整体状态由实际执行结果计算，不允许人工覆盖。F-003 Worker 不得自行生成 CLAIMED_ONLY——本任务要求真实执行。**
 
 **边界定义（与 §4/§10 一致的机器执行语义）：** 命令级启动异常 ≠ Worker 启动失败；单条命令失败不阻断后续命令；Worker 自身无法启动、输入校验失败或任务级阻断属于 BLOCKED；超时属于命令执行失败，整体 EXECUTED_FAIL；空命令清单属于输入校验失败，不得产生成功报告。
+
+**NOT_EXECUTED 适用限定（v0.5，消除与 BLOCKED 的交叉）：** F-003 最小版不支持外部取消语义（范围零扩张）——**NOT_EXECUTED 为协议兼容状态，本 Worker 不主动生成**。只要输入校验通过且 Worker 正常启动，执行即进入命令执行阶段，终态只能是 EXECUTED_PASS/EXECUTED_FAIL/BLOCKED 之一；输入校验未通过（空清单、无效 worktree、非完整 40 位 SHA、HEAD 不一致）一律 BLOCKED，不落入 NOT_EXECUTED。
 
 ## 6. 日志证据与报告互相对应（会务 F-03）
 
@@ -108,4 +110,5 @@
 | v0.1 | 2026-11-14 | 起草：目标/七步草案/硬边界/交付/验收六项；三项留拍板 | 会务评审：原则性通过 |
 | v0.2 | 2026-11-14 | 落实评审（dispatch-2026-11-14T02-25-47）：三项拍板定稿（T-P1-907/独立 CLI/方案 B）；新增 §4 执行安全/§5 两层语义/§6 日志关联/§10 失败策略；§7 脱敏归档+§9 凭据边界（runtime 专用目录）；验收六项调八项（§11）；设计原则入 §1 | 会务确认：原则性通过，补 3 处 |
 | v0.3 | 2026-11-14 | 按会务确认（dispatch-2026-11-14T02-31-46，reply 3732B SHA d8d4ca7e）补 3 处语义：①§5 NOT_EXECUTED→BLOCKED 穷举映射不留人工解释空间 ②§10 两类失败区分（单条启动异常→继续执行+整体 EXECUTED_FAIL；Worker 无法启动/输入校验失败→整体 BLOCKED；超时→记录并继续不重试）③§4 空命令清单拒绝执行不得产生成功报告 | 会务核对：§4 通过/§10 原则通过/§5 需闭合 |
-| v0.4 | 2026-11-14 | 按会务核对（dispatch-2026-11-14T02-35-59，reply 4879B SHA 46f97ab1）终版五行穷举映射：§5 补 CLAIMED_ONLY→BLOCKED 行+Worker 不得自行生成 CLAIMED_ONLY（真实执行要求）；§5/§10 统一边界定义（命令级启动异常≠Worker 启动失败/超时属命令执行失败整体 EXECUTED_FAIL/空清单属输入校验失败）；§10 状态映射指向 §5 终版表 | 待会务终核对→用户开工拍板 |
+| v0.4 | 2026-11-14 | 按会务核对（dispatch-2026-11-14T02-35-59，reply 4879B SHA 46f97ab1）终版五行穷举映射：§5 补 CLAIMED_ONLY→BLOCKED 行+Worker 不得自行生成 CLAIMED_ONLY（真实执行要求）；§5/§10 统一边界定义（命令级启动异常≠Worker 启动失败/超时属命令执行失败整体 EXECUTED_FAIL/空清单属输入校验失败）；§10 状态映射指向 §5 终版表 | 会务终核对：主体通过，剩 NOT_EXECUTED 边界一处 |
+| v0.5 | 2026-11-14 | 按会务终核对（dispatch-2026-11-14T02-40-28，reply 3406B SHA f507e745）闭合最后一处：NOT_EXECUTED 适用限定——F-003 不支持外部取消（范围零扩张），NOT_EXECUTED 为协议兼容状态本 Worker 不主动生成；输入校验未通过（空清单/无效 worktree/非完整 SHA/HEAD 不一致）一律 BLOCKED 不落入 NOT_EXECUTED | 待会务限定复核→用户开工拍板 |
