@@ -739,22 +739,29 @@ class Scheduler:
         message_id = msg1.get("message_id") or envelope["message_id"]
         self.rs.complete(4, "register plan message", message_id=message_id)
 
-        # A3 重放验证：artifact 重放→duplicate:true 同 ID；message 重放→409 RES-0003 不新增
-        code, art2 = m1.post("/api/v1/artifacts", art_body)
-        code, msg2 = m1.post("/api/v1/messages", envelope)
+        # A3 重放验证：artifact 重放→duplicate:true 同 ID；message 重放→409 RES-0003 不新增。
+        #（验收第5轮 REJECT 修复，reply 631ddd8d367ce51a：①art/msg 重放状态码须分别捕获
+        #——原代码共用 code 变量致 artifact_replay.http 记录的是 message 重放状态；
+        #②M1 错误体为平级结构 {"code": ...}（app/platform/errors.py:36-51 error_body），
+        #非 error.code 嵌套——原读取恒为 null；757 行 "RES-0003" 静态模板行改为捕获值动态记录。
+        #平级 code 真实捕获实证：acceptance/a3_replay_probe.py 对运行中 M1 重放原 envelope
+        #→409+code=RES-0003（a3-message-replay-probe.json）。）
+        art_code, art2 = m1.post("/api/v1/artifacts", art_body)
+        msg_code, msg2 = m1.post("/api/v1/messages", envelope)
         replay = {
-            "artifact_replay": {"http": code, "duplicate": art2.get("duplicate") if isinstance(art2, dict) else None,
+            "artifact_replay": {"http": art_code, "duplicate": art2.get("duplicate") if isinstance(art2, dict) else None,
                                 "artifact_id": art2.get("artifact_id") or art2.get("id") if isinstance(art2, dict) else None},
-            "message_replay": {"http": code, "error_code": msg2.get("error", {}).get("code") if isinstance(msg2, dict) else None},
+            "message_replay": {"http": msg_code, "error_code": msg2.get("code") if isinstance(msg2, dict) else None},
         }
-        msg_replay_ok = replay["message_replay"]["http"] == 409
+        msg_replay_ok = replay["message_replay"]["http"] == 409 and replay["message_replay"]["error_code"] == "RES-0003"
         art_replay_ok = replay["artifact_replay"]["duplicate"] is True
         self.ev.blob(4, "replay-a3", json.dumps({"artifact_replay_ok": art_replay_ok,
                                                  "message_replay_ok": msg_replay_ok,
                                                  **replay}, ensure_ascii=False, indent=2).encode("utf-8"))
         if not (art_replay_ok and msg_replay_ok):
             raise OrchestrationError(4, f"A3 replay verification failed: {json.dumps(replay)[:300]}")
-        self.rs.note("S4 A3 replay: artifact duplicate:true same-id; message 409 RES-0003 no-new-row")
+        self.rs.note(f"S4 A3 replay: artifact http={art_code} duplicate:true same-id; "
+                     f"message http={msg_code} error_code={replay['message_replay']['error_code']} no-new-row")
         self.ev.triplet(4, "register", json.dumps({"artifact_id": artifact_id, "message_id": message_id,
                                                    "ajv": ajv, "replay": replay}, ensure_ascii=False).encode("utf-8"),
                         b"", {"outcome": "PASS"})
