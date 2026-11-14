@@ -224,12 +224,12 @@ adbc14bba299e268d1eb6f1c8d47258cd7b159f0f6f4027711ec3c75ca0051b7 *phase0/logs/di
 33baf985d4529e7d624ccbc6a0ecc93ad0d9c753c80e21a9d2952ffb6d893e4d *phase0/logs/dispatch-2026-11-14T07-57-15/result.json
 f0e10a08ea4e13368becf14816527ad7b3af5485c40a45e5e7e40c24aa0bdc7a *phase0/logs/dispatch-2026-11-14T07-57-15/run.log
 636d8384aea4643039a9005cb973694ffb157174a2fd76eca1ea3da29256c06b *phase0/logs/dispatch-2026-11-14T07-57-15/sent-dispatch.png
-b04c03c4ad76232e834274daa2d476128e20f78e58772e051d8e2e4cbfa2fd70 *phase1/logs/t-p1-908-20261114/REPRODUCE-GUIDE.md
-44d4223adb052502193bacf2fb0931bfe0945bde560b5da01c76cb4e03603c51 *phase1/logs/t-p1-908-20261114/RUN-RECORD.md
+63681a2d8f1355a8c99bd73905add6abb5f04ce9e86e6303251afeb4b06be707 *phase1/logs/t-p1-908-20261114/REPRODUCE-GUIDE.md
+227e6f7d065970f127a6994baff29749305ea5f59ae126e181ce0b73bb2e3de4 *phase1/logs/t-p1-908-20261114/RUN-RECORD.md
 a4a8d9c173b9f2f26969499df187aa43ff8e647256b8b00d593dc800025bef05 *phase1/logs/t-p1-908-20261114/acceptance/a3-message-replay-probe.json
 cb4d00b34b5451bceb1098f038b72dd58937472ed38861d681f82489e1f6ba5b *phase1/logs/t-p1-908-20261114/acceptance/a3_replay_probe.py
 55c4708b673052171c68118ec7920d11c64338174c7b5643508e717b1ce34f6b *phase1/logs/t-p1-908-20261114/acceptance/audit_evidence_triplets.py
-588d4503696b8c7bb5507cb216aff03eba8bf32a32c12c7303516bdca0ae5a4a *phase1/logs/t-p1-908-20261114/acceptance/blob-manifest.json
+179ec07962c4935d6608a849c9ce362d4b8d65fa47f0a1346cbe857cc7e22453 *phase1/logs/t-p1-908-20261114/acceptance/blob-manifest.json
 1f46ec1570539677148b59663e2d3cb9c25600bac9d6493c32c471a84eee0238 *phase1/logs/t-p1-908-20261114/acceptance/export_task_events_audit.py
 cc42e1be5113d1a0ce45a1e9671c5bda9bf36c463b7337833aaa9dcfdc322419 *phase1/logs/t-p1-908-20261114/acceptance/round1/SHA256SUMS-round1.txt
 064489a777a03942764ea3b09c1754aed12beab1210bec2c6825d684683f9756 *phase1/logs/t-p1-908-20261114/acceptance/round1/dispatch-message.txt
@@ -248,6 +248,11 @@ a4058057b624acddd9f6adcccfc5525ce15ffe8941055d638f3b93d92dcd0654 *phase1/logs/t-
 631ddd8d367ce51a7f3869ab9fa76becb6680272772e179801b2bd2abf1399ef *phase1/logs/t-p1-908-20261114/acceptance/round5/reply.txt
 f8e73c980e2c9600493e80c1d7289093e5673725671044f324ae8dfaeb5375bf *phase1/logs/t-p1-908-20261114/acceptance/round5/request.txt
 fb59dea2be680a8c54651bf914da6838cdb4e192c5def5d279b0b25dcd160280 *phase1/logs/t-p1-908-20261114/acceptance/round5/run.log
+a16f38b9a8178007a06730ea530987fb97780a8ba191d7d787177645b6f0c821 *phase1/logs/t-p1-908-20261114/acceptance/round6/reply.txt
+ada957fb76fb695ec18f1b13017f3c07ff86225fcd7cc238f62efcdfabd9069a *phase1/logs/t-p1-908-20261114/acceptance/round6/request-6a-composer-residue.txt
+ada957fb76fb695ec18f1b13017f3c07ff86225fcd7cc238f62efcdfabd9069a *phase1/logs/t-p1-908-20261114/acceptance/round6/request.txt
+df60d1539e7a5d8b6fa27e304b2f32ded751a9b403b420da8e97bfdac7b7ac37 *phase1/logs/t-p1-908-20261114/acceptance/round6/run-6a-composer-residue.log
+40c095b3e8f00eba17bd0d2d3785a087c0b4e642301712a286866e0dbb25af35 *phase1/logs/t-p1-908-20261114/acceptance/round6/run.log
 59842c72dfa118ef65b0e7be1a032c240a6c6fa50ad4b60824960f8640fe3c38 *phase1/logs/t-p1-908-20261114/acceptance/sec_scan_908.py
 0213abad5f888be2f7bc646f9c80d6498f305efe7401cf7bf9d843d8c9012218 *phase1/logs/t-p1-908-20261114/acceptance/task-events-audit-serverlog.ndjson
 37ba86bebfe10e7c08feca702384f45a3d13648f8fa04fab84110207f0b51c9c *phase1/logs/t-p1-908-20261114/acceptance/task-events-audit.json
