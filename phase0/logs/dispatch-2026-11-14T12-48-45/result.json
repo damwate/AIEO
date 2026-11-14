@@ -1,0 +1,181 @@
+{
+  "at": "2026-11-14T12:52:02.743Z",
+  "message_bytes": 1147,
+  "reply": "ChatGPT 说：\n\nISSUES\n\n1. DEC-037 / 战略纪要 §五、§八：PASS。 归档正文十节完整，DEC-037、总纲挂注与战略方向一致。原文“待归档”保留并由附注说明，处理合理。未发现实质性战略矛盾。\n\n2. DEC-038 / 决策日志 DEC-038：ISSUES。 主会话唯一中继、逐方共识、ChatGPT 终审、用户拍板，逻辑一致。但30分钟预授权尚未明确适用范围。建议明确：仅限开工方案，不能自动授权代码合并、生产发布、数据删除等高风险操作。\n\n3. DEC-039 / 决策日志 DEC-039、handoff-template.md §1：ISSUES。\n\nS2 在原纪要中是 Basic / Standard，DEC-039 却写成 S1/S2→Basic，存在映射不一致。\n\n模板字段目前是文字说明，缺少实际任务等级、选型理由、批准人和决策依据填写项。\n\n全程不换轨应允许用户批准升级，避免与 DEC-037 的超能力升级原则冲突。\n建议修订为可填写字段，并统一 S2 映射。\n\n4. AI-DEV-LESSONS.md §2：PASS_WITH_CONDITIONS。 三轮止损与多方协商不冲突。建议明确同一问题第三轮失败仍必须升级，不能通过增加参会 AI 无限延长讨论。\n\n5. DEC-010 / 合并审批：PASS_WITH_CONDITIONS。 新协议不能覆盖 main 合并和生产发布必须人工审批的规定。30分钟沉默不得视为合并授权。\n\n6. 下一步 / Basic MVP：建议立即启动。 先确定六模块最小实现方案，再选一个真实 Java/Python 小需求验证完整闭环，最后在另一台电脑验证快速部署。\n\n最终裁定：暂不建议将 DEC-038/039 作为无条件执行的完整协议定稿。 优先修正 S2 映射、30分钟授权边界及版本升级规则。其余归档成果可以保留。",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "edceaabf-5512-4a43-960b-3940663ad322",
+  "stability": {
+    "stable": true,
+    "interval_ms": 3292,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-14T12:51:58.749Z",
+      "read_finished_at": "2026-11-14T12:51:59.032Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "582a920ecce84242123e2130ef136165d8cbcfa6744f54dc5ad4f2c5f2338ad8",
+          "size_bytes": 1745
+        }
+      ],
+      "assistant_uuid": "edceaabf-5512-4a43-960b-3940663ad322",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-14T12:52:02.041Z",
+      "read_finished_at": "2026-11-14T12:52:02.576Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "582a920ecce84242123e2130ef136165d8cbcfa6744f54dc5ad4f2c5f2338ad8",
+          "size_bytes": 1745
+        }
+      ],
+      "assistant_uuid": "edceaabf-5512-4a43-960b-3940663ad322",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "6c5cfff278277fb23172744bd56ee7de9cda4799abe4fd109f27f239a55209d5",
+          "582a920ecce84242123e2130ef136165d8cbcfa6744f54dc5ad4f2c5f2338ad8"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "6c5cfff278277fb23172744bd56ee7de9cda4799abe4fd109f27f239a55209d5",
+          "582a920ecce84242123e2130ef136165d8cbcfa6744f54dc5ad4f2c5f2338ad8"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "582a920ecce84242123e2130ef136165d8cbcfa6744f54dc5ad4f2c5f2338ad8",
+  "size_bytes": 1745,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-14T12-48-45\\reply.txt",
+  "reply_readback_sha256": "582a920ecce84242123e2130ef136165d8cbcfa6744f54dc5ad4f2c5f2338ad8",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-14T12-48-45\\raw-units.json",
+  "raw_units_sha256": "fbea45a2178fc021125043cb3f4bd383dd9983796915dedc9f4aa4c61024251e",
+  "raw_units_size_bytes": 4396,
+  "raw_units_readback_sha256": "fbea45a2178fc021125043cb3f4bd383dd9983796915dedc9f4aa4c61024251e",
+  "session_id": "6af858e4-7f74-83ec-860e-f360ab9484e2",
+  "conversation_url": "https://chatgpt.com/c/6af858e4-7f74-83ec-860e-f360ab9484e2",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}
