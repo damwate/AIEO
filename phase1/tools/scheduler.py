@@ -712,8 +712,8 @@ class Scheduler:
             "target": {"agent_id": "AIEO-ORCHESTRATOR", "agent_type": "system"},
             "project_id": run_project_id(self.run_id),
             "batch_id": self.rs.entities.get("batch_id"),
-            "task_id": task_id,
-            "correlation_id": f"CORR-{self.run_id}-01",
+            "task_id": None,  # TASK_PLAN_SUBMITTED 契约: task_id const null（904 冻结）
+            "correlation_id": f"CORR-{self.run_id}",
             "payload": plan,
         }
         ajv = self.run_ajv_double_validation(envelope)
@@ -789,7 +789,7 @@ console.log(JSON.stringify({ envelope: { valid: !!evOk, errors: ev.errors ?? [] 
         out = []
         for event, tail in seq:
             body = {"event": event, "event_id": f"EVT-{self.run_id}-{event}-{tail}",
-                    "correlation_id": f"CORR-{self.run_id}-01"}
+                    "correlation_id": f"CORR-{self.run_id}"}
             code, resp = m1.post(f"/api/v1/tasks/{task_id}/events", body)
             resp = m1.expect(code, (200, 201), f"event {event}", resp)
             out.append({"event": event, "http": code, "event_id": body["event_id"]})
@@ -822,7 +822,7 @@ console.log(JSON.stringify({ envelope: { valid: !!evOk, errors: ev.errors ?? [] 
         init = self.mcp.initialize()
         claim = self.mcp.call("claim_task", {
             "task_id": self.task_id,
-            "correlation_id": f"CORR-{self.run_id}-02",
+            "correlation_id": f"CORR-{self.run_id}",
             "base_commit": self.rs.base_commit,
         }, timeout=60)
         self.ev.blob(6, "claim-result", json.dumps({"init": init, "claim": claim},
@@ -840,7 +840,7 @@ console.log(JSON.stringify({ envelope: { valid: !!evOk, errors: ev.errors ?? [] 
         # A4 注入：同会话重复领取→预期 fail-closed TASK-0003（905 §5-1 先例同型）
         repeat = self.mcp.call("claim_task", {
             "task_id": self.task_id,
-            "correlation_id": f"CORR-{self.run_id}-02",
+            "correlation_id": f"CORR-{self.run_id}",
             "base_commit": self.rs.base_commit,
         }, timeout=60)
         inj_ok = repeat["is_error"] and (repeat.get("code") == "TASK-0003" or "TASK-0003" in repeat["text"])
@@ -861,7 +861,7 @@ console.log(JSON.stringify({ envelope: { valid: !!evOk, errors: ev.errors ?? [] 
     def s7_dev_handoff(self) -> None:
         assert self.task_id
         body = {"event": "START", "event_id": f"EVT-{self.run_id}-START-01",
-                "correlation_id": f"CORR-{self.run_id}-02"}
+                "correlation_id": f"CORR-{self.run_id}"}
         code, resp = self.m1.post(f"/api/v1/tasks/{self.task_id}/events", body)
         resp = self.m1.expect(code, (200, 201), "event START", resp)
         code, task = self.m1.get(f"/api/v1/tasks/{self.task_id}")
@@ -1034,7 +1034,7 @@ if __name__ == "__main__":
     # =====================================================================
     def s9_report_close(self) -> None:
         assert self.task_id and self.execution_id and self.commit_sha
-        corr = f"CORR-{self.run_id}-02"
+        corr = f"CORR-{self.run_id}"
         prog = self.mcp.call("report_progress", {
             "task_id": self.task_id, "correlation_id": corr,
             "stage": "IMPLEMENTATION", "detail": "dev done; commit collected via M4",
