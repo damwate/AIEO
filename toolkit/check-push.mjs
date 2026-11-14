@@ -236,13 +236,28 @@ export function buildCandidateQueue({ registryPorts = [], gitConfigPorts = [], e
 // ============================================================
 // 验证模块（P1-2：TCP 探测与探测序列均可注入，测试不依赖真实网络/注册表）
 // ============================================================
-export function probePort(port, host = "127.0.0.1", timeoutMs = TIMEOUTS.tcpProbe) {
+// probePort（R2 复核 P1-1 遗留整改）：结构化三态返回，不再压缩成布尔——
+//   连接成功 → { ok:true,  timedOut:false, ms, reason:"connected" }
+//   连接失败（含 ECONNREFUSED 拒绝）→ { ok:false, timedOut:false, ms, reason:"连接失败（<code>）" }
+//   超时   → { ok:false, timedOut:true,  ms, reason:"timeout（本次探测超时≠路径永久不可用）" }
+// deps.createSocket 可注入（测试不依赖真实网络即可覆盖超时分支）。
+export function probePort(port, host = "127.0.0.1", timeoutMs = TIMEOUTS.tcpProbe, { createSocket = net.connect } = {}) {
   return new Promise((resolve) => {
-    const s = net.connect({ host, port: Number(port) });
-    const done = (ok) => { try { s.destroy(); } catch {} resolve(ok); };
-    s.setTimeout(timeoutMs, () => done(false));
+    const start = Date.now();
+    let settled = false;
+    const s = createSocket({ host, port: Number(port) });
+    const done = (ok, err, timedOut) => {
+      if (settled) return;
+      settled = true;
+      try { s.destroy(); } catch {}
+      const ms = Date.now() - start;
+      if (timedOut) resolve({ ok: false, timedOut: true, ms, reason: "timeout（本次探测超时≠路径永久不可用）" });
+      else if (ok) resolve({ ok: true, timedOut: false, ms, reason: "connected" });
+      else resolve({ ok: false, timedOut: false, ms, reason: `连接失败（${(err && err.code) || (err && err.message) || "error"}）` });
+    };
+    s.setTimeout(timeoutMs, () => done(false, null, true));
     s.once("connect", () => done(true));
-    s.once("error", () => done(false));
+    s.once("error", (err) => done(false, err, false));
   });
 }
 
@@ -263,11 +278,21 @@ export async function runProbeSequence({ candidates = [], directProbe, candidate
 
 // 单候选验证（P1-2 导出，共识 3：监听≠代理，TCP 预筛失败不执行 dry-run）：
 // tcpProbe 与 dryRun 均可注入，测试不依赖真实网络。dryRun(label) → { ok, timedOut, stderr, ms }。
+// tcpProbe 兼容注入布尔（旧式）；结构化返回（probePort 本尊）时保留三态语义——
+// 超时与未监听分开标注，超时≠路径永久不可用（R2 复核 P1-1 遗留整改）。
 export async function probeCandidate({ candidate, tcpProbe = probePort, dryRun }) {
   const label = candidate.label || `代理 127.0.0.1:${candidate.port}（来源: ${(candidate.sources || []).join("+")}）`;
-  const alive = await tcpProbe(candidate.port);
-  if (!alive) {
-    return { tried: [{ label, port: candidate.port, ok: false, timedOut: false, stderr: "TCP 未监听", ms: 0 }], win: null, tcpSkipped: true };
+  const raw = await tcpProbe(candidate.port);
+  const res = typeof raw === "boolean"
+    ? { ok: raw, timedOut: false, ms: 0, reason: raw ? "connected" : null }
+    : raw;
+  if (!res || !res.ok) {
+    const timedOut = !!(res && res.timedOut);
+    const reason = res && res.reason && res.reason !== "connected" ? `（${res.reason}）` : "";
+    const stderr = timedOut
+      ? "TCP 探测超时（本次探测超时≠路径永久不可用）"
+      : `TCP 未监听${reason}`;
+    return { tried: [{ label, port: candidate.port, ok: false, timedOut, stderr, ms: (res && res.ms) || 0 }], win: null, tcpSkipped: true };
   }
   const r = await dryRun(label);
   return {

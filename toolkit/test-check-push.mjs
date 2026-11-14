@@ -6,6 +6,7 @@
 // 全部用注入 runner，不依赖真实注册表、真实代理端口与真实 Git 网络连接（P1-2）。
 import test from "node:test";
 import assert from "node:assert/strict";
+import net from "node:net";
 import {
   parseProxyServerString,
   discoverRegistryProxy,
@@ -14,6 +15,7 @@ import {
   buildCandidateQueue,
   portsFromGitConfigEntries,
   isValidPort,
+  probePort,
   runProbeSequence,
   probeCandidate,
 } from "./check-push.mjs";
@@ -295,4 +297,71 @@ test("直连成功 → 不进入候选验证；全部候选失败 → winner=nul
   });
   assert.equal(seq2.winner, null);
   assert.equal(seq2.tried.length, 2);
+});
+
+// ---------- probePort 三态（R2 复核 P1-1 遗留整改：超时≠未监听≠拒绝） ----------
+function makeHangingSocket() {
+  // 模拟永不完成连接的 socket：真实 timer 走 probePort 的超时分支
+  let timer = null;
+  return {
+    setTimeout(ms, cb) { timer = setTimeout(cb, ms); },
+    once() {},
+    destroy() { if (timer) clearTimeout(timer); },
+  };
+}
+
+test("probePort：真实 loopback 监听端口 → 连接成功三态 {ok,timedOut:false,reason:connected}", async () => {
+  const server = net.createServer(() => {});
+  await new Promise((res) => server.listen(0, "127.0.0.1", res));
+  const port = server.address().port;
+  try {
+    const r = await probePort(port, "127.0.0.1");
+    assert.equal(r.ok, true);
+    assert.equal(r.timedOut, false);
+    assert.equal(r.reason, "connected");
+    assert.equal(typeof r.ms, "number");
+  } finally { server.close(); }
+});
+
+test("probePort：真实 loopback 已关闭端口 → 连接拒绝（非超时，ECONNREFUSED）", async () => {
+  const server = net.createServer(() => {});
+  await new Promise((res) => server.listen(0, "127.0.0.1", res));
+  const port = server.address().port;
+  await new Promise((res) => server.close(res));
+  const r = await probePort(port, "127.0.0.1");
+  assert.equal(r.ok, false);
+  assert.equal(r.timedOut, false);
+  assert.match(r.reason, /连接失败（ECONNREFUSED）/);
+});
+
+test("probePort：注入挂起 socket（真实 timer）→ 超时三态 timedOut=true ≠永久不可用", async () => {
+  const r = await probePort(59999, "127.0.0.1", 40, { createSocket: () => makeHangingSocket() });
+  assert.equal(r.ok, false);
+  assert.equal(r.timedOut, true);
+  assert.match(r.reason, /timeout（本次探测超时≠路径永久不可用）/);
+});
+
+test("probeCandidate：TCP 探测超时保留独立状态（timedOut:true，不标'未监听'），dry-run 不执行", async () => {
+  let dryRunCalled = 0;
+  const r = await probeCandidate({
+    candidate: { port: 61234, sources: ["--ports"] },
+    tcpProbe: async () => ({ ok: false, timedOut: true, ms: 2000, reason: "timeout（本次探测超时≠路径永久不可用）" }),
+    dryRun: async () => { dryRunCalled++; return { ok: true, timedOut: false, stderr: "", ms: 1 }; },
+  });
+  assert.equal(r.tcpSkipped, true);
+  assert.equal(r.win, null);
+  assert.equal(dryRunCalled, 0);
+  assert.equal(r.tried[0].timedOut, true);
+  assert.match(r.tried[0].stderr, /TCP 探测超时（本次探测超时≠路径永久不可用）/);
+});
+
+test("probeCandidate：真实拒绝端口（默认 probePort）→ 'TCP 未监听（连接失败（ECONNREFUSED））'且非超时", async () => {
+  const server = net.createServer(() => {});
+  await new Promise((res) => server.listen(0, "127.0.0.1", res));
+  const port = server.address().port;
+  await new Promise((res) => server.close(res));
+  const r = await probeCandidate({ candidate: { port, sources: ["netstat"] }, dryRun: async () => { throw new Error("不应执行"); } });
+  assert.equal(r.tcpSkipped, true);
+  assert.equal(r.tried[0].timedOut, false);
+  assert.match(r.tried[0].stderr, /TCP 未监听（连接失败（ECONNREFUSED））/);
 });
