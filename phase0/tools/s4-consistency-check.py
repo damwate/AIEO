@@ -2,6 +2,7 @@
 # 用法：python -I phase0/tools/s4-consistency-check.py （在仓库根目录执行）
 # 修正记录：①c 正则锚定收紧至附录差异记录表区域（避免跨表匹配）；⑤ 断言口径=30b56de（S1 R2 PASS 验收对象）；⑥c 仅查过期残留「待 S3 复验」（复验列口径，描述列引述不算）
 # R2 问题12 整改：⑥a 返工表随实态 11→13 行；⑧ 组从存在性检查改为实质比较（task-brief 当前步骤实态/steps S4 R2 登记/delivery S1-S3 闭环与 S4 待定区分）
+# R3 问题12 整改：⑧ 组升级为三文件交叉比较（轮次指向 R4）（当前轮次指向三方同为 R3/R1、R2 轮结论三文件逐项一致/S1-S3 闭环三方一致/delivery 当前实态 24/24+问题1-13+历史快照显式标注）
 import io, re, subprocess, sys, os
 ok=[]; fail=[]
 def chk(name, cond, detail=""):
@@ -62,16 +63,26 @@ for sid, nxtid in [("S1","S2"),("S2","S3"),("S3","S4")]:
     sec_i = st.split(f"## {sid}")[1].split(f"## {nxtid}")[0]
     chk(f"⑦ {sid}含字面验收结论PASS", "验收结论：PASS" in sec_i)
 
-# ⑧ task-brief ↔ steps ↔ delivery 实质一致（问题12 整改：真正比较状态与结论内容，非仅标题存在）
+# ⑧ task-brief ↔ steps ↔ delivery 三文件状态交叉比较（R3 问题12 整改：逐项核对轮次指向与结论，非仅各自存在）
 tb_step = [l for l in tb.splitlines() if l.startswith("| 当前步骤 |")]
 chk("⑧a task-brief当前步骤行唯一", len(tb_step)==1, f"n={len(tb_step)}")
 step_txt = tb_step[0] if tb_step else ""
-chk("⑧a2 当前步骤实态=S4复验中(含R3复验指向)", "S4" in step_txt and "R3 复验" in step_txt and "复验" in step_txt, step_txt[:60])
 s4_sec = st.split("## S4", 1)[1] if "## S4" in st else ""
-chk("⑧b steps S4区段含R2复验REJECT2项登记", ("REJECT 2 项" in s4_sec or "REJECT 2项" in s4_sec))
-chk("⑧c delivery区分S1-S3闭环与S4待定", ("S4 独立验收进行中" in dl) and ("四步独立验收全闭环" not in dl))
-chk("⑧d delivery七要素标题齐全", all(h in dl for h in ["## 原始需求","## 最终实现内容","## 修改文件","## 测试结果","## Git commit","## 未解决问题","## 后续建议"]))
-chk("⑧e delivery声明12行附录", "12 行" in dl)
+# 交叉1：当前复验轮次指向——三文件必须同为 R4（轮次指向随整改实态演进，R3 整改时由 R3 改 R4）
+chk("⑧a2 tb当前步骤指向R4复验", "R4 复验" in step_txt, step_txt[:60])
+chk("⑧b steps S4⑥当前轮次指向R4(R4复验结论待回填)", "S4 R4 复验结论待回填" in s4_sec)
+chk("⑧c delivery当前指向R4复验", "待 R4 复验" in dl)
+# 交叉2：已发生轮次结论——三文件对 R1/R2 结论表述逐项一致
+chk("⑧d R1轮结论三文件一致(REJECT 3项)", all("REJECT 3 项" in x for x in (step_txt, s4_sec, dl)))
+chk("⑧e R2轮结论三文件一致(REJECT 2项)", all("REJECT 2 项" in x for x in (step_txt, s4_sec, dl)))
+# 交叉3：S1-S3 闭环状态三方一致（三文件均声明 S1/S2/S3 PASS 闭环）
+chk("⑧f S1-S3闭环三文件一致", all(("S1" in x and "PASS" in x) for x in (step_txt, s4_sec, dl)))
+chk("⑧g delivery无「四步独立验收全闭环」残留", "四步独立验收全闭环" not in dl)
+chk("⑧h delivery七要素标题齐全", all(h in dl for h in ["## 原始需求","## 最终实现内容","## 修改文件","## 测试结果","## Git commit","## 未解决问题","## 后续建议"]))
+chk("⑧i delivery声明12行附录", "12 行" in dl)
+# 交叉4：delivery 当前实态数据=24/24+问题1-13（历史快照须显式标注）
+chk("⑧j delivery当前实态24/24与问题1-13", ("24/24" in dl) and ("问题 1-13" in dl))
+chk("⑧k delivery历史快照显式标注", "历史快照" in dl)
 
 print(f"PASS {len(ok)} / FAIL {len(fail)}")
 for x in ok: print(" [PASS]", x)
