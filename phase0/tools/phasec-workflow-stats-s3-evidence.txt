@@ -1,0 +1,5 @@
+S3复审证据补充（BLOCKED解除，附件通道先例S2-R3c/v0.3 ST-03）
+附件：s3-evidence-v1.zip，sha256=3cb8f4a389127d76eab4632b2c653cbb8a8a06fab9b51510dff5f165ac83a513，34422字节——含你上轮所列全部6个文件（仓库相对路径）+MANIFEST.txt（逐文件SHA256）
+基点：复审基点9a2935c；本请求文件所在commit 38b1793（均已推origin/main）；其余五文件自9a2935c零变更（可GitHub compare 9a2935c→38b1793核验）
+解压后请先按MANIFEST核对SHA256，再按冻结标准整体复审：规则可执行性（四步流程/两道关口/止损/交付条件无内部冲突）+v0.3新增条款逐条可执行+清单31项六字段三态自洽+附录12行↔统计§十三一致+v0.2现行版注记
+结论：PASS（进S4）/NEEDS RECTIFICATION（按模块五计数）/BLOCKED；复审通过≠v0.3生效

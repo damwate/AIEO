@@ -1,0 +1,8 @@
+S3整体复审请求：b-20261115-phasec-workflow-stats（阶段C统计+修订+清单）
+绑定：github.com/damwate/AIEO main@9a2935cabddbb29b9b8d507f48580502b5c36e41
+复审对象（前步已各自验收闭环，本轮整体复审）：①workflow-stats.md（S1 R2 PASS）②basic/WORKFLOW.md v0.3+basic/ACCEPTANCE-CHECKLIST.md+templates/acceptance-request.md（S2 三轮验收 R3 PASS）③steps.md S2 核对记录
+请读：basic/tasks/b-20261115-phasec-workflow-stats/acceptance/s3-review-request.md（绑定/复审标准/重点五处）+steps.md拍板方案要点与S2出口条件
+S3出口条件（冻结原文）：不仅查文字还查规则可执行性（四步流程/两道关口/止损/交付条件无内部冲突），不由执行者自宣通过
+重点：v0.3新增条款逐条可执行且与既有条款无冲突重复/清单31项六字段可操作+三态自洽+与检查器分工清晰/WORKFLOW附录12行与统计报告§十三吻合/v0.2现行版注记完整
+结论：复审通过（进S4）/需整改（列问题，按模块五计数）/BLOCKED
+注：复审通过≠v0.3生效，生效拍板留用户

@@ -1,0 +1,7 @@
+S2复验请求：问题5整改完毕（同问题第1次返工，同验收通道）
+绑定：github.com/damwate/AIEO main@03b6ed28277f56aa3094a6bbefebf5f0d3dcf944（整改前基线052576c=parent，单commit 3文件，rev-list=1+parent已核验；首版0da7d1e六查通过项不因整改失效；回填commit 2db7ebd不属diff范围）
+整改三处（遵最小边界）：①task-brief差异记录11条→12行②steps.md S2⑤ 30个条目→31个条目行（根因如实登记：批量替换目标编号写错①写成②静默未中）③WORKFLOW附录末两行重号11→末行改12
+程序核验：附录行号1-12无重复、清单31项、三处与验收请求v2一致
+请读：acceptance/s2-acceptance-request.md（v2含版本注记+复验重点五处）+git diff 052576c→03b6ed2
+复验重点：三处数量一致性核查+整改范围核验（仅3文件，已核实内容未动）
+结论：PASS/REJECT/BLOCKED；返工计数按WORKFLOW模块五

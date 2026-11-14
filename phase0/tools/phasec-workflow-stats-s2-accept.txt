@@ -1,0 +1,7 @@
+S2验收请求：b-20261115-phasec-workflow-stats 第2步（阶段C修订草案）
+绑定：github.com/damwate/AIEO main@0da7d1e16c5811f6d420c387cdd7f5fdd60e361c（基线cf07c62=parent，单commit 5文件+121/-19，rev-list=1+parent已核验；其后回填commit不属diff范围）
+交付物：①basic/WORKFLOW.md v0.2→v0.3（12行修订+文末附录=v0.2↔v0.3差异记录与ST依据对照表）②basic/ACCEPTANCE-CHECKLIST.md新建（七模块31项×六字段×三态+三总体规则+与检查器分工）③templates/acceptance-request.md增ST-01申报前核验条款（唯一模板修改）
+请读：basic/tasks/b-20261115-phasec-workflow-stats/acceptance/s2-acceptance-request.md（完整绑定/标准/自测/如实标注5项）+steps.md拍板方案要点5/6/8与S2出口条件+workflow-stats.md§十三ST-01~12
+标准：每处修订有统计依据；非统计驱动单独标注；不借机扩大流程复杂度；模板无冲突不改
+复审重点：附录12行逐行ST依据核对/新条款与保留条款无内部冲突/清单六字段三态完整/模板边界遵守/未动已核实数字
+结论：PASS/REJECT/BLOCKED；返工计数按WORKFLOW模块五"同一问题"规则

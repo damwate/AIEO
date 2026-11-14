@@ -1,0 +1,6 @@
+S2第3轮复验请求：问题5第2轮补正完毕（同问题第2次返工）
+绑定：github.com/damwate/AIEO main@0604231fa2002cfb45845943cd797cec796fbfe3（整改前基线2db7ebd=parent，单commit 2文件=task-brief补正+steps.md流程登记，rev-list=1+parent已核验；回填commit c03953d不属diff范围）
+补正内容：task-brief「当前步骤」按你上轮精确文本补正——显式载明"WORKFLOW附录差异记录12行、验收清单31项"（R2缺失处）；其余两文件未动（steps.md仅④第2轮记录+返工表复验列流程登记）
+请读：acceptance/s2-acceptance-request.md（v3：版本注记含R2结果+复验重点改为你的唯一遗留单处）+git diff 2db7ebd→0604231
+复验重点：task-brief 12行/31项字样落地核查+整改范围核验（已通过内容未动）
+结论：PASS/REJECT/BLOCKED；返工计数按WORKFLOW模块五（问题5当前第2次返工）

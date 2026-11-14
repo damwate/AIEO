@@ -1,0 +1,8 @@
+S3复审通道说明（BLOCKED解除尝试）
+根因确认：账号已达ChatGPT文件附件数量限制（重置=11月16日1:29，约5小时后），故zip无法挂载——非工具故障，如实报告
+替代通道（请重试GitHub直读，本次给精确raw URL）：
+zip包：raw.githubusercontent.com/damwate/AIEO/ce8c3d5d68ff7f8a6ca8eccdac3905ade2626374/basic/tasks/b-20261115-phasec-workflow-stats/acceptance/s3-evidence-v1.zip
+或逐文件直读：raw.githubusercontent.com/damwate/AIEO/ce8c3d5d68ff7f8a6ca8eccdac3905ade2626374/<仓库路径>，六个路径见s3-review-request.md绑定节（basic/WORKFLOW.md等）
+zip内MANIFEST.txt含逐文件SHA256可自校验；zip sha256=3cb8f4a389127d76eab4632b2c653cbb8a8a06fab9b51510dff5f165ac83a513
+若仍无法读取：请回复BLOCKED并说明你可用的读取通道；备选=①01:29附件配额重置后重发zip②改用此前GitHub API读取正常的会话通道
+结论标准不变：PASS（进S4）/NEEDS RECTIFICATION（按模块五计数）/BLOCKED；复审通过≠v0.3生效
