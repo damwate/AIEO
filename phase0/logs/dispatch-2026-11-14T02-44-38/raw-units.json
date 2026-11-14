@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-14T02:47:37.991Z",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "87340387-89ab-47d7-9708-47b375d90eeb",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "4da36090a4753fa151a5c03ef08062aa93a9ad702156021bf32c72080f283b0d",
+          "428354679453223b2ea077f366f2172a199595893908a9661ba051134a20cf85"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "4da36090a4753fa151a5c03ef08062aa93a9ad702156021bf32c72080f283b0d",
+          "428354679453223b2ea077f366f2172a199595893908a9661ba051134a20cf85"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-0:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nF-003 任务书 v0.5 限定复核报告\nPASS\n\n无保留定稿通过\n\n复核对象： damwate/AIEO\n\n指定基线：e869d0d\n\n实际读取完整 Commit SHA：e869d0d5160ac94e92c02351b054ccaeb5670932\n\n文件：docs/phase1/F003-TEST-WORKER-BRIEF.md\n\n文件 Blob SHA：38aa2d9ac856eb1810371faf75333a35fe7e3316\n\n版本：v0.5\n\n复核按指定完整 SHA 读取，没有使用 HEAD 替代。\n\n一、唯一遗留项复核\n\nPASS §5 NOT_EXECUTED 适用限定\n\n本次修改解决了上一轮唯一遗留问题。\n\n逐项核对：\n\n核对事项\n\n\t\n\n结果\n\n\n\n\n明确 F-003 不支持外部取消\n\n\t\n\nPASS\n\n\n\n\nNOT_EXECUTED 明确为协议兼容状态\n\n\t\n\nPASS\n\n\n\n\nWorker 不主动生成 NOT_EXECUTED\n\n\t\n\nPASS\n\n\n\n\n空命令清单 → BLOCKED\n\n\t\n\nPASS\n\n\n\n\n无效 worktree → BLOCKED\n\n\t\n\nPASS\n\n\n\n\n非完整 40 位 SHA → BLOCKED\n\n\t\n\nPASS\n\n\n\n\nHEAD 与指定 SHA 不一致 → BLOCKED\n\n\t\n\nPASS\n\n\n\n\n输入校验通过后进入命令阶段\n\n\t\n\nPASS\n\n关键改进是区分了：\n\n协议层允许存在的状态。\n\nF-003 Worker 实际允许产生的状态。\n\n不再因为「没有执行任何命令」这一表面事实，就把输入校验失败错误归入 NOT_EXECUTED。\n\n二、§4 / §5 / §10 一致性复核\n\nPASS 三节语义闭合\n\n情况\n\n\t\n\n§4 安全约束\n\n\t\n\n§5 状态映射\n\n\t\n\n§10 失败策略\n\n\n\n\n空清单\n\n\t\n\n拒绝执行\n\n\t\n\nBLOCKED\n\n\t\n\nBLOCKED\n\n\n\n\n无效 worktree\n\n\t\n\n校验失败\n\n\t\n\nBLOCKED\n\n\t\n\nBLOCKED\n\n\n\n\nSHA 无效或不一致\n\n\t\n\n拒绝执行\n\n\t\n\nBLOCKED\n\n\t\n\nBLOCKED\n\n\n\n\n单条命令启动异常\n\n\t\n\n明确失败\n\n\t\n\nEXECUTED_FAIL\n\n\t\n\n继续后续命令\n\n\n\n\n命令非零退出\n\n\t\n\n明确失败\n\n\t\n\nEXECUTED_FAIL\n\n\t\n\n继续执行\n\n\n\n\n命令超时\n\n\t\n\n明确失败\n\n\t\n\nEXECUTED_FAIL\n\n\t\n\n继续执行、不重试\n\n\n\n\nWorker 无法启动\n\n\t\n\n安全阻断\n\n\t\n\nBLOCKED\n\n\t\n\nBLOCKED\n\n\n\n\n全部命令成功\n\n\t\n\n正常执行\n\n\t\n\nEXECUTED_PASS\n\n\t\n\n按实际结果计算\n\n特别确认三个容易混淆的边界：\n\n命令启动异常不等于 Worker 启动失败。\n\n单条命令失败不等于整个任务被阻断。\n\n输入校验失败不等于协议兼容状态 NOT_EXECUTED。\n\n没有发现新的状态映射冲突，也没有发现与 §4、§10 相互矛盾的执行规则。\n\n三、最终复核结论\n\n复核范围\n\n\t\n\n结果\n\n\n\n\nv0.5 唯一遗留项\n\n\t\n\nPASS\n\n\n\n\n§4 执行安全\n\n\t\n\nPASS\n\n\n\n\n§5 五行穷举映射\n\n\t\n\nPASS\n\n\n\n\n§5 NOT_EXECUTED 边界\n\n\t\n\nPASS\n\n\n\n\n§10 失败处理\n\n\t\n\nPASS\n\n\n\n\n§4/§5/§10 一致性\n\n\t\n\nPASS\n\n\n\n\n原有范围及权限边界\n\n\t\n\nPASS\n\n最终结论：F-003 任务书 v0.5 无保留定稿 PASS。\n\n文件可作为 T-P1-907 的正式任务书提交用户开工拍板。\n\n四、授权边界再次确认\n\n本次 PASS 仅代表任务书定稿质量通过，不产生任何开发授权。\n\n以下约束继续有效：\n\nDEC-017 扩展场景限制不解除。\n\nDEC-023 前置约束不变。\n\n不授权 Worker 开发。\n\n不授权分支合并。\n\n不授权发布。\n\n不授权 F-001 提前实施。\n\n不改变用户最终授权权。\n\n下一节点：用户对 T-P1-907 单独作出开工拍板。\n\n复核对象：GitHub v0.5 完整版本\n\n会务意见：可以提交用户，不需要再为本次 NOT_EXECUTED 边界安排第四轮文字修改。",
+      "text_sha256": "428354679453223b2ea077f366f2172a199595893908a9661ba051134a20cf85",
+      "size_bytes": 3194,
+      "assistant_uuid": "87340387-89ab-47d7-9708-47b375d90eeb"
+    }
+  ]
+}
