@@ -139,3 +139,10 @@ security-scan.txt（SEC-SCAN-T-P1-908-001）：范围=本证据目录 + 18 个 d
 - **判定：REJECT——全部 8 项"FAIL+未取得"，根因=验收会话执行环境无法解析 github.com（DNS 失败，git clone 未成功），属环境不可达，非证据缺陷**：第 2 轮修复项（A2 指针/A4 记录/A7 扫描器/指南 §0）无一被重新质疑；审阅人如实申报"未取得原始字节……没有伪造 SHA256 或 PASS 结论"（诚实留证，予以记录）。第 1/2 轮审阅会话均经浏览通道实际读到仓库内容，本会话仅尝试代码沙箱克隆——会话间网络能力差异。
 - **处置**：不构成对交付物的新阻断；第 4 轮简报 v4 增补通道阶梯指引——代码沙箱 DNS 失败时改用**浏览工具**访问 raw.githubusercontent.com/<完整SHA>/<路径>（text/plain 原始字节，勿经 DOM 复制）；若仍不可达，请明示属环境限制而非证据缺陷。
 - **分支冻结纪律**：验收在途期间 scheduler@08c8e7c366c708b219f3c737eef2c36abfcefc04 与 evidence@10515b66b8487b6db1df86a6bc53ecbe3fa0c4ef 冻结不动；本轮 reply 归档/清单重生成使 evidence 前进至新 HEAD，由第 4 轮简报 v4 携带。
+
+## 13. 独立验收第 4 轮（REJECT·环境能力受限）与第 5 轮沙箱通道实验（2026-11-14）
+
+- **第 4 轮派单**：phase0/logs/dispatch-2026-11-14T09-36-16/（--new-session；简报 v4 1198B 含三阶通道阶梯）。request sha256=`33cbccf4a0fdb904b5c5acc20df13e11cafc5a957992d5f3e5d2cbd80911c7e4`；reply sha256=`7f2fd50bb4f5cd34631251b52377050b0394a8c562d3cd3e2af2899d9d59545d`（归档 acceptance/round4/）。
+- **判定：REJECT——审阅环境"字节下载及哈希计算能力受限"，审阅人明示"不认定为仓库证据缺陷，也不推翻第 2 轮修复"**。实质进展：**raw.githubusercontent.com 浏览通道已读通**——指南 §0+A1–A8 指令、A2/A4/A7 修正指针、四分支锚点（scheduler 08c8e7c…/fixture fda9183…/evidence 91b4b39…/任务书 c610992…）全部核对无误；仅代码沙箱 DNS 阻塞 git clone、浏览工具无法落地字节做本地 sha256 自算。审阅人零伪造（"SHA未自算"逐项如实标注）。
+- **未测路径**：代码沙箱对 **raw.githubusercontent.com 域名**（区别于 github.com）的 DNS 直连从未测试（第 3/4 轮 clone 目标均为 github.com）；api.github.com git/blobs 通道亦未测试。
+- **第 5 轮处置**：新增 acceptance/blob-manifest.json（路径→git blob SHA-1 映射，api.github.com/repos/damwate/AIEO/git/blobs/<blob-SHA> 返回 base64 原始字节，blob ID 内容自校验）；简报 v5 指示沙箱先测 raw 域名 curl/python 直取字节自算 sha256，失败再测 api.github.com blobs；浏览通道仅作内容核验并须明示"未自算 SHA"。
