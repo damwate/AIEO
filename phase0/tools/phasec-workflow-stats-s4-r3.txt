@@ -1,0 +1,7 @@
+S4 R3复验请求
+绑定：基点d8d201a→待验收39f8eb69915793c3ce55a06ac602ef9cd163faf2（2 commit线性：8aa60e8整改→39f8eb6回填，rev-list --reverse --parents核链已过）。R2轮链cc030ff→ccc9c55→d8d201a→8aa60e8→39f8eb6。
+问题12=task-brief改复验实态+delivery区分S1-S3 PASS与S4进行中（弃「全闭环」）+⑧组实质比较24/24 PASS；问题13=raw失败不降级+三条件全过[raw成功/三方一致/编号1-12]任一失败exit(1)+失败路径实测exit=1。
+可复跑：python -I basic/tool/check_taskpack.py basic/tasks/b-20261115-phasec-workflow-stats（④PASS/IN_PROGRESS）+python -I phase0/tools/s4-consistency-check.py（24/24）+python -I phase0/tools/s4-appendix-threeway-check.py（三条件PASS）——档案随commit在库。环境声明：本机Windows无独立Linux，raw直读成功=联网可达，输出存档待贵方复跑。
+读取：raw直读 raw.githubusercontent.com/damwate/AIEO/39f8eb69915793c3ce55a06ac602ef9cd163faf2/<路径>（s4-acceptance-request.md v3）
+边界：不推翻S1-S3（PASS沿用）；通过≠v0.3生效（拍板留用户）
+结论：PASS（S4闭环）/REJECT（计数）/BLOCKED（如实说明）
