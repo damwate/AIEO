@@ -1024,8 +1024,7 @@ class RestM1Adapter:
                 "result": result, "reason": reason, "correlation_id": correlation_id,
                 "details": details}}
         with open(path, "a", encoding="utf-8") as f:
-            f.write(json.dumps(rec, ensure_ascii=False, default=str) + "
-")
+            f.write(json.dumps(rec, ensure_ascii=False, default=str) + "\\n")
         return "AUD-LOCAL-" + uuid.uuid4().hex[:8]
 
 
@@ -1041,7 +1040,7 @@ def main():
         message="feat(phase1): bundle_gate --version flag (T-P1-908 run ORCH-{self.run_id})",
         base_commit=BASE_COMMIT, files_scope=["phase1/tools/bundle_gate.mjs"], context=ctx,
         test_command=["node", "phase1/tools/bundle_gate.mjs", "--version"],
-        test_log_path=r"{RUNTIME_DIR / 'executions' / ('ORCH-' + RUN_ID) / 's8-test-run.log'}")
+        test_log_path=r"{self.rs.exec_dir / 's8-test-run.log'}")
     print(json.dumps(ev, ensure_ascii=False, default=str))
 
 if __name__ == "__main__":
