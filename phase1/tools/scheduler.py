@@ -1192,12 +1192,25 @@ if __name__ == "__main__":
         }, m3_log, REPO_ROOT)
         self.mcp.start()
         init = self.mcp.initialize()
-        # 故意缺参：report 无 correlation_id（亦无 execution_id/git 等后续闭环字段——
-        # 本演示 run 未执行 S6-S8，如实申报）；task_id 为本 run S1 真实创建实体。
+        # 905 §5-1 同形态：报告体结构完整（否则 assertValidDevReport 先拒 REQ-0002，
+        # 见 mcp_server.mjs:279-282 分层——schema 校验在 correlation 前置校验之前），
+        # 唯一故意缺参=report.correlation_id，且新 MCP 会话无在途领取可继承→REQ-0001。
+        # 除 task_id/base_commit（本 run 真实值）外，其余字段为占位测试向量（本演示 run
+        # 无真实开发：EXEC-001/0 补位 40hex 自明占位），该请求在 bridge 层即被拒，
+        # 不达 M1、不注册任何实体；占位申报随证据归档。
         report = {
             "task_id": self.task_id,
+            "execution_id": "EXEC-001",
             "status": "COMPLETED",
-            "implementation_summary": "A4 deliberate missing-param injection demo (deliberately incomplete)",
+            "implementation_summary": "A4 deliberate missing-param injection vector (placeholder body, never reaches M1)",
+            "git": {"repository": run_project_id(self.run_id), "branch": self.fixture_branch,
+                    "base_commit": self.rs.base_commit, "commit_sha": "0" * 40,
+                    "changed_files": ["phase1/tools/bundle_gate.mjs"]},
+            "tests": {"executed": False, "commands": ["(placeholder: no real test in A4 demo run)"],
+                      "passed": 0, "failed": 0, "log_artifact_id": None},
+            "known_issues": [],
+            "knowledge_updates_required": False,
+            "self_assessment": "A4 失败采集演示注入向量：除 correlation_id 故意缺失外结构完整；占位值如实申报",
         }
         sub = self.mcp.call("submit_result", {"task_id": self.task_id, "report": report}, timeout=120)
         self.ev.blob(9, "a4-inject-submit", json.dumps(
