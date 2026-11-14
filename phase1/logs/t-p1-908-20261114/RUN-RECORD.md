@@ -132,3 +132,10 @@ security-scan.txt（SEC-SCAN-T-P1-908-001）：范围=本证据目录 + 18 个 d
   - **A3/A6=指南引用不精确所致**：初版指南用 s4-\*replay\* 通配且未给实际 JSON 键，验收人按 DOM 通道+通配无法定位。**修复**：指南 v2 精确文件名（s4-replay-a3.json/s9-submit-replay-a3.json/s4-ajv-validation.json）+实际键值（artifact_replay_ok/message_replay_ok、report_registry.duplicate、envelope/payload valid:errors:[]）。
 - **修复后证据集**：ORCH-908022 执行目录+console 入 evidence 树；acceptance/round2/ 归档；triplet-audit 重跑（22 run/151 组/incomplete=0）；全树重扫+SHA256SUMS 重生成+sha256sum -c 全量实测（见 security-scan.txt 与 acceptance/sha256sum-c-result.txt 更新版）。
 - **第 3 轮派单**：简报 v3（携带 scheduler@08c8e7c366c708b219f3c737eef2c36abfcefc04 等新锚点+§0 字节保真读法+逐项 SHA 引用）；合并拍板仍留用户（DEC-010 不松动）。
+
+## 12. 独立验收第 3 轮（REJECT·环境不可达）与第 4 轮通道指引（2026-11-14）
+
+- **第 3 轮派单**：phase0/logs/dispatch-2026-11-14T09-25-56/（--new-session 新空白会话；简报 v3 1121B，明示 §0 字节保真双通道+新锚点 scheduler@08c8e7c…/evidence@10515b6…）。request sha256=`7ebd77bd8ce83eee70b84216f1120bc1960edc65d687dd48207f2a6ed90716f5`；reply sha256=`724405f85bfc13adecfe7ff42c17bcd66a8a335ed2bc6318076efe2851d30f74`（归档 acceptance/round3/）。
+- **判定：REJECT——全部 8 项"FAIL+未取得"，根因=验收会话执行环境无法解析 github.com（DNS 失败，git clone 未成功），属环境不可达，非证据缺陷**：第 2 轮修复项（A2 指针/A4 记录/A7 扫描器/指南 §0）无一被重新质疑；审阅人如实申报"未取得原始字节……没有伪造 SHA256 或 PASS 结论"（诚实留证，予以记录）。第 1/2 轮审阅会话均经浏览通道实际读到仓库内容，本会话仅尝试代码沙箱克隆——会话间网络能力差异。
+- **处置**：不构成对交付物的新阻断；第 4 轮简报 v4 增补通道阶梯指引——代码沙箱 DNS 失败时改用**浏览工具**访问 raw.githubusercontent.com/<完整SHA>/<路径>（text/plain 原始字节，勿经 DOM 复制）；若仍不可达，请明示属环境限制而非证据缺陷。
+- **分支冻结纪律**：验收在途期间 scheduler@08c8e7c366c708b219f3c737eef2c36abfcefc04 与 evidence@10515b66b8487b6db1df86a6bc53ecbe3fa0c4ef 冻结不动；本轮 reply 归档/清单重生成使 evidence 前进至新 HEAD，由第 4 轮简报 v4 携带。

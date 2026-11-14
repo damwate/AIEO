@@ -236,6 +236,9 @@ phase1/logs/t-p1-908-20261114/acceptance/round1/run.log: OK
 phase1/logs/t-p1-908-20261114/acceptance/round2/reply.txt: OK
 phase1/logs/t-p1-908-20261114/acceptance/round2/request.txt: OK
 phase1/logs/t-p1-908-20261114/acceptance/round2/run.log: OK
+phase1/logs/t-p1-908-20261114/acceptance/round3/reply.txt: OK
+phase1/logs/t-p1-908-20261114/acceptance/round3/request.txt: OK
+phase1/logs/t-p1-908-20261114/acceptance/round3/run.log: OK
 phase1/logs/t-p1-908-20261114/acceptance/sec_scan_908.py: OK
 phase1/logs/t-p1-908-20261114/acceptance/task-events-audit-serverlog.ndjson: OK
 phase1/logs/t-p1-908-20261114/acceptance/task-events-audit.json: OK
