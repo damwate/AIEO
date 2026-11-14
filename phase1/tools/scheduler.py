@@ -1110,8 +1110,9 @@ if __name__ == "__main__":
         status = task.get("status") if isinstance(task, dict) else "?"
         # A3 重放验证：S9 重放→accepted:true+duplicate:true 不新增消息
         sub2 = self.mcp.call("submit_result", {"task_id": self.task_id, "report": report}, timeout=120)
-        replay_ok = (not sub2["is_error"]) and bool(sub2.get("parsed", {}) or {}) and \
-                    (sub2["parsed"].get("duplicate") is True if isinstance(sub2["parsed"], dict) else "duplicate" in sub2["text"])
+        p2 = sub2.get("parsed") if isinstance(sub2.get("parsed"), dict) else {}
+        rr = p2.get("report_registry") or {}
+        replay_ok = (not sub2["is_error"]) and (p2.get("duplicate") is True or rr.get("duplicate") is True)
         self.ev.blob(9, "submit-replay-a3", json.dumps(sub2, ensure_ascii=False).encode("utf-8"))
         self.ev.triplet(9, "report-close", json.dumps({"progress_ok": not prog["is_error"],
                                                        "submit_ok": not sub["is_error"],
