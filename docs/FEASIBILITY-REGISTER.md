@@ -27,12 +27,7 @@
 - **验证路径：** D1′ 真实规划会话（DEC-017 边界内：公开仓库/单 unit/稳定 DOM/fail-closed）→ Phase 4 逐角色扩展；扩展场景（多 assistant unit/动态裁切恢复等）随 T-P1-906 分批复审。
 - **状态：** OPEN
 
-### F-003 测试执行 Worker 缺位
-- **假设/现状：** 立项架构有 TEST 节点；M1 只做 test_reports **登记**，测试的真实执行与日志证据采集无人负责。
-- **当前证据：** 盘点议题 2；PHASE-STATUS §2.3"测试日志可追溯 ❌"。
-- **风险：** 高——"审查和测试有真实证据"（06 §9-4）的测试半边缺位；GPT-04 检查真实测试证据（§7）被其牵制。
-- **验证路径：** D1′ 通过后立项最小测试执行 Worker（真实执行+日志采集+登记），归属 M4 或独立，届时拍板。
-- **状态：** OPEN
+### F-003 测试执行 Worker 缺位【已验证，移入 §2 成果保护区】
 
 ### F-004 D1′ 真实端到端垂直切片可行性【已验证，移入 §2 成果保护区】
 
@@ -63,6 +58,7 @@
 | 四模块集成（自驱动） | 状态机全链真实跑通含真实 commit 采集（GPT 腿为夹具） | `phase1/logs/integration-20261113T160107Z/`；T-P1-902 r2 PASS |
 | F-004 D1′ 真实端到端垂直切片 | **真实全链九步 PASS（2026-11-14，T-P1-905）**：M1 REST 建制→真实 ChatGPT 规划（826B 出/1636B 回，UUID `944f5ad1`）→904 Schema 双验证+登记（幂等三重验证过）→状态机 DRAFT→DEV_REPORTED 七事件全经 REST/MCP→M3 真实 claim（TASK-0003 负例过）→真实 commit `916d8b2`→M4 采集→报告闭环（DEVELOPMENT_COMPLETED 入 Inbox）。**边界：单角色/单轮/单任务；未合并 main（DEC-010）；另行独立验收** | `phase1/logs/t-p1-905-d1prime-20261114/RUN-RECORD.md`（全链 ID/SHA 绑定）；分支 `feature/T-P1-001-bundle-gate-help` |
 | F-007 契约体系消费者缺位 | **第一个真实消费者落地（2026-11-14，T-P1-905）**：M2/M3/M4 与编排首次通过 M1 REST 互通过一单真实消息——消息信封+task-plan-submitted payload Schema（904 冻结交付）对真实 GPT 回复 Ajv 双 valid；C3 错误码（REQ-0001/RES-0003/TASK-0003）在真实链路 5 次实际拦截（含 2 次 submit_result fail-closed 拒绝）；三 ID 强制+幂等键全链生效 | `phase1/logs/t-p1-905-d1prime-20261114/RUN-RECORD.md` §3/§5；`s4-schema-validation.json` |
+| F-003 测试执行 Worker 缺位 | **最小版已交付并独立验收（2026-11-14，T-P1-907）**：Python 标准库单文件 Worker（dev `b711160` Blob `0e4d7ab9`，193 行）——四道输入门禁（完整 40 位 SHA+worktree toplevel+HEAD 精确比对+清单校验/允许列表/超时 1..600s，六项拒绝全 BLOCKED exit=2 零执行）；四次真实执行覆盖 EXECUTED_PASS/EXECUTED_FAIL/TIMEOUT/START_ERROR（失败与启动异常留全记录且继续后续）；三件套原始字节+双 SHA 采集+SHA256SUMS；报告符合冻结契约（Ajv 141/141 环境回归+两报告独立 PASS，blob `1bda905c` 未动）；方案 B 零 REST 零凭据（artifact_id=null）；R1-R5 扫描 CLEAN。独立验收 8 PASS/0 REWORK/0 BLOCKED（DEC-029）。**边界：GPT-04 消费链路未提前开放；多环境/并发/重试/调度不在最小版范围** | `phase1/logs/t-p1-907-20261114/RUN-RECORD.md`（§9 验收记录）；分支 `feature/T-P1-907-test-worker`（dev）/`feature/T-P1-907-evidence`（证据） |
 
 ## 3. 版本记录
 
@@ -71,3 +67,4 @@
 | v0.1 | 2026-11-14 | 初稿：F-001~F-007 登记 + 已验证假设区 6 项 | 待用户 2026-11-14 10:30 审阅 |
 | v0.2 | 2026-11-14 | F-004 验证路径更新：号段已会务裁定 T-P1-905（方案 A，依赖 T-P1-904 先行） | 待用户 2026-11-14 10:30 审阅 |
 | v0.3 | 2026-11-14 | T-P1-905 D1′ 执行后更新：F-002 补真实单角色单轮证据、缺口收窄为多角色多轮（保持 OPEN）；F-004/F-007 转 VERIFIED 移入 §2 成果保护区（附 D1′ 全链证据）；状态：TECHNICALLY_PASSED，待用户审阅定稿 | 主会话（依据 DEC-024-C 开工授权执行，验收另行） |
+| v0.4 | 2026-11-14 | T-P1-907 执行后更新：F-003 关闭——最小测试执行 Worker 已交付并独立验收（8 PASS/0 REWORK/0 BLOCKED，DEC-029），移入 §2 成果保护区；v0.3 批注 TECHNICALLY_PASSED 仍待用户审阅定稿（归档不等于定稿） | 主会话（依据 DEC-028 开工授权执行，验收已闭合，合并待用户批准） |
