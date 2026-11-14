@@ -1,0 +1,7 @@
+【会务·T-P1-905限定复核(F-01~F-04闭合)】按完整SHA读仓库。基线main=b9e3b37；证据分支feature/T-P1-905-d1prime修订提交=36bedf5(保留a2895af未重写历史)；开发分支feature/T-P1-001-bundle-gate-help=916d8b2未动(首轮A项已PASS)。
+逐项核验(只核闭合，不重复首轮全量)：
+F-01→RUN-RECORD新增§8基线差异说明：执行基线c55c7f5与验收基线e59e250区分，两提交间main仅DEC-025/026治理文档，对DEC-024-C执行授权影响零；
+F-02→§7计数修正33→32(git ls-tree实查口径，笔误注明)；
+F-03→security-scan.txt(SHA 13b52b0c，工作树+git树双范围，规则R1-R5，结果CLEAN，git grep -a -P修正说明)；
+F-04→§9验收记录+修订落实表(PHASE-STATUS经查无计数/基线错误表述)。
+结论三态PASS/REWORK/BLOCKED，逐项给理由。约束：本复核不构成合并授权(DEC-010)，PASS后合并由用户拍板；DEC-017不解除。
