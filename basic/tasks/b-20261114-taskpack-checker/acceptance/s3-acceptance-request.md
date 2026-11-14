@@ -1,12 +1,13 @@
-# 验收请求：b-20261114-taskpack-checker 第 3 步（S3 unittest 正负例+边界测试+JSON 输出）——复验 R2
+# 验收请求：b-20261114-taskpack-checker 第 3 步（S3 unittest 正负例+边界测试+JSON 输出）——复验 R3（仅文档修正）
 
-> **绑定注记：** 验收历史：首验 REJECT（dispatch-2026-11-14T17-39-59，reply sha256=a741d1bc0568dacd2e99466c077f3f9bf63b129c75e46c2685479c71266bf28a，P1-1/P1-2/P2-1→整改 941ee88，登记问题9）→ 复验R1 REJECT（dispatch-2026-11-14T17-54-36，reply sha256=2da8c284a8ee3439c2cf4a4544a72bbd50094d7a9bedac08a4d22d3efc8ad0bb：三项整改成果确认保留；新 P1-1 计数覆盖缺口+P1-2 绑定申报错误→登记问题10，同批整改）。S2 已闭环（复验R3c PASS，dispatch-17-27-15）。S1 四轮闭环（复验 R4 PASS）。
+> **绑定注记：** 验收历史：首验 REJECT（dispatch-2026-11-14T17-39-59，reply sha256=a741d1bc0568dacd2e99466c077f3f9bf63b129c75e46c2685479c71266bf28a，P1-1/P1-2/P2-1→整改 941ee88，登记问题9）→ 复验R1 REJECT（dispatch-2026-11-14T17-54-36，reply sha256=2da8c284a8ee3439c2cf4a4544a72bbd50094d7a9bedac08a4d22d3efc8ad0bb：三项整改成果确认保留；新 P1-1 计数覆盖缺口+P1-2 绑定申报错误→登记问题10，同批整改）→ **复验R2（dispatch-2026-11-14T18-04-51，reply sha256=82fc2fb2488ecf11c4dc314ace57f7fcc535cfcc43cfb25b7a93f7591cbce3f9）：Git 绑定 P1-2/代码 P1-1/动态测试全 PASS（附件 SHA256 逐字一致+独立执行 Ran 33 tests OK 失败 0 跳过 0——Linux 环境符号链接权限可用故 skipped=0，环境差异如实注明）；唯一遗留=steps.md S3 六要素②④⑤未同步 33 项（验收记录准确性问题，非代码缺陷）→ 本轮仅文档修正**。S2 已闭环（复验R3c PASS）。S1 四轮闭环（复验 R4 PASS）。
+> **复验R3 范围：仅 steps.md S3 六要素②④⑤⑥文档修正（②用例数 33/④按轮次区分历史与最终结果/⑤最终命令+33 项结果/Windows skipped=1 历史环境说明保留未改写为 Linux 结果）+本请求更新。无代码改动，不重做已通过的测试。上轮验收方读 b1bd307 树内验收请求为 R1 版系时序必然（R2 版请求在 b1bd307 之后的 docs commit 86e5310），本轮请求随最新 docs commit 入库。**
 > **P1-2 如实说明：** 上轮（复验R1）申报"diff=4818399→941ee88 单 commit"错误——941ee88 的 parent 实为 3191a34，4818399→941ee88 区间含 2 commits（3191a34+941ee88）/5 文件；根因是申报时凭记忆写基线、未核实 parent 与 rev-list 区间数，与 S2 问题5 同型教训，已固化申报前必跑 `git rev-list --count` 与 parent 核验。本轮绑定按下述口径申报。
 
 ## 代码绑定（延续已认可口径：待验收 commit 自身 diff=parent→commit）
 
 - 分支：main（https://github.com/damwate/AIEO.git）
-- **本次待验收代码 commit：`b1bd307ffe574b785814e47527f0f91423a54190`（parent=3e61af1）**
+- **本轮无新代码 commit：代码验收基线仍为复验R2 已通过的 `b1bd307ffe574b785814e47527f0f91423a54190`（parent=3e61af1，diff=3e61af1→b1bd307 单 commit 仅 2 文件）。本轮新增仅为文档 commit（steps.md 六要素修正+本请求），不改变代码。**
 - **验收 diff 范围：`3e61af1` → `b1bd307`（单 commit，改动 2 个文件：basic/tool/check_taskpack.py 计数补标题形式、basic/tool/test_check_taskpack.py 新增跨格式反例。请以 `git show b1bd307` 核验；GitHub Compare 3e61af1...b1bd307 应为 ahead_by=1/2 files。）**
 - 历史链绑定：首验对象 4818399（parent=3c3c1bc，单 commit 仅 test 文件）；首轮整改 941ee88（parent=3191a34，单 commit 3 文件：工具+测试+整改材料）；docs 回填 3191a34/3e61af1 为文档 commit 不属验收代码范围。被测工具 check_taskpack.py 在 941ee88 与 b1bd307 两轮被修改——依据均如实登记（首验允许条款"新增测试实际发现其行为存在缺陷"+复验R1 P1-1"重复计数覆盖工具支持的全部字段书写形式"）。
 - 文档绑定：本验收请求与 steps.md 问题9/问题10 登记+S3 六要素回填随文档 commit 入库
