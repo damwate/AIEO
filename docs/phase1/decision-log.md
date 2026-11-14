@@ -257,3 +257,16 @@
 - **人工接管检查点（brief §1 范围内）：** M1/Chrome 启停（调度器零触碰）；908003 前 Composer 残留草稿 CDP 清理；908004 回读不一致诊断+链接化根因探测（证实 scheme 边界软换行，派单工具零修改、调度器侧去 scheme 适配）。
 - **边界：** 三分支推送后另行独立验收（新空白会话派单，A1–A8 简报 ≤1200B）；**合并 main 留用户拍板（DEC-010 不松动）**；M1/M2/M3/M4 零修改（只读消费契约）；M1 四条 PENDING 消息 ACK 超范围；M3 CLI 独立驱动开发腿为后续升级目标（DEC-032 ①如实申报）。
 - **关联：** DEC-033（开工拍板）、DEC-032（任务书 v0.3）、DEC-028（执行形态）、DEC-010（合并审批保留）、F-001（验收通过后关闭）。
+
+### DEC-035 T-P1-908 独立验收第 1 轮 REJECT 登记与补证修复闭环（2026-11-14 16:24–16:5x 本地）
+
+- **第 1 轮派单：** phase0/logs/dispatch-2026-11-14T08-24-15/（--new-session 新空白会话，1122B 自包含简报：三分支完整 SHA+任务书对照 SHA+A1–A8 步骤+回复格式）。reply.txt sha256=`1e3742d406ea60eaaf85dcb6046d3631390fbbb3fcfd272bc67309b17e5f49a9`。
+- **判定：REJECT**——A2/A3/A6/A7 PASS；**A1/A4/A5/A8 FAIL（阻断）**，审阅人明示"不得合并，等待补证及修复后重新独立验收"。执行会话零申辩全采纳，逐项定性：A4=交付缺陷（任务书 §11 A4 要求"登记类故意缺参→真实 REQ-0001→该 run ORCHESTRATED_FAIL+五要素"，此前误以 S6 重复领取探测 TASK-0003 充当且 RUN-RECORD §8 误标——任务书误读）；A1/A5/A8=补证缺口（缺独立 task_events 审计、缺 sha256sum -c 实测、缺可重现指南与逐项 SHA 引用要求）。
+- **修复与补证（全部真实链路，零 mock）：**
+  - A4：scheduler 新增 `--inject-a4` 专用失败采集演示模式（feature/T-P1-908-scheduler 提交 2b3e622→8f3a635）；演示 run ORCH-908020（首版向量过简→真实链路 REQ-0002，fail-closed 拒判，如实留证）→ 对照 mcp_server.mjs:279-282 分层修正向量 → **ORCH-908021：真实链路 REQ-0001（"report.correlation_id 缺失且当前会话无在途领取可继承"，905 §5-1 同形态）→ ORCHESTRATED_FAIL exit 1 + 失败报告五要素齐全**，判定条件达成。
+  - A1：evidence 分支新增 task-events-audit.json（M1 REST 只读读回）+ task-events-audit-serverlog.ndjson（M1 服务端审计 28 行）+ zero-db-direct-modification-declaration.md。
+  - A5：triplet-audit.json（21 run 149 组三件套 incomplete=0）+ SHA256SUMS 重生成（908 项）+ sha256sum-c-result.txt（908/908 OK）。
+  - A8：REPRODUCE-GUIDE.md（逐条重现命令）+ round1 原始字节归档；RUN-RECORD §8 改任务书原文逐字对照、新增 §10。
+  - 重扫：security-scan.txt 793 文件 disk+git 树双范围仍 **CLEAN**；evidence 分支补证提交 77a48d1。
+- **第 2 轮派单：** 另行发起（--new-session，简报携更新后完整 SHA+REPRODUCE-GUIDE 入口+reply 逐项引用证据 SHA 要求）；**合并 main 仍留用户拍板（DEC-010 不松动）**。
+- **关联：** DEC-034（执行完成）、DEC-028/DEC-033（执行形态）、DEC-010（合并审批保留）、T-P1-905 §5-1（A4 先例）。
