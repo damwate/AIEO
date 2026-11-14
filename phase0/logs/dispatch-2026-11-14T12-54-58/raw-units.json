@@ -1,0 +1,108 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-14T12:56:48.409Z",
+  "user_unit_key": "fallback-turn-1:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-1:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "d2a0ed18-7c14-4154-828e-c7b97337b762",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-1:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "6c5cfff278277fb23172744bd56ee7de9cda4799abe4fd109f27f239a55209d5",
+          "582a920ecce84242123e2130ef136165d8cbcfa6744f54dc5ad4f2c5f2338ad8",
+          "5e05e5f37fd30fd96d7bd4b4994e5b8917c9c6b1d89e89d3c6e0dabaef41a497",
+          "b56f65b14adce7f853935045b67588c47f847f15c224c1cba4f2824ce6afa937"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "6c5cfff278277fb23172744bd56ee7de9cda4799abe4fd109f27f239a55209d5",
+          "582a920ecce84242123e2130ef136165d8cbcfa6744f54dc5ad4f2c5f2338ad8",
+          "5e05e5f37fd30fd96d7bd4b4994e5b8917c9c6b1d89e89d3c6e0dabaef41a497",
+          "b56f65b14adce7f853935045b67588c47f847f15c224c1cba4f2824ce6afa937"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-1:0:user",
+      "fallback-turn-1:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-1:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\nPASS\n\n1. ① S2 映射：闭合。 DEC-040 明确取代 DEC-039 笔误，恢复 S2→Basic 或 Standard（按风险定），与战略纪要 §五一致。\n\n2. ② 30分钟预授权：实质闭合。 限定为开工方案拍板；main 合并、生产发布、数据删除明确排除，DEC-010 保留。注意：DEC-040 标注「待用户确认」，因此正式生效仍须用户确认。\n\n3. ③ 升级通道：闭合。 默认不换轨，超能力经用户批准升级；第三轮失败必须升级，不得增加参会 AI 延长止损周期。符合 AI-DEV-LESSONS §2。\n\n4. ④ 交接模板 v0.3：闭合。 五项可填写字段齐全，等级映射、批准记录和执行约定具备可操作性。\n\n最终裁定：原 ISSUES 三项均已修正，无新增实质性阻断。\n\n建议：用户确认 DEC-040 第2条后，启动 Basic MVP。",
+      "text_sha256": "b56f65b14adce7f853935045b67588c47f847f15c224c1cba4f2824ce6afa937",
+      "size_bytes": 862,
+      "assistant_uuid": "d2a0ed18-7c14-4154-828e-c7b97337b762"
+    }
+  ]
+}
