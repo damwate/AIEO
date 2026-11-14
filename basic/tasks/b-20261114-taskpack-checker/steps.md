@@ -36,22 +36,27 @@
 |---|---|---|---|---|
 | 问题1 | 文本输出遗漏 phase_problems（UNKNOWN 无可识别原因） | render_text 独立传参未接收 PhaseInfo.problems | `40c66d9b17696f548603bb847e45190204a09674`（文本输出"阶段读取: <原因>"） | 复验R1静态PASS（15-13-16）；复验R2维持（15-24-07） |
 | 问题2 | 文本与 JSON 未真正共用完整结果对象（正常/目录不存在两路径各自拼装、schema 不一致） | main() 三处分别构造数据 | `40c66d9b17696f548603bb847e45190204a09674`（统一 build_result，render_text(data) 消费同一对象） | 复验R1静态PASS；复验R2维持 |
-| 问题3 | 验收请求文档代码绑定过时（返工后待验收 commit 仍写 49c82b5，动态证据绑定 40c66d9，两份代码混合认定风险） | 返工提交后未同步更新 acceptance/s1-acceptance-request.md 的绑定字段 | 文档更新（绑定=40c66d9，diff=9de95cc→40c66d9，附验收历史证据链） | 复验R3维持（15-28-41，R3未再指出绑定问题，另发现问题4） |
+| 问题3 | 验收请求文档代码绑定过时（返工后待验收 commit 仍写 49c82b5，动态证据绑定 40c66d9，两份代码混合认定风险） | 返工提交后未同步更新 acceptance/s1-acceptance-request.md 的绑定字段 | `9ae394a12d5e261adeb272aa22050d92c5abb423`（文档更新：绑定=40c66d9，diff=9de95cc→40c66d9，附验收历史证据链） | 复验R3维持（15-28-41，R3未再指出绑定问题，另发现问题4） |
 | 问题4 | 冻结口径1"阶段读取失败=①项FAIL"实现却返回N/A（复验R3 dispatch-15-28-41 REJECT；执行者"桩期语义"辩护不成立，验收方正确） | check_requirement 依赖 read_phase 结果但未将 UNKNOWN 转为该项 FAIL，S1 骨架桩语义覆盖了冻结口径语义 | `553ed2d12455e6f30a2cee22616eeafb73ecf963`（check_requirement 内读阶段：UNKNOWN=FAIL+可识别原因+files登记task-brief.md；阶段正常仍N/A桩；整体FAIL优先不变；六项独立函数保持） | **复验R4 PASS**（dispatch-15-51-20，问题4修复符合冻结口径，六项标准全过） |
 
 （问题1、2 相互独立各第 1 次返工；问题3、问题4 各与之独立，均第 1 次；采集器跳位致结论原文不可恢复按 DEC-043 先例换会话，属采集缺陷不计入本任务返工；另：af3e9a7 提交信息声称"steps.md登记问题4"但该提交 diff 实际未含 steps.md，问题4 登记在本 commit 补上）
 
 ## S2 六项检查规则实现（验收重点：规则逐项通过）
 
-- [ ] ①需求记录（requirement.md 原文非空 + task-brief.md 9 必备字段非空非占位符）
-- [ ] ②步骤清单（steps.md 有效步骤编号与名称）
-- [ ] ③步骤验收记录（每步骤小节六要素+PASS 结论+证据引用，关联具体小节）
-- [ ] ④REJECT 返工记录（REJECT/返工/问题编号三方关联）
-- [ ] ⑤返工次数（同编号有效返工记录计数，第 4 次及以后 FAIL）
-- [ ] ⑥交付记录（任务完成时 delivery.md 七要素）
+- [x] ①需求记录（requirement.md 原文非空 + task-brief.md 9 必备字段非空非占位符）
+- [x] ②步骤清单（steps.md 有效步骤编号与名称）
+- [x] ③步骤验收记录（每步骤小节六要素+PASS 结论+证据引用，关联具体小节）
+- [x] ④REJECT 返工记录（REJECT/返工/问题编号三方关联）
+- [x] ⑤返工次数（同编号有效返工记录计数，第 4 次及以后 FAIL）
+- [x] ⑥交付记录（任务完成时 delivery.md 七要素）
 
 **六要素记录（步骤完成后填写）：**
-①本步骤目标：②修改文件：③修改内容（本次待验收 commit 完整 SHA）：④执行结果：⑤测试结果：⑥验收证据引用：
+①本步骤目标：按 steps.md S2 冻结清单实现六项检查规则（替换 S1 桩），保持六项独立函数+统一结果对象+两层校验（结构+有限规则，不做 AI 语义判断）。
+②修改文件：basic/tool/check_taskpack.py（六项函数实装+解析辅助）；basic/tasks/b-20261114-taskpack-checker/steps.md（S2 勾选+本记录+问题3修复 commit 补全 40 位）；acceptance/s2-fixtures/（三个验证用 fixture 任务包）+acceptance/s2-runtime-evidence/（五组运行证据留档）。
+③修改内容（本次待验收 commit 完整 SHA）：见 s2-acceptance-request.md 绑定字段（待验收 commit 及 diff 范围以该文件为准）。要点：①requirement.md 非空非占位符+task-brief 9 必备字段（按冻结清单"9 必备字段"；当前状态走阶段映射专门校验、最终结果设计上完成前暂空，均不入占位符检查表），字段提取支持表格行/行内/`## 字段`标题三形态；②`## S<编号> <名称>` 小节解析；③六要素提取（标记+（说明）后缀+冒号）+阶段规则（COMPLETED 全须 PASS/IN_PROGRESS 编号<当前须 PASS/PLANNING 全 N/A/当前步骤解析不出=FAIL 不猜）+PASS 结论+dispatch 目录+reply SHA256(64hex)+包内证据路径校验（相对/禁../禁符号链接出界/存在性）；④REJECT 与返工表三方关联（REJECT 须有含「问题编号+修复 commit 40位SHA」的有效行）；⑤同编号计数第 4 次及以后 FAIL；⑥COMPLETED 时 delivery.md 七要素，其余 N/A；④⑤在 COMPLETED 且无返工时空满足 PASS（保证整体 PASS 可达）；阶段读取失败=③FAIL 不猜。
+④执行结果：六项规则实装完成；对自身任务包运行：①②④⑤ PASS、③⑥ N/A 未到期、Overall IN_PROGRESS exit=1（符合冻结口径 6）；三 fixture 场景与 JSON 一致性全部符合预期（见⑥证据）。自测中抓出并修正三处：自身返工表问题3修复列为短 SHA（补全 9ae394a1…）；①误按 11 字段检查致「最终结果」占位符永久误报（改按冻结清单 9 字段）；④在 COMPLETED 无返工时误 N/A 卡死整体 PASS（改空满足）。
+⑤测试结果：自测 5 场景+JSON 一致性全过（A 自身包 IN_PROGRESS exit1/B good-completed 全 PASS exit0/C rework4 ⑤FAIL exit1/D reject-no-table ③④FAIL exit1/E JSON schema 与文本判定一致）；11 类异常场景 unittest 归 S3（本步骤未做，如实标注）；未跑独立验收（本记录即为派单前置材料）。
+⑥验收证据引用：验收结论：待独立验收（dispatch 目录与 reply SHA256 由验收派单后回填）。动态证据 acceptance/s2-runtime-evidence/run-a-own-pack.stdout 至 run-e-json-consistency.json 五组留档。
 
 ## S3 unittest 正负例+边界测试+JSON 输出（验收重点：异常场景全部覆盖）
 

@@ -1,0 +1,14 @@
+# S2 动态证据（2026-11-15 00:32，本机运行留档）
+# 场景A 本任务包 预期①②④⑤PASS ③⑥N/A IN_PROGRESS exit=1
+Taskpack: b-20261114-taskpack-checker
+Phase: IN_PROGRESS
+[PASS] ① 需求记录
+[PASS] ② 步骤清单
+[N/A] ③ 步骤验收记录
+       - 1 步记录完整 PASS；未到期步骤（3 个）: S2 六项检查规则实现（验收重点：规则逐项通过）、S3 unittest 正负例+边界测试+JSON 输出（验收重点：异常场景全部覆盖）、S4 文档与交付（验收重点：可独立运行）
+[PASS] ④ REJECT返工记录
+[PASS] ⑤ 返工次数
+[N/A] ⑥ 交付记录
+       - 阶段=IN_PROGRESS，交付记录未到期（COMPLETED 时检查 delivery.md 七要素）
+Overall: IN_PROGRESS
+exit=1

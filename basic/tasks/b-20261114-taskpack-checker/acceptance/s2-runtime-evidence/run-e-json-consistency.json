@@ -1,0 +1,102 @@
+# 场景E JSON与文本共用同一结果对象 本任务包 六项状态/overall/schema 一致
+{
+  "taskpack": "b-20261114-taskpack-checker",
+  "phase": "IN_PROGRESS",
+  "phase_problems": [],
+  "items": [
+    {
+      "no": 1,
+      "name": "需求记录",
+      "status": "PASS",
+      "problems": [],
+      "files": [
+        "requirement.md",
+        "task-brief.md"
+      ],
+      "steps": [],
+      "evidence": []
+    },
+    {
+      "no": 2,
+      "name": "步骤清单",
+      "status": "PASS",
+      "problems": [],
+      "files": [
+        "steps.md"
+      ],
+      "steps": [
+        "S1 骨架：CLI+状态模型+六项检查函数桩（验收重点：结构正确）",
+        "S2 六项检查规则实现（验收重点：规则逐项通过）",
+        "S3 unittest 正负例+边界测试+JSON 输出（验收重点：异常场景全部覆盖）",
+        "S4 文档与交付（验收重点：可独立运行）"
+      ],
+      "evidence": []
+    },
+    {
+      "no": 3,
+      "name": "步骤验收记录",
+      "status": "N/A",
+      "problems": [
+        "1 步记录完整 PASS；未到期步骤（3 个）: S2 六项检查规则实现（验收重点：规则逐项通过）、S3 unittest 正负例+边界测试+JSON 输出（验收重点：异常场景全部覆盖）、S4 文档与交付（验收重点：可独立运行）"
+      ],
+      "files": [
+        "steps.md",
+        "task-brief.md"
+      ],
+      "steps": [
+        "S1 骨架：CLI+状态模型+六项检查函数桩（验收重点：结构正确）",
+        "S2 六项检查规则实现（验收重点：规则逐项通过）",
+        "S3 unittest 正负例+边界测试+JSON 输出（验收重点：异常场景全部覆盖）",
+        "S4 文档与交付（验收重点：可独立运行）"
+      ],
+      "evidence": [
+        "acceptance/s1-acceptance-request.md"
+      ]
+    },
+    {
+      "no": 4,
+      "name": "REJECT返工记录",
+      "status": "PASS",
+      "problems": [],
+      "files": [
+        "steps.md"
+      ],
+      "steps": [
+        "问题1",
+        "问题2",
+        "问题3",
+        "问题4"
+      ],
+      "evidence": []
+    },
+    {
+      "no": 5,
+      "name": "返工次数",
+      "status": "PASS",
+      "problems": [],
+      "files": [
+        "steps.md"
+      ],
+      "steps": [
+        "问题1×1",
+        "问题2×1",
+        "问题3×1",
+        "问题4×1"
+      ],
+      "evidence": []
+    },
+    {
+      "no": 6,
+      "name": "交付记录",
+      "status": "N/A",
+      "problems": [
+        "阶段=IN_PROGRESS，交付记录未到期（COMPLETED 时检查 delivery.md 七要素）"
+      ],
+      "files": [],
+      "steps": [],
+      "evidence": []
+    }
+  ],
+  "problems": [],
+  "overall": "IN_PROGRESS"
+}

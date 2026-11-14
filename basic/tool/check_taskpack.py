@@ -19,8 +19,9 @@ import argparse
 import json
 import re
 import sys
+from collections import Counter
 from dataclasses import dataclass, field
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 # ---- 冻结口径常量 ----
 
@@ -37,20 +38,27 @@ PHASE_MAP = {
 # 占位符黑名单（steps.md 冻结口径 2）：字段值命中即判无效内容
 PLACEHOLDER_MARKERS = ("待填写", "TODO", "TBD", "待拍板后填写", "暂空")
 
-# task-brief.md 必备字段（basic/WORKFLOW.md 模块一）
+# task-brief.md ①项检查的 9 个必备字段（steps.md S2 冻结清单："9 必备字段非空非占位符"；
+# 版本选型三要素拆为三个具体字段）。当前状态/最终结果不在本表：当前状态由阶段映射专门校验
+# （冻结口径 1），最终结果设计上就是"任务完成前暂空"，作占位符检查会永久误报。
 BRIEF_REQUIRED_FIELDS = (
     "任务ID",
     "需求原文",
     "执行者理解",
     "验收目标",
     "优先级",
-    "当前状态",
     "当前步骤",
-    "最终结果",
     "选定版本",
     "任务等级",
     "选型理由",
 )
+
+# 步骤六要素（basic/WORKFLOW.md：steps.md 每步记录六要素）
+SIX_ELEMENT_NAMES = ("本步骤目标", "修改文件", "修改内容", "执行结果", "测试结果", "验收证据引用")
+CIRCLED = "①②③④⑤⑥"
+
+# delivery.md 七要素（basic/WORKFLOW.md 模块六）
+DELIVERY_ELEMENTS = ("原始需求", "最终实现内容", "修改文件", "测试结果", "Git commit", "未解决问题", "后续建议")
 
 ITEM_NAMES = {
     1: "需求记录",
@@ -68,8 +76,14 @@ OVERALL_IN_PROGRESS = "IN_PROGRESS"
 PHASE_UNKNOWN = "UNKNOWN"
 
 # commit SHA=40 位 hex；dispatch reply SHA256=64 位 hex（steps.md 冻结口径 5）
-RE_SHA40 = re.compile(r"^[0-9a-fA-F]{40}$")
-RE_SHA64 = re.compile(r"^[0-9a-fA-F]{64}$")
+RE_SHA40 = re.compile(r"(?<![0-9a-fA-F])[0-9a-fA-F]{40}(?![0-9a-fA-F])")
+RE_SHA64 = re.compile(r"(?<![0-9a-fA-F])[0-9a-fA-F]{64}(?![0-9a-fA-F])")
+# dispatch 证据目录引用（phase0/logs/dispatch-YYYY-MM-DDTHH-MM-SS）
+RE_DISPATCH_DIR = re.compile(r"dispatch-\d{4}-\d{2}-\d{2}T\d{2}-\d{2}-\d{2}")
+# 步骤小节标题（## S<编号> <名称>）
+RE_STEP_HEADING = re.compile(r"^##\s+(S(\d+))\s+(.*)$", re.MULTILINE)
+# 同一问题返工上限：第 3 次允许通过、第 4 次及以后 FAIL（冻结口径 3）
+REWORK_LIMIT = 3
 
 
 @dataclass
@@ -105,12 +119,10 @@ class PhaseInfo:
 
 
 def read_file_safe(path: Path) -> str:
-    """读取文本文件；编码异常按冻结口径 7 必须产生可识别结果，不抛未捕获异常"""
+    """读取文本文件；编码/OS 异常按冻结口径 7 必须产生可识别结果，不抛未捕获异常"""
     try:
         return path.read_text(encoding="utf-8")
-    except UnicodeDecodeError as exc:
-        raise FileDecodeError(str(path), str(exc)) from None
-    except OSError as exc:
+    except (UnicodeDecodeError, OSError) as exc:
         raise FileDecodeError(str(path), str(exc)) from None
 
 
@@ -121,6 +133,11 @@ class FileDecodeError(Exception):
         super().__init__(f"文件读取失败: {path} ({reason})")
         self.path = path
         self.reason = reason
+
+
+def is_placeholder(value: str) -> bool:
+    """占位符判定：命中黑名单子串即无效（冻结口径 2）"""
+    return any(marker in value for marker in PLACEHOLDER_MARKERS)
 
 
 def read_phase(task_dir: Path) -> PhaseInfo:
@@ -144,66 +161,167 @@ def read_phase(task_dir: Path) -> PhaseInfo:
     return PhaseInfo(phase=phase)
 
 
-def is_placeholder(value: str) -> bool:
-    """占位符判定：命中黑名单子串即无效（冻结口径 2）"""
-    return any(marker in value for marker in PLACEHOLDER_MARKERS)
+def extract_brief_field(text: str, name: str):
+    """从 task-brief.md 提取必备字段值，三种形态（本仓库实际使用前两种+标题）：
+    ①表格行 `| 字段 | 值 |`；②行内 `字段：值`（含 - * 与 ** 加粗前缀）；
+    ③标题 `## 字段（注记）[：值]`——标题行无值时取下一个非空行。返回值或 None（不存在）"""
+    table = re.search(rf"^\|\s*{re.escape(name)}\s*\|\s*(.*?)\s*\|", text, re.MULTILINE)
+    if table:
+        return table.group(1)
+    inline = re.search(rf"^\s*(?:[-*]\s*)?\**{re.escape(name)}\**\s*[：:](.*)$", text, re.MULTILINE)
+    if inline and inline.group(1).strip():
+        return inline.group(1).strip()
+    heading = re.search(rf"^\s*#{{1,6}}\s*{re.escape(name)}\s*(?:（[^）]*）)?\s*[：:]?\s*(.*)$", text, re.MULTILINE)
+    if heading:
+        rest = heading.group(1).strip()
+        if rest:
+            return rest
+        after = text[heading.end():]
+        for ln in after.split("\n"):
+            s = ln.strip().lstrip("#*- ").strip()
+            if s:
+                return s
+    return inline.group(1).strip() if inline else None
 
 
-def _na_item(no: int) -> ItemResult:
-    """S1 桩：未到期/未实现的检查项返回 N/A（S2 逐项替换实现）"""
-    return ItemResult(no=no, name=ITEM_NAMES[no], status=STATUS_NA,
-                      problems=["检查规则实现于 S2（当前为 S1 骨架桩）"])
+def parse_current_step(task_dir: Path):
+    """从 task-brief.md「当前步骤」解析当前步骤编号（S<数字>→int）；无法解析返回 None"""
+    brief_path = task_dir / "task-brief.md"
+    if not brief_path.is_file():
+        return None
+    try:
+        text = read_file_safe(brief_path)
+    except FileDecodeError:
+        return None
+    value = extract_brief_field(text, "当前步骤")
+    if not value:
+        return None
+    m = re.search(r"S(\d+)", value)
+    return int(m.group(1)) if m else None
 
 
-# ---- 六项独立检查函数（冻结口径 4：互不依赖执行顺序，各自结构化返回） ----
-
-def check_requirement(task_dir: Path) -> ItemResult:
-    """①需求记录：阶段读取失败（缺失/非法/占位符）=FAIL+可识别原因（冻结口径 1：
-    不猜阶段）；阶段正常时字段级检查实现于 S2（当前为 S1 骨架桩）"""
-    item = ItemResult(no=1, name=ITEM_NAMES[1])
-    phase_info = read_phase(task_dir)
-    if phase_info.phase == PHASE_UNKNOWN:
-        item.status = STATUS_FAIL
-        item.problems = list(phase_info.problems)
-        item.files = ["task-brief.md"]
-        return item
-    item.problems = ["字段级检查实现于 S2（当前为 S1 骨架桩）"]
-    return item
+def split_h2_sections(text: str) -> list:
+    """按 `## ` 标题切分小节，返回 [(标题, 正文)]；标题前内容忽略"""
+    matches = list(re.finditer(r"^##\s+(.*)$", text, re.MULTILINE))
+    sections = []
+    for i, m in enumerate(matches):
+        start = m.end()
+        end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
+        sections.append((m.group(1).strip(), text[start:end]))
+    return sections
 
 
-def check_steps(task_dir: Path) -> ItemResult:
-    """②步骤清单：steps.md 存在且含有效步骤编号与名称"""
-    return _na_item(2)
+def get_step_sections(text: str) -> list:
+    """提取步骤小节 [(编号:int, 标题, 正文)]（标题形如 `S1 骨架：...`）"""
+    steps = []
+    for title, body in split_h2_sections(text):
+        m = re.match(r"^S(\d+)\s+(.*)$", title)
+        if m:
+            steps.append((int(m.group(1)), m.group(2).strip(), body))
+    return steps
 
 
-def check_step_acceptance(task_dir: Path) -> ItemResult:
-    """③步骤验收记录：每步骤小节内六要素+PASS 结论+证据引用（关联具体小节）"""
-    return _na_item(3)
+def extract_six_elements(body: str) -> dict:
+    """提取六要素：标记为 ①-⑥+要素名（允许"（说明）"后缀+冒号），值为标记后到下一标记前
+    的文本；标记缺失=None；返回 {要素全名: str|None}"""
+    result = {}
+    spans = []  # (element_full_name, marker_start, value_start)
+    for i, name in enumerate(SIX_ELEMENT_NAMES):
+        full = CIRCLED[i] + name
+        m = re.search(re.escape(CIRCLED[i]) + re.escape(name) + r"(?:\s*（[^）]*）)?\s*[：:]", body)
+        spans.append((full, m.start(), m.end()) if m else (full, None, None))
+    for i, (full, start, vstart) in enumerate(spans):
+        if vstart is None:
+            result[full] = None
+            continue
+        # 值边界=下一个已找到标记的 start（不含），否则小节末尾
+        end = len(body)
+        for j in range(i + 1, len(spans)):
+            if spans[j][1] is not None:
+                end = spans[j][1]
+                break
+        result[full] = body[vstart:end].strip()
+    return result
 
 
-def check_rework_records(task_dir: Path) -> ItemResult:
-    """④REJECT 返工记录：REJECT/返工记录/问题编号三方关联"""
-    return _na_item(4)
+def validate_pack_path(task_dir: Path, rel: str):
+    """证据路径校验（冻结口径 5）：相对路径、禁 .. 穿越、解析实际路径防符号链接绕过、
+    必须存在于任务包内。返回问题文本或 None（通过）"""
+    rel_norm = rel.replace("\\", "/").strip()
+    if not rel_norm:
+        return "空路径"
+    if re.match(r"^[A-Za-z]:", rel_norm) or rel_norm.startswith(("/", "\\")):
+        return f"绝对路径不允许: {rel}"
+    parts = PurePosixPath(rel_norm).parts
+    if ".." in parts:
+        return f"路径穿越（..）不允许: {rel}"
+    base = task_dir.resolve()
+    try:
+        target = (base / rel_norm).resolve()
+    except OSError as exc:
+        return f"路径解析失败: {rel} ({exc})"
+    if not target.is_relative_to(base):
+        return f"实际路径越出任务目录（疑似符号链接绕过）: {rel}"
+    if not target.exists():
+        return f"证据路径不存在: {rel}"
+    return None
 
 
-def check_rework_limit(task_dir: Path) -> ItemResult:
-    """⑤返工次数：同编号有效返工记录计数，第 3 次允许通过、第 4 次及以后 FAIL"""
-    return _na_item(5)
+def pack_paths_in_text(text: str) -> list:
+    """从证据文本提取任务包内相对证据路径 token（acceptance/ 开头；含 * 时截断为目录前缀）"""
+    tokens = []
+    for m in re.finditer(r"acceptance/[\w.\-/\\]+", text):
+        tok = m.group(0).rstrip("。，；、）)\"'`")
+        tok = tok.replace("\\", "/")
+        star = tok.find("*")
+        if star >= 0:
+            tok = tok[:star]
+        if tok.endswith("/"):
+            tok = tok[:-1]
+        if tok and tok not in tokens:
+            tokens.append(tok)
+    return tokens
 
 
-def check_delivery(task_dir: Path, phase: str) -> ItemResult:
-    """⑥交付记录：任务完成时 delivery.md 七要素必须存在（按阶段矩阵 N/A 除外）"""
-    return _na_item(6)
-
-
-CHECK_FUNCS = (
-    check_requirement,
-    check_steps,
-    check_step_acceptance,
-    check_rework_records,
-    check_rework_limit,
-    check_delivery,
-)
+def parse_rework_table(text: str) -> tuple:
+    """解析返工记录表（表头含「问题编号」的 markdown 表格）。
+    返回 (found:bool, rows:[{problem, sha, problems:[...]})"""
+    lines = text.split("\n")
+    header_idx = None
+    for i, ln in enumerate(lines):
+        if re.match(r"^\s*\|.*问题编号.*\|", ln):
+            header_idx = i
+            break
+    if header_idx is None:
+        return False, []
+    cols = [c.strip() for c in lines[header_idx].strip().strip("|").split("|")]
+    try:
+        pi = cols.index("问题编号")
+        fi = next(i for i, c in enumerate(cols) if "修复" in c)
+    except (ValueError, StopIteration):
+        return True, [{"problem": "", "sha": None,
+                       "problems": ["返工记录表表头须含「问题编号」与「修复 commit」列"]}]
+    rows = []
+    for ln in lines[header_idx + 1:]:
+        if not ln.strip().startswith("|"):
+            break
+        cells = [c.strip() for c in ln.strip().strip("|").split("|")]
+        if all(re.fullmatch(r":?-{2,}:?", c) for c in cells if c):
+            continue  # 表头分隔行
+        problems = []
+        if len(cells) < len(cols):
+            problems.append(f"列数({len(cells)})少于表头({len(cols)})")
+        problem = cells[pi] if pi < len(cells) else ""
+        sha = None
+        if fi < len(cells):
+            m = RE_SHA40.search(cells[fi])
+            sha = m.group(0) if m else None
+            if not sha:
+                problems.append("修复 commit 列缺 40 位 hex SHA")
+        if not problem or is_placeholder(problem):
+            problems.append("问题编号缺失或为占位符")
+        rows.append({"problem": problem, "sha": sha, "problems": problems})
+    return True, rows
 
 
 def summarize(results: list, phase: str) -> tuple:
@@ -237,13 +355,327 @@ def render_text(result: dict) -> str:
         lines.append(f"       - 阶段读取: {problem}")
     for problem in result["problems"]:
         lines.append(f"       - {problem}")
-    circled = "①②③④⑤⑥"
     for r in result["items"]:
-        lines.append(f"[{r['status']}] {circled[r['no'] - 1]} {r['name']}")
+        lines.append(f"[{r['status']}] {CIRCLED[r['no'] - 1]} {r['name']}")
         for problem in r["problems"]:
             lines.append(f"       - {problem}")
     lines.append(f"Overall: {result['overall']}")
     return "\n".join(lines)
+
+
+# ---- 六项独立检查函数（冻结口径 4：互不依赖执行顺序，各自结构化返回） ----
+
+def check_requirement(task_dir: Path) -> ItemResult:
+    """①需求记录：requirement.md 原文非空非占位符 + task-brief.md 必备字段非空非占位符。
+    阶段读取失败（缺失/非法/占位符）=FAIL+可识别原因（冻结口径 1，不猜阶段）"""
+    item = ItemResult(no=1, name=ITEM_NAMES[1])
+    phase_info = read_phase(task_dir)
+    if phase_info.phase == PHASE_UNKNOWN:
+        item.status = STATUS_FAIL
+        item.problems = list(phase_info.problems)
+        item.files = ["task-brief.md"]
+        return item
+    problems = []
+    files = []
+    req_path = task_dir / "requirement.md"
+    if not req_path.is_file():
+        problems.append("requirement.md 不存在")
+    else:
+        files.append("requirement.md")
+        try:
+            req_text = read_file_safe(req_path).strip()
+            if not req_text:
+                problems.append("requirement.md 内容为空")
+            elif is_placeholder(req_text):
+                problems.append(f"requirement.md 内容为占位符: {req_text[:60]!r}")
+        except FileDecodeError as exc:
+            problems.append(str(exc))
+    brief_path = task_dir / "task-brief.md"
+    if not brief_path.is_file():
+        problems.append("task-brief.md 不存在")
+    else:
+        files.append("task-brief.md")
+        try:
+            brief_text = read_file_safe(brief_path)
+        except FileDecodeError as exc:
+            brief_text = None
+            problems.append(str(exc))
+        if brief_text is not None:
+            for fname in BRIEF_REQUIRED_FIELDS:
+                value = extract_brief_field(brief_text, fname)
+                if value is None:
+                    problems.append(f"task-brief.md 缺少必备字段「{fname}」")
+                elif not value.strip():
+                    problems.append(f"task-brief.md 字段「{fname}」为空")
+                elif is_placeholder(value):
+                    problems.append(f"task-brief.md 字段「{fname}」为占位符: {value!r}")
+    item.files = files
+    item.problems = problems
+    item.status = STATUS_FAIL if problems else STATUS_PASS
+    return item
+
+
+def check_steps(task_dir: Path) -> ItemResult:
+    """②步骤清单：steps.md 存在且含有效步骤编号与名称（`## S<编号> <名称>` 小节）"""
+    item = ItemResult(no=2, name=ITEM_NAMES[2])
+    path = task_dir / "steps.md"
+    if not path.is_file():
+        item.status = STATUS_FAIL
+        item.problems = ["steps.md 不存在"]
+        item.files = ["steps.md"]
+        return item
+    item.files = ["steps.md"]
+    try:
+        text = read_file_safe(path)
+    except FileDecodeError as exc:
+        item.status = STATUS_FAIL
+        item.problems = [str(exc)]
+        return item
+    steps = get_step_sections(text)
+    if not steps:
+        item.status = STATUS_FAIL
+        item.problems = ["steps.md 未找到任何步骤小节（须含 `## S<编号> <名称>` 标题）"]
+        return item
+    item.steps = [f"S{sid} {title}" for sid, title, _ in steps]
+    item.status = STATUS_PASS
+    return item
+
+
+def check_step_acceptance(task_dir: Path) -> ItemResult:
+    """③步骤验收记录：每步骤小节六要素齐全+PASS 结论（验收结论：PASS）+证据引用
+    （dispatch 目录+reply SHA256 64位hex+包内证据路径校验），关联具体步骤小节。
+    阶段规则：COMPLETED→全部步骤须 PASS；IN_PROGRESS→编号小于当前步骤的须 PASS、
+    当前及以后未到期 N/A；PLANNING→全部 N/A；当前步骤无法解析→FAIL（不猜）"""
+    item = ItemResult(no=3, name=ITEM_NAMES[3])
+    path = task_dir / "steps.md"
+    if not path.is_file():
+        item.status = STATUS_FAIL
+        item.problems = ["steps.md 不存在，无法核验步骤验收记录"]
+        item.files = ["steps.md"]
+        return item
+    item.files = ["steps.md", "task-brief.md"]
+    try:
+        text = read_file_safe(path)
+    except FileDecodeError as exc:
+        item.status = STATUS_FAIL
+        item.problems = [str(exc)]
+        return item
+    step_secs = get_step_sections(text)
+    if not step_secs:
+        item.status = STATUS_FAIL
+        item.problems = ["steps.md 无步骤小节"]
+        return item
+    phase_info = read_phase(task_dir)
+    phase = phase_info.phase
+    current = parse_current_step(task_dir)
+    problems = []
+    pass_steps, na_steps = [], []
+    item.steps = [f"S{sid} {title}" for sid, title, _ in step_secs]
+    if phase == PHASE_UNKNOWN:
+        item.status = STATUS_FAIL
+        item.problems = ["任务阶段读取失败，无法判定步骤是否到期（冻结口径 1 不猜阶段）"] + list(phase_info.problems)
+        return item
+    for sid, title, body in step_secs:
+        label = f"S{sid} {title}"
+        elems = extract_six_elements(body)
+        missing = [CIRCLED[i] + SIX_ELEMENT_NAMES[i] for i in range(6) if elems.get(CIRCLED[i] + SIX_ELEMENT_NAMES[i]) is None]
+        empty = [CIRCLED[i] + SIX_ELEMENT_NAMES[i] for i in range(6)
+                 if elems.get(CIRCLED[i] + SIX_ELEMENT_NAMES[i]) is not None
+                 and (not elems[CIRCLED[i] + SIX_ELEMENT_NAMES[i]].strip()
+                      or is_placeholder(elems[CIRCLED[i] + SIX_ELEMENT_NAMES[i]]))]
+        ev = elems.get(CIRCLED[5] + SIX_ELEMENT_NAMES[5]) or ""
+        conclusion_pass = bool(re.search(r"验收结论[：:]\s*\**\s*PASS", ev))
+        step_problems = []
+        if missing:
+            step_problems.append(f"六要素缺失: {'、'.join(missing)}")
+        if empty:
+            step_problems.append(f"六要素为空/占位符: {'、'.join(empty)}")
+        if ev.strip() and not is_placeholder(ev):
+            if not RE_DISPATCH_DIR.search(ev):
+                step_problems.append("⑥缺 dispatch 目录引用（dispatch-YYYY-MM-DDTHH-MM-SS）")
+            if not RE_SHA64.search(ev):
+                step_problems.append("⑥缺 reply SHA256（64 位 hex）")
+            for tok in pack_paths_in_text(ev):
+                problem = validate_pack_path(task_dir, tok)
+                if problem:
+                    step_problems.append(problem)
+                else:
+                    item.evidence.append(tok)
+        if elems and not missing and not empty and conclusion_pass and not step_problems:
+            pass_steps.append(label)
+            continue
+        due = (phase == PHASE_COMPLETED) or (current is not None and sid < current)
+        if due:
+            if not conclusion_pass and not missing and not empty:
+                step_problems.append("缺「验收结论：PASS」")
+            problems.append(f"{label}: " + "；".join(step_problems))
+        elif phase == PHASE_PLANNING:
+            na_steps.append(label)
+        elif current is None:
+            problems.append(f"{label}: 「当前步骤」无法解析出 S 编号，无法判定步骤是否到期（不猜）")
+        else:
+            na_steps.append(label)
+    if problems:
+        item.problems = problems
+        item.status = STATUS_FAIL
+    elif na_steps:
+        item.problems = [f"{len(pass_steps)} 步记录完整 PASS；未到期步骤（{len(na_steps)} 个）: {'、'.join(na_steps)}"]
+        item.status = STATUS_NA
+    else:
+        item.status = STATUS_PASS
+    return item
+
+
+def check_rework_records(task_dir: Path) -> ItemResult:
+    """④REJECT 返工记录：凡步骤验收证据含 REJECT 结论须有返工记录表行（问题编号+
+    修复 commit 40位SHA）；无 REJECT 且无返工表=N/A（未发生）。三方关联的结构层校验"""
+    item = ItemResult(no=4, name=ITEM_NAMES[4])
+    path = task_dir / "steps.md"
+    if not path.is_file():
+        item.status = STATUS_FAIL
+        item.problems = ["steps.md 不存在，无法核验 REJECT 返工记录"]
+        item.files = ["steps.md"]
+        return item
+    item.files = ["steps.md"]
+    try:
+        text = read_file_safe(path)
+    except FileDecodeError as exc:
+        item.status = STATUS_FAIL
+        item.problems = [str(exc)]
+        return item
+    reject_steps = []
+    for sid, title, body in get_step_sections(text):
+        elems = extract_six_elements(body)
+        if any(v and "REJECT" in v for v in elems.values()):
+            reject_steps.append(f"S{sid}")
+    found, rows = parse_rework_table(text)
+    problems = []
+    valid_rows = [r for r in rows if not r["problems"]]
+    for r in rows:
+        problems.extend(r["problems"])
+    if not found:
+        if reject_steps:
+            problems.append(f"步骤 {'、'.join(reject_steps)} 含 REJECT 结论但未找到返工记录表（表头须含「问题编号」）")
+    else:
+        if reject_steps and not valid_rows:
+            problems.append(f"步骤 {'、'.join(reject_steps)} 含 REJECT 结论但返工记录表无有效行")
+    if problems:
+        item.problems = problems
+        item.status = STATUS_FAIL
+    elif found:
+        # 表存在（有效行或暂无行）：记录结构就绪即 PASS
+        item.steps = [r["problem"] for r in valid_rows]
+        item.status = STATUS_PASS
+    elif read_phase(task_dir).phase == PHASE_COMPLETED:
+        # COMPLETED 且无 REJECT、无返工表：零返工空满足 PASS（保证整体 PASS 可达）
+        item.status = STATUS_PASS
+    else:
+        item.problems = ["无 REJECT 结论且无返工记录表（无返工发生，开发期未到期）"]
+        item.status = STATUS_NA
+    return item
+
+
+def check_rework_limit(task_dir: Path) -> ItemResult:
+    """⑤返工次数：按返工记录表同编号有效行计数，第 3 次允许通过、第 4 次及以后 FAIL；
+    无表/无有效行时：COMPLETED 阶段=PASS（0 返工空满足），否则 N/A 未到期"""
+    item = ItemResult(no=5, name=ITEM_NAMES[5])
+    path = task_dir / "steps.md"
+    if not path.is_file():
+        item.status = STATUS_FAIL
+        item.problems = ["steps.md 不存在，无法核验返工次数"]
+        item.files = ["steps.md"]
+        return item
+    item.files = ["steps.md"]
+    try:
+        text = read_file_safe(path)
+    except FileDecodeError as exc:
+        item.status = STATUS_FAIL
+        item.problems = [str(exc)]
+        return item
+    found, rows = parse_rework_table(text)
+    valid_rows = [r for r in rows if not r["problems"] and r["problem"] and r["sha"]]
+    if not found or not valid_rows:
+        phase = read_phase(task_dir).phase
+        if phase == PHASE_COMPLETED:
+            item.status = STATUS_PASS
+        else:
+            item.problems = ["无有效返工记录行，返工次数未到期可计数"]
+            item.status = STATUS_NA
+        return item
+    counts = Counter(r["problem"] for r in valid_rows)
+    over = sorted(p for p, c in counts.items() if c > REWORK_LIMIT)
+    item.steps = [f"{p}×{c}" for p, c in sorted(counts.items())]
+    if over:
+        item.problems = [f"问题编号 {p} 有效返工记录达 {counts[p]} 次（第 {REWORK_LIMIT + 1} 次及以后 FAIL，冻结口径 3）" for p in over]
+        item.status = STATUS_FAIL
+    else:
+        item.status = STATUS_PASS
+    return item
+
+
+def check_delivery(task_dir: Path, phase: str) -> ItemResult:
+    """⑥交付记录：COMPLETED 时 delivery.md 七要素必须齐全非空；其余阶段 N/A 未到期"""
+    item = ItemResult(no=6, name=ITEM_NAMES[6])
+    if phase != PHASE_COMPLETED:
+        item.problems = [f"阶段={phase}，交付记录未到期（COMPLETED 时检查 delivery.md 七要素）"]
+        item.status = STATUS_NA
+        return item
+    path = task_dir / "delivery.md"
+    if not path.is_file():
+        item.status = STATUS_FAIL
+        item.problems = ["任务已完成但 delivery.md 不存在（七要素完工总结）"]
+        item.files = ["delivery.md"]
+        return item
+    item.files = ["delivery.md"]
+    try:
+        text = read_file_safe(path)
+    except FileDecodeError as exc:
+        item.status = STATUS_FAIL
+        item.problems = [str(exc)]
+        return item
+    lines = [ln for ln in text.split("\n")]
+    problems = []
+    for name in DELIVERY_ELEMENTS:
+        value = None
+        for i, ln in enumerate(lines):
+            idx = ln.find(name)
+            if idx < 0:
+                continue
+            rest = ln[idx + len(name):].strip().lstrip("：:#*- ").strip()
+            if rest and not is_placeholder(rest):
+                value = rest
+                break
+            # 标题行：向后找第一个非空内容行作为值
+            for j in range(i + 1, min(i + 4, len(lines))):
+                nxt = lines[j].strip().lstrip("#*- ").strip()
+                if nxt:
+                    value = nxt if not is_placeholder(nxt) else None
+                    break
+            break
+        if value is None:
+            problems.append(f"delivery.md 七要素缺失或为空: {name}")
+        elif is_placeholder(value):
+            problems.append(f"delivery.md 七要素「{name}」为占位符")
+    if problems:
+        item.problems = problems
+        item.status = STATUS_FAIL
+    else:
+        item.status = STATUS_PASS
+    return item
+
+
+CHECK_FUNCS = (
+    check_requirement,
+    check_steps,
+    check_step_acceptance,
+    check_rework_records,
+    check_rework_limit,
+)
+
+# 阶段常量（与 PHASE_MAP 值一致）
+PHASE_COMPLETED = "COMPLETED"
+PHASE_IN_PROGRESS = "IN_PROGRESS"
+PHASE_PLANNING = "PLANNING"
 
 
 def main(argv: list) -> int:
