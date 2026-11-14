@@ -1,0 +1,181 @@
+{
+  "at": "2026-11-14T03:09:53.374Z",
+  "message_bytes": 1192,
+  "reply": "ChatGPT 说：\nT-P1-907 独立验收报告\n\n暂不签发 PASS 验收进行中\n\n仓库： damwate/AIEO\n\n验收基线： c4a9dc22319868451ebe560ebfc58a72ccdb0085\n\n任务书： F-003 v0.5，已核实实际 Blob SHA 为 38aa2d9ac856eb1810371faf75333a35fe7e3316，与指定版本一致。\n\n一、已完成的独立核验\n\n核验项\n\n\t\n\n当前结果\n\n\t\n\n依据\n\n\n\n\nA1 开发分支身份\n\n\t\n\nPASS\n\n\t\n\n完整 SHA 对比，基线一致，ahead 1\n\n\n\n\nA1 文件范围\n\n\t\n\nPASS\n\n\t\n\n仅新增 phase1/tools/test_worker.py\n\n\n\n\n任务书约束\n\n\t\n\nPASS\n\n\t\n\nv0.5 五行状态映射、异常策略、方案 B 均已读取\n\n\n\n\nWorker 实现初审\n\n\t\n\nPASS\n\n\t\n\n已读取完整 193 行源码\n\n开发分支确认：\n\nb711160d374b7a0dfc3f6445b393736a4949d1f6\n\n源码 Blob SHA：\n\n0e4d7ab94c12fc4f8af923770deb1863160ed1ed\n\n初审确认其具备以下机制：\n\n完整 40 位 SHA 格式校验及 HEAD 一致性核验。\n\n命令清单非空校验。\n\n可执行程序白名单。\n\nargv 数组执行，shell=False。\n\n超时、启动异常分别记录。\n\n单条命令失败后继续执行。\n\n根据真实执行结果自动计算 PASS/REWORK。\n\n输出逐命令 stdout、stderr、meta 及 SHA-256 索引。\n\n不调用 M1 REST，不引入业务凭据。\n\n注意：以上是源码核验，不等于真实运行证据已经通过。\n\n二、A1—A8 验收结论\n\n以下 PASS 指证据与验收要求相符；REWORK 指存在需要修订的交付问题；BLOCKED 指缺乏足够证据，不能确认通过。\n\n项目\n\n\t\n\n结论\n\n\t\n\n独立核验意见\n\n\n\n\nA1 完整 SHA + HEAD\n\n\t\n\nPASS\n\n\t\n\nDev commit 与基线精确对应；R3 真实证明 HEAD 不一致时 BLOCKED，未自动 checkout/reset\n\n\n\n\nA2 正向执行\n\n\t\n\nPASS\n\n\t\n\nEXEC-907001 两条命令 exit 0；二层结果 14/14、TAR 三项 match、95/95\n\n\n\n\nA3 失败真实演示\n\n\t\n\nPASS\n\n\t\n\nEXEC-907002 被测命令真实 exit 2；Worker 正确产生 EXECUTED_FAIL/REWORK\n\n\n\n\nA4 异常处理\n\n\t\n\nPASS\n\n\t\n\nTIMEOUT、真实 OSError、失败后继续，以及六项输入拒绝均有证据\n\n\n\n\nA5 原始日志与 SHA-256\n\n\t\n\nPASS\n\n\t\n\n三件套、报告 evidence_index、SHA256SUMS 及原始日志均已提交；抽查的报告索引与清单哈希一致\n\n\n\n\nA6 冻结契约\n\n\t\n\nPASS\n\n\t\n\n两份报告 Ajv2020 strict PASS；141/141；Schema Blob 完全一致\n\n\n\n\nA7 安全与权限边界\n\n\t\n\nPASS\n\n\t\n\nR1-R5 CLEAN，扫描记录 0 命中；源码无 REST 调用；artifact_id=null\n\n\n\n\nA8 双分支及范围\n\n\t\n\nREWORK\n\n\t\n\n双分支及修改范围符合要求，但证据文件数量与 RUN-RECORD 记载不一致\n\n三、重点问题\n\nA4：异常处理值得肯定。\n\n这里有两项容易混淆的事实：\n\nEXEC-907003 首次设计的启动异常演示没有触发，因为 python3 实际可用。开发方如实记录，没有伪造异常。\n\nEXEC-907004 改用受限 PATH，真实触发 FileNotFoundError。两条命令均产生 START_ERROR，第二条仍被尝试执行。\n\n这符合任务书 §10 的继续执行要求。\n\nA8：发现一处交付记录错误。\n\n我重新计算了证据分支的 Git compare 文件清单：\n\nRUN-RECORD 声明\n\n53 文件\n\nGit 实际新增\n\n55 文件\n\n差异定位\n\ninputs-and-rejections 实际有 19 个文件，而 RUN-RECORD 写的是 17 个。\n\n其中包含 commands-a4starterr.json 和 commands-a4suite.json 两份文件。\n\n其余文件数量与目录清单能够对应。\n\n需要修订 RUN-RECORD\n\n这不是 Worker 功能缺陷，也没有发现证据文件缺失，但独立验收记录必须准确反映实际提交内容。\n\n另外，规划文件 reply.txt 的 SHA-256 完整值已在 RUN-RECORD 登记，但本轮通过指定仓库引用读取该文件时返回 404。因此我没有把规划原文标记为已独立复核。这不影响上述源码与运行证据核验，但应保留这一核验限制。\n\n四、双分支与工程范围\n\n开发分支\n\n范围符合\n\nfeature/T-P1-907-test-worker\n\nb711160d374b7a0dfc3f6445b393736a4949d1f6\n\n基线：c4a9dc2\n\n仅新增 phase1/tools/test_worker.py\n\n193 行源码\n\n证据分支\n\n范围符合\n\nfeature/T-P1-907-evidence\n\n669fe546a3c3413769c614056317c93ee1f34352\n\n基线：c4a9dc2\n\n实际新增 55 个文件\n\n仅增加本任务证据及运行记录\n\n未触碰范围\n\nM1：未修改\n\nM4：未修改\n\n冻结 Schema：未修改\n\nF-001：未提前实现\n\n调度、批次、REST 集成：未提前实现\n\n五、最终会务决定\nREWORK — 暂不整体验收通过\n\n本轮八项结果：\n\nPASS：A1、A2、A3、A4、A5、A6、A7，共 7 项。\n\nREWORK：A8，共 1 项。\n\nBLOCKED：0 项。\n\n唯一明确的交付修订要求：\n\n修订 RUN-RECORD.md，将证据文件总数更正为 55。\n\n将输入与拒绝目录数量更正为 19，并核对组成清单。\n\n保留原有历史记录，不重写提交历史。\n\n提交修订后重新进行 A8 限定复核，不要求重新执行已经通过的四组 Worker 测试。\n\n权限与决议边界\n\n本报告不构成合并授权，DEC-010 继续有效。\n\nDEC-017 扩展场景限制不解除。\n\n不因本轮测试成功而授权 F-003 自动关闭。\n\nF-003 的最终处置待验收完成后另行登记。\n\n两个分支继续保持未合并状态。\n\n我的会务意见： T-P1-907 的核心实现和真实执行证据质量良好，没有发现需要推翻 Worker 实现的实质性问题。当前不应为了一个记录数量错误重新开发或重跑全部测试，只需要完成 A8 文档修订和限定复核。\n\n建议下一轮直接提交修订后的 RUN-RECORD 和新完整 SHA。",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "79aead41-3206-4010-a2d7-5aed5c85b8ce",
+  "stability": {
+    "stable": true,
+    "interval_ms": 4610,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-14T03:09:48.072Z",
+      "read_finished_at": "2026-11-14T03:09:49.667Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "637d80186d157d459e142b78306b73fd6d0d12329f59e50e59b99e4bb028ef3d",
+          "size_bytes": 5448
+        }
+      ],
+      "assistant_uuid": "79aead41-3206-4010-a2d7-5aed5c85b8ce",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-14T03:09:52.682Z",
+      "read_finished_at": "2026-11-14T03:09:53.217Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "637d80186d157d459e142b78306b73fd6d0d12329f59e50e59b99e4bb028ef3d",
+          "size_bytes": 5448
+        }
+      ],
+      "assistant_uuid": "79aead41-3206-4010-a2d7-5aed5c85b8ce",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "24dc417fcc93a02bf15ce34e1a81520760036a21c6ad05c3e894d131512110b6",
+          "637d80186d157d459e142b78306b73fd6d0d12329f59e50e59b99e4bb028ef3d"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "24dc417fcc93a02bf15ce34e1a81520760036a21c6ad05c3e894d131512110b6",
+          "637d80186d157d459e142b78306b73fd6d0d12329f59e50e59b99e4bb028ef3d"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "637d80186d157d459e142b78306b73fd6d0d12329f59e50e59b99e4bb028ef3d",
+  "size_bytes": 5448,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-14T03-06-25\\reply.txt",
+  "reply_readback_sha256": "637d80186d157d459e142b78306b73fd6d0d12329f59e50e59b99e4bb028ef3d",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-14T03-06-25\\raw-units.json",
+  "raw_units_sha256": "075e1f04c3f7230c0df2eb922eb7e2cddb59d57d058bc4c76228c131497f8386",
+  "raw_units_size_bytes": 8442,
+  "raw_units_readback_sha256": "075e1f04c3f7230c0df2eb922eb7e2cddb59d57d058bc4c76228c131497f8386",
+  "session_id": "6af7d068-c138-83e8-a7a5-fbe0e56f7e3a",
+  "conversation_url": "https://chatgpt.com/c/6af7d068-c138-83e8-a7a5-fbe0e56f7e3a",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}
