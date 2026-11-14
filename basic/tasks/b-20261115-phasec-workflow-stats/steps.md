@@ -72,7 +72,7 @@
 **六要素记录（步骤完成后填写）：**
 ①本步骤目标：按冻结方案完成整体校验交付——检查器六项自检（本任务包）+全部交付物文件一致性检查（程序核验）+delivery.md 七要素成文；声明 v0.3 生效拍板留用户（代授权范围外），S4 验收通过≠v0.3 生效。
 ②修改文件：basic/tasks/b-20261115-phasec-workflow-stats/delivery.md（新建，七要素）；本 steps.md（S4 登记）；task-brief.md（状态更新）。
-③修改内容（本次待验收 commit 完整 SHA）：（待回填——S4 交付 commit；申报前必跑 rev-list+parent 核验）
+③修改内容（本次待验收 commit 完整 SHA）：5580d4aacfc34d89e4ea674cdea0204a7b1d25ac（S4 交付唯一 commit；diff=6cf01df→5580d4a 单 commit 3 文件=delivery.md 新建+steps.md S4 登记+task-brief 状态，申报前核验已跑：rev-list --count 6cf01df..5580d4a=1+parent=6cf01df；验收基线口径=S1-S3 三件交付物内容层面已分别闭环于 30b56de[R2 PASS]/0604231[R3 PASS]/09e7797[R4 PASS]，本 commit 为文档交付与校验记录；其后的回填/闭环文档 commit 不属验收 diff 范围，承首任务 S4 先例 43cd5da→afecef5）
 ④执行结果：检查器六项自检 EXECUTED（①②④⑤ PASS、③=S1-S3 3 步记录完整 PASS/S4 未到期、⑥ N/A、Overall=IN_PROGRESS=S4 进行中预期态）；全部交付物一致性程序核验 21/21 PASS，八组检查=①WORKFLOW v0.3 草案版本头+v0.2 现行 blockquote+附录差异记录 12 行无重号；②清单 31 项×6 字段 0 错列+BLOCKED 边界第 4 条规则在位；③ST-01 核链命令（rev-list --reverse --parents）WORKFLOW 与模板两处同步在位；④附录 ST-10/11 与统计 §十三 关键句对齐（止损未触发/规划 2 轮 12 分钟收敛/六查不属 ST 条目）；⑤workflow-stats.md 最后修改=30b56de（=S1 R2 PASS 验收对象，S2/S3 全程未动统计）；⑥返工表 8 行全 40 位 SHA 无占位符残留；⑦S1/S2/S3 六要素各含字面「验收结论：PASS」；⑧task-brief↔steps 状态一致。如实记录一处核验脚本断言口径修正：⑤组初版断言写"最后修改=976ada1"系我写错（S1 闭环回填 commit 本就不碰统计文件），甄别为断言口径错误非交付物缺陷，修正为 30b56de 后全过；delivery.md 七要素成文（复刻首任务格式）。
 ⑤测试结果：一致性核验输出 20 PASS+1 FAIL→FAIL 甄别=断言口径错误（见④）→修正重跑 21/21 PASS；检查器自检输出留证（S4 commit 前后各跑一次，COMPLETED 前后 ③⑥ 到期行为正确）。
 ⑥验收证据引用：（待 S4 独立验收后回填）
