@@ -1,0 +1,12 @@
+# 场景C rework4(问题1已被S1⑤引用)（预期：④PASS ⑤FAIL问题1第4次 exit1）
+Taskpack: fixture-rework4
+Phase: COMPLETED
+[PASS] ① 需求记录
+[PASS] ② 步骤清单
+[PASS] ③ 步骤验收记录
+[PASS] ④ REJECT返工记录
+[FAIL] ⑤ 返工次数
+       - 问题1 有效返工记录达 4 次（第 4 次及以后 FAIL，冻结口径 3）
+[PASS] ⑥ 交付记录
+Overall: FAIL
+exit=1

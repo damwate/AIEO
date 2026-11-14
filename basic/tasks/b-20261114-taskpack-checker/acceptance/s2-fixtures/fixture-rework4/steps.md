@@ -9,7 +9,7 @@
 ②修改文件：fixture/S1.md
 ③修改内容：S1 实现内容。
 ④执行结果：S1 执行完成。
-⑤测试结果：S1 冒烟通过。
+⑤测试结果：S1 冒烟通过。（该任务共发生问题1 返工 4 次，见返工记录表）
 ⑥验收证据引用：验收结论：PASS（dispatch-2026-11-14T10-00-01，reply sha256=a1b2c3d4a1b2c3d4a1b2c3d4a1b2c3d4a1b2c3d4a1b2c3d4a1b2c3d4a1b2c3d4）。证据包内路径 acceptance/s2-fixtures/evidence/probe.txt。
 
 ## S2 规则实现

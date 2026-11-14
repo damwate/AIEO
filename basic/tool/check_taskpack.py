@@ -320,8 +320,16 @@ def parse_rework_table(text: str) -> tuple:
                 problems.append("修复 commit 列缺 40 位 hex SHA")
         if not problem or is_placeholder(problem):
             problems.append("问题编号缺失或为占位符")
-        rows.append({"problem": problem, "sha": sha, "problems": problems})
+        num_m = re.search(r"问题\s*(\d+)", problem)
+        rows.append({"problem": problem, "sha": sha,
+                     "num": int(num_m.group(1)) if num_m else None,
+                     "problems": problems})
     return True, rows
+
+
+def extract_problem_numbers(text: str) -> set:
+    """提取文本中引用的问题编号集合（「问题<N>」，容许空白）；编号级三方关联用"""
+    return {int(m) for m in re.findall(r"问题\s*(\d+)", text)}
 
 
 def summarize(results: list, phase: str) -> tuple:
@@ -477,6 +485,19 @@ def check_step_acceptance(task_dir: Path) -> ItemResult:
         return item
     for sid, title, body in step_secs:
         label = f"S{sid} {title}"
+        # P1-1 整改（S2 首验 REJECT）：先判到期（阶段规则），再评估记录——
+        # 未到期步骤一律 N/A，不因预填完整 PASS 记录而提前 PASS；
+        # PLANNING 全部 N/A；IN_PROGRESS 编号<当前才到期；COMPLETED 全部到期
+        if phase == PHASE_PLANNING:
+            na_steps.append(label)
+            continue
+        if phase == PHASE_IN_PROGRESS:
+            if current is None:
+                problems.append(f"{label}: 「当前步骤」无法解析出 S 编号，无法判定步骤是否到期（不猜）")
+                continue
+            if sid >= current:
+                na_steps.append(label)
+                continue
         elems = extract_six_elements(body)
         missing = [CIRCLED[i] + SIX_ELEMENT_NAMES[i] for i in range(6) if elems.get(CIRCLED[i] + SIX_ELEMENT_NAMES[i]) is None]
         empty = [CIRCLED[i] + SIX_ELEMENT_NAMES[i] for i in range(6)
@@ -504,17 +525,9 @@ def check_step_acceptance(task_dir: Path) -> ItemResult:
         if elems and not missing and not empty and conclusion_pass and not step_problems:
             pass_steps.append(label)
             continue
-        due = (phase == PHASE_COMPLETED) or (current is not None and sid < current)
-        if due:
-            if not conclusion_pass and not missing and not empty:
-                step_problems.append("缺「验收结论：PASS」")
-            problems.append(f"{label}: " + "；".join(step_problems))
-        elif phase == PHASE_PLANNING:
-            na_steps.append(label)
-        elif current is None:
-            problems.append(f"{label}: 「当前步骤」无法解析出 S 编号，无法判定步骤是否到期（不猜）")
-        else:
-            na_steps.append(label)
+        if not conclusion_pass and not missing and not empty:
+            step_problems.append("缺「验收结论：PASS」")
+        problems.append(f"{label}: " + "；".join(step_problems))
     if problems:
         item.problems = problems
         item.status = STATUS_FAIL
@@ -527,8 +540,9 @@ def check_step_acceptance(task_dir: Path) -> ItemResult:
 
 
 def check_rework_records(task_dir: Path) -> ItemResult:
-    """④REJECT 返工记录：凡步骤验收证据含 REJECT 结论须有返工记录表行（问题编号+
-    修复 commit 40位SHA）；无 REJECT 且无返工表=N/A（未发生）。三方关联的结构层校验"""
+    """④REJECT 返工记录（P1-2 整改：编号级三方关联）：步骤⑥含 REJECT 须引用问题编号，
+    且返工表须有该编号的有效行（问题编号+修复 commit 40位SHA）；返工行也须被某步骤⑥引用；
+    无 REJECT 无表=N/A（COMPLETED 空满足 PASS）。无关行不能替代缺失关联"""
     item = ItemResult(no=4, name=ITEM_NAMES[4])
     path = task_dir / "steps.md"
     if not path.is_file():
@@ -544,26 +558,44 @@ def check_rework_records(task_dir: Path) -> ItemResult:
         item.problems = [str(exc)]
         return item
     reject_steps = []
+    reject_nums = set()
+    referenced_nums = set()
+    problems = []
     for sid, title, body in get_step_sections(text):
         elems = extract_six_elements(body)
-        if any(v and "REJECT" in v for v in elems.values()):
+        # 编号引用源=整个步骤小节（六要素任一要素提及均可构成行关联）
+        referenced_nums.update(extract_problem_numbers(body))
+        has_reject = False
+        for v in elems.values():
+            if v and "REJECT" in v:
+                has_reject = True
+                # REJECT 关联编号=含 REJECT 的要素值+⑥（验收结论所在）
+                reject_nums.update(extract_problem_numbers(v))
+        if has_reject:
+            ev = elems.get(CIRCLED[5] + SIX_ELEMENT_NAMES[5]) or ""
+            reject_nums.update(extract_problem_numbers(ev))
             reject_steps.append(f"S{sid}")
+            if not extract_problem_numbers(body):
+                problems.append(f"S{sid} 含 REJECT 结论但未引用问题编号（须如「问题1」），无法三方关联")
     found, rows = parse_rework_table(text)
-    problems = []
     valid_rows = [r for r in rows if not r["problems"]]
     for r in rows:
         problems.extend(r["problems"])
-    if not found:
-        if reject_steps:
-            problems.append(f"步骤 {'、'.join(reject_steps)} 含 REJECT 结论但未找到返工记录表（表头须含「问题编号」）")
-    else:
-        if reject_steps and not valid_rows:
-            problems.append(f"步骤 {'、'.join(reject_steps)} 含 REJECT 结论但返工记录表无有效行")
+    # P1-2：返工行须被步骤⑥引用（编号级），未被引用的行不构成有效关联
+    for r in valid_rows:
+        if r["num"] is None or r["num"] not in referenced_nums:
+            problems.append(f"返工行「{r['problem']}」未被任何步骤⑥验收记录引用（编号级三方关联缺失）")
+    # P1-2：REJECT 引用的每个问题编号都须有对应有效返工行，无关行不能替代
+    for num in sorted(reject_nums):
+        if not any(r["num"] == num for r in valid_rows):
+            problems.append(f"REJECT 关联的「问题{num}」无有效返工记录行（问题编号+修复 commit 40 位 SHA）")
+    if not found and reject_steps:
+        problems.append(f"步骤 {'、'.join(reject_steps)} 含 REJECT 结论但未找到返工记录表（表头须含「问题编号」）")
     if problems:
         item.problems = problems
         item.status = STATUS_FAIL
     elif found:
-        # 表存在（有效行或暂无行）：记录结构就绪即 PASS
+        # 表存在（有效行或暂无行且均关联）：记录结构就绪即 PASS
         item.steps = [r["problem"] for r in valid_rows]
         item.status = STATUS_PASS
     elif read_phase(task_dir).phase == PHASE_COMPLETED:
@@ -594,19 +626,25 @@ def check_rework_limit(task_dir: Path) -> ItemResult:
         return item
     found, rows = parse_rework_table(text)
     valid_rows = [r for r in rows if not r["problems"] and r["problem"] and r["sha"]]
-    if not found or not valid_rows:
+    # P1-3 整改（S2 首验 REJECT）：只计通过④编号级关联的行——行编号须被某步骤小节引用，
+    # 未被引用的行不参与计数（其关联缺陷由④单独 FAIL，不静默）
+    referenced_nums = set()
+    for _, _, body in get_step_sections(text):
+        referenced_nums.update(extract_problem_numbers(body))
+    linked_rows = [r for r in valid_rows if r["num"] is not None and r["num"] in referenced_nums]
+    if not found or not linked_rows:
         phase = read_phase(task_dir).phase
         if phase == PHASE_COMPLETED:
             item.status = STATUS_PASS
         else:
-            item.problems = ["无有效返工记录行，返工次数未到期可计数"]
+            item.problems = ["无已关联的有效返工记录行，返工次数未到期可计数"]
             item.status = STATUS_NA
         return item
-    counts = Counter(r["problem"] for r in valid_rows)
-    over = sorted(p for p, c in counts.items() if c > REWORK_LIMIT)
-    item.steps = [f"{p}×{c}" for p, c in sorted(counts.items())]
+    counts = Counter(r["num"] for r in linked_rows)
+    over = sorted(n for n, c in counts.items() if c > REWORK_LIMIT)
+    item.steps = [f"问题{n}×{c}" for n, c in sorted(counts.items())]
     if over:
-        item.problems = [f"问题编号 {p} 有效返工记录达 {counts[p]} 次（第 {REWORK_LIMIT + 1} 次及以后 FAIL，冻结口径 3）" for p in over]
+        item.problems = [f"问题{n} 有效返工记录达 {counts[n]} 次（第 {REWORK_LIMIT + 1} 次及以后 FAIL，冻结口径 3）" for n in over]
         item.status = STATUS_FAIL
     else:
         item.status = STATUS_PASS

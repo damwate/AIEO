@@ -1,0 +1,16 @@
+# 场景H reject-wrong-number(P1-2复验)（预期：③FAIL缺PASS ④FAIL(问题1无行+问题2未引用) exit1）
+Taskpack: fixture-reject-wrong-number
+Phase: IN_PROGRESS
+[PASS] ① 需求记录
+[PASS] ② 步骤清单
+[FAIL] ③ 步骤验收记录
+       - S2 规则实现: 缺「验收结论：PASS」
+[FAIL] ④ REJECT返工记录
+       - 返工行「问题2」未被任何步骤⑥验收记录引用（编号级三方关联缺失）
+       - REJECT 关联的「问题1」无有效返工记录行（问题编号+修复 commit 40 位 SHA）
+[N/A] ⑤ 返工次数
+       - 无已关联的有效返工记录行，返工次数未到期可计数
+[N/A] ⑥ 交付记录
+       - 阶段=IN_PROGRESS，交付记录未到期（COMPLETED 时检查 delivery.md 七要素）
+Overall: FAIL
+exit=1
