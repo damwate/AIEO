@@ -1,0 +1,4 @@
+Error: 回读不一致，STOP
+    at sendAndCollect (file:///D:/AIEO/phase0/tools/gpt_dispatch.mjs:167:55)
+    at async mainLocked (file:///D:/AIEO/phase0/tools/gpt_dispatch.mjs:298:59)
+    at async main (file:///D:/AIEO/phase0/tools/gpt_dispatch.mjs:252:5)

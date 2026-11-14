@@ -1,0 +1,10 @@
+{
+  "step": "2",
+  "name": "dispatch-stdout",
+  "started_utc": "2026-11-14T07:12:21Z",
+  "sha256_stdout": "4bf26176a9287a81843491081a24069fc7971ddc7b62e6c17dfa41479f619469",
+  "sha256_stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "exit_code": 0,
+  "cmd": "node gpt_dispatch.mjs --new-session",
+  "timeout_ms_env": "600000"
+}

@@ -1,0 +1,80 @@
+{
+  "failure_report": {
+    "run_id": "ORCH-908012",
+    "failed_step": -1,
+    "last_confirmed_state": "S7: dev done: bundle_gate.mjs 新增 --version：输出版本行 bundle_gate version 1.0（与输出记录 bundle_gate_ver",
+    "completed_operations_with_entity_ids": [
+      {
+        "step": 1,
+        "op": "create project",
+        "project_id": "AIEO-ORCH-908012"
+      },
+      {
+        "step": 1,
+        "op": "create batch",
+        "batch_id": "BATCH-012"
+      },
+      {
+        "step": 1,
+        "op": "create agents",
+        "agents": "GPT-01,ZCODE-01,GIT-WORKER-01"
+      },
+      {
+        "step": 1,
+        "op": "create task",
+        "task_id": "T-P1-011"
+      },
+      {
+        "step": 2,
+        "op": "dispatch outbound+evidence dir",
+        "dispatch_dir": "dispatch-2026-11-14T07-09-35"
+      },
+      {
+        "step": 3,
+        "op": "real ChatGPT planning reply",
+        "reply_sha256": "e36dc5797b862c0fb80218add2bf413554f3f867165bafa98b23def92bd0ec09",
+        "dispatch_dir": "dispatch-2026-11-14T07-09-35"
+      },
+      {
+        "step": 4,
+        "op": "register plan artifact",
+        "artifact_id": "ART-OTH-004"
+      },
+      {
+        "step": 4,
+        "op": "register plan message",
+        "message_id": "MSG-20261114-071221"
+      },
+      {
+        "step": 5,
+        "op": "state advance DRAFT->READY via M1 events",
+        "task_status": "READY"
+      },
+      {
+        "step": 6,
+        "op": "real claim via M3 MCP (single session)",
+        "execution_id": "EXEC-003"
+      },
+      {
+        "step": 6,
+        "op": "injected repeat claim -> TASK-0003 fail-closed (A4)",
+        "injection": "expected"
+      },
+      {
+        "step": 7,
+        "op": "START event + dev handoff written",
+        "task_status": "IN_PROGRESS"
+      },
+      {
+        "step": 7,
+        "op": "real development performed by orchestration session (方案 b)",
+        "dev_summary": "bundle_gate.mjs 新增 --version：输出版本行 bundle_gate version 1.0（与输出记录 bundle_gate_version 元数据 1.0 一致）退出码 0，不执行核验流程，其余参数行为不变"
+      }
+    ],
+    "evidence_pointers": [
+      "S0: runtime/t-p1-908/executions/ORCH-908012/evidence-steps/s0-precheck-*",
+      "S1: s1-bootstrap stdout (project=AIEO-ORCH-908012, batch=BATCH-012, task=T-P1-011)"
+    ]
+  },
+  "generated_utc": "2026-11-14T07:14:24Z"
+}

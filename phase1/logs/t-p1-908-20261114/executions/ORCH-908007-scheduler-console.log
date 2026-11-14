@@ -1,0 +1,20 @@
+[2026-11-14T06:18:57Z] lock acquired: D:\AIEO\runtime\t-p1-908\locks\run-908007.lock
+[2026-11-14T06:18:59Z] CONFIRMED S0: PRECHECK all read-only checks passed; lock held
+[2026-11-14T06:19:00Z] OWNER login ok (user=OWNER)
+[2026-11-14T06:19:00Z] COMPLETED S1 create project {'project_id': 'AIEO-ORCH-908007'}
+[2026-11-14T06:19:00Z] COMPLETED S1 create batch {'batch_id': 'BATCH-007'}
+[2026-11-14T06:19:00Z] service tokens: reused existing runtime token store for pre-registered platform agents (C6, gitignored)
+[2026-11-14T06:19:00Z] service tokens stored to gitignored runtime dir (C6)
+[2026-11-14T06:19:00Z] COMPLETED S1 create agents {'agents': 'GPT-01,ZCODE-01,GIT-WORKER-01'}
+[2026-11-14T06:19:00Z] COMPLETED S1 create task {'task_id': 'T-P1-006'}
+[2026-11-14T06:19:00Z] CONFIRMED S1: bootstrap done: project=AIEO-ORCH-908007 batch=BATCH-007 task=T-P1-006
+[2026-11-14T06:19:00Z] S2 outbound composed: 886 bytes (limit 1200)
+[2026-11-14T06:21:28Z] COMPLETED S2 dispatch outbound+evidence dir {'dispatch_dir': 'dispatch-2026-11-14T06-19-02'}
+[2026-11-14T06:21:28Z] CONFIRMED S2: dispatch ok; evidence dir=dispatch-2026-11-14T06-19-02
+[2026-11-14T06:21:28Z] COMPLETED S3 real ChatGPT planning reply {'reply_sha256': '90173f9bc68fbb76fd12e75d4e1a5493f49439c5a84890b85285faab9f8f8b2c', 'dispatch_dir': 'dispatch-2026-11-14T06-19-02'}
+[2026-11-14T06:21:28Z] CONFIRMED S3: reply received sha256=90173f9bc68f¡­ plan parsed
+[2026-11-14T06:21:30Z] S4 Ajv double validation: envelope+payload both valid (0 errors)
+[2026-11-14T06:21:30Z] COMPLETED S4 register plan artifact {'artifact_id': 'ART-OTH-001'}
+[2026-11-14T06:21:30Z] ORCHESTRATED_FAIL at S-1: register plan message: HTTP 202 {"message_id": "MSG-20261114-062128", "schema_version": "1.0", "message_type": "TASK_PLAN_SUBMITTED", "direction": "INBOUND", "source_agent_id": "GPT-01", "target_agent_id": "AIEO-ORCHESTRATOR", "project_id": "AIEO-ORCH-908007", "batch_id": "BATCH-007", "task_id": null, "correlation_id": "CORR-90800
+RESULT=ORCHESTRATED_FAIL exit=1
+SCHEDULER-EXIT=1

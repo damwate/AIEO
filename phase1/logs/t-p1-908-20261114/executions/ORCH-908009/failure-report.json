@@ -1,0 +1,45 @@
+{
+  "failure_report": {
+    "run_id": "ORCH-908009",
+    "failed_step": -1,
+    "last_confirmed_state": "S3: reply received sha256=de3c54e2b075… plan parsed",
+    "completed_operations_with_entity_ids": [
+      {
+        "step": 1,
+        "op": "create project",
+        "project_id": "AIEO-ORCH-908009"
+      },
+      {
+        "step": 1,
+        "op": "create batch",
+        "batch_id": "BATCH-009"
+      },
+      {
+        "step": 1,
+        "op": "create agents",
+        "agents": "GPT-01,ZCODE-01,GIT-WORKER-01"
+      },
+      {
+        "step": 1,
+        "op": "create task",
+        "task_id": "T-P1-008"
+      },
+      {
+        "step": 2,
+        "op": "dispatch outbound+evidence dir",
+        "dispatch_dir": "dispatch-2026-11-14T06-29-52"
+      },
+      {
+        "step": 3,
+        "op": "real ChatGPT planning reply",
+        "reply_sha256": "de3c54e2b075853487b484cd9b8ded6016a39029c54b5023f2b13676011129b7",
+        "dispatch_dir": "dispatch-2026-11-14T06-29-52"
+      }
+    ],
+    "evidence_pointers": [
+      "S0: runtime/t-p1-908/executions/ORCH-908009/evidence-steps/s0-precheck-*",
+      "S1: s1-bootstrap stdout (project=AIEO-ORCH-908009, batch=BATCH-009, task=T-P1-008)"
+    ]
+  },
+  "generated_utc": "2026-11-14T06:32:19Z"
+}

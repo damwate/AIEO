@@ -1,0 +1,28 @@
+{
+  "step": "1",
+  "name": "bootstrap",
+  "started_utc": "2026-11-14T08:38:01Z",
+  "sha256_stdout": "71a83f671da22134367c6c6f724a3fe00117df1e0af552d113bf1f583118e101",
+  "sha256_stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "outcome": "PASS",
+  "project_id": "AIEO-ORCH-908020",
+  "batch_id": "BATCH-020",
+  "task_id": "T-P1-019",
+  "agents": [
+    {
+      "agent_id": "GPT-01",
+      "http": 409,
+      "reused_existing": true
+    },
+    {
+      "agent_id": "ZCODE-01",
+      "http": 409,
+      "reused_existing": true
+    },
+    {
+      "agent_id": "GIT-WORKER-01",
+      "http": 409,
+      "reused_existing": true
+    }
+  ]
+}

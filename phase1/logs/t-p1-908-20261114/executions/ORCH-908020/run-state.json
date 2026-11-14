@@ -1,0 +1,57 @@
+{
+  "run_id": "908020",
+  "result": "ORCHESTRATED_FAIL",
+  "failed_step": 9,
+  "last_confirmed": "S1: bootstrap done: project=AIEO-ORCH-908020 batch=BATCH-020 task=T-P1-019",
+  "base_commit": "67c177c4f9c96a13cf21f0d882ae6b59b302a721",
+  "entities": {
+    "project_id": "AIEO-ORCH-908020",
+    "batch_id": "BATCH-020",
+    "agents": "GPT-01,ZCODE-01,GIT-WORKER-01",
+    "task_id": "T-P1-019"
+  },
+  "completed_operations": [
+    {
+      "step": 1,
+      "op": "create project",
+      "project_id": "AIEO-ORCH-908020"
+    },
+    {
+      "step": 1,
+      "op": "create batch",
+      "batch_id": "BATCH-020"
+    },
+    {
+      "step": 1,
+      "op": "create agents",
+      "agents": "GPT-01,ZCODE-01,GIT-WORKER-01"
+    },
+    {
+      "step": 1,
+      "op": "create task",
+      "task_id": "T-P1-019"
+    }
+  ],
+  "evidence_pointers": {
+    "S0": [
+      "runtime/t-p1-908/executions/ORCH-908020/evidence-steps/s0-precheck-*"
+    ],
+    "S1": [
+      "s1-bootstrap stdout (project=AIEO-ORCH-908020, batch=BATCH-020, task=T-P1-019)"
+    ]
+  },
+  "notes": [
+    "[2026-11-14T08:37:57Z] lock acquired: D:\\AIEO\\runtime\\t-p1-908\\locks\\run-908020.lock",
+    "[2026-11-14T08:38:00Z] CONFIRMED S0: PRECHECK all read-only checks passed; lock held",
+    "[2026-11-14T08:38:01Z] OWNER login ok (user=OWNER)",
+    "[2026-11-14T08:38:01Z] COMPLETED S1 create project {'project_id': 'AIEO-ORCH-908020'}",
+    "[2026-11-14T08:38:01Z] COMPLETED S1 create batch {'batch_id': 'BATCH-020'}",
+    "[2026-11-14T08:38:01Z] service tokens: reused existing runtime token store for pre-registered platform agents (C6, gitignored)",
+    "[2026-11-14T08:38:01Z] service tokens stored to gitignored runtime dir (C6)",
+    "[2026-11-14T08:38:01Z] COMPLETED S1 create agents {'agents': 'GPT-01,ZCODE-01,GIT-WORKER-01'}",
+    "[2026-11-14T08:38:01Z] COMPLETED S1 create task {'task_id': 'T-P1-019'}",
+    "[2026-11-14T08:38:01Z] CONFIRMED S1: bootstrap done: project=AIEO-ORCH-908020 batch=BATCH-020 task=T-P1-019",
+    "[2026-11-14T08:38:04Z] ORCHESTRATED_FAIL at S9: A4 injection rejected but code=REQ-0002 (expected REQ-0001): {\n  \"code\": \"REQ-0002\",\n  \"message\": \"SCHEMA_VALIDATION_FAILED: 开发报告不符合 03-协议 §6 结构（6 项错误）\",\n  \"details\": {\n    \"field_errors\": [\n      {\n        \"field\": \"execution_id\",\n        \"reason\": \"格式 EXEC-<3位以上序号>，实际 \\\"undefined\\\"\"\n      },\n      {\n        \"field\": \"git\",\n        \"reason\": \"必填对象 {repositor"
+  ],
+  "updated_utc": "2026-11-14T08:38:04Z"
+}

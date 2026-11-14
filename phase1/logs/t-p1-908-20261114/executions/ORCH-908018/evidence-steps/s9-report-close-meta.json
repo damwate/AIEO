@@ -1,0 +1,8 @@
+{
+  "step": "9",
+  "name": "report-close",
+  "started_utc": "2026-11-14T07:55:05Z",
+  "sha256_stdout": "1e68bd19c56372b192c7ba387e7d9de838c18809c2ada6fc3e1cebb5c4c5db86",
+  "sha256_stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "outcome": "PASS"
+}

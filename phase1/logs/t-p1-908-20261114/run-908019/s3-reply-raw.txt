@@ -1,0 +1,24 @@
+ChatGPT 说：
+JSON
+{
+  "result": "SUCCESS",
+  "batch_id": "BATCH-019",
+  "project_id": "AIEO-ORCH-908019",
+  "requirement_summary": "为bundle_gate.mjs增加--version参数，保持原有无参及help行为。",
+  "tasks": [
+    {
+      "task_id": "T-P1-018",
+      "title": "为bundle_gate.mjs增加版本参数支持",
+      "priority": "P1",
+      "dependencies": [],
+      "files_scope": [
+        "phase1/tools/bundle_gate.mjs"
+      ],
+      "acceptance_criteria": [
+        "执行node phase1/tools/bundle_gate.mjs --version，stdout输出版本行，退出码为0。",
+        "执行node phase1/tools/bundle_gate.mjs，无参行为保持原状，退出码仍为2，原有报错行为不变。",
+        "--help行为保持不变；仅修改指定文件，不引入其他文件变更。"
+      ]
+    }
+  ]
+}

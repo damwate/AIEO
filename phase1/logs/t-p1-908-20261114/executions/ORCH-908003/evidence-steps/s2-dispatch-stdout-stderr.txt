@@ -1,0 +1,4 @@
+Error: Composer 非空，STOP
+    at sendAndCollect (file:///D:/AIEO/phase0/tools/gpt_dispatch.mjs:163:58)
+    at async mainLocked (file:///D:/AIEO/phase0/tools/gpt_dispatch.mjs:298:59)
+    at async main (file:///D:/AIEO/phase0/tools/gpt_dispatch.mjs:252:5)

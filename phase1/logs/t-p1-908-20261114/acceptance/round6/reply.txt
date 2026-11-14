@@ -1,0 +1,21 @@
+ChatGPT 说：
+
+A1 PASS — REST终态DEV_REPORTED、服务端事件、零DB直改声明、151组三件套齐全。证据：c415b24f8aa27f4c192e50215f9eb49f305679d0、44103a2a5b439149ba4662535ceb356586d64a6b、c271d76403d7843fe76e6c950edd7524673435f1
+
+A2 PASS — T-P1-018终态及reply原始内容、三处SHA绑定指针成立。证据：3e1eedd6293936fdf9b0ae0662b7d6dc740363ec
+
+A3 PASS — e47055d修复状态码分离、平级code提取及RES-0003判据；探针409+RES-0003，原行未变。旧null如实保留。证据：e47055d48cbba5217182bbcaf42d899e73abe85a、4abb964a3bdebf1b183046b359ab6105206d2655
+
+A4 PASS — ORCH-908022真实REQ-0001、唯一缺参、失败报告五要素齐全。证据：f633930cff67deb9448127cab0db3bd131cf374a、a8b99da9c77f214bb0f4ed1c7dd5ef56c3e51046
+
+A5 PASS — SHA256SUMS执行结果全OK，151/151三件套。证据：4407ced042d755d3d38893573bc2b95344645968
+
+A6 PASS — envelope、payload双Schema均valid，errors=[]。证据：8290b40b5b511855c637d1ef8bdb363e045c6884
+
+A7 PASS — 扫描器v2已入库，git树RAW命中计入total_raw；双范围扫描CLEAN。证据：4502532c02635ca8a161957d135374b0dfbdc366、67510bba6207bdba0783d861cb60530ebb3f64cb
+
+A8 FAIL — 指南仍将scheduler锚点指向旧版08c8e7c，与本轮e47055d不一致；本次未完成SHA256本地自算。证据：指南ffcfe6c0f86887127d926ddd25bec27334af504c。
+
+通道说明： GitHub Blob内容已读取核验；未自算SHA256。raw域名直连DNS失败。
+
+REJECT

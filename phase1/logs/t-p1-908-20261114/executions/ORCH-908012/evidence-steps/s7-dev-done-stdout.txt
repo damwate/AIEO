@@ -1,0 +1,18 @@
+{
+  "run_id": "908012",
+  "task_id": "T-P1-011",
+  "execution_id": "EXEC-003",
+  "ready": true,
+  "summary": "bundle_gate.mjs 新增 --version：输出版本行 bundle_gate version 1.0（与输出记录 bundle_gate_version 元数据 1.0 一致）退出码 0，不执行核验流程，其余参数行为不变",
+  "dev_by": "orchestration-session (方案 b)",
+  "branch": "feature/T-P1-908-fixture",
+  "worktree": "runtime/t-p1-908/wt-fixture",
+  "changed_files": ["phase1/tools/bundle_gate.mjs"],
+  "verification": {
+    "version_flag": {"cmd": "node phase1/tools/bundle_gate.mjs --version", "stdout": "bundle_gate version 1.0", "exit_code": 0},
+    "no_args_unchanged": {"cmd": "node phase1/tools/bundle_gate.mjs", "stdout": "bundle_gate: 缺 --commit", "exit_code": 2},
+    "help_flag_unchanged": {"cmd": "node phase1/tools/bundle_gate.mjs --help", "exit_code": 0},
+    "single_file_scope": {"git_status_modified_count": 1, "note": "仅 phase1/tools/bundle_gate.mjs +7 行，无新增文件"}
+  },
+  "written_at_utc": "2026-11-14T07:14:00Z"
+}

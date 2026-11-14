@@ -1,0 +1,57 @@
+{
+  "run_id": "ORCH-908003",
+  "scheduler": "phase1/tools/scheduler.py (F-001 v0.3, Python stdlib single file)",
+  "brief": "docs/phase1/F001-SCHEDULER-BRIEF.md v0.3",
+  "result": "ORCHESTRATED_FAIL",
+  "failed_step": 2,
+  "last_confirmed": "S1: bootstrap done: project=AIEO-ORCH-908003 batch=BATCH-003 task=T-P1-002",
+  "base_commit": "67c177c4f9c96a13cf21f0d882ae6b59b302a721",
+  "entities": {
+    "project_id": "AIEO-ORCH-908003",
+    "batch_id": "BATCH-003",
+    "agents": "GPT-01,ZCODE-01,GIT-WORKER-01",
+    "task_id": "T-P1-002"
+  },
+  "completed_operations": [
+    {
+      "step": 1,
+      "op": "create project",
+      "project_id": "AIEO-ORCH-908003"
+    },
+    {
+      "step": 1,
+      "op": "create batch",
+      "batch_id": "BATCH-003"
+    },
+    {
+      "step": 1,
+      "op": "create agents",
+      "agents": "GPT-01,ZCODE-01,GIT-WORKER-01"
+    },
+    {
+      "step": 1,
+      "op": "create task",
+      "task_id": "T-P1-002"
+    }
+  ],
+  "evidence_pointers": [
+    "S0: runtime/t-p1-908/executions/ORCH-908003/evidence-steps/s0-precheck-*",
+    "S1: s1-bootstrap stdout (project=AIEO-ORCH-908003, batch=BATCH-003, task=T-P1-002)"
+  ],
+  "notes": [
+    "[2026-11-14T06:02:21Z] lock acquired: D:\\AIEO\\runtime\\t-p1-908\\locks\\run-908003.lock",
+    "[2026-11-14T06:02:23Z] CONFIRMED S0: PRECHECK all read-only checks passed; lock held",
+    "[2026-11-14T06:02:23Z] OWNER login ok (user=OWNER)",
+    "[2026-11-14T06:02:23Z] COMPLETED S1 create project {'project_id': 'AIEO-ORCH-908003'}",
+    "[2026-11-14T06:02:23Z] COMPLETED S1 create batch {'batch_id': 'BATCH-003'}",
+    "[2026-11-14T06:02:24Z] service tokens: reused existing runtime token store for pre-registered platform agents (C6, gitignored)",
+    "[2026-11-14T06:02:24Z] service tokens stored to gitignored runtime dir (C6)",
+    "[2026-11-14T06:02:24Z] COMPLETED S1 create agents {'agents': 'GPT-01,ZCODE-01,GIT-WORKER-01'}",
+    "[2026-11-14T06:02:24Z] COMPLETED S1 create task {'task_id': 'T-P1-002'}",
+    "[2026-11-14T06:02:24Z] CONFIRMED S1: bootstrap done: project=AIEO-ORCH-908003 batch=BATCH-003 task=T-P1-002",
+    "[2026-11-14T06:02:24Z] S2 outbound composed: 893 bytes (limit 1200)",
+    "[2026-11-14T06:02:42Z] gpt_dispatch exit!=0; evidence kept (run.log retained)",
+    "[2026-11-14T06:02:42Z] ORCHESTRATED_FAIL at S2: gpt_dispatch exit 1; dispatch evidence retained"
+  ],
+  "generated_utc": "2026-11-14T06:02:42Z"
+}

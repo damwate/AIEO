@@ -1,0 +1,9 @@
+{
+  "step": "7",
+  "name": "start-handoff",
+  "started_utc": "2026-11-14T07:53:17Z",
+  "sha256_stdout": "3cc29d14c2496cffb2be114aa63f205994399c8e0560e7214f2b4eee43c136bb",
+  "sha256_stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "outcome": "HANDOFF",
+  "task_status": "IN_PROGRESS"
+}

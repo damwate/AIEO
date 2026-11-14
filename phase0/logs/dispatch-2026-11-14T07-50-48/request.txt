@@ -1,0 +1,4 @@
+【开发规划请求·F-001调度器真实编排】你是规划会话GPT-01。按完整SHA读仓库 github.com/damwate/AIEO（基线main=67c177c4f9c96a13cf21f0d882ae6b59b302a721）。
+任务T-P1-017（项目AIEO-ORCH-908018，批次BATCH-018）：为 phase1/tools/bundle_gate.mjs 增加 --version：node该工具 --version 时stdout输出版本行且退出码0；无参调用维持现有exit 2报错；--help行为不变；仅改该单文件。
+只做规划不动代码。请用```json围栏回复规划对象，字段严格为：{"result":"SUCCESS","batch_id":"BATCH-018","project_id":"AIEO-ORCH-908018","requirement_summary":"<50字内>","tasks":[{"task_id":"T-P1-017","title":"...","priority":"P1","dependencies":[],"files_scope":["phase1/tools/bundle_gate.mjs"],"acceptance_criteria":["<3条可验证>"]}]}
+batch_id/project_id/task_id按本消息原值填入。总回复<=500字。

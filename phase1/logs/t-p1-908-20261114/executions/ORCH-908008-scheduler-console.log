@@ -1,0 +1,19 @@
+[2026-11-14T06:24:09Z] lock acquired: D:\AIEO\runtime\t-p1-908\locks\run-908008.lock
+[2026-11-14T06:24:11Z] CONFIRMED S0: PRECHECK all read-only checks passed; lock held
+[2026-11-14T06:24:12Z] OWNER login ok (user=OWNER)
+[2026-11-14T06:24:12Z] COMPLETED S1 create project {'project_id': 'AIEO-ORCH-908008'}
+[2026-11-14T06:24:12Z] COMPLETED S1 create batch {'batch_id': 'BATCH-008'}
+[2026-11-14T06:24:12Z] service tokens: reused existing runtime token store for pre-registered platform agents (C6, gitignored)
+[2026-11-14T06:24:12Z] service tokens stored to gitignored runtime dir (C6)
+[2026-11-14T06:24:12Z] COMPLETED S1 create agents {'agents': 'GPT-01,ZCODE-01,GIT-WORKER-01'}
+[2026-11-14T06:24:12Z] COMPLETED S1 create task {'task_id': 'T-P1-007'}
+[2026-11-14T06:24:12Z] CONFIRMED S1: bootstrap done: project=AIEO-ORCH-908008 batch=BATCH-008 task=T-P1-007
+[2026-11-14T06:24:12Z] S2 outbound composed: 886 bytes (limit 1200)
+[2026-11-14T06:26:39Z] COMPLETED S2 dispatch outbound+evidence dir {'dispatch_dir': 'dispatch-2026-11-14T06-24-13'}
+[2026-11-14T06:26:39Z] CONFIRMED S2: dispatch ok; evidence dir=dispatch-2026-11-14T06-24-13
+[2026-11-14T06:26:39Z] COMPLETED S3 real ChatGPT planning reply {'reply_sha256': 'bb1726669da40860ee387c89d77d2038acb773449fa51a991f91296a58c103b3', 'dispatch_dir': 'dispatch-2026-11-14T06-24-13'}
+[2026-11-14T06:26:39Z] CONFIRMED S3: reply received sha256=bb1726669da4бн plan parsed
+[2026-11-14T06:26:39Z] S4 Ajv double validation: envelope+payload both valid (0 errors)
+[2026-11-14T06:26:40Z] ORCHESTRATED_FAIL at S-1: register plan artifact: HTTP 409 {"code": "RES-0002", "message": "RESOURCE_CONFLICT: artifact path already registered with a different sha256", "retryable": false, "correlation_id": "d05dbf76-42be-48db-b4ca-f2edafa3473d", "details": {"field": "path", "artifact_id": "ART-OTH-001"}}
+RESULT=ORCHESTRATED_FAIL exit=1
+SCHEDULER-EXIT=1

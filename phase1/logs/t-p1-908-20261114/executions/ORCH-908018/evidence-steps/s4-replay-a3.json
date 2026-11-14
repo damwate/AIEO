@@ -1,0 +1,13 @@
+{
+  "artifact_replay_ok": true,
+  "message_replay_ok": true,
+  "artifact_replay": {
+    "http": 409,
+    "duplicate": true,
+    "artifact_id": "ART-OTH-010"
+  },
+  "message_replay": {
+    "http": 409,
+    "error_code": null
+  }
+}

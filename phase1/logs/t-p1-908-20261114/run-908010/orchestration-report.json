@@ -1,0 +1,120 @@
+{
+  "run_id": "ORCH-908010",
+  "scheduler": "phase1/tools/scheduler.py (F-001 v0.3, Python stdlib single file)",
+  "brief": "docs/phase1/F001-SCHEDULER-BRIEF.md v0.3",
+  "result": "ORCHESTRATED_FAIL",
+  "failed_step": 7,
+  "last_confirmed": "S7: START emitted; task IN_PROGRESS; handoff written; awaiting executor",
+  "base_commit": "67c177c4f9c96a13cf21f0d882ae6b59b302a721",
+  "entities": {
+    "project_id": "AIEO-ORCH-908010",
+    "batch_id": "BATCH-010",
+    "agents": "GPT-01,ZCODE-01,GIT-WORKER-01",
+    "task_id": "T-P1-009",
+    "dispatch_dir": "dispatch-2026-11-14T06-34-30",
+    "reply_sha256": "b5571d9a8cd1df0b12bed201b26b6d5817b1019262eff2ee89fa368b5db45f29",
+    "artifact_id": "ART-OTH-002",
+    "message_id": "MSG-20261114-063700",
+    "task_status": "IN_PROGRESS",
+    "execution_id": null,
+    "injection": "expected"
+  },
+  "completed_operations": [
+    {
+      "step": 1,
+      "op": "create project",
+      "project_id": "AIEO-ORCH-908010"
+    },
+    {
+      "step": 1,
+      "op": "create batch",
+      "batch_id": "BATCH-010"
+    },
+    {
+      "step": 1,
+      "op": "create agents",
+      "agents": "GPT-01,ZCODE-01,GIT-WORKER-01"
+    },
+    {
+      "step": 1,
+      "op": "create task",
+      "task_id": "T-P1-009"
+    },
+    {
+      "step": 2,
+      "op": "dispatch outbound+evidence dir",
+      "dispatch_dir": "dispatch-2026-11-14T06-34-30"
+    },
+    {
+      "step": 3,
+      "op": "real ChatGPT planning reply",
+      "reply_sha256": "b5571d9a8cd1df0b12bed201b26b6d5817b1019262eff2ee89fa368b5db45f29",
+      "dispatch_dir": "dispatch-2026-11-14T06-34-30"
+    },
+    {
+      "step": 4,
+      "op": "register plan artifact",
+      "artifact_id": "ART-OTH-002"
+    },
+    {
+      "step": 4,
+      "op": "register plan message",
+      "message_id": "MSG-20261114-063700"
+    },
+    {
+      "step": 5,
+      "op": "state advance DRAFT->READY via M1 events",
+      "task_status": "READY"
+    },
+    {
+      "step": 6,
+      "op": "real claim via M3 MCP (single session)",
+      "execution_id": null
+    },
+    {
+      "step": 6,
+      "op": "injected repeat claim -> TASK-0003 fail-closed (A4)",
+      "injection": "expected"
+    },
+    {
+      "step": 7,
+      "op": "START event + dev handoff written",
+      "task_status": "IN_PROGRESS"
+    }
+  ],
+  "evidence_pointers": [
+    "S0: runtime/t-p1-908/executions/ORCH-908010/evidence-steps/s0-precheck-*",
+    "S1: s1-bootstrap stdout (project=AIEO-ORCH-908010, batch=BATCH-010, task=T-P1-009)"
+  ],
+  "notes": [
+    "[2026-11-14T06:34:25Z] lock acquired: D:\\AIEO\\runtime\\t-p1-908\\locks\\run-908010.lock",
+    "[2026-11-14T06:34:27Z] CONFIRMED S0: PRECHECK all read-only checks passed; lock held",
+    "[2026-11-14T06:34:28Z] OWNER login ok (user=OWNER)",
+    "[2026-11-14T06:34:28Z] COMPLETED S1 create project {'project_id': 'AIEO-ORCH-908010'}",
+    "[2026-11-14T06:34:28Z] COMPLETED S1 create batch {'batch_id': 'BATCH-010'}",
+    "[2026-11-14T06:34:28Z] service tokens: reused existing runtime token store for pre-registered platform agents (C6, gitignored)",
+    "[2026-11-14T06:34:28Z] service tokens stored to gitignored runtime dir (C6)",
+    "[2026-11-14T06:34:28Z] COMPLETED S1 create agents {'agents': 'GPT-01,ZCODE-01,GIT-WORKER-01'}",
+    "[2026-11-14T06:34:28Z] COMPLETED S1 create task {'task_id': 'T-P1-009'}",
+    "[2026-11-14T06:34:28Z] CONFIRMED S1: bootstrap done: project=AIEO-ORCH-908010 batch=BATCH-010 task=T-P1-009",
+    "[2026-11-14T06:34:28Z] S2 outbound composed: 886 bytes (limit 1200)",
+    "[2026-11-14T06:37:00Z] COMPLETED S2 dispatch outbound+evidence dir {'dispatch_dir': 'dispatch-2026-11-14T06-34-30'}",
+    "[2026-11-14T06:37:00Z] CONFIRMED S2: dispatch ok; evidence dir=dispatch-2026-11-14T06-34-30",
+    "[2026-11-14T06:37:00Z] COMPLETED S3 real ChatGPT planning reply {'reply_sha256': 'b5571d9a8cd1df0b12bed201b26b6d5817b1019262eff2ee89fa368b5db45f29', 'dispatch_dir': 'dispatch-2026-11-14T06-34-30'}",
+    "[2026-11-14T06:37:00Z] CONFIRMED S3: reply received sha256=b5571d9a8cd1… plan parsed",
+    "[2026-11-14T06:37:02Z] S4 Ajv double validation: envelope+payload both valid (0 errors)",
+    "[2026-11-14T06:37:02Z] COMPLETED S4 register plan artifact {'artifact_id': 'ART-OTH-002'}",
+    "[2026-11-14T06:37:02Z] COMPLETED S4 register plan message {'message_id': 'MSG-20261114-063700'}",
+    "[2026-11-14T06:37:02Z] S4 A3 replay: artifact duplicate:true same-id; message 409 RES-0003 no-new-row",
+    "[2026-11-14T06:37:02Z] CONFIRMED S4: registered artifact=ART-OTH-002 message=MSG-20261114-063700; A3 replays verified",
+    "[2026-11-14T06:37:02Z] COMPLETED S5 state advance DRAFT->READY via M1 events {'task_status': 'READY'}",
+    "[2026-11-14T06:37:02Z] CONFIRMED S5: task T-P1-009 status=READY",
+    "[2026-11-14T06:37:05Z] COMPLETED S6 real claim via M3 MCP (single session) {'execution_id': None}",
+    "[2026-11-14T06:37:05Z] COMPLETED S6 injected repeat claim -> TASK-0003 fail-closed (A4) {'injection': 'expected'}",
+    "[2026-11-14T06:37:05Z] CONFIRMED S6: claimed; task DISPATCHED; execution=None",
+    "[2026-11-14T06:37:05Z] COMPLETED S7 START event + dev handoff written {'task_status': 'IN_PROGRESS'}",
+    "[2026-11-14T06:37:05Z] CONFIRMED S7: START emitted; task IN_PROGRESS; handoff written; awaiting executor",
+    "[2026-11-14T06:52:05Z] ORCHESTRATED_FAIL at S7: dev-done.json not ready within 900s (dev leg timeout)"
+  ],
+  "generated_utc": "2026-11-14T06:52:05Z"
+}

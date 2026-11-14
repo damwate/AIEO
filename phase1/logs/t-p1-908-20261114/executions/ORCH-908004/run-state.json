@@ -1,0 +1,59 @@
+{
+  "run_id": "908004",
+  "result": "ORCHESTRATED_FAIL",
+  "failed_step": 2,
+  "last_confirmed": "S1: bootstrap done: project=AIEO-ORCH-908004 batch=BATCH-004 task=T-P1-003",
+  "base_commit": "67c177c4f9c96a13cf21f0d882ae6b59b302a721",
+  "entities": {
+    "project_id": "AIEO-ORCH-908004",
+    "batch_id": "BATCH-004",
+    "agents": "GPT-01,ZCODE-01,GIT-WORKER-01",
+    "task_id": "T-P1-003"
+  },
+  "completed_operations": [
+    {
+      "step": 1,
+      "op": "create project",
+      "project_id": "AIEO-ORCH-908004"
+    },
+    {
+      "step": 1,
+      "op": "create batch",
+      "batch_id": "BATCH-004"
+    },
+    {
+      "step": 1,
+      "op": "create agents",
+      "agents": "GPT-01,ZCODE-01,GIT-WORKER-01"
+    },
+    {
+      "step": 1,
+      "op": "create task",
+      "task_id": "T-P1-003"
+    }
+  ],
+  "evidence_pointers": {
+    "S0": [
+      "runtime/t-p1-908/executions/ORCH-908004/evidence-steps/s0-precheck-*"
+    ],
+    "S1": [
+      "s1-bootstrap stdout (project=AIEO-ORCH-908004, batch=BATCH-004, task=T-P1-003)"
+    ]
+  },
+  "notes": [
+    "[2026-11-14T06:05:29Z] lock acquired: D:\\AIEO\\runtime\\t-p1-908\\locks\\run-908004.lock",
+    "[2026-11-14T06:05:31Z] CONFIRMED S0: PRECHECK all read-only checks passed; lock held",
+    "[2026-11-14T06:05:32Z] OWNER login ok (user=OWNER)",
+    "[2026-11-14T06:05:32Z] COMPLETED S1 create project {'project_id': 'AIEO-ORCH-908004'}",
+    "[2026-11-14T06:05:32Z] COMPLETED S1 create batch {'batch_id': 'BATCH-004'}",
+    "[2026-11-14T06:05:32Z] service tokens: reused existing runtime token store for pre-registered platform agents (C6, gitignored)",
+    "[2026-11-14T06:05:32Z] service tokens stored to gitignored runtime dir (C6)",
+    "[2026-11-14T06:05:32Z] COMPLETED S1 create agents {'agents': 'GPT-01,ZCODE-01,GIT-WORKER-01'}",
+    "[2026-11-14T06:05:32Z] COMPLETED S1 create task {'task_id': 'T-P1-003'}",
+    "[2026-11-14T06:05:32Z] CONFIRMED S1: bootstrap done: project=AIEO-ORCH-908004 batch=BATCH-004 task=T-P1-003",
+    "[2026-11-14T06:05:32Z] S2 outbound composed: 893 bytes (limit 1200)",
+    "[2026-11-14T06:06:28Z] gpt_dispatch exit!=0; evidence kept (run.log retained)",
+    "[2026-11-14T06:06:28Z] ORCHESTRATED_FAIL at S2: gpt_dispatch exit 1; dispatch evidence retained"
+  ],
+  "updated_utc": "2026-11-14T06:06:28Z"
+}

@@ -1,0 +1,27 @@
+[
+  {
+    "check": "m1_health",
+    "ok": true,
+    "http": 200
+  },
+  {
+    "check": "tokens_present",
+    "ok": true,
+    "missing": []
+  },
+  {
+    "check": "fixture_bundle_gate",
+    "ok": true,
+    "path": "D:\\AIEO\\phase1\\tools\\bundle_gate.mjs"
+  },
+  {
+    "check": "chrome_debug_port_9222",
+    "ok": true,
+    "occupied": false
+  },
+  {
+    "check": "m3_bridge_present",
+    "ok": true,
+    "path": "D:\\AIEO\\app\\zcode_bridge\\bin\\aieo-zcode-mcp.mjs"
+  }
+]

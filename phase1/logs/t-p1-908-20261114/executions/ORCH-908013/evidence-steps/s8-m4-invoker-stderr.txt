@@ -1,0 +1,13 @@
+Traceback (most recent call last):
+  File "D:\AIEO\runtime\t-p1-908\m4_invoker.py", line 88, in <module>
+    main()
+  File "D:\AIEO\runtime\t-p1-908\m4_invoker.py", line 73, in main
+    adapter = RestM1Adapter()
+              ^^^^^^^^^^^^^^^
+  File "D:\AIEO\runtime\t-p1-908\m4_invoker.py", line 28, in __init__
+    code, resp = self.call("POST", "/api/v1/auth/login", {"username": os.environ["AIEO_PLATFORM_ADMIN_USERNAME"], "password": os.environ["AIEO_PLATFORM_ADMIN_PASSWORD"]})
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AIEO\runtime\t-p1-908\m4_invoker.py", line 34, in call
+    if self.csrf and method != "GET":
+       ^^^^^^^^^
+AttributeError: 'RestM1Adapter' object has no attribute 'csrf'

@@ -1,0 +1,12 @@
+started_at=2026-11-14T07:55:03.361012Z
+finished_at=2026-11-14T07:55:03.506087Z
+duration_ms=141
+command_json=["node", "phase1/tools/bundle_gate.mjs", "--version"]
+exit_code=0
+
+--- stdout ---
+bundle_gate version 1.0
+
+--- stderr ---
+
+--- end ---

@@ -1,0 +1,23 @@
+ChatGPT 说：
+
+第5轮通道①结果：失败。 已在代码沙箱尝试 GitHub 克隆及指定完整 SHA 检出，均因 DNS 解析失败（Could not resolve host: github.com）而未能取得仓库字节。未将此结果误判为代码缺陷，继续尝试通道②。
+
+通道③：已按三个完整 commit SHA 获取内容；内容核验/未自算SHA。以下 SHA256 为证据清单前16位。
+
+A1: PASS — REST终态、服务端事件、零DB直改声明；37ba86bebfe10e7c
+
+A2: PASS — DEV_REPORTED，reply三处SHA一致；1b3a4dcfa93a2760
+
+A3: FAIL — S4 message replay 的 error_code=null，未证明 RES-0003；39ee721dd78f953b
+
+A4: PASS — 真实REQ-0001、ORCHESTRATED_FAIL、五要素；f039bd243f821fca
+
+A5: PASS — 三件套151组完整；归档校验931/931 OK；92b51a521e6cdb4c
+
+A6: PASS — 双Schema valid，errors均为0；c5633025b3339e60
+
+A7: FAIL — 扫描器 git_raw=0 硬编码，Git树命中未计入泄漏判定；2fb73b4272e93e67
+
+A8: FAIL — 未完成字节级SHA独立复核；41c589b57216d359
+
+REJECT
