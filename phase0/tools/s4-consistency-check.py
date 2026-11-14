@@ -3,6 +3,7 @@
 # 修正记录：①c 正则锚定收紧至附录差异记录表区域（避免跨表匹配）；⑤ 断言口径=30b56de（S1 R2 PASS 验收对象）；⑥c 仅查过期残留「待 S3 复验」（复验列口径，描述列引述不算）
 # R2 问题12 整改：⑥a 返工表随实态 11→13 行；⑧ 组从存在性检查改为实质比较（task-brief 当前步骤实态/steps S4 R2 登记/delivery S1-S3 闭环与 S4 待定区分）
 # R3 问题12 整改：⑧ 组升级为三文件交叉比较（轮次指向 R4）（当前轮次指向三方同为 R3/R1、R2 轮结论三文件逐项一致/S1-S3 闭环三方一致/delivery 当前实态 24/24+问题1-13+历史快照显式标注）
+# R4 裁定登记：⑧b/⑧c 轮次指向随止损态更新（S4 R4 复验 REJECT 1 项+ST-10 止损触发交用户）；验收方 R4 指出的断言强化[⑧d⑧e逐项对应/⑧f逐项核对/delivery 主状态+核验数字 R4 实态对齐]属 R5 整改范围，ST-10 止损后留待用户拍板
 import io, re, subprocess, sys, os
 ok=[]; fail=[]
 def chk(name, cond, detail=""):
@@ -70,8 +71,8 @@ step_txt = tb_step[0] if tb_step else ""
 s4_sec = st.split("## S4", 1)[1] if "## S4" in st else ""
 # 交叉1：当前复验轮次指向——三文件必须同为 R4（轮次指向随整改实态演进，R3 整改时由 R3 改 R4）
 chk("⑧a2 tb当前步骤指向R4复验", "R4 复验" in step_txt, step_txt[:60])
-chk("⑧b steps S4⑥当前轮次指向R4(R4复验结论待回填)", "S4 R4 复验结论待回填" in s4_sec)
-chk("⑧c delivery当前指向R4复验", "待 R4 复验" in dl)
+chk("⑧b steps S4⑥含R4裁定与止损触发登记", ("S4 R4 复验" in s4_sec) and ("ST-10 止损触发" in s4_sec))
+chk("⑧c delivery当前指向止损交用户", ("R4 复验 REJECT 1 项" in dl) and ("止损触发" in dl))
 # 交叉2：已发生轮次结论——三文件对 R1/R2 结论表述逐项一致
 chk("⑧d R1轮结论三文件一致(REJECT 3项)", all("REJECT 3 项" in x for x in (step_txt, s4_sec, dl)))
 chk("⑧e R2轮结论三文件一致(REJECT 2项)", all("REJECT 2 项" in x for x in (step_txt, s4_sec, dl)))

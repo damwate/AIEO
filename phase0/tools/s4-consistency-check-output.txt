@@ -18,9 +18,9 @@ PASS 30 / FAIL 0
  [PASS] ⑦ S2含字面验收结论PASS
  [PASS] ⑦ S3含字面验收结论PASS
  [PASS] ⑧a task-brief当前步骤行唯一 | n=1
- [PASS] ⑧a2 tb当前步骤指向R4复验 | | 当前步骤 | S4 复验中（R1 REJECT 3 项整改通过：问题9/10/11 R2 复验 PASS、问题11 
- [PASS] ⑧b steps S4⑥当前轮次指向R4(R4复验结论待回填)
- [PASS] ⑧c delivery当前指向R4复验
+ [PASS] ⑧a2 tb当前步骤指向R4复验 | | 当前步骤 | S4 止损交用户（R4 复验 REJECT 1 项=问题12 第 3 次 REJECT[⑧组断言四处漏
+ [PASS] ⑧b steps S4⑥含R4裁定与止损触发登记
+ [PASS] ⑧c delivery当前指向止损交用户
  [PASS] ⑧d R1轮结论三文件一致(REJECT 3项)
  [PASS] ⑧e R2轮结论三文件一致(REJECT 2项)
  [PASS] ⑧f S1-S3闭环三文件一致

@@ -1,0 +1,7 @@
+S4 R4复验请求
+绑定：基点39f8eb6→待验收8250de05a764163560fc6da9593de107f6ed17b6（2 commit线性：b15b59e整改→8250de0回填）。R3轮链cc030ff→…→b15b59e→8250de0七条线性。
+问题12=⑧组三文件交叉比较30/30 PASS：轮次指向三方同为R4+R1/R2结论三文件一致+S1-S3闭环一致+delivery实态24/24与问题1-13、旧数据标「R1时点历史快照」；问题13=失败路径正式测试s4-appendix-threeway-failpath-test.py：invalid域名副本实跑，raw失败判FAIL+退出码=1两条件PASS，命令+输出+退出码在档；
+可复跑：python -I basic/tool/check_taskpack.py basic/tasks/b-20261115-phasec-workflow-stats（④PASS）+python -I phase0/tools/s4-consistency-check.py（30/30）+python -I phase0/tools/s4-appendix-threeway-check.py（三条件）+…failpath-test.py（两条件）。环境：本机Windows无独立Linux，raw直读可达GitHub。
+读取：raw直读 raw.githubusercontent.com/damwate/AIEO/8250de05a764163560fc6da9593de107f6ed17b6/<路径>（v4请求）
+边界：不推翻S1-S3（PASS沿用）；通过≠v0.3生效（拍板留用户）
+结论：PASS（S4闭环）/REJECT（计数）/BLOCKED（如实说明）
