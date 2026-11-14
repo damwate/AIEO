@@ -1,0 +1,81 @@
+S3 返工 R2 整改材料（复验R1 P1-1 跨格式重复反例实际 FAIL 输出 + 33 项完整执行结果）
+整改 commit：basic/tool/check_taskpack.py（count_brief_field_rows 补标题形式，计数覆盖 extract_brief_field 全部三种书写形式）+ basic/tool/test_check_taskpack.py（新增 test_duplicate_brief_field_cross_format）
+==========================================
+
+===== 跨格式重复字段反例（表格行「任务ID」+标题形式「## 任务ID」）实际 FAIL 输出 (exit=1)
+Taskpack: dupcross
+Phase: IN_PROGRESS
+[FAIL] ① 需求记录
+       - task-brief.md 字段「任务ID」重复出现 2 次（重复字段不允许静默接受）
+[PASS] ② 步骤清单
+[PASS] ③ 步骤验收记录
+[N/A] ④ REJECT返工记录
+       - 无 REJECT 结论且无返工记录表（无返工发生，开发期未到期）
+[N/A] ⑤ 返工次数
+       - 无已关联的有效返工记录行，返工次数未到期可计数
+[N/A] ⑥ 交付记录
+       - 阶段=IN_PROGRESS，交付记录未到期（COMPLETED 时检查 delivery.md 七要素）
+Overall: FAIL
+
+==========================================
+对照说明：旧版 count_brief_field_rows（仅表格行+行内键）对本反例计数=表格1+行内0+标题0=1，
+不会 FAIL（漏判）；整改后计数=表格1+行内0+标题1=2 → ① FAIL 如上。
+标题形式计数 regex 与 extract_brief_field 的标题形态（## 字段（注记）：值）口径一致。
+==========================================
+test_duplicate_brief_field (test_check_taskpack.TestDuplicates.test_duplicate_brief_field)
+task-brief 重复字段行（两个「任务ID」）→ ① FAIL+可识别重复原因，不因未到期项掩盖 ... ok
+test_duplicate_brief_field_cross_format (test_check_taskpack.TestDuplicates.test_duplicate_brief_field_cross_format)
+跨格式重复字段（表格行+标题形式「任务ID」，无行内）→ ① FAIL+重复原因； ... ok
+test_duplicate_step_number (test_check_taskpack.TestDuplicates.test_duplicate_step_number)
+steps.md 重复步骤编号（两个 S1 小节）→ ② FAIL+可识别重复编号原因，不静默接受 ... ok
+test_cli_missing_evidence_file_fails (test_check_taskpack.TestEvidencePath.test_cli_missing_evidence_file_fails)
+⑥引用包内路径不存在 → ③ FAIL ... ok
+test_cli_traversal_in_evidence_fails (test_check_taskpack.TestEvidencePath.test_cli_traversal_in_evidence_fails)
+⑥引用 acceptance/../ 穿越 → ③ FAIL ... ok
+test_unit_absolute_rejected (test_check_taskpack.TestEvidencePath.test_unit_absolute_rejected) ... ok
+test_unit_relative_ok (test_check_taskpack.TestEvidencePath.test_unit_relative_ok) ... ok
+test_unit_symlink_escape_rejected (test_check_taskpack.TestEvidencePath.test_unit_symlink_escape_rejected) ... skipped '当前环境无符号链接权限（Windows 非开发者模式）'
+test_unit_traversal_rejected (test_check_taskpack.TestEvidencePath.test_unit_traversal_rejected) ... ok
+test_all_abnormal_inputs_identifiable (test_check_taskpack.TestIdentifiableResults.test_all_abnormal_inputs_identifiable) ... ok
+test_directory_not_exist (test_check_taskpack.TestIdentifiableResults.test_directory_not_exist) ... ok
+test_json_matches_text_completed (test_check_taskpack.TestJsonConsistency.test_json_matches_text_completed) ... ok
+test_json_matches_text_rework4 (test_check_taskpack.TestJsonConsistency.test_json_matches_text_rework4) ... ok
+test_json_missing_dir (test_check_taskpack.TestJsonConsistency.test_json_missing_dir)
+目录不存在：文本与 JSON 判定一致（P2-1 补第三场景对照）+JSON phase=UNKNOWN、 ... ok
+test_empty_requirement (test_check_taskpack.TestMissingBrokenFiles.test_empty_requirement) ... ok
+test_invalid_encoding_is_identifiable (test_check_taskpack.TestMissingBrokenFiles.test_invalid_encoding_is_identifiable)
+编码异常（无效 UTF-8 字节）→ 对应项 FAIL 可识别，不抛未捕获异常 ... ok
+test_missing_brief (test_check_taskpack.TestMissingBrokenFiles.test_missing_brief) ... ok
+test_missing_requirement (test_check_taskpack.TestMissingBrokenFiles.test_missing_requirement) ... ok
+test_missing_steps (test_check_taskpack.TestMissingBrokenFiles.test_missing_steps) ... ok
+test_placeholder_requirement (test_check_taskpack.TestMissingBrokenFiles.test_placeholder_requirement) ... ok
+test_current_step_unresolvable_is_fail_not_guess (test_check_taskpack.TestPhaseBoundary.test_current_step_unresolvable_is_fail_not_guess)
+当前步骤解析不出 S 编号 → ③ FAIL 不猜 ... ok
+test_illegal_phase_is_unknown_fail (test_check_taskpack.TestPhaseBoundary.test_illegal_phase_is_unknown_fail)
+非法阶段值（不在映射表）→ ①③ FAIL 可识别原因，不猜阶段 ... ok
+test_in_progress_not_due_steps_na (test_check_taskpack.TestPhaseBoundary.test_in_progress_not_due_steps_na)
+P1-1 回归：IN_PROGRESS 当前=S2，S2/S3 预填完整 PASS 记录 → N/A（编号>=当前） ... ok
+test_planning_all_na_even_with_prefilled_pass (test_check_taskpack.TestPhaseBoundary.test_planning_all_na_even_with_prefilled_pass)
+P1-1 回归：PLANNING 预填完整 PASS 记录 → ③ 全 N/A 不提前 PASS ... ok
+test_completed_pack_all_pass (test_check_taskpack.TestPositive.test_completed_pack_all_pass)
+正例：COMPLETED 完整任务包 → 六项全 PASS exit=0（④⑤ 无返工空满足） ... ok
+test_in_progress_own_pack_shape (test_check_taskpack.TestPositive.test_in_progress_own_pack_shape)
+正例：IN_PROGRESS 当前=S2，S1 完整 PASS → ③ N/A 未到期，整体 IN_PROGRESS exit=1 ... ok
+test_missing_dispatch_or_sha_in_ev (test_check_taskpack.TestRecordStepMismatch.test_missing_dispatch_or_sha_in_ev)
+⑥缺 dispatch 目录或 reply SHA256 → ③ FAIL ... ok
+test_six_element_placeholder (test_check_taskpack.TestRecordStepMismatch.test_six_element_placeholder) ... ok
+test_step_missing_six_elements (test_check_taskpack.TestRecordStepMismatch.test_step_missing_six_elements)
+记录与步骤不对应：小节缺六要素 → ③ FAIL 列缺失要素 ... ok
+test_reject_without_number_fails (test_check_taskpack.TestRework.test_reject_without_number_fails)
+R2 反例回归：④ 含 REJECT 无编号，其他要素提及问题1，表有问题1行 → ④ FAIL ... ok
+test_rework_3_times_pass (test_check_taskpack.TestRework.test_rework_3_times_pass)
+第 3 次返工：允许（冻结口径 3）→ ⑤ PASS ... ok
+test_rework_4_times_fail (test_check_taskpack.TestRework.test_rework_4_times_fail)
+第 4 次及以后：⑤ FAIL ... ok
+test_rework_row_unreferenced (test_check_taskpack.TestRework.test_rework_row_unreferenced)
+返工行未被任何步骤小节引用 → ④ FAIL（编号级关联缺失） ... ok
+
+----------------------------------------------------------------------
+Ran 33 tests in 7.988s
+
+OK (skipped=1)
