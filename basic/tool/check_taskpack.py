@@ -540,8 +540,9 @@ def check_step_acceptance(task_dir: Path) -> ItemResult:
 
 
 def check_rework_records(task_dir: Path) -> ItemResult:
-    """④REJECT 返工记录（P1-2 整改：编号级三方关联）：步骤⑥含 REJECT 须引用问题编号，
-    且返工表须有该编号的有效行（问题编号+修复 commit 40位SHA）；返工行也须被某步骤⑥引用；
+    """④REJECT 返工记录（编号级三方关联）：步骤含 REJECT 时，REJECT 所在要素值与⑥验收证据引用
+    须引用问题编号（其他无关要素的编号不替代，复验 R2 整改），且返工表须有该编号的有效行
+    （问题编号+修复 commit 40位SHA）；返工行也须被某步骤小节引用；
     无 REJECT 无表=N/A（COMPLETED 空满足 PASS）。无关行不能替代缺失关联"""
     item = ItemResult(no=4, name=ITEM_NAMES[4])
     path = task_dir / "steps.md"
@@ -565,18 +566,23 @@ def check_rework_records(task_dir: Path) -> ItemResult:
         elems = extract_six_elements(body)
         # 编号引用源=整个步骤小节（六要素任一要素提及均可构成行关联）
         referenced_nums.update(extract_problem_numbers(body))
+        # REJECT 关联编号=含 REJECT 的各要素值+⑥（验收结论所在），判定范围与提取范围一致；
+        # 不允许用同一小节其他无关要素中的编号替代（复验 R2 遗留 P1 整改）
+        step_reject_nums = set()
         has_reject = False
         for v in elems.values():
             if v and "REJECT" in v:
                 has_reject = True
-                # REJECT 关联编号=含 REJECT 的要素值+⑥（验收结论所在）
-                reject_nums.update(extract_problem_numbers(v))
+                step_reject_nums.update(extract_problem_numbers(v))
         if has_reject:
             ev = elems.get(CIRCLED[5] + SIX_ELEMENT_NAMES[5]) or ""
-            reject_nums.update(extract_problem_numbers(ev))
+            step_reject_nums.update(extract_problem_numbers(ev))
+            reject_nums.update(step_reject_nums)
             reject_steps.append(f"S{sid}")
-            if not extract_problem_numbers(body):
-                problems.append(f"S{sid} 含 REJECT 结论但未引用问题编号（须如「问题1」），无法三方关联")
+            if not step_reject_nums:
+                problems.append(
+                    f"S{sid} 含 REJECT 但 REJECT 所在要素值与⑥验收证据引用均未引用问题编号（须如「问题1」），无法三方关联"
+                )
     found, rows = parse_rework_table(text)
     valid_rows = [r for r in rows if not r["problems"]]
     for r in rows:
