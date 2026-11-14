@@ -87,7 +87,7 @@
 **六要素记录（步骤完成后填写）：**
 ①本步骤目标：使用说明落位（工具为 Basic 专属，落位 basic/tool/README.md，README 命令须真实可跑）+完工总结 delivery.md 七要素（原始需求/最终实现内容/修改文件/测试结果/Git commit/未解决问题/后续建议）。
 ②修改文件：basic/tool/README.md（新增使用说明：用法/六项检查要点/阶段映射/退出码/证据路径三规则/测试运行/fixtures 索引）；basic/tasks/b-20261114-taskpack-checker/delivery.md（新增七要素完工总结）；basic/tasks/b-20261114-taskpack-checker/steps.md（S4 勾选+本记录；S2③占位符撞词措辞修正+S2⑥/S3⑥「验收结论：PASS」措辞统一——见④如实注记）；basic/tasks/b-20261114-taskpack-checker/task-brief.md（当前步骤更新 S4，S1/S2/S3 闭环留痕）；acceptance/s4-acceptance-request.md（新增）。
-③修改内容（本次待验收 commit 完整 SHA）：见 acceptance/s4-acceptance-request.md 绑定字段（待验收 commit 完整 SHA 随派单简报给出并回填至⑥；parent、commit 数、文件清单以该文件为准）。本步无代码改动，代码验收基线仍为 b1bd307（S3 已闭环）。
+③修改内容（本次待验收 commit 完整 SHA）：`43cd5da08eb2f40cd85926e0f1c422fd5cd0d2f9`（diff=75bd102→43cd5da 单 commit 共 5 文件，parent/区间数/文件清单申报前已核验：rev-list count=1、文件数=5 与 s4-acceptance-request.md 申报一致；本步无代码改动，代码验收基线仍为 b1bd307（S3 已闭环））。要点：
 ④执行结果：README 所列命令实跑核对一致（python -I basic/tool/check_taskpack.py <任务目录> 文本输出+--json 输出结构 phase/overall/items=6，退出码 FAIL/IN_PROGRESS=1 单独验证）；自身包检查预演暴露并修正 S2 记录两处措辞问题（工具行为符合冻结口径，属记录写法问题：S2③ 要点解释文字含黑名单词"暂空"被 is_placeholder 子串命中→改"留空"并注记避免复述；S2⑥"当前结论：PASS"/S3⑥"最终结论：PASS"不满足③「验收结论：PASS」正则→统一为"验收结论：PASS"，验收事实与 dispatch/reply SHA 未改动）；delivery.md 七要素与本任务实际逐项核对一致。
 ⑤测试结果：python -I basic/tool/check_taskpack.py basic/tasks/b-20261114-taskpack-checker → ①②④⑤ PASS、③「3 步记录完整 PASS；未到期步骤（1 个）: S4」、⑥ N/A、Overall IN_PROGRESS exit=1（S4 完成前正确形态）；unittest 33 用例 OK (skipped=1) 不受影响（本步无代码改动）。未跑独立验收（本记录即派单前置材料）。
-⑥验收证据引用：验收结论：待独立验收（dispatch 目录与 reply SHA256 由验收派单后回填）。S4 交付物（README+delivery.md）在待验收 commit 内可核对；④自检命令可复跑；basic/tool/README.md 引用的 S3 验收历史链与 steps.md S3 ⑥一致。
+⑥验收证据引用：验收结论：待独立验收（dispatch 目录与 reply SHA256 由验收派单后回填）。待验收 commit `43cd5da08eb2f40cd85926e0f1c422fd5cd0d2f9`（其后的 SHA 回填文档 commit 不属验收 diff 范围）。S4 交付物（README+delivery.md）在待验收 commit 内可核对；④自检命令可复跑；basic/tool/README.md 引用的 S3 验收历史链与 steps.md S3 ⑥一致。
