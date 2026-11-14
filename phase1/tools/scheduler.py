@@ -366,6 +366,9 @@ class Scheduler:
         self.execution_id: str | None = None
         self.commit_sha: str | None = None
         self.fixture_branch = "feature/T-P1-908-fixture"
+        # artifact path 全局唯一（M1 unique(path)，真实 run 908008 409 RES-0002 证据）：
+        # 证据登记路径绑定 run_id（跨 run 隔离在注册路径层落实）
+        self.ev_rel_dir = f"{EVIDENCE_REL}/run-{self.run_id}"
         self.fixture_repo = REPO_ROOT / "runtime" / "t-p1-908" / "wt-fixture"
         self.evidence_worktree = REPO_ROOT / "runtime" / "t-p1-908" / "wt-ev"
 
@@ -660,8 +663,8 @@ class Scheduler:
         raw = reply_path.read_bytes()
         reply_sha = sha256_bytes(raw)
         # 原始字节先落证据 worktree（注册路径=仓库相对真实路径，任务书 §8/A2 三处一致）
-        ev_rel = f"{EVIDENCE_REL}/s3-reply-raw.txt"
-        ev_abs = self.evidence_worktree / EVIDENCE_REL / "s3-reply-raw.txt"
+        ev_rel = f"{self.ev_rel_dir}/s3-reply-raw.txt"
+        ev_abs = self.evidence_worktree / self.ev_rel_dir / "s3-reply-raw.txt"
         ev_abs.parent.mkdir(parents=True, exist_ok=True)
         ev_abs.write_bytes(raw)
         text = raw.decode("utf-8", "replace")
@@ -724,7 +727,7 @@ class Scheduler:
 
         # artifact 登记（幂等键=同 path+sha；先登记后重放验证）
         art_body = {"task_id": task_id, "type": "OTHER", "path": ev_rel,
-                    "sha256": reply_sha, "content": (self.evidence_worktree / EVIDENCE_REL / "s3-reply-raw.txt").read_text(encoding="utf-8", errors="replace")}
+                    "sha256": reply_sha, "content": (self.evidence_worktree / self.ev_rel_dir / "s3-reply-raw.txt").read_text(encoding="utf-8", errors="replace")}
         code, art1 = m1.post("/api/v1/artifacts", art_body)
         art1 = m1.expect(code, (200, 201), "register plan artifact", art1)
         artifact_id = art1.get("artifact_id") or art1.get("id")
@@ -1151,7 +1154,7 @@ if __name__ == "__main__":
         }
         self.rs.report_file.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
         # orchestration-report.json 存证据目录（run_id 绑定；§8 不新增 M1 登记路径）
-        ev_abs = self.evidence_worktree / EVIDENCE_REL / "orchestration-report.json"
+        ev_abs = self.evidence_worktree / self.ev_rel_dir / "orchestration-report.json"
         ev_abs.parent.mkdir(parents=True, exist_ok=True)
         ev_abs.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
 
