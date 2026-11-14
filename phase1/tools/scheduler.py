@@ -703,7 +703,7 @@ class Scheduler:
         assert self.m1 and self.task_id and self.dispatch_dir
         m1, task_id = self.m1, self.task_id
         plan = json.loads((self.rs.exec_dir / "evidence-steps" / "s3-plan-extracted.json").read_text(encoding="utf-8"))
-        ev_rel = f"{EVIDENCE_REL}/s3-reply-raw.txt"
+        ev_rel = f"{self.ev_rel_dir}/s3-reply-raw.txt"
 
         # Ajv 双校验（904 冻结契约：envelope + payload；本地真实 Ajv 2020）
         envelope = {
