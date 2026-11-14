@@ -630,9 +630,13 @@ class Scheduler:
         pid = run_project_id(self.run_id)
         task_id = self.task_id
         batch_id = self.rs.entities.get("batch_id", "")
+        # 出站文本工程约束（真实 run 908004 探测证实）：URL 紧贴前字符且带 scheme
+        # 会触发 Composer 链接化并在边界插入软换行 → innerText 回读不一致。
+        # 裸域名（无 scheme）不链接化；URL 前保留空格双保险。
         return (
-            "【开发规划请求·F-001调度器真实编排】你是规划会话GPT-01。按完整SHA读仓库"
-            f"https://github.com/damwate/AIEO（基线main={self.rs.base_commit}）。\n"
+            "【开发规划请求·F-001调度器真实编排】你是规划会话GPT-01。按完整SHA读仓库 "
+            "github.com/damwate/AIEO"
+            f"（基线main={self.rs.base_commit}）。\n"
             f"任务{task_id}（项目{pid}，批次{batch_id}）：为 phase1/tools/bundle_gate.mjs 增加 --version："
             "node该工具 --version 时stdout输出版本行且退出码0；无参调用维持现有exit 2报错；"
             "--help行为不变；仅改该单文件。\n"
