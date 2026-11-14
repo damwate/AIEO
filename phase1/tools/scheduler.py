@@ -1086,6 +1086,16 @@ if __name__ == "__main__":
             "git": {"repository": run_project_id(self.run_id), "branch": self.fixture_branch,
                     "base_commit": self.rs.base_commit, "commit_sha": self.commit_sha,
                     "changed_files": ["phase1/tools/bundle_gate.mjs"]},
+            # 03-协议 §6 完整结构（真实 run 908017 REQ-0002 四项缺失暴露；report_schema.mjs 只读契约）：
+            # tests 为 M4 commit_and_collect 管道实测（test_run exit 0，log 留档 exec 目录并记录 log_sha256，
+            # 未注册为 M1 ART → log_artifact_id=null 为 schema 明示允许）；
+            "tests": {"executed": True,
+                      "commands": ["node phase1/tools/bundle_gate.mjs --version"],
+                      "passed": 1, "failed": 0, "log_artifact_id": None},
+            "known_issues": [],
+            "knowledge_updates_required": False,
+            "self_assessment": "单文件新增 --version 旗标；四项验收（--version 退出0/无参行为不变/--help 不变/仅改单文件）"
+                               "与 M4 管道测试均实测通过；无已知遗留问题",
             "correlation_id": corr,
             "batch_id": self.rs.entities.get("batch_id"),
             "project_id": run_project_id(self.run_id),
