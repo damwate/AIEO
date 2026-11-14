@@ -678,7 +678,9 @@ class Scheduler:
     def extract_plan_json(self, text: str) -> dict:
         m = re.search(r"```json\s*(\{.*?\})\s*```", text, re.S)
         if not m:
-            m = re.search(r"(\{[\"']result[\"'].*\})", text, re.S)
+            # ChatGPT UI 可将 JSON 渲染为"JSON"代码块标签（无围栏）；放宽为
+            # 首个含 "result" 键的平衡对象（真实 run 908005 证据形态）
+            m = re.search(r"(\{[\s\S]{0,80}?[\"']result[\"'][\s\S]*\})", text)
         if not m:
             raise OrchestrationError(3, "no plan JSON found in GPT-01 reply")
         try:
