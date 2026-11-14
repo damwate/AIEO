@@ -1,0 +1,40 @@
+{
+  "failure_report": {
+    "run_id": "ORCH-908021",
+    "failed_step": 9,
+    "last_confirmed_state": "S9: A4 injection captured REQ-0001 from real chain",
+    "completed_operations_with_entity_ids": [
+      {
+        "step": 1,
+        "op": "create project",
+        "project_id": "AIEO-ORCH-908021"
+      },
+      {
+        "step": 1,
+        "op": "create batch",
+        "batch_id": "BATCH-021"
+      },
+      {
+        "step": 1,
+        "op": "create agents",
+        "agents": "GPT-01,ZCODE-01,GIT-WORKER-01"
+      },
+      {
+        "step": 1,
+        "op": "create task",
+        "task_id": "T-P1-020"
+      },
+      {
+        "step": 9,
+        "op": "A4 deliberate missing-param registration rejected by real chain (expected)",
+        "reject_code": "REQ-0001",
+        "reject_message": "{\n  \"code\": \"REQ-0001\",\n  \"message\": \"INVALID_ARGUMENT: report.correlation_id 缺失且当前会话无在途领取可继承\",\n  \"details\": null,\n  \"retryable\": false,\n  \"correlation_id\": null\n}"
+      }
+    ],
+    "evidence_pointers": [
+      "S0: runtime/t-p1-908/executions/ORCH-908021/evidence-steps/s0-precheck-*",
+      "S1: s1-bootstrap stdout (project=AIEO-ORCH-908021, batch=BATCH-021, task=T-P1-020)"
+    ]
+  },
+  "generated_utc": "2026-11-14T08:39:59Z"
+}

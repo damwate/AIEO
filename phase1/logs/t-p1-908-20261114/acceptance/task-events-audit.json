@@ -1,0 +1,1179 @@
+{
+  "exported_at_utc": "2026-11-14T08:42:17Z",
+  "source": "M1 REST read-only + M1 server ndjson audit log",
+  "tasks": {
+    "T-P1-018": {
+      "task_detail": {
+        "task_id": "T-P1-018",
+        "batch_id": "BATCH-019",
+        "parent_id": null,
+        "title": "bundle_gate --version 版本输出（F-001 调度器验证任务）",
+        "description": "为 phase1/tools/bundle_gate.mjs 增加 --version 版本输出；node phase1/tools/bundle_gate.mjs --version 输出版本行且退出码 0；仅修改该单文件；无参调用与 --help 行为不变。Run ORCH-908019。",
+        "status": "DEV_REPORTED",
+        "priority": "P1",
+        "weight": 1.0,
+        "files_scope": [
+          "phase1/tools/bundle_gate.mjs"
+        ],
+        "acceptance_criteria": [
+          "node phase1/tools/bundle_gate.mjs --version 输出版本行且退出码 0",
+          "无参调用维持既有 exit 2 报错行为",
+          "--help 行为不变",
+          "仅修改 phase1/tools/bundle_gate.mjs 单文件"
+        ],
+        "engineering_standard_items": [
+          "C5-branch-policy",
+          "C6-secrets-not-in-git"
+        ],
+        "task_package_hash": "0cdcf7e93d0efcd5a12d331bbd6ccff6f4a1e357a33069fc167f139cfe8824e0",
+        "engineering_standard_version": "1.0.0",
+        "knowledge_base_commit": "67c177c4f9c96a13cf21f0d882ae6b59b302a721",
+        "blocked_reason": null,
+        "blocked_owner": null,
+        "unblock_condition": null,
+        "cancelled_by": null,
+        "cancelled_reason": null,
+        "created_at": "2026-11-14T07:57:14.135Z",
+        "updated_at": "2026-11-14T08:01:35.477Z",
+        "dependencies": [],
+        "latest_execution": {
+          "execution_id": "EXEC-010",
+          "task_id": "T-P1-018",
+          "agent_id": "ZCODE-01",
+          "attempt": 1,
+          "base_commit": "67c177c4f9c96a13cf21f0d882ae6b59b302a721",
+          "status": "RUNNING",
+          "started_at": "2026-11-14T07:59:46.054Z",
+          "ended_at": null,
+          "created_at": "2026-11-14T07:59:46.054Z"
+        },
+        "allowed_events": [
+          "CANCEL",
+          "GIT_VALIDATE"
+        ]
+      },
+      "dependencies": {
+        "task_id": "T-P1-018",
+        "dependencies": [],
+        "dependencies_satisfied": true,
+        "pending": []
+      },
+      "http": [
+        200,
+        200
+      ]
+    },
+    "T-P1-019": {
+      "task_detail": {
+        "task_id": "T-P1-019",
+        "batch_id": "BATCH-020",
+        "parent_id": null,
+        "title": "bundle_gate --version 版本输出（F-001 调度器验证任务）",
+        "description": "为 phase1/tools/bundle_gate.mjs 增加 --version 版本输出；node phase1/tools/bundle_gate.mjs --version 输出版本行且退出码 0；仅修改该单文件；无参调用与 --help 行为不变。Run ORCH-908020。",
+        "status": "DRAFT",
+        "priority": "P1",
+        "weight": 1.0,
+        "files_scope": [
+          "phase1/tools/bundle_gate.mjs"
+        ],
+        "acceptance_criteria": [
+          "node phase1/tools/bundle_gate.mjs --version 输出版本行且退出码 0",
+          "无参调用维持既有 exit 2 报错行为",
+          "--help 行为不变",
+          "仅修改 phase1/tools/bundle_gate.mjs 单文件"
+        ],
+        "engineering_standard_items": [
+          "C5-branch-policy",
+          "C6-secrets-not-in-git"
+        ],
+        "task_package_hash": "55b7029a1719fd5a17149320981e2a1896211b1aeb467647938c2bbf03bf9c28",
+        "engineering_standard_version": "1.0.0",
+        "knowledge_base_commit": "67c177c4f9c96a13cf21f0d882ae6b59b302a721",
+        "blocked_reason": null,
+        "blocked_owner": null,
+        "unblock_condition": null,
+        "cancelled_by": null,
+        "cancelled_reason": null,
+        "created_at": "2026-11-14T08:38:01.821Z",
+        "updated_at": "2026-11-14T08:38:01.821Z",
+        "dependencies": [],
+        "latest_execution": null,
+        "allowed_events": [
+          "CANCEL",
+          "PLAN"
+        ]
+      },
+      "dependencies": {
+        "task_id": "T-P1-019",
+        "dependencies": [],
+        "dependencies_satisfied": true,
+        "pending": []
+      },
+      "http": [
+        200,
+        200
+      ]
+    },
+    "T-P1-020": {
+      "task_detail": {
+        "task_id": "T-P1-020",
+        "batch_id": "BATCH-021",
+        "parent_id": null,
+        "title": "bundle_gate --version 版本输出（F-001 调度器验证任务）",
+        "description": "为 phase1/tools/bundle_gate.mjs 增加 --version 版本输出；node phase1/tools/bundle_gate.mjs --version 输出版本行且退出码 0；仅修改该单文件；无参调用与 --help 行为不变。Run ORCH-908021。",
+        "status": "DRAFT",
+        "priority": "P1",
+        "weight": 1.0,
+        "files_scope": [
+          "phase1/tools/bundle_gate.mjs"
+        ],
+        "acceptance_criteria": [
+          "node phase1/tools/bundle_gate.mjs --version 输出版本行且退出码 0",
+          "无参调用维持既有 exit 2 报错行为",
+          "--help 行为不变",
+          "仅修改 phase1/tools/bundle_gate.mjs 单文件"
+        ],
+        "engineering_standard_items": [
+          "C5-branch-policy",
+          "C6-secrets-not-in-git"
+        ],
+        "task_package_hash": "4a80c77ab0ed9956b410a10019592c59aaa9dbb51dfdd61bfdb226b9f0f4e946",
+        "engineering_standard_version": "1.0.0",
+        "knowledge_base_commit": "67c177c4f9c96a13cf21f0d882ae6b59b302a721",
+        "blocked_reason": null,
+        "blocked_owner": null,
+        "unblock_condition": null,
+        "cancelled_by": null,
+        "cancelled_reason": null,
+        "created_at": "2026-11-14T08:39:58.235Z",
+        "updated_at": "2026-11-14T08:39:58.235Z",
+        "dependencies": [],
+        "latest_execution": null,
+        "allowed_events": [
+          "CANCEL",
+          "PLAN"
+        ]
+      },
+      "dependencies": {
+        "task_id": "T-P1-020",
+        "dependencies": [],
+        "dependencies_satisfied": true,
+        "pending": []
+      },
+      "http": [
+        200,
+        200
+      ]
+    }
+  },
+  "messages": {
+    "INBOUND": {
+      "http": 200,
+      "response": {
+        "items": [
+          {
+            "message_id": "MSG-20261114-889501",
+            "schema_version": "1.0",
+            "message_type": "DEVELOPMENT_COMPLETED",
+            "direction": "INBOUND",
+            "source_agent_id": "ZCODE-01",
+            "target_agent_id": "AIEO-ORCHESTRATOR",
+            "project_id": "AIEO-ORCH-908019",
+            "batch_id": "BATCH-019",
+            "task_id": "T-P1-018",
+            "correlation_id": "CORR-908019",
+            "payload": {
+              "batch_id": "BATCH-019",
+              "correlation_id": "CORR-908019",
+              "execution_id": "EXEC-010",
+              "git": {
+                "base_commit": "67c177c4f9c96a13cf21f0d882ae6b59b302a721",
+                "branch": "feature/T-P1-908-fixture",
+                "changed_files": [
+                  "phase1/tools/bundle_gate.mjs"
+                ],
+                "commit_sha": "fda9183dafb77ca15578abb244b3b2d15999fafb",
+                "repository": "AIEO-ORCH-908019"
+              },
+              "implementation_summary": "bundle_gate.mjs 新增 --version：stdout 版本行+退出码0；仅改该单文件；真实开发由编排会话完成（方案b）",
+              "knowledge_updates_required": false,
+              "known_issues": [],
+              "project_id": "AIEO-ORCH-908019",
+              "self_assessment": "单文件新增 --version 旗标；四项验收（--version 退出0/无参行为不变/--help 不变/仅改单文件）与 M4 管道测试均实测通过；无已知遗留问题",
+              "session_id": "SES-c658ed71-1ca1-470c-b013-bb29a40cbcad",
+              "status": "COMPLETED",
+              "task_id": "T-P1-018",
+              "tests": {
+                "commands": [
+                  "node phase1/tools/bundle_gate.mjs --version"
+                ],
+                "executed": true,
+                "failed": 0,
+                "log_artifact_id": null,
+                "passed": 1
+              }
+            },
+            "status": "PENDING",
+            "retry_count": 0,
+            "max_retries": 8,
+            "next_retry_at": null,
+            "last_error_code": null,
+            "last_error_message": null,
+            "delivered_at": null,
+            "acked_at": null,
+            "dead_lettered_at": null,
+            "processing_status": "PENDING",
+            "processed_at": null,
+            "created_at": "2026-11-14T08:01:35.498Z",
+            "updated_at": "2026-11-14T08:01:35.498Z"
+          },
+          {
+            "message_id": "MSG-20261114-075943",
+            "schema_version": "1.0",
+            "message_type": "TASK_PLAN_SUBMITTED",
+            "direction": "INBOUND",
+            "source_agent_id": "GPT-01",
+            "target_agent_id": "AIEO-ORCHESTRATOR",
+            "project_id": "AIEO-ORCH-908019",
+            "batch_id": "BATCH-019",
+            "task_id": null,
+            "correlation_id": "CORR-908019",
+            "payload": {
+              "batch_id": "BATCH-019",
+              "project_id": "AIEO-ORCH-908019",
+              "requirement_summary": "为bundle_gate.mjs增加--version参数，保持原有无参及help行为。",
+              "result": "SUCCESS",
+              "tasks": [
+                {
+                  "acceptance_criteria": [
+                    "执行node phase1/tools/bundle_gate.mjs --version，stdout输出版本行，退出码为0。",
+                    "执行node phase1/tools/bundle_gate.mjs，无参行为保持原状，退出码仍为2，原有报错行为不变。",
+                    "--help行为保持不变；仅修改指定文件，不引入其他文件变更。"
+                  ],
+                  "dependencies": [],
+                  "files_scope": [
+                    "phase1/tools/bundle_gate.mjs"
+                  ],
+                  "priority": "P1",
+                  "task_id": "T-P1-018",
+                  "title": "为bundle_gate.mjs增加版本参数支持"
+                }
+              ]
+            },
+            "status": "PENDING",
+            "retry_count": 0,
+            "max_retries": 8,
+            "next_retry_at": null,
+            "last_error_code": null,
+            "last_error_message": null,
+            "delivered_at": null,
+            "acked_at": null,
+            "dead_lettered_at": null,
+            "processing_status": "PENDING",
+            "processed_at": null,
+            "created_at": "2026-11-14T07:59:43.833Z",
+            "updated_at": "2026-11-14T07:59:43.833Z"
+          },
+          {
+            "message_id": "MSG-20261114-850501",
+            "schema_version": "1.0",
+            "message_type": "DEVELOPMENT_COMPLETED",
+            "direction": "INBOUND",
+            "source_agent_id": "ZCODE-01",
+            "target_agent_id": "AIEO-ORCHESTRATOR",
+            "project_id": "AIEO-ORCH-908018",
+            "batch_id": "BATCH-018",
+            "task_id": "T-P1-017",
+            "correlation_id": "CORR-908018",
+            "payload": {
+              "batch_id": "BATCH-018",
+              "correlation_id": "CORR-908018",
+              "execution_id": "EXEC-009",
+              "git": {
+                "base_commit": "67c177c4f9c96a13cf21f0d882ae6b59b302a721",
+                "branch": "feature/T-P1-908-fixture",
+                "changed_files": [
+                  "phase1/tools/bundle_gate.mjs"
+                ],
+                "commit_sha": "6faa2f003824703f777ea0b3a7d28f720fc395f0",
+                "repository": "AIEO-ORCH-908018"
+              },
+              "implementation_summary": "bundle_gate.mjs 新增 --version：stdout 版本行+退出码0；仅改该单文件；真实开发由编排会话完成（方案b）",
+              "knowledge_updates_required": false,
+              "known_issues": [],
+              "project_id": "AIEO-ORCH-908018",
+              "self_assessment": "单文件新增 --version 旗标；四项验收（--version 退出0/无参行为不变/--help 不变/仅改单文件）与 M4 管道测试均实测通过；无已知遗留问题",
+              "session_id": "SES-7c209ebe-ca28-4e12-92d3-d8fb2358f3e9",
+              "status": "COMPLETED",
+              "task_id": "T-P1-017",
+              "tests": {
+                "commands": [
+                  "node phase1/tools/bundle_gate.mjs --version"
+                ],
+                "executed": true,
+                "failed": 0,
+                "log_artifact_id": null,
+                "passed": 1
+              }
+            },
+            "status": "PENDING",
+            "retry_count": 0,
+            "max_retries": 8,
+            "next_retry_at": null,
+            "last_error_code": null,
+            "last_error_message": null,
+            "delivered_at": null,
+            "acked_at": null,
+            "dead_lettered_at": null,
+            "processing_status": "PENDING",
+            "processed_at": null,
+            "created_at": "2026-11-14T07:55:05.452Z",
+            "updated_at": "2026-11-14T07:55:05.452Z"
+          },
+          {
+            "message_id": "MSG-20261114-075314",
+            "schema_version": "1.0",
+            "message_type": "TASK_PLAN_SUBMITTED",
+            "direction": "INBOUND",
+            "source_agent_id": "GPT-01",
+            "target_agent_id": "AIEO-ORCHESTRATOR",
+            "project_id": "AIEO-ORCH-908018",
+            "batch_id": "BATCH-018",
+            "task_id": null,
+            "correlation_id": "CORR-908018",
+            "payload": {
+              "batch_id": "BATCH-018",
+              "project_id": "AIEO-ORCH-908018",
+              "requirement_summary": "为bundle_gate.mjs增加--version版本查询，保持原有参数及帮助行为。",
+              "result": "SUCCESS",
+              "tasks": [
+                {
+                  "acceptance_criteria": [
+                    "执行node phase1/tools/bundle_gate.mjs --version，stdout输出bundle_gate版本行，退出码为0。",
+                    "无参数调用仍输出原有错误信息，退出码为2；--help输出及退出码保持不变。",
+                    "仅修改phase1/tools/bundle_gate.mjs，不改变现有核验逻辑及其他参数行为。"
+                  ],
+                  "dependencies": [],
+                  "files_scope": [
+                    "phase1/tools/bundle_gate.mjs"
+                  ],
+                  "priority": "P1",
+                  "task_id": "T-P1-017",
+                  "title": "为bundle_gate.mjs增加--version参数支持"
+                }
+              ]
+            },
+            "status": "PENDING",
+            "retry_count": 0,
+            "max_retries": 8,
+            "next_retry_at": null,
+            "last_error_code": null,
+            "last_error_message": null,
+            "delivered_at": null,
+            "acked_at": null,
+            "dead_lettered_at": null,
+            "processing_status": "PENDING",
+            "processed_at": null,
+            "created_at": "2026-11-14T07:53:14.282Z",
+            "updated_at": "2026-11-14T07:53:14.282Z"
+          },
+          {
+            "message_id": "MSG-20261114-074520",
+            "schema_version": "1.0",
+            "message_type": "TASK_PLAN_SUBMITTED",
+            "direction": "INBOUND",
+            "source_agent_id": "GPT-01",
+            "target_agent_id": "AIEO-ORCHESTRATOR",
+            "project_id": "AIEO-ORCH-908017",
+            "batch_id": "BATCH-017",
+            "task_id": null,
+            "correlation_id": "CORR-908017",
+            "payload": {
+              "batch_id": "BATCH-017",
+              "project_id": "AIEO-ORCH-908017",
+              "requirement_summary": "为bundle_gate.mjs增加--version，保持原有参数及帮助行为不变。",
+              "result": "SUCCESS",
+              "tasks": [
+                {
+                  "acceptance_criteria": [
+                    "node phase1/tools/bundle_gate.mjs --version：stdout输出bundle_gate 1.0版本行，退出码0，不执行核验流程。",
+                    "无参数调用仍输出原有缺参错误，退出码保持2；--help输出及退出码0保持不变。",
+                    "仅修改指定单文件，不改变现有核验逻辑、记录格式及其他参数行为。"
+                  ],
+                  "dependencies": [],
+                  "files_scope": [
+                    "phase1/tools/bundle_gate.mjs"
+                  ],
+                  "priority": "P1",
+                  "task_id": "T-P1-016",
+                  "title": "为bundle_gate.mjs增加版本查询参数"
+                }
+              ]
+            },
+            "status": "PENDING",
+            "retry_count": 0,
+            "max_retries": 8,
+            "next_retry_at": null,
+            "last_error_code": null,
+            "last_error_message": null,
+            "delivered_at": null,
+            "acked_at": null,
+            "dead_lettered_at": null,
+            "processing_status": "PENDING",
+            "processed_at": null,
+            "created_at": "2026-11-14T07:45:20.777Z",
+            "updated_at": "2026-11-14T07:45:20.777Z"
+          },
+          {
+            "message_id": "MSG-20261114-073917",
+            "schema_version": "1.0",
+            "message_type": "TASK_PLAN_SUBMITTED",
+            "direction": "INBOUND",
+            "source_agent_id": "GPT-01",
+            "target_agent_id": "AIEO-ORCHESTRATOR",
+            "project_id": "AIEO-ORCH-908016",
+            "batch_id": "BATCH-016",
+            "task_id": null,
+            "correlation_id": "CORR-908016",
+            "payload": {
+              "batch_id": "BATCH-016",
+              "project_id": "AIEO-ORCH-908016",
+              "requirement_summary": "为bundle_gate.mjs增加--version，保持原有参数错误及帮助行为。",
+              "result": "SUCCESS",
+              "tasks": [
+                {
+                  "acceptance_criteria": [
+                    "执行node phase1/tools/bundle_gate.mjs --version，stdout输出单行版本信息（版本号与现有bundle_gate_version一致，即1.0），退出码0。",
+                    "无参数执行仍输出原有缺参错误，退出码2；--help输出及退出码0保持不变。",
+                    "仅修改phase1/tools/bundle_gate.mjs；正常核验流程、核验记录格式及其他参数行为不发生变化。"
+                  ],
+                  "dependencies": [],
+                  "files_scope": [
+                    "phase1/tools/bundle_gate.mjs"
+                  ],
+                  "priority": "P1",
+                  "task_id": "T-P1-015",
+                  "title": "bundle_gate.mjs增加版本查询参数"
+                }
+              ]
+            },
+            "status": "PENDING",
+            "retry_count": 0,
+            "max_retries": 8,
+            "next_retry_at": null,
+            "last_error_code": null,
+            "last_error_message": null,
+            "delivered_at": null,
+            "acked_at": null,
+            "dead_lettered_at": null,
+            "processing_status": "PENDING",
+            "processed_at": null,
+            "created_at": "2026-11-14T07:39:17.865Z",
+            "updated_at": "2026-11-14T07:39:17.865Z"
+          },
+          {
+            "message_id": "MSG-20261114-073201",
+            "schema_version": "1.0",
+            "message_type": "TASK_PLAN_SUBMITTED",
+            "direction": "INBOUND",
+            "source_agent_id": "GPT-01",
+            "target_agent_id": "AIEO-ORCHESTRATOR",
+            "project_id": "AIEO-ORCH-908015",
+            "batch_id": "BATCH-015",
+            "task_id": null,
+            "correlation_id": "CORR-908015",
+            "payload": {
+              "batch_id": "BATCH-015",
+              "project_id": "AIEO-ORCH-908015",
+              "requirement_summary": "为bundle_gate.mjs增加版本查询，保持原有参数及帮助行为。",
+              "result": "SUCCESS",
+              "tasks": [
+                {
+                  "acceptance_criteria": [
+                    "执行node phase1/tools/bundle_gate.mjs --version，stdout输出版本行（bundle_gate 1.0），退出码为0，不执行核验流程。",
+                    "无参数调用仍输出原有缺参错误信息，退出码保持2；--help输出及退出码0保持不变。",
+                    "版本号统一维护，避免与现有核验记录bundle_gate_version字段不一致；仅修改指定单文件。"
+                  ],
+                  "dependencies": [],
+                  "files_scope": [
+                    "phase1/tools/bundle_gate.mjs"
+                  ],
+                  "priority": "P1",
+                  "task_id": "T-P1-014",
+                  "title": "为bundle_gate.mjs增加--version版本查询参数"
+                }
+              ]
+            },
+            "status": "PENDING",
+            "retry_count": 0,
+            "max_retries": 8,
+            "next_retry_at": null,
+            "last_error_code": null,
+            "last_error_message": null,
+            "delivered_at": null,
+            "acked_at": null,
+            "dead_lettered_at": null,
+            "processing_status": "PENDING",
+            "processed_at": null,
+            "created_at": "2026-11-14T07:32:01.464Z",
+            "updated_at": "2026-11-14T07:32:01.464Z"
+          },
+          {
+            "message_id": "MSG-20261114-072505",
+            "schema_version": "1.0",
+            "message_type": "TASK_PLAN_SUBMITTED",
+            "direction": "INBOUND",
+            "source_agent_id": "GPT-01",
+            "target_agent_id": "AIEO-ORCHESTRATOR",
+            "project_id": "AIEO-ORCH-908014",
+            "batch_id": "BATCH-014",
+            "task_id": null,
+            "correlation_id": "CORR-908014",
+            "payload": {
+              "batch_id": "BATCH-014",
+              "project_id": "AIEO-ORCH-908014",
+              "requirement_summary": "为bundle_gate.mjs增加--version，保持原有参数及帮助行为兼容。",
+              "result": "SUCCESS",
+              "tasks": [
+                {
+                  "acceptance_criteria": [
+                    "执行node phase1/tools/bundle_gate.mjs --version，stdout输出版本行，stderr无错误，退出码为0。",
+                    "无参调用仍输出原有缺参错误，退出码保持2；--help输出及退出码0保持不变。",
+                    "原有完整核验参数及执行流程不受影响；仅修改指定单文件，不引入额外文件或依赖。"
+                  ],
+                  "dependencies": [],
+                  "files_scope": [
+                    "phase1/tools/bundle_gate.mjs"
+                  ],
+                  "priority": "P1",
+                  "task_id": "T-P1-013",
+                  "title": "为bundle_gate.mjs增加版本查询参数"
+                }
+              ]
+            },
+            "status": "PENDING",
+            "retry_count": 0,
+            "max_retries": 8,
+            "next_retry_at": null,
+            "last_error_code": null,
+            "last_error_message": null,
+            "delivered_at": null,
+            "acked_at": null,
+            "dead_lettered_at": null,
+            "processing_status": "PENDING",
+            "processed_at": null,
+            "created_at": "2026-11-14T07:25:05.521Z",
+            "updated_at": "2026-11-14T07:25:05.521Z"
+          },
+          {
+            "message_id": "MSG-20261114-071936",
+            "schema_version": "1.0",
+            "message_type": "TASK_PLAN_SUBMITTED",
+            "direction": "INBOUND",
+            "source_agent_id": "GPT-01",
+            "target_agent_id": "AIEO-ORCHESTRATOR",
+            "project_id": "AIEO-ORCH-908013",
+            "batch_id": "BATCH-013",
+            "task_id": null,
+            "correlation_id": "CORR-908013",
+            "payload": {
+              "batch_id": "BATCH-013",
+              "project_id": "AIEO-ORCH-908013",
+              "requirement_summary": "为bundle_gate.mjs增加独立版本查询参数，保持原有行为兼容。",
+              "result": "SUCCESS",
+              "tasks": [
+                {
+                  "acceptance_criteria": [
+                    "执行node phase1/tools/bundle_gate.mjs --version，stdout输出非空版本行，退出码为0。",
+                    "无参数调用维持原有错误输出及exit 2；--help行为与修改前一致。",
+                    "仅修改phase1/tools/bundle_gate.mjs，不引入额外文件或依赖；完成版本查询、无参及帮助参数回归测试。"
+                  ],
+                  "dependencies": [],
+                  "files_scope": [
+                    "phase1/tools/bundle_gate.mjs"
+                  ],
+                  "priority": "P1",
+                  "task_id": "T-P1-012",
+                  "title": "为bundle_gate.mjs增加--version参数支持"
+                }
+              ]
+            },
+            "status": "PENDING",
+            "retry_count": 0,
+            "max_retries": 8,
+            "next_retry_at": null,
+            "last_error_code": null,
+            "last_error_message": null,
+            "delivered_at": null,
+            "acked_at": null,
+            "dead_lettered_at": null,
+            "processing_status": "PENDING",
+            "processed_at": null,
+            "created_at": "2026-11-14T07:19:36.299Z",
+            "updated_at": "2026-11-14T07:19:36.299Z"
+          },
+          {
+            "message_id": "MSG-20261114-071221",
+            "schema_version": "1.0",
+            "message_type": "TASK_PLAN_SUBMITTED",
+            "direction": "INBOUND",
+            "source_agent_id": "GPT-01",
+            "target_agent_id": "AIEO-ORCHESTRATOR",
+            "project_id": "AIEO-ORCH-908012",
+            "batch_id": "BATCH-012",
+            "task_id": null,
+            "correlation_id": "CORR-908012",
+            "payload": {
+              "batch_id": "BATCH-012",
+              "project_id": "AIEO-ORCH-908012",
+              "requirement_summary": "为bundle_gate.mjs增加--version，保持原有参数错误及help行为。",
+              "result": "SUCCESS",
+              "tasks": [
+                {
+                  "acceptance_criteria": [
+                    "执行node phase1/tools/bundle_gate.mjs --version，stdout输出版本行，退出码为0；版本号与现有bundle_gate_version自述1.0保持一致。",
+                    "无参数执行仍输出原有缺参错误信息，退出码为2；--help输出及退出码保持不变。",
+                    "仅修改phase1/tools/bundle_gate.mjs，不改变现有核验逻辑及其他参数行为。"
+                  ],
+                  "dependencies": [],
+                  "files_scope": [
+                    "phase1/tools/bundle_gate.mjs"
+                  ],
+                  "priority": "P1",
+                  "task_id": "T-P1-011",
+                  "title": "为bundle_gate工具增加版本查询参数"
+                }
+              ]
+            },
+            "status": "PENDING",
+            "retry_count": 0,
+            "max_retries": 8,
+            "next_retry_at": null,
+            "last_error_code": null,
+            "last_error_message": null,
+            "delivered_at": null,
+            "acked_at": null,
+            "dead_lettered_at": null,
+            "processing_status": "PENDING",
+            "processed_at": null,
+            "created_at": "2026-11-14T07:12:21.709Z",
+            "updated_at": "2026-11-14T07:12:21.709Z"
+          },
+          {
+            "message_id": "MSG-20261114-065642",
+            "schema_version": "1.0",
+            "message_type": "TASK_PLAN_SUBMITTED",
+            "direction": "INBOUND",
+            "source_agent_id": "GPT-01",
+            "target_agent_id": "AIEO-ORCHESTRATOR",
+            "project_id": "AIEO-ORCH-908011",
+            "batch_id": "BATCH-011",
+            "task_id": null,
+            "correlation_id": "CORR-908011",
+            "payload": {
+              "batch_id": "BATCH-011",
+              "project_id": "AIEO-ORCH-908011",
+              "requirement_summary": "为bundle_gate.mjs增加--version，保持无参及--help原行为。",
+              "result": "SUCCESS",
+              "tasks": [
+                {
+                  "acceptance_criteria": [
+                    "执行node phase1/tools/bundle_gate.mjs --version，stdout输出bundle_gate版本行，退出码为0。",
+                    "无参执行仍输出原有缺少--commit错误，退出码为2；不得启动核验流程。",
+                    "--help输出内容及退出码保持不变；仅修改指定单文件。"
+                  ],
+                  "dependencies": [],
+                  "files_scope": [
+                    "phase1/tools/bundle_gate.mjs"
+                  ],
+                  "priority": "P1",
+                  "task_id": "T-P1-010",
+                  "title": "为bundle_gate增加版本参数支持"
+                }
+              ]
+            },
+            "status": "PENDING",
+            "retry_count": 0,
+            "max_retries": 8,
+            "next_retry_at": null,
+            "last_error_code": null,
+            "last_error_message": null,
+            "delivered_at": null,
+            "acked_at": null,
+            "dead_lettered_at": null,
+            "processing_status": "PENDING",
+            "processed_at": null,
+            "created_at": "2026-11-14T06:56:42.800Z",
+            "updated_at": "2026-11-14T06:56:42.800Z"
+          },
+          {
+            "message_id": "MSG-20261114-063700",
+            "schema_version": "1.0",
+            "message_type": "TASK_PLAN_SUBMITTED",
+            "direction": "INBOUND",
+            "source_agent_id": "GPT-01",
+            "target_agent_id": "AIEO-ORCHESTRATOR",
+            "project_id": "AIEO-ORCH-908010",
+            "batch_id": "BATCH-010",
+            "task_id": null,
+            "correlation_id": "CORR-908010",
+            "payload": {
+              "batch_id": "BATCH-010",
+              "project_id": "AIEO-ORCH-908010",
+              "requirement_summary": "为bundle_gate.mjs增加版本查询，保持原有参数错误及帮助行为。",
+              "result": "SUCCESS",
+              "tasks": [
+                {
+                  "acceptance_criteria": [
+                    "执行node phase1/tools/bundle_gate.mjs --version，stdout输出单行版本信息，退出码为0，不执行核验流程；版本号与工具现有bundle_gate_version 1.0保持一致。",
+                    "无参数执行仍输出原有缺参错误，退出码为2；未知参数及其他参数校验行为不变。",
+                    "--help输出内容及退出码0保持不变；仅修改指定单文件，通过版本查询、帮助、无参及原有参数行为回归测试。"
+                  ],
+                  "dependencies": [],
+                  "files_scope": [
+                    "phase1/tools/bundle_gate.mjs"
+                  ],
+                  "priority": "P1",
+                  "task_id": "T-P1-009",
+                  "title": "为bundle_gate.mjs增加--version版本查询参数"
+                }
+              ]
+            },
+            "status": "PENDING",
+            "retry_count": 0,
+            "max_retries": 8,
+            "next_retry_at": null,
+            "last_error_code": null,
+            "last_error_message": null,
+            "delivered_at": null,
+            "acked_at": null,
+            "dead_lettered_at": null,
+            "processing_status": "PENDING",
+            "processed_at": null,
+            "created_at": "2026-11-14T06:37:00.996Z",
+            "updated_at": "2026-11-14T06:37:00.996Z"
+          },
+          {
+            "message_id": "MSG-20261114-062128",
+            "schema_version": "1.0",
+            "message_type": "TASK_PLAN_SUBMITTED",
+            "direction": "INBOUND",
+            "source_agent_id": "GPT-01",
+            "target_agent_id": "AIEO-ORCHESTRATOR",
+            "project_id": "AIEO-ORCH-908007",
+            "batch_id": "BATCH-007",
+            "task_id": null,
+            "correlation_id": "CORR-908007",
+            "payload": {
+              "batch_id": "BATCH-007",
+              "project_id": "AIEO-ORCH-908007",
+              "requirement_summary": "为bundle_gate.mjs增加--version，保持原有帮助及无参行为。",
+              "result": "SUCCESS",
+              "tasks": [
+                {
+                  "acceptance_criteria": [
+                    "执行node phase1/tools/bundle_gate.mjs --version，stdout输出版本行，退出码0，无核验副作用。",
+                    "无参数调用维持原有错误输出及退出码2；--help输出内容及退出码0保持不变。",
+                    "仅修改指定单文件；正常核验参数解析及执行流程不受影响。"
+                  ],
+                  "dependencies": [],
+                  "files_scope": [
+                    "phase1/tools/bundle_gate.mjs"
+                  ],
+                  "priority": "P1",
+                  "task_id": "T-P1-006",
+                  "title": "为bundle_gate增加--version版本查询参数"
+                }
+              ]
+            },
+            "status": "PENDING",
+            "retry_count": 0,
+            "max_retries": 8,
+            "next_retry_at": null,
+            "last_error_code": null,
+            "last_error_message": null,
+            "delivered_at": null,
+            "acked_at": null,
+            "dead_lettered_at": null,
+            "processing_status": "PENDING",
+            "processed_at": null,
+            "created_at": "2026-11-14T06:21:28.970Z",
+            "updated_at": "2026-11-14T06:21:28.970Z"
+          }
+        ],
+        "page": 1,
+        "page_size": 200,
+        "total": 13
+      }
+    },
+    "OUTBOUND": {
+      "http": 200,
+      "response": {
+        "items": [
+          {
+            "message_id": "MSG-20261114-850502",
+            "schema_version": "1.0",
+            "message_type": "TASK_ASSIGNED",
+            "direction": "OUTBOUND",
+            "source_agent_id": "AIEO-ORCHESTRATOR",
+            "target_agent_id": "ZCODE-01",
+            "project_id": "AIEO-ORCH-908019",
+            "batch_id": "BATCH-019",
+            "task_id": "T-P1-018",
+            "correlation_id": "0c9a7c67-f943-484b-9351-7608eed4c783",
+            "payload": {
+              "attempt": 1,
+              "base_commit": "67c177c4f9c96a13cf21f0d882ae6b59b302a721",
+              "execution_id": "EXEC-010",
+              "task_id": "T-P1-018",
+              "task_package_hash": "0cdcf7e93d0efcd5a12d331bbd6ccff6f4a1e357a33069fc167f139cfe8824e0",
+              "title": "bundle_gate --version 版本输出（F-001 调度器验证任务）"
+            },
+            "status": "PENDING",
+            "retry_count": 0,
+            "max_retries": 8,
+            "next_retry_at": null,
+            "last_error_code": null,
+            "last_error_message": null,
+            "delivered_at": null,
+            "acked_at": null,
+            "dead_lettered_at": null,
+            "processing_status": null,
+            "processed_at": null,
+            "created_at": "2026-11-14T07:59:46.055Z",
+            "updated_at": "2026-11-14T07:59:46.055Z"
+          },
+          {
+            "message_id": "MSG-20261114-075315",
+            "schema_version": "1.0",
+            "message_type": "TASK_ASSIGNED",
+            "direction": "OUTBOUND",
+            "source_agent_id": "AIEO-ORCHESTRATOR",
+            "target_agent_id": "ZCODE-01",
+            "project_id": "AIEO-ORCH-908018",
+            "batch_id": "BATCH-018",
+            "task_id": "T-P1-017",
+            "correlation_id": "865ff534-f05e-4e91-8236-3ab685145bc3",
+            "payload": {
+              "attempt": 1,
+              "base_commit": "67c177c4f9c96a13cf21f0d882ae6b59b302a721",
+              "execution_id": "EXEC-009",
+              "task_id": "T-P1-017",
+              "task_package_hash": "249a547dfd2278a2a8a1a60012b6526b039688d998438706cae47e6573a97997",
+              "title": "bundle_gate --version 版本输出（F-001 调度器验证任务）"
+            },
+            "status": "PENDING",
+            "retry_count": 0,
+            "max_retries": 8,
+            "next_retry_at": null,
+            "last_error_code": null,
+            "last_error_message": null,
+            "delivered_at": null,
+            "acked_at": null,
+            "dead_lettered_at": null,
+            "processing_status": null,
+            "processed_at": null,
+            "created_at": "2026-11-14T07:53:16.987Z",
+            "updated_at": "2026-11-14T07:53:16.987Z"
+          },
+          {
+            "message_id": "MSG-20261114-074521",
+            "schema_version": "1.0",
+            "message_type": "TASK_ASSIGNED",
+            "direction": "OUTBOUND",
+            "source_agent_id": "AIEO-ORCHESTRATOR",
+            "target_agent_id": "ZCODE-01",
+            "project_id": "AIEO-ORCH-908017",
+            "batch_id": "BATCH-017",
+            "task_id": "T-P1-016",
+            "correlation_id": "a7880862-65b8-460b-bc3e-e296aa22b166",
+            "payload": {
+              "attempt": 1,
+              "base_commit": "67c177c4f9c96a13cf21f0d882ae6b59b302a721",
+              "execution_id": "EXEC-008",
+              "task_id": "T-P1-016",
+              "task_package_hash": "12fa4a896ddb1489cc39a977d0bf86b911ceeda9cd98e5c68aa7a2e2abddb8d8",
+              "title": "bundle_gate --version 版本输出（F-001 调度器验证任务）"
+            },
+            "status": "PENDING",
+            "retry_count": 0,
+            "max_retries": 8,
+            "next_retry_at": null,
+            "last_error_code": null,
+            "last_error_message": null,
+            "delivered_at": null,
+            "acked_at": null,
+            "dead_lettered_at": null,
+            "processing_status": null,
+            "processed_at": null,
+            "created_at": "2026-11-14T07:45:23.071Z",
+            "updated_at": "2026-11-14T07:45:23.071Z"
+          },
+          {
+            "message_id": "MSG-20261114-073918",
+            "schema_version": "1.0",
+            "message_type": "TASK_ASSIGNED",
+            "direction": "OUTBOUND",
+            "source_agent_id": "AIEO-ORCHESTRATOR",
+            "target_agent_id": "ZCODE-01",
+            "project_id": "AIEO-ORCH-908016",
+            "batch_id": "BATCH-016",
+            "task_id": "T-P1-015",
+            "correlation_id": "fd6b6171-736e-4625-80ec-2e5aeeee1caf",
+            "payload": {
+              "attempt": 1,
+              "base_commit": "67c177c4f9c96a13cf21f0d882ae6b59b302a721",
+              "execution_id": "EXEC-007",
+              "task_id": "T-P1-015",
+              "task_package_hash": "e2d62230168ca030eb9bc73133f6177c2a9c17dfcba4227b43af61b23a5266fe",
+              "title": "bundle_gate --version 版本输出（F-001 调度器验证任务）"
+            },
+            "status": "PENDING",
+            "retry_count": 0,
+            "max_retries": 8,
+            "next_retry_at": null,
+            "last_error_code": null,
+            "last_error_message": null,
+            "delivered_at": null,
+            "acked_at": null,
+            "dead_lettered_at": null,
+            "processing_status": null,
+            "processed_at": null,
+            "created_at": "2026-11-14T07:39:20.978Z",
+            "updated_at": "2026-11-14T07:39:20.978Z"
+          },
+          {
+            "message_id": "MSG-20261114-073202",
+            "schema_version": "1.0",
+            "message_type": "TASK_ASSIGNED",
+            "direction": "OUTBOUND",
+            "source_agent_id": "AIEO-ORCHESTRATOR",
+            "target_agent_id": "ZCODE-01",
+            "project_id": "AIEO-ORCH-908015",
+            "batch_id": "BATCH-015",
+            "task_id": "T-P1-014",
+            "correlation_id": "7d920cdc-f688-487d-9ef9-eb129a431b0b",
+            "payload": {
+              "attempt": 1,
+              "base_commit": "67c177c4f9c96a13cf21f0d882ae6b59b302a721",
+              "execution_id": "EXEC-006",
+              "task_id": "T-P1-014",
+              "task_package_hash": "ad44ff83b1b31211fb34c8853d5aae4b1d06fcc01208f82473ca6dd5787c34d4",
+              "title": "bundle_gate --version 版本输出（F-001 调度器验证任务）"
+            },
+            "status": "PENDING",
+            "retry_count": 0,
+            "max_retries": 8,
+            "next_retry_at": null,
+            "last_error_code": null,
+            "last_error_message": null,
+            "delivered_at": null,
+            "acked_at": null,
+            "dead_lettered_at": null,
+            "processing_status": null,
+            "processed_at": null,
+            "created_at": "2026-11-14T07:32:04.396Z",
+            "updated_at": "2026-11-14T07:32:04.396Z"
+          },
+          {
+            "message_id": "MSG-20261114-072506",
+            "schema_version": "1.0",
+            "message_type": "TASK_ASSIGNED",
+            "direction": "OUTBOUND",
+            "source_agent_id": "AIEO-ORCHESTRATOR",
+            "target_agent_id": "ZCODE-01",
+            "project_id": "AIEO-ORCH-908014",
+            "batch_id": "BATCH-014",
+            "task_id": "T-P1-013",
+            "correlation_id": "d5fcfc9c-8d82-4740-84db-3c54a6d65eea",
+            "payload": {
+              "attempt": 1,
+              "base_commit": "67c177c4f9c96a13cf21f0d882ae6b59b302a721",
+              "execution_id": "EXEC-005",
+              "task_id": "T-P1-013",
+              "task_package_hash": "228efb9c0456287fee8b2a075087c1e92fd067db77732d5251f77405025660b2",
+              "title": "bundle_gate --version 版本输出（F-001 调度器验证任务）"
+            },
+            "status": "PENDING",
+            "retry_count": 0,
+            "max_retries": 8,
+            "next_retry_at": null,
+            "last_error_code": null,
+            "last_error_message": null,
+            "delivered_at": null,
+            "acked_at": null,
+            "dead_lettered_at": null,
+            "processing_status": null,
+            "processed_at": null,
+            "created_at": "2026-11-14T07:25:08.820Z",
+            "updated_at": "2026-11-14T07:25:08.820Z"
+          },
+          {
+            "message_id": "MSG-20261114-071937",
+            "schema_version": "1.0",
+            "message_type": "TASK_ASSIGNED",
+            "direction": "OUTBOUND",
+            "source_agent_id": "AIEO-ORCHESTRATOR",
+            "target_agent_id": "ZCODE-01",
+            "project_id": "AIEO-ORCH-908013",
+            "batch_id": "BATCH-013",
+            "task_id": "T-P1-012",
+            "correlation_id": "52fca713-3f70-4d92-94c4-6f49d27d7fb8",
+            "payload": {
+              "attempt": 1,
+              "base_commit": "67c177c4f9c96a13cf21f0d882ae6b59b302a721",
+              "execution_id": "EXEC-004",
+              "task_id": "T-P1-012",
+              "task_package_hash": "2e3bd071ae51860e7bd014c26059bfa379e0362be0c4b446fe60106d921ea4c9",
+              "title": "bundle_gate --version 版本输出（F-001 调度器验证任务）"
+            },
+            "status": "PENDING",
+            "retry_count": 0,
+            "max_retries": 8,
+            "next_retry_at": null,
+            "last_error_code": null,
+            "last_error_message": null,
+            "delivered_at": null,
+            "acked_at": null,
+            "dead_lettered_at": null,
+            "processing_status": null,
+            "processed_at": null,
+            "created_at": "2026-11-14T07:19:39.699Z",
+            "updated_at": "2026-11-14T07:19:39.699Z"
+          },
+          {
+            "message_id": "MSG-20261114-071222",
+            "schema_version": "1.0",
+            "message_type": "TASK_ASSIGNED",
+            "direction": "OUTBOUND",
+            "source_agent_id": "AIEO-ORCHESTRATOR",
+            "target_agent_id": "ZCODE-01",
+            "project_id": "AIEO-ORCH-908012",
+            "batch_id": "BATCH-012",
+            "task_id": "T-P1-011",
+            "correlation_id": "de39b20c-15d0-4b0c-99fe-f5db6516405b",
+            "payload": {
+              "attempt": 1,
+              "base_commit": "67c177c4f9c96a13cf21f0d882ae6b59b302a721",
+              "execution_id": "EXEC-003",
+              "task_id": "T-P1-011",
+              "task_package_hash": "c9a16063e61a920fd79ac6c5723613009738ba031f2c721a77e3af0f06dec6a2",
+              "title": "bundle_gate --version 版本输出（F-001 调度器验证任务）"
+            },
+            "status": "PENDING",
+            "retry_count": 0,
+            "max_retries": 8,
+            "next_retry_at": null,
+            "last_error_code": null,
+            "last_error_message": null,
+            "delivered_at": null,
+            "acked_at": null,
+            "dead_lettered_at": null,
+            "processing_status": null,
+            "processed_at": null,
+            "created_at": "2026-11-14T07:12:24.017Z",
+            "updated_at": "2026-11-14T07:12:24.017Z"
+          },
+          {
+            "message_id": "MSG-20261114-065643",
+            "schema_version": "1.0",
+            "message_type": "TASK_ASSIGNED",
+            "direction": "OUTBOUND",
+            "source_agent_id": "AIEO-ORCHESTRATOR",
+            "target_agent_id": "ZCODE-01",
+            "project_id": "AIEO-ORCH-908011",
+            "batch_id": "BATCH-011",
+            "task_id": "T-P1-010",
+            "correlation_id": "401893ce-ba32-4475-8fec-88c9d0896a2c",
+            "payload": {
+              "attempt": 1,
+              "base_commit": "67c177c4f9c96a13cf21f0d882ae6b59b302a721",
+              "execution_id": "EXEC-002",
+              "task_id": "T-P1-010",
+              "task_package_hash": "64cf33331a6f5ebff9ff3314e22541bf33b417b685b83889a81f1c9dcbba5d39",
+              "title": "bundle_gate --version 版本输出（F-001 调度器验证任务）"
+            },
+            "status": "PENDING",
+            "retry_count": 0,
+            "max_retries": 8,
+            "next_retry_at": null,
+            "last_error_code": null,
+            "last_error_message": null,
+            "delivered_at": null,
+            "acked_at": null,
+            "dead_lettered_at": null,
+            "processing_status": null,
+            "processed_at": null,
+            "created_at": "2026-11-14T06:56:45.663Z",
+            "updated_at": "2026-11-14T06:56:45.663Z"
+          },
+          {
+            "message_id": "MSG-20261114-063701",
+            "schema_version": "1.0",
+            "message_type": "TASK_ASSIGNED",
+            "direction": "OUTBOUND",
+            "source_agent_id": "AIEO-ORCHESTRATOR",
+            "target_agent_id": "ZCODE-01",
+            "project_id": "AIEO-ORCH-908010",
+            "batch_id": "BATCH-010",
+            "task_id": "T-P1-009",
+            "correlation_id": "c2d2204b-9ab3-4db1-a949-cf9f4fe2fe4e",
+            "payload": {
+              "attempt": 1,
+              "base_commit": "67c177c4f9c96a13cf21f0d882ae6b59b302a721",
+              "execution_id": "EXEC-001",
+              "task_id": "T-P1-009",
+              "task_package_hash": "33f04b3f47fa3bf693a561e146e63161bd77999b0ffdfca6ec3a10e3949368f9",
+              "title": "bundle_gate --version 版本输出（F-001 调度器验证任务）"
+            },
+            "status": "PENDING",
+            "retry_count": 0,
+            "max_retries": 8,
+            "next_retry_at": null,
+            "last_error_code": null,
+            "last_error_message": null,
+            "delivered_at": null,
+            "acked_at": null,
+            "dead_lettered_at": null,
+            "processing_status": null,
+            "processed_at": null,
+            "created_at": "2026-11-14T06:37:05.262Z",
+            "updated_at": "2026-11-14T06:37:05.262Z"
+          }
+        ],
+        "page": 1,
+        "page_size": 200,
+        "total": 10
+      }
+    }
+  },
+  "artifacts": {
+    "ART-OTH-011": {
+      "http": 200,
+      "response": {
+        "artifact_id": "ART-OTH-011",
+        "task_id": "T-P1-018",
+        "type": "OTHER",
+        "path": "phase1/logs/t-p1-908-20261114/run-908019/s3-reply-raw.txt",
+        "sha256": "1b3a4dcfa93a27609680d52ee5ba1c32849286997e00601829d6cda7714dda5a",
+        "created_at": "2026-11-14T07:59:44.468Z",
+        "content": "ChatGPT 说：\nJSON\n{\n  \"result\": \"SUCCESS\",\n  \"batch_id\": \"BATCH-019\",\n  \"project_id\": \"AIEO-ORCH-908019\",\n  \"requirement_summary\": \"为bundle_gate.mjs增加--version参数，保持原有无参及help行为。\",\n  \"tasks\": [\n    {\n      \"task_id\": \"T-P1-018\",\n      \"title\": \"为bundle_gate.mjs增加版本参数支持\",\n      \"priority\": \"P1\",\n      \"dependencies\": [],\n      \"files_scope\": [\n        \"phase1/tools/bundle_gate.mjs\"\n      ],\n      \"acceptance_criteria\": [\n        \"执行node phase1/tools/bundle_gate.mjs --version，stdout输出版本行，退出码为0。\",\n        \"执行node phase1/tools/bundle_gate.mjs，无参行为保持原状，退出码仍为2，原有报错行为不变。\",\n        \"--help行为保持不变；仅修改指定文件，不引入其他文件变更。\"\n      ]\n    }\n  ]\n}",
+        "content_size_bytes": 816
+      }
+    },
+    "ART-DIFF-005": {
+      "http": 200,
+      "response": {
+        "artifact_id": "ART-DIFF-005",
+        "task_id": "T-P1-018",
+        "type": "DIFF",
+        "path": "git-worker/diffs/T-P1-018/diff-fda9183dafb77ca15578abb244b3b2d15999fafb.patch",
+        "sha256": "d262403c6768f6cd9ebb031950a1fbc565c1b46691472d1f59e51c9ae0f608ea",
+        "created_at": "2026-11-14T08:01:35.319Z",
+        "content": null,
+        "content_size_bytes": null
+      }
+    }
+  },
+  "server_log_line_count": 28
+}

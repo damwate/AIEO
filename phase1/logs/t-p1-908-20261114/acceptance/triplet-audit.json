@@ -1,0 +1,1033 @@
+{
+  "audited_at_utc": "2026-11-14T08:43:47Z",
+  "scope": "21 execution dirs under phase1/logs/t-p1-908-20261114/executions/",
+  "criterion": "brief §6 证据三件套 stdout/stderr/meta.json 每组齐全；§11 A5 每步三件套齐全",
+  "results": [
+    {
+      "execution": "ORCH-908001",
+      "groups": [
+        {
+          "group": "s0-precheck",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s1-bootstrap",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s2-compose",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s2-dispatch-stdout",
+          "complete": true,
+          "missing": []
+        }
+      ],
+      "groups_total": 4,
+      "groups_incomplete": 0,
+      "missing_total": 0,
+      "non_triplet_files": []
+    },
+    {
+      "execution": "ORCH-908002",
+      "groups": [
+        {
+          "group": "s0-precheck",
+          "complete": true,
+          "missing": []
+        }
+      ],
+      "groups_total": 1,
+      "groups_incomplete": 0,
+      "missing_total": 0,
+      "non_triplet_files": []
+    },
+    {
+      "execution": "ORCH-908003",
+      "groups": [
+        {
+          "group": "s0-precheck",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s1-bootstrap",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s2-compose",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s2-dispatch-stdout",
+          "complete": true,
+          "missing": []
+        }
+      ],
+      "groups_total": 4,
+      "groups_incomplete": 0,
+      "missing_total": 0,
+      "non_triplet_files": []
+    },
+    {
+      "execution": "ORCH-908004",
+      "groups": [
+        {
+          "group": "s0-precheck",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s1-bootstrap",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s2-compose",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s2-dispatch-stdout",
+          "complete": true,
+          "missing": []
+        }
+      ],
+      "groups_total": 4,
+      "groups_incomplete": 0,
+      "missing_total": 0,
+      "non_triplet_files": []
+    },
+    {
+      "execution": "ORCH-908005",
+      "groups": [
+        {
+          "group": "s0-precheck",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s1-bootstrap",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s2-compose",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s2-dispatch-stdout",
+          "complete": true,
+          "missing": []
+        }
+      ],
+      "groups_total": 4,
+      "groups_incomplete": 0,
+      "missing_total": 0,
+      "non_triplet_files": []
+    },
+    {
+      "execution": "ORCH-908006",
+      "groups": [
+        {
+          "group": "s0-precheck",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s1-bootstrap",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s2-compose",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s2-dispatch-stdout",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s3-reply",
+          "complete": true,
+          "missing": []
+        }
+      ],
+      "groups_total": 5,
+      "groups_incomplete": 0,
+      "missing_total": 0,
+      "non_triplet_files": [
+        "s3-plan-extracted.json",
+        "s4-ajv-validation.json"
+      ]
+    },
+    {
+      "execution": "ORCH-908007",
+      "groups": [
+        {
+          "group": "s0-precheck",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s1-bootstrap",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s2-compose",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s2-dispatch-stdout",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s3-reply",
+          "complete": true,
+          "missing": []
+        }
+      ],
+      "groups_total": 5,
+      "groups_incomplete": 0,
+      "missing_total": 0,
+      "non_triplet_files": [
+        "s3-plan-extracted.json",
+        "s4-ajv-validation.json"
+      ]
+    },
+    {
+      "execution": "ORCH-908008",
+      "groups": [
+        {
+          "group": "s0-precheck",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s1-bootstrap",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s2-compose",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s2-dispatch-stdout",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s3-reply",
+          "complete": true,
+          "missing": []
+        }
+      ],
+      "groups_total": 5,
+      "groups_incomplete": 0,
+      "missing_total": 0,
+      "non_triplet_files": [
+        "s3-plan-extracted.json",
+        "s4-ajv-validation.json"
+      ]
+    },
+    {
+      "execution": "ORCH-908009",
+      "groups": [
+        {
+          "group": "s0-precheck",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s1-bootstrap",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s2-compose",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s2-dispatch-stdout",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s3-reply",
+          "complete": true,
+          "missing": []
+        }
+      ],
+      "groups_total": 5,
+      "groups_incomplete": 0,
+      "missing_total": 0,
+      "non_triplet_files": [
+        "s3-plan-extracted.json",
+        "s4-ajv-validation.json"
+      ]
+    },
+    {
+      "execution": "ORCH-908010",
+      "groups": [
+        {
+          "group": "s0-precheck",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s1-bootstrap",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s2-compose",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s2-dispatch-stdout",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s3-reply",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s4-register",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s5-events",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s6-claim",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s7-start-handoff",
+          "complete": true,
+          "missing": []
+        }
+      ],
+      "groups_total": 9,
+      "groups_incomplete": 0,
+      "missing_total": 0,
+      "non_triplet_files": [
+        "s3-plan-extracted.json",
+        "s4-ajv-validation.json",
+        "s4-replay-a3.json",
+        "s6-claim-repeat-a4.json",
+        "s6-claim-result.json"
+      ]
+    },
+    {
+      "execution": "ORCH-908011",
+      "groups": [
+        {
+          "group": "s0-precheck",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s1-bootstrap",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s2-compose",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s2-dispatch-stdout",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s3-reply",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s4-register",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s5-events",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s6-claim",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s7-dev-done",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s7-start-handoff",
+          "complete": true,
+          "missing": []
+        }
+      ],
+      "groups_total": 10,
+      "groups_incomplete": 0,
+      "missing_total": 0,
+      "non_triplet_files": [
+        "s3-plan-extracted.json",
+        "s4-ajv-validation.json",
+        "s4-replay-a3.json",
+        "s6-claim-repeat-a4.json",
+        "s6-claim-result.json"
+      ]
+    },
+    {
+      "execution": "ORCH-908012",
+      "groups": [
+        {
+          "group": "s0-precheck",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s1-bootstrap",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s2-compose",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s2-dispatch-stdout",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s3-reply",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s4-register",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s5-events",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s6-claim",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s7-dev-done",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s7-start-handoff",
+          "complete": true,
+          "missing": []
+        }
+      ],
+      "groups_total": 10,
+      "groups_incomplete": 0,
+      "missing_total": 0,
+      "non_triplet_files": [
+        "s3-plan-extracted.json",
+        "s4-ajv-validation.json",
+        "s4-replay-a3.json",
+        "s6-claim-repeat-a4.json",
+        "s6-claim-result.json"
+      ]
+    },
+    {
+      "execution": "ORCH-908013",
+      "groups": [
+        {
+          "group": "s0-precheck",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s1-bootstrap",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s2-compose",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s2-dispatch-stdout",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s3-reply",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s4-register",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s5-events",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s6-claim",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s7-dev-done",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s7-start-handoff",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s8-m4-invoker",
+          "complete": true,
+          "missing": []
+        }
+      ],
+      "groups_total": 11,
+      "groups_incomplete": 0,
+      "missing_total": 0,
+      "non_triplet_files": [
+        "s3-plan-extracted.json",
+        "s4-ajv-validation.json",
+        "s4-replay-a3.json",
+        "s6-claim-repeat-a4.json",
+        "s6-claim-result.json"
+      ]
+    },
+    {
+      "execution": "ORCH-908014",
+      "groups": [
+        {
+          "group": "s0-precheck",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s1-bootstrap",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s2-compose",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s2-dispatch-stdout",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s3-reply",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s4-register",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s5-events",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s6-claim",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s7-dev-done",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s7-start-handoff",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s8-m4-invoker",
+          "complete": true,
+          "missing": []
+        }
+      ],
+      "groups_total": 11,
+      "groups_incomplete": 0,
+      "missing_total": 0,
+      "non_triplet_files": [
+        "s3-plan-extracted.json",
+        "s4-ajv-validation.json",
+        "s4-replay-a3.json",
+        "s6-claim-repeat-a4.json",
+        "s6-claim-result.json"
+      ]
+    },
+    {
+      "execution": "ORCH-908015",
+      "groups": [
+        {
+          "group": "s0-precheck",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s1-bootstrap",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s2-compose",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s2-dispatch-stdout",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s3-reply",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s4-register",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s5-events",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s6-claim",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s7-dev-done",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s7-start-handoff",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s8-m4-invoker",
+          "complete": true,
+          "missing": []
+        }
+      ],
+      "groups_total": 11,
+      "groups_incomplete": 0,
+      "missing_total": 0,
+      "non_triplet_files": [
+        "s3-plan-extracted.json",
+        "s4-ajv-validation.json",
+        "s4-replay-a3.json",
+        "s6-claim-repeat-a4.json",
+        "s6-claim-result.json"
+      ]
+    },
+    {
+      "execution": "ORCH-908016",
+      "groups": [
+        {
+          "group": "s0-precheck",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s1-bootstrap",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s2-compose",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s2-dispatch-stdout",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s3-reply",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s4-register",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s5-events",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s6-claim",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s7-dev-done",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s7-start-handoff",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s8-m4-invoker",
+          "complete": true,
+          "missing": []
+        }
+      ],
+      "groups_total": 11,
+      "groups_incomplete": 0,
+      "missing_total": 0,
+      "non_triplet_files": [
+        "s3-plan-extracted.json",
+        "s4-ajv-validation.json",
+        "s4-replay-a3.json",
+        "s6-claim-repeat-a4.json",
+        "s6-claim-result.json"
+      ]
+    },
+    {
+      "execution": "ORCH-908017",
+      "groups": [
+        {
+          "group": "s0-precheck",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s1-bootstrap",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s2-compose",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s2-dispatch-stdout",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s3-reply",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s4-register",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s5-events",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s6-claim",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s7-dev-done",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s7-start-handoff",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s8-m4-invoker",
+          "complete": true,
+          "missing": []
+        }
+      ],
+      "groups_total": 11,
+      "groups_incomplete": 0,
+      "missing_total": 0,
+      "non_triplet_files": [
+        "s3-plan-extracted.json",
+        "s4-ajv-validation.json",
+        "s4-replay-a3.json",
+        "s6-claim-repeat-a4.json",
+        "s6-claim-result.json",
+        "s8-m4-evidence.json",
+        "s9-progress.json",
+        "s9-submit.json"
+      ]
+    },
+    {
+      "execution": "ORCH-908018",
+      "groups": [
+        {
+          "group": "s0-precheck",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s1-bootstrap",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s2-compose",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s2-dispatch-stdout",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s3-reply",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s4-register",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s5-events",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s6-claim",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s7-dev-done",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s7-start-handoff",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s8-m4-invoker",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s9-report-close",
+          "complete": true,
+          "missing": []
+        }
+      ],
+      "groups_total": 12,
+      "groups_incomplete": 0,
+      "missing_total": 0,
+      "non_triplet_files": [
+        "s3-plan-extracted.json",
+        "s4-ajv-validation.json",
+        "s4-replay-a3.json",
+        "s6-claim-repeat-a4.json",
+        "s6-claim-result.json",
+        "s8-m4-evidence.json",
+        "s9-progress.json",
+        "s9-submit-replay-a3.json",
+        "s9-submit.json"
+      ]
+    },
+    {
+      "execution": "ORCH-908019",
+      "groups": [
+        {
+          "group": "s0-precheck",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s1-bootstrap",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s2-compose",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s2-dispatch-stdout",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s3-reply",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s4-register",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s5-events",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s6-claim",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s7-dev-done",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s7-start-handoff",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s8-m4-invoker",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s9-report-close",
+          "complete": true,
+          "missing": []
+        }
+      ],
+      "groups_total": 12,
+      "groups_incomplete": 0,
+      "missing_total": 0,
+      "non_triplet_files": [
+        "s3-plan-extracted.json",
+        "s4-ajv-validation.json",
+        "s4-replay-a3.json",
+        "s6-claim-repeat-a4.json",
+        "s6-claim-result.json",
+        "s8-m4-evidence.json",
+        "s9-progress.json",
+        "s9-submit-replay-a3.json",
+        "s9-submit.json"
+      ]
+    },
+    {
+      "execution": "ORCH-908020",
+      "groups": [
+        {
+          "group": "s0-precheck",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s1-bootstrap",
+          "complete": true,
+          "missing": []
+        }
+      ],
+      "groups_total": 2,
+      "groups_incomplete": 0,
+      "missing_total": 0,
+      "non_triplet_files": [
+        "s9-a4-inject-submit.json"
+      ]
+    },
+    {
+      "execution": "ORCH-908021",
+      "groups": [
+        {
+          "group": "s0-precheck",
+          "complete": true,
+          "missing": []
+        },
+        {
+          "group": "s1-bootstrap",
+          "complete": true,
+          "missing": []
+        }
+      ],
+      "groups_total": 2,
+      "groups_incomplete": 0,
+      "missing_total": 0,
+      "non_triplet_files": [
+        "s9-a4-inject-submit.json"
+      ]
+    }
+  ],
+  "summary": {
+    "executions": 21,
+    "total_groups": 149,
+    "incomplete_groups": 0
+  }
+}

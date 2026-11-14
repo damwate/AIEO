@@ -50,6 +50,8 @@ PASS run 全程 4 分 24 秒（锁获取 07:57:11 → PASS 08:01:35）。console
 
 18 FAIL 全部按五要素留证（run_id/失败步号/最后确认状态/已完成操作含实体 ID/证据指针）：executions/ORCH-*/failure-report.json + evidence-steps/ + console log + 对应 dispatch dir。调度器三态分界遵守：BLOCKED 仅限 S0（全程未触发），其余失败均为 ORCHESTRATED_FAIL。
 
+> 后续追加 run：ORCH-908020（REQ-0002）/ORCH-908021（REQ-0001，A4 达标）为**验收第 1 轮 REJECT 后的 A4 修复演示 run**（--inject-a4 专用模式），详见 §10；不在本表执行期序列内。
+
 ## 3. 调度器提交链（feature/T-P1-908-scheduler）
 
 5112321 初版 → b159978 → 55147dd → 872e9a5 → ad010b6 → cb9b344 → b474055 → 96b324e → 09ad3e8 → 180a829 → aba9b74 → 96eda32 → a13652e → 7cab971 → 7764a92 → b5061f3 → a153fd4 → **35c98f9**（共 18 提交：1 初版 + 17 个真实失败驱动修复）。每个 commit message 均注明暴露该缺陷的真实 run 与只读契约出处。模板渲染冒烟门禁（自 aba9b74 起）：render → compile 通过方准进入 S8；7cab971 追加 M4 提交信息正则 fullmatch 断言。
@@ -83,21 +85,37 @@ PASS run 全程 4 分 24 秒（锁获取 07:57:11 → PASS 08:01:35）。console
 
 security-scan.txt（SEC-SCAN-T-P1-908-001）：范围=本证据目录 + 18 个 dispatch dir（≥T05），disk 全量 walk + git HEAD 树 git grep -a -P；规则 R1 ait_* 令牌 / R2 csrf_token 值 / R3 ADMIN_PASSWORD / R4 SESSION_SECRET / R5 通用 ≥16 字符密钥赋值。结果：**CLEAN（0 RAW 泄漏）**——见 security-scan.txt 原文。
 
-## 8. A1–A8 可验收化对照（任务书 §12/§11）
+## 8. A1–A8 可验收化对照（任务书 §11 原文逐字引用）
 
-| # | 判定 | 证据 |
-|---|---|---|
-| A1 | 调度器单文件 stdlib、十步 S0-S9 可执行 | wt-dev phase1/tools/scheduler.py；908019 console 十步 CONFIRMED |
-| A2 | S0 PRECHECK 零业务副作用+锁生命周期 | s0-precheck-*；锁 O_CREAT\|O_EXCL；失败 run 自释放（locks 目录每 run 结束为空） |
-| A3 | 幂等重放验证 | S4 artifact duplicate:true/message 409 RES-0003（s4-*）；S9 submit report_registry.duplicate:true（s9-submit-replay-a3） |
-| A4 | 注入重复 claim fail-closed | s6-*：TASK-0003 expected |
-| A5 | S2 出站 ≤1200B | s2-*：886 bytes (limit 1200) |
-| A6 | 真实开发+真实提交 | dev-done.json 四项验收；M4 commit fda9183；ART-DIFF-005 |
-| A7 | 终态 DEV_REPORTED 且 M1 唯一持有 | s9-*：GET /api/v1/tasks/T-P1-018 status=DEV_REPORTED |
-| A8 | 失败报告五要素+RAW 泄漏阻断 | 18 份 failure-report.json；security-scan.txt CLEAN |
+> ⚠️ 修订记录：初版本节为执行会话的自拟摘要，与任务书 §11 原文存在偏差（A4 尤甚）——第 1 轮独立验收（§10）据此正确驳回。本节已改为**逐字引用任务书 §11 标准**并逐一挂证据。
+
+| # | 任务书 §11 标准（原文） | 判定条件（原文） | 证据（REPRODUCE-GUIDE.md 有逐条重现命令） |
+|---|---|---|---|
+| A1 | 真实通道 | task_events 审计含 run 全部事件+零 DB 直改声明+每步证据文件存在且与 SHA256SUMS 一致 | acceptance/task-events-audit.json（REST 只读读回）+ task-events-audit-serverlog.ndjson（M1 服务端 28 行审计）+ zero-db-direct-modification-declaration.md；triplet-audit.json 149 组全齐 |
+| A2 | 闭环真实 | M1 内任务终态 DEV_REPORTED+reply 原始字节 SHA 三处一致（dispatch unit hash/归档文件/M1 artifact 登记值） | audit JSON tasks.T-P1-018.status=DEV_REPORTED；s3-reply-raw.txt sha256=1b3a4dcfa93a…；ART-OTH-011 登记值 |
+| A3 | 幂等 | S4 重放→artifact `duplicate:true` 同 ID+message 重放→409 RES-0003 不新增；S9 重放→`accepted:true`+`duplicate:true` 不新增消息；各重放响应证据归档 | ORCH-908019 s4-*replay*（duplicate:true/409 RES-0003）+ s9-submit-replay-a3（report_registry.duplicate:true） |
+| A4 | 失败采集 | 失败注入=登记类故意缺参触发真实 REQ-0001 拒绝（905 §5-1 先例）；预期=该 run ORCHESTRATED_FAIL+失败报告五要素齐全 | ORCH-908021：--inject-a4（scheduler 提交 2b3e622+8f3a635）→真实链路 REQ-0001 原文→ORCHESTRATED_FAIL+failure-report.json 五要素；908020 REQ-0002 迭代如实留证；§10 |
+| A5 | 证据完整 | `sha256sum -c SHA256SUMS` 通过+每步三件套齐全 | acceptance/sha256sum-c-result.txt（21 run 全树实测 PASS）+ triplet-audit.json（149/149） |
+| A6 | 契约符合 | `contracts/v1.0/message-envelope.schema.json`+`contracts/v1.0/task-plan-submitted.payload.schema.json`（904 冻结）双 valid 0 errors+校验日志归档 | ORCH-908019 s4-*.json：Ajv envelope+payload 0 errors |
+| A7 | 安全 | `security-scan.txt` result: CLEAN（磁盘+git HEAD 树双范围）+扫描器可复现 | security-scan.txt（SEC-SCAN-T-P1-908-001，793 文件重扫）CLEAN；sec_scan_908.py 可复跑 |
+| A8 | 重现核验 | 独立验收按完整 SHA 读双分支可重现全部判定；验收 reply 逐项引用 SHA | REPRODUCE-GUIDE.md（逐条命令+预期输出）；round-2 派单简报明示逐项 SHA 引用要求 |
+
+注：S6 的重复领取 fail-closed 探测（TASK-0003）保留为幂等/并发防护的真实验证，但它**不是**任务书 A4（初版误标已更正，scheduler s6 注释同步修正）。
 
 ## 9. 移交与遗留
 
-- 合并拍板（DEC-010）留用户：三分支 feature/T-P1-908-{scheduler,fixture,evidence} 已推送，等待独立验收（新空白会话派单，A1-A8 简报 ≤1200B）后由用户决定合并。
+- 合并拍板（DEC-010）留用户：三分支 feature/T-P1-908-{scheduler,fixture,evidence} 已推送 remote 并经 ls-remote 核验（scheduler=35c98f9…→A4 修复后新 HEAD、fixture=fda9183dafb77ca15578abb244b3b2d15999fafb、evidence=75f850a…→补证后新 HEAD）；main=b628678（DEC-034）已推送。等待独立验收第 2 轮通过后由用户决定合并。
 - FEASIBILITY-REGISTER v0.3 批注待用户审阅；M1 PENDING 消息 ACK 超范围；M3 CLI 独立驱动开发腿为后续升级目标（DEC-032 ①如实申报）。
 - 908011 run-state.json result 字段为 None 的取证瑕疵：该 run 在 S8 模板渲染抛 NameError（未走 OrchestrationError 通道），失败事实由 console+failure-report.json 如实留证；后续版本已由冒烟门禁杜绝该类缺陷。
+
+## 10. 独立验收第 1 轮（REJECT）与补证修复闭环（2026-11-14）
+
+- **第 1 轮派单**：phase0/logs/dispatch-2026-11-14T08-24-15/（--new-session 新空白会话；1122B 自包含简报：三分支完整 SHA+任务书对照 SHA+A1–A8 步骤+回复格式）。reply.txt sha256=`1e3742d406ea60eaaf85dcb6046d3631390fbbb3fcfd272bc67309b17e5f49a9`（归档 acceptance/round1/）。
+- **判定：REJECT**——A2/A3/A6/A7 PASS；**A1/A4/A5/A8 FAIL（阻断）**；审阅人明示"不得合并，等待补证及修复后重新独立验收"。
+- 逐项定性与处置（全部成立，零申辩）：
+  - **A4=交付缺陷**：任务书 §11 A4 原文为"登记类故意缺参触发真实 REQ-0001（905 §5-1 先例）；预期=该 run ORCHESTRATED_FAIL+五要素"；本会话此前实现的是 S6 重复领取探测（TASK-0003）且 RUN-RECORD §8 误标为 A4——属对任务书误读。**修复**：scheduler `--inject-a4` 专用失败采集演示模式（提交 2b3e622→8f3a635）。演示 run：**ORCH-908020**（首版向量过简→真实链路 REQ-0002，调度器 fail-closed 拒判，ORCHESTRATED_FAIL+五要素，如实留证）→对照 mcp_server.mjs:279-282 分层（schema 校验先于 correlation 前置校验）修正向量→**ORCH-908021**：结构完整报告体+唯一缺参 correlation_id（905 §5-1 同形态）→真实链路 **REQ-0001**（"report.correlation_id 缺失且当前会话无在途领取可继承"）→**ORCHESTRATED_FAIL exit 1+五要素齐全**，A4 判定条件达成。
+  - **A1=补证缺口**：新增 acceptance/task-events-audit.json（M1 REST 只读读回三任务详情+消息+工件）+ task-events-audit-serverlog.ndjson（M1 服务端审计 28 行，含 T-P1-018 四次 task_event_submitted 转换）+ zero-db-direct-modification-declaration.md（声明+三条支持证据，含"scheduler 源码 grep sqlite3=0"可审计事实）。
+  - **A5=补证缺口**：acceptance/audit_evidence_triplets.py → triplet-audit.json（21 run、149 组三件套、incomplete=0）；SHA256SUMS 全树重生成；`sha256sum -c` 全量实测输出归档 acceptance/sha256sum-c-result.txt。
+  - **A8=补证缺口**：新增 REPRODUCE-GUIDE.md（A1–A8 逐条可执行重现命令+预期输出）；round-2 派单简报将明示"reply 逐项引用证据文件 SHA"（任务书 §11 A8 原文后半句此前未写入简报要求）。
+- **补充扫描**：新增文件（审计导出/服务端日志抽取/round1 归档/演示 run 证据）后全树重扫——security-scan.txt 更新为 793 文件 disk+git 树双范围，result 仍 **CLEAN**（0 RAW 泄漏）。
+- **第 2 轮派单**：独立新空白会话另行发起（简报携带更新后分支 SHA+REPRODUCE-GUIDE 入口+逐项 SHA 引用要求）；合并拍板仍留用户（DEC-010 不松动）。
