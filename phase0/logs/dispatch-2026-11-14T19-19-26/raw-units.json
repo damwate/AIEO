@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-14T19:26:15.247Z",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "4eb464aa-9b63-41d2-9a17-f579c9967753",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "1b7df8f6cbd93bf14b020d1779b3eeace19afaa19b82981d1969848cf86bf0f6",
+          "d98e442e16e45d599592919fae227e80693ca9c0490cbe36dc392f9be0b2fe09"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "1b7df8f6cbd93bf14b020d1779b3eeace19afaa19b82981d1969848cf86bf0f6",
+          "d98e442e16e45d599592919fae227e80693ca9c0490cbe36dc392f9be0b2fe09"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-0:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nBasic 阶段 C · S1 独立验收\nREJECT · 需要修改\n\n验收对象： f36743ccac48f33bca3ebd6fea4cb51e19c2a5a5\n\n仓库：damwate/AIEO，分支 main。\n\n验收范围核对通过。\n\n核验项\n\n\t\n\n实际核验结果\n\n\n\n\n基线\n\n\t\n\n3aaf6b21\n\n\n\n\n待验收 commit\n\n\t\n\nf36743cc\n\n\n\n\nCompare\n\n\t\n\nahead_by=1\n\n\n\n\n提交数量\n\n\t\n\n1\n\n\n\n\n修改文件\n\n\t\n\n3 个\n\n\n\n\n实际变更\n\n\t\n\n+222 / -18\n\n\n\n\n回填 commit\n\n\t\n\n0dc3115，明确排除\n\n三个变更文件与验收请求申报一致：\n\nworkflow-stats.md\n\nsteps.md\n\ntask-brief.md\n\n验收请求从 0dc3115 读取，仅用于确认绑定和验收标准，没有将其后续回填内容混入被验收 diff。\n\n一、六查结果\n\n检查项\n\n\t\n\n结论\n\n\t\n\n说明\n\n\n\n\n① 步骤目标\n\n\t\n\nPASS\n\n\t\n\n统计报告与 S1 冻结目标一致\n\n\n\n\n② 拍板方案\n\n\t\n\n部分通过\n\n\t\n\n维度和口径基本齐备，耗时统计存在遗漏\n\n\n\n\n③ 未超范围\n\n\t\n\nPASS\n\n\t\n\n没有提前执行 S2 修订\n\n\n\n\n④ 统计质量\n\n\t\n\nREJECT\n\n\t\n\n一次通过率分母错误，相邻间隔统计不完整\n\n\n\n\n⑤ 真实执行抽核\n\n\t\n\nPASS\n\n\t\n\n18 个有结论轮次的原始日志可以复算\n\n\n\n\n⑥ 证据可核查\n\n\t\n\nPASS\n\n\t\n\n原始目录、run.log、result.json、reply.txt 均可访问\n\n二、统计维度与口径核查\n\n基本通过 五基础维度、三补充维度均已建立。\n\n验收内容\n\n\t\n\n核查结果\n\n\n\n\n五基础维度\n\n\t\n\nPASS\n\n\n\n\n三补充维度 A/B/C\n\n\t\n\nPASS\n\n\n\n\nBLOCKED 单列\n\n\t\n\nPASS\n\n\n\n\n问题编号实体计数\n\n\t\n\nPASS\n\n\n\n\n问题等级缺证处理\n\n\t\n\nPASS\n\n\n\n\n主根因唯一、次根因分列\n\n\t\n\nPASS\n\n\n\n\n三类互斥拦截\n\n\t\n\nPASS\n\n\n\n\n四项拦截比例\n\n\t\n\nPASS\n\n\n\n\n按任务 ID 归属原则\n\n\t\n\n证据不足\n\n\n\n\nST-01～ST-12\n\n\t\n\nPASS\n\n1. 问题等级\n\n报告正确区分了问题级和发现项级：\n\n问题级：P0=1、P1=7、未标注=2。\n\n发现项级：P0=1、P1=10、P2=1、未标注=2。\n\n问题3、4 没有擅自推算等级，符合冻结要求。\n\n建议补充明确写出问题级 P2=0，避免与发现项级 P2=1 混淆。\n\n2. 拦截三分类\n\n互斥分类核对\n\n可自动拦截\n\n1/10\n\n可模板预防\n\n1/10\n\n必须人工判断\n\n8/10\n\n四比例：\n\n可前移：2/10\n\n检查器可拦截：1/10\n\n模板可预防：1/10\n\n必须人工：8/10\n\n三类主分类合计10项，没有重复归类，辅助标签也没有混入主分类。\n\n3. ST 追踪表\n\nST-01～ST-12 全部建立。\n\n特别认可：\n\nST-01：申报绑定同型问题跨三个步骤复发。\n\nST-02：交接包15轮与磁盘16轮矛盾。\n\nST-03：BLOCKED 缺少规范处置路径。\n\nST-08/09：采集故障与补采恢复机制。\n\nST-10/11：保留止损与规划阶段实测基线，不为修改而修改。\n\n统计发现与 S2 修订动作之间的边界清楚，没有提前宣称规范已经修改。\n\n三、发现的实质性问题\n以下问题必须修正\nP1-1：一次通过率计算口径错误\n\n报告 §八：\n\nS4 一次通过（1/16=6.25% 一次过率）。\n\n这个分母不正确。\n\n本次有四个验收步骤：\n\n步骤\n\n\t\n\n首次验收情况\n\n\t\n\n是否一次通过\n\n\n\n\nS1\n\n\t\n\nBLOCKED，随后 REJECT\n\n\t\n\n否\n\n\n\n\nS2\n\n\t\n\nREJECT\n\n\t\n\n否\n\n\n\n\nS3\n\n\t\n\nREJECT\n\n\t\n\n否\n\n\n\n\nS4\n\n\t\n\nPASS\n\n\t\n\n是\n\n因此：\n\n一次通过率\n=\n1\n4\n=\n25\n%\n一次通过率=\n4\n1\n\t​\n\n=25%\n\n1/16=6.25% 不是步骤一次通过率。\n\n修改要求：\n\n明确区分：\n\n步骤一次通过率：1/4=25%。\n\n最终 PASS 轮次：4/16=25%。\n\n首验 REJECT、BLOCKED 等结果分布：沿用原有统计。\n\n不得将不同统计对象混用分母。\n\nP1-2：相邻派单间隔漏掉五段\n\n这是本次比较重要的统计完整性问题。\n\n我重新读取了18个有结论轮次的 run.log，复算了相邻派单时间。\n\n报告 §六目前列出了12段间隔，但完整的18轮应有17段相邻间隔。\n\n缺失的五段如下：\n\n缺失区间\n\n\t\n\n实际间隔\n\n\n\n\n规划 R1→R2\n\n\t\n\n6分36.687秒\n\n\n\n\n规划→S1\n\n\t\n\n6分26.957秒\n\n\n\n\nS1→S2\n\n\t\n\n45分43.538秒\n\n\n\n\nS2→S3\n\n\t\n\n8分55.411秒\n\n\n\n\nS3→S4\n\n\t\n\n7分28.123秒\n\n这些间隔不能直接视为代码修复工时，但它们属于完整的墙钟相邻间隔数据。\n\n修改要求：\n\n补齐17段相邻间隔，不能只列返工阶段内部间隔。\n\n区分阶段内修复间隔与阶段间等待间隔。\n\n说明阶段间隔是否包含其他工作干扰。\n\n解释全任务总历时与各阶段历时之差。\n\n目前数据实际上可以闭合：\n\n全任务墙钟时间核对\n\n3:43:54\n\n14:44:19 → 18:28:13\n\n组成\n\n\t\n\n时间\n\n\n\n\n五阶段历时合计\n\n\t\n\n2:35:20\n\n\n\n\n五段遗漏间隔合计\n\n\t\n\n1:08:34\n\n\n\n\n完整总历时\n\n\t\n\n3:43:54\n\n因此不是总历时数字错误，而是相邻间隔明细不完整。\n\nP1-3：57个历史目录的归属证据不够具体\n\n冻结方案明确规定：\n\n按任务 ID、派单内容、步骤关联确认，不按时间范围。\n\n报告 §一对首任务27个、本任务2个、并行5个目录有明确分类，但对更早期57个目录只给出：\n\n00-47-28 至 14-23-49 各轮\n\n这不足以让独立验收方确认57个目录确实属于不同历史任务，而不是仅凭时间范围排除。\n\n修改要求：\n\n补充57个目录的归属依据：\n\n目录名称。\n\n对应任务 ID 或历史工作类别。\n\n派单内容识别依据。\n\n排除统计原料的理由。\n\n可以按历史任务分组，不要求每个目录写长篇说明，但必须能够逐目录追溯。\n\n91个目录的总数我已实际核对，确实存在91个 dispatch-2026-11-14 目录。问题是归属证据展示不够充分，而不是目录总数错误。\n\n四、真实执行抽核\nEXECUTED_PASS\n\n这部分我没有只相信报告中的自测结论。\n\n实际抽取了18个有结论轮次的原始 run.log，逐一读取首条、末条时间戳并计算差值。\n\n抽核样本：S1-R4\n\n文件：15-51-20/run.log\n\n项目\n\n\t\n\n原始记录\n\n\n\n\n开始\n\n\t\n\n15:51:22.756\n\n\n\n\n结束\n\n\t\n\n15:54:55.181\n\n\n\n\n实际历时\n\n\t\n\n212.425秒\n\n\n\n\n回复 SHA256\n\n\t\n\nc2d621ac…f258\n\nresult.json 中的回复 SHA256 与报告及首任务 steps.md 的 S1-R4 记录一致。\n\n18轮耗时复算结果：\n\n项目\n\n\t\n\n原始复算\n\n\t\n\n报告\n\n\n\n\n有结论轮总耗时\n\n\t\n\n3779.719秒\n\n\t\n\n3779.7秒\n\n\n\n\n18轮平均\n\n\t\n\n3.4997分钟\n\n\t\n\n3.5分钟\n\n\n\n\n纯验收16轮平均\n\n\t\n\n3.5932分钟\n\n\t\n\n3.6分钟\n\n数值一致\n\n这也证明报告中提到的均值错误从3.4修正为3.5分钟，确实已经落实。\n\n原始证据可以从以下位置继续核验：\n\n首任务 steps.md\n\nS1统计报告\n\n原始 dispatch 证据目录\n\n五、最终修改要求\n\n本轮只要求修改统计报告，不需要重新规划，也不需要代码改动。\n\n编号\n\n\t\n\n优先级\n\n\t\n\n修改内容\n\n\n\n\nP1-1\n\n\t\n\nP1\n\n\t\n\n修正一次通过率的统计分母\n\n\n\n\nP1-2\n\n\t\n\nP1\n\n\t\n\n补齐17段相邻间隔及时间闭合说明\n\n\n\n\nP1-3\n\n\t\n\nP1\n\n\t\n\n补足57个历史目录的归属依据\n\n\n\n\nP1-4\n\n\t\n\nP2\n\n\t\n\n明确问题级P2=0，避免与发现项级混淆\n\n其他已核实的统计数字、问题编号、根因、拦截分类、ST追踪表及可信度说明，不要求无依据重做。\n\n六、验收裁定\n\nREJECT\n\n原因：统计报告存在三项实质性准确性或完整性缺陷，以及一项等级展示问题。\n\nGit 绑定：通过\n\n统计维度：通过\n\n主要口径：基本通过\n\n原始执行抽核：通过\n\n数据完整性：未通过\n\nS1 暂不闭环，不授权进入 S2。\n\n给执行 AI 的边界指令：\n\n本次属于最小范围统计整改。不得修改原始历史证据，不得为了让数字好看而重新定义口径，不得修改已经核实正确的统计数字。修复后提交新的单独 commit，重新提供完整绑定和验收请求，由我进行独立复验。\n\n本次没有代码交付，unittest 不适用，不将其列为缺陷。",
+      "text_sha256": "d98e442e16e45d599592919fae227e80693ca9c0490cbe36dc392f9be0b2fe09",
+      "size_bytes": 7660,
+      "assistant_uuid": "4eb464aa-9b63-41d2-9a17-f579c9967753"
+    }
+  ]
+}
