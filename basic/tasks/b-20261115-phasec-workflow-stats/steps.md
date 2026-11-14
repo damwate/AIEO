@@ -28,7 +28,7 @@
 **六要素记录（步骤完成后填写）：**
 ①本步骤目标：按冻结口径（五基础+三补充维度/口径冻结表/三类互斥拦截分类四比例）产出首任务 b-20261114-taskpack-checker 四步全流程统计报告 workflow-stats.md，含归属核验、证据索引、可信度说明、ST-xx 修订追踪表、S1 出口条件自查。
 ②修改文件：basic/tasks/b-20261115-phasec-workflow-stats/workflow-stats.md（新建，十四节统计报告）；本 steps.md（S1 勾选+本记录）。
-③修改内容（本次待验收 commit 完整 SHA）：（待回填——本次待验收 commit=承载本步骤工作的 commit，完整 SHA 由紧随的文档回填 commit 写入本栏与 acceptance/s1-acceptance-request.md；回填 commit 不属验收 diff 范围，承首任务 S4 先例 43cd5da→afecef5；diff 范围=3aaf6b2→待验收 commit）
+③修改内容（本次待验收 commit 完整 SHA）：f36743ccac48f33bca3ebd6fea4cb51e19c2a5a5（S1 工作唯一 commit；diff=3aaf6b2→f36743c 单 commit 已核验 rev-list=1+parent=3aaf6b2；本栏与 acceptance/s1-acceptance-request.md 的回填 commit 不属验收 diff 范围，承首任务 S4 先例 43cd5da→afecef5）
 ④执行结果：91 个 dispatch 目录全量归属核验完成（首任务 27/本任务 2/并行 5/早期 57）；五基础+三补充维度统计完成；验收轮按磁盘证据重计为 16（交接包记 15 且分步枚举自相矛盾，差异如实列 ST-02）；10 问题逐项登记（问题级 P0=1/P1=7/未标注=2，发现项级 P0=1/P1=10/P2=1，等级缺证不估算）；拦截三分类 1 可自动/1 可模板/8 须人工；ST-01~ST-12 追踪表建立（ST-01 绑定申报同型复发×3 为最强修订信号）；S1 出口条件自查三项全过（报告§十四）。
 ⑤测试结果：统计数字抽核 EXECUTED_PASS——①关键轮次 reply SHA256 与首任务 steps.md ⑥ 记录交叉核对一致（S1-R4=c2d621ac…/S2-R3c=355e35e1…/S3-R3=1c323ace…/S4=fcf86d1d…）；②耗时差值复算抽核**发现并修正一处均值误差**（有结论轮均值 3.4→3.5 分钟，纯验收 16 轮 3.6 分钟，逐轮秒级复算）；③轮次计数与目录存在性比对（16 有结论轮+9 失败派单+2 规划失败计 27 目录吻合）。无代码交付，unittest 不适用（如实标注：本步无自动化测试，验证方式=数字溯源抽核）。
 ⑥验收证据引用：待独立验收（本记录即为派单前置材料）；验收请求于回填 commit 落位 acceptance/s1-acceptance-request.md（绑定与 diff 范围以该文件为准）。
