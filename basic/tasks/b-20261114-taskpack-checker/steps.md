@@ -38,8 +38,11 @@
 | 问题2 | 文本与 JSON 未真正共用完整结果对象（正常/目录不存在两路径各自拼装、schema 不一致） | main() 三处分别构造数据 | `40c66d9b17696f548603bb847e45190204a09674`（统一 build_result，render_text(data) 消费同一对象） | 复验R1静态PASS；复验R2维持 |
 | 问题3 | 验收请求文档代码绑定过时（返工后待验收 commit 仍写 49c82b5，动态证据绑定 40c66d9，两份代码混合认定风险） | 返工提交后未同步更新 acceptance/s1-acceptance-request.md 的绑定字段 | `9ae394a12d5e261adeb272aa22050d92c5abb423`（文档更新：绑定=40c66d9，diff=9de95cc→40c66d9，附验收历史证据链） | 复验R3维持（15-28-41，R3未再指出绑定问题，另发现问题4） |
 | 问题4 | 冻结口径1"阶段读取失败=①项FAIL"实现却返回N/A（复验R3 dispatch-15-28-41 REJECT；执行者"桩期语义"辩护不成立，验收方正确） | check_requirement 依赖 read_phase 结果但未将 UNKNOWN 转为该项 FAIL，S1 骨架桩语义覆盖了冻结口径语义 | `553ed2d12455e6f30a2cee22616eeafb73ecf963`（check_requirement 内读阶段：UNKNOWN=FAIL+可识别原因+files登记task-brief.md；阶段正常仍N/A桩；整体FAIL优先不变；六项独立函数保持） | **复验R4 PASS**（dispatch-15-51-20，问题4修复符合冻结口径，六项标准全过） |
+| 问题5 | S2首验P0：验收请求申报"diff=553ed2d→3add8da单commit"，实际该区间含9个commit（混入check-push整改/交接包等并行任务），绑定范围与实际不符（dispatch-16-40-38） | 申报时把"待验收commit自身改动"与"区间范围"混写，未核实 rev-list 区间数 | `e664e76b49be268739070b08aded9066e4b4908c`（S2返工commit：diff=955ffaa→该commit单commit，仅S2工具/fixtures/证据；另附验收请求重绑定声明） | 待复验（复验R2） |
+| 问题6 | S2首验P1-1：③先评记录后判到期，PLANNING/未到期步骤预填完整PASS记录会被判PASS而非N/A（dispatch-16-40-38） | 实现顺序与冻结口径"未到期N/A"相反：先pass_steps后due分支 | `e664e76b49be268739070b08aded9066e4b4908c`（check_step_acceptance 重排：先阶段/到期判定，未到期一律N/A不评估记录；COMPLETED全到期） | 待复验（复验R2） |
+| 问题7 | S2首验P1-2/P1-3：④仅查"有REJECT+表有有效行"未核编号级关联，无关行可替代；⑤直接计全部有效行未限定已关联行（dispatch-16-40-38） | 三方关联实现停留在"存在性"层，未做"编号级"关联与交叉引用 | `e664e76b49be268739070b08aded9066e4b4908c`（④编号级关联：REJECT所在要素值+⑥提取编号，逐编号要求有效行+返工行须被步骤小节引用；⑤仅计已关联行） | 待复验（复验R2） |
 
-（问题1、2 相互独立各第 1 次返工；问题3、问题4 各与之独立，均第 1 次；采集器跳位致结论原文不可恢复按 DEC-043 先例换会话，属采集缺陷不计入本任务返工；另：af3e9a7 提交信息声称"steps.md登记问题4"但该提交 diff 实际未含 steps.md，问题4 登记在本 commit 补上）
+（问题1、2 相互独立各第 1 次返工；问题5/6/7 为 S2 首验 REJECT 三项相互独立各第 1 次返工，修复均为 e664e76；问题3、问题4 各与之独立，均第 1 次；采集器跳位致结论原文不可恢复按 DEC-043 先例换会话，属采集缺陷不计入本任务返工；另：af3e9a7 提交信息声称"steps.md登记问题4"但该提交 diff 实际未含 steps.md，问题4 登记在本 commit 补上）
 
 ## S2 六项检查规则实现（验收重点：规则逐项通过）
 
@@ -52,11 +55,11 @@
 
 **六要素记录（步骤完成后填写）：**
 ①本步骤目标：按 steps.md S2 冻结清单实现六项检查规则（替换 S1 桩），保持六项独立函数+统一结果对象+两层校验（结构+有限规则，不做 AI 语义判断）。
-②修改文件：basic/tool/check_taskpack.py（六项函数实装+解析辅助）；basic/tasks/b-20261114-taskpack-checker/steps.md（S2 勾选+本记录+问题3修复 commit 补全 40 位）；acceptance/s2-fixtures/（三个验证用 fixture 任务包）+acceptance/s2-runtime-evidence/（五组运行证据留档）。
+②修改文件：basic/tool/check_taskpack.py（六项函数实装+解析辅助）；basic/tasks/b-20261114-taskpack-checker/steps.md（S2 勾选+本记录+问题3修复 commit 补全 40 位）；acceptance/s2-fixtures/（六个验证用 fixture 任务包：三原始+复验新增 phase-boundary×2+reject-wrong-number）+acceptance/s2-runtime-evidence/（首验版五组）+acceptance/s2-runtime-evidence-v2/（返工后八组 A-H 留档）。
 ③修改内容（本次待验收 commit 完整 SHA）：见 s2-acceptance-request.md 绑定字段（待验收 commit 及 diff 范围以该文件为准）。要点：①requirement.md 非空非占位符+task-brief 9 必备字段（按冻结清单"9 必备字段"；当前状态走阶段映射专门校验、最终结果设计上完成前暂空，均不入占位符检查表），字段提取支持表格行/行内/`## 字段`标题三形态；②`## S<编号> <名称>` 小节解析；③六要素提取（标记+（说明）后缀+冒号）+阶段规则（COMPLETED 全须 PASS/IN_PROGRESS 编号<当前须 PASS/PLANNING 全 N/A/当前步骤解析不出=FAIL 不猜）+PASS 结论+dispatch 目录+reply SHA256(64hex)+包内证据路径校验（相对/禁../禁符号链接出界/存在性）；④REJECT 与返工表三方关联（REJECT 须有含「问题编号+修复 commit 40位SHA」的有效行）；⑤同编号计数第 4 次及以后 FAIL；⑥COMPLETED 时 delivery.md 七要素，其余 N/A；④⑤在 COMPLETED 且无返工时空满足 PASS（保证整体 PASS 可达）；阶段读取失败=③FAIL 不猜。
 ④执行结果：六项规则实装完成；对自身任务包运行：①②④⑤ PASS、③⑥ N/A 未到期、Overall IN_PROGRESS exit=1（符合冻结口径 6）；三 fixture 场景与 JSON 一致性全部符合预期（见⑥证据）。自测中抓出并修正三处：自身返工表问题3修复列为短 SHA（补全 9ae394a1…）；①误按 11 字段检查致「最终结果」占位符永久误报（改按冻结清单 9 字段）；④在 COMPLETED 无返工时误 N/A 卡死整体 PASS（改空满足）。
 ⑤测试结果：自测 5 场景+JSON 一致性全过（A 自身包 IN_PROGRESS exit1/B good-completed 全 PASS exit0/C rework4 ⑤FAIL exit1/D reject-no-table ③④FAIL exit1/E JSON schema 与文本判定一致）；11 类异常场景 unittest 归 S3（本步骤未做，如实标注）；未跑独立验收（本记录即为派单前置材料）。
-⑥验收证据引用：验收结论：待独立验收（dispatch 目录与 reply SHA256 由验收派单后回填）。动态证据 acceptance/s2-runtime-evidence/run-a-own-pack.stdout 至 run-e-json-consistency.json 五组留档。
+⑥验收证据引用：**首验 REJECT（dispatch-2026-11-14T16-40-38，reply sha256=757db8ce1ee5de5f5229837d3acd2a51373ac0f813827a94dba59deeb88764c5）**：①②⑥ PASS；P0 绑定范围申报与实际不符（区间 9 commits）+P1-1 ③先评记录后判到期+P1-2/P1-3 ④⑤缺编号级三方关联；整改 commit e664e76（diff=955ffaa→e664e76 单 commit）+证据升级 v2 八组。复验结论：待复验R2（dispatch 目录与 reply SHA256 回填此处）。动态证据 acceptance/s2-runtime-evidence-v2/（A 自身包①②④⑤PASS ③⑥N/A / B good-completed 全PASS exit0 / C rework4 问题1×4 ⑤FAIL / D reject-no-table ③④FAIL / E JSON 一致性 / F phase-boundary-inprogress ③"1步PASS+2未到期N/A" / G phase-boundary-planning ③全N/A / H reject-wrong-number ④双问题FAIL）八组留档，fixtures 六场景可复跑。
 
 ## S3 unittest 正负例+边界测试+JSON 输出（验收重点：异常场景全部覆盖）
 
