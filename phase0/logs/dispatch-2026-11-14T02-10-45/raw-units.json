@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-14T02:13:48.540Z",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "dfc05f26-4690-423f-b925-160595dd26ab",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "1dbf82e416ac8995e1fd27ebad4a3ca964971f72980c4bb5695f951c797d362c",
+          "3fc9af550e47e17f35e8dd187eac2f490ba9ad9f838b6b9cc8d661752eefe5fa"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "1dbf82e416ac8995e1fd27ebad4a3ca964971f72980c4bb5695f951c797d362c",
+          "3fc9af550e47e17f35e8dd187eac2f490ba9ad9f838b6b9cc8d661752eefe5fa"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-0:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nT-P1-905 第三轮限定复核报告\n\n复核范围：仅 F-01、F-02、F-04。\n\n本轮采用固定提交 SHA，不使用动态 HEAD：\n\n对象\n\n\t\n\n固定版本\n\n\n\n\n仓库\n\n\t\n\ndamwate/AIEO\n\n\n\n\nmain 验收基线\n\n\t\n\nb9e3b37bd689336c786b56bbb6d8a8fda66792e0\n\n\n\n\n证据分支本轮修订\n\n\t\n\nf838d8c98b3e8ba82698fa9d2820b64bfe674d07\n\n\n\n\n开发分支\n\n\t\n\n916d8b2f213f21dfd13746dc19e0597948bb4a52\n\n\n\n\n原始执行提交\n\n\t\n\na2895af\n\n\n\n\n前轮证据修订\n\n\t\n\n36bedf5\n\n已读取本轮提交的 GitHub 完整提交差异。确认本轮修改涉及 RUN-RECORD.md 及二轮复核归档材料，没有修改开发分支的 bundle_gate.mjs。\n\n一、逐项复核\nF-01：基线差异说明\nPASS\n\n检查位置：RUN-RECORD.md §8\n\n核验结果：\n\n执行基线 c55c7f5 与验收基线 e59e250 仍然明确区分，没有混淆。\n\n§8 已将原来的「治理文档类提交」修正为「治理决议文档及其配套会议证据」。\n\n独立比较 38ee462 → e59e250，确认：\n\n两个提交之间新增一个提交。\n\n涉及 12 个文件。\n\n包含决议文档、7 个会议证据文件、会务简报及会话指针等。\n\n没有涉及 app/、tests/、contracts/。\n\n「对执行授权的影响 = 零」结论保留，DEC-024-C 的历史授权没有被追溯改变。\n\n裁定理由： 原问题已经修正，文字与 Git 比较结果一致，授权边界没有漂移。\n\nF-02：证据文件计数\nPASS\n\n检查位置：RUN-RECORD.md §7、§9\n\n终版计数：\n\n文件组成\n\n\t\n\n数量\n\n\n\n\n步骤及回归证据\n\n\t\n\n31\n\n\n\n\nRUN-RECORD.md\n\n\t\n\n1\n\n\n\n\nsecurity-scan.txt\n\n\t\n\n1\n\n\n\n\nsecurity-scan.sha256\n\n\t\n\n1\n\n\n\n\n合计\n\n\t\n\n34\n\n核验过程：\n\n原始提交 a2895af 的证据目录为 32 个文件。\n\n修订过程中增加两份扫描证据。\n\n本轮 36bedf5 → f838d8c 比较确认，RUN-RECORD 被修改，未再增加其他 D1′ 证据目录文件。\n\n§7 已修正为 34。\n\n§9 的落实表也明确登记 34。\n\n计数沿革如实记录为 33 → 32 → 34，没有掩盖前两次错误。\n\n裁定理由： 31+1+2 的组成完整，34 的终版口径与此前 Git 树核验结果及本轮提交差异一致。没有发现再次漏计或重复计数。\n\nF-04：验收记录与修订落实表\nPASS\n\n检查位置：RUN-RECORD.md §9\n\n核验结果：\n\n二轮 REWORK 结果被如实保留，没有覆盖历史结论。\n\n二轮复核证据 dispatch-2026-11-14T02-05-34 已归档。\n\n归档中包含：\n\nrequest.txt\n\nreply.txt\n\nresult.json\n\nraw-units.json\n\nrun.log\n\n双截图\n\n二轮报告的关键身份信息已登记：\n\nassistant UUID：8fd17f16\n\n回复长度：5042 字节\n\nSHA-256：44c4bac6643e79a7c575ffbb85be45f9019db1a89aaee2d333458f9a675f542e\n\n§9 明确记录二轮裁定：F-03 PASS，F-01/F-02/F-04 REWORK。\n\n三轮返工内容与落实表同步：\n\nF-01：§8 修订。\n\nF-02：34 文件终版。\n\nF-04：§7、§9 同步。\n\nF-03：沿用既有 PASS，不重复扫描。\n\n原始 a2895af 历史保留。\n\n裁定理由： 修订落实表、历史复核结论和本轮修订记录形成一致的证据链，没有发现遗漏二轮 REWORK 或伪造历史 PASS 的情况。\n\n二、其他边界核对\n\nF-03 按照本轮派单要求不重新审查，沿用二轮 PASS，不把它冒充为本轮重新验证的结果。\n\n开发分支方面：\n\n916d8b2f213f21dfd13746dc19e0597948bb4a52 未被本轮证据修订改变。\n\n证据分支比较确认：a2895af 到 f838d8c 为两个后续提交，原始执行历史保留。\n\n两个分支均未因此获得合并授权。\n\n三、最终裁定\nPASS\n\nT-P1-905 第三轮限定复核通过\n\n复核项目\n\n\t\n\n本轮结果\n\n\n\n\nF-01 基线差异说明\n\n\t\n\nPASS\n\n\n\n\nF-02 证据文件计数\n\n\t\n\nPASS\n\n\n\n\nF-04 验收记录同步\n\n\t\n\nPASS\n\n\n\n\nF-03 安全扫描\n\n\t\n\n沿用二轮 PASS，不重核\n\n限定范围内的三个返工问题全部闭合。\n\n四、授权边界及后续决定\n\n本报告明确保留以下限制：\n\nDEC-010： 本次 PASS 不构成合并授权。两个分支是否合并，由用户最终拍板。\n\nDEC-017： 不解除，扩展场景限制继续有效。\n\n不授权发布。\n\n不授权自动启动下一任务。\n\n不要求重跑九步，也不要求修改开发分支或重写原始执行历史。\n\n会务最终意见： T-P1-905 第三轮限定复核通过。此前 F-01、F-02、F-04 的文档证据问题已闭合，可以提交用户进行双分支合并决策。\n\n复核依据：damwate/AIEO，固定提交 f838d8c98b3e8ba82698fa9d2820b64bfe674d07。此次未执行任何仓库写操作。",
+      "text_sha256": "3fc9af550e47e17f35e8dd187eac2f490ba9ad9f838b6b9cc8d661752eefe5fa",
+      "size_bytes": 4467,
+      "assistant_uuid": "dfc05f26-4690-423f-b925-160595dd26ab"
+    }
+  ]
+}
