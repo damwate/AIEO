@@ -1215,8 +1215,12 @@ if __name__ == "__main__":
         sub = self.mcp.call("submit_result", {"task_id": self.task_id, "report": report}, timeout=120)
         self.ev.blob(9, "a4-inject-submit", json.dumps(
             {"init": init, "submit": sub,
-             "deliberately_omitted": ["report.correlation_id", "report.execution_id", "report.git",
-                                      "report.batch_id", "report.project_id"],
+             "injected_report": report,
+             "deliberately_omitted": ["report.correlation_id"],
+             "placeholder_fields_declared": ["execution_id", "git.commit_sha", "tests.commands",
+                                             "implementation_summary", "self_assessment"],
+             "note": "报告体结构完整（过 assertValidDevReport）唯一缺参=correlation_id；"
+                     "占位字段如实申报且该请求于 bridge 层被拒不达 M1 零实体登记",
              "brief_citation": "F001-SCHEDULER-BRIEF.md v0.3 §11 A4; precedent t-p1-905 RUN-RECORD §5-1"},
             ensure_ascii=False).encode("utf-8"))
         parsed = sub.get("parsed") if isinstance(sub.get("parsed"), dict) else {}
