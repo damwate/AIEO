@@ -208,16 +208,32 @@ def summarize(results: list, phase: str) -> tuple:
     return overall, (0 if overall == STATUS_PASS else 1)
 
 
-def render_text(task_dir: Path, phase: str, results: list, overall: str) -> str:
-    """人类可读文本输出（共识样例样式）"""
-    lines = [f"Taskpack: {task_dir.name}", f"Phase: {phase}"]
-    for r in results:
-        marker = f"[{r.status}]"
-        circled = "①②③④⑤⑥"[r.no - 1]
-        lines.append(f"{marker} {circled} {r.name}")
-        for problem in r.problems:
+def build_result(taskpack_label: str, phase: str, phase_problems: list,
+                 results: list, problems: list, overall: str) -> dict:
+    """统一完整结果对象（冻结口径 6）：文本与 JSON、正常与异常路径共用同一 schema"""
+    return {
+        "taskpack": taskpack_label,
+        "phase": phase,
+        "phase_problems": list(phase_problems),
+        "items": [r.to_dict() if isinstance(r, ItemResult) else r for r in results],
+        "problems": list(problems),
+        "overall": overall,
+    }
+
+
+def render_text(result: dict) -> str:
+    """人类可读文本输出（消费统一结果对象，共识样例样式）"""
+    lines = [f"Taskpack: {result['taskpack']}", f"Phase: {result['phase']}"]
+    for problem in result["phase_problems"]:
+        lines.append(f"       - 阶段读取: {problem}")
+    for problem in result["problems"]:
+        lines.append(f"       - {problem}")
+    circled = "①②③④⑤⑥"
+    for r in result["items"]:
+        lines.append(f"[{r['status']}] {circled[r['no'] - 1]} {r['name']}")
+        for problem in r["problems"]:
             lines.append(f"       - {problem}")
-    lines.append(f"Overall: {overall}")
+    lines.append(f"Overall: {result['overall']}")
     return "\n".join(lines)
 
 
@@ -234,34 +250,21 @@ def main(argv: list) -> int:
     task_dir = Path(args.task_dir)
     # 冻结口径 7：异常输入产生可识别结果，不抛未捕获异常
     if not task_dir.is_dir():
-        result = {
-            "taskpack": args.task_dir,
-            "phase": PHASE_UNKNOWN,
-            "items": [],
-            "problems": [f"任务目录不存在: {task_dir}"],
-            "overall": STATUS_FAIL,
-        }
-        print(json.dumps(result, ensure_ascii=False, indent=2) if args.json
-              else f"Taskpack: {task_dir.name}\nPhase: {PHASE_UNKNOWN}\nOverall: {STATUS_FAIL}\n"
-                   f"       - 任务目录不存在: {task_dir}")
-        return 1
+        data = build_result(task_dir.name, PHASE_UNKNOWN, [], [],
+                            [f"任务目录不存在: {task_dir}"], STATUS_FAIL)
+        exit_code = 1
+    else:
+        phase_info = read_phase(task_dir)
+        results = [fn(task_dir) for fn in CHECK_FUNCS[:5]]
+        results.append(check_delivery(task_dir, phase_info.phase))
+        overall, exit_code = summarize(results, phase_info.phase)
+        data = build_result(task_dir.name, phase_info.phase, phase_info.problems,
+                            results, [], overall)
 
-    phase_info = read_phase(task_dir)
-    results = [fn(task_dir) for fn in CHECK_FUNCS[:5]]
-    results.append(check_delivery(task_dir, phase_info.phase))
-    overall, exit_code = summarize(results, phase_info.phase)
-
-    data = {
-        "taskpack": task_dir.name,
-        "phase": phase_info.phase,
-        "phase_problems": phase_info.problems,
-        "items": [r.to_dict() for r in results],
-        "overall": overall,
-    }
     if args.json:
         print(json.dumps(data, ensure_ascii=False, indent=2))
     else:
-        print(render_text(task_dir, phase_info.phase, results, overall))
+        print(render_text(data))
     return exit_code
 
 
