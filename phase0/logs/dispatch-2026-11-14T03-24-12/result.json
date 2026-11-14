@@ -1,0 +1,181 @@
+{
+  "at": "2026-11-14T03:28:04.489Z",
+  "message_bytes": 800,
+  "reply": "ChatGPT 说：\nT-P1-907 A8 限定复核报告\n\n复核范围：仅 A8，不重核 A1–A7。\n\n复核基线与对象\n\n项目\n\n\t\n\n指定版本\n\n\n\n\nmain 基线\n\n\t\n\nc4a9dc2\n\n\n\n\n证据分支修订\n\n\t\n\nf44bbca\n\n\n\n\n开发分支\n\n\t\n\nb711160\n\n\n\n\n历史证据提交\n\n\t\n\n669fe54\n\n\n\n\n复核范围\n\n\t\n\nA8 闭合\n\n已取得 f44bbca 对应的完整提交 SHA：\n\nf44bbca3960a6e577a273c103d01801f2a384da5\n\n提交说明明确记载：修订 RUN-RECORD 计数、新增 §9 验收记录，并补入规划与验收证据及两份派单简报；同时注明没有重跑四组真实执行，也没有重写历史。\n\n重要边界：文档证据修订不能替代原始执行证据，也不能将历史记录变成新的执行事实。\n\n一、A8 修订逐项核验\n\nA8-1：RUN-RECORD §7 计数修正\n\nPASS\n\n已按指定完整 SHA 读取 RUN-RECORD，Blob SHA：\n\n91295cfe4eeb4d0153ea1c299569931545330c9a\n\n核验项目\n\n\t\n\n原记录\n\n\t\n\n修订后\n\n\n\n\n证据文件总数\n\n\t\n\n53\n\n\t\n\n55\n\n\n\n\n输入与拒绝文件\n\n\t\n\n17\n\n\t\n\n19\n\n两份此前漏计文件均已实际读取：\n\ncommands-a4starterr.json\n\ncommands-a4suite.json\n\n两份文件均存在于指定证据分支，且各自有独立 Blob SHA。\n\n判断： 计数修正准确，明确保留 53→55、17→19 的历史沿革，没有掩盖首轮错误。\n\nA8-2：§9 独立验收记录\n\nPASS\n\n已核对新增 §9 内容与首轮验收原文。\n\n首轮记录：\n\nDispatch：2026-11-14T03-06-25\n\nReply：5448 字节\n\nSHA-256：637d80186d157d459e142b78306b73fd6d0d12329f59e50e59b99e4bb028ef3d\n\n首轮结论：A1–A7 PASS，A8 REWORK，BLOCKED 0。\n\n修订记录准确保留首轮唯一问题及整改要求，没有把首轮 REWORK 改写成首轮 PASS。\n\n判断： 验收历史记录完整，结论沿革可信。\n\nA8-3：规划证据补入\n\nPASS\n\n已成功读取：\n\nphase0/logs/dispatch-2026-11-14T02-49-55/reply.txt\n\n原文大小：19102 字节\n\nSHA-256：2920da047d43c6b984914a465b6e27d0cac4c928eb76f6bc716947b263b29d5d\n\n与 RUN-RECORD 登记值一致。\n\n原规划内容可读取，涵盖 CLI、worktree、命令清单、执行策略、三件套、Ajv 校验及归档方案。\n\n判断： 上轮 404 读取限制已经解除。\n\nA8-4：验收证据与两份派单简报入库\n\nPASS\n\n已实际读取以下文件：\n\nphase0/logs/dispatch-2026-11-14T03-06-25/reply.txt\n\nphase0/tools/t-p1-907-plan-request.txt\n\nphase0/tools/t-p1-907-acceptance-request.txt\n\n两份派单简报内容与本次规划及验收任务相符。\n\n验收证据 SHA-256 与 §9 登记一致，Dispatch 的 result.json 也记录了原始回复读取回验和稳定性检查通过。\n\n判断： 规划、验收、派单请求形成完整可追溯证据链。\n\n二、双分支及历史完整性\n\n通过 Git compare 按完整 SHA 核验：\n\n检查\n\n\t\n\n结果\n\n\n\n\nmain → 原证据提交 669fe54\n\n\t\n\nahead 1\n\n\n\n\n原证据提交 → 修订 f44bbca\n\n\t\n\nahead 1\n\n\n\n\n修订前后是否重写历史\n\n\t\n\n否\n\n\n\n\n开发分支 b711160\n\n\t\n\n未改变\n\n\n\n\nmain 是否被本次修订修改\n\n\t\n\n否\n\n开发分支比较结果：\n\n基线：c4a9dc22319868451ebe560ebfc58a72ccdb0085\n\n开发提交：b711160d374b7a0dfc3f6445b393736a4949d1f6\n\n仅新增 phase1/tools/test_worker.py，193 行。\n\n证据分支比较结果：\n\n原提交：669fe546a3c3413769c614056317c93ee1f34352\n\n修订提交：f44bbca3960a6e577a273c103d01801f2a384da5\n\n新增规划、验收证据及派单简报，修改 RUN-RECORD。\n\n未发现开发分支被此次文档修订带动修改的情况。\n\n三、最终三态结论\nA8 PASS\nT-P1-907 八项验收全部具备 PASS 结论\n8\nPASS\n0\nREWORK\n0\nBLOCKED\n\n验收项\n\n\t\n\n本轮结论\n\n\t\n\n依据\n\n\n\n\nA1\n\n\t\n\nPASS\n\n\t\n\n首轮通过，沿用\n\n\n\n\nA2\n\n\t\n\nPASS\n\n\t\n\n首轮通过，沿用\n\n\n\n\nA3\n\n\t\n\nPASS\n\n\t\n\n首轮通过，沿用\n\n\n\n\nA4\n\n\t\n\nPASS\n\n\t\n\n首轮通过，沿用\n\n\n\n\nA5\n\n\t\n\nPASS\n\n\t\n\n首轮通过，沿用\n\n\n\n\nA6\n\n\t\n\nPASS\n\n\t\n\n首轮通过，沿用\n\n\n\n\nA7\n\n\t\n\nPASS\n\n\t\n\n首轮通过，沿用\n\n\n\n\nA8\n\n\t\n\nPASS\n\n\t\n\n本轮重新核验\n\n说明：A1–A7 沿用首轮独立验收结论，本轮没有重新执行或重新审查这些项目。本轮实际复核对象仅为 A8。\n\n四、会务决议边界\n\n本次复核通过，不产生以下授权：\n\nDEC-010： 继续有效。本次不构成合并授权。\n\nDEC-017： 不解除，原有限制继续有效。\n\nF-003： 最终关闭或降级处置仍待另行登记。\n\n开发分支与证据分支继续保持独立，不擅自合并 main。\n\n不要求重跑已经通过的四组真实 Worker 执行。\n\n五、最终会务意见\n限定复核通过\n\nT-P1-907 本次 A8 遗留问题已全部闭合。\n\n本轮整改方式正确：修正文档计数、保留历史、补齐证据，而不是重做已经通过的 Worker 实现或重复执行全部测试。\n\n建议将本次复核结果作为 DEC-028 授权期内 T-P1-907 的独立验收完成依据，后续由用户决定是否进入 DEC-010 规定的下一步审批。\n\n复核对象：修订提交 f44bbca",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "540a1be3-8d31-441e-ae3d-b460c0d46e61",
+  "stability": {
+    "stable": true,
+    "interval_ms": 4644,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-14T03:27:59.099Z",
+      "read_finished_at": "2026-11-14T03:28:00.732Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "f46f3b8592e479321d982240645f3857d89e623a5f3258b74976c3f046f653be",
+          "size_bytes": 4893
+        }
+      ],
+      "assistant_uuid": "540a1be3-8d31-441e-ae3d-b460c0d46e61",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-14T03:28:03.742Z",
+      "read_finished_at": "2026-11-14T03:28:04.285Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "f46f3b8592e479321d982240645f3857d89e623a5f3258b74976c3f046f653be",
+          "size_bytes": 4893
+        }
+      ],
+      "assistant_uuid": "540a1be3-8d31-441e-ae3d-b460c0d46e61",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "d0b4dbde25c6b2d965e406404807365e08ad02f0d2a6fb6c10c0b2cc6d8ea718",
+          "f46f3b8592e479321d982240645f3857d89e623a5f3258b74976c3f046f653be"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "d0b4dbde25c6b2d965e406404807365e08ad02f0d2a6fb6c10c0b2cc6d8ea718",
+          "f46f3b8592e479321d982240645f3857d89e623a5f3258b74976c3f046f653be"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "f46f3b8592e479321d982240645f3857d89e623a5f3258b74976c3f046f653be",
+  "size_bytes": 4893,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-14T03-24-12\\reply.txt",
+  "reply_readback_sha256": "f46f3b8592e479321d982240645f3857d89e623a5f3258b74976c3f046f653be",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-14T03-24-12\\raw-units.json",
+  "raw_units_sha256": "381e81655c35959bba1627b6a1ac78a62a53581c0cb908dfd71f899862d6c04d",
+  "raw_units_size_bytes": 7957,
+  "raw_units_readback_sha256": "381e81655c35959bba1627b6a1ac78a62a53581c0cb908dfd71f899862d6c04d",
+  "session_id": "6af7d494-4674-83ee-944c-9da5beac52e6",
+  "conversation_url": "https://chatgpt.com/c/6af7d494-4674-83ee-944c-9da5beac52e6",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}
