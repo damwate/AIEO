@@ -64,13 +64,18 @@
 
 ## S3 unittest 正负例+边界测试+JSON 输出（验收重点：异常场景全部覆盖）
 
-- [ ] 正例：完整任务包样例输出 PASS
-- [ ] 11 类异常输入逐项断言（含目录不存在/路径穿越/符号链接）
-- [ ] `--json` 输出结构与文本判定一致性
-- [ ] 异常输入产生可识别结果（无未捕获异常/静默跳过/错误 PASS）
+- [x] 正例：完整任务包样例输出 PASS
+- [x] 11 类异常输入逐项断言（含目录不存在/路径穿越/符号链接）
+- [x] `--json` 输出结构与文本判定一致性
+- [x] 异常输入产生可识别结果（无未捕获异常/静默跳过/错误 PASS）
 
 **六要素记录（步骤完成后填写）：**
-①本步骤目标：②修改文件：③修改内容（本次待验收 commit 完整 SHA）：④执行结果：⑤测试结果：⑥验收证据引用：
+①本步骤目标：按 steps.md S3 拍板口径实现 unittest——正例完整任务包输出 PASS、11 类异常输入逐项断言（含目录不存在/路径穿越/符号链接）、`--json` 输出结构与文本判定一致性、异常输入产生可识别结果（无未捕获异常/静默跳过/错误 PASS）。
+②修改文件：basic/tool/test_check_taskpack.py（新增，32 用例：黑盒 subprocess 走 CLI 真实退出码+validate_pack_path 三规则单元直调）；basic/tasks/b-20261114-taskpack-checker/steps.md（S3 勾选+本记录）。
+③修改内容（本次待验收 commit 完整 SHA）：见 s3-acceptance-request.md 绑定字段（待验收 commit 及 diff 范围以该文件为准）。要点：临时目录动态构造任务包（不依赖仓库 fixtures，自包含）；按拍板 11 类异常一一映射测试（目录不存在/缺文件×3/空文件/编码异常/重复字段+重复编号/记录与步骤不对应×2/证据不存在/非法阶段/第 3 次返工/第 4 次返工/路径穿越）；符号链接出界以 os.symlink 权限探测，无权限 skipTest 如实标注（validate_pack_path 的 resolve+is_relative_to 口径由单元级 test_unit_symlink_escape_rejected 与相对/穿越/绝对路径三规则共同覆盖）；JSON 一致性断言 items 状态序列+overall↔exit 对应（COMPLETED 全 PASS/rework4/目录不存在三场景）；可识别结果批量断言 6 异常场景 exit=1+含 FAIL+无 Traceback。
+④执行结果：Ran 32 tests，OK（skipped=1：test_unit_symlink_escape_rejected 因当前 Windows 环境无符号链接创建权限按设计跳过，环境允许时自动执行）；全部异常场景无未捕获异常（每用例断言无 Traceback）。
+⑤测试结果：python -I -m unittest discover -s basic/tool -p "test_check_taskpack.py" → OK (skipped=1)；python -I basic/tool/test_check_taskpack.py 直跑等价。未跑独立验收（本记录即派单前置材料）。
+⑥验收证据引用：验收结论：待独立验收（dispatch 目录与 reply SHA256 由验收派单后回填）。测试文件 test_check_taskpack.py 在待验收 commit 内可复跑；仓库 fixtures 七场景（S2 留档）与 S2 证据 v3 九组可交叉核对。
 
 ## S4 文档与交付（验收重点：可独立运行）
 
