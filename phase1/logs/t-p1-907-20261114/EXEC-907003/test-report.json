@@ -1,0 +1,83 @@
+{
+  "task_id": "T-P1-907",
+  "execution_id": "EXEC-907003",
+  "commit_sha": "b711160d374b7a0dfc3f6445b393736a4949d1f6",
+  "execution_result": "EXECUTED_FAIL",
+  "result": "REWORK",
+  "artifact_id": null,
+  "payload": {
+    "worker_version": "0.1.0",
+    "worktree": "D:\\AIEO\\runtime\\t-p1-907\\wt-dev",
+    "head_verified": true,
+    "commands": [
+      {
+        "command_id": "command-001",
+        "name": "startup-error-demo-python3-missing",
+        "argv": [
+          "python3",
+          "-c",
+          "print('start-error-demo')"
+        ],
+        "exit_code": 0,
+        "status": "COMPLETED",
+        "timed_out": false,
+        "exception": null,
+        "duration_ms": 828
+      },
+      {
+        "command_id": "command-002",
+        "name": "timeout-demo-node-sleep",
+        "argv": [
+          "node",
+          "-e",
+          "setTimeout(function(){},60000)"
+        ],
+        "exit_code": null,
+        "status": "TIMEOUT",
+        "timed_out": true,
+        "exception": null,
+        "duration_ms": 3015
+      },
+      {
+        "command_id": "command-003",
+        "name": "continue-after-failure-help-ok",
+        "argv": [
+          "node",
+          "phase1/tools/bundle_gate.mjs",
+          "--help"
+        ],
+        "exit_code": 0,
+        "status": "COMPLETED",
+        "timed_out": false,
+        "exception": null,
+        "duration_ms": 78
+      }
+    ],
+    "evidence_index": [
+      {
+        "command_id": "command-001",
+        "stdout_path": "command-001.stdout",
+        "stdout_sha256": "dc48685cc652e50217e3ecc796bd08fc32ce04cdf6a287aa9bff217ac0fd23d0",
+        "stderr_path": "command-001.stderr",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "meta_path": "command-001.meta.json"
+      },
+      {
+        "command_id": "command-002",
+        "stdout_path": "command-002.stdout",
+        "stdout_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderr_path": "command-002.stderr",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "meta_path": "command-002.meta.json"
+      },
+      {
+        "command_id": "command-003",
+        "stdout_path": "command-003.stdout",
+        "stdout_sha256": "a4f69c24e8e2a589bbf8f0ee6634f7ccd05abdf5addd1ee5f61790a2dc453ebf",
+        "stderr_path": "command-003.stderr",
+        "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "meta_path": "command-003.meta.json"
+      }
+    ]
+  }
+}

@@ -1,0 +1,1358 @@
+ChatGPT 说：
+T-P1-907 开发规划评审稿
+规划基线已核对
+仅规划，不写代码
+
+规划对象： AIEO / T-P1-907 / F-003 Test Worker
+
+仓库： damwate/AIEO
+
+指定基线： main=c4a9dc2
+
+任务书： docs/phase1/F003-TEST-WORKER-BRIEF.md v0.5
+
+开发执行者： 主会话 ZCode 腿
+
+规划职责： GPT-01
+
+一、基线核对与总体实现判断
+
+我按指定基线 c4a9dc2 读取了任务书及 905 的真实执行记录，并核对了 bundle_gate.mjs、测试报告 Schema、904 的 Ajv 复核材料。
+
+核对结果：
+
+核对项目
+
+	
+
+结果
+
+
+
+
+F-003 v0.5
+
+	
+
+已读取，Blob SHA 38aa2d9ac856eb1810371faf75333a35fe7e3316
+
+
+
+
+905 RUN-RECORD
+
+	
+
+已读取，Blob SHA 6d0c0adbcf8ba8dedb1f4396ac8309b4538eecb3
+
+
+
+
+bundle_gate.mjs
+
+	
+
+已读取
+
+
+
+
+test-report.schema.json
+
+	
+
+已读取
+
+
+
+
+904 Ajv 141/141 复核记录
+
+	
+
+已读取
+
+
+
+
+905 回归结果
+
+	
+
+14/14、TAR 三项 match、95/95
+
+905 回归记录明确锚定的开发成果 SHA：
+
+916d8b2f213f21dfd13746dc19e0597948bb4a52
+
+905 回归使用的被测材料来源 SHA：
+
+ca3e5cfe7d56a4951a74e1663443310c4455dc4a
+
+这里有一个必须保留的区别：
+
+Worker 被测代码版本： 以用户开工时确定的完整 40 位 SHA 为准。
+
+bundle_gate 的 --commit 参数： 使用 905 原始回归所锚定的 ca3e5cfe...，复现历史回归命令。
+
+不能把这两个 SHA 混成一个，也不能用 HEAD 替代任何一个。
+
+总体建议：采用单文件独立 CLI + JSON 命令清单 + 顺序 subprocess 执行 + 每条命令三件套 + 统一报告生成。
+
+不引入第三方 Python 依赖，不改 M1/M4，不碰冻结契约，不实现调度。
+
+二、CLI 设计：test_worker.py
+2.1 建议命令行接口
+
+文件位置：
+
+phase1/tools/test_worker.py
+
+建议使用 Python 标准库 argparse。
+
+Bash
+python3 phase1/tools/test_worker.py \
+  --worktree /absolute/path/to/AIEO \
+  --commit-sha c4a9dc22319868451ebe560ebfc58a72ccdb0085 \
+  --commands runtime/t-p1-907/commands-positive.json \
+  --task-id T-P1-907 \
+  --execution-id EXEC-907001 \
+  --output-dir runtime/t-p1-907/executions/EXEC-907001
+
+参数定义：
+
+参数
+
+	
+
+必需
+
+	
+
+用途
+
+
+
+
+--worktree
+
+	
+
+是
+
+	
+
+被测 Git worktree 绝对路径
+
+
+
+
+--commit-sha
+
+	
+
+是
+
+	
+
+指定完整 40 位 SHA
+
+
+
+
+--commands
+
+	
+
+是
+
+	
+
+JSON 命令清单
+
+
+
+
+--task-id
+
+	
+
+是
+
+	
+
+任务 ID
+
+
+
+
+--execution-id
+
+	
+
+是
+
+	
+
+本次执行唯一 ID
+
+
+
+
+--output-dir
+
+	
+
+是
+
+	
+
+本次执行证据目录
+
+建议退出码：
+
+0：Worker 正常完成，所有命令退出码为 0。
+
+1：Worker 正常完成，但至少一条命令失败。
+
+2：Worker 自身启动参数错误或任务级输入校验失败。
+
+注意：退出码 0 只表示所有命令执行成功，不代表独立验收通过。
+
+2.2 worktree 与 SHA 核验
+
+这是 Worker 第一项硬门禁。
+
+执行顺序：
+
+检查 worktree 路径存在。
+
+检查是有效 Git 工作树。
+
+检查输入 SHA 符合 ^[0-9a-f]{40}$。
+
+执行 Git 查询。
+
+比对实际 HEAD 与指定 SHA。
+
+完全一致才允许进入命令执行阶段。
+
+建议内部调用：
+
+Python
+运行
+subprocess.run(
+    ["git", "-C", worktree, "rev-parse", "--show-toplevel"],
+    capture_output=True,
+    check=True
+)
+
+
+subprocess.run(
+    ["git", "-C", worktree, "rev-parse", "HEAD"],
+    capture_output=True,
+    check=True
+)
+
+实际实现还需要：
+
+对返回值去除换行后进行精确比较。
+
+检查 --show-toplevel 与指定 worktree 的规范化路径一致。
+
+Git 查询异常统一 BLOCKED。
+
+不允许通过自动 checkout、reset 等操作修正不一致状态。
+
+Worker 只核验，不修改被测 worktree。
+
+2.3 JSON 命令清单格式
+
+建议采用 JSON 文件，而不是 CLI 传入长命令字符串。
+
+理由：
+
+argv 参数天然支持数组。
+
+不需要 shell 解析。
+
+能独立审查每一条命令。
+
+便于未来 F-001 调度器生成命令清单。
+
+可固定超时和命令顺序。
+
+建议格式：
+
+JSON
+{
+  "schema_version": "1.0",
+  "commands": [
+    {
+      "id": "command-001",
+      "name": "bundle-gate-help",
+      "argv": [
+        "node",
+        "phase1/tools/bundle_gate.mjs",
+        "--help"
+      ],
+      "timeout_seconds": 30
+    },
+    {
+      "id": "command-002",
+      "name": "bundle-gate-regression",
+      "argv": [
+        "node",
+        "phase1/tools/bundle_gate.mjs"
+      ],
+      "timeout_seconds": 180
+    }
+  ]
+}
+
+以上只是格式示意，第二条正式命令在下一节替换为完整回归参数。
+
+字段建议：
+
+字段
+
+	
+
+类型
+
+	
+
+规则
+
+
+
+
+schema_version
+
+	
+
+string
+
+	
+
+固定 1.0
+
+
+
+
+commands
+
+	
+
+array
+
+	
+
+必须非空
+
+
+
+
+id
+
+	
+
+string
+
+	
+
+command-NNN，不能重复
+
+
+
+
+name
+
+	
+
+string
+
+	
+
+可读命令名称
+
+
+
+
+argv
+
+	
+
+string[]
+
+	
+
+必须非空，首项为可执行程序
+
+
+
+
+timeout_seconds
+
+	
+
+integer
+
+	
+
+正整数，有上限
+
+额外约束：
+
+禁止 shell=True。
+
+禁止命令清单使用 shell 字符串。
+
+禁止 sh -c、bash -c、cmd /c、PowerShell 等 shell 包装执行方式。
+
+不接受命令自定义 cwd。
+
+所有命令统一使用指定 worktree 作为 cwd。
+
+不接受命令清单自定义环境变量。
+
+建议对可执行程序采用显式允许列表，首版只开放实际需要的 node 等程序，不开放任意 shell 入口。
+
+命令清单校验失败，不执行任何命令。
+
+2.4 subprocess 执行与三件套落盘
+
+每条命令固定生成三个文件：
+
+纯文本
+executions/
+└── EXEC-907001/
+    ├── command-001.stdout
+    ├── command-001.stderr
+    ├── command-001.meta.json
+    ├── command-002.stdout
+    ├── command-002.stderr
+    ├── command-002.meta.json
+    └── test-report.json
+
+执行建议：
+
+Python
+运行
+subprocess.Popen(
+    argv,
+    cwd=worktree,
+    shell=False,
+    stdout=stdout_file,
+    stderr=stderr_file
+)
+
+使用 wait(timeout=...) 实现超时控制。
+
+日志文件直接写入原始字节，不做字符解码后重新编码。
+
+每条 meta.json 建议包含：
+
+JSON
+{
+  "command_id": "command-001",
+  "argv": ["node", "phase1/tools/bundle_gate.mjs", "--help"],
+  "started_at": "ISO-8601",
+  "finished_at": "ISO-8601",
+  "duration_ms": 100,
+  "exit_code": 0,
+  "status": "COMPLETED",
+  "timed_out": false,
+  "exception": null,
+  "stdout_path": "command-001.stdout",
+  "stdout_sha256": "...",
+  "stderr_path": "command-001.stderr",
+  "stderr_sha256": "..."
+}
+
+状态建议：
+
+COMPLETED：进程正常结束。
+
+TIMEOUT：超过超时限制。
+
+START_ERROR：进程启动异常。
+
+这里有一条非常重要的实现纪律：
+
+单条命令失败不停止后续命令。
+
+例如 command-001 成功、command-002 失败、command-003 成功，三条都必须保留完整证据，最终整体结果仍然是 EXECUTED_FAIL / REWORK。
+
+启动异常也必须留下空 stdout/stderr 文件及异常 meta，不能因为没有真正启动进程而丢失该命令的执行记录。
+
+三、S3 正向执行 + S4 失败演示
+
+这里严格使用 905 已有证据，不重新设计一套不同的回归测试。
+
+3.1 测试对象和材料
+
+905 已有回归锚点
+
+被测材料来源 SHA
+
+ca3e5cfe7d56a4951a74e1663443310c4455dc4a
+
+检查项
+
+	
+
+历史结果
+
+
+
+
+分片核验
+
+	
+
+14/14
+
+
+
+
+TAR 总字节数 / SHA-256 / Git blob SHA-1
+
+	
+
+3项 match
+
+
+
+
+解包文件核验
+
+	
+
+95/95
+
+
+
+
+进程退出码
+
+	
+
+0
+
+证据位置：
+
+phase1/logs/t-p1-905-d1prime-20261114/s7-regression-out/
+
+其中：
+
+bundle-gate-result.json
+
+bundle-gate-run.log
+
+历史执行日志明确记载：
+
+纯文本
+parts=14/14 tar_ok=true unpack=95/95 exit=0
+3.2 S3 正向命令清单
+
+建议文件：
+
+runtime/t-p1-907/commands-positive.json
+
+正式命令一：帮助信息测试。
+
+Bash
+node phase1/tools/bundle_gate.mjs --help
+
+预期：
+
+exit code = 0
+
+stdout 有完整用途说明。
+
+包含五个参数及必选性。
+
+包含调用示例。
+
+包含退出码说明。
+
+stderr 为空。
+
+正式命令二：905 夹具回归。
+
+Bash
+node phase1/tools/bundle_gate.mjs \
+  --commit ca3e5cfe7d56a4951a74e1663443310c4455dc4a \
+  --parts-index phase1/manifests/bundle-parts.index.json \
+  --tar phase1/manifests/T-P1-903-input-bundle.tar \
+  --manifest phase1/manifests/T-P1-903-input-manifest.json \
+  --output-dir runtime/t-p1-907/bundle-gate-regression
+
+预期：
+
+检查项
+
+	
+
+预期
+
+
+
+
+exit code
+
+	
+
+0
+
+
+
+
+parts
+
+	
+
+14/14
+
+
+
+
+TAR total_bytes
+
+	
+
+match
+
+
+
+
+TAR SHA-256
+
+	
+
+match
+
+
+
+
+TAR Git blob SHA-1
+
+	
+
+match
+
+
+
+
+unpack
+
+	
+
+95/95
+
+
+
+
+missing
+
+	
+
+0
+
+
+
+
+extra
+
+	
+
+0
+
+
+
+
+mismatched
+
+	
+
+0
+
+这里特别说明：
+
+bundle_gate 自身还会生成 bundle-gate-result.json 和 bundle-gate-run.log。
+
+这两份文件是被测程序的输出，不替代 Worker 的 command-002 三件套。
+
+Worker 必须同时保存两层证据：
+
+bundle_gate 自身的机器核验结果。
+
+Worker 采集的原始 stdout、stderr、执行元数据。
+
+这样独立验收才能交叉核对。
+
+3.3 S4 失败演示命令
+
+905 已经有一条真实的非零退出记录：
+
+phase1/logs/t-p1-905-d1prime-20261114/s7-noarg-stderr.txt
+
+内容：
+
+纯文本
+bundle_gate: 缺 --commit
+
+对应历史记录是无参数调用，exit code = 2。
+
+建议本次真实重跑：
+
+Bash
+node phase1/tools/bundle_gate.mjs
+
+预期：
+
+检查项
+
+	
+
+预期
+
+
+
+
+真实进程启动
+
+	
+
+是
+
+
+
+
+exit code
+
+	
+
+2
+
+
+
+
+stderr
+
+	
+
+缺 --commit
+
+
+
+
+stdout
+
+	
+
+空
+
+
+
+
+Worker 命令状态
+
+	
+
+COMPLETED
+
+
+
+
+Worker 整体执行结果
+
+	
+
+EXECUTED_FAIL
+
+
+
+
+Worker 任务结果
+
+	
+
+REWORK
+
+关键设计：S3 和 S4 必须分成两次 Worker 执行。
+
+不能把正向测试和故意失败的演示放进同一个命令清单，然后要求整次执行 PASS。
+
+建议分配：
+
+执行
+
+	
+
+Execution ID
+
+	
+
+命令
+
+	
+
+预期
+
+
+
+
+S3
+
+	
+
+EXEC-907001
+
+	
+
+两条正向命令
+
+	
+
+EXECUTED_PASS
+
+
+
+
+S4
+
+	
+
+EXEC-907002
+
+	
+
+一条故意失败命令
+
+	
+
+EXECUTED_FAIL
+
+两次都使用相同的任务 ID、相同的被测 commit，但使用不同的 execution_id。
+
+这样才能分别证明：
+
+Worker 能正确执行成功命令。
+
+Worker 能正确采集失败命令。
+
+Worker 能正确生成两种不同的执行报告。
+
+不会让失败演示污染正向执行的结果。
+
+四、S6 报告生成与 Ajv 校验
+4.1 冻结契约
+
+目标文件：
+
+contracts/v1.0/test-report.schema.json
+
+已经核对：
+
+$schema 使用 JSON Schema Draft 2020-12。
+
+必填字段：task_id、execution_id、commit_sha、execution_result、result。
+
+execution_id 必须符合 EXEC-数字。
+
+commit_sha 必须为完整 40 位小写 SHA。
+
+execution_result 五种枚举。
+
+result 三种枚举。
+
+不得修改 Schema。
+
+4.2 Worker 报告结构建议
+
+建议每次执行生成一份完整报告：
+
+JSON
+{
+  "task_id": "T-P1-907",
+  "execution_id": "EXEC-907001",
+  "commit_sha": "c4a9dc22319868451ebe560ebfc58a72ccdb0085",
+  "execution_result": "EXECUTED_PASS",
+  "result": "PASS",
+  "artifact_id": null,
+  "payload": {
+    "worker_version": "0.1.0",
+    "worktree": "...",
+    "head_verified": true,
+    "commands": [
+      {
+        "command_id": "command-001",
+        "exit_code": 0,
+        "status": "COMPLETED"
+      }
+    ],
+    "evidence_index": [
+      {
+        "command_id": "command-001",
+        "stdout_path": "command-001.stdout",
+        "stdout_sha256": "...",
+        "stderr_path": "command-001.stderr",
+        "stderr_sha256": "...",
+        "meta_path": "command-001.meta.json"
+      }
+    ]
+  }
+}
+
+这是结构示意，实际报告必须包含全部命令的执行事实。
+
+特别注意：
+
+artifact_id 使用 null，因为本阶段不做 M1 REST 登记。
+
+commit_sha 使用 Worker 实际核验的 worktree HEAD。
+
+payload 保存每条命令的详细信息。
+
+所有证据路径相对于报告所在执行目录。
+
+不允许人工覆盖整体执行结果。
+
+4.3 状态计算
+
+严格落实 v0.5 §5：
+
+执行事实
+
+	
+
+execution_result
+
+	
+
+result
+
+
+
+
+所有命令退出码 0
+
+	
+
+EXECUTED_PASS
+
+	
+
+PASS
+
+
+
+
+任意命令非零退出
+
+	
+
+EXECUTED_FAIL
+
+	
+
+REWORK
+
+
+
+
+命令启动异常
+
+	
+
+EXECUTED_FAIL
+
+	
+
+REWORK
+
+
+
+
+命令超时
+
+	
+
+EXECUTED_FAIL
+
+	
+
+REWORK
+
+
+
+
+Worker 启动或输入校验失败
+
+	
+
+BLOCKED
+
+	
+
+BLOCKED
+
+
+
+
+NOT_EXECUTED
+
+	
+
+本 Worker 不主动生成
+
+	
+
+BLOCKED
+
+禁止通过报告生成时的参数人为指定 PASS。
+
+4.4 904 环境 Ajv 校验
+
+我核对了 904 的环境：
+
+phase0/tools/package.json
+
+已有依赖：
+
+Ajv 8.20.0
+
+ajv-formats 3.0.1
+
+ajv-keywords 5.1.0
+
+904 的最终复核记录是：
+
+141/141 PASS
+
+历史记录：
+
+phase1/logs/t-p1-904-20261114/schema-tests.log
+
+建议分两层验证。
+
+第一层：904 环境完整回归
+
+在仓库根目录：
+
+Bash
+node phase0/tools/test_schemas.mjs
+
+预期：
+
+纯文本
+141/141 PASS
+exit=0
+
+这是已有的 Schema 正负例测试，不需要另建测试框架。
+
+第二层：验证本次实际生成的报告
+
+不能只依赖第一层。
+
+必须把 EXEC-907001/test-report.json 和 EXEC-907002/test-report.json 分别交给 Ajv。
+
+建议使用 Node 的一次性 --input-type=module -e 调用，直接加载现有 Ajv 2020：
+
+JavaScript
+import Ajv2020 from './phase0/tools/node_modules/ajv/dist/2020.js';
+import fs from 'node:fs';
+
+const schema = JSON.parse(
+  fs.readFileSync('contracts/v1.0/test-report.schema.json', 'utf8')
+);
+
+const report = JSON.parse(
+  fs.readFileSync(process.argv[1], 'utf8')
+);
+
+const ajv = new Ajv2020({
+  allErrors: true,
+  strict: true
+});
+
+const validate = ajv.compile(schema);
+
+if (!validate(report)) {
+  console.error(JSON.stringify(validate.errors, null, 2));
+  process.exit(1);
+}
+
+console.log('TEST REPORT SCHEMA: PASS');
+
+执行时将报告路径作为独立 argv 参数传入。
+
+两份报告都必须独立验证成功。
+
+注意：第二层验证的是实际 Worker 产物，不是人工构造的正例。
+
+S6 完成条件
+
+两份报告均已生成。
+
+两份报告均通过 Ajv。
+
+报告中的 SHA 与实际 worktree HEAD 一致。
+
+报告中的日志 SHA 与三件套实际字节一致。
+
+S3 为 EXECUTED_PASS。
+
+S4 为 EXECUTED_FAIL。
+
+不存在人工覆盖结果的情况。
+
+五、执行顺序
+
+建议按以下顺序推进，不要并行开发或提前归档。
+
+阶段 A：开发前准备
+
+核实 DEC-028 开工授权。
+
+建立开发分支和隔离 worktree。
+
+确定完整 SHA。
+
+确认 runtime 已 gitignore。
+
+阶段 B：实现 Worker
+
+CLI 参数解析。
+
+worktree/HEAD 核验。
+
+JSON 命令清单校验。
+
+argv subprocess 执行。
+
+三件套日志采集。
+
+状态计算。
+
+JSON 报告生成。
+
+阶段 C：基础安全测试
+
+空命令清单拒绝。
+
+短 SHA 拒绝。
+
+HEAD 不一致拒绝。
+
+无效 worktree 拒绝。
+
+命令不存在。
+
+超时。
+
+单条启动异常后继续执行。
+
+以上异常场景不能只做模拟，应保留真实进程及错误证据。
+
+阶段 D：S3 正向执行
+
+--help。
+
+903 夹具回归。
+
+核对 14/14、TAR 三 match、95/95。
+
+生成 EXEC-907001 报告。
+
+阶段 E：S4 失败演示
+
+无参数执行 bundle_gate。
+
+捕获真实 exit=2。
+
+生成 EXEC-907002 报告。
+
+核对 EXECUTED_FAIL / REWORK。
+
+阶段 F：S6 报告校验
+
+904 环境 141/141 回归。
+
+两份报告分别 Ajv 校验。
+
+报告、日志、SHA 交叉核对。
+
+阶段 G：安全扫描与证据归档
+
+R1-R5 扫描。
+
+CLEAN 后归档。
+
+生成 RUN-RECORD。
+
+开发与证据分支分别提交。
+
+阶段 H：独立验收
+
+GPT 独立读取完整 SHA。
+
+按八项验收标准逐项复核。
+
+PASS 后提交用户决定下一步。
+
+六、证据归档布局
+
+建议延续 905 的证据组织习惯，统一使用独立目录。
+
+纯文本
+phase1/
+├── tools/
+│   └── test_worker.py
+│
+└── logs/
+    └── t-p1-907-20261114/
+        ├── RUN-RECORD.md
+        ├── baseline.txt
+        │
+        ├── EXEC-907001/
+        │   ├── command-001.stdout
+        │   ├── command-001.stderr
+        │   ├── command-001.meta.json
+        │   ├── command-002.stdout
+        │   ├── command-002.stderr
+        │   ├── command-002.meta.json
+        │   ├── test-report.json
+        │   └── report-validation.log
+        │
+        ├── EXEC-907002/
+        │   ├── command-001.stdout
+        │   ├── command-001.stderr
+        │   ├── command-001.meta.json
+        │   ├── test-report.json
+        │   └── report-validation.log
+        │
+        ├── schema-validation/
+        │   └── schema-tests.log
+        │
+        ├── security/
+        │   ├── security-scan.txt
+        │   └── security-scan.sha256
+        │
+        └── SHA256SUMS
+
+注意：这里展示的是最终归档布局，实际运行期间建议先写入：
+
+runtime/t-p1-907-<timestamp>/
+
+完成脱敏扫描后，再复制至证据目录。
+
+双分支提交建议
+
+沿用 905 的双分支分离模式：
+
+分支
+
+	
+
+负责内容
+
+
+
+
+开发分支
+
+	
+
+只提交 phase1/tools/test_worker.py 及必要的 Worker 自身测试
+
+
+
+
+证据分支
+
+	
+
+RUN-RECORD、执行报告、原始日志、Schema 校验、安全扫描及相关登记文档
+
+要求：
+
+两个分支均以本次实际 main 基线完整 SHA 为基础。
+
+不重写历史。
+
+不将 runtime 临时文件提交 Git。
+
+C6 秘密不得进入 Git。
+
+日志原始字节不得为了脱敏而静默修改。
+
+安全扫描发现秘密时阻断归档，保留受保护的本地证据并登记。
+
+七、交付验收清单
+
+以下直接对应 F-003 v0.5 §11 的八项验收标准。
+
+T-P1-907 验收进度
+
+0/8
+A1：真实 worktree、完整 40 位 SHA、HEAD 一致性
+A2：真实正向执行，两条命令退出码均为 0
+A3：真实非零退出，Worker 生成失败报告
+A4：超时、启动异常、输入校验异常处理正确
+A5：所有命令三件套完整，原始字节及 SHA-256 一致
+A6：两份实际报告 Ajv 校验通过，报告与日志可追溯
+A7：R1-R5 CLEAN，秘密不进入 Git
+A8：开发/证据双分支、RUN-RECORD、独立验收齐全
+
+这是规划核对清单，不代表仓库实际验收结果。
+
+八、边界与最终建议
+
+本次规划明确不允许以下行为：
+
+不修改 test-report.schema.json。
+
+不修改 M1 代码。
+
+不扩展 M4 测试执行职责。
+
+不实现 F-001 调度、批次、并发或 REST 自动登记。
+
+不提前开放 GPT-04 审查消费链路。
+
+不解除 DEC-017。
+
+不因 DEC-028 开工授权而获得合并或发布权限。
+
+我建议 ZCode 按上述方案实施，优先把 Worker 本身做扎实，不要在第一版加入多任务、插件、配置中心或复杂调度能力。
+
+另外有一个实现上的优先级判断：先完成真实执行和三件套证据，再做报告生成。不要先设计一套漂亮的报告系统，最后才补真实执行能力。
+
+GPT-01 规划结论
+
+建议按规划实施
+
+技术方案：明确
+
+命令清单：明确
+
+正向/失败演示：明确
+
+Ajv 校验：明确
+
+证据归档：明确
+
+权限边界：明确
+
+本规划不代替 ZCode 实现、不代替独立验收，也不产生新的合并或发布授权。
+
+ZCode 完成开发分支提交后，可以把完整 commit SHA 和交付证据交给我，我按这份规划逐项做独立实现复核。
+
+🔍
+
+跟进 T-P1-907 独立验收
+
+轻点设置

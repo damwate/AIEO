@@ -1,0 +1,1 @@
+test_worker: BLOCKED: worktree HEAD b711160d374b7a0dfc3f6445b393736a4949d1f6 != specified commit_sha c4a9dc22319868451ebe560ebfc58a72ccdb0085 (no auto checkout/reset; worker only verifies)

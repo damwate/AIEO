@@ -1,0 +1,1 @@
+test_worker: BLOCKED: commit_sha must be a full 40-hex lowercase SHA (short SHA rejected)

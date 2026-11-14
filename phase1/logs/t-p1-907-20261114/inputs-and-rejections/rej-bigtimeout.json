@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "commands": [
+    {
+      "id": "command-001",
+      "name": "timeout-over-cap-rejected",
+      "argv": ["node", "--version"],
+      "timeout_seconds": 9999
+    }
+  ]
+}

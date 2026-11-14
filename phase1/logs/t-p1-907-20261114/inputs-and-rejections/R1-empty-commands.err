@@ -1,0 +1,1 @@
+test_worker: BLOCKED: commands must be a non-empty array (empty list rejected per brief §4)

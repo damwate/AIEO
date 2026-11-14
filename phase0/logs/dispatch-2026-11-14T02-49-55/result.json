@@ -1,0 +1,181 @@
+{
+  "at": "2026-11-14T02:54:52.222Z",
+  "message_bytes": 977,
+  "reply": "ChatGPT 说：\nT-P1-907 开发规划评审稿\n规划基线已核对\n仅规划，不写代码\n\n规划对象： AIEO / T-P1-907 / F-003 Test Worker\n\n仓库： damwate/AIEO\n\n指定基线： main=c4a9dc2\n\n任务书： docs/phase1/F003-TEST-WORKER-BRIEF.md v0.5\n\n开发执行者： 主会话 ZCode 腿\n\n规划职责： GPT-01\n\n一、基线核对与总体实现判断\n\n我按指定基线 c4a9dc2 读取了任务书及 905 的真实执行记录，并核对了 bundle_gate.mjs、测试报告 Schema、904 的 Ajv 复核材料。\n\n核对结果：\n\n核对项目\n\n\t\n\n结果\n\n\n\n\nF-003 v0.5\n\n\t\n\n已读取，Blob SHA 38aa2d9ac856eb1810371faf75333a35fe7e3316\n\n\n\n\n905 RUN-RECORD\n\n\t\n\n已读取，Blob SHA 6d0c0adbcf8ba8dedb1f4396ac8309b4538eecb3\n\n\n\n\nbundle_gate.mjs\n\n\t\n\n已读取\n\n\n\n\ntest-report.schema.json\n\n\t\n\n已读取\n\n\n\n\n904 Ajv 141/141 复核记录\n\n\t\n\n已读取\n\n\n\n\n905 回归结果\n\n\t\n\n14/14、TAR 三项 match、95/95\n\n905 回归记录明确锚定的开发成果 SHA：\n\n916d8b2f213f21dfd13746dc19e0597948bb4a52\n\n905 回归使用的被测材料来源 SHA：\n\nca3e5cfe7d56a4951a74e1663443310c4455dc4a\n\n这里有一个必须保留的区别：\n\nWorker 被测代码版本： 以用户开工时确定的完整 40 位 SHA 为准。\n\nbundle_gate 的 --commit 参数： 使用 905 原始回归所锚定的 ca3e5cfe...，复现历史回归命令。\n\n不能把这两个 SHA 混成一个，也不能用 HEAD 替代任何一个。\n\n总体建议：采用单文件独立 CLI + JSON 命令清单 + 顺序 subprocess 执行 + 每条命令三件套 + 统一报告生成。\n\n不引入第三方 Python 依赖，不改 M1/M4，不碰冻结契约，不实现调度。\n\n二、CLI 设计：test_worker.py\n2.1 建议命令行接口\n\n文件位置：\n\nphase1/tools/test_worker.py\n\n建议使用 Python 标准库 argparse。\n\nBash\npython3 phase1/tools/test_worker.py \\\n  --worktree /absolute/path/to/AIEO \\\n  --commit-sha c4a9dc22319868451ebe560ebfc58a72ccdb0085 \\\n  --commands runtime/t-p1-907/commands-positive.json \\\n  --task-id T-P1-907 \\\n  --execution-id EXEC-907001 \\\n  --output-dir runtime/t-p1-907/executions/EXEC-907001\n\n参数定义：\n\n参数\n\n\t\n\n必需\n\n\t\n\n用途\n\n\n\n\n--worktree\n\n\t\n\n是\n\n\t\n\n被测 Git worktree 绝对路径\n\n\n\n\n--commit-sha\n\n\t\n\n是\n\n\t\n\n指定完整 40 位 SHA\n\n\n\n\n--commands\n\n\t\n\n是\n\n\t\n\nJSON 命令清单\n\n\n\n\n--task-id\n\n\t\n\n是\n\n\t\n\n任务 ID\n\n\n\n\n--execution-id\n\n\t\n\n是\n\n\t\n\n本次执行唯一 ID\n\n\n\n\n--output-dir\n\n\t\n\n是\n\n\t\n\n本次执行证据目录\n\n建议退出码：\n\n0：Worker 正常完成，所有命令退出码为 0。\n\n1：Worker 正常完成，但至少一条命令失败。\n\n2：Worker 自身启动参数错误或任务级输入校验失败。\n\n注意：退出码 0 只表示所有命令执行成功，不代表独立验收通过。\n\n2.2 worktree 与 SHA 核验\n\n这是 Worker 第一项硬门禁。\n\n执行顺序：\n\n检查 worktree 路径存在。\n\n检查是有效 Git 工作树。\n\n检查输入 SHA 符合 ^[0-9a-f]{40}$。\n\n执行 Git 查询。\n\n比对实际 HEAD 与指定 SHA。\n\n完全一致才允许进入命令执行阶段。\n\n建议内部调用：\n\nPython\n运行\nsubprocess.run(\n    [\"git\", \"-C\", worktree, \"rev-parse\", \"--show-toplevel\"],\n    capture_output=True,\n    check=True\n)\n\n\nsubprocess.run(\n    [\"git\", \"-C\", worktree, \"rev-parse\", \"HEAD\"],\n    capture_output=True,\n    check=True\n)\n\n实际实现还需要：\n\n对返回值去除换行后进行精确比较。\n\n检查 --show-toplevel 与指定 worktree 的规范化路径一致。\n\nGit 查询异常统一 BLOCKED。\n\n不允许通过自动 checkout、reset 等操作修正不一致状态。\n\nWorker 只核验，不修改被测 worktree。\n\n2.3 JSON 命令清单格式\n\n建议采用 JSON 文件，而不是 CLI 传入长命令字符串。\n\n理由：\n\nargv 参数天然支持数组。\n\n不需要 shell 解析。\n\n能独立审查每一条命令。\n\n便于未来 F-001 调度器生成命令清单。\n\n可固定超时和命令顺序。\n\n建议格式：\n\nJSON\n{\n  \"schema_version\": \"1.0\",\n  \"commands\": [\n    {\n      \"id\": \"command-001\",\n      \"name\": \"bundle-gate-help\",\n      \"argv\": [\n        \"node\",\n        \"phase1/tools/bundle_gate.mjs\",\n        \"--help\"\n      ],\n      \"timeout_seconds\": 30\n    },\n    {\n      \"id\": \"command-002\",\n      \"name\": \"bundle-gate-regression\",\n      \"argv\": [\n        \"node\",\n        \"phase1/tools/bundle_gate.mjs\"\n      ],\n      \"timeout_seconds\": 180\n    }\n  ]\n}\n\n以上只是格式示意，第二条正式命令在下一节替换为完整回归参数。\n\n字段建议：\n\n字段\n\n\t\n\n类型\n\n\t\n\n规则\n\n\n\n\nschema_version\n\n\t\n\nstring\n\n\t\n\n固定 1.0\n\n\n\n\ncommands\n\n\t\n\narray\n\n\t\n\n必须非空\n\n\n\n\nid\n\n\t\n\nstring\n\n\t\n\ncommand-NNN，不能重复\n\n\n\n\nname\n\n\t\n\nstring\n\n\t\n\n可读命令名称\n\n\n\n\nargv\n\n\t\n\nstring[]\n\n\t\n\n必须非空，首项为可执行程序\n\n\n\n\ntimeout_seconds\n\n\t\n\ninteger\n\n\t\n\n正整数，有上限\n\n额外约束：\n\n禁止 shell=True。\n\n禁止命令清单使用 shell 字符串。\n\n禁止 sh -c、bash -c、cmd /c、PowerShell 等 shell 包装执行方式。\n\n不接受命令自定义 cwd。\n\n所有命令统一使用指定 worktree 作为 cwd。\n\n不接受命令清单自定义环境变量。\n\n建议对可执行程序采用显式允许列表，首版只开放实际需要的 node 等程序，不开放任意 shell 入口。\n\n命令清单校验失败，不执行任何命令。\n\n2.4 subprocess 执行与三件套落盘\n\n每条命令固定生成三个文件：\n\n纯文本\nexecutions/\n└── EXEC-907001/\n    ├── command-001.stdout\n    ├── command-001.stderr\n    ├── command-001.meta.json\n    ├── command-002.stdout\n    ├── command-002.stderr\n    ├── command-002.meta.json\n    └── test-report.json\n\n执行建议：\n\nPython\n运行\nsubprocess.Popen(\n    argv,\n    cwd=worktree,\n    shell=False,\n    stdout=stdout_file,\n    stderr=stderr_file\n)\n\n使用 wait(timeout=...) 实现超时控制。\n\n日志文件直接写入原始字节，不做字符解码后重新编码。\n\n每条 meta.json 建议包含：\n\nJSON\n{\n  \"command_id\": \"command-001\",\n  \"argv\": [\"node\", \"phase1/tools/bundle_gate.mjs\", \"--help\"],\n  \"started_at\": \"ISO-8601\",\n  \"finished_at\": \"ISO-8601\",\n  \"duration_ms\": 100,\n  \"exit_code\": 0,\n  \"status\": \"COMPLETED\",\n  \"timed_out\": false,\n  \"exception\": null,\n  \"stdout_path\": \"command-001.stdout\",\n  \"stdout_sha256\": \"...\",\n  \"stderr_path\": \"command-001.stderr\",\n  \"stderr_sha256\": \"...\"\n}\n\n状态建议：\n\nCOMPLETED：进程正常结束。\n\nTIMEOUT：超过超时限制。\n\nSTART_ERROR：进程启动异常。\n\n这里有一条非常重要的实现纪律：\n\n单条命令失败不停止后续命令。\n\n例如 command-001 成功、command-002 失败、command-003 成功，三条都必须保留完整证据，最终整体结果仍然是 EXECUTED_FAIL / REWORK。\n\n启动异常也必须留下空 stdout/stderr 文件及异常 meta，不能因为没有真正启动进程而丢失该命令的执行记录。\n\n三、S3 正向执行 + S4 失败演示\n\n这里严格使用 905 已有证据，不重新设计一套不同的回归测试。\n\n3.1 测试对象和材料\n\n905 已有回归锚点\n\n被测材料来源 SHA\n\nca3e5cfe7d56a4951a74e1663443310c4455dc4a\n\n检查项\n\n\t\n\n历史结果\n\n\n\n\n分片核验\n\n\t\n\n14/14\n\n\n\n\nTAR 总字节数 / SHA-256 / Git blob SHA-1\n\n\t\n\n3项 match\n\n\n\n\n解包文件核验\n\n\t\n\n95/95\n\n\n\n\n进程退出码\n\n\t\n\n0\n\n证据位置：\n\nphase1/logs/t-p1-905-d1prime-20261114/s7-regression-out/\n\n其中：\n\nbundle-gate-result.json\n\nbundle-gate-run.log\n\n历史执行日志明确记载：\n\n纯文本\nparts=14/14 tar_ok=true unpack=95/95 exit=0\n3.2 S3 正向命令清单\n\n建议文件：\n\nruntime/t-p1-907/commands-positive.json\n\n正式命令一：帮助信息测试。\n\nBash\nnode phase1/tools/bundle_gate.mjs --help\n\n预期：\n\nexit code = 0\n\nstdout 有完整用途说明。\n\n包含五个参数及必选性。\n\n包含调用示例。\n\n包含退出码说明。\n\nstderr 为空。\n\n正式命令二：905 夹具回归。\n\nBash\nnode phase1/tools/bundle_gate.mjs \\\n  --commit ca3e5cfe7d56a4951a74e1663443310c4455dc4a \\\n  --parts-index phase1/manifests/bundle-parts.index.json \\\n  --tar phase1/manifests/T-P1-903-input-bundle.tar \\\n  --manifest phase1/manifests/T-P1-903-input-manifest.json \\\n  --output-dir runtime/t-p1-907/bundle-gate-regression\n\n预期：\n\n检查项\n\n\t\n\n预期\n\n\n\n\nexit code\n\n\t\n\n0\n\n\n\n\nparts\n\n\t\n\n14/14\n\n\n\n\nTAR total_bytes\n\n\t\n\nmatch\n\n\n\n\nTAR SHA-256\n\n\t\n\nmatch\n\n\n\n\nTAR Git blob SHA-1\n\n\t\n\nmatch\n\n\n\n\nunpack\n\n\t\n\n95/95\n\n\n\n\nmissing\n\n\t\n\n0\n\n\n\n\nextra\n\n\t\n\n0\n\n\n\n\nmismatched\n\n\t\n\n0\n\n这里特别说明：\n\nbundle_gate 自身还会生成 bundle-gate-result.json 和 bundle-gate-run.log。\n\n这两份文件是被测程序的输出，不替代 Worker 的 command-002 三件套。\n\nWorker 必须同时保存两层证据：\n\nbundle_gate 自身的机器核验结果。\n\nWorker 采集的原始 stdout、stderr、执行元数据。\n\n这样独立验收才能交叉核对。\n\n3.3 S4 失败演示命令\n\n905 已经有一条真实的非零退出记录：\n\nphase1/logs/t-p1-905-d1prime-20261114/s7-noarg-stderr.txt\n\n内容：\n\n纯文本\nbundle_gate: 缺 --commit\n\n对应历史记录是无参数调用，exit code = 2。\n\n建议本次真实重跑：\n\nBash\nnode phase1/tools/bundle_gate.mjs\n\n预期：\n\n检查项\n\n\t\n\n预期\n\n\n\n\n真实进程启动\n\n\t\n\n是\n\n\n\n\nexit code\n\n\t\n\n2\n\n\n\n\nstderr\n\n\t\n\n缺 --commit\n\n\n\n\nstdout\n\n\t\n\n空\n\n\n\n\nWorker 命令状态\n\n\t\n\nCOMPLETED\n\n\n\n\nWorker 整体执行结果\n\n\t\n\nEXECUTED_FAIL\n\n\n\n\nWorker 任务结果\n\n\t\n\nREWORK\n\n关键设计：S3 和 S4 必须分成两次 Worker 执行。\n\n不能把正向测试和故意失败的演示放进同一个命令清单，然后要求整次执行 PASS。\n\n建议分配：\n\n执行\n\n\t\n\nExecution ID\n\n\t\n\n命令\n\n\t\n\n预期\n\n\n\n\nS3\n\n\t\n\nEXEC-907001\n\n\t\n\n两条正向命令\n\n\t\n\nEXECUTED_PASS\n\n\n\n\nS4\n\n\t\n\nEXEC-907002\n\n\t\n\n一条故意失败命令\n\n\t\n\nEXECUTED_FAIL\n\n两次都使用相同的任务 ID、相同的被测 commit，但使用不同的 execution_id。\n\n这样才能分别证明：\n\nWorker 能正确执行成功命令。\n\nWorker 能正确采集失败命令。\n\nWorker 能正确生成两种不同的执行报告。\n\n不会让失败演示污染正向执行的结果。\n\n四、S6 报告生成与 Ajv 校验\n4.1 冻结契约\n\n目标文件：\n\ncontracts/v1.0/test-report.schema.json\n\n已经核对：\n\n$schema 使用 JSON Schema Draft 2020-12。\n\n必填字段：task_id、execution_id、commit_sha、execution_result、result。\n\nexecution_id 必须符合 EXEC-数字。\n\ncommit_sha 必须为完整 40 位小写 SHA。\n\nexecution_result 五种枚举。\n\nresult 三种枚举。\n\n不得修改 Schema。\n\n4.2 Worker 报告结构建议\n\n建议每次执行生成一份完整报告：\n\nJSON\n{\n  \"task_id\": \"T-P1-907\",\n  \"execution_id\": \"EXEC-907001\",\n  \"commit_sha\": \"c4a9dc22319868451ebe560ebfc58a72ccdb0085\",\n  \"execution_result\": \"EXECUTED_PASS\",\n  \"result\": \"PASS\",\n  \"artifact_id\": null,\n  \"payload\": {\n    \"worker_version\": \"0.1.0\",\n    \"worktree\": \"...\",\n    \"head_verified\": true,\n    \"commands\": [\n      {\n        \"command_id\": \"command-001\",\n        \"exit_code\": 0,\n        \"status\": \"COMPLETED\"\n      }\n    ],\n    \"evidence_index\": [\n      {\n        \"command_id\": \"command-001\",\n        \"stdout_path\": \"command-001.stdout\",\n        \"stdout_sha256\": \"...\",\n        \"stderr_path\": \"command-001.stderr\",\n        \"stderr_sha256\": \"...\",\n        \"meta_path\": \"command-001.meta.json\"\n      }\n    ]\n  }\n}\n\n这是结构示意，实际报告必须包含全部命令的执行事实。\n\n特别注意：\n\nartifact_id 使用 null，因为本阶段不做 M1 REST 登记。\n\ncommit_sha 使用 Worker 实际核验的 worktree HEAD。\n\npayload 保存每条命令的详细信息。\n\n所有证据路径相对于报告所在执行目录。\n\n不允许人工覆盖整体执行结果。\n\n4.3 状态计算\n\n严格落实 v0.5 §5：\n\n执行事实\n\n\t\n\nexecution_result\n\n\t\n\nresult\n\n\n\n\n所有命令退出码 0\n\n\t\n\nEXECUTED_PASS\n\n\t\n\nPASS\n\n\n\n\n任意命令非零退出\n\n\t\n\nEXECUTED_FAIL\n\n\t\n\nREWORK\n\n\n\n\n命令启动异常\n\n\t\n\nEXECUTED_FAIL\n\n\t\n\nREWORK\n\n\n\n\n命令超时\n\n\t\n\nEXECUTED_FAIL\n\n\t\n\nREWORK\n\n\n\n\nWorker 启动或输入校验失败\n\n\t\n\nBLOCKED\n\n\t\n\nBLOCKED\n\n\n\n\nNOT_EXECUTED\n\n\t\n\n本 Worker 不主动生成\n\n\t\n\nBLOCKED\n\n禁止通过报告生成时的参数人为指定 PASS。\n\n4.4 904 环境 Ajv 校验\n\n我核对了 904 的环境：\n\nphase0/tools/package.json\n\n已有依赖：\n\nAjv 8.20.0\n\najv-formats 3.0.1\n\najv-keywords 5.1.0\n\n904 的最终复核记录是：\n\n141/141 PASS\n\n历史记录：\n\nphase1/logs/t-p1-904-20261114/schema-tests.log\n\n建议分两层验证。\n\n第一层：904 环境完整回归\n\n在仓库根目录：\n\nBash\nnode phase0/tools/test_schemas.mjs\n\n预期：\n\n纯文本\n141/141 PASS\nexit=0\n\n这是已有的 Schema 正负例测试，不需要另建测试框架。\n\n第二层：验证本次实际生成的报告\n\n不能只依赖第一层。\n\n必须把 EXEC-907001/test-report.json 和 EXEC-907002/test-report.json 分别交给 Ajv。\n\n建议使用 Node 的一次性 --input-type=module -e 调用，直接加载现有 Ajv 2020：\n\nJavaScript\nimport Ajv2020 from './phase0/tools/node_modules/ajv/dist/2020.js';\nimport fs from 'node:fs';\n\nconst schema = JSON.parse(\n  fs.readFileSync('contracts/v1.0/test-report.schema.json', 'utf8')\n);\n\nconst report = JSON.parse(\n  fs.readFileSync(process.argv[1], 'utf8')\n);\n\nconst ajv = new Ajv2020({\n  allErrors: true,\n  strict: true\n});\n\nconst validate = ajv.compile(schema);\n\nif (!validate(report)) {\n  console.error(JSON.stringify(validate.errors, null, 2));\n  process.exit(1);\n}\n\nconsole.log('TEST REPORT SCHEMA: PASS');\n\n执行时将报告路径作为独立 argv 参数传入。\n\n两份报告都必须独立验证成功。\n\n注意：第二层验证的是实际 Worker 产物，不是人工构造的正例。\n\nS6 完成条件\n\n两份报告均已生成。\n\n两份报告均通过 Ajv。\n\n报告中的 SHA 与实际 worktree HEAD 一致。\n\n报告中的日志 SHA 与三件套实际字节一致。\n\nS3 为 EXECUTED_PASS。\n\nS4 为 EXECUTED_FAIL。\n\n不存在人工覆盖结果的情况。\n\n五、执行顺序\n\n建议按以下顺序推进，不要并行开发或提前归档。\n\n阶段 A：开发前准备\n\n核实 DEC-028 开工授权。\n\n建立开发分支和隔离 worktree。\n\n确定完整 SHA。\n\n确认 runtime 已 gitignore。\n\n阶段 B：实现 Worker\n\nCLI 参数解析。\n\nworktree/HEAD 核验。\n\nJSON 命令清单校验。\n\nargv subprocess 执行。\n\n三件套日志采集。\n\n状态计算。\n\nJSON 报告生成。\n\n阶段 C：基础安全测试\n\n空命令清单拒绝。\n\n短 SHA 拒绝。\n\nHEAD 不一致拒绝。\n\n无效 worktree 拒绝。\n\n命令不存在。\n\n超时。\n\n单条启动异常后继续执行。\n\n以上异常场景不能只做模拟，应保留真实进程及错误证据。\n\n阶段 D：S3 正向执行\n\n--help。\n\n903 夹具回归。\n\n核对 14/14、TAR 三 match、95/95。\n\n生成 EXEC-907001 报告。\n\n阶段 E：S4 失败演示\n\n无参数执行 bundle_gate。\n\n捕获真实 exit=2。\n\n生成 EXEC-907002 报告。\n\n核对 EXECUTED_FAIL / REWORK。\n\n阶段 F：S6 报告校验\n\n904 环境 141/141 回归。\n\n两份报告分别 Ajv 校验。\n\n报告、日志、SHA 交叉核对。\n\n阶段 G：安全扫描与证据归档\n\nR1-R5 扫描。\n\nCLEAN 后归档。\n\n生成 RUN-RECORD。\n\n开发与证据分支分别提交。\n\n阶段 H：独立验收\n\nGPT 独立读取完整 SHA。\n\n按八项验收标准逐项复核。\n\nPASS 后提交用户决定下一步。\n\n六、证据归档布局\n\n建议延续 905 的证据组织习惯，统一使用独立目录。\n\n纯文本\nphase1/\n├── tools/\n│   └── test_worker.py\n│\n└── logs/\n    └── t-p1-907-20261114/\n        ├── RUN-RECORD.md\n        ├── baseline.txt\n        │\n        ├── EXEC-907001/\n        │   ├── command-001.stdout\n        │   ├── command-001.stderr\n        │   ├── command-001.meta.json\n        │   ├── command-002.stdout\n        │   ├── command-002.stderr\n        │   ├── command-002.meta.json\n        │   ├── test-report.json\n        │   └── report-validation.log\n        │\n        ├── EXEC-907002/\n        │   ├── command-001.stdout\n        │   ├── command-001.stderr\n        │   ├── command-001.meta.json\n        │   ├── test-report.json\n        │   └── report-validation.log\n        │\n        ├── schema-validation/\n        │   └── schema-tests.log\n        │\n        ├── security/\n        │   ├── security-scan.txt\n        │   └── security-scan.sha256\n        │\n        └── SHA256SUMS\n\n注意：这里展示的是最终归档布局，实际运行期间建议先写入：\n\nruntime/t-p1-907-<timestamp>/\n\n完成脱敏扫描后，再复制至证据目录。\n\n双分支提交建议\n\n沿用 905 的双分支分离模式：\n\n分支\n\n\t\n\n负责内容\n\n\n\n\n开发分支\n\n\t\n\n只提交 phase1/tools/test_worker.py 及必要的 Worker 自身测试\n\n\n\n\n证据分支\n\n\t\n\nRUN-RECORD、执行报告、原始日志、Schema 校验、安全扫描及相关登记文档\n\n要求：\n\n两个分支均以本次实际 main 基线完整 SHA 为基础。\n\n不重写历史。\n\n不将 runtime 临时文件提交 Git。\n\nC6 秘密不得进入 Git。\n\n日志原始字节不得为了脱敏而静默修改。\n\n安全扫描发现秘密时阻断归档，保留受保护的本地证据并登记。\n\n七、交付验收清单\n\n以下直接对应 F-003 v0.5 §11 的八项验收标准。\n\nT-P1-907 验收进度\n\n0/8\nA1：真实 worktree、完整 40 位 SHA、HEAD 一致性\nA2：真实正向执行，两条命令退出码均为 0\nA3：真实非零退出，Worker 生成失败报告\nA4：超时、启动异常、输入校验异常处理正确\nA5：所有命令三件套完整，原始字节及 SHA-256 一致\nA6：两份实际报告 Ajv 校验通过，报告与日志可追溯\nA7：R1-R5 CLEAN，秘密不进入 Git\nA8：开发/证据双分支、RUN-RECORD、独立验收齐全\n\n这是规划核对清单，不代表仓库实际验收结果。\n\n八、边界与最终建议\n\n本次规划明确不允许以下行为：\n\n不修改 test-report.schema.json。\n\n不修改 M1 代码。\n\n不扩展 M4 测试执行职责。\n\n不实现 F-001 调度、批次、并发或 REST 自动登记。\n\n不提前开放 GPT-04 审查消费链路。\n\n不解除 DEC-017。\n\n不因 DEC-028 开工授权而获得合并或发布权限。\n\n我建议 ZCode 按上述方案实施，优先把 Worker 本身做扎实，不要在第一版加入多任务、插件、配置中心或复杂调度能力。\n\n另外有一个实现上的优先级判断：先完成真实执行和三件套证据，再做报告生成。不要先设计一套漂亮的报告系统，最后才补真实执行能力。\n\nGPT-01 规划结论\n\n建议按规划实施\n\n技术方案：明确\n\n命令清单：明确\n\n正向/失败演示：明确\n\nAjv 校验：明确\n\n证据归档：明确\n\n权限边界：明确\n\n本规划不代替 ZCode 实现、不代替独立验收，也不产生新的合并或发布授权。\n\nZCode 完成开发分支提交后，可以把完整 commit SHA 和交付证据交给我，我按这份规划逐项做独立实现复核。\n\n🔍\n\n跟进 T-P1-907 独立验收\n\n轻点设置",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "4616ab54-4937-4dee-89ed-14be5baaac41",
+  "stability": {
+    "stable": true,
+    "interval_ms": 10688,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-14T02:54:40.828Z",
+      "read_finished_at": "2026-11-14T02:54:48.503Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "2920da047d43c6b984914a465b6e27d0cac4c928eb76f6bc716947b263b29d5d",
+          "size_bytes": 19102
+        }
+      ],
+      "assistant_uuid": "4616ab54-4937-4dee-89ed-14be5baaac41",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-14T02:54:51.515Z",
+      "read_finished_at": "2026-11-14T02:54:52.071Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "2920da047d43c6b984914a465b6e27d0cac4c928eb76f6bc716947b263b29d5d",
+          "size_bytes": 19102
+        }
+      ],
+      "assistant_uuid": "4616ab54-4937-4dee-89ed-14be5baaac41",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "78ee6ad220bf134e43d1e13b06753cae73e317928dfc7f61be73f9095ce3affe",
+          "2920da047d43c6b984914a465b6e27d0cac4c928eb76f6bc716947b263b29d5d"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "78ee6ad220bf134e43d1e13b06753cae73e317928dfc7f61be73f9095ce3affe",
+          "2920da047d43c6b984914a465b6e27d0cac4c928eb76f6bc716947b263b29d5d"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "2920da047d43c6b984914a465b6e27d0cac4c928eb76f6bc716947b263b29d5d",
+  "size_bytes": 19102,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-14T02-49-55\\reply.txt",
+  "reply_readback_sha256": "2920da047d43c6b984914a465b6e27d0cac4c928eb76f6bc716947b263b29d5d",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-14T02-49-55\\raw-units.json",
+  "raw_units_sha256": "536d9a775fe80412d004ab6b16e644dce85638566485dad3bfeebc47262ddebe",
+  "raw_units_size_bytes": 23359,
+  "raw_units_readback_sha256": "536d9a775fe80412d004ab6b16e644dce85638566485dad3bfeebc47262ddebe",
+  "session_id": "6af7cc88-6d84-83e8-a9d0-c77cbdc9a21e",
+  "conversation_url": "https://chatgpt.com/c/6af7cc88-6d84-83e8-a9d0-c77cbdc9a21e",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}

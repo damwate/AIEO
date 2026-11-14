@@ -1,0 +1,20 @@
+{
+  "command_id": "command-001",
+  "name": "bundle-gate-help",
+  "argv": [
+    "node",
+    "phase1/tools/bundle_gate.mjs",
+    "--help"
+  ],
+  "started_at": "2026-11-14T02:58:41.997+00:00",
+  "finished_at": "2026-11-14T02:58:42.084+00:00",
+  "duration_ms": 78,
+  "exit_code": 0,
+  "status": "COMPLETED",
+  "timed_out": false,
+  "exception": null,
+  "stdout_path": "command-001.stdout",
+  "stdout_sha256": "a4f69c24e8e2a589bbf8f0ee6634f7ccd05abdf5addd1ee5f61790a2dc453ebf",
+  "stderr_path": "command-001.stderr",
+  "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+}
