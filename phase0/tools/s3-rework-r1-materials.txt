@@ -1,0 +1,270 @@
+S3 返工 R1 整改材料（P1-1/P1-2 具体FAIL输出 + P2-1 JSON三场景文本对照）
+整改 commit 范围：basic/tool/check_taskpack.py（重复字段+重复编号检测）+ basic/tool/test_check_taskpack.py（断言加强）
+==========================================
+
+===== 材料1: 重复字段（两个「任务ID」行）→ ① FAIL (exit=1)
+Taskpack: dupfield
+Phase: IN_PROGRESS
+[FAIL] ① 需求记录
+       - task-brief.md 字段「任务ID」重复出现 2 次（重复字段不允许静默接受）
+[PASS] ② 步骤清单
+[PASS] ③ 步骤验收记录
+[N/A] ④ REJECT返工记录
+       - 无 REJECT 结论且无返工记录表（无返工发生，开发期未到期）
+[N/A] ⑤ 返工次数
+       - 无已关联的有效返工记录行，返工次数未到期可计数
+[N/A] ⑥ 交付记录
+       - 阶段=IN_PROGRESS，交付记录未到期（COMPLETED 时检查 delivery.md 七要素）
+Overall: FAIL
+
+===== 材料2: 重复步骤编号（两个 S1 小节）→ ② FAIL (exit=1)
+Taskpack: dupstep
+Phase: IN_PROGRESS
+[PASS] ① 需求记录
+[FAIL] ② 步骤清单
+       - 步骤编号重复（重复编号不允许静默接受）: S1 出现 2 个小节
+[N/A] ③ 步骤验收记录
+       - 2 步记录完整 PASS；未到期步骤（1 个）: S2 规则实现
+[N/A] ④ REJECT返工记录
+       - 无 REJECT 结论且无返工记录表（无返工发生，开发期未到期）
+[N/A] ⑤ 返工次数
+       - 无已关联的有效返工记录行，返工次数未到期可计数
+[N/A] ⑥ 交付记录
+       - 阶段=IN_PROGRESS，交付记录未到期（COMPLETED 时检查 delivery.md 七要素）
+Overall: FAIL
+
+==========================================
+材料3: JSON 三场景文本对照（每场景跑文本+JSON，比较六项状态/Overall/退出码）
+
+===== 场景1 COMPLETED全PASS 文本模式 (exit=0)
+Taskpack: jgood
+Phase: COMPLETED
+[PASS] ① 需求记录
+[PASS] ② 步骤清单
+[PASS] ③ 步骤验收记录
+[PASS] ④ REJECT返工记录
+[PASS] ⑤ 返工次数
+[PASS] ⑥ 交付记录
+Overall: PASS
+
+===== 场景1 COMPLETED全PASS JSON模式 (exit=0)
+{
+  "taskpack": "jgood",
+  "phase": "COMPLETED",
+  "phase_problems": [],
+  "items": [
+    {
+      "no": 1,
+      "name": "需求记录",
+      "status": "PASS",
+      "problems": [],
+      "files": [
+        "requirement.md",
+        "task-brief.md"
+      ],
+      "steps": [],
+      "evidence": []
+    },
+    {
+      "no": 2,
+      "name": "步骤清单",
+      "status": "PASS",
+      "problems": [],
+      "files": [
+        "steps.md"
+      ],
+      "steps": [
+        "S1 骨架"
+      ],
+      "evidence": []
+    },
+    {
+      "no": 3,
+      "name": "步骤验收记录",
+      "status": "PASS",
+      "problems": [],
+      "files": [
+        "steps.md",
+        "task-brief.md"
+      ],
+      "steps": [
+        "S1 骨架"
+      ],
+      "evidence": [
+        "acceptance/s2-fixtures/evidence/probe.txt"
+      ]
+    },
+    {
+      "no": 4,
+      "name": "REJECT返工记录",
+      "status": "PASS",
+      "problems": [],
+      "files": [
+        "steps.md"
+      ],
+      "steps": [],
+      "evidence": []
+    },
+    {
+      "no": 5,
+      "name": "返工次数",
+      "status": "PASS",
+      "problems": [],
+      "files": [
+        "steps.md"
+      ],
+      "steps": [],
+      "evidence": []
+    },
+    {
+      "no": 6,
+      "name": "交付记录",
+      "status": "PASS",
+      "problems": [],
+      "files": [
+        "delivery.md"
+      ],
+      "steps": [],
+      "evidence": []
+    }
+  ],
+  "problems": [],
+  "overall": "PASS"
+}
+
+--- 场景1 COMPLETED全PASS 对照结果: 文本状态序列=['PASS', 'PASS', 'PASS', 'PASS', 'PASS', 'PASS'] JSON状态序列=['PASS', 'PASS', 'PASS', 'PASS', 'PASS', 'PASS']
+    exit: 文本=0 JSON=0 | overall=PASS | 一致判定=一致
+
+===== 场景2 第4次返工FAIL 文本模式 (exit=1)
+Taskpack: jrw4
+Phase: IN_PROGRESS
+[PASS] ① 需求记录
+[PASS] ② 步骤清单
+[PASS] ③ 步骤验收记录
+[PASS] ④ REJECT返工记录
+[FAIL] ⑤ 返工次数
+       - 问题1 有效返工记录达 4 次（第 4 次及以后 FAIL，冻结口径 3）
+[N/A] ⑥ 交付记录
+       - 阶段=IN_PROGRESS，交付记录未到期（COMPLETED 时检查 delivery.md 七要素）
+Overall: FAIL
+
+===== 场景2 第4次返工FAIL JSON模式 (exit=1)
+{
+  "taskpack": "jrw4",
+  "phase": "IN_PROGRESS",
+  "phase_problems": [],
+  "items": [
+    {
+      "no": 1,
+      "name": "需求记录",
+      "status": "PASS",
+      "problems": [],
+      "files": [
+        "requirement.md",
+        "task-brief.md"
+      ],
+      "steps": [],
+      "evidence": []
+    },
+    {
+      "no": 2,
+      "name": "步骤清单",
+      "status": "PASS",
+      "problems": [],
+      "files": [
+        "steps.md"
+      ],
+      "steps": [
+        "S1 骨架"
+      ],
+      "evidence": []
+    },
+    {
+      "no": 3,
+      "name": "步骤验收记录",
+      "status": "PASS",
+      "problems": [],
+      "files": [
+        "steps.md",
+        "task-brief.md"
+      ],
+      "steps": [
+        "S1 骨架"
+      ],
+      "evidence": [
+        "acceptance/s2-fixtures/evidence/probe.txt"
+      ]
+    },
+    {
+      "no": 4,
+      "name": "REJECT返工记录",
+      "status": "PASS",
+      "problems": [],
+      "files": [
+        "steps.md"
+      ],
+      "steps": [
+        "问题1",
+        "问题1",
+        "问题1",
+        "问题1"
+      ],
+      "evidence": []
+    },
+    {
+      "no": 5,
+      "name": "返工次数",
+      "status": "FAIL",
+      "problems": [
+        "问题1 有效返工记录达 4 次（第 4 次及以后 FAIL，冻结口径 3）"
+      ],
+      "files": [
+        "steps.md"
+      ],
+      "steps": [
+        "问题1×4"
+      ],
+      "evidence": []
+    },
+    {
+      "no": 6,
+      "name": "交付记录",
+      "status": "N/A",
+      "problems": [
+        "阶段=IN_PROGRESS，交付记录未到期（COMPLETED 时检查 delivery.md 七要素）"
+      ],
+      "files": [],
+      "steps": [],
+      "evidence": []
+    }
+  ],
+  "problems": [],
+  "overall": "FAIL"
+}
+
+--- 场景2 第4次返工FAIL 对照结果: 文本状态序列=['PASS', 'PASS', 'PASS', 'PASS', 'FAIL', 'N/A'] JSON状态序列=['PASS', 'PASS', 'PASS', 'PASS', 'FAIL', 'N/A']
+    exit: 文本=1 JSON=1 | overall=FAIL | 一致判定=一致
+
+===== 场景3 目录不存在 文本模式 (exit=1)
+Taskpack: does-not-exist
+Phase: UNKNOWN
+       - 任务目录不存在: C:\Users\youting\AppData\Local\Temp\s3-r1-wgkmpprs\does-not-exist
+Overall: FAIL
+
+===== 场景3 目录不存在 JSON模式 (exit=1)
+{
+  "taskpack": "does-not-exist",
+  "phase": "UNKNOWN",
+  "phase_problems": [],
+  "items": [],
+  "problems": [
+    "任务目录不存在: C:\\Users\\youting\\AppData\\Local\\Temp\\s3-r1-wgkmpprs\\does-not-exist"
+  ],
+  "overall": "FAIL"
+}
+
+--- 场景3 目录不存在 对照结果: 文本状态序列=[] JSON状态序列=[]
+    exit: 文本=1 JSON=1 | overall=FAIL | 一致判定=一致
+
+==========================================
+三场景一致性总结: 全部一致 PASS

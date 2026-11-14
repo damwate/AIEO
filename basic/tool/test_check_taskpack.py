@@ -301,23 +301,29 @@ class TestMissingBrokenFiles(CLIBase):
 
 class TestDuplicates(CLIBase):
     def test_duplicate_brief_field(self):
-        """task-brief 重复字段行（两个「任务ID」）→ 可识别结果，不崩不误 PASS 全场"""
+        """task-brief 重复字段行（两个「任务ID」）→ ① FAIL+可识别重复原因，不因未到期项掩盖"""
         brief = BRIEF_TMPL.format(status="开发中", step="S2 规则实现")
         brief += "| 任务ID | b-20261114-s3-test-dup |\n"
         steps = "# 步骤清单：t\n\n## S1 骨架\n" + six_block(1)
         d = self.make_task("dupfield", brief=brief, steps=steps)
         out, code = self.run_cli(d)
-        self.assertIn("Overall:", out)
+        self.assertEqual(self.item_status(out, 1), "FAIL")
+        self.assertIn("重复", out)
+        self.assertIn("任务ID", out)
+        self.assertNotIn("Overall: PASS", out)
         self.assertEqual(code, 1)
 
     def test_duplicate_step_number(self):
-        """steps.md 重复步骤编号（两个 S1 小节）→ 两个小节分别评估，可识别"""
+        """steps.md 重复步骤编号（两个 S1 小节）→ ② FAIL+可识别重复编号原因，不静默接受"""
         steps = ("# 步骤清单：t\n\n## S1 骨架\n" + six_block(1)
                  + "\n## S1 重复小节\n" + six_block(1) + "\n## S2 规则实现\n" + six_block(2))
         d = self.make_task("dupstep", steps=steps)
         out, code = self.run_cli(d)
-        self.assertEqual(self.item_status(out, 3), "N/A")
-        self.assertIn("2 步记录完整 PASS", out)  # 两个 S1 小节均到期且评 PASS
+        self.assertEqual(self.item_status(out, 2), "FAIL")
+        self.assertIn("重复", out)
+        self.assertIn("S1", out)
+        self.assertNotIn("Overall: PASS", out)
+        self.assertEqual(code, 1)
 
 
 class TestRecordStepMismatch(CLIBase):
@@ -433,11 +439,11 @@ class TestJsonConsistency(CLIBase):
         self.assertEqual(item5["status"], "FAIL")
 
     def test_json_missing_dir(self):
-        """目录不存在：JSON phase=UNKNOWN、问题可识别、exit=1"""
-        jout, code = self.run_cli(self.base / "does-not-exist", json_mode=True)
-        data = json.loads(jout)
+        """目录不存在：文本与 JSON 判定一致（P2-1 补第三场景对照）+JSON phase=UNKNOWN、
+        问题可识别、exit=1"""
+        data = self.assert_json_matches_text(self.base / "does-not-exist")
         self.assertEqual(data["phase"], "UNKNOWN")
-        self.assertEqual(code, 1)
+        self.assertEqual(data["overall"], "FAIL")
         self.assertTrue(any("不存在" in p for p in data["problems"]))
 
 

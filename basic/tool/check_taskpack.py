@@ -184,6 +184,14 @@ def extract_brief_field(text: str, name: str):
     return inline.group(1).strip() if inline else None
 
 
+def count_brief_field_rows(text: str, name: str) -> int:
+    """统计字段在 task-brief.md 中作为字段行出现的次数（表格行+行内键各计），
+    用于重复字段检测（拍板异常类"重复字段或编号"：重复字段不允许静默接受）"""
+    table = len(re.findall(rf"^\|\s*{re.escape(name)}\s*\|", text, re.MULTILINE))
+    inline = len(re.findall(rf"^\s*(?:[-*]\s*)?\**{re.escape(name)}\**\s*[：:]", text, re.MULTILINE))
+    return table + inline
+
+
 def parse_current_step(task_dir: Path):
     """从 task-brief.md「当前步骤」解析当前步骤编号（S<数字>→int）；无法解析返回 None"""
     brief_path = task_dir / "task-brief.md"
@@ -374,7 +382,8 @@ def render_text(result: dict) -> str:
 # ---- 六项独立检查函数（冻结口径 4：互不依赖执行顺序，各自结构化返回） ----
 
 def check_requirement(task_dir: Path) -> ItemResult:
-    """①需求记录：requirement.md 原文非空非占位符 + task-brief.md 必备字段非空非占位符。
+    """①需求记录：requirement.md 原文非空非占位符 + task-brief.md 必备字段非空非占位符
+    且不重复（重复字段 FAIL，拍板异常类"重复字段或编号"）。
     阶段读取失败（缺失/非法/占位符）=FAIL+可识别原因（冻结口径 1，不猜阶段）"""
     item = ItemResult(no=1, name=ITEM_NAMES[1])
     phase_info = read_phase(task_dir)
@@ -417,6 +426,11 @@ def check_requirement(task_dir: Path) -> ItemResult:
                     problems.append(f"task-brief.md 字段「{fname}」为空")
                 elif is_placeholder(value):
                     problems.append(f"task-brief.md 字段「{fname}」为占位符: {value!r}")
+                else:
+                    n = count_brief_field_rows(brief_text, fname)
+                    if n > 1:
+                        problems.append(
+                            f"task-brief.md 字段「{fname}」重复出现 {n} 次（重复字段不允许静默接受）")
     item.files = files
     item.problems = problems
     item.status = STATUS_FAIL if problems else STATUS_PASS
@@ -424,7 +438,8 @@ def check_requirement(task_dir: Path) -> ItemResult:
 
 
 def check_steps(task_dir: Path) -> ItemResult:
-    """②步骤清单：steps.md 存在且含有效步骤编号与名称（`## S<编号> <名称>` 小节）"""
+    """②步骤清单：steps.md 存在且含有效步骤编号与名称（`## S<编号> <名称>` 小节），编号唯一
+    （重复编号 FAIL，拍板异常类"重复字段或编号"）"""
     item = ItemResult(no=2, name=ITEM_NAMES[2])
     path = task_dir / "steps.md"
     if not path.is_file():
@@ -445,6 +460,14 @@ def check_steps(task_dir: Path) -> ItemResult:
         item.problems = ["steps.md 未找到任何步骤小节（须含 `## S<编号> <名称>` 标题）"]
         return item
     item.steps = [f"S{sid} {title}" for sid, title, _ in steps]
+    dup = {sid: n for sid, n in Counter(s for s, _, _ in steps).items() if n > 1}
+    if dup:
+        item.status = STATUS_FAIL
+        item.problems = [
+            "步骤编号重复（重复编号不允许静默接受）: "
+            + "、".join(f"S{sid} 出现 {n} 个小节" for sid, n in sorted(dup.items()))
+        ]
+        return item
     item.status = STATUS_PASS
     return item
 
