@@ -1,0 +1,14 @@
+# 场景I reject-element-no-number 复验R2遗留P1反例（预期：④FAIL'REJECT所在要素值与⑥均未引用问题编号' ⑤PASS(问题1行已关联×1) exit1）
+Taskpack: fixture-reject-element-no-number
+Phase: IN_PROGRESS
+[PASS] ① 需求记录
+[PASS] ② 步骤清单
+[N/A] ③ 步骤验收记录
+       - 1 步记录完整 PASS；未到期步骤（1 个）: S2 规则实现
+[FAIL] ④ REJECT返工记录
+       - S2 含 REJECT 但 REJECT 所在要素值与⑥验收证据引用均未引用问题编号（须如「问题1」），无法三方关联
+[PASS] ⑤ 返工次数
+[N/A] ⑥ 交付记录
+       - 阶段=IN_PROGRESS，交付记录未到期（COMPLETED 时检查 delivery.md 七要素）
+Overall: FAIL
+exit=1

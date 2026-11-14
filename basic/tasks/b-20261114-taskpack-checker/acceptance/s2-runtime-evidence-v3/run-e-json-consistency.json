@@ -1,0 +1,81 @@
+# 场景E JSON与文本判定一致性（复验R2遗留P1整改后回归；--json 与文本六项+overall 对照）
+{
+  "own-pack": {
+    "json_items": [
+      [
+        1,
+        "PASS"
+      ],
+      [
+        2,
+        "PASS"
+      ],
+      [
+        3,
+        "N/A"
+      ],
+      [
+        4,
+        "PASS"
+      ],
+      [
+        5,
+        "PASS"
+      ],
+      [
+        6,
+        "N/A"
+      ]
+    ],
+    "text_seq": [
+      "PASS",
+      "PASS",
+      "N/A",
+      "PASS",
+      "PASS",
+      "N/A"
+    ],
+    "overall_json": "IN_PROGRESS",
+    "overall_text_exit": 1,
+    "consistent": true
+  },
+  "reject-element-no-number": {
+    "json_items": [
+      [
+        1,
+        "PASS"
+      ],
+      [
+        2,
+        "PASS"
+      ],
+      [
+        3,
+        "N/A"
+      ],
+      [
+        4,
+        "FAIL"
+      ],
+      [
+        5,
+        "PASS"
+      ],
+      [
+        6,
+        "N/A"
+      ]
+    ],
+    "text_seq": [
+      "PASS",
+      "PASS",
+      "N/A",
+      "FAIL",
+      "PASS",
+      "N/A"
+    ],
+    "overall_json": "FAIL",
+    "overall_text_exit": 1,
+    "consistent": true
+  }
+}

@@ -1,0 +1,15 @@
+# 场景F phase-boundary-inprogress P1-1复验（预期：③ N/A 1步PASS+2未到期；预填完整PASS记录不提前PASS）
+Taskpack: fixture-phase-boundary-inprogress
+Phase: IN_PROGRESS
+[PASS] ① 需求记录
+[PASS] ② 步骤清单
+[N/A] ③ 步骤验收记录
+       - 1 步记录完整 PASS；未到期步骤（2 个）: S2 规则实现、S3 交付
+[N/A] ④ REJECT返工记录
+       - 无 REJECT 结论且无返工记录表（无返工发生，开发期未到期）
+[N/A] ⑤ 返工次数
+       - 无已关联的有效返工记录行，返工次数未到期可计数
+[N/A] ⑥ 交付记录
+       - 阶段=IN_PROGRESS，交付记录未到期（COMPLETED 时检查 delivery.md 七要素）
+Overall: IN_PROGRESS
+exit=1

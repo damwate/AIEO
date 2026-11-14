@@ -1,0 +1,11 @@
+# 场景B good-completed（预期：六项全PASS exit0；④⑤COMPLETED空满足）
+Taskpack: fixture-good-completed
+Phase: COMPLETED
+[PASS] ① 需求记录
+[PASS] ② 步骤清单
+[PASS] ③ 步骤验收记录
+[PASS] ④ REJECT返工记录
+[PASS] ⑤ 返工次数
+[PASS] ⑥ 交付记录
+Overall: PASS
+exit=0
