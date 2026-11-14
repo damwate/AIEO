@@ -59,7 +59,7 @@ runtime gitignored 执行；R1-R5 扫描；**发现 RAW 秘密泄漏→阻断归
 
 ## §8 运行报告与登记边界（方案 B 同款）
 
-run 产出 `orchestration-report.json` 存证据目录（run_id 绑定；不新增 M1 登记路径=零 M1 修改）；S4/S8/S9 的 artifact/message 登记仅在九步既有步骤内发生。
+run 产出 `orchestration-report.json` 存证据目录（run_id 绑定；不新增 M1 登记路径=零 M1 修改）；S4/S8/S9 的 artifact/message 登记仅发生在 S0–S9 既有步骤内。
 
 ## §9 凭据边界
 
