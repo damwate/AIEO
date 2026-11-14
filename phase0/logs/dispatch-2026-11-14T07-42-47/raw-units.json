@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-14T07:45:19.297Z",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "ef2cfcab-e216-47ee-9706-f5e18ae1ece9",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "cb7ac29d747278778827a538e3492b727bdec150794e4ae63f8d924578ecce38",
+          "2147584510f0f40a31f21170c6a63f2f0f82407835838c5b5a4ba5cf10e47c65"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "cb7ac29d747278778827a538e3492b727bdec150794e4ae63f8d924578ecce38",
+          "2147584510f0f40a31f21170c6a63f2f0f82407835838c5b5a4ba5cf10e47c65"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-0:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nJSON\n{\n  \"result\": \"SUCCESS\",\n  \"batch_id\": \"BATCH-017\",\n  \"project_id\": \"AIEO-ORCH-908017\",\n  \"requirement_summary\": \"为bundle_gate.mjs增加--version，保持原有参数及帮助行为不变。\",\n  \"tasks\": [\n    {\n      \"task_id\": \"T-P1-016\",\n      \"title\": \"为bundle_gate.mjs增加版本查询参数\",\n      \"priority\": \"P1\",\n      \"dependencies\": [],\n      \"files_scope\": [\n        \"phase1/tools/bundle_gate.mjs\"\n      ],\n      \"acceptance_criteria\": [\n        \"node phase1/tools/bundle_gate.mjs --version：stdout输出bundle_gate 1.0版本行，退出码0，不执行核验流程。\",\n        \"无参数调用仍输出原有缺参错误，退出码保持2；--help输出及退出码0保持不变。\",\n        \"仅修改指定单文件，不改变现有核验逻辑、记录格式及其他参数行为。\"\n      ]\n    }\n  ]\n}",
+      "text_sha256": "2147584510f0f40a31f21170c6a63f2f0f82407835838c5b5a4ba5cf10e47c65",
+      "size_bytes": 849,
+      "assistant_uuid": "ef2cfcab-e216-47ee-9706-f5e18ae1ece9"
+    }
+  ]
+}

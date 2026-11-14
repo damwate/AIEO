@@ -1,0 +1,34 @@
+{
+  "failure_report": {
+    "run_id": "ORCH-908004",
+    "failed_step": 2,
+    "last_confirmed_state": "S1: bootstrap done: project=AIEO-ORCH-908004 batch=BATCH-004 task=T-P1-003",
+    "completed_operations_with_entity_ids": [
+      {
+        "step": 1,
+        "op": "create project",
+        "project_id": "AIEO-ORCH-908004"
+      },
+      {
+        "step": 1,
+        "op": "create batch",
+        "batch_id": "BATCH-004"
+      },
+      {
+        "step": 1,
+        "op": "create agents",
+        "agents": "GPT-01,ZCODE-01,GIT-WORKER-01"
+      },
+      {
+        "step": 1,
+        "op": "create task",
+        "task_id": "T-P1-003"
+      }
+    ],
+    "evidence_pointers": [
+      "S0: runtime/t-p1-908/executions/ORCH-908004/evidence-steps/s0-precheck-*",
+      "S1: s1-bootstrap stdout (project=AIEO-ORCH-908004, batch=BATCH-004, task=T-P1-003)"
+    ]
+  },
+  "generated_utc": "2026-11-14T06:06:28Z"
+}

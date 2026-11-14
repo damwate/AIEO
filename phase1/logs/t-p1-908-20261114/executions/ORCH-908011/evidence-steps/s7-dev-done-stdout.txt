@@ -1,0 +1,15 @@
+{
+  "ready": true,
+  "run_id": "908011",
+  "executor": "orchestration-session (方案 b: 真实执行者)",
+  "edit_file": "phase1/tools/bundle_gate.mjs",
+  "change": "main 入口新增 --version 分支：stdout 输出 'bundle_gate version 1.0'（与 bundle_gate_version 元数据一致），exit 0；不执行核验流程",
+  "verification": {
+    "version_output": "bundle_gate version 1.0",
+    "version_exit": 0,
+    "noarg_behavior": "bundle_gate: 缺 --commit / exit 2（不变）",
+    "help_exit": 0,
+    "files_changed": ["phase1/tools/bundle_gate.mjs"]
+  },
+  "uncommitted_for_m4": true
+}

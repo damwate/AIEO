@@ -1,0 +1,18 @@
+[2026-11-14T06:13:55Z] lock acquired: D:\AIEO\runtime\t-p1-908\locks\run-908006.lock
+[2026-11-14T06:13:57Z] CONFIRMED S0: PRECHECK all read-only checks passed; lock held
+[2026-11-14T06:13:57Z] OWNER login ok (user=OWNER)
+[2026-11-14T06:13:57Z] COMPLETED S1 create project {'project_id': 'AIEO-ORCH-908006'}
+[2026-11-14T06:13:57Z] COMPLETED S1 create batch {'batch_id': 'BATCH-006'}
+[2026-11-14T06:13:57Z] service tokens: reused existing runtime token store for pre-registered platform agents (C6, gitignored)
+[2026-11-14T06:13:57Z] service tokens stored to gitignored runtime dir (C6)
+[2026-11-14T06:13:57Z] COMPLETED S1 create agents {'agents': 'GPT-01,ZCODE-01,GIT-WORKER-01'}
+[2026-11-14T06:13:57Z] COMPLETED S1 create task {'task_id': 'T-P1-005'}
+[2026-11-14T06:13:57Z] CONFIRMED S1: bootstrap done: project=AIEO-ORCH-908006 batch=BATCH-006 task=T-P1-005
+[2026-11-14T06:13:57Z] S2 outbound composed: 886 bytes (limit 1200)
+[2026-11-14T06:16:36Z] COMPLETED S2 dispatch outbound+evidence dir {'dispatch_dir': 'dispatch-2026-11-14T06-13-59'}
+[2026-11-14T06:16:36Z] CONFIRMED S2: dispatch ok; evidence dir=dispatch-2026-11-14T06-13-59
+[2026-11-14T06:16:36Z] COMPLETED S3 real ChatGPT planning reply {'reply_sha256': 'a934860abbb264d1848ddb563972e74ad8308c3352eec5ac485e01e84190008e', 'dispatch_dir': 'dispatch-2026-11-14T06-13-59'}
+[2026-11-14T06:16:36Z] CONFIRMED S3: reply received sha256=a934860abbb2бн plan parsed
+[2026-11-14T06:16:37Z] ORCHESTRATED_FAIL at S4: Ajv validation not both valid: {"envelope": {"valid": false, "errors": [{"instancePath": "/task_id", "schemaPath": "#/allOf/1/then/properties/task_id/const", "keyword": "const", "params": {"allowedValue": null}, "message": "must be equal to constant"}, {"instancePath": "", "schemaPath": "#/allOf/1/if", "keyword": "if", "params": {"failingKeyword": "then"}, "message": "must match \"then\" schema"}, {"instancePath": "/correlation
+RESULT=ORCHESTRATED_FAIL exit=1
+SCHEDULER-EXIT=1

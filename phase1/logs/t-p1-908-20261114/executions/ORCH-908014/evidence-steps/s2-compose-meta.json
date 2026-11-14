@@ -1,0 +1,11 @@
+{
+  "step": "2",
+  "name": "compose",
+  "started_utc": "2026-11-14T07:22:37Z",
+  "sha256_stdout": "0a6a0175f122d4e3314d6894ab5b29914553d1bbb6b35299754d852989daa2d2",
+  "sha256_stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "outcome": "PASS",
+  "bytes": 886,
+  "limit": 1200,
+  "request_file": "D:\\AIEO\\runtime\\t-p1-908\\staging\\t-p1-908-908014-request.txt"
+}

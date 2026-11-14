@@ -1,0 +1,20 @@
+{
+  "run_id": "908015",
+  "task_id": "T-P1-014",
+  "execution_id": "EXEC-006",
+  "executor": "orchestration-session (方案 b: 真实执行者)",
+  "worktree": "D:\\AIEO\\runtime\\t-p1-908\\wt-fixture",
+  "branch": "feature/T-P1-908-fixture",
+  "edit_file": "phase1/tools/bundle_gate.mjs",
+  "expected_change": "新增 --version：stdout 输出版本行，退出码 0；其余行为不变",
+  "constraints": [
+    "仅改该单文件",
+    "不提交（M4 负责真实 commit）",
+    "完成后写 dev-done.json（本目录）"
+  ],
+  "dev_done_file": "D:\\AIEO\\runtime\\t-p1-908\\executions\\ORCH-908015\\dev-done.json",
+  "dev_done_format": {
+    "ready": "true",
+    "summary": "一句话说明改动"
+  }
+}

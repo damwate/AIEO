@@ -1,0 +1,22 @@
+{
+  "result": "SUCCESS",
+  "batch_id": "BATCH-017",
+  "project_id": "AIEO-ORCH-908017",
+  "requirement_summary": "为bundle_gate.mjs增加--version，保持原有参数及帮助行为不变。",
+  "tasks": [
+    {
+      "task_id": "T-P1-016",
+      "title": "为bundle_gate.mjs增加版本查询参数",
+      "priority": "P1",
+      "dependencies": [],
+      "files_scope": [
+        "phase1/tools/bundle_gate.mjs"
+      ],
+      "acceptance_criteria": [
+        "node phase1/tools/bundle_gate.mjs --version：stdout输出bundle_gate 1.0版本行，退出码0，不执行核验流程。",
+        "无参数调用仍输出原有缺参错误，退出码保持2；--help输出及退出码0保持不变。",
+        "仅修改指定单文件，不改变现有核验逻辑、记录格式及其他参数行为。"
+      ]
+    }
+  ]
+}

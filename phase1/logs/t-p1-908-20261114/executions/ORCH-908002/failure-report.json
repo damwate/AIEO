@@ -1,0 +1,23 @@
+{
+  "failure_report": {
+    "run_id": "ORCH-908002",
+    "failed_step": -1,
+    "last_confirmed_state": "S0: PRECHECK all read-only checks passed; lock held",
+    "completed_operations_with_entity_ids": [
+      {
+        "step": 1,
+        "op": "create project",
+        "project_id": "AIEO-ORCH-908002"
+      },
+      {
+        "step": 1,
+        "op": "create batch",
+        "batch_id": "BATCH-002"
+      }
+    ],
+    "evidence_pointers": [
+      "S0: runtime/t-p1-908/executions/ORCH-908002/evidence-steps/s0-precheck-*"
+    ]
+  },
+  "generated_utc": "2026-11-14T06:00:23Z"
+}

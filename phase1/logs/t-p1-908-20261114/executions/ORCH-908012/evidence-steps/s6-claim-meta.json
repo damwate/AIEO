@@ -1,0 +1,8 @@
+{
+  "step": "6",
+  "name": "claim",
+  "started_utc": "2026-11-14T07:12:24Z",
+  "sha256_stdout": "509ba7a35dec9fe3347216ca809cd2c8bde3920ebeefa71cc60bd78e28b08133",
+  "sha256_stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "outcome": "PASS"
+}

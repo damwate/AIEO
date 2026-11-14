@@ -1,0 +1,12 @@
+{
+  "step": "3",
+  "name": "reply",
+  "started_utc": "2026-11-14T07:53:14Z",
+  "sha256_stdout": "28b73dd868de7a1e20eacacf577a95e2da37912b74e195e207d345003bc6761c",
+  "sha256_stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "outcome": "PASS",
+  "reply_bytes": 833,
+  "reply_sha256": "28b73dd868de7a1e20eacacf577a95e2da37912b74e195e207d345003bc6761c",
+  "dispatch_dir": "dispatch-2026-11-14T07-50-48",
+  "evidence_rel_path": "phase1/logs/t-p1-908-20261114/run-908018/s3-reply-raw.txt"
+}

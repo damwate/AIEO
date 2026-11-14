@@ -1,0 +1,8 @@
+{
+  "step": "4",
+  "name": "register",
+  "started_utc": "2026-11-14T07:53:15Z",
+  "sha256_stdout": "28eccb1c58dc47c2008f64c0706d3f3f86ea8400e9f9efa90ec69ce27d947f60",
+  "sha256_stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "outcome": "PASS"
+}

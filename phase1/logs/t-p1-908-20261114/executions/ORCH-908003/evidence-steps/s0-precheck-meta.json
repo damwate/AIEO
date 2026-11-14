@@ -1,0 +1,36 @@
+{
+  "step": "0",
+  "name": "precheck",
+  "started_utc": "2026-11-14T06:02:23Z",
+  "sha256_stdout": "fb326cf8a0ffab6113c6a5e6d0b2eeac663a4af2653bdc57e77fa2acecc5d443",
+  "sha256_stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "checks": [
+    {
+      "check": "m1_health",
+      "ok": true,
+      "http": 200
+    },
+    {
+      "check": "tokens_present",
+      "ok": true,
+      "missing": []
+    },
+    {
+      "check": "fixture_bundle_gate",
+      "ok": true,
+      "path": "D:\\AIEO\\phase1\\tools\\bundle_gate.mjs"
+    },
+    {
+      "check": "chrome_debug_port_9222",
+      "ok": true,
+      "occupied": false
+    },
+    {
+      "check": "m3_bridge_present",
+      "ok": true,
+      "path": "D:\\AIEO\\app\\zcode_bridge\\bin\\aieo-zcode-mcp.mjs"
+    }
+  ],
+  "lock_path": "D:\\AIEO\\runtime\\t-p1-908\\locks\\run-908003.lock",
+  "outcome": "PASS"
+}

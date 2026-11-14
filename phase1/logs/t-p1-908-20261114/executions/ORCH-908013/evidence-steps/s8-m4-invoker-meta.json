@@ -1,0 +1,8 @@
+{
+  "step": "8",
+  "name": "m4-invoker",
+  "started_utc": "2026-11-14T07:21:10Z",
+  "sha256_stdout": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "sha256_stderr": "c41a16291a1f431ca069c91ba0bd5e993e1a28950d8d34ffb1352be1b2f172b4",
+  "exit_code": 1
+}

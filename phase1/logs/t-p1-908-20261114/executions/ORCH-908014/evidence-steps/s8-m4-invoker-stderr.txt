@@ -1,0 +1,12 @@
+Traceback (most recent call last):
+  File "D:\AIEO\runtime\t-p1-908\m4_invoker.py", line 89, in <module>
+    main()
+  File "D:\AIEO\runtime\t-p1-908\m4_invoker.py", line 81, in main
+    ev = worker.commit_and_collect(repo=REPO_WORKTREE,
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AIEO\app\git_worker\worker.py", line 1415, in commit_and_collect
+    evidence = self._commit_and_collect(
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AIEO\app\git_worker\worker.py", line 1476, in _commit_and_collect
+    raise GitWorkerError(
+app.git_worker.worker.GitWorkerError: INVALID_COMMIT_MESSAGE

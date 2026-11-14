@@ -1,0 +1,9 @@
+{
+  "step": "5",
+  "name": "events",
+  "started_utc": "2026-11-14T07:45:21Z",
+  "sha256_stdout": "1f1453d2c46e0d016af2259f92d3b77db7dc3702b0e36e879923593b05e290bf",
+  "sha256_stderr": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+  "outcome": "PASS",
+  "final_status": "READY"
+}

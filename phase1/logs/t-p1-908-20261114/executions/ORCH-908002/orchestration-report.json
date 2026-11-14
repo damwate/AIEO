@@ -1,0 +1,37 @@
+{
+  "run_id": "ORCH-908002",
+  "scheduler": "phase1/tools/scheduler.py (F-001 v0.3, Python stdlib single file)",
+  "brief": "docs/phase1/F001-SCHEDULER-BRIEF.md v0.3",
+  "result": "ORCHESTRATED_FAIL",
+  "failed_step": -1,
+  "last_confirmed": "S0: PRECHECK all read-only checks passed; lock held",
+  "base_commit": "67c177c4f9c96a13cf21f0d882ae6b59b302a721",
+  "entities": {
+    "project_id": "AIEO-ORCH-908002",
+    "batch_id": "BATCH-002"
+  },
+  "completed_operations": [
+    {
+      "step": 1,
+      "op": "create project",
+      "project_id": "AIEO-ORCH-908002"
+    },
+    {
+      "step": 1,
+      "op": "create batch",
+      "batch_id": "BATCH-002"
+    }
+  ],
+  "evidence_pointers": [
+    "S0: runtime/t-p1-908/executions/ORCH-908002/evidence-steps/s0-precheck-*"
+  ],
+  "notes": [
+    "[2026-11-14T06:00:20Z] lock acquired: D:\\AIEO\\runtime\\t-p1-908\\locks\\run-908002.lock",
+    "[2026-11-14T06:00:22Z] CONFIRMED S0: PRECHECK all read-only checks passed; lock held",
+    "[2026-11-14T06:00:22Z] OWNER login ok (user=OWNER)",
+    "[2026-11-14T06:00:23Z] COMPLETED S1 create project {'project_id': 'AIEO-ORCH-908002'}",
+    "[2026-11-14T06:00:23Z] COMPLETED S1 create batch {'batch_id': 'BATCH-002'}",
+    "[2026-11-14T06:00:23Z] ORCHESTRATED_FAIL at S-1: create agent GPT-01: HTTP 409 {\"code\": \"RES-0002\", \"message\": \"RESOURCE_CONFLICT: agent GPT-01 already registered\", \"retryable\": false, \"correlation_id\": \"0a90a395-6aed-4d90-b041-647282062f6e\", \"details\": {\"field\": \"agent_id\"}}"
+  ],
+  "generated_utc": "2026-11-14T06:00:23Z"
+}

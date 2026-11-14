@@ -1,0 +1,134 @@
+{
+  "run_id": "ORCH-908011",
+  "scheduler": "phase1/tools/scheduler.py (F-001 v0.3, Python stdlib single file)",
+  "brief": "docs/phase1/F001-SCHEDULER-BRIEF.md v0.3",
+  "result": null,
+  "failed_step": null,
+  "last_confirmed": "S7: dev done: ",
+  "base_commit": "67c177c4f9c96a13cf21f0d882ae6b59b302a721",
+  "entities": {
+    "project_id": "AIEO-ORCH-908011",
+    "batch_id": "BATCH-011",
+    "agents": "GPT-01,ZCODE-01,GIT-WORKER-01",
+    "task_id": "T-P1-010",
+    "dispatch_dir": "dispatch-2026-11-14T06-54-11",
+    "reply_sha256": "b567ff507263d9729b2250e22e7db738748db159be4d5cc4e42aabee961d2522",
+    "artifact_id": "ART-OTH-003",
+    "message_id": "MSG-20261114-065642",
+    "task_status": "IN_PROGRESS",
+    "execution_id": "EXEC-002",
+    "injection": "expected",
+    "dev_summary": "",
+    "repository_id": "REPO-001"
+  },
+  "completed_operations": [
+    {
+      "step": 1,
+      "op": "create project",
+      "project_id": "AIEO-ORCH-908011"
+    },
+    {
+      "step": 1,
+      "op": "create batch",
+      "batch_id": "BATCH-011"
+    },
+    {
+      "step": 1,
+      "op": "create agents",
+      "agents": "GPT-01,ZCODE-01,GIT-WORKER-01"
+    },
+    {
+      "step": 1,
+      "op": "create task",
+      "task_id": "T-P1-010"
+    },
+    {
+      "step": 2,
+      "op": "dispatch outbound+evidence dir",
+      "dispatch_dir": "dispatch-2026-11-14T06-54-11"
+    },
+    {
+      "step": 3,
+      "op": "real ChatGPT planning reply",
+      "reply_sha256": "b567ff507263d9729b2250e22e7db738748db159be4d5cc4e42aabee961d2522",
+      "dispatch_dir": "dispatch-2026-11-14T06-54-11"
+    },
+    {
+      "step": 4,
+      "op": "register plan artifact",
+      "artifact_id": "ART-OTH-003"
+    },
+    {
+      "step": 4,
+      "op": "register plan message",
+      "message_id": "MSG-20261114-065642"
+    },
+    {
+      "step": 5,
+      "op": "state advance DRAFT->READY via M1 events",
+      "task_status": "READY"
+    },
+    {
+      "step": 6,
+      "op": "real claim via M3 MCP (single session)",
+      "execution_id": "EXEC-002"
+    },
+    {
+      "step": 6,
+      "op": "injected repeat claim -> TASK-0003 fail-closed (A4)",
+      "injection": "expected"
+    },
+    {
+      "step": 7,
+      "op": "START event + dev handoff written",
+      "task_status": "IN_PROGRESS"
+    },
+    {
+      "step": 7,
+      "op": "real development performed by orchestration session (方案 b)",
+      "dev_summary": ""
+    },
+    {
+      "step": 8,
+      "op": "register repository",
+      "repository_id": "REPO-001"
+    }
+  ],
+  "evidence_pointers": [
+    "S0: runtime/t-p1-908/executions/ORCH-908011/evidence-steps/s0-precheck-*",
+    "S1: s1-bootstrap stdout (project=AIEO-ORCH-908011, batch=BATCH-011, task=T-P1-010)"
+  ],
+  "notes": [
+    "[2026-11-14T06:54:07Z] lock acquired: D:\\AIEO\\runtime\\t-p1-908\\locks\\run-908011.lock",
+    "[2026-11-14T06:54:09Z] CONFIRMED S0: PRECHECK all read-only checks passed; lock held",
+    "[2026-11-14T06:54:09Z] OWNER login ok (user=OWNER)",
+    "[2026-11-14T06:54:09Z] COMPLETED S1 create project {'project_id': 'AIEO-ORCH-908011'}",
+    "[2026-11-14T06:54:09Z] COMPLETED S1 create batch {'batch_id': 'BATCH-011'}",
+    "[2026-11-14T06:54:09Z] service tokens: reused existing runtime token store for pre-registered platform agents (C6, gitignored)",
+    "[2026-11-14T06:54:09Z] service tokens stored to gitignored runtime dir (C6)",
+    "[2026-11-14T06:54:09Z] COMPLETED S1 create agents {'agents': 'GPT-01,ZCODE-01,GIT-WORKER-01'}",
+    "[2026-11-14T06:54:09Z] COMPLETED S1 create task {'task_id': 'T-P1-010'}",
+    "[2026-11-14T06:54:09Z] CONFIRMED S1: bootstrap done: project=AIEO-ORCH-908011 batch=BATCH-011 task=T-P1-010",
+    "[2026-11-14T06:54:09Z] S2 outbound composed: 886 bytes (limit 1200)",
+    "[2026-11-14T06:56:42Z] COMPLETED S2 dispatch outbound+evidence dir {'dispatch_dir': 'dispatch-2026-11-14T06-54-11'}",
+    "[2026-11-14T06:56:42Z] CONFIRMED S2: dispatch ok; evidence dir=dispatch-2026-11-14T06-54-11",
+    "[2026-11-14T06:56:42Z] COMPLETED S3 real ChatGPT planning reply {'reply_sha256': 'b567ff507263d9729b2250e22e7db738748db159be4d5cc4e42aabee961d2522', 'dispatch_dir': 'dispatch-2026-11-14T06-54-11'}",
+    "[2026-11-14T06:56:42Z] CONFIRMED S3: reply received sha256=b567ff507263… plan parsed",
+    "[2026-11-14T06:56:43Z] S4 Ajv double validation: envelope+payload both valid (0 errors)",
+    "[2026-11-14T06:56:43Z] COMPLETED S4 register plan artifact {'artifact_id': 'ART-OTH-003'}",
+    "[2026-11-14T06:56:43Z] COMPLETED S4 register plan message {'message_id': 'MSG-20261114-065642'}",
+    "[2026-11-14T06:56:43Z] S4 A3 replay: artifact duplicate:true same-id; message 409 RES-0003 no-new-row",
+    "[2026-11-14T06:56:43Z] CONFIRMED S4: registered artifact=ART-OTH-003 message=MSG-20261114-065642; A3 replays verified",
+    "[2026-11-14T06:56:43Z] COMPLETED S5 state advance DRAFT->READY via M1 events {'task_status': 'READY'}",
+    "[2026-11-14T06:56:43Z] CONFIRMED S5: task T-P1-010 status=READY",
+    "[2026-11-14T06:56:45Z] COMPLETED S6 real claim via M3 MCP (single session) {'execution_id': 'EXEC-002'}",
+    "[2026-11-14T06:56:45Z] COMPLETED S6 injected repeat claim -> TASK-0003 fail-closed (A4) {'injection': 'expected'}",
+    "[2026-11-14T06:56:45Z] CONFIRMED S6: claimed; task DISPATCHED; execution=EXEC-002",
+    "[2026-11-14T06:56:45Z] COMPLETED S7 START event + dev handoff written {'task_status': 'IN_PROGRESS'}",
+    "[2026-11-14T06:56:45Z] CONFIRMED S7: START emitted; task IN_PROGRESS; handoff written; awaiting executor",
+    "[2026-11-14T07:00:30Z] COMPLETED S7 real development performed by orchestration session (方案 b) {'dev_summary': ''}",
+    "[2026-11-14T07:00:30Z] CONFIRMED S7: dev done: ",
+    "[2026-11-14T07:00:30Z] COMPLETED S8 register repository {'repository_id': 'REPO-001'}"
+  ],
+  "generated_utc": "2026-11-14T07:00:30Z"
+}
