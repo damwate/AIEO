@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-14T14:47:16.017Z",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:1:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "57dde282-8869-4edd-b167-b6e4fcf84543",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "f051c9127beea6ed8798734988e22c4028f7598b84da8a2993ebcbde16199b1b",
+          "f4abb482abcb3fb3f4c0cd6cc0e9e72030334d1d36185fd00f48fc7e0e055460"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "f051c9127beea6ed8798734988e22c4028f7598b84da8a2993ebcbde16199b1b",
+          "f4abb482abcb3fb3f4c0cd6cc0e9e72030334d1d36185fd00f48fc7e0e055460"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:1:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:1:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:1:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:1:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:1:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-0:1:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nAIEO Basic · taskpack-checker 方案评审\n\n评审结论：方案方向正确，但建议先修订判定模型，再进入开发。\n\n这个工具的定位应该是：检查任务包是否具备完整、可追溯、可验收的记录，而不是简单检查文件是否存在。\n\nQ1：待规划/开发中任务，②—⑥应该 FAIL 还是中间态？\n\n建议：引入三态判定，不要简单地把尚未到期的内容判为 FAIL。\n\n原因是 Basic 的任务执行是逐项推进的。如果工具在开发刚开始时就因为没有交付记录而报 FAIL，会产生大量没有实际意义的失败结果。\n\n建议每项使用以下三种状态：\n\n状态\n\n\t\n\n含义\n\n\n\n\nPASS\n\n\t\n\n当前阶段要求已满足\n\n\n\n\nFAIL\n\n\t\n\n当前阶段要求未满足，或记录存在明确缺陷\n\n\n\n\nN/A\n\n\t\n\n当前阶段尚不要求检查该项\n\n但是，我建议再增加一个整体状态：\n\nPASS：所有当前阶段适用的检查项通过。\n\nFAIL：至少一项适用检查项失败。\n\nIN_PROGRESS：存在尚未到期的检查项。\n\n具体规则：\n\n检查项\n\n\t\n\n规划阶段\n\n\t\n\n开发阶段\n\n\t\n\n完成阶段\n\n\n\n\n①需求记录\n\n\t\n\n必须\n\n\t\n\n必须\n\n\t\n\n必须\n\n\n\n\n②步骤清单\n\n\t\n\n必须\n\n\t\n\n必须\n\n\t\n\n必须\n\n\n\n\n③步骤验收记录\n\n\t\n\nN/A\n\n\t\n\n已执行步骤必须\n\n\t\n\n必须\n\n\n\n\n④REJECT返工记录\n\n\t\n\nN/A\n\n\t\n\n发生REJECT时必须\n\n\t\n\n发生REJECT时必须\n\n\n\n\n⑤返工次数\n\n\t\n\nN/A\n\n\t\n\n已发生返工时检查\n\n\t\n\n必须\n\n\n\n\n⑥交付记录\n\n\t\n\nN/A\n\n\t\n\nN/A\n\n\t\n\n必须\n\n这里有两个重要细节：\n\n未发生 REJECT，不应要求存在返工记录。\n\n开发中已经完成的步骤必须有完整验收记录，不能用 IN_PROGRESS 掩盖已经发生的记录缺失。\n\n阶段信息从哪里来？\n\n建议 taskpack-checker 读取任务包中的明确状态字段，而不是根据文件是否存在推测阶段。\n\n例如：\n\nPLANNING\n\nIN_PROGRESS\n\nCOMPLETED\n\n状态字段缺失或不合法，应当 FAIL，避免工具自行猜测。\n\nQ2：字段校验只检查存在性和非空，是否足够？\n\n建议：采用两层校验，首期不做复杂语义分析。\n\n第一层：结构校验（必须实现）\n\n文件存在。\n\n必备字段存在。\n\n字段非空。\n\n格式符合约定。\n\n必须字段不能只包含空格、占位符或模板提示。\n\n第二层：规则校验（必须实现，但限定范围）\n\n例如：\n\n检查内容\n\n\t\n\n校验方式\n\n\n\n\nrequirement.md\n\n\t\n\n原始需求内容非空\n\n\n\n\ntask-brief.md\n\n\t\n\n9个字段全部存在且非空\n\n\n\n\nsteps.md\n\n\t\n\n存在有效步骤编号和步骤名称\n\n\n\n\n六要素\n\n\t\n\n每个步骤逐项检查\n\n\n\n\nPASS结论\n\n\t\n\n必须存在明确的PASS标记\n\n\n\n\n证据引用\n\n\t\n\n必须存在可识别的证据引用\n\n\n\n\nREJECT\n\n\t\n\n必须有对应返工记录\n\n\n\n\n返工次数\n\n\t\n\n按同一问题统计\n\n\n\n\ndelivery.md\n\n\t\n\n七个交付要素完整\n\n特别强调三个问题：\n\n1. 不能把占位符当成有效内容。\n\n例如：\n\n纯文本\n- 技术方案：待填写\n- 验收标准：TODO\n- 测试结果：无\n\n这些虽然非空，但不代表有效记录。\n\n2. 不能只检查文件里出现过 PASS。\n\n必须将 PASS 关联到具体步骤，避免一个步骤的 PASS 被错误地当成所有步骤通过。\n\n3. 不能只检查存在 REJECT。\n\n必须建立问题编号、REJECT记录和返工记录之间的关联。\n\n首期不要求 AI 理解自然语言是否真正合理，但必须保证结构和记录之间的可追溯性。\n\nQ3：落位和判定规则还有什么漏洞？\n\n我有六项建议。\n\n1. 文件路径和任务包边界\n建议采纳\n\n落位：\n\n纯文本\nbasic/\n└── tool/\n    └── check_taskpack.py\n\n合理。\n\n但需要明确：\n\n检查对象必须是指定任务目录。\n\n不允许默认检查当前工作目录。\n\n必须检查关键文件是否位于任务包根目录。\n\n不允许通过目录外文件补足任务包缺失记录。\n\n2. 六项检查必须相互独立\n\n不要写成一个巨大的检查函数。\n\n建议：\n\nPython\n运行\ncheck_requirement()\ncheck_steps()\ncheck_step_acceptance()\ncheck_rework_records()\ncheck_rework_limit()\ncheck_delivery()\n\n每个函数返回结构化检查结果。\n\n这样未来增加检查项，不需要重写整体逻辑。\n\n3. 返工次数的定义必须明确\n\n建议：\n\n以问题编号作为统计单位。\n\n同一问题连续 REJECT 的返工次数累计。\n\n不同问题分别统计。\n\n同一问题返工超过3次，FAIL。\n\n第3次仍未通过，不允许通过修改问题编号规避限制。\n\n这里还有一个必须明确的边界：\n\n第3次返工之后仍然 REJECT，应该判定为超过允许的三轮处理上限，进入升级处理，而不是允许第4轮继续循环。\n\n4. 证据引用不能只检查文字\n\n例如：\n\n纯文本\n证据：test_result.txt\n\n如果文件不存在，这个证据引用实际上没有意义。\n\n建议首期至少支持：\n\n任务包内部相对路径。\n\nGit commit SHA。\n\n测试命令及其结果记录。\n\n其中，内部文件引用应检查目标文件真实存在，禁止路径穿越到任务包外部。\n\nGit SHA 和命令记录则先检查格式及内容，不要求工具自动执行全部测试。\n\n5. CLI输出必须方便其他AI读取\n\n建议输出：\n\n纯文本\nTaskpack: b-20261114-taskpack-checker\nPhase: IN_PROGRESS\n\n[PASS] ① 需求记录\n[PASS] ② 步骤清单\n[FAIL] ③ 步骤验收记录\n[N/A] ④ REJECT返工记录\n[PASS] ⑤ 返工次数\n[N/A] ⑥ 交付记录\n\nOverall: FAIL\nExit code: 1\n\n注意：这里的 FAIL 表示开发阶段已有步骤的记录不完整，而不是因为尚未交付。\n\n建议额外支持：\n\nBash\npython check_taskpack.py <task_dir> --json\n\n输出机器可读 JSON，方便规划 AI、执行 AI 自动读取检查结果。\n\n6. 必须增加异常输入测试\n\n现有测试方案基本正确，但还缺少以下场景：\n\n任务目录不存在。\n\n关键文件缺失。\n\n文件编码异常。\n\n空文件。\n\n字段重复。\n\n步骤编号重复。\n\n步骤验收记录与步骤清单不对应。\n\n证据引用不存在。\n\n非法任务阶段。\n\n同一问题第3次和第4次返工。\n\n路径穿越。\n\n这些比单纯测试几个正常和异常样例更有价值。\n\n最终建议：修订后进入开发\n\n我建议保留原来的 S1—S4，但调整如下：\n\n阶段\n\n\t\n\n工作内容\n\n\t\n\n验收重点\n\n\n\n\nS1\n\n\t\n\nCLI、状态模型、六项检查函数骨架\n\n\t\n\n结构正确\n\n\n\n\nS2\n\n\t\n\n六项检查规则实现\n\n\t\n\n规则逐项通过\n\n\n\n\nS3\n\n\t\n\nunittest 正负例、边界测试、JSON输出\n\n\t\n\n异常场景全部覆盖\n\n\n\n\nS4\n\n\t\n\n文档、使用说明、交付\n\n\t\n\n可独立运行\n\n有三项必须先达成共识：\n\n整体状态增加 IN_PROGRESS，单项采用 PASS/FAIL/N/A。\n\n采用结构校验+有限规则校验，不做 AI 语义判断。\n\n增加步骤关联、证据有效性和问题编号关联，防止形式上完整、实际不可追溯。\n\n我的原则是：Basic 要轻量，但不能因为轻量而失去工程记录的真实性。\n\n共识状态：需要讨论",
+      "text_sha256": "f4abb482abcb3fb3f4c0cd6cc0e9e72030334d1d36185fd00f48fc7e0e055460",
+      "size_bytes": 6966,
+      "assistant_uuid": "57dde282-8869-4edd-b167-b6e4fcf84543"
+    }
+  ]
+}

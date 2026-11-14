@@ -1,0 +1,5 @@
+【AIEO·Basic规划协商】(新会话)任务b-20261114-taskpack-checker任务包完整性检查工具。
+背景:D:\AIEO,main,commit b1cc528。需求经用户拍板:basic/tasks/b-20261114-taskpack-checker/requirement.md(原文存档)+task-brief.md(理解/验收目标),Python标准库,检查六项记录完整性,输出PASS/FAIL+缺失项。
+方案稿:1.落位basic/tool/check_taskpack.py单文件,标准库(argparse/pathlib/re);2.用法python check_taskpack.py <task_dir>,逐项输出六项结果+整体结论,退出码0/1;3.判定:①requirement.md含原文+task-brief.md含9必备字段(行首"- 字段名:"匹配且非空)②steps.md含拍板步骤清单③每步骤六要素+PASS结论+证据引用④REJECT须有对应返工记录⑤同一问题返工计数≤3⑥delivery.md七要素;4.步骤:S1骨架(CLI+六项函数)→S2逐项实现+unittest(临时构造PASS样例+各类FAIL样例)→S3负例→S4交付。
+请审:Q1待规划/开发中任务必缺②-⑥,应FAIL还是标注"未到期"类中间态?Q2字段校验=存在性+非空是否足够,需语义校验否?Q3落位与判定规则其他漏洞?
+回复:分条+末行单独"共识达成"或"需要讨论"。

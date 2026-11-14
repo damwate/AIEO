@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-14T14:56:24.699Z",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:1:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "03b2e35b-1ab3-4d9b-9f70-1df5f65364bc",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "25c4938d07994299feb30400ed1e9aa7b1b40f643fc840d782f42b0a0d57dab5",
+          "d9690a4f4cb027b2a09c2b6e25cc5767d2d16570b2b3e6978af21a4b9aa94a71"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "25c4938d07994299feb30400ed1e9aa7b1b40f643fc840d782f42b0a0d57dab5",
+          "d9690a4f4cb027b2a09c2b6e25cc5767d2d16570b2b3e6978af21a4b9aa94a71"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:1:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:1:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:1:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:1:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:1:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-0:1:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n1. 三态判定及阶段映射：认同。\n\n单项结果：PASS / FAIL / N/A。\n\n整体结果：PASS / FAIL / IN_PROGRESS。\n\n存在未到期检查项时，整体为 IN_PROGRESS。\n\n阶段映射严格按你列出的规则执行：\n\n待规划 → PLANNING\n\n开发中、验收中、返工、阻塞 → IN_PROGRESS\n\n完成 → COMPLETED\n\n当前状态缺失或非法：对应检查项 FAIL，禁止推测阶段。\n\n2. 两层校验：认同。\n\n第一层：结构完整性，包括文件存在、字段、非空、格式及占位符黑名单。\n\n第二层：有限规则校验。\n\n不引入 AI 语义判断，避免工具职责膨胀及不可重复的主观判断。\n\n3. PASS 关联及返工次数：认同。\n\nPASS 必须关联具体步骤小节，不能用全局文本充数。\n\nREJECT、返工记录、问题编号必须建立三方关联。\n\n同一问题编号返工次数超过 3 次，即第 4 次触发⑤ FAIL。\n\n建议明确：第 3 次允许通过，第 4 次及以后判定失败；计数依据是有效返工记录，而不是文本中重复出现的编号。\n\n4. 六项独立检查函数：认同。\n\n六项检查分别实现，互不依赖内部执行顺序。\n\n每项返回结构化结果。\n\n统一字段建议包含：检查项编号、检查项名称、状态、问题描述、关联文件、关联步骤及证据。\n\n汇总层负责计算整体结果，不让单项函数自行决定整体状态。\n\n5. 证据引用校验：认同。\n\n路径必须位于任务包内部。\n\n必须验证目标文件实际存在。\n\n禁止 .. 路径穿越。\n\nSHA 仅验证十六进制格式及规定长度，不宣称验证了文件真实性。\n\n不自动执行测试，避免检查工具产生副作用。\n\n补充一个实现要求：路径校验除检查 .. 外，还应解析实际路径并检查其是否仍处于任务包根目录内，防止符号链接绕过限制。\n\n6. 文本输出及 JSON 输出：认同。\n\n默认输出人类可读文本。\n\n--json 输出相同检查数据结构。\n\n两种输出共用同一检查结果对象，禁止维护两套判定逻辑。\n\n退出码：整体 PASS 为 0，整体 FAIL 为 1。\n\n补充：IN_PROGRESS 也应退出码为 1，避免尚未完成的任务包被外部自动化误判为通过。\n\n7. 11 类异常输入纳入 S3 测试：认同。\n\n必须覆盖：\n\n目录不存在；\n\n缺少文件；\n\n空文件；\n\n编码异常；\n\n重复字段或编号；\n\n记录与步骤不对应；\n\n证据不存在；\n\n非法阶段；\n\n第 3 次返工；\n\n第 4 次返工；\n\n路径穿越。\n\n建议再明确：异常输入必须产生可识别的检查结果，不允许出现未捕获异常、静默跳过或错误 PASS。\n\n最终裁定：七点全部认同，附加上述四项实现约束。\n\n没有要求扩大 Basic 的功能范围，继续坚持 Python 标准库、确定性规则、可重复检查、无 AI 语义判断。\n\n共识达成",
+      "text_sha256": "d9690a4f4cb027b2a09c2b6e25cc5767d2d16570b2b3e6978af21a4b9aa94a71",
+      "size_bytes": 2892,
+      "assistant_uuid": "03b2e35b-1ab3-4d9b-9f70-1df5f65364bc"
+    }
+  ]
+}
