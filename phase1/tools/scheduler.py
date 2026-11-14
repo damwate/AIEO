@@ -947,6 +947,10 @@ console.log(JSON.stringify({ envelope: { valid: !!evOk, errors: ev.errors ?? [] 
         invoker = RUNTIME_DIR / "m4_invoker.py"
         invoker.write_text(self.render_m4_invoker(repository_id), encoding="utf-8")
         env = dict(os.environ)
+        # Windows 管道子进程默认 locale 编码（cp936），diff 中文注释经 print 编出 GBK 字节，
+        # 调度器按 UTF-8 解析即崩（真实 run 908015 暴露）；统一强制 UTF-8 管道编码。
+        env["PYTHONIOENCODING"] = "utf-8"
+        env["PYTHONUTF8"] = "1"
         proc = subprocess.run([sys.executable, "-I", str(invoker)],
                               cwd=str(REPO_ROOT), env=env, capture_output=True, timeout=300)
         self.ev.triplet(8, "m4-invoker", proc.stdout, proc.stderr, {"exit_code": proc.returncode})
