@@ -1,0 +1,181 @@
+{
+  "at": "2026-11-14T02:30:02.213Z",
+  "message_bytes": 830,
+  "reply": "ChatGPT 说：\nAIEO 会务评审：F-003 测试 Worker 最小版任务书 v0.1\n\n三项原则性方案均建议通过 补充修订后定稿\n\n会务结论：建议批准任务书的设计方向，但不批准开工。\n\n本轮评审对象为：\n\n仓库：damwate/AIEO\n\n指定基线：b2ea16f340d3b6e98accad34a7a6da8e140f2a99\n\n文件：docs/phase1/F003-TEST-WORKER-BRIEF.md\n\n文件 Blob SHA：4784bb3e0b2862e592061525f55c64111c0e6e42\n\n版本：v0.1\n\n已读取指定 SHA 下的完整任务书及冻结的 contracts/v1.0/test-report.schema.json。\n\n本任务的核心定位是正确的：让 AIEO 从能够规划、开发、审查，进一步具备真实执行测试、收集执行证据、形成机器可验证测试报告的能力。\n\n这一步不应该提前变成调度系统，也不应该把 M1、M4 的职责混在一起。\n\n一、三项拍板\n\n议题\n\n\t\n\n会务意见\n\n\t\n\n结论\n\n\n\n\n① 号段 T-P1-907\n\n\t\n\n906 保留，顺延不取消\n\n\t\n\n通过\n\n\n\n\n② 独立 CLI Worker\n\n\t\n\nphase1/tools/test_worker.py，Python 标准库\n\n\t\n\n通过\n\n\n\n\n③ REST 登记方案 B\n\n\t\n\n本阶段只生成报告文件，F-001 集成\n\n\t\n\n通过\n\n① 号段：采用 T-P1-907\n\n同意。\n\n理由：\n\n906 已有 C2 分批复审的既定任务安排，不应为了 F-003 抢占或取消。\n\nF-003 是新的独立能力建设任务，应获得独立编号。\n\n后续 F-001、多角色以及 906 的安排应继续遵循 DEC-026 的路线，不因本次调整擅自改变优先级。\n\n建议明确写入任务书：\n\nT-P1-907 = F-003 测试执行 Worker 最小版\n\n906 保持原任务身份，后续另行启动。\n\n② 归属：采用独立 CLI Worker\n\n同意。\n\n建议结构：\n\n纯文本\nphase1/\n├── tools/\n│   ├── bundle_gate.mjs\n│   └── test_worker.py\n└── logs/\n    └── t-p1-907-<timestamp>/\n\n理由：\n\nM4 保持 Git 采集职责单一。\n\n测试执行属于独立的 TEST 能力，不应依赖 M4 承担测试业务。\n\nPython 标准库足以完成命令执行、超时控制、输出采集、SHA-256 和 JSON 报告生成。\n\n独立 CLI 便于后续被 F-001 调度调用。\n\n不需要现在引入常驻服务、消息队列或额外部署组件。\n\n特别强调：独立 CLI 不等于独立调度系统。\n\n本阶段只负责执行一个明确的测试任务，不负责管理多个任务。\n\n③ REST 登记：采用方案 B\n\n同意，而且这是我认为本次任务最重要的范围控制决定之一。\n\n建议形成明确边界：\n\nF-003 最小版\n\n接收指定 worktree、commit 和测试命令清单。\n真实执行测试命令。\n收集 stdout、stderr、退出码、耗时。\n生成执行日志及 SHA-256。\n生成符合冻结 Schema 的 JSON 报告。\n\nF-001 集成阶段\n\n调度系统调用 Worker。\n接收 Worker 输出。\n通过 M1 REST 接口登记 test_reports。\n处理任务状态、批次及后续角色协作。\n\n这样可以避免 F-003 同时承担测试执行和业务登记两个不同层面的责任。\n\n另外，方案 B 不意味着报告不能被后续消费，而是本阶段不负责自动 REST 登记。\n\n二、七步范围评审\n总体合理\n\n七步能够覆盖最小闭环，但有几个地方需要补齐，否则 Worker 即使成功运行，也不一定能形成可独立复核的证据链。\n\n步骤\n\n\t\n\n评审\n\n\t\n\n补充要求\n\n\n\n\nS1 任务书评审\n\n\t\n\n通过\n\n\t\n\n会务定稿与用户开工授权分开\n\n\n\n\nS2 Worker 实现\n\n\t\n\n需补充\n\n\t\n\n输入校验、路径安全、命令执行安全\n\n\n\n\nS3 正向真实执行\n\n\t\n\n通过\n\n\t\n\n固定真实 commit 完整 SHA\n\n\n\n\nS4 失败真实演示\n\n\t\n\n需补充\n\n\t\n\n明确执行失败与 Worker 自身故障的区别\n\n\n\n\nS5 日志证据采集\n\n\t\n\n需补充\n\n\t\n\n原始字节、逐命令 SHA、日志引用关系\n\n\n\n\nS6 JSON 报告\n\n\t\n\n通过，需细化\n\n\t\n\n报告字段与实际执行结果建立映射\n\n\n\n\nS7 提交与验收\n\n\t\n\n通过\n\n\t\n\n双分支、独立验收、权限边界\n\n三、建议增加的六项要求\n\nF-01：输入与执行安全\n\n这是当前任务书最明显的缺项。\n\n必须明确：\n\nworktree 必须存在且是有效 Git 工作树。\n\n指定 commit 必须是完整 40 位 SHA。\n\nWorker 必须核对 worktree 实际 HEAD 与指定 commit 一致。\n\n命令使用 argv 数组执行，禁止 shell=True。\n\n每条命令固定工作目录，不能自行改变 Worker 的执行根目录。\n\n超时、命令不存在、进程启动异常均应有明确失败结果。\n\n禁止命令清单通过任意 shell 字符串执行。\n\n特别是不能让 Worker 变成一个不受限制的任意命令执行入口。\n\nF-02：测试执行结果必须具有明确语义\n\n冻结 Schema 有两个不同字段：\n\n字段\n\n\t\n\n允许值\n\n\t\n\n含义\n\n\n\n\nexecution_result\n\n\t\n\nEXECUTED_PASS / EXECUTED_FAIL / NOT_EXECUTED / CLAIMED_ONLY / BLOCKED\n\n\t\n\n执行事实\n\n\n\n\nresult\n\n\t\n\nPASS / REWORK / BLOCKED\n\n\t\n\n任务验收结论\n\n建议明确映射：\n\n所有命令真实执行且成功：EXECUTED_PASS + PASS\n\n命令真实执行但存在非零退出：EXECUTED_FAIL + REWORK\n\n未能启动执行或执行被阻断：BLOCKED + BLOCKED\n\n未执行：不能伪装为执行成功。\n\n这里尤其需要强调：Worker 自身运行成功，不代表被测项目测试通过。\n\nF-03：日志与报告必须互相对应\n\n建议每条命令至少产生：\n\n纯文本\ncommand-001.stdout\ncommand-001.stderr\ncommand-001.meta.json\ncommand-002.stdout\ncommand-002.stderr\ncommand-002.meta.json\n\n每条记录包括：\n\n命令及参数\n\n开始和结束时间\n\n执行耗时\n\n退出码\n\nstdout SHA-256\n\nstderr SHA-256\n\n超时或异常状态\n\n原始日志保留字节，不允许只保存经过格式化的终端输出。\n\n报告 payload 中保存对应日志的相对路径及 SHA-256，使审查者可以从报告追溯到原始证据。\n\nF-04：失败处理策略必须确定\n\n目前任务书规定不重试，但没有明确一条命令失败之后如何处理后续命令。\n\n建议最小版：\n\n顺序执行。\n\n不自动重试。\n\n记录每条命令的真实结果。\n\n明确采用继续执行剩余命令还是停止执行的策略。\n\n超时和异常不得被记录成普通成功。\n\n整体状态根据实际执行结果计算，不允许人工覆盖。\n\n建议把这条作为实现前的明确约束。\n\nF-05：报告生成与验证\n\n已检查冻结 Schema：\n\ncontracts/v1.0/test-report.schema.json\n\nSHA：\n\n1bda905cfbfc5c223c86dfe7b421848b79ba6d2e\n\n其中五个必需字段确实是：\n\n纯文本\ntask_id\nexecution_id\ncommit_sha\nexecution_result\nresult\n\n因此，任务书引用的字段正确。\n\n但建议补充：\n\nexecution_id 必须唯一且符合 EXEC-数字 格式。\n\ncommit_sha 必须与实际执行对象一致。\n\npayload 应包含命令执行明细和证据索引。\n\n报告生成后必须通过冻结 Schema 校验。\n\n不得修改冻结 Schema 来迁就 Worker。\n\nSchema 校验失败时，整体不得 PASS。\n\n另外，任务书要求 Ajv 校验，应明确使用仓库现有可复现的 Ajv 环境，不要为了这项工作引入未经批准的新依赖。\n\nF-06：安全扫描与证据归档\n\n沿用 905 的 R1-R5 脱敏方法。\n\n但建议明确：\n\n原始日志不能因为脱敏而被静默篡改。\n\n归档日志和报告之前必须扫描。\n\n发现秘密时阻断归档，保留本地受保护证据并如实登记。\n\n日志 SHA-256 必须对应实际归档的字节。\n\n不能因为扫描 CLEAN 就推断执行证据真实，二者是不同验收条件。\n\n还有一个值得修正的细节：采用 REST 方案 B 后，F-003 本身不需要 M1 service token。建议将 runtime/d1prime-20261114/ 改为 F-003 自己的 gitignored 运行目录，并明确 Worker 默认不需要业务凭据，避免不必要的秘密引入。\n\n三、验收标准需要加强的地方\n\n现有六项验收标准方向正确，但我建议最终调整为以下八项，避免出现只验证了 Worker 能运行，却没有验证其结果可信的情况。\n\n编号\n\n\t\n\n最终验收要求\n\n\t\n\n必须提供的证据\n\n\n\n\nA1\n\n\t\n\n真实仓库、真实 commit 执行\n\n\t\n\n完整 SHA、HEAD 核验\n\n\n\n\nA2\n\n\t\n\n正向测试真实通过\n\n\t\n\n真实进程、退出码 0、原始日志\n\n\n\n\nA3\n\n\t\n\n失败测试真实发生\n\n\t\n\n非零退出码、失败报告\n\n\n\n\nA4\n\n\t\n\nWorker 异常处理正确\n\n\t\n\n超时、启动异常等 fail-closed 证据\n\n\n\n\nA5\n\n\t\n\n日志证据完整\n\n\t\n\n原始字节、逐项 SHA-256\n\n\n\n\nA6\n\n\t\n\n报告符合冻结契约\n\n\t\n\nAjv 校验结果、报告与日志关联\n\n\n\n\nA7\n\n\t\n\n安全和权限边界符合要求\n\n\t\n\nR1-R5 CLEAN、无秘密进入 Git\n\n\n\n\nA8\n\n\t\n\n工程交付完整\n\n\t\n\n双分支、RUN-RECORD、独立验收、范围核对\n\n这里还有两个特别要求：\n\n第一，S3 的真实测试对象必须固定。\n\n建议使用 T-P1-905 已合并的真实开发成果：\n\nbundle_gate.mjs --help\n\nparts 14/14\n\nTAR 与 unpack 回归\n\n执行对象必须记录完整 40 位 commit SHA，不能只写 916d8b2 这样的短 SHA，也不能用后续变动的 HEAD 代替。\n\n第二，S4 不应只证明被测程序能够失败。\n\n还需要证明 Worker 能正确识别这个失败，并将它写入报告。\n\n否则只能证明被测程序有错误处理能力，不能证明测试 Worker 有失败采集能力。\n\n四、需要特别保留的治理边界\n\n以下事项不接受因为 F-003 实现需要而放宽。\n\n治理约束\n\n\t\n\n会务意见\n\n\n\n\nDEC-017\n\n\t\n\n原样保留，不解除\n\n\n\n\nDEC-023\n\n\t\n\n906 的前置约束不变\n\n\n\n\n零 mock\n\n\t\n\n继续作为整体 PASS 的必要条件\n\n\n\n\n历史提交\n\n\t\n\n不允许重写\n\n\n\n\nM1\n\n\t\n\n不修改\n\n\n\n\nM4\n\n\t\n\n不扩展测试执行职责\n\n\n\n\nF-001\n\n\t\n\n不提前实现调度、批次和 REST 集成\n\n\n\n\nGPT-04\n\n\t\n\n不提前开放审查消费链路\n\n\n\n\n合并发布\n\n\t\n\n必须另行取得授权\n\n尤其是零 mock：\n\n不能用伪造 subprocess 返回值代替真实进程；不能用人工编写的成功报告代替 Worker 产物；不能用预先生成的日志冒充本次执行证据。\n\n五、建议最终任务书修改清单\n\n建议 v0.1 修改为 v0.2，仅做必要的补充，不重新设计架构。\n\n必须修改的内容\n\n确认 T-P1-907 号段。\n确认独立 CLI Worker 归属。\n确认 REST 方案 B。\n补充 F-01 输入与命令执行安全。\n补充 F-02 两层结果状态映射。\n补充 F-03 日志与报告关联。\n补充 F-04 失败处理策略。\n补充 F-05 Schema 验证细节。\n补充 F-06 脱敏与归档要求。\n验收标准调整为八项。\n将运行时秘密目录调整为 F-003 专用目录。\n保留全部原有治理约束。\n六、最终会务决议建议\nF-003 任务书评审意见\n原则性通过，补充修订后定稿\n\n决议事项\n\n\t\n\n最终意见\n\n\n\n\n任务编号\n\n\t\n\nT-P1-907\n\n\n\n\n任务归属\n\n\t\n\n独立 CLI Worker\n\n\n\n\n技术实现\n\n\t\n\nPython 标准库\n\n\n\n\nREST 方案\n\n\t\n\nB，延后至 F-001\n\n\n\n\n七步范围\n\n\t\n\n保留，补充执行安全及证据要求\n\n\n\n\n验收标准\n\n\t\n\n六项调整为八项\n\n\n\n\nDEC-017\n\n\t\n\n不解除\n\n\n\n\n零 mock\n\n\t\n\n不解除\n\n\n\n\n开工授权\n\n\t\n\n未授予\n\n\n\n\n合并发布授权\n\n\t\n\n未授予\n\n七、我对 F-003 的额外判断\n\n我认为 F-003 应当坚持一个非常重要的设计原则：\n\nWorker 只负责提供事实，不负责宣布事实是否可信。\n\n具体来说：\n\nWorker 负责真实执行。\n\nWorker 负责保存原始证据。\n\nWorker 负责生成结构化报告。\n\nSchema 负责检查报告结构。\n\n独立审查者负责判断证据是否足以支持验收。\n\n用户负责最终授权。\n\n这样才能避免未来出现 Worker 自己执行、自己判断、自己宣布 PASS 的闭环漏洞。\n\n这也是 F-003 与未来 F-001 调度系统之间应该保持的职责边界。\n\n会务最终建议：采用 T-P1-907 + 独立 CLI + REST 方案 B，补充上述六项要求后形成 v0.2，重新提交会务确认。\n\n本轮不授权开发、不授权创建开发分支、不授权合并或发布。最终开工由用户单独拍板。\n\n仓库核验：指定基线 b2ea16f 完整 SHA。已确认该提交与当时 main 完全一致。",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "ae5028ad-e5a2-4782-9a85-6db7bec23c11",
+  "stability": {
+    "stable": true,
+    "interval_ms": 6807,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-14T02:29:54.695Z",
+      "read_finished_at": "2026-11-14T02:29:58.495Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "a1c0e1ee474812c2b5dee4086970dc74c35bb265eecd17f4a03b6c2c3349436c",
+          "size_bytes": 11882
+        }
+      ],
+      "assistant_uuid": "ae5028ad-e5a2-4782-9a85-6db7bec23c11",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-14T02:30:01.501Z",
+      "read_finished_at": "2026-11-14T02:30:02.071Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "a1c0e1ee474812c2b5dee4086970dc74c35bb265eecd17f4a03b6c2c3349436c",
+          "size_bytes": 11882
+        }
+      ],
+      "assistant_uuid": "ae5028ad-e5a2-4782-9a85-6db7bec23c11",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "938b9851a0918d7c6852ef42130327bf07aa48e5194394be14aeeca8e981a545",
+          "a1c0e1ee474812c2b5dee4086970dc74c35bb265eecd17f4a03b6c2c3349436c"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "938b9851a0918d7c6852ef42130327bf07aa48e5194394be14aeeca8e981a545",
+          "a1c0e1ee474812c2b5dee4086970dc74c35bb265eecd17f4a03b6c2c3349436c"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "a1c0e1ee474812c2b5dee4086970dc74c35bb265eecd17f4a03b6c2c3349436c",
+  "size_bytes": 11882,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-14T02-25-47\\reply.txt",
+  "reply_readback_sha256": "a1c0e1ee474812c2b5dee4086970dc74c35bb265eecd17f4a03b6c2c3349436c",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-14T02-25-47\\raw-units.json",
+  "raw_units_sha256": "574eaa310424cd1f5811a851455b9ad21b3b2ff96f9af431b39f3db7bc20b236",
+  "raw_units_size_bytes": 15397,
+  "raw_units_readback_sha256": "574eaa310424cd1f5811a851455b9ad21b3b2ff96f9af431b39f3db7bc20b236",
+  "session_id": "6af7c6df-964c-83ee-b480-85ed71736c94",
+  "conversation_url": "https://chatgpt.com/c/6af7c6df-964c-83ee-b480-85ed71736c94",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}

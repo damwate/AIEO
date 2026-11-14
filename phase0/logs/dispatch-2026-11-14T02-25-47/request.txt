@@ -1,0 +1,5 @@
+【会务·F-003测试Worker最小版任务书评审】按完整SHA读仓库。基线main=b2ea16f（T-P1-905双分支已合并main：开发分支916d8b2+证据分支2a41308，DEC-027登记验收关闭）。任务书docs/phase1/F003-TEST-WORKER-BRIEF.md v0.1（依据DEC-026决议二路线：905验收→F-003）。请评审并拍板三项：
+①号段：建议T-P1-907（906保留C2分批复审，顺延不取消）？
+②归属：建议独立CLI worker（phase1/tools/test_worker.py，单Python标准库，不并入M4）？
+③REST登记：建议方案B=最小版只出报告文件（符合冻结test-report.schema.json），M1 REST自动登记留F-001集成阶段？
+另请审七步范围与验收标准有无漏项。约束：本评审不构成开工授权（开工由用户拍板）；DEC-017不解除；零mock红线沿用。
