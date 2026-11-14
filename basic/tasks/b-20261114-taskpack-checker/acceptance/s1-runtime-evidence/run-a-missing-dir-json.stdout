@@ -1,0 +1,10 @@
+{
+  "taskpack": "not-a-dir",
+  "phase": "UNKNOWN",
+  "phase_problems": [],
+  "items": [],
+  "problems": [
+    "任务目录不存在: D:\\AIEO\\not-a-dir"
+  ],
+  "overall": "FAIL"
+}

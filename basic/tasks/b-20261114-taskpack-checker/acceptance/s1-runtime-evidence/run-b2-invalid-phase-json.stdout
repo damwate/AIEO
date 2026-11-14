@@ -1,0 +1,77 @@
+{
+  "taskpack": "invalid-phase",
+  "phase": "UNKNOWN",
+  "phase_problems": [
+    "「当前状态」非法值（不在映射表）: '火星'"
+  ],
+  "items": [
+    {
+      "no": 1,
+      "name": "需求记录",
+      "status": "N/A",
+      "problems": [
+        "检查规则实现于 S2（当前为 S1 骨架桩）"
+      ],
+      "files": [],
+      "steps": [],
+      "evidence": []
+    },
+    {
+      "no": 2,
+      "name": "步骤清单",
+      "status": "N/A",
+      "problems": [
+        "检查规则实现于 S2（当前为 S1 骨架桩）"
+      ],
+      "files": [],
+      "steps": [],
+      "evidence": []
+    },
+    {
+      "no": 3,
+      "name": "步骤验收记录",
+      "status": "N/A",
+      "problems": [
+        "检查规则实现于 S2（当前为 S1 骨架桩）"
+      ],
+      "files": [],
+      "steps": [],
+      "evidence": []
+    },
+    {
+      "no": 4,
+      "name": "REJECT返工记录",
+      "status": "N/A",
+      "problems": [
+        "检查规则实现于 S2（当前为 S1 骨架桩）"
+      ],
+      "files": [],
+      "steps": [],
+      "evidence": []
+    },
+    {
+      "no": 5,
+      "name": "返工次数",
+      "status": "N/A",
+      "problems": [
+        "检查规则实现于 S2（当前为 S1 骨架桩）"
+      ],
+      "files": [],
+      "steps": [],
+      "evidence": []
+    },
+    {
+      "no": 6,
+      "name": "交付记录",
+      "status": "N/A",
+      "problems": [
+        "检查规则实现于 S2（当前为 S1 骨架桩）"
+      ],
+      "files": [],
+      "steps": [],
+      "evidence": []
+    }
+  ],
+  "problems": [],
+  "overall": "IN_PROGRESS"
+}

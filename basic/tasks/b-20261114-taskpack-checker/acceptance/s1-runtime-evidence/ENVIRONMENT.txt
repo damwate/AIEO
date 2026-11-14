@@ -1,0 +1,7 @@
+# S1 动态执行证据（BLOCKED 解除材料）
+- 执行时间: 2026-11-14T15:17:48Z (UTC)
+- 环境: Windows 11 10.0.26300 x64, Python 3.12.10, Git Bash; 如实标注: 本机 Windows 环境, 非独立 Linux (仓库无 Linux 环境)
+- 被测工具: basic/tool/check_taskpack.py @ commit 40c66d9b17696f548603bb847e45190204a09674
+- 执行方式: python -I (隔离模式); 每场景 stdout/stderr 原始字节落盘 + 退出码 (.exit)
+- 场景: A=目录不存在 B=缺task-brief B2=非法状态值(补充) C=正常任务包(本任务包自身)
+- 命令模板: python -I basic/tool/check_taskpack.py <target> [--json]
