@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-14T11:40:27.410Z",
+  "user_unit_key": "fallback-turn-1:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-1:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "6a962700-b22f-4a1e-9e91-baae15e89790",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-1:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "cc3b24cc0492fd3ee7b55c6a376d9778561b217e35fe980fe191fb6005313b82",
+          "702f9fd46e6ba2094a6a9b87ca9d71c2b8f7e74ad3b90b7062cdb37088c80e43"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "cc3b24cc0492fd3ee7b55c6a376d9778561b217e35fe980fe191fb6005313b82",
+          "702f9fd46e6ba2094a6a9b87ca9d71c2b8f7e74ad3b90b7062cdb37088c80e43"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-1:0:user",
+      "fallback-turn-1:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-1:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n本轮定位为规划讨论，不构成验收、开发授权或合并授权。\n\n建议延续 DEC-023 已确定的路线边界：\n\n904：契约机器化缩编版先行。\n\n905：D1′真实端到端垂直切片。\n\n906：C2 扩展场景第一批复审，必须以后置 905 通过为启动条件。\n\nDEC-017 六项逐项验收，不批量解除。\n\n906 不应被当作独立于 904、905 的并行开发任务。\n\n1. §8 待确认事项：建议处置顺序\n\n我建议按以下顺序，避免治理事项与开发事项相互阻塞。\n\n顺序\n\n\t\n\n事项\n\n\t\n\n建议处置\n\n\t\n\n理由\n\n\n\n\n1\n\n\t\n\nFEASIBILITY-REGISTER v0.3/v0.4\n\n\t\n\n用户逐项审阅，确认后转 USER_REVIEWED，再正式定稿\n\n\t\n\n技术通过不等于业务意图确认；F-003 已关闭，不能重复开发\n\n\n\n\n2\n\n\t\n\nM1 四条 PENDING ACK\n\n\t\n\n先明确四条消息的具体内容、责任人、ACK 语义及是否影响 906，再逐条处理\n\n\t\n\nDEC-034/036 已明确不属于 908 范围，不能因调度器完成就视为已解决\n\n\n\n\n3\n\n\t\n\n10 个未跟踪 dispatch 目录\n\n\t\n\n先清点、核对归档覆盖率、逐目录形成处置清单；最后决定保留或清理\n\n\t\n\n原始证据有追溯价值，不能仅因已归档就直接删除\n\n\n\n\n4\n\n\t\n\nT-P1-906\n\n\t\n\n完成前置条件核对、路线确认、任务书评审，再单独申请开工\n\n\t\n\n防止把 DEC-023 的任务顺序误当成自动开工授权\n\n补充意见：\n\n10 个目录建议先只读盘点，不要立即清理。保留期限、证据冗余和工作树清洁度需要综合决定。\n\nM1 四条 ACK 不建议打包处理，应有独立状态和结果记录。\n\nFEASIBILITY-REGISTER 与 USAGE-ISSUE-REGISTER 必须保持分工：前者记录技术假设，后者记录使用期问题。\n\n依据：交接包 §8、DEC-026、DEC-027、DEC-036。\nGitHub\n+3\n\n2. T-P1-906 开工前置条件及风险\n\n这里有一个重要的路线问题：\n\nDEC-023 原定 905 → 906，但 DEC-026 后来明确将 906 顺延。\n\nDEC-026 的路线是：\n\n905 双分支验收 → F-003 → F-001 → GPT-02/03/04/05 逐角色接入 → 受控试运行 → 906。\n\n目前 907（F-003）和 908（F-001）已经闭合。因此，不能简单认为 906 的所有前置条件都已满足。\nGitHub\n+1\n\n我的建议是补齐以下条件：\n\nA. 必须满足\n\n907、908 的最终合并及独立验收状态确认。\n\nGPT-02/03/04/05 逐角色接入情况有明确记录，不能把 GPT-01 单角色真实链路等同于多角色完成。\n\nF-001 调度器与 F-003 Worker 的真实接口边界确认。\n\n受控试运行的目标、范围和退出条件明确。\n\nFEASIBILITY-REGISTER 中 F-006 六项扩展场景与 DEC-017 限制逐项映射。\n\n用户正式确认 906 开工。\n\nB. 主要风险\n\n风险\n\n\t\n\n建议控制\n\n\n\n\nDEC-017 扩展场景提前解禁\n\n\t\n\n每项独立复审、独立授权\n\n\n\n\n多角色协作不稳定\n\n\t\n\n不以模拟收发代替真实网页链路\n\n\n\n\nM1 ACK 缺失\n\n\t\n\n明确哪些能力依赖 ACK，避免隐式假设\n\n\n\n\n调度器与 Worker 边界模糊\n\n\t\n\n冻结接口，避免顺手修改 M1\n\n\n\n\n任务范围膨胀\n\n\t\n\n严格限定 C2 第一批，不顺带完成全部扩展场景\n\n尤其注意：906 是扩展能力复审任务，不是借机重构 M1、M2 或调度器的机会。\n\n3. T-P1-906 任务书验收结构建议\n\n结合 908 七轮经验，我建议采用以下结构。\n\n建议验收框架：A1–A8\n\nA1：任务范围与 DEC-017 对照\n\n确认本批次具体复审哪些扩展能力，不得越界。\n\nA2：对象身份与版本绑定\n\n完整 40 位 SHA、文件路径、任务书版本、证据对象绑定。\n\nA3：真实链路验证\n\n真实外部资源、真实请求响应、真实状态变化；禁止 Mock 冒充 PASS。\n\nA4：失败关闭与异常验证\n\n超时、权限错误、数据不完整、重复操作等负例。\n\nA5：M1 数据与 ACK 语义\n\nREST、数据库、ACK、幂等性及并发行为按本批实际范围验证。\n\nA6：跨角色及跨模块兼容性\n\n检查既有单角色核心路径不被扩展实现破坏。\n\nA7：安全与证据完整性\n\n原始请求、回复、日志、哈希清单、敏感信息扫描。\n\nA8：独立复现与环境能力声明\n\n指南、证据锚点、复现命令、审阅环境能力边界。\n\nA8 特别建议：吸收 908 的教训。\n\n将 A8 拆成三个独立判断：\n\nA8-1：指南及证据锚点正确，属于交付质量要求。\n\nA8-2：有能力的审阅环境可以独立复现，属于复现质量要求。\n\nA8-3：审阅环境不具备网络或 SHA256 自算能力时，明确记录限制，采用执行方原始证据、完整 SHA、独立留档进行替代核验。\n\n必须区分三种结果：\n\n情况\n\n\t\n\n处理\n\n\n\n\n代码或证据确实缺陷\n\n\t\n\nREWORK\n\n\n\n\n证据不足且尚未验证\n\n\t\n\nBLOCKED\n\n\n\n\n审阅环境客观不支持某项复现\n\n\t\n\nPARTIAL，注明责任边界\n\n不能因为环境受限就把未验证项目算作 PASS，也不能因为审阅沙箱无法联网就无限重复派单。\n\n908 的 A8 经历说明：指南锚点滞后是真缺陷，环境无法自算 SHA 则是环境限制，两者不能混为一谈。\n\n4. 我的最终规划建议\n下一阶段建议路线\n\n治理收尾\n\nFEASIBILITY 审阅、M1 ACK 确认、dispatch 目录盘点。\n\n能力确认\n\n核对 907、908 交付，以及 GPT 多角色接入和受控试运行条件。\n\n906 会务立项\n\n明确 C2 第一批复审范围、任务书、逐项验收标准。\n\n用户开工拍板\n\n单独授权，不从前序任务继承权限。\n\n906 执行与独立验收\n\n按 A1–A8 验收，逐项解除 DEC-017 限制。\n\n我认为最重要的三条治理原则：\n\nPASS 不等于授权。\n\n归档不等于定稿。\n\n前一任务完成，不代表后一任务自动获得开工权限。\n\n以上建议以交接包和 DEC-023、DEC-026、DEC-036 为依据。没有修改仓库，也没有启动任何任务。\n\n下一步我建议先召开一次小型会务讨论，把 §8 三项治理遗留和 906 的真实开工条件逐项定下来，再形成 906 任务书评审议程。",
+      "text_sha256": "702f9fd46e6ba2094a6a9b87ca9d71c2b8f7e74ad3b90b7062cdb37088c80e43",
+      "size_bytes": 5993,
+      "assistant_uuid": "6a962700-b22f-4a1e-9e91-baae15e89790"
+    }
+  ]
+}

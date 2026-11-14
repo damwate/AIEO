@@ -1,0 +1,10 @@
+{
+  "target": "fallback-turn-2:2:assistant",
+  "keys": [
+    "fallback-turn-1:0:user",
+    "fallback-turn-1:2:assistant",
+    "fallback-turn-2:0:user",
+    "fallback-turn-2:2:assistant"
+  ],
+  "stopVisible": false
+}

@@ -1,0 +1,33 @@
+{
+  "units": [
+    {
+      "key": "fallback-turn-1:0:user",
+      "role": null,
+      "tag": "DIV",
+      "text": "【复审修正回执】前轮 ISSUES 三项已修正，请对照你前轮意见逐项复核是否闭合。 仓库 github.com/damwate/AIEO 分支 main，修正提交完整 SHA： 5efb537cd3af945a50386fbc7beb089",
+      "childUnitCount": 0
+    },
+    {
+      "key": "fallback-turn-1:2:assistant",
+      "role": null,
+      "tag": "DIV",
+      "text": "ChatGPT 说： PASS 1. ① S2 映射：闭合。 DEC-040 明确取代 DEC-039 笔误，恢复 S2→Basic 或 Standard（按风险定），与战略纪要 §五一致。 2. ② 30分钟预授权：实质闭合。 限定",
+      "childUnitCount": 0
+    },
+    {
+      "key": "fallback-turn-2:0:user",
+      "role": null,
+      "tag": "DIV",
+      "text": "【开工会议第一题：版本目录与工具包落位】用户确认 30 分钟条款生效，指示 Basic 开发前先规划版本目录与工具包落位（工具放哪与你讨论）。 我的方案 v0.1 已推送，请读： 仓库 github.com/damwate/AIEO 分支 ",
+      "childUnitCount": 0
+    },
+    {
+      "key": "fallback-turn-2:2:assistant",
+      "role": null,
+      "tag": "DIV",
+      "text": "ChatGPT 说： 基于指定提交 b9cb015 的方案内容，我的意见如下： A. 目录结构：同意，微调。 basic/standard/advanced/ 作为版本入口直观；toolkit/ 独立于版本，避免工具重复。建议增加根目录",
+      "childUnitCount": 0
+    }
+  ],
+  "turnChildren": []
+}

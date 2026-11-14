@@ -1,0 +1,12 @@
+【开工会议第一题：版本目录与工具包落位】用户确认 30 分钟条款生效，指示 Basic 开发前先规划版本目录与工具包落位（工具放哪与你讨论）。
+我的方案 v0.1 已推送，请读：
+仓库 github.com/damwate/AIEO 分支 main
+commit b9cb015eb174c231fb6f6c88fa288e6e40adf3b8
+文件 docs/phase1/version-directory-plan.md
+要点：basic/（WORKFLOW+tools+templates+tasks）、standard/ 占位、advanced/ 仅 README 资产映射（app/contracts/phase1 物理不搬）、toolkit/（首批 check-push.mjs 推送诊断+check-env.mjs 体检）、其余目录不动。
+请讨论：
+A. 目录结构与命名是否合适，有无更简方案；
+B. Basic 派单工具复用：选项 A 引用 phase0/tools 不复制（我的倾向）vs 选项 B 复制最小集；
+C. toolkit 首批两脚本够否，还应沉淀什么；
+D. 有无遗漏风险（跨电脑复用/路径失效/双份维护）。
+回复：A-D 逐项意见（同意/修改+理由）；末行"共识达成"或"分歧点：…"；≤600字。

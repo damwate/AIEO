@@ -333,3 +333,12 @@
 - **用户观察（原话）：** "其实每次我给你发要求，你跟chatgpt讨论及最后的过程就是在用最最初级的版本。有了知道该做什么+怎么做之后，就不会有问题了。"
 - **执行：** 主会话起草 `docs/phase1/version-directory-plan.md` v0.1（basic/、standard/ 占位、advanced/ 资产映射不搬迁、toolkit/ 首批 check-push+check-env；Basic 派单工具复用倾向选项 A=引用 phase0/tools 不复制），按 DEC-038 协议发 ChatGPT 共识讨论后交用户拍板；通过后进入 Basic MVP 实现。
 - **关联：** DEC-041（启动前置已清）、DEC-038（会议协议）、DEC-037（分级路线 §四 Basic 建设原则、§七成果不推倒重来）、DEC-040（被确认条款）。
+
+### DEC-043 开工会议第一题共识达成：版本目录与工具包落位 v0.2 待用户拍板（2026-11-14）
+
+- **讨论过程（含中断如实记录）：** 派单 R1（dispatch-2026-11-14T13-06-53，原会话 6af858e4）发送双验通过，但回复采集 fail-closed（INBOUND_WINDOW_COMPLETENESS_UNPROVEN）；诊断中用户关闭 Chrome 窗口致调试实例消失、补采脚本中止；**按用户指示"重新发起一次会话"**以 `--new-session` 重派（dispatch-2026-11-14T13-20-09，新会话 `6af8603f-d084-83ec-8780-4bb88cef8d7b`，简报 1039B 携方案 commit b9cb015 完整 SHA），reply 1692B sha256=`7ee616fc51a7e2f802e9d23a607d50c22f93642da2cb6ee387c47188d5baa6b9`，**末行"共识达成"**。中断轮的诊断级证据（outline+截图 diag-2026-11-14T13-12-28）已归档备查，正式证据以 13-20-09 轮为准。
+- **共识内容（四项全采纳，v0.2 已落稿 `docs/phase1/version-directory-plan.md`）：** A 目录=basic/standard/advanced/toolkit 命名保留，**Basic 不预建空 tools/**（有自有工具再建）；B 派单工具=**选项 A**（引用 phase0/tools 唯一权威源码不复制，仓库相对路径+WORKFLOW 注明依赖调用）；C 工具包=先做 check-push.mjs（执行前确认+诊断失败不得擅改 Git 配置）与 check-env.mjs（Linux/Windows 识别+端口可配置）两项，**按真实故障沉淀、不提前造工具**；D 风险五条（禁个人绝对路径/固定端口、脚本经 Git 根定位、唯一权威源码、历史证据不得移动重命名、README 写明归属依赖用法）。
+- **最终裁定（ChatGPT 原话）：** "建议按上述微调进入 v0.2，用户拍板后再实施。"
+- **过程中暴露的工具缺陷与环境约束（如实登记）：** ①采集器缺陷——ChatGPT DOM 的 fallback 编号每轮跳 1（0=user，2=assistant，1 号槽位为未打键内部元素），会话页可滚动需多窗口合并取证时，跳位被误判为缺 unit 而 fail-closed；单屏单窗口轮次（如新会话首轮）不受影响。**修复纳入 toolkit 工作**（补独立逻辑序列或修正合并语义，带测试+独立复核）。②派单守卫（agent-kit chatgpt-dispatch-guard，PreToolUse hook）会拒绝"命令行内嵌 chatgpt.com URL + 脚本执行"形态的临时脚本——**会话 URL 不得写进命令行**，一律走冻结工具（其命令行不含 URL 故放行）；Chrome 启停属人工检查点（DEC-034），脚本不得擅自动浏览器生命周期。
+- **状态：** v0.2 共识稿交用户拍板；拍板通过后按 §6 实施清单执行（建目录+两工具），随后进入 Basic MVP 六模块方案讨论（会议第二题）。
+- **关联：** DEC-042（前置任务指示）、DEC-038（会议协议）、DEC-039（版本选型制度）、AI-DEV-LESSONS L-009（虚拟列表完整性教训——本次缺陷同类）。
