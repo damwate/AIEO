@@ -1,6 +1,7 @@
 # S4 交付物一致性核验脚本（b-20261115-phasec-workflow-stats）
 # 用法：python -I phase0/tools/s4-consistency-check.py （在仓库根目录执行）
-# 修正记录：①c 正则锚定收紧至附录差异记录表区域（避免跨表匹配）；⑤ 断言口径=30b56de（S1 R2 PASS 验收对象）；⑥c 仅查过期残留「待 S3 复验」（「待 S4 复验」为复验发出前合法中间态）
+# 修正记录：①c 正则锚定收紧至附录差异记录表区域（避免跨表匹配）；⑤ 断言口径=30b56de（S1 R2 PASS 验收对象）；⑥c 仅查过期残留「待 S3 复验」（复验列口径，描述列引述不算）
+# R2 问题12 整改：⑥a 返工表随实态 11→13 行；⑧ 组从存在性检查改为实质比较（task-brief 当前步骤实态/steps S4 R2 登记/delivery S1-S3 闭环与 S4 待定区分）
 import io, re, subprocess, sys, os
 ok=[]; fail=[]
 def chk(name, cond, detail=""):
@@ -47,9 +48,9 @@ r = subprocess.run(['git','log','--oneline','--follow','--','basic/tasks/b-20261
 commits = r.stdout.strip().splitlines()
 chk("⑤ workflow-stats 最后修改=30b56de(S1 R2 PASS 对象)", commits and commits[0].startswith("30b56de"), f"last={commits[0][:30] if commits else 'none'}")
 
-# ⑥ 返工表 11 行（问题1-11）全 SHA/状态闭环
+# ⑥ 返工表 13 行（问题1-13，R2 复验后实态）全 SHA/状态闭环
 rework = re.findall(r"^\| 问题(\d+) \|", st, re.M)
-chk("⑥a 返工表11行(问题1-11)", sorted(map(int,rework))==list(range(1,12)), f"n={rework}")
+chk("⑥a 返工表13行(问题1-13)", sorted(map(int,rework))==list(range(1,14)), f"n={rework}")
 chk("⑥b 无占位符残留", "PLACEHOLDER" not in st)
 # ⑥c 返工表复验列无过期残留（问题描述列引述旧缺陷不算；「待 S4 复验」为复验发出前合法中间态）
 rw_rows = [l for l in st.splitlines() if re.match(r"^\| 问题\d+ \|", l)]
@@ -61,10 +62,16 @@ for sid, nxtid in [("S1","S2"),("S2","S3"),("S3","S4")]:
     sec_i = st.split(f"## {sid}")[1].split(f"## {nxtid}")[0]
     chk(f"⑦ {sid}含字面验收结论PASS", "验收结论：PASS" in sec_i)
 
-# ⑧ task-brief ↔ steps ↔ delivery 一致
-chk("⑧a task-brief状态与steps一致", ("| 当前状态 |" in tb))
-chk("⑧b delivery七要素标题齐全", all(h in dl for h in ["## 原始需求","## 最终实现内容","## 修改文件","## 测试结果","## Git commit","## 未解决问题","## 后续建议"]))
-chk("⑧c delivery声明12行附录", "12 行" in dl)
+# ⑧ task-brief ↔ steps ↔ delivery 实质一致（问题12 整改：真正比较状态与结论内容，非仅标题存在）
+tb_step = [l for l in tb.splitlines() if l.startswith("| 当前步骤 |")]
+chk("⑧a task-brief当前步骤行唯一", len(tb_step)==1, f"n={len(tb_step)}")
+step_txt = tb_step[0] if tb_step else ""
+chk("⑧a2 当前步骤实态=S4复验中(含R3复验指向)", "S4" in step_txt and "R3 复验" in step_txt and "复验" in step_txt, step_txt[:60])
+s4_sec = st.split("## S4", 1)[1] if "## S4" in st else ""
+chk("⑧b steps S4区段含R2复验REJECT2项登记", ("REJECT 2 项" in s4_sec or "REJECT 2项" in s4_sec))
+chk("⑧c delivery区分S1-S3闭环与S4待定", ("S4 独立验收进行中" in dl) and ("四步独立验收全闭环" not in dl))
+chk("⑧d delivery七要素标题齐全", all(h in dl for h in ["## 原始需求","## 最终实现内容","## 修改文件","## 测试结果","## Git commit","## 未解决问题","## 后续建议"]))
+chk("⑧e delivery声明12行附录", "12 行" in dl)
 
 print(f"PASS {len(ok)} / FAIL {len(fail)}")
 for x in ok: print(" [PASS]", x)

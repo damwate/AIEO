@@ -1,22 +1,25 @@
-PASS 21 / FAIL 0
- [PASS] ��a v0.3�ݰ��汾ͷ
- [PASS] ��b v0.2����״̬blockquote
- [PASS] ��c ��¼�����¼12�����غ�(ê����¼����) | rows=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
- [PASS] ��a �嵥31�� | n=31
- [PASS] ��b ÿ��6�ֶ�(7����) | bad=0
- [PASS] ��c BLOCKED�߽����
- [PASS] ��a WORKFLOW����������
- [PASS] ��b ģ�庬��������
- [PASS] ��a ST-10ֹ��δ��������
- [PASS] ��b ST-11�滮Ч�ʶ���
- [PASS] ��c ���鲻��ST��Ŀ
- [PASS] �� workflow-stats ����޸�=30b56de(S1 R2 PASS ����) | last=30b56de docs(basic): �׶�C S1������
- [PASS] ��a ������11��(����1-11) | n=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11']
- [PASS] ��b ��ռλ������
- [PASS] ��c �������޹��ڲ��� | stale=[]
- [PASS] �� S1���������ս���PASS
- [PASS] �� S2���������ս���PASS
- [PASS] �� S3���������ս���PASS
- [PASS] ��a task-brief״̬��stepsһ��
- [PASS] ��b delivery��Ҫ�ر�����ȫ
- [PASS] ��c delivery����12�и�¼
+PASS 24 / FAIL 0
+ [PASS] ①a v0.3草案版本头
+ [PASS] ①b v0.2现行状态blockquote
+ [PASS] ①c 附录差异记录12行无重号(锚定附录区域) | rows=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
+ [PASS] ②a 清单31项 | n=31
+ [PASS] ②b 每项6字段(7竖线) | bad=0
+ [PASS] ②c BLOCKED边界规则
+ [PASS] ③a WORKFLOW含核链命令
+ [PASS] ③b 模板含核链命令
+ [PASS] ④a ST-10止损未触发对齐
+ [PASS] ④b ST-11规划效率对齐
+ [PASS] ④c 六查不属ST条目
+ [PASS] ⑤ workflow-stats 最后修改=30b56de(S1 R2 PASS 对象) | last=30b56de docs(basic): 阶段C S1返工—
+ [PASS] ⑥a 返工表13行(问题1-13) | n=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13']
+ [PASS] ⑥b 无占位符残留
+ [PASS] ⑥c 复验列无过期残留 | stale=[]
+ [PASS] ⑦ S1含字面验收结论PASS
+ [PASS] ⑦ S2含字面验收结论PASS
+ [PASS] ⑦ S3含字面验收结论PASS
+ [PASS] ⑧a task-brief当前步骤行唯一 | n=1
+ [PASS] ⑧a2 当前步骤实态=S4复验中(含R3复验指向) | | 当前步骤 | S4 复验中（R1 REJECT 3 项整改通过：问题9/10/11 R2 复验 PASS、问题11 
+ [PASS] ⑧b steps S4区段含R2复验REJECT2项登记
+ [PASS] ⑧c delivery区分S1-S3闭环与S4待定
+ [PASS] ⑧d delivery七要素标题齐全
+ [PASS] ⑧e delivery声明12行附录
