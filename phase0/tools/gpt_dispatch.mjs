@@ -21,7 +21,7 @@
 import { chromium } from "playwright";
 import { spawn, execFile } from "node:child_process";
 import { existsSync, mkdirSync, writeFileSync, readFileSync, appendFileSync } from "node:fs";
-import { dirname, join } from "node:path";
+import { basename, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { acquireSessionLock } from "../e2e-poc/session_lock.mjs";
 import {
@@ -72,6 +72,10 @@ const {
   schemaPath,
   m1RegistrationRequested,
 } = dispatchOptions;
+
+// 附件支持（--attach <file>，EGO-LITE 手册 §3.2 附件通道：先挂全部文件→发送键 enabled→填文本→Enter 一次发送）
+const attachIdx = process.argv.indexOf("--attach");
+const attachPath = attachIdx >= 0 && process.argv.length > attachIdx + 1 ? process.argv[attachIdx + 1] : null;
 
 const msgBytes = Buffer.byteLength(message, "utf8");
 if (msgBytes > MAX_MSG_BYTES) {
@@ -151,7 +155,7 @@ async function stopIfContextLimit(page) {
 }
 
 // ---------- 发送并收集 ----------
-async function sendAndCollect(page, text, label) {
+async function sendAndCollect(page, text, label, attachPath = null) {
   const findComposer = async () => {
     const loc = page.locator('[aria-label="询问 ChatGPT"], [aria-label="Ask ChatGPT"], #prompt-textarea').filter({ visible: true }).first();
     await loc.waitFor({ state: "visible", timeout: 10000 });
@@ -161,10 +165,39 @@ async function sendAndCollect(page, text, label) {
   log(`[${label}] 基线尾部: ${JSON.stringify(baseline)}`);
   const c = await findComposer(page);
   if (((await c.innerText()) || "").trim() !== "") throw new Error("Composer 非空，STOP");
+  // 附件挂载（手册 §3.2：先挂全部文件→轮询发送键 enabled（上传中 disabled）→再填文本→Enter）
+  if (attachPath) {
+    const fileInput = page.locator('input[aria-label="附加文件"]').first();
+    await fileInput.setInputFiles(attachPath);
+    const fname = basename(attachPath);
+    const form = c.locator("xpath=ancestor::form").first();
+    const chipT0 = Date.now();
+    let chipOk = false;
+    while (Date.now() - chipT0 < 15000) {
+      const formText = (await form.innerText().catch(() => "")) || "";
+      if (formText.includes(fname)) { chipOk = true; break; }
+      await page.waitForTimeout(800);
+    }
+    if (!chipOk) throw new Error("附件挂载未验证（form 内未见文件名 chip），STOP");
+    const sendBtn = page.locator('button[data-testid="send-button"], form button[aria-label*="发送"], form button[aria-label*="Send"]').first();
+    const upT0 = Date.now();
+    while (Date.now() - upT0 < 60000) {
+      const ready = await sendBtn.evaluate((el) => !el.disabled && el.getAttribute("aria-disabled") !== "true").catch(() => false);
+      if (ready) break;
+      await page.waitForTimeout(1000);
+    }
+    const upReady = await sendBtn.evaluate((el) => !el.disabled && el.getAttribute("aria-disabled") !== "true").catch(() => false);
+    if (!upReady) throw new Error("上传未完成（发送键 60s 内仍 disabled），STOP");
+    log(`[${label}] 附件已挂载并上传完成: ${fname}`);
+  }
   await c.click();
-  await page.evaluate((t) => document.execCommand("insertText", false, t), text);
+  // 填充走 CDP Input.insertText（EGO-LITE 手册禁用 document.execCommand）
+  await page.keyboard.insertText(text);
   const norm = (s) => (s || "").replace(/\s+/g, " ").trim();
-  if (norm(await c.innerText()) !== norm(text)) throw new Error("回读不一致，STOP");
+  // URL autolink 容错：Lexical 自动链接化会在 URL 前的冒号后补空格（2026-11-15 实测致回读不一致），
+  // 归一化时折叠该伪影；其余差异仍严格拒绝
+  const normUrl = (s) => norm(s).replace(/:\s+(?=https?:\/\/)/g, ":");
+  if (normUrl(await c.innerText()) !== normUrl(text)) throw new Error("回读不一致，STOP");
   await c.focus();
   await page.keyboard.press("Enter");
 
@@ -295,7 +328,7 @@ async function mainLocked() {
 
   await stopIfContextLimit(page);
 
-  const { snapshot, assistant_uuid, checks, stability } = await sendAndCollect(page, message, "dispatch");
+  const { snapshot, assistant_uuid, checks, stability } = await sendAndCollect(page, message, "dispatch", attachPath);
 
   // 保存当前真实会话 URL（local-chatgpt 草稿态跳过；上限已在发送前安全停止）
   let conversationUrl = null;
