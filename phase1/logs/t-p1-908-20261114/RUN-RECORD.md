@@ -164,3 +164,10 @@ security-scan.txt（SEC-SCAN-T-P1-908-001）：范围=本证据目录 + 18 个 d
 - **A8 FAIL 两因**：①指南 v2 的 scheduler 锚点仍指 08c8e7c（第 5 轮修复后未随 e47055d 更新——包装缺陷，审阅人正确命中；reply 引指南 SHA ffcfe6c0f86887127d926ddd25bec27334af504c）；②SHA256 本地自算环境不可行（沙箱无网络，历轮已明示）。
 - **修复**：指南 v3——分支锚点行/A1 grep/A4 修复提交命令全部更新为 e47055d48cbba5217182bbcaf42d899e73abe85a，历史修复链保留注明；08c8e7c 余留引用均为历史链引用非锚点。
 - **第 7 轮**：简报 v7 携带修订后 evidence 新 HEAD；A1–A7 判定若不因指南锚点问题受累应维持；A8 字节自算若环境仍不可行，按历轮"环境受限非证据缺陷"如实标注。
+
+## 16. 独立验收第 7 轮（A1–A7 全 PASS；A8 FAIL 明示"环境限制"）——派单循环止步（2026-11-14）
+
+- **第 7 轮派单**：phase0/logs/dispatch-2026-11-14T10-18-39/（简报 v7 1002B）。request sha256=`94bfca6c2ff3767212a459094765744708e676383d15304013ede3227fdd570f`；reply sha256=`0c16b765e39547f2128f4291641567778efbdedf88547ddda91b2ffe72e910fd`（均归档 acceptance/round7/，与派单日志 artifact_sha256 一致）。
+- **判定：REJECT（仅 A8）——A1–A7 全部 PASS 且本轮逐项引用完整 64 位 SHA-256 值**；审阅人明示"指南v3锚点已与scheduler e47055d一致，修复链历史保留；但本环境无法独立计算SHA256，未自算"，A8 标注"FAIL（环境限制）"。A2 引用的 1b3a4dcfa93a… 为归档实测值（run-908019/s3-reply-raw.txt 与 audit JSON 既有记录一致，内容经 blob 通道核验）；A5 读到 941/941 OK 实测档；A7 RAW=0。
+- **循环止步判定**：A8 唯一残留=审阅环境无网络无法落地字节自算哈希——第 3/4/5/6/7 轮反复证实（clone DNS 失败、raw/api 沙箱直连失败、仅 blob/浏览内容核验可用），继续派单无法改变审阅环境能力，属环境上限而非证据缺陷；按预定规则停止派单，交用户拍板（DEC-010 与验收收口方式）。
+- **执行方侧 A8 状态**：evidence@78857472a67de2ffd6b52d8b491ead5e9fb7d289 树内 `sha256sum -c SHA256SUMS` 941/941 OK exit0（acceptance/sha256sum-c-result.txt）；独立验证者（有网络环境）按 REPRODUCE-GUIDE v3 §0 可完整重现全部判定。

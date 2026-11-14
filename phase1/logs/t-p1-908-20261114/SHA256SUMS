@@ -225,7 +225,7 @@ adbc14bba299e268d1eb6f1c8d47258cd7b159f0f6f4027711ec3c75ca0051b7 *phase0/logs/di
 f0e10a08ea4e13368becf14816527ad7b3af5485c40a45e5e7e40c24aa0bdc7a *phase0/logs/dispatch-2026-11-14T07-57-15/run.log
 636d8384aea4643039a9005cb973694ffb157174a2fd76eca1ea3da29256c06b *phase0/logs/dispatch-2026-11-14T07-57-15/sent-dispatch.png
 63681a2d8f1355a8c99bd73905add6abb5f04ce9e86e6303251afeb4b06be707 *phase1/logs/t-p1-908-20261114/REPRODUCE-GUIDE.md
-227e6f7d065970f127a6994baff29749305ea5f59ae126e181ce0b73bb2e3de4 *phase1/logs/t-p1-908-20261114/RUN-RECORD.md
+12c18c778c5644d6c8185f585bfe8bad5f8049854013b5b317c8fce7960ab169 *phase1/logs/t-p1-908-20261114/RUN-RECORD.md
 a4a8d9c173b9f2f26969499df187aa43ff8e647256b8b00d593dc800025bef05 *phase1/logs/t-p1-908-20261114/acceptance/a3-message-replay-probe.json
 cb4d00b34b5451bceb1098f038b72dd58937472ed38861d681f82489e1f6ba5b *phase1/logs/t-p1-908-20261114/acceptance/a3_replay_probe.py
 55c4708b673052171c68118ec7920d11c64338174c7b5643508e717b1ce34f6b *phase1/logs/t-p1-908-20261114/acceptance/audit_evidence_triplets.py
@@ -253,6 +253,9 @@ ada957fb76fb695ec18f1b13017f3c07ff86225fcd7cc238f62efcdfabd9069a *phase1/logs/t-
 ada957fb76fb695ec18f1b13017f3c07ff86225fcd7cc238f62efcdfabd9069a *phase1/logs/t-p1-908-20261114/acceptance/round6/request.txt
 df60d1539e7a5d8b6fa27e304b2f32ded751a9b403b420da8e97bfdac7b7ac37 *phase1/logs/t-p1-908-20261114/acceptance/round6/run-6a-composer-residue.log
 40c095b3e8f00eba17bd0d2d3785a087c0b4e642301712a286866e0dbb25af35 *phase1/logs/t-p1-908-20261114/acceptance/round6/run.log
+0c16b765e39547f2128f4291641567778efbdedf88547ddda91b2ffe72e910fd *phase1/logs/t-p1-908-20261114/acceptance/round7/reply.txt
+94bfca6c2ff3767212a459094765744708e676383d15304013ede3227fdd570f *phase1/logs/t-p1-908-20261114/acceptance/round7/request.txt
+e607117bdebeee06a2b459983c75a42e9532abc31d269cb8cd597dec44dda51a *phase1/logs/t-p1-908-20261114/acceptance/round7/run.log
 59842c72dfa118ef65b0e7be1a032c240a6c6fa50ad4b60824960f8640fe3c38 *phase1/logs/t-p1-908-20261114/acceptance/sec_scan_908.py
 0213abad5f888be2f7bc646f9c80d6498f305efe7401cf7bf9d843d8c9012218 *phase1/logs/t-p1-908-20261114/acceptance/task-events-audit-serverlog.ndjson
 37ba86bebfe10e7c08feca702384f45a3d13648f8fa04fab84110207f0b51c9c *phase1/logs/t-p1-908-20261114/acceptance/task-events-audit.json
