@@ -1,0 +1,12 @@
+MCP initialized: {"protocolVersion": "2025-06-18", "serverInfo": {"name": "aieo-zcode-bridge", "version": "0.1.0"}}
+claim_task #1: {"isError": false, "payload": {"accepted": true, "session_id": "SES-0adb9067-c82a-4a2d-8697-d1072432c650", "task": {"task": {"task_id": "T-P1-001", "batch_id": "BATCH-001", "parent_id": null, "title": "为 phase1/tools/bundle_gate.mjs 增加 --help 用法输出", "description": "以 --help 调用时向 stdout 输出工具用途、五个参数（--commit/--parts-index/--tar/--manifest/--output-dir）含义与必选性、一个完整调用示例、退出码约定（0 成功/1 核验失败/2 参数错误），并以退出码 0 正常结束；无参调用维持现有报错行为；不改变任何现有校验逻辑，不改其余文件。", "status": "DISPATCHED", "priority": "P2", "weight": 1, "files_scope": ["phase1/tools/bundle_gate.mjs"], "acceptance_criteria": ["node phase1/tools/bundle_gate
+claim_task #2 (same session): {"isError": true, "payload": {"code": "TASK-0003", "message": "TASK_ALREADY_CLAIMED: 本会话已领取任务 T-P1-001（单会话单任务），须先 submit_result 结束当前任务", "details": {"active_task": "T-P1-001", "claimed_at": "2026-11-14T01:20:26.085Z"}, "retryable": false, "correlation_id": "CORR-905002"}, "raw": {"content": [{"type": "text", "text": "{\n  \"code\": \"TASK-0003\",\n  \"message\": \"TASK_ALREADY_CLAIMED: 本会话已领取任务 T-
+claim REST duplicate: 409 {"code":"TASK-0003","message":"TASK_ALREADY_CLAIMED: task T-P1-001 is not claimable (status=DISPATCHED)","retryable":false,"correlation_id":"49d7f1a9-1898-4579-abdf-5b3f54079607","details":{"task_id":"T-P1-001","status":"DISPATCHED"}}
+task status after claim: None
+outbox TASK_ASSIGNED: []
+S6 RESULT: CHECK-FAILED
+GET task shape: {"task_id": "T-P1-001", "batch_id": "BATCH-001", "parent_id": null, "title": "为 phase1/tools/bundle_gate.mjs 增加 --help 用法输出", "description": "以 --help 调用时向 stdout 输出工具用途、五个参数（--commit/--parts-index/--
+task row: ('T-P1-001', 'DISPATCHED')
+execution rows: [('EXEC-001', 'T-P1-001', 'ZCODE-01', 1, 'c55c7f5bfc08e073b93750ae412d0b5d29278343', 'RUNNING')]
+messages all: [('MSG-20261114-000001', 'TASK_PLAN_SUBMITTED', 'INBOUND', 'PENDING'), ('MSG-20261114-000002', 'TASK_ASSIGNED', 'OUTBOUND', 'PENDING')]
+outbox REST: 200 [{"message_id": "MSG-20261114-000002", "message_type": "TASK_ASSIGNED", "status": "PENDING"}]

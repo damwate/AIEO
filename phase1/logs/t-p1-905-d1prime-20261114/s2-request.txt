@@ -1,0 +1,4 @@
+[GPT-01 任务规划] 项目AIEO-D1PRIME 批次BATCH-001 任务T-P1-001 correlation=CORR-905001。
+需求：为phase1/tools/bundle_gate.mjs增加--help用法输出：--help调用时向stdout打印工具用途、5个参数(--commit/--parts-index/--tar/--manifest/--output-dir)含义与必选性、完整调用示例、退出码约定(0成功/1核验失败/2参数错误)，以退出码0结束；无参调用维持现有报错；不改其他文件。
+只回一个JSON，无其他文字，字段：
+{"result":"SUCCESS","batch_id":"BATCH-001","project_id":"AIEO-D1PRIME","requirement_summary":"<50字内>","tasks":[{"task_id":"T-P1-001","title":"<80字内>","description":"<具体计划>","priority":"P2","dependencies":[],"files_scope":["phase1/tools/bundle_gate.mjs"],"acceptance_criteria":["<可验证>"]}],"open_questions":[]}

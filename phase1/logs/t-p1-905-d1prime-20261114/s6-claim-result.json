@@ -1,0 +1,127 @@
+{
+  "base_commit": "c55c7f5bfc08e073b93750ae412d0b5d29278343",
+  "correlation_id": "CORR-905002",
+  "mcp_init": {
+    "protocolVersion": "2025-06-18",
+    "serverInfo": {
+      "name": "aieo-zcode-bridge",
+      "version": "0.1.0"
+    }
+  },
+  "claim_first": {
+    "isError": false,
+    "payload": {
+      "accepted": true,
+      "session_id": "SES-0adb9067-c82a-4a2d-8697-d1072432c650",
+      "task": {
+        "task": {
+          "task_id": "T-P1-001",
+          "batch_id": "BATCH-001",
+          "parent_id": null,
+          "title": "为 phase1/tools/bundle_gate.mjs 增加 --help 用法输出",
+          "description": "以 --help 调用时向 stdout 输出工具用途、五个参数（--commit/--parts-index/--tar/--manifest/--output-dir）含义与必选性、一个完整调用示例、退出码约定（0 成功/1 核验失败/2 参数错误），并以退出码 0 正常结束；无参调用维持现有报错行为；不改变任何现有校验逻辑，不改其余文件。",
+          "status": "DISPATCHED",
+          "priority": "P2",
+          "weight": 1,
+          "files_scope": [
+            "phase1/tools/bundle_gate.mjs"
+          ],
+          "acceptance_criteria": [
+            "node phase1/tools/bundle_gate.mjs --help 输出含五个参数说明与调用示例",
+            "--help 退出码为 0",
+            "无参调用维持现有报错行为（exit 2）",
+            "不修改 bundle_gate.mjs 以外的任何文件"
+          ],
+          "engineering_standard_items": [],
+          "task_package_hash": "b43e1b3e955a2b315ee1e661b7b0f27f65b59e83778b846ef91a5f435777e1a8",
+          "engineering_standard_version": "v1.0.0",
+          "knowledge_base_commit": "c55c7f5bfc08e073b93750ae412d0b5d29278343",
+          "blocked_reason": null,
+          "blocked_owner": null,
+          "unblock_condition": null,
+          "cancelled_by": null,
+          "cancelled_reason": null,
+          "created_at": "2026-11-14T01:11:40.352Z",
+          "updated_at": "2026-11-14T01:20:26.132Z",
+          "dependencies": [],
+          "latest_execution": {
+            "execution_id": "EXEC-001",
+            "task_id": "T-P1-001",
+            "agent_id": "ZCODE-01",
+            "attempt": 1,
+            "base_commit": "c55c7f5bfc08e073b93750ae412d0b5d29278343",
+            "status": "RUNNING",
+            "started_at": "2026-11-14T01:20:26.132Z",
+            "ended_at": null,
+            "created_at": "2026-11-14T01:20:26.132Z"
+          },
+          "allowed_events": [
+            "BLOCKED",
+            "CANCEL",
+            "START"
+          ]
+        },
+        "execution_id": "EXEC-001",
+        "attempt": 1,
+        "transition": {
+          "task_id": "T-P1-001",
+          "event_id": "EVT-CLAIM-61086f8e8e6c46b59f4fc5a6d3e55ae8",
+          "event": "DISPATCH",
+          "from_status": "READY",
+          "to_status": "DISPATCHED",
+          "duplicate": false,
+          "processed_at": "2026-11-14T01:20:26.132Z"
+        },
+        "dispatch_message_id": "MSG-20261114-000002"
+      },
+      "message_ack": null
+    },
+    "raw": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\n  \"accepted\": true,\n  \"session_id\": \"SES-0adb9067-c82a-4a2d-8697-d1072432c650\",\n  \"task\": {\n    \"task\": {\n      \"task_id\": \"T-P1-001\",\n      \"batch_id\": \"BATCH-001\",\n      \"parent_id\": null,\n      \"title\": \"为 phase1/tools/bundle_gate.mjs 增加 --help 用法输出\",\n      \"description\": \"以 --help 调用时向 stdout 输出工具用途、五个参数（--commit/--parts-index/--tar/--manifest/--output-dir）含义与必选性、一个完整调用示例、退出码约定（0 成功/1 核验失败/2 参数错误），并以退出码 0 正常结束；无参调用维持现有报错行为；不改变任何现有校验逻辑，不改其余文件。\",\n      \"status\": \"DISPATCHED\",\n      \"priority\": \"P2\",\n      \"weight\": 1,\n      \"files_scope\": [\n        \"phase1/tools/bundle_gate.mjs\"\n      ],\n      \"acceptance_criteria\": [\n        \"node phase1/tools/bundle_gate.mjs --help 输出含五个参数说明与调用示例\",\n        \"--help 退出码为 0\",\n        \"无参调用维持现有报错行为（exit 2）\",\n        \"不修改 bundle_gate.mjs 以外的任何文件\"\n      ],\n      \"engineering_standard_items\": [],\n      \"task_package_hash\": \"b43e1b3e955a2b315ee1e661b7b0f27f65b59e83778b846ef91a5f435777e1a8\",\n      \"engineering_standard_version\": \"v1.0.0\",\n      \"knowledge_base_commit\": \"c55c7f5bfc08e073b93750ae412d0b5d29278343\",\n      \"blocked_reason\": null,\n      \"blocked_owner\": null,\n      \"unblock_condition\": null,\n      \"cancelled_by\": null,\n      \"cancelled_reason\": null,\n      \"created_at\": \"2026-11-14T01:11:40.352Z\",\n      \"updated_at\": \"2026-11-14T01:20:26.132Z\",\n      \"dependencies\": [],\n      \"latest_execution\": {\n        \"execution_id\": \"EXEC-001\",\n        \"task_id\": \"T-P1-001\",\n        \"agent_id\": \"ZCODE-01\",\n        \"attempt\": 1,\n        \"base_commit\": \"c55c7f5bfc08e073b93750ae412d0b5d29278343\",\n        \"status\": \"RUNNING\",\n        \"started_at\": \"2026-11-14T01:20:26.132Z\",\n        \"ended_at\": null,\n        \"created_at\": \"2026-11-14T01:20:26.132Z\"\n      },\n      \"allowed_events\": [\n        \"BLOCKED\",\n        \"CANCEL\",\n        \"START\"\n      ]\n    },\n    \"execution_id\": \"EXEC-001\",\n    \"attempt\": 1,\n    \"transition\": {\n      \"task_id\": \"T-P1-001\",\n      \"event_id\": \"EVT-CLAIM-61086f8e8e6c46b59f4fc5a6d3e55ae8\",\n      \"event\": \"DISPATCH\",\n      \"from_status\": \"READY\",\n      \"to_status\": \"DISPATCHED\",\n      \"duplicate\": false,\n      \"processed_at\": \"2026-11-14T01:20:26.132Z\"\n    },\n    \"dispatch_message_id\": \"MSG-20261114-000002\"\n  },\n  \"message_ack\": null\n}"
+        }
+      ]
+    }
+  },
+  "claim_duplicate_same_session": {
+    "isError": true,
+    "payload": {
+      "code": "TASK-0003",
+      "message": "TASK_ALREADY_CLAIMED: 本会话已领取任务 T-P1-001（单会话单任务），须先 submit_result 结束当前任务",
+      "details": {
+        "active_task": "T-P1-001",
+        "claimed_at": "2026-11-14T01:20:26.085Z"
+      },
+      "retryable": false,
+      "correlation_id": "CORR-905002"
+    },
+    "raw": {
+      "content": [
+        {
+          "type": "text",
+          "text": "{\n  \"code\": \"TASK-0003\",\n  \"message\": \"TASK_ALREADY_CLAIMED: 本会话已领取任务 T-P1-001（单会话单任务），须先 submit_result 结束当前任务\",\n  \"details\": {\n    \"active_task\": \"T-P1-001\",\n    \"claimed_at\": \"2026-11-14T01:20:26.085Z\"\n  },\n  \"retryable\": false,\n  \"correlation_id\": \"CORR-905002\"\n}"
+        }
+      ],
+      "isError": true
+    }
+  },
+  "neg_a_task0003": true,
+  "claim_duplicate_rest": {
+    "status": 409,
+    "body": {
+      "code": "TASK-0003",
+      "message": "TASK_ALREADY_CLAIMED: task T-P1-001 is not claimable (status=DISPATCHED)",
+      "retryable": false,
+      "correlation_id": "49d7f1a9-1898-4579-abdf-5b3f54079607",
+      "details": {
+        "task_id": "T-P1-001",
+        "status": "DISPATCHED"
+      }
+    }
+  },
+  "neg_b_task0003": true,
+  "task_status_after_claim": null,
+  "outbox_task_assigned": []
+}

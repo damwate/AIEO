@@ -1,0 +1,9 @@
+PLAN: HTTP 200 {"task_id": "T-P1-001", "event_id": "EVT-D1P-PLAN-001", "event": "PLAN", "from_status": "DRAFT", "to_status": "PLANNING", "duplicate": false, "processed_at": "2
+ARCH_REVIEW: HTTP 200 {"task_id": "T-P1-001", "event_id": "EVT-D1P-ARCH-001", "event": "ARCH_REVIEW", "from_status": "PLANNING", "to_status": "ARCH_REVIEW", "duplicate": false, "proc
+PASS: HTTP 200 {"task_id": "T-P1-001", "event_id": "EVT-D1P-ARCHPASS-001", "event": "PASS", "from_status": "ARCH_REVIEW", "to_status": "READY", "duplicate": false, "processed_
+FINAL STATUS: READY
+task_event: ('EVT-D1P-PLAN-001', 'PLAN', 'DRAFT', 'PLANNING', 'OWNER', '2026-11-14T01:19:22.669Z')
+task_event: ('EVT-D1P-ARCH-001', 'ARCH_REVIEW', 'PLANNING', 'ARCH_REVIEW', 'OWNER', '2026-11-14T01:19:22.697Z')
+task_event: ('EVT-D1P-ARCHPASS-001', 'PASS', 'ARCH_REVIEW', 'READY', 'OWNER', '2026-11-14T01:19:22.724Z')
+audit task_event tail: []
+S5 DONE status=READY

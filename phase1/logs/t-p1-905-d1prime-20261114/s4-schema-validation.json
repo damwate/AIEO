@@ -1,0 +1,12 @@
+{
+  "reply_sha256_prefix": "7d04368f",
+  "json_extracted": true,
+  "payload_schema": "contracts/v1.0/task-plan-submitted.payload.schema.json",
+  "payload_valid": true,
+  "payload_errors": [],
+  "envelope_schema": "contracts/v1.0/message-envelope.schema.json",
+  "envelope_valid": true,
+  "envelope_errors": [],
+  "envelope_message_id": "MSG-20261114-000001",
+  "plan_task_id": "T-P1-001"
+}

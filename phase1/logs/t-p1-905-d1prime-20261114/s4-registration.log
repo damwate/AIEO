@@ -1,0 +1,12 @@
+login: HTTP 200 -> {"username": "OWNER", "csrf_token": "…REDACTED", "expires_at": "2026-11-15T01:18:42.251Z"}
+create_agent_gpt01: HTTP 201 -> {"agent": {"agent_id": "GPT-01", "agent_type": "reviewer", "role": "gpt-01-planner", "enabled": 1, "capabilities": "{\"dispatch_tool\":\"phase0/tools/gpt_dispatch.mjs\",\"model_channel\":\"chatgpt-web\"}", "created_at": 
+register_artifact_first: HTTP 201 -> {"artifact_id": "ART-OTH-001", "task_id": "T-P1-001", "type": "OTHER", "path": "phase1/logs/t-p1-905-d1prime-20261114/s4-reply-raw.txt", "sha256": "7d04368f7d3cb72a4ad644454c50bbe913cc5b08f685103ecffaa5c0037673dc", "crea
+register_artifact_replay: HTTP 201 -> {"artifact_id": "ART-OTH-001", "task_id": "T-P1-001", "type": "OTHER", "path": "phase1/logs/t-p1-905-d1prime-20261114/s4-reply-raw.txt", "sha256": "7d04368f7d3cb72a4ad644454c50bbe913cc5b08f685103ecffaa5c0037673dc", "crea
+register_message_first: HTTP 202 -> {"message_id": "MSG-20261114-000001", "schema_version": "1.0", "message_type": "TASK_PLAN_SUBMITTED", "direction": "INBOUND", "source_agent_id": "GPT-01", "target_agent_id": "AIEO-ORCHESTRATOR", "project_id": "AIEO-D1PRI
+register_message_replay: HTTP 409 -> {"code": "RES-0003", "message": "DUPLICATE_MESSAGE: message MSG-20261114-000001 already registered; returning original result", "retryable": false, "correlation_id": "95b8b45c-7b90-4c54-9b96-223430d0f807", "details": {"m
+list_messages_inbox: HTTP 400 -> {"code": "REQ-0001", "message": "INVALID_ARGUMENT: direction must be INBOUND or OUTBOUND", "retryable": false, "correlation_id": "5ee78251-4e0a-411f-ba71-f1a6cc21b34f", "details": {"field": "direction"}}
+ARTIFACT_IDEMPOTENT: True MSG_FIRST: 202 MSG_REPLAY: 409
+inbox query fix: 200
+inbox TASK_PLAN_SUBMITTED total: 1 | has MSG-20261114-000001: True
+DB counts -> artifacts: 1 messages: 1 agents: [('AIEO-ORCHESTRATOR',), ('GIT-WORKER-01',), ('GPT-01',), ('ZCODE-01',)]
+audit tail: ['login_success', 'message_registered', 'artifact_registered', 'agent_registered', 'login_success', 'service_credential_issued']

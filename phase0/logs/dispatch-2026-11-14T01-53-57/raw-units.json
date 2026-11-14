@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-14T01:58:49.535Z",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "6d35cb71-69e6-4fa2-8a24-89cc94f730ed",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "b91d62b7739096105cb9aec4588c5af2dcce569e3b18aa0ded2b48e2d4e90084",
+          "a20185da494aa888a18db321dd21d45c2697393dfd3a78d414a7e893ea98ad5f"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "b91d62b7739096105cb9aec4588c5af2dcce569e3b18aa0ded2b48e2d4e90084",
+          "a20185da494aa888a18db321dd21d45c2697393dfd3a78d414a7e893ea98ad5f"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-0:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nT-P1-905 D1′ 独立验收报告\n\n暂定结论：BLOCKED 独立验收 · 双分支 · 2026-11-14\n\n当前判断：开发分支的范围与提交规范已通过核验；证据分支的全链记录具有较强完整性，但存在一个需要解决的基线问题，且部分原始证据尚未完成独立交叉核验。因此暂不签发整体 PASS。\n\n本次按指定完整 SHA 检查，不以仓库当前 HEAD 替代指定对象。\n\n一、A：开发分支核验\nPASS\n\n核验对象：\n\n分支：feature/T-P1-001-bundle-gate-help\n\nCommit：916d8b2f213f21dfd13746dc19e0597948bb4a52\n\n父提交：c55c7f5bfc08e073b93750ae412d0b5d29278343\n\nGitHub 独立比较结果：\n\n核验项\n\n\t\n\n结果\n\n\n\n\n相对基线提交数\n\n\t\n\n1\n\n\n\n\n修改文件数\n\n\t\n\n1\n\n\n\n\n新增行\n\n\t\n\n22\n\n\n\n\n删除行\n\n\t\n\n0\n\n\n\n\n修改文件\n\n\t\n\nphase1/tools/bundle_gate.mjs\n\n\n\n\n提交标题\n\n\t\n\nfeat(contract): add --help usage output to bundle_gate\n\n具体判断：\n\n修改仅增加 --help 分支，没有扩张到其他文件。\n\n帮助输出覆盖工具用途、五个参数、参数必选性、完整调用示例和退出码。\n\n--help 在参数解析及核验流程之前执行，正常情况下不需要提供其他参数。\n\n原有核验逻辑没有被此次 diff 修改。\n\n提交标题符合 Conventional Commits 风格。\n\nA 项通过。\n\n注意：这里通过的是代码范围、diff 和提交规范审查，不代表我已经在本地重新运行了 Node.js 测试。\n\n二、B：证据分支与九步闭环核验\nBLOCKED\n\n核验对象：\n\n分支：feature/T-P1-905-d1prime\n\nCommit：a2895aff2f5e027468aad9b60c96b11a939f5892\n\n证据主记录：phase1/logs/t-p1-905-d1prime-20261114/RUN-RECORD.md\n\n任务书：docs/phase1/D1PRIME-VERTICAL-SLICE-BRIEF.md v0.3\n\n1. 已核实的九步证据\n\n步骤\n\n\t\n\n独立检查结果\n\n\t\n\n判断\n\n\n\n\nS1 建立项目、批次、任务\n\n\t\n\nREST 响应及身份创建记录存在\n\n\t\n\n有证据\n\n\n\n\nS2 出站任务包\n\n\t\n\n826 字节，SHA 有记录\n\n\t\n\n有证据\n\n\n\n\nS3 真实 GPT 规划\n\n\t\n\nassistant UUID、1636 字节回复、双读稳定性记录存在\n\n\t\n\n有证据\n\n\n\n\nS4 Schema 双验证及登记\n\n\t\n\n两个 Schema 均 valid，登记及幂等记录存在\n\n\t\n\n有证据\n\n\n\n\nS5 状态机推进\n\n\t\n\n三个 REST 事件及审计轨迹存在\n\n\t\n\n有证据\n\n\n\n\nS6 ZCode 领取\n\n\t\n\nMCP 领取、EXEC-001、重复领取负例记录存在\n\n\t\n\n有证据\n\n\n\n\nS7 真实开发\n\n\t\n\n--help 输出、无参错误输出、903 回归记录存在\n\n\t\n\n有证据\n\n\n\n\nS8 Git 提交及 M4 采集\n\n\t\n\ncommit、diff、登记记录存在\n\n\t\n\n有证据\n\n\n\n\nS9 报告闭环\n\n\t\n\nsubmit_result、重放、DEV_REPORTED 记录存在\n\n\t\n\n有证据\n\n其中有两个值得肯定的地方：\n\nS6 明确承认首次核验脚本因 cookie 使用缺陷产生错误结果，没有把错误输出当成成功证据。\n\nS9 明确登记了两次 REQ-0001 fail-closed 拒绝，以及最终成功后的幂等重放结果。\n\n这符合 DEC-024-C 的失败关闭纪律。\n\n2. 当前阻断原因：基线不一致\n\n我对证据分支与指定 main 基线做了 Git 比较：\n\n证据分支与 main 的实际关系\n\n共同祖先\n\nc55c7f5\n\nmain=e59e250\n\n领先 2 个提交\n\n证据分支=a2895af\n\n领先 1 个提交\n\nGit 比较结果：diverged；证据分支相对指定 main 落后 2 个提交。\n\n这不是简单的文档版本差异：\n\nRUN-RECORD.md 声明执行基线为 c55c7f5。\n\nS6 的 execution base 也是 c55c7f5。\n\n任务书 v0.3 在当前 main e59e250 上可以读取，但证据分支本身并未包含 main 后续两个提交。\n\n两个后续提交涉及 PHASE-STATUS.md、decision-log.md、USAGE-ISSUE-REGISTER.md 及另一组派单证据。\n\n我不认为应该直接把执行基线改成 e59e250，因为这会篡改历史事实。但必须明确区分：\n\n执行时基线 c55c7f5，与本次验收指定的 main 基线 e59e250，不是同一个基线。\n\n需要证据分支补充基线差异说明，明确 DEC-025/026 对本次执行、任务授权和验收边界的影响。\n\n三、C：SHA 引用交叉一致性\nPASS\n\n逐项对照结果：\n\n对象\n\n\t\n\nSHA\n\n\t\n\n核验结果\n\n\n\n\nGPT 回复\n\n\t\n\n7d04368f…\n\n\t\n\n一致\n\n\n\n\n出站请求\n\n\t\n\n9ac51191…\n\n\t\n\n一致\n\n\n\n\nDiff\n\n\t\n\n78dd19ec…\n\n\t\n\n一致\n\n\n\n\n开发 Commit\n\n\t\n\n916d8b2…\n\n\t\n\n一致\n\n\n\n\n执行基线\n\n\t\n\nc55c7f5…\n\n\t\n\n一致\n\n具体证据：\n\n回复 SHA 同时出现在 dispatch 双读结果、原始回复 SHA 文件、M1 ART-OTH-001 登记记录中。\n\n请求 SHA 同时出现在请求 SHA 文件和 dispatch 结果的 range proof 中。\n\nDiff SHA 同时出现在 diff.sha256、commit-evidence.json、M4 采集记录中。\n\nCommit 完整 SHA 与 GitHub 实际 commit 对象一致。\n\n开发提交的父提交与证据中登记的 base_commit 一致。\n\nC 项通过。\n\n说明：本项验证了各处 SHA 引用一致性及 Git 对象身份，没有在当前环境重新计算全部文件的 SHA-256。\n\n四、D：安全、结论真实性与未登记事项\nREWORK\n1. 秘密脱敏\n\n已检查的关键证据：\n\ns1-bootstrap.json：服务令牌只保留部分前缀，其余 REDACTED。\n\nOWNER CSRF 字段已脱敏。\n\ngpt-reviewer-session.json：只记录会话 URL、采集时间和角色，没有发现会话凭据。\n\nraw-units.json：检查到的是回复内容及 SHA，没有发现明文服务令牌。\n\nRUN-RECORD §5-6 声明归档前完成全目录扫描，发现的 2 个服务令牌及 3 个 CSRF 令牌均已脱敏。\n\n但全量扫描的机器输出没有作为独立证据文件提供，因此我不把这项声明提升为已经独立复验的全量安全 PASS。\n\n2. 是否存在夸大结论\n\n目前没有发现明显的范围夸大。\n\n以下边界处理正确：\n\nZCode 开发由编排会话自身承接，没有伪称独立 CLI 会话。\n\nS6 核验脚本缺陷被如实记录。\n\nS9 的 dev_report_id:null 没有被伪装成有效 ID，而是以数据库记录作为权威依据。\n\n四条 Inbox 消息仍为 PENDING，明确登记。\n\nF-002 仍保持 OPEN，多角色多轮能力没有提前宣布验证完成。\n\nPHASE-STATUS 保持 16✅ / 5⚠️ / 5❌，没有因为 D1′ 自动升级全部相关事项。\n\n3. 一个证据数量问题\n\n我按 GitHub 实际归档文件清单重新计数：\n\n证据类别\n\n\t\n\n实际文件数\n\n\n\n\nD1′ 目录（含 RUN-RECORD.md）\n\n\t\n\n32\n\n\n\n\n派单证据目录\n\n\t\n\n7\n\n\n\n\n另有文档更新\n\n\t\n\n2\n\n\n\n\n另有会话记录\n\n\t\n\n1\n\n这意味着当前可见 Git 归档中，D1′ 目录为 32 个文件，而不是声明的 33 份运行证据。\n\n这不直接证明缺少关键步骤，但必须核对数量口径，不能让交付清单和实际 Git Tree 不一致。\n\nD 项需要返工补证。\n\n五、最终四项裁定\n\n项目\n\n\t\n\n结论\n\n\t\n\n主要理由\n\n\n\n\nA 开发分支\n\n\t\n\nPASS\n\n\t\n\n单文件、单提交、范围符合\n\n\n\n\nB 证据分支\n\n\t\n\nBLOCKED\n\n\t\n\n执行基线与当前 main 不一致，证据数量口径待纠正\n\n\n\n\nC SHA 交叉一致性\n\n\t\n\nPASS\n\n\t\n\n五项 SHA 引用一致\n\n\n\n\nD 安全及治理\n\n\t\n\nREWORK\n\n\t\n\n全量脱敏扫描缺少独立机器证据，文件数量需纠正\n\n整体：BLOCKED\n\n当前不满足双分支独立验收全部通过的条件。\n\n这不是认定九步真实执行失败，而是证据归档与验收基线尚未完全闭合。\n\n六、建议返工清单\n\n建议只做证据修订，不重新执行九步，不修改开发分支。\n\n编号\n\n\t\n\n修订事项\n\n\t\n\n要求\n\n\n\n\nF-01\n\n\t\n\n基线差异说明\n\n\t\n\n明确 c55 执行基线、e59 验收基线，以及 DEC-025/026 对执行授权的影响\n\n\n\n\nF-02\n\n\t\n\n证据数量\n\n\t\n\n核对 33 与实际 32 的差异，补齐缺项或修正统计口径\n\n\n\n\nF-03\n\n\t\n\n安全扫描\n\n\t\n\n提交全目录脱敏扫描结果，记录扫描范围、规则、结果及 SHA\n\n\n\n\nF-04\n\n\t\n\n结论复核\n\n\t\n\n修订 RUN-RECORD 与 PHASE-STATUS 中相关证据数量及基线表述\n\n建议新建一个证据修订提交，保留原始执行提交 a2895af，不要覆盖或重写历史证据。\n\n七、授权边界最终确认\n\n以下事项本次均不授权：\n\n不批准合并 916d8b2。\n\n不批准合并 a2895af。\n\n不批准发布。\n\n不解除 DEC-017。\n\n不自动启动 T-P1-906。\n\n不把 D1′ 单角色单轮 PASS 扩大解释为整体自动化已经达到可用阶段。\n\n我的建议：先让证据分支完成 F-01～F-04，再进行一次限定复核。开发分支无需返工。\n\n本次验收严格遵循 DEC-010 的逐任务合并授权制度，也不改变 DEC-017 的既有限制。",
+      "text_sha256": "a20185da494aa888a18db321dd21d45c2697393dfd3a78d414a7e893ea98ad5f",
+      "size_bytes": 8370,
+      "assistant_uuid": "6d35cb71-69e6-4fa2-8a24-89cc94f730ed"
+    }
+  ]
+}

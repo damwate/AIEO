@@ -1,0 +1,2 @@
+START: 200 {"task_id": "T-P1-001", "event_id": "EVT-D1P-START-001", "event": "START", "from_status": "DISPATCHED", "to_status": "IN_PROGRESS", "duplicate": false, "processed_at": "2026-11-14T01:22:31.852Z"}
+status: IN_PROGRESS

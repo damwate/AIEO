@@ -1,0 +1,23 @@
+test_log artifact: 201 ART-TEST-001
+report_progress: {"isError": false, "payload": {"delivered": true, "message_id": "MSG-20261114-513704", "status": "PENDING", "duplicate": false}, "raw": {"content": [{"type": "text", "text": "{\n  \"delivered\": true,\n  \"message_id\": \"MSG-20261114-513704\",\n  \"status\": \"PENDING\",\n  \"duplicate\": false\n}"
+submit_result: {"isError": true, "payload": {"code": "REQ-0001", "message": "INVALID_ARGUMENT: report.correlation_id 缺失且当前会话无在途领取可继承", "details": null, "retryable": false, "correlation_id": null}, "raw": {"content": [{"type": "text", "text": "{\n  \"code\": \"REQ-0001\",\n  \"message\": \"INVALID_ARGUMENT: report.correlation_id 缺失且当前会话无在途领取可继承\",\n  \"details\": null,\n  \"retryable\": false,\n  \"correlation_id
+submit_result replay: {"isError": true, "payload": {"code": "REQ-0001", "message": "INVALID_ARGUMENT: report.correlation_id 缺失且当前会话无在途领取可继承", "details": null, "retryable": false, "correlation_id": null}, "raw": {"content": [{"type": "text", "text": "{\n  \"code\": \"REQ-0
+final task status: IN_PROGRESS
+inbox DEVELOPMENT_COMPLETED: ['MSG-20261114-513704', 'MSG-20261114-000001']
+development_reports: []
+messages count: 3
+S9 DONE
+submit_result: {"isError": true, "payload": {"code": "REQ-0001", "message": "INVALID_ARGUMENT: 无法确定 project_id/batch_id（报告 git.repository 缺失且本会话无领取缓存）", "details": null, "retryable": false, "correlation_id": "CORR-905002"}, "raw": {"content": [{"type": "text", "text": "{\n  \"code\": \"REQ-0001\",\n  \"message\": \"INVALID_ARGUMENT: 无法确定 project_id/batch_id（报告 git.repository 缺失且本会话无领取缓存）\",\n  \"details\": null,\n  \"retryable\": f
+submit_result replay: {"isError": true, "payload": {"code": "REQ-0001", "message": "INVALID_ARGUMENT: 无法确定 project_id/batch_id（报告 git.repository 缺失且本会话无领取缓存）", "details": null, "retryable": false, "correlation_id": "CORR-905002"}, "raw": {"content": [{"type": "text", "text": "{\n  
+final task status: IN_PROGRESS
+development_reports: []
+messages: [('MSG-20261114-000001', 'TASK_PLAN_SUBMITTED', 'INBOUND', 'PENDING'), ('MSG-20261114-000002', 'TASK_ASSIGNED', 'OUTBOUND', 'PENDING'), ('MSG-20261114-513704', 'PROGRESS_UPDATED', 'INBOUND', 'PENDING')]
+task_events tail: [('EVT-D1P-START-001', 'START', 'DISPATCHED', 'IN_PROGRESS'), ('EVT-CLAIM-61086f8e8e6c46b59f4fc5a6d3e55ae8', 'DISPATCH', 'READY', 'DISPATCHED')]
+S9 DONE
+submit_result: {"isError": false, "payload": {"accepted": true, "report_registry": {"registered": true, "duplicate": false, "dev_report_id": null}, "message_ack": {"message_id": "MSG-20261114-519006", "status": "PENDING", "duplicate": false}}, "raw": {"content": [{"type": "text", "text": "{\n  \"accepted\": true,\n  \"report_registry\": {\n    \"registered\": true,\n    \"duplicate\": false,\n    \"dev_report_id\": null\n  },\n  \"
+submit_result replay: {"isError": false, "payload": {"accepted": true, "report_registry": {"registered": true, "duplicate": true, "dev_report_id": null}, "message_ack": {"skipped": true, "reason": "duplicate_registration_no_new_message"}}, "raw": {"content": [{"type": "text", "text
+final task status: DEV_REPORTED
+development_reports: [(1, 'T-P1-001', 'EXEC-001', 'COMPLETED')]
+messages: [('MSG-20261114-000001', 'TASK_PLAN_SUBMITTED', 'INBOUND', 'PENDING'), ('MSG-20261114-000002', 'TASK_ASSIGNED', 'OUTBOUND', 'PENDING'), ('MSG-20261114-513704', 'PROGRESS_UPDATED', 'INBOUND', 'PENDING'), ('MSG-20261114-519006', 'DEVELOPMENT_COMPLETED', 'INBOUND', 'PENDING')]
+task_events tail: [('EVT-DEV-EXEC-001', 'DEVELOPMENT_COMPLETED', 'IN_PROGRESS', 'DEV_REPORTED'), ('EVT-D1P-START-001', 'START', 'DISPATCHED', 'IN_PROGRESS')]
+S9 DONE
