@@ -93,7 +93,7 @@ security-scan.txt（SEC-SCAN-T-P1-908-001）：范围=本证据目录 + 18 个 d
 |---|---|---|---|
 | A1 | 真实通道 | task_events 审计含 run 全部事件+零 DB 直改声明+每步证据文件存在且与 SHA256SUMS 一致 | acceptance/task-events-audit.json（REST 只读读回）+ task-events-audit-serverlog.ndjson（M1 服务端 28 行审计）+ zero-db-direct-modification-declaration.md；triplet-audit.json 22 run 151 组全齐 |
 | A2 | 闭环真实 | M1 内任务终态 DEV_REPORTED+reply 原始字节 SHA 三处一致（dispatch unit hash/归档文件/M1 artifact 登记值） | audit JSON tasks.T-P1-018.status=DEV_REPORTED；s3-reply-raw.txt sha256=1b3a4dcfa93a…；ART-OTH-011 登记值 |
-| A3 | 幂等 | S4 重放→artifact `duplicate:true` 同 ID+message 重放→409 RES-0003 不新增；S9 重放→`accepted:true`+`duplicate:true` 不新增消息；各重放响应证据归档 | ORCH-908019 s4-*replay*（duplicate:true/409 RES-0003）+ s9-submit-replay-a3（report_registry.duplicate:true） |
+| A3 | 幂等 | S4 重放→artifact `duplicate:true` 同 ID+message 重放→409 RES-0003 不新增；S9 重放→`accepted:true`+`duplicate:true` 不新增消息；各重放响应证据归档 | ORCH-908019 s4-replay-a3（duplicate:true）+ **a3-message-replay-probe.json（409+RES-0003 真实捕获，§14）**+ s9-submit-replay-a3（report_registry.duplicate:true） |
 | A4 | 失败采集 | 失败注入=登记类故意缺参触发真实 REQ-0001 拒绝（905 §5-1 先例）；预期=该 run ORCHESTRATED_FAIL+失败报告五要素齐全 | ORCH-908022：--inject-a4（scheduler 提交 2b3e622+8f3a635→08c8e7c 记录修正）→真实链路 REQ-0001 原文→ORCHESTRATED_FAIL+failure-report.json 五要素；注入 blob s9-a4-inject-submit.json 记录实际向量（唯一缺参 correlation_id+占位如实申报）；908020/908021 迭代如实留证；§10 |
 | A5 | 证据完整 | `sha256sum -c SHA256SUMS` 通过+每步三件套齐全 | acceptance/sha256sum-c-result.txt（全树实测 PASS，条目数见该文件与清单头注）+ triplet-audit.json（151/151） |
 | A6 | 契约符合 | `contracts/v1.0/message-envelope.schema.json`+`contracts/v1.0/task-plan-submitted.payload.schema.json`（904 冻结）双 valid 0 errors+校验日志归档 | ORCH-908019 s4-*.json：Ajv envelope+payload 0 errors |
@@ -146,3 +146,12 @@ security-scan.txt（SEC-SCAN-T-P1-908-001）：范围=本证据目录 + 18 个 d
 - **判定：REJECT——审阅环境"字节下载及哈希计算能力受限"，审阅人明示"不认定为仓库证据缺陷，也不推翻第 2 轮修复"**。实质进展：**raw.githubusercontent.com 浏览通道已读通**——指南 §0+A1–A8 指令、A2/A4/A7 修正指针、四分支锚点（scheduler 08c8e7c…/fixture fda9183…/evidence 91b4b39…/任务书 c610992…）全部核对无误；仅代码沙箱 DNS 阻塞 git clone、浏览工具无法落地字节做本地 sha256 自算。审阅人零伪造（"SHA未自算"逐项如实标注）。
 - **未测路径**：代码沙箱对 **raw.githubusercontent.com 域名**（区别于 github.com）的 DNS 直连从未测试（第 3/4 轮 clone 目标均为 github.com）；api.github.com git/blobs 通道亦未测试。
 - **第 5 轮处置**：新增 acceptance/blob-manifest.json（路径→git blob SHA-1 映射，api.github.com/repos/damwate/AIEO/git/blobs/<blob-SHA> 返回 base64 原始字节，blob ID 内容自校验）；简报 v5 指示沙箱先测 raw 域名 curl/python 直取字节自算 sha256，失败再测 api.github.com blobs；浏览通道仅作内容核验并须明示"未自算 SHA"。
+
+## 14. 独立验收第 5 轮（REJECT：A3/A7 真缺陷+字节自算环境受限）与修复（2026-11-14）
+
+- **第 5 轮派单**：phase0/logs/dispatch-2026-11-14T09-48-xx/（--new-session；简报 v5 1117B 三阶通道）。request/reply 归档 acceptance/round5/。
+- **判定：REJECT——首次实质逐项判定：A1/A2/A4/A5/A6 PASS（内容核验，注明"未自算SHA"）；A3/A7/A8 FAIL**。
+- **A3=交付缺陷（证据捕获路径错误，审阅人命中）**：s4-replay-a3.json message_replay.error_code=null，"RES-0003"仅存在于 scheduler 静态模板日志行，无捕获实证。根因双缺陷：①M1 错误体为平级结构 {"code":...}（app/platform/errors.py:36-51 error_body），scheduler.py:748 误读嵌套 error.code 恒 null；②artifact_replay.http 与 message_replay.http 共用 code 变量，前者记录的是 message 重放状态。**修复**：scheduler e47055d48cbba5217182bbcaf42d899e73abe85a（分离状态码+平级 code 提取+RES-0003 判据入 msg_replay_ok+动态日志）；**真实捕获补证**：acceptance/a3_replay_probe.py 用 ORCH-908019 原 envelope 重发同 message_id → 运行中 M1 实测 409 + code=RES-0003 + "returning original result"（details.created_at=07:59:43.833Z 原行未变，零新增）→ acceptance/a3-message-replay-probe.json。历史 blob 的 null 如实保留不篡改。
+- **A7=交付缺陷（扫描器判定逻辑，审阅人命中）**：sec_scan_908.py git 树段 git_raw 恒 0（仅展示 git_hits 不入 total_raw）——git 树内 RAW 泄漏不会触发 LEAK-BLOCKED。**修复**：扫描器 v2（-n 逐行捕获，REDACTED 占位豁免与 disk 侧同语义，git 树 raw 命中入 total_raw）；历史扫描结果（全 0 命中）事实不受影响。重扫全树 CLEAN（见 security-scan.txt v3）。
+- **A8=环境受限（非证据缺陷）**：代码沙箱 DNS 仍不可达 github.com；raw/api 域名沙箱直连未测通；审阅人按通道③以完整 SHA 逐文件内容核验并逐项引用 SHA 前 16 位+如实标注"未自算SHA"。
+- **分支锚点（第 6 轮简报 v6 携带）**：scheduler=e47055d…；evidence=本轮补证后新 HEAD（round5 归档+探针+扫描器 v2+指南 A3/A7 修订+§14）。

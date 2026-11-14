@@ -30,7 +30,9 @@
 - ⚠️ **不要**用 $E 顶层 `s3-reply-raw.txt`：那是 ORCH-908008（BATCH-008/T-P1-007）已提交历史的遗留文件，仅存在于归档树中，与 A2 无关。A2 唯一正确指针=run-908019/ 子目录内同名文件。
 
 **A3 幂等**（文件名精确，勿用通配）：
-- S4 重放：`cat $E/executions/ORCH-908019/evidence-steps/s4-replay-a3.json`——`artifact_replay_ok:true, message_replay_ok:true`；其中 artifact_replay={http:409, duplicate:true, artifact_id:ART-OTH-011}，message_replay={http:409}（RES-0003 不新增）。
+- S4 重放：`cat $E/executions/ORCH-908019/evidence-steps/s4-replay-a3.json`——`artifact_replay_ok:true, message_replay_ok:true`；其中 artifact_replay={duplicate:true, artifact_id:ART-OTH-011}。
+- ⚠️ 该 blob 的 message_replay.error_code=null 是 scheduler 旧读取路径缺陷（M1 错误体为平级结构 {"code":...}，app/platform/errors.py:36-51，旧代码误读嵌套 error.code；另 artifact_replay.http 因共用变量记录的是 message 重放状态）——已修 scheduler e47055d48cbba5217182bbcaf42d899e73abe85a，如实留证勿据该字段否定 RES-0003 本身。
+- **RES-0003 真实捕获（验收第5轮补证）**：`cat $E/acceptance/a3-message-replay-probe.json`——ORCH-908019 原 envelope（envelope_sha256 见文件内）对运行中 M1 重发同 message_id → `replay_http:409` + `body_code:"RES-0003"` + "returning original result"（details.created_at=07:59:43.833Z 原行未变=零新增；messaging.py:3-5/146、errors.py:160）；探针 `$E/acceptance/a3_replay_probe.py` 可复跑。
 - S9 重放：`cat $E/executions/ORCH-908019/evidence-steps/s9-submit-replay-a3.json`——submit 已 accepted:true 且 report_registry.duplicate:true 不新增（bridge 把 duplicate 嵌套在 report_registry 下，见 scheduler 35c98f9 修复说明）。
 
 **A4 失败采集**（登记类故意缺参→真实 REQ-0001→该 run ORCHESTRATED_FAIL+五要素）：
@@ -45,7 +47,7 @@
 
 **A6 契约符合**：`cat $E/executions/ORCH-908019/evidence-steps/s4-ajv-validation.json`——`envelope:{valid:true,errors:[]}` 且 `payload:{valid:true,errors:[]}`（904 冻结双 Schema Ajv 0 errors 校验记录归档）。
 
-**A7 安全**：`cat $E/security-scan.txt`——SEC-SCAN-T-P1-908-001 result: CLEAN（disk 全量 walk + git HEAD 树 git grep -a -P 五规则，双范围）；**独立重跑**：checkout 完整 SHA 后于仓库根执行 `python -I phase1/logs/t-p1-908-20261114/acceptance/sec_scan_908.py`（扫描器已入库本分支，5 规则，重跑输出落回 $E/security-scan.txt；预期末行 result: CLEAN）。
+**A7 安全**：`cat $E/security-scan.txt`——SEC-SCAN-T-P1-908-001 result: CLEAN（disk 全量 walk + git HEAD 树 git grep -a -P 五规则，双范围）；**独立重跑**：checkout 完整 SHA 后于仓库根执行 `python -I phase1/logs/t-p1-908-20261114/acceptance/sec_scan_908.py`（扫描器 v2 已入库本分支：git 树命中计入泄漏判定——第5轮修复前 git_raw 恒 0 仅展示，重跑输出落回 $E/security-scan.txt；预期末行 result: CLEAN）。
 
 **A8 重现核验**：本指南即重现程序；验收 reply 须逐项引用所读证据文件的完整 SHA（在 §0 通道上自行 `sha256sum` 计算）与分支+完整 40 位 commit SHA，不接受无 SHA 指针的断言。
 

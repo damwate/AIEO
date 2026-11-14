@@ -53,16 +53,23 @@ for root_dir in (EV,) + tuple('phase0/logs/' + d for d in DISPATCH_DIRS):
 
 lines.append('')
 lines.append('=== git tree scan (HEAD, git grep -a -P per rule; PCRE because POSIX ERE lacks backslash-s) ===')
+# （验收第5轮 REJECT 修复，reply 631ddd8d367ce51a：git 树命中必须计入泄漏判定——
+# 原实现 git_raw 恒为 0（仅展示 git_hits 不入 total_raw），git 树内的 RAW 泄漏
+# 不会触发 LEAK-BLOCKED。改为逐行捕获：-n 输出 path:line:content，
+# 含 REDACTED 占位的命中不计 raw（与 disk 侧 scan_text 同语义）。）
 for root_dir in (EV,) + tuple('phase0/logs/' + d for d in DISPATCH_DIRS):
     git_hits = 0
     git_raw = 0
     for rid, pat in RULES:
-        r = subprocess.run(['git', 'grep', '-a', '-P', '-c', pat, '--', root_dir],
+        r = subprocess.run(['git', 'grep', '-a', '-P', '-n', pat, '--', root_dir],
                            capture_output=True, text=True)
         if r.returncode == 0 and r.stdout.strip():
             for ln in r.stdout.strip().splitlines():
-                cnt = int(ln.rsplit(':', 1)[1]) if ln.rsplit(':', 1)[1].isdigit() else 1
-                git_hits += cnt
+                git_hits += 1
+                frag = ln.split(':', 2)[-1]
+                if REDACT_HINT not in frag:
+                    git_raw += 1
+                    lines.append('[%s] git-tree file=%s fragment=%r' % (rid, ln.split(':', 1)[0], frag[:40]))
     lines.append('git grep -P hits in %s: %d (raw/unredacted: %d)' % (root_dir, git_hits, git_raw))
     total_raw += git_raw
 

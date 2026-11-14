@@ -1,0 +1,26 @@
+{
+  "probe": "A3 message-replay（验收第5轮 REJECT 补证）",
+  "at_utc": "2026-11-14T09:55:54Z",
+  "m1_base": "http://127.0.0.1:8000",
+  "envelope_file": "executions/ORCH-908019/ajv-input-envelope.json",
+  "envelope_sha256": "4aa8306e4cd3685a0797e954cf2b7b4c4ef41e1ff4ac1c81aa5d0b3df9d67b4a",
+  "message_id": "MSG-20261114-075943",
+  "correlation_id": "CORR-908019",
+  "replay_http": 409,
+  "replay_body": {
+    "code": "RES-0003",
+    "message": "DUPLICATE_MESSAGE: message MSG-20261114-075943 already registered; returning original result",
+    "retryable": false,
+    "correlation_id": "86253221-6144-49c5-be02-08d281f8e3f0",
+    "details": {
+      "message_id": "MSG-20261114-075943",
+      "status": "PENDING",
+      "processing_status": "PENDING",
+      "delivered_at": null,
+      "acked_at": null,
+      "created_at": "2026-11-14T07:59:43.833Z"
+    }
+  },
+  "body_code": "RES-0003",
+  "note": "同 message_id 幂等重放：M1 按主键去重 409 RES-0003 返回原处理结果，不重复执行副作用不新增行（messaging.py:3-5,146；errors.py:160）。响应体为平级错误结构（errors.py error_body），scheduler.py:748 误读嵌套 error.code 致 s4-replay-a3.json error_code=null。"
+}

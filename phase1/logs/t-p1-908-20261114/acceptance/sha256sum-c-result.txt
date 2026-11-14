@@ -226,6 +226,8 @@ phase0/logs/dispatch-2026-11-14T07-57-15/run.log: OK
 phase0/logs/dispatch-2026-11-14T07-57-15/sent-dispatch.png: OK
 phase1/logs/t-p1-908-20261114/REPRODUCE-GUIDE.md: OK
 phase1/logs/t-p1-908-20261114/RUN-RECORD.md: OK
+phase1/logs/t-p1-908-20261114/acceptance/a3-message-replay-probe.json: OK
+phase1/logs/t-p1-908-20261114/acceptance/a3_replay_probe.py: OK
 phase1/logs/t-p1-908-20261114/acceptance/audit_evidence_triplets.py: OK
 phase1/logs/t-p1-908-20261114/acceptance/blob-manifest.json: OK
 phase1/logs/t-p1-908-20261114/acceptance/export_task_events_audit.py: OK
@@ -243,6 +245,9 @@ phase1/logs/t-p1-908-20261114/acceptance/round3/run.log: OK
 phase1/logs/t-p1-908-20261114/acceptance/round4/reply.txt: OK
 phase1/logs/t-p1-908-20261114/acceptance/round4/request.txt: OK
 phase1/logs/t-p1-908-20261114/acceptance/round4/run.log: OK
+phase1/logs/t-p1-908-20261114/acceptance/round5/reply.txt: OK
+phase1/logs/t-p1-908-20261114/acceptance/round5/request.txt: OK
+phase1/logs/t-p1-908-20261114/acceptance/round5/run.log: OK
 phase1/logs/t-p1-908-20261114/acceptance/sec_scan_908.py: OK
 phase1/logs/t-p1-908-20261114/acceptance/task-events-audit-serverlog.ndjson: OK
 phase1/logs/t-p1-908-20261114/acceptance/task-events-audit.json: OK
