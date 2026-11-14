@@ -810,7 +810,9 @@ console.log(JSON.stringify({ envelope: { valid: !!evOk, errors: ev.errors ?? [] 
         self.rs.confirm(5, f"task {task_id} status=READY")
 
     # =====================================================================
-    # S6 真实领取（M3 MCP stdio）+ 重复领取注入（A4）
+    # S6 真实领取（M3 MCP stdio）+ 重复领取 fail-closed 探测
+    #（该探测为幂等/并发防护的真实验证，非任务书 §11 A4；A4=专用失败采集 run，
+    #  登记类故意缺参→真实 REQ-0001，见 a4_inject() 与 --inject-a4）
     # =====================================================================
     def s6_claim(self) -> None:
         assert self.task_id
@@ -1145,6 +1147,12 @@ if __name__ == "__main__":
 
         try:
             self.s1_bootstrap(); self.rs.save()
+            if getattr(self.args, "inject_a4", False):
+                # A4 失败采集演示（任务书 §11）：登记类故意缺参→真实 REQ-0001→
+                # 本 run 以 ORCHESTRATED_FAIL 结束并出具五要素失败报告。
+                # 不执行 S2-S8：零派单/零开发/零 fixture 提交；S1 实体如实登记留证。
+                self.a4_inject(); self.rs.save()
+                raise OrchestrationError(9, "A4 injection did not raise (unreachable)")
             self.s2_dispatch(); self.rs.save()
             reply_sha = self.s3_verify_reply(); self.rs.save()
             self.s4_register(reply_sha); self.rs.save()
@@ -1166,6 +1174,52 @@ if __name__ == "__main__":
             self.write_report()
             self.rs.save()
         return 0 if self.rs.result == "ORCHESTRATED_PASS" else 1
+
+    # =====================================================================
+    # A4 失败采集注入（任务书 §11 A4；--inject-a4 专用 run）
+    # 形态=905 §5-1 先例：登记类 submit_result 故意缺 report.correlation_id，
+    # 且新 M3 MCP 会话无在途领取可继承→真实链路 REQ-0001 拒绝。
+    # 预期=本 run ORCHESTRATED_FAIL+失败报告五要素；绝不清算/重试/吞错。
+    # =====================================================================
+    def a4_inject(self) -> None:
+        assert self.task_id
+        tokens = json.loads((RUNTIME_DIR / "service-tokens.json").read_text(encoding="utf-8"))
+        m3_log = RUNTIME_DIR / "logs-m3"
+        self.mcp = McpClient(BRIDGE_BIN, {
+            "AIEO_ZCODE_BRIDGE_M1_BASE_URL": os.environ.get("AIEO_SCHEDULER_M1_BASE_URL", "http://127.0.0.1:8000"),
+            "AIEO_ZCODE_BRIDGE_M1_SERVICE_TOKEN": tokens["ZCODE-01"],
+            "AIEO_ZCODE_BRIDGE_LOG_DIR": str(m3_log),
+        }, m3_log, REPO_ROOT)
+        self.mcp.start()
+        init = self.mcp.initialize()
+        # 故意缺参：report 无 correlation_id（亦无 execution_id/git 等后续闭环字段——
+        # 本演示 run 未执行 S6-S8，如实申报）；task_id 为本 run S1 真实创建实体。
+        report = {
+            "task_id": self.task_id,
+            "status": "COMPLETED",
+            "implementation_summary": "A4 deliberate missing-param injection demo (deliberately incomplete)",
+        }
+        sub = self.mcp.call("submit_result", {"task_id": self.task_id, "report": report}, timeout=120)
+        self.ev.blob(9, "a4-inject-submit", json.dumps(
+            {"init": init, "submit": sub,
+             "deliberately_omitted": ["report.correlation_id", "report.execution_id", "report.git",
+                                      "report.batch_id", "report.project_id"],
+             "brief_citation": "F001-SCHEDULER-BRIEF.md v0.3 §11 A4; precedent t-p1-905 RUN-RECORD §5-1"},
+            ensure_ascii=False).encode("utf-8"))
+        parsed = sub.get("parsed") if isinstance(sub.get("parsed"), dict) else {}
+        text = sub.get("text") or ""
+        if sub.get("is_error"):
+            # 真实拒绝即预期结果：核验错误码是否 REQ-0001 后如实 fail-closed
+            code = parsed.get("code") or ""
+            if code != "REQ-0001":
+                raise OrchestrationError(9, f"A4 injection rejected but code={code or 'unknown'} (expected REQ-0001): {text[:300]}")
+            self.rs.complete(9, "A4 deliberate missing-param registration rejected by real chain (expected)",
+                             reject_code=code, reject_message=text[:200])
+            self.rs.confirm(9, "A4 injection captured REQ-0001 from real chain")
+            raise OrchestrationError(9, f"A4 failure-collection demonstration: deliberate missing-param "
+                                        f"registration rejected with {code} (905 §5-1 precedent shape); "
+                                        f"run intentionally ends ORCHESTRATED_FAIL per brief §11 A4")
+        raise OrchestrationError(9, f"A4 injection NOT rejected by real chain (fail-closed absent!): {text[:300]}")
 
     def write_failure_report(self) -> None:
         """失败报告五要素（任务书 §5）。"""
@@ -1212,6 +1266,10 @@ def main(argv=None) -> int:
     ap.add_argument("--base-commit", required=True, help="40-hex main HEAD used as knowledge_base_commit")
     ap.add_argument("--dev-wait-seconds", type=int, default=900,
                     help="S7 max wait for dev-done.json from the orchestration-session executor")
+    ap.add_argument("--inject-a4", action="store_true",
+                    help="A4 失败采集演示 run：S0->S1 后在登记类通道（M3 submit_result）故意缺参，"
+                         "预期真实链路 REQ-0001 拒绝→该 run ORCHESTRATED_FAIL+失败报告五要素"
+                         "（任务书 §11 A4；905 §5-1 先例同形态；不执行 S2-S8，不触碰 fixture/Chrome/ChatGPT）")
     args = ap.parse_args(argv)
     if not re.fullmatch(r"[0-9a-f]{40}", args.base_commit):
         print("ERROR: --base-commit must be a full 40-hex SHA", file=sys.stderr)
