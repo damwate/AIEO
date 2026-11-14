@@ -248,3 +248,12 @@
 - **执行形态（照 DEC-028 先例）：** 完成后另行独立验收，不因开工获得合并/发布权限；双分支分离（dev=调度器代码，evidence=RUN-RECORD+证据）；M1 零修改；零 mock；零 mock 红线与 §11 八项验收照旧。
 - **权责衔接：** 14:30 用户回归后，执行重大偏离与 main 合并决策回归用户拍板（DEC-010）。
 - **关联：** DEC-031（窗口授权）、DEC-032（任务书定稿）、DEC-028（执行形态先例）、DEC-010（合并审批保留）。
+
+### DEC-034 T-P1-908 执行完成登记：ORCHESTRATED_PASS（run ORCH-908019，2026-11-14 16:01 本地）
+
+- **结果：** 19 个真实 run（908001–908019）中 **ORCH-908019 ORCHESTRATED_PASS**（08:01:35Z，exit 0）：十步 S0–S9 全链真实走通——S6 M3 真实 claim（EXEC-010，注入重复 claim → TASK-0003 fail-closed）、S7 方案 b 真实开发（bundle_gate `--version` 四项验收实测）、S8 M4 真实 commit_and_collect（commit `fda9183` / ART-DIFF-005 / 管道测试 exit 0）、S9 开发报告 accepted → **task T-P1-018 实达 DEV_REPORTED** + A3 双重放 verified（artifact duplicate:true / message 409 RES-0003 / submit report_registry.duplicate:true）。BLOCKED 全程未触发（S0 后失败均 ORCHESTRATED_FAIL）。
+- **失败驱动工程如实留证：** 18 个 FAIL run 对应 17 个修复提交（5112321→35c98f9，分支 feature/T-P1-908-scheduler），每个 commit message 注明暴露缺陷的真实 run 与只读契约出处；全部失败报告五要素齐全；S8 后失败 run 的 fixture 环境按设计态重置（同一 patch 重放，中间 commit SHA 7f36dc9/9a54728/471ade9/6faa2f0 留档，分支未推送无共享历史改写），终局保留 PASS run 提交 `fda9183`（feature/T-P1-908-fixture）。
+- **证据：** feature/T-P1-908-evidence 分支 phase1/logs/t-p1-908-20261114/（RUN-RECORD.md 十步绑定+全量复盘+A1–A8 矩阵；SEC-SCAN-T-P1-908-001 CLEAN 756 文件 0 RAW 泄漏；SHA256SUMS 757 项；18 dispatch dir ≥T05 原始字节）。
+- **人工接管检查点（brief §1 范围内）：** M1/Chrome 启停（调度器零触碰）；908003 前 Composer 残留草稿 CDP 清理；908004 回读不一致诊断+链接化根因探测（证实 scheme 边界软换行，派单工具零修改、调度器侧去 scheme 适配）。
+- **边界：** 三分支推送后另行独立验收（新空白会话派单，A1–A8 简报 ≤1200B）；**合并 main 留用户拍板（DEC-010 不松动）**；M1/M2/M3/M4 零修改（只读消费契约）；M1 四条 PENDING 消息 ACK 超范围；M3 CLI 独立驱动开发腿为后续升级目标（DEC-032 ①如实申报）。
+- **关联：** DEC-033（开工拍板）、DEC-032（任务书 v0.3）、DEC-028（执行形态）、DEC-010（合并审批保留）、F-001（验收通过后关闭）。
