@@ -1,4 +1,6 @@
 > **版本注记（返工问题5，2026-11-14）：** 首版绑定 `0da7d1e`（R1 独立验收 dispatch-2026-11-14T19-55-39 REJECT 1 项：P1-1 文档数量口径未统一——task-brief 差异记录 11 条/steps.md S2⑤ 30 个条目/WORKFLOW 附录末两行重号 11，实际=附录 12 行+清单 31 项，同一根因计 1 问题；reply sha256=4f11e099ba2edb40ed3bf1a0b185c94d014ca259d8af5cc4ccedf518c2feed6f）。本版为整改后绑定 `03b6ed2` 的更新版（v2），仅最小范围整改，遵验收方边界指令：不重新设计、不扩大修改范围、已通过项不重复整改。
+>
+> **v3 版本注记（问题5 第 2 轮，2026-11-14）：** R2 复验（dispatch-2026-11-14T20-01-39 发送双验通过后采集 fail-closed→recoll_phasec_s2_r2.mjs 补采 recoll-2026-11-14T20-04-58-780Z 六查全过未重发，reply sha256=746178a98c977ad455aa86a7e29d0bbbb2da97f22a72b8f047c0d2d064ff3fae）五项 PASS（绑定/附录编号/清单 31 项/整改范围/已通过内容保护），唯 task-brief 状态行返工改写时删失「差异记录 12 行」字样（同根因复发，不新增编号）→按验收方精确文本补正，绑定 `0604231`。
 
 # 验收请求：b-20261115-phasec-workflow-stats 第 2 步（S2 修订草案）
 
@@ -7,8 +9,8 @@
 - 分支：main（https://github.com/damwate/AIEO.git）
 - 首版开发前基线 commit：`cf07c62450394f6a789af6fc8915255a2fd68c3e`（S1 闭环归档 commit，首版工作 commit 的 parent）
 - 本次整改前基线 commit：`052576c173cc91913a52c0d51ae90a962aa7c096`（首版绑定回填 commit）
-- **本次待验收 commit：`03b6ed28277f56aa3094a6bbefebf5f0d3dcf944`**（S2 整改唯一 commit）
-- 首版验收 diff 范围：`cf07c62` → `0da7d1e`（单 commit，5 文件 +121/-19，R1 已验）；本次整改 diff 范围：`052576c` → `03b6ed2`（单 commit，3 文件，绑定核验：`git rev-list --count 052576c..03b6ed2`=1，parent=052576c 已核验）
+- **本次待验收 commit：`0604231fa2002cfb45845943cd797cec796fbfe3`**（S2 第 2 轮补正唯一 commit；第 1 轮整改=03b6ed28277f56aa3094a6bbefebf5f0d3dcf944，R2 已验其①②③落地）
+- 首版验收 diff 范围：`cf07c62` → `0da7d1e`（单 commit，5 文件 +121/-19，R1 已验）；第 1 轮整改 diff 范围：`052576c` → `03b6ed2`（单 commit，3 文件，R2 已验）；本轮补正 diff 范围：`2db7ebd` → `0604231`（单 commit，2 文件=task-brief 补正+steps.md 流程登记，绑定核验：`git rev-list --count 2db7ebd..0604231`=1，parent=2db7ebd 已核验）
 - **绑定声明：** 其后的回填文档 commit（写入本文件与 steps.md ③ 完整 SHA）不属验收 diff 范围，承首任务 S4 先例（43cd5da→afecef5）与本任务 S1 先例（f36743c→0dc3115）。申报前已跑 rev-list+parent 核验（ST-01 申报前核验动作，v0.3 模板新条款本身）。
 
 ## 验收内容
@@ -20,7 +22,11 @@
   2. `basic/ACCEPTANCE-CHECKLIST.md` 新建（七模块 A-G 共 31 项×固定六字段+三总体规则+分工声明）；
   3. `basic/templates/acceptance-request.md` 唯一模板修改（代码绑定节增"申报前核验（ST-01，必跑）"条款）。
 
-## 本次复验重点（R1 REJECT 问题5 的整改）
+## 本次复验重点（R2 REJECT 问题5 第 2 轮的唯一遗留）
+
+①task-brief.md「当前步骤」按验收方精确文本补正：显式载明「WORKFLOW 附录差异记录 12 行、验收清单 31 项」（R2 缺失处）；②其余两文件未动（steps.md 仅流程登记：④第 2 轮记录+返工表复验列，不影响验收对象内容）；③整改范围核验：diff 2db7ebd→0604231 仅 2 文件，已核实内容与已通过项未改动。
+
+## 历史复验重点（R1 REJECT 问题5 的整改，R2 已验）
 
 ①task-brief.md「当前步骤」差异记录数量 11 条→**12 行**；②steps.md S2⑤「30 个条目」→**31 个条目行**（根因如实登记：批量替换目标编号写错①写成②静默未中）；③WORKFLOW.md 附录末两行重号 11→末行改 **12**（程序核验行号 1-12 无重复）；④三处数量与实际一致性：附录 12 行=清单 31 项，与验收请求记载一致；⑤整改范围核验：diff 052576c→03b6ed2 仅 3 文件（WORKFLOW/steps/task-brief），已核实内容与已通过项未改动。
 
