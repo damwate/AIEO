@@ -1051,7 +1051,8 @@ def main():
     ctx = AuditContext(task_id=TASK_ID, execution_id=EXECUTION_ID,
                        correlation_id=str(uuid.uuid4()), repository_id=REPOSITORY_ID)
     ev = worker.commit_and_collect(repo=REPO_WORKTREE,
-        message="feat(phase1): bundle_gate --version flag (T-P1-908 run ORCH-{self.run_id})",
+        # scope 须在 M4 _COMMIT_SUBJECT 词表内（worker.py:71）；本文件先例 916d8b2 feat(contract)
+        message="feat(contract): bundle_gate --version flag (T-P1-010 run ORCH-{self.run_id})",
         base_commit=BASE_COMMIT, files_scope=["phase1/tools/bundle_gate.mjs"], context=ctx,
         test_command=["node", "phase1/tools/bundle_gate.mjs", "--version"],
         test_log_path=r"{self.rs.exec_dir / 's8-test-run.log'}")
