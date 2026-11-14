@@ -445,6 +445,21 @@
 
 **证据：** `app/gpt_controller/src/inbound_reply.mjs`（门禁）、`dom_view.mjs`（透传）、`dispatch.mjs`（收敛复核）；返工测试日志 `phase1/logs/m2-gpt-controller-20261113/f001-rework/`；审查 finding `phase0/logs/dispatch-2026-11-12T17-11-35/reply.txt`（F-001）。
 
+### L-014 连接类故障按固定路径限时排查，精确报告后继续可用工作，禁止空转罢工
+
+**scope:** GLOBAL（所有会话的网络/代理/外部服务连接故障处置纪律；本机代理拓扑见 `phase0/environment-inventory.md` §4/§5）  
+**status:** ACTIVE  
+**验证结果：** 2026-11-14 git push 实测复盘（DEC-037 文档提交 `4df25a7` 推送受阻，一轮排查定位根因并正确报告用户）  
+**有效经验：**
+
+1. **先查档案再动手：** 本机代理拓扑已有盘点，遇到"连不上"先读 `phase0/environment-inventory.md` §4/§5——本机两个本地代理端口用途不同：**10391**＝系统代理（浏览器访问 ChatGPT；Playwright 启动浏览器必须显式带代理参数）；**6822**＝Git 推送 GitHub 专用（`.git/config` 配置）。端口不同＝服务不同，一个不通不代表另一个的状态。
+2. **直连不可达是本环境常态，不是故障：** chatgpt.com 直连超时、github.com 直连 Connection was reset（均实测）。不要把"多试几次直连"当排查手段；对照性绕过代理只试一次（如 `git -c http.https://github.com.proxy= push …`），失败即确认必须走代理。
+3. **排查固定路径，最多一轮：** ①读报错特征——`Failed to connect to 127.0.0.1 port NNNN` ＝ 该端口代理进程未启动，属本地服务未开而非网络问题；②`git config --show-origin --list | grep -i proxy` 确认配置层级——URL 级条目（`http.https://github.com.proxy`）优先于通用 `http.proxy`，用 `-c http.proxy=` 覆盖不了它（本次实测）；③`netstat -ano | grep <端口>` 或 `curl -I -x http://127.0.0.1:<端口> <目标>` 判断监听与可达性。
+4. **连不上 ≠ 罢工：** 排查一轮仍不通，立即精确报告三要素（哪个连接、报错原文、需要用户做什么——如"启动监听 6822 的代理工具"），然后把受阻项挂起、继续做不依赖该连接的工作，条件恢复后再回来补做。禁止无限重试空转，禁止不报告就停工。
+5. **受阻期间的正确产出形态：** 本地 commit 在 `.git` 里不会丢；受阻期间正常继续其他产出，维护"待推送清单"，连接恢复后一次推送，不重做任何工作。
+
+**证据：** `phase0/environment-inventory.md` §4/§5（代理端口、Git 代理配置、直连实测）；2026-11-14 主会话 git push 复盘（6822 未监听→直连 reset→按本条路径一轮定位并报告用户）。
+
 ---
 
 ## 4. 昨晚至今的关键节点与失败档案

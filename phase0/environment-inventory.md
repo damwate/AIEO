@@ -57,7 +57,7 @@
 - **Playwright 启动浏览器时必须显式带代理参数**（`--proxy-server=http://127.0.0.1:10391` 或 Playwright `proxy` 选项），否则无法访问 ChatGPT；
 - ZCode CLI/智谱 API 不需要该代理。
 
-## 5. Git 仓库现状
+## 5. Git 仓库现状（2026-11-14 补记：Git 推送代理实测）
 
 | 项目 | 实际值 |
 |---|---|
@@ -66,6 +66,11 @@
 | 工作区状态 | 干净（本次盘点后 `git status` 确认） |
 | 提交身份 | mingong@aliyun.com（用户全局 Git 配置） |
 | POC 分支 | `feature/AIEO-PHASE0-POC`（本次创建，不合并 main，等待 GPT 独立审查） |
+| **Git 推送代理（本仓库，2026-11-14 补查）** | `.git/config` 两条：`http.proxy=http://127.0.0.1:6822` 与 `http.https://github.com.proxy=http://127.0.0.1:6822`（URL 级条目优先于通用项，`git -c http.proxy=` 覆盖不了它）；查询方式 `git config --show-origin --list` |
+| **GitHub 直连（2026-11-14 实测）** | **不可达**（Connection was reset）——推送必须经 6822 代理，不要反复试直连；实测命令 `git -c http.https://github.com.proxy= push` |
+| **代理报错特征** | `Failed to connect to 127.0.0.1 port 6822` ＝ 6822 代理进程未启动（非网络问题），请用户启动对应代理工具后重试（2026-11-14 push 复盘） |
+
+**补记说明（2026-11-14）：** 6822（Git 推送专用）与 10391（系统代理，ChatGPT/浏览器用）是**两个独立的本地代理服务**，端口不同、状态互不代表。连接类故障的固定排查路径与行为纪律见 `docs/AI-DEV-LESSONS.md` **L-014**。
 
 ## 6. 盘点结论（对照文档 05 §2 检查单）
 
@@ -75,3 +80,4 @@
 - ⚠️ ChatGPT 网页必须经本地代理 10391 访问，自动化脚本必须显式配置代理；
 - ⚠️ Playwright 库本身未安装，需在 `phase0/gpt-browser-poc` 内安装；
 - ✅ Git 仓库干净，POC 全部在 `feature/AIEO-PHASE0-POC` 分支进行。
+- ⚠️ **Git 推送 GitHub 必须经本地代理 6822（2026-11-14 补记）**：代理未启动时推送失败——按 L-014 一次性排查后精确报告用户启动代理，继续其他工作，禁止反复重试或停工。
