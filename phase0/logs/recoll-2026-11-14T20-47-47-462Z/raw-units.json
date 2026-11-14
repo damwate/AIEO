@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-14T20:48:22.079Z",
+  "user_unit_key": "fallback-turn-3:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-3:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "ee616fa8-92eb-47c3-a52e-10e544949102",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-3:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "d2278c1c8a68c274bba08f59de6ca5d26dff58dc2e24eec4140491ae81f89104",
+          "1d6d365ac546302b32574976ede34be1b82c28620d2b060df147d77464b6da47"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "d2278c1c8a68c274bba08f59de6ca5d26dff58dc2e24eec4140491ae81f89104",
+          "1d6d365ac546302b32574976ede34be1b82c28620d2b060df147d77464b6da47"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-3:0:user",
+      "fallback-turn-3:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-3:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nS3 复验结论：PASS\nS3 正式闭环，允许进入 S4\n\n本轮唯一遗留的问题6第2次整改通过。问题7、问题8沿用 R3 已通过结论；没有发现本轮整改破坏原有通过项。\n\n一、提交绑定核验\n\n核验项\n\n\t\n\n结果\n\n\n\n\n复验基点\n\n\t\n\na74db982484d3703cd6430edb27569034b891be4\n\n\n\n\n待验收 commit\n\n\t\n\n09e7797c565fd1bfef9cf4151e4b14c0fbd6a786\n\n\n\n\nCompare\n\n\t\n\nahead 1 / behind 0\n\n\n\n\n实际验收 diff\n\n\t\n\n唯一 commit，4 个文件\n\n\n\n\n回填 commit\n\n\t\n\n89c0471，不属于验收 diff\n\n实际修改文件与申报一致：\n\nbasic/WORKFLOW.md\n\nbasic/templates/acceptance-request.md\n\nsteps.md\n\ntask-brief.md\n\n目标 commit 是基点的唯一后继，符合本轮单 commit 申报的绑定要求。v3 复验请求在 89c0471 上读取成功，确认其绑定、整改说明和验收范围与本轮申报一致。\n\n二、问题6：第2次整改通过\nPASS\n\n我核对了 WORKFLOW 模块四 ST-01 与验收请求模板，两处已经同步增加：\n\nBash\ngit rev-list --reverse --parents <基线>..<待验收commit>\n\n并明确了四项判定条件：\n\n第一条 commit 必须只有一个 parent，且等于基线。\n\n后续每条 commit 必须只有一个 parent，且等于上一条 commit 的 SHA。\n\n最后一条 commit 必须等于待验收 commit。\n\n任意一条出现多个 parent，即存在 merge commit，不得按普通线性多 commit 申报；须改报 diff 基线并单独说明。\n\n同时明确了两个辅助命令的边界：\n\ngit rev-list --count 只核对数量，不能证明 parent 链正确。\n\ngit show -s --format='%H %P' 只显示指定 commit 及其直接 parent，不能代替区间内逐条核链。\n\n独立判定： 新增命令与四项条件形成了可执行的线性历史核验规则。执行者可以逐行检查输出，不需要自行补充判定逻辑。单 commit 与多 commit 两种情况也已经区分。\n\n模板同步覆盖了同一套命令与判定条件，没有出现规范与模板各写一套的情况。\n\n三、已通过项保护复核\n\n项目\n\n\t\n\n结果\n\n\n\n\n问题7：清单 BLOCKED 边界\n\n\t\n\n沿用 R3 PASS，本轮未改\n\n\n\n\n问题8：ST-10/11 与统计 §十三一致\n\n\t\n\n沿用 R3 PASS，本轮未改\n\n\n\n\n31 项清单结构与六字段\n\n\t\n\n未修改\n\n\n\n\n统计报告数字\n\n\t\n\n未修改\n\n\n\n\nv0.2 现行状态\n\n\t\n\n未修改\n\n\n\n\nWORKFLOW 附录 12 行编号\n\n\t\n\n未修改\n\n\n\n\nv0.3 草案状态及用户拍板边界\n\n\t\n\n未修改\n\n原有已通过项没有被本轮修改范围触及。\n\n四、阶段裁定\n\n阶段\n\n\t\n\n裁定\n\n\n\n\nS1 统计报告\n\n\t\n\nPASS\n\n\n\n\nS2 WORKFLOW、清单与模板修订\n\n\t\n\nPASS\n\n\n\n\nS3 整体独立复审\n\n\t\n\nPASS\n\n\n\n\nS4 整体校验与交付\n\n\t\n\n允许进入\n\nS3 的三个问题全部闭环：\n\n问题6：第2次整改通过。\n\n问题7：已在 R3 通过。\n\n问题8：已在 R3 通过。\n\n本轮没有新增返工问题。\n\n五、进入 S4 的边界\n\nS4 按冻结方案执行：\n\n检查器六项自检。\n\n全部交付物文件一致性检查。\n\ndelivery.md 七要素检查。\n\n检查器 PASS 不替代文档和交付物的独立验收。\n\n特别重申：本次 PASS 只代表 S3 闭环、允许进入 S4，不代表 basic/WORKFLOW.md v0.3 正式生效。\n\nv0.3 仍是草案，v0.2 继续作为现行版本，正式生效仍须等待用户最终拍板。",
+      "text_sha256": "1d6d365ac546302b32574976ede34be1b82c28620d2b060df147d77464b6da47",
+      "size_bytes": 3280,
+      "assistant_uuid": "ee616fa8-92eb-47c3-a52e-10e544949102"
+    }
+  ]
+}

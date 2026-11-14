@@ -1,0 +1,7 @@
+S3复验请求v3（问题6第2次整改）
+绑定：基点a74db98→待验收09e7797c565fd1bfef9cf4151e4b14c0fbd6a786（唯一commit；rev-list=1，parent=a74db98已核验；多commit命令已实测）；其后回填89c0471（v3请求+归档）不属验收diff
+整改：WORKFLOW ST-01②多commit申报增git rev-list --reverse --parents <基线>..<待验收commit>逐条核链+通过条件四则（首条唯一parent=基线/后续每条唯一parent=上一条SHA/末条=待验收commit/任一条多parent=merge改报diff基线），并明示--count仅核数量、show -s仅见首末parent不能替代链验证；acceptance-request模板同步
+R3已PASS问题7/8零改动（仅ST-01条款/模板核验句/流程登记）；31项结构/统计数字/v0.2现行/12行编号/v0.3草案状态未动
+读取：附件配额未重置，raw直读 raw.githubusercontent.com/damwate/AIEO/09e7797c565fd1bfef9cf4151e4b14c0fbd6a786/<路径>（WORKFLOW.md、templates/acceptance-request.md，其余路径详见v3请求绑定节）
+复验重点：①核链命令+四条件可复跑②已过项未受影响
+结论：PASS（S3闭环进S4）/NEEDS RECTIFICATION（同一问题计数）/BLOCKED；通过≠v0.3生效
