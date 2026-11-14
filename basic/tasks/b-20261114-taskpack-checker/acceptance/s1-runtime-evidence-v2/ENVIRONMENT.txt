@@ -1,0 +1,8 @@
+# S1 动态执行证据 v2（复验 R3 REJECT 问题4 修复后）
+- 执行时间: 2026-11-14T15:33:21Z (UTC)
+- 环境: Windows 11 10.0.26300 x64, Python 3.12.10, Git Bash; 如实标注: 本机 Windows 环境, 非独立 Linux (仓库无 Linux 环境)
+- 被测工具: basic/tool/check_taskpack.py @ commit 553ed2d12455e6f30a2cee22616eeafb73ecf963
+- 与 v1 差异: 修复问题4(阶段读取失败时①项FAIL); v1 目录保留作为 40c66d9 行为的历史证据, 不覆盖
+- 场景: A=目录不存在 B=缺task-brief B2=非法状态值 C=正常任务包
+- 命令模板: python -I basic/tool/check_taskpack.py <target> [--json]
+- 预期: A/B/B2=Overall FAIL+①FAIL(B/B2)+exit=1; C=IN_PROGRESS+六项N/A+exit=1

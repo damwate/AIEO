@@ -1,0 +1,16 @@
+Taskpack: missing-brief
+Phase: UNKNOWN
+       - 阶段读取: task-brief.md 不存在: basic\tasks\b-20261114-taskpack-checker\acceptance\s1-runtime-evidence\fixtures\missing-brief\task-brief.md
+[FAIL] ① 需求记录
+       - task-brief.md 不存在: basic\tasks\b-20261114-taskpack-checker\acceptance\s1-runtime-evidence\fixtures\missing-brief\task-brief.md
+[N/A] ② 步骤清单
+       - 检查规则实现于 S2（当前为 S1 骨架桩）
+[N/A] ③ 步骤验收记录
+       - 检查规则实现于 S2（当前为 S1 骨架桩）
+[N/A] ④ REJECT返工记录
+       - 检查规则实现于 S2（当前为 S1 骨架桩）
+[N/A] ⑤ 返工次数
+       - 检查规则实现于 S2（当前为 S1 骨架桩）
+[N/A] ⑥ 交付记录
+       - 检查规则实现于 S2（当前为 S1 骨架桩）
+Overall: FAIL

@@ -1,0 +1,79 @@
+{
+  "taskpack": "missing-brief",
+  "phase": "UNKNOWN",
+  "phase_problems": [
+    "task-brief.md 不存在: basic\\tasks\\b-20261114-taskpack-checker\\acceptance\\s1-runtime-evidence\\fixtures\\missing-brief\\task-brief.md"
+  ],
+  "items": [
+    {
+      "no": 1,
+      "name": "需求记录",
+      "status": "FAIL",
+      "problems": [
+        "task-brief.md 不存在: basic\\tasks\\b-20261114-taskpack-checker\\acceptance\\s1-runtime-evidence\\fixtures\\missing-brief\\task-brief.md"
+      ],
+      "files": [
+        "task-brief.md"
+      ],
+      "steps": [],
+      "evidence": []
+    },
+    {
+      "no": 2,
+      "name": "步骤清单",
+      "status": "N/A",
+      "problems": [
+        "检查规则实现于 S2（当前为 S1 骨架桩）"
+      ],
+      "files": [],
+      "steps": [],
+      "evidence": []
+    },
+    {
+      "no": 3,
+      "name": "步骤验收记录",
+      "status": "N/A",
+      "problems": [
+        "检查规则实现于 S2（当前为 S1 骨架桩）"
+      ],
+      "files": [],
+      "steps": [],
+      "evidence": []
+    },
+    {
+      "no": 4,
+      "name": "REJECT返工记录",
+      "status": "N/A",
+      "problems": [
+        "检查规则实现于 S2（当前为 S1 骨架桩）"
+      ],
+      "files": [],
+      "steps": [],
+      "evidence": []
+    },
+    {
+      "no": 5,
+      "name": "返工次数",
+      "status": "N/A",
+      "problems": [
+        "检查规则实现于 S2（当前为 S1 骨架桩）"
+      ],
+      "files": [],
+      "steps": [],
+      "evidence": []
+    },
+    {
+      "no": 6,
+      "name": "交付记录",
+      "status": "N/A",
+      "problems": [
+        "检查规则实现于 S2（当前为 S1 骨架桩）"
+      ],
+      "files": [],
+      "steps": [],
+      "evidence": []
+    }
+  ],
+  "problems": [],
+  "overall": "FAIL"
+}
