@@ -46,11 +46,12 @@
 | 项目 | 实际值 | 实测证据 |
 |---|---|---|
 | WinHTTP 代理 | 直接访问（无代理） | `netsh winhttp show proxy` |
-| 用户级系统代理 | **启用**：`http=127.0.0.1:10391;https=127.0.0.1:10391;socks=127.0.0.1:10391` | 注册表 `HKCU\...\Internet Settings`，ProxyEnable=1 |
-| 代理端口监听 | 127.0.0.1:10391 正在监听（PID 3164） | `netstat -ano` |
+| 用户级系统代理 | **启用**：晨间=10391，**13:45 复测=2482**（`http=127.0.0.1:2482;https=127.0.0.1:2482;socks=127.0.0.1:2482`）——**端口会随代理工具重启而变，勿写死** | 注册表 `HKCU\...\Internet Settings`，ProxyEnable=1；查询命令 `powershell -NoProfile -Command "Get-ItemProperty 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings' | Select ProxyServer,ProxyEnable"` |
+| 代理端口监听 | 晨间 10391（PID 3164）→ 午后 2482 监听中（0.0.0.0，PID 8280）；10391/6822 午后均无监听 | `netstat -ano -p TCP | grep ":2482 "` |
 | 直连 chatgpt.com | **超时不可达**（curl 000，15s） | `curl -I https://chatgpt.com` |
-| 经代理 chatgpt.com | **HTTP 200**（约 2.3s） | `curl -I -x http://127.0.0.1:10391 https://chatgpt.com` |
+| 经代理 chatgpt.com | **HTTP 200**（晨间经 10391 约 2.3s；13:49 经 2482 实测 github.com 0.6s） | `curl -I -x http://127.0.0.1:2482 https://github.com` |
 | open.bigmodel.cn | 200（智谱 API 可达，ZCode 正常工作） | `curl -I` |
+| **找活代理端口的固定方法（2026-11-14 定稿）** | ①注册表 ProxyServer（浏览器同款，最可靠）→ ②`netstat` 确认监听 → ③`curl -x` 实测 200；端口永远动态获取，不写死 | 本表 + `toolkit/check-push.mjs --ports <端口>` |
 
 **影响与对策：**
 - Chrome 默认走系统代理 → 用户手工登录 ChatGPT 无障碍；
@@ -69,7 +70,7 @@
 | **Git 推送代理（本仓库，2026-11-14 补查）** | `.git/config` 两条：`http.proxy=http://127.0.0.1:6822` 与 `http.https://github.com.proxy=http://127.0.0.1:6822`（URL 级条目优先于通用项，`git -c http.proxy=` 覆盖不了它）；查询方式 `git config --show-origin --list` |
 | **6822 端口实况（2026-11-14 二次修正）** | **常无监听**——配置指向的代理进程多数时间未运行，属"配置存在但服务不在"，报错 `Failed to connect to 127.0.0.1 port 6822` 即此因 |
 | **GitHub 直连连通性（2026-11-14 实测，随时间变化）** | **时好时坏**：上午直连 Connection was reset，午间直连 HTTP 200。不要把"直连不可达"当永久结论，每次先试 |
-| **推送决策路径（2026-11-14 定稿）** | ①先绕过仓库代理直连：`git -c http.https://github.com.proxy= -c http.proxy= push`；②直连被 reset → `netstat -ano | grep <端口>` 查 10391/6822 哪个在监听，用活着的端口试（`-c http.https://github.com.proxy=http://127.0.0.1:<端口>`）；③都不通 → 按 L-014 精确报告用户，继续其他工作 |
+| **推送决策路径（2026-11-14 定稿，已固化为工具）** | **`node toolkit/check-push.mjs`（诊断）→ `--push --yes --ports <端口>`（真实推送）**：自动执行 ①绕仓库代理直连 dry-run → ②失败探测候选端口（配置解析+AIEO_CHECK_PORTS+--ports，如系统代理 2482）→ ③都不通按 L-014 精确报告并继续其他工作；不改写 .git/config、执行前确认。手动等价：`git -c http.https://github.com.proxy=http://127.0.0.1:<活端口> -c http.proxy=http://127.0.0.1:<活端口> push` | 13:52 实战：直连 reset→6822 死→2482 活→推送成功 62d1187 |
 
 **补记说明（2026-11-14，二次修正）：** 6822 是 `.git/config` 里的历史配置端口，与系统代理 10391 均不保证在监听；**直连连通性随时间变化**，推送以"先直连、再查活代理、最后报告"为固定决策路径。连接类故障的行为纪律见 `docs/AI-DEV-LESSONS.md` **L-014**。
 
