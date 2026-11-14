@@ -11,7 +11,7 @@
 ## 2. 仓库与基线【事实，2026-11-14 19:1x git 实查】
 
 - 仓库：`https://github.com/damwate/AIEO.git`
-- **main = 2745d059a717ed1f9baa521cf379aa6c84edaec5**（T-P1-908 第二笔合并：复核记录并回），origin/main 已同步（`3edf0ae..2745d05` 推送成功+ls-remote 验证）；其上另有本会话 governance 提交（DEC-036 登记 aa217120a0aafd5c08aac69f7cb39b993ba4c5fc、本交接包归档与 SHA 补记两笔，见 `git log` 首三条实查）
+- **main = 2745d059a717ed1f9baa521cf379aa6c84edaec5**（T-P1-908 第二笔合并：复核记录并回）；其上本会话 governance 提交：DEC-036 登记 `aa217120a0aafd5c08aac69f7cb39b993ba4c5fc` → 本交接包归档 `32513c8`（`git log -- handoff/PHASE1-CLOSEOUT-HANDOFF-V5.md` 首条）→ 本行补记 commit。推送与 ls-remote 验证随补记提交一并执行，以下一条 commit 消息留痕
 - 任务分支（全部与 origin 同步）：
   - `feature/T-P1-908-scheduler` = `e47055d48cbba5217182bbcaf42d899e73abe85a`（phase1/tools/scheduler.py 1308 行，blob f9daf5b69e673906b5e4b2880ff184aedc1aeeca；修复链 2b3e622→8f3a635→08c8e7c→e47055d）
   - `feature/T-P1-908-fixture` = `fda9183dafb77ca15578abb244b3b2d15999fafb`
