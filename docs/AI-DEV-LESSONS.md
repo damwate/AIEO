@@ -452,8 +452,8 @@
 **验证结果：** 2026-11-14 git push 实测复盘（DEC-037 文档提交 `4df25a7` 推送受阻，一轮排查定位根因并正确报告用户）  
 **有效经验：**
 
-1. **先查档案再动手：** 本机代理拓扑已有盘点，遇到"连不上"先读 `phase0/environment-inventory.md` §4/§5——本机两个本地代理端口用途不同：**10391**＝系统代理（浏览器访问 ChatGPT；Playwright 启动浏览器必须显式带代理参数）；**6822**＝Git 推送 GitHub 专用（`.git/config` 配置）。端口不同＝服务不同，一个不通不代表另一个的状态。
-2. **直连不可达是本环境常态，不是故障：** chatgpt.com 直连超时、github.com 直连 Connection was reset（均实测）。不要把"多试几次直连"当排查手段；对照性绕过代理只试一次（如 `git -c http.https://github.com.proxy= push …`），失败即确认必须走代理。
+1. **先查档案再动手：** 本机代理拓扑已有盘点，遇到"连不上"先读 `phase0/environment-inventory.md` §4/§5——本机代理端口：**10391**＝系统代理（浏览器访问 ChatGPT；Playwright 启动浏览器必须显式带代理参数，不保证常开）；**6822**＝`.git/config` 里的 Git 推送代理配置（URL 级条目优先于通用项，`git -c http.proxy=` 覆盖不了它），但**常无监听**（"配置存在≠服务在跑"）。端口不通＝该服务不在，不代表网络断。
+2. **直连连通性随时间变化，不要下永久结论：** 2026-11-14 同日实测——上午 github.com 直连 Connection was reset，午间直连 HTTP 200；chatgpt.com 直连曾超时。**每次先绕过仓库代理直连试一次**（`git -c http.https://github.com.proxy= -c http.proxy= push`，本路径已验证成功），失败再查活代理端口，不要预设"必须走代理"或"必须直连"。
 3. **排查固定路径，最多一轮：** ①读报错特征——`Failed to connect to 127.0.0.1 port NNNN` ＝ 该端口代理进程未启动，属本地服务未开而非网络问题；②`git config --show-origin --list | grep -i proxy` 确认配置层级——URL 级条目（`http.https://github.com.proxy`）优先于通用 `http.proxy`，用 `-c http.proxy=` 覆盖不了它（本次实测）；③`netstat -ano | grep <端口>` 或 `curl -I -x http://127.0.0.1:<端口> <目标>` 判断监听与可达性。
 4. **连不上 ≠ 罢工：** 排查一轮仍不通，立即精确报告三要素（哪个连接、报错原文、需要用户做什么——如"启动监听 6822 的代理工具"），然后把受阻项挂起、继续做不依赖该连接的工作，条件恢复后再回来补做。禁止无限重试空转，禁止不报告就停工。
 5. **受阻期间的正确产出形态：** 本地 commit 在 `.git` 里不会丢；受阻期间正常继续其他产出，维护"待推送清单"，连接恢复后一次推送，不重做任何工作。
