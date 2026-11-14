@@ -37,7 +37,7 @@
 - **验收六查（验收方自查，不得只读完工总结了事）：** ①是否符合本步骤目标 ②是否符合用户拍板方案 ③修改是否超出范围 ④有无明显代码质量问题 ⑤测试是否真实执行 ⑥证据是否可核查。
 - **验收方须自行获取并核查：** 用户拍板的方案、本步骤验收标准、开发前基线 commit、实际代码修改 diff、测试执行结果及证据。
 - **验收轮次计数口径（ST-02）：** 有验收结论（PASS/REJECT/混合轮）且回复可核查的派单计 1 轮；发送失败/采集 fail-closed 未取回结论的派单不计轮次（按派单故障处置处理）；BLOCKED 尝试轮计入轮次并在 steps.md 如实标注。（先例：交接包"15 轮"≠磁盘证据 16 轮的口径混乱。）
-- **绑定申报核验（ST-01，最强复发信号，申报前必跑）：** ①`git rev-list --count <基线>..<待验收commit>` 结果须与申报 commit 数一致；②parent 核验=`git show -s --format='%H %P' <待验收commit>`——**单 commit 申报时 parent 必须等于申报基线**；**多 commit 申报时**首端=基线、尾端=待验收 commit 且链上不得含 merge commit（出现 merge 须改报 diff 基线并单独说明）；③返工后绑定必须更新至**最终**待验收对象；④回填/闭环文档 commit 须显式声明不属验收 diff 范围。
+- **绑定申报核验（ST-01，最强复发信号，申报前必跑）：** ①`git rev-list --count <基线>..<待验收commit>` 结果须与申报 commit 数一致；②parent 核验=`git show -s --format='%H %P' <待验收commit>`——**单 commit 申报时** parent 必须等于申报基线；**多 commit 申报时**另跑 `git rev-list --reverse --parents <基线>..<待验收commit>` 逐条核链，通过条件=第一条 commit 的唯一 parent 等于基线、后续每条只有一个 parent 且等于上一条 commit 的 SHA、最后一条等于待验收 commit；任一条出现多个 parent 即存在 merge commit，不得按普通线性多 commit 申报，应改报 diff 基线并单独说明（注意：rev-list --count 仅核对数量、git show -s 仅见首末 parent，均不能替代逐条链验证）；③返工后绑定必须更新至**最终**待验收对象；④回填/闭环文档 commit 须显式声明不属验收 diff 范围。
 - **BLOCKED 解除路径（ST-03）：** 按成因选解除手段——commit 未推送→推送后恢复原会话；证据 404/无法 clone→直读入口（raw URL/附件通道）+必要时新会话自包含简报；动态执行环境受限→证据 zip 包+MANIFEST（SHA256）附件通道静态核验（先例 S2-R3c）；回复已发送但未采集→补采驱动（见派单工具链）。解除后恢复验收，原 BLOCKED 记录保留不删。
 - **混合结论记录（ST-04）：** 一轮验收同时含通过项与阻断/遗留项时，逐项如实记录（如"静态 PASS+缺动态证据 BLOCKED"），不得整体简化为单一 PASS 或 REJECT；遗留项单列跟踪至闭环。
 - 证据归档：派单日志（request.txt / reply.txt 原始字节 + SHA256）入 `phase0/logs/dispatch-<时间戳>/`；动态证据按"目录+文件组+MANIFEST（SHA256 清单）"结构打包（ST-12，先例 S2-R3c）。

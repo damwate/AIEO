@@ -7,7 +7,7 @@
 - **本次待验收 commit：<完整 40 位 SHA>**
 - 测试所绑定的 commit：<SHA；与待验收 commit 一致或说明差异>
 - 验收 diff 范围：基线 → 待验收 commit
-- **申报前核验（ST-01，必跑）：** `git rev-list --count <基线>..<待验收commit>` 结果须与申报 commit 数一致；parent 核验=`git show -s --format='%H %P' <待验收commit>`——单 commit 申报 parent 须等于基线，多 commit 申报链上不得含 merge commit。返工轮必须更新本节绑定至**最终**待验收对象；其后的回填/闭环文档 commit 须显式声明不属验收 diff 范围。
+- **申报前核验（ST-01，必跑）：** `git rev-list --count <基线>..<待验收commit>` 结果须与申报 commit 数一致；parent 核验=`git show -s --format='%H %P' <待验收commit>`——单 commit 申报 parent 须等于基线；多 commit 申报另跑 `git rev-list --reverse --parents <基线>..<待验收commit>` 逐条核链（第一条唯一 parent=基线，后续每条唯一 parent=上一条 SHA，末条=待验收 commit，任一条多 parent=merge，须改报 diff 基线并单独说明）。返工轮必须更新本节绑定至**最终**待验收对象；其后的回填/闭环文档 commit 须显式声明不属验收 diff 范围。
 
 ## 验收内容
 
