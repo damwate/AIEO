@@ -997,6 +997,7 @@ class RestM1Adapter:
         self.base = M1_BASE.rstrip("/")
         jar = http.cookiejar.CookieJar()
         self.op = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(jar))
+        self.csrf = None  # call() 在登录期间即读取该属性，必须先于 login 初始化
         code, resp = self.call("POST", "/api/v1/auth/login", {{"username": os.environ["AIEO_PLATFORM_ADMIN_USERNAME"], "password": os.environ["AIEO_PLATFORM_ADMIN_PASSWORD"]}})
         self.csrf = resp.get("csrf_token")
     def call(self, method, path, body=None):
