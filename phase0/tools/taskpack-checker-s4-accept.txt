@@ -1,0 +1,5 @@
+【AIEO·S4独立验收】b-20261114-taskpack-checker第4步(文档与交付,验收重点:可独立运行)。S1/S2/S3已闭环(S3复验R3 PASS,dispatch-18-13-02,reply sha256=1c323ace…)。
+待验收commit 43cd5da(已推,parent=75bd102,申报前已核rev-list count=1):diff单commit共5文件——basic/tool/README.md(新增使用说明)+delivery.md(新增七要素完工总结)+steps.md(S4六要素回填+记录写法修正:S2③解释文字占位符黑名单撞词"暂空"→"留空"、S2⑥"当前结论"/S3⑥"最终结论"统一"验收结论:PASS"匹配③正则——工具行为符合冻结口径,验收事实未动,见S4④如实注记)+task-brief.md(当前步骤S4)+s4-acceptance-request.md。本步无代码改动,代码验收基线仍b1bd307。
+请先读acceptance/s4-acceptance-request.md(含文件清单/核验材料/绑定口径)。
+自检:README四类命令实跑核对一致;自身包检查①②④⑤PASS、③"3步记录完整PASS"、⑥N/A、Overall IN_PROGRESS exit=1;unittest 33 OK(skipped=1,S3复验R2你方沙箱已独立执行33/33全过)。
+请按验收六查自查,末行单独PASS或REJECT(给具体要求)或BLOCKED。
