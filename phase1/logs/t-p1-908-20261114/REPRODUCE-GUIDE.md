@@ -26,7 +26,7 @@
 
 **A2 闭环真实**：
 - 任务终态：`cat $E/acceptance/task-events-audit.json` 的 tasks.T-P1-018（REST 读回 DEV_REPORTED）。
-- reply 原始字节 SHA 三处一致：①`sha256sum $E/run-908019/s3-reply-raw.txt` = `1b3a4dcfa93a27609680d52ee5ba1c32849286997e00601829d6cda7714dda5a`（=RUN-RECORD §1 S3 行）；②S2 派单 unit hash——随证据分支提交的派单目录在仓库根 `phase0/logs/dispatch-2026-11-14T07-57-15/`（raw-units.json 内 user unit hash 字段），不在 $E 下；③M1 artifact ART-OTH-011 登记值（audit JSON artifacts 下原文）。
+- reply 原始字节 SHA 三处一致：①`sha256sum $E/run-908019/s3-reply-raw.txt` = `1b3a4dcfa93a27609680d52ee5ba1c32849286997e00601829d6cda7714dda5a`（=RUN-RECORD §1 S3 行）；②S2 派单目录（随证据分支提交，仓库根 phase0/logs/dispatch-2026-11-14T07-57-15/）：`grep -c 1b3a4dcfa93a phase0/logs/dispatch-2026-11-14T07-57-15/result.json` ≥1（回复采集记录内含同值）；③M1 artifact ART-OTH-011 登记值（audit JSON artifacts 下原文）。
 - ⚠️ **不要**用 $E 顶层 `s3-reply-raw.txt`：那是 ORCH-908008（BATCH-008/T-P1-007）已提交历史的遗留文件，仅存在于归档树中，与 A2 无关。A2 唯一正确指针=run-908019/ 子目录内同名文件。
 
 **A3 幂等**（文件名精确，勿用通配）：
