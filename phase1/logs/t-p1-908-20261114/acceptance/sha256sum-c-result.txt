@@ -231,6 +231,12 @@ phase1/logs/t-p1-908-20261114/acceptance/a3_replay_probe.py: OK
 phase1/logs/t-p1-908-20261114/acceptance/audit_evidence_triplets.py: OK
 phase1/logs/t-p1-908-20261114/acceptance/blob-manifest.json: OK
 phase1/logs/t-p1-908-20261114/acceptance/export_task_events_audit.py: OK
+phase1/logs/t-p1-908-20261114/acceptance/postmerge-round1/reply.txt: OK
+phase1/logs/t-p1-908-20261114/acceptance/postmerge-round1/request.txt: OK
+phase1/logs/t-p1-908-20261114/acceptance/postmerge-round1/run.log: OK
+phase1/logs/t-p1-908-20261114/acceptance/postmerge-round2/reply.txt: OK
+phase1/logs/t-p1-908-20261114/acceptance/postmerge-round2/request.txt: OK
+phase1/logs/t-p1-908-20261114/acceptance/postmerge-round2/run.log: OK
 phase1/logs/t-p1-908-20261114/acceptance/round1/SHA256SUMS-round1.txt: OK
 phase1/logs/t-p1-908-20261114/acceptance/round1/dispatch-message.txt: OK
 phase1/logs/t-p1-908-20261114/acceptance/round1/reply.txt: OK
