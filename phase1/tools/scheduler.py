@@ -948,6 +948,8 @@ console.log(JSON.stringify({ envelope: { valid: !!evOk, errors: ev.errors ?? [] 
             raise OrchestrationError(8, f"M4 evidence missing commit_sha: {json.dumps(m4)[:300]}")
         self.ev.blob(8, "m4-evidence", json.dumps(m4, ensure_ascii=False, indent=2).encode("utf-8"))
         reg = m4.get("m1_registration")
+        if not isinstance(reg, dict) or reg.get("status") != "REGISTERED":
+            raise OrchestrationError(8, f"M4 m1_registration not REGISTERED: {json.dumps(m4)[:300]}")
         self.rs.complete(8, "M4 commit_and_collect (real git + real registration)",
                          commit_sha=self.commit_sha, branch=m4.get("branch"),
                          diff_sha256=m4.get("diff_sha256"), m1_registration=reg)
@@ -996,29 +998,36 @@ class RestM1Adapter:
                 return r.getcode(), json.loads(r.read().decode() or "{{}}")
         except urllib.error.HTTPError as e:
             return e.code, json.loads(e.read().decode() or "{{}}")
-    def register_commit(self, **kw):
+    def register_commit(self, *, task_id, execution_id, repository_id, branch, sha,
+                        base_commit, diff_artifact_id=None):
         code, resp = self.call("POST", "/api/v1/commits", {{
-            "task_id": kw.get("task_id"), "execution_id": kw.get("execution_id"),
-            "repository_id": kw.get("repository_id"), "branch": kw.get("branch"),
-            "sha": kw.get("commit_sha"), "base_commit": kw.get("base_commit"),
-            "diff_artifact_id": kw.get("diff_artifact_id")}})
-        ok = code in (200, 201)
-        return {{"registered": ok, "http": code, "commit_id": resp.get("commit_id") or resp.get("id")}}
-    def register_artifact(self, **kw):
+            "task_id": task_id, "execution_id": execution_id,
+            "repository_id": repository_id, "branch": branch,
+            "sha": sha, "base_commit": base_commit,
+            "diff_artifact_id": diff_artifact_id}})
+        if code not in (200, 201, 202):
+            raise RuntimeError("register_commit HTTP %s %s" % (code, json.dumps(resp)[:200]))
+        return str(resp.get("commit_id") or resp.get("id") or "")
+    def register_artifact(self, *, task_id, artifact_type, path, sha256):
         code, resp = self.call("POST", "/api/v1/artifacts", {{
-            "task_id": kw.get("task_id"), "type": kw.get("artifact_type", "DIFF"),
-            "path": kw.get("path"), "sha256": kw.get("sha256"), "content": kw.get("content")}})
-        ok = code in (200, 201)
-        return {{"registered": ok, "http": code,
-                "artifact_id": resp.get("artifact_id") or resp.get("id"),
-                "duplicate": resp.get("duplicate")}}
-    def record_audit(self, **kw):
+            "task_id": task_id, "type": artifact_type,
+            "path": path, "sha256": sha256}})
+        if code not in (200, 201, 202):
+            raise RuntimeError("register_artifact HTTP %s %s" % (code, json.dumps(resp)[:200]))
+        return str(resp.get("artifact_id") or resp.get("id") or "")
+    def record_audit(self, *, actor_id, actor_type, action, target_type, target_id,
+                     result, reason=None, correlation_id=None, details=None):
         path = RUN_DIR / "m4-local-audit.ndjson"
         rec = {{"ts_utc": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat(),
-                "audit_local_only": True, **kw}}
+                "audit_local_only": True, "actor_id": actor_id, "actor_type": actor_type,
+                "action": action, "target_type": target_type, "target_id": target_id,
+                "result": result, "reason": reason, "correlation_id": correlation_id,
+                "details": details}}
         with open(path, "a", encoding="utf-8") as f:
-            f.write(json.dumps(rec, ensure_ascii=False, default=str) + "\\n")
-        return {{"audit_id": "AUD-LOCAL-" + uuid.uuid4().hex[:8], "scope": "AUDIT_LOCAL_ONLY"}}
+            f.write(json.dumps(rec, ensure_ascii=False, default=str) + "
+")
+        return "AUD-LOCAL-" + uuid.uuid4().hex[:8]
+
 
 def main():
     adapter = RestM1Adapter()
