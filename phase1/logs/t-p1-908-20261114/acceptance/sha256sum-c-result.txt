@@ -1,7 +1,3 @@
-# sha256sum -c SHA256SUMS 实测输出（验收第1轮 A5 补证；2026-11-14
-# 本文件与 SHA256SUMS 自身按惯例不在清单内（自指排除）；执行目录=wt-ev 分支工作树根
-# 结果：908/908 OK，exit=0
-#
 phase0/logs/dispatch-2026-11-14T00-47-28/raw-units.json: OK
 phase0/logs/dispatch-2026-11-14T00-47-28/reply-dispatch.png: OK
 phase0/logs/dispatch-2026-11-14T00-47-28/reply.txt: OK
@@ -237,6 +233,10 @@ phase1/logs/t-p1-908-20261114/acceptance/round1/dispatch-message.txt: OK
 phase1/logs/t-p1-908-20261114/acceptance/round1/reply.txt: OK
 phase1/logs/t-p1-908-20261114/acceptance/round1/request.txt: OK
 phase1/logs/t-p1-908-20261114/acceptance/round1/run.log: OK
+phase1/logs/t-p1-908-20261114/acceptance/round2/reply.txt: OK
+phase1/logs/t-p1-908-20261114/acceptance/round2/request.txt: OK
+phase1/logs/t-p1-908-20261114/acceptance/round2/run.log: OK
+phase1/logs/t-p1-908-20261114/acceptance/sec_scan_908.py: OK
 phase1/logs/t-p1-908-20261114/acceptance/task-events-audit-serverlog.ndjson: OK
 phase1/logs/t-p1-908-20261114/acceptance/task-events-audit.json: OK
 phase1/logs/t-p1-908-20261114/acceptance/triplet-audit.json: OK
@@ -879,6 +879,17 @@ phase1/logs/t-p1-908-20261114/executions/ORCH-908021/evidence-steps/s9-a4-inject
 phase1/logs/t-p1-908-20261114/executions/ORCH-908021/failure-report.json: OK
 phase1/logs/t-p1-908-20261114/executions/ORCH-908021/orchestration-report.json: OK
 phase1/logs/t-p1-908-20261114/executions/ORCH-908021/run-state.json: OK
+phase1/logs/t-p1-908-20261114/executions/ORCH-908022-scheduler-console.log: OK
+phase1/logs/t-p1-908-20261114/executions/ORCH-908022/evidence-steps/s0-precheck-meta.json: OK
+phase1/logs/t-p1-908-20261114/executions/ORCH-908022/evidence-steps/s0-precheck-stderr.txt: OK
+phase1/logs/t-p1-908-20261114/executions/ORCH-908022/evidence-steps/s0-precheck-stdout.txt: OK
+phase1/logs/t-p1-908-20261114/executions/ORCH-908022/evidence-steps/s1-bootstrap-meta.json: OK
+phase1/logs/t-p1-908-20261114/executions/ORCH-908022/evidence-steps/s1-bootstrap-stderr.txt: OK
+phase1/logs/t-p1-908-20261114/executions/ORCH-908022/evidence-steps/s1-bootstrap-stdout.txt: OK
+phase1/logs/t-p1-908-20261114/executions/ORCH-908022/evidence-steps/s9-a4-inject-submit.json: OK
+phase1/logs/t-p1-908-20261114/executions/ORCH-908022/failure-report.json: OK
+phase1/logs/t-p1-908-20261114/executions/ORCH-908022/orchestration-report.json: OK
+phase1/logs/t-p1-908-20261114/executions/ORCH-908022/run-state.json: OK
 phase1/logs/t-p1-908-20261114/manual-takeover/diag-page.png: OK
 phase1/logs/t-p1-908-20261114/manual-takeover/manual-composer-clean.mjs: OK
 phase1/logs/t-p1-908-20261114/manual-takeover/manual-linkify-probe.mjs: OK
@@ -908,5 +919,6 @@ phase1/logs/t-p1-908-20261114/run-908019/orchestration-report.json: OK
 phase1/logs/t-p1-908-20261114/run-908019/s3-reply-raw.txt: OK
 phase1/logs/t-p1-908-20261114/run-908020/orchestration-report.json: OK
 phase1/logs/t-p1-908-20261114/run-908021/orchestration-report.json: OK
+phase1/logs/t-p1-908-20261114/run-908022/orchestration-report.json: OK
 phase1/logs/t-p1-908-20261114/s3-reply-raw.txt: OK
 phase1/logs/t-p1-908-20261114/security-scan.txt: OK

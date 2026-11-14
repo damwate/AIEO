@@ -41,7 +41,7 @@
 - 迭代如实留证：908020（首版向量过简→REQ-0002，调度器 fail-closed 拒判；console log 同目录）、908021（REQ-0001 达标但证据 blob 记了过时五字段清单，与实际单缺参矛盾——scheduler 08c8e7c 修正记录后重跑为 908022）。
 - 先例对照：main@…c6109921 仓库 phase1/logs/t-p1-905-d1prime-20261114/RUN-RECORD.md §5-1。
 
-**A5 证据完整**：`git checkout <evidence 完整SHA> 后 cd 仓库根 && sha256sum -c $E/SHA256SUMS`——全量实测通过（清单自身与校验输出文件按惯例自排除，见清单头注）；`cat $E/acceptance/sha256sum-c-result.txt` 为执行方实测存档；`cat $E/acceptance/triplet-audit.json`（151/151）。
+**A5 证据完整**：`git checkout <evidence 完整SHA> 后 cd 仓库根 && sha256sum -c $E/SHA256SUMS`——全量实测通过；约定：清单自身与 $E/acceptance/sha256sum-c-result.txt 不在清单内（自排除，避免自指哈希）；`cat $E/acceptance/sha256sum-c-result.txt` 为执行方实测存档；`cat $E/acceptance/triplet-audit.json`（151/151）。
 
 **A6 契约符合**：`cat $E/executions/ORCH-908019/evidence-steps/s4-ajv-validation.json`——`envelope:{valid:true,errors:[]}` 且 `payload:{valid:true,errors:[]}`（904 冻结双 Schema Ajv 0 errors 校验记录归档）。
 
