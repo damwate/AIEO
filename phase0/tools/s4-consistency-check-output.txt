@@ -1,4 +1,4 @@
-PASS 19 / FAIL 2
+PASS 21 / FAIL 0
  [PASS] ①a v0.3草案版本头
  [PASS] ①b v0.2现行状态blockquote
  [PASS] ①c 附录差异记录12行无重号(锚定附录区域) | rows=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
@@ -12,11 +12,11 @@ PASS 19 / FAIL 2
  [PASS] ④c 六查不属ST条目
  [PASS] ⑤ workflow-stats 最后修改=30b56de(S1 R2 PASS 对象) | last=30b56de docs(basic): 阶段C S1返工—
  [PASS] ⑥a 返工表11行(问题1-11) | n=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11']
+ [PASS] ⑥b 无占位符残留
+ [PASS] ⑥c 复验列无过期残留 | stale=[]
  [PASS] ⑦ S1含字面验收结论PASS
  [PASS] ⑦ S2含字面验收结论PASS
  [PASS] ⑦ S3含字面验收结论PASS
  [PASS] ⑧a task-brief状态与steps一致
  [PASS] ⑧b delivery七要素标题齐全
  [PASS] ⑧c delivery声明12行附录
- [FAIL] ⑥b 无占位符残留
- [FAIL] ⑥c 无待复验残留

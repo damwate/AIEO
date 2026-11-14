@@ -1,0 +1,14 @@
+待验收 commit: 5580d4aacfc34d89e4ea674cdea0204a7b1d25ac
+检查对象: basic/WORKFLOW.md 附录差异记录表
+① 本地工作区(原始字节,CRLF) sha256 = 44f38672406f1c9d062245b31458466d0c7bc215822f3a563145d718f9915dd8
+① 本地工作区(行尾归一,LF)   sha256 = df5d1f21968ce01c1634709ce2adc2901a1bcc2f60ffaefe66920ed0424114cc
+   (说明: 工作区文件经 git autocrlf checkout 为 CRLF, 与 git 对象差异=纯行尾, 内容归一后等价)
+② git对象层    sha256 = df5d1f21968ce01c1634709ce2adc2901a1bcc2f60ffaefe66920ed0424114cc
+③ GitHub raw   sha256 = df5d1f21968ce01c1634709ce2adc2901a1bcc2f60ffaefe66920ed0424114cc
+三方逐字节一致: PASS
+三方归一后 sha256 = df5d1f21968ce01c1634709ce2adc2901a1bcc2f60ffaefe66920ed0424114cc
+附录编号序列(本地) = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
+附录编号序列(raw)  = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
+编号1-12全在且无重号: PASS
+
+结论: R1 问题11=验收方读取偏差（三方逐字节一致+编号1-12全在）

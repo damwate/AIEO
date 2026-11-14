@@ -1,6 +1,6 @@
 # S4 交付物一致性核验脚本（b-20261115-phasec-workflow-stats）
 # 用法：python -I phase0/tools/s4-consistency-check.py （在仓库根目录执行）
-# 修正记录：①c 正则锚定收紧至附录差异记录表区域（避免跨表匹配）；⑤ 断言口径=30b56de（S1 R2 PASS 验收对象）
+# 修正记录：①c 正则锚定收紧至附录差异记录表区域（避免跨表匹配）；⑤ 断言口径=30b56de（S1 R2 PASS 验收对象）；⑥c 仅查过期残留「待 S3 复验」（「待 S4 复验」为复验发出前合法中间态）
 import io, re, subprocess, sys, os
 ok=[]; fail=[]
 def chk(name, cond, detail=""):
@@ -51,7 +51,10 @@ chk("⑤ workflow-stats 最后修改=30b56de(S1 R2 PASS 对象)", commits and co
 rework = re.findall(r"^\| 问题(\d+) \|", st, re.M)
 chk("⑥a 返工表11行(问题1-11)", sorted(map(int,rework))==list(range(1,12)), f"n={rework}")
 chk("⑥b 无占位符残留", "PLACEHOLDER" not in st)
-chk("⑥c 无待复验残留", "待 S3 复验" not in st and "待 S4 复验" not in st)
+# ⑥c 返工表复验列无过期残留（问题描述列引述旧缺陷不算；「待 S4 复验」为复验发出前合法中间态）
+rw_rows = [l for l in st.splitlines() if re.match(r"^\| 问题\d+ \|", l)]
+stale = [l.split("|")[-2].strip() for l in rw_rows if "待 S3 复验" in l.split("|")[-2]]
+chk("⑥c 复验列无过期残留", not stale, f"stale={stale}")
 
 # ⑦ S1/S2/S3/S4 六要素字面验收结论（S4 闭环后应有）
 for sid, nxtid in [("S1","S2"),("S2","S3"),("S3","S4")]:

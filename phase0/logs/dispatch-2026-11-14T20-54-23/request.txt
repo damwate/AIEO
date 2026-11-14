@@ -1,0 +1,6 @@
+S4独立验收请求
+绑定：基点6cf01df→待验收5580d4aacfc34d89e4ea674cdea0204a7b1d25ac（S4交付唯一commit；rev-list=1，parent=6cf01df已核验；diff=delivery.md新建七要素+steps.md S4登记+task-brief状态共3文件）；其后回填cc030ff（本验收请求）不属验收diff
+前置：S1/S2/S3已分别独立验收闭环（30b56de R2 PASS/0604231 R3 PASS/09e7797 R4 PASS），本步为整体校验+文档交付，无新功能变更
+验收重点：①交付完整性=需求四项齐备（报告/v0.3/清单/复审留痕）②S4自校验真实性=检查器可复跑（python -I basic/tool/check_taskpack.py basic/tasks/b-20261115-phasec-workflow-stats）+一致性核验21/21（八组见steps.md S4④）③状态一致性=三文件互不矛盾+返工表问题1-8全闭环④边界声明=v0.3草案/v0.2现行/拍板留用户三处在位
+读取：请raw直读 raw.githubusercontent.com/damwate/AIEO/5580d4aacfc34d89e4ea674cdea0204a7b1d25ac/<路径>（acceptance/s4-acceptance-request.md 及其列明文件）
+结论：验收结论 PASS（S4闭环任务完成交用户拍板）/REJECT（同一问题计数）/BLOCKED；通过≠v0.3生效

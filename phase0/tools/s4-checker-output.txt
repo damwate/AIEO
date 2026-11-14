@@ -4,11 +4,8 @@ Phase: IN_PROGRESS
 [PASS] ② 步骤清单
 [N/A] ③ 步骤验收记录
        - 3 步记录完整 PASS；未到期步骤（1 个）: S4 整体校验交付（验收重点：交付完整，等待用户拍板生效）
-[FAIL] ④ REJECT返工记录
-       - REJECT 关联的「问题9」无有效返工记录行（问题编号+修复 commit 40 位 SHA）
-       - REJECT 关联的「问题10」无有效返工记录行（问题编号+修复 commit 40 位 SHA）
-       - REJECT 关联的「问题11」无有效返工记录行（问题编号+修复 commit 40 位 SHA）
+[PASS] ④ REJECT返工记录
 [PASS] ⑤ 返工次数
 [N/A] ⑥ 交付记录
        - 阶段=IN_PROGRESS，交付记录未到期（COMPLETED 时检查 delivery.md 七要素）
-Overall: FAIL
+Overall: IN_PROGRESS
