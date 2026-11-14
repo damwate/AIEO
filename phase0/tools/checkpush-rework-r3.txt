@@ -1,0 +1,6 @@
+【AIEO·check-push复验R3】按R2(dispatch-16-16-37"需要修改")唯一遗留P1-1最小整改,commit 56a4fda(已推github main):
+修复点:
+①probePort布尔改结构化三态{ok,timedOut,ms,reason}:连接成功reason=connected;连接失败reason=连接失败(具体code如ECONNREFUSED);超时reason=timeout(本次探测超时≠路径永久不可用);deps.createSocket可注入(测试不依赖真实网络覆盖超时分支);
+②probeCandidate保留TCP超时独立状态:timedOut:true+stderr"TCP 探测超时（本次探测超时≠路径永久不可用）",不再统一标"TCP未监听";未监听标"TCP 未监听（连接失败（<code>））";布尔注入向后兼容;超时仍跳过本次dry-run继续下一候选,候选序未动;
+③测试25→30全过,新增5项:真实loopback监听→连接成功三态/真实已关闭端口→ECONNREFUSED且非超时/注入挂起socket走真实timer→timeout三态/probeCandidate超时状态保留且dry-run不执行/真实拒绝端口经probeCandidate标"未监听(连接失败(ECONNREFUSED))"。
+未扩大范围,五条共识/只读/候选序未动。请仅复核本遗留项(TCP三态),末行单独"通过"或"需要修改"(给具体要求)。

@@ -1,0 +1,8 @@
+【AIEO·check-push整改复验R2】按复核R1(dispatch-16-05-36"需要修改")最小整改,commit 7239fea(github.com/damwate/AIEO main已推):
+P1-1超时分离:直连dry-run 30s/代理候选45s/真实推送180s;timeout记录为明确失败原因"本次探测超时≠路径永久不可用";
+P1-2注入补全:discoverNetstatPorts/probeCandidate(tcpProbe,dryRun)/runProbeSequence均导出可注入;测试不依赖真实注册表/端口/网络;
+P1-3端口校验:isValidPort(整数1-65535)在注册表/git config/env/--ports/netstat/队列全入口,非法过滤+诊断输出;
+P2-1 git config非本机地址跳过并记录原因(本工具限定本地代理);
+测试17→25项全过(含复核10场景:直连timeout转候选/首候选timeout继续/预筛失败跳dry-run/端口0/65536/1.5/-1/Infinity拒绝/多协议https优先/netstat失败记录);
+实战:直连30s超时(明确原因)→3572 dry-run OK→推送成功ahead=0。
+未扩大范围(共识五条/只读/候选序未动)。请复审四项整改+测试覆盖,末行单独"通过"或"需要修改"(给具体要求)。
