@@ -1,32 +1,34 @@
 # 验收请求：b-20261115-phasec-workflow-stats 第 4 步（S4 整体校验交付）
 
-**版本：v4（复验请求）。** 历史：v1→R1 独立验收 REJECT 3 项（问题9/10/11）；v2→R2 复验 REJECT 2 项（问题12/13；R1 三问题全 PASS+问题11 误判纠正）；v3→R3 复验 REJECT 保留 2 项（问题12 文字修订确认部分通过[⑧组交叉比较与快照标注缺]、问题13 代码修复 PASS[失败路径执行证据不足]）——本版为第 3 次整改后 R4 复验请求。验收标准=S4 出口条件（steps.md 冻结原文）：交付完整，等待用户拍板生效。
+**版本：v5（R5 复验请求）。** 历史：v1→R1 独立验收 REJECT 3 项（问题9/10/11）；v2→R2 复验 REJECT 2 项（问题12/13；R1 三问题全 PASS+问题11 误判纠正）；v3→R3 复验 REJECT 保留 2 项（问题12 文字修订确认部分通过、问题13 代码修复 PASS[失败路径执行证据不足]）；v4→R4 复验 REJECT 1 项（问题12 第 3 次 REJECT=⑧组断言四处漏检[delivery 主状态滞留/核验数字过时反被⑧j放行/⑧d⑧e仅短语包含未逐项/⑧f未逐项核对 S1-S3]；问题13 失败路径证据闭合 PASS 关闭不重复计数）→ST-10 止损触发停止整改循环→经用户 2026-11-15 晨确认解除止损（代授权窗口内以 ChatGPT 会商结论为准）→三方止损会商 1/2（裁定登记 steps.md⑥：会商1 授权 R5 范围=⑧组逐项精确核对+delivery 主状态/核验数字实态对齐+负向/正向测试，问题12 最后一次常规整改机会；会商2 冻结止损四级阶梯并裁定会商1"R5 REJECT=终局"条款被用户指令取代，R5 REJECT→停止原方案循环进入降档阶梯）——本版为第 4 次整改（R5）复验请求。验收标准=S4 出口条件（steps.md 冻结原文）：交付完整，等待用户拍板生效。
 
-## 绑定（v4 复验）
+## 绑定（v5 复验）
 
 - 分支：main（https://github.com/damwate/AIEO.git）
-- **复验基点 commit：`39f8eb69915793c3ce55a06ac602ef9cd163faf2`**（R3 待验收对象，R3 已核验两段单 commit 线性）
+- **复验基点 commit：`4ca3dc5f599990ebc43178afe0bb8233263761f1`**（R4 裁定登记+ST-10 止损处置 commit，已推；非整改 commit——会商1 已确认"它是止损后的处置记录，不是R5整改提交，也不构成新一轮复验"）
 - **待验收 commit：本回填 commit（HEAD）。** Git 自引用结构性限制如实声明：本 commit SHA 由本节申报并经 `git rev-parse HEAD` 对照核验，实跑结果随派单简报给出。
-- **待验收 diff：39f8eb6→本 commit 双 commit 线性链（按 ST-01 逐条核链）：**
-  1. `b15b59ebe5612401b62a9b1d7639162d3864654f`（R3 两问题整改主体：⑧组三文件交叉比较、delivery 历史快照标注+当前实态、失败路径正式测试存档；唯一 parent=39f8eb6）
-  2. 本回填 commit（返工表问题12/13 修复列 R3 整改 SHA 回填+本请求 v4+R3 轮证据归档+输出档案最终态重生成；唯一 parent=b15b59e）
-  - 申报前核验已跑：`git rev-list --reverse --parents 39f8eb6..HEAD` 两条线性全过四通过条件+`git rev-list --count 39f8eb6..HEAD`=2；实跑输出随派单简报逐条列出。
-- **R3 轮绑定完整链：** cc030ff→ccc9c55（R1 整改）→d8d201a（R1 回填）→8aa60e8（R2 整改）→39f8eb6（R2 回填）→b15b59e（R3 整改）→本 commit（R3 回填）——七条线性，`git rev-list --reverse --parents cc030ff..HEAD` 逐条核。
-- **绑定声明：** 后续闭环 commit 不属验收 diff（ST-01 条款④）。S1-S3 沿用既有独立结论；R3 已确认"不要求重做 S1—S3，也不要求重新统计或重写 WORKFLOW"。
-- 验收通过≠v0.3 生效——生效拍板留用户（代授权范围外）。
+- **待验收 diff：4ca3dc5→本 commit 双 commit 线性链（按 ST-01 逐条核链）：**
+  1. `fe7210e4b41c8e87a7f3e9d467aae92aa0e0cdf7`（R5 整改主体：⑧组 12→18 项逐项化[⑧a2/⑧b/⑧c1-3/⑧d1-4/⑧f1-4/⑧j]+检查器参数化 run_checks 重构+负向 5 类/正向 2 项测试脚本与输出存档+三文件 R5 实态对齐 36/36；唯一 parent=4ca3dc5）
+  2. 本回填 commit（返工表问题12 修复列 R5 整改 SHA 回填+本请求 v5+止损会商 1/2 派单/补采证据归档；唯一 parent=fe7210e）
+  - 申报前核验已跑：`git rev-list --reverse --parents 4ca3dc5..HEAD` 两条线性全过四通过条件+`git rev-list --count 4ca3dc5..HEAD`=2；实跑输出随派单简报逐条列出。
+- **S4 轮次完整链（供逐条核验）：** cc030ff→ccc9c55（R1 整改）→d8d201a（R1 回填）→8aa60e8（R2 整改）→39f8eb6（R2 回填）→b15b59e（R3 整改）→8250de0（R3 回填）→4ca3dc5（R4 裁定登记+止损处置）→fe7210e（R5 整改）→本 commit（R5 回填）——十条线性，`git rev-list --reverse --parents cc030ff..HEAD` 逐条核；其中 8250de0（R3 回填）→4ca3dc5（R4 裁定登记）两段已由既往复验/会商确认不属验收 diff、不构成新复验轮。
+- **绑定声明：** 后续闭环 commit 不属验收 diff（ST-01 条款④）。S1-S3 沿用既有独立结论（会商1/2 均裁定不重验）；R5 范围=问题12 唯一，禁止扩大（会商1 整改边界）。验收通过≠v0.3 生效——生效拍板留用户（代授权范围外）。
 
-## R3 两问题整改对照
+## R4→R5 整改对照（问题12 第 3 次整改，会商1 授权范围；R4 四处漏检逐一对应）
 
-1. **问题12（⑧组交叉比较+历史快照标注）：** ⑧组由"各自断言"升级为**三文件交叉比较**（一致性脚本重跑 30/30 PASS，组数 24→30 如实在脚本头注登记修正记录）——交叉1 当前复验轮次指向三方同为 R4（⑧a2 task-brief/⑧b steps ⑥"S4 R4 复验结论待回填"/⑧c delivery"待 R4 复验"）；交叉2 已发生轮结论三文件逐项一致（⑧d R1 REJECT 3 项/⑧e R2 REJECT 2 项 同时在 task-brief 当前步骤、steps S4 区段、delivery 三处命中）；交叉3 S1-S3 闭环三方一致（⑧f）；交叉4 delivery 当前实态数据（⑧j "24/24"+"问题 1-13"）/⑧k 历史快照显式标注。delivery.md 旧自测数据段已标"[R1 时点历史快照，非当前实态；当前实态=R2 整改后 24/24+返工表问题 1-13（1-11 已取得通过结论、12/13 待 R4 复验）]"。
-2. **问题13（失败路径执行证据）：** 新增正式测试存档 phase0/tools/s4-appendix-threeway-failpath-test.py+输出 .txt——脚本生成无效域名副本实际运行并捕获完整输出与退出码：条件① raw 失败判定"FAIL" PASS、条件② 退出码=1 PASS，完整命令+副本输出+退出码在档可复跑（`python -I phase0/tools/s4-appendix-threeway-failpath-test.py`，预期 exit=0；副本运行后自动清理）。实现细节如实登记：子进程以 `-X utf8` 运行保 UTF-8 输出（`-I` 子进程忽略 PYTHONIOENCODING 环境变量——首版因此误判，已修正并以输出档案为准）。
+1. **delivery 主状态滞留 → ⑧c1-3 主状态句结构化解析：** 正则提取 delivery 加粗主状态句（非全文短语包含），逐项核对 R5 实态指向（"S4 独立验收 R5 复验中"+"R5 复验结论待回填"）+R4 轮终态（"R4 复验 REJECT 1 项"+"问题12 第 3 次"）+过期残留禁入（"待 R3 复验"/"待 R4 复验"/"24/24"/"30/30"/"止损交用户"任一出现在主状态句即 FAIL）——delivery 主状态句已重写为 R5 实态并承载完整轮次链与止损解除依据。
+2. **核验数字过时反被⑧j放行 → ⑧j 当前数字与历史快照分离：** "当前=36/36"必须与本轮检查器实际项数一致+演进链句完整标注（历轮核验数字：R1 时点 21/21→R2 时点 24/24→R3/R4 时点 30/30，当前=36/36）+每个"24/24"出现点前 40 字符内须有 历史/快照/演进 标注，裸露旧当前态即 FAIL——delivery 已按此重写，历史保留但全部显式标注。
+3. **⑧d⑧e 仅短语包含 → ⑧d1-4 轮次链逐轮逐项：** R1-R4 每轮"轮结论+对应问题编号"两字段在 task-brief 当前步骤行/steps.md S4 区段/delivery 三处逐一命中，缺一即 FAIL（R1 REJECT 3 项[问题9/10/11]/R2 REJECT 2 项[问题12/13]/R3 REJECT 保留 2 项[问题12/13]/R4 REJECT 1 项[问题12 第 3 次]）——steps⑥ R3 轮括注已补问题编号使逐项对应显式化。
+4. **⑧f 未逐项核对 S1-S3 → ⑧f1-4 逐步闭环核对：** ⑧f1 三文件声明"S1-S3 PASS 沿用"；⑧f2-4 按 delivery 各步标题（**S1 统计报告**/**S2 修订草案**/**S3 整体独立复审**）切段，在各自段内核对对应 PASS 结论（S1 段含 R2 PASS/S2 段含 R3 PASS+"S2 正式闭环"/S3 段含 R4 PASS+"S3 正式闭环"），非"S1"+"PASS"关键词同现。
+- 另：⑧组 12→18 项（总 30→36），脚本重构为参数化 `run_checks()`；按会商1 执行约束新增负向/正向测试 `phase0/tools/s4-check-negpos-tests.py`：负向 5 类注入全部指名拦截（轮次冲突→⑧a2/问题编号错配→⑧d2⑧d3/S1-S3 单项状态错误→⑧f3/当前数字过期→⑧j/主状态与正文冲突→⑧c2⑧d4），正向 2 项（三文件实态一致 36/36 全过/历史记录标注正确仍全过），注入仅作用于内存副本不动仓库文件。
 
 ## 复验重点
 
-1. **问题12 交叉比较实效：** `python -I phase0/tools/s4-consistency-check.py`（预期 30/30 PASS）——⑧a2/⑧b/⑧c 三文件轮次指向 R4 一致；⑧d/⑧e R1/R2 轮结论三文件逐项一致；⑧j/⑧k delivery 实态数据与快照标注。
-2. **问题13 失败路径证据：** `python -I phase0/tools/s4-appendix-threeway-failpath-test.py`（预期两条件 PASS+exit=0）；正常路径 `python -I phase0/tools/s4-appendix-threeway-check.py`（预期三条件 PASS+exit=0）。
-3. **检查器：** `python -I basic/tool/check_taskpack.py basic/tasks/b-20261115-phasec-workflow-stats`（预期 ④ PASS/Overall=IN_PROGRESS=S4 待复验预期态）。
-4. **环境如实声明：** 本机 Windows 10（Git Bash），无独立 Linux 环境；三命令在本机执行（GitHub raw 直读成功=联网可达），输出存档随待验收 commit 在库，验收方环境恢复后可复跑核对。
+1. **⑧组逐项核对实效：** `python -X utf8 -I phase0/tools/s4-consistency-check.py`（预期 36/36 PASS）——⑧a2/⑧b/⑧c1-3 三文件当前实态逐项一致；⑧d1-4 四轮结论+问题编号三文件逐项命中；⑧f1-4 S1-S3 逐步闭环；⑧j 当前数字=36/36+演进链标注+无裸露旧当前态。
+2. **负向/正向测试：** `python -X utf8 -I phase0/tools/s4-check-negpos-tests.py`（预期 7/7 PASS：N1-N5 五类注入逐一指名拦截+P1/P2 正向全过）。
+3. **检查器：** `python -X utf8 -I basic/tool/check_taskpack.py basic/tasks/b-20261115-phasec-workflow-stats`（预期 ④ PASS/Overall=IN_PROGRESS=S4 待复验预期态）。
+4. **环境如实声明：** 本机 Windows 10（Git Bash），无独立 Linux 环境；三命令在本机执行（GitHub raw 直读成功=联网可达），输出存档随待验收 commit 在库（phase0/tools/s4-consistency-check-output.txt、s4-check-negpos-tests-output.txt、s4-checker-output.txt），验收方环境恢复后可复跑核对。
 
 ## 结论
 
-验收结论：PASS（S4 闭环，任务四步全完成，交用户拍板 v0.3 生效）/ REJECT（列具体问题，按"同一问题"规则计数）/ BLOCKED（环境原因如实说明）。通过≠v0.3 生效。
+验收结论：PASS（问题12 闭环，S4 进入最终交付确认，交用户拍板 v0.3 生效）/ REJECT（列具体问题；按会商2 裁定=停止原方案循环进入止损降档阶梯，不直接判定需求不可行）/ BLOCKED（环境原因如实说明，不计 REJECT 不得冒充 PASS）。通过≠v0.3 生效。
