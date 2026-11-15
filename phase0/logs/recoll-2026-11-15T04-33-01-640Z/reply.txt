@@ -1,0 +1,188 @@
+ChatGPT 说：
+
+REJECT 问题1、2已关闭；问题3未关闭，且发现额外范围问题。
+
+本轮只复核你指定的三项整改及新增越界改动，没有重新审查上一轮已通过的 S1 生效内容、37项总数、DV1/negpos历史矩阵和阶段C零修改结论。
+
+逐项复核
+
+复核项
+
+	
+
+结论
+
+	
+
+独立核验
+
+
+
+
+问题1：①b记录位置
+
+	
+
+PASS
+
+	
+
+增加交接包路径及§5断言；NT4删除该引用后，确实指名由①b拦截
+
+
+
+
+问题2：①a头部定位
+
+	
+
+PASS
+
+	
+
+通过首个二级标题前的头部区域定位声明；NT5将声明移出头部后，指名由①a拦截
+
+
+
+
+问题3：MANIFEST绑定
+
+	
+
+FAIL
+
+	
+
+MANIFEST仍绑定旧代码commit 91474c1，没有绑定本轮修改后的 ff0ab04，也没有完成要求的双SHA绑定
+
+
+
+
+新增越界改动
+
+	
+
+FAIL
+
+	
+
+本轮diff包含任务范围以外的文档和环境清单修改
+
+① 问题1：关闭
+
+检查器①b现在同时检查：
+
+b-20261115-v03-activation/requirement.md
+
+handoff/BASIC-PHASE-C-V03-ACTIVATION-HANDOFF.md
+
+§5
+
+专项测试NT4删除交接包路径及§5引用，实际失败项为①b，符合预期。
+
+这次不是单纯增加测试名称，而是检查器本身确实增加了对应断言。问题1关闭。
+
+② 问题2：关闭
+
+检查器新增：
+
+Python
+运行
+cl_head = cl.split("\n## ", 1)[0]
+cl_decl = next(
+    (l for l in cl_head.splitlines()
+     if l.startswith("> **生效状态（正式版）")),
+    ""
+)
+
+①a现在从清单头部区域提取声明，不再全文搜索。
+
+NT5把原声明移除后追加到文件尾，专项测试实际由①a拦截。专项测试输出为：
+
+ACTIVATION-STATE TESTS PASS 7 / FAIL 0
+
+问题2关闭。
+
+③ 问题3：仍未关闭
+
+这是本轮的主要阻断。
+
+我分别读取了 ff0ab04 和登记commit d7d33d5 的 MANIFEST。两处实际内容仍然是：
+
+纯文本
+被测commit=91474c15e45c51ce87e0c44e3ffe2900b50cea0c
+
+而本轮被测代码已经在 ff0ab04 发生变化：
+
+s4-consistency-check.py 增加①a头部定位和①b交接包引用断言。
+
+s4-activation-state-tests.py 增加NT4、NT5。
+
+因此，91474c1 不能代表本轮最终被测代码。
+
+另外，MANIFEST仍然没有：
+
+文档基线SHA 52e1f29 与最终被测代码SHA ff0ab04 的双SHA绑定。
+
+完整的五条测试命令。
+
+与新专项7/7输出相匹配的SHA256。
+
+特别是专项输出已经从5项变成7项，但MANIFEST中对应的哈希仍是旧值：
+
+纯文本
+e62dcd364cd297381c4325d763e09f32bcd5717e69c8d0a074bb26ee505bf2d6
+
+它不能证明当前7/7输出文件的完整性。
+
+所以，虽然 d7d33d5 修正了原先的 52e1f29 错绑问题，却仍然没有完成这次要求的最终版本绑定。问题3不能关闭。
+
+④ 新增越界改动
+
+对比 91474c1..ff0ab04，除本次检查器、专项测试和任务登记外，还出现：
+
+docs/AI-DEV-LESSONS.md
+
+phase0/environment-inventory.md
+
+phase0/tools/recoll_v03act_acc.mjs
+
+phase0/tools/recoll_v03act_plan_r1.mjs
+
+phase0/tools/brief_v03act_acc.txt
+
+phase0/tools/brief_v03act_plan_r1.txt
+
+phase0/tools/brief_v03act_plan_r2.txt
+
+多个 phase0/logs/ 派单和补采文件
+
+其中，派单和补采日志可以解释为过程审计材料；但 AI-DEV-LESSONS.md 和 environment-inventory.md 的修改不属于本轮冻结的S1/S2验收整改内容，不能自动视为授权范围。
+
+需要将这两份文档的改动单独说明、恢复，或取得明确的范围授权。不能把它们混在本轮验收diff里直接放行。
+
+整改要求
+
+MANIFEST改为双SHA绑定：文档基线 52e1f29，最终被测代码 ff0ab04。
+
+更新五份输出的SHA256，尤其是专项7/7输出；写明完整生成命令和预期结果。
+
+对最终被测代码干净检出，重新运行五条命令，确认退出码全0、归档输出与重跑结果 IDENTICAL×5。
+
+更新 steps.md 中S2待验收commit，不能继续把 91474c1 写成最终整改版本。
+
+处理 docs/AI-DEV-LESSONS.md 和 phase0/environment-inventory.md 的越界修改；派单审计日志则应与代码整改范围区分登记。
+
+最终裁定：REJECT。
+
+问题1：关闭。
+
+问题2：关闭。
+
+问题3：未关闭。
+
+新增范围问题：待处理。
+
+不要求重新做NT4、NT5已经通过的测试，也不要求重做上一轮已经通过的历史矩阵。下一轮只需针对MANIFEST最终绑定和越界文件处理进行复核。
+
+查看整改提交 ff0ab04 · 查看登记提交 d7d33d5

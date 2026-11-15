@@ -1,0 +1,9 @@
+[验收复核|b-20261115-v03-activation|只复核问题1/2/3]
+R1 REJECT(reply a9e3059b…)整改提交复核。已PASS部分(S1生效/37项/DV1 negpos零改动/阶段C零修改/DEC-043未动)不重复审查。
+材料:github.com/damwate/AIEO@main 复核diff=91474c1..ff0ab04,登记67e434d(MANIFEST v2+返工表,不属被测diff)。
+问题1整改:①b增补handoff/BASIC-PHASE-C-V03-ACTIVATION-HANDOFF.md+§5精确断言;专项新增NT4(删交接包引用→①b指名拦截)。
+问题2:①a收紧=定位清单头部区(首二级标题前)声明行核验;新增NT5(声明移出头部→①a拦截);NT5首跑6/7暴露①a仍全文扫描,即收紧复跑7/7。
+问题3:MANIFEST v2重写:被测代码=ff0ab04+文档基线=52e1f29双SHA+五输出SHA256+生成命令+预期结果+IDENTICAL×5。
+整改后重跑:37/37+专项7/7+DV1 6/6+negpos 7/7+phasec包COMPLETED全PASS,退出码全0。
+复核点:①三项整改是否关闭对应问题②NT4/NT5隔离注入与指名拦截质量③MANIFEST双绑定可追溯性④无新增越界改动。
+三态:PASS(关闭问题1/2/3)/REJECT(列项)/BLOCKED。
