@@ -1,0 +1,7 @@
+【S2复验R3|b-20261115-gpt03-review-leg】对S2-R2五新问题按会商乙方案限定复验。
+仓库github.com/damwate/AIEO main，锚点按SHA读：
+A 待验收=6d39ff97…基线后6commit至HEAD（整改代码=fdba15c2f9f3d8fb70092766778d34d6d114d542+0c5642d9152012a2fc9f6c3196ba393efbc58a4c）
+B 申报=030c947后最新：读basic/tasks/b-20261115-gpt03-review-leg/acceptance/review-request-s2-r3.md与steps.md返工表问题17-21行
+C 依据=会商裁定（reply sha256=65914169…乙方案+丙口径）+charter §7/附录C/D。
+复验点：①NEW-P1-01 INTENT-only即便attach也fail-closed+反例test_16d②NEW-P1-02乙方案组合证据：test_19（CONFIRMED落账后R4前os._exit+tasklist独立死亡验证+新进程resume补采补登记零重派）+丙口径声明③NEW-P1-03追加式审计修复三件④NEW-P2-01双份运行记录28/28×2⑤NEW-P2-02区间口径修正（6d39ff9基线）⑥回归28用例+范围零越界。
+回执：①-⑥逐项+五问题逐项（关闭/未关闭）+总结论（PASS/REJECT+新问题编号）。

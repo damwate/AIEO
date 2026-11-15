@@ -1,0 +1,8 @@
+【S2独立验收|b-20261115-gpt03-review-leg】独立验收S2注入类矩阵执行（真实链）。
+仓库github.com/damwate/AIEO main，锚点按SHA读：
+A 待验收区间4commit至6d39ff97ead78bf56b457f2198b9089f81c32295（代码变更仅review_leg.py 55/18；余为材料/登记文档）
+B 申报=34f2c39后最新：读basic/tasks/b-20261115-gpt03-review-leg/acceptance/review-request-s2.md与steps.md S2节
+C 依据=charter v1.0 §7/附录D。
+核心事实：三任务真实落档——T-P1-017 REWORK(918003)/T-P1-018 PASS(918005 A5①断点恢复)/T-P1-022 PASS(918007 A6人工链)；M1真实推进可查；reply SHA=498cbcff…/e2cc1d54…/eb8ec9df…。
+复验点：①A2+A10真实②A3三组天然现场+注入构造双形态（特定错误码短会话未完全等价复现,已如实登记）③A4真实重放（409双证×2）④A5①+A8现场（INTENT断点→fail-closed→人工核查→REPAIR→恢复闭环）⑤A5②等价证据裁断（未构造独立现场,已如实登记）⑥A6真实（attach同契约同幂等键）⑦零mock与范围（4commit零越界）。
+回执：六查逐项+矩阵A2-A10逐项判定+总结论（PASS/REJECT+问题编号）。

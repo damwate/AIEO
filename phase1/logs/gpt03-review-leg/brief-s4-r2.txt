@@ -1,0 +1,7 @@
+【S4复验R2|b-20261115-gpt03-review-leg】对S4-R1两项（NEW-P2-05/06）做限定复验（纯文档）。
+仓库github.com/damwate/AIEO main，锚点按SHA读：
+A 待验收=9a3c4c56649ed1185d9742a9f76ff5868eb119bf后2commit至HEAD（整改=ec69a308a74c6188fb35e0602c83dfa11dcf8fb8：delivery总状态如实化+区间分类重列；dc51d49=问题28/29行SHA回填）
+B 申报=dc51d49后最新：读basic/tasks/b-20261115-gpt03-review-leg/steps.md返工表问题28/29行与delivery.md总状态段
+C 依据=S4-R1裁定（reply sha256=7dad95fc…）+R4规则延伸。
+复验点：①NEW-P2-05关闭核验：区间分类重列（8e7dd0e系基线非成员；排除3=a3cfdfd/091ec8e/c5afe20申报回填类；计入2=2321e98 S2PASS登记+DEC-061、9a3c4c5 S4交付登记）②NEW-P2-06关闭核验：delivery总状态如实化（S1-S3 PASS+S4交付确认进行中，未宣告S4 PASS）③纯文档无新问题（2commit零代码）。
+回执：①-③逐项+两问题逐项（关闭/未关闭）+总结论（PASS/REJECT+新问题编号）。

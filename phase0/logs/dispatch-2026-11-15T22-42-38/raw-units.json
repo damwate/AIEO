@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-15T22:44:55.972Z",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "b353ce46-319d-4121-9fbc-65ac5add7f62",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "5d5fea7c15c48b049c52e54e990c110faf800314c6d4c9070a90bf115aed4d1a",
+          "e3a4de11484819b7fe4d84a8feb31a52f6f8501bf32c99ed205238283d7369f6"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "5d5fea7c15c48b049c52e54e990c110faf800314c6d4c9070a90bf115aed4d1a",
+          "e3a4de11484819b7fe4d84a8feb31a52f6f8501bf32c99ed205238283d7369f6"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-0:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n{\n\"result\": \"PASS\",\n\"summary\": \"P1-01 已关闭：独立 JSON Schema 草案文件已成形，采用 Draft 2020-12，required 十字段、findings 等数组及 unblocked 辅助字段均已定义，additionalProperties=false；文件头明确草案候选身份及 Gate3 后冻结落位路径，且与 Charter §A-2 字段引用一致，未触碰 H2 冻结红线。\",\n\"issues\": [],\n\"charter\": \"GPT02-ARCH-REVIEW-LEG\"\n}",
+      "text_sha256": "e3a4de11484819b7fe4d84a8feb31a52f6f8501bf32c99ed205238283d7369f6",
+      "size_bytes": 431,
+      "assistant_uuid": "b353ce46-319d-4121-9fbc-65ac5add7f62"
+    }
+  ]
+}

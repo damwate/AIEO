@@ -1,0 +1,7 @@
+【S2复验R6|b-20261115-gpt03-review-leg】对S2-R5唯一残留（NEW-P2-02申报口径）做限定复验（纯文档）。
+仓库github.com/damwate/AIEO main，锚点按SHA读：
+A 待验收=fef498e1cce14e73f60af1f81af520b3e7230efd后继回填至HEAD（无代码变更）
+B 申报=8e7dd0e4a7feb07ea466aeb54af300037f13864b后最新：读basic/tasks/b-20261115-gpt03-review-leg/acceptance/review-request-s2-r6.md与steps.md返工表问题27行
+C 依据=R4裁定（reply sha256=28f42ec2…排除2/范围8口径）延续。
+复验点：①NEW-P2-02关闭核验：R6申报ST-01段单一口径=完整区间10commit(全40位SHA+分类)/排除2(73f0050fd18cc41ad4e949b6be1ac758236bb5b9+fef498e1cce14e73f60af1f81af520b3e7230efd)/范围8(40位列举)——与R4裁定及steps问题21行三方一致；R5自创"排除5→范围4"废止②纯文档无新问题（代码零变更,29/29不变）。
+回执：①②逐项+NEW-P2-02判定（关闭/未关闭）+总结论（PASS/REJECT+新问题编号）。

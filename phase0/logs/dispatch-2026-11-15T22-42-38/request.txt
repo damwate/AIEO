@@ -1,0 +1,7 @@
+[立项评审|GPT02-ARCH-REVIEW-LEG|Gate2-R3|限定复验]
+Gate2-R2 唯一残留（P1-01 契约草案文件未成形）已整改。
+读 github.com/damwate/AIEO@main 77ff79439b32a762298efb88892c913af81936f0：
+1. docs/phase1/arch-review-report.schema.draft.json——独立 JSON Schema 草案文件（2020-12，required 十字段+findings 等数组+unblocked 辅助字段，additionalProperties=false；文件头 description 标注草案候选身份与 Gate3 后落位 contracts/v1.0 冻结路径，不触碰 H2 冻结红线）。
+2. docs/phase1/GPT02-ARCH-REVIEW-LEG-CHARTER-DRAFT.md §A-2 引用同步更新。
+复验范围：仅契约草案文件是否成形且与 A-2 字段一致；其余项 Gate2-R2 已确认通过不重开。新问题另列。
+回复仅一个```json对象：{"result":"PASS|REWORK","summary":"<一句话>","issues":["<未关闭项>…"],"charter":"GPT02-ARCH-REVIEW-LEG"}；result仅PASS/REWORK。
