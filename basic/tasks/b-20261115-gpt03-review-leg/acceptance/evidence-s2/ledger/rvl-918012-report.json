@@ -1,0 +1,9 @@
+{
+  "result": "REVIEW_LEG_PASS",
+  "final_status": "TEST_ACCEPTANCE",
+  "artifact_id": "ART-REV-006",
+  "message_id": "MSG-44340263-513307",
+  "review_report_id": "EXEC-014@fda9183dafb7",
+  "reply_sha256": "0f323ef28dbb689fdd83d83d188f059ce837636f366bf97f911fc5d9ad1d961c",
+  "resumed": true
+}

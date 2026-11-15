@@ -1,0 +1,14 @@
+[
+  {
+    "key": "fallback-turn-4:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【S1复验R5|b-20261115-gpt03-review-leg】对S1-R4唯一残留P2-01做限定复验。\n仓库github.com/damwate/A"
+  },
+  {
+    "key": "fallback-turn-4:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\n本轮按限定范围复验：被测锚点固定为 bfb779715eb9b81032cb1610e630abe48decac95，只追踪 R4 遗留"
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "result": "REVIEW_LEG_PASS",
+  "final_status": "REWORK",
+  "artifact_id": "ART-REV-001",
+  "message_id": "MSG-84409310-749934",
+  "review_report_id": "EXEC-009@6faa2f003824",
+  "reply_sha256": "498cbcfffca030016aff7d16c937581a20c190a0ae821181fae3b6cba13a5ec6",
+  "dispatch_dir": "dispatch-2026-11-15T16-01-00"
+}

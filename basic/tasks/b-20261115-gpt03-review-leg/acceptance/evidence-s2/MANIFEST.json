@@ -1,0 +1,723 @@
+[
+  {
+    "archive": "ledger/rvl-918003-ledger.jsonl",
+    "source": "runtime\\review-leg\\rvl-918003\\ledger.jsonl",
+    "bytes": 10821,
+    "sha256": "84455db6e30d63a5d30e3828610f3d5f006d4c35331141db98689151f3b7f274",
+    "note": "review round 918003 ledger (append-only)"
+  },
+  {
+    "archive": "ledger/rvl-918003-report.json",
+    "source": "runtime\\review-leg\\rvl-918003\\review-leg-report.json",
+    "bytes": 323,
+    "sha256": "7842c0487994ad375bdc49c64ac7afc4d303efabe400a9cdaabcd6214f23de9c",
+    "note": "final leg report"
+  },
+  {
+    "archive": "ledger/rvl-918003-brief.txt",
+    "source": "runtime\\review-leg\\rvl-918003\\brief.txt",
+    "bytes": 614,
+    "sha256": "071d812f10da98e1e763116a3a05376aee8ca5e51552211c5062a742f7502a2d",
+    "note": "run dir evidence"
+  },
+  {
+    "archive": "ledger/rvl-918003-reply.txt",
+    "source": "runtime\\review-leg\\rvl-918003\\reply.txt",
+    "bytes": 946,
+    "sha256": "498cbcfffca030016aff7d16c937581a20c190a0ae821181fae3b6cba13a5ec6",
+    "note": "run dir evidence"
+  },
+  {
+    "archive": "ledger/rvl-918003-ajv-input-envelope.json",
+    "source": "runtime\\review-leg\\rvl-918003\\ajv-input-envelope.json",
+    "bytes": 1302,
+    "sha256": "7d7a20b47ac379855861298ba87a1bbe2e8aa1509e44eba8486bfbef63c5b479",
+    "note": "run dir evidence"
+  },
+  {
+    "archive": "ledger/rvl-918005-ledger.jsonl",
+    "source": "runtime\\review-leg\\rvl-918005\\ledger.jsonl",
+    "bytes": 8159,
+    "sha256": "a8396acf9156cfcf42735d07472c16d3f777659225cc86263950cb5a1ba3967a",
+    "note": "review round 918005 ledger (append-only)"
+  },
+  {
+    "archive": "ledger/rvl-918005-report.json",
+    "source": "runtime\\review-leg\\rvl-918005\\review-leg-report.json",
+    "bytes": 301,
+    "sha256": "06c6ecce13dca8de68e649e98e35acec0e5134b303094b56697a8b6617404d97",
+    "note": "final leg report"
+  },
+  {
+    "archive": "ledger/rvl-918005-brief.txt",
+    "source": "runtime\\review-leg\\rvl-918005\\brief.txt",
+    "bytes": 600,
+    "sha256": "665767b237c270111c18f13ffe332e0b500be44bd54429e40c4be36740f47a24",
+    "note": "run dir evidence"
+  },
+  {
+    "archive": "ledger/rvl-918005-reply.txt",
+    "source": "runtime\\review-leg\\rvl-918005\\reply.txt",
+    "bytes": 330,
+    "sha256": "e2cc1d54c65f60b9dd517c3c99d3c399b7490e9d07db984e19a8567e3ca8e89e",
+    "note": "run dir evidence"
+  },
+  {
+    "archive": "ledger/rvl-918005-ajv-input-envelope.json",
+    "source": "runtime\\review-leg\\rvl-918005\\ajv-input-envelope.json",
+    "bytes": 698,
+    "sha256": "fd237352a5d0334d44b051fcbdbb9a8c93262f7bd6113c997299a3cf83e714b4",
+    "note": "run dir evidence"
+  },
+  {
+    "archive": "ledger/rvl-918005-ledger.jsonl.bak-a8-repair",
+    "source": "runtime\\review-leg\\rvl-918005\\ledger.jsonl.bak-a8-repair",
+    "bytes": 2060,
+    "sha256": "42f701f72fdf0ec41d85e9d8464094aca06c504741b13ae3688f7154503e2198",
+    "note": "run dir evidence"
+  },
+  {
+    "archive": "ledger/rvl-918007-ledger.jsonl",
+    "source": "runtime\\review-leg\\rvl-918007\\ledger.jsonl",
+    "bytes": 4849,
+    "sha256": "f67070771c710aba36f3cdf0a2654ce662ab6d85f3e506b36f96be4942f0ae35",
+    "note": "review round 918007 ledger (append-only)"
+  },
+  {
+    "archive": "ledger/rvl-918007-report.json",
+    "source": "runtime\\review-leg\\rvl-918007\\review-leg-report.json",
+    "bytes": 307,
+    "sha256": "59b807ac09f587698a9681e9647c15e4669b75d25efbd27d719973c34aee1828",
+    "note": "final leg report"
+  },
+  {
+    "archive": "ledger/rvl-918007-brief.txt",
+    "source": "runtime\\review-leg\\rvl-918007\\brief.txt",
+    "bytes": 614,
+    "sha256": "e932fb8a5934e1c559f9e39914dc12db187c0e1f93c588ba9abbf8a487c763f8",
+    "note": "run dir evidence"
+  },
+  {
+    "archive": "ledger/rvl-918007-reply.txt",
+    "source": "runtime\\review-leg\\rvl-918007\\reply.txt",
+    "bytes": 342,
+    "sha256": "eb8ec9dfcdf67e02d1c972ae1e8b1e55e9c9d16e2724fbfa514dd4ebb04f6de7",
+    "note": "run dir evidence"
+  },
+  {
+    "archive": "ledger/rvl-918007-ajv-input-envelope.json",
+    "source": "runtime\\review-leg\\rvl-918007\\ajv-input-envelope.json",
+    "bytes": 710,
+    "sha256": "68ced1cf93622c3830ab571332cd1d7ac1bd42b25e7202fcf4d457c4e2dfdcbb",
+    "note": "run dir evidence"
+  },
+  {
+    "archive": "ledger/rvl-918010-ledger.jsonl",
+    "source": "runtime\\review-leg\\rvl-918010\\ledger.jsonl",
+    "bytes": 6552,
+    "sha256": "b0c1351bb947c3555d406cf5ba651d20c66836225b599cda30a4388e40b55a34",
+    "note": "review round 918010 ledger (append-only)"
+  },
+  {
+    "archive": "ledger/rvl-918010-report.json",
+    "source": "runtime\\review-leg\\rvl-918010\\review-leg-report.json",
+    "bytes": 323,
+    "sha256": "88cd8be480c3ff1f7c141f4acffdc8044ab8b908d42351b6ea626f35e7e79b28",
+    "note": "final leg report"
+  },
+  {
+    "archive": "ledger/rvl-918010-brief.txt",
+    "source": "runtime\\review-leg\\rvl-918010\\brief.txt",
+    "bytes": 614,
+    "sha256": "bde8afe24b96739dae06e514269ca95d5dec13d3315c5fdf58c79b442971954b",
+    "note": "run dir evidence"
+  },
+  {
+    "archive": "ledger/rvl-918010-reply.txt",
+    "source": "runtime\\review-leg\\rvl-918010\\reply.txt",
+    "bytes": 807,
+    "sha256": "40b2cafdb4004d2169c7effadd43924455132b6cc5f3022ca1c5f6061a57efd9",
+    "note": "run dir evidence"
+  },
+  {
+    "archive": "ledger/rvl-918010-ajv-input-envelope.json",
+    "source": "runtime\\review-leg\\rvl-918010\\ajv-input-envelope.json",
+    "bytes": 1163,
+    "sha256": "255a4d57c258b84047f2ca4d369b9e08bd8665f8e4951b7e04a665e218ab82de",
+    "note": "run dir evidence"
+  },
+  {
+    "archive": "ledger/rvl-918011-ledger.jsonl",
+    "source": "runtime\\review-leg\\rvl-918011\\ledger.jsonl",
+    "bytes": 6555,
+    "sha256": "4941974844806e498fd3f9a7b8a477ed18bab43b992a4e495c529cb178381571",
+    "note": "review round 918011 ledger (append-only)"
+  },
+  {
+    "archive": "ledger/rvl-918011-report.json",
+    "source": "runtime\\review-leg\\rvl-918011\\review-leg-report.json",
+    "bytes": 332,
+    "sha256": "6ba9d823f8e36f54a12bd2e1bc10c43c448d7ed1844420791d6ecab2adc932bb",
+    "note": "final leg report"
+  },
+  {
+    "archive": "ledger/rvl-918011-brief.txt",
+    "source": "runtime\\review-leg\\rvl-918011\\brief.txt",
+    "bytes": 614,
+    "sha256": "c5aae1e64ef43a4da94724d5be2b49ab672aea340ccbfac6576c7a30fe749498",
+    "note": "run dir evidence"
+  },
+  {
+    "archive": "ledger/rvl-918011-reply.txt",
+    "source": "runtime\\review-leg\\rvl-918011\\reply.txt",
+    "bytes": 349,
+    "sha256": "9298921f15a9ed1997f228bbf788ae78767f680b525e4b3bd38c812aa7f3efdc",
+    "note": "run dir evidence"
+  },
+  {
+    "archive": "ledger/rvl-918011-ajv-input-envelope.json",
+    "source": "runtime\\review-leg\\rvl-918011\\ajv-input-envelope.json",
+    "bytes": 717,
+    "sha256": "7743b76a72686199aafce7b5a0de3a378df3b4e1ccdc644ad5cf1d317094aed0",
+    "note": "run dir evidence"
+  },
+  {
+    "archive": "ledger/rvl-918012-ledger.jsonl",
+    "source": "runtime\\review-leg\\rvl-918012\\ledger.jsonl",
+    "bytes": 8864,
+    "sha256": "252339fabe6c6f2bcee49e5b6689c4163a4f8e591851abbf058c007e4dbd2df7",
+    "note": "review round 918012 ledger (append-only)"
+  },
+  {
+    "archive": "ledger/rvl-918012-report.json",
+    "source": "runtime\\review-leg\\rvl-918012\\review-leg-report.json",
+    "bytes": 301,
+    "sha256": "8c935c187b43d9ef4fe0a2110756957f42c3448a7298e8f1e8613ba1f979bff1",
+    "note": "final leg report"
+  },
+  {
+    "archive": "ledger/rvl-918012-brief.txt",
+    "source": "runtime\\review-leg\\rvl-918012\\brief.txt",
+    "bytes": 614,
+    "sha256": "148f1d36c308fb56f6c252430e3ca51bbf188c102a9e2756f9c97cd204762b35",
+    "note": "run dir evidence"
+  },
+  {
+    "archive": "ledger/rvl-918012-reply.txt",
+    "source": "runtime\\review-leg\\rvl-918012\\reply.txt",
+    "bytes": 322,
+    "sha256": "0f323ef28dbb689fdd83d83d188f059ce837636f366bf97f911fc5d9ad1d961c",
+    "note": "run dir evidence"
+  },
+  {
+    "archive": "ledger/rvl-918012-ajv-input-envelope.json",
+    "source": "runtime\\review-leg\\rvl-918012\\ajv-input-envelope.json",
+    "bytes": 690,
+    "sha256": "11f4043957d227da0da4247c5ec94972ee44fd5bbe96baa1fe188a126363bf96",
+    "note": "run dir evidence"
+  },
+  {
+    "archive": "ledger/rvl-918012-a5-breakpoint-snapshot.json",
+    "source": "runtime\\review-leg\\rvl-918012\\a5-breakpoint-snapshot.json",
+    "bytes": 180,
+    "sha256": "2840d61bd9eec38558cb5e5d7eea0ce9c3f66a16c9ab84e15a7c485664a264af",
+    "note": "run dir evidence"
+  },
+  {
+    "archive": "ledger/rvl-918012-ledger.jsonl.bak-a5-repair",
+    "source": "runtime\\review-leg\\rvl-918012\\ledger.jsonl.bak-a5-repair",
+    "bytes": 2700,
+    "sha256": "e854c74977d0e89fbfd9f97f4fad2823dbe2d1a1360711cf55648b9ee45c963b",
+    "note": "run dir evidence"
+  },
+  {
+    "archive": "ledger/rvl-918012-recoll_driver.mjs",
+    "source": "runtime\\review-leg\\rvl-918012\\recoll_driver.mjs",
+    "bytes": 10643,
+    "sha256": "654c0cf21bdc24197186ea64ed1e046cf6606024a54d587bd46fc0624acde58e",
+    "note": "run dir evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T14-46-19/result.json",
+    "source": "phase0\\logs\\dispatch-2026-11-15T14-46-19\\result.json",
+    "bytes": 16941,
+    "sha256": "77663b57cbacbaadcc0f0c186065ab48162c4be45db27ba41dfe08e01de6790b",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T14-46-19/reply.txt",
+    "source": "phase0\\logs\\dispatch-2026-11-15T14-46-19\\reply.txt",
+    "bytes": 10382,
+    "sha256": "21df8c7e031a55faebb5170e1df2f83d15c07916a31ef714a1f2004098e7a4ce",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T14-46-19/request.txt",
+    "source": "phase0\\logs\\dispatch-2026-11-15T14-46-19\\request.txt",
+    "bytes": 1079,
+    "sha256": "bd79325c2bed7db8d2fc64e138d30bad3de46c130d2c66a430a505fffa333fcb",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T14-46-19/run.log",
+    "source": "phase0\\logs\\dispatch-2026-11-15T14-46-19\\run.log",
+    "bytes": 1130,
+    "sha256": "9aadc9f7cde4a7a3bff2eb371ace1c8788d4f4a5fdfb1f9387d5333b8785e25a",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T15-11-04/request.txt",
+    "source": "phase0\\logs\\dispatch-2026-11-15T15-11-04\\request.txt",
+    "bytes": 1126,
+    "sha256": "1b6b092dd4f589545fa76fadc5634d0dcf8fb87f79741aee1bfaa5da7ecd8ff9",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T15-11-04/run.log",
+    "source": "phase0\\logs\\dispatch-2026-11-15T15-11-04\\run.log",
+    "bytes": 1083,
+    "sha256": "b860d0b80ced2a12d254c27cf80be1228bf0ab71afa70e4ec210c11b9868142c",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T15-30-34/request.txt",
+    "source": "phase0\\logs\\dispatch-2026-11-15T15-30-34\\request.txt",
+    "bytes": 1116,
+    "sha256": "6e62c30b782d761c965045d697af57b12bbf72b1a745955a8f7f568154b8ee15",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T15-30-34/run.log",
+    "source": "phase0\\logs\\dispatch-2026-11-15T15-30-34\\run.log",
+    "bytes": 1088,
+    "sha256": "988d76b45b44d8851a7d94389fe1be39e657fa3e515cf30eb59b4bb5705e4c5f",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T15-38-46/result.json",
+    "source": "phase0\\logs\\dispatch-2026-11-15T15-38-46\\result.json",
+    "bytes": 8632,
+    "sha256": "ddae70cf6a34704f4fe738e7e78d4e168f6084b433f7827eaa22dc469c3ef43c",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T15-38-46/reply.txt",
+    "source": "phase0\\logs\\dispatch-2026-11-15T15-38-46\\reply.txt",
+    "bytes": 2050,
+    "sha256": "9a5897989712a4cfc6fadaffa25c1e5855f466540e0915566d6aa4deb6ba667e",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T15-38-46/request.txt",
+    "source": "phase0\\logs\\dispatch-2026-11-15T15-38-46\\request.txt",
+    "bytes": 1099,
+    "sha256": "fb4b4fff093a19fb21a4c1a61912e272d47e4d617f18c7dd139e9a5ec21e0941",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T15-38-46/run.log",
+    "source": "phase0\\logs\\dispatch-2026-11-15T15-38-46\\run.log",
+    "bytes": 1292,
+    "sha256": "0696b64e89650542d34dd40f73df268182578a19328266170a3056873ef18d47",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T15-47-04/request.txt",
+    "source": "phase0\\logs\\dispatch-2026-11-15T15-47-04\\request.txt",
+    "bytes": 1025,
+    "sha256": "21e0f830a220000eafa50e19361135d0d2baf34a9d0efdbf8a4ef0b9cb72d748",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T15-47-04/run.log",
+    "source": "phase0\\logs\\dispatch-2026-11-15T15-47-04\\run.log",
+    "bytes": 1083,
+    "sha256": "4b77e11c065df8c2d6f925bd870dcf4bb5b44d0efd5ac2215973de85b46c1ebb",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T16-01-00/result.json",
+    "source": "phase0\\logs\\dispatch-2026-11-15T16-01-00\\result.json",
+    "bytes": 6713,
+    "sha256": "4fdc80ba9405e438cf0bd7235f0c6ced4f3e1ddb74c670962024c09a20da3073",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T16-01-00/reply.txt",
+    "source": "phase0\\logs\\dispatch-2026-11-15T16-01-00\\reply.txt",
+    "bytes": 946,
+    "sha256": "498cbcfffca030016aff7d16c937581a20c190a0ae821181fae3b6cba13a5ec6",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T16-01-00/request.txt",
+    "source": "phase0\\logs\\dispatch-2026-11-15T16-01-00\\request.txt",
+    "bytes": 614,
+    "sha256": "071d812f10da98e1e763116a3a05376aee8ca5e51552211c5062a742f7502a2d",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T16-01-00/run.log",
+    "source": "phase0\\logs\\dispatch-2026-11-15T16-01-00\\run.log",
+    "bytes": 1130,
+    "sha256": "f7df9b26332d674ca8e30b13b9c11b8a079af6572d7c5494b25e84d3c751d193",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T16-10-05/request.txt",
+    "source": "phase0\\logs\\dispatch-2026-11-15T16-10-05\\request.txt",
+    "bytes": 614,
+    "sha256": "6c317cf0cb3186fb80fc98279d8303cabf67f30ffae8c74bcf5000be96356777",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T16-10-05/run.log",
+    "source": "phase0\\logs\\dispatch-2026-11-15T16-10-05\\run.log",
+    "bytes": 199,
+    "sha256": "1e266849be88665410f5e1ca16decd537572136c51cc92cd2059ffc59afc4480",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T16-11-04/result.json",
+    "source": "phase0\\logs\\dispatch-2026-11-15T16-11-04\\result.json",
+    "bytes": 6090,
+    "sha256": "5e60b0c3b506d03a1507c6ee1001c7082282149fd571d1749c174e6977a726e3",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T16-11-04/reply.txt",
+    "source": "phase0\\logs\\dispatch-2026-11-15T16-11-04\\reply.txt",
+    "bytes": 330,
+    "sha256": "e2cc1d54c65f60b9dd517c3c99d3c399b7490e9d07db984e19a8567e3ca8e89e",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T16-11-04/request.txt",
+    "source": "phase0\\logs\\dispatch-2026-11-15T16-11-04\\request.txt",
+    "bytes": 600,
+    "sha256": "665767b237c270111c18f13ffe332e0b500be44bd54429e40c4be36740f47a24",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T16-11-04/run.log",
+    "source": "phase0\\logs\\dispatch-2026-11-15T16-11-04\\run.log",
+    "bytes": 1130,
+    "sha256": "d62f4514e101f50c5d39fc1434a30e4b27d8147cc61c928977ea36e8c5761b6d",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T16-15-30/request.txt",
+    "source": "phase0\\logs\\dispatch-2026-11-15T16-15-30\\request.txt",
+    "bytes": 614,
+    "sha256": "e932fb8a5934e1c559f9e39914dc12db187c0e1f93c588ba9abbf8a487c763f8",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T16-15-30/run.log",
+    "source": "phase0\\logs\\dispatch-2026-11-15T16-15-30\\run.log",
+    "bytes": 670,
+    "sha256": "ecaf3b4d6ab25b4dc2a91d898be1a6e27b90d5d7a76372d4d0f01dfeabed0ced",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T16-17-44/request.txt",
+    "source": "phase0\\logs\\dispatch-2026-11-15T16-17-44\\request.txt",
+    "bytes": 614,
+    "sha256": "e932fb8a5934e1c559f9e39914dc12db187c0e1f93c588ba9abbf8a487c763f8",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T16-17-44/run.log",
+    "source": "phase0\\logs\\dispatch-2026-11-15T16-17-44\\run.log",
+    "bytes": 430,
+    "sha256": "bdcf76aa88f0c57b123217199912d6802d01acdf309cc5dbd1eba14961139e83",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T16-20-16/result.json",
+    "source": "phase0\\logs\\dispatch-2026-11-15T16-20-16\\result.json",
+    "bytes": 6102,
+    "sha256": "02086b6fe7d92d9b6159c81b1d54420f4b025474575d2dd3d44c838170f35f45",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T16-20-16/reply.txt",
+    "source": "phase0\\logs\\dispatch-2026-11-15T16-20-16\\reply.txt",
+    "bytes": 342,
+    "sha256": "eb8ec9dfcdf67e02d1c972ae1e8b1e55e9c9d16e2724fbfa514dd4ebb04f6de7",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T16-20-16/request.txt",
+    "source": "phase0\\logs\\dispatch-2026-11-15T16-20-16\\request.txt",
+    "bytes": 614,
+    "sha256": "e932fb8a5934e1c559f9e39914dc12db187c0e1f93c588ba9abbf8a487c763f8",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T16-20-16/run.log",
+    "source": "phase0\\logs\\dispatch-2026-11-15T16-20-16\\run.log",
+    "bytes": 1131,
+    "sha256": "e39951c1234935279be2bf56312734d7605d5288d33caa24e24c3d22bb0bff3b",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T16-25-10/request.txt",
+    "source": "phase0\\logs\\dispatch-2026-11-15T16-25-10\\request.txt",
+    "bytes": 1174,
+    "sha256": "0fa60b96042ab4969911374616b4461292e61234d59d6c4870c3f1ab5ef2bf70",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T16-25-10/run.log",
+    "source": "phase0\\logs\\dispatch-2026-11-15T16-25-10\\run.log",
+    "bytes": 1082,
+    "sha256": "b27c98e964386b09a56eda4df4c51af80f06029e497954494bc78eccf0881ad2",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T16-43-52/result.json",
+    "source": "phase0\\logs\\dispatch-2026-11-15T16-43-52\\result.json",
+    "bytes": 6574,
+    "sha256": "93ccf9ab463b057f00a88520d3199f9d9acbdcb9e9126d3341a1f733cb7249e3",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T16-43-52/reply.txt",
+    "source": "phase0\\logs\\dispatch-2026-11-15T16-43-52\\reply.txt",
+    "bytes": 807,
+    "sha256": "40b2cafdb4004d2169c7effadd43924455132b6cc5f3022ca1c5f6061a57efd9",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T16-43-52/request.txt",
+    "source": "phase0\\logs\\dispatch-2026-11-15T16-43-52\\request.txt",
+    "bytes": 614,
+    "sha256": "bde8afe24b96739dae06e514269ca95d5dec13d3315c5fdf58c79b442971954b",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T16-43-52/run.log",
+    "source": "phase0\\logs\\dispatch-2026-11-15T16-43-52\\run.log",
+    "bytes": 1131,
+    "sha256": "b66ce8d888a3998e96fecbf25c2664d5dad85be5e0f697f015cee214d8318fcd",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T16-59-57/result.json",
+    "source": "phase0\\logs\\dispatch-2026-11-15T16-59-57\\result.json",
+    "bytes": 6109,
+    "sha256": "bd7499060aae4a5055acf7d7b0ebbd67f6e4f5a7de910ab4f4873096541647e8",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T16-59-57/reply.txt",
+    "source": "phase0\\logs\\dispatch-2026-11-15T16-59-57\\reply.txt",
+    "bytes": 349,
+    "sha256": "9298921f15a9ed1997f228bbf788ae78767f680b525e4b3bd38c812aa7f3efdc",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T16-59-57/request.txt",
+    "source": "phase0\\logs\\dispatch-2026-11-15T16-59-57\\request.txt",
+    "bytes": 614,
+    "sha256": "c5aae1e64ef43a4da94724d5be2b49ab672aea340ccbfac6576c7a30fe749498",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T16-59-57/run.log",
+    "source": "phase0\\logs\\dispatch-2026-11-15T16-59-57\\run.log",
+    "bytes": 1125,
+    "sha256": "06faf49795230efb6b3a3ce97837e8b3b120a00d53cc74a4c3596b8f25aa0bf0",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T17-12-16/result.json",
+    "source": "phase0\\logs\\dispatch-2026-11-15T17-12-16\\result.json",
+    "bytes": 6082,
+    "sha256": "1ca461be0b8662edc3d28a817eb4060ee9c1d573dc6977468c16ad185724b76b",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T17-12-16/reply.txt",
+    "source": "phase0\\logs\\dispatch-2026-11-15T17-12-16\\reply.txt",
+    "bytes": 322,
+    "sha256": "0f323ef28dbb689fdd83d83d188f059ce837636f366bf97f911fc5d9ad1d961c",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T17-12-16/request.txt",
+    "source": "phase0\\logs\\dispatch-2026-11-15T17-12-16\\request.txt",
+    "bytes": 614,
+    "sha256": "148f1d36c308fb56f6c252430e3ca51bbf188c102a9e2756f9c97cd204762b35",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "dispatch/dispatch-2026-11-15T17-12-16/run.log",
+    "source": "phase0\\logs\\dispatch-2026-11-15T17-12-16\\run.log",
+    "bytes": 932,
+    "sha256": "53912b165e34cd83f9e6a7d090057f35565213df5305a61a8425a7c5235fcd41",
+    "note": "dispatch evidence"
+  },
+  {
+    "archive": "recoll/recoll-2026-11-15T13-06-02-854Z/result.json",
+    "source": "phase0\\logs\\recoll-2026-11-15T13-06-02-854Z\\result.json",
+    "bytes": 2806,
+    "sha256": "2f71932afdd075a698d07b89d47ae669aa59e173e670074c3b874c6ae1266f82",
+    "note": "recollection evidence"
+  },
+  {
+    "archive": "recoll/recoll-2026-11-15T13-06-02-854Z/reply.txt",
+    "source": "phase0\\logs\\recoll-2026-11-15T13-06-02-854Z\\reply.txt",
+    "bytes": 15885,
+    "sha256": "fbd3f0ee3f18b94907d90d614978b1250922a7322d25b0b7141a82149830f70e",
+    "note": "recollection evidence"
+  },
+  {
+    "archive": "recoll/recoll-2026-11-15T13-23-46-826Z/result.json",
+    "source": "phase0\\logs\\recoll-2026-11-15T13-23-46-826Z\\result.json",
+    "bytes": 2805,
+    "sha256": "a8152aaecf72cbaa6592b460ced14cc3f05a0becda5a9b33dc7a324e7fa19606",
+    "note": "recollection evidence"
+  },
+  {
+    "archive": "recoll/recoll-2026-11-15T13-23-46-826Z/reply.txt",
+    "source": "phase0\\logs\\recoll-2026-11-15T13-23-46-826Z\\reply.txt",
+    "bytes": 6156,
+    "sha256": "9e8bd5c43fdc1a3af55a0b8a63c5bc7f72c5887ebfb0799403d1e6e52a0504ec",
+    "note": "recollection evidence"
+  },
+  {
+    "archive": "recoll/recoll-2026-11-15T13-38-16-181Z-vp/result.json",
+    "source": "phase0\\logs\\recoll-2026-11-15T13-38-16-181Z-vp\\result.json",
+    "bytes": 2803,
+    "sha256": "46045b77923ffda7168b6bb200783d56edf53e7c50b3ef9987bb2b1d6144d769",
+    "note": "recollection evidence"
+  },
+  {
+    "archive": "recoll/recoll-2026-11-15T13-38-16-181Z-vp/reply.txt",
+    "source": "phase0\\logs\\recoll-2026-11-15T13-38-16-181Z-vp\\reply.txt",
+    "bytes": 4090,
+    "sha256": "dcc3586855d7bfed610ec81a3ac7111a0dddd8ec9f7cb33193bb7bde8b1f2458",
+    "note": "recollection evidence"
+  },
+  {
+    "archive": "recoll/recoll-2026-11-15T13-45-38-187Z-vp/result.json",
+    "source": "phase0\\logs\\recoll-2026-11-15T13-45-38-187Z-vp\\result.json",
+    "bytes": 2805,
+    "sha256": "677d5bcf99773385396018a8e5a480ac4032e933bfbf90d3cfa1795502d600f2",
+    "note": "recollection evidence"
+  },
+  {
+    "archive": "recoll/recoll-2026-11-15T13-45-38-187Z-vp/reply.txt",
+    "source": "phase0\\logs\\recoll-2026-11-15T13-45-38-187Z-vp\\reply.txt",
+    "bytes": 3976,
+    "sha256": "efc31d795d4c15f9d13fdfcab8ae172a5dd124b47bb0f0b61159ff494ff29f00",
+    "note": "recollection evidence"
+  },
+  {
+    "archive": "recoll/recoll-2026-11-15T13-51-18-782Z-vp/result.json",
+    "source": "phase0\\logs\\recoll-2026-11-15T13-51-18-782Z-vp\\result.json",
+    "bytes": 2805,
+    "sha256": "8d693215f1c19d84845375787d2781f6c29923b972c2404c8773861d34fc7c30",
+    "note": "recollection evidence"
+  },
+  {
+    "archive": "recoll/recoll-2026-11-15T13-51-18-782Z-vp/reply.txt",
+    "source": "phase0\\logs\\recoll-2026-11-15T13-51-18-782Z-vp\\reply.txt",
+    "bytes": 3408,
+    "sha256": "b791239c5df253ec4148484689089acd35463a4e12bf3045c82334ade1339256",
+    "note": "recollection evidence"
+  },
+  {
+    "archive": "recoll/recoll-2026-11-15T15-16-34-705Z/result.json",
+    "source": "phase0\\logs\\recoll-2026-11-15T15-16-34-705Z\\result.json",
+    "bytes": 2848,
+    "sha256": "8904e5ac87392b99e0ef92abf1ebfe9940dcf6ef2f8c4816a5d207fbf174e655",
+    "note": "recollection evidence"
+  },
+  {
+    "archive": "recoll/recoll-2026-11-15T15-16-34-705Z/reply.txt",
+    "source": "phase0\\logs\\recoll-2026-11-15T15-16-34-705Z\\reply.txt",
+    "bytes": 9041,
+    "sha256": "488132da2bbd04cf0ca0b94f7ca9d3200d5ab1389f8cd6ea83e97788fc1e3e18",
+    "note": "recollection evidence"
+  },
+  {
+    "archive": "recoll/recoll-2026-11-15T15-34-46-680Z/result.json",
+    "source": "phase0\\logs\\recoll-2026-11-15T15-34-46-680Z\\result.json",
+    "bytes": 2816,
+    "sha256": "97dde947466807e89e1234f77cfc0163a78c07c48d2782379a5f67ea26d792ac",
+    "note": "recollection evidence"
+  },
+  {
+    "archive": "recoll/recoll-2026-11-15T15-34-46-680Z/reply.txt",
+    "source": "phase0\\logs\\recoll-2026-11-15T15-34-46-680Z\\reply.txt",
+    "bytes": 6309,
+    "sha256": "de74148b18f4c15243a8fa39388897e42a5709e8fbb3d4938ddcf34b5669516c",
+    "note": "recollection evidence"
+  },
+  {
+    "archive": "recoll/recoll-2026-11-15T15-52-56-237Z/result.json",
+    "source": "phase0\\logs\\recoll-2026-11-15T15-52-56-237Z\\result.json",
+    "bytes": 2832,
+    "sha256": "b4b818356bc3d724ffdcadaa47a6381d80de38cbde8324afd4ea3bed9264973c",
+    "note": "recollection evidence"
+  },
+  {
+    "archive": "recoll/recoll-2026-11-15T15-52-56-237Z/reply.txt",
+    "source": "phase0\\logs\\recoll-2026-11-15T15-52-56-237Z\\reply.txt",
+    "bytes": 3617,
+    "sha256": "d2a9c58a9d2ed338320048b5bae062b2bdbd19149de5175779c12c34cc6e519e",
+    "note": "recollection evidence"
+  },
+  {
+    "archive": "recoll/recoll-2026-11-15T16-38-25-773Z/result.json",
+    "source": "phase0\\logs\\recoll-2026-11-15T16-38-25-773Z\\result.json",
+    "bytes": 2860,
+    "sha256": "ca8945dcd27f3587de6bec9cdf731af9bf4d4d7b34932f632b50623286816e50",
+    "note": "recollection evidence"
+  },
+  {
+    "archive": "recoll/recoll-2026-11-15T16-38-25-773Z/reply.txt",
+    "source": "phase0\\logs\\recoll-2026-11-15T16-38-25-773Z\\reply.txt",
+    "bytes": 8202,
+    "sha256": "a5f15e6dec575232fe81e9092c186b6fbd92033dd8dc1f93746aed992786b1b0",
+    "note": "recollection evidence"
+  },
+  {
+    "archive": "a3-probe/recoll-2026-11-15T16-06-09-203Z/units-diag.json",
+    "source": "phase0\\logs\\recoll-2026-11-15T16-06-09-203Z\\units-diag.json",
+    "bytes": 473,
+    "sha256": "481c9d00c2c22e28ba9cd6a9749e35b2d16219bd1676fad4862675a4b2c3463a",
+    "note": "A3 injection probe evidence"
+  },
+  {
+    "archive": "a3-probe/recoll-2026-11-15T16-06-09-203Z/run.log",
+    "source": "phase0\\logs\\recoll-2026-11-15T16-06-09-203Z\\run.log",
+    "bytes": 629,
+    "sha256": "c32a532ddeae9c18dea6922fd876010bf0a8830ce35aff4a092da65618c6e456",
+    "note": "A3 injection probe evidence"
+  },
+  {
+    "archive": "a3-probe/recoll-2026-11-15T16-07-31-398Z/units-diag.json",
+    "source": "phase0\\logs\\recoll-2026-11-15T16-07-31-398Z\\units-diag.json",
+    "bytes": 473,
+    "sha256": "481c9d00c2c22e28ba9cd6a9749e35b2d16219bd1676fad4862675a4b2c3463a",
+    "note": "A3 injection probe evidence"
+  },
+  {
+    "archive": "a3-probe/recoll-2026-11-15T16-07-31-398Z/run.log",
+    "source": "phase0\\logs\\recoll-2026-11-15T16-07-31-398Z\\run.log",
+    "bytes": 1185,
+    "sha256": "05c7adcc9d38cbb15813a3820a32a11d85b92e22ffa30e856e441dbfaacba021",
+    "note": "A3 injection probe evidence"
+  },
+  {
+    "archive": "m1-export.json",
+    "source": "runtime/t-p1-908/aieo.db (read-only)",
+    "bytes": 27088,
+    "sha256": "a61108c75891280453dcd10ee3684b76b51d4a7147dd5e235a9eec52aea7bda3",
+    "note": "M1 read-only export: tasks/events/reports/artifacts/messages for the six tasks"
+  }
+]

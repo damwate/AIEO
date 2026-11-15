@@ -1,0 +1,804 @@
+{
+  "tasks": [
+    {
+      "task_id": "T-P1-017",
+      "status": "REWORK",
+      "task_package_hash": "249a547dfd2278a2a8a1a60012b6526b039688d998438706cae47e6573a97997",
+      "engineering_standard_version": "1.0.0",
+      "knowledge_base_commit": "67c177c4f9c96a13cf21f0d882ae6b59b302a721",
+      "updated_at": "2026-11-15T16:03:25.382Z"
+    },
+    {
+      "task_id": "T-P1-018",
+      "status": "TEST_ACCEPTANCE",
+      "task_package_hash": "0cdcf7e93d0efcd5a12d331bbd6ccff6f4a1e357a33069fc167f139cfe8824e0",
+      "engineering_standard_version": "1.0.0",
+      "knowledge_base_commit": "67c177c4f9c96a13cf21f0d882ae6b59b302a721",
+      "updated_at": "2026-11-15T16:13:51.615Z"
+    },
+    {
+      "task_id": "T-P1-022",
+      "status": "TEST_ACCEPTANCE",
+      "task_package_hash": "1e787cf885d7368895bb3d1249198859b0227b185238699ea02eebf752c0d139",
+      "engineering_standard_version": "1.0.0",
+      "knowledge_base_commit": "67c177c4f9c96a13cf21f0d882ae6b59b302a721",
+      "updated_at": "2026-11-15T16:23:02.741Z"
+    },
+    {
+      "task_id": "T-P1-023",
+      "status": "REWORK",
+      "task_package_hash": "1f42b7268ceaf7ae7e8fa0830486a47d3a9c75dd907dc0c56587fc273d3a1351",
+      "engineering_standard_version": "1.0.0",
+      "knowledge_base_commit": "67c177c4f9c96a13cf21f0d882ae6b59b302a721",
+      "updated_at": "2026-11-15T16:46:22.966Z"
+    },
+    {
+      "task_id": "T-P1-024",
+      "status": "TEST_ACCEPTANCE",
+      "task_package_hash": "696cf1cb25ac811d33d55ac8cd77c0cbb2146af8b35e8d6f16c5ca7348257d38",
+      "engineering_standard_version": "1.0.0",
+      "knowledge_base_commit": "67c177c4f9c96a13cf21f0d882ae6b59b302a721",
+      "updated_at": "2026-11-15T17:02:46.260Z"
+    },
+    {
+      "task_id": "T-P1-026",
+      "status": "TEST_ACCEPTANCE",
+      "task_package_hash": "0cd64a193f9e38ba39fcb2067c392c61e749e336bbb4417f898392fd88bafabd",
+      "engineering_standard_version": "1.0.0",
+      "knowledge_base_commit": "67c177c4f9c96a13cf21f0d882ae6b59b302a721",
+      "updated_at": "2026-11-15T17:16:49.188Z"
+    }
+  ],
+  "task_events": [
+    {
+      "event_id": "EVT-908018-PLAN-01",
+      "task_id": "T-P1-017",
+      "event": "PLAN",
+      "from_status": "DRAFT",
+      "to_status": "PLANNING",
+      "actor_id": "OWNER",
+      "correlation_id": "CORR-908018",
+      "created_at": "2026-11-14T07:53:15.447Z"
+    },
+    {
+      "event_id": "EVT-908018-ARCH_REVIEW-02",
+      "task_id": "T-P1-017",
+      "event": "ARCH_REVIEW",
+      "from_status": "PLANNING",
+      "to_status": "ARCH_REVIEW",
+      "actor_id": "OWNER",
+      "correlation_id": "CORR-908018",
+      "created_at": "2026-11-14T07:53:15.518Z"
+    },
+    {
+      "event_id": "EVT-908018-PASS-03",
+      "task_id": "T-P1-017",
+      "event": "PASS",
+      "from_status": "ARCH_REVIEW",
+      "to_status": "READY",
+      "actor_id": "OWNER",
+      "correlation_id": "CORR-908018",
+      "created_at": "2026-11-14T07:53:15.591Z"
+    },
+    {
+      "event_id": "EVT-CLAIM-fc96f891120a4552a0d2f766091b2be8",
+      "task_id": "T-P1-017",
+      "event": "DISPATCH",
+      "from_status": "READY",
+      "to_status": "DISPATCHED",
+      "actor_id": "ZCODE-01",
+      "correlation_id": "865ff534-f05e-4e91-8236-3ab685145bc3",
+      "created_at": "2026-11-14T07:53:16.987Z"
+    },
+    {
+      "event_id": "EVT-908018-START-01",
+      "task_id": "T-P1-017",
+      "event": "START",
+      "from_status": "DISPATCHED",
+      "to_status": "IN_PROGRESS",
+      "actor_id": "OWNER",
+      "correlation_id": "CORR-908018",
+      "created_at": "2026-11-14T07:53:17.074Z"
+    },
+    {
+      "event_id": "EVT-DEV-EXEC-009",
+      "task_id": "T-P1-017",
+      "event": "DEVELOPMENT_COMPLETED",
+      "from_status": "IN_PROGRESS",
+      "to_status": "DEV_REPORTED",
+      "actor_id": "ZCODE-01",
+      "correlation_id": "d5a78ba6-85af-4d3e-946c-f0eaf4088499",
+      "created_at": "2026-11-14T07:55:05.431Z"
+    },
+    {
+      "event_id": "EVT-RVL-918003-GIT_VALIDATE-01",
+      "task_id": "T-P1-017",
+      "event": "GIT_VALIDATE",
+      "from_status": "DEV_REPORTED",
+      "to_status": "GIT_VALIDATING",
+      "actor_id": "ENGINE-01",
+      "correlation_id": "CORR-918003",
+      "created_at": "2026-11-15T16:00:59.063Z"
+    },
+    {
+      "event_id": "EVT-RVL-918003-PASS-02",
+      "task_id": "T-P1-017",
+      "event": "PASS",
+      "from_status": "GIT_VALIDATING",
+      "to_status": "CODE_REVIEW",
+      "actor_id": "ENGINE-01",
+      "correlation_id": "CORR-918003",
+      "created_at": "2026-11-15T16:00:59.341Z"
+    },
+    {
+      "event_id": "EVT-REVIEW-EXEC-009-6faa2f003824",
+      "task_id": "T-P1-017",
+      "event": "REWORK",
+      "from_status": "CODE_REVIEW",
+      "to_status": "REWORK",
+      "actor_id": "ENGINE-01",
+      "correlation_id": "bb9c3359-2897-4b02-83f8-9bc36c810059",
+      "created_at": "2026-11-15T16:03:25.382Z"
+    },
+    {
+      "event_id": "EVT-908019-PLAN-01",
+      "task_id": "T-P1-018",
+      "event": "PLAN",
+      "from_status": "DRAFT",
+      "to_status": "PLANNING",
+      "actor_id": "OWNER",
+      "correlation_id": "CORR-908019",
+      "created_at": "2026-11-14T07:59:44.606Z"
+    },
+    {
+      "event_id": "EVT-908019-ARCH_REVIEW-02",
+      "task_id": "T-P1-018",
+      "event": "ARCH_REVIEW",
+      "from_status": "PLANNING",
+      "to_status": "ARCH_REVIEW",
+      "actor_id": "OWNER",
+      "correlation_id": "CORR-908019",
+      "created_at": "2026-11-14T07:59:44.677Z"
+    },
+    {
+      "event_id": "EVT-908019-PASS-03",
+      "task_id": "T-P1-018",
+      "event": "PASS",
+      "from_status": "ARCH_REVIEW",
+      "to_status": "READY",
+      "actor_id": "OWNER",
+      "correlation_id": "CORR-908019",
+      "created_at": "2026-11-14T07:59:44.744Z"
+    },
+    {
+      "event_id": "EVT-CLAIM-ad6b2aee443c41b6b0f53fc585dffbf2",
+      "task_id": "T-P1-018",
+      "event": "DISPATCH",
+      "from_status": "READY",
+      "to_status": "DISPATCHED",
+      "actor_id": "ZCODE-01",
+      "correlation_id": "0c9a7c67-f943-484b-9351-7608eed4c783",
+      "created_at": "2026-11-14T07:59:46.055Z"
+    },
+    {
+      "event_id": "EVT-908019-START-01",
+      "task_id": "T-P1-018",
+      "event": "START",
+      "from_status": "DISPATCHED",
+      "to_status": "IN_PROGRESS",
+      "actor_id": "OWNER",
+      "correlation_id": "CORR-908019",
+      "created_at": "2026-11-14T07:59:46.141Z"
+    },
+    {
+      "event_id": "EVT-DEV-EXEC-010",
+      "task_id": "T-P1-018",
+      "event": "DEVELOPMENT_COMPLETED",
+      "from_status": "IN_PROGRESS",
+      "to_status": "DEV_REPORTED",
+      "actor_id": "ZCODE-01",
+      "correlation_id": "37de3c6e-02c3-4ecd-8ed9-36b92eb3165e",
+      "created_at": "2026-11-14T08:01:35.477Z"
+    },
+    {
+      "event_id": "EVT-RVL-918005-GIT_VALIDATE-01",
+      "task_id": "T-P1-018",
+      "event": "GIT_VALIDATE",
+      "from_status": "DEV_REPORTED",
+      "to_status": "GIT_VALIDATING",
+      "actor_id": "ENGINE-01",
+      "correlation_id": "CORR-918005",
+      "created_at": "2026-11-15T16:10:04.807Z"
+    },
+    {
+      "event_id": "EVT-RVL-918005-PASS-02",
+      "task_id": "T-P1-018",
+      "event": "PASS",
+      "from_status": "GIT_VALIDATING",
+      "to_status": "CODE_REVIEW",
+      "actor_id": "ENGINE-01",
+      "correlation_id": "CORR-918005",
+      "created_at": "2026-11-15T16:10:05.037Z"
+    },
+    {
+      "event_id": "EVT-REVIEW-EXEC-010-fda9183dafb7",
+      "task_id": "T-P1-018",
+      "event": "PASS",
+      "from_status": "CODE_REVIEW",
+      "to_status": "TEST_ACCEPTANCE",
+      "actor_id": "ENGINE-01",
+      "correlation_id": "050f9d87-bfe5-4184-9bfd-c5fcca1c7ce6",
+      "created_at": "2026-11-15T16:13:51.615Z"
+    },
+    {
+      "event_id": "EVT-A6-01",
+      "task_id": "T-P1-022",
+      "event": "PLAN",
+      "from_status": "DRAFT",
+      "to_status": "PLANNING",
+      "actor_id": "OWNER",
+      "correlation_id": "6cafd60b-7ed9-424b-b3da-f55d1207473e",
+      "created_at": "2026-11-15T16:15:11.572Z"
+    },
+    {
+      "event_id": "EVT-A6-02",
+      "task_id": "T-P1-022",
+      "event": "ARCH_REVIEW",
+      "from_status": "PLANNING",
+      "to_status": "ARCH_REVIEW",
+      "actor_id": "OWNER",
+      "correlation_id": "807c17f1-975d-4f00-9c0d-23fc8b41dc51",
+      "created_at": "2026-11-15T16:15:11.615Z"
+    },
+    {
+      "event_id": "EVT-A6-03",
+      "task_id": "T-P1-022",
+      "event": "PASS",
+      "from_status": "ARCH_REVIEW",
+      "to_status": "READY",
+      "actor_id": "OWNER",
+      "correlation_id": "fde38445-b3df-4020-9447-4fe0a1b00792",
+      "created_at": "2026-11-15T16:15:11.661Z"
+    },
+    {
+      "event_id": "EVT-CLAIM-762d8d146ee44ca9bfc7907a372079f0",
+      "task_id": "T-P1-022",
+      "event": "DISPATCH",
+      "from_status": "READY",
+      "to_status": "DISPATCHED",
+      "actor_id": "OWNER",
+      "correlation_id": "1bd7ac62-3547-4cd3-abae-1814686c497b",
+      "created_at": "2026-11-15T16:15:11.710Z"
+    },
+    {
+      "event_id": "EVT-A6-START",
+      "task_id": "T-P1-022",
+      "event": "START",
+      "from_status": "DISPATCHED",
+      "to_status": "IN_PROGRESS",
+      "actor_id": "OWNER",
+      "correlation_id": "ed2523ff-6f1a-4d06-b0e8-cf341999ae53",
+      "created_at": "2026-11-15T16:15:11.778Z"
+    },
+    {
+      "event_id": "EVT-A6-DEV",
+      "task_id": "T-P1-022",
+      "event": "DEVELOPMENT_COMPLETED",
+      "from_status": "IN_PROGRESS",
+      "to_status": "DEV_REPORTED",
+      "actor_id": "OWNER",
+      "correlation_id": "ec36130e-c120-416c-beeb-a16efb8efd3d",
+      "created_at": "2026-11-15T16:15:11.887Z"
+    },
+    {
+      "event_id": "EVT-RVL-918007-GIT_VALIDATE-01",
+      "task_id": "T-P1-022",
+      "event": "GIT_VALIDATE",
+      "from_status": "DEV_REPORTED",
+      "to_status": "GIT_VALIDATING",
+      "actor_id": "ENGINE-01",
+      "correlation_id": "CORR-918007",
+      "created_at": "2026-11-15T16:15:29.791Z"
+    },
+    {
+      "event_id": "EVT-RVL-918007-PASS-02",
+      "task_id": "T-P1-022",
+      "event": "PASS",
+      "from_status": "GIT_VALIDATING",
+      "to_status": "CODE_REVIEW",
+      "actor_id": "ENGINE-01",
+      "correlation_id": "CORR-918007",
+      "created_at": "2026-11-15T16:15:30.020Z"
+    },
+    {
+      "event_id": "EVT-REVIEW-EXEC-011-fda9183dafb7",
+      "task_id": "T-P1-022",
+      "event": "PASS",
+      "from_status": "CODE_REVIEW",
+      "to_status": "TEST_ACCEPTANCE",
+      "actor_id": "ENGINE-01",
+      "correlation_id": "0958c18b-fd36-46f6-bf57-6cd9f09abfbd",
+      "created_at": "2026-11-15T16:23:02.741Z"
+    },
+    {
+      "event_id": "EVT-A5-01",
+      "task_id": "T-P1-023",
+      "event": "PLAN",
+      "from_status": "DRAFT",
+      "to_status": "PLANNING",
+      "actor_id": "OWNER",
+      "correlation_id": "a428fabd-d954-4a95-b815-7950a3a76c59",
+      "created_at": "2026-11-15T16:43:24.037Z"
+    },
+    {
+      "event_id": "EVT-A5-02",
+      "task_id": "T-P1-023",
+      "event": "ARCH_REVIEW",
+      "from_status": "PLANNING",
+      "to_status": "ARCH_REVIEW",
+      "actor_id": "OWNER",
+      "correlation_id": "fcef847d-3a30-4315-aef3-079731e069a4",
+      "created_at": "2026-11-15T16:43:24.065Z"
+    },
+    {
+      "event_id": "EVT-A5-03",
+      "task_id": "T-P1-023",
+      "event": "PASS",
+      "from_status": "ARCH_REVIEW",
+      "to_status": "READY",
+      "actor_id": "OWNER",
+      "correlation_id": "8f7560b1-b2c5-45bc-8902-61aa699c44fe",
+      "created_at": "2026-11-15T16:43:24.092Z"
+    },
+    {
+      "event_id": "EVT-CLAIM-2bd25341e1bd429d9a443f3f1bef1c3c",
+      "task_id": "T-P1-023",
+      "event": "DISPATCH",
+      "from_status": "READY",
+      "to_status": "DISPATCHED",
+      "actor_id": "OWNER",
+      "correlation_id": "9c284b3f-0315-48ac-ab72-1b6495de516b",
+      "created_at": "2026-11-15T16:43:24.119Z"
+    },
+    {
+      "event_id": "EVT-A5-START",
+      "task_id": "T-P1-023",
+      "event": "START",
+      "from_status": "DISPATCHED",
+      "to_status": "IN_PROGRESS",
+      "actor_id": "OWNER",
+      "correlation_id": "b81acf23-5c98-45bd-a7ff-fb0d69aa7b5a",
+      "created_at": "2026-11-15T16:43:24.149Z"
+    },
+    {
+      "event_id": "EVT-A5-DEV",
+      "task_id": "T-P1-023",
+      "event": "DEVELOPMENT_COMPLETED",
+      "from_status": "IN_PROGRESS",
+      "to_status": "DEV_REPORTED",
+      "actor_id": "OWNER",
+      "correlation_id": "d1d097ce-9756-4a88-a973-20bc58decd59",
+      "created_at": "2026-11-15T16:43:24.221Z"
+    },
+    {
+      "event_id": "EVT-RVL-918010-GIT_VALIDATE-01",
+      "task_id": "T-P1-023",
+      "event": "GIT_VALIDATE",
+      "from_status": "DEV_REPORTED",
+      "to_status": "GIT_VALIDATING",
+      "actor_id": "ENGINE-01",
+      "correlation_id": "CORR-918010",
+      "created_at": "2026-11-15T16:43:51.949Z"
+    },
+    {
+      "event_id": "EVT-RVL-918010-PASS-02",
+      "task_id": "T-P1-023",
+      "event": "PASS",
+      "from_status": "GIT_VALIDATING",
+      "to_status": "CODE_REVIEW",
+      "actor_id": "ENGINE-01",
+      "correlation_id": "CORR-918010",
+      "created_at": "2026-11-15T16:43:52.148Z"
+    },
+    {
+      "event_id": "EVT-REVIEW-EXEC-012-fda9183dafb7",
+      "task_id": "T-P1-023",
+      "event": "REWORK",
+      "from_status": "CODE_REVIEW",
+      "to_status": "REWORK",
+      "actor_id": "ENGINE-01",
+      "correlation_id": "39fe2df4-24fb-425c-85f0-b1b1dd4682c3",
+      "created_at": "2026-11-15T16:46:22.966Z"
+    },
+    {
+      "event_id": "EVT-A5B-T-P1-024-01",
+      "task_id": "T-P1-024",
+      "event": "PLAN",
+      "from_status": "DRAFT",
+      "to_status": "PLANNING",
+      "actor_id": "OWNER",
+      "correlation_id": "32394714-9cc8-4702-8373-a978485fb8a2",
+      "created_at": "2026-11-15T16:59:53.690Z"
+    },
+    {
+      "event_id": "EVT-A5B-T-P1-024-02",
+      "task_id": "T-P1-024",
+      "event": "ARCH_REVIEW",
+      "from_status": "PLANNING",
+      "to_status": "ARCH_REVIEW",
+      "actor_id": "OWNER",
+      "correlation_id": "af345db4-f03b-4d9c-bb50-b0a34950e2e1",
+      "created_at": "2026-11-15T16:59:53.735Z"
+    },
+    {
+      "event_id": "EVT-A5B-T-P1-024-03",
+      "task_id": "T-P1-024",
+      "event": "PASS",
+      "from_status": "ARCH_REVIEW",
+      "to_status": "READY",
+      "actor_id": "OWNER",
+      "correlation_id": "126be4c5-441f-4cf1-92a2-2e34f3885b9a",
+      "created_at": "2026-11-15T16:59:53.777Z"
+    },
+    {
+      "event_id": "EVT-CLAIM-ded862289e3245059fd6a943b88abd09",
+      "task_id": "T-P1-024",
+      "event": "DISPATCH",
+      "from_status": "READY",
+      "to_status": "DISPATCHED",
+      "actor_id": "OWNER",
+      "correlation_id": "61796170-cb96-4480-a5fd-d322fc1557ca",
+      "created_at": "2026-11-15T16:59:53.822Z"
+    },
+    {
+      "event_id": "EVT-A5B-T-P1-024-START",
+      "task_id": "T-P1-024",
+      "event": "START",
+      "from_status": "DISPATCHED",
+      "to_status": "IN_PROGRESS",
+      "actor_id": "OWNER",
+      "correlation_id": "3e4cd482-cba4-4b29-8e92-bef4ce937e8b",
+      "created_at": "2026-11-15T16:59:53.894Z"
+    },
+    {
+      "event_id": "EVT-A5B-T-P1-024-DEV",
+      "task_id": "T-P1-024",
+      "event": "DEVELOPMENT_COMPLETED",
+      "from_status": "IN_PROGRESS",
+      "to_status": "DEV_REPORTED",
+      "actor_id": "OWNER",
+      "correlation_id": "79ae6a7e-c13e-4f1a-8584-63838c2bbd3a",
+      "created_at": "2026-11-15T16:59:54.009Z"
+    },
+    {
+      "event_id": "EVT-RVL-918011-GIT_VALIDATE-01",
+      "task_id": "T-P1-024",
+      "event": "GIT_VALIDATE",
+      "from_status": "DEV_REPORTED",
+      "to_status": "GIT_VALIDATING",
+      "actor_id": "ENGINE-01",
+      "correlation_id": "CORR-918011",
+      "created_at": "2026-11-15T16:59:55.505Z"
+    },
+    {
+      "event_id": "EVT-RVL-918011-PASS-02",
+      "task_id": "T-P1-024",
+      "event": "PASS",
+      "from_status": "GIT_VALIDATING",
+      "to_status": "CODE_REVIEW",
+      "actor_id": "ENGINE-01",
+      "correlation_id": "CORR-918011",
+      "created_at": "2026-11-15T16:59:55.876Z"
+    },
+    {
+      "event_id": "EVT-REVIEW-EXEC-013-fda9183dafb7",
+      "task_id": "T-P1-024",
+      "event": "PASS",
+      "from_status": "CODE_REVIEW",
+      "to_status": "TEST_ACCEPTANCE",
+      "actor_id": "ENGINE-01",
+      "correlation_id": "d9ffd3a5-2671-4eba-8955-4ffe231b8c8f",
+      "created_at": "2026-11-15T17:02:46.260Z"
+    },
+    {
+      "event_id": "EVT-A5D-T-P1-026-01",
+      "task_id": "T-P1-026",
+      "event": "PLAN",
+      "from_status": "DRAFT",
+      "to_status": "PLANNING",
+      "actor_id": "OWNER",
+      "correlation_id": "a6f8204b-3663-4277-9c9a-a8505919d89d",
+      "created_at": "2026-11-15T17:12:11.134Z"
+    },
+    {
+      "event_id": "EVT-A5D-T-P1-026-02",
+      "task_id": "T-P1-026",
+      "event": "ARCH_REVIEW",
+      "from_status": "PLANNING",
+      "to_status": "ARCH_REVIEW",
+      "actor_id": "OWNER",
+      "correlation_id": "3fc77559-47ec-4ba6-9966-d7e65a14e838",
+      "created_at": "2026-11-15T17:12:11.195Z"
+    },
+    {
+      "event_id": "EVT-A5D-T-P1-026-03",
+      "task_id": "T-P1-026",
+      "event": "PASS",
+      "from_status": "ARCH_REVIEW",
+      "to_status": "READY",
+      "actor_id": "OWNER",
+      "correlation_id": "529b2bdd-107e-407b-847f-d8e6d84cc7c3",
+      "created_at": "2026-11-15T17:12:11.263Z"
+    },
+    {
+      "event_id": "EVT-CLAIM-aaf028c32d494a26a53757b1c05f94a2",
+      "task_id": "T-P1-026",
+      "event": "DISPATCH",
+      "from_status": "READY",
+      "to_status": "DISPATCHED",
+      "actor_id": "OWNER",
+      "correlation_id": "db5d6241-1e8d-4742-9915-d446aad16fe4",
+      "created_at": "2026-11-15T17:12:11.317Z"
+    },
+    {
+      "event_id": "EVT-A5D-T-P1-026-START",
+      "task_id": "T-P1-026",
+      "event": "START",
+      "from_status": "DISPATCHED",
+      "to_status": "IN_PROGRESS",
+      "actor_id": "OWNER",
+      "correlation_id": "e9e9714d-82d7-4fca-a677-8ecf8380aa3d",
+      "created_at": "2026-11-15T17:12:11.446Z"
+    },
+    {
+      "event_id": "EVT-A5D-T-P1-026-DEV",
+      "task_id": "T-P1-026",
+      "event": "DEVELOPMENT_COMPLETED",
+      "from_status": "IN_PROGRESS",
+      "to_status": "DEV_REPORTED",
+      "actor_id": "OWNER",
+      "correlation_id": "a89e6ce0-c0d9-49f8-9cd5-3e6bd1a70254",
+      "created_at": "2026-11-15T17:12:11.640Z"
+    },
+    {
+      "event_id": "EVT-RVL-918012-GIT_VALIDATE-01",
+      "task_id": "T-P1-026",
+      "event": "GIT_VALIDATE",
+      "from_status": "DEV_REPORTED",
+      "to_status": "GIT_VALIDATING",
+      "actor_id": "ENGINE-01",
+      "correlation_id": "CORR-918012",
+      "created_at": "2026-11-15T17:12:13.431Z"
+    },
+    {
+      "event_id": "EVT-RVL-918012-PASS-02",
+      "task_id": "T-P1-026",
+      "event": "PASS",
+      "from_status": "GIT_VALIDATING",
+      "to_status": "CODE_REVIEW",
+      "actor_id": "ENGINE-01",
+      "correlation_id": "CORR-918012",
+      "created_at": "2026-11-15T17:12:14.009Z"
+    },
+    {
+      "event_id": "EVT-REVIEW-EXEC-014-fda9183dafb7",
+      "task_id": "T-P1-026",
+      "event": "PASS",
+      "from_status": "CODE_REVIEW",
+      "to_status": "TEST_ACCEPTANCE",
+      "actor_id": "ENGINE-01",
+      "correlation_id": "1f616370-59a5-4647-8812-876c4f7fb87f",
+      "created_at": "2026-11-15T17:16:49.188Z"
+    }
+  ],
+  "review_reports": [
+    {
+      "task_id": "T-P1-017",
+      "execution_id": "EXEC-009",
+      "reviewed_commit": "6faa2f003824703f777ea0b3a7d28f720fc395f0",
+      "reviewer_agent_id": "GPT-03",
+      "result": "REWORK",
+      "created_at": "2026-11-15T16:03:25.383Z"
+    },
+    {
+      "task_id": "T-P1-018",
+      "execution_id": "EXEC-010",
+      "reviewed_commit": "fda9183dafb77ca15578abb244b3b2d15999fafb",
+      "reviewer_agent_id": "GPT-03",
+      "result": "PASS",
+      "created_at": "2026-11-15T16:13:51.616Z"
+    },
+    {
+      "task_id": "T-P1-022",
+      "execution_id": "EXEC-011",
+      "reviewed_commit": "fda9183dafb77ca15578abb244b3b2d15999fafb",
+      "reviewer_agent_id": "GPT-03",
+      "result": "PASS",
+      "created_at": "2026-11-15T16:23:02.742Z"
+    },
+    {
+      "task_id": "T-P1-023",
+      "execution_id": "EXEC-012",
+      "reviewed_commit": "fda9183dafb77ca15578abb244b3b2d15999fafb",
+      "reviewer_agent_id": "GPT-03",
+      "result": "REWORK",
+      "created_at": "2026-11-15T16:46:22.967Z"
+    },
+    {
+      "task_id": "T-P1-024",
+      "execution_id": "EXEC-013",
+      "reviewed_commit": "fda9183dafb77ca15578abb244b3b2d15999fafb",
+      "reviewer_agent_id": "GPT-03",
+      "result": "PASS",
+      "created_at": "2026-11-15T17:02:46.260Z"
+    },
+    {
+      "task_id": "T-P1-026",
+      "execution_id": "EXEC-014",
+      "reviewed_commit": "fda9183dafb77ca15578abb244b3b2d15999fafb",
+      "reviewer_agent_id": "GPT-03",
+      "result": "PASS",
+      "created_at": "2026-11-15T17:16:49.190Z"
+    }
+  ],
+  "artifacts_review": [
+    {
+      "artifact_id": "ART-DIFF-004",
+      "task_id": "T-P1-017",
+      "type": "DIFF",
+      "path": "git-worker/diffs/T-P1-017/diff-6faa2f003824703f777ea0b3a7d28f720fc395f0.patch",
+      "sha256": "d262403c6768f6cd9ebb031950a1fbc565c1b46691472d1f59e51c9ae0f608ea",
+      "created_at": "2026-11-14T07:55:05.307Z"
+    },
+    {
+      "artifact_id": "ART-REV-001",
+      "task_id": "T-P1-017",
+      "type": "REVIEW_EVIDENCE",
+      "path": "runtime/review-leg/rvl-918003/reply.txt",
+      "sha256": "498cbcfffca030016aff7d16c937581a20c190a0ae821181fae3b6cba13a5ec6",
+      "created_at": "2026-11-15T16:03:25.224Z"
+    },
+    {
+      "artifact_id": "ART-DIFF-005",
+      "task_id": "T-P1-018",
+      "type": "DIFF",
+      "path": "git-worker/diffs/T-P1-018/diff-fda9183dafb77ca15578abb244b3b2d15999fafb.patch",
+      "sha256": "d262403c6768f6cd9ebb031950a1fbc565c1b46691472d1f59e51c9ae0f608ea",
+      "created_at": "2026-11-14T08:01:35.319Z"
+    },
+    {
+      "artifact_id": "ART-REV-002",
+      "task_id": "T-P1-018",
+      "type": "REVIEW_EVIDENCE",
+      "path": "runtime/review-leg/rvl-918005/reply.txt",
+      "sha256": "e2cc1d54c65f60b9dd517c3c99d3c399b7490e9d07db984e19a8567e3ca8e89e",
+      "created_at": "2026-11-15T16:13:51.560Z"
+    },
+    {
+      "artifact_id": "ART-DIFF-006",
+      "task_id": "T-P1-022",
+      "type": "DIFF",
+      "path": "git-worker/diffs/T-P1-022/diff-fda9183dafb77ca15578abb244b3b2d15999fafb.patch",
+      "sha256": "d262403c6768f6cd9ebb031950a1fbc565c1b46691472d1f59e51c9ae0f608ea",
+      "created_at": "2026-11-15T16:15:11.812Z"
+    },
+    {
+      "artifact_id": "ART-REV-003",
+      "task_id": "T-P1-022",
+      "type": "REVIEW_EVIDENCE",
+      "path": "runtime/review-leg/rvl-918007/reply.txt",
+      "sha256": "eb8ec9dfcdf67e02d1c972ae1e8b1e55e9c9d16e2724fbfa514dd4ebb04f6de7",
+      "created_at": "2026-11-15T16:23:02.678Z"
+    },
+    {
+      "artifact_id": "ART-DIFF-007",
+      "task_id": "T-P1-023",
+      "type": "DIFF",
+      "path": "git-worker/diffs/T-P1-023/diff-fda9183dafb77ca15578abb244b3b2d15999fafb.patch",
+      "sha256": "d262403c6768f6cd9ebb031950a1fbc565c1b46691472d1f59e51c9ae0f608ea",
+      "created_at": "2026-11-15T16:43:24.177Z"
+    },
+    {
+      "artifact_id": "ART-REV-004",
+      "task_id": "T-P1-023",
+      "type": "REVIEW_EVIDENCE",
+      "path": "runtime/review-leg/rvl-918010/reply.txt",
+      "sha256": "40b2cafdb4004d2169c7effadd43924455132b6cc5f3022ca1c5f6061a57efd9",
+      "created_at": "2026-11-15T16:46:22.915Z"
+    },
+    {
+      "artifact_id": "ART-DIFF-008",
+      "task_id": "T-P1-024",
+      "type": "DIFF",
+      "path": "git-worker/diffs/T-P1-024/diff-fda9183dafb77ca15578abb244b3b2d15999fafb.patch",
+      "sha256": "d262403c6768f6cd9ebb031950a1fbc565c1b46691472d1f59e51c9ae0f608ea",
+      "created_at": "2026-11-15T16:59:53.936Z"
+    },
+    {
+      "artifact_id": "ART-REV-005",
+      "task_id": "T-P1-024",
+      "type": "REVIEW_EVIDENCE",
+      "path": "runtime/review-leg/rvl-918011/reply.txt",
+      "sha256": "9298921f15a9ed1997f228bbf788ae78767f680b525e4b3bd38c812aa7f3efdc",
+      "created_at": "2026-11-15T17:02:46.181Z"
+    },
+    {
+      "artifact_id": "ART-DIFF-009",
+      "task_id": "T-P1-026",
+      "type": "DIFF",
+      "path": "git-worker/diffs/T-P1-026/diff-fda9183dafb77ca15578abb244b3b2d15999fafb.patch",
+      "sha256": "d262403c6768f6cd9ebb031950a1fbc565c1b46691472d1f59e51c9ae0f608ea",
+      "created_at": "2026-11-15T17:12:11.526Z"
+    },
+    {
+      "artifact_id": "ART-REV-006",
+      "task_id": "T-P1-026",
+      "type": "REVIEW_EVIDENCE",
+      "path": "runtime/review-leg/rvl-918012/reply.txt",
+      "sha256": "0f323ef28dbb689fdd83d83d188f059ce837636f366bf97f911fc5d9ad1d961c",
+      "created_at": "2026-11-15T17:16:49.108Z"
+    }
+  ],
+  "messages_review": [
+    {
+      "message_id": "MSG-84409310-749934",
+      "task_id": "T-P1-017",
+      "message_type": "CODE_REVIEW_SUBMITTED",
+      "direction": "INBOUND",
+      "source_agent_id": "GPT-03",
+      "target_agent_id": "AIEO-ORCHESTRATOR",
+      "correlation_id": "CORR-918003",
+      "created_at": "2026-11-15T16:03:24.000Z"
+    },
+    {
+      "message_id": "MSG-87009714-319990",
+      "task_id": "T-P1-018",
+      "message_type": "CODE_REVIEW_SUBMITTED",
+      "direction": "INBOUND",
+      "source_agent_id": "GPT-03",
+      "target_agent_id": "AIEO-ORCHESTRATOR",
+      "correlation_id": "CORR-918005",
+      "created_at": "2026-11-15T16:13:51.000Z"
+    },
+    {
+      "message_id": "MSG-84327290-066622",
+      "task_id": "T-P1-022",
+      "message_type": "CODE_REVIEW_SUBMITTED",
+      "direction": "INBOUND",
+      "source_agent_id": "GPT-03",
+      "target_agent_id": "AIEO-ORCHESTRATOR",
+      "correlation_id": "CORR-918007",
+      "created_at": "2026-11-15T16:23:02.000Z"
+    },
+    {
+      "message_id": "MSG-08075107-833118",
+      "task_id": "T-P1-023",
+      "message_type": "CODE_REVIEW_SUBMITTED",
+      "direction": "INBOUND",
+      "source_agent_id": "GPT-03",
+      "target_agent_id": "AIEO-ORCHESTRATOR",
+      "correlation_id": "CORR-918010",
+      "created_at": "2026-11-15T16:46:22.000Z"
+    },
+    {
+      "message_id": "MSG-32366018-768177",
+      "task_id": "T-P1-024",
+      "message_type": "CODE_REVIEW_SUBMITTED",
+      "direction": "INBOUND",
+      "source_agent_id": "GPT-03",
+      "target_agent_id": "AIEO-ORCHESTRATOR",
+      "correlation_id": "CORR-918011",
+      "created_at": "2026-11-15T17:02:44.000Z"
+    },
+    {
+      "message_id": "MSG-44340263-513307",
+      "task_id": "T-P1-026",
+      "message_type": "CODE_REVIEW_SUBMITTED",
+      "direction": "INBOUND",
+      "source_agent_id": "GPT-03",
+      "target_agent_id": "AIEO-ORCHESTRATOR",
+      "correlation_id": "CORR-918012",
+      "created_at": "2026-11-15T17:16:48.000Z"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+ChatGPT 说：
+JSON
+{
+  "result": "PASS",
+  "summary": "逐行审查通过：仅新增--version早期分支，版本输出与1.0元数据一致且退出码为0，不执行核验流程；无参退出码2及--help既有行为保持不变，满足全部验收标准。",
+  "issues": [],
+  "reviewed_commit": "fda9183dafb77ca15578abb244b3b2d15999fafb"
+}

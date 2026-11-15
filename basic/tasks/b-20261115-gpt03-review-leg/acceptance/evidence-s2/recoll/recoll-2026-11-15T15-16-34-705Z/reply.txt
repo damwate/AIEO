@@ -1,0 +1,572 @@
+ChatGPT 说：
+S1 独立验收复验 R2 回执
+
+任务： b-20261115-gpt03-review-leg
+复验对象： S1-R1 六项整改
+被测 SHA： 6cf9147e6f49d2f43ef2e0b37753b3ca5e351402
+申报 SHA： 010a70b3ddd4c20aa335c047b1f06b8236827a37
+
+ST-01 绑定核验 PASS
+一、绑定与修改范围
+
+直接比较确认：
+
+R2 申报基线 4c888334db9f2a5b38d46f86a531ec7d87af8749。
+
+被测提交相对该基线恰好 1 个 commit。
+
+变更恰好两个文件。
+
+文件
+
+	
+
+新增
+
+	
+
+删除
+
+
+
+
+review_leg.py
+
+	
+
+227
+
+	
+
+57
+
+
+
+
+test_review_leg.py
+
+	
+
+93
+
+	
+
+38
+
+没有额外修改文件。
+
+查看 R2 被测提交
+
+查看相对 R2 基线的精确比较
+
+范围结论：PASS。 两个文件与申报一致，scheduler.py、M1-M4、M2 工具链和契约文件均未进入本次整改 diff。
+
+二、①—⑧ 限定复验
+① P1-01：409 幂等双证核验
+未完全关闭
+
+已落实两项防线：
+
+响应必须提供本次幂等键相关证据。
+
+账本必须存在匹配的 request_sha。
+
+artifact 不再走 409 命中路径，符合 M1 的同路径同 SHA 返回 201 duplicate:true 语义。
+
+但仍有一个缺口：
+
+review_leg.py：_register_step
+
+当前 key_evidence 使用：
+
+message：幂等 ID 是否出现在整个响应 JSON 字符串中；
+
+report：execution_id 和 commit 前缀是否出现在整个响应 JSON 字符串中。
+
+这不是对响应结构中权威记录字段的精确核验。如果只是错误描述或其他文本回显了这些值，也可能通过。
+
+要求： 对响应中的结构化记录字段进行精确匹配，不能仅使用 JSON 字符串包含判断。
+
+请求指纹核验已经有实质进步，但双证中的第一证仍不够严格。
+
+② P1-02：逐项只读核实、只补缺项
+部分关闭
+
+已确认实现：
+
+新增 _ledger_verified()；
+
+artifact 使用白名单 GET 实际读取；
+
+r5_register(skip=) 支持跳过已核实项；
+
+写入 R5_SKIP_VERIFIED；
+
+A9 测试通过真实 M1 服务端故障注入，验证 artifact ID 不变；
+
+resume 不重新派单。
+
+这些整改方向正确。
+
+但 message/report 的核实仍有缺陷。
+
+review_leg.py：_ledger_verified
+
+目前：
+
+message 核验 message_id、reply_sha 和 request_sha 非空；
+
+report 核验 result、reply_sha、execution_id 和 request_sha 非空。
+
+没有将账本 request_sha 与当前待登记请求重新计算出的预期 SHA 比较。
+
+因此，账本中只要存在非空 request_sha，就可能被认定为已核实，尚未充分证明原请求内容与当前请求一致。
+
+此外，A9 主要验证 artifact 成功、message 失败的情况。message 已成功而 report 失败的分支尚未独立验证。
+
+要求： message/report 也必须比较完整的预期请求指纹；补充 message 已成功、report 未成功的恢复测试。
+
+③ P1-03：COLLECT_FAILED 会话证据与 resume 双锚点
+未关闭
+
+正向整改已经落实：
+
+R3_SEND_CONFIRMED_COLLECT_FAILED 保存 conversation_uuid；
+
+保存 sent_user_unit_key；
+
+保存 next_user_unit_key；
+
+保存 unit_count 和 result.json SHA；
+
+resume 能同时识别 SEND_CONFIRMED 与 SEND_CONFIRMED_COLLECT_FAILED；
+
+_resume_collect() 使用原 conversation UUID 补采，不创建新会话。
+
+相关代码：
+
+COLLECT_FAILED 记录
+
+双锚点识别
+
+但是发现一个确定的执行错误：
+
+resume 补采调用
+
+调用：
+
+Python
+运行
+return self._resume_register(flags)
+
+而函数定义是：
+
+Python
+运行
+def _resume_register(self) -> int:
+
+传入了一个不接受的参数。
+
+结果：COLLECT_FAILED 原会话补采即使成功，继续进入登记阶段时也会抛出 TypeError。
+
+该异常不在 resume() 当前捕获的异常类型范围内，会直接逸出，而不是正常完成登记或写入腿级 BLOCKED。
+
+这是本轮确认的新缺陷：
+
+NEW-P1-01 _resume_register(flags) 参数不匹配，导致补采成功后的自动恢复无法完成。
+
+必须修复，并增加 COLLECT_FAILED → 原会话补采 → 契约校验 → 补登记 → 状态推进的测试。
+
+④ P2-01：账本八字段组
+部分关闭
+
+已补齐的内容：
+
+review_round / idempotency_key；
+
+conversation_uuid / 创建时间 / profile；
+
+ownership_check；
+
+sent_user_unit_key / next_user_unit_key；
+
+assistant_uuid；
+
+R4 marker、快照 SHA、checks、extracted_at；
+
+R5 request_sha / response_sha；
+
+多阶段原子追加与 fsync。
+
+但附录 C 的发送前后 user unit 计数要求尚未得到充分证明。
+
+当前 R3 记录主要是：
+
+unit_count；
+
+unit_keys；
+
+sent_user_unit_key；
+
+next_user_unit_key。
+
+测试替身提供的 result.json 也只有单一 unit_count，没有独立的发送前计数、发送后计数和采集时计数三者的完整对照。
+
+因此，不能把一个会话快照等同于完整的发送前后交叉证明。
+
+要求： 明确记录三个时点的 user unit 计数及其对应快照标识，避免使用 assistant unit 或单一总计数替代。
+
+⑤ P2-02：A9 服务端故障注入
+关闭
+
+已确认：
+
+使用 SQLite 服务端触发器；
+
+在 messages INSERT 时注入 ABORT；
+
+M1 服务端返回 500；
+
+artifact 实际成功登记；
+
+message 登记失败；
+
+解除故障后恢复；
+
+artifact 原 ID 保留。
+
+测试代码不再替换 leg.engine.post。
+
+dispatch_double 仅拦截 gpt_dispatch.mjs，其他 subprocess 调用仍然透传，包括 Git 和 Ajv。
+
+这符合本轮约定的 ChatGPT 边界替身要求。
+
+查看 A9 测试
+
+⑥ P2-03：A8 双场景
+关闭
+
+test_08a：
+
+已验证：
+
+派单实际执行一次；
+
+发送和采集记录形成；
+
+截断账本，仅保留 SEND_INTENT；
+
+resume 返回腿级 BLOCKED；
+
+不发生第二次派单；
+
+M1 仍保持 CODE_REVIEW；
+
+恢复完整账本后只补登记；
+
+不产生新派单。
+
+test_08b：
+
+已验证：
+
+账本有 R3_SEND_INTENT；
+
+M1 仍为 DEV_REPORTED；
+
+resume 识别矛盾态；
+
+腿级 BLOCKED；
+
+派单次数为零；
+
+M1 状态保持不变。
+
+这两种场景分别覆盖账本断裂和账本/M1 矛盾，达到本项整改要求。
+
+查看 A8 测试
+
+⑦ 整改引入新缺陷及原认可项维持性
+PARTIAL
+
+静态复核确认：
+
+测试方法共 19 个；
+
+A8 拆为 08a/08b；
+
+A9 改为服务端故障注入；
+
+原有 PASS/REWORK 路径、契约校验、白名单和 BLOCKED 区分仍在；
+
+发现 NEW-P1-01；
+
+P1-01、P1-02、P2-01 仍有上述残留。
+
+需要特别说明：本次独立核对了 19 个测试方法及关键断言，但没有在目标运行环境重新执行测试。因此，19/19 PASS 是申报结果，不是本次独立执行确认。
+
+⑧ 修改范围复核
+PASS
+
+R2 基线比较确认：
+
+文件
+
+	
+
+状态
+
+
+
+
+review_leg.py
+
+	
+
+修改
+
+
+
+
+test_review_leg.py
+
+	
+
+修改
+
+
+
+
+scheduler.py
+
+	
+
+未修改
+
+
+
+
+M1-M4
+
+	
+
+未修改
+
+
+
+
+M2 工具链
+
+	
+
+未修改
+
+
+
+
+契约文件
+
+	
+
+未修改
+
+没有发现超范围修改。
+
+三、六项整改关闭状态
+
+R1 问题
+
+	
+
+R2 结论
+
+	
+
+主要依据
+
+
+
+
+P1-01 409 双证核验
+
+	
+
+未关闭
+
+	
+
+响应键采用字符串包含而非结构化字段精确核验
+
+
+
+
+P1-02 逐项核实与只补缺项
+
+	
+
+未关闭
+
+	
+
+message/report 请求指纹未与预期 SHA 比较
+
+
+
+
+P1-03 COLLECT_FAILED 恢复
+
+	
+
+未关闭
+
+	
+
+_resume_register(flags) 参数错误
+
+
+
+
+P2-01 八字段组
+
+	
+
+未关闭
+
+	
+
+发送前后 user unit 计数证据不完整
+
+
+
+
+P2-02 A9 服务端注入
+
+	
+
+关闭
+
+	
+
+真实 M1 REST 路径，客户端零替换
+
+
+
+
+P2-03 A8 双场景
+
+	
+
+关闭
+
+	
+
+08a/08b 两种故障均有明确断言
+
+四、R1 原认可项维持性
+
+原认可项
+
+	
+
+R2 判定
+
+
+
+
+三文件架构方向
+
+	
+
+PASS（未扩大范围）
+
+
+
+
+附录 B 白名单边界
+
+	
+
+PASS
+
+
+
+
+R0-R6 主流程
+
+	
+
+PASS（原有正常路径）
+
+
+
+
+PASS/REWORK 状态映射
+
+	
+
+PASS
+
+
+
+
+腿级/M1 任务级 BLOCKED 区分
+
+	
+
+PASS
+
+
+
+
+review report 权威登记设计
+
+	
+
+PASS
+
+
+
+
+修改范围零越界
+
+	
+
+PASS
+
+注意：正常流程保持不代表全部恢复分支可用。NEW-P1-01 正好发生在原会话补采之后的登记恢复路径。
+
+五、最终总结论
+
+S1-R2 限定复验
+
+REJECT
+
+未关闭：4 项原问题。
+
+P1：3 项未关闭
+
+P2：1 项未关闭
+
+已关闭：2 项
+
+新发现：NEW-P1-01
+
+下一轮最小整改要求
+
+建议只做以下四组工作，不扩大架构范围：
+
+409 核验： 改为结构化响应键精确匹配，保留请求 SHA 双证。
+
+登记恢复： message/report 重新计算并核对预期请求 SHA，补充 message 成功、report 失败的测试。
+
+采集恢复： 修复 _resume_register(flags) 参数错误，补充 COLLECT_FAILED 完整恢复测试。
+
+账本： 补齐发送前、发送后、采集时 user unit 计数的独立证据。
+
+P2-02、P2-03 不要求重复整改，只需保留现有通过证据。
+
+最终裁定：S1-R2 REJECT，不授权进入 S2。
+
+本轮已确认整改方向正确，且六项中两项实质关闭。剩余问题集中在幂等证明强度、部分登记恢复可信度、采集恢复执行错误和账本证据完整性。
+
+建议下一轮以这四组为严格复验范围，继续保持两个文件修改边界和 M1-M4/scheduler.py 零修改纪律。

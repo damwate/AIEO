@@ -1,0 +1,142 @@
+ChatGPT 说：
+
+本轮按限定范围复验：被测锚点固定为 bfb779715eb9b81032cb1610e630abe48decac95，只追踪 R4 遗留的 P2-01；不会把分支最新状态或 HEAD 当作被测依据。重点核对缺键时是否确实 fail-closed，以及人工 attach 路径是否明确登记为 not_applicable。
+
+S1-R5 限定复验回执
+
+被测 commit： bfb779715eb9b81032cb1610e630abe48decac95
+
+① P2-01 缺键处置：PASS
+
+自动路径缺少发送锚点： r4_capture_and_validate() 默认 allow_no_anchor=False。没有可用的 sent_user_unit_key 时抛出 OrchestrationError(4)，不会继续登记采集成功。若存在发送记录但记录中没有有效发送键，同样拒绝。
+review_leg.py L497-L515
+
+自动路径缺少定位键： 发送锚点存在但采集结果没有 located_user_unit_key/user_unit_key 时，明确抛出 OrchestrationError(4)。
+review_leg.py L523-L547
+
+人工 attach 路径： 只有确认本腿没有发送记录时，才允许 allow_no_anchor=True，并写入明确状态串 not_applicable_no_leg_send_anchor (manual attach path)；有发送记录但缺发送键时仍拒绝。实际 attach_reply() 路径调用该逻辑。
+review_leg.py L1112-L1143
+
+取值域： 成功写账时，自动路径两键齐全则记录比较布尔值；人工无发送锚点则记录显式状态串；其他缺键分支抛错，不会成功写入 None。
+
+test_16b： 已覆盖自动路径无发送锚点拒绝，以及人工路径放行并断言账本状态串。
+test_review_leg.py L823-L841
+
+补充测试边界：test_16b直接覆盖的是“无发送锚点”反例，没有单独构造“有发送锚点、缺定位键”的测试数据；但对应生产代码分支有明确的 OrchestrationError(4) 防线，静态核验通过。
+
+② resume 重读原现场及恢复链：PASS
+
+_resume_register() 从账本 R4_REPLY_CAPTURED.source_dir 读取原采集现场；仅当原目录不存在时才回退 run_dir。回退后若缺少交叉核验所需定位键，仍会触发 fail-closed，不会把缺证据当作成功。
+review_leg.py L1071-L1087
+
+测试文件共有 23 个测试方法；恢复链相关用例包括：
+
+test_08c：采集失败后原会话补采、核对发送键、完成登记，断言零重发；
+
+test_09：部分登记后 resume，只补缺项；
+
+test_09b：message 成功、report 失败后 resume，只补 report。
+
+这些用例覆盖了恢复链关键路径。测试文件及申报记录报告 23/23 PASS；本轮通过 GitHub 源码审阅核验用例存在和断言内容，未独立执行测试进程，因此不把申报的运行结果表述为本轮亲自复跑结果。
+
+③ 范围复核：PASS
+
+以申报基线 50ab1cf53994ff8257332ddce4bf441053c194bd 对比被测 SHA，GitHub compare 返回：
+
+文件
+
+	
+
+增加
+
+	
+
+删除
+
+
+
+
+phase1/tools/review_leg.py
+
+	
+
+32
+
+	
+
+9
+
+
+
+
+phase1/tools/test_review_leg.py
+
+	
+
+20
+
+	
+
+0
+
+共 1 个 commit、恰好 2 个文件，与申报 numstat 一致。没有越界文件。
+
+注意：若直接从 R4 被测 SHA 0fed73a... 比较，会额外看到后续回填材料变更；按 R5 申报的正式基线 50ab1cf... 比较，验收 diff 才是上述两个文件。
+
+最终裁定
+PASS
+
+P2-01：关闭
+
+项目
+
+	
+
+结论
+
+
+
+
+① 缺键 fail-closed / attach 显式状态
+
+	
+
+PASS
+
+
+
+
+② resume 原现场重读 / 恢复链回归
+
+	
+
+PASS
+
+
+
+
+③ 两文件范围
+
+	
+
+PASS
+
+
+
+
+P2-01
+
+	
+
+关闭
+
+
+
+
+新问题编号
+
+	
+
+无
+
+总结论：PASS。 R4 唯一遗留的 P2-01 已满足本轮限定复验要求；此前已关闭问题不在本轮重新展开。测试执行状态按上述证据边界保留，不冒称本轮独立复跑。
