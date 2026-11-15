@@ -34,4 +34,4 @@ PASS 36 / FAIL 0
  [PASS] ⑧g delivery无「四步独立验收全闭环」残留
  [PASS] ⑧h delivery七要素标题齐全
  [PASS] ⑧i delivery声明12行附录
- [PASS] ⑧j delivery当前核验数字=36/36+问题1-13+历史快照标注+演进链完整+旧数字无裸露当前态
+ [PASS] ⑧j(DV1) delivery当前=36/36+历史数字全文扫描区段归属(区段外裸露/区段内缺轮次标注即FAIL,逐位置报告) | viol=[] segs=4

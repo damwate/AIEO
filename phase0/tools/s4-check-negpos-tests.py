@@ -56,8 +56,8 @@ def main():
     ok, fail = cc.run_checks(wf, cl, tpl, st, tb, ws, dl)
     results.append(("P1 三文件实态一致全过(36/36)", len(ok)==36 and len(fail)==0,
                     f"实际 PASS={len(ok)}/FAIL={len(fail)} fail={fail}"))
-    # P2 历史记录存在但标注正确：追加带历史快照标注的旧数字句，仍应全过
-    dl_hist = dl + "\n（历史快照补充标注示例：R2 时点一致性核验 24/24，已由上方演进链标注为历史记录，非当前实态。）"
+    # P2 历史记录存在但归属正确：追加带显式历史快照区段标记+轮次标注的旧数字句，仍应全过
+    dl_hist = dl + "\n<!--hist-snap-start-->历史快照补充标注示例：R2 时点一致性核验 24/24，已由上方演进链区段标注为历史记录，非当前实态。<!--hist-snap-end-->"
     ok2, fail2 = cc.run_checks(wf, cl, tpl, st, tb, ws, dl_hist)
     results.append(("P2 历史记录标注正确时通过", len(ok2)==36 and len(fail2)==0,
                     f"实际 PASS={len(ok2)}/FAIL={len(fail2)} fail={fail2}"))

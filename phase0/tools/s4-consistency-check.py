@@ -13,6 +13,9 @@
 # R4 复验教训：存在性断言（短语包含/关键词同现）≠一致性证明——错误状态曾以 30/30 PASS 通过；本版按逐项核对收紧。
 # R5 裁定登记（REJECT，⑧j 覆盖缺口）=⑧a2⑧b⑧c1-3 随 REJECT 态演进（R5 复验 REJECT+停止原方案循环进降档阶梯）；
 #   ⑧j 检查逻辑本轮保持原样未修复——修复属降档方案，待降档会商（会商3）授权，缺口已由 s4-gap-probe-8j.py 实证存档。
+# DV1（会商3 授权的降档方案验证，不入问题12 返工计数）=⑧j 重写为全文扫描+显式历史快照区段归属（弃 40 字符窗口）：
+#   三旧数字每个出现位置须落在 <!--hist-snap-start--><!--hist-snap-end--> 区段内且所在行含对应轮次标注，
+#   区段外裸露直接 FAIL，违规位置全量收集逐位置报告；负向 3 数字+整体三位置测试见 s4-dv1-tests.py。
 import io, re, subprocess, sys
 
 def run_checks(wf, cl, tpl, st, tb, ws, dl):
@@ -109,14 +112,35 @@ def run_checks(wf, cl, tpl, st, tb, ws, dl):
     chk("⑧g delivery无「四步独立验收全闭环」残留", "四步独立验收全闭环" not in dl)
     chk("⑧h delivery七要素标题齐全", all(h in dl for h in ["## 原始需求","## 最终实现内容","## 修改文件","## 测试结果","## Git commit","## 未解决问题","## 后续建议"]))
     chk("⑧i delivery声明12行附录", "12 行" in dl)
-    # 逐项5：当前核验数字与历史快照分离——当前=36/36+演进链完整标注+旧数字仅存于历史标注语境
+    # 逐项5（DV1 版，会商3 修订方法授权）：历史核验数字全文扫描+显式历史快照区段归属——
+    #   弃"前 40 字符含历史/快照/演进"窗口判断（R5 裁定实证该规则放行 21/21、30/30 裸露）；
+    #   改为：21/21、24/24、30/30 每个出现位置必须落在 <!--hist-snap-start-->…<!--hist-snap-end-->
+    #   显式历史快照区段内，且所在行含对应轮次标注（21/21↔R1；24/24↔R2；30/30↔R3 或 R4）；
+    #   区段外裸露原则上直接 FAIL；违规位置全量收集逐位置报告（非只拦截第一个）；
+    #   当前数字 36/36 按当前实态单独核验（不属历史数字清单，无区段归属要求）；
+    #   ⑧c3 继续负责主状态句过期状态检查，⑧j 负责 delivery 全文历史数字归属——职责分开。
+    snap_spans = [(m.start(), m.end()) for m in re.finditer(r"<!--hist-snap-start-->.*?<!--hist-snap-end-->", dl, re.S)]
+    snap_segs = re.findall(r"<!--hist-snap-start-->(.*?)<!--hist-snap-end-->", dl, re.S)
+    viol = []
+    for _num, _rounds in (("21/21", ("R1",)), ("24/24", ("R2",)), ("30/30", ("R3", "R4"))):
+        for mm in re.finditer(re.escape(_num), dl):
+            _i = mm.start()
+            if not any(_s <= _i < _e for _s, _e in snap_spans):
+                viol.append(f"{_num}@{_i}(区段外裸露)")
+            else:
+                _ls = dl.rfind("\n", 0, _i) + 1
+                _le = dl.find("\n", _i)
+                _le = _le if _le >= 0 else len(dl)
+                if not any(_r in dl[_ls:_le] for _r in _rounds):
+                    viol.append(f"{_num}@{_i}(区段内缺轮次{'/'.join(_rounds)}标注)")
     hist = re.search(r"历轮核验数字[^。；\n]*", dl)
-    occ = [mm.start() for mm in re.finditer("24/24", dl)]
-    labeled = all(("历史" in dl[max(0,i-40):i]) or ("快照" in dl[max(0,i-40):i]) or ("演进" in dl[max(0,i-40):i]) for i in occ)
-    chk("⑧j delivery当前核验数字=36/36+问题1-13+历史快照标注+演进链完整+旧数字无裸露当前态",
-        ("当前=36/36" in dl) and ("问题 1-13" in dl) and ("历史快照" in dl)
-        and bool(hist) and all(k in hist.group(0) for k in ("21/21","24/24","30/30","36/36")) and labeled)
-    # （原⑧k「历史快照显式标注」独立项已并入⑧j 复合断言，⑧组 18 项）
+    chk("⑧j(DV1) delivery当前=36/36+历史数字全文扫描区段归属(区段外裸露/区段内缺轮次标注即FAIL,逐位置报告)",
+        ("当前=36/36" in dl) and ("问题 1-13" in dl) and len(snap_segs) >= 1
+        and bool(hist) and all(k in hist.group(0) for k in ("21/21","24/24","30/30","36/36"))
+        and not viol,
+        f"viol={viol} segs={len(snap_segs)}")
+    # （原⑧k「历史快照显式标注」独立项已并入⑧j 复合断言，⑧组 18 项；
+    #   原 40 字符窗口版 ⑧j 及其缺口复现见 s4-gap-probe-8j.py 与 R5 裁定登记 commit ac08520）
     return ok, fail
 
 def _read(p):
