@@ -1,0 +1,5 @@
+[立项评审|b-20261115-standard-kickoff|S2-Gate2|深度项精化]
+Gate1已PASS(问题5/6关闭确认,历史REJECT保留)。按方案丙Gate2=会务立项评审:请读 github.com/damwate/AIEO@main f93ff2a7f1e00b9f5f0e460bcb0c197bcbdd2bcf 三材料——docs/phase1/GPT03-REVIEW-LEG-CHARTER-DRAFT.md v0.5(正文§1-§9+附录A评审输入初稿)/phase1/logs/e-check-20261114/m1-endpoints.json(41端点机器清单)/docs/phase1/F001-SCHEDULER-BRIEF.md(908定稿任务书=精化深度先例)。
+评审目标:把附录A三深度项精化到定稿级——①engine M1白名单端点表(逐端点HTTP method+路径+操作范围+拒绝条件,对照机器清单核定)②A5恢复证据字段(账本结构/会话标识/断点快照字段表)③A6完整恢复设计+回滚分支(按M1状态分列,腿级语义)。逐项给修订要求或直接认可;可提新反例。
+边界:仅立项评审,不授权代码开发;需求原文确认与开工仍留用户(Gate3);历史REJECT保留。
+回执:三深度项逐项(认可/修订要求)+新增发现+三态。

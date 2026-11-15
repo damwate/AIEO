@@ -75,5 +75,5 @@
 - ③修改内容：完工六查执行（①所有步骤 PASS——S2 三关口闭环后满足②整体测试=文档检查器+18用例③无遗留 REJECT——8 问题全关闭确认④工作区已推送⑤已 commit⑥本交付总结成文）；Gate3 拍板（DEC-057）随本步登记；新任务登记与交接包（L-015 四项）
 - ④执行结果：任务 COMPLETED（最终结果 PASS）；GPT-03 实施转入独立新任务 b-20261115-gpt03-review-leg 待接手会话按交接包开工
 - ⑤测试结果：ST-05 检查器 COMPLETED 态全项自检（见⑥交付确认验收复核）
-- ⑥验收证据引用：S4=阶段性交付登记（S2 挂起致任务保持阻塞态，完工六查"所有步骤 PASS"未满足不宣告完工；delivery.md 七要素+DEC-054 登记；补采驱动 7 件归档本任务 acceptance/）
+- ⑥验收证据引用：S4 交付确认=dispatch-2026-11-15T13-34-14→补采 recoll-2026-11-15T13-38-16-181Z-vp（L-018 第2条视口拉高升级，七查全过，reply 4090B sha256=dcc3586855d7bfed610ec81a3ac7111a0dddd8ec9f7cb33193bb7bde8b1f2458）=首轮 REJECT 4 项（S4-01~04：②-⑤待填/⑥旧状态/缺 git status 原始证明/缺检查器证据——20d6a6e 已补②-⑤）→本 commit 补齐⑥终态+acceptance/s4-git-status.txt（ahead=0+工作区实况+HEAD）+acceptance/s4-checker-output.txt（检查器执行输出）→复验待回填。**S4 验收结论：（复验待回填）**
 

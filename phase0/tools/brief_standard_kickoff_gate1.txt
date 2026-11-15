@@ -1,3 +1,3 @@
 [降档验证|b-20261115-standard-kickoff|S2-Gate1|草案级]
-用户已批准你方会商方案甲+丙(DEC-055登记)。请执行Gate1草案级降档验证:请读 github.com/damwate/AIEO@main HEADSHA 的 basic/tasks/b-20261115-standard-kickoff/acceptance/review-request-s2-gate1.md——按会商草案级六项验收(I1-I7完整性/防膨胀/授权链闭合/状态路径合法出边/矩阵场景齐备/已过项继承),被测=GPT03-REVIEW-LEG-CHARTER-DRAFT.md v0.4@e1474b3bddf57530c3122e300204911bba93cd61(含A6底线两种BLOCKED语义区分+附录A评审输入初稿)。深度项(白名单端点精化/A5字段/回滚分支)按决议转Gate2不重审;问题5/6历史REJECT保留不重开。
+用户已批准你方会商方案甲+丙(DEC-055登记)。请执行Gate1草案级降档验证:请读 github.com/damwate/AIEO@main bbb420a9cf5d4da99a162c9cf40c690857d709b2 的 basic/tasks/b-20261115-standard-kickoff/acceptance/review-request-s2-gate1.md——按会商草案级六项验收(I1-I7完整性/防膨胀/授权链闭合/状态路径合法出边/矩阵场景齐备/已过项继承),被测=GPT03-REVIEW-LEG-CHARTER-DRAFT.md v0.4@e1474b3bddf57530c3122e300204911bba93cd61(含A6底线两种BLOCKED语义区分+附录A评审输入初稿)。深度项(白名单端点精化/A5字段/回滚分支)按决议转Gate2不重审;问题5/6历史REJECT保留不重开。
 回执:六项逐项+总结论PASS/REJECT+问题编号。

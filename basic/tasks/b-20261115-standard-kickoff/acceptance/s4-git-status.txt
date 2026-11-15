@@ -1,0 +1,5 @@
+[check-push] 分支=main 上游=origin/main ahead=0 behind=0 remote=https://github.com/damwate/AIEO.git
+[check-push] ahead=0，无需推送。诊断完成。
+ M phase0/logs/gpt-reviewer-session.json
+ M phase0/tools/brief_standard_kickoff_gate1.txt
+HEAD=20d6a6e245adfa78b67f1b30d0b85ce2d334d2b9
