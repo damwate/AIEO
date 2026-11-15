@@ -1,0 +1,8 @@
+[独立验收|b-20261115-basic-replication-verify|S1]
+D1可复制性演练+报告,请独立验收(冻结=你R1"修改后同意"五项全采纳,节点授权增补②)。
+材料:被测=85895dd1c416b332907fe162754bce0ee66f6c2b;包basic/tasks/b-20261115-basic-replication-verify/(acceptance/=replication-report.md+9原始输出+MANIFEST)。
+结论:①clone经代理成功HEAD=d05f46b fsck净/无代理条目 ②体检对照1st=2FAIL(设计排除)→npm ci→2nd=1FAIL(仅profile,登录态不入Git正确) ③taskpack×3全PASS ④check-push诊断零副作用 ⑤治理文档齐;skills/monitor=主机级依赖如实登记。
+报告缺口:P0=0;P1=2(G1 profile初始化未文档化/G2 skills依赖未登记);P2=2(G3 Windows专属限制未声明/G4自装清单缺);待验证1(G5跨电脑实测);结论边界=本机模拟≠真正新电脑。
+自查纠正:首检输出未落盘,删clone目录干净重做,两次对照真实落盘。
+验收点:①八项清单与原始输出一致②报告与R1冻结相符③缺口分级合理④只登记不修复⑤证据可复核。
+三态:PASS/REJECT(列项)/BLOCKED。

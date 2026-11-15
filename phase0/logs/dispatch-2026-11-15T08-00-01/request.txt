@@ -1,0 +1,6 @@
+[验收复验R3|b-20261115-basic-replication-verify|只复核P1-1/P1-2两处]
+R2(reply 3ac8c1f0…51562355)两项整改提交:
+P1-1:ls-MANIFEST.txt全部SHA256改按Git blob内容计算(根因=工作区CRLF与仓库LF差异,消除歧义),npm-ci-exec.txt=068f98824ba7056679e25b83ccf76bcb008ce8ce2f152e9087b16667ae8a4243与你的独立计算一致;逐文件分类标注不变。
+P1-2:报告第五表与第三节"零副作用"无条件结论改"部分可证:执行时点前后快照未留存,当前态快照不能替代历史对照",与第四节披露一致。
+材料:github.com/damwate/AIEO@main 2e6ad7112ce1590f03d107699b82de6d58b18f1a 的acceptance/ls-MANIFEST.txt+replication-report.md。
+复验仅此两处,其余不重复审。三态:PASS(问题1/2关闭+S1结论)/REJECT(列项)/BLOCKED。
