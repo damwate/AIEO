@@ -1,2 +1,5 @@
 [2026-11-15T22:05:31.480Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页
 [2026-11-15T22:08:19.564Z] [tab-hygiene] 成功退出：浏览器连接已关+profile Chrome 已杀（含本次自建页 0 页）；tab 清零
+
+# S4-R4 轮现场（ef8497b 代码首跑）tab-audit 样张见 s3-tab-audit-sample.json：
+# before/exit_before_disposal/exit_after_disposal(CDP_UNREACHABLE=tab清零证明) 三段完整

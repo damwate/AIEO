@@ -24,7 +24,7 @@ import { existsSync, mkdirSync, writeFileSync, readFileSync, appendFileSync } fr
 import { basename, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { acquireSessionLock } from "../e2e-poc/session_lock.mjs";
-import { describePages, pickChatGptPage } from "./tab_hygiene.mjs";
+import { describePages, pickChatGptPage, cleanupDecision } from "./tab_hygiene.mjs";
 import {
   MIN_STABLE_READ_INTERVAL_MS,
   compareInboundSnapshots,
@@ -485,7 +485,9 @@ async function mainLocked() {
 main().catch(async (e) => {
   const details = e.details === undefined ? "" : ` details=${JSON.stringify(e.details)}`;
   log(`致命错误: ${e.message}${details}`);
-  if (sendAttempted) {
+  // S4-R4 P1-01：清理决策统一走 tab_hygiene.cleanupDecision（被测纯函数=实际决策路径）
+  const cleanup = cleanupDecision({ sendAttempted });
+  if (cleanup === "preserve_scene") {
     // P1-03：发送已发生——UNCERTAIN/生成中/采集失败现场必须保留（禁重发语义依赖现场），禁关页。
     writeTabAudit({ outcome: "failure_scene_preserved", before: tabAuditBeforeRef.value,
                     exit_after_disposal: "not_applicable（现场保留，无处置动作）",
