@@ -1,5 +1,5 @@
-# MANIFEST：D1 可复制性验证证据包（R2 复核[P1-1]整改：全部 SHA256 按 Git blob 内容计算=仓库文件字节，CRLF/LF 无歧义）
-被测commit=85895dd1c416b332907fe162754bce0ee66f6c2b；补档与 MANIFEST 修正登记于后续 commit（不属被测 diff）
+# MANIFEST：D1 可复制性验证证据包（R3 复核[P1-1]终版：全部 SHA256 按 Git blob 内容计算=仓库文件字节，CRLF/LF 无歧义）
+被测commit=85895dd1c416b332907fe162754bce0ee66f6c2b；报告自身 SHA=其所在 commit 的 Git blob（git ls-files -s 取 index，与提交后字节一致）；本 MANIFEST 与报告同 commit 提交，验收方按仓库文件独立计算应全部一致
 
 9c8f051cb0882b86cd389a2fbbcf26470ac97c8d4062c219fa6789ac0b44990a *check-env-1st.txt  [原始输出]
 b7206dc381d0cdf4787deb2c2093029715f61039c09726f846e6347e0986fefa *check-env-2nd.txt  [原始输出]
@@ -11,4 +11,4 @@ b7206dc381d0cdf4787deb2c2093029715f61039c09726f846e6347e0986fefa *check-env-2nd.
 97c26cfebbf04b4fa7d73ab9bd1ab65066164b4c1426022131b5c5bb993e1c2a *fsck-exec.txt  [执行记录补档]
 cadf2eeef945788518536b4a08cce4504977c9f03372e843d3f8c9388aa91004 *npm-ci-exec.txt  [执行记录补档]
 95905042ab1bf02b5f4cee66b63a4f2a4c1a6d64595b376cb63bd2ee4190fdc5 *check-push-before-after.txt  [执行记录补档]
-fd8106a93811c3aca59cbce81149ced85e800b019cefa6e9f801221433e386f6 *replication-report.md  [报告]
+034a2acba8176f2420114f54e5bddf17f18bb1ce *replication-report.md  [报告]
