@@ -1,7 +1,12 @@
+# MANIFEST：b-20261115-v03-activation 五命令输出证据包（第二轮，R1 验收 REJECT[问题3]整改重写）
+被测代码commit=ff0ab04f59bc1b9de9788812a97ee152a160b4d9（R1 整改 commit：s4-consistency-check.py[①b 补交接包+§5 断言/①a 收紧头部定位]+s4-activation-state-tests.py[负向5+正向2]+五输出归档均在该树）
+被测文档基线commit=52e1f298fdbc31000b781ced8d55b9591f10c38b（S1 文档生效：WORKFLOW.md+ACCEPTANCE-CHECKLIST.md 自该 commit 内容未再变更，已含于被测代码 commit 树——双 SHA 绑定语义）
+绑定关系=下方五输出由被测代码 commit 树在仓库根目录生成；干净树重跑五命令退出码全 0 且与归档字节一致（IDENTICAL×5）；本 MANIFEST 登记于后续 commit，不属被测 diff（承 phasec 登记先例）
+生成命令=①python -X utf8 -I phase0/tools/s4-consistency-check.py ②python -X utf8 -I phase0/tools/s4-activation-state-tests.py ③python -X utf8 -I phase0/tools/s4-dv1-tests.py ④python -X utf8 -I phase0/tools/s4-check-negpos-tests.py ⑤python -I basic/tool/check_taskpack.py basic/tasks/b-20261115-phasec-workflow-stats
+预期结果=①37/37 退出0 ②7/7（负向5+正向2）退出0 ③6/6 退出0 ④7/7 退出0 ⑤Phase=COMPLETED ①-⑥ 全 PASS Overall=PASS 退出0
+整改关联=问题1/问题2/问题3（R1 验收 REJECT，reply sha256=a9e3059b535bbc7e9e0cbcceef56982bb9f42f92b0385ee8fe60594c6456162f），修复 commit=ff0ab04…b4d9；DV1/negpos 历史矩阵脚本零改动
 52285c9e15b01b074280cc0c9dd73d904c0ef3759ee2f455c386b92fb30340a9 *s4-activation-consistency-output.txt
 0d9ef8ee168f6be3c3a56960db5c1ca611f5730256bbeac2b58c035edc7505f3 *s4-activation-dv1-output.txt
 ad40f17328da81ca35aeea7073cfae3e5b9b563dfa3d3808ee4fe5bccf31c776 *s4-activation-negpos-output.txt
-e62dcd364cd297381c4325d763e09f32bcd5717e69c8d0a074bb26ee505bf2d6 *s4-activation-state-tests-output.txt
+a70d0ba8321a391ee649247bd268786d77b7e46856ed380ab597cb23bb070a2b *s4-activation-state-tests-output.txt
 608d26ad036ff4336c06d92dca6245830d93dbb63291b2830ad821a5d0521258 *s4-activation-taskpack-phasec-output.txt
-被测commit=91474c15e45c51ce87e0c44e3ffe2900b50cea0c（S2 检查器同步 commit；绑定语义=被测内容为该 commit 树上的 WORKFLOW.md/ACCEPTANCE-CHECKLIST.md/s4-consistency-check.py/两测试脚本/phasec 任务包，证据文件由后续 commit 承载；干净树重跑五命令退出 0 且与归档字节一致=IDENTICAL×5）
-生成命令见各output头部（python -X utf8 -I ...）
