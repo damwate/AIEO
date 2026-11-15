@@ -1,6 +1,11 @@
-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 *basic/tasks/b-20261115-v03-lessons-recoll/acceptance/ls-MANIFEST.txt
-52285c9e15b01b074280cc0c9dd73d904c0ef3759ee2f455c386b92fb30340a9 *basic/tasks/b-20261115-v03-lessons-recoll/acceptance/ls-consistency-output.txt
-0d9ef8ee168f6be3c3a56960db5c1ca611f5730256bbeac2b58c035edc7505f3 *basic/tasks/b-20261115-v03-lessons-recoll/acceptance/ls-dv1-output.txt
-ad40f17328da81ca35aeea7073cfae3e5b9b563dfa3d3808ee4fe5bccf31c776 *basic/tasks/b-20261115-v03-lessons-recoll/acceptance/ls-negpos-output.txt
-a70d0ba8321a391ee649247bd268786d77b7e46856ed380ab597cb23bb070a2b *basic/tasks/b-20261115-v03-lessons-recoll/acceptance/ls-state-tests-output.txt
-55027d18a4ca09a4545dda2571bacd1bcba5aae810f0ab584c565573391c31b3 *basic/tasks/b-20261115-v03-lessons-recoll/acceptance/ls-taskpack-self.txt
+# MANIFEST：b-20261115-v03-lessons-recoll 五输出证据包（R1 验收 REJECT[问题1]补正重写）
+被测commit=240ace69f7a0b3af5ff438a4ec834bcf0f040bd9（S1 经验入库 commit：docs/AI-DEV-LESSONS.md L-018 新第4条+L-014 第6条对照表+basic/WORKFLOW.md 验证节追加+本任务包归档，内容于此 commit 定格）
+绑定语义=五输出由被测 commit 树生成；本 MANIFEST 及 steps.md 补正登记于后续 commit，不属被测 diff（承 R3 lessons-recoll 复核确认的"被测先固定、证据登记后置"结构）
+生成命令=①python -X utf8 -I phase0/tools/s4-consistency-check.py ②python -X utf8 -I phase0/tools/s4-activation-state-tests.py ③python -X utf8 -I phase0/tools/s4-dv1-tests.py ④python -X utf8 -I phase0/tools/s4-check-negpos-tests.py ⑤python -I basic/tool/check_taskpack.py basic/tasks/b-20261115-v03-lessons-recoll（仓库根目录）
+预期结果=①37/37 退出0 ②7/7 退出0 ③6/6 退出0 ④7/7 退出0 ⑤本包 IN_PROGRESS（开发期实态，COMPLETED 后转全 PASS）
+验收关联=R1 验收（新审查会话 6af93e42-91e8-83ec-943f-8e312e1b50a0，reply sha256=071f26de65c8da07661b037e29cf0276d2babc95d92d36b396aecc1c11ed86fb）裁定 REJECT 唯一 P1[问题1]，内容四项 PASS+926f7ec 独立授权确认
+52285c9e15b01b074280cc0c9dd73d904c0ef3759ee2f455c386b92fb30340a9 *ls-consistency-output.txt
+a70d0ba8321a391ee649247bd268786d77b7e46856ed380ab597cb23bb070a2b *ls-state-tests-output.txt
+0d9ef8ee168f6be3c3a56960db5c1ca611f5730256bbeac2b58c035edc7505f3 *ls-dv1-output.txt
+ad40f17328da81ca35aeea7073cfae3e5b9b563dfa3d3808ee4fe5bccf31c776 *ls-negpos-output.txt
+55027d18a4ca09a4545dda2571bacd1bcba5aae810f0ab584c565573391c31b3 *ls-taskpack-self.txt
