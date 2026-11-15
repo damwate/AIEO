@@ -462,3 +462,11 @@
 - **拍板内容：** 用户确认 GPT-03 审查真实腿最小版 §1 需求原文并**批准开工**（charter 定稿=v0.7 R3-01 修订 d0c2d92ea88017397753d2072bb28407b7684956，Gate1/Gate2 闭环见 DEC-056）。
 - **实施安排：** GPT-03 审查腿实施=独立新任务（按任务书定稿执行；独立验收/零 mock/双分支惯例；开工≠合并 main，DEC-010）。standard-kickoff 任务全链闭环：S1 治理基线 PASS＋S2 三关口闭环 PASS＋S3 C1 工具 PASS＋S4 交付登记——完工六查满足（所有步骤均 PASS），任务状态=完成/最终结果=PASS。
 - **关联：** DEC-053~056 全链、charter 定稿、WORKFLOW 增补②。
+
+### DEC-058 GPT-03 审查腿实施开工：charter 定稿 v1.0 登记＋steps.md 步骤清单冻结（2026-11-15，节点自主推进授权执行）
+
+- **授权链：** Gate1 草案级降档验证 PASS（reply sha256=76000828115f892e3242033dd3aa22d33b56e13ea7116e426df11a8dd7620c41）→Gate2 会务立项评审定稿认可（Gate2-R4 reply sha256=5b492a7b7fb75b19e24844a3cb8bb5a481b4d6b0e3357b2d448fc49c9b153abb，无剩余修订；现场 dispatch-2026-11-15T13-26-45）→Gate3 用户确认 §1 需求原文＋批准开工（2026-11-15 拍板，DEC-057）。
+- **charter 定稿：** docs/phase1/GPT03-REVIEW-LEG-CHARTER-DRAFT.md v1.0——§1-§9 与附录 A-E 内容自 v0.7（R3-01 修订）@d0c2d92ea88017397753d2072bb28407b7684956 零变更，仅标题/定稿声明/版本记录行登记性增补。
+- **steps.md 冻结：** basic/tasks/b-20261115-gpt03-review-leg/steps.md——S1 编排实现→S2 注入类验收矩阵（A2/A3/A4/A5/A7/A8/A9/A10）→S3 真实端到端（A1+A6，零 mock）→S4 交付登记；每步交独立验收（H9）；ST-05/ST-01 前置；双分支纪律。架构归属=采纳定稿推荐"前者"（scheduler 编排框架内新增审查阶段编排：phase1/tools/review_leg.py 复用框架件，scheduler.py 本体零修改防回归）。
+- **开工侦察（环境事实，只读）：** M1 服务 127.0.0.1:8000 health ok（DB=runtime/t-p1-908/aieo.db，env.sh 密钥不进 Git）；T-P1-017/T-P1-018 实存 DEV_REPORTED（A1 复用候选）；契约 contracts/v1.0 含 CODE_REVIEW_SUBMITTED 消息枚举与 review-report.schema.json（冻结文本，H2）；agents 表有 GPT-01/ZCODE-01/GIT-WORKER-01 先例（GPT-03 agent 与 engine 服务身份按 bootstrap 先例准备，运行期严格限附录 B 8 端点）。
+- **关联：** DEC-057（Gate3 开工拍板）、DEC-055~056（三关口）、charter 定稿 v1.0、L-020（节点自主推进）、L-018（派单纪律）、L-021（申报口径）、H1~H12。
