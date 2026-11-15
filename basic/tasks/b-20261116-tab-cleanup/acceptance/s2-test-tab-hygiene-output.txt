@@ -1,0 +1,18 @@
+PASS 指定会话多命中取最近创建（末位）
+PASS 指定会话单命中返回该页
+PASS 指定会话零命中返回 null（调用方 newPage）
+PASS 空页表返回 null
+PASS 同会话 UUID 大小写归一命中
+PASS 无 uuid：返回数组序第一个 chatgpt 页（既有语义）
+PASS 无 uuid：跳过非 chatgpt 页取首个 chatgpt 页
+PASS 无 uuid：零 chatgpt 候选返回 null
+PASS 同会话多 tab：留最近创建，关其余（均确权）
+PASS 不同会话各留一页
+PASS 主页多个只留一个；非 chatgpt 页不进计划
+PASS 全部唯一：close 为空
+PASS 生成中页永不进 close（P2-02 误关保护）
+PASS 未确权页进 skippedNotOwned 不进 close（P1-05 归属隔离）
+PASS 确权且非生成中的重复页才可关
+PASS 多候选并列 seq 相同按 index 大者（P1-02 可执行定义）
+PASS 模块不导出任何 close/kill 函数（关闭动作只属调用方）
+total=17 pass=17 fail=0

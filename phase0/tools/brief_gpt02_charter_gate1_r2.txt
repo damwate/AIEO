@@ -1,0 +1,5 @@
+【立项 Gate1 R2 限定复验·GPT02-ARCH-REVIEW-LEG-CHARTER-DRAFT】TPT02-GATE1-R2|gpt02-charter
+上轮（reply 归档 dispatch-2026-11-15T22-05-31）REWORK 唯一 P1-01（§4 BLOCKED 双语义）已整改；两 P2 为建议性备注（Gate2 范围）无需本轮处理。
+读仓库 github.com/damwate/AIEO（main=c96f1283966fd01858c27da1eecddcbf4f97dede）docs/phase1/GPT02-ARCH-REVIEW-LEG-CHARTER-DRAFT.md §4"BLOCKED 双语义"段。
+复验范围限定：仅核验 P1-01 是否关闭——①M1 BLOCKED→BLOCKED 合法出边如实呈现且不放宽 engine 权限；②任务级（仅 OWNER 决定提交）与腿级（仅记录）两语义区分明确不混用；③与 GPT-03 charter §5 底线条款同构性。新问题另列。
+回复仅一个```json对象：{"result":"PASS|REWORK","summary":"<一句话>","issues":["<未关闭项>…"],"charter":"GPT02-ARCH-REVIEW-LEG"}；result仅PASS/REWORK。

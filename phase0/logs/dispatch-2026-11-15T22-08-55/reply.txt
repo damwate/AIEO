@@ -1,0 +1,8 @@
+ChatGPT 说：
+
+{
+"result": "PASS",
+"summary": "P1-01 已关闭：M1 BLOCKED→BLOCKED 合法出边如实保留且未授予 engine 推进权限，任务级与腿级 BLOCKED 权责边界明确，与 GPT-03 charter §5 底线条款同构。",
+"issues": [],
+"charter": "GPT02-ARCH-REVIEW-LEG"
+}

@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-15T22:11:16.196Z",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "b895f7fb-9623-45ab-962a-797d1781f84b",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "7fee31e8133e47bb5cae960cea884d69d282bec02d307e8d0646f178cafeb04f",
+          "a7aeed2913e90af0a64449b51be3cdcc0a4ba3c0e80098e88f3d24260ca2b367"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "7fee31e8133e47bb5cae960cea884d69d282bec02d307e8d0646f178cafeb04f",
+          "a7aeed2913e90af0a64449b51be3cdcc0a4ba3c0e80098e88f3d24260ca2b367"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-0:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n{\n\"result\": \"PASS\",\n\"summary\": \"P1-01 已关闭：M1 BLOCKED→BLOCKED 合法出边如实保留且未授予 engine 推进权限，任务级与腿级 BLOCKED 权责边界明确，与 GPT-03 charter §5 底线条款同构。\",\n\"issues\": [],\n\"charter\": \"GPT02-ARCH-REVIEW-LEG\"\n}",
+      "text_sha256": "a7aeed2913e90af0a64449b51be3cdcc0a4ba3c0e80098e88f3d24260ca2b367",
+      "size_bytes": 291,
+      "assistant_uuid": "b895f7fb-9623-45ab-962a-797d1781f84b"
+    }
+  ]
+}
