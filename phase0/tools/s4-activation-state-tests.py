@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
-# v0.3 生效态专项回归测试（b-20261115-v03-activation 冻结方案 S2 新增，独立于 DV1/negpos 历史矩阵）。
-# 覆盖"生效状态"专用断言（检查器 ①a/①b）能否拦截旧草案态回流：
-#   负向 3 注入（各自断言被【指名】拦截）：
+# v0.3 生效态专项回归测试（b-20261115-v03-activation 冻结方案 S2 新增；R1 验收 REJECT 整改后负向扩至 5）。
+# 覆盖"生效状态"专用断言（检查器 ①a/①b）能否拦截旧草案态回流与记录信息缺失：
+#   负向 5 注入（各自断言被【指名】拦截）：
 #     NT1 = WORKFLOW 标题回退草案态（"草案，待用户拍板生效"回流）→ ①a 拦截；
 #     NT2 = 生效状态 blockquote 回退旧草案态（"v0.2 仍为现行版"回流）→ ①b 拦截；
-#     NT3 = ACCEPTANCE-CHECKLIST 头部正式生效声明被删除 → ①a 拦截（清单声明部分）。
+#     NT3 = ACCEPTANCE-CHECKLIST 头部正式生效声明被删除 → ①a 拦截（清单声明部分）；
+#     NT4 = blockquote 删除交接包记录位置引用（handoff/...HANDOFF.md §5）→ ①b 拦截（P1-1 整改新增）；
+#     NT5 = 清单头部生效声明被移出头部（追加到文件尾）→ ①a 拦截（P2 整改新增，①a 定位头部声明行）。
 #   正向 2 项：
 #     P1 = 仓库当前生效实态 → 37/37 全过；
 #     P2 = 历史草案记录保留情形（wf 追加含"草案"字样的显式历史快照注释，模拟历史区扩写）→ 仍 37/37 全过
@@ -58,6 +60,18 @@ def main():
     # NT3 清单正式生效声明删除：头部生效状态行被移除
     run("NT3 清单生效声明删除", ["①a"],
         lambda w, c: (w, c.replace(CL_DECL, "", 1)))
+    # NT4 blockquote 删除交接包记录位置引用（P1-1 整改覆盖：记录位置不完整必须被 ①b 拦截）
+    def nt4(w, c):
+        lines = w.splitlines()
+        idx = next(i for i, l in enumerate(lines) if l.startswith("> **v0.3 生效状态"))
+        lines[idx] = lines[idx].replace(" 与 `handoff/BASIC-PHASE-C-V03-ACTIVATION-HANDOFF.md` §5", "")
+        return ("\n".join(lines) + ("\n" if w.endswith("\n") else ""), c)
+    run("NT4 blockquote删交接包记录位置引用", ["①b"], nt4)
+    # NT5 清单头部生效声明移出头部（P2 整改覆盖：①a 须定位头部声明行，移至文尾即拦截）
+    def nt5(w, c):
+        c2 = c.replace(CL_DECL, "", 1) + "\n" + CL_DECL.rstrip("\n") + "（移出头部示例）\n"
+        return (w, c2)
+    run("NT5 清单生效声明移出头部", ["①a"], nt5)
 
     # ---- 正向 2 项 ----
     # P1 仓库当前生效实态全过
@@ -71,7 +85,7 @@ def main():
                     f"实际 PASS={len(ok2)}/FAIL={len(fail2)} fail={fail2}"))
 
     npass = sum(1 for _, hit, _ in results if hit)
-    print(f"ACTIVATION-STATE TESTS PASS {npass} / FAIL {len(results)-npass}（负向3+正向2=5）")
+    print(f"ACTIVATION-STATE TESTS PASS {npass} / FAIL {len(results)-npass}（负向5+正向2=7）")
     for name, hit, detail in results:
         print((" [PASS] " if hit else " [FAIL] ") + name + " | " + detail)
     sys.exit(0 if npass == len(results) else 1)

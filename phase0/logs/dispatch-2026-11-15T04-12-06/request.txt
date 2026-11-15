@@ -1,0 +1,7 @@
+[独立验收|b-20261115-v03-activation|S1+S2合并验收轮]
+冻结方案(steps.md,基线615174d)S1+S2已执行,请独立验收。合并一轮=两步验收点关联(S2四命令验证S1生效态),验收点不减,任一点FAIL退回。
+材料(按SHA读):github.com/damwate/AIEO@main 验收diff=615174d..91474c1,登记d7d33d5不属被测diff。
+S1(52e1f29):WORKFLOW.md标题"已生效2026-11-15"+blockquote五要素[日期/v0.3现行/v0.2历史对照以Git历史为准/批准依据=用户原话/记录位=requirement.md+交接包§5]+清单生效声明;附录历史"草案"保留(计数=2)。
+S2(91474c1):检查器①a①b随生效态演进(37项不变,①b负向拒旧态);新增s4-activation-state-tests.py(负向3指名拦截+正向2,内存副本注入);DV1/negpos零改动。
+申报:被测=91474c1;证据=acceptance/五输出+MANIFEST;一致性37/37+专项5/5+DV1 6/6+negpos 7/7+phasec包COMPLETED全PASS,退出码全0;重跑IDENTICAL×5。
+验收点:①五要素与残留②diff仅及声明文件,phasec包零改动③37项与负向断言质量④MANIFEST对照⑤边界。三态:PASS/REJECT(列项)/BLOCKED。
