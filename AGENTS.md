@@ -1,0 +1,27 @@
+# AIEO 项目执行纪律（本文件每次会话自动加载——用户 2026-11-15 两次明确批评"没遵守开发经验"后固化）
+
+## 异常处置第一动作（最高优先级，违反=流程事故）
+
+**遇到任何异常——连接故障、派单采集 fail-closed、CONTEXT_LIMIT_STOP、断言失败、工具报错、裁定 REJECT——第一动作＝查开发经验库，禁止凭当下判断直接处理：**
+
+1. `docs/AI-DEV-LESSONS.md`——先 grep 关键词（代理/proxy/采集/fail-closed/CONTEXT_LIMIT/断言/绑定/止损）定位对应 L-xxx 条目；
+2. `phase0/environment-inventory.md` §4/§5——本机网络与代理拓扑实况；
+3. 对应条目的「有效经验」逐条执行；「验证结果」段有实测先例可对照。
+
+**已固化的第一动作映射：**
+
+| 异常 | 第一动作 | 依据 |
+|---|---|---|
+| GitHub push 连不上 | `node toolkit/check-push.mjs --push --yes`（禁止手工猜端口/unset 配置绕行） | L-014 第 6 条 |
+| 派单采集 fail-closed | 禁重发→三步诊断→静态 DOM 补采；recoll 派生后必须 **grep 三参数行**（CONV_UUID+SENT_USER_UNIT_KEY+FAILED_DIR）核对，**换会话时 CONV_UUID 必换** | L-018 第 1/2/3 条 |
+| 补采定位 | 归属校验三件套：简报标记文本唯一定位+最后 user 断言+前轮 reply SHA 排除（定位成功≠归属正确） | L-018 第 4 条 |
+| 审查会话上下文上限 | **主动迁移**：会话轮次多/接近上限信号即换会话（不等 CONTEXT_LIMIT_STOP 坏死）；迁移简报 ≤1200B 自包含，`--new-session` 首派即活 | L-018 第 6 条+手册 §5 |
+| 派单/申报前 | ST-05 检查器自检**先于 commit**（顺序勿颠倒）；ST-01 绑定申报=被测 commit 完整 SHA 明文登记（不写"见后"） | WORKFLOW 模块三 |
+| 检查项数演进 | 测试断言同步+申报引用从最终归档取值并锁定被测 commit | L-017 |
+| 同问题返工近止损线 | 停止整改循环→三方会商→交用户（四级阶梯+挂起并行条款） | L-019+WORKFLOW 模块五 |
+
+## 开工惯例
+
+- 每任务开工：读交接包/上一任务 delivery 的「后续建议」+ AI-DEV-LESSONS.md 相关条目（开工指令点名的条目逐字读完）；
+- push 一律走 `toolkit/check-push.mjs`；派单流程照 `chatgpt-web-dispatch` skill（含手册 EGO-LITE-HANDBOOK.md）；
+- 仓库当前审查会话 UUID 在 `phase0/logs/gpt-reviewer-session.json`。
