@@ -111,7 +111,10 @@
 
 - ①本步骤目标：delivery.md（按 docs/phase1/handoff-template.md）+decision-log 登记+完工六查+申报（ST-01 绑定核验：git diff --numstat 机器值入申报；ST-05 自检通过后派单）。
 - ②修改文件：本任务包 delivery.md/steps.md⑥ 回填、docs/phase1/decision-log.md、任务包状态字段。
-- ③执行结果：（实施时回填）④⑤⑥（实施时回填；S4-R4 交付确认派单）
+- ③执行结果：delivery.md 成文（七要素：交付总状态/验收链摘要/红线遵守/决策登记/待确认遗留/证据索引）；完工六查满足（S1-S3 全 PASS+S4 交付确认派单）；ST-01 绑定核验=本次待验收 commit（见⑥）；task-brief 状态更新。
+- ④执行结果：S4 交付登记完成；**本次待验收 commit=见⑥**（delivery.md+状态字段+⑦ 本行）。
+- ⑤测试结果：代码零变更（纯交付登记文档）；29/29 既有记录引用（test-run-s2r3b.txt）。
+- ⑥验收证据引用：**S4 交付确认派单=待验收 commit（⑥ 申报）**；核验范围=S1-S4 全链（S1 PASS 链/S2 PASS 链/S3 承载确认/delivery 七要素/完工六查/ST-01）。
 
 ## 纪律条款（全步骤有效）
 
