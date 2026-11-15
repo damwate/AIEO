@@ -36,4 +36,5 @@ clone 完整性（经代理）／两次体检对照符合设计／check_taskpack
 
 ## 四、原始输出归档
 
-本目录（acceptance/）：第一次体检=check-env-1st.txt、第二次=check-env-2nd.txt、taskpack 三输出=taskpack-*.txt、check-push 诊断=check-push-diag.txt、clone 记录=clone-log.txt（MANIFEST 见 ls-MANIFEST.txt）。
+本目录（acceptance/）原始输出 7 项：check-env-1st.txt／check-env-2nd.txt／taskpack-×3／check-push-diag.txt／clone-log.txt；执行记录补档 3 项（R1 验收 P1-1/P1-2 整改）：fsck-exec.txt（fsck 退出码 0 复跑记录）／npm-ci-exec.txt（如实补记：完整 stdout 未落盘，退出码与结果按执行时终端记录）／check-push-before-after.txt（当前态快照+执行时点快照未落盘如实标注，不补造）；报告=replication-report.md；清单=ls-MANIFEST.txt（准确区分原始输出/执行记录补档/报告）。
+fsck 结论：clone 时执行（干净=无输出）；npm ci 结论：两次退出码 0、playwright 恢复由 check-env-2nd [OK] 佐证；check-push 零副作用：当前态快照（proxy=0 条/status=0 条/HEAD=origin/main=无领先）+执行时终端核验（steps.md S1③），执行时点前后快照未落盘已如实标注——该项证据为"部分可证"，不冒充完整。

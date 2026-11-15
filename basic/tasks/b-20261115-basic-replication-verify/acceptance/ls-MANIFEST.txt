@@ -1,8 +1,14 @@
-9c8f051cb0882b86cd389a2fbbcf26470ac97c8d4062c219fa6789ac0b44990a *check-env-1st.txt
-b7206dc381d0cdf4787deb2c2093029715f61039c09726f846e6347e0986fefa *check-env-2nd.txt
-8c76314db224fa5b018d7a791dc82e6cb92645ed22e53f2e6fcd2d483f6925ba *taskpack-b-20261115-standard-design-input.txt
-bc4da9a9d87904f9ff33e55755ad93f42de5e014935e56fc6d386e56e3a36288 *taskpack-b-20261115-v03-activation.txt
-9742b0484e579ebaebdfd40640638097a1c2e970e07f0af822147abac2d426f6 *taskpack-b-20261115-v03-lessons-recoll.txt
-6526a9e8592efcf472df5cd8473648577ad5c04bc9651f032791e2cc3655408f *check-push-diag.txt
-2a09761c128ae9ac21bfd873a6da3e72ed322d8446ac35ff9a58faa33f0653e6 *clone-log.txt
-f58737a3f96cb091e24124084446355a295434f715e3f27749af0057887b1d8a *replication-report.md
+# MANIFEST：D1 可复制性验证证据包（R1 验收 REJECT[P1-1]整改重生成；准确分类=原始输出 7+执行记录补档 3+报告 1）
+被测commit=85895dd1c416b332907fe162754bce0ee66f6c2b（S1 报告+初始证据；补档文件与本 MANIFEST 登记于整改 commit，不属被测 diff）
+
+9c8f051cb0882b86cd389a2fbbcf26470ac97c8d4062c219fa6789ac0b44990a *check-env-1st.txt  [原始输出]
+b7206dc381d0cdf4787deb2c2093029715f61039c09726f846e6347e0986fefa *check-env-2nd.txt  [原始输出]
+bc4da9a9d87904f9ff33e55755ad93f42de5e014935e56fc6d386e56e3a36288 *taskpack-b-20261115-v03-activation.txt  [原始输出]
+9742b0484e579ebaebdfd40640638097a1c2e970e07f0af822147abac2d426f6 *taskpack-b-20261115-v03-lessons-recoll.txt  [原始输出]
+8c76314db224fa5b018d7a791dc82e6cb92645ed22e53f2e6fcd2d483f6925ba *taskpack-b-20261115-standard-design-input.txt  [原始输出]
+6526a9e8592efcf472df5cd8473648577ad5c04bc9651f032791e2cc3655408f *check-push-diag.txt  [原始输出]
+2a09761c128ae9ac21bfd873a6da3e72ed322d8446ac35ff9a58faa33f0653e6 *clone-log.txt  [原始输出]
+97c26cfebbf04b4fa7d73ab9bd1ab65066164b4c1426022131b5c5bb993e1c2a *fsck-exec.txt  [执行记录补档]
+cadf2eeef945788518536b4a08cce4504977c9f03372e843d3f8c9388aa91004 *npm-ci-exec.txt  [执行记录补档]
+95905042ab1bf02b5f4cee66b63a4f2a4c1a6d64595b376cb63bd2ee4190fdc5 *check-push-before-after.txt  [执行记录补档]
+06f99a3ada1bae48508ece4ab1043518cc46b6c165c2ef2521c6b599b258604a *replication-report.md  [报告]

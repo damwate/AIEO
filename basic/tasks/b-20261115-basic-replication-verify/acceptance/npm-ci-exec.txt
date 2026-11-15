@@ -1,0 +1,4 @@
+# npm ci 执行记录（如实补记）：完整 stdout 未落盘（执行时仅终端记录退出码），本文件按执行事实补记，不补造输出
+命令: npm --prefix phase0/tools ci（第二次演练）与 npm ci（phase0/tools 内，第一次演练）
+退出码: 0（两次均成功，执行时终端记录 NPM_EXIT=0/NPM_DONE）
+结果: found 0 vulnerabilities（第一次演练终端输出）；playwright 由 check-env-2nd.txt [OK] 佐证恢复
