@@ -8,7 +8,7 @@
 - ①本步骤目标：docs/phase1/basic-completion-dod.md 成文（12 条四要素+状态定义+双口径统计+BC-12 签核流程）；review-request 计数修正；decision-log 澄清
 - ②修改文件：docs/phase1/basic-completion-dod.md（新增）、docs/phase1/basic-completion-review-request.md（计数修正）、basic/tasks/b-20261115-basic-dod/
 - ③修改内容：见 ④
-- ④执行结果：DoD 文件成文（12 条四要素+四态状态定义+双口径统计头部+BC-12 六步签核流程+完成路径表；BC-03=BLOCKED/BC-06=FAIL/BC-12=BLOCKED 如实标注）；review-request 计数修正（双口径）；DEC-051 澄清条目登记。**待验收 commit 完整 SHA：见本 commit（S1 成文）**
+- ④执行结果：DoD 文件成文（12 条四要素+四态状态定义+双口径统计头部+BC-12 六步签核流程+完成路径表；BC-03=BLOCKED/BC-06=FAIL/BC-12=BLOCKED 如实标注）；review-request 计数修正（双口径）；DEC-051 澄清条目登记。**待验收 commit 完整 SHA：7141e81294926e728bb39ff44fa4f1512d52f238（S1 DoD 成文+统计口径修正，内容定格）**
 - ⑤测试结果：四命令全过退出 0（37/37+DV1 6/6+negpos 7/7+专项 7/7，检查器零修改）
 - ⑥验收证据引用：待验收派单后登记
 
