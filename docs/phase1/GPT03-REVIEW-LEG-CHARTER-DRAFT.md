@@ -33,7 +33,7 @@
 
 ## 4. 状态与流程（I3+P1-02 一期边界）
 
-一期流程（单任务、单轮审查，状态路径=M1 既有合法出边，依据 `app/platform/state_machine.py:33-37` 与 C2 14 态）：DEV_REPORTED 任务存在 → 审查腿发 `GIT_VALIDATE` 事件（DEV_REPORTED→GIT_VALIDATING）→ Git 校验通过发 `PASS`（GIT_VALIDATING→CODE_REVIEW）→ CODE_REVIEW 状态组装审查简报（diff/测试证据指针）→ 真实派单（M2）→ 回复采集与契约校验 → 结论登记 M1（artifacts+messages，幂等键）→ 审查结论状态推进：**PASS→TEST_ACCEPTANCE／REWORK→REWORK（CODE_REVIEW 合法出边）；BLOCKED→BLOCKED**。
+一期流程（单任务、单轮审查，状态路径=M1 既有合法出边，依据 `app/platform/state_machine.py:33-37` 与 C2 14 态）：DEV_REPORTED 任务存在 → 审查腿发 `GIT_VALIDATE` 事件（DEV_REPORTED→GIT_VALIDATING）→ Git 校验通过发 `PASS`（GIT_VALIDATING→CODE_REVIEW）→ CODE_REVIEW 状态组装审查简报（diff/测试证据指针）→ 真实派单（M2）→ 回复采集与契约校验 → 结论登记 M1（artifacts+messages，幂等键）→ 审查结论状态推进：**PASS→TEST_ACCEPTANCE／REWORK→REWORK（CODE_REVIEW 合法出边）**；审查腿故障→**腿级 BLOCKED**（run 层记录，M1 任务不动；进入 M1 task.status=BLOCKED 仅 OWNER 决定，见 §5 语义区分与 §6 白名单）。
 **一期边界明确：** ①自动触发=每个 DEV_REPORTED 任务**一次**审查轮；②审查结论=REWORK 时不自动重开开发轮，登记后停等人工（多轮重审自动化属非目标）；③审查腿任何环节失败→任务保持当前 M1 状态停等人工（§7 回滚），不阻塞既有 DEV_REPORTED 结果。
 
 ## 5. 异常处理（I4+P1-02 分类与重试规则）
@@ -57,7 +57,7 @@
 | 主体 | C7 身份类型 | 可执行操作（白名单） | 禁止操作 | 依据 |
 |---|---|---|---|---|
 | OWNER（用户本人） | §8.5 固定 OWNER（人类会话） | 启动/暂停/恢复/取消 run；批准开工；确认需求原文；**MERGE_TO_MAIN 等审批 target** | —（审批类操作不可下放） | DEC-010；C7 §8.5；C2 approvals target_type |
-| 调度引擎（engine） | §8.6 独立本机服务身份 | M1 只读查询（GET 类）；**仅 §4 合法出边事件**（GIT_VALIDATE/PASS/REWORK/BLOCKED 登记与状态推进）；artifacts+messages 幂等登记；经 M2 工具链发起审查派单 | DB 直改；白名单外端点；MERGE_TO_MAIN/RELEASE/DEAD_LETTER_REQUEUE/CONTRACT_CHANGE 类审批操作；自行推断/修正 M1 状态 | C7 §8.6 白名单；state_machine.py 出边；T-P1-908 既有边界 |
+| 调度引擎（engine） | §8.6 独立本机服务身份 | M1 只读查询（GET 类）；**仅 §4 合法出边事件**（GIT_VALIDATE/PASS/REWORK 登记与状态推进）；artifacts+messages 幂等登记；经 M2 工具链发起审查派单 | DB 直改；白名单外端点；**推进 M1 任务至 BLOCKED 态**（任务级 BLOCKED 仅 OWNER 决定，G1-03 底线）；MERGE_TO_MAIN/RELEASE/DEAD_LETTER_REQUEUE/CONTRACT_CHANGE 类审批操作；自行推断/修正 M1 状态 | C7 §8.6 白名单；state_machine.py 出边；T-P1-908 既有边界 |
 | 执行腿（M2/M3/M4/test_worker） | 各自既有身份（M3=§8.6 MCP stdio 服务身份） | 各自既有能力 | 接口契约消费，零修改 | 契约 v1.0.0；T-P1-908 先例 |
 | 人工执行者（编排会话） | OWNER 会话下人工操作 | 开发交接（方案 b 先例）/审查响应 | 受 Basic WORKFLOW 约束 | T-P1-908 §S7 |
 
@@ -101,5 +101,6 @@ GPT-02/04/05 真实腿；多轮审查重审自动化；新 commit 重审触发�
 |---|---|---|---|---|
 | v0.1 | 2026-11-15 | 已被本版取代 | 初稿误定对象为"F-001 立项"（基于未同步漂移状态 F-001 OPEN）——S2 独立验收 REJECT（问题3~6）指出 T-P1-908 已落地 F-001 最小版（DEC-036） | b-20261115-standard-kickoff S2 |
 | v0.2 | 2026-11-15 | 草案（待会务评审→待用户确认需求原文→待用户拍板开工） | 对象重定位=GPT-03 审查真实腿最小版（推荐首角色，顺序留评审决策点）；§2 缺口分析（P1-01）/§4 一期边界（P1-02）/§5 错误分类重试表（P1-02）/§6 授权边界表（P1-03）/§7 可执行验收矩阵（P1-04）；随附 FEASIBILITY/PHASE-STATUS 漂移校正 | S2 验收 REJECT 整改（问题3~6） |
+| v0.5 | 2026-11-15 | 草案（Gate1 复验被测对象） | G1-03 整改：engine 白名单移除 BLOCKED 态推进（任务级 BLOCKED 仅 OWNER，引擎故障=腿级 BLOCKED run 层记录）；§4 对齐 | S2-Gate1 验证轮裁定（reply sha256=dd1866336b88bdfa…） |
 | v0.4 | 2026-11-15 | 草案（降档验证轮被测对象） | 用户拍板批准会商方案甲+丙（三关口）；§5/§7 落实 A6 底线=两种 BLOCKED 语义区分（腿级 vs M1 任务状态）；新增附录 A《会务立项评审输入初稿》（端点白名单/A5 账本证据/回滚分支——深度项转入 Gate 2 评审） | S2 恢复执行（用户拍板 2026-11-15） |
 | v0.3 | 2026-11-15 | 草案（状态不变） | S2-R2 复验问题4 关闭；问题3 残留=PHASE-STATUS 文件头旧结论（已随本任务修正 commit 校正至 v0.10）；问题5 整改=§6 凭据三类边界+engine C7 §8.6 服务身份与白名单/禁止操作列+§8.7 审计落实；问题6 整改=§4 状态路径明确（state_machine.py:33-37 合法出边 GIT_VALIDATING/CODE_REVIEW/TEST_ACCEPTANCE/REWORK）+§7 A1 状态预期/A3 注入点与禁重发证明/A4 幂等键定义/A5 两类断点恢复/A6 人工登记判定/回滚改"不改变既有状态停等人工" | S2-R2 复验（reply sha256=2de7fd0f…，recoll-2026-11-15T11-52-35-084Z）问题3/5/6 整改 |
