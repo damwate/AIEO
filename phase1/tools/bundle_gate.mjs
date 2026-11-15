@@ -70,13 +70,6 @@ function runCmd(cmd, args) {
 }
 
 // ------------------------------------------------------------------ main
-if (argv.includes("--version")) {
-  // T-P1-010（F-001 调度器验证任务 run ORCH-908011）：--version 输出版本行
-  // （与输出记录内 bundle_gate_version 元数据 "1.0" 一致），退出码 0；
-  // 不执行任何核验流程；其余参数行为不受影响。
-  console.log("bundle_gate version 1.0");
-  exit(0);
-}
 if (argv.includes("--help")) {
   // T-P1-001：--help 用法输出（仅输出用法，不执行任何核验流程，退出码 0）。
   console.log(`bundle_gate — AIEO Phase 1 聚合包机器核验工具（BYTE_INTEGRITY_GATE，T-P1-903 r4 决议新增）。
@@ -97,6 +90,14 @@ TAR 总哈希 → 解包 → 逐文件 SHA-256/size 对照 manifest；输出机�
        --output-dir phase0/logs/bundle-gate-<task>-<round>
 
 退出码：0=全部核验通过；1=任一核验项失败（结果 JSON 如实记录失败项）；2=参数错误（缺参/未知参数/格式非法）。`);
+  exit(0);
+}
+// T-P1-017 REWORK 整改（DEC-063，审查轮 P2）：--version 检查移至 --help 之后——
+// 组合传入 --version --help 时帮助优先（基线行为不变）；--version 单独传入输出
+// 版本行（与输出记录内 bundle_gate_version 元数据 "1.0" 一致），退出码 0；
+// 不执行任何核验流程；其余参数行为不受影响。
+if (argv.includes("--version")) {
+  console.log("bundle_gate version 1.0");
   exit(0);
 }
 const opts = parseOpts(["commit", "parts-index", "tar", "manifest", "output-dir"]);
