@@ -1,0 +1,6 @@
+会商4请求（会商2第二级，DV1 REJECT触发）
+DV1裁定（62e56f8，reply 62fea07c…8cdc）：⑧j（全文扫描/区段归属/逐位置）与测试6/6审查全过；唯一阻断=证据绑定未闭合：申报引用NT位置为首跑值21/21@3050/24/24@3181/30/30@6030，终归档s4-dv1-tests-output.txt为重跑值@3197/@3328/@6308——根因=其后delivery实态编辑改偏移，申报未同步。
+读取（raw.githubusercontent.com/damwate/AIEO/62e56f8/）：logs/recoll-2026-11-15T01-08-29-478Z/reply.txt+basic/tasks/b-20261115-phasec-workflow-stats/steps.md
+请裁定：①根因定性=证据归档/版本绑定vs机制设计缺陷②整体功能是否BLOCKED③原方案有无设计缺陷④为何测试输出位置与申报不一致+如何保证后续测试输出来自待验收快照（候选：输出头部打印HEAD SHA+delivery SHA自证/归档名带SHA/申报仅引带SHA归档）⑤后续路径（补证据重验？新轮边界？）与三级触发线。
+边界：不得判需求不可行；问题12保留R5第4次REJECT不增；R6不安排；禁拆分/改编号；S1-S3沿用；v0.3拍板留用户。
+结论：第二级裁定表（定性/BLOCKED/绑定/路径/触发线）

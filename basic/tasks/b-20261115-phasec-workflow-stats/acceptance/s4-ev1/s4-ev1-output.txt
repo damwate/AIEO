@@ -1,0 +1,109 @@
+=== S4-DV1-EV1 测试证据快照绑定补验输出 ===
+裁定依据：会商4（会商2 第二级评估）reply sha256=2c32b00705d2340803d6a8b507122dc464da9e3bf256e2475394e72ebbb0fbce
+          phase0/logs/recoll-2026-11-15T01-21-48-400Z/reply.txt（已入库归档）
+被测快照（裁定固定，DV1 整改主体 commit）：e309474dc85a8040506bd71347b03aa299384e1d
+git rev-parse HEAD（被测 worktree）：e309474dc85a8040506bd71347b03aa299384e1d
+git status --porcelain（被测 worktree）：空（干净检出）
+Python 版本：3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]
+platform：Windows-11-10.0.26300-SP0
+生成时间（UTC）：2026-11-15T01:25:56+00:00
+驱动脚本（本文件生成者）SHA256：486abaf33058f0601c8b05acf3fd656fcb3c2bfbbcc960d653c32259973ec811
+
+---- 输入身份：被测快照内文件 SHA256 ----
+4469d7a6ad755609027cc2af2c999210ed59cfd929db9c2b951e411d1bea214e  basic/tasks/b-20261115-phasec-workflow-stats/delivery.md
+658ab5d0b140e336d23c3282a8e61a38db4e582540da6d83b38a5275932e8015  phase0/tools/s4-consistency-check.py
+a582df0917e70fef73b565a58c15c67bdd08691344890d4352edda353a7ab564  phase0/tools/s4-dv1-tests.py
+a4ed1bb321b5ef16e7cc03ee18cefc7f7630d2c636f415ce952b67d759763af6  phase0/tools/s4-check-negpos-tests.py
+0454a2913ab750b9763abf0837f313a6d10b8323963b0eeb11e1ec4ec2612c3a  basic/tool/check_taskpack.py
+
+---- 命令 1/4：python -X utf8 -I phase0/tools/s4-consistency-check.py（cwd=被测快照） ----
+退出码：0
+stdout：
+PASS 36 / FAIL 0
+ [PASS] ①a v0.3草案版本头
+ [PASS] ①b v0.2现行状态blockquote
+ [PASS] ①c 附录差异记录12行无重号(锚定附录区域) | rows=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
+ [PASS] ②a 清单31项 | n=31
+ [PASS] ②b 每项6字段(7竖线) | bad=0
+ [PASS] ②c BLOCKED边界规则
+ [PASS] ③a WORKFLOW含核链命令
+ [PASS] ③b 模板含核链命令
+ [PASS] ④a ST-10止损未触发对齐
+ [PASS] ④b ST-11规划效率对齐
+ [PASS] ④c 六查不属ST条目
+ [PASS] ⑤ workflow-stats 最后修改=30b56de(S1 R2 PASS 对象) | last=30b56de docs(basic): 阶段C S1返工—
+ [PASS] ⑥a 返工表13行(问题1-13) | n=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13']
+ [PASS] ⑥b 无占位符残留
+ [PASS] ⑥c 复验列无过期残留 | stale=[]
+ [PASS] ⑦ S1含字面验收结论PASS
+ [PASS] ⑦ S2含字面验收结论PASS
+ [PASS] ⑦ S3含字面验收结论PASS
+ [PASS] ⑧a task-brief当前步骤行唯一 | n=1
+ [PASS] ⑧a2 tb当前步骤指向R5 REJECT实态(R5 REJECT+问题12第4次+R4 REJECT 1项+问题12第3次)
+ [PASS] ⑧b steps S4⑥含R5裁定登记+降档阶梯启动(R5 REJECT+问题12第4次)+R4裁定+止损历史
+ [PASS] ⑧c1 主状态句存在且指向R5 REJECT实态(R5复验REJECT+停止原方案循环进降档阶梯+R6不安排)
+ [PASS] ⑧c2 主状态句含R4轮终态(REJECT 1项+问题12第3次)
+ [PASS] ⑧c3 主状态句无过期残留(待R3/待R4复验/24-24/30-30/止损交用户/R5结论待回填)
+ [PASS] ⑧d1 轮结论三文件逐项(REJECT 3 项+问题9/10/11)
+ [PASS] ⑧d2 轮结论三文件逐项(REJECT 2 项+问题12/13)
+ [PASS] ⑧d3 轮结论三文件逐项(REJECT 保留 2 项+问题12/13)
+ [PASS] ⑧d4 轮结论三文件逐项(REJECT 1 项+问题12 第 3 次)
+ [PASS] ⑧f1 S1-S3 PASS沿用三文件声明
+ [PASS] ⑧f2 delivery S1段逐步(R2 PASS)
+ [PASS] ⑧f3 delivery S2段逐步(R3 PASS+S2 正式闭环)
+ [PASS] ⑧f4 delivery S3段逐步(R4 PASS+S3 正式闭环)
+ [PASS] ⑧g delivery无「四步独立验收全闭环」残留
+ [PASS] ⑧h delivery七要素标题齐全
+ [PASS] ⑧i delivery声明12行附录
+ [PASS] ⑧j(DV1) delivery当前=36/36+历史数字全文扫描区段归属(区段外裸露/区段内缺轮次标注即FAIL,逐位置报告) | viol=[] segs=4
+判定：符合预期（退出码 == 0；关键输出 齐全）
+
+---- 命令 2/4：python -X utf8 -I phase0/tools/s4-dv1-tests.py（cwd=被测快照） ----
+退出码：0
+stdout：
+DV1 TESTS PASS 6 / FAIL 0（负向3+整体1+正向2=6）
+ [PASS] N1 正文新增裸露21/21 | 实际FAIL=['⑧j(DV1)'] 完整明细=⑧j(DV1) delivery当前=36/36+历史数字全文扫描区段归属(区段外裸露/区段内缺轮次标注即FAIL,逐位置报告) | viol=['21/21@6260(区段外裸露)'] segs=4
+ [PASS] N2 正文新增裸露24/24 | 实际FAIL=['⑧j(DV1)'] 完整明细=⑧j(DV1) delivery当前=36/36+历史数字全文扫描区段归属(区段外裸露/区段内缺轮次标注即FAIL,逐位置报告) | viol=['24/24@6260(区段外裸露)'] segs=4
+ [PASS] N3 正文新增裸露30/30 | 实际FAIL=['⑧j(DV1)'] 完整明细=⑧j(DV1) delivery当前=36/36+历史数字全文扫描区段归属(区段外裸露/区段内缺轮次标注即FAIL,逐位置报告) | viol=['30/30@6260(区段外裸露)'] segs=4
+ [PASS] NT 整体三位置注入(S1尾21/21+S2尾24/24+文末30/30) | 实际FAIL=['⑧j(DV1)'] 完整明细=⑧j(DV1) delivery当前=36/36+历史数字全文扫描区段归属(区段外裸露/区段内缺轮次标注即FAIL,逐位置报告) | viol=['21/21@3197(区段外裸露)', '24/24@3328(区段外裸露)', '30/30@6308(区段外裸露)'] segs=4
+ [PASS] P1 基线(当前36/36与历史演进链共存)全过 | 实际 PASS=36/FAIL=0 fail=[]
+ [PASS] P2 三旧数字均在正确历史快照区域内追加仍全过 | 实际 PASS=36/FAIL=0 fail=[]
+判定：符合预期（退出码 == 0；关键输出 齐全）
+
+---- 命令 3/4：python -X utf8 -I phase0/tools/s4-check-negpos-tests.py（cwd=被测快照） ----
+退出码：0
+stdout：
+NEG/POS TESTS PASS 7 / FAIL 0（负向5+正向2=7）
+ [PASS] N1 轮次冲突(tb当前步骤R5 REJECT→PASS改写) | 期望拦截=['⑧a2'] 实际FAIL=['⑧a2']
+ [PASS] N2 问题编号错配(dl 问题12/13 全部错写) | 期望拦截=['⑧d2', '⑧d3'] 实际FAIL=['⑧d2', '⑧d3']
+ [PASS] N3 S1-S3单项状态错误(dl S2段R3 PASS→REJECT) | 期望拦截=['⑧f3'] 实际FAIL=['⑧f3']
+ [PASS] N4 当前数字过期(dl 当前=36/36→30/30) | 期望拦截=['⑧j'] 实际FAIL=['⑧j(DV1)']
+ [PASS] N5 主状态与正文冲突(dl主状态R4 REJECT→PASS) | 期望拦截=['⑧c2', '⑧d4'] 实际FAIL=['⑧c2', '⑧d4']
+ [PASS] P1 三文件实态一致全过(36/36) | 实际 PASS=36/FAIL=0 fail=[]
+ [PASS] P2 历史记录标注正确时通过 | 实际 PASS=36/FAIL=0 fail=[]
+判定：符合预期（退出码 == 0；关键输出 齐全）
+
+---- 命令 4/4：python -X utf8 -I basic/tool/check_taskpack.py basic/tasks/b-20261115-phasec-workflow-stats（cwd=被测快照） ----
+退出码：1
+stdout：
+Taskpack: b-20261115-phasec-workflow-stats
+Phase: IN_PROGRESS
+[PASS] ① 需求记录
+[PASS] ② 步骤清单
+[N/A] ③ 步骤验收记录
+       - 3 步记录完整 PASS；未到期步骤（1 个）: S4 整体校验交付（验收重点：交付完整，等待用户拍板生效）
+[PASS] ④ REJECT返工记录
+[PASS] ⑤ 返工次数
+[N/A] ⑥ 交付记录
+       - 阶段=IN_PROGRESS，交付记录未到期（COMPLETED 时检查 delivery.md 七要素）
+Overall: IN_PROGRESS
+判定：符合预期（退出码 == 1；关键输出 齐全）
+
+---- EV1 判定 ----
+①一致性核验=36/36 ②DV1测试=6/6 ③negpos=7/7 ④任务包④PASS/Overall=IN_PROGRESS/退出1（既定语义）
+  [PASS] s4-consistency-check
+  [PASS] s4-dv1-tests
+  [PASS] s4-check-negpos-tests
+  [PASS] check_taskpack
+EV1 结果：PASS（四命令全部符合预期，输出绑定上述快照身份；申报引用=本归档文件路径+本文件顶部 SHA256+被测源 commit）
+版本变动条款：被测 delivery 任何修改后必须重跑本驱动重新生成本文件，不得沿用旧输出。

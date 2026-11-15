@@ -1,0 +1,8 @@
+=== S4-DV1-EV1 证据 MANIFEST ===
+生成时间（UTC）：2026-11-15T01:26:08+00:00
+被测快照：e309474dc85a8040506bd71347b03aa299384e1d
+裁定依据 reply sha256：2c32b00705d2340803d6a8b507122dc464da9e3bf256e2475394e72ebbb0fbce
+驱动脚本 SHA256：486abaf33058f0601c8b05acf3fd656fcb3c2bfbbcc960d653c32259973ec811  phase0/tools/s4-ev1-run.py
+证据文件清单：
+128125c793bcc09cdc1362cd5485da151b17926d62fbd76b3861644a56a61ec0  s4-ev1-output.txt（EV1 主证据）
+约定：验收请求只引用本 MANIFEST 所列归档文件路径、SHA256 及被测源 commit；被测文件修改后须重跑驱动，旧输出不得沿用。
