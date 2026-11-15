@@ -1,0 +1,323 @@
+ChatGPT 说：
+修改后同意
+
+D1 可复制性实战验证方向正确，建议补齐 5 项后冻结执行。 这次验证很有价值：DEC-045 D1 的“复制到新电脑即用”此前没有真正实测，不能仅凭 Basic 目录独立就认定产品级可复制性已经成立。
+
+我已按 d05f46b 检查任务需求、任务书、basic/WORKFLOW.md 和仓库文件树。以下意见针对方案，不是对尚未执行的验证作 PASS 判断。
+
+① 核验清单：建议扩为八项
+
+你原来的六项保留，补充两个维度，并把环境依赖拆清楚。
+
+项目
+
+	
+
+核验内容
+
+	
+
+我的意见
+
+
+
+
+1. Clone 完整性
+
+	
+
+未认证公开 clone、Git 完整性、分支、HEAD SHA、工作区状态
+
+	
+
+保留
+
+
+
+
+2. 环境初始化
+
+	
+
+OS、Git、Node、Python、PowerShell、Chrome、Playwright
+
+	
+
+扩充
+
+
+
+
+3. 环境体检
+
+	
+
+node toolkit/check-env.mjs，逐项解释 OK/WARN/FAIL
+
+	
+
+保留，但须前后运行两次
+
+
+
+
+4. Basic 核心工具
+
+	
+
+check_taskpack.py 对三个代表性任务包执行
+
+	
+
+保留，明确三个任务包及预期结果
+
+
+
+
+5. 公共工具链
+
+	
+
+check-push 诊断、phase0/tools 依赖、会话锁、派单主工具及采集器
+
+	
+
+必须扩充
+
+
+
+
+6. 治理文档
+
+	
+
+WORKFLOW、验收清单、模板、任务目录规范、AGENTS、权威交接模板
+
+	
+
+保留并补全
+
+
+
+
+7. 部署边界
+
+	
+
+不依赖 Standard 运行时；公共工具引用不复制；环境初始化要求
+
+	
+
+保留
+
+
+
+
+8. 可复制性与外部依赖
+
+	
+
+登录态、浏览器 profile、外部 Skill、主机专属配置
+
+	
+
+新增
+
+特别需要验证的实际依赖
+
+我检查了仓库文件树和相关源码，发现几个不能忽略的事实：
+
+A. node_modules 不随仓库复制
+
+.gitignore 排除了 node_modules/，但 phase0/tools/package.json 声明了 Playwright、AJV、undici 等依赖。
+
+check-env.mjs 会检查：
+
+phase0/tools/node_modules/playwright
+
+因此建议演练分成两个时间点：
+
+初始 clone 后运行体检，记录缺失依赖。
+
+按 package-lock.json 执行 npm ci 后再次运行体检。
+
+不能把初始缺失直接判成代码缺陷，也不能跳过初始化就声称可复制即用。
+
+B. runtime/ 不随仓库复制
+
+.gitignore 明确排除了 runtime/，但 check-env.mjs 会检查：
+
+runtime/chrome_profiles/gpt-poc
+
+gpt_dispatch.mjs 也将该目录作为 Chrome profile 使用。
+
+应核验新环境如何初始化 profile、如何首次登录，以及是否需要人工操作。登录态和 Cookie 不得进入 Git。
+
+C. phase0 工具链不只是两个脚本
+
+至少核验以下文件和依赖：
+
+phase0/tools/gpt_dispatch.mjs
+
+phase0/tools/inbound_dom.mjs
+
+phase0/tools/inbound_reply.mjs
+
+phase0/tools/dispatch_options.mjs
+
+phase0/e2e-poc/session_lock.mjs
+
+phase0/tools/package.json 与 package-lock.json
+
+phase0/tools/node_modules/playwright
+
+还要验证 Chrome/CDP profile 和 PowerShell 的可用性。
+
+重要限制： 当前 session_lock.mjs 使用 PowerShell；gpt_dispatch.mjs 还写有 Windows Chrome 路径。因此不能仅凭 check-env.mjs 标注 Linux/Windows 跨平台，就宣称整条派单链跨平台可用。
+
+D. Skills 与 monitor
+
+在 d05f46b 仓库文件树中：
+
+没有仓库内的 skills/ 文件或目录；
+
+没有 monitor/ 文件或目录。
+
+AGENTS.md 确实存在，但文件明确限定为 ZCode 执行会话自动加载，ChatGPT 网页审查会话不会自动加载。
+
+所以：
+
+Skills 如果依赖外部客户端安装，必须列为主机级外部依赖，不得假定 clone 后自动具备。
+
+monitor 目前不是 basic/WORKFLOW.md 明确规定的 Basic 必备组件，不应为了目录完整性而新增必检要求。
+
+另外两个细节
+
+check-env.mjs 不是最终 PASS 判定器。 源码明确写明退出码恒为 0，端口未监听和 CDP 不在线也可能是常见状态。因此必须逐条解读报告，不能只看退出码。
+
+check_taskpack.py 的退出码也要结合任务状态解释。 它对 IN_PROGRESS 会返回退出码 1，这不等于检查器缺陷。三个测试包最好覆盖不同状态，并在方案中冻结具体任务 ID、预期状态和预期输出。
+
+② 报告落位与缺口分级
+建议采纳
+
+报告建议放在：
+
+basic/tasks/b-20261115-basic-replication-verify/acceptance/replication-report.md
+
+同目录保留原始演练输出、依赖安装记录、目录清单和 MANIFEST。这样验证报告、原始证据、验收结论都归属于同一任务，不必修改 Basic 现行规范文件。
+
+缺口分级建议如下：
+
+级别
+
+	
+
+定义
+
+	
+
+示例
+
+
+
+
+P0：阻断即用
+
+	
+
+按文档执行仍无法完成 Basic 核心工作流，或关键公共工具不可恢复
+
+	
+
+核心脚本缺失、必需依赖无法安装
+
+
+
+
+P1：影响效率
+
+	
+
+核心功能可用，但需要额外人工操作、未文档化配置或临时绕行
+
+	
+
+profile 初始化未说明、环境检测信息不足
+
+
+
+
+P2：记录性
+
+	
+
+不影响使用，但文档、目录说明或证据记录不完整
+
+	
+
+版本说明缺失、目录清单不够明确
+
+补充规则：
+
+环境未初始化造成的缺失，与仓库自身缺陷分开记录。
+
+有替代操作但尚未文档化的，不直接算 P0。
+
+无法实测的项目标记 BLOCKED 或待验证，不冒充 PASS。
+
+每个缺口给出证据、影响范围、修复建议，但不在本任务中修复。
+
+③ 两个必须写进方案的边界
+
+边界一：临时目录 Clone 不等于真正的新电脑。
+
+在同一台电脑上创建临时目录，仍然共享本机的 Node、Python、Git、系统代理、全局 Git 配置、Chrome 和用户凭据。
+
+所以报告必须分开写：
+
+仓库复制验证： 干净目录 clone 后，仓库文件和脚本能否正常工作。
+
+环境初始化验证： 依赖安装、profile 初始化、外部工具配置能否按步骤完成。
+
+新电脑完整验证： 当前演练没有实际换电脑时，只能标记为“本机模拟验证”，不能声称已经完成跨电脑实测。
+
+建议至少记录环境变量、Git 全局配置、Node/Python 版本、系统代理状态，以及是否使用已有登录态。
+
+边界二：诊断不等于推送。
+
+check-push 只运行：
+
+Bash
+node toolkit/check-push.mjs
+
+禁止使用 --push 或 --yes。它的诊断模式会进行 Git dry-run 探测，但不应执行真实推送。执行前后核对 .git/config、分支和工作区，确认没有产生实际推送或配置修改。
+
+此外，check-env 的输出不能替代人工核验，也不能因为环境依赖缺失就擅自修改检查器。
+
+④ 最终冻结意见
+
+建议按以下步骤组织实施：
+
+创建临时目录，验证未认证公开 Clone，记录完整 SHA 和仓库完整性。
+
+第一次运行 check-env，记录干净 Clone 的原始环境状态。
+
+安装必要依赖并初始化运行环境，记录每项操作及结果。
+
+第二次运行 check-env，解释所有残留 WARN/FAIL。
+
+运行三个代表性任务包的 check_taskpack.py，运行 check-push 诊断模式。
+
+核验 Basic 工具、公共工具链、治理文件、外部依赖和部署边界。
+
+形成验证报告，按 P0/P1/P2 登记缺口和修复建议。
+
+不修复、不提交任何工具代码或 Basic 现行规范文件，交独立验收。
+
+最终裁定：修改后同意。
+
+需要落实的核心修改是：补充公共工具链完整性、依赖安装前后对照、外部 Skill/运行时依赖登记，以及“本机模拟”与“真正新电脑验证”的结论区分。
+
+执行边界仍是纯验证。不得因为发现问题就顺手修复，更不得借此改造 Basic 或 Standard。
+
+这与 DEC-045 D1 已确认的原则一致：Basic 不依赖 Standard 业务运行时，但复制时必须保留公共工具并完成环境初始化。

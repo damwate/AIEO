@@ -1,0 +1,19 @@
+===== AIEO 环境体检 2026-11-15T07:45:58.132Z =====
+[INFO] OS: win32 10.0.26300 x64 主机=DESKTOP-9C0M7GR
+[OK]   node 24.14.0（需 ≥18：派单工具链/playwright 要求）
+[OK]   git version 2.47.1.windows.1
+[OK]   仓库 D:/AIEO-replication-test
+[INFO] 分支=main 上游=origin/main ahead=0 behind=0 未提交变更=0
+[INFO] 最近提交: d05f46b docs(basic): D1可复制性验证任务登记——b-20261115-basic-replication-verify(requirement.md节点授权确认版:模拟新环境初始化全流程clone+check-env+
+[INFO] 仓库代理配置：无 http.*.proxy 条目
+[INFO] 无候选代理端口（可 --ports a,b 或环境变量 AIEO_CHECK_PORTS 提供）
+[OK]   Chrome CDP 127.0.0.1:9222 在线 Chrome/157.0.8103.51
+[OK]   phase0/tools/gpt_dispatch.mjs（派单主工具）
+[OK]   phase0/tools/inbound_dom.mjs（回复采集器）
+[OK]   phase0/tools/node_modules/playwright（playwright 依赖）
+[OK]   phase0/e2e-poc/session_lock.mjs（会话锁）
+[FAIL] runtime/chrome_profiles/gpt-poc（gpt-poc Chrome profile） 缺失
+[OK]   basic/WORKFLOW.md（Basic 工作流规范）
+[OK]   docs/phase1/handoff-template.md（交接包权威模板）
+[OK]   docs/phase1/version-directory-plan.md（版本目录方案 v1.0）
+===== 体检完成（报告型工具，退出码恒 0）=====

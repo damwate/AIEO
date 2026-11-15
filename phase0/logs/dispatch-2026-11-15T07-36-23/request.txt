@@ -1,0 +1,5 @@
+[规划协商|b-20261115-basic-replication-verify|S1验证类|轮1]
+D1可复制性实战验证(DEC-045 D1"复制到新电脑即用"从未实测,产品级缺口)。方案冻结依节点自主授权增补②以你复审通过替代逐项拍板。
+材料(按SHA读):github.com/damwate/AIEO@main d05f46b basic/tasks/b-20261115-basic-replication-verify/;对照条款=basic/WORKFLOW.md部署边界。
+拟执行:本机临时目录clone github.com/damwate/AIEO(验公开拉取,私有则记缺口)→check-env体检→核心工具逐个核验[check_taskpack对3任务包/check-push诊断模式/治理文档齐备WORKFLOW+清单+templates+AGENTS.md]→部署边界条款逐项对照→成文验证报告[通过项+缺口分级(阻断即用/影响效率/记录性)+修复建议,只登记不修复]。
+请求:①核验清单六项有无遗漏(尤其"即用"还应验什么——如skill文件依赖/monitor目录/phase0工具链在clone内的完整性)②报告落位与缺口分级标准意见③边界有无缺口④三态:同意/修改(列点)/否决。

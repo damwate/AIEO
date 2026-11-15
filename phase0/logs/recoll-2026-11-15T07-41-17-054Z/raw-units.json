@@ -1,0 +1,204 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-15T07:42:00.243Z",
+  "user_unit_key": "fallback-turn-7:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-7:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "2c8fdbcc-0347-46b0-b5c7-b2eaf494d467",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-7:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant",
+          "fallback-turn-6:0:user",
+          "fallback-turn-6:2:assistant",
+          "fallback-turn-7:0:user",
+          "fallback-turn-7:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "729c5c22c862ade56675ab49cc6ce14abb01afc436f6e52474d8779af050ec61",
+          "071f26de65c8da07661b037e29cf0276d2babc95d92d36b396aecc1c11ed86fb",
+          "4084bfdcd6e6ce6ce6884460b2787b211ff2cba315dfdfd00fe27c1177faf411",
+          "df55fa967337f7a079e037c6ba1ce08d383b801c999e7e5bd449514ba5ef1141",
+          "cc50d5a89252d6c2658fbcf60e564107355ad1abc7644f0a7733a1498d1092eb",
+          "21d3150d1c3f70baf2d07849ed90588dc096e8eeafb3ff630ef50fe42b824851",
+          "608ad87ef6cac6746609c20979318eeab06c3613a189ab11feb9b8f2d18d06d7",
+          "ee3f919366277579c7d6af3b0f96be07bd4e47c759ce185a562428259e1bc519",
+          "2045fcd7338ed83a09cbeff1dd67f4aef6b1225508daa4c757e5a8b7e13b4e4c",
+          "a040e7b8c741e9d45f040ce30d9b261f65334e320b97fb71eaae1b2adeff3122",
+          "4f8fe6d34f202f4b0ddc2551e0ec9035de52a8fe489f132249125bc2320bc169",
+          "7bd447f0d9dde7fb8dbe712ea2faa773242cf4d322646bb8c2948d9fe996b8c1",
+          "3f13e82e12714290fcb0189914bd5f954fa83b78ee8efd603eb3f639ff8596d7",
+          "7c67824a6ab5f6932e98ec8b4532daa2783f3c7e90c9c8a7c975319bfc44577c",
+          "2bc78a2caf77049e8b794d5822e1c7dd95b6a9e47200d232a5c6052f4427c89b",
+          "fc8478d79cc0a634e406bff7030e60a9862f8ab4eb254cd1e2903b3298cbd974"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant",
+          "fallback-turn-6:0:user",
+          "fallback-turn-6:2:assistant",
+          "fallback-turn-7:0:user",
+          "fallback-turn-7:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "729c5c22c862ade56675ab49cc6ce14abb01afc436f6e52474d8779af050ec61",
+          "071f26de65c8da07661b037e29cf0276d2babc95d92d36b396aecc1c11ed86fb",
+          "4084bfdcd6e6ce6ce6884460b2787b211ff2cba315dfdfd00fe27c1177faf411",
+          "df55fa967337f7a079e037c6ba1ce08d383b801c999e7e5bd449514ba5ef1141",
+          "cc50d5a89252d6c2658fbcf60e564107355ad1abc7644f0a7733a1498d1092eb",
+          "21d3150d1c3f70baf2d07849ed90588dc096e8eeafb3ff630ef50fe42b824851",
+          "608ad87ef6cac6746609c20979318eeab06c3613a189ab11feb9b8f2d18d06d7",
+          "ee3f919366277579c7d6af3b0f96be07bd4e47c759ce185a562428259e1bc519",
+          "2045fcd7338ed83a09cbeff1dd67f4aef6b1225508daa4c757e5a8b7e13b4e4c",
+          "a040e7b8c741e9d45f040ce30d9b261f65334e320b97fb71eaae1b2adeff3122",
+          "4f8fe6d34f202f4b0ddc2551e0ec9035de52a8fe489f132249125bc2320bc169",
+          "7bd447f0d9dde7fb8dbe712ea2faa773242cf4d322646bb8c2948d9fe996b8c1",
+          "3f13e82e12714290fcb0189914bd5f954fa83b78ee8efd603eb3f639ff8596d7",
+          "7c67824a6ab5f6932e98ec8b4532daa2783f3c7e90c9c8a7c975319bfc44577c",
+          "2bc78a2caf77049e8b794d5822e1c7dd95b6a9e47200d232a5c6052f4427c89b",
+          "fc8478d79cc0a634e406bff7030e60a9862f8ab4eb254cd1e2903b3298cbd974"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant",
+          "fallback-turn-6:0:user",
+          "fallback-turn-6:2:assistant",
+          "fallback-turn-7:0:user",
+          "fallback-turn-7:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-7:0:user",
+      "fallback-turn-7:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant",
+          "fallback-turn-6:0:user",
+          "fallback-turn-6:2:assistant",
+          "fallback-turn-7:0:user",
+          "fallback-turn-7:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant",
+          "fallback-turn-6:0:user",
+          "fallback-turn-6:2:assistant",
+          "fallback-turn-7:0:user",
+          "fallback-turn-7:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant",
+          "fallback-turn-6:0:user",
+          "fallback-turn-6:2:assistant",
+          "fallback-turn-7:0:user",
+          "fallback-turn-7:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-7:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n修改后同意\n\nD1 可复制性实战验证方向正确，建议补齐 5 项后冻结执行。 这次验证很有价值：DEC-045 D1 的“复制到新电脑即用”此前没有真正实测，不能仅凭 Basic 目录独立就认定产品级可复制性已经成立。\n\n我已按 d05f46b 检查任务需求、任务书、basic/WORKFLOW.md 和仓库文件树。以下意见针对方案，不是对尚未执行的验证作 PASS 判断。\n\n① 核验清单：建议扩为八项\n\n你原来的六项保留，补充两个维度，并把环境依赖拆清楚。\n\n项目\n\n\t\n\n核验内容\n\n\t\n\n我的意见\n\n\n\n\n1. Clone 完整性\n\n\t\n\n未认证公开 clone、Git 完整性、分支、HEAD SHA、工作区状态\n\n\t\n\n保留\n\n\n\n\n2. 环境初始化\n\n\t\n\nOS、Git、Node、Python、PowerShell、Chrome、Playwright\n\n\t\n\n扩充\n\n\n\n\n3. 环境体检\n\n\t\n\nnode toolkit/check-env.mjs，逐项解释 OK/WARN/FAIL\n\n\t\n\n保留，但须前后运行两次\n\n\n\n\n4. Basic 核心工具\n\n\t\n\ncheck_taskpack.py 对三个代表性任务包执行\n\n\t\n\n保留，明确三个任务包及预期结果\n\n\n\n\n5. 公共工具链\n\n\t\n\ncheck-push 诊断、phase0/tools 依赖、会话锁、派单主工具及采集器\n\n\t\n\n必须扩充\n\n\n\n\n6. 治理文档\n\n\t\n\nWORKFLOW、验收清单、模板、任务目录规范、AGENTS、权威交接模板\n\n\t\n\n保留并补全\n\n\n\n\n7. 部署边界\n\n\t\n\n不依赖 Standard 运行时；公共工具引用不复制；环境初始化要求\n\n\t\n\n保留\n\n\n\n\n8. 可复制性与外部依赖\n\n\t\n\n登录态、浏览器 profile、外部 Skill、主机专属配置\n\n\t\n\n新增\n\n特别需要验证的实际依赖\n\n我检查了仓库文件树和相关源码，发现几个不能忽略的事实：\n\nA. node_modules 不随仓库复制\n\n.gitignore 排除了 node_modules/，但 phase0/tools/package.json 声明了 Playwright、AJV、undici 等依赖。\n\ncheck-env.mjs 会检查：\n\nphase0/tools/node_modules/playwright\n\n因此建议演练分成两个时间点：\n\n初始 clone 后运行体检，记录缺失依赖。\n\n按 package-lock.json 执行 npm ci 后再次运行体检。\n\n不能把初始缺失直接判成代码缺陷，也不能跳过初始化就声称可复制即用。\n\nB. runtime/ 不随仓库复制\n\n.gitignore 明确排除了 runtime/，但 check-env.mjs 会检查：\n\nruntime/chrome_profiles/gpt-poc\n\ngpt_dispatch.mjs 也将该目录作为 Chrome profile 使用。\n\n应核验新环境如何初始化 profile、如何首次登录，以及是否需要人工操作。登录态和 Cookie 不得进入 Git。\n\nC. phase0 工具链不只是两个脚本\n\n至少核验以下文件和依赖：\n\nphase0/tools/gpt_dispatch.mjs\n\nphase0/tools/inbound_dom.mjs\n\nphase0/tools/inbound_reply.mjs\n\nphase0/tools/dispatch_options.mjs\n\nphase0/e2e-poc/session_lock.mjs\n\nphase0/tools/package.json 与 package-lock.json\n\nphase0/tools/node_modules/playwright\n\n还要验证 Chrome/CDP profile 和 PowerShell 的可用性。\n\n重要限制： 当前 session_lock.mjs 使用 PowerShell；gpt_dispatch.mjs 还写有 Windows Chrome 路径。因此不能仅凭 check-env.mjs 标注 Linux/Windows 跨平台，就宣称整条派单链跨平台可用。\n\nD. Skills 与 monitor\n\n在 d05f46b 仓库文件树中：\n\n没有仓库内的 skills/ 文件或目录；\n\n没有 monitor/ 文件或目录。\n\nAGENTS.md 确实存在，但文件明确限定为 ZCode 执行会话自动加载，ChatGPT 网页审查会话不会自动加载。\n\n所以：\n\nSkills 如果依赖外部客户端安装，必须列为主机级外部依赖，不得假定 clone 后自动具备。\n\nmonitor 目前不是 basic/WORKFLOW.md 明确规定的 Basic 必备组件，不应为了目录完整性而新增必检要求。\n\n另外两个细节\n\ncheck-env.mjs 不是最终 PASS 判定器。 源码明确写明退出码恒为 0，端口未监听和 CDP 不在线也可能是常见状态。因此必须逐条解读报告，不能只看退出码。\n\ncheck_taskpack.py 的退出码也要结合任务状态解释。 它对 IN_PROGRESS 会返回退出码 1，这不等于检查器缺陷。三个测试包最好覆盖不同状态，并在方案中冻结具体任务 ID、预期状态和预期输出。\n\n② 报告落位与缺口分级\n建议采纳\n\n报告建议放在：\n\nbasic/tasks/b-20261115-basic-replication-verify/acceptance/replication-report.md\n\n同目录保留原始演练输出、依赖安装记录、目录清单和 MANIFEST。这样验证报告、原始证据、验收结论都归属于同一任务，不必修改 Basic 现行规范文件。\n\n缺口分级建议如下：\n\n级别\n\n\t\n\n定义\n\n\t\n\n示例\n\n\n\n\nP0：阻断即用\n\n\t\n\n按文档执行仍无法完成 Basic 核心工作流，或关键公共工具不可恢复\n\n\t\n\n核心脚本缺失、必需依赖无法安装\n\n\n\n\nP1：影响效率\n\n\t\n\n核心功能可用，但需要额外人工操作、未文档化配置或临时绕行\n\n\t\n\nprofile 初始化未说明、环境检测信息不足\n\n\n\n\nP2：记录性\n\n\t\n\n不影响使用，但文档、目录说明或证据记录不完整\n\n\t\n\n版本说明缺失、目录清单不够明确\n\n补充规则：\n\n环境未初始化造成的缺失，与仓库自身缺陷分开记录。\n\n有替代操作但尚未文档化的，不直接算 P0。\n\n无法实测的项目标记 BLOCKED 或待验证，不冒充 PASS。\n\n每个缺口给出证据、影响范围、修复建议，但不在本任务中修复。\n\n③ 两个必须写进方案的边界\n\n边界一：临时目录 Clone 不等于真正的新电脑。\n\n在同一台电脑上创建临时目录，仍然共享本机的 Node、Python、Git、系统代理、全局 Git 配置、Chrome 和用户凭据。\n\n所以报告必须分开写：\n\n仓库复制验证： 干净目录 clone 后，仓库文件和脚本能否正常工作。\n\n环境初始化验证： 依赖安装、profile 初始化、外部工具配置能否按步骤完成。\n\n新电脑完整验证： 当前演练没有实际换电脑时，只能标记为“本机模拟验证”，不能声称已经完成跨电脑实测。\n\n建议至少记录环境变量、Git 全局配置、Node/Python 版本、系统代理状态，以及是否使用已有登录态。\n\n边界二：诊断不等于推送。\n\ncheck-push 只运行：\n\nBash\nnode toolkit/check-push.mjs\n\n禁止使用 --push 或 --yes。它的诊断模式会进行 Git dry-run 探测，但不应执行真实推送。执行前后核对 .git/config、分支和工作区，确认没有产生实际推送或配置修改。\n\n此外，check-env 的输出不能替代人工核验，也不能因为环境依赖缺失就擅自修改检查器。\n\n④ 最终冻结意见\n\n建议按以下步骤组织实施：\n\n创建临时目录，验证未认证公开 Clone，记录完整 SHA 和仓库完整性。\n\n第一次运行 check-env，记录干净 Clone 的原始环境状态。\n\n安装必要依赖并初始化运行环境，记录每项操作及结果。\n\n第二次运行 check-env，解释所有残留 WARN/FAIL。\n\n运行三个代表性任务包的 check_taskpack.py，运行 check-push 诊断模式。\n\n核验 Basic 工具、公共工具链、治理文件、外部依赖和部署边界。\n\n形成验证报告，按 P0/P1/P2 登记缺口和修复建议。\n\n不修复、不提交任何工具代码或 Basic 现行规范文件，交独立验收。\n\n最终裁定：修改后同意。\n\n需要落实的核心修改是：补充公共工具链完整性、依赖安装前后对照、外部 Skill/运行时依赖登记，以及“本机模拟”与“真正新电脑验证”的结论区分。\n\n执行边界仍是纯验证。不得因为发现问题就顺手修复，更不得借此改造 Basic 或 Standard。\n\n这与 DEC-045 D1 已确认的原则一致：Basic 不依赖 Standard 业务运行时，但复制时必须保留公共工具并完成环境初始化。",
+      "text_sha256": "fc8478d79cc0a634e406bff7030e60a9862f8ab4eb254cd1e2903b3298cbd974",
+      "size_bytes": 7700,
+      "assistant_uuid": "2c8fdbcc-0347-46b0-b5c7-b2eaf494d467"
+    }
+  ]
+}
