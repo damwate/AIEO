@@ -12,7 +12,7 @@
 | 2 | 环境依赖（OS/Git/Node/Python/PowerShell/Chrome） | PASS（本机共享） | check-env：node 24.14.0/git 2.47.1/Chrome CDP 9222 在线；**共享本机环境，新电脑需自装——见缺口 G4** |
 | 3 | 环境体检两次对照 | **PASS（符合预期）** | 第一次（初始 clone）：2 FAIL=playwright 依赖缺失+chrome profile 缺失（均为 .gitignore 设计排除，非缺陷）；npm ci 后第二次：playwright OK，残留 1 FAIL=chrome profile（登录态不入 Git，C6 纪律正确） |
 | 4 | Basic 核心工具（check_taskpack） | **PASS** | 3 个 COMPLETED 任务包（v03-activation/lessons-recoll/standard-design-input）全部 Overall=PASS 退出 0，与主工作区结论一致 |
-| 5 | 公共工具链 | **PASS（附限制）** | check-push 诊断模式正常（ahead=0 无需推送，未用 --push --yes，执行前后 .git/config 0 代理条目+工作区净=零改动）；gpt_dispatch/inbound_dom/inbound_reply/session_lock/package.json 齐备（check-env OK）；**限制：session_lock 用 PowerShell+gpt_dispatch 写死 Windows Chrome 路径——派单链当前仅 Windows 实测，check-env 标注"跨平台"不等于派单链跨平台已验证** |
+| 5 | 公共工具链 | **PASS（附限制）** | check-push 诊断执行成功（ahead=0 无需推送，未用 --push --yes）；**零副作用证据部分可证**：当前态快照 proxy=0/status=0/HEAD=origin/main，执行时点前后快照未留存（见 §四），当前态快照不能替代历史前后对照；gpt_dispatch/inbound_dom/inbound_reply/session_lock/package.json 齐备（check-env OK）；**限制：session_lock 用 PowerShell+gpt_dispatch 写死 Windows Chrome 路径——派单链当前仅 Windows 实测，check-env 标注"跨平台"不等于派单链跨平台已验证** |
 | 6 | 治理文档齐备 | **PASS** | WORKFLOW/ACCEPTANCE-CHECKLIST/templates 三件套（acceptance-request+handoff-package+task-brief）/tasks README/AGENTS.md（33 行）/docs/phase1/handoff-template.md 全部在 clone 内 |
 | 7 | 部署边界条款对照 | **PASS** | "Basic 不依赖 Standard 业务运行时"成立（basic/ 工具全部独立跑通）；"复制新电脑需保留仓库公共工具并初始化环境"——npm ci 即可恢复 playwright（已验证），profile 需人工初始化（见缺口） |
 | 8 | 可复制性与外部依赖 | **部分（如实登记）** | 仓库内无 skills/、无 monitor/：chatgpt-web-dispatch skill=主机级外部依赖（~/.agents/skills/，clone 后需按 skill 自身方式安装）；monitor=外部 agent-kit 仓库管理（非 WORKFLOW 规定的 Basic 必备组件，不作必检）；**登录态/Cookie 不入 Git（正确），但初始化步骤未文档化（见缺口 G2）** |
@@ -32,9 +32,9 @@
 
 ## 三、通过项汇总
 
-clone 完整性（经代理）／两次体检对照符合设计／check_taskpack 三包结论一致／check-push 诊断零副作用／治理文档全齐备／部署边界两条款实测成立／登录态不入 Git 纪律正确执行。
+clone 完整性（经代理）／两次体检对照符合设计／check_taskpack 三包结论一致／check-push 诊断执行成功（零副作用部分可证，执行时点快照未留存）／治理文档全齐备／部署边界两条款实测成立／登录态不入 Git 纪律正确执行。
 
 ## 四、原始输出归档
 
 本目录（acceptance/）原始输出 7 项：check-env-1st.txt／check-env-2nd.txt／taskpack-×3／check-push-diag.txt／clone-log.txt；执行记录补档 3 项（R1 验收 P1-1/P1-2 整改）：fsck-exec.txt（fsck 退出码 0 复跑记录）／npm-ci-exec.txt（如实补记：完整 stdout 未落盘，退出码与结果按执行时终端记录）／check-push-before-after.txt（当前态快照+执行时点快照未落盘如实标注，不补造）；报告=replication-report.md；清单=ls-MANIFEST.txt（准确区分原始输出/执行记录补档/报告）。
-fsck 结论：clone 时执行（干净=无输出）；npm ci 结论：两次退出码 0、playwright 恢复由 check-env-2nd [OK] 佐证；check-push 零副作用：当前态快照（proxy=0 条/status=0 条/HEAD=origin/main=无领先）+执行时终端核验（steps.md S1③），执行时点前后快照未落盘已如实标注——该项证据为"部分可证"，不冒充完整。
+fsck 结论：clone 时执行（干净=无输出）；npm ci 结论：两次退出码 0、playwright 恢复由 check-env-2nd [OK] 佐证；check-push 零副作用（部分可证）：当前态快照（proxy=0 条/status=0 条/HEAD=origin/main=无领先）+执行时终端核验（steps.md S1③），执行时点前后快照未落盘已如实标注——该项证据为"部分可证"，不冒充完整。
