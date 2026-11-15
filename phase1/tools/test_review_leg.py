@@ -528,6 +528,79 @@ class ReviewLegTests(unittest.TestCase):
         self.assertEqual(self.server.query(
             "SELECT status FROM tasks WHERE task_id=?", (task_id,))[0]["status"], "TEST_ACCEPTANCE")
 
+    def test_08c_collect_failed_full_recovery(self):
+        """NEW-P1-01 修复验证：发送双验过但采集失败（COLLECT_FAILED 落账会话证据）
+        → resume 原会话补采（禁重发）→ 契约校验 → 只补登记 → 状态推进。全程零重发。"""
+        import hashlib
+        leg, task_id, _, ctx, commit = self.make_leg("f06c", lambda c: self.reply_for(c, "PASS"))
+        reply_text = self.reply_for(commit, "PASS")
+        sends = {"n": 0}
+
+        def wrapper(cmd, **kw):
+            joined = " ".join(map(str, cmd))
+            if "gpt_dispatch.mjs" in joined:
+                sends["n"] += 1
+                ddir = rl.DISPATCH_LOG_DIR / f"dispatch-08c-{sends['n']}"
+                ddir.mkdir(parents=True, exist_ok=True)
+                msg_file = None
+                cl = [str(a) for a in cmd]
+                if "--message-file" in cl:
+                    msg_file = Path(cl[cl.index("--message-file") + 1])
+                if msg_file and msg_file.is_file():
+                    (ddir / "request.txt").write_bytes(msg_file.read_bytes())
+                # 发送双验证据先落盘（result.json），随后进程非零退出=采集失败（§5 行2 形态）
+                (ddir / "result.json").write_text(json.dumps({
+                    "user_unit_key": "fallback-turn-1:0:user",
+                    "unit_count": 1,
+                    "conversation_url": "https://chatgpt.com/c/22222222-3333-4444-8555-666666666666",
+                    "completion_checks": {"send_double_verify": True},
+                }, ensure_ascii=False), encoding="utf-8")
+                return FakeProc(3, b"", b"injected collection failure after send double-verify")
+            if "recoll_driver.mjs" in joined:
+                # 补采替身（ChatGPT 采集边界）：落盘 recoll 产物到 run_dir（=驱动模板 OUT_DIR）
+                reply_sha = hashlib.sha256(reply_text.encode("utf-8")).hexdigest()
+                (leg.run_dir / "reply.txt").write_text(reply_text, encoding="utf-8")
+                (leg.run_dir / "recoll-result.json").write_text(json.dumps({
+                    "recollection": True, "located_user_unit_key": "fallback-turn-1:0:user",
+                    "unit_count": 1, "reply_bytes": len(reply_text.encode("utf-8")),
+                    "reply_sha256": reply_sha,
+                    "checks": {"final_stop_button_not_visible": True, "tail_is_assistant": True,
+                               "dil_uuid_present": True, "uuid_stable": True,
+                               "stable_unit_read": True, "target_range_materialized": True,
+                               "not_prev_reply_sha": True},
+                    "stability": {"stable": True},
+                    "conversation_url": "https://chatgpt.com/c/22222222-3333-4444-8555-666666666666",
+                }, ensure_ascii=False), encoding="utf-8")
+                (leg.run_dir / "units-diag.json").write_text(json.dumps([
+                    {"key": "fallback-turn-1:0:user", "role": "user", "text_head": "brief"},
+                    {"key": "fallback-turn-1:2:assistant", "role": "assistant", "text_head": "reply"},
+                ], ensure_ascii=False), encoding="utf-8")
+                return FakeProc(0)
+            return REAL_SUBPROCESS_RUN(cmd, **kw)
+
+        with self.dispatch_double(wrapper):
+            rc = leg.run()
+        self.assertEqual(rc, 2, "collect-failure -> leg-level BLOCKED (resend forbidden)")
+        self.assertEqual(sends["n"], 1, "exactly one send attempt")
+        cf = leg.ledger.latest("R3_SEND_CONFIRMED_COLLECT_FAILED")
+        self.assertIsNotNone(cf)
+        self.assertEqual(cf["conversation_uuid"], "22222222-3333-4444-8555-666666666666",
+                         "COLLECT_FAILED must carry conversation evidence (P1-03)")
+        self.assertEqual(cf["sent_user_unit_key"], "fallback-turn-1:0:user")
+        # resume：COLLECT_FAILED 锚点 → 原会话补采 → 登记 → 推进（NEW-P1-01 修复前此处 TypeError 逸出）
+        with self.dispatch_double(wrapper):
+            rc2 = leg.resume()
+        self.assertEqual(rc2, 0, "full recovery completes (NEW-P1-01 fixed)")
+        self.assertEqual(sends["n"], 1, "recovery must not resend")
+        self.assertEqual(self.server.query(
+            "SELECT status FROM tasks WHERE task_id=?", (task_id,))[0]["status"], "TEST_ACCEPTANCE")
+        kinds = [r["kind"] for r in leg.ledger.load()]
+        self.assertIn("RESUME_COLLECT_OK", kinds)
+        r4 = leg.ledger.latest("R4_REPLY_CAPTURED")
+        self.assertEqual(r4["user_unit_counts"]["at_capture_materialized"], 1,
+                         "capture-time user unit count recorded from units-diag")
+        self.assertTrue(r4["snapshot"]["source"].startswith("recoll"))
+
     def test_08b_ledger_m1_contradiction_blocks(self):
         """A8 场景②：账本含派单痕迹而 M1 任务尚在 DEV_REPORTED=矛盾态 → fail-closed。"""
         leg, task_id, _, ctx, commit = self.make_leg("f06b", lambda c: self.reply_for(c, "PASS"))
@@ -590,6 +663,50 @@ class ReviewLegTests(unittest.TestCase):
         arts = self.server.query("SELECT artifact_id,sha256 FROM artifacts WHERE task_id=? AND type='REVIEW_EVIDENCE'", (task_id,))
         self.assertEqual(len(arts), 1)
         self.assertEqual(arts[0]["artifact_id"], artifact_id_before, "artifact id/content unchanged")
+        self.assertEqual(self.server.query(
+            "SELECT status FROM tasks WHERE task_id=?", (task_id,))[0]["status"], "TEST_ACCEPTANCE")
+
+    def test_09b_message_ok_report_fail_resume_completes(self):
+        """P1-02 补充分支：message 已成功而 report 登记失败 → resume 跳过前两项
+        （指纹重算核实）只补 report → 推进完成，零重派。"""
+        leg, task_id, _, ctx, commit = self.make_leg("f07b", lambda c: self.reply_for(c, "PASS"))
+        wrapper, _ = ctx
+        fconn = sqlite3.connect(self.server.db_path)
+        try:
+            fconn.execute("CREATE TABLE IF NOT EXISTS rvl_fault2(state TEXT)")
+            fconn.execute("DELETE FROM rvl_fault2")
+            fconn.execute("INSERT INTO rvl_fault2 VALUES('arm')")
+            fconn.execute("CREATE TRIGGER IF NOT EXISTS rvl_fail_report "
+                          "BEFORE INSERT ON review_reports "
+                          "WHEN (SELECT state FROM rvl_fault2)='arm' "
+                          "BEGIN SELECT RAISE(ABORT, 'rvl injected server-side report failure'); END")
+            fconn.commit()
+        finally:
+            fconn.close()
+        with self.dispatch_double(wrapper):
+            rc = leg.run()
+        fconn = sqlite3.connect(self.server.db_path)
+        try:
+            fconn.execute("UPDATE rvl_fault2 SET state='disarm'")
+            fconn.commit()
+        finally:
+            fconn.close()
+        self.assertEqual(rc, 2, "report registration failure -> leg-level BLOCKED")
+        kinds = [r["kind"] for r in leg.ledger.load()]
+        self.assertIn("R5_ARTIFACT", kinds)
+        self.assertIn("R5_MESSAGE", kinds)
+        self.assertNotIn("R5_REPORT", kinds)
+        wrapper2, calls2 = make_dispatch_double("should-not-be-sent", rl.DISPATCH_LOG_DIR)
+        with self.dispatch_double(wrapper2):
+            rc2 = leg.resume()
+        self.assertEqual(rc2, 0)
+        self.assertEqual(calls2["n"], 0, "resume must not re-dispatch")
+        skip_recs = [r for r in leg.ledger.load() if r["kind"] == "R5_SKIP_VERIFIED"]
+        self.assertTrue(any(r["what"] == "artifact" for r in skip_recs))
+        self.assertTrue(any(r["what"] == "message" for r in skip_recs),
+                        "message must be skip-verified via canonical fingerprint recompute")
+        msgs = self.server.query("SELECT COUNT(*) c FROM messages WHERE task_id=? AND message_type='CODE_REVIEW_SUBMITTED'", (task_id,))
+        self.assertEqual(msgs[0]["c"], 1, "message not duplicated")
         self.assertEqual(self.server.query(
             "SELECT status FROM tasks WHERE task_id=?", (task_id,))[0]["status"], "TEST_ACCEPTANCE")
 

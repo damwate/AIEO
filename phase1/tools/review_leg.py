@@ -444,6 +444,17 @@ class ReviewLeg:
                 "unit_keys": result.get("unit_keys"),
                 "result_json_sha256": sha256_file(ddir / "result.json"),
                 "completion_checks": result.get("completion_checks"),
+                # 附录 C ④发送前后 user unit 计数（三时点独立证据）：
+                # 发送前=0（--new-session 语义：会话由本次发送创建，构造性成立）；
+                # 发送时=1（本腿唯一 user unit，键由发送双验锚定）；采集时=R4 快照。
+                "user_unit_counts": {
+                    "pre_send": 0,
+                    "pre_send_basis": "new-session: conversation created by this send",
+                    "at_send": 1,
+                    "at_send_key": result.get("user_unit_key"),
+                    "source": "dispatch result.json (send double-verify pinned user unit key)",
+                    "snapshot_sha256": sha256_file(ddir / "result.json"),
+                },
                 "send_state": "SEND_CONFIRMED",
                 "outcome": "CONFIRMED"})
             return ddir
@@ -492,6 +503,20 @@ class ReviewLeg:
                         "checks": snap_src.get("completion_checks") or snap_src.get("checks"),
                         "snapshot_sha256": sha256_file(cand), "source": cand_name}
                 break
+        # 采集时物化 user unit 计数实读：units-diag.json（补采）或 raw-units.json（首发）
+        for u_name in ("units-diag.json", "raw-units.json"):
+            u_file = reply_path.parent / u_name
+            if u_file.is_file():
+                try:
+                    units_src = json.loads(u_file.read_text(encoding="utf-8"))
+                    u_list = units_src if isinstance(units_src, list) else units_src.get("units") or []
+                    user_units = [u for u in u_list if isinstance(u, dict) and u.get("role") == "user"]
+                    snap["materialized_user_count"] = len(user_units)
+                    snap["materialized_user_keys"] = [u.get("key") for u in user_units][-8:]
+                    snap["materialized_source"] = u_name
+                except (ValueError, AttributeError):
+                    pass
+                break
         self.ledger.append({"kind": "R4_REPLY_CAPTURED", "bytes": len(raw), "reply_sha256": reply_sha,
                             "source_dir": str(reply_path.parent),
                             "marker_text": self.marker_text,
@@ -499,6 +524,15 @@ class ReviewLeg:
                             "marker_hit_count": 1 if located_key else None,
                             "last_user_assert": bool(located_key),
                             "snapshot": snap,
+                            # 附录 C ④采集时 user unit 计数（与发送时键身份交叉证明；
+                            # 键身份一致=强于计数一致的 L-018 第 4 条归属校验口径）
+                            "user_unit_counts": {
+                                "at_capture_materialized": snap.get("materialized_user_count"),
+                                "target_key": located_key,
+                                "target_matches_sent_key": None,  # 由 resume_collect 与 R3 记录交叉后回填
+                                "source": snap.get("source") if isinstance(snap, dict) else None,
+                                "snapshot_sha256": snap.get("snapshot_sha256") if isinstance(snap, dict) else None,
+                            },
                             "extracted_at": utc_now_iso(),
                             "outcome": "CAPTURED"})
         parsed = self.extract_review_json(raw.decode("utf-8", "replace"))
@@ -593,11 +627,50 @@ class ReviewLeg:
     def _req_sha(obj) -> str:
         return sha256_bytes(json.dumps(obj, ensure_ascii=False, sort_keys=True).encode("utf-8"))
 
+    def _expected_envelope(self, task: dict, captured: dict) -> dict:
+        """按当前内容重建预期信封（与 r5_register 同构）：供规范化指纹重算核对。"""
+        parsed = captured["parsed"]
+        return {
+            "schema_version": "1.0",
+            "message_id": self.message_id(),
+            "message_type": "CODE_REVIEW_SUBMITTED",
+            "created_at": utc_now_iso(),
+            "source": {"agent_id": REVIEWER_AGENT, "agent_type": "reviewer"},
+            "target": {"agent_id": ORCHESTRATOR_AGENT, "agent_type": "system"},
+            "project_id": self.project_id,
+            "batch_id": task.get("batch_id"),
+            "task_id": self.task_id,
+            "correlation_id": self.correlation_id,
+            "payload": parsed,
+        }
+
+    def _expected_report_body(self, task: dict, captured: dict, message_id: str,
+                              artifact_id: str | None) -> dict:
+        """按当前内容+账本既有登记 ID 重建预期报告体：供全量指纹重算核对。"""
+        parsed = captured["parsed"]
+        execution_id = (task.get("latest_execution") or {}).get("execution_id")
+        return {
+            "task_id": self.task_id,
+            "execution_id": execution_id,
+            "reviewed_commit": self.reviewed_commit,
+            "reviewer": REVIEWER_AGENT,
+            "result": parsed["result"],
+            "task_package_hash": task.get("task_package_hash"),
+            "base_commit": (task.get("latest_execution") or {}).get("base_commit"),
+            "engineering_standard_version": task.get("engineering_standard_version"),
+            "knowledge_base_commit": task.get("knowledge_base_commit"),
+            "payload": {"summary": parsed.get("summary"), "issues": parsed.get("issues", []),
+                        "message_id": message_id, "artifact_id": artifact_id,
+                        "review_round": 1, "idempotency_key": self.idem_keys["idempotency_key"],
+                        "reply_sha256": captured["reply_sha256"]},
+        }
+
     def _ledger_verified(self, task: dict, captured: dict) -> set:
-        """P1-02 逐项只读核实：账本既有成功记录与当前待登记内容链核验。
+        """P1-02 逐项只读核实（R2 整改：指纹重算核对，不认非空即过）。
         artifact=白名单 GET 实读回核（task 关联+SHA，强证据）；
-        message/report=账本请求指纹链（确定性键+reply SHA+execution 关联一致，附录 C
-        证据规则①账本交叉证明/④逐项记录已成功 ID）。任一链节不符→视为未完成项。"""
+        message=按当前内容重算规范化指纹（canon，剔除 created_at）与账本 canonical_sha 比较；
+        report=按当前内容+账本既有 message/artifact ID 重建预期报告体，重算全量 request_sha
+        与账本比较。任一链节不符→视为未完成项（宁可走幂等键重发，不误判已完成）。"""
         flags = self.ledger.state_flags()
         verified: set = set()
         reply_sha = captured.get("reply_sha256")
@@ -610,15 +683,22 @@ class ReviewLeg:
         fm = flags.get("R5_MESSAGE")
         if fm and fm.get("message_id") == self.message_id() \
                 and fm.get("reply_sha256") == reply_sha \
-                and fm.get("request_sha"):
-            verified.add("message")
+                and fm.get("canonical_sha"):
+            if fm["canonical_sha"] == self._canon_sha(self._expected_envelope(task, captured)):
+                verified.add("message")
         fr = flags.get("R5_REPORT")
         execution_id = (task.get("latest_execution") or {}).get("execution_id")
         if fr and fr.get("result") == captured["parsed"].get("result") \
                 and fr.get("reply_sha256") == reply_sha \
                 and fr.get("execution_id") == execution_id \
                 and fr.get("request_sha"):
-            verified.add("report")
+            expected_body = self._expected_report_body(
+                task, captured,
+                message_id=fr.get("payload_message_id") or (fm or {}).get("message_id")
+                or self.message_id(),
+                artifact_id=(fa or {}).get("artifact_id"))
+            if fr["request_sha"] == self._req_sha(expected_body):
+                verified.add("report")
         return verified
 
     def r5_register(self, task: dict, captured: dict, skip: frozenset[str] = frozenset()) -> dict:
@@ -661,10 +741,12 @@ class ReviewLeg:
                 code, resp, (200, 201, 202, 409), "message",
                 lambda r: str(r.get("message_id") or r.get("id") or envelope["message_id"]),
                 request_sha=self._req_sha(envelope),
-                key_evidence=lambda r: envelope["message_id"] in json.dumps(r, ensure_ascii=False))
+                canonical_sha=self._canon_sha(envelope),
+                key_evidence=lambda r: (r.get("details") or {}).get("message_id") == envelope["message_id"])
             self.ledger.append({"kind": "R5_MESSAGE", "message_id": out["message_id"],
                                 "message_type": envelope["message_type"],
                                 "request_sha": self._req_sha(envelope),
+                                "canonical_sha": self._canon_sha(envelope),
                                 "response_sha": self._req_sha(resp),
                                 "reply_sha256": captured["reply_sha256"], "outcome": "PASS"})
 
@@ -701,19 +783,39 @@ class ReviewLeg:
                 lambda r: str(r.get("review_report_id") or r.get("id")
                               or f"{r.get('execution_id')}@{str(r.get('reviewed_commit'))[:12]}"),
                 request_sha=self._req_sha(report_body),
-                key_evidence=lambda r: execution_id in json.dumps(r, ensure_ascii=False)
-                and self.reviewed_commit[:12] in json.dumps(r, ensure_ascii=False),
+                key_evidence=self._report_key_evidence(execution_id),
                 require_transition=True)
             self.ledger.append({"kind": "R5_REPORT", "result": result,
                                 "execution_id": execution_id,
                                 "request_sha": self._req_sha(report_body),
                                 "response_sha": self._req_sha(resp),
                                 "reply_sha256": captured["reply_sha256"],
+                                "payload_message_id": report_body["payload"]["message_id"],
+                                "payload_artifact_id": report_body["payload"]["artifact_id"],
                                 "review_report_id": out["review_report_id"], "outcome": "PASS"})
         return out
 
+    @staticmethod
+    def _canon_sha(envelope: dict) -> str:
+        """规范化指纹（剔除 created_at 元数据字段）：重启后信封重建仍可比对内容一致性。"""
+        canon = {k: v for k, v in envelope.items() if k != "created_at"}
+        return sha256_bytes(json.dumps(canon, ensure_ascii=False, sort_keys=True).encode("utf-8"))
+
+    @staticmethod
+    def _report_key_evidence(execution_id: str):
+        """report 409 键精确核验：details.execution_id 结构化匹配 + message 文本按
+        M1 固定格式 'review report for (<execution_id>, <commit12>)..' 正则解析（非子串包含）。"""
+        def check(r) -> bool:
+            if (r.get("details") or {}).get("execution_id") != execution_id:
+                return False
+            m = re.search(r"review report for \(" + re.escape(execution_id)
+                          + r", ([0-9a-f]{12})\.\.\)", str(r.get("message", "")))
+            return bool(m)
+        return check
+
     def _register_step(self, code: int, resp, want: tuple[int, ...], what: str,
                        extract_id, request_sha: str | None = None,
+                       canonical_sha: str | None = None,
                        key_evidence=None, require_transition: bool = False) -> str:
         if code in want and isinstance(resp, dict):
             if code == 409:
@@ -726,8 +828,10 @@ class ReviewLeg:
                                                 f"{json.dumps(resp, ensure_ascii=False)[:300]}")
                 kind = {"message": "R5_MESSAGE", "review report": "R5_REPORT"}.get(what)
                 rec = self.ledger.state_flags().get(kind) if kind else None
-                if not rec or rec.get("request_sha") != request_sha:
-                    raise OrchestrationError(5, f"{what} 409 without matching ledger request fingerprint "
+                fingerprint_field = "canonical_sha" if canonical_sha is not None else "request_sha"
+                expected = canonical_sha if canonical_sha is not None else request_sha
+                if not rec or rec.get(fingerprint_field) != expected:
+                    raise OrchestrationError(5, f"{what} 409 without matching ledger {fingerprint_field} "
                                                 f"(cannot prove same-content replay; fail-closed)")
                 self.ledger.append({"kind": "R5_DUPLICATE_OK", "what": what,
                                     "response_sha": self._req_sha(resp),
@@ -827,6 +931,14 @@ class ReviewLeg:
                                 "reason": str(exc), "phase": "resume"})
             print(f"RESULT=LEG_LEVEL_BLOCKED transport reason={exc}", flush=True)
             return 2
+        except Exception as exc:  # 未预期异常同样收敛为腿级 BLOCKED（忠实记录类型与现场，不静默吞）
+            self.ledger.append({"kind": "LEG_LEVEL_BLOCKED", "step": -1,
+                                "reason": f"unexpected {type(exc).__name__} during resume: {exc}",
+                                "phase": "resume", "outcome": "BLOCKED_LEG"})
+            self._write_report({"result": "LEG_LEVEL_BLOCKED", "failed_step": -1,
+                                "reason": f"{type(exc).__name__}: {exc}", "phase": "resume"})
+            print(f"RESULT=LEG_LEVEL_BLOCKED unexpected {type(exc).__name__} reason={exc}", flush=True)
+            return 2
 
     def _resume_inner(self) -> int:
         flags = self.ledger.state_flags()
@@ -890,7 +1002,7 @@ class ReviewLeg:
         if not conv_uuid or not sent_key:
             raise OrchestrationError(-1, "ledger missing conversation_uuid/sent_user_unit_key "
                                          "(fail-closed: cannot prove send state; manual check required)")
-        template = PHASE0_TOOLS / "review_leg_recoll_template.mjs"
+        template = Path(__file__).resolve().parent / "review_leg_recoll_template.mjs"
         driver = self.run_dir / "recoll_driver.mjs"
         failed_dir = DISPATCH_LOG_DIR / sent_anchor.get("dispatch_dir", "")
         if not sent_anchor.get("dispatch_dir") or not failed_dir.is_dir():
@@ -899,8 +1011,8 @@ class ReviewLeg:
         derive_recoll_driver(template, driver, {
             "CONV_UUID": conv_uuid,
             "SENT_USER_UNIT_KEY": sent_key,
-            "FAILED_DIR": str(failed_dir),
-            "OUT_DIR": str(self.run_dir),
+            "FAILED_DIR": str(failed_dir).replace("\\", "/"),   # JS 字面量安全化（Windows 反斜杠=转义符）
+            "OUT_DIR": str(self.run_dir).replace("\\", "/"),
             "MARKER_TEXT": self.marker_text,
             # 行6 断点定义=R4_REPLY_CAPTURED 不存在（无本轮已采集 reply 可比对）→ 前轮 SHA 排除置空
             "PREV_REPLY_SHA": "",
@@ -920,7 +1032,7 @@ class ReviewLeg:
         coll = json.loads((self.run_dir / "recoll-result.json").read_text(encoding="utf-8"))
         self.ledger.append({"kind": "RESUME_COLLECT_OK", "reply_sha256": coll.get("reply_sha256"),
                             "checks": coll.get("checks"), "outcome": "CAPTURED"})
-        return self._resume_register(flags)
+        return self._resume_register()
 
     def _resume_register(self) -> int:
         """附录 D 行7/8 / 断点 S2：按原幂等键补登记（不再次触发 GPT-03）。
