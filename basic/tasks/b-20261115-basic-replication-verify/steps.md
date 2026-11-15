@@ -16,6 +16,6 @@
 
 | 问题编号 | 轮次来源 | 问题描述 | 整改内容 | 修复 commit | 验证 |
 |---|---|---|---|---|---|
-| 问题1 | R1 验收 REJECT P1-1 | 原始输出数量与 MANIFEST 不一致（申报 9 实为 7 输出+报告+清单）；fsck/npm ci 缺独立执行记录 | 补档 fsck-exec.txt（退出码 0）+npm-ci-exec.txt（如实补记 stdout 未落盘，退出码按执行时终端记录）+报告清单计数修正+MANIFEST 重生成（准确分类原始输出 7+补档 3+报告 1） | [40hex 于 commit B 回填] | 复核轮确认 |
-| 问题2 | R1 验收 REJECT P1-2 | check-push 零副作用缺前后状态证据 | 补档 check-push-before-after.txt（当前态快照 proxy=0/status=0/HEAD=origin/main=无 push；执行时点快照未落盘如实标注"部分可证"不补造） | 同问题1 修复 commit | 复核轮确认 |
-| 问题3 | R1 验收 REJECT P1-3 | recoll_rep_plan.mjs 新增工具脚本超 requirement"不修改任何工具代码"字面边界 | 剥离依据登记（非修复）：recoll 派生脚本=DEC-043/L-018 既有恢复机制的每任务延续（派单基础设施），此前各任务均随 commit 归档且 R2 复核（lessons-recoll，reply 2986a76b…）已裁定"recoll_*.mjs 属过程审计附件不是被测逻辑"——本脚本属同一既有独立工作模式，申请排除出本任务验收范围，由验收方按先例裁定 | 同问题1 修复 commit | 待验收方按先例裁定 |
+| 问题1 | R1 验收 REJECT P1-1 | 原始输出数量与 MANIFEST 不一致（申报 9 实为 7 输出+报告+清单）；fsck/npm ci 缺独立执行记录 | 补档 fsck-exec.txt（退出码 0）+npm-ci-exec.txt（如实补记 stdout 未落盘，退出码按执行时终端记录）+报告清单计数修正+MANIFEST 重生成（准确分类原始输出 7+补档 3+报告 1） | 59505121c5b69b9aec8a38fa4bf8dcc1d539089a | 复核轮确认 |
+| 问题2 | R1 验收 REJECT P1-2 | check-push 零副作用缺前后状态证据 | 补档 check-push-before-after.txt（当前态快照 proxy=0/status=0/HEAD=origin/main=无 push；执行时点快照未落盘如实标注"部分可证"不补造） | 59505121c5b69b9aec8a38fa4bf8dcc1d539089a（同问题1） | 复核轮确认 |
+| 问题3 | R1 验收 REJECT P1-3 | recoll_rep_plan.mjs 新增工具脚本超 requirement"不修改任何工具代码"字面边界 | 剥离依据登记（非修复）：recoll 派生脚本=DEC-043/L-018 既有恢复机制的每任务延续（派单基础设施），此前各任务均随 commit 归档且 R2 复核（lessons-recoll，reply 2986a76b…）已裁定"recoll_*.mjs 属过程审计附件不是被测逻辑"——本脚本属同一既有独立工作模式，申请排除出本任务验收范围，由验收方按先例裁定 | 59505121c5b69b9aec8a38fa4bf8dcc1d539089a（同问题1） | 待验收方按先例裁定 |
