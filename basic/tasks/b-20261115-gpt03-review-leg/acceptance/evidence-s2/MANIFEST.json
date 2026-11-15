@@ -974,8 +974,10 @@
   {
     "archive": "test-run-s2r3b.txt",
     "source": "phase1/logs/gpt03-review-leg/test-run-s2r3b.txt",
-    "bytes": 7037,
-    "sha256": "0a6618e2d7da8f2a2592584153af0d4d23020941946a8135d6372a6f873fff47",
-    "note": "S2-R4 整改后回归运行记录（29/29 OK）——blob 口径绑定见下轮重算"
+    "bytes": 6969,
+    "sha256": "18bd4418276a1e8728a94fb4d74618a298cc8439ab8da2802da6f625041699b8",
+    "note": "S2-R4 整改后回归运行记录（29/29 OK）——blob 口径绑定见下轮重算",
+    "blob_bound": true,
+    "sha_basis": "git-blob-bytes (post-commit normalization)"
   }
 ]
