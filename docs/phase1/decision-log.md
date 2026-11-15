@@ -514,3 +514,12 @@
 - **② Chrome tab 泄漏：另立小任务。** 立项 basic/tasks/b-20261116-tab-cleanup（tab 消歧+清理策略，M2 派单/补采链），按任务流程执行。
 - **③ GPT-02/04/05 接入：立项（DEC-026 路线逐角色）。** 角色定义=立项 docs/立项/02-GPT角色与会话规范.md（GPT-02 架构审核/GPT-04 检查真实测试证据/GPT-05 批次审计）；立项产物=charter 草案+规划协商复审，Gate3 用户拍板开工不变。
 - **关联**：DEC-058~062、DEC-026（路线）、DEC-052（M2 移交）、L-020（节点授权）、charter 定稿 v1.0 §4/附录 D（REWORK 停等人工+人工重开链）、standard/WORKFLOW.md v0.1（生效）、parallel-governance-draft.md v0.1（生效）。
+
+### DEC-064 处置①完成：T-P1-017 REWORK 整改闭环——两轮真实审查后 PASS，M1 至 TEST_ACCEPTANCE（2026-11-16，节点自主推进授权执行）
+
+- **整改 commit：** `0807064e193ef566987d1cfe29fea11d919ed85c`（feature/T-P1-908-fixture，父=fda9183，单文件单提交）——`--version` 检查块整体移至 `--help` 之后，恢复帮助优先基线；四例实测（--version=版本行 exit0／--help=帮助 exit0／组合传参=帮助 exit0／无参=缺参 exit2）。
+- **R2 复验轮（run 918014，新会话）：** 结论 REWORK（reply sha256=c0861af4841d60388eccfeb6d568ac8118d799af556d3344414e74d8b8a2ef51）——**整改代码逻辑已获认可**（"代码逻辑符合预期"），REWORK 原因=被测 commit GitHub 404（fixture 分支未推送 origin，与 R1 边界备注同源）。处置=分支推送（fda9183..0807064，check-push 实测直连路径复用）+材料补记 R2 结果与 R3 限定复验范围（main=dfa134a）。
+- **R3 复验轮（run 918015，新会话）：** **PASS**（reply sha256=15420a15cd535d2cda746cc705929588164b68c614b54b50c6a6e7ba3dd0dec8）——提交身份与父提交关系独立验证过、单提交仅改 bundle_gate.mjs、--help 优先级恢复、R1 P2 关闭，issues=[]。
+- **M1 事件链（人工重开环×2，全部合法出边）：** REWORK→ARCH_REVIEW→PASS(READY)→claim（EXEC-016 attempt2→EXEC-017 attempt3，ZCODE-01 令牌）→START→DIFF artifact（ART-DIFF-011，diff sha256=b1df0940…）+commit 登记→dev report COMPLETED（自动施加 DEVELOPMENT_COMPLETED）→DEV_REPORTED→审查腿 GIT_VALIDATE→PASS→CODE_REVIEW→**R3 PASS→TEST_ACCEPTANCE（终态登记时）**。操作 transcript 与双轮证据归档 `phase0/logs/t-p1-017-rework-reentry/`（reentry_ops*.py/transcript*.json/evidence/918014-r2|918015-r3）。
+- **边界与遗留：** ①处置范围=REWORK 解除（用户指令明列事项）；TEST_ACCEPTANCE→ACCEPTED 推进=test_reports 门（908 库该表至今为空，从未真实行使）——**留作 GPT-04 测试验收腿（下一张 charter）首个真实用例**，本次不以人工登记越代；②审查腿一期边界"REWORK 停等人工"经本例实战验证：人工重开环=ARCH_REVIEW→PASS→claim 重入，无自动重审；③tab 消歧在两次派单前核实（Chrome 进程不存在=泄漏已随进程关闭消除，新拉起单 tab 前提满足）。
+- **关联**：DEC-063（处置决定）、DEC-058~062（审查腿框架）、L-014（push 纪律）、L-018（派单采集纪律）、L-020（节点授权）、rvl-918014/918015 账本。

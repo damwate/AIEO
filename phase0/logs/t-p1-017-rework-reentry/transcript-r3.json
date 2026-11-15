@@ -1,0 +1,102 @@
+{
+  "ops": [
+    {
+      "step": "owner_login",
+      "ok": true,
+      "detail": {
+        "http": 200
+      }
+    },
+    {
+      "step": "event_arch_review",
+      "ok": true,
+      "detail": {
+        "task_id": "T-P1-017",
+        "event_id": "EVT-918015R-ARCH_REVIEW-01",
+        "event": "ARCH_REVIEW",
+        "from_status": "REWORK",
+        "to_status": "ARCH_REVIEW",
+        "duplicate": false,
+        "processed_at": "2026-11-15T21:51:11.409Z"
+      }
+    },
+    {
+      "step": "event_pass_to_ready",
+      "ok": true,
+      "detail": {
+        "task_id": "T-P1-017",
+        "event_id": "EVT-918015R-PASS-02",
+        "event": "PASS",
+        "from_status": "ARCH_REVIEW",
+        "to_status": "READY",
+        "duplicate": false,
+        "processed_at": "2026-11-15T21:51:11.446Z"
+      }
+    },
+    {
+      "step": "zcode_claim",
+      "ok": true,
+      "detail": {
+        "claim_http": 200,
+        "exec_id": "EXEC-017",
+        "attempt_hint": 3
+      }
+    },
+    {
+      "step": "event_start",
+      "ok": true,
+      "detail": {
+        "task_id": "T-P1-017",
+        "event_id": "EVT-918015R-START-03",
+        "event": "START",
+        "from_status": "DISPATCHED",
+        "to_status": "IN_PROGRESS",
+        "duplicate": false,
+        "processed_at": "2026-11-15T21:51:11.514Z"
+      }
+    },
+    {
+      "step": "register_commit",
+      "ok": true,
+      "detail": {
+        "http": 201,
+        "resp_keys": [
+          "git_commit_id",
+          "task_id",
+          "execution_id",
+          "repository_id",
+          "branch",
+          "sha",
+          "base_commit",
+          "diff_artifact_id",
+          "created_at",
+          "duplicate"
+        ]
+      }
+    },
+    {
+      "step": "dev_report_completed",
+      "ok": true,
+      "detail": {
+        "http": 201,
+        "resp_keys": [
+          "task_id",
+          "execution_id",
+          "status",
+          "transition",
+          "created_at",
+          "duplicate"
+        ]
+      }
+    },
+    {
+      "step": "final_status_dev_reported",
+      "ok": true,
+      "detail": {
+        "status": "DEV_REPORTED",
+        "latest_execution": "EXEC-017"
+      }
+    }
+  ],
+  "m1_url": "http://127.0.0.1:8000"
+}

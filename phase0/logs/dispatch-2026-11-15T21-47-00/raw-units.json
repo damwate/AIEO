@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-15T21:49:40.923Z",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "bd59691d-9d3e-49eb-9ee6-66ec72448094",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "8be4bccd4a0b9969eece75b0a40b88e237dab173b5c816d7aba12d13aa671a58",
+          "c0861af4841d60388eccfeb6d568ac8118d799af556d3344414e74d8b8a2ef51"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "8be4bccd4a0b9969eece75b0a40b88e237dab173b5c816d7aba12d13aa671a58",
+          "c0861af4841d60388eccfeb6d568ac8118d799af556d3344414e74d8b8a2ef51"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-0:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n{\n\"result\": \"REWORK\",\n\"summary\": \"整改方向符合要求，但被测commit 0807064e193ef566987d1cfe29fea11d919ed85c 无法在GitHub按SHA解析，尚不能完成提交身份及单提交diff独立核验。\",\n\"issues\": [\n\"P1：GitHub返回404（No commit found），按指定SHA读取被测commit失败；commit查询亦未找到该SHA。\",\n\"已读取基线57990477d72a2751b433e5630daedd8670c29dcb中的R2复验材料，并与父提交fda9183dafb77ca15578abb244b3b2d15999fafb核对。材料所示整改将--version移至--help之后，代码逻辑符合预期，但不能替代对指定被测commit的独立验证。\",\n\"请确认fixture分支已推送且SHA正确，再提交复验。\"\n],\n\"reviewed_commit\": \"0807064e193ef566987d1cfe29fea11d919ed85c\"\n}",
+      "text_sha256": "c0861af4841d60388eccfeb6d568ac8118d799af556d3344414e74d8b8a2ef51",
+      "size_bytes": 768,
+      "assistant_uuid": "bd59691d-9d3e-49eb-9ee6-66ec72448094"
+    }
+  ]
+}

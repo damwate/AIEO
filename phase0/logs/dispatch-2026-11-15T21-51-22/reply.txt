@@ -1,0 +1,8 @@
+ChatGPT 说：
+JSON
+{
+  "result": "PASS",
+  "summary": "被测commit身份及父提交关系已独立验证，确认单提交且仅修改phase1/tools/bundle_gate.mjs；--help优先级恢复，--version独立行为及无参退出行为符合验收标准，R1 P2关闭。",
+  "issues": [],
+  "reviewed_commit": "0807064e193ef566987d1cfe29fea11d919ed85c"
+}

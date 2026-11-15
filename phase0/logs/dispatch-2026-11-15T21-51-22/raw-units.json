@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-15T21:54:02.394Z",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "495fe32a-1455-480d-bc8a-dd9fa60a846e",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "9ad9ea9097d79bb6fdc89737063969547ce8ca34e3a8fb6c960d4d167815fa40",
+          "15420a15cd535d2cda746cc705929588164b68c614b54b50c6a6e7ba3dd0dec8"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "9ad9ea9097d79bb6fdc89737063969547ce8ca34e3a8fb6c960d4d167815fa40",
+          "15420a15cd535d2cda746cc705929588164b68c614b54b50c6a6e7ba3dd0dec8"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-0:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nJSON\n{\n  \"result\": \"PASS\",\n  \"summary\": \"被测commit身份及父提交关系已独立验证，确认单提交且仅修改phase1/tools/bundle_gate.mjs；--help优先级恢复，--version独立行为及无参退出行为符合验收标准，R1 P2关闭。\",\n  \"issues\": [],\n  \"reviewed_commit\": \"0807064e193ef566987d1cfe29fea11d919ed85c\"\n}",
+      "text_sha256": "15420a15cd535d2cda746cc705929588164b68c614b54b50c6a6e7ba3dd0dec8",
+      "size_bytes": 353,
+      "assistant_uuid": "495fe32a-1455-480d-bc8a-dd9fa60a846e"
+    }
+  ]
+}

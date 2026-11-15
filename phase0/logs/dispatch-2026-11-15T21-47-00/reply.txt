@@ -1,0 +1,12 @@
+ChatGPT 说：
+
+{
+"result": "REWORK",
+"summary": "整改方向符合要求，但被测commit 0807064e193ef566987d1cfe29fea11d919ed85c 无法在GitHub按SHA解析，尚不能完成提交身份及单提交diff独立核验。",
+"issues": [
+"P1：GitHub返回404（No commit found），按指定SHA读取被测commit失败；commit查询亦未找到该SHA。",
+"已读取基线57990477d72a2751b433e5630daedd8670c29dcb中的R2复验材料，并与父提交fda9183dafb77ca15578abb244b3b2d15999fafb核对。材料所示整改将--version移至--help之后，代码逻辑符合预期，但不能替代对指定被测commit的独立验证。",
+"请确认fixture分支已推送且SHA正确，再提交复验。"
+],
+"reviewed_commit": "0807064e193ef566987d1cfe29fea11d919ed85c"
+}

@@ -1,0 +1,53 @@
+{
+  "ops": [
+    {
+      "step": "owner_login",
+      "ok": true,
+      "detail": {
+        "http": 200,
+        "keys": [
+          "username",
+          "csrf_token",
+          "expires_at"
+        ]
+      }
+    },
+    {
+      "step": "event_arch_review",
+      "ok": true,
+      "detail": {
+        "task_id": "T-P1-017",
+        "event_id": "EVT-918014R-ARCH_REVIEW-01",
+        "event": "ARCH_REVIEW",
+        "from_status": "REWORK",
+        "to_status": "ARCH_REVIEW",
+        "duplicate": false,
+        "processed_at": "2026-11-15T21:45:45.645Z"
+      }
+    },
+    {
+      "step": "event_pass_to_ready",
+      "ok": true,
+      "detail": {
+        "task_id": "T-P1-017",
+        "event_id": "EVT-918014R-PASS-02",
+        "event": "PASS",
+        "from_status": "ARCH_REVIEW",
+        "to_status": "READY",
+        "duplicate": false,
+        "processed_at": "2026-11-15T21:45:45.689Z"
+      }
+    },
+    {
+      "step": "zcode_claim",
+      "ok": false,
+      "detail": {
+        "http": 200,
+        "to_status": null,
+        "execution_id": "EXEC-016",
+        "attempt": null
+      }
+    }
+  ],
+  "m1_url": "http://127.0.0.1:8000"
+}
