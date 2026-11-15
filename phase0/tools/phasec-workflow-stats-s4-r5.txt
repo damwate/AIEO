@@ -1,0 +1,7 @@
+S4 R5复验请求（会商1/2授权R5=问题12最后一次常规整改）
+绑定：基点4ca3dc5→待验收3acb72e221258e91516150ed4b987051655cb0c9（2 commit线性：fe7210e整改→3acb72e回填）。S4轮链cc030ff→…→3acb72e线性。
+R4四处漏检整改：⑧组12→18项总30→36——⑧c1-3主状态句解析+过期残留禁入；⑧j当前=36/36+演进链21→24→30→36历史快照标注；⑧d1-4轮次链R1-R4逐轮逐项（轮结论+编号三文件缺一FAIL）；⑧f1-4 S1-S3逐步闭环。负向5类指名拦截+正向2项=7/7。
+可复跑：python -X utf8 -I phase0/tools/s4-consistency-check.py（36/36）+…s4-check-negpos-tests.py（7/7）+…basic/tool/check_taskpack.py basic/tasks/b-20261115-phasec-workflow-stats（④PASS）。Windows无独立Linux，raw可达。
+读取：raw.githubusercontent.com/damwate/AIEO/3acb72e221258e91516150ed4b987051655cb0c9/acceptance/s4-acceptance-request.md（v5）
+边界：R5只处理问题12；S1-S3 PASS沿用；R5 REJECT=停止原方案循环进降档阶梯（会商2非直接终局）；通过≠v0.3生效（拍板留用户）
+结论：PASS（问题12闭环）/REJECT（按会商2进降档阶梯）/BLOCKED（如实说明）

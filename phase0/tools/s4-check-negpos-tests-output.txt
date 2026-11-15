@@ -1,5 +1,5 @@
 NEG/POS TESTS PASS 7 / FAIL 0（负向5+正向2=7）
- [PASS] N1 轮次冲突(tb当前步骤R5→R4回退) | 期望拦截=['⑧a2'] 实际FAIL=['⑧a2']
+ [PASS] N1 轮次冲突(tb当前步骤R5 REJECT→PASS改写) | 期望拦截=['⑧a2'] 实际FAIL=['⑧a2']
  [PASS] N2 问题编号错配(dl 问题12/13 全部错写) | 期望拦截=['⑧d2', '⑧d3'] 实际FAIL=['⑧d2', '⑧d3']
  [PASS] N3 S1-S3单项状态错误(dl S2段R3 PASS→REJECT) | 期望拦截=['⑧f3'] 实际FAIL=['⑧f3']
  [PASS] N4 当前数字过期(dl 当前=36/36→30/30) | 期望拦截=['⑧j'] 实际FAIL=['⑧j']

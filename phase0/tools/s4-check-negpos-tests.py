@@ -35,9 +35,9 @@ def main():
         results.append((name, hit, f"期望拦截={expect_fail_names} 实际FAIL={fnames}"))
 
     # ---- 负向 5 类 ----
-    # N1 轮次冲突：task-brief 当前步骤实态回退（R5 复验中→R4 复验中），三文件轮次指向冲突
-    run("N1 轮次冲突(tb当前步骤R5→R4回退)", ["⑧a2"],
-        lambda tb, dl: (tb.replace("S4 R5 复验中", "S4 R4 复验中"), dl))
+    # N1 轮次冲突：task-brief 当前步骤实态与已登记轮结论冲突（R5 REJECT 改写为 PASS），三文件轮次指向冲突
+    run("N1 轮次冲突(tb当前步骤R5 REJECT→PASS改写)", ["⑧a2"],
+        lambda tb, dl: (tb.replace("S4 R5 复验 REJECT", "S4 R5 复验 PASS"), dl))
     # N2 问题编号错配：delivery 全文 R2/R3 轮对应问题编号全部错写（⑧d 按轮逐项核对应双双拦截）
     run("N2 问题编号错配(dl 问题12/13 全部错写)", ["⑧d2", "⑧d3"],
         lambda tb, dl: (tb, dl.replace("问题12/13", "问题12与13")))
