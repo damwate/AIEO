@@ -55,8 +55,15 @@
 
 GPT-04/GPT-05 真实腿；多轮返工重审自动化；规划流（PLANNING 前）改造与任务分解生成；scheduler.py 修改；多任务/多批次编排；新 commit 重审触发；契约修改；M1-M4 代码修改；管理后台。
 
+## 附录 A：会务立项评审输入初稿（Gate2 深度项——随草案提交，待评审精化，非草案级验收项）
+
+- **深度项①：engine（GPT-02 腿）M1 白名单端点表**——对照 m1-endpoints.json 机器清单（phase1/logs/e-check-20261114/）核定：tasks 读取（GET task/latest_execution/allowed_events）、events POST（事件白名单限 **PASS/REWORK**——ARCH_REVIEW 态合法出边；GIT_VALIDATE 不适用本腿；BLOCKED/CANCEL engine 调用层禁入）、artifacts POST+GET、messages POST、reports/review POST（ARCH_REVIEW 结论登记）、agents bootstrap（GPT-02 服务身份注册，先例=ENGINE-01）；逐端点 HTTP method+路径+操作范围+拒绝条件。
+- **深度项②：架构审核简报组装与材料载体**——输入=M1 任务字段（title/description/files_scope/acceptance_criteria/task_dependencies）+任务书/方案材料 GitHub 指针（L-007）；出站 ≤1200B；结论域 PASS/REWORK/BLOCKED 三态 JSON（904 冻结契约风格，schema 待 Gate2 定稿：复用 review-report.schema.json 或新增 arch-review 契约——决策点）。
+- **深度项③：断点恢复与回滚矩阵**——按 ARCH_REVIEW 态×断点（简报组装前/派单发送后未采集/采集后未登记/登记后结论未推进）列恢复行+腿级 BLOCKED 语义+回滚=不退 M1 状态交接人工；登记权威关系（M1 状态唯一权威/腿只发起合法事件）。
+
 ## 版本记录
 
 | 版本 | 日期 | 状态 | 变更 | 依据 |
 |---|---|---|---|---|
 | v0.1 | 2026-11-16 | 草案 | 初稿成文（GPT-03 charter v1.0 同构框架，落点 ARCH_REVIEW 关口） | DEC-063 处置③；DEC-026 路线；角色规范 docs/立项/02 §3；state_machine.py:28-30 实读 |
+| v0.2 | 2026-11-16 | 草案 | Gate1 闭环：§4 BLOCKED 双语义段（Gate1-R1 P1-01）+附录 A 评审输入初稿（Gate2 深度项三项） | Gate1-R1 REWORK（697a5e54…）→Gate1-R2 PASS（a7aeed29…）；附录 A 按 GPT-03 Gate2 先例成文 |
