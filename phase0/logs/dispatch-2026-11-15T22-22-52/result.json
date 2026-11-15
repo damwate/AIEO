@@ -1,0 +1,181 @@
+{
+  "at": "2026-11-15T22:25:19.872Z",
+  "message_bytes": 1168,
+  "reply": "ChatGPT 说：\nJSON\n{\n  \"result\": \"REWORK\",\n  \"summary\": \"R3 两项限定复验均未通过：会话锁仍在枚举前立即释放，处置后快照仍未实现。\",\n  \"issues\": [\n    \"P1-02：phase0/tools/tab_cleanup.mjs 中 acquireSessionLock() 后立即 lock.release()，随后才连接 CDP、枚举页面、判定及关闭。锁未覆盖完整的枚举→判定→关闭生命周期，probe-release 竞态仍然存在。应将锁持有范围扩展至完整操作，并在 finally 中释放。\",\n    \"P2-01：gpt_dispatch.mjs 的成功路径仅记录 browser.close()/killProfileChrome() 前的 exit 快照；失败路径的 exit 快照也在关闭自建页之前获取。writeTabAudit 未实现 exit_after_disposal 字段，无法证明处置后的 tab 清零或值守页零关闭。需补充处置后重新探测及对应证据。\"\n  ],\n  \"task_id\": \"b-20261116-tab-cleanup\"\n}",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "251c56d7-4178-47b8-bc22-363fd39f5446",
+  "stability": {
+    "stable": true,
+    "interval_ms": 3571,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-15T22:25:15.623Z",
+      "read_finished_at": "2026-11-15T22:25:16.188Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "079b20a13a5ebcfaef2848a629260987615bab084b034959da5c6c669b7d3402",
+          "size_bytes": 880
+        }
+      ],
+      "assistant_uuid": "251c56d7-4178-47b8-bc22-363fd39f5446",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-15T22:25:19.193Z",
+      "read_finished_at": "2026-11-15T22:25:19.733Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "079b20a13a5ebcfaef2848a629260987615bab084b034959da5c6c669b7d3402",
+          "size_bytes": 880
+        }
+      ],
+      "assistant_uuid": "251c56d7-4178-47b8-bc22-363fd39f5446",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "ca6ca64dd81c21f8665ccd1bcc162c999f6c31602bd529443b82eff68158b6a1",
+          "079b20a13a5ebcfaef2848a629260987615bab084b034959da5c6c669b7d3402"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "ca6ca64dd81c21f8665ccd1bcc162c999f6c31602bd529443b82eff68158b6a1",
+          "079b20a13a5ebcfaef2848a629260987615bab084b034959da5c6c669b7d3402"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "079b20a13a5ebcfaef2848a629260987615bab084b034959da5c6c669b7d3402",
+  "size_bytes": 880,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-15T22-22-52\\reply.txt",
+  "reply_readback_sha256": "079b20a13a5ebcfaef2848a629260987615bab084b034959da5c6c669b7d3402",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-15T22-22-52\\raw-units.json",
+  "raw_units_sha256": "602c010695aec308e1e08fbdc3441d8ca5a0a3a4b2d195acf33a00a853ad8f4c",
+  "raw_units_size_bytes": 3535,
+  "raw_units_readback_sha256": "602c010695aec308e1e08fbdc3441d8ca5a0a3a4b2d195acf33a00a853ad8f4c",
+  "session_id": "6afa30f2-5f2c-83ec-a654-45a9cc0855c2",
+  "conversation_url": "https://chatgpt.com/c/6afa30f2-5f2c-83ec-a654-45a9cc0855c2",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}

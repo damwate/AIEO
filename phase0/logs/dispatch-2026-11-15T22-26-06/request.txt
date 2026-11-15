@@ -1,0 +1,8 @@
+【独立验收 R4·b-20261116-tab-cleanup】TPT02-S4ACC-R4|tab-cleanup
+R3（079b20a1…）两 REWORK 项系简报误钉整改前 SHA（fd40cee）；修复实存本轮 main=ef8497b，仅复验该 2 项。
+读仓库 github.com/damwate/AIEO（main=ef8497bcf539e74d3bf43beab4805f0f2fac1384）
+1. phase0/tools/gpt_dispatch.mjs——P1-01：sendAttempted 旗标现紧贴 Enter（sendAndCollect 内"回读一致+focus"之后）；cleanupDecision 纯函数（tab_hygiene.mjs）+2 例测试。
+2. phase0/tools/tab_cleanup.mjs——P1-02(R2)：会话锁覆盖枚举→判定→关闭全程（finally 释放，消除 probe-release 竞态）；三态探测+owned 仅确认态沿袭。
+3. P2-01(R2)：tab-audit.json 增 exit_after_disposal 处置后快照（成功=CDP 不可达即 tab 清零证明；失败=exit_before/after 对照证值守页零关闭）；样张 phase0/logs/dispatch-2026-11-15T22-18-25/tab-audit.json；diff=acceptance/s1-integration-diff-audit.patch；测试19/19。
+新问题另列。
+回复仅一个```json对象：{"result":"PASS|REWORK","summary":"<一句话>","issues":["<未关闭项>…"],"task_id":"b-20261116-tab-cleanup"}；result仅PASS/REWORK。

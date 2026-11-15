@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-15T22:25:19.872Z",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "251c56d7-4178-47b8-bc22-363fd39f5446",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "ca6ca64dd81c21f8665ccd1bcc162c999f6c31602bd529443b82eff68158b6a1",
+          "079b20a13a5ebcfaef2848a629260987615bab084b034959da5c6c669b7d3402"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "ca6ca64dd81c21f8665ccd1bcc162c999f6c31602bd529443b82eff68158b6a1",
+          "079b20a13a5ebcfaef2848a629260987615bab084b034959da5c6c669b7d3402"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-0:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nJSON\n{\n  \"result\": \"REWORK\",\n  \"summary\": \"R3 两项限定复验均未通过：会话锁仍在枚举前立即释放，处置后快照仍未实现。\",\n  \"issues\": [\n    \"P1-02：phase0/tools/tab_cleanup.mjs 中 acquireSessionLock() 后立即 lock.release()，随后才连接 CDP、枚举页面、判定及关闭。锁未覆盖完整的枚举→判定→关闭生命周期，probe-release 竞态仍然存在。应将锁持有范围扩展至完整操作，并在 finally 中释放。\",\n    \"P2-01：gpt_dispatch.mjs 的成功路径仅记录 browser.close()/killProfileChrome() 前的 exit 快照；失败路径的 exit 快照也在关闭自建页之前获取。writeTabAudit 未实现 exit_after_disposal 字段，无法证明处置后的 tab 清零或值守页零关闭。需补充处置后重新探测及对应证据。\"\n  ],\n  \"task_id\": \"b-20261116-tab-cleanup\"\n}",
+      "text_sha256": "079b20a13a5ebcfaef2848a629260987615bab084b034959da5c6c669b7d3402",
+      "size_bytes": 880,
+      "assistant_uuid": "251c56d7-4178-47b8-bc22-363fd39f5446"
+    }
+  ]
+}

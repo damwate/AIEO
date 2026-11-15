@@ -1,0 +1,13 @@
+ChatGPT 说：
+
+```json
+{
+"result": "REWORK",
+"summary": "R4 已确认 sendAttempted 置位时机及 --close 会话锁覆盖枚举至关闭的整改已落入 ef8497b，但 P2-01 指定样张仍是旧版 exit 字段，未形成处置后快照证据。",
+"issues": [
+"P2-01：phase0/logs/dispatch-2026-11-15T22-18-25/tab-audit.json 实存内容仍使用 exit 字段，没有 exit_before_disposal 和 exit_after_disposal；与本轮声称的整改后样张不一致，不能证明处置后 CDP 不可达或值守页零关闭。",
+"P1-01：cleanupDecision 已导出，但 gpt_dispatch.mjs 未导入或调用该函数，实际 catch 仍直接依据 sendAttempted 分支。需核实两例测试是否验证实际清理决策契约，而非仅独立测试纯函数。"
+],
+"task_id": "b-20261116-tab-cleanup"
+}
+```

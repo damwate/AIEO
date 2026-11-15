@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-15T22:28:38.307Z",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "be107783-5072-47ce-a866-9eaed0107753",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "1b3d1bf6c4679ff7f4ea134cd41785a86d3ce0d26fb61f32df10503aedb74da8",
+          "1918780ed77b2f5592ba6883532198556f40a5f2ae504651dd31aa73f121a0b9"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "1b3d1bf6c4679ff7f4ea134cd41785a86d3ce0d26fb61f32df10503aedb74da8",
+          "1918780ed77b2f5592ba6883532198556f40a5f2ae504651dd31aa73f121a0b9"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-0:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n```json\n{\n\"result\": \"REWORK\",\n\"summary\": \"R4 已确认 sendAttempted 置位时机及 --close 会话锁覆盖枚举至关闭的整改已落入 ef8497b，但 P2-01 指定样张仍是旧版 exit 字段，未形成处置后快照证据。\",\n\"issues\": [\n\"P2-01：phase0/logs/dispatch-2026-11-15T22-18-25/tab-audit.json 实存内容仍使用 exit 字段，没有 exit_before_disposal 和 exit_after_disposal；与本轮声称的整改后样张不一致，不能证明处置后 CDP 不可达或值守页零关闭。\",\n\"P1-01：cleanupDecision 已导出，但 gpt_dispatch.mjs 未导入或调用该函数，实际 catch 仍直接依据 sendAttempted 分支。需核实两例测试是否验证实际清理决策契约，而非仅独立测试纯函数。\"\n],\n\"task_id\": \"b-20261116-tab-cleanup\"\n}\n```",
+      "text_sha256": "1918780ed77b2f5592ba6883532198556f40a5f2ae504651dd31aa73f121a0b9",
+      "size_bytes": 806,
+      "assistant_uuid": "be107783-5072-47ce-a866-9eaed0107753"
+    }
+  ]
+}

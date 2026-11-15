@@ -1,0 +1,11 @@
+ChatGPT 说：
+JSON
+{
+  "result": "REWORK",
+  "summary": "R3 两项限定复验均未通过：会话锁仍在枚举前立即释放，处置后快照仍未实现。",
+  "issues": [
+    "P1-02：phase0/tools/tab_cleanup.mjs 中 acquireSessionLock() 后立即 lock.release()，随后才连接 CDP、枚举页面、判定及关闭。锁未覆盖完整的枚举→判定→关闭生命周期，probe-release 竞态仍然存在。应将锁持有范围扩展至完整操作，并在 finally 中释放。",
+    "P2-01：gpt_dispatch.mjs 的成功路径仅记录 browser.close()/killProfileChrome() 前的 exit 快照；失败路径的 exit 快照也在关闭自建页之前获取。writeTabAudit 未实现 exit_after_disposal 字段，无法证明处置后的 tab 清零或值守页零关闭。需补充处置后重新探测及对应证据。"
+  ],
+  "task_id": "b-20261116-tab-cleanup"
+}
