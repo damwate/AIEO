@@ -1,0 +1,26 @@
+[
+  {
+    "key": "fallback-turn-0:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[迁移接棒|AIEO Basic→新审查会话]\n前会话(6af90e6f)上下文满CONTEXT_LIMIT_STOP,本会话承接后续全部验收。背景速读:git"
+  },
+  {
+    "key": "fallback-turn-0:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nAIEO Basic｜S1 独立验收\n验收进行中\n\n当前初步结论：发现一项需要重点核实的证据绑定问题，暂不签发 PASS。\n\n已确认 Gi"
+  },
+  {
+    "key": "fallback-turn-1:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[验收复核|b-20261115-v03-lessons-recoll|只复核问题1]\nR1裁定(reply 071f26de…86fb)内容四项PASS+92"
+  },
+  {
+    "key": "fallback-turn-1:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nAIEO Basic｜S1 问题1复核裁定\nPASS\n\n问题1关闭，S1 整体验收 PASS。\n\n本轮严格限定为 R1 唯一 P1「证据绑"
+  }
+]

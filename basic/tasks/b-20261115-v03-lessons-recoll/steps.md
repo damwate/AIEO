@@ -17,16 +17,16 @@
 - ③修改内容：L-018 新增第 4 条「键漂移与归属校验型定位」（故障现象/失败案例/修正机制三件套/验证证据+两纪律[定位≠归属；SHA 全同=排除条件]+适用边界），原第 4/5 条顺延为 5/6，外部引用同步（1059 行"第 5 条"→"第 6 条"）+验证结果行补 2026-11-15 实测（#12-15 其中一次暴露键漂移变体）；L-014 第 6 条增实战对照表（手工 3 轮 300s 空转 vs 工具 40s 定位 3260）+结论句（40 秒是实测非 SLA）；WORKFLOW「首个真实闭环验证任务节」末尾追加「v0.3 生效后首个日常任务」小段（不覆盖历史记录；结果与验收=完成后回填占位）；附录 12 行未动。**待验收 commit 完整 SHA：240ace69f7a0b3af5ff438a4ec834bcf0f040bd9（S1 纯文档改动+本任务包归档，内容于此 commit 定格；证据登记 commit 后置不属被测 diff，承 R3 先例"被测先固定、证据登记后置"结构）**
 - ④执行结果：三处编辑完成；检查器零修改（冻结方案预判实测成立）；L-018 条目重编号引用影响排查=仅 1 处外部引用已同步
 - ⑤测试结果：四命令重跑全过退出 0=一致性 37/37+专项 7/7+DV1 6/6+negpos 7/7（归档 acceptance/+MANIFEST）；本任务包 taskpack 自检 IN_PROGRESS（开发期实态）
-- ⑥验收证据引用：R1 验收=新审查会话 6af93e42-91e8-83ec-943f-8e312e1b50a0（迁移接棒自 6af90e6f CONTEXT_LIMIT_STOP，dispatch-2026-11-15T05-06-08 现场+迁移简报 brief_v03ls_migrate.txt 1168B 首派一次成功），reply sha256=071f26de65c8da07661b037e29cf0276d2babc95d92d36b396aecc1c11ed86fb，裁定=REJECT 唯一 P1[问题1=证据绑定未闭合]（内容四项 PASS+926f7ec 独立授权确认）；补正 commit=9eaed62f2503e1dca50f1e2b6a903f63fb988a8a+返工表登记 eca034adeac284dbc253f56314aab7dda083cff2；复核轮待派（只复核问题1，PASS 后回填验收结论）
+- ⑥验收证据引用：R1 验收=新审查会话 6af93e42-91e8-83ec-943f-8e312e1b50a0（迁移接棒自 6af90e6f CONTEXT_LIMIT_STOP，dispatch-2026-11-15T05-06-08 现场+迁移简报 brief_v03ls_migrate.txt 1168B 首派一次成功），reply sha256=071f26de65c8da07661b037e29cf0276d2babc95d92d36b396aecc1c11ed86fb，裁定=REJECT 唯一 P1[问题1=证据绑定未闭合]（内容四项 PASS+926f7ec 独立授权确认）；补正 commit=9eaed62f2503e1dca50f1e2b6a903f63fb988a8a+返工表登记 eca034adeac284dbc253f56314aab7dda083cff2；R2 复核=recoll_v03ls_r2.mjs 归属校验型补采 recoll-2026-11-15T05-20-17-574Z（首派漏换 CONV_UUID 指|旧会话经 units-diag 当场发现即纠正=L-018 第3条实战，recoll 无发送副作用），reply sha256=1cf73ed767f049c6d9dd670bf6b443de77a6339544388871103e8ad9f06df557：问题1 关闭+**S1 整体验收结论：PASS**（被测 240ace69f7a0b3af5ff438a4ec834bcf0f040bd9；六项全 PASS：L-018/L-014/WORKFLOW 历史保护/四命令归档/926f7ec 独立授权/问题1 证据绑定）
 
 ## S2 独立验收与交付
 
 - ①本步骤目标：ChatGPT 独立验收通过，登记交付
 - ②修改文件：本任务包 delivery.md（交付时）
-- ③修改内容：待执行后登记
-- ④执行结果：待登记
-- ⑤测试结果：待登记
-- ⑥验收证据引用：待验收派单后登记
+- ③修改内容：WORKFLOW「v0.3 生效后首个日常任务」节"结果与验收"行按 R2 复核建议文案回填正式结论；delivery.md 七要素成文；task-brief 转完成态；四命令最终轮归档刷新
+- ④执行结果：S2 交付登记完成；WORKFLOW 回填后四命令重跑确认 37/37 保持（实测不以预计代替）
+- ⑤测试结果：四命令退出码全 0（归档 acceptance/）
+- ⑥验收证据引用：S2=交付登记 commit（本 commit）；R2 复核 reply sha256=1cf73ed767f049c6d9dd670bf6b443de77a6339544388871103e8ad9f06df557（S1 整体验收结论：PASS，建议回填文案已采纳）；dispatch 链=dispatch-2026-11-15T05-06-08（R1，迁移首派）+dispatch-2026-11-15T05-15-02（R2）
 
 
 ## 返工记录表（首次 REJECT 时建表；按"同一问题"计数）

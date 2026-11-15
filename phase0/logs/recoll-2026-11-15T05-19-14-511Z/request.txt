@@ -1,0 +1,7 @@
+[验收复核|b-20261115-v03-lessons-recoll|只复核问题1]
+R1裁定(reply 071f26de…86fb)内容四项PASS+926f7ec独立授权确认,唯一P1=问题1证据绑定未闭合。本轮只复核问题1补正,已通过项不重复审查。
+补正(两段式,承你R3先例"被测先固定、证据登记后置"):①steps.md S1③明文登记被测commit完整SHA=240ace69f7a0b3af5ff438a4ec834bcf0f040bd9(内容定格commit,证据登记后置不属被测diff)②ls-MANIFEST.txt重写(basic/tasks/b-20261115-v03-lessons-recoll/acceptance/):被测commit完整SHA+五输出SHA256+五条生成命令+预期结果+绑定语义;补正commit=9eaed62f2503e1dca50f1e2b6a903f63fb988a8a(证据绑定落地),返工表登记=eca034adeac284dbc253f56314aab7dda083cff2,S1⑥证据链补全=bcc475f。
+材料:github.com/damwate/AIEO@main 读 eca034a(或bcc475f)的任务包三文件。
+复核点:①steps.md被测SHA明文登记②MANIFEST绑定与SHA256③未动已验收内容(L-014/L-018/WORKFLOW/检查器/三COMPLETED包)。
+裁定通过请一并给:S1整体验收结论(便于闭环登记,回填WORKFLOW验证节)。
+三态:PASS(问题1关闭+S1结论)/REJECT(列项)/BLOCKED。

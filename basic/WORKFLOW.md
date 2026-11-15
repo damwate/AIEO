@@ -100,7 +100,7 @@
 - **实际修改文件：** docs/AI-DEV-LESSONS.md（L-018 增补第 4 条+L-014 第 6 条对照表）、basic/WORKFLOW.md（本节追加）。
 - **ST-05 实战：** 申报前检查器自检已执行并留存记录（PLANNING/IN_PROGRESS/COMPLETED 各阶段实态见任务包 steps.md）。
 - **ST-01 实战：** 申报引用=归档路径+SHA256+被测 commit，从最终归档取值（规划/验收证据链见 steps.md）。
-- **结果与验收：** 完成后回填（独立验收结论、对应 commit 与证据路径）。
+- **结果与验收：** S1 PASS（2026-11-15，独立验收 R1 REJECT 唯一 P1 问题1 经 R2 复核关闭）；被测内容 commit=240ace69f7a0b3af5ff438a4ec834bcf0f040bd9；证据补正 commit=9eaed62f2503e1dca50f1e2b6a903f63fb988a8a，返工登记=eca034adeac284dbc253f56314aab7dda083cff2，S1 验收结论回填=bcc475f；五输出及 SHA256 见 basic/tasks/b-20261115-v03-lessons-recoll/acceptance/ls-MANIFEST.txt。
 
 ## 部署边界（D1 独立性的准确含义）
 

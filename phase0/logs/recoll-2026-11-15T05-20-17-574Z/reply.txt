@@ -1,0 +1,310 @@
+ChatGPT 说：
+AIEO Basic｜S1 问题1复核裁定
+PASS
+
+问题1关闭，S1 整体验收 PASS。
+
+本轮严格限定为 R1 唯一 P1「证据绑定未闭合」，不重复审查此前四项已通过内容。
+
+一、问题1复核
+
+复核点
+
+	
+
+结果
+
+	
+
+核查依据
+
+
+
+
+① steps.md 明文登记被测 SHA
+
+	
+
+PASS
+
+	
+
+S1③ 已登记完整 SHA
+
+
+
+
+② MANIFEST 证据绑定
+
+	
+
+PASS
+
+	
+
+完整 SHA、五份输出 SHA256、五条生成命令、预期结果、绑定语义齐备
+
+
+
+
+③ 已验收内容未被补正修改
+
+	
+
+PASS
+
+	
+
+补正 Diff 未修改 L-014、L-018、检查器及三个历史任务包
+
+① 被测对象绑定
+
+唯一被测内容 Commit
+
+240ace69f7a0b3af5ff438a4ec834bcf0f040bd9
+
+证据登记补正 Commit
+
+9eaed62f2503e1dca50f1e2b6a903f63fb988a8a
+
+steps.md 已经明确区分：
+
+240ace69：S1 内容定格对象。
+
+9eaed62：证据登记补正，不属于被测内容 Diff。
+
+符合「被测先固定、证据登记后置」原则。
+
+② MANIFEST 核查
+
+已读取 eca034a 中完整 MANIFEST。
+
+五份输出均能在被测 commit 240ace69 对应目录中找到。
+
+文件
+
+	
+
+MANIFEST SHA256
+
+
+
+
+ls-consistency-output.txt
+
+	
+
+52285c9e15b01b074280cc0c9dd73d904c0ef3759ee2f455c386b92fb30340a9
+
+
+
+
+ls-state-tests-output.txt
+
+	
+
+a70d0ba8321a391ee649247bd268786d77b7e46856ed380ab597cb23bb070a2b
+
+
+
+
+ls-dv1-output.txt
+
+	
+
+0d9ef8ee168f6be3c3a56960db5c1ca611f5730256bbeac2b58c035edc7505f3
+
+
+
+
+ls-negpos-output.txt
+
+	
+
+ad40f17328da81ca35aeea7073cfae3e5b9b563dfa3d3808ee4fe5bccf31c776
+
+
+
+
+ls-taskpack-self.txt
+
+	
+
+55027d18a4ca09a4545dda2571bacd1bcba5aae810f0ab584c565573391c31b3
+
+五条生成命令、预期结果及绑定语义均已明确。
+
+说明：本轮核实了 MANIFEST 登记、文件存在性及对象绑定，没有在本地重新计算五份文件的 SHA256，因此不将其表述为独立重算通过。
+
+③ 修改范围核查
+
+实际 GitHub 比较结果：
+
+比较区间
+
+	
+
+提交数
+
+	
+
+修改文件
+
+
+
+
+926f7ec → 9eaed62
+
+	
+
+1
+
+	
+
+MANIFEST、steps.md、task-brief.md
+
+
+
+
+9eaed62 → eca034a
+
+	
+
+1
+
+	
+
+steps.md
+
+
+
+
+eca034a → bcc475f
+
+	
+
+1
+
+	
+
+steps.md
+
+其中 926f7ec 是独立用户指令增补，不计入 S1 被测内容。
+
+本轮证据补正没有修改：
+
+docs/AI-DEV-LESSONS.md 的 L-014、L-018。
+
+检查器源码。
+
+三个历史 COMPLETED 任务包。
+
+WORKFLOW 的 S1 内容。
+
+二、S1 整体验收结论
+
+R1 四项内容验收均 PASS，926f7ec 独立授权边界确认 PASS；R2 唯一遗留问题1现已关闭。
+
+S1 最终验收
+
+PASS
+PASS
+
+验收项目
+
+	
+
+最终结果
+
+
+
+
+L-018 内容与重编号
+
+	
+
+PASS
+
+
+
+
+L-014 实战对照表
+
+	
+
+PASS
+
+
+
+
+WORKFLOW 历史保护
+
+	
+
+PASS
+
+
+
+
+四命令测试归档
+
+	
+
+PASS（原轮静态核查）
+
+
+
+
+926f7ec 独立授权
+
+	
+
+PASS
+
+
+
+
+R1 问题1证据绑定
+
+	
+
+PASS
+
+
+
+
+S1 整体
+
+	
+
+PASS
+
+S1 已通过，可以进入 S2。
+
+三、供 WORKFLOW 回填的正式结论
+
+建议在 basic/WORKFLOW.md 的「v0.3 生效后首个日常任务」节中，将原来的：
+
+结果与验收：完成后回填（独立验收结论、对应 commit 与证据路径）。
+
+替换为：
+
+写作
+
+结果与验收：S1 PASS（2026-11-15，独立验收 R1 REJECT 唯一 P1 问题1经 R2 复核关闭）；被测内容 commit=240ace69f7a0b3af5ff438a4ec834bcf0f040bd9；证据补正 commit=9eaed62f2503e1dca50f1e2b6a903f63fb988a8a，返工登记=eca034adeac284dbc253f56314aab7dda083cff2，S1 验收结论回填=bcc475f；五输出及 SHA256 见 basic/tasks/b-20261115-v03-lessons-recoll/acceptance/ls-MANIFEST.txt。
+
+四、最终回执
+
+最终三态：PASS
+
+R1 问题1：关闭。
+
+S1：整体验收通过。
+
+S2：尚待执行，不提前宣布任务整体完成。
+
+建议下一步：进入 S2 独立验收与交付。
+
+验收对象：github.com/damwate/AIEO，main。复核材料读取至 bcc475f。
+
+本轮不再要求开发方对 S1 内容进行任何返工。

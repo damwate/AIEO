@@ -1,0 +1,220 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-15T04:53:38.542Z",
+  "user_unit_key": "fallback-turn-8:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-8:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "f85f69ae-85fd-4873-a214-a5ca50dd3a4f",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-8:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant",
+          "fallback-turn-6:0:user",
+          "fallback-turn-6:2:assistant",
+          "fallback-turn-7:0:user",
+          "fallback-turn-7:2:assistant",
+          "fallback-turn-8:0:user",
+          "fallback-turn-8:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "3218c45f155a380f4e2525aca22c5f6354fbe0978c3e430d9dca97a873296165",
+          "3119652d3f4fa2e240badd15f8795f37c356eec5fac0a65823d6a7969b6e7bb7",
+          "0c71e08fc5d79607209f899b382bca7c3f59a8180418c749d18150860fb03b78",
+          "cab4f8e6a2b58846823ef58a3991d066e5e37fc7649b619a623fb5c60d9ec25f",
+          "640f18ada200e85b25ae804e9194d63c2b1601a8f13a2076d3b992c4ef0a8d27",
+          "d6934a674f0b8cde343f2995ed963b46c9eefab4614016dc8ca9fe97b4aeb9e5",
+          "2252755a1ae2e815d03c47d9671ca489cac8f9b397982e5dcc8e74ec32143daa",
+          "14a48dc982f42fa4ab1054c2d59726897714d179406f973bb38b0f8512f1c7ec",
+          "a2cb401e8b4c7c59fdea4d800bfd8cd996b0ca82207fdf2db71863aa7c019a4c",
+          "d1fc718c23734e1e42eae1712175ac350e7b292d5acdfb7ee6f72306d53fc046",
+          "64565e0f466b9c397c2dbef782fd02547e3e22dff000a2426850a418427f3326",
+          "a9e3059b535bbc7e9e0cbcceef56982bb9f42f92b0385ee8fe60594c6456162f",
+          "8abe558bc1407a0f931677e8e1122d6f6539893fe44951370a670e6134ff9ac7",
+          "2986a76b79190e5b55a20eca43bd31b7731577815e72e1478bd97471183be046",
+          "815c7b526082a274c3349a49c59d7e0b784c5cbb9c2118d6ce3e3a767ecc55c4",
+          "2f09f5ceb5608b89dadab9ede87d85867bd8c45ebb14da70e3c4875ad638ce6e",
+          "61e80be3a2bc11f3f6788c89ccc05387c5cb91ba794bcc5268d7dd5999cd7250",
+          "7aecb6c48c24d20b5f93a28eef588af56e66c5568ab4b7a73e8bdaae2a94e3fb"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant",
+          "fallback-turn-6:0:user",
+          "fallback-turn-6:2:assistant",
+          "fallback-turn-7:0:user",
+          "fallback-turn-7:2:assistant",
+          "fallback-turn-8:0:user",
+          "fallback-turn-8:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "3218c45f155a380f4e2525aca22c5f6354fbe0978c3e430d9dca97a873296165",
+          "3119652d3f4fa2e240badd15f8795f37c356eec5fac0a65823d6a7969b6e7bb7",
+          "0c71e08fc5d79607209f899b382bca7c3f59a8180418c749d18150860fb03b78",
+          "cab4f8e6a2b58846823ef58a3991d066e5e37fc7649b619a623fb5c60d9ec25f",
+          "640f18ada200e85b25ae804e9194d63c2b1601a8f13a2076d3b992c4ef0a8d27",
+          "d6934a674f0b8cde343f2995ed963b46c9eefab4614016dc8ca9fe97b4aeb9e5",
+          "2252755a1ae2e815d03c47d9671ca489cac8f9b397982e5dcc8e74ec32143daa",
+          "14a48dc982f42fa4ab1054c2d59726897714d179406f973bb38b0f8512f1c7ec",
+          "a2cb401e8b4c7c59fdea4d800bfd8cd996b0ca82207fdf2db71863aa7c019a4c",
+          "d1fc718c23734e1e42eae1712175ac350e7b292d5acdfb7ee6f72306d53fc046",
+          "64565e0f466b9c397c2dbef782fd02547e3e22dff000a2426850a418427f3326",
+          "a9e3059b535bbc7e9e0cbcceef56982bb9f42f92b0385ee8fe60594c6456162f",
+          "8abe558bc1407a0f931677e8e1122d6f6539893fe44951370a670e6134ff9ac7",
+          "2986a76b79190e5b55a20eca43bd31b7731577815e72e1478bd97471183be046",
+          "815c7b526082a274c3349a49c59d7e0b784c5cbb9c2118d6ce3e3a767ecc55c4",
+          "2f09f5ceb5608b89dadab9ede87d85867bd8c45ebb14da70e3c4875ad638ce6e",
+          "61e80be3a2bc11f3f6788c89ccc05387c5cb91ba794bcc5268d7dd5999cd7250",
+          "7aecb6c48c24d20b5f93a28eef588af56e66c5568ab4b7a73e8bdaae2a94e3fb"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant",
+          "fallback-turn-6:0:user",
+          "fallback-turn-6:2:assistant",
+          "fallback-turn-7:0:user",
+          "fallback-turn-7:2:assistant",
+          "fallback-turn-8:0:user",
+          "fallback-turn-8:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-8:0:user",
+      "fallback-turn-8:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant",
+          "fallback-turn-6:0:user",
+          "fallback-turn-6:2:assistant",
+          "fallback-turn-7:0:user",
+          "fallback-turn-7:2:assistant",
+          "fallback-turn-8:0:user",
+          "fallback-turn-8:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant",
+          "fallback-turn-6:0:user",
+          "fallback-turn-6:2:assistant",
+          "fallback-turn-7:0:user",
+          "fallback-turn-7:2:assistant",
+          "fallback-turn-8:0:user",
+          "fallback-turn-8:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant",
+          "fallback-turn-6:0:user",
+          "fallback-turn-6:2:assistant",
+          "fallback-turn-7:0:user",
+          "fallback-turn-7:2:assistant",
+          "fallback-turn-8:0:user",
+          "fallback-turn-8:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-8:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n同意（附结构性修改建议）\n\n我已按指定 commit c753084237971e1e201bff2d4b53da811850e9ac 读取需求原文、任务书、AI-DEV-LESSONS.md、basic/WORKFLOW.md 和当前37项检查器。\n\n整体方向合理：这是 v0.3 生效后的首个日常文档任务，重点不是扩展流程，而是把真实执行中发现的补采定位机制沉淀下来，并验证 ST-05、ST-01 能否在日常任务中真正执行。\n\n以下建议作为本轮规划共识，不代表已经授权动工。\n\n① 两处经验入库：建议落点与结构\nL-018：建议在原条目内增补，不另建 L-020\n建议：并入 L-018\n\n我倾向于保留现有 L-018 编号和主题。\n\n理由：\n\n新旧经验都属于 ChatGPT 网页派单后的 fail-closed 补采问题。\n\n现有 L-018 已覆盖禁重发、三步诊断、驱动派生、reply 核验和会话迁移。\n\n键漂移与归属校验是补采定位环节的新故障模式，不是独立的新治理主题。\n\n如果另建 L-020，容易把同一套补采流程拆成两条需要同步维护的经验。\n\n建议在 L-018 的第3条之后，新增一个独立编号的经验点，标题明确为：\n\n键漂移与归属校验型定位：reload 后禁止仅凭固定键补采，必须验证本轮归属。\n\n建议内容分为四部分：\n\n部分\n\n\t\n\n应记录的内容\n\n\n\n\n故障现象\n\n\t\n\nreload 后物化键重排；固定键字符串可能重新指向旧 user；固定键补采可能取得旧轮 reply\n\n\n\n\n失败案例\n\n\t\n\nR2 首次补采取得与 R1 SHA 完全相同的旧 reply，证明仅凭键定位不可靠\n\n\n\n\n修正机制\n\n\t\n\n简报标记文本唯一定位 + 最后 user 断言 + 前轮 reply SHA 排除\n\n\n\n\n验证证据\n\n\t\n\nrecoll_v03act_r2b.mjs、recoll_v03act_r3.mjs，七查结果及对应原始 request/reply、SHA256\n\n这里有两个细节建议：\n\n把“定位成功”和“归属正确”明确分开。 找到一个 user unit，不等于找到本轮 user unit；取得一份 reply，也不等于取得本轮 reply。\n\n把 SHA 全同写成明确的排除条件。 如果本轮补采结果与前轮 reply SHA 相同，应判定归属冲突，不能仅凭内容看起来合理就通过。\n\n建议增加一条适用边界：上述方法是当前 ChatGPT 网页派单补采流程的实证规则，不能直接推导为所有网页采集器或其他平台 API 的通用定位规则。\n\nL-014：保留第6条，补强对照数据\n建议：不另建条目\n\nL-014 第6条现有结构已经合理，不需要拆分。\n\n建议只补充一张简短对照表，放在第6条“实战对照”之后：\n\n处置方式\n\n\t\n\n实际过程\n\n\t\n\n结果\n\n\n\n\n手工猜端口\n\n\t\n\n3轮重试、涉及6822死端口和直连失败，累计300秒超时空转\n\n\t\n\n未完成推送\n\n\n\n\n固化工具\n\n\t\n\nnode toolkit/check-push.mjs --push --yes\n\n\t\n\n40秒定位3260并成功推送\n\n\n\n\n结果对照\n\n\t\n\n手工排查与工具化发现\n\n\t\n\nahead=4 → 0\n\n再补充一句结论：\n\n经验价值不是单纯缩短等待时间，而是将端口发现、协议解析、候选验证和推送复核固化为可重复执行的第一动作。\n\n注意不要将“40秒”写成工具永远保证的性能指标。它是这次实战的测量结果，不是 SLA。\n\n② WORKFLOW 回填：建议最小修改面\n建议：只修改现有验证任务节\n\n当前 basic/WORKFLOW.md 的“首个真实闭环验证任务”记录的是 b-20261114-taskpack-checker，它是 Basic 最初的任务包完整性工具闭环，不能被本次新任务覆盖或改写。\n\n建议保留原有两条事实：\n\n任务包完整性检查工具已经交付。\n\n阶段 C 已以其全流程记录作为统计原料。\n\n在该节末尾追加一个独立的小段：\n\nv0.3 生效后首个日常任务：经验库补采与连接故障经验实战验证\n\n只登记以下事实：\n\n任务 ID：b-20261115-v03-lessons-recoll。\n\n任务目标：L-018 键漂移与归属校验经验入库，L-014 第6条补强。\n\n实际修改文件：docs/AI-DEV-LESSONS.md、basic/WORKFLOW.md，以及确实需要同步的检查器文件。\n\nST-05：申报前检查器自检的实际执行结果。\n\nST-01：基线、待验收 commit、parent 链和返工后绑定更新的实际核验结果。\n\n独立验收结论、对应 commit 和证据路径。\n\n不建议把尚未执行的测试结果提前写入 WORKFLOW。规划阶段只冻结记录结构，最终结果在任务完成后回填。\n\n附录12行保持原样，不修改表格、不重编号、不新增差异行。\n\n③ 检查器断言影响预判\n预判：37项大概率无需修改\n\n我检查了当前 s4-consistency-check.py 的37项断言。\n\n本次预计修改的 WORKFLOW 区域是文档后部的“首个真实闭环验证任务”节，现有断言与它的直接关系如下：\n\n检查区域\n\n\t\n\n当前检查内容\n\n\t\n\n预计影响\n\n\n\n\n①a\n\n\t\n\nWORKFLOW版本头、清单头部生效声明\n\n\t\n\n无\n\n\n\n\n①b\n\n\t\n\n生效状态blockquote五要素\n\n\t\n\n无\n\n\n\n\n①c\n\n\t\n\n附录12行\n\n\t\n\n无，必须保持\n\n\n\n\n③a\n\n\t\n\nWORKFLOW含核链命令\n\n\t\n\n原文保留即可\n\n\n\n\n④a/④b/④c\n\n\t\n\nST-10、ST-11及六查统计对齐\n\n\t\n\n无\n\n\n\n\n其余检查项\n\n\t\n\n阶段C任务包、返工表、delivery及历史状态\n\n\t\n\n原则上无\n\n因此我的判断是：\n\n不应为了本次文档修改主动重构检查器。\n\n但需要注意两个条件：\n\n实际修改后必须执行37项检查，不能以“预计不影响”代替实测。\n\n如果某项断言因本次新增事实而失效，只修改受影响断言，不增加检查项、不降低原断言强度。\n\n此外，专项7/7、DV1 6/6、negpos 7/7也应作为回归保护。即使37项仍为37项，也不能因此跳过测试脚本的正反向验证。\n\n这与 L-017 的纪律一致：检查器变化要同步测试，不能只看正向基线通过。\n\n④ 建议冻结的本轮方案\n\n项目\n\n\t\n\n建议冻结内容\n\n\n\n\nL-018\n\n\t\n\n原条目内新增独立经验点，不新增编号\n\n\n\n\nL-014\n\n\t\n\n第6条增加实战对照数据，不改变原有规则\n\n\n\n\nWORKFLOW\n\n\t\n\n现有首个真实闭环验证任务节追加本次日常任务事实，不覆盖历史任务\n\n\n\n\n附录\n\n\t\n\n12行完全不动\n\n\n\n\n检查器\n\n\t\n\n优先零修改；若实际断言受影响再最小同步\n\n\n\n\n检查项数量\n\n\t\n\n37项保持不变\n\n\n\n\n测试\n\n\t\n\n37/37、DV1 6/6、negpos 7/7、专项7/7\n\n\n\n\n采集工具\n\n\t\n\n不修改 recoll_v03act_r2b.mjs、r3.mjs，只作为证据引用\n\n\n\n\n历史任务\n\n\t\n\n两个 COMPLETED 任务包不改历史裁定\n\n\n\n\nDEC-043\n\n\t\n\n继续 backlog\n\n\n\n\nST-05/ST-01\n\n\t\n\n本任务实际执行并留存可核查证据\n\n还建议明确一条： 本次经验入库只沉淀已经实证的定位与核验机制，不把“默认 backlog 不入本任务”等新策略扩展成未经用户批准的全局规则。\n\n本轮三态裁定\n同意\n\n我同意这项任务的总体方向和实施边界，建议按上面的结构性修改冻结方案：\n\nL-018 并入新经验点；\n\nL-014 增补对照数据；\n\nWORKFLOW 只追加事实记录；\n\n检查器优先保持37项不变；\n\nST-05、ST-01作为本任务的真实实战验证重点。\n\n当前状态：规划共识建议已形成，尚未获得用户最终拍板，不授权修改文件或开始执行。\n\n你可以在拍板时直接确认这版方案；如果批准，后续就按冻结方案进入 S1 文档实施。",
+      "text_sha256": "7aecb6c48c24d20b5f93a28eef588af56e66c5568ab4b7a73e8bdaae2a94e3fb",
+      "size_bytes": 7270,
+      "assistant_uuid": "f85f69ae-85fd-4873-a214-a5ca50dd3a4f"
+    }
+  ]
+}
