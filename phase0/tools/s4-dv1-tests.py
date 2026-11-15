@@ -3,7 +3,7 @@
 会商3 裁定的测试条件：
   负向 N1/N2/N3 = delivery 正文新增裸露 21/21 / 24/24 / 30/30 各自必须 FAIL（指名拦截 ⑧j）；
   整体测试 NT   = 三种旧数字分别放在不同正文位置，每个出现位置都必须被识别（viol 逐位置报告，非只拦截第一个）；
-  正向 P1       = 当前 36/36 与历史演进记录同时存在且语义正确（仓库基线）→ PASS；
+  正向 P1       = 当前 37/37 与历史演进记录同时存在且语义正确（仓库基线）→ PASS；
   正向 P2       = 三种旧数字均在正确历史快照区域内（追加显式区段+轮次标注句）→ PASS。
 全部注入只作用于内存中的文件内容副本，不修改任何仓库文件。
 用法：python -X utf8 -I phase0/tools/s4-dv1-tests.py （在仓库根目录执行）
@@ -64,11 +64,11 @@ def main():
 
     # ---- 正向 2 项 ----
     ok, fail = cc.run_checks(wf, cl, tpl, st, tb, ws, dl)
-    results.append(("P1 基线(当前36/36与历史演进链共存)全过", len(ok)==36 and len(fail)==0,
+    results.append(("P1 基线(当前37/37与历史演进链共存)全过", len(ok)==37 and len(fail)==0,
                     f"实际 PASS={len(ok)}/FAIL={len(fail)} fail={fail}"))
     dl_legal = dl + "\n<!--hist-snap-start-->历史快照补充标注示例：R1 时点核验 21/21，R2 时点核验 24/24，R3/R4 时点核验 30/30，均已由演进链区段标注为历史记录。<!--hist-snap-end-->"
     ok2, fail2 = cc.run_checks(wf, cl, tpl, st, tb, ws, dl_legal)
-    results.append(("P2 三旧数字均在正确历史快照区域内追加仍全过", len(ok2)==36 and len(fail2)==0,
+    results.append(("P2 三旧数字均在正确历史快照区域内追加仍全过", len(ok2)==37 and len(fail2)==0,
                     f"实际 PASS={len(ok2)}/FAIL={len(fail2)} fail={fail2}"))
 
     npass = sum(1 for _, hit, _ in results if hit)

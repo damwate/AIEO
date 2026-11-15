@@ -1,0 +1,10 @@
+[2026-11-15T01:58:08.922Z] 会话锁已获取（补采）
+[2026-11-15T01:58:09.067Z] 未找到已打开的会话页，按保存的会话 URL 导航
+[2026-11-15T01:58:10.486Z] 页面就位: https://chatgpt.com/c/6af8cab1-06bc-83ec-bcc8-712149e80e45
+[2026-11-15T01:58:10.534Z] 视口覆盖已应用（1920×20000，dpr=1），等待渲染收敛
+[2026-11-15T01:58:18.554Z] 静置门通过（units=20，无停止按钮）；额外静置 30000ms 供虚拟列表收敛
+[2026-11-15T01:58:52.776Z] checks={"final_stop_button_not_visible":true,"tail_is_assistant":true,"dil_uuid_present":true,"uuid_stable":true,"stable_unit_read":true,"target_range_materialized":true}
+[2026-11-15T01:58:52.782Z] reply 已落盘: D:\AIEO\phase0\logs\recoll-2026-11-15T01-58-08-575Z\reply.txt（5129 字节，1 unit）
+[2026-11-15T01:58:52.783Z] recoll COMPLETED
+[2026-11-15T01:58:52.814Z] 视口覆盖已清除，恢复原视口
+[2026-11-15T01:58:52.931Z] 会话锁已释放（补采）

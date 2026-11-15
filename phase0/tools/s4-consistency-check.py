@@ -24,6 +24,9 @@
 #   EV1 证据=acceptance/s4-ev1/ 输出绑定被测快照 e309474 身份+MANIFEST，申报只引归档路径+SHA256+被测 commit）。
 # EV1 复验 PASS 裁定登记（新会话 6af90e6f 独立复核，reply sha256=3119652d…e7bb7）=⑧a2⑧b⑧c1⑧c3 再演进
 #   （EV1 复验 PASS 实态+证据绑定问题关闭进 S4 最终交付确认；⑧c3 禁入清单追加「EV1 复验待派」过期态）。
+# S4 最终交付确认补正（裁定 REJECT 本轮=P1 补正非功能缺陷，reply sha256=cab4f8e6…5f）=⑦ 加 S4 四步全查+
+#   ⑧a2⑧b⑧c1⑧c3 再演进（四步全闭环任务 COMPLETED 终检态：⑧c1 主状态句正则改 S1/S2/S3/S4 独立验收全闭环；
+#   ⑧c3 禁入清单追加「尚未最终 PASS」「进入 S4 最终交付确认」过期态）。
 import io, re, subprocess, sys
 
 def run_checks(wf, cl, tpl, st, tb, ws, dl):
@@ -75,9 +78,11 @@ def run_checks(wf, cl, tpl, st, tb, ws, dl):
     stale = [l.split("|")[-2].strip() for l in rw_rows if "待 S3 复验" in l.split("|")[-2]]
     chk("⑥c 复验列无过期残留", not stale, f"stale={stale}")
 
-    # ⑦ S1/S2/S3/S4 六要素字面验收结论（S4 闭环后应有）
-    for sid, nxtid in [("S1","S2"),("S2","S3"),("S3","S4")]:
-        sec_i = st.split(f"## {sid}")[1].split(f"## {nxtid}")[0]
+    # ⑦ S1/S2/S3/S4 六要素字面验收结论（S4 最终交付确认补正后四步全查）
+    for sid, nxtid in [("S1","S2"),("S2","S3"),("S3","S4"),("S4",None)]:
+        sec_i = st.split(f"## {sid}")[1]
+        if nxtid:
+            sec_i = sec_i.split(f"## {nxtid}")[0]
         chk(f"⑦ {sid}含字面验收结论PASS", "验收结论：PASS" in sec_i)
 
     # ⑧ task-brief ↔ steps ↔ delivery 三文件状态逐项精确核对（R5 问题12 整改：
@@ -86,32 +91,36 @@ def run_checks(wf, cl, tpl, st, tb, ws, dl):
     chk("⑧a task-brief当前步骤行唯一", len(tb_step)==1, f"n={len(tb_step)}")
     step_txt = tb_step[0] if tb_step else ""
     s4_sec = st.split("## S4", 1)[1] if "## S4" in st else ""
-    # 逐项1：当前复验轮次指向——task-brief 当前步骤实态=EV1 复验 PASS 已登记+进入 S4 最终交付确认，完整承载轮次链
-    chk("⑧a2 tb当前步骤指向EV1复验PASS实态(EV1 复验 PASS+证据绑定问题关闭+S4最终交付确认+EV1 PASS+会商4+证据绑定+历史链:DV1 REJECT+第二级+R5 REJECT+问题12第4次+R4 REJECT 1项+问题12第3次)",
+    # 逐项1：当前复验轮次指向——task-brief 当前步骤实态=S4 最终交付确认补正完成+验收结论 PASS 已登记（四步全闭环 COMPLETED），完整承载轮次链
+    chk("⑧a2 tb当前步骤指向S4最终交付确认补正完成实态(S4 验收结论 PASS+四步全闭环任务 COMPLETED+P1 补正+补正执行+EV1 复验 PASS+证据绑定+S4最终交付确认+EV1 PASS+会商4+历史链:DV1 REJECT+第二级+R5 REJECT+问题12第4次+R4 REJECT 1项+问题12第3次)",
         ("S4-DV1-EV1" in step_txt) and ("EV1 PASS" in step_txt) and ("证据绑定" in step_txt) and ("会商4" in step_txt)
         and ("EV1 复验 PASS" in step_txt) and ("S4 最终交付确认" in step_txt)
+        and ("S4 验收结论 PASS" in step_txt) and ("四步全闭环任务 COMPLETED" in step_txt)
+        and ("P1 补正" in step_txt) and ("补正执行" in step_txt)
         and ("S4-DV1 REJECT" in step_txt) and ("第二级" in step_txt)
         and ("S4 R5 复验 REJECT" in step_txt) and ("问题12 第 4 次" in step_txt)
         and ("R4 复验 REJECT 1 项" in step_txt) and ("问题12 第 3 次" in step_txt))
-    chk("⑧b steps S4⑥含EV1复验PASS裁定登记+会商4裁定+EV1授权与PASS登记+DV1 REJECT+第二级+R5裁定+降档阶梯+止损历史",
+    chk("⑧b steps S4⑥含最终交付确认登记(P1 补正+五项补正)+EV1复验PASS裁定+验收结论:PASS+会商4裁定+EV1授权与PASS登记+DV1 REJECT+第二级+R5裁定+降档阶梯+止损历史",
         ("S4-DV1-EV1" in s4_sec) and ("会商4" in s4_sec) and ("EV1 PASS" in s4_sec) and ("证据绑定" in s4_sec)
         and ("EV1 复验 PASS" in s4_sec) and ("证据绑定问题关闭" in s4_sec)
+        and ("S4 最终交付确认" in s4_sec) and ("P1 补正" in s4_sec) and ("验收结论：PASS" in s4_sec)
         and ("S4-DV1 REJECT" in s4_sec) and ("第二级会商" in s4_sec)
         and ("S4 R5 复验 REJECT" in s4_sec) and ("停止原方案整改循环进入止损降档阶梯" in s4_sec)
         and ("ST-10 止损触发" in s4_sec))
     # 逐项2：delivery 主状态句结构化解析（提取加粗句逐项核对，非全文短语包含）
-    mst = re.search(r"\*\*S1/S2/S3 独立验收已闭环[^*]*\*\*", dl)
+    mst = re.search(r"\*\*S1/S2/S3/S4 独立验收全闭环[^*]*\*\*", dl)
     m0 = mst.group(0) if mst else ""
-    chk("⑧c1 主状态句存在且指向EV1复验PASS实态(会商4+EV1 PASS+EV1 复验 PASS+证据绑定问题关闭+S4最终交付确认+R5复验REJECT+停止原方案循环进降档阶梯+DV1 REJECT+第二级评估)",
-        bool(mst) and ("S4-DV1-EV1" in m0) and ("EV1 PASS" in m0) and ("会商4" in m0)
-        and ("EV1 复验 PASS" in m0) and ("证据绑定问题关闭" in m0) and ("S4 最终交付确认" in m0)
+    chk("⑧c1 主状态句存在且指向四步全闭环COMPLETED实态(S4 验收结论 PASS+四步全闭环任务 COMPLETED+P1 补正+EV1 复验 PASS+证据绑定问题关闭+会商4+EV1 PASS+R5复验REJECT+停止原方案循环进降档阶梯+DV1 REJECT+第二级评估)",
+        bool(mst) and ("S4 验收结论 PASS" in m0) and ("四步全闭环任务 COMPLETED" in m0) and ("P1 补正" in m0)
+        and ("S4-DV1-EV1" in m0) and ("EV1 PASS" in m0) and ("会商4" in m0)
+        and ("EV1 复验 PASS" in m0) and ("证据绑定问题关闭" in m0)
         and ("S4 独立验收 R5 复验 REJECT" in m0)
         and ("停止原方案整改循环进入止损降档阶梯" in m0)
         and ("S4-DV1 REJECT" in m0) and ("第二级评估" in m0))
     chk("⑧c2 主状态句含R4轮终态(REJECT 1项+问题12第3次)",
         bool(mst) and ("R4 复验 REJECT 1 项" in m0) and ("问题12 第 3 次" in m0))
-    chk("⑧c3 主状态句无过期残留(待R3/待R4复验/24-24/30-30/止损交用户/R5与DV1与EV1结论待回填/EV1复验待派/第二级会商待开)",
-        bool(mst) and not any(x in m0 for x in ("待 R3 复验","待 R4 复验","24/24","30/30","止损交用户","R5 复验结论待回填","DV1 复验结论待回填","EV1 复验结论待回填","EV1 复验待派","第二级会商待开")))
+    chk("⑧c3 主状态句无过期残留(待R3/待R4复验/24-24/30-30/止损交用户/R5与DV1与EV1结论待回填/EV1复验待派/尚未最终PASS/进入S4最终交付确认/第二级会商待开)",
+        bool(mst) and not any(x in m0 for x in ("待 R3 复验","待 R4 复验","24/24","30/30","止损交用户","R5 复验结论待回填","DV1 复验结论待回填","EV1 复验结论待回填","EV1 复验待派","尚未最终 PASS","进入 S4 最终交付确认","第二级会商待开")))
     # 逐项3：轮次链 R1-R4 逐轮三文件逐项核对（轮结论+对应问题编号缺一即 FAIL）
     for _n,_v,_p in [("⑧d1","REJECT 3 项","问题9/10/11"),("⑧d2","REJECT 2 项","问题12/13"),
                      ("⑧d3","REJECT 保留 2 项","问题12/13"),("⑧d4","REJECT 1 项","问题12 第 3 次")]:

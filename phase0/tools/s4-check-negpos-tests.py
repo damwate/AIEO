@@ -2,7 +2,7 @@
 # R5 问题12 整改：一致性核验负向/正向测试（会商1 执行约束，非可选自选动作）
 # 负向 5 类注入（对应会商1指定清单：轮次冲突/问题编号错配/S1-S3单项状态错误/当前数字过期/主状态与正文冲突），
 #   每类断言被【指名】拦截（对应 ⑧ 编号出现在 fail 名单），非仅整体 FAIL；
-# 正向 2 项：P1 三文件实态完全一致→36/36 全过；P2 历史记录存在但标注正确→仍 36/36 全过。
+# 正向 2 项：P1 三文件实态完全一致→37/37 全过；P2 历史记录存在但标注正确→仍 37/37 全过。
 # 全部注入只作用于内存中的文件内容副本，不修改任何仓库文件。
 # 用法：python -X utf8 -I phase0/tools/s4-check-negpos-tests.py （在仓库根目录执行）
 import io, sys, importlib.machinery, importlib.util
@@ -54,12 +54,12 @@ def main():
     # ---- 正向 2 项 ----
     # P1 三文件实态完全一致（仓库当前态）
     ok, fail = cc.run_checks(wf, cl, tpl, st, tb, ws, dl)
-    results.append(("P1 三文件实态一致全过(36/36)", len(ok)==36 and len(fail)==0,
+    results.append(("P1 三文件实态一致全过(37/37)", len(ok)==37 and len(fail)==0,
                     f"实际 PASS={len(ok)}/FAIL={len(fail)} fail={fail}"))
     # P2 历史记录存在但归属正确：追加带显式历史快照区段标记+轮次标注的旧数字句，仍应全过
     dl_hist = dl + "\n<!--hist-snap-start-->历史快照补充标注示例：R2 时点一致性核验 24/24，已由上方演进链区段标注为历史记录，非当前实态。<!--hist-snap-end-->"
     ok2, fail2 = cc.run_checks(wf, cl, tpl, st, tb, ws, dl_hist)
-    results.append(("P2 历史记录标注正确时通过", len(ok2)==36 and len(fail2)==0,
+    results.append(("P2 历史记录标注正确时通过", len(ok2)==37 and len(fail2)==0,
                     f"实际 PASS={len(ok2)}/FAIL={len(fail2)} fail={fail2}"))
 
     # ---- 汇总 ----
