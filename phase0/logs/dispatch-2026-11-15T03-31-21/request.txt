@@ -1,0 +1,6 @@
+[规划协商|b-20261115-v03-activation|S1文档类|轮1]
+阶段C已COMPLETED(验收2b0e2cb),v0.3草案经你复审通过,用户已拍板"同意生效"。本任务按v0.3流程做生效落地;本轮=规划协商,共识后呈用户拍板冻结才动工。
+材料(按SHA读):github.com/damwate/AIEO@main commit 8095fa436b047302f2f195a4d563026781086e0d basic/tasks/b-20261115-v03-activation/(requirement.md三段原文+task-brief.md理解6条/验收目标5项)。
+方案:S1 WORKFLOW.md标题去草案注记;生效状态blockquote回填日期2026-11-15+批准依据(拍板原话+存档位);v0.3现行/v0.2留历史对照;清单头补已生效声明;附录12行不动。S2 检查器①a①b随生效态改写(37项不变,负向断言无草案字样);dv1/negpos不改样本(wf读真实文件);重跑37/37+6/6+7/7+COMPLETED包taskpack全PASS,归档本任务不覆盖历史存档。S3 独立验收+登记交付。
+边界:禁改phasec任务包三文件;DEC-043挂backlog;共识后仍须用户拍板。
+请求:①S1有无第三处草案态残留遗漏②S2断言演进有无①a①b外遗漏③边界缺口④三态:同意/修改(列点)/否决(理由)。
