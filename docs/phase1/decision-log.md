@@ -536,3 +536,11 @@
 - **交付物**：tab_hygiene.mjs（纯函数：消歧/去重/owned-generating 双门槛/cleanupDecision）+tab_cleanup.mjs（维护脚本 dry-run 默认+--close 全程持锁）+gpt_dispatch.mjs/review_leg_recoll_template.mjs 集成（tab-audit.json 三段式审计：before/exit_before_disposal/exit_after_disposal）+19 用例测试。
 - **语义保证**：零语义变更红线逐项核过（P2-01 清单）；失败路径三态处置（已发送=保留现场/发送前=仅关自建页/成功=profile 级关闭既有语义）；--close 需独占会话锁（自动化在途拒绝）。
 - **关联**：DEC-063/065、L-018/L-021、task 包 acceptance/ 五轮 dispatch 现场归档（22-12-57/22-18-25/22-22-52/22-26-06/22-29-33）。
+
+### DEC-067 处置③立项完成：GPT-02 charter Gate1+Gate2 全闭环——Gate3 留用户拍板（2026-11-16，立项节点登记）
+
+- **charter v0.3+schema 草案成文**：docs/phase1/GPT02-ARCH-REVIEW-LEG-CHARTER-DRAFT.md（§1-§9+附录 A 定稿粒度）+docs/phase1/arch-review-report.schema.draft.json（草案候选，Gate3 开工后落位 contracts/v1.0 冻结）。
+- **Gate1（草案级验证）**：R1 REWORK（P1-01 BLOCKED 双语义未对齐，reply 697a5e54…）→§4 双语义段整改→R2 限定复验 PASS（a7aeed29…）。
+- **Gate2（会务立项评审）**：R1 REWORK（**架构阻断 P1**：M1 POST /reports/review 经 _require_execution 绑定 CODE_REVIEW 执行，不承载 ARCH_REVIEW 登记——"复用+零修改"矛盾，reply 归档 dispatch-2026-11-15T22-34-25）→**路线 B 裁定**（M1 零修改；artifacts+events 多事务登记+非原子代价如实接受+路线 B 专属恢复行；否决路线 A=须正式修改立项范围）→v0.3 落实（A-1 端点表 7 行+双 scope+/agents 出运行期白名单+事件白名单 PASS/REWORK；A-2 新契约+简报四组输入+1200B 口径冻结；A-3 九行恢复矩阵）→R2 REWORK（仅剩契约文件未成形）→schema 草案文件成文→**R3 限定复验 PASS**（reply sha256=e3a4de11484819b7fe4d84a8feb31a52f6f8501bf32c99ed205238283d7369f6，issues=[]）。
+- **Gate3（待用户拍板，本会话不代行）**：①确认 charter §1 需求原文；②批准开工。原文摘要："在 GPT-03 审查真实腿同框架基础上，接入 GPT-02 架构审核真实腿最小版：M1 状态机 ARCH_REVIEW 态任务自动触发一次真实 chatgpt.com 架构审核派单（复用 M2 派单链与 fail-closed 门禁），采集审核回复并经冻结契约校验后登记 M1，审核结论落档并按 M1 既有状态机推进（PASS→READY／REWORK→REWORK）；GPT-04/05、多轮返工重审自动化不在本期。"
+- **关联**：DEC-063/065、DEC-026（路线）、Gate2-R1 架构发现（/reports/review 承载边界=对 GPT-04 立项的同样约束先例）、L-020/H7。
