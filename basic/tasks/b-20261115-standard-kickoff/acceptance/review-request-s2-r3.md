@@ -6,7 +6,7 @@
 
 - **待验收 commit（单 commit 申报）：** `56235f0639974827b654b6680bf47ac2b3d1c578`
 - **diff 基线：** `4095981`（前次回填链尾 commit）
-- **绑定核验（机器输出原文）：** parent=409598115a136f4f07a5dbd7e255f0b25e6cf644（=`git show -s --format='%H %P'` 输出，=基线 4095981 系其短 SHA）✓；`git rev-list --count`=1 ✓；`git diff --numstat 基线..待验收` → **2	1	docs/PHASE-STATUS.mdï22	18	docs/phase1/GPT03-REVIEW-LEG-CHARTER-DRAFT.mdï**
+- **绑定核验（机器输出原文）：** parent=409598115a136f4f07a5dbd7e255f0b25e6cf644（=`git show -s --format='%H %P'` 输出，=基线 4095981 系其短 SHA）✓；`git rev-list --count`=1 ✓；`git diff --numstat 基线..待验收` → **2／1 docs/PHASE-STATUS.md；22／18 docs/phase1/GPT03-REVIEW-LEG-CHARTER-DRAFT.md**（恰 2 文件）
 - 本请求所在回填 commit 不属验收 diff 范围（ST-01 ④）。
 
 ## 三项整改对照
