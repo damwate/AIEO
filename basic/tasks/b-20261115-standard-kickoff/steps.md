@@ -62,12 +62,12 @@ S2 验收链：R1 REJECT 4 项→v0.2 整改→R2 限定复验（reply sha256=2d
 
 ## S3 阶段B-C1绑定核验工具
 
-- ①本步骤目标：申报绑定自动核验工具落 toolkit/（Python 标准库/只读 Git/fail-closed）+10 场景测试矩阵+四工程要求。
-- ②修改文件：（待填）
-- ③修改内容：（待填）
-- ④执行结果：（待填）
-- ⑤测试结果：（待填）
-- ⑥验收证据引用：（待填）
+- ①本步骤目标：申报绑定自动核验工具落 toolkit/（Python 标准库/只读 Git/fail-closed）+10 场景测试矩阵+四工程要求（B1-B5）。
+- ②修改文件：toolkit/check-binding.py（新增）、toolkit/test-check-binding.py（新增）、toolkit/README.md（工具清单增条目）、acceptance/b3-practice/（B3 实战输出 3 件）、本任务包。
+- ③修改内容：R1 区间数/R2 线性链逐条 parent/R3 merge 禁止+改报提示/R4 最终性（后代未声明 FAIL）/R5 回填声明识别/R6 对象存在/R7 空区间 BLOCKED 禁止 PASS；判定三态 PASS/FAIL/BLOCKED 退出码 0/1/2；只读承诺（GIT_OPTIONAL_LOCKS=0+仅四只读命令+git 异常 BLOCKED）；16 用例测试矩阵（十场景+B4 确定性+B5 只读快照/坏仓库/非法 SHA）；负例逐条断言命中规则与 commit（L-017）。**本次待验收 commit=093cd832eb1f9e0bd5f89ed8c5aa4f77fd8082d3**（单 commit 申报，基线=a665d2cf3ed7a01c683bb2ba68b102248d2957ad，自核验工具输出=机器证据见 acceptance/b3-practice/s3-self-binding.json PASS）。
+- ④执行结果：工具+测试成文；开发期 3 轮自纠（GBK 解码致测试壳读线程崩溃→补 encoding；merge 测试构造含同文件冲突→side 分支改独立文件；仓库探针区分环境不可用 BLOCKED vs 对象不存在 FAIL）均属测试壳/工具自身缺陷即发现即改；B3 实战三条申报全 PASS。
+- ⑤测试结果：16/16 通过退出 0（B1 矩阵全场景+B2 负例指名+B4 确定性（两次运行 JSON 全等）+B5 只读（.git 快照前后不变）/坏仓库 BLOCKED/非法 SHA FAIL）；B3 实战=S1/S2 首轮/S2-R3 三条真实申报核验 PASS（acceptance/b3-practice/*.json），工具 numstat 与验收轮机器值逐字一致（S1: 11/1+62/0+13/3；S2: 64/0；S2-R3: 2/1+22/18）——若 S1 时已有本工具，问题1（P1-01 申报行数错误）会被机器拦截。工具不能判定的边界如实记录：①不核对申报文本原文与传入参数的一致性（调用方责任）②不验证回填 commit 内容是否与声明相符（只验声明存在与线性性）。
+- ⑥验收证据引用：（待派单后回填）
 
 ## S4 交付与登记
 
