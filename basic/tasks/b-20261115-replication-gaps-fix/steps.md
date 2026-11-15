@@ -7,7 +7,7 @@
 
 - ①本步骤目标：G1+G4=新环境初始化清单成文；G2=外部依赖清单登记；G3=Windows 限制声明落位部署边界
 - ②修改文件：toolkit/SETUP-CHECKLIST.md（新增）、basic/WORKFLOW.md（部署边界增三条+附录增补③记录）、本任务包
-- ③修改内容：SETUP-CHECKLIST.md 六节（基础环境自装表含 Node≥20.18.1/仓库获取与网络[clone 与 check-push 能力区分]/依赖安装/Chrome Profile 初始化四步[人工登录验证+敏感数据检查，与 ego-profile 分开]/外部依赖清单/初始化完成确认）；WORKFLOW 部署边界增三条引用与声明。**待验收 commit 完整 SHA：见本 commit（S1 成文，本行登记于交付前自查回填）**
+- ③修改内容：SETUP-CHECKLIST.md 六节（基础环境自装表含 Node≥20.18.1/仓库获取与网络[clone 与 check-push 能力区分]/依赖安装/Chrome Profile 初始化四步[人工登录验证+敏感数据检查，与 ego-profile 分开]/外部依赖清单/初始化完成确认）；WORKFLOW 部署边界增三条引用与声明。**待验收 commit 完整 SHA：3119ef6eb522d8062f96e81f4c0e8bdf1ffa5eff（S1 清单成文+部署边界增补，内容定格）**
 - ④执行结果：三处增补完成；四命令重跑全过退出 0（37/37+DV1 6/6+negpos 7/7+专项 7/7，检查器零修改预判实测成立）；basic 现行条款语义未变（仅增补）
 - ⑤测试结果：同④
 - ⑥验收证据引用：待验收派单后登记
