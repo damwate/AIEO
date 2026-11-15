@@ -1,0 +1,4 @@
+[验收|b-20261115-standard-kickoff|S2]
+请读 github.com/damwate/AIEO@main 3d5ef22ceceb8a846da9d6d280cbae748ccd9a8b 的 basic/tasks/b-20261115-standard-kickoff/acceptance/review-request-s2.md——按该请求执行S2独立验收(F-001中央调度最小版立项任务书草案):绑定申报(待验收=615d5787cecf39a32b43776cf92ef3633c406d19,单commit,基线51865860…814,parent已核验,rev-list=1,numstat=64/0恰1新文件)+I1-I7逐项判定+防膨胀(§1非目标/§9不在范围)+验收六查。材料@待验收commit可读:docs/phase1/F001-SCHEDULER-BRIEF-DRAFT.md。
+边界:仅立项准备不含任何代码,归属方案A/B留评审拍板,需求原文=拟定稿待用户确认,实际开工留用户拍板(H7)。
+回执:六查逐项+I1-I7逐项+结论PASS/REJECT+问题编号。

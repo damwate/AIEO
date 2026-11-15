@@ -34,7 +34,7 @@
 | 问题5 | S2-R1 REJECT P1-03（同上） | I5 缺权限与授权模型 | v0.2 §6 四主体表→R2 缺 C7 身份对应→v0.3 §6 凭据三类+C7 §8.5/8.6/8.7 落实 | 0eceb006df5d0074cb29c6758141b761ed9f925a；R3 补订=56235f0639974827b654b6680bf47ac2b3d1c578 | R1/R2/R3 三次 REJECT→触发止损→会商1 挂起（待用户裁定；L-019） |
 | 问题6 | S2-R1 REJECT P1-04（同上） | I6 验收矩阵不可执行 | v0.2 §7 矩阵 A1~A6→R2 缺状态预期/注入点/幂等键/断点/回滚分支→v0.3 §4 状态路径=state_machine.py:33-37 合法出边+§7 六场景逐步可执行化 | 0eceb006df5d0074cb29c6758141b761ed9f925a；R3 补订=56235f0639974827b654b6680bf47ac2b3d1c578 | R1/R2/R3 三次 REJECT→触发止损→会商1 挂起（待用户裁定；L-019） |
 | 问题7 | S3-R1 REJECT P1-01（reply sha256=59ae93368215b7f9…） | R4/numstat git 命令非零退出被当空列表放行（fail-open，可错误输出 PASS） | R4 rev-list 与 numstat diff 非零退出改 raise GitCmdError→RX BLOCKED；故障注入测试 b5d/b5e（失败→BLOCKED 退出 2、无 R4 PASS） | 76f9abfe44e78e1f30078841ebb3fbd05a0f2b8b | S3-R2 复验 PASS 关闭（reply sha256=865db50acb5fc05def09b6d38a438247aa28cc1f25bec27a8ded6810b9ade5a0，dispatch-2026-11-15T12-36-04 新会话接棒，前会话 6af99227 CONTEXT_LIMIT_STOP 归档 L-018 迁移） |
-| 问题8 | S3-R1 REJECT P1-02（同上） | B2 负例未完整断言被拦截 commit 身份与 R7 原因 | test_03/04/06/08/09 补 commits 断言+test_10a/b/c 补 R7 id 断言+b5c 升级内容 SHA256；R2 复验=仅剩 test_10a/b 缺 R7 原因断言→最小修复补两行 assertIn | 76f9abfe44e78e1f30078841ebb3fbd05a0f2b8b；R3 最小修复=c351d49ed6d29e354c0636237863c041987fad83 | （待 S3-R3 复验） |
+| 问题8 | S3-R1 REJECT P1-02（同上） | B2 负例未完整断言被拦截 commit 身份与 R7 原因 | test_03/04/06/08/09 补 commits 断言+test_10a/b/c 补 R7 id 断言+b5c 升级内容 SHA256；R2 复验=仅剩 test_10a/b 缺 R7 原因断言→最小修复补两行 assertIn | 76f9abfe44e78e1f30078841ebb3fbd05a0f2b8b；R3 最小修复=c351d49ed6d29e354c0636237863c041987fad83 | S3-R3 复验 PASS 关闭（reply sha256=796160adec85d5ce440000b604ad8a90aecf991c0b4ab474b0397e9e90aa9aa1，dispatch-2026-11-15T12-43-11） |
 
 ## S2 阶段C0-F001立项准备
 
@@ -66,7 +66,7 @@ S2 验收链：R1 REJECT 4 项→v0.2 整改→R2 限定复验（reply sha256=2d
 - ③修改内容：R1 区间数/R2 线性链逐条 parent/R3 merge 禁止+改报提示/R4 最终性（后代未声明 FAIL）/R5 回填声明识别/R6 对象存在/R7 空区间 BLOCKED 禁止 PASS；判定三态 PASS/FAIL/BLOCKED 退出码 0/1/2；只读承诺（GIT_OPTIONAL_LOCKS=0+仅四只读命令+git 异常 BLOCKED）；16 用例测试矩阵（十场景+B4 确定性+B5 只读快照/坏仓库/非法 SHA）；负例逐条断言命中规则与 commit（L-017）。**本次待验收 commit=093cd832eb1f9e0bd5f89ed8c5aa4f77fd8082d3**（单 commit 申报，基线=a665d2cf3ed7a01c683bb2ba68b102248d2957ad，自核验工具输出=机器证据见 acceptance/b3-practice/s3-self-binding.json PASS）。
 - ④执行结果：工具+测试成文；开发期 3 轮自纠（GBK 解码致测试壳读线程崩溃→补 encoding；merge 测试构造含同文件冲突→side 分支改独立文件；仓库探针区分环境不可用 BLOCKED vs 对象不存在 FAIL）均属测试壳/工具自身缺陷即发现即改；B3 实战三条申报全 PASS。
 - ⑤测试结果：18/18 通过退出 0（B1 矩阵全场景+B2 负例指名+commit 身份断言+B4 确定性+B5 只读内容哈希/坏仓库 BLOCKED/非法 SHA FAIL/故障注入 2 件→BLOCKED）；B3 实战=S1/S2 首轮/S2-R3 三条真实申报核验 PASS（acceptance/b3-practice/*.json），工具 numstat 与验收轮机器值逐字一致（S1: 11/1+62/0+13/3；S2: 64/0；S2-R3: 2/1+22/18）——若 S1 时已有本工具，问题1（P1-01 申报行数错误）会被机器拦截。工具不能判定的边界如实记录：①不核对申报文本原文与传入参数的一致性（调用方责任）②不验证回填 commit 内容是否与声明相符（只验声明存在与线性性）。
-- ⑥验收证据引用：S3-R1=dispatch-2026-11-15T12-24-38（fail-closed 禁重发）→recoll_kickoff_s3.mjs 补采（recoll-2026-11-15T12-28-22-485Z，七查全过，reply 8313B sha256=59ae93368215b7f9…）=REJECT 2 项（问题7/问题8；待验收 093cd832eb1f9e0bd5f89ed8c5aa4f77fd8082d3）；S3-R2=dispatch-2026-11-15T12-36-04（新会话 6af99f6a 接棒，前会话 6af99227 上下文上限归档 L-018 迁移；reply 3960B sha256=865db50acb5fc05def09b6d38a438247aa28cc1f25bec27a8ded6810b9ade5a0，被测=76f9abfe44e78e1f30078841ebb3fbd05a0f2b8b）=问题7 PASS 关闭、问题8 仅剩 test_10a/b 原因断言→最小修复 c351d49ed6d29e354c0636237863c041987fad83（18/18 复跑 OK）。**S3 验收结论：（待 R3 复验回填）**
+- ⑥验收证据引用：S3-R1=dispatch-2026-11-15T12-24-38（fail-closed 禁重发）→recoll_kickoff_s3.mjs 补采（recoll-2026-11-15T12-28-22-485Z，七查全过，reply 8313B sha256=59ae93368215b7f9…）=REJECT 2 项（问题7/问题8；待验收 093cd832eb1f9e0bd5f89ed8c5aa4f77fd8082d3）；S3-R2=dispatch-2026-11-15T12-36-04（新会话 6af99f6a 接棒，前会话 6af99227 上下文上限归档 L-018 迁移；reply 3960B sha256=865db50acb5fc05def09b6d38a438247aa28cc1f25bec27a8ded6810b9ade5a0，被测=76f9abfe44e78e1f30078841ebb3fbd05a0f2b8b）=问题7 PASS 关闭、问题8 仅剩 test_10a/b 原因断言→最小修复 c351d49ed6d29e354c0636237863c041987fad83（18/18 复跑 OK）。S3-R3 限定复验=dispatch-2026-11-15T12-43-11（reply 1325B sha256=796160adec85d5ce440000b604ad8a90aecf991c0b4ab474b0397e9e90aa9aa1，被测=c351d49ed6d29e354c0636237863c041987fad83）=问题2 PASS 关闭。**S3 验收结论：PASS**（问题7/问题8 关闭）。
 
 ## S4 交付与登记
 
@@ -75,5 +75,5 @@ S2 验收链：R1 REJECT 4 项→v0.2 整改→R2 限定复验（reply sha256=2d
 - ③修改内容：（待填）
 - ④执行结果：（待填）
 - ⑤测试结果：（待填）
-- ⑥验收证据引用：（待填）
+- ⑥验收证据引用：S4=阶段性交付登记（S2 挂起致任务保持阻塞态，完工六查"所有步骤 PASS"未满足不宣告完工；delivery.md 七要素+DEC-054 登记；补采驱动 7 件归档本任务 acceptance/）
 

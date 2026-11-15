@@ -1,0 +1,4 @@
+[验收复验|b-20261115-standard-kickoff|S2|只复核问题3~6]
+请读 github.com/damwate/AIEO@main 409598115a136f4f07a5dbd7e255f0b25e6cf644 的 basic/tasks/b-20261115-standard-kickoff/acceptance/review-request-s2-r2.md——按该请求限定复验四项整改:问题3=状态漂移校正(FEASIBILITY F-001 CLOSED附DEC-034~036证据/PHASE-STATUS校正/误定文件移除/对象重定位)+问题4=一期边界与五类错误处置表+问题5=四主体授权边界表+问题6=验收矩阵A1-A6,均落 GPT03-REVIEW-LEG-CHARTER-DRAFT.md v0.2@0eceb006df5d0074cb29c6758141b761ed9f925a(单commit,基线3d5ef22…a8b,numstat=4/3+1/1+0/64删+87/0增)。
+已过项(ST-01/防膨胀/I1/I7)不重审。仅立项准备不含代码,开工留用户拍板(H7)。
+回执:问题3~6逐项结论+总结论PASS/REJECT+问题编号。

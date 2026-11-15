@@ -1,0 +1,4 @@
+[验收|b-20261115-standard-kickoff|S1]
+请读 github.com/damwate/AIEO@main 83bd41d7844f03a04911117c26fd7076e2586e74 的 basic/tasks/b-20261115-standard-kickoff/acceptance/review-request-s1.md——按该请求执行S1独立验收(阶段A治理基线):绑定申报(待验收=a5d0afdc8712cc38fa70663f239cb74d8d6fec0d,单commit,基线9654914…1a,parent已核验,rev-list=1,diff=3文件)+A1-A5逐项判定+验收六查。材料@待验收commit可读:standard/WORKFLOW.md(新,中级版主规范草案)/standard/parallel-governance-draft.md(v0.1规范候选)/docs/PHASE-STATUS.md(v0.9快照)。
+边界:WORKFLOW与M2=草案/候选未生效(H5/H6),生效留用户拍板;纯文档不动代码;S2/S3未开工。
+回执:六查逐项+A1-A5逐项+结论PASS/REJECT+问题编号。

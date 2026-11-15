@@ -1,0 +1,5 @@
+[验收复验|b-20261115-standard-kickoff|S2-R3|只复核问题3/5/6残留]
+请读 github.com/damwate/AIEO@main 91bca49fb63602865f4352e6b926d37cef541d71 的 basic/tasks/b-20261115-standard-kickoff/acceptance/review-request-s2-r3.md——按该请求限定复验三项残留整改(待验收=56235f0639974827b654b6680bf47ac2b3d1c578,单commit,基线4095981…f644):
+问题3=PHASE-STATUS文件头v0.10同步§0真实状态;问题5=GPT03草案v0.3 §6凭据三类边界+四主体表C7身份列/禁止操作列(§8.5/8.6/8.7落实);问题6=§4状态路径=state_machine.py:33-37合法出边+§7矩阵A1状态逐步预期/A3注入点与禁重发证明/A4幂等键/A5两类断点/A6人工判定/回滚改不改变既有状态。
+已过项(问题4/R1/R2已过项)不重审。仅立项准备不含代码,开工留用户拍板(H7)。
+回执:问题3/5/6逐项结论+总结论PASS/REJECT+问题编号。

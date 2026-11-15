@@ -1,0 +1,6 @@
+[验收复验|b-20261115-standard-kickoff|S1|只复核P1-01/P1-02两处]
+请读 github.com/damwate/AIEO@main 2b56cec457a444f5847e28ce9066bd27be363370 的 basic/tasks/b-20261115-standard-kickoff/acceptance/review-request-s1-r2.md——按该请求限定复验:
+P1-01:申报改git diff --numstat机器输出原文(待验收=91b164672f0d8bb3d512b3e963e76910146cf829,单commit,parent=83bd41d…e74,numstat=20/1 standard/WORKFLOW.md)。
+P1-02:standard/WORKFLOW.md新增附录B决议核对表(DEC-010~052逐项:要点/红线检查/落位,补DEC-049/050/051),版本记录移附录C。
+其余A1/A3/A4/A5与六查通过项不重审不扩范围。WORKFLOW仍草案未生效(H6)。本回填commit不属验收diff范围。
+回执:P1-01/P1-02逐项结论+总结论PASS/REJECT+问题编号。

@@ -1,0 +1,4 @@
+[验收|b-20261115-standard-kickoff|S3]
+请读 github.com/damwate/AIEO@main 52acd0f6fc6475e003fa3b5b19884261ea36a2f6 的 basic/tasks/b-20261115-standard-kickoff/acceptance/review-request-s3.md——按该请求执行S3独立验收(C1申报绑定自动核验工具):绑定申报(待验收=093cd832eb1f9e0bd5f89ed8c5aa4f77fd8082d3,单commit,基线a665d2cf…57ad,工具自核验PASS=s3-self-binding.json)+B1-B5逐项判定+验收六查。材料@待验收commit:toolkit/check-binding.py(221行)/toolkit/test-check-binding.py(268行)/toolkit/README.md/acceptance/b3-practice/四件。可复跑:python -I toolkit/test-check-binding.py(16用例)。
+边界:只读工具不动工作区;B3实战含边界如实记录;不自动改BC-06状态(按Basic DoD签核机制)。
+回执:六查逐项+B1-B5逐项+结论PASS/REJECT+问题编号。
