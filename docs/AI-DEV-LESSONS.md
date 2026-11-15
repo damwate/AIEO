@@ -1431,3 +1431,16 @@ AI 执行者：
 
 局部任务完成不代表项目方向正确。真正有效的 AI 软件工程，不是让 AI 不断完成更多任务，而是确保每一项任务都在为正确的项目目标创造价值。
 
+
+### L-021 申报统计口径与文档编辑纪律（b-20261115-standard-kickoff 四则过程实战）
+
+**scope:** GLOBAL（所有会话的申报、文档编辑、浏览器采集升级、会话派生纪律）
+**status:** ACTIVE
+**验证结果：** 2026-11-15 standard-kickoff 全任务实战（S1~S4 多轮验收/补采/交付确认链）
+
+1. **申报行数统计必须用 `git diff --numstat` 机器口径：** `--stat` 的数字列是增删合计（如 16=13+3），拆读即错——S1 首轮申报行数错误（问题1/P1-01，P1 级 REJECT）根因即此；自 S3 起 toolkit/check-binding.py（C1）把 numstat 机器值写入申报，**申报前必跑工具**（Gate1 G1-06 教训：工具已存在但没跑=流程缺口，当日即被验收方 GitHub compare 证伪）。
+2. **长锚点字符串 replace 必须断言命中：** python `str.replace` 未命中是静默 no-op——本任务三度踩中（steps ⑥ 回填丢失/返工表行未更新/§7 行截断），全部靠 ST-05/复验兜住。纪律：长替换后必须 assert 命中计数或改用行定位法。
+3. **补采采集稳定性不足时按 L-018 第 2 条升级视口拉高：** 会话变长（>10 轮）后滚动+静置物化失效（INBOUND_WINDOW_COMPLETENESS_UNPROVEN），CDP 视口拉高 1920×20000 强制全量物化后七查即过；视口覆盖曾致 units=0 的先例（recoll_dod_r2）不否定本路径——两路径按会话长度择用，先滚动后视口。
+4. **补采驱动派生三参数核对必须含 CONV_UUID 的"当前值核对"：** 审查会话会漂移（本日 6af99227→6af9a767→6af9b028 三次），派生驱动若继承母本 CONV_UUID 即定位 0 命中（两度发生，均凭 units-diag.json 当场发现）；派生前先读 gpt-reviewer-session.json 当前值+派单日志会话就绪 URL 交叉核对。
+
+**证据：** basic/tasks/b-20261115-standard-kickoff/（steps.md 返工表问题1/7/8/9、acceptance/ 驱动与证据）；dispatch/recoll-2026-11-15T1*（10 次 fail-closed 现场）；DEC-053~057。
