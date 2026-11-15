@@ -66,7 +66,7 @@
 | 问题24 | S2-R3 REJECT NEW-P2-02（同上 reply） | R3 申报与 steps 问题21 行仍写 count=3，与 Compare 6 不一致 | steps 问题21 行口径终版=6d39ff9..申报 HEAD 共 8 commit（含 R4 本轮 2）逐 commit 分类；R3 申报即改 6d39ff9 基线（Compare 6 获认可） | 030c947ac7c4fd7c2e5af9c252185924e8046dfc（口径终版随本申报回填 commit 生效） | 本申报 ST-01 段 count=8 |
 | 问题25 | S2-R3 REJECT NEW-P2-03（reply sha256=f1ab60a9…） | INTENT+FAILED 真实追加式序列被误判发送状态不确定（intent_only 未排除失败终态），明确失败后人工 attach 被错误拒绝 | intent_only 判定排除 failed_send_exists（先判失败终态）；反例 test_16e（INTENT→FAILED 并存+attach→显式 not_applicable 放行） | afc1ee130b4e25075b48c7494777f362420f9584 | test_16e PASS（29 用例） |
 | 问题26 | S2-R4 REJECT NEW-P2-04（reply sha256=28f42ec2…） | R4 申报文件 MANIFEST 数量写 108，实际 Git 树/steps 均为 109——同轮验收材料数量不一致 | R5 申报统一为 109（MANIFEST.json 实际条目数），无数据缺项 | fef498e1cce14e73f60af1f81af520b3e7230efd（R5 回填） | R5 复验关闭（109 三处一致）；R6 申报按单一口径修正自身 ST-01 段（见问题27） |
-| 问题27 | S2-R5 REJECT NEW-P2-02（reply sha256=5465c163…） | R5 申报 ST-01 段自创"排除 5 回填→范围 4"与 R4 裁定"排除 2→范围 8"两套口径并存；列出的 SHA 均为 8 位短 SHA 未达完整锚定纪律 | R6 申报统一按 R4 裁定单一口径：Git 完整区间 10 commit（全 40 位 SHA+分类）；ST-01④ 排除=73f0050f/43f43e3d 两回填（40 位）；计入验收范围=其余 8 commit（40 位列举）；steps 问题21 行不动（已与裁定一致） | 回填 commit 于 R6 申报时定案（ST-01④ 排除，完整 SHA 见 R6 申报） | R6 申报三处口径一致+全完整 SHA |
+| 问题27 | S2-R5 REJECT NEW-P2-02（reply sha256=5465c163…） | R5 申报 ST-01 段自创"排除 5 回填→范围 4"与 R4 裁定"排除 2→范围 8"两套口径并存；列出的 SHA 均为 8 位短 SHA 未达完整锚定纪律 | R6 申报统一按 R4 裁定单一口径：Git 完整区间 10 commit（全 40 位 SHA+分类）；ST-01④ 排除=73f0050f/43f43e3d 两回填（40 位）；计入验收范围=其余 8 commit（40 位列举）；steps 问题21 行不动（已与裁定一致） | 8e7dd0e4a7feb07ea466aeb54af300037f13864b（R6 申报回填，ST-01④ 排除） | R6 申报三处口径一致+全完整 SHA |
 
 
 ## S2 注入类验收矩阵执行（A2/A3/A4/A5/A7/A8/A9/A10）
