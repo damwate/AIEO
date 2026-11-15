@@ -1,4 +1,4 @@
-# GPT-03 审查真实腿最小版接入——立项任务书（草案 v0.2）
+# GPT-03 审查真实腿最小版接入——立项任务书（草案 v0.6，Gate2 修订稿）
 
 > **文档身份与授权链（I7）：** 本文件=Standard 平台路线下一项立项**草案**（b-20261115-standard-kickoff S2 产出，v0.1 为误定对象的 F-001 立项草案——S2 独立验收 REJECT 后按 P1-01 重定位重写，沿革见版本记录）。生效路径：会务立项评审 → **用户确认需求原文（§1）** → 用户拍板开工（H7；立项准备≠实施授权）。路线依据：DEC-026 决议二（F-001 最小版已完成→GPT-02/03/04/05 逐角色接入）、DEC-036（T-P1-908 全链闭合=F-001 最小版落地）、DEC-037（分级路线，Standard 迭代）。
 
@@ -57,7 +57,7 @@
 | 主体 | C7 身份类型 | 可执行操作（白名单） | 禁止操作 | 依据 |
 |---|---|---|---|---|
 | OWNER（用户本人） | §8.5 固定 OWNER（人类会话） | 启动/暂停/恢复/取消 run；批准开工；确认需求原文；**MERGE_TO_MAIN 等审批 target** | —（审批类操作不可下放） | DEC-010；C7 §8.5；C2 approvals target_type |
-| 调度引擎（engine） | §8.6 独立本机服务身份 | M1 只读查询（GET 类）；**仅 §4 合法出边事件**（GIT_VALIDATE/PASS/REWORK 登记与状态推进）；artifacts+messages 幂等登记；经 M2 工具链发起审查派单 | DB 直改；白名单外端点；**推进 M1 任务至 BLOCKED 态**（任务级 BLOCKED 仅 OWNER 决定，G1-03 底线）；MERGE_TO_MAIN/RELEASE/DEAD_LETTER_REQUEUE/CONTRACT_CHANGE 类审批操作；自行推断/修正 M1 状态 | C7 §8.6 白名单；state_machine.py 出边；T-P1-908 既有边界 |
+| 调度引擎（engine） | §8.6 独立本机服务身份 | **M1 白名单=附录 B 定稿表**（8 端点；events 入口限事件白名单 GIT_VALIDATE/PASS/REWORK；messages ACK 已移出）；经 M2 工具链发起审查派单 | DB 直改；白名单外端点；BLOCKED/CANCEL 等事件（engine 调用层禁止）；**推进 M1 任务至 BLOCKED 态**（任务级仅 OWNER）；MERGE_TO_MAIN/RELEASE/DEAD_LETTER_REQUEUE/CONTRACT_CHANGE 类审批；自行推断/修正 M1 状态 | C7 §8.6 白名单；state_machine.py 出边；T-P1-908 既有边界；**允许访问接口≠允许任意状态推进（事件合法性由 M1 状态机最终裁定）** |
 | 执行腿（M2/M3/M4/test_worker） | 各自既有身份（M3=§8.6 MCP stdio 服务身份） | 各自既有能力 | 接口契约消费，零修改 | 契约 v1.0.0；T-P1-908 先例 |
 | 人工执行者（编排会话） | OWNER 会话下人工操作 | 开发交接（方案 b 先例）/审查响应 | 受 Basic WORKFLOW 约束 | T-P1-908 §S7 |
 
@@ -73,7 +73,7 @@
 | A4 | 幂等重放 | A1 完成，幂等键=`<run 键>+review-round-1`（沿用 908 幂等键模式） | 重放同一登记请求原文（artifacts+messages+事件） | M1 无重复登记（event_id/messages 幂等）；无新外部副作用（dispatch 目录数不增+ChatGPT 会话 user unit 数不变） | 出现重复登记或新派单=FAIL | 重放前后 M1 查询对比+dispatch 目录计数 |
 | A5 | 重启恢复（两类断点分别测） | ①已发送未采集：派单完成、reply 未落盘时终止进程；②已采集未登记：reply 已落盘、M1 登记未完成时终止 | 重新拉起审查腿 | ①禁重发→补采路径恢复（§5）；②仅补登记，不重新触发 GPT（L-008 语义） | ①重发=FAIL；②重新派单=FAIL | 两类现场各一轮：断点快照+恢复后 M1 状态与登记对比 |
 | A6 | 人工退路 | 审查腿**腿级 BLOCKED**（M1 任务保持 CODE_REVIEW 不变） | 人工经既有派单链完成审查并按**同一契约校验+同一幂等键**登记 | M1 内登记完整（artifacts+messages+事件）且状态推进与自动路径一致（CODE_REVIEW→结论）；判定=三项登记齐+状态符合 §4 映射 | 登记缺失/状态不符=FAIL | 人工登记记录+reply SHA+M1 事件 |
-- 回滚/退路（不假设未验证的状态回退转换）：审查腿失败或停用时**不改变任务既有 M1 状态**（保持 DEV_REPORTED/GIT_VALIDATING/CODE_REVIEW 当前态）停等人工，人工经 M1 既有接口继续；审查腿为新增编排步骤，不修改既有模块。
+- 回滚/退路定稿=**附录 D**（按 M1 状态×断点恢复矩阵 11 行+回滚与人工接管规则 8 行；回滚定义=停止新增副作用、保留已发生事实、从当前 M1 状态交接人工，**不将 M1 状态退回前一状态**）；A7-A10 新增验收用例见附录 D。
 - 独立验收：双分支惯例（开发分支+证据分支，§2.4 平台纪律）；零 mock 红线（真实 chatgpt.com 审查收发）沿用 DEC-028 授权文本口径。
 
 ## 8. 授权与红线（I7）
@@ -101,6 +101,61 @@ GPT-02/04/05 真实腿；多轮审查重审自动化；新 commit 重审触发�
 |---|---|---|---|---|
 | v0.1 | 2026-11-15 | 已被本版取代 | 初稿误定对象为"F-001 立项"（基于未同步漂移状态 F-001 OPEN）——S2 独立验收 REJECT（问题3~6）指出 T-P1-908 已落地 F-001 最小版（DEC-036） | b-20261115-standard-kickoff S2 |
 | v0.2 | 2026-11-15 | 草案（待会务评审→待用户确认需求原文→待用户拍板开工） | 对象重定位=GPT-03 审查真实腿最小版（推荐首角色，顺序留评审决策点）；§2 缺口分析（P1-01）/§4 一期边界（P1-02）/§5 错误分类重试表（P1-02）/§6 授权边界表（P1-03）/§7 可执行验收矩阵（P1-04）；随附 FEASIBILITY/PHASE-STATUS 漂移校正 | S2 验收 REJECT 整改（问题3~6） |
+| v0.6 | 2026-11-15 | 草案（Gate2 修订稿·修订后再评被测对象） | Gate2 回执（reply sha256=fbd3f0ee3f18b94907d90d614978b1250922a7322d25b0b7141a82149830f70e，recoll-2026-11-15T13-06-02-854Z）五项关闭事项落实：标题版本统一 v0.6（F-G2-01）/附录 B 端点定稿表（ACK 移出+事件白名单）/附录 C A5 账本+三断点快照+四证据规则/附录 D A6 恢复矩阵 11 行+回滚接管规则+A7-A10/附录 E 登记权威关系 | S2-Gate2 立项评审 |
 | v0.5 | 2026-11-15 | 草案（Gate1 复验被测对象） | G1-03 整改：engine 白名单移除 BLOCKED 态推进（任务级 BLOCKED 仅 OWNER，引擎故障=腿级 BLOCKED run 层记录）；§4 对齐 | S2-Gate1 验证轮裁定（reply sha256=dd1866336b88bdfa…） |
 | v0.4 | 2026-11-15 | 草案（降档验证轮被测对象） | 用户拍板批准会商方案甲+丙（三关口）；§5/§7 落实 A6 底线=两种 BLOCKED 语义区分（腿级 vs M1 任务状态）；新增附录 A《会务立项评审输入初稿》（端点白名单/A5 账本证据/回滚分支——深度项转入 Gate 2 评审） | S2 恢复执行（用户拍板 2026-11-15） |
 | v0.3 | 2026-11-15 | 草案（状态不变） | S2-R2 复验问题4 关闭；问题3 残留=PHASE-STATUS 文件头旧结论（已随本任务修正 commit 校正至 v0.10）；问题5 整改=§6 凭据三类边界+engine C7 §8.6 服务身份与白名单/禁止操作列+§8.7 审计落实；问题6 整改=§4 状态路径明确（state_machine.py:33-37 合法出边 GIT_VALIDATING/CODE_REVIEW/TEST_ACCEPTANCE/REWORK）+§7 A1 状态预期/A3 注入点与禁重发证明/A4 幂等键定义/A5 两类断点恢复/A6 人工登记判定/回滚改"不改变既有状态停等人工" | S2-R2 复验（reply sha256=2de7fd0f…，recoll-2026-11-15T11-52-35-084Z）问题3/5/6 整改 |
+
+## 附录 B：engine M1 白名单端点定稿表（Gate2 精化；来源=m1-endpoints.json 机器清单+本表裁定；ACK 已移出）
+
+> 通用规则：①端点白名单≠事件白名单——events 入口仅允许 GIT_VALIDATE/PASS/REWORK，BLOCKED/CANCEL 在 engine 调用层明确禁止；②事件合法性由 M1 状态机最终裁定；③登记授权（登记类）与 ACK（改变消息处理状态）分开授权，ACK 不在白名单。
+
+| 端点 | 操作范围与作用对象 | 允许请求/事件值 | 幂等键规则 | 拒绝条件与预期响应 | 副作用 | 验收用例 |
+|---|---|---|---|---|---|---|
+| GET /api/v1/tasks/{task_id} | 读指定任务状态与元数据，仅限当前审查任务 | — | 只读 | 任务不存在/无权限/含秘密字段→拒绝读取 | 无 | A1 |
+| GET /api/v1/tasks/{task_id}/dependencies | 读指定任务依赖及状态 | — | 只读 | 任务不存在/借此读无关任务→拒绝 | 无 | A1 |
+| GET /api/v1/artifacts/{artifact_id} | 读已登记审查输入 artifact | — | 只读 | 不存在/超审查任务关联范围→拒绝 | 无 | A1 |
+| GET /api/v1/board | 仅必要时读最小化看板信息 | — | 只读 | 非必要全局读取→拒绝（默认不调用） | 无 | A1 |
+| POST /api/v1/tasks/{task_id}/events | 事件推进（唯一状态写入口） | 仅 GIT_VALIDATE/PASS/REWORK，按当前状态出边 | event_id 幂等；重复请求幂等返回 | BLOCKED/CANCEL 等事件值/非法出边/缺 event_id/任务不匹配→拒绝（INVALID_STATE_TRANSITION 等） | 状态推进 | A1/A2/A7 |
+| POST /api/v1/artifacts | 登记审查证据 | 限定任务关联+必填字段 | 稳定幂等键；重复键内容不一致→拒绝 | 缺关联/缺字段/覆盖既有证据→拒绝 | 证据登记 | A1/A9 |
+| POST /api/v1/messages | 登记审查消息记录 | 限定 message 类型+任务关联+幂等键 | 稳定幂等键 | 任意管理消息/类型不符/关联不符/重复键冲突→拒绝 | 消息登记 | A1/A9 |
+| POST /api/v1/reports/review | 登记正式审查结论（**结论权威记录**） | 限定 task_id/execution_id/结果/证据关联 | 幂等键；重复登记冲突→拒绝 | 无对应执行轮/非法结果/不匹配/证据不完整→拒绝 | 结论登记 | A1/A2/A9 |
+
+## 附录 C：A5 恢复账本与断点快照定稿（Gate2 精化）
+
+**账本八字段组**：①任务与审查轮标识（run_id/task_id/review_round/execution_id/idempotency_key）②会话标识（conversation_uuid/创建时间/profile 标识/归属校验结果）③派单账本（dispatch_id/SEND_INTENT_RECORDED/SEND_CONFIRMED/发送时间与结果）④会话快照（发送前后 user unit 计数/采集时计数/快照时间与 SHA）⑤回复证据（reply 路径/字节/SHA-256/采集状态/契约校验结果）⑥M1 推进证据（推进前后 status/event_id/事件名/响应 SHA）⑦登记证据（artifact_id/message_id/review_report_id/请求与响应 SHA）⑧恢复记录（checkpoint_id/前后阶段/恢复决策与依据/时间）。账本**每次阶段变化独立落一条记录**（原子追加，不只在退出时写最终 JSON——防强制终止丢断点）。
+
+**三断点快照与允许动作**：
+| 快照 | 时点 | 重启后允许动作 | 禁止 |
+|---|---|---|---|
+| S1 发送后未采集 | 已确认发送，reply 未落盘 | 回原会话补采 | 重新派单 |
+| S2 已采集未登记 | reply 已落盘，M1 登记未完成 | 按原幂等键补登记 | 重新触发 GPT-03 |
+| S3 登记或推进结果不确定 | 请求已发出、响应未可靠取得 | 先只读核实 M1；已生效接续，确认未生效才按同一幂等标识重试；无法确认→腿级 BLOCKED | 推测恢复 |
+
+**四条证据规则**：①发送证明=SEND_INTENT_RECORDED/SEND_CONFIRMED/REPLY_CAPTURED 三态区分，以发送前后 unit 计数+原会话标识+账本交叉证明无第二次发送（不能只靠 SEND_STARTED=1）；②账本原子追加防篡改；③恢复决策 fail-closed（UUID 缺失/计数不一致/账本断裂/SHA 不匹配/M1 无法确认→不推测恢复，保持 M1 状态+腿级 BLOCKED）；④登记允许部分成功可核对（逐项记录已成功 ID 与幂等键，重启只补未完成项，不整轮重做）。
+
+## 附录 D：A6 恢复矩阵、回滚与人工接管规则定稿（Gate2 精化）
+
+**恢复矩阵（M1 状态×断点）**：
+| M1 状态 | 断点 | 恢复动作 | 禁止 |
+|---|---|---|---|
+| DEV_REPORTED | 未发 GIT_VALIDATE | 只读核实后继续校验并提交合法事件 | 跳过 Git 校验直进 CODE_REVIEW |
+| DEV_REPORTED | GIT_VALIDATE 响应丢失 | 查询 M1 状态与事件；已推进接续，未推进才用原 event_id 重试 | 换 event_id 盲发 |
+| GIT_VALIDATING | 校验未完成 | 重新执行只读校验；通过后提交 PASS | 假定已通过；擅自推进任务级 BLOCKED |
+| GIT_VALIDATING | PASS 已生效未记录响应 | 只读核实；已 CODE_REVIEW 则继续 | 重复创建审查轮/重新派单 |
+| CODE_REVIEW | 尚未派单 | 以本轮唯一审查轮标识派单一次 | 创建第二个审查轮 |
+| CODE_REVIEW | 已发送未采集 | 连原 conversation UUID 按 A5 补采 | 新建会话重发 |
+| CODE_REVIEW | 已采集未登记 | 校验回复 SHA 按原幂等键补登记 | 再次触发 GPT-03 |
+| CODE_REVIEW | 部分登记成功 | 逐项只读核实补缺项 | 覆盖已登记/换幂等键重做 |
+| CODE_REVIEW | 结论已登记、推进未确认 | 查询 M1 事件状态；未生效才用原 event_id 重试 | 凭本地日志推断 M1 状态 |
+| TEST_ACCEPTANCE | 重启发现已推进 | 标记本轮完成，交后续测试验收流程 | 重新派单/回退 CODE_REVIEW |
+| REWORK | 审查结论=返工 | 记录结论停止自动审查 | 自动开启下一轮开发或重审 |
+| BLOCKED | M1 任务级阻塞 | 仅人工按 OWNER 权限处理；审查腿停止 | engine 推进或恢复任务级 BLOCKED |
+
+**回滚与人工接管规则（回滚=停止新增副作用、保留事实、从当前 M1 状态交接人工，不回退状态）**：Git 校验阶段→当前 DEV_REPORTED/GIT_VALIDATING；派单前→CODE_REVIEW（不创建会话不发送）；已发送未采集→CODE_REVIEW（人工从原会话补采）；已采集未登记→CODE_REVIEW（人工按同幂等键补登记）；登记部分成功→CODE_REVIEW（保留已登记 ID 仅补缺项）；推进结果不确定→核实后的真实 M1 状态；结论已登记→CODE_REVIEW 或已推进目标状态（不撤销已登记结论）。关键边界：**BLOCKED=M1 任务状态；腿级 BLOCKED=审查腿自身停止状态（run 账本记录，M1 保持原状态）——二者不得混用**。
+
+**A7-A10 新增验收用例**：A7 状态推进成功响应丢失（重启只读核实识别已推进，无第二事件副作用）；A8 发送成功账本后续写入失败（不因账本缺记录而重发；无法证明发送状态→停止人工核查）；A9 部分登记成功（artifact 成功/message 或 report 失败→重启只补失败项，成功项 ID 不变）；A10 任务已进入 REWORK（engine 不自动开启下一轮审查或开发）。
+
+## 附录 E：登记权威关系（Gate2 新增发现落实）
+
+**review report（POST /reports/review）=审查结论的权威记录**；artifacts=证据登记（输入/输出证据指针）；messages=传输与消息记录。三者不一致时以 review report 为结论权威，artifacts/messages 为证据链；任何冲突→腿级 BLOCKED 停等人工，不自动改写。
