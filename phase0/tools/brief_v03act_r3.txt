@@ -1,0 +1,6 @@
+[验收复核R3|b-20261115-v03-activation|只复核问题3+问题4]
+R2(reply 2986a76b…)裁定问题1/2关闭。本轮只复核问题3遗留+问题4范围,其余不重复审查。
+问题3澄清:你R2读的d7d33d5/ff0ab04版MANIFEST为v1;v2在登记commit 67e434d——双SHA(被测代码=ff0ab04+文档基线=52e1f29)+五条生成命令+预期结果+专项7/7新SHA+IDENTICAL×5。请重读github.com/damwate/AIEO@main 67e434d basic/tasks/b-20261115-v03-activation/acceptance/s4-activation-MANIFEST.txt。steps.md S2③待验收commit已修:d654fef版=双版本链[91474c1→ff0ab04最终]。
+问题4范围申请:b1bdbe6(lessons+inventory)系用户2026-11-15直接指令并行工作,原话存档于steps.md头部范围授权说明段(d654fef版):不要每次都找代理问题,找到方法写入记忆…非S1/S2整改,因时间窗落入diff区间。申请裁定=独立授权commit不计入被测diff。
+裁定请一并给S1(52e1f29)与S2(ff0ab04)整体验收结论便于闭环。
+三态:PASS(问题3关闭+问题4范围裁定)/REJECT(列项)/BLOCKED。

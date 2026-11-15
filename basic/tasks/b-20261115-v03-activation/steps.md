@@ -16,7 +16,7 @@
 - ③修改内容：WORKFLOW.md 标题"（草案，待用户拍板生效）"→"（已生效 2026-11-15）"；生效状态 blockquote 整行改写为五要素（生效日期 2026-11-15 经用户拍板正式生效／为**现行版**／v0.2 保留为历史对照以 Git 历史 commit 为准无独立副本／批准依据=用户拍板原话"同意生效，请给我一句话交接给新的会话完成接下来的工作"／记录位置=tasks/b-20261115-v03-activation/requirement.md+handoff/BASIC-PHASE-C-V03-ACTIVATION-HANDOFF.md §5）；ACCEPTANCE-CHECKLIST.md 头部补生效状态（正式版）blockquote；附录表 12 行与 ST-10/11 段历史"草案"记录保留不动（全文"草案"计数=2 均为历史区）。**待验收 commit 完整 SHA：52e1f298fdbc31000b781ced8d55b9591f10c38b**
 - ④执行结果：三处编辑完成；Python 逐项核验（标题含已生效无草案/blockquote 五要素全 True/blockquote 自身无草案态/清单声明/附录历史保留=2）全过；phasec 任务包三文件 diff=0
 - ⑤测试结果：一致性检查器①a①b 断言此际仍为草案态（S1→S2 既定中间态，S2 commit 91474c1 后消除，四命令于 S2 全过）
-- ⑥验收证据引用：待验收派单后登记
+- ⑥验收证据引用：合并验收轮 R1=dispatch-2026-11-15T04-12-06→recoll-2026-11-15T04-16-08-180Z（reply sha256=a9e3059b…162f，S1 五要素/范围/边界点通过，随 S2 整改退回）；R3 复核=recoll-2026-11-15T04-41-21-287Z（reply sha256=2f09f5ceb5608b89dadab9ede87d85867bd8c45ebb14da70e3c4875ad638ce6e，S1 文档生效[被测 52e1f298fdbc31000b781ced8d55b9591f10c38b]验收结论：PASS）
 
 ## S2 检查器同步与测试演进
 
@@ -25,7 +25,7 @@
 - ③修改内容：①a 改为"v0.3 已生效版本头字面+清单正式生效声明"双断言（标题行精确锚定且无草案字样）；①b 改为生效状态 blockquote 五要素精确锚定并负向拒绝旧草案态（"草案"/"仍为现行版"在 blockquote 行回流即 FAIL）；①c 附录 12 行保持；检查项总数 37 不变。新增专项回归：负向 3 注入+正向 2，全部注入只作用于内存副本。**待验收 commit 完整 SHA：91474c15e45c51ce87e0c44e3ffe2900b50cea0c（R1 验收对象）→ ff0ab04f59bc1b9de9788812a97ee152a160b4d9（R1 REJECT[问题1/2/3]整改后最终待验收版本，R2 复核问题1/2 关闭确认；R2 复核 reply sha256=2986a76b79190e5b…）**
 - ④执行结果：五命令全过退出 0 并归档；MANIFEST 首版被测 commit 误取生成时 HEAD（52e1f29），登记轮修正为 91474c1。R1 独立验收（dispatch-2026-11-15T04-12-06→recoll-2026-11-15T04-16-08-180Z 补采，reply sha256=a9e3059b535bbc7e9e0cbcceef56982bb9f42f92b0385ee8fe60594c6456162f）裁定 **REJECT 3 项[问题1=①b 未核验完整记录位置（P1-1）/问题2=①a 全文包含偏弱（P2）/问题3=MANIFEST 被测 commit 绑定不完整（P1-2）]**，整改见返工表。已确认通过部分保留：S1 生效内容/37 项不变/DV1/negpos 零改动/变更范围/阶段 C 零修改/DEC-043 未动
 - ⑤测试结果：整改后重跑=一致性 37/37+专项 7/7（负向扩至 5：NT4 交接包引用删除→①b 拦截、NT5 声明移出头部→①a 拦截；NT5 首跑 6/7 暴露 ①a 全文扫描漏检，收紧 ①a 至清单头部区[首个二级标题前]后 7/7）+DV1 6/6+negpos 7/7+phasec 包 taskpack COMPLETED 全 PASS，退出码全 0，归档刷新
-- ⑥验收证据引用：R1=dispatch-2026-11-15T04-12-06（发送双验通过，采集 fail-closed DEC-043#13 禁重发）→recoll_v03act_acc.mjs 补采 recoll-2026-11-15T04-16-08-180Z（六查全过，reply sha256=a9e3059b…162f，REJECT 3 项[问题1/问题2/问题3]）；R2 复核=recoll-2026-11-15T04-33-01-640Z（归属校验型补采 recoll_v03act_r2b.mjs，reply sha256=2986a76b79190e5b…，问题1/问题2 关闭确认+问题3 待对 67e434d 关闭确认+问题4（范围）待范围裁定）；下一轮复核待派（对应问题3 遗留项+范围项，PASS 后回填 S1/S2 两步⑥验收结论）
+- ⑥验收证据引用：R1=dispatch-2026-11-15T04-12-06（发送双验通过，采集 fail-closed DEC-043#13 禁重发）→recoll_v03act_acc.mjs 补采 recoll-2026-11-15T04-16-08-180Z（六查全过，reply sha256=a9e3059b535bbc7e9e0cbcceef56982bb9f42f92b0385ee8fe60594c6456162f，REJECT 3 项[问题1/问题2/问题3]）；R2 复核=recoll-2026-11-15T04-33-01-640Z（归属校验型补采 recoll_v03act_r2b.mjs 七查全过，reply sha256=2986a76b79190e5b55a20eca43bd31b7731577815e72e1478bd97471183be046，问题1/问题2 关闭确认；R1 误采集现场 recoll-2026-11-15T04-29-58-641Z 如实归档）；R3 复核=recoll-2026-11-15T04-41-21-287Z（recoll_v03act_r3.mjs 七查全过，reply sha256=2f09f5ceb5608b89dadab9ede87d85867bd8c45ebb14da70e3c4875ad638ce6e）：问题3 关闭确认（MANIFEST v2@67e434d 全核验）+问题4 范围裁定通过（b1bdbe6=独立授权 commit）+**S2 检查器与测试[最终待验收 ff0ab04f59bc1b9de9788812a97ee152a160b4d9]验收结论：PASS；S2 证据登记[67e434d3515da2d5f5a959e2fe974c8d43afe54e]验收结论：PASS**
 
 ## 返工记录表（首次 REJECT 时建表；按"同一问题"计数）
 
@@ -34,13 +34,13 @@
 | 问题1 | R1 验收 REJECT P1-1 | ①b 断言未核验完整记录位置（交接包路径+§5 缺失，引用被误删仍可过） | ①b 增补 `handoff/BASIC-PHASE-C-V03-ACTIVATION-HANDOFF.md`+`§5` 精确断言；专项测试新增 NT4（blockquote 删交接包引用→①b 指名拦截） | ff0ab04f59bc1b9de9788812a97ee152a160b4d9 | 重跑专项 7/7 含 NT4 PASS；R2 复核关闭确认（reply 2986a76b…） |
 | 问题2 | R1 验收 REJECT P2 | ①a 清单声明为全文包含检查，声明移出头部仍可过（弱位置约束） | ①a 收紧=定位清单头部区（首个二级标题前）声明行核验三要素；专项测试新增 NT5（声明移出头部→①a 指名拦截）；NT5 首跑暴露实现仍全文扫描（6/7），收紧后 7/7 | ff0ab04f59bc1b9de9788812a97ee152a160b4d9 | 重跑专项 7/7 含 NT5 PASS；R2 复核关闭确认（reply 2986a76b…） |
 | 问题3 | R1 验收 REJECT P1-2 | MANIFEST 被测 commit 绑定不完整（验收 diff 内版本仍指 52e1f29，无法追溯 S2 测试代码版本；缺双 SHA 与生成命令） | MANIFEST 重写：被测代码 SHA+被测文档基线 SHA 双绑定+五输出 SHA256+生成命令+五输出由最终被测代码版本重新生成归档（五输出重生成与归档刷新在修复 commit 完成，MANIFEST 登记于其后 commit，不属被测 diff） | ff0ab04f59bc1b9de9788812a97ee152a160b4d9 | 五输出与被测代码 commit 树重跑一致（IDENTICAL×5）；R2 复核=验收方读取 d7d33d5 旧版 MANIFEST（v2 位于 67e434d 含双 SHA/五命令/7/7 新 SHA 未被读取），待下一轮对 67e434d 关闭确认 |
-| 问题4 | R2 复核新增越界改动（范围问题） | b1bdbe6（AI-DEV-LESSONS.md+environment-inventory.md）出现在验收 diff 区间，非本任务内容，系用户 2026-11-15 直接指令的并行工作（原话存档于头部范围授权说明段） | 申请验收方确认为独立授权 commit，不计入本任务被测 diff | b1bdbe6cea77a56ab783c9ae511aff07d3f4a0c5 | 待验收方确认范围裁定 |
+| 问题4 | R2 复核新增越界改动（范围问题） | b1bdbe6（AI-DEV-LESSONS.md+environment-inventory.md）出现在验收 diff 区间，非本任务内容，系用户 2026-11-15 直接指令的并行工作（原话存档于头部范围授权说明段） | 申请验收方确认为独立授权 commit，不计入本任务被测 diff | b1bdbe6cea77a56ab783c9ae511aff07d3f4a0c5 | R3 复核范围裁定通过（问题4 关闭） |
 
 ## S3 独立验收与交付
 
 - ①本步骤目标：ChatGPT 独立验收通过，三文件零修改 git diff 核验，登记交付
-- 修改文件：本任务包 delivery.md、handoff.md（交付时）
-- ②修改内容：待执行后登记
-- ③执行结果：待登记
-- ④测试结果：待登记
-- ⑤验收证据引用：待验收派单后登记
+- ②修改文件：basic/tasks/b-20261115-v03-activation/delivery.md、task-brief.md（完成态）、steps.md（本登记）、acceptance/（终检归档刷新）
+- ③修改内容：R1 合并验收轮→R2 复核（问题1/2 关闭+问题3 澄清+问题4 提出）→R3 复核 PASS 全闭环；delivery.md 七要素成文（含过程如实记录三项：误采集弃用/SHA 误填纠正/网络排查绕行教训）；task-brief 转完成态；五命令最终轮归档刷新
+- ④执行结果：R3 裁定 S1 PASS（52e1f29）+S2 PASS（ff0ab04）+S2 证据登记 PASS（67e434d），问题1-4 全关闭；phasec 三文件零修改经验收方 R1/R2 两轮独立核验确认；本任务 taskpack 终检 ①②④⑤⑥ PASS（③ N/A=2 步完整 PASS+S3 登记）
+- ⑤测试结果：最终轮五命令全过退出 0：一致性 37/37+专项 7/7+DV1 6/6+negpos 7/7+phasec 包 COMPLETED 全 PASS
+- ⑥验收证据引用：R3 复核=recoll-2026-11-15T04-41-21-287Z（recoll_v03act_r3.mjs 七查全过，reply sha256=2f09f5ceb5608b89dadab9ede87d85867bd8c45ebb14da70e3c4875ad638ce6e）；验收派单链=phase0/logs/dispatch-2026-11-15T04-12-06（R1）+dispatch-2026-11-15T04-25-05（R2）+dispatch-2026-11-15T04-37-33（R3）；**验收结论：PASS**（S1 文档生效 52e1f29 PASS+S2 检查器与测试 ff0ab04 PASS+S2 证据登记 67e434d PASS，问题1-4 全关闭）；终检归档=acceptance/ 五输出+MANIFEST

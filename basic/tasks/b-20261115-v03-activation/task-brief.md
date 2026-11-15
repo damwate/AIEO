@@ -35,6 +35,6 @@
 
 | 字段 | 值 |
 |---|---|
-| 当前状态 | 返工 |
-| 当前步骤 | S2 整改（R1 独立验收 REJECT 3 项[P1-1/P1-2/P2]已整改：①b 补交接包断言/①a 收紧头部定位/NT4 NT5 新增/专项 7/7/MANIFEST 双绑定重写；复核待派） |
-| 最终结果 | （任务完成前暂空） |
+| 当前状态 | 完成 |
+| 当前步骤 | 全部步骤完成（S1 PASS/S2 PASS/S3 交付登记；R3 复核 reply sha256=2f09f5ceb5608b89dadab9ede87d85867bd8c45ebb14da70e3c4875ad638ce6e） |
+| 最终结果 | PASS：WORKFLOW.md v0.3 于 2026-11-15 正式生效（S1 文档生效 52e1f29 PASS+S2 检查器同步 ff0ab04 PASS+证据登记 67e434d PASS；问题1-4 全关闭；37/37+专项7/7+DV1 6/6+negpos 7/7+phasec 包 COMPLETED 全 PASS；R1 REJECT 3 项经 R2/R3 闭环，R2 误采集现场如实归档） |
