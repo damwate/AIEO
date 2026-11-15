@@ -532,8 +532,13 @@ class ReviewLeg:
                     break
         cross_check_state = None   # 布尔=完成比对；字符串=显式不可比状态（绝不 None 充数）
         if sent_key is None:
-            if allow_no_anchor and not has_dispatch_record:
-                cross_check_state = "not_applicable_no_leg_send_anchor (manual attach path)"
+            if allow_no_anchor:
+                # A6 人工退路：发送责任转移到人工链（含本腿发送尝试失败后人工接管的形态），
+                # 腿侧键交叉核验不适用——显式登记不可比状态，绝不以 None 充数。
+                cross_check_state = ("not_applicable_no_leg_send_anchor (manual attach path"
+                                     + "; leg had failed send attempts, ownership ensured by manual chain)"
+                                     if has_dispatch_record else
+                                     "not_applicable_no_leg_send_anchor (manual attach path)")
             else:
                 raise OrchestrationError(4, "send-anchor key unavailable for ownership cross-check "
                                             "(missing/empty R3 sent_user_unit_key; fail-closed, "
