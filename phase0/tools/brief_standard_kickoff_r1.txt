@@ -1,0 +1,4 @@
+[规划复审|b-20261115-standard-kickoff|S1]
+请读 github.com/damwate/AIEO@main 881b9052aaea027e0e99cf9d76280c0661fe1138 的 standard/development-plan.md——按§六执行规划复审：①两轨定性与A→B→C顺序(阶段C=F-001立项放A/B后是否合理,平台路线是否应先行)②M2吸收方式(并入WORKFLOW vs 保留独立文件)③C1工具落位toolkit/与测试矩阵要求④验收标准A1-A3/B1-B3/C可判定性与遗漏硬约束。
+背景:basic/WORKFLOW.md(v0.3生效)+docs/phase1/decision-log.md(DEC-049~052)+standard/WORKFLOW-DESIGN-INPUT.md同仓库同commit可读。授权口径:任务执行按WORKFLOW增补②"复审通过+节点授权";standard/WORKFLOW.md与M2生效、F-001开工保留用户拍板;DEC-010红线不动。
+回执:逐项评估意见+三态(同意/修改后同意+修改项清单/不同意)。
