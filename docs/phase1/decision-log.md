@@ -470,3 +470,11 @@
 - **steps.md 冻结：** basic/tasks/b-20261115-gpt03-review-leg/steps.md——S1 编排实现→S2 注入类验收矩阵（A2/A3/A4/A5/A7/A8/A9/A10）→S3 真实端到端（A1+A6，零 mock）→S4 交付登记；每步交独立验收（H9）；ST-05/ST-01 前置；双分支纪律。架构归属=采纳定稿推荐"前者"（scheduler 编排框架内新增审查阶段编排：phase1/tools/review_leg.py 复用框架件，scheduler.py 本体零修改防回归）。
 - **开工侦察（环境事实，只读）：** M1 服务 127.0.0.1:8000 health ok（DB=runtime/t-p1-908/aieo.db，env.sh 密钥不进 Git）；T-P1-017/T-P1-018 实存 DEV_REPORTED（A1 复用候选）；契约 contracts/v1.0 含 CODE_REVIEW_SUBMITTED 消息枚举与 review-report.schema.json（冻结文本，H2）；agents 表有 GPT-01/ZCODE-01/GIT-WORKER-01 先例（GPT-03 agent 与 engine 服务身份按 bootstrap 先例准备，运行期严格限附录 B 8 端点）。
 - **关联：** DEC-057（Gate3 开工拍板）、DEC-055~056（三关口）、charter 定稿 v1.0、L-020（节点自主推进）、L-018（派单纪律）、L-021（申报口径）、H1~H12。
+
+### DEC-059 GPT-03 审查腿 S1 编排实现 PASS：R1-R5 五轮独立验收链闭环（2026-11-15，节点自主推进授权执行）
+
+- **S1 交付：** phase1/tools/review_leg.py（R0-R6 编排+附录 B 白名单客户端 fail-closed+附录 C 八字段组账本 fsync 原子追加+三断点 resume+attach-reply 人工退路）+review_leg_recoll_template.mjs（归属校验三件套+视口拉高升级）+test_review_leg.py（23 用例，自带独立测试 M1，ChatGPT 收发/补采两侧替身，其余全真实）；被测链 512f9c5→6cf9147→c081086→0fed73a→bfb7797（ST-01 每轮 PASS）。
+- **验收链：** R1 REJECT 6 项（P1-01 409 判定过宽/P1-02 恢复重跑全量/P1-03 补采断链/P2-01 账本缺字段/P2-02 A9 越界替身/P2-03 A8 覆盖不足）→R2 REJECT（P2-02/P2-03 关闭；NEW-P1-01=_resume_register 签名逸出）→R3 REJECT（P1-02/NEW-P1-01 关闭；NEW-P1-02=键捕获组未比对）→R4 REJECT（NEW-P1-02/P1-01 关闭；P2-01 缺键 None 残留）→**R5 PASS**（P2-01 缺键 fail-closed+not_applicable 显式登记）。问题1-10 全关闭，返工表全链登记 steps.md。
+- **过程：** 派单采集 fail-closed 3 次（R2/R3/R5）全部"发送双验过→禁重发→归属校验型补采七查全过"恢复（R5 用 L-021 第 3 条视口拉高 1920×20000 变体），零重发；会话 6af9c5f3 专用；测试从 18 用例演进至 23（全部正反例对应冻结条款）。
+- **启动 S2：** 注入类验收矩阵（A2/A3/A4/A5/A7/A8/A9/A10；真实派单注入 A3/A5①）。
+- **关联：** DEC-057/058、charter v1.0、L-018（补采）、L-021（视口升级）、H9/H10。
