@@ -1,7 +1,7 @@
-# Basic 多任务并行治理规则（M2 受控试运行）
+# 多任务并行治理规则草案（M2 受控试运行）——移交 Standard/中级版
 
-> **状态：⏸ 待用户批准生效**（ChatGPT 讨论方案 reply sha256=448de84136147c0c7d9f48b50843483d3c4def1c8fb4e31d9bf55ed6c53ca20b；讨论材料 docs/phase1/parallel-tasks-discussion.md；本文件起草后未经用户批准不得执行 M2 并行）。
-> **模式定位：** M1 交替推进=默认模式（L-014 第 5 条+v0.3 挂起机制，无需本文件）；M2=本文件受控试运行（最多 2 任务）；M3 并行流水线=不纳入 Basic（留给 Standard/Advanced）。
+> **状态（2026-11-15 用户裁定）：多任务模式移交中级版处理，初级版维持 M1 交替推进不动**。本草案由 Basic 期讨论产出（ChatGPT 方案 reply sha256=448de841…ca20b，讨论材料 docs/phase1/parallel-tasks-discussion.md），移交 standard/ 作为中级版并行治理的设计输入——内容按中级版需要修订后另行生效。
+> **Basic 侧结论：** M1 交替推进=默认模式（L-014 第 5 条+v0.3 挂起机制承载）；M2/M3 不纳入 Basic（本文件即移交载体）。
 
 ## 1. M2 核心规则（一任务四件套）
 
