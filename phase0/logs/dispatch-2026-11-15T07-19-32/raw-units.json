@@ -1,0 +1,108 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-15T07:22:56.487Z",
+  "user_unit_key": "fallback-turn-5:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-5:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "163b2e48-f59f-4c3f-991a-973a2496833b",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-5:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "4f8fe6d34f202f4b0ddc2551e0ec9035de52a8fe489f132249125bc2320bc169",
+          "7bd447f0d9dde7fb8dbe712ea2faa773242cf4d322646bb8c2948d9fe996b8c1",
+          "3f13e82e12714290fcb0189914bd5f954fa83b78ee8efd603eb3f639ff8596d7",
+          "7c67824a6ab5f6932e98ec8b4532daa2783f3c7e90c9c8a7c975319bfc44577c"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "4f8fe6d34f202f4b0ddc2551e0ec9035de52a8fe489f132249125bc2320bc169",
+          "7bd447f0d9dde7fb8dbe712ea2faa773242cf4d322646bb8c2948d9fe996b8c1",
+          "3f13e82e12714290fcb0189914bd5f954fa83b78ee8efd603eb3f639ff8596d7",
+          "7c67824a6ab5f6932e98ec8b4532daa2783f3c7e90c9c8a7c975319bfc44577c"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-5:0:user",
+      "fallback-turn-5:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-5:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\nPASS S1 设计输入文档独立验收通过。\n\n验收对象严格绑定 1a6f96d9f1148e6faf5f1f77a6262601c4428f71，未将后续登记 commit 8bc67ec 混入被测范围。\n\n验收结果\n\n验收点\n\n\t\n\n结论\n\n\t\n\n核查结果\n\n\n\n\n① 四节结构与编制说明\n\n\t\n\nPASS\n\n\t\n\n四节结构、落位文件名及编制说明四条均落实；另有汇总节，不影响冻结结构\n\n\n\n\n② 统计数字溯源\n\n\t\n\nPASS\n\n\t\n\n抽核 18 轮、3:43:54、代码返工 8/10、独立验收发现 10/10、步骤一次通过 1/4，均与统计源一致\n\n\n\n\n③ 候选清单与推导口径\n\n\t\n\nPASS\n\n\t\n\nC1–C8 均具备统一八字段；事实、设计判断、待验证项有区分；ST-10/11 未被错误推导为新能力\n\n\n\n\n④ 既有资产关系\n\n\t\n\nPASS\n\n\t\n\n明确标注已具备、部分具备、尚未具备；与 standard/README.md 的资产归属一致，没有替代、复制或移动既有资产\n\n\n\n\n⑤ 实施边界\n\n\t\n\nPASS\n\n\t\n\n明确声明只作设计输入，不启动 Standard 代码开发，不构成实施授权\n\n关键数字抽核\n\n18 轮：规划 2 轮 + 验收 16 轮。\n\n3:43:54：统计报告记录的全任务总历时。\n\n代码返工 8/10：与统计报告 §十一致。\n\n独立验收发现 10/10：与统计报告 §九一致。\n\n一次通过率 1/4：按四个验收步骤计算，不与最终 PASS 轮次占比混淆。\n\n统计源同时保留了失败派单与有效验收轮次的区别、BLOCKED 的证据获取原因，以及无法确认的采集内部状态。设计输入文档没有把这些可信度限制抹掉。\n\n改动范围核查\n\n被测 commit 的文件清单共 7 个文件：\n\n4 个任务包内验收输出；\n\nsteps.md；\n\ntask-brief.md；\n\nstandard/WORKFLOW-DESIGN-INPUT.md。\n\n没有修改 basic/ 现行流程文件，没有修改检查器，也没有修改 Standard 既有代码或资产。\n\n补充说明：37/37、DV1 6/6、negpos 7/7、专项 7/7 的输出记录已存在且结果为全通过；但这些检查主要验证既有统计任务及其记录的一致性，不应误解为对新设计文档全部语义内容的自动化覆盖。本轮文档内容仍以独立审查为准。\n\n最终裁定\n\nPASS。 本轮 S1 设计输入成文符合冻结方案及授权边界，没有发现需要返工的阻断项。\n\n本结论只确认 standard/WORKFLOW-DESIGN-INPUT.md 作为设计输入文档通过独立验收，不代表 Standard 实施获批，也不代表整个任务包 S2 交付步骤已完成。",
+      "text_sha256": "7c67824a6ab5f6932e98ec8b4532daa2783f3c7e90c9c8a7c975319bfc44577c",
+      "size_bytes": 2454,
+      "assistant_uuid": "163b2e48-f59f-4c3f-991a-973a2496833b"
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-15T07:14:57.460Z",
+  "user_unit_key": "fallback-turn-5:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-5:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "454a2d60-4acd-4f9c-a61e-e8b0606fb2d9",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-5:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "729c5c22c862ade56675ab49cc6ce14abb01afc436f6e52474d8779af050ec61",
+          "071f26de65c8da07661b037e29cf0276d2babc95d92d36b396aecc1c11ed86fb",
+          "4084bfdcd6e6ce6ce6884460b2787b211ff2cba315dfdfd00fe27c1177faf411",
+          "df55fa967337f7a079e037c6ba1ce08d383b801c999e7e5bd449514ba5ef1141",
+          "cc50d5a89252d6c2658fbcf60e564107355ad1abc7644f0a7733a1498d1092eb",
+          "21d3150d1c3f70baf2d07849ed90588dc096e8eeafb3ff630ef50fe42b824851",
+          "608ad87ef6cac6746609c20979318eeab06c3613a189ab11feb9b8f2d18d06d7",
+          "ee3f919366277579c7d6af3b0f96be07bd4e47c759ce185a562428259e1bc519",
+          "2045fcd7338ed83a09cbeff1dd67f4aef6b1225508daa4c757e5a8b7e13b4e4c",
+          "a040e7b8c741e9d45f040ce30d9b261f65334e320b97fb71eaae1b2adeff3122",
+          "4f8fe6d34f202f4b0ddc2551e0ec9035de52a8fe489f132249125bc2320bc169",
+          "7bd447f0d9dde7fb8dbe712ea2faa773242cf4d322646bb8c2948d9fe996b8c1"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": []
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-5:0:user",
+      "fallback-turn-5:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STATIC_NON_SCROLLABLE_DOM",
+      "scrollable_window_observed": false,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant"
+        ],
+        "overlap_keys": []
+      }
+    ],
+    "window_transitions": 0
+  },
+  "units": [
+    {
+      "key": "fallback-turn-5:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n修改后同意\n\n总体方向同意。 这项任务符合 DEC-049 的 P2 定位：把 Basic 阶段 C 的真实数据整理成 Standard 设计输入，不重新统计、不修改 Basic 现行文件，也不启动 Standard 代码开发。\n\n我建议保留你提出的四节结构，并补充几项边界，避免设计输入文档把统计事实、设计推论和未来实施方案混在一起。\n\n① 四节结构与文件落位\n\n建议文件名：\n\nstandard/WORKFLOW-DESIGN-INPUT.md\n\n中文标题：《Standard（中级版）工作流设计输入基线》\n\n建议按以下四节组织：\n\n章节\n\n\t\n\n内容\n\n\t\n\n主要依据\n\n\n\n\n一、真实工作流耗时与往返数据\n\n\t\n\n规划、验收轮次、阶段耗时、相邻间隔、BLOCKED、失败派单等\n\n\t\n\nworkflow-stats.md §三、§六、§八、§十一\n\n\n\n\n二、返工问题根因与修复成本\n\n\t\n\n10 项问题的主根因、次根因、等级、代码/文档/证据返工成本、重新派单成本\n\n\t\n\n§四、§五、§十\n\n\n\n\n三、ST-01～ST-12 有效性与版本分界\n\n\t\n\n每项统计信号、现行措施效果、前移空间、是否适合 Basic 或 Standard\n\n\t\n\n§七～§十、§十三\n\n\n\n\n四、Standard 能力候选清单\n\n\t\n\n从前三节提炼能力候选，标注证据、解决的问题、Basic/Standard 分界理由\n\n\t\n\n前三节综合推导\n\n另外建议文档开头有一个很短的编制说明，明确：\n\n统计唯一基线：workflow-stats.md，对应本次指定 commit。\n\n统计数字直接引用，不重新计算或调整。\n\n区分“统计事实”“设计判断”“待验证候选”。\n\n本文件是设计输入，不是 Standard 实施授权。\n\n需要同步一个小问题： 当前 task-brief.md 的“执行者理解”仍写着三类信息加能力候选清单。用户本轮已经明确四节结构，建议规划冻结时将其更新为四节，避免任务书与实际方案不一致。这不涉及修改 basic/ 现行文件。\n\n② 能力候选清单的推导口径\n\n我建议采用一个原则：\n\n统计信号足以证明存在问题，不代表已经证明某种解决方案有效。\n\n因此，每项能力候选至少应有一个可追溯的统计信号，并说明它支持的是“问题存在”还是“解决方案值得验证”。\n\n足以支撑候选的统计信号\n\n统计信号\n\n\t\n\n能支持的设计方向\n\n\t\n\n推导强度\n\n\n\n\n同类申报绑定问题跨 S1/S2/S3 复发 3 次，含 P0\n\n\t\n\n申报绑定自动核验、任务包与验收对象绑定能力\n\n\t\n\n强\n\n\n\n\n10/10 编号问题均由独立验收发现\n\n\t\n\n加强开发自检、检查器前移、过程质量反馈\n\n\t\n\n强\n\n\n\n\n代码返工 8/10\n\n\t\n\n更强的测试约束、反例覆盖、代码质量检查\n\n\t\n\n强\n\n\n\n\nBLOCKED 轮次集中于证据获取问题，解除方式曾靠临场处理\n\n\t\n\n证据可访问性检查、替代验收通道、BLOCKED 恢复机制\n\n\t\n\n强\n\n\n\n\n失败/不可恢复派单 9/27\n\n\t\n\n派单可靠性、采集恢复、失败状态对账能力\n\n\t\n\n强，但要保留内部状态无法区分的证据限制\n\n\n\n\n证据制作与修复占据较大相邻间隔\n\n\t\n\n标准化证据包、自动生成 MANIFEST、证据与 commit 绑定\n\n\t\n\n中强\n\n\n\n\n问题 4 的语义口径偏差\n\n\t\n\n规则解释、判定示例、语义一致性检查\n\n\t\n\n中\n\n\n\n\n轮次计数口径混乱\n\n\t\n\n验收轮次状态模型与统一统计规则\n\n\t\n\n强\n\n不能过度推导的信号\n\n以下数据应当记录，但不能直接推导出“必须增加某项能力”：\n\nST-10： 最大返工次数为 2，三轮止损机制未触发。这只能说明阈值尚未受到实测压力，不能证明需要更复杂的止损系统。\n\nST-11： 规划两轮约 12 分钟收敛，属于正向基线，不代表规划阶段需要增加复杂工具。\n\nS4 首验通过： 只能说明该步骤在本次样本中一次通过，不能证明所有纯文档任务都能一次通过。\n\n检查器拦截 2 处未编号措辞问题： 是有效正向样本，但不能将其写成已覆盖全部问题类型。\n\n建议能力候选清单采用统一字段\n\n每项至少写清：\n\n候选能力名称；\n\n统计依据及原始章节；\n\n解决的具体问题；\n\n预期改善的指标；\n\nBasic 已有能力及其不足；\n\n为什么可能需要 Standard；\n\n尚缺少什么验证；\n\n优先级建议（不是实施授权）。\n\n特别注意：不能因为某项能力“听起来高级”就列入 Standard。必须能从统计信号说明它解决了什么实际瓶颈。\n\n③ 与 standard/ 既有资产的关系\n\n我核对了 standard/README.md 的资产映射。当前目录的既定定位是：现有已开发体系就是 Standard 中级版基础，不推倒重来。\n\n现有资产映射为：\n\n资产类别\n\n\t\n\n现有位置\n\n\t\n\n本任务处理方式\n\n\n\n\n调度器 M1～M4\n\n\t\n\napp/\n\n\t\n\n只作为现有能力背景，不修改\n\n\n\n\n契约 C1～C8\n\n\t\n\ncontracts/\n\n\t\n\n作为既有约束，不重新定义\n\n\n\n\n治理体系\n\n\t\n\nphase1/\n\n\t\n\n作为现行治理资产，不复制全文\n\n\n\n\n交接包\n\n\t\n\nhandoff/\n\n\t\n\n作为现有交接机制，不重复建档\n\n\n\n\n历史证据与派单工具\n\n\t\n\nphase0/\n\n\t\n\n保留原位置，不移动、不重命名\n\n建议明确三个关系：\n\n本设计输入文档是新增的分析资产，不是对既有调度器、契约或治理体系的替代。\n\n能力候选需要标注“现有资产已具备 / 部分具备 / 尚未具备”，避免把已有功能误判为新需求。\n\n后续若决定增强某项能力，再确定是扩展 app/、完善 contracts/、补充 phase1/ 治理，还是新增其他资产；本任务不提前决定代码落点。\n\n我尤其不建议现在建立第二套 Standard 设计规范或复制现有中级版代码。先形成设计输入，后续再基于输入判断现有体系哪些地方需要增强。\n\n④ 规划冻结前的修改清单\n\n同意方案，但冻结前补齐以下四点：\n\n将 task-brief.md 中的三类结构更新为本轮四节结构。\n\n设计输入文档采用 standard/WORKFLOW-DESIGN-INPUT.md。\n\n能力候选统一标注统计依据、Basic/Standard 分界理由和待验证项，区分事实与推论。\n增加现有 Standard 资产映射字段，明确本次只分析、不修改、不复制现有资产。\n\n继续保持原定边界：\n\n统计数字只引用，不重算。\n\nbasic/ 现行文件零改动。\n\n不启动 Standard 代码开发。\n\n只产出设计输入文档，交独立复审。\n\n最终三态：修改后同意，不否决。\n\n节点自主授权可以用于本轮方案冻结，但不能把这份设计输入文档的复审通过解释为 Standard 代码开发授权。后续若进入实施阶段，仍需单独明确实施范围和验收标准。",
+      "text_sha256": "7bd447f0d9dde7fb8dbe712ea2faa773242cf4d322646bb8c2948d9fe996b8c1",
+      "size_bytes": 6630,
+      "assistant_uuid": "454a2d60-4acd-4f9c-a61e-e8b0606fb2d9"
+    }
+  ]
+}

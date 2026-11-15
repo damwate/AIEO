@@ -1,0 +1,6 @@
+[规划协商|b-20261115-standard-design-input|S1文档类|轮1]
+P2=Standard设计输入准备(DEC-049下一节点,你判定"只整理不实施")。方案拍板依节点自主授权增补②以你复审通过替代用户逐项拍板。
+材料(按SHA读):github.com/damwate/AIEO@main a5e5fdf1aabbdab1fd89779e7606674de29990b4 basic/tasks/b-20261115-standard-design-input/;原料=basic/tasks/b-20261115-phasec-workflow-stats/workflow-stats.md。
+拟产出:standard/下成文设计输入文档,四节=①真实工作流耗时与往返数据(溯源统计§三-§六)②10项返工问题根因分布与修复成本(§七-§九)③ST-01~ST-12有效性/自动化空间/Basic-Standard分界(§十-§十三)④Standard能力候选清单(从统计信号推导,每项标依据与分界理由)。
+边界:统计数字只引用解读不重算;basic/现行文件零改动;不启动Standard代码。
+请求:①四节结构与落位文件名意见②能力候选清单推导口径(哪些统计信号足够支撑候选)③与standard/既有资产(资产映射登记)的关系④三态:同意/修改(列点)/否决。
