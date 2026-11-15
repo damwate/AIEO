@@ -1,1 +1,7 @@
-52285c9e15b01b074280cc0c9dd73d904c0ef3759ee2f455c386b92fb30340a9 *basic/tasks/b-20261115-replication-gaps-fix/acceptance/gf-consistency-output.txt
+# MANIFEST：G1-G4 修复 S1 四命令输出（R1 验收[P2]整改重生成；条目为提交后 LF 字节的 SHA256）
+被测commit=3119ef6eb522d8062f96e81f4c0e8bdf1ffa5eff（四输出原位于任务根，整改统一移入 acceptance/——移动属登记整理，输出内容未变）
+
+8097e951f28bb1f939b4753cfeff5d9be36bb0aba06f79b7c0bb259964f5bf56 *gf-consistency-output.txt
+b0047983b63a2868acea19c207d6e24e5038ca68c9cc94377c75038c18e03cd7 *gf-dv1-output.txt
+e7a1a17e8b1cc5739bdff8145766b52ab02d91587075f8a054f643f387cbd3b7 *gf-negpos-output.txt
+c049aaaf2a4735d1191e2fdb89363bae2c3f207fd207bcda484ab561d65638fe *gf-state-tests-output.txt

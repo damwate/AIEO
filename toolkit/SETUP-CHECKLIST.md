@@ -29,7 +29,7 @@
 1. 启动带调试端口的 Chrome：`chrome.exe --remote-debugging-port=9222 --remote-allow-origins=* --user-data-dir=<仓库>\runtime\chrome_profiles\gpt-poc`（runtime/ 不随 Git 复制，首次需创建）。
 2. **人工登录 ChatGPT**（Plus 账号）；登录态/Cookie 只存本机 profile，绝不入库。
 3. 配置本机账号钉扎 `~/.agents/ego-profile.json`（**与 profile 分开的本机配置**，同样不入 Git）：defaultProfileId/defaultAccount/spaceExpect 三字段，方法见 chatgpt-web-dispatch skill 的「本机账号钉扎」节。
-4. **人工登录验证**（规划 R1）：浏览器打开 chatgpt.com 确认会话有效；**敏感数据检查**：确认 profile 目录、ego-profile.json 不在 `git status` 未跟踪清单外泄风险路径（runtime/ 与 ~/.agents/ 均在仓库外）。
+4. **人工登录验证**（规划 R1）：浏览器打开 chatgpt.com 确认会话有效。**敏感数据检查（路径事实与核验方法）**：`runtime/` 位于**仓库目录内部**（`<仓库>/runtime/`），但已被 `.gitignore` 排除、不应有任何文件被 Git 跟踪——用 `git check-ignore -v runtime/chrome_profiles/gpt-poc`（应命中规则）与 `git ls-files runtime/`（应为 0）核验，不能只凭 `git status` 判断忽略文件安全；`~/.agents/ego-profile.json` 位于用户主目录，独立于仓库，同样不得进入 Git。
 5. 复跑 `node toolkit/check-env.mjs`：全部 OK（CDP 在线）。
 
 ## 5. 外部依赖清单（主机级，不在仓库内——G2 登记）
