@@ -1,0 +1,8 @@
+【独立验收 R1·b-20261116-tab-cleanup】TPT02-S4ACC-R1|tab-cleanup
+任务：Chrome tab 泄漏清理 S4 交付确认验收（Basic WORKFLOW v0.3；冻结口径=steps.md 四步）。
+读仓库 github.com/damwate/AIEO（main=ce3befac59e9b2298ce9ade77a28c4edce4776f4）：
+1. basic/tasks/b-20261116-tab-cleanup/delivery.md（七要素+证据索引）
+2. 同目录 steps.md（冻结步骤）+task-brief.md v0.2（§0 对照+红线）+acceptance/（17 用例输出/143 行 diff 审计/审计行）
+3. 抽验实现：phase0/tools/tab_hygiene.mjs、tab_cleanup.mjs、gpt_dispatch.mjs attachPage 与 catch 段
+验收重点：①共识链完整（R1 8项→v0.2→R2 PASS）；②零语义变更红线（P2-01 清单+唯一有意偏差 pages[0]→newPage 已声明）；③失败路径分叉正确（已发送=保留现场/发送前=仅关自建页，L-018 不破坏）；④S3 证据形态（P2-03）。
+回复仅一个```json对象：{"result":"PASS|REWORK","summary":"<一句话>","issues":["<具体问题>…"],"task_id":"b-20261116-tab-cleanup"}；result仅PASS/REWORK。

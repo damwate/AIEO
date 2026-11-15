@@ -58,6 +58,13 @@ export function pickChatGptPage(descs, { conversationUuid = null } = {}) {
   return chatgpt[0] || null;
 }
 
+/** 失败路径清理决策（gpt_dispatch catch 分叉的可测纯函数，S4-R1 P1-01）：
+ *  sendAttempted=true（Enter 已按下）→"preserve_scene"（UNCERTAIN/生成中现场保留，禁关页）；
+ *  sendAttempted=false（发送前任何失败，无发送证据）→"close_created_pages"（仅关自建页）。 */
+export function cleanupDecision({ sendAttempted }) {
+  return sendAttempted ? "preserve_scene" : "close_created_pages";
+}
+
 /** 维护去重计划：{ keep: [index], close: [index], skippedGenerating: [index], skippedNotOwned: [index] }
  *  每会话留最近创建一页；关闭候选仅限"非生成中且 owned 确权"的重复页——
  *  生成中页（P2-02 误关保护）与未确权页（P1-05 归属隔离）一律降级到对应 skipped 列表。 */

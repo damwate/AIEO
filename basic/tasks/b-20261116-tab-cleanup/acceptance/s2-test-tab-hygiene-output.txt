@@ -14,5 +14,7 @@ PASS 生成中页永不进 close（P2-02 误关保护）
 PASS 未确权页进 skippedNotOwned 不进 close（P1-05 归属隔离）
 PASS 确权且非生成中的重复页才可关
 PASS 多候选并列 seq 相同按 index 大者（P1-02 可执行定义）
+PASS Enter 后失败=保留现场（UNCERTAIN 禁关页）
+PASS 发送前失败=仅关自建页（无发送证据）
 PASS 模块不导出任何 close/kill 函数（关闭动作只属调用方）
-total=17 pass=17 fail=0
+total=19 pass=19 fail=0

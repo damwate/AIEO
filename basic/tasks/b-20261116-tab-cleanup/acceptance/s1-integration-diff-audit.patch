@@ -1,3 +1,4 @@
+# S1 集成 diff（b6d0b9e）
 diff --git a/phase0/tools/gpt_dispatch.mjs b/phase0/tools/gpt_dispatch.mjs
 index 14461bf..b32504a 100644
 --- a/phase0/tools/gpt_dispatch.mjs
@@ -141,3 +142,254 @@ index a0a483d..b0cb0e1 100644
    if (browser) await browser.close().catch(() => {});
    lock.release();
    log("会话锁已释放（review-leg 补采）");
+
+# S4-R1 整改 diff（工作区 vs ce3befa）
+diff --git a/phase0/tools/gpt_dispatch.mjs b/phase0/tools/gpt_dispatch.mjs
+index b32504a..495372a 100644
+--- a/phase0/tools/gpt_dispatch.mjs
++++ b/phase0/tools/gpt_dispatch.mjs
+@@ -71,6 +71,7 @@ try {
+ // ownedCreatedPages=本次运行自建页注册表（关闭唯一对象；不依赖 browser.close 做清理）。
+ let sendAttempted = false;
+ let ownedCreatedPages = [];
++const tabAuditBeforeRef = { value: null }; // attach 前页清单（catch 路径取证用）
+ const {
+   message,
+   newSession,
+@@ -127,6 +128,26 @@ async function startChromeWithDebugPort() {
+   }
+   throw new Error("Chrome 调试端口未就绪");
+ }
++// tab-audit 证据（b-20261116-tab-cleanup P2-03/S4-R1 P2-01）：CDP /json 目标清单快照，
++// 运行前后页身份（targetId+URL）对照+处置记录——成功/失败路径均落盘。
++async function cdpTargetList() {
++  try {
++    const r = await fetch(`${CDP_URL}/json`);
++    const tabs = await r.json();
++    return tabs.filter((t) => t.type === "page").map((t) => ({ id: t.id, url: t.url }));
++  } catch {
++    return { error: "CDP_UNREACHABLE" };
++  }
++}
++
++function writeTabAudit(extra) {
++  try {
++    writeFileSync(join(EV_DIR, "tab-audit.json"), JSON.stringify({ at: new Date().toISOString(), ...extra }, null, 2), "utf8");
++  } catch (e) {
++    log(`[tab-hygiene] tab-audit 落盘失败（不影响主流程）: ${e.message}`);
++  }
++}
++
+ async function attachPage() {
+   const browser = await chromium.connectOverCDP(CDP_URL, { timeout: 30000 });
+   const ctx = browser.contexts()[0];
+@@ -169,7 +190,6 @@ async function stopIfContextLimit(page) {
+ 
+ // ---------- 发送并收集 ----------
+ async function sendAndCollect(page, text, label, attachPath = null) {
+-  sendAttempted = true; // P1-03：此后任何失败=发送/生成现场，禁关页（catch 据此分叉）
+   const findComposer = async () => {
+     const loc = page.locator('[aria-label="询问 ChatGPT"], [aria-label="Ask ChatGPT"], #prompt-textarea').filter({ visible: true }).first();
+     await loc.waitFor({ state: "visible", timeout: 10000 });
+@@ -213,6 +233,10 @@ async function sendAndCollect(page, text, label, attachPath = null) {
+   const normUrl = (s) => norm(s).replace(/:\s+(?=https?:\/\/)/g, ":");
+   if (normUrl(await c.innerText()) !== normUrl(text)) throw new Error("回读不一致，STOP");
+   await c.focus();
++  // P1-01（S4-R1 整改）：发送旗标紧贴实际发送动作（Enter）——入口处置位会把基线读取/
++  // composer 检查/附件上传等发送前失败误判为"已发送"而跳过自建页清理。此前的失败
++  // =发送前失败（无发送证据），catch 按 close_created_pages 分叉；Enter 后=UNCERTAIN 保留现场。
++  sendAttempted = true;
+   await page.keyboard.press("Enter");
+ 
+   // 发送双验：记录本次新 user unit key，并在 tail 确认后观察停止按钮。
+@@ -308,8 +332,11 @@ async function mainLocked() {
+   writeFileSync(join(EV_DIR, "request.txt"), message, "utf8");
+ 
+   await startChromeWithDebugPort();
++  const tabAuditBefore = await cdpTargetList();
++  tabAuditBeforeRef.value = tabAuditBefore;
+   const { browser, page, createdPages } = await attachPage();
+   ownedCreatedPages = createdPages;
++  log(`[tab-hygiene] attach 前页清单 ${Array.isArray(tabAuditBefore) ? tabAuditBefore.length + " 页" : "不可达"}`);
+ 
+   if (newSession) {
+     // 新聊天落地页：无消息 unit，就绪 = composer + bodyLen>300（手册 NEW_CONV 口径）
+@@ -439,8 +466,12 @@ async function mainLocked() {
+     ...Object.fromEntries(Object.entries(optionalIds).filter(([, value]) => value !== null)),
+   };
+   writeFileSync(join(EV_DIR, "result.json"), JSON.stringify(result, null, 2), "utf8");
++  const tabAuditExit = await cdpTargetList();
+   await browser.close().catch(() => {});
+   await killProfileChrome();
++  writeTabAudit({ outcome: "success", before: tabAuditBefore, exit: tabAuditExit,
++                  created_pages: ownedCreatedPages.length,
++                  disposal: "browser.close+killProfileChrome（profile 级整浏览器关闭=既有成功语义，含既有页与自建页，tab 清零）" });
+   log(`[tab-hygiene] 成功退出：浏览器连接已关+profile Chrome 已杀（含本次自建页 ${ownedCreatedPages.length} 页）；tab 清零`);
+   log(`=== 派单完成，artifact_sha256=${result.artifact_sha256} size_bytes=${result.size_bytes} ===`);
+   console.log("\n=====REPLY_BEGIN=====");
+@@ -453,13 +484,22 @@ main().catch(async (e) => {
+   log(`致命错误: ${e.message}${details}`);
+   if (sendAttempted) {
+     // P1-03：发送已发生——UNCERTAIN/生成中/采集失败现场必须保留（禁重发语义依赖现场），禁关页。
++    writeTabAudit({ outcome: "failure_scene_preserved", before: tabAuditBeforeRef.value,
++                    created_pages: ownedCreatedPages.length,
++                    disposal: "已发送后失败：现场保留不关页（L-018 禁重发语义依赖现场），退出后人工/补采链处置",
++                    error: e.message });
+     log("[tab-hygiene] 发送已发生：保留现场不关页（禁重发语义依赖现场）；退出后由人工/补采链按 L-018 处置");
+   } else {
+-    // P1-03：发送前失败——仅关闭本次自建页（显式 page.close，逐页容错但不吞主错误）。
++    // P1-03/P1-01：发送前失败（Enter 前任何步骤）——仅关闭本次自建页（显式 page.close，逐页容错但不吞主错误）。
++    const exitList = await cdpTargetList();
+     for (const p of ownedCreatedPages) {
+       await p.close().then(() => log("[tab-hygiene] 已关闭自建页（发送前失败清理）"))
+         .catch((ce) => log(`[tab-hygiene] 自建页关闭失败（不影响主错误上报）: ${ce.message}`));
+     }
++    writeTabAudit({ outcome: "failure_created_pages_closed", before: tabAuditBeforeRef.value, exit: exitList,
++                    created_pages: ownedCreatedPages.length,
++                    disposal: "发送前失败：仅关闭本次自建页；既有页零触碰（值守页零关闭证明=before/exit 对照）",
++                    error: e.message });
+   }
+   console.error(e);
+   process.exit(1);
+diff --git a/phase0/tools/tab_cleanup.mjs b/phase0/tools/tab_cleanup.mjs
+index 3a7e641..5d21aaa 100644
+--- a/phase0/tools/tab_cleanup.mjs
++++ b/phase0/tools/tab_cleanup.mjs
+@@ -1,19 +1,24 @@
+-// Chrome tab 维护清理脚本（b-20261116-tab-cleanup S1.3，P1-04 安全门槛）。
++// Chrome tab 维护清理脚本（b-20261116-tab-cleanup S1.3，P1-04 安全门槛；S4-R1 P1-02 整改）。
+ //
+ // 默认 dry-run：只枚举+分组+输出候选报告，不关任何页。
+-// --close：显式开启关闭；逐页门槛（全部满足才关）：
+-//   ①非生成中（停止按钮不可见）；②tab_hygiene 判定为可关重复页（每会话留最新）；
+-//   ③主页/无 CONV 页保留最新一个；④无法确认安全一律不关（fail-closed）。
++// --close：显式开启关闭，且须先取得会话锁（任何自动化在途即拒绝——归属安全门槛）；
++//   逐页门槛（全部满足才关）：
++//   ①停止按钮探测明确返回 false（生成中/探测失败一律不关——fail-closed）；
++//   ②tab_hygiene 判定为可关重复页（每会话留最新）；
++//   ③主页/无 CONV 页保留最新一个；
++//   ④无法确认安全一律不关（skippedNotOwned/skippedGenerating 如实报告）。
+ // 用法：node tab_cleanup.mjs [--close] [--json <out>]
+ import { chromium } from "playwright";
+ import { writeFileSync } from "node:fs";
+ import { describePages, dedupePlan } from "./tab_hygiene.mjs";
++import { acquireSessionLock } from "../e2e-poc/session_lock.mjs";
+ 
+ const CDP_URL = "http://127.0.0.1:9222";
+ const CLOSE = process.argv.includes("--close");
+ const jsonArg = process.argv[process.argv.indexOf("--json") + 1];
+ 
+ async function stopButtonVisible(page) {
++  // 三态：true=生成中；false=探测成功且非生成中；"PROBE_FAIL"=探测失败（fail-closed）
+   return page.evaluate(() => {
+     const candidates = document.querySelectorAll(
+       'button[aria-label="停止"], button[aria-label="Stop"], button[data-testid="stop-button"], form button[aria-label*="停止"], form button[aria-label*="Stop"]');
+@@ -27,6 +32,28 @@ async function stopButtonVisible(page) {
+   }).catch(() => "PROBE_FAIL");
+ }
+ 
++async function targetIdList() {
++  try {
++    const r = await fetch(`${CDP_URL}/json`);
++    const tabs = await r.json();
++    return tabs.filter((t) => t.type === "page").map((t) => ({ id: t.id, url: t.url }));
++  } catch {
++    return { error: "CDP_UNREACHABLE" };
++  }
++}
++
++if (CLOSE) {
++  // P1-04/P1-02：关闭动作前必须独占会话锁——任何自动化（派单/补采）在途即拒绝关闭。
++  try {
++    const lock = acquireSessionLock({ holder: "tab_cleanup" });
++    lock.release();
++    console.log("[tab-cleanup] 会话锁探测通过（无在途自动化）");
++  } catch (e) {
++    console.error(`[tab-cleanup] --close 拒绝：会话锁被持有（自动化可能在途，fail-closed）: ${e.message}`);
++    process.exit(1);
++  }
++}
++
+ const browser = await chromium.connectOverCDP(CDP_URL, { timeout: 30000 });
+ const ctx = browser.contexts()[0];
+ if (!ctx) {
+@@ -37,9 +64,12 @@ const pages = ctx.pages();
+ const descs = [];
+ const pageByIdx = [];
+ for (let i = 0; i < pages.length; i++) {
+-  const url = pages[i].url();
+-  const generating = (await stopButtonVisible(pages[i])) === true;
+-  descs.push({ url, generating, owned: !generating }); // owned 语义=安全门槛已确认（P1-04）：非生成中即可关候选
++  const probe = await stopButtonVisible(pages[i]);
++  descs.push({
++    url: pages[i].url(),
++    generating: probe === true,      // 仅明确探测到生成中才算
++    owned: probe === false,          // 仅"探测成功且非生成中"才确权（PROBE_FAIL→双 false=不进关闭计划）
++  });
+   pageByIdx.push(pages[i]);
+ }
+ const plan = dedupePlan(describePages(descs));
+@@ -48,7 +78,8 @@ const report = {
+   at: new Date().toISOString(),
+   mode: CLOSE ? "close" : "dry-run",
+   total: pages.length,
+-  pages: descs.map((d, i) => ({ index: i, url: d.url, generating: d.generating })),
++  targets: await targetIdList(),
++  pages: descs.map((d, i) => ({ index: i, url: d.url, generating: d.generating, owned: d.owned })),
+   keep: plan.keep,
+   closeCandidates: plan.close,
+   skippedGenerating: plan.skippedGenerating,
+@@ -56,7 +87,7 @@ const report = {
+   closed: [],
+   closeFailures: [],
+ };
+-console.log(`[tab-cleanup] mode=${report.mode} 总页数=${pages.length} 保留=${plan.keep.length} 关闭候选=${plan.close.length} 生成中跳过=${plan.skippedGenerating.length}`);
++console.log(`[tab-cleanup] mode=${report.mode} 总页数=${pages.length} 保留=${plan.keep.length} 关闭候选=${plan.close.length} 生成中跳过=${plan.skippedGenerating.length} 未确权跳过=${plan.skippedNotOwned.length}`);
+ 
+ if (CLOSE) {
+   for (const idx of plan.close) {
+diff --git a/phase0/tools/tab_hygiene.mjs b/phase0/tools/tab_hygiene.mjs
+index aed9644..5409126 100644
+--- a/phase0/tools/tab_hygiene.mjs
++++ b/phase0/tools/tab_hygiene.mjs
+@@ -58,6 +58,13 @@ export function pickChatGptPage(descs, { conversationUuid = null } = {}) {
+   return chatgpt[0] || null;
+ }
+ 
++/** 失败路径清理决策（gpt_dispatch catch 分叉的可测纯函数，S4-R1 P1-01）：
++ *  sendAttempted=true（Enter 已按下）→"preserve_scene"（UNCERTAIN/生成中现场保留，禁关页）；
++ *  sendAttempted=false（发送前任何失败，无发送证据）→"close_created_pages"（仅关自建页）。 */
++export function cleanupDecision({ sendAttempted }) {
++  return sendAttempted ? "preserve_scene" : "close_created_pages";
++}
++
+ /** 维护去重计划：{ keep: [index], close: [index], skippedGenerating: [index], skippedNotOwned: [index] }
+  *  每会话留最近创建一页；关闭候选仅限"非生成中且 owned 确权"的重复页——
+  *  生成中页（P2-02 误关保护）与未确权页（P1-05 归属隔离）一律降级到对应 skipped 列表。 */
+diff --git a/phase0/tools/test_tab_hygiene.mjs b/phase0/tools/test_tab_hygiene.mjs
+index 5fdee69..142c784 100644
+--- a/phase0/tools/test_tab_hygiene.mjs
++++ b/phase0/tools/test_tab_hygiene.mjs
+@@ -2,7 +2,7 @@
+ // 正反例对应 task-brief §2 消歧/去重规则与"回复未采集不关"边界（close 仅由调用方
+ // 在采集完成后执行，纯函数层不提供 close —— 测试断言其不存在即可防误用）。
+ import assert from "node:assert/strict";
+-import { describePages, pickChatGptPage, dedupePlan } from "./tab_hygiene.mjs";
++import { describePages, pickChatGptPage, dedupePlan, cleanupDecision } from "./tab_hygiene.mjs";
+ 
+ const CONV_A = "6afa0860-ab7c-83ec-8fce-260067e855cb";
+ const CONV_B = "91800300-0000-0000-0000-000000000000";
+@@ -99,6 +99,13 @@ const tests = [
+     d[0].seq = 100; d[1].seq = 100;
+     assert.equal(pickChatGptPage(d, { conversationUuid: CONV_A }).index, 1);
+   }],
++  // ---- S4-R1 P1-01：失败路径分类 ----
++  ["Enter 后失败=保留现场（UNCERTAIN 禁关页）", () => {
++    assert.equal(cleanupDecision({ sendAttempted: true }), "preserve_scene");
++  }],
++  ["发送前失败=仅关自建页（无发送证据）", () => {
++    assert.equal(cleanupDecision({ sendAttempted: false }), "close_created_pages");
++  }],
+   // ---- 防误用边界 ----
+   ["模块不导出任何 close/kill 函数（关闭动作只属调用方）", async () => {
+     const m = await import("./tab_hygiene.mjs");

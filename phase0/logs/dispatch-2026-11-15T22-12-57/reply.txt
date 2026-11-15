@@ -1,0 +1,12 @@
+ChatGPT 说：
+JSON
+{
+  "result": "REWORK",
+  "summary": "共识链与17项单元测试通过，但发现两个安全门槛实现缺陷，且S3证据未达到冻结的P2-03形态，暂不能确认S4交付。",
+  "issues": [
+    "P1-01：phase0/tools/gpt_dispatch.mjs 中 sendAttempted=true 设置在 sendAndCollect() 入口，而非实际发送动作附近。基线读取、composer检查、附件上传等发送前步骤失败，也会被误判为已发送，导致自建页不按冻结规则关闭。应明确区分发送前失败与Enter发送后的UNCERTAIN状态，并覆盖相应失败路径测试。",
+    "P1-02：phase0/tools/tab_cleanup.mjs 中 stopButtonVisible() 探测失败返回 PROBE_FAIL，但调用方仅以 generating === true 判定生成中，随后将 !generating 直接赋给 owned。探测失败因此会被当成已确认安全，且所有非生成中的页面都被视为已确权，可能关闭无法确认归属的重复页面。必须改为探测失败及归属未确认均 fail-closed，只有明确通过安全门槛的页面才能进入关闭计划。",
+    "P2-01：S3证据未满足task-brief v0.2 §0及steps.md S3.2冻结的P2-03形态。当前s3-tab-hygiene-audit-lines.txt仅有选页日志和成功退出日志，缺少运行前后页面身份清单、targetId/URL/CONV_UUID对照、既有值守页零关闭证明及自建页处置记录的完整证据链。成功路径日志不能替代这些证据。"
+  ],
+  "task_id": "b-20261116-tab-cleanup"
+}

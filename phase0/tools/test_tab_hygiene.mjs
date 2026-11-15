@@ -2,7 +2,7 @@
 // 正反例对应 task-brief §2 消歧/去重规则与"回复未采集不关"边界（close 仅由调用方
 // 在采集完成后执行，纯函数层不提供 close —— 测试断言其不存在即可防误用）。
 import assert from "node:assert/strict";
-import { describePages, pickChatGptPage, dedupePlan } from "./tab_hygiene.mjs";
+import { describePages, pickChatGptPage, dedupePlan, cleanupDecision } from "./tab_hygiene.mjs";
 
 const CONV_A = "6afa0860-ab7c-83ec-8fce-260067e855cb";
 const CONV_B = "91800300-0000-0000-0000-000000000000";
@@ -98,6 +98,13 @@ const tests = [
     const d = describePages([{ url: conv(CONV_A) }, { url: conv(CONV_A) }]);
     d[0].seq = 100; d[1].seq = 100;
     assert.equal(pickChatGptPage(d, { conversationUuid: CONV_A }).index, 1);
+  }],
+  // ---- S4-R1 P1-01：失败路径分类 ----
+  ["Enter 后失败=保留现场（UNCERTAIN 禁关页）", () => {
+    assert.equal(cleanupDecision({ sendAttempted: true }), "preserve_scene");
+  }],
+  ["发送前失败=仅关自建页（无发送证据）", () => {
+    assert.equal(cleanupDecision({ sendAttempted: false }), "close_created_pages");
   }],
   // ---- 防误用边界 ----
   ["模块不导出任何 close/kill 函数（关闭动作只属调用方）", async () => {

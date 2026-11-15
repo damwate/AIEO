@@ -15,8 +15,8 @@
 | 规划协商 | R1 REWORK 5P1+3P2（reply sha256=c4535793…）→任务书 v0.2 §0 逐项整改→R2 PASS 共识（reply sha256=f60d6c7c…，8 项全关；新 P2=测试 await import 当场修） | **共识** |
 | S1 集成实现 | gpt_dispatch attachPage 显式化+created-pages 注册表+catch 按 sendAttempted 分叉（已发送=保留现场禁关页/发送前=仅关自建页）；recoll 模板 uuid 多命中取末位+finally 关自建页（只读链路安全）；tab_cleanup.mjs 新增 | **完成** |
 | S2 测试回归 | test_tab_hygiene 17/17（含 P2-02 扩容：生成中保护/未确权隔离/并列判定/所有权门槛）+test_dispatch_options 12/12 回归+四文件语法检查过 | **PASS** |
-| S3 真实链冒烟 | S3.1 dry-run 实证（实况 Chrome 1 页/0 候选/零关闭，tab-cleanup-dryrun-20261116.json）；S3.2 集成后首跑（Gate1-R1 派单 22-05-31）日志审计链完整：选页复用#0→自建注册 0→成功退出 tab 清零 | **PASS** |
-| S4 独立验收 | 本 delivery+acceptance/ 证据+验收派单 | 本轮 |
+| S3 真实链冒烟 | S3.1 dry-run 实证（实况 Chrome 1 页/0 候选/零关闭，tab-cleanup-dryrun-20261116.json）；S3.2 集成后首跑（Gate1-R1 派单 22-05-31）日志审计链完整；S4-R1 整改后升级=tab-audit.json 前后页身份（targetId+URL）+处置记录三态落盘（success/failure_scene_preserved/failure_created_pages_closed） | **PASS（证据形态按 P2-03 补齐）** |
+| S4 独立验收 | R1 REWORK 3 项（P1-01 sendAttempted 位置过早/P1-02 探测失败 fail-closed 缺失/P2-01 S3 证据形态不足；reply sha256=f71656bc…）→整改（旗标紧贴 Enter+cleanupDecision 纯函数 2 例+探测三态 owned 仅确认态+--close 会话锁门槛+tab-audit.json）→R2 限定复验 | R1 REWORK→R2 本轮 |
 
 ## 3. 零语义变更红线遵守（事实，P2-01 审计清单）
 
