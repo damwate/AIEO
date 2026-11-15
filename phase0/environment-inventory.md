@@ -46,10 +46,10 @@
 | 项目 | 实际值 | 实测证据 |
 |---|---|---|
 | WinHTTP 代理 | 直接访问（无代理） | `netsh winhttp show proxy` |
-| 用户级系统代理 | **启用**，端口随代理客户端重启而变，勿写死：晨间=10391 → 13:45=2482 → 晚间=3572（**今日三迁**）。ProxyServer 为分协议串 `http=127.0.0.1:P;https=127.0.0.1:P;socks=127.0.0.1:P`，**按协议解析取端口，勿整串抓第一个数字、勿假设各协议端口相同**；代理客户端=SakuraCat VPN（单进程混合端口，如 PID 8280，重启即换端口并写回注册表） | 注册表 `HKCU\...\Internet Settings`，ProxyEnable=1；PowerShell 查询 `Get-ItemProperty 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings' | Select ProxyServer,ProxyEnable`；Git Bash 下 reg query 必须写 `//v`（`/v` 被 MSYS 参数转换吃掉返回空——教训见 L-016） |
-| 代理端口监听 | 晨间 10391（PID 3164）→ 午后 2482 监听中（0.0.0.0，PID 8280）；10391/6822 午后均无监听 | `netstat -ano -p TCP | grep ":2482 "` |
-| 直连 chatgpt.com | **超时不可达**（curl 000，15s） | `curl -I https://chatgpt.com` |
-| 经代理 chatgpt.com | **HTTP 200**（晨间经 10391 约 2.3s；13:49 经 2482 实测 github.com 0.6s） | `curl -I -x http://127.0.0.1:2482 https://github.com` |
+| 用户级系统代理 | **启用**，端口随代理客户端重启而变，勿写死：晨间=10391 → 13:45=2482 → 晚间=3572（**今日三迁**）→ 11-15=3260（check-push 实测）。ProxyServer 为分协议串 `http=127.0.0.1:P;https=127.0.0.1:P;socks=127.0.0.1:P`，**按协议解析取端口，勿整串抓第一个数字、勿假设各协议端口相同**；代理客户端=SakuraCat VPN（单进程混合端口，如 PID 8280，重启即换端口并写回注册表） | 注册表 `HKCU\...\Internet Settings`，ProxyEnable=1；PowerShell 查询 `Get-ItemProperty 'HKCU:\Software\Microsoft\Windows\CurrentVersion\Internet Settings' | Select ProxyServer,ProxyEnable`；Git Bash 下 reg query 必须写 `//v`（`/v` 被 MSYS 参数转换吃掉返回空——教训见 L-016） |
+| 代理端口监听 | 晨间 10391（PID 3164）→ 午后 2482 监听中（0.0.0.0，PID 8280）；10391/6822 午后均无监听；**11-15：6822 死、注册表端口 3260 活（check-push TCP+git dry-run 双证）** | `netstat -ano -p TCP | grep ":2482 "` |
+| 直连 chatgpt.com | **超时不可达**（curl 000，15s）；11-15 github.com/chatgpt.com 直连 curl 000 | `curl -I https://chatgpt.com` |
+| 经代理 chatgpt.com | **HTTP 200**（晨间经 10391 约 2.3s；13:49 经 2482 实测 github.com 0.6s；**11-15 经 3260 git push 成功 ahead=4→0**） | `curl -I -x http://127.0.0.1:2482 https://github.com` |
 | open.bigmodel.cn | 200（智谱 API 可达，ZCode 正常工作） | `curl -I` |
 | **找活代理端口的固定方法（2026-11-14 定稿，晚间经共识评审修订）** | **配置来源只提供候选，实际连接测试判定可用性（配置存在≠端口可用）**——①直连试一次（时好时坏勿预设）→ ②注册表 ProxyServer 分协议解析（首选候选）→ ③git config 遗留配置（回退）→ ④netstat 监听端口（末位；**监听≠代理**，必须经代理协议实测）。候选去重、逐个真实探测（TLS 握手+HTTP 响应即链路通，200 非唯一判据）、记录来源与失败原因；注册表端口失效不停止，继续其余候选。**全程只读**：不改注册表/git config/系统代理、不重启代理客户端、不回写探测端口 | 本表 + `toolkit/check-push.mjs`（候选序固化进工具，见 L-016） |
 

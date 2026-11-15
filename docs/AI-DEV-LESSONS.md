@@ -457,8 +457,9 @@
 3. **排查固定路径，最多一轮：** ①读报错特征——`Failed to connect to 127.0.0.1 port NNNN` ＝ 该端口代理进程未启动，属本地服务未开而非网络问题；②`git config --show-origin --list | grep -i proxy` 确认配置层级——URL 级条目（`http.https://github.com.proxy`）优先于通用 `http.proxy`，用 `-c http.proxy=` 覆盖不了它（本次实测）；③`netstat -ano | grep <端口>` 或 `curl -I -x http://127.0.0.1:<端口> <目标>` 判断监听与可达性。
 4. **连不上 ≠ 罢工：** 排查一轮仍不通，立即精确报告三要素（哪个连接、报错原文、需要用户做什么——如"启动监听 6822 的代理工具"），然后把受阻项挂起、继续做不依赖该连接的工作，条件恢复后再回来补做。禁止无限重试空转，禁止不报告就停工。
 5. **受阻期间的正确产出形态：** 本地 commit 在 `.git` 里不会丢；受阻期间正常继续其他产出，维护"待推送清单"，连接恢复后一次推送，不重做任何工作。
+6. **连接类故障第一动作＝跑固化工具，禁止手工猜端口（2026-11-15 用户指令固化，实战反面案例）：** 本机代理端口随代理客户端（SakuraCat）重启**持续漂移**（10391→2482→3572→3260），`.git/config` 里的 6822 是死配置，直连时好时坏——任何"手工 unset 配置→试直连→失败→猜下一个端口"的循环都是空转。**第一动作：`node toolkit/check-push.mjs --push --yes`**（候选序固化：直连 dry-run→注册表 ProxyServer 分协议解析→git config→netstat 末位；严格只读不改配置；自动选定活端口真实推送并复核 ahead/behind）。实战对照（b-20261115-v03-activation）：执行会话手工猜端口 3 轮重试+300s 超时空转，改跑工具 40 秒发现端口 3260 推送成功（ahead=4→0）。**适用于 GitHub push；ChatGPT 网页派单同理先查 §4**——Chrome 走系统代理（注册表 ProxyServer 即活端口），gpt_dispatch 复用已开浏览器时由系统代理兜底；新会话/换 ZCode 账号后涉及 GitHub 与 ChatGPT 的所有开发，开工第一动作先读 `phase0/environment-inventory.md` §4/§5（本条+L-016），不重新踩坑。
 
-**证据：** `phase0/environment-inventory.md` §4/§5（代理端口、Git 代理配置、直连实测）；2026-11-14 主会话 git push 复盘（6822 未监听→直连 reset→按本条路径一轮定位并报告用户）。
+**证据：** `phase0/environment-inventory.md` §4/§5（代理端口、Git 代理配置、直连实测）；2026-11-14 主会话 git push 复盘（6822 未监听→直连 reset→按本条路径一轮定位并报告用户）；2026-11-15 b-20261115-v03-activation 反面案例+工具成功案例（手工猜端口 3 轮空转 vs check-push 40s 定位端口 3260 推送成功，用户指令"找到方法之后写入记忆"）。
 
 ### L-015 会话管理执行者自管：压缩事件为唯一信号、触发点必评估、四项齐备才算交接完成
 
