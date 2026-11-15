@@ -5,7 +5,7 @@
 
 ## 1. 交付总状态（事实）
 
-- **任务结论：PASS**——S1-S4 四步全部独立验收 PASS（S1=R1-R5 五轮/S2=R1-R8+会商乙方案/S3=真实证据承载确认（并入 S4 核验）/S4=本交付确认轮）；问题 1-27 全部关闭，无未关闭项、无挂起项。
+- **任务结论（截至本版）：S1-S3 PASS+S4 交付确认进行中**——S1=R1-R5 五轮 PASS/S2=R1-R8+会商乙方案 PASS（问题 11-27 关）/S3=真实证据承载确认（S2-R8 整体确认）/S4 交付确认 R1=REJECT 2 项（问题28=NEW-P2-05 区间分类/问题29=NEW-P2-06 总状态提前宣告——本版即整改），整改后待复验；问题 1-27 全部关闭维持。
 - **交付物（事实）**：`phase1/tools/review_leg.py`（GPT-03 审查腿编排：R0-R6+附录 B 白名单客户端+附录 C 八字段组账本 fsync 原子追加+三断点 resume+attach-reply 人工退路+A8/INTENT-only 双重 fail-closed）、`phase1/tools/review_leg_recoll_template.mjs`（归属校验型补采模板+视口拉高升级）、`phase1/tools/test_review_leg.py`（29 用例）+`test_runner_common.py`（runner 公共件）；charter 定稿 v1.0 与 steps.md 冻结件随任务包归档。
 - **真实业务落档（零 mock，事实）**：七任务真实审查轮全部经真实 chatgpt.com 收发并按 M1 既有状态机推进——T-P1-017 REWORK/018 PASS/022 PASS（A6 人工链）/023 REWORK/024 PASS/026 PASS（A5① 断点后恢复）/027 REWORK；review_reports/artifacts/messages 三类登记齐（M1 只读导出=evidence-s2/m1-export.json）。
 
