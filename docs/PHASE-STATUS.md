@@ -7,7 +7,7 @@
 - **Basic（初级版）＝建成：** 产品级 DoD 固化（DEC-051，`docs/phase1/basic-completion-dod.md` BC-01~BC-12）；挂起项=BC-03 G5 跨电脑实测（等设备）/BC-06 v0.3 代码类任务实战（等真实需求）/BC-12 六步签核（等前置）；多任务模式裁定移交中级版（DEC-052，Basic 维持 M1 交替）。
 - **Standard（中级版）＝2026-11-15 启动开发：** b-20261115-standard-kickoff 规划 R1/R2 复审闭环、steps 冻结（DEC-053；规划=standard/development-plan.md v0.2，两轨 T1 治理/T2 平台，硬约束 H1~H12）；S1 治理基线实施中（standard/WORKFLOW.md v0.1 草案+M2 规范候选 v0.1——**均待用户批准生效**）；能力候选 C1-C8（standard/WORKFLOW-DESIGN-INPUT.md）：C1 随本任务 S3 实施，余项 backlog。
 - **Advanced（高级版）＝占位**（advanced/）。
-- **平台路线（T2 轨）状态不变部分：** §1-§5 所载平台状态（代码基线 e19c000，F-003 已完成合并）继续有效；**路线下一项=F-001 中央调度最小版立项准备**（kickoff S2，立项任务书草案将提交用户确认需求原文——开工须用户拍板）。
+- **平台路线（T2 轨）状态【2026-11-15 校正】：** §1-§5 所载平台状态继续有效；**F-001 中央调度最小版已落地**（T-P1-908：`phase1/tools/scheduler.py` S0-S9 单任务真实编排闭环，七轮验收+合并 main+复核 ACCEPT，DEC-034~036）——§3"中央调度引擎 ❌ 未工程化"与 §5"下一项=F-001 立项"为 T-P1-908 闭合后未同步的漂移记录，以本校正为准；**平台路线真实下一项=GPT-02~05 逐角色真实腿接入（DEC-026 路线）**，立项准备=standard-kickoff S2 修正版草案（提交用户确认需求原文——开工须用户拍板）。
 - 2026-11-15 工作重心=Basic 收尾与 Standard 启动，`app/`、`contracts/`、`tests/` 无代码变化；当日过程记录=basic/tasks/ 与 decision-log DEC-051~053。
 
 **定位：** 持续维护的阶段进度快照（EXP-PLANNING-001 §五）；本 v0.1 内容源自复盘盘点草案 `docs/reviews/2026-11-14-总体规划与可行性复盘-主会话盘点.md` 并追加 E 验收核对矩阵。
