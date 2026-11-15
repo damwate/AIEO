@@ -145,7 +145,7 @@ index a0a483d..b0cb0e1 100644
 
 # S4-R1 整改 diff（工作区 vs ce3befa）
 diff --git a/phase0/tools/gpt_dispatch.mjs b/phase0/tools/gpt_dispatch.mjs
-index b32504a..495372a 100644
+index b32504a..b7ab1b3 100644
 --- a/phase0/tools/gpt_dispatch.mjs
 +++ b/phase0/tools/gpt_dispatch.mjs
 @@ -71,6 +71,7 @@ try {
@@ -214,24 +214,28 @@ index b32504a..495372a 100644
  
    if (newSession) {
      // 新聊天落地页：无消息 unit，就绪 = composer + bodyLen>300（手册 NEW_CONV 口径）
-@@ -439,8 +466,12 @@ async function mainLocked() {
+@@ -439,8 +466,15 @@ async function mainLocked() {
      ...Object.fromEntries(Object.entries(optionalIds).filter(([, value]) => value !== null)),
    };
    writeFileSync(join(EV_DIR, "result.json"), JSON.stringify(result, null, 2), "utf8");
-+  const tabAuditExit = await cdpTargetList();
++  const tabAuditExitBefore = await cdpTargetList();
    await browser.close().catch(() => {});
    await killProfileChrome();
-+  writeTabAudit({ outcome: "success", before: tabAuditBefore, exit: tabAuditExit,
++  // S4-R2 P2-01：处置后快照——profile Chrome 已杀，CDP 不可达即"处置后状态"的机器证明（如实记录采集失败）
++  const tabAuditExitAfter = await cdpTargetList();
++  writeTabAudit({ outcome: "success", before: tabAuditBefore, exit_before_disposal: tabAuditExitBefore,
++                  exit_after_disposal: tabAuditExitAfter,
 +                  created_pages: ownedCreatedPages.length,
-+                  disposal: "browser.close+killProfileChrome（profile 级整浏览器关闭=既有成功语义，含既有页与自建页，tab 清零）" });
++                  disposal: "browser.close+killProfileChrome（profile 级整浏览器关闭=既有成功语义，含既有页与自建页）；exit_after_disposal CDP_UNREACHABLE=tab 清零证明" });
    log(`[tab-hygiene] 成功退出：浏览器连接已关+profile Chrome 已杀（含本次自建页 ${ownedCreatedPages.length} 页）；tab 清零`);
    log(`=== 派单完成，artifact_sha256=${result.artifact_sha256} size_bytes=${result.size_bytes} ===`);
    console.log("\n=====REPLY_BEGIN=====");
-@@ -453,13 +484,22 @@ main().catch(async (e) => {
+@@ -453,13 +487,26 @@ main().catch(async (e) => {
    log(`致命错误: ${e.message}${details}`);
    if (sendAttempted) {
      // P1-03：发送已发生——UNCERTAIN/生成中/采集失败现场必须保留（禁重发语义依赖现场），禁关页。
 +    writeTabAudit({ outcome: "failure_scene_preserved", before: tabAuditBeforeRef.value,
++                    exit_after_disposal: "not_applicable（现场保留，无处置动作）",
 +                    created_pages: ownedCreatedPages.length,
 +                    disposal: "已发送后失败：现场保留不关页（L-018 禁重发语义依赖现场），退出后人工/补采链处置",
 +                    error: e.message });
@@ -239,20 +243,23 @@ index b32504a..495372a 100644
    } else {
 -    // P1-03：发送前失败——仅关闭本次自建页（显式 page.close，逐页容错但不吞主错误）。
 +    // P1-03/P1-01：发送前失败（Enter 前任何步骤）——仅关闭本次自建页（显式 page.close，逐页容错但不吞主错误）。
-+    const exitList = await cdpTargetList();
++    const exitBefore = await cdpTargetList();
      for (const p of ownedCreatedPages) {
        await p.close().then(() => log("[tab-hygiene] 已关闭自建页（发送前失败清理）"))
          .catch((ce) => log(`[tab-hygiene] 自建页关闭失败（不影响主错误上报）: ${ce.message}`));
      }
-+    writeTabAudit({ outcome: "failure_created_pages_closed", before: tabAuditBeforeRef.value, exit: exitList,
++    // S4-R2 P2-01：处置后快照——证明实际关闭结果与既有页保留情况
++    const exitAfter = await cdpTargetList();
++    writeTabAudit({ outcome: "failure_created_pages_closed", before: tabAuditBeforeRef.value,
++                    exit_before_disposal: exitBefore, exit_after_disposal: exitAfter,
 +                    created_pages: ownedCreatedPages.length,
-+                    disposal: "发送前失败：仅关闭本次自建页；既有页零触碰（值守页零关闭证明=before/exit 对照）",
++                    disposal: "发送前失败：仅关闭本次自建页；既有页零触碰（exit_before/exit_after 对照=值守页零关闭证明）",
 +                    error: e.message });
    }
    console.error(e);
    process.exit(1);
 diff --git a/phase0/tools/tab_cleanup.mjs b/phase0/tools/tab_cleanup.mjs
-index 3a7e641..5d21aaa 100644
+index 3a7e641..2488cae 100644
 --- a/phase0/tools/tab_cleanup.mjs
 +++ b/phase0/tools/tab_cleanup.mjs
 @@ -1,19 +1,24 @@
@@ -284,10 +291,15 @@ index 3a7e641..5d21aaa 100644
    return page.evaluate(() => {
      const candidates = document.querySelectorAll(
        'button[aria-label="停止"], button[aria-label="Stop"], button[data-testid="stop-button"], form button[aria-label*="停止"], form button[aria-label*="Stop"]');
-@@ -27,6 +32,28 @@ async function stopButtonVisible(page) {
+@@ -27,53 +32,85 @@ async function stopButtonVisible(page) {
    }).catch(() => "PROBE_FAIL");
  }
  
+-const browser = await chromium.connectOverCDP(CDP_URL, { timeout: 30000 });
+-const ctx = browser.contexts()[0];
+-if (!ctx) {
+-  console.error("CDP 无浏览器上下文");
+-  process.exit(1);
 +async function targetIdList() {
 +  try {
 +    const r = await fetch(`${CDP_URL}/json`);
@@ -296,58 +308,117 @@ index 3a7e641..5d21aaa 100644
 +  } catch {
 +    return { error: "CDP_UNREACHABLE" };
 +  }
-+}
+ }
+-const pages = ctx.pages();
+-const descs = [];
+-const pageByIdx = [];
+-for (let i = 0; i < pages.length; i++) {
+-  const url = pages[i].url();
+-  const generating = (await stopButtonVisible(pages[i])) === true;
+-  descs.push({ url, generating, owned: !generating }); // owned 语义=安全门槛已确认（P1-04）：非生成中即可关候选
+-  pageByIdx.push(pages[i]);
 +
++// S4-R2 P1-02：--close 时会话锁必须覆盖"枚举→判定→关闭"全程（probe-then-release 存在
++// 并发竞态：锁释放后、关闭前自动化可能取得锁）。锁在 finally 释放；dry-run 只读不需要锁。
++let sessionLock = null;
 +if (CLOSE) {
-+  // P1-04/P1-02：关闭动作前必须独占会话锁——任何自动化（派单/补采）在途即拒绝关闭。
 +  try {
-+    const lock = acquireSessionLock({ holder: "tab_cleanup" });
-+    lock.release();
-+    console.log("[tab-cleanup] 会话锁探测通过（无在途自动化）");
++    sessionLock = acquireSessionLock({ holder: "tab_cleanup" });
++    console.log("[tab-cleanup] 会话锁已获取（覆盖枚举→判定→关闭全程）");
 +  } catch (e) {
 +    console.error(`[tab-cleanup] --close 拒绝：会话锁被持有（自动化可能在途，fail-closed）: ${e.message}`);
 +    process.exit(1);
 +  }
-+}
-+
- const browser = await chromium.connectOverCDP(CDP_URL, { timeout: 30000 });
- const ctx = browser.contexts()[0];
- if (!ctx) {
-@@ -37,9 +64,12 @@ const pages = ctx.pages();
- const descs = [];
- const pageByIdx = [];
- for (let i = 0; i < pages.length; i++) {
--  const url = pages[i].url();
--  const generating = (await stopButtonVisible(pages[i])) === true;
--  descs.push({ url, generating, owned: !generating }); // owned 语义=安全门槛已确认（P1-04）：非生成中即可关候选
-+  const probe = await stopButtonVisible(pages[i]);
-+  descs.push({
-+    url: pages[i].url(),
-+    generating: probe === true,      // 仅明确探测到生成中才算
-+    owned: probe === false,          // 仅"探测成功且非生成中"才确权（PROBE_FAIL→双 false=不进关闭计划）
-+  });
-   pageByIdx.push(pages[i]);
  }
- const plan = dedupePlan(describePages(descs));
-@@ -48,7 +78,8 @@ const report = {
-   at: new Date().toISOString(),
-   mode: CLOSE ? "close" : "dry-run",
-   total: pages.length,
--  pages: descs.map((d, i) => ({ index: i, url: d.url, generating: d.generating })),
-+  targets: await targetIdList(),
-+  pages: descs.map((d, i) => ({ index: i, url: d.url, generating: d.generating, owned: d.owned })),
-   keep: plan.keep,
-   closeCandidates: plan.close,
-   skippedGenerating: plan.skippedGenerating,
-@@ -56,7 +87,7 @@ const report = {
-   closed: [],
-   closeFailures: [],
- };
--console.log(`[tab-cleanup] mode=${report.mode} 总页数=${pages.length} 保留=${plan.keep.length} 关闭候选=${plan.close.length} 生成中跳过=${plan.skippedGenerating.length}`);
-+console.log(`[tab-cleanup] mode=${report.mode} 总页数=${pages.length} 保留=${plan.keep.length} 关闭候选=${plan.close.length} 生成中跳过=${plan.skippedGenerating.length} 未确权跳过=${plan.skippedNotOwned.length}`);
+-const plan = dedupePlan(describePages(descs));
  
- if (CLOSE) {
-   for (const idx of plan.close) {
+-const report = {
+-  at: new Date().toISOString(),
+-  mode: CLOSE ? "close" : "dry-run",
+-  total: pages.length,
+-  pages: descs.map((d, i) => ({ index: i, url: d.url, generating: d.generating })),
+-  keep: plan.keep,
+-  closeCandidates: plan.close,
+-  skippedGenerating: plan.skippedGenerating,
+-  skippedNotOwned: plan.skippedNotOwned,
+-  closed: [],
+-  closeFailures: [],
+-};
+-console.log(`[tab-cleanup] mode=${report.mode} 总页数=${pages.length} 保留=${plan.keep.length} 关闭候选=${plan.close.length} 生成中跳过=${plan.skippedGenerating.length}`);
++let browser = null;
++try {
++  browser = await chromium.connectOverCDP(CDP_URL, { timeout: 30000 });
++  const ctx = browser.contexts()[0];
++  if (!ctx) {
++    console.error("CDP 无浏览器上下文");
++    process.exit(1);
++  }
++  const pages = ctx.pages();
++  const descs = [];
++  const pageByIdx = [];
++  for (let i = 0; i < pages.length; i++) {
++    const probe = await stopButtonVisible(pages[i]);
++    descs.push({
++      url: pages[i].url(),
++      generating: probe === true,      // 仅明确探测到生成中才算
++      owned: probe === false,          // 仅"探测成功且非生成中"才确权（PROBE_FAIL→双 false=不进关闭计划）
++    });
++    pageByIdx.push(pages[i]);
++  }
++  const plan = dedupePlan(describePages(descs));
+ 
+-if (CLOSE) {
+-  for (const idx of plan.close) {
+-    try {
+-      await pageByIdx[idx].close();
+-      report.closed.push(idx);
+-      console.log(`[tab-cleanup] 已关闭页#${idx}: ${descs[idx].url}`);
+-    } catch (e) {
+-      report.closeFailures.push({ index: idx, error: String(e) });
+-      console.log(`[tab-cleanup] 页#${idx} 关闭失败（不吞错，继续其余页）: ${e.message}`);
++  const report = {
++    at: new Date().toISOString(),
++    mode: CLOSE ? "close" : "dry-run",
++    total: pages.length,
++    targets: await targetIdList(),
++    pages: descs.map((d, i) => ({ index: i, url: d.url, generating: d.generating, owned: d.owned })),
++    keep: plan.keep,
++    closeCandidates: plan.close,
++    skippedGenerating: plan.skippedGenerating,
++    skippedNotOwned: plan.skippedNotOwned,
++    closed: [],
++    closeFailures: [],
++  };
++  console.log(`[tab-cleanup] mode=${report.mode} 总页数=${pages.length} 保留=${plan.keep.length} 关闭候选=${plan.close.length} 生成中跳过=${plan.skippedGenerating.length} 未确权跳过=${plan.skippedNotOwned.length}`);
++
++  if (CLOSE) {
++    for (const idx of plan.close) {
++      try {
++        await pageByIdx[idx].close();
++        report.closed.push(idx);
++        console.log(`[tab-cleanup] 已关闭页#${idx}: ${descs[idx].url}`);
++      } catch (e) {
++        report.closeFailures.push({ index: idx, error: String(e) });
++        console.log(`[tab-cleanup] 页#${idx} 关闭失败（不吞错，继续其余页）: ${e.message}`);
++      }
+     }
++    if (report.closeFailures.length > 0) process.exitCode = 1; // P2-02：关闭失败不得伪造成功
++  } else {
++    console.log("[tab-cleanup] dry-run：未关闭任何页（--close 显式开启关闭）");
+   }
+-  if (report.closeFailures.length > 0) process.exitCode = 1; // P2-02：关闭失败不得伪造成功
+-} else {
+-  console.log("[tab-cleanup] dry-run：未关闭任何页（--close 显式开启关闭）");
+-}
+ 
+-if (jsonArg) writeFileSync(jsonArg, JSON.stringify(report, null, 2), "utf8");
+-await browser.close().catch(() => {});
++  if (jsonArg) writeFileSync(jsonArg, JSON.stringify(report, null, 2), "utf8");
++} finally {
++  if (sessionLock) sessionLock.release();
++  if (browser) await browser.close().catch(() => {});
++}
+ process.exit(process.exitCode ?? 0);
 diff --git a/phase0/tools/tab_hygiene.mjs b/phase0/tools/tab_hygiene.mjs
 index aed9644..5409126 100644
 --- a/phase0/tools/tab_hygiene.mjs

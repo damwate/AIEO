@@ -42,69 +42,75 @@ async function targetIdList() {
   }
 }
 
+// S4-R2 P1-02：--close 时会话锁必须覆盖"枚举→判定→关闭"全程（probe-then-release 存在
+// 并发竞态：锁释放后、关闭前自动化可能取得锁）。锁在 finally 释放；dry-run 只读不需要锁。
+let sessionLock = null;
 if (CLOSE) {
-  // P1-04/P1-02：关闭动作前必须独占会话锁——任何自动化（派单/补采）在途即拒绝关闭。
   try {
-    const lock = acquireSessionLock({ holder: "tab_cleanup" });
-    lock.release();
-    console.log("[tab-cleanup] 会话锁探测通过（无在途自动化）");
+    sessionLock = acquireSessionLock({ holder: "tab_cleanup" });
+    console.log("[tab-cleanup] 会话锁已获取（覆盖枚举→判定→关闭全程）");
   } catch (e) {
     console.error(`[tab-cleanup] --close 拒绝：会话锁被持有（自动化可能在途，fail-closed）: ${e.message}`);
     process.exit(1);
   }
 }
 
-const browser = await chromium.connectOverCDP(CDP_URL, { timeout: 30000 });
-const ctx = browser.contexts()[0];
-if (!ctx) {
-  console.error("CDP 无浏览器上下文");
-  process.exit(1);
-}
-const pages = ctx.pages();
-const descs = [];
-const pageByIdx = [];
-for (let i = 0; i < pages.length; i++) {
-  const probe = await stopButtonVisible(pages[i]);
-  descs.push({
-    url: pages[i].url(),
-    generating: probe === true,      // 仅明确探测到生成中才算
-    owned: probe === false,          // 仅"探测成功且非生成中"才确权（PROBE_FAIL→双 false=不进关闭计划）
-  });
-  pageByIdx.push(pages[i]);
-}
-const plan = dedupePlan(describePages(descs));
-
-const report = {
-  at: new Date().toISOString(),
-  mode: CLOSE ? "close" : "dry-run",
-  total: pages.length,
-  targets: await targetIdList(),
-  pages: descs.map((d, i) => ({ index: i, url: d.url, generating: d.generating, owned: d.owned })),
-  keep: plan.keep,
-  closeCandidates: plan.close,
-  skippedGenerating: plan.skippedGenerating,
-  skippedNotOwned: plan.skippedNotOwned,
-  closed: [],
-  closeFailures: [],
-};
-console.log(`[tab-cleanup] mode=${report.mode} 总页数=${pages.length} 保留=${plan.keep.length} 关闭候选=${plan.close.length} 生成中跳过=${plan.skippedGenerating.length} 未确权跳过=${plan.skippedNotOwned.length}`);
-
-if (CLOSE) {
-  for (const idx of plan.close) {
-    try {
-      await pageByIdx[idx].close();
-      report.closed.push(idx);
-      console.log(`[tab-cleanup] 已关闭页#${idx}: ${descs[idx].url}`);
-    } catch (e) {
-      report.closeFailures.push({ index: idx, error: String(e) });
-      console.log(`[tab-cleanup] 页#${idx} 关闭失败（不吞错，继续其余页）: ${e.message}`);
-    }
+let browser = null;
+try {
+  browser = await chromium.connectOverCDP(CDP_URL, { timeout: 30000 });
+  const ctx = browser.contexts()[0];
+  if (!ctx) {
+    console.error("CDP 无浏览器上下文");
+    process.exit(1);
   }
-  if (report.closeFailures.length > 0) process.exitCode = 1; // P2-02：关闭失败不得伪造成功
-} else {
-  console.log("[tab-cleanup] dry-run：未关闭任何页（--close 显式开启关闭）");
-}
+  const pages = ctx.pages();
+  const descs = [];
+  const pageByIdx = [];
+  for (let i = 0; i < pages.length; i++) {
+    const probe = await stopButtonVisible(pages[i]);
+    descs.push({
+      url: pages[i].url(),
+      generating: probe === true,      // 仅明确探测到生成中才算
+      owned: probe === false,          // 仅"探测成功且非生成中"才确权（PROBE_FAIL→双 false=不进关闭计划）
+    });
+    pageByIdx.push(pages[i]);
+  }
+  const plan = dedupePlan(describePages(descs));
 
-if (jsonArg) writeFileSync(jsonArg, JSON.stringify(report, null, 2), "utf8");
-await browser.close().catch(() => {});
+  const report = {
+    at: new Date().toISOString(),
+    mode: CLOSE ? "close" : "dry-run",
+    total: pages.length,
+    targets: await targetIdList(),
+    pages: descs.map((d, i) => ({ index: i, url: d.url, generating: d.generating, owned: d.owned })),
+    keep: plan.keep,
+    closeCandidates: plan.close,
+    skippedGenerating: plan.skippedGenerating,
+    skippedNotOwned: plan.skippedNotOwned,
+    closed: [],
+    closeFailures: [],
+  };
+  console.log(`[tab-cleanup] mode=${report.mode} 总页数=${pages.length} 保留=${plan.keep.length} 关闭候选=${plan.close.length} 生成中跳过=${plan.skippedGenerating.length} 未确权跳过=${plan.skippedNotOwned.length}`);
+
+  if (CLOSE) {
+    for (const idx of plan.close) {
+      try {
+        await pageByIdx[idx].close();
+        report.closed.push(idx);
+        console.log(`[tab-cleanup] 已关闭页#${idx}: ${descs[idx].url}`);
+      } catch (e) {
+        report.closeFailures.push({ index: idx, error: String(e) });
+        console.log(`[tab-cleanup] 页#${idx} 关闭失败（不吞错，继续其余页）: ${e.message}`);
+      }
+    }
+    if (report.closeFailures.length > 0) process.exitCode = 1; // P2-02：关闭失败不得伪造成功
+  } else {
+    console.log("[tab-cleanup] dry-run：未关闭任何页（--close 显式开启关闭）");
+  }
+
+  if (jsonArg) writeFileSync(jsonArg, JSON.stringify(report, null, 2), "utf8");
+} finally {
+  if (sessionLock) sessionLock.release();
+  if (browser) await browser.close().catch(() => {});
+}
 process.exit(process.exitCode ?? 0);

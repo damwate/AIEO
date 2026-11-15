@@ -1,0 +1,8 @@
+【独立验收 R2 限定复验·b-20261116-tab-cleanup】TPT02-S4ACC-R2|tab-cleanup
+上轮（reply sha256=f71656bc…）REWORK 3 项已整改，本轮仅复验该 3 项。
+读仓库 github.com/damwate/AIEO（main=fd40cee1e1e278d3ac774c9c23843b2c42814973）：
+1. phase0/tools/gpt_dispatch.mjs——P1-01：sendAttempted 旗标现紧贴 Enter（sendAndCollect 内"回读一致+focus"之后）；cleanupDecision 纯函数（tab_hygiene.mjs）+2 例测试。
+2. phase0/tools/tab_cleanup.mjs——P1-02：stopButtonVisible 三态（true/false/PROBE_FAIL），owned 仅"探测成功且非生成中"确权，PROBE_FAIL 进 skippedNotOwned；--close 前置会话锁探测（自动化在途即拒绝）。
+3. P2-01：gpt_dispatch 新增 tab-audit.json（cdpTargetList 前后页 targetId+URL 清单+三态处置记录 success/failure_scene_preserved/failure_created_pages_closed）；acceptance/s1-integration-diff-audit.patch 392 行两段标注；测试 19/19（acceptance/s2-test-tab-hygiene-output.txt）。
+新问题另列。
+回复仅一个```json对象：{"result":"PASS|REWORK","summary":"<一句话>","issues":["<未关闭项>…"],"task_id":"b-20261116-tab-cleanup"}；result仅PASS/REWORK。

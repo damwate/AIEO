@@ -1,0 +1,18 @@
+{
+  "at": "2026-11-15T22:21:08.478Z",
+  "outcome": "success",
+  "before": [
+    {
+      "id": "AFD8701F4BFCBC8A995F1A3C54EBBFE5",
+      "url": "https://chatgpt.com/"
+    }
+  ],
+  "exit": [
+    {
+      "id": "AFD8701F4BFCBC8A995F1A3C54EBBFE5",
+      "url": "https://chatgpt.com/c/6afa2fe5-65e8-83ec-85f3-6001ad532894"
+    }
+  ],
+  "created_pages": 0,
+  "disposal": "browser.close+killProfileChrome（profile 级整浏览器关闭=既有成功语义，含既有页与自建页，tab 清零）"
+}

@@ -466,12 +466,15 @@ async function mainLocked() {
     ...Object.fromEntries(Object.entries(optionalIds).filter(([, value]) => value !== null)),
   };
   writeFileSync(join(EV_DIR, "result.json"), JSON.stringify(result, null, 2), "utf8");
-  const tabAuditExit = await cdpTargetList();
+  const tabAuditExitBefore = await cdpTargetList();
   await browser.close().catch(() => {});
   await killProfileChrome();
-  writeTabAudit({ outcome: "success", before: tabAuditBefore, exit: tabAuditExit,
+  // S4-R2 P2-01：处置后快照——profile Chrome 已杀，CDP 不可达即"处置后状态"的机器证明（如实记录采集失败）
+  const tabAuditExitAfter = await cdpTargetList();
+  writeTabAudit({ outcome: "success", before: tabAuditBefore, exit_before_disposal: tabAuditExitBefore,
+                  exit_after_disposal: tabAuditExitAfter,
                   created_pages: ownedCreatedPages.length,
-                  disposal: "browser.close+killProfileChrome（profile 级整浏览器关闭=既有成功语义，含既有页与自建页，tab 清零）" });
+                  disposal: "browser.close+killProfileChrome（profile 级整浏览器关闭=既有成功语义，含既有页与自建页）；exit_after_disposal CDP_UNREACHABLE=tab 清零证明" });
   log(`[tab-hygiene] 成功退出：浏览器连接已关+profile Chrome 已杀（含本次自建页 ${ownedCreatedPages.length} 页）；tab 清零`);
   log(`=== 派单完成，artifact_sha256=${result.artifact_sha256} size_bytes=${result.size_bytes} ===`);
   console.log("\n=====REPLY_BEGIN=====");
@@ -485,20 +488,24 @@ main().catch(async (e) => {
   if (sendAttempted) {
     // P1-03：发送已发生——UNCERTAIN/生成中/采集失败现场必须保留（禁重发语义依赖现场），禁关页。
     writeTabAudit({ outcome: "failure_scene_preserved", before: tabAuditBeforeRef.value,
+                    exit_after_disposal: "not_applicable（现场保留，无处置动作）",
                     created_pages: ownedCreatedPages.length,
                     disposal: "已发送后失败：现场保留不关页（L-018 禁重发语义依赖现场），退出后人工/补采链处置",
                     error: e.message });
     log("[tab-hygiene] 发送已发生：保留现场不关页（禁重发语义依赖现场）；退出后由人工/补采链按 L-018 处置");
   } else {
     // P1-03/P1-01：发送前失败（Enter 前任何步骤）——仅关闭本次自建页（显式 page.close，逐页容错但不吞主错误）。
-    const exitList = await cdpTargetList();
+    const exitBefore = await cdpTargetList();
     for (const p of ownedCreatedPages) {
       await p.close().then(() => log("[tab-hygiene] 已关闭自建页（发送前失败清理）"))
         .catch((ce) => log(`[tab-hygiene] 自建页关闭失败（不影响主错误上报）: ${ce.message}`));
     }
-    writeTabAudit({ outcome: "failure_created_pages_closed", before: tabAuditBeforeRef.value, exit: exitList,
+    // S4-R2 P2-01：处置后快照——证明实际关闭结果与既有页保留情况
+    const exitAfter = await cdpTargetList();
+    writeTabAudit({ outcome: "failure_created_pages_closed", before: tabAuditBeforeRef.value,
+                    exit_before_disposal: exitBefore, exit_after_disposal: exitAfter,
                     created_pages: ownedCreatedPages.length,
-                    disposal: "发送前失败：仅关闭本次自建页；既有页零触碰（值守页零关闭证明=before/exit 对照）",
+                    disposal: "发送前失败：仅关闭本次自建页；既有页零触碰（exit_before/exit_after 对照=值守页零关闭证明）",
                     error: e.message });
   }
   console.error(e);
