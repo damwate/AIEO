@@ -101,6 +101,7 @@ GPT-02/04/05 真实腿；多轮审查重审自动化；新 commit 重审触发�
 |---|---|---|---|---|
 | v0.1 | 2026-11-15 | 已被本版取代 | 初稿误定对象为"F-001 立项"（基于未同步漂移状态 F-001 OPEN）——S2 独立验收 REJECT（问题3~6）指出 T-P1-908 已落地 F-001 最小版（DEC-036） | b-20261115-standard-kickoff S2 |
 | v0.2 | 2026-11-15 | 草案（待会务评审→待用户确认需求原文→待用户拍板开工） | 对象重定位=GPT-03 审查真实腿最小版（推荐首角色，顺序留评审决策点）；§2 缺口分析（P1-01）/§4 一期边界（P1-02）/§5 错误分类重试表（P1-02）/§6 授权边界表（P1-03）/§7 可执行验收矩阵（P1-04）；随附 FEASIBILITY/PHASE-STATUS 漂移校正 | S2 验收 REJECT 整改（问题3~6） |
+| v0.7（R3-01 修订） | 2026-11-15 | 草案（Gate2-R4 复验被测对象） | R3-01 整改：附录 B 授权依据列 8 行统一为"engine 独立本机服务身份（C7 §8.6）＋读取/登记/事件推进权限"表述，消除与 §6 凭据三类边界的歧义（GET=只读权限白名单；events=§6 事件白名单+M1 裁定；登记类=C5 契约） | S2-Gate2-R3 复评（reply sha256=9e8bd5c43fdc1a3af55a0b8a63c5bc7f72c5887ebfb0799403d1e6e52a0504ec，recoll-2026-11-15T13-23-46-826Z） |
 | v0.7 | 2026-11-15 | 草案（Gate2-R3 复验被测对象） | Gate2-R2 回执（reply sha256=666b86b2ce1545cf1f4c0eb89662f237fde294b08c30248d9cf1d791b4cca8ed，dispatch-2026-11-15T13-13-25 新会话）两项关闭：R2-01=附录 B 重构 9 列结构（Method/Path/Handler 实名/操作范围/授权依据/允许值/幂等键/拒绝条件/副作用与用例；8 端点不变 ACK 不回入）；R2-02=附录 D 数量声明统一（恢复矩阵 12 行/回滚规则 7 类）+A7-A10 补 A1-A6 同粒度（前置/注入/预期/禁止/失败判定/证据） | S2-Gate2-R2 立项复评 |
 | v0.6 | 2026-11-15 | 草案（Gate2 修订稿·修订后再评被测对象） | Gate2 回执（reply sha256=fbd3f0ee3f18b94907d90d614978b1250922a7322d25b0b7141a82149830f70e，recoll-2026-11-15T13-06-02-854Z）五项关闭事项落实：标题版本统一 v0.6（F-G2-01）/附录 B 端点定稿表（ACK 移出+事件白名单）/附录 C A5 账本+三断点快照+四证据规则/附录 D A6 恢复矩阵 11 行+回滚接管规则+A7-A10/附录 E 登记权威关系 | S2-Gate2 立项评审 |
 | v0.5 | 2026-11-15 | 草案（Gate1 复验被测对象） | G1-03 整改：engine 白名单移除 BLOCKED 态推进（任务级 BLOCKED 仅 OWNER，引擎故障=腿级 BLOCKED run 层记录）；§4 对齐 | S2-Gate1 验证轮裁定（reply sha256=dd1866336b88bdfa…） |
@@ -113,14 +114,14 @@ GPT-02/04/05 真实腿；多轮审查重审自动化；新 commit 重审触发�
 
 | HTTP Method | 完整 Path | Handler | 操作对象与作用范围 | 授权依据 | 允许请求字段/事件值/消息类型 | 幂等键规则与重复行为 | 拒绝条件与预期响应 | 副作用与验收用例 |
 |---|---|---|---|---|---|---|---|---|
-| GET | /api/v1/tasks/{task_id} | get_task | 读指定任务状态与元数据，仅限当前审查任务 | C7 §8.6+会话凭据 | 仅路径参数 task_id | 只读幂等 | 任务不存在/无权限/响应含秘密字段→拒绝读取（404/403，脱敏） | 无；A1 |
+| GET | /api/v1/tasks/{task_id} | get_task | 读指定任务状态与元数据，仅限当前审查任务 | engine 独立本机服务身份（C7 §8.6）＋M1 只读权限白名单 | 仅路径参数 task_id | 只读幂等 | 任务不存在/无权限/响应含秘密字段→拒绝读取（404/403，脱敏） | 无；A1 |
 | GET | /api/v1/tasks/{task_id}/dependencies | get_dependencies | 读指定任务依赖及依赖状态 | 同上 | 仅路径参数 task_id | 只读幂等 | 任务不存在/借此读无关任务详情→拒绝 | 无；A1 |
 | GET | /api/v1/artifacts/{artifact_id} | get_artifact | 读已登记审查输入 artifact | 同上 | 仅路径参数 artifact_id | 只读幂等 | 不存在/超审查任务关联范围→拒绝 | 无；A1 |
 | GET | /api/v1/board | get_board | 仅必要时读最小化看板信息（非默认操作） | 同上 | 仅查询参数 project_id（如需） | 只读幂等 | 非必要全局读取→拒绝（engine 默认不调用） | 无；A1 |
-| POST | /api/v1/tasks/{task_id}/events | submit_event | 状态事件推进（唯一状态写入口） | C7 §8.6+M1 状态机最终裁定 | 事件值仅 GIT_VALIDATE/PASS/REWORK，按当前状态出边；须带 event_id | event_id 幂等；重复提交幂等返回原结果 | BLOCKED/CANCEL 等事件值/非法出边/缺 event_id/任务不匹配→拒绝（INVALID_STATE_TRANSITION 等） | 状态推进；A1/A2/A7 |
-| POST | /api/v1/artifacts | register_artifact | 登记审查证据（输入/输出指针） | C7 §8.6+C5 | 限定任务关联+必填字段 | 稳定幂等键；重复键内容不一致→拒绝，一致→幂等返回 | 缺关联/缺必填字段/覆盖既有证据→拒绝 | 证据登记；A1/A9 |
-| POST | /api/v1/messages | submit_message | 登记审查消息记录 | C7 §8.6+C5 | 限定 message 类型+任务关联 | 稳定幂等键；重复键冲突→拒绝 | 任意管理消息/类型不符/关联不符/重复键冲突→拒绝 | 消息登记；A1/A9 |
-| POST | /api/v1/reports/review | register_review_report | 登记正式审查结论（**结论权威记录**，附录 E） | C7 §8.6+C5 | 限定 task_id/execution_id/审查结果/证据关联 | 幂等键；重复登记冲突→拒绝 | 无对应执行轮/非法结果/任务或 execution 不匹配/证据不完整→拒绝 | 结论登记；A1/A2/A9 |
+| POST | /api/v1/tasks/{task_id}/events | submit_event | 状态事件推进（唯一状态写入口） | engine 独立本机服务身份（C7 §8.6）；事件推进权限=§6 白名单（GIT_VALIDATE/PASS/REWORK），合法性由 M1 状态机最终裁定 | 事件值仅 GIT_VALIDATE/PASS/REWORK，按当前状态出边；须带 event_id | event_id 幂等；重复提交幂等返回原结果 | BLOCKED/CANCEL 等事件值/非法出边/缺 event_id/任务不匹配→拒绝（INVALID_STATE_TRANSITION 等） | 状态推进；A1/A2/A7 |
+| POST | /api/v1/artifacts | register_artifact | 登记审查证据（输入/输出指针） | engine 独立本机服务身份（C7 §8.6）；登记权限=C5 契约 | 限定任务关联+必填字段 | 稳定幂等键；重复键内容不一致→拒绝，一致→幂等返回 | 缺关联/缺必填字段/覆盖既有证据→拒绝 | 证据登记；A1/A9 |
+| POST | /api/v1/messages | submit_message | 登记审查消息记录 | engine 独立本机服务身份（C7 §8.6）；登记权限=C5 契约 | 限定 message 类型+任务关联 | 稳定幂等键；重复键冲突→拒绝 | 任意管理消息/类型不符/关联不符/重复键冲突→拒绝 | 消息登记；A1/A9 |
+| POST | /api/v1/reports/review | register_review_report | 登记正式审查结论（**结论权威记录**，附录 E） | engine 独立本机服务身份（C7 §8.6）；登记权限=C5 契约 | 限定 task_id/execution_id/审查结果/证据关联 | 幂等键；重复登记冲突→拒绝 | 无对应执行轮/非法结果/任务或 execution 不匹配/证据不完整→拒绝 | 结论登记；A1/A2/A9 |
 
 ## 附录 C：A5 恢复账本与断点快照定稿（Gate2 精化）
 
