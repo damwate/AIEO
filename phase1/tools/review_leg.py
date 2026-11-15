@@ -479,7 +479,8 @@ class ReviewLeg:
     # R4 回复采集+904 冻结契约校验（Ajv 2020 真校验；失败=保留原始 artifact 不登记）
     # ------------------------------------------------------------------
     def r4_capture_and_validate(self, reply_dir: Path, batch_id: str | None,
-                                prev_reply_sha: str | None = None) -> dict:
+                                prev_reply_sha: str | None = None,
+                                allow_no_anchor: bool = False) -> dict:
         reply_path = reply_dir / "reply.txt"
         if not reply_path.is_file() or reply_path.stat().st_size == 0:
             raise OrchestrationError(4, f"reply.txt missing/empty in {reply_dir}")
@@ -492,13 +493,26 @@ class ReviewLeg:
         # 附录 C ②归属校验结果 / ④采集快照证据：从采集现场 result（dispatch 或 recoll）提取
         snap: dict = {}
         located_key = None
-        # 发送键交叉核验（P2-01）：采集定位键必须与账本发送锚点键一致（键身份一致强于计数）
+        # 发送键交叉核验（P2-01/R4 整改）：采集定位键必须与账本发送锚点键一致。
+        # 缺键处置：自动路径（run/resume）缺发送锚点=fail-closed（None 不得视为已完成交叉
+        # 核验）；仅 attach-reply 人工路径（本腿未发送）显式登记 not_applicable。
         sent_key = None
+        has_dispatch_record = False
         for anchor_kind in ("R3_SEND_CONFIRMED", "R3_SEND_CONFIRMED_COLLECT_FAILED"):
             rec = self.ledger.state_flags().get(anchor_kind)
-            if rec and rec.get("sent_user_unit_key"):
-                sent_key = rec["sent_user_unit_key"]
-                break
+            if rec:
+                has_dispatch_record = True
+                if rec.get("sent_user_unit_key"):
+                    sent_key = rec["sent_user_unit_key"]
+                    break
+        cross_check_state = None   # 布尔=完成比对；字符串=显式不可比状态（绝不 None 充数）
+        if sent_key is None:
+            if allow_no_anchor and not has_dispatch_record:
+                cross_check_state = "not_applicable_no_leg_send_anchor (manual attach path)"
+            else:
+                raise OrchestrationError(4, "send-anchor key unavailable for ownership cross-check "
+                                            "(missing/empty R3 sent_user_unit_key; fail-closed, "
+                                            "None must not pass as completed cross-check)")
         for cand_name in ("result.json", "recoll-result.json"):
             cand = reply_path.parent / cand_name
             if cand.is_file():
@@ -528,6 +542,9 @@ class ReviewLeg:
                 except (ValueError, AttributeError):
                     pass
                 break
+        if located_key is None and sent_key is not None:
+            raise OrchestrationError(4, "capture evidence lacks located user unit key while send "
+                                        "anchor exists (cannot prove reply ownership; fail-closed)")
         self.ledger.append({"kind": "R4_REPLY_CAPTURED", "bytes": len(raw), "reply_sha256": reply_sha,
                             "source_dir": str(reply_path.parent),
                             "marker_text": self.marker_text,
@@ -543,7 +560,7 @@ class ReviewLeg:
                                 "target_key": located_key,
                                 "sent_key": sent_key,
                                 "target_matches_sent_key": (located_key == sent_key)
-                                if (located_key and sent_key) else None,
+                                if (located_key and sent_key) else cross_check_state,
                                 "source": snap.get("materialized_source"),
                                 "snapshot_sha256": snap.get("snapshot_sha256") if isinstance(snap, dict) else None,
                             },
@@ -1053,9 +1070,14 @@ class ReviewLeg:
 
     def _resume_register(self) -> int:
         """附录 D 行7/8 / 断点 S2：按原幂等键补登记（不再次触发 GPT-03）。
-        P1-02：先逐项只读核实既有成功记录，保留原 ID，只补缺失项。"""
+        P1-02：先逐项只读核实既有成功记录，保留原 ID，只补缺失项。
+        重读源=账本 R4_REPLY_CAPTURED.source_dir（原采集现场，含 result/recoll 快照
+        可供归属键交叉核验）；源目录已不在时回退 run_dir（reply 副本在账本 SHA 核验下）。"""
         task = self._refetch_task()
-        captured = self.r4_capture_and_validate(self.run_dir, batch_id=task.get("batch_id"))
+        flags = self.ledger.state_flags()
+        src = (flags.get("R4_REPLY_CAPTURED") or {}).get("source_dir")
+        reply_dir = Path(src) if src and Path(src).is_dir() else self.run_dir
+        captured = self.r4_capture_and_validate(reply_dir, batch_id=task.get("batch_id"))
         skip = frozenset(self._ledger_verified(task, captured))
         out = self.r5_register(task, captured, skip=skip)
         status = self.r6_verify_transition(captured["parsed"]["result"])
@@ -1108,7 +1130,8 @@ class ReviewLeg:
         stage_dir.mkdir(parents=True, exist_ok=True)
         staged = stage_dir / "reply.txt"
         staged.write_bytes(reply_file.read_bytes())
-        captured = self.r4_capture_and_validate(stage_dir, batch_id=task.get("batch_id"))
+        captured = self.r4_capture_and_validate(stage_dir, batch_id=task.get("batch_id"),
+                                                allow_no_anchor=True)
         skip = frozenset(self._ledger_verified(task, captured))
         out = self.r5_register(task, captured, skip=skip)
         status = self.r6_verify_transition(captured["parsed"]["result"])

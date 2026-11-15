@@ -820,6 +820,26 @@ class ReviewLegTests(unittest.TestCase):
     # ------------------------------------------------------------------
     # 发送失败 vs 采集失败区分（§5 行1/行2）
     # ------------------------------------------------------------------
+    def test_16b_missing_send_anchor_fails_closed(self):
+        """P2-01 缺键处置（R4 复验残留）：自动路径无发送锚点→r4 fail-closed（None 不得
+        视为已完成交叉核验）；attach 人工路径显式登记 not_applicable 不误报。"""
+        leg, task_id, patch_path, _, commit = self.make_leg("f16", None)
+        stage = leg.run_dir / "staged"
+        stage.mkdir(parents=True, exist_ok=True)
+        (stage / "reply.txt").write_text(self.reply_for(commit, "PASS"), encoding="utf-8")
+        task = leg._refetch_task()
+        # 自动路径（默认 allow_no_anchor=False）：账本无 R3 发送锚点 → fail-closed
+        with self.assertRaises(OrchestrationError) as cm:
+            leg.r4_capture_and_validate(stage, batch_id=task.get("batch_id"))
+        self.assertIn("fail-closed", str(cm.exception))
+        # attach 人工路径：显式 not_applicable，不异常
+        captured = leg.r4_capture_and_validate(stage, batch_id=task.get("batch_id"),
+                                               allow_no_anchor=True)
+        rec = leg.ledger.latest("R4_REPLY_CAPTURED")
+        self.assertEqual(rec["user_unit_counts"]["target_matches_sent_key"],
+                         "not_applicable_no_leg_send_anchor (manual attach path)")
+        self.assertIsNotNone(captured)
+
     def test_16_report_key_evidence_rejects_wrong_commit(self):
         """NEW-P1-02 反例：report 409 响应中 commit 前缀与本方 reviewed_commit 不一致
         → key_evidence 必须拒绝（fail-closed），不得仅凭 execution_id 匹配放行。"""
