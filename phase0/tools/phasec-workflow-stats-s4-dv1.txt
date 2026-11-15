@@ -1,0 +1,8 @@
+S4-DV1验证请求（会商3授权，非R6）
+绑定：基点ac08520→待验收eb590962（线性链e309474→本commit）。S4轮链十三条rev-list实跑全过。
+DV1=⑧j重写：三旧数字全文逐位置扫描+须落显式历史快照区段内+所在行含轮次标注(21/21↔R1/24/24↔R2/30/30↔R3或R4)+区段外裸露FAIL+viol逐位全报+当前36/36单独核；delivery三处区段化；⑧c3主状态/⑧j全文分开。
+测试：s4-dv1-tests.py 6/6（N1/N2/N3裸露指名拦截+NT三位置viol全报@3050/@3181/@6030+P1/P2正向）+negpos 7/7+一致性36/36+探针True→False。
+可复跑（均python -X utf8 -I）：phase0/tools/{s4-consistency-check.py(36/36)+s4-dv1-tests.py(6/6)+s4-check-negpos-tests.py(7/7)}+basic/tool/check_taskpack.py basic/tasks/b-20261115-phasec-workflow-stats(④PASS)。Windows无独立Linux。
+读取：raw.githubusercontent.com/damwate/AIEO/eb590962/acceptance/s4-acceptance-request.md(v6+证据清单)
+边界：DV1只处理⑧j缺口；问题12返工记录R5第4次REJECT保留；PASS=关闭确认/REJECT=不加返工次数+不启动R6+进二级会商/BLOCKED=如实；通过≠v0.3生效（拍板留用户）
+结论：DV1 PASS/REJECT/BLOCKED

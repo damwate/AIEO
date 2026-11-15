@@ -16,6 +16,8 @@
 # DV1（会商3 授权的降档方案验证，不入问题12 返工计数）=⑧j 重写为全文扫描+显式历史快照区段归属（弃 40 字符窗口）：
 #   三旧数字每个出现位置须落在 <!--hist-snap-start--><!--hist-snap-end--> 区段内且所在行含对应轮次标注，
 #   区段外裸露直接 FAIL，违规位置全量收集逐位置报告；负向 3 数字+整体三位置测试见 s4-dv1-tests.py。
+# DV1 REJECT 裁定登记=⑧a2⑧b⑧c1-3 随 REJECT 态演进（DV1 REJECT=⑧j 实现与测试独立审查全过，
+#   唯一阻断项=证据绑定未闭合[申报引用首跑位置 vs 仓库终归档重跑位置未同步]→第二级会商）。
 import io, re, subprocess, sys
 
 def run_checks(wf, cl, tpl, st, tb, ws, dl):
@@ -78,24 +80,26 @@ def run_checks(wf, cl, tpl, st, tb, ws, dl):
     chk("⑧a task-brief当前步骤行唯一", len(tb_step)==1, f"n={len(tb_step)}")
     step_txt = tb_step[0] if tb_step else ""
     s4_sec = st.split("## S4", 1)[1] if "## S4" in st else ""
-    # 逐项1：当前复验轮次指向——task-brief 当前步骤实态=R5 复验 REJECT+降档阶梯启动，完整承载 R4 轮终态与问题编号
-    chk("⑧a2 tb当前步骤指向R5 REJECT实态(R5 REJECT+问题12第4次+R4 REJECT 1项+问题12第3次)",
-        ("S4 R5 复验 REJECT" in step_txt) and ("问题12 第 4 次" in step_txt)
+    # 逐项1：当前复验轮次指向——task-brief 当前步骤实态=DV1 REJECT+第二级会商待开，完整承载轮次链
+    chk("⑧a2 tb当前步骤指向DV1 REJECT实态(DV1 REJECT+第二级+R5 REJECT+问题12第4次+R4 REJECT 1项+问题12第3次)",
+        ("S4-DV1 REJECT" in step_txt) and ("第二级" in step_txt)
+        and ("S4 R5 复验 REJECT" in step_txt) and ("问题12 第 4 次" in step_txt)
         and ("R4 复验 REJECT 1 项" in step_txt) and ("问题12 第 3 次" in step_txt))
-    chk("⑧b steps S4⑥含R5裁定登记+降档阶梯启动(R5 REJECT+问题12第4次)+R4裁定+止损历史",
-        ("S4 R5 复验 REJECT" in s4_sec) and ("问题12 第 4 次" in s4_sec)
-        and ("停止原方案整改循环进入止损降档阶梯" in s4_sec)
-        and ("S4 R4 复验" in s4_sec) and ("ST-10 止损触发" in s4_sec))
+    chk("⑧b steps S4⑥含DV1 REJECT登记+第二级会商+R5裁定+降档阶梯+止损历史",
+        ("S4-DV1 REJECT" in s4_sec) and ("第二级会商" in s4_sec)
+        and ("S4 R5 复验 REJECT" in s4_sec) and ("停止原方案整改循环进入止损降档阶梯" in s4_sec)
+        and ("ST-10 止损触发" in s4_sec))
     # 逐项2：delivery 主状态句结构化解析（提取加粗句逐项核对，非全文短语包含）
     mst = re.search(r"\*\*S1/S2/S3 独立验收已闭环[^*]*\*\*", dl)
     m0 = mst.group(0) if mst else ""
-    chk("⑧c1 主状态句存在且指向R5 REJECT实态(R5复验REJECT+停止原方案循环进降档阶梯+R6不安排)",
+    chk("⑧c1 主状态句存在且指向DV1 REJECT实态(R5复验REJECT+停止原方案循环进降档阶梯+DV1 REJECT+第二级评估)",
         bool(mst) and ("S4 独立验收 R5 复验 REJECT" in m0)
-        and ("停止原方案整改循环进入止损降档阶梯" in m0) and ("R6 不安排" in m0))
+        and ("停止原方案整改循环进入止损降档阶梯" in m0)
+        and ("S4-DV1 REJECT" in m0) and ("第二级评估" in m0))
     chk("⑧c2 主状态句含R4轮终态(REJECT 1项+问题12第3次)",
         bool(mst) and ("R4 复验 REJECT 1 项" in m0) and ("问题12 第 3 次" in m0))
-    chk("⑧c3 主状态句无过期残留(待R3/待R4复验/24-24/30-30/止损交用户/R5结论待回填)",
-        bool(mst) and not any(x in m0 for x in ("待 R3 复验","待 R4 复验","24/24","30/30","止损交用户","R5 复验结论待回填")))
+    chk("⑧c3 主状态句无过期残留(待R3/待R4复验/24-24/30-30/止损交用户/R5与DV1结论待回填)",
+        bool(mst) and not any(x in m0 for x in ("待 R3 复验","待 R4 复验","24/24","30/30","止损交用户","R5 复验结论待回填","DV1 复验结论待回填")))
     # 逐项3：轮次链 R1-R4 逐轮三文件逐项核对（轮结论+对应问题编号缺一即 FAIL）
     for _n,_v,_p in [("⑧d1","REJECT 3 项","问题9/10/11"),("⑧d2","REJECT 2 项","问题12/13"),
                      ("⑧d3","REJECT 保留 2 项","问题12/13"),("⑧d4","REJECT 1 项","问题12 第 3 次")]:

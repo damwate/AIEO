@@ -18,11 +18,11 @@ PASS 36 / FAIL 0
  [PASS] ⑦ S2含字面验收结论PASS
  [PASS] ⑦ S3含字面验收结论PASS
  [PASS] ⑧a task-brief当前步骤行唯一 | n=1
- [PASS] ⑧a2 tb当前步骤指向R5 REJECT实态(R5 REJECT+问题12第4次+R4 REJECT 1项+问题12第3次)
- [PASS] ⑧b steps S4⑥含R5裁定登记+降档阶梯启动(R5 REJECT+问题12第4次)+R4裁定+止损历史
- [PASS] ⑧c1 主状态句存在且指向R5 REJECT实态(R5复验REJECT+停止原方案循环进降档阶梯+R6不安排)
+ [PASS] ⑧a2 tb当前步骤指向DV1 REJECT实态(DV1 REJECT+第二级+R5 REJECT+问题12第4次+R4 REJECT 1项+问题12第3次)
+ [PASS] ⑧b steps S4⑥含DV1 REJECT登记+第二级会商+R5裁定+降档阶梯+止损历史
+ [PASS] ⑧c1 主状态句存在且指向DV1 REJECT实态(R5复验REJECT+停止原方案循环进降档阶梯+DV1 REJECT+第二级评估)
  [PASS] ⑧c2 主状态句含R4轮终态(REJECT 1项+问题12第3次)
- [PASS] ⑧c3 主状态句无过期残留(待R3/待R4复验/24-24/30-30/止损交用户/R5结论待回填)
+ [PASS] ⑧c3 主状态句无过期残留(待R3/待R4复验/24-24/30-30/止损交用户/R5与DV1结论待回填)
  [PASS] ⑧d1 轮结论三文件逐项(REJECT 3 项+问题9/10/11)
  [PASS] ⑧d2 轮结论三文件逐项(REJECT 2 项+问题12/13)
  [PASS] ⑧d3 轮结论三文件逐项(REJECT 保留 2 项+问题12/13)
@@ -34,4 +34,4 @@ PASS 36 / FAIL 0
  [PASS] ⑧g delivery无「四步独立验收全闭环」残留
  [PASS] ⑧h delivery七要素标题齐全
  [PASS] ⑧i delivery声明12行附录
- [PASS] ⑧j(DV1) delivery当前=36/36+历史数字全文扫描区段归属(区段外裸露/区段内缺轮次标注即FAIL,逐位置报告) | viol=[] segs=4
+ [PASS] ⑧j(DV1) delivery当前=36/36+历史数字全文扫描区段归属(区段外裸露/区段内缺轮次标注即FAIL,逐位置报告) | viol=[] segs=3
