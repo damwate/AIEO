@@ -719,5 +719,19 @@
     "bytes": 27088,
     "sha256": "a61108c75891280453dcd10ee3684b76b51d4a7147dd5e235a9eec52aea7bda3",
     "note": "M1 read-only export: tasks/events/reports/artifacts/messages for the six tasks"
+  },
+  {
+    "archive": "test-run-s2r3.txt",
+    "source": "phase1/logs/gpt03-review-leg/test-run-s2r3.txt",
+    "bytes": 6819,
+    "sha256": "0e588c3f0f2f0139d6c62d08f02cc1c096fc8fc1eb17cb267a5bef885e6ec8cf",
+    "note": "NEW-P2-01: independent test execution record (full stdout)"
+  },
+  {
+    "archive": "test-run-s2r3-confirm.txt",
+    "source": "phase1/logs/gpt03-review-leg/test-run-s2r3-confirm.txt",
+    "bytes": 6819,
+    "sha256": "459e727fa902c52aa260d39e04ae7e2a9613fc0180af68f51badce5e043d97c1",
+    "note": "NEW-P2-01: independent test execution record (full stdout)"
   }
 ]

@@ -1,0 +1,66 @@
+test_01_whitelist_client_guards (__main__.ReviewLegTests.test_01_whitelist_client_guards) ... ok
+test_02_idempotent_ids_deterministic (__main__.ReviewLegTests.test_02_idempotent_ids_deterministic) ... ok
+test_03_full_flow_pass_registers_and_transitions (__main__.ReviewLegTests.test_03_full_flow_pass_registers_and_transitions) ... RESULT=REVIEW_LEG_PASS status=TEST_ACCEPTANCE
+ok
+test_04_rework_stops_without_reopen (__main__.ReviewLegTests.test_04_rework_stops_without_reopen) ... RESULT=REVIEW_LEG_PASS status=REWORK
+RESULT=REVIEW_LEG_DONE status=REWORK
+ok
+test_05_contract_fail_keeps_raw_no_registration (__main__.ReviewLegTests.test_05_contract_fail_keeps_raw_no_registration) ... RESULT=LEG_LEVEL_BLOCKED step=4 reason=no review JSON found in GPT-03 reply
+ok
+test_05b_blocked_verdict_rejected (__main__.ReviewLegTests.test_05b_blocked_verdict_rejected) ... RESULT=LEG_LEVEL_BLOCKED step=4 reason=reply result 'BLOCKED' outside ['PASS', 'REWORK'] (BLOCKED is not a content verdict; engine must not set task-level BLOCKED)
+ok
+test_06_replay_same_request_no_duplicates (__main__.ReviewLegTests.test_06_replay_same_request_no_duplicates) ... RESULT=REVIEW_LEG_PASS status=TEST_ACCEPTANCE
+ok
+test_07_event_replay_single_row (__main__.ReviewLegTests.test_07_event_replay_single_row) ... RESULT=REVIEW_LEG_PASS status=TEST_ACCEPTANCE
+ok
+test_08a_send_happened_ledger_broken_blocks (__main__.ReviewLegTests.test_08a_send_happened_ledger_broken_blocks)
+A8 场景①（charter 附录 D A8）：发送已成立、发送后账本记录丢失（仅剩 INTENT） ... RESULT=LEG_LEVEL_BLOCKED step=-1 reason=ledger has send intent without confirmation (appendix D row5 vs A8: cannot prove send state -> fail-closed BLOCKED; manual dispatch-dir check required; resend forbidden)
+RESULT=REVIEW_LEG_PASS (resumed) status=TEST_ACCEPTANCE
+ok
+test_08b_ledger_m1_contradiction_blocks (__main__.ReviewLegTests.test_08b_ledger_m1_contradiction_blocks)
+A8 场景②：账本含派单痕迹而 M1 任务尚在 DEV_REPORTED=矛盾态 → fail-closed。 ... RESULT=LEG_LEVEL_BLOCKED step=-1 reason=ledger has dispatch records but M1 status=DEV_REPORTED (contradiction; fail-closed BLOCKED, no speculative recovery)
+ok
+test_08c_collect_failed_full_recovery (__main__.ReviewLegTests.test_08c_collect_failed_full_recovery)
+NEW-P1-01 修复验证：发送双验过但采集失败（COLLECT_FAILED 落账会话证据） ... RESULT=LEG_LEVEL_BLOCKED step=3 reason=send double-verified but collection failed (禁重发; run resume for recovery): gpt_dispatch exit 3: injected collection failure after send double-verify
+RESULT=REVIEW_LEG_PASS (resumed) status=TEST_ACCEPTANCE
+ok
+test_09_partial_registration_resumes_without_redo (__main__.ReviewLegTests.test_09_partial_registration_resumes_without_redo) ... RESULT=LEG_LEVEL_BLOCKED step=5 reason=message register HTTP 500: {"code": "SYS-0001", "message": "INTERNAL_ERROR: platform request failed", "retryable": false, "correlation_id": "cc113af1-dc7b-42a0-84f5-79a5082aa1ee"}
+RESULT=REVIEW_LEG_PASS (resumed) status=TEST_ACCEPTANCE
+ok
+test_09b_message_ok_report_fail_resume_completes (__main__.ReviewLegTests.test_09b_message_ok_report_fail_resume_completes)
+P1-02 补充分支：message 已成功而 report 登记失败 → resume 跳过前两项 ... RESULT=LEG_LEVEL_BLOCKED step=5 reason=review report register HTTP 500: {"code": "SYS-0001", "message": "INTERNAL_ERROR: platform request failed", "retryable": false, "correlation_id": "e6baa290-b42e-4b9e-9a18-c9f8ff2b840d"}
+RESULT=REVIEW_LEG_PASS (resumed) status=TEST_ACCEPTANCE
+ok
+test_10_diff_sha_mismatch_rejected (__main__.ReviewLegTests.test_10_diff_sha_mismatch_rejected) ... ok
+test_10b_git_verify_missing_commit (__main__.ReviewLegTests.test_10b_git_verify_missing_commit) ... ok
+test_11_brief_over_limit_fails_no_truncation (__main__.ReviewLegTests.test_11_brief_over_limit_fails_no_truncation) ... ok
+test_12_ledger_atomic_and_flags (__main__.ReviewLegTests.test_12_ledger_atomic_and_flags) ... ok
+test_13_resume_terminal_rows (__main__.ReviewLegTests.test_13_resume_terminal_rows) ... RESULT=REVIEW_LEG_PASS status=TEST_ACCEPTANCE
+RESULT=REVIEW_LEG_DONE status=TEST_ACCEPTANCE
+ok
+test_13b_resume_blocked_row_engine_must_not_touch (__main__.ReviewLegTests.test_13b_resume_blocked_row_engine_must_not_touch) ... RESULT=LEG_LEVEL_BLOCKED step=-1 reason=M1 task status=BLOCKED: engine must not touch (appendix D row12; OWNER only)
+ok
+test_14_setup_agents_idempotent (__main__.ReviewLegTests.test_14_setup_agents_idempotent) ... SETUP_OK agents=[{"agent_id": "GPT-03", "reused_existing": true}, {"agent_id": "ENGINE-01", "reused_existing": true}] tokens=runtime/review-leg/service-tokens.json (gitignored)
+SETUP_OK agents=[{"agent_id": "GPT-03", "reused_existing": true}, {"agent_id": "ENGINE-01", "reused_existing": true}] tokens=runtime/review-leg/service-tokens.json (gitignored)
+ok
+test_15_send_failure_one_redispatch_then_blocked (__main__.ReviewLegTests.test_15_send_failure_one_redispatch_then_blocked) ... RESULT=REVIEW_LEG_PASS status=TEST_ACCEPTANCE
+ok
+test_16_report_key_evidence_rejects_wrong_commit (__main__.ReviewLegTests.test_16_report_key_evidence_rejects_wrong_commit)
+NEW-P1-02 反例：report 409 响应中 commit 前缀与本方 reviewed_commit 不一致 ... ok
+test_16b_missing_send_anchor_fails_closed (__main__.ReviewLegTests.test_16b_missing_send_anchor_fails_closed)
+P2-01 缺键处置（R4 复验残留）：自动路径无发送锚点→r4 fail-closed（None 不得 ... ok
+test_16c_confirmed_send_missing_key_fails_closed_even_attach (__main__.ReviewLegTests.test_16c_confirmed_send_missing_key_fails_closed_even_attach)
+S2-R1 P1-01 反例：已确认发送（CONFIRMED）但发送键缺失时，即便 attach 人工路径 ... ok
+test_16d_intent_only_attach_fails_closed (__main__.ReviewLegTests.test_16d_intent_only_attach_fails_closed)
+S2-R2 NEW-P1-01 反例：INTENT-only（发送状态不确定）即便 attach 也必须 ... ok
+test_17_a7_real_process_restart_event_idempotent (__main__.ReviewLegTests.test_17_a7_real_process_restart_event_idempotent)
+A7 真实现场：子进程提交 GIT_VALIDATE 后 os._exit（M1 已提交、客户端进程死） ... ok
+test_18_a5b_real_process_restart_register_only (__main__.ReviewLegTests.test_18_a5b_real_process_restart_register_only)
+A5② 真实现场：子进程完成采集（reply 落盘+R4 账本）后 os._exit（登记未完成） ... ok
+test_19_a5_combination_evidence_process_death_verified (__main__.ReviewLegTests.test_19_a5_combination_evidence_process_death_verified)
+A5① 组合证据（会商乙方案裁定）：runner 独立进程于"发送确认后、reply 采集前" ... ok
+
+----------------------------------------------------------------------
+Ran 28 tests in 38.391s
+
+OK

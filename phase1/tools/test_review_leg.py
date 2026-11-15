@@ -297,50 +297,23 @@ class ReviewLegTests(unittest.TestCase):
     _runner_reply = None
 
     def _write_runner(self, name, body, task_id, commit, patch_path, run_key):
-        """生成独立 runner 脚本（真实子进程执行；自带 ChatGPT 边界替身）。占位符替换。"""
+        """生成独立 runner 脚本（真实子进程执行）。公共件=test_runner_common（真实模块
+        import，无字符串拼接缩进问题）。"""
         tpl = """# -*- coding: utf-8 -*-
-import json, os, sys, time
-sys.path.insert(0, r"__TOOLS__")
-import subprocess as _sp
-import review_leg as _rl
+import json, os, sys
 from pathlib import Path
+sys.path.insert(0, r"__TOOLS__")
+from test_runner_common import install_double
 
-REAL_RUN = _sp.run
-def _double(cmd, **kw):
-    joined = " ".join(map(str, cmd))
-    if "gpt_dispatch.mjs" in joined:
-        droot = Path(r"__DROOT__")
-        droot.mkdir(parents=True, exist_ok=True)
-        n = len(list(droot.glob("dispatch-runner-*"))) + 1
-        ddir = droot / ("dispatch-runner-" + str(n))
-        ddir.mkdir(parents=True, exist_ok=True)
-        cl = [str(a) for a in cmd]
-        if "--message-file" in cl:
-            mf = Path(cl[cl.index("--message-file") + 1])
-            if mf.is_file():
-                (ddir / "request.txt").write_bytes(mf.read_bytes())
-        reply_text = __REPLY__
-        (ddir / "reply.txt").write_text(reply_text, encoding="utf-8")
-        (ddir / "result.json").write_text(json.dumps({
-            "user_unit_key": "fallback-turn-0:0:user", "unit_count": 1,
-            "conversation_url": "https://chatgpt.com/c/33333333-4444-4555-8666-777777777777",
-            "completion_checks": {"send_double_verify": True}}, ensure_ascii=False), encoding="utf-8")
-        class FP:
-            returncode = 0
-            stdout = b""
-            stderr = b""
-        return FP()
-    return REAL_RUN(cmd, **kw)
-_rl.subprocess.run = _double
-_rl.RUNTIME_DIR = Path(r"__RUNTIME__")
-_rl.DISPATCH_LOG_DIR = Path(r"__DROOT__")
+install_double(__REPLY__, Path(r"__DROOT__"), Path(r"__RUNTIME__"), Path(r"__OUTDIR__"))
 
 __BODY__
 """
         tpl = tpl.replace("__TOOLS__", str(REPO_ROOT / "phase1" / "tools"))
+        tpl = tpl.replace("__REPLY__", repr(self._runner_reply or ""))
         tpl = tpl.replace("__DROOT__", str(self.tmp / "dispatch-logs"))
         tpl = tpl.replace("__RUNTIME__", str(self.tmp / "runtime"))
-        tpl = tpl.replace("__REPLY__", repr(self._runner_reply or ""))
+        tpl = tpl.replace("__OUTDIR__", str(self.tmp / "runtime" / ("rvl-" + run_key)))
         tpl = tpl.replace("__BODY__", body)
         rp = self.tmp / name
         rp.write_text(tpl, encoding="utf-8")
@@ -1091,6 +1064,92 @@ __BODY__
         self.assertTrue(str(rec["user_unit_counts"]["target_matches_sent_key"]).startswith("not_applicable"),
                         "failed-send-only attach must be explicitly not_applicable")
         self.assertIsNotNone(captured2)
+
+    def test_19_a5_combination_evidence_process_death_verified(self):
+        """A5① 组合证据（会商乙方案裁定）：runner 独立进程于"发送确认后、reply 采集前"
+        （账本状态事件=CONFIRMED 落账、R4_REPLY_CAPTURED 未落账）os._exit；父测试双重
+        验证进程树死亡（returncode+tasklist 独立存活检查）；全新子进程 resume 走补采→
+        补登记→推进（零重派）。丙修正口径：组合证据，不得表述为一次真实派单现场完整捕获。"""
+        task_id, commit, patch_path, artifact_id = self._make_runner_leg("rn19")
+        self._runner_reply = self.reply_for(commit, "PASS")
+        run_key = "997019"
+        token = self.tokens["ENGINE-01"]
+        body1 = (
+            "ART_ID = sys.argv[7]\n"
+            "from review_leg import ReviewLeg\n"
+            "leg = ReviewLeg(run_key=" + repr(run_key) + ", task_id=" + repr(task_id) +
+            ", project_id='PRJ-RVLTEST',\n"
+            "    reviewed_commit=" + repr(commit) + ", diff_artifact_id=ART_ID,\n"
+            "    diff_file=Path(" + repr(str(patch_path)) + "), fixture_repo=Path(" + repr(str(self.fixture)) + "),\n"
+            "    m1_url=sys.argv[1], token=sys.argv[2],\n"
+            "    marker_text='[GPT03-R1|" + run_key + "|" + task_id + "]')\n"
+            "leg.r0_precheck()\n"
+            "leg.r1_git_validate_and_pass()\n"
+            "task = leg._refetch_task()\n"
+            "leg.r2_compose_brief(task)\n"
+            "leg.r3_dispatch(leg.run_dir.joinpath('brief.txt').read_text(encoding='utf-8'))\n"
+            "# A5① 断点：发送确认已落账（CONFIRMED）、reply 采集动作未执行（R4 未落账）\n"
+            "kinds = [json.loads(l)['kind'] for l in leg.ledger.path.read_text(encoding='utf-8').splitlines() if l.strip()]\n"
+            "assert 'R3_SEND_CONFIRMED' in kinds and 'R4_REPLY_CAPTURED' not in kinds, kinds\n"
+            "print('BREAKPOINT_STATE_OK', flush=True)\n"
+            "Path(leg.run_dir / 'runner-pid.json').write_text(json.dumps({'pid': os.getpid()}), encoding='utf-8')\n"
+            "os._exit(9)\n"
+        )
+        r1 = self._write_runner("runner-a5c-run.py", body1, task_id, commit, patch_path, run_key)
+        import time as _t
+        self._t19_dirs_before = len(list(rl.DISPATCH_LOG_DIR.glob("dispatch-runner-*")))
+        proc1 = self._run_runner(r1, token, task_id, commit, patch_path, run_key, artifact_id, timeout=180)
+        self.assertIn("BREAKPOINT_STATE_OK", proc1.stdout,
+                      "breakpoint state must be confirmed before exit; stdout=" + proc1.stdout[-400:]
+                      + " stderr=" + proc1.stderr[-600:])
+        self.assertEqual(proc1.returncode, -9 if os.name != "nt" else 9,
+                         "runner1 dies after send confirmation, before capture")
+        # 双重验证：独立存活检查（tasklist 全量）——进程树死亡证据（会商要求；
+        # runner 自报 PID=唯一可靠来源，父进程无法可靠枚举子进程 PID）
+        dirs_after_r1 = len(list(rl.DISPATCH_LOG_DIR.glob("dispatch-runner-*")))  # runner1 派单合法
+        pid_rec = json.loads((Path(self.tmp) / "runtime" / ("rvl-" + run_key) / "runner-pid.json").read_text(encoding="utf-8"))
+        r = subprocess.run(["tasklist", "/FO", "CSV", "/NH"], capture_output=True, text=True, timeout=30)
+        self.assertNotIn(str(pid_rec["pid"]), r.stdout,
+                         "process tree death independently verified via tasklist (runner-reported pid)")
+        snap = {"runner_pid": pid_rec["pid"], "exit_code": proc1.returncode,
+                "tasklist_verify": "pid absent (independent alive-check)",
+                "breakpoint": "R3_SEND_CONFIRMED present / R4_REPLY_CAPTURED absent",
+                "combination_evidence_note": "组合证据（会商乙方案）：本测试+918012真实链+test_18恢复语义，"
+                                             "不得表述为一次真实派单现场完整捕获",
+                "verified_at": _t.strftime("%Y-%m-%dT%H:%M:%S", _t.gmtime()) + "Z"}
+        (Path(self.tmp) / "runtime" / "a5-combination-snapshot.json").write_text(
+            json.dumps(snap, ensure_ascii=False, indent=2), encoding="utf-8")
+        # 全新子进程 resume：CONFIRMED 有/R4 无 → _resume_collect（补采替身）→ 补登记 → 推进
+        body2 = (
+            "ART_ID = sys.argv[7]\n"
+            "from review_leg import ReviewLeg\n"
+            "leg = ReviewLeg(run_key=" + repr(run_key) + ", task_id=" + repr(task_id) +
+            ", project_id='PRJ-RVLTEST',\n"
+            "    reviewed_commit=" + repr(commit) + ", diff_artifact_id=ART_ID,\n"
+            "    diff_file=Path(" + repr(str(patch_path)) + "), fixture_repo=Path(" + repr(str(self.fixture)) + "),\n"
+            "    m1_url=sys.argv[1], token=sys.argv[2],\n"
+            "    marker_text='[GPT03-R1|" + run_key + "|" + task_id + "]')\n"
+            "rc = leg.resume()\n"
+            "print('RUNNER2_RC=' + str(rc))\n"
+            "assert rc == 0, 'resume failed'\n"
+        )
+        r2 = self._write_runner("runner-a5c-resume.py", body2, task_id, commit, patch_path, run_key)
+        proc2 = self._run_runner(r2, token, task_id, commit, patch_path, run_key, artifact_id, timeout=240)
+        self.assertIn("RUNNER2_RC=0", proc2.stdout,
+                      "resume runner failed: " + proc2.stdout[-500:] + proc2.stderr[-400:])
+        kinds = [r["kind"] for r in (self.server and [])]  # placeholder no-op
+        led = json.loads(json.dumps([]))
+        self.assertEqual(self.server.query(
+            "SELECT COUNT(*) c FROM review_reports WHERE task_id=?", (task_id,))[0]["c"], 1)
+        self.assertEqual(self.server.query(
+            "SELECT COUNT(*) c FROM messages WHERE task_id=? AND message_type='CODE_REVIEW_SUBMITTED'",
+            (task_id,))[0]["c"], 1)
+        # 零重派断言：test_19 全程 dispatch 目录数 delta=0（resume 走补采路径，无新派单）
+        dispatch_dirs = list(rl.DISPATCH_LOG_DIR.glob("dispatch-runner-*"))
+        self.assertEqual(len(dispatch_dirs), dirs_after_r1,
+                         "A5① combination: resume must not re-dispatch (zero delta after breakpoint)")
+        self.assertEqual(self.server.query(
+            "SELECT status FROM tasks WHERE task_id=?", (task_id,))[0]["status"], "TEST_ACCEPTANCE")
 
     def test_16d_intent_only_attach_fails_closed(self):
         """S2-R2 NEW-P1-01 反例：INTENT-only（发送状态不确定）即便 attach 也必须
