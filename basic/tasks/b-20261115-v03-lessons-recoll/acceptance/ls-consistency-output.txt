@@ -1,0 +1,38 @@
+PASS 37 / FAIL 0
+ [PASS] ①a v0.3已生效版本头+清单正式生效声明
+ [PASS] ①b 生效状态blockquote五要素已生效态(日期2026-11-15/v0.3现行/v0.2历史对照/批准依据原话/记录位置;负向拒绝旧草案态)
+ [PASS] ①c 附录差异记录12行无重号(锚定附录区域) | rows=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12']
+ [PASS] ②a 清单31项 | n=31
+ [PASS] ②b 每项6字段(7竖线) | bad=0
+ [PASS] ②c BLOCKED边界规则
+ [PASS] ③a WORKFLOW含核链命令
+ [PASS] ③b 模板含核链命令
+ [PASS] ④a ST-10止损未触发对齐
+ [PASS] ④b ST-11规划效率对齐
+ [PASS] ④c 六查不属ST条目
+ [PASS] ⑤ workflow-stats 最后修改=30b56de(S1 R2 PASS 对象) | last=30b56de docs(basic): 阶段C S1返工—
+ [PASS] ⑥a 返工表13行(问题1-13) | n=['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13']
+ [PASS] ⑥b 无占位符残留
+ [PASS] ⑥c 复验列无过期残留 | stale=[]
+ [PASS] ⑦ S1含字面验收结论PASS
+ [PASS] ⑦ S2含字面验收结论PASS
+ [PASS] ⑦ S3含字面验收结论PASS
+ [PASS] ⑦ S4含字面验收结论PASS
+ [PASS] ⑧a task-brief当前步骤行唯一 | n=1
+ [PASS] ⑧a2 tb当前步骤指向S4最终交付确认补正完成实态(S4 验收结论 PASS+四步全闭环任务 COMPLETED+P1 补正+补正执行+EV1 复验 PASS+证据绑定+S4最终交付确认+EV1 PASS+会商4+历史链:DV1 REJECT+第二级+R5 REJECT+问题12第4次+R4 REJECT 1项+问题12第3次)
+ [PASS] ⑧b steps S4⑥含最终交付确认登记(P1 补正+五项补正)+EV1复验PASS裁定+验收结论:PASS+会商4裁定+EV1授权与PASS登记+DV1 REJECT+第二级+R5裁定+降档阶梯+止损历史
+ [PASS] ⑧c1 主状态句存在且指向四步全闭环COMPLETED实态(S4 验收结论 PASS+四步全闭环任务 COMPLETED+P1 补正+EV1 复验 PASS+证据绑定问题关闭+会商4+EV1 PASS+R5复验REJECT+停止原方案循环进降档阶梯+DV1 REJECT+第二级评估+最终交付确认复核 PASS+四步全闭环任务正式裁定 COMPLETED)
+ [PASS] ⑧c2 主状态句含R4轮终态(REJECT 1项+问题12第3次)
+ [PASS] ⑧c3 主状态句无过期残留(待R3/待R4复验/24-24/30-30/止损交用户/R5与DV1与EV1结论待回填/EV1复验待派/尚未最终PASS/进入S4最终交付确认/第二级会商待开/复核待派)
+ [PASS] ⑧d1 轮结论三文件逐项(REJECT 3 项+问题9/10/11)
+ [PASS] ⑧d2 轮结论三文件逐项(REJECT 2 项+问题12/13)
+ [PASS] ⑧d3 轮结论三文件逐项(REJECT 保留 2 项+问题12/13)
+ [PASS] ⑧d4 轮结论三文件逐项(REJECT 1 项+问题12 第 3 次)
+ [PASS] ⑧f1 S1-S3 PASS沿用三文件声明
+ [PASS] ⑧f2 delivery S1段逐步(R2 PASS)
+ [PASS] ⑧f3 delivery S2段逐步(R3 PASS+S2 正式闭环)
+ [PASS] ⑧f4 delivery S3段逐步(R4 PASS+S3 正式闭环)
+ [PASS] ⑧g delivery无「四步独立验收全闭环」残留
+ [PASS] ⑧h delivery七要素标题齐全
+ [PASS] ⑧i delivery声明12行附录
+ [PASS] ⑧j(DV1) delivery当前=36/36+历史数字全文扫描区段归属(区段外裸露/区段内缺轮次标注即FAIL,逐位置报告) | viol=[] segs=3

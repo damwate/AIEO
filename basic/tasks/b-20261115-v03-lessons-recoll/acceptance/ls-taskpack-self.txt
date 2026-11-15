@@ -1,0 +1,13 @@
+Taskpack: b-20261115-v03-lessons-recoll
+Phase: IN_PROGRESS
+[PASS] ① 需求记录
+[PASS] ② 步骤清单
+[N/A] ③ 步骤验收记录
+       - 0 步记录完整 PASS；未到期步骤（2 个）: S1 经验入库与 WORKFLOW 回填、S2 独立验收与交付
+[N/A] ④ REJECT返工记录
+       - 无 REJECT 结论且无返工记录表（无返工发生，开发期未到期）
+[N/A] ⑤ 返工次数
+       - 无已关联的有效返工记录行，返工次数未到期可计数
+[N/A] ⑥ 交付记录
+       - 阶段=IN_PROGRESS，交付记录未到期（COMPLETED 时检查 delivery.md 七要素）
+Overall: IN_PROGRESS
