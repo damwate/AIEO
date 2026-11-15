@@ -5,7 +5,7 @@
 
 ## 1. 交付总状态（事实）
 
-- **任务结论：S1-S3 完成，S4 独立验收进行中（本 delivery 提交验收派单时点状态）**——规划协商 R1 REWORK→v0.2 整改→R2 PASS 共识（8 项全关）；S1 集成/S2 测试/S3 冒烟全部完成；ST-05 IN_PROGRESS 全 PASS。
+- **任务结论：PASS（终态，2026-11-16）**——规划 R1 REWORK→v0.2→R2 共识（8 项全关）；S1-S3 完成；S4 验收链 R1 REWORK(3项)→R2 REWORK(2项)→R3 REWORK(简报误钉SHA,非代码问题)→R4 REWORK(2项)→**R5 PASS（reply sha256=813c6a8b…，issues=[]）**；ST-05 COMPLETED 态全项 PASS。
 - **交付物（事实）**：`phase0/tools/tab_hygiene.mjs`（纯函数消歧/去重/归属门槛：describePages/pickChatGptPage/dedupePlan，含 generating/owned 双旗标 fail-closed）、`phase0/tools/tab_cleanup.mjs`（维护脚本：dry-run 默认+--close 逐页安全门槛）、`phase0/tools/test_tab_hygiene.mjs`（17 用例）；gpt_dispatch.mjs 与 review_leg_recoll_template.mjs 各 +20±行集成（选页显式化+自建页注册表+失败路径分叉）。
 
 ## 2. 验收链摘要（事实，逐轮 reply SHA 可回溯）
@@ -16,7 +16,7 @@
 | S1 集成实现 | gpt_dispatch attachPage 显式化+created-pages 注册表+catch 按 sendAttempted 分叉（已发送=保留现场禁关页/发送前=仅关自建页）；recoll 模板 uuid 多命中取末位+finally 关自建页（只读链路安全）；tab_cleanup.mjs 新增 | **完成** |
 | S2 测试回归 | test_tab_hygiene 17/17（含 P2-02 扩容：生成中保护/未确权隔离/并列判定/所有权门槛）+test_dispatch_options 12/12 回归+四文件语法检查过 | **PASS** |
 | S3 真实链冒烟 | S3.1 dry-run 实证（实况 Chrome 1 页/0 候选/零关闭，tab-cleanup-dryrun-20261116.json）；S3.2 集成后首跑（Gate1-R1 派单 22-05-31）日志审计链完整；S4-R1 整改后升级=tab-audit.json 前后页身份（targetId+URL）+处置记录三态落盘（success/failure_scene_preserved/failure_created_pages_closed） | **PASS（证据形态按 P2-03 补齐）** |
-| S4 独立验收 | R1 REWORK 3 项（P1-01 sendAttempted 位置过早/P1-02 探测失败 fail-closed 缺失/P2-01 S3 证据形态不足；reply sha256=f71656bc…）→整改（旗标紧贴 Enter+cleanupDecision 纯函数 2 例+探测三态 owned 仅确认态+--close 会话锁门槛+tab-audit.json）→R2 限定复验 | R1 REWORK→R2 本轮 |
+| S4 独立验收 | R1 REWORK 3 项（sendAttempted 位置/探测 fail-closed/证据形态；f71656bc…）→R2 REWORK 2 项（锁窗口竞态/处置后快照；f9420710…）→R3 REWORK（079b20a1…，**系执行侧简报误钉整改前 SHA fd40cee 所致误读，非代码缺陷**）→R4 REWORK 2 项（cleanupDecision 未接线/样张过期；1918780e…）→**R5 PASS（813c6a8b…，issues=[]）** | **PASS** |
 
 ## 3. 零语义变更红线遵守（事实，P2-01 审计清单）
 

@@ -1,0 +1,5 @@
+ChatGPT 说：
+
+{"result":"REWORK","summary":"603d70fe 提交已核实，P1-01 的实际决策接线有明确 diff 证据；但仍需核对 R5 指定的完整验收材料，暂不能据此确认 PASS。","issues":["待完成 R5 指定样张、集成 diff、19/19 测试输出及 cleanupDecision 实现与调用路径的限定复验"] ,"task_id":"b-20261116-tab-cleanup"}
+
+{"result":"PASS","summary":"R4 两项整改均通过限定复验：cleanupDecision 已接入 catch 实际分支，处置后样张具备三阶段 CDP 证据，19/19 测试通过。","issues":[],"task_id":"b-20261116-tab-cleanup"}

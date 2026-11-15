@@ -1,0 +1,8 @@
+【独立验收 R5·b-20261116-tab-cleanup】TPT02-S4ACC-R5|tab-cleanup
+R4（1918780e…）2 项已整改，本轮仅复验该 2 项。
+读仓库 github.com/damwate/AIEO（main=603d70fe14cf41e506de9467489c64321d4c9332）：
+1. P1-01：cleanupDecision 已接线为 catch 实际决策路径（gpt_dispatch.mjs 第 27 行导入、488-490 调用判定 preserve_scene/close_created_pages）——被测纯函数=实现本体。
+2. P2-01：处置后样张=ef8497b 代码首跑现场（R4 轮自身 tab-audit.json，归档 acceptance/s3-tab-audit-sample.json）：before/exit_before_disposal/exit_after_disposal 三段，exit_after_disposal=CDP_UNREACHABLE 即 tab 清零机器证明。
+3. 其他材料：diff=acceptance/s1-integration-diff-audit.patch；测试19/19（acceptance/s2-test-tab-hygiene-output.txt）。
+新问题另列。
+回复仅一个```json对象：{"result":"PASS|REWORK","summary":"<一句话>","issues":["<未关闭项>…"],"task_id":"b-20261116-tab-cleanup"}；result仅PASS/REWORK。

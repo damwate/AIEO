@@ -529,3 +529,10 @@
 - **② tab-cleanup（b-20261116-tab-cleanup）：** 规划协商 R1 REWORK（5P1+3P2，reply sha256=c4535793…，会话 6afa2a89）→任务书 v0.2 逐项整改（行号勘误以源码实读为准 127/112-114；"最近活跃"改创建序；三类清理时点禁 finally 无差别关；维护模式 dry-run 默认+--close 门槛；自建页注册表；审计红线清单；测试扩容；冒烟证据形态）→**R2 PASS 共识**（8 项全关+1 新 P2 当场修：测试 await import）。steps.md 冻结（S1 集成/S2 测试/S3 冒烟/S4 验收）。S1-S3 完成：gpt_dispatch.mjs+recoll 模板集成（选页语义不变仅显式化+失败路径按 sendAttempted 分叉——已发送现场保留/发送前失败仅关自建页）+tab_cleanup.mjs 维护脚本+test_tab_hygiene 17/17 过+test_dispatch_options 回归 12/12 过+P2-01 审计 diff+dry-run 实证（1 页 0 候选零关闭）+集成后首跑审计链完整（Gate1-R1 派单日志=选页/注册/退出清零）；ST-05 IN_PROGRESS 全 PASS。S4 独立验收待派。
 - **③ GPT-02 charter（GPT02-ARCH-REVIEW-LEG-CHARTER-DRAFT.md）：** v0.1 成文（GPT-03 同构框架，落点 ARCH_REVIEW 关口；角色顺序推荐 GPT-02 先行）→Gate1-R1 REWORK（P1-01=§4 BLOCKED 双语义未对齐；reply 归档 dispatch-2026-11-15T22-05-31）→整改（BLOCKED 双语义段：M1 出边如实呈现+任务级仅 OWNER 不代提交+腿级仅记录，与 GPT-03 §5 同构）→**Gate1-R2 限定复验 PASS**（issues=[]，reply 归档 dispatch-2026-11-15T22-08-55）。下一步=Gate2 会务立项评审（多轮至定稿认可）→Gate3 用户确认 §1+拍板开工。
 - **关联**：DEC-063（处置②③决定）、DEC-026（路线）、L-018/L-020、b-20261116-tab-cleanup 任务包、GPT03 charter 定稿（同构基线）。
+
+### DEC-066 处置②完成：tab-cleanup 任务 COMPLETED/PASS——tab 泄漏清理落地+验收链 R1-R5（2026-11-16，任务完成登记）
+
+- **任务终态：完成/最终结果=PASS**（ST-05 COMPLETED 全项 PASS）。规划共识（R1 REWORK 8 项→v0.2→R2 PASS）→S1 集成/S2 测试 19/19+S3 冒烟→S4 验收链 R1 REWORK(3)→R2 REWORK(2)→R3 REWORK（**执行侧简报误钉整改前 SHA fd40cee 所致误读——申报口径教训：钉定 SHA 必须随整改 commit 同步更新，L-021 适用**）→R4 REWORK(2)→**R5 PASS**（reply sha256=813c6a8b0223d76a17be109ba3afd0c170e67f0163672a0a9c598d1edd13953d，issues=[]）。
+- **交付物**：tab_hygiene.mjs（纯函数：消歧/去重/owned-generating 双门槛/cleanupDecision）+tab_cleanup.mjs（维护脚本 dry-run 默认+--close 全程持锁）+gpt_dispatch.mjs/review_leg_recoll_template.mjs 集成（tab-audit.json 三段式审计：before/exit_before_disposal/exit_after_disposal）+19 用例测试。
+- **语义保证**：零语义变更红线逐项核过（P2-01 清单）；失败路径三态处置（已发送=保留现场/发送前=仅关自建页/成功=profile 级关闭既有语义）；--close 需独占会话锁（自动化在途拒绝）。
+- **关联**：DEC-063/065、L-018/L-021、task 包 acceptance/ 五轮 dispatch 现场归档（22-12-57/22-18-25/22-22-52/22-26-06/22-29-33）。

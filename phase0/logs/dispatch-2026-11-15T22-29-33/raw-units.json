@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-15T22:32:22.829Z",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "de53eb59-75af-494d-9e3d-5a7d1d54d4e3",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "30b0b4c584543dc1129fad9795446233b7a5e2358df36651ecc7b94f95070f52",
+          "813c6a8b0223d76a17be109ba3afd0c170e67f0163672a0a9c598d1edd13953d"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "30b0b4c584543dc1129fad9795446233b7a5e2358df36651ecc7b94f95070f52",
+          "813c6a8b0223d76a17be109ba3afd0c170e67f0163672a0a9c598d1edd13953d"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-0:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n{\"result\":\"REWORK\",\"summary\":\"603d70fe 提交已核实，P1-01 的实际决策接线有明确 diff 证据；但仍需核对 R5 指定的完整验收材料，暂不能据此确认 PASS。\",\"issues\":[\"待完成 R5 指定样张、集成 diff、19/19 测试输出及 cleanupDecision 实现与调用路径的限定复验\"] ,\"task_id\":\"b-20261116-tab-cleanup\"}\n\n{\"result\":\"PASS\",\"summary\":\"R4 两项整改均通过限定复验：cleanupDecision 已接入 catch 实际分支，处置后样张具备三阶段 CDP 证据，19/19 测试通过。\",\"issues\":[],\"task_id\":\"b-20261116-tab-cleanup\"}",
+      "text_sha256": "813c6a8b0223d76a17be109ba3afd0c170e67f0163672a0a9c598d1edd13953d",
+      "size_bytes": 600,
+      "assistant_uuid": "de53eb59-75af-494d-9e3d-5a7d1d54d4e3"
+    }
+  ]
+}
