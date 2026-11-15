@@ -1,0 +1,20 @@
+{
+  "at": "2026-11-15T22:05:12.015Z",
+  "mode": "dry-run",
+  "total": 1,
+  "pages": [
+    {
+      "index": 0,
+      "url": "https://chatgpt.com/",
+      "generating": false
+    }
+  ],
+  "keep": [
+    0
+  ],
+  "closeCandidates": [],
+  "skippedGenerating": [],
+  "skippedNotOwned": [],
+  "closed": [],
+  "closeFailures": []
+}

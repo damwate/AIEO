@@ -1,0 +1,8 @@
+【规划协商请求·b-20261116-tab-cleanup】TPT02-PLAN-R1|tab-cleanup
+任务：Chrome tab 泄漏清理小任务任务书复审（Basic WORKFLOW v0.3 规划协商）。
+读仓库 github.com/damwate/AIEO（main=16ffc6ba0f38b2c668b056bfdab42daf2882393f）：
+1. basic/tasks/b-20261116-tab-cleanup/task-brief.md（执行者理解与验收目标）
+2. basic/tasks/b-20261116-tab-cleanup/requirement.md（需求原文）
+背景：DEC-060 实测 4 chatgpt tab 积累（newPage 未关闭）；DEC-063 处置②立项。
+复审重点：①执行者理解与缺陷事实是否有偏差（gpt_dispatch.mjs:127 取页规则/recoll 模板 newPage）；②"零语义变更"红线是否完整（发送双验/禁重发/fail-closed 不受影响）；③步骤清单（S1 实现+S2 测试+S3 真实链冒烟）是否合理；④遗漏风险。
+回复仅一个```json对象：{"result":"PASS|REWORK","summary":"<一句话>","issues":["<具体问题>…"],"task_id":"b-20261116-tab-cleanup"}；result仅PASS/REWORK。

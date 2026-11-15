@@ -1,0 +1,6 @@
+【规划协商 R2·b-20261116-tab-cleanup】TPT02-PLAN-R2|tab-cleanup
+上轮（会话 6afa2a89，reply sha256=c4535793689eb3e5…）REWORK 5 P1+3 P2 已逐项整改。
+读仓库 github.com/damwate/AIEO（main=b700b0b4cf4c53e0d8fdae4951677847d687a2ca）文件 basic/tasks/b-20261116-tab-cleanup/task-brief.md v0.2——§0 为逐项整改对照表（含行号勘误说明：源码实读 gpt_dispatch attachPage=124 行/选页=127 行、recoll 选页=112/newPage=114，与上轮所引 119/105-108 不符，请复核 grep 证据）。
+tab_hygiene.mjs+test_tab_hygiene.mjs 初版已入库（13/13 过，未接入调用点——接入待共识后 S1）。
+复审范围：仅验证 8 项意见是否关闭；新问题另列。
+回复仅一个```json对象：{"result":"PASS|REWORK","summary":"<一句话>","issues":["<未关闭项/新问题>…"],"task_id":"b-20261116-tab-cleanup"}；result仅PASS/REWORK。

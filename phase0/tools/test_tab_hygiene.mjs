@@ -48,31 +48,62 @@ const tests = [
     assert.equal(pickChatGptPage(d, {}), null);
   }],
   // ---- dedupePlan：维护清理 ----
-  ["同会话多 tab：留最近创建，关其余", () => {
-    const d = describePages(pages([conv(CONV_A), conv(CONV_A), conv(CONV_A)]));
+  ["同会话多 tab：留最近创建，关其余（均确权）", () => {
+    const d = describePages([conv, conv, conv].map((f) => ({ url: f(CONV_A), owned: true })));
     const plan = dedupePlan(d);
-    assert.deepEqual(plan, { keep: [2], close: [1, 0] });
+    assert.deepEqual({ keep: plan.keep, close: plan.close }, { keep: [2], close: [1, 0] });
   }],
   ["不同会话各留一页", () => {
-    const d = describePages(pages([conv(CONV_A), conv(CONV_B), conv(CONV_A)]));
+    const d = describePages([{ url: conv(CONV_A), owned: true }, { url: conv(CONV_B) }, { url: conv(CONV_A), owned: true }]);
     const plan = dedupePlan(d);
-    assert.deepEqual(plan, { keep: [2, 1], close: [0] });
+    assert.deepEqual({ keep: plan.keep, close: plan.close }, { keep: [2, 1], close: [0] });
   }],
   ["主页多个只留一个；非 chatgpt 页不进计划", () => {
-    const d = describePages(pages([HOME, "https://example.com", HOME, conv(CONV_A)]));
+    const d = describePages([{ url: HOME, owned: true }, { url: "https://example.com" }, { url: HOME, owned: true }, { url: conv(CONV_A) }]);
     const plan = dedupePlan(d);
-    assert.deepEqual(plan, { keep: [3, 2], close: [0] });
+    assert.deepEqual({ keep: plan.keep, close: plan.close }, { keep: [3, 2], close: [0] });
   }],
   ["全部唯一：close 为空", () => {
     const d = describePages(pages([conv(CONV_A), conv(CONV_B), HOME]));
     assert.deepEqual(dedupePlan(d).close, []);
   }],
+  // ---- P2-02 扩容：生成中/未确权保护 ----
+  ["生成中页永不进 close（P2-02 误关保护）", () => {
+    const d = describePages([
+      { url: conv(CONV_A), owned: true, generating: true },
+      { url: conv(CONV_A), owned: true },
+    ]);
+    const plan = dedupePlan(d);
+    assert.deepEqual(plan.close, []);
+    assert.deepEqual(plan.skippedGenerating, [0]);
+  }],
+  ["未确权页进 skippedNotOwned 不进 close（P1-05 归属隔离）", () => {
+    const d = describePages([
+      { url: conv(CONV_A), owned: false },
+      { url: conv(CONV_A), owned: false },
+      { url: conv(CONV_A), owned: true },
+    ]);
+    const plan = dedupePlan(d);
+    assert.deepEqual(plan.close, []);
+    assert.deepEqual(plan.skippedNotOwned, [1, 0]);
+  }],
+  ["确权且非生成中的重复页才可关", () => {
+    const d = describePages([
+      { url: conv(CONV_A), owned: true },
+      { url: conv(CONV_A), owned: true },
+    ]);
+    assert.deepEqual(dedupePlan(d).close, [0]);
+  }],
+  ["多候选并列 seq 相同按 index 大者（P1-02 可执行定义）", () => {
+    const d = describePages([{ url: conv(CONV_A) }, { url: conv(CONV_A) }]);
+    d[0].seq = 100; d[1].seq = 100;
+    assert.equal(pickChatGptPage(d, { conversationUuid: CONV_A }).index, 1);
+  }],
   // ---- 防误用边界 ----
-  ["模块不导出任何 close/kill 函数（关闭动作只属调用方）", () => {
-    import("./tab_hygiene.mjs").then((m) => {
-      const exportsWithClose = Object.keys(m).filter((k) => /close|kill/i.test(k));
-      assert.deepEqual(exportsWithClose, []);
-    });
+  ["模块不导出任何 close/kill 函数（关闭动作只属调用方）", async () => {
+    const m = await import("./tab_hygiene.mjs");
+    const exportsWithClose = Object.keys(m).filter((k) => /close|kill/i.test(k));
+    assert.deepEqual(exportsWithClose, []);
   }],
 ];
 

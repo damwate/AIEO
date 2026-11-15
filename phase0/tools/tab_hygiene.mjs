@@ -20,7 +20,11 @@
 
 const CONV_RE = /\/c\/([0-9a-fA-F-]{36})/;
 
-/** 页描述：{ index, url, createdAt? }（index=调用方数组下位；createdAt 可选 ISO/epoch，缺省用 index 序） */
+/** 页描述：{ index, url, createdAt?, generating?, owned? }
+ *  index=调用方数组下位；createdAt 可选 ISO/epoch，缺省用 index 序；
+ *  generating=该页正在生成回复（停止按钮可见等，由调用方探测后标注）——永不进关闭计划；
+ *  owned=调用方安全门槛已确认可关——运行结束清理语义=created-pages 注册表成员（P1-05）；
+ *  维护模式语义=逐页安全门槛通过（P1-04）。未确权页永不进关闭计划（fail-closed）。 */
 export function describePages(pages) {
   return pages.map((p, index) => {
     const url = String(p.url || "");
@@ -32,6 +36,8 @@ export function describePages(pages) {
       isChatGpt: url.includes("chatgpt.com"),
       conversationUuid: m ? m[1].toLowerCase() : null,
       seq: p.createdAt ? Number(p.createdAt) || 0 : index,
+      generating: p.generating === true,
+      owned: p.owned === true,
     };
   });
 }
@@ -52,20 +58,26 @@ export function pickChatGptPage(descs, { conversationUuid = null } = {}) {
   return chatgpt[0] || null;
 }
 
-/** 维护去重计划：{ keep: [index], close: [index] }——每会话留最近创建一页。 */
+/** 维护去重计划：{ keep: [index], close: [index], skippedGenerating: [index], skippedNotOwned: [index] }
+ *  每会话留最近创建一页；关闭候选仅限"非生成中且 owned 确权"的重复页——
+ *  生成中页（P2-02 误关保护）与未确权页（P1-05 归属隔离）一律降级到对应 skipped 列表。 */
 export function dedupePlan(descs) {
   const chatgpt = descs.filter((d) => d.isChatGpt);
   const keep = [];
   const close = [];
+  const skippedGenerating = [];
+  const skippedNotOwned = [];
   const groups = new Map();
   for (const d of newestFirst(chatgpt)) {
     const key = d.conversationUuid || "(home)";
     if (!groups.has(key)) {
       groups.set(key, true);
       keep.push(d.index);
-    } else {
-      close.push(d.index);
+      continue;
     }
+    if (d.generating) skippedGenerating.push(d.index);
+    else if (!d.owned) skippedNotOwned.push(d.index);
+    else close.push(d.index);
   }
-  return { keep, close };
+  return { keep, close, skippedGenerating, skippedNotOwned };
 }

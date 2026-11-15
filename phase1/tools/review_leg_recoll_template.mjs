@@ -18,6 +18,7 @@ import { existsSync, mkdirSync, writeFileSync, copyFileSync } from "node:fs";
 import { join } from "node:path";
 import { createHash } from "node:crypto";
 import { acquireSessionLock } from "../e2e-poc/session_lock.mjs";
+import { describePages } from "./tab_hygiene.mjs";
 import { readDomUnits, readReplySnapshot } from "./inbound_dom.mjs";
 import {
   MIN_STABLE_READ_INTERVAL_MS, compareInboundSnapshots, persistInboundArtifacts,
@@ -101,6 +102,7 @@ const lock = acquireSessionLock({ holder: "review_leg_recoll" });
 log("会话锁已获取（review-leg 补采；仅采集不发送）");
 let browser;
 let cdp;
+const createdPages = []; // 本次运行自建页注册表（b-20261116-tab-cleanup P1-05；finally 清理）
 try {
   if (!existsSync(FAILED_DIR)) throw new Error(`失败现场目录不存在: ${FAILED_DIR}`);
   if (existsSync(join(FAILED_DIR, "request.txt"))) {
@@ -109,9 +111,19 @@ try {
   browser = await chromium.connectOverCDP(CDP_URL);
   const ctx = browser.contexts()[0];
   if (!ctx) throw new Error("CDP 无浏览器上下文");
-  let page = ctx.pages().find((p) => p.url().includes(CONV_UUID));
-  if (!page) {
+  // tab 消歧（b-20261116-tab-cleanup P1-02）：指定会话多命中取末位（创建序=最近创建）；
+  // 未命中才 newPage（既有语义不变）。自建页登记，finally 中清理（只读链路任意退出点安全，P1-03）。
+  const existingPages = ctx.pages();
+  const matchedDescs = describePages(existingPages.map((p) => ({ url: p.url() })))
+    .map((d, i) => ({ d, raw: i }))
+    .filter(({ d }) => d.conversationUuid === String(CONV_UUID).toLowerCase());
+  let page;
+  if (matchedDescs.length > 0) {
+    page = existingPages[matchedDescs[matchedDescs.length - 1].raw];
+    log(`[tab-hygiene] 会话页命中 ${matchedDescs.length} 个，取末位（最近创建）`);
+  } else {
     page = await ctx.newPage();
+    createdPages.push(page);
     await page.goto(`https://chatgpt.com/c/${CONV_UUID}`, { waitUntil: "domcontentloaded", timeout: 60000 });
   }
   log(`页面就位: ${page.url()}`);
@@ -169,6 +181,12 @@ try {
   process.exitCode = 1;
 } finally {
   if (cdp) await cdp.send("Emulation.clearDeviceMetricsOverride").catch(() => {});
+  // 自建页清理（b-20261116-tab-cleanup P1-03）：补采为只读链路（不发送），成功或失败
+  // 退出点关闭本次自建页均安全；仅关注册表内页，绝不触碰既有值守页（P1-05）。
+  for (const p of createdPages) {
+    await p.close().then(() => log("[tab-hygiene] 已关闭自建页"))
+      .catch((ce) => log(`[tab-hygiene] 自建页关闭失败（不影响主流程结果）: ${ce && ce.message}`));
+  }
   if (browser) await browser.close().catch(() => {});
   lock.release();
   log("会话锁已释放（review-leg 补采）");

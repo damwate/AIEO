@@ -24,6 +24,7 @@ import { existsSync, mkdirSync, writeFileSync, readFileSync, appendFileSync } fr
 import { basename, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { acquireSessionLock } from "../e2e-poc/session_lock.mjs";
+import { describePages, pickChatGptPage } from "./tab_hygiene.mjs";
 import {
   MIN_STABLE_READ_INTERVAL_MS,
   compareInboundSnapshots,
@@ -65,6 +66,11 @@ try {
   if (error.details !== undefined) console.error(JSON.stringify(error.details));
   process.exit(error.exitCode ?? 2);
 }
+// tab 生命周期卫生状态（b-20261116-tab-cleanup，P1-03/P1-05）：
+// sendAttempted=已进入 sendAndCollect（此后失败=发送/生成现场，禁关页）；
+// ownedCreatedPages=本次运行自建页注册表（关闭唯一对象；不依赖 browser.close 做清理）。
+let sendAttempted = false;
+let ownedCreatedPages = [];
 const {
   message,
   newSession,
@@ -124,8 +130,15 @@ async function startChromeWithDebugPort() {
 async function attachPage() {
   const browser = await chromium.connectOverCDP(CDP_URL, { timeout: 30000 });
   const ctx = browser.contexts()[0];
-  const page = ctx.pages().find((p) => p.url().includes("chatgpt.com")) || ctx.pages()[0] || (await ctx.newPage());
-  return { browser, page };
+  // tab 消歧落档（b-20261116-tab-cleanup）：选页语义与既有行为一致（首个 chatgpt 页
+  // 或新建），仅显式化判定并登记自建页——零语义变更红线（task-brief v0.2 §0 P2-01）。
+  const existing = ctx.pages();
+  const descs = describePages(existing.map((p) => ({ url: p.url() })));
+  const picked = pickChatGptPage(descs, {});
+  const page = picked ? existing[picked.index] : await ctx.newPage();
+  const createdPages = picked ? [] : [page];
+  log(`[tab-hygiene] 选页: ${picked ? `复用既有页#${picked.index}` : "新建页"}（既有 ${existing.length} 页）；自建页注册 ${createdPages.length} 页`);
+  return { browser, page, createdPages };
 }
 
 async function stopButtonVisible(page) {
@@ -156,6 +169,7 @@ async function stopIfContextLimit(page) {
 
 // ---------- 发送并收集 ----------
 async function sendAndCollect(page, text, label, attachPath = null) {
+  sendAttempted = true; // P1-03：此后任何失败=发送/生成现场，禁关页（catch 据此分叉）
   const findComposer = async () => {
     const loc = page.locator('[aria-label="询问 ChatGPT"], [aria-label="Ask ChatGPT"], #prompt-textarea').filter({ visible: true }).first();
     await loc.waitFor({ state: "visible", timeout: 10000 });
@@ -294,7 +308,8 @@ async function mainLocked() {
   writeFileSync(join(EV_DIR, "request.txt"), message, "utf8");
 
   await startChromeWithDebugPort();
-  const { browser, page } = await attachPage();
+  const { browser, page, createdPages } = await attachPage();
+  ownedCreatedPages = createdPages;
 
   if (newSession) {
     // 新聊天落地页：无消息 unit，就绪 = composer + bodyLen>300（手册 NEW_CONV 口径）
@@ -426,15 +441,26 @@ async function mainLocked() {
   writeFileSync(join(EV_DIR, "result.json"), JSON.stringify(result, null, 2), "utf8");
   await browser.close().catch(() => {});
   await killProfileChrome();
+  log(`[tab-hygiene] 成功退出：浏览器连接已关+profile Chrome 已杀（含本次自建页 ${ownedCreatedPages.length} 页）；tab 清零`);
   log(`=== 派单完成，artifact_sha256=${result.artifact_sha256} size_bytes=${result.size_bytes} ===`);
   console.log("\n=====REPLY_BEGIN=====");
   console.log(snapshot.reply);
   console.log("=====REPLY_END=====");
 }
 
-main().catch((e) => {
+main().catch(async (e) => {
   const details = e.details === undefined ? "" : ` details=${JSON.stringify(e.details)}`;
   log(`致命错误: ${e.message}${details}`);
+  if (sendAttempted) {
+    // P1-03：发送已发生——UNCERTAIN/生成中/采集失败现场必须保留（禁重发语义依赖现场），禁关页。
+    log("[tab-hygiene] 发送已发生：保留现场不关页（禁重发语义依赖现场）；退出后由人工/补采链按 L-018 处置");
+  } else {
+    // P1-03：发送前失败——仅关闭本次自建页（显式 page.close，逐页容错但不吞主错误）。
+    for (const p of ownedCreatedPages) {
+      await p.close().then(() => log("[tab-hygiene] 已关闭自建页（发送前失败清理）"))
+        .catch((ce) => log(`[tab-hygiene] 自建页关闭失败（不影响主错误上报）: ${ce.message}`));
+    }
+  }
   console.error(e);
   process.exit(1);
 });
