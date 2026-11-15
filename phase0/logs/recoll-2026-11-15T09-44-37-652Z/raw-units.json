@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-15T09:45:31.644Z",
+  "user_unit_key": "fallback-turn-3:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-3:1:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "763aedc9-c015-414f-a751-e8c75df3e4fa",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-3:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "927c2e9b29d4132d1a1a1dc7a5207035292562bcf90d7189b1e5877fffa2bbf5",
+          "e1ff7457fa66dd654e6273ef9f7eb20c1fd5fb2b199606c4cf4d52823b9c4d1e"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "927c2e9b29d4132d1a1a1dc7a5207035292562bcf90d7189b1e5877fffa2bbf5",
+          "e1ff7457fa66dd654e6273ef9f7eb20c1fd5fb2b199606c4cf4d52823b9c4d1e"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:1:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-3:0:user",
+      "fallback-turn-3:1:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:1:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:1:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:1:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-3:1:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nBasic（初级版）整体完成度治理级判定回执\n\n判定对象： damwate/AIEO@c1f7ee18780f4177003c6a8f7a0d1069b929cd31\n\n判定基准： DEC-045 五项共识 D1-D5；按请求文件的七项自报现状逐项核验，并核对五项未完成项。\n\nREJECT｜尚未整体完成\n\n这里的 REJECT 表示至少一项明确的完成条件尚未满足；不是说现有阶段成果无效。G5 跨电脑实测本身标记为“未验证”，但 D1 是 DEC-045 明确要求，故不能用文档和本机模拟替代完成证明。\n\n一、治理结论表\n\n判定项\n\n\t\n\n结论\n\n\t\n\n独立核验与理由\n\n\n\n\nD1 独立轻量版、复制到新电脑即用\n\n\t\n\nBLOCKED / 未证实\n\n\t\n\n已有部署边界、依赖清单和 toolkit/SETUP-CHECKLIST.md；但复制性演练明确是本机模拟，G5 第二台设备实测未做。D1 的关键验收条件尚无直接证据。\n\n\n\n\nD2 六模块、文档优先、少量脚本、人工可跑\n\n\t\n\nPASS（有平台边界）\n\n\t\n\nbasic/WORKFLOW.md 六模块规则、任务模板和 31 项清单已成文；核心检查器为 Python 标准库脚本。派单链当前仅 Windows 实测，文件已如实声明，不能扩张成跨平台结论。\n\n\n\n\nD3 选择性抽取能力、不搬整套架构\n\n\t\n\nPASS（治理规则已落地）\n\n\t\n\nWORKFLOW 明确禁止导入中级版运行时模块、禁止搬迁 M1-M4/调度器完整架构，并规定复制件四要素登记；公共工具引用不复制。当前证据支持边界纪律，不等于证明所有未来抽取场景。\n\n\n\n\nD4 首个真实闭环=任务包完整性检查工具\n\n\t\n\nPASS\n\n\t\n\ncheck_taskpack.py 已实现六项独立检查、文本/JSON 共用结果、结构与有限规则校验；taskpack-checker 任务记录四步闭环及独立验收 PASS。\n\n\n\n\nD5 四步流程、独立验收、三轮止损\n\n\t\n\nPASS（制度和实战均有证据）\n\n\t\n\nWORKFLOW 明确四步、逐步独立验收、三轮止损；阶段 C 的真实任务和返工记录包含多轮 REJECT、复验、止损/降档处置实例。\n\n\n\n\n阶段 A→B→C 顺序\n\n\t\n\nPASS\n\n\t\n\n阶段 A 文档复审及用户拍板、阶段 B 检查器交付、阶段 C 统计修订和 v0.3 生效均有对应决策/任务记录。\n\n\n\n\n整体完成标准\n\n\t\n\nREJECT / 尚未成文\n\n\t\n\n已有 ACCEPTANCE-CHECKLIST.md 是“单个任务的工程质量验收清单”，不是“Basic 产品整体完成门槛”；请求方也如实列明整体完成 checklist 尚未定义。\n\n二、自报现状七项核验\n\n自报项\n\n\t\n\n核验结果\n\n\t\n\n说明\n\n\n\n\nWORKFLOW v0.3 正式生效\n\n\t\n\nPASS\n\n\t\n\n指定 commit 的 WORKFLOW 头部记载 2026-11-15 用户拍板生效；DEC-049/050 及 activation 任务链相互指向。\n\n\n\n\n31 项验收清单\n\n\t\n\nPASS\n\n\t\n\n已读取 ACCEPTANCE-CHECKLIST.md，七组 A-G 共 31 项，含 PASS/FAIL/N/A、整体通过和 BLOCKED 边界。\n\n\n\n\ntemplates 三件套\n\n\t\n\nPASS（其中一件为权威模板指针）\n\n\t\n\ntask-brief、acceptance-request、handoff-package 均存在；handoff-package 明确指向 docs/phase1/handoff-template.md，不是重复维护的完整副本。\n\n\n\n\n任务包检查器\n\n\t\n\nPASS（源码核验；未在本会话重跑）\n\n\t\n\n已读取 790 行脚本，确认标准库依赖、六项检查函数和结果模型；任务记录包含两任务实战及终检 PASS 证据。此处核验的是代码和归档证据，不冒称本会话重新执行测试。\n\n\n\n\n推送/环境工具\n\n\t\n\nPASS（工具存在；实战按记录核验）\n\n\t\n\n已读取 check-push.mjs、check-env.mjs；前者具候选发现、探测、超时与只读边界，后者明确为跨平台只读体检。实战结论来自 lessons 与 replication 任务记录，本会话未连接用户主机复跑。\n\n\n\n\n“5 任务全闭环”\n\n\t\n\n部分通过，申报口径需更正\n\n\t\n\n多个任务包有 COMPLETED/PASS 记录；但请求文件的“5 任务”后面实际列出 7 个任务名。不能把数量不一致当成已核实的准确统计，需统一口径并给出纳入/排除规则。\n\n\n\n\n设计输入、会话管理\n\n\t\n\nPASS（资产存在）；主动性问题仍是运营改进项\n\n\t\n\nstandard/WORKFLOW-DESIGN-INPUT.md 已交付；L-015 与 WORKFLOW 会话管理节已写入。自报的“3 次打满才迁移”说明执行纪律尚需持续验证，但不推翻已成文协议。\n\n三、五项未完成事项的治理归类\n\n未完成项\n\n\t\n\n是否阻断 Basic 整体完成\n\n\t\n\n优先级\n\n\t\n\n判定\n\n\n\n\nG5：第二台设备跨电脑实测未做\n\n\t\n\n是\n\n\t\n\nP0\n\n\t\n\nD1 明确含“复制到新电脑即用”。本机模拟只能证明流程在原环境可走，不能证明干净新设备可复现。\n\n\n\n\nv0.3 流程下没有代码类真实任务\n\n\t\n\n建议列为完成前必办\n\n\t\n\nP1\n\n\t\n\n不是 DEC-045 字面上的独立阶段门槛，但代码返工曾占 8/10，且 v0.3 的测试断言/申报绑定规则尚无代码类任务实战。至少完成一个低风险、可回滚的代码任务闭环，才有足够把握宣布流程可覆盖代码任务。\n\n\n\n\nDEC-043 收集器修复、recoll 默认策略沉淀两项 backlog\n\n\t\n\n否，当前按持续运营项管理\n\n\t\n\nP2/P3\n\n\t\n\nDEC-049 已分别记录重启条件；现有禁重发+补采路径有多次恢复记录。若补采失败、错误归属再次发生或成本明显影响效率，应按触发条件升级，不能永久搁置。\n\n\n\n\n会话管理主动性不足\n\n\t\n\n否\n\n\t\n\nP2\n\n\t\n\nL-015 已成文，但实际执行有被动触发记录。属于运行纪律需持续观察，不是 Basic 六模块产品功能缺失。\n\n\n\n\n缺少“Basic 整体完成”checklist\n\n\t\n\n是（治理门槛缺失）\n\n\t\n\nP1\n\n\t\n\n31 项清单不能替代产品级 DoD。必须先把整体完成标准固定，才能有可复核的最终 PASS。\n\n四、建议的 Basic 整体完成标准 checklist\n\n以下是建议版“产品级 DoD”，与 31 项单任务验收清单分开。每项只允许 PASS / FAIL / BLOCKED；BLOCKED 不得计作通过。\n\nBC-01｜DEC-045 对齐： D1-D5 五项逐项映射到具体文件、实现或实测证据；无未解释的偏离。\nBC-02｜独立性： Basic 不导入 Standard/Advanced 运行时模块，不依赖其数据库、服务端、调度器；仓库公共工具及主机级依赖清单完整。\nBC-03｜新设备复现（D1/G5）： 在第二台干净设备或可复现的干净 VM 上，从 clone 开始按 SETUP-CHECKLIST 完成初始化；记录 OS、Node/Python/Git 版本、命令、退出码、HEAD SHA、依赖安装、profile 初始化、安全检查及实际阻断项。至少验证 taskpack 检查器和派单/推送路径；如平台限制不支持，必须缩小产品支持声明并经用户确认，不能宣称“复制即用”。\nBC-04｜六模块交付： 任务管理、规划协商、开发执行、独立验收、返工管理、交付管理均有可执行规范、模板/记录入口和责任边界。\nBC-05｜核心工具： taskpack checker 在干净环境可运行；PASS/FAIL/IN_PROGRESS、六项检查、路径安全、异常输入和 JSON/文本一致性有可复跑测试证据。\nBC-06｜代码类流程验证： 至少一个 v0.3 下代码类任务按四步流程完整闭环；代码绑定、测试原始输出、独立六查、返工记录、最终交付和检查器终检均 PASS。不得用文档任务替代。\nBC-07｜抽取边界： 无整套架构搬迁/反向运行时依赖；若存在复制件，逐件登记来源路径、源 commit 完整 SHA、修改点、对应测试；若无抽取，明确记录 N/A 理由。\nBC-08｜开发纪律： 四步流程、用户授权/节点授权边界、独立验收、三轮止损和 BLOCKED 处置均有真实任务证据；高危操作仍遵守 DEC-010。\nBC-09｜任务质量清单： 31 项清单与 WORKFLOW/模板口径一致；整体通过必须全必检 PASS，N/A 有条件说明。\nBC-10｜证据和版本： 所有完成声明绑定完整 commit SHA；测试证据可定位、哈希可核；任务数、状态、验收轮次统计口径一致（先解决“5 vs 7”）。\nBC-11｜已知限制与 backlog： DEC-043/recoll 等遗留项有负责人、重启触发条件和当前替代流程；不得把已知限制写成已修复。\nBC-12｜最终治理签核： 形成一份产品级验收报告，逐项列 PASS/FAIL/BLOCKED、证据链接、未解决项；所有 BC 必办项 PASS 后才允许宣布 Basic 初级版完成。\n五、剩余必办优先级与完成路径\n\nP0：完成 G5 新设备复现。 这是当前唯一直接对应 D1 明确承诺的实测缺口。建议用第二台 Windows 设备或干净 VM；不要把本机删目录重建再次算作跨电脑实测。\n\nP1：完成一个 v0.3 代码类任务闭环。 选低风险、可回滚的小改动，按四步流程验证代码测试、diff 绑定、独立验收和交付终检。\n\nP1：把上述 BC-01～BC-12 固化为仓库内产品级 DoD，并修正“5 任务/7 名称”统计口径。 之后按 checklist 做一次最终验收。\n\nP2：会话管理主动性持续改进。 用后续任务记录证明阶段完成点和新阶段开工前主动评估交接，不要求为此暂停当前工作。\n\nP2/P3：backlog 按 DEC-049 触发条件处理。 不要求为 Basic 完成而无条件先修复两项，但必须保留可见状态和触发升级机制。\n\n六、判定边界\n\n当前可确认已完成： DEC-045 阶段 A/B/C 主体成果、v0.3 生效、31 项任务验收清单、模板、taskpack 检查器、推送/环境工具、Standard 设计输入，以及多个任务的独立验收闭环。\n\n当前不能宣称已完成： D1 跨电脑可复制性；v0.3 代码任务覆盖；产品级完成门槛正式固化。\n\n不是当前阻断项： DEC-043 收集器修复和 recoll 默认策略沉淀（按 DEC-049 触发条件持续运营）；会话管理主动性（运营纪律改进）。\n\n本次为对指定 commit 的文档、源码和归档记录独立核验；未登录第二台设备、未连接执行机重跑脚本，也未对所有历史任务逐条重演。因此凡涉及真实环境的结论均严格限于仓库归档证据。\n\n最终判定：REJECT——Basic 初级版主体建设已基本完成，但 D1 的 G5 实测和产品级 DoD 尚未闭合；完成上述 P0/P1 后再申请最终 PASS。\n\n七、关键核验指针（均固定到本次判定 commit）\n\nDEC-045/DEC-049/DEC-050 决策日志\n\nBasic WORKFLOW v0.3\n\n31 项任务验收清单\n\ntaskpack 检查器源码\n\n新环境初始化清单\n\n跨电脑复制性演练交付记录（明确 G5 未做）\n\nStandard 工作流设计输入\n\n开发经验 L-015/L-018\n\nreply SHA256（不含本 SHA256 字段自身）：\n\n5dc96a4dab1e9f7a621b10b3e0a88d3b90c897dc8d4b3cc4d9d4bdf08740eea3",
+      "text_sha256": "e1ff7457fa66dd654e6273ef9f7eb20c1fd5fb2b199606c4cf4d52823b9c4d1e",
+      "size_bytes": 10583,
+      "assistant_uuid": "763aedc9-c015-414f-a751-e8c75df3e4fa"
+    }
+  ]
+}

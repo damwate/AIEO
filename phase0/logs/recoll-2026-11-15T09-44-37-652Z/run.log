@@ -1,0 +1,11 @@
+[2026-11-15T09:44:38.232Z] 会话锁已获取（补采v2）
+[2026-11-15T09:44:38.826Z] 页面就位: https://chatgpt.com/c/6af978f4-1288-83ec-b240-cc98f86a1915
+[2026-11-15T09:44:39.063Z] 视口覆盖已应用（1920×20000）
+[2026-11-15T09:44:47.075Z] 静置门通过（units=2）；额外静置 30000ms
+[2026-11-15T09:45:27.550Z] 物化 unit 共 2 个（诊断落盘 units-diag.json）
+[2026-11-15T09:45:27.550Z] 本轮 user 定位成功: fallback-turn-3:0:user（简报标记唯一且为最后一个 user）
+[2026-11-15T09:45:31.644Z] checks={"final_stop_button_not_visible":true,"tail_is_assistant":true,"dil_uuid_present":true,"uuid_stable":true,"stable_unit_read":true,"target_range_materialized":true,"not_prev_reply_sha":true}
+[2026-11-15T09:45:31.649Z] reply 已落盘: D:\AIEO\phase0\logs\recoll-2026-11-15T09-44-37-652Z\reply.txt（10583 字节，SHA256=e1ff7457fa66dd65…）
+[2026-11-15T09:45:31.651Z] recoll COMPLETED
+[2026-11-15T09:45:31.654Z] 视口覆盖已清除
+[2026-11-15T09:45:31.790Z] 会话锁已释放（补采v2）

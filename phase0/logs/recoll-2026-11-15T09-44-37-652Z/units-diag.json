@@ -1,0 +1,14 @@
+[
+  {
+    "key": "fallback-turn-3:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[重发请求|非新任务]\n请把你对\"治理级判定请求\"(Basic初级版整体完成度,docs/phase1/basic-completion-review-requ"
+  },
+  {
+    "key": "fallback-turn-3:1:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nBasic（初级版）整体完成度治理级判定回执\n\n判定对象： damwate/AIEO@c1f7ee18780f4177003c6a8f7a"
+  }
+]
