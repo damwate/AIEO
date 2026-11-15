@@ -522,22 +522,30 @@ class ReviewLeg:
         # 缺键处置：自动路径（run/resume）缺发送锚点=fail-closed（None 不得视为已完成交叉
         # 核验）；仅 attach-reply 人工路径（本腿未发送）显式登记 not_applicable。
         sent_key = None
-        has_dispatch_record = False
+        confirmed_send_exists = False   # 已确认发送（CONFIRMED/COLLECT_FAILED）但键缺失=S2-R1 P1-01 整改点
+        failed_send_only = True         # 仅有失败尝试（纯发送失败，无成功发送证明）
         for anchor_kind in ("R3_SEND_CONFIRMED", "R3_SEND_CONFIRMED_COLLECT_FAILED"):
             rec = self.ledger.state_flags().get(anchor_kind)
             if rec:
-                has_dispatch_record = True
+                confirmed_send_exists = True
+                failed_send_only = False
                 if rec.get("sent_user_unit_key"):
                     sent_key = rec["sent_user_unit_key"]
                     break
         cross_check_state = None   # 布尔=完成比对；字符串=显式不可比状态（绝不 None 充数）
         if sent_key is None:
+            if confirmed_send_exists:
+                # S2-R1 P1-01：已确认发送但发送键缺失——即便人工 attach 也不得 not_applicable
+                #（发送键是归属证明的核心，缺失=无法证明回复归属本腿发送轮，fail-closed）
+                raise OrchestrationError(4, "confirmed send exists but sent_user_unit_key missing "
+                                            "(ownership cannot be proven; fail-closed even for manual "
+                                            "attach; manual ledger forensics required)")
             if allow_no_anchor:
-                # A6 人工退路：发送责任转移到人工链（含本腿发送尝试失败后人工接管的形态），
+                # 纯发送失败（无成功发送证明）后人工接管：发送责任转移到人工链，
                 # 腿侧键交叉核验不适用——显式登记不可比状态，绝不以 None 充数。
-                cross_check_state = ("not_applicable_no_leg_send_anchor (manual attach path"
-                                     + "; leg had failed send attempts, ownership ensured by manual chain)"
-                                     if has_dispatch_record else
+                cross_check_state = ("not_applicable_no_leg_send_anchor (manual attach path; "
+                                     "leg had failed send attempts only, ownership ensured by manual chain)"
+                                     if failed_send_only else
                                      "not_applicable_no_leg_send_anchor (manual attach path)")
             else:
                 raise OrchestrationError(4, "send-anchor key unavailable for ownership cross-check "
@@ -1067,7 +1075,9 @@ class ReviewLeg:
             raise OrchestrationError(-1, "ledger missing conversation_uuid/sent_user_unit_key "
                                          "(fail-closed: cannot prove send state; manual check required)")
         template = Path(__file__).resolve().parent / "review_leg_recoll_template.mjs"
-        driver = self.run_dir / "recoll_driver.mjs"
+        # 驱动必须落在 phase0/tools 下：playwright 按脚本目录向上解析 node_modules，
+        # run_dir（runtime/）不在解析链上（S2-R2 NEW-01 实测缺陷）
+        driver = PHASE0_TOOLS / "review_leg_recoll_driver.mjs"
         failed_dir = DISPATCH_LOG_DIR / sent_anchor.get("dispatch_dir", "")
         if not sent_anchor.get("dispatch_dir") or not failed_dir.is_dir():
             raise OrchestrationError(-1, f"failed dispatch dir not resolvable: {failed_dir} "
