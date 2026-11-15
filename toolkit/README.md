@@ -23,6 +23,15 @@
 - 端口可配置：代理端口 `AIEO_CHECK_PORTS`/`--ports`（默认只读解析仓库代理配置）；CDP 端口 `AIEO_CDP_PORT`/`--cdp-port`（默认 9222 = phase0 冻结派单工具链值）
 - 说明：**退出码恒 0**（报告型工具）。端口未监听/CDP 不在线属常见波动（L-014、`phase0/environment-inventory.md` §5"配置存在≠服务在跑"），由阅读者判断
 
+### check-binding.py —— 申报绑定自动核验（C1，b-20261115-standard-kickoff S3 交付）
+
+- 用法：`python -I toolkit/check-binding.py --baseline <40hex> --target <40hex> [--count N] [--backfill-note "回填声明"] [--mark-na "不适用说明"] [--repo <path>]`
+- 规则：R1 区间数／R2 线性链逐条 parent 核验／R3 merge 禁止（提示改报 diff 基线）／R4 最终性（后代未声明→FAIL）／R5 回填声明识别／R6 对象存在／R7 空区间→BLOCKED（禁止 PASS）
+- 判定三态：PASS／FAIL／BLOCKED（无法核验≠PASS）；退出码 0/1/2；输出 JSON 含 numstat 机器值供申报对照
+- 安全：只读 git（GIT_OPTIONAL_LOCKS=0，仅 rev-parse/cat-file/rev-list/diff --numstat）；不修改工作区与配置；git 异常→BLOCKED
+- 测试：`python -I toolkit/test-check-binding.py`（16 用例=十场景矩阵+B4 确定性+B5 只读/异常边界；负例断言具体拦截规则）
+- 出处：设计输入 C1（ST-01 绑定类复发 3 次含 P0 的机器化关闭）；承载=WORKFLOW 模块四"绑定申报核验（ST-01）"的人工核验升级
+
 ## 待办（已登记未实施）
 
 - `phase0/tools/inbound_dom.mjs` 采集器缺陷修复：ChatGPT 页面 DOM 每轮编号跳位（0=user、2=assistant），长会话多窗口取证合并被误判缺 unit（DEC-043 登记）；修复须带测试 + 独立复核。
