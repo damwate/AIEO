@@ -505,3 +505,12 @@
 - **真实业务成果（零 mock）**：七任务真实审查轮全部经真实 chatgpt.com 收发并按 M1 状态机推进（REWORK×3/PASS×4）；A1-A10 验收矩阵全场景覆盖（真实执行+会商乙组合证据）；派单 fail-closed 7 次全补采零重发。
 - **待用户拍板事项（9 点后）**：①T-P1-017 REWORK 处置（--version/--help 优先级 P2 问题）；②Chrome tab 泄漏清理小任务立项；③GPT-02/04/05 接入立项（DEC-026 路线）；④standard/WORKFLOW.md 与 M2 规范候选批准生效（H5/H6）。
 - **关联**：DEC-057~061、charter 定稿 v1.0、会商乙方案（65914169…）、L-018/L-020/L-021、H1~H12。
+
+### DEC-063 delivery 后续建议四项处置决定登记：用户指令授权执行＋WORKFLOW/M2 生效落地（2026-11-16，节点自主推进授权执行）
+
+- **授权依据（用户 2026-11-16 执行指令原文）：** "读 basic/tasks/b-20261115-gpt03-review-leg/delivery.md 与 docs/phase1/decision-log.md 的 DEC-058~062，确认任务已 COMPLETED/PASS 并核对仓库实际状态，然后按 delivery.md「后续建议」处理四项待拍板事项（T-P1-017 REWORK 处置 / Chrome tab 泄漏小任务 / GPT-02/04/05 接入立项 / WORKFLOW+M2 生效），继续按 L-020 稳步推进。"——四项处置方向由用户本人点名授权，按 L-020 稳步推进；开工核验（第一动作）已完成：任务终态 COMPLETED/PASS（DEC-062）、四件交付物+7 审查账本+pending-issues 实存、HEAD=c92f399。
+- **④ WORKFLOW+M2 生效（本次即落地）：** standard/WORKFLOW.md v0.1 状态 草案→**生效**（复审通过=S1-R2 限定复验 PASS reply sha256=677b1b96…；批准依据=上述用户指令明列"WORKFLOW+M2 生效"）；standard/parallel-governance-draft.md v0.1 状态 规范候选→**生效**（四状态机两道关口满足：规划 R1/R2 复审沿袭+用户批准）。**M1 交替推进仍为默认模式**，M2 为按需启用的受控并行模式不自动切换；文件名沿用不更名（本次用户未裁定更名，引用链稳定）。PHASE-STATUS v0.11 头部快照同步（v0.10 残留"GPT-03 草案待评审"校正）。
+- **① T-P1-017 REWORK 处置决定：整改。** 事实链（执行会话核验）：被测 commit 6faa2f0（fixture 分支链，孤儿 run commit 不在 ref 可达链）+分支 tip fda9183 均为 `--version` 检查位于 `--help` 之前缺陷形态（同 diff 重跑 ORCH-908018/019）；M1 task T-P1-017 status=REWORK（review_id=1，EXEC-009，GPT-03 REWORK：组合传参输出版本不输出帮助，建议版本检查置于帮助之后）；main 未受影响（无 --version 块，任务未合并）。处置=修复 flag 顺序（fixture 分支新 commit，行为基线：--version 单独→版本行退出 0／--help 单独或组合→帮助输出不变）→按 state_machine REWORK 合法出边人工重开（REWORK→DISPATCH→…→DEV_REPORTED，人工链非 engine 自动，符合 charter A10"engine 不自动开启"边界）→审查腿新一轮真实审查→PASS 则 CODE_REVIEW→TEST_ACCEPTANCE。
+- **② Chrome tab 泄漏：另立小任务。** 立项 basic/tasks/b-20261116-tab-cleanup（tab 消歧+清理策略，M2 派单/补采链），按任务流程执行。
+- **③ GPT-02/04/05 接入：立项（DEC-026 路线逐角色）。** 角色定义=立项 docs/立项/02-GPT角色与会话规范.md（GPT-02 架构审核/GPT-04 检查真实测试证据/GPT-05 批次审计）；立项产物=charter 草案+规划协商复审，Gate3 用户拍板开工不变。
+- **关联**：DEC-058~062、DEC-026（路线）、DEC-052（M2 移交）、L-020（节点授权）、charter 定稿 v1.0 §4/附录 D（REWORK 停等人工+人工重开链）、standard/WORKFLOW.md v0.1（生效）、parallel-governance-draft.md v0.1（生效）。
