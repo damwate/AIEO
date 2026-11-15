@@ -1,0 +1,5 @@
+EV1复验请求v7：EV1已实施（会商4授权reply 2c32b007…fbce；驱动s4-ev1-run.py六环节对照见v7）=被测快照固定e309474干净检出，四命令全符合预期=EV1 PASS（36/36+6/6+7/7+④PASS/IN_PROGRESS）。
+证据（按裁定=路径+SHA+被测commit）：主证据acceptance/s4-ev1/s4-ev1-output.txt SHA256=128125c793bcc09cdc1362cd5485da151b17926d62fbd76b3861644a56a61ec0，被测源=e309474dc85a8040506bd71347b03aa299384e1d；MANIFEST/驱动SHA见v7。
+读取（raw.githubusercontent.com/damwate/AIEO/6c9fd515/basic/tasks/b-20261115-phasec-workflow-stats/acceptance/）：s4-acceptance-request.md（v7含全部SHA）+s4-ev1/两件
+请复验：①绑定身份自洽+输入SHA可复核（git show e309474对照）②四命令结果对照③MANIFEST SHA对照④版本变动条款处置：EV1后登记commit改delivery=会商4要求的状态同步，后续修改均重跑驱动——合规否⑤三态=PASS[证据绑定关闭进S4交付确认]/REJECT[第三级验证问题12不增]/BLOCKED[如实]。
+边界：不得判需求不可行；问题12=R5第4次REJECT不增；R6不安排；DV1 REJECT不改写；禁拆分改编号；S1-S3沿用；v0.3拍板留用户。
