@@ -1,4 +1,10 @@
-# T-P1-017 REWORK 复验材料（R2 轮，run 918014）
+# T-P1-017 REWORK 复验材料（R2 轮 run 918014 → R3 复验 run 918015）
+
+## 0. R2 轮结果与本次复验范围（2026-11-16）
+
+- R2 轮（rvl-918014，reply sha256=c0861af4841d60388eccfeb6d568ac8118d799af556d3344414e74d8b8a2ef51）结论 REWORK：**整改代码逻辑已获认可**（"材料所示整改将--version移至--help之后，代码逻辑符合预期"），REWORK 原因=被测 commit 0807064 在 GitHub 无法按 SHA 解析（404——fixture 分支当时未推送 origin）。
+- 处置：fixture 分支 feature/T-P1-908-fixture 已推送 origin（0807064e193ef566987d1cfe29fea11d919ed85c 现可按 SHA 解析）。
+- **R3 复验范围限定：** 仅核验 ①被测提交身份与单提交 diff 独立验证（R2 P1 项）+②R1 P2（--help 优先级）关闭确认；代码逻辑 R2 已认可不重复扩大。
 
 ## 1. 整改语境（REWORK 复验）
 
