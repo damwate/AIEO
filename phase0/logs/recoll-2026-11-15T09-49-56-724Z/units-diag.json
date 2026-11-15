@@ -1,0 +1,14 @@
+[
+  {
+    "key": "fallback-turn-4:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[规划协商|b-20261115-basic-dod|S1文档类|轮1]\nBC-DoD固化任务(你治理级判定P1建议)。方案冻结依节点授权增补②以你复审通过替代"
+  },
+  {
+    "key": "fallback-turn-4:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nBC-DoD 规划复审｜S1 文档类｜轮1\n修改\n\n复审对象：AIEO@61fe67b4178808ec7468936642f771e37"
+  }
+]

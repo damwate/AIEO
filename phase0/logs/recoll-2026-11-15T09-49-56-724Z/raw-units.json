@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-15T09:50:50.704Z",
+  "user_unit_key": "fallback-turn-4:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-4:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "ba1f0fad-619d-462a-bb75-8fc9ff35ad93",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-4:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "3623eebb7e34e91cc1afd5c6cdb6ba176e700bbd3a62afcf40c941863ae19b3a",
+          "b01107a3a234acfecf7a96a12a25982f78fc3a607a7ed18d5df1fd9b905b5612"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "3623eebb7e34e91cc1afd5c6cdb6ba176e700bbd3a62afcf40c941863ae19b3a",
+          "b01107a3a234acfecf7a96a12a25982f78fc3a607a7ed18d5df1fd9b905b5612"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-4:0:user",
+      "fallback-turn-4:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-4:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nBC-DoD 规划复审｜S1 文档类｜轮1\n修改\n\n复审对象：AIEO@61fe67b4178808ec7468936642f771e370fa6bc8\n\n总体意见：方案方向同意，四要素结构同意，BC-01～BC-12 不需要推倒重来。但统计口径存在一个必须修正的关键问题：历史 7 个任务包，与当前目录中的 8 个任务包不是同一个计数。\n\n我核对了指定 commit 的任务目录、任务登记、Basic 工作流、31 项验收清单、整体完成度请求和决策日志。当前只做规划复审，没有修改仓库文件，也没有判定 Basic 完成。\n\n① 四要素结构与状态口径\n\n同意每条统一采用四要素：\n\n判定标准：明确可观察、可复核的通过条件，避免使用“基本具备”“原则上符合”等模糊表述。\n\n证据要求：列明具体文件、commit、测试输出、实测记录或验收回执；有动态实测要求的，不能用文档代替。\n\n当前状态：严格依据当前仓库证据，不把计划、声明或尚未执行的测试算作 PASS。\n\n判定说明：解释为什么是当前状态，指出缺口及其对整体完成的影响。\n\n建议统一使用以下状态定义：\n\n状态\n\n\t\n\n含义\n\n\t\n\n能否计入通过\n\n\n\n\nPASS\n\n\t\n\n标准满足，证据充分\n\n\t\n\n是\n\n\n\n\nFAIL\n\n\t\n\n已知事实明确不满足标准\n\n\t\n\n否\n\n\n\n\nBLOCKED\n\n\t\n\n存在外部或环境阻断，当前无法完成验证\n\n\t\n\n否\n\n\n\n\n未验证\n\n\t\n\n尚无足够证据判断是否满足\n\n\t\n\n否\n\n这里有一条必须冻结的原则：\n\n“没有发现失败”不等于 PASS；“没有完成验证”也不应自动写成 FAIL。\n\n但如果某条 DoD 明确要求必须完成某项任务，而当前事实是该任务尚未发生，那么可以判 FAIL，并说明这是完成条件未满足，不是说工具或实现本身有缺陷。\n\n当前状态初判建议\n\n以下是按现有证据提出的规划初判，不是最终验收结论。\n\n条目\n\n\t\n\n建议状态\n\n\t\n\n复审意见\n\n\n\n\nBC-01 DEC-045 对齐\n\n\t\n\nPASS\n\n\t\n\nD1-D5 已有明确映射，需在 DoD 中逐项引用依据\n\n\n\n\nBC-02 独立性\n\n\t\n\nPASS（有边界）\n\n\t\n\n不依赖 Standard 业务运行时；但公共工具、Chrome Profile、外部依赖不能被描述为无需初始化\n\n\n\n\nBC-03 新设备复现\n\n\t\n\nBLOCKED / 未验证\n\n\t\n\nG5 第二台设备实测未做；本机模拟不能替代\n\n\n\n\nBC-04 六模块交付\n\n\t\n\nPASS\n\n\t\n\nWORKFLOW 六模块已有成文规范\n\n\n\n\nBC-05 核心工具\n\n\t\n\nPASS（按现有证据初判）\n\n\t\n\n检查器已实现并有实战记录；DoD 应要求可复跑的测试输出\n\n\n\n\nBC-06 代码类流程验证\n\n\t\n\nFAIL\n\n\t\n\nv0.3 下代码类任务零实战，明确不满足至少一个代码类闭环的要求\n\n\n\n\nBC-07 抽取边界\n\n\t\n\nPASS（需核实登记）\n\n\t\n\n保留“禁止整套架构搬迁、禁止反向运行时依赖”；复制件四要素登记或无抽取的 N/A 说明必须有证据\n\n\n\n\nBC-08 开发纪律\n\n\t\n\nPASS（有证据边界）\n\n\t\n\n四步流程、独立验收、三轮止损已有制度和实战证据；不应声称代码类流程也已验证\n\n\n\n\nBC-09 31 项清单\n\n\t\n\nPASS\n\n\t\n\n31 项清单已成文；不得把它当作产品级 DoD\n\n\n\n\nBC-10 证据和版本\n\n\t\n\nFAIL（统计部分）\n\n\t\n\n5 与 7 的历史任务计数冲突，且当前目录已增加 DoD 任务包，需要区分统计范围\n\n\n\n\nBC-11 限制与 backlog\n\n\t\n\nPASS\n\n\t\n\nDEC-049 已有 backlog 和重启条件；不得把挂起写成修复完成\n\n\n\n\nBC-12 最终治理签核\n\n\t\n\nBLOCKED\n\n\t\n\n尚未达到签核条件，必须等待 BC-03、BC-06 等必办项闭合\n\n这里尤其强调三点：\n\nBC-03：建议保留“G5 未验证”的原始事实，并用 BLOCKED 表示当前无法通过该门槛。不要将本机模拟包装成跨电脑实测。\n\nBC-06：建议用 FAIL。因为“至少一个 v0.3 代码类任务闭环”是明确要求，当前为零实战，条件确实没有满足。FAIL 不表示代码工具本身失败。\n\nBC-12：不是当前任务的签核结果，而是未来最终治理验收的程序性门槛。现在只能是 BLOCKED，不能因为 DoD 文档成文就变 PASS。\n\n② 统计口径修正落位\n需要修正\n\n这是本轮最重要的修改意见。\n\n我直接读取了 basic/tasks/ 在指定 commit 下的目录清单，发现：\n\n当前目录实际情况\n\n8 个任务包\n\n指定 commit 61fe67b 的目录清单\n\n历史实战任务包：7 个\n\nb-20261114-taskpack-checker\n\nb-20261115-basic-replication-verify\n\nb-20261115-phasec-workflow-stats\n\nb-20261115-replication-gaps-fix\n\nb-20261115-standard-design-input\n\nb-20261115-v03-activation\n\nb-20261115-v03-lessons-recoll\n\n当前新增登记任务：1 个\n\nb-20261115-basic-dod\n\n当前任务处于规划协商阶段，不属于此前 7 个历史实战任务。\n\n所以，原任务书中“5 包全列……实为 7 包”的判断，针对历史任务统计是正确方向；但如果同时规定“纳入规则 = basic/tasks/ 下全部登记任务”，就会把当前 DoD 任务也纳入，产生 8 包，而不是 7 包。\n\n建议采用双口径，彻底消除歧义：\n\n统计维度\n\n\t\n\n纳入范围\n\n\t\n\n指定 commit 数量\n\n\n\n\n历史实战任务统计\n\n\t\n\n当前 DoD 任务登记前的 7 个历史任务包\n\n\t\n\n7\n\n\n\n\n当前目录任务包盘点\n\n\t\n\nbasic/tasks/ 下全部登记任务目录\n\n\t\n\n8\n\n\n\n\n历史闭环完成率\n\n\t\n\n只统计历史任务包，并按各自真实状态核验\n\n\t\n\n逐包核验\n\n\n\n\n当前 DoD 任务状态\n\n\t\n\n单独列示，不并入历史实战完成率\n\n\t\n\n1\n\n建议把统计规则写成：\n\n任务目录盘点以指定 commit 下 basic/tasks/ 的实际任务目录为准，纳入全部登记任务；历史实战统计另设明确的截止 commit，以该截止点之前已登记的历史任务包为统计对象。当前统计任务自身及后续新增任务不得倒灌进历史实战分母。任何统计均列明完整任务 ID、纳入依据和状态。\n\n修改落位建议\n\ndocs/phase1/basic-completion-dod.md：列出完整 7 个历史任务包，同时说明当前 DoD 任务包是第 8 个目录。\n\ndocs/phase1/basic-completion-review-request.md：将“5 任务全闭环”修正为“历史 7 个任务包”，并明确历史统计截止点。\n\ndocs/phase1/decision-log.md：新增澄清条目，说明原“5 任务”是数量笔误，实际列举了 7 个历史任务名称；当前目录任务包总数为 8，历史统计与目录盘点分开计算。\n\n不要只把 5 改成 7。 那样仍会留下当前目录 8 包与历史统计 7 包之间的歧义。\n\n③ BC 条目增删改意见\n保留 12 条主体结构\n\n不建议增加 BC-13，也不建议删除任何现有条目。建议做以下定向修订：\n\n条目\n\n\t\n\n修改建议\n\n\t\n\n原因\n\n\n\n\nBC-01\n\n\t\n\n保留，明确 D1-D5 与证据的映射表\n\n\t\n\n避免只有原则引用，没有具体证据\n\n\n\n\nBC-02\n\n\t\n\n修改，明确独立运行时与公共工具依赖的边界\n\n\t\n\nBasic 不等于只复制 basic/ 就能运行\n\n\n\n\nBC-03\n\n\t\n\n修改，明确干净设备、初始化步骤、实际运行记录\n\n\t\n\n防止把本机模拟当跨设备验证\n\n\n\n\nBC-04\n\n\t\n\n保留，增加六模块对应文件/入口\n\n\t\n\n让规范能落地执行\n\n\n\n\nBC-05\n\n\t\n\n修改，要求核心工具正反例测试和可复跑输出\n\n\t\n\n避免只凭源码存在判定 PASS\n\n\n\n\nBC-06\n\n\t\n\n保留，明确必须是 v0.3 下真实代码类任务\n\n\t\n\n防止文档任务替代代码实战\n\n\n\n\nBC-07\n\n\t\n\n修改，明确无抽取时如何证明 N/A\n\n\t\n\n不要求为了满足条目而人为复制代码\n\n\n\n\nBC-08\n\n\t\n\n保留，强调真实任务证据\n\n\t\n\n不能只凭 WORKFLOW 写了纪律就算全部验证\n\n\n\n\nBC-09\n\n\t\n\n保留，明确 31 项是单任务质量清单\n\n\t\n\n与产品级 DoD 分工明确\n\n\n\n\nBC-10\n\n\t\n\n修改，增加历史任务统计截止点和目录全量盘点规则\n\n\t\n\n解决 5/7/8 的计数歧义\n\n\n\n\nBC-11\n\n\t\n\n保留，要求 backlog 有触发条件、状态及处置记录\n\n\t\n\n运营项不等于完成项\n\n\n\n\nBC-12\n\n\t\n\n修改，增加最终签核的输入、签核人、签核结论及禁止提前签核规则\n\n\t\n\n防止文档成文被误解为产品完成\n\nBC-12 最终签核流程建议\n\n建议写成一个独立的小节，按以下顺序执行：\n\n冻结最终验收基线\n\n记录待验收完整 commit SHA、DoD 版本、31 项清单版本和证据截止时间。\n\n逐项独立复核 BC-01～BC-11\n\n每项核对判定标准、证据、状态；PASS、FAIL、BLOCKED、未验证均保留，不得隐藏。\n\n检查硬性前置条件\n\nBC-03 的 G5 跨设备实测必须通过；BC-06 的代码类任务闭环必须通过；其他必办项不得存在 FAIL、BLOCKED 或未验证。\n\n形成最终治理验收报告\n\n报告必须包含逐项结论、证据链接、统计口径、未解决事项、最终基线 SHA。\n\nChatGPT 独立治理复核\n\n独立读取最终基线和证据，不能仅依据执行者总结。\n\n最终签核\n\n由有权签核者明确给出 PASS / REJECT / BLOCKED。只有所有必办条件满足且签核 PASS，才允许宣布 Basic 初级版整体完成。\n\n同时增加一条硬约束：\n\nBC-DoD 文档自身验收 PASS ≠ Basic 产品整体完成 PASS。\n\n本次任务只负责把完成标准写清楚，不负责执行最终产品验收。\n\n④ 三态裁定\n修改后同意\n修改\n\n采纳范围：\n\n同意 BC-01～BC-12 四要素结构。\n\n同意 12 条主体不增不减。\n\n同意 BC-03 标记 G5 未验证。\n\n同意 BC-06 当前判 FAIL，注明零代码类实战。\n\n同意 BC-12 延后最终签核。\n\n要求修正历史 7 包与当前目录 8 包的统计口径。\n\n要求把 BC-12 最终签核流程写清楚。\n不授权：\n\n不判定 Basic 完成。\n\n不修改 31 项清单。\n\n不修改工具代码。\n\n规划冻结条件： 执行者按上述意见修订方案后，可以依节点自主推进授权（WORKFLOW 增补②）启动文档编写，不需要再逐项向用户拍板；但本轮“修改后同意”不是对尚未成文的最终文档预先验收。文档完成后仍需 ChatGPT 对实际文件和证据复审。\n\n本轮复审基线：61fe67b4178808ec7468936642f771e370fa6bc8。\n\n可直接进入下一轮：先修订步骤方案，把“历史 7 包 / 当前目录 8 包”的双口径纳入，再开始成文。",
+      "text_sha256": "b01107a3a234acfecf7a96a12a25982f78fc3a607a7ed18d5df1fd9b905b5612",
+      "size_bytes": 10113,
+      "assistant_uuid": "ba1f0fad-619d-462a-bb75-8fc9ff35ad93"
+    }
+  ]
+}

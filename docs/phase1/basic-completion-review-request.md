@@ -17,7 +17,7 @@
 | templates 三件套 | acceptance-request/handoff-package/task-brief | basic/templates/ |
 | 任务包检查器 | check_taskpack.py（ST-05 条款），两任务实战+终检全 PASS | basic/tool/check_taskpack.py |
 | 推送/环境工具 | check-push.mjs（端口漂移实战 3 次）、check-env.mjs+SETUP-CHECKLIST（D1 演练验证） | toolkit/ |
-| 任务实战 | 5 任务全闭环：taskpack-checker（v0.2 时代）→phasec-workflow-stats（阶段 C）→v03-activation→lessons-recoll→standard-design-input→replication-verify→replication-gaps-fix（后 4 个含 v0.3 下 3 个） | basic/tasks/ 各包 task-brief 最终结果+decision-log |
+| 任务实战 | **历史实战任务 7 个全闭环**（统计截止 commit 3119ef6；原"5 任务"系数量笔误，实列 7 名）：taskpack-checker（v0.2 时代）→phasec-workflow-stats（阶段 C）→v03-activation→lessons-recoll→standard-design-input→basic-replication-verify→replication-gaps-fix（后 4 个含 v0.3 下 3 个）；目录盘点口径另计（basic/tasks/ 全部登记包，DoD 成文时点 8 个） | basic/tasks/ 各包 task-brief 最终结果+decision-log |
 | 设计输入 | standard/WORKFLOW-DESIGN-INPUT.md（P2，S1 PASS） | standard/ |
 | 会话管理 | L-015 协议+L-018 迁移路径（今日实战迁移 3 次均成功但均为被动触发） | docs/AI-DEV-LESSONS.md |
 
