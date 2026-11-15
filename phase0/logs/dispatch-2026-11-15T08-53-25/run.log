@@ -1,0 +1,9 @@
+[2026-11-15T08:53:26.734Z] 会话锁已获取 pid=13856
+[2026-11-15T08:53:26.736Z] === GPT 派单（已有会话，消息 508 字节）===
+[2026-11-15T08:53:30.485Z] Chrome 已启动 pid=16092
+[2026-11-15T08:53:36.687Z] 会话就绪: https://chatgpt.com/c/6af971ee-ed3c-83ec-86c8-8439ab2711ed
+[2026-11-15T08:53:41.713Z] [dispatch] 基线尾部: {"role":"assistant","key":"fallback-turn-0:2:assistant","assistantUuid":"2fc74959-e7e9-4501-a16c-5549531ce652"}
+[2026-11-15T08:53:42.802Z] [dispatch] 发送双验通过（polls=1，user_unit_key=fallback-turn-1:0:user，tail 后观察）
+[2026-11-15T08:53:43.233Z] 截图: sent-dispatch.png
+[2026-11-15T08:56:12.824Z] 会话锁已释放
+[2026-11-15T08:56:12.825Z] 致命错误: INBOUND_WINDOW_COMPLETENESS_UNPROVEN: BLOCKED: 滚动中实际观察到渲染 unit 集合变化，且缺少独立逻辑序列，不能排除持续遗漏中间 unit details={"materialized_unit_keys":["fallback-turn-1:0:user","fallback-turn-1:2:assistant"],"remediation":"提供可信的完整逻辑 unit 序列，或在非虚拟化静态 DOM 上重新读取"}

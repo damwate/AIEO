@@ -1,0 +1,197 @@
+{
+  "at": "2026-11-15T09:25:42.727Z",
+  "message_bytes": 810,
+  "reply": "ChatGPT 说：\nS1 整改复验回执\n\nPASS P1、P2 全部关闭，S1 复验通过。\n\n被验收提交： 39fef01874881a363836ae897ff747d6e07f9f61\n\n结论表\n\n复核项\n\n\t\n\n核查结果\n\n\t\n\n三态\n\n\n\n\nP1 路径事实\n\n\t\n\n明确 runtime/ 位于仓库内部\n\n\t\n\nPASS\n\n\n\n\nP1 忽略规则\n\n\t\n\n明确 .gitignore 排除\n\n\t\n\nPASS\n\n\n\n\nP1 Git 核验\n\n\t\n\ngit check-ignore -v + git ls-files runtime/\n\n\t\n\nPASS\n\n\n\n\nP1 独立配置\n\n\t\n\n~/.agents/ego-profile.json 独立于仓库\n\n\t\n\nPASS\n\n\n\n\nP2 文件归档\n\n\t\n\n四份输出统一进入 acceptance/\n\n\t\n\nPASS\n\n\n\n\nP2 SHA256\n\n\t\n\n四份文件逐一重新计算，全部匹配\n\n\t\n\nPASS\n\n\n\n\nP2 内容不变\n\n\t\n\n新旧文件 Git blob SHA 一致\n\n\t\n\nPASS\n\nP2 SHA256 实际复算\n\n文件\n\n\t\n\nSHA256\n\n\t\n\n结果\n\n\n\n\ngf-consistency-output.txt\n\n\t\n\n8097e951f28bb1f939b4753cfeff5d9be36bb0aba06f79b7c0bb259964f5bf56\n\n\t\n\n匹配\n\n\n\n\ngf-dv1-output.txt\n\n\t\n\nb0047983b63a2868acea19c207d6e24e5038ca68c9cc94377c75038c18e03cd7\n\n\t\n\n匹配\n\n\n\n\ngf-negpos-output.txt\n\n\t\n\ne7a1a17e8b1cc5739bdff8145766b52ab02d91587075f8a054f643f387cbd3b7\n\n\t\n\n匹配\n\n\n\n\ngf-state-tests-output.txt\n\n\t\n\nc049aaaf2a4735d1191e2fdb89363bae2c3f207fd207bcda484ab561d65638fe\n\n\t\n\n匹配\n\n复算确认：\n\n四份文件均为 LF 换行。\n\n四份 SHA256 与 MANIFEST 完全一致。\n\n四份 Git blob SHA 与原被测提交对应文件一致，证明仅移动位置，没有改变输出内容。\n\n最终裁定\n\nS1 整改复验\n\nPASS\n\nP1：问题关闭。\n\nP2：问题关闭。\n\n本轮限定复核项：全部通过。\n\nS1：正式验收通过。\n\n回执 SHA256\n\n计算对象：本次回执正文（不含本 SHA256 字段）。\n\n纯文本\nf02977f7c06f8bd94e05349088823506987366161fa2257c91ad04e586fc0bde\n\n结论：REJECT → PASS。 本轮不扩大审查范围，不重新审查其他事项，也不将 G5 跨电脑实测误记为已完成。",
+  "user_unit_key": "fallback-turn-1:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-1:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "c4dc6f2d-8e9b-422c-af93-f65f265f2bea",
+  "stability": {
+    "stable": true,
+    "interval_ms": 3827,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-15T09:25:38.182Z",
+      "read_finished_at": "2026-11-15T09:25:39.002Z",
+      "unit_keys": [
+        "fallback-turn-1:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-1:2:assistant",
+          "sha256": "09e938c942c382181ebced7b99c4b3bafc03cdd967adbceadd82aec34a301027",
+          "size_bytes": 1815
+        }
+      ],
+      "assistant_uuid": "c4dc6f2d-8e9b-422c-af93-f65f265f2bea",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-15T09:25:42.008Z",
+      "read_finished_at": "2026-11-15T09:25:42.546Z",
+      "unit_keys": [
+        "fallback-turn-1:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-1:2:assistant",
+          "sha256": "09e938c942c382181ebced7b99c4b3bafc03cdd967adbceadd82aec34a301027",
+          "size_bytes": 1815
+        }
+      ],
+      "assistant_uuid": "c4dc6f2d-8e9b-422c-af93-f65f265f2bea",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-1:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "594511ef35722725801f09597001df3465df258276241b3dd81d72f58a2014fc",
+          "b19cae20a665923a8c31a80653040a4c0d4533a9be919d5929fe1ac8a87e77e4",
+          "5135a7ba37f1552e52e1b31bfd12c750a2da8a64f5501a8734c326abbab3eac1",
+          "09e938c942c382181ebced7b99c4b3bafc03cdd967adbceadd82aec34a301027"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "594511ef35722725801f09597001df3465df258276241b3dd81d72f58a2014fc",
+          "b19cae20a665923a8c31a80653040a4c0d4533a9be919d5929fe1ac8a87e77e4",
+          "5135a7ba37f1552e52e1b31bfd12c750a2da8a64f5501a8734c326abbab3eac1",
+          "09e938c942c382181ebced7b99c4b3bafc03cdd967adbceadd82aec34a301027"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-1:0:user",
+      "fallback-turn-1:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "09e938c942c382181ebced7b99c4b3bafc03cdd967adbceadd82aec34a301027",
+  "size_bytes": 1815,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-15T09-23-31\\reply.txt",
+  "reply_readback_sha256": "09e938c942c382181ebced7b99c4b3bafc03cdd967adbceadd82aec34a301027",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-15T09-23-31\\raw-units.json",
+  "raw_units_sha256": "a755d4f534a82ef7cc1229b9f5b5804411a8fd4bb6972d52bf35810cb44a4bd9",
+  "raw_units_size_bytes": 5446,
+  "raw_units_readback_sha256": "a755d4f534a82ef7cc1229b9f5b5804411a8fd4bb6972d52bf35810cb44a4bd9",
+  "session_id": "6af978f4-1288-83ec-b240-cc98f86a1915",
+  "conversation_url": "https://chatgpt.com/c/6af978f4-1288-83ec-b240-cc98f86a1915",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}

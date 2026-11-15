@@ -1,0 +1,204 @@
+ChatGPT 说：
+S1 整改复验回执
+
+PASS P1、P2 全部关闭，S1 复验通过。
+
+被验收提交： 39fef01874881a363836ae897ff747d6e07f9f61
+
+结论表
+
+复核项
+
+	
+
+核查结果
+
+	
+
+三态
+
+
+
+
+P1 路径事实
+
+	
+
+明确 runtime/ 位于仓库内部
+
+	
+
+PASS
+
+
+
+
+P1 忽略规则
+
+	
+
+明确 .gitignore 排除
+
+	
+
+PASS
+
+
+
+
+P1 Git 核验
+
+	
+
+git check-ignore -v + git ls-files runtime/
+
+	
+
+PASS
+
+
+
+
+P1 独立配置
+
+	
+
+~/.agents/ego-profile.json 独立于仓库
+
+	
+
+PASS
+
+
+
+
+P2 文件归档
+
+	
+
+四份输出统一进入 acceptance/
+
+	
+
+PASS
+
+
+
+
+P2 SHA256
+
+	
+
+四份文件逐一重新计算，全部匹配
+
+	
+
+PASS
+
+
+
+
+P2 内容不变
+
+	
+
+新旧文件 Git blob SHA 一致
+
+	
+
+PASS
+
+P2 SHA256 实际复算
+
+文件
+
+	
+
+SHA256
+
+	
+
+结果
+
+
+
+
+gf-consistency-output.txt
+
+	
+
+8097e951f28bb1f939b4753cfeff5d9be36bb0aba06f79b7c0bb259964f5bf56
+
+	
+
+匹配
+
+
+
+
+gf-dv1-output.txt
+
+	
+
+b0047983b63a2868acea19c207d6e24e5038ca68c9cc94377c75038c18e03cd7
+
+	
+
+匹配
+
+
+
+
+gf-negpos-output.txt
+
+	
+
+e7a1a17e8b1cc5739bdff8145766b52ab02d91587075f8a054f643f387cbd3b7
+
+	
+
+匹配
+
+
+
+
+gf-state-tests-output.txt
+
+	
+
+c049aaaf2a4735d1191e2fdb89363bae2c3f207fd207bcda484ab561d65638fe
+
+	
+
+匹配
+
+复算确认：
+
+四份文件均为 LF 换行。
+
+四份 SHA256 与 MANIFEST 完全一致。
+
+四份 Git blob SHA 与原被测提交对应文件一致，证明仅移动位置，没有改变输出内容。
+
+最终裁定
+
+S1 整改复验
+
+PASS
+
+P1：问题关闭。
+
+P2：问题关闭。
+
+本轮限定复核项：全部通过。
+
+S1：正式验收通过。
+
+回执 SHA256
+
+计算对象：本次回执正文（不含本 SHA256 字段）。
+
+纯文本
+f02977f7c06f8bd94e05349088823506987366161fa2257c91ad04e586fc0bde
+
+结论：REJECT → PASS。 本轮不扩大审查范围，不重新审查其他事项，也不将 G5 跨电脑实测误记为已完成。

@@ -1,0 +1,6 @@
+[验收复验|b-20261115-replication-gaps-fix|S1|只复核P1/P2两处]
+R1裁定(reply 11bebd48…8dff1d2a)两项整改提交:
+P1:toolkit/SETUP-CHECKLIST.md敏感数据检查已改路径事实与核验方法[runtime/位于仓库内部被.gitignore排除,git check-ignore -v+git ls-files runtime/=0核验,不能只凭git status;~/.agents/独立于仓库]。
+P2:四输出统一移acceptance/+gf-MANIFEST.txt重生成4条[按提交后LF字节SHA256,注明移动属登记整理输出未变]。
+材料:读 github.com/damwate/AIEO@main 39fef01874881a363836ae897ff747d6e07f9f61 的toolkit/SETUP-CHECKLIST.md+basic/tasks/b-20261115-replication-gaps-fix/acceptance/(gf-MANIFEST+四输出)。
+复验仅此两处,其余不重复审。三态:PASS(问题关闭+S1结论)/REJECT(列项)/BLOCKED。回执含结论表+SHA256。

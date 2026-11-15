@@ -1,0 +1,4 @@
+[状态更正+新验收请求|b-20261115-replication-gaps-fix]
+你上轮按旧R3请求做的复验已过时(R3早已由前会话R4 PASS关闭,reply a8bd85a2…;D1任务已COMPLETED交付),请忽略。
+真实任务=读 github.com/damwate/AIEO@main 4dfa0c750e815d4af1249eb68f7c5464d10b621a 的 basic/tasks/b-20261115-replication-gaps-fix/acceptance/review-request-s1.md——按该文件执行G1-G4修复S1验收(被测=3119ef6…a5eff,复核点+三态请求全在文件内)。
+回执:结论表+reply SHA256。
