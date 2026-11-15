@@ -1,0 +1,7 @@
+【S2复验R4|b-20261115-gpt03-review-leg】对S2-R3四限定项做限定复验。
+仓库github.com/damwate/AIEO main，锚点按SHA读：
+A 待验收=f1ab60a9裁定锚030c947ac7c4fd7c2e5af9c252185924e8046dfc后2commit至HEAD（整改=afc1ee130b4e25075b48c7494777f362420f9584：review_leg.py intent_only排除FAILED终态+test_16e反例+账本证据4件归档；c47f69e+43f43e3=MANIFEST blob重算+返工表22-25行）
+B 申报=43f43e3后最新：读basic/tasks/b-20261115-gpt03-review-leg/acceptance/review-request-s2-r4.md与steps.md返工表问题22-25行
+C 依据=会商乙方案（reply 65914169…）+charter §7/附录C/D。
+复验点：①NEW-P1-03四件账本证据在树（918012修复版/污染快照/备份/918013账本,追加式对应）②NEW-P2-01 MANIFEST 109条blob绑定（抽验SHA256+bytes=git blob字节,sha_basis字段）③NEW-P2-02口径终版count=8（6d39ff9..HEAD）④NEW-P2-03 INTENT+FAILED放行修复+test_16e反例⑤回归29/29（test-run-s2r3b归档）+范围零越界。
+回执：①-⑤逐项+四问题逐项（关闭/未关闭）+总结论（PASS/REJECT+新问题编号）。

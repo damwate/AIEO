@@ -1,0 +1,7 @@
+【S2复验R7|b-20261115-gpt03-review-leg】对NEW-P2-02做终版限定复验（固定区间终点+全量清单）。
+仓库github.com/damwate/AIEO main，锚点按SHA读：
+A 区间终点固定=a3cfdfd3160701ae755c5ce8440f99dae8d42da6（R6定案回填,已推送）；基线不变=6d39ff97ead78bf56b457f2198b9089f81c32295
+B 申报=091ec8e后最新：读basic/tasks/b-20261115-gpt03-review-leg/acceptance/review-request-s2-r7.md（14commit全量表）与steps.md返工表问题21行（同口径延伸）
+C 依据=S2-R6裁定（reply sha256=1a8dcb2c…：先固定终点再以Compare完整清单为准）。
+复验点：①Compare(6d39ff9..a3cfdfd)独立清点=14commit,核对申报14行表无漏列无杜撰②分类与排除规则一致性（验收申报回填类8排除/代码治理证据6计入）③三方一致：R7申报表=steps问题21行（同口径延伸）=R4裁定规则延伸至终点a3cfdfd④NEW-P2-02判定。纯文档（29/29不变）。
+回执：①-④逐项+NEW-P2-02判定（关闭/未关闭）+总结论（PASS/REJECT+新问题编号）。

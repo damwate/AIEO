@@ -1,0 +1,14 @@
+[
+  {
+    "key": "fallback-turn-5:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[三方会商|b-20261115-standard-kickoff|S2|问题5问题6止损]\n按WORKFLOW模块五执行序(停止→三方会商→交用户)开三方会商"
+  },
+  {
+    "key": "fallback-turn-5:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n三方会商意见｜Standard S2 问题5/6止损\n止损流程已进入会商阶段\n\n我按 basic/WORKFLOW.md 模块五和 ste"
+  }
+]

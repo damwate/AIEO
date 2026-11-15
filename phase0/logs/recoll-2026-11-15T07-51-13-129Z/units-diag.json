@@ -1,0 +1,110 @@
+[
+  {
+    "key": "fallback-turn-0:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[迁移接棒|AIEO Basic→新审查会话]\n前会话(6af90e6f)上下文满CONTEXT_LIMIT_STOP,本会话承接后续全部验收。背景速读:git"
+  },
+  {
+    "key": "fallback-turn-0:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nAIEO Basic｜S1 独立验收\n验收进行中\n\n当前初步结论：发现一项需要重点核实的证据绑定问题，暂不签发 PASS。\n\n已确认 Gi"
+  },
+  {
+    "key": "fallback-turn-1:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[验收复核|b-20261115-v03-lessons-recoll|只复核问题1]\nR1裁定(reply 071f26de…86fb)内容四项PASS+92"
+  },
+  {
+    "key": "fallback-turn-1:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nAIEO Basic｜S1 问题1复核裁定\nPASS\n\n问题1关闭，S1 整体验收 PASS。\n\n本轮严格限定为 R1 唯一 P1「证据绑"
+  },
+  {
+    "key": "fallback-turn-2:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[节点汇报与判定|用户指令:汇报当前情况,判定节点是否通过,可否开下一节点]\n汇报(HEAD=d4c3f9c,全已推):\n①v03-activation(v0."
+  },
+  {
+    "key": "fallback-turn-2:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n当前判定（先给结论）\n\n倾向：DEC-045 三阶段后的当前节点可以通过，但应把 AGENTS.md 单独列为“待复核治理改动”，不能混入"
+  },
+  {
+    "key": "fallback-turn-3:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[AGENTS.md独立复核请求|治理文档专项|DEC-049 P0]\n按你节点判定意见执行:①AGENTS.md适用范围已修正(工作区根,commit 6d2"
+  },
+  {
+    "key": "fallback-turn-3:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nAGENTS.md 独立复核结论\nREJECT\n\n发现 1 处规则映射表述需要修正\n\n已按指定完整 SHA 6d271b12397cebf"
+  },
+  {
+    "key": "fallback-turn-4:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[AGENTS.md复验|只复验ST-05行及相邻规则]\n按你复核意见(reply ee3f9193…1bc519)整改:ST-05行改为\"ST-05检查器自检"
+  },
+  {
+    "key": "fallback-turn-4:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nST-05 行复验 PASS\n\n修正已闭合规则依据。\n\nST-05：PASS — 已改为“每步派单验收前运行并处理缺口”，与 WORKFL"
+  },
+  {
+    "key": "fallback-turn-5:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[规划协商|b-20261115-standard-design-input|S1文档类|轮1]\nP2=Standard设计输入准备(DEC-049下一节点,你"
+  },
+  {
+    "key": "fallback-turn-5:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n修改后同意\n\n总体方向同意。 这项任务符合 DEC-049 的 P2 定位：把 Basic 阶段 C 的真实数据整理成 Standard "
+  },
+  {
+    "key": "fallback-turn-6:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[独立验收|b-20261115-standard-design-input|S1]\nP2设计输入成文,请独立验收(方案冻结=你R1\"修改后同意\"四点全采纳,节"
+  },
+  {
+    "key": "fallback-turn-6:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\nPASS S1 设计输入文档独立验收通过。\n\n验收对象严格绑定 1a6f96d9f1148e6faf5f1f77a6262601c442"
+  },
+  {
+    "key": "fallback-turn-7:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[规划协商|b-20261115-basic-replication-verify|S1验证类|轮1]\nD1可复制性实战验证(DEC-045 D1\"复制到新电脑"
+  },
+  {
+    "key": "fallback-turn-7:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n修改后同意\n\nD1 可复制性实战验证方向正确，建议补齐 5 项后冻结执行。 这次验证很有价值：DEC-045 D1 的“复制到新电脑即用”"
+  },
+  {
+    "key": "fallback-turn-8:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[独立验收|b-20261115-basic-replication-verify|S1]\nD1可复制性演练+报告,请独立验收(冻结=你R1\"修改后同意\"五项全"
+  },
+  {
+    "key": "fallback-turn-8:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\nREJECT S1 本轮暂不通过。 演练主体和报告质量基本符合冻结方案，但存在证据清单不一致、关键结果缺少原始证据，以及工具代码超出授权"
+  }
+]

@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-15T15:17:27.519Z",
+  "user_unit_key": "fallback-turn-1:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-1:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "4b101ee8-07e8-426b-a23d-4adba9e06333",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-1:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "1b6b092dd4f589545fa76fadc5634d0dcf8fb87f79741aee1bfaa5da7ecd8ff9",
+          "488132da2bbd04cf0ca0b94f7ca9d3200d5ab1389f8cd6ea83e97788fc1e3e18"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "1b6b092dd4f589545fa76fadc5634d0dcf8fb87f79741aee1bfaa5da7ecd8ff9",
+          "488132da2bbd04cf0ca0b94f7ca9d3200d5ab1389f8cd6ea83e97788fc1e3e18"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-1:0:user",
+      "fallback-turn-1:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-1:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nS1 独立验收复验 R2 回执\n\n任务： b-20261115-gpt03-review-leg\n复验对象： S1-R1 六项整改\n被测 SHA： 6cf9147e6f49d2f43ef2e0b37753b3ca5e351402\n申报 SHA： 010a70b3ddd4c20aa335c047b1f06b8236827a37\n\nST-01 绑定核验 PASS\n一、绑定与修改范围\n\n直接比较确认：\n\nR2 申报基线 4c888334db9f2a5b38d46f86a531ec7d87af8749。\n\n被测提交相对该基线恰好 1 个 commit。\n\n变更恰好两个文件。\n\n文件\n\n\t\n\n新增\n\n\t\n\n删除\n\n\n\n\nreview_leg.py\n\n\t\n\n227\n\n\t\n\n57\n\n\n\n\ntest_review_leg.py\n\n\t\n\n93\n\n\t\n\n38\n\n没有额外修改文件。\n\n查看 R2 被测提交\n\n查看相对 R2 基线的精确比较\n\n范围结论：PASS。 两个文件与申报一致，scheduler.py、M1-M4、M2 工具链和契约文件均未进入本次整改 diff。\n\n二、①—⑧ 限定复验\n① P1-01：409 幂等双证核验\n未完全关闭\n\n已落实两项防线：\n\n响应必须提供本次幂等键相关证据。\n\n账本必须存在匹配的 request_sha。\n\nartifact 不再走 409 命中路径，符合 M1 的同路径同 SHA 返回 201 duplicate:true 语义。\n\n但仍有一个缺口：\n\nreview_leg.py：_register_step\n\n当前 key_evidence 使用：\n\nmessage：幂等 ID 是否出现在整个响应 JSON 字符串中；\n\nreport：execution_id 和 commit 前缀是否出现在整个响应 JSON 字符串中。\n\n这不是对响应结构中权威记录字段的精确核验。如果只是错误描述或其他文本回显了这些值，也可能通过。\n\n要求： 对响应中的结构化记录字段进行精确匹配，不能仅使用 JSON 字符串包含判断。\n\n请求指纹核验已经有实质进步，但双证中的第一证仍不够严格。\n\n② P1-02：逐项只读核实、只补缺项\n部分关闭\n\n已确认实现：\n\n新增 _ledger_verified()；\n\nartifact 使用白名单 GET 实际读取；\n\nr5_register(skip=) 支持跳过已核实项；\n\n写入 R5_SKIP_VERIFIED；\n\nA9 测试通过真实 M1 服务端故障注入，验证 artifact ID 不变；\n\nresume 不重新派单。\n\n这些整改方向正确。\n\n但 message/report 的核实仍有缺陷。\n\nreview_leg.py：_ledger_verified\n\n目前：\n\nmessage 核验 message_id、reply_sha 和 request_sha 非空；\n\nreport 核验 result、reply_sha、execution_id 和 request_sha 非空。\n\n没有将账本 request_sha 与当前待登记请求重新计算出的预期 SHA 比较。\n\n因此，账本中只要存在非空 request_sha，就可能被认定为已核实，尚未充分证明原请求内容与当前请求一致。\n\n此外，A9 主要验证 artifact 成功、message 失败的情况。message 已成功而 report 失败的分支尚未独立验证。\n\n要求： message/report 也必须比较完整的预期请求指纹；补充 message 已成功、report 未成功的恢复测试。\n\n③ P1-03：COLLECT_FAILED 会话证据与 resume 双锚点\n未关闭\n\n正向整改已经落实：\n\nR3_SEND_CONFIRMED_COLLECT_FAILED 保存 conversation_uuid；\n\n保存 sent_user_unit_key；\n\n保存 next_user_unit_key；\n\n保存 unit_count 和 result.json SHA；\n\nresume 能同时识别 SEND_CONFIRMED 与 SEND_CONFIRMED_COLLECT_FAILED；\n\n_resume_collect() 使用原 conversation UUID 补采，不创建新会话。\n\n相关代码：\n\nCOLLECT_FAILED 记录\n\n双锚点识别\n\n但是发现一个确定的执行错误：\n\nresume 补采调用\n\n调用：\n\nPython\n运行\nreturn self._resume_register(flags)\n\n而函数定义是：\n\nPython\n运行\ndef _resume_register(self) -> int:\n\n传入了一个不接受的参数。\n\n结果：COLLECT_FAILED 原会话补采即使成功，继续进入登记阶段时也会抛出 TypeError。\n\n该异常不在 resume() 当前捕获的异常类型范围内，会直接逸出，而不是正常完成登记或写入腿级 BLOCKED。\n\n这是本轮确认的新缺陷：\n\nNEW-P1-01 _resume_register(flags) 参数不匹配，导致补采成功后的自动恢复无法完成。\n\n必须修复，并增加 COLLECT_FAILED → 原会话补采 → 契约校验 → 补登记 → 状态推进的测试。\n\n④ P2-01：账本八字段组\n部分关闭\n\n已补齐的内容：\n\nreview_round / idempotency_key；\n\nconversation_uuid / 创建时间 / profile；\n\nownership_check；\n\nsent_user_unit_key / next_user_unit_key；\n\nassistant_uuid；\n\nR4 marker、快照 SHA、checks、extracted_at；\n\nR5 request_sha / response_sha；\n\n多阶段原子追加与 fsync。\n\n但附录 C 的发送前后 user unit 计数要求尚未得到充分证明。\n\n当前 R3 记录主要是：\n\nunit_count；\n\nunit_keys；\n\nsent_user_unit_key；\n\nnext_user_unit_key。\n\n测试替身提供的 result.json 也只有单一 unit_count，没有独立的发送前计数、发送后计数和采集时计数三者的完整对照。\n\n因此，不能把一个会话快照等同于完整的发送前后交叉证明。\n\n要求： 明确记录三个时点的 user unit 计数及其对应快照标识，避免使用 assistant unit 或单一总计数替代。\n\n⑤ P2-02：A9 服务端故障注入\n关闭\n\n已确认：\n\n使用 SQLite 服务端触发器；\n\n在 messages INSERT 时注入 ABORT；\n\nM1 服务端返回 500；\n\nartifact 实际成功登记；\n\nmessage 登记失败；\n\n解除故障后恢复；\n\nartifact 原 ID 保留。\n\n测试代码不再替换 leg.engine.post。\n\ndispatch_double 仅拦截 gpt_dispatch.mjs，其他 subprocess 调用仍然透传，包括 Git 和 Ajv。\n\n这符合本轮约定的 ChatGPT 边界替身要求。\n\n查看 A9 测试\n\n⑥ P2-03：A8 双场景\n关闭\n\ntest_08a：\n\n已验证：\n\n派单实际执行一次；\n\n发送和采集记录形成；\n\n截断账本，仅保留 SEND_INTENT；\n\nresume 返回腿级 BLOCKED；\n\n不发生第二次派单；\n\nM1 仍保持 CODE_REVIEW；\n\n恢复完整账本后只补登记；\n\n不产生新派单。\n\ntest_08b：\n\n已验证：\n\n账本有 R3_SEND_INTENT；\n\nM1 仍为 DEV_REPORTED；\n\nresume 识别矛盾态；\n\n腿级 BLOCKED；\n\n派单次数为零；\n\nM1 状态保持不变。\n\n这两种场景分别覆盖账本断裂和账本/M1 矛盾，达到本项整改要求。\n\n查看 A8 测试\n\n⑦ 整改引入新缺陷及原认可项维持性\nPARTIAL\n\n静态复核确认：\n\n测试方法共 19 个；\n\nA8 拆为 08a/08b；\n\nA9 改为服务端故障注入；\n\n原有 PASS/REWORK 路径、契约校验、白名单和 BLOCKED 区分仍在；\n\n发现 NEW-P1-01；\n\nP1-01、P1-02、P2-01 仍有上述残留。\n\n需要特别说明：本次独立核对了 19 个测试方法及关键断言，但没有在目标运行环境重新执行测试。因此，19/19 PASS 是申报结果，不是本次独立执行确认。\n\n⑧ 修改范围复核\nPASS\n\nR2 基线比较确认：\n\n文件\n\n\t\n\n状态\n\n\n\n\nreview_leg.py\n\n\t\n\n修改\n\n\n\n\ntest_review_leg.py\n\n\t\n\n修改\n\n\n\n\nscheduler.py\n\n\t\n\n未修改\n\n\n\n\nM1-M4\n\n\t\n\n未修改\n\n\n\n\nM2 工具链\n\n\t\n\n未修改\n\n\n\n\n契约文件\n\n\t\n\n未修改\n\n没有发现超范围修改。\n\n三、六项整改关闭状态\n\nR1 问题\n\n\t\n\nR2 结论\n\n\t\n\n主要依据\n\n\n\n\nP1-01 409 双证核验\n\n\t\n\n未关闭\n\n\t\n\n响应键采用字符串包含而非结构化字段精确核验\n\n\n\n\nP1-02 逐项核实与只补缺项\n\n\t\n\n未关闭\n\n\t\n\nmessage/report 请求指纹未与预期 SHA 比较\n\n\n\n\nP1-03 COLLECT_FAILED 恢复\n\n\t\n\n未关闭\n\n\t\n\n_resume_register(flags) 参数错误\n\n\n\n\nP2-01 八字段组\n\n\t\n\n未关闭\n\n\t\n\n发送前后 user unit 计数证据不完整\n\n\n\n\nP2-02 A9 服务端注入\n\n\t\n\n关闭\n\n\t\n\n真实 M1 REST 路径，客户端零替换\n\n\n\n\nP2-03 A8 双场景\n\n\t\n\n关闭\n\n\t\n\n08a/08b 两种故障均有明确断言\n\n四、R1 原认可项维持性\n\n原认可项\n\n\t\n\nR2 判定\n\n\n\n\n三文件架构方向\n\n\t\n\nPASS（未扩大范围）\n\n\n\n\n附录 B 白名单边界\n\n\t\n\nPASS\n\n\n\n\nR0-R6 主流程\n\n\t\n\nPASS（原有正常路径）\n\n\n\n\nPASS/REWORK 状态映射\n\n\t\n\nPASS\n\n\n\n\n腿级/M1 任务级 BLOCKED 区分\n\n\t\n\nPASS\n\n\n\n\nreview report 权威登记设计\n\n\t\n\nPASS\n\n\n\n\n修改范围零越界\n\n\t\n\nPASS\n\n注意：正常流程保持不代表全部恢复分支可用。NEW-P1-01 正好发生在原会话补采之后的登记恢复路径。\n\n五、最终总结论\n\nS1-R2 限定复验\n\nREJECT\n\n未关闭：4 项原问题。\n\nP1：3 项未关闭\n\nP2：1 项未关闭\n\n已关闭：2 项\n\n新发现：NEW-P1-01\n\n下一轮最小整改要求\n\n建议只做以下四组工作，不扩大架构范围：\n\n409 核验： 改为结构化响应键精确匹配，保留请求 SHA 双证。\n\n登记恢复： message/report 重新计算并核对预期请求 SHA，补充 message 成功、report 失败的测试。\n\n采集恢复： 修复 _resume_register(flags) 参数错误，补充 COLLECT_FAILED 完整恢复测试。\n\n账本： 补齐发送前、发送后、采集时 user unit 计数的独立证据。\n\nP2-02、P2-03 不要求重复整改，只需保留现有通过证据。\n\n最终裁定：S1-R2 REJECT，不授权进入 S2。\n\n本轮已确认整改方向正确，且六项中两项实质关闭。剩余问题集中在幂等证明强度、部分登记恢复可信度、采集恢复执行错误和账本证据完整性。\n\n建议下一轮以这四组为严格复验范围，继续保持两个文件修改边界和 M1-M4/scheduler.py 零修改纪律。",
+      "text_sha256": "488132da2bbd04cf0ca0b94f7ca9d3200d5ab1389f8cd6ea83e97788fc1e3e18",
+      "size_bytes": 9041,
+      "assistant_uuid": "4b101ee8-07e8-426b-a23d-4adba9e06333"
+    }
+  ]
+}

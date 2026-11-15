@@ -1,0 +1,82 @@
+{
+  "recollection": true,
+  "driver": "recoll_kickoff_s4r3.mjs",
+  "remediation": "归属校验型定位（简报标记文本唯一+最后user断言+R1 reply SHA排除），未重发任何消息",
+  "reference_failed_dispatch_dir": "phase0/logs/dispatch-2026-11-15T12-59-40",
+  "conversation_url": "https://chatgpt.com/c/6af9b028-a314-83ec-bfee-c26ce65dee49",
+  "sent_user_unit_key_reported": "fallback-turn-5:0:user(键号漂移后重排,以标记定位为准)",
+  "located_user_unit_key": "fallback-turn-5:0:user",
+  "assistant_uuid": "13a73d70-d3bd-46cc-be4d-a9ba01e3b1b4",
+  "unit_keys": [
+    "fallback-turn-5:2:assistant"
+  ],
+  "unit_count": 1,
+  "reply_bytes": 3408,
+  "reply_sha256": "b791239c5df253ec4148484689089acd35463a4e12bf3045c82334ade1339256",
+  "checks": {
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "not_prev_reply_sha": true
+  },
+  "stability": {
+    "stable": true,
+    "interval_ms": 3298,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-15T13:52:09.858Z",
+      "read_finished_at": "2026-11-15T13:52:10.154Z",
+      "unit_keys": [
+        "fallback-turn-5:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-5:2:assistant",
+          "sha256": "b791239c5df253ec4148484689089acd35463a4e12bf3045c82334ade1339256",
+          "size_bytes": 3408
+        }
+      ],
+      "assistant_uuid": "13a73d70-d3bd-46cc-be4d-a9ba01e3b1b4",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-15T13:52:13.155Z",
+      "read_finished_at": "2026-11-15T13:52:13.700Z",
+      "unit_keys": [
+        "fallback-turn-5:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-5:2:assistant",
+          "sha256": "b791239c5df253ec4148484689089acd35463a4e12bf3045c82334ade1339256",
+          "size_bytes": 3408
+        }
+      ],
+      "assistant_uuid": "13a73d70-d3bd-46cc-be4d-a9ba01e3b1b4",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "extracted_at": "2026-11-15T13:52:13.705Z",
+  "artifacts": {
+    "reply": "D:\\AIEO\\phase0\\logs\\recoll-2026-11-15T13-51-18-782Z-vp\\reply.txt",
+    "raw_units": null
+  }
+}

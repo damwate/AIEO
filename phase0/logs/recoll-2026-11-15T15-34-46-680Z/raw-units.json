@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-15T15:35:39.611Z",
+  "user_unit_key": "fallback-turn-2:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-2:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "d7b9d2c6-0e7c-422d-aff5-6abb4a368bfc",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-2:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "6e62c30b782d761c965045d697af57b12bbf72b1a745955a8f7f568154b8ee15",
+          "de74148b18f4c15243a8fa39388897e42a5709e8fbb3d4938ddcf34b5669516c"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "6e62c30b782d761c965045d697af57b12bbf72b1a745955a8f7f568154b8ee15",
+          "de74148b18f4c15243a8fa39388897e42a5709e8fbb3d4938ddcf34b5669516c"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-2:0:user",
+      "fallback-turn-2:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-2:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nS1 独立验收复验 R3 回执\n\n被测对象： c081086ee4a98d430632566ca066b565ec4eac83\n\nST-01 绑定范围核验 PASS\n\n\n\n\nS1-R3 总结论：REJECT\n\n先确认范围锚点：按申报的复验基线 f3fa715c00e4698a5f7015fed70d565ae59556de 比较到被测 SHA，GitHub 比较结果为 1 个提交、恰好 2 个文件：\n\n文件\n\n\t\n\n新增\n\n\t\n\n删除\n\n\n\n\nphase1/tools/review_leg.py\n\n\t\n\n127\n\n\t\n\n15\n\n\n\n\nphase1/tools/test_review_leg.py\n\n\t\n\n117\n\n\t\n\n0\n\n这与 R3 申报的 numstat 一致。此前若从 R2 被测 SHA 直接比较，会把后续申报/返工登记文件也纳入区间；本轮按 R3 声明的实际整改基线核验，范围没有扩大。\n\n精确比较：R3 基线 → 被测 SHA\n\n被测提交\n\n申报文件在 main 可读取；被测 SHA 本身不包含这份 R3 回填请求文件，符合申报所述“回填 commit 不属验收 diff 范围”。以下按代码与测试内容独立核对，不把申报的测试通过记录当作我已执行的测试结果。\n\n一、①—⑥逐项复验\n\n① 409 结构化键精确核验：未完全关闭。\n\nmessage 分支：details.message_id == 本方 message_id，是结构化字段精确相等判断，符合要求。\n\nreport 分支：details.execution_id == 本方 execution_id，并使用正则解析 M1 固定格式，已不再使用普通子串包含。\n\n但正则捕获的 commit12 只被限制为 12 位小写十六进制，代码没有把捕获组与 self.reviewed_commit[:12] 比较。因此，同一 execution_id 下，错误 commit 前缀的 report 错误消息仍可能通过响应键证据检查。\n\n问题位置：_report_key_evidence。\n\n结论：部分完成，不能关闭 P1-01。 这也是本轮新发现的问题，编号 NEW-P1-02：report 409 正则捕获组未与本次 reviewed_commit 前缀精确比对。\n\n② 指纹重算与 test_09b：关闭。\n\nmessage：重建预期 envelope，规范化时剔除 created_at，重算 canonical SHA 与账本比较。\n\nreport：按当前任务/回复内容以及账本已有 message/artifact ID 重建完整报告体，重算 request SHA 比较。\n\ntest_09b 覆盖 message 已成功、report 失败的部分登记场景；恢复时断言 artifact 和 message 被跳过、message 未重复、无重新派单，并最终推进到 TEST_ACCEPTANCE。\n\n代码位置：_expected_envelope / _expected_report_body / _ledger_verified；test_09b。\n\n③ NEW-P1-01 签名修复、resume 兜底与 test_08c：关闭。\n\n_resume_collect() 现在调用无参 _resume_register()，与方法签名一致。\n\nresume() 增加未预期 Exception 兜底，记录异常类型与现场原因，并收敛为腿级 BLOCKED。\n\ntest_08c 覆盖 COLLECT_FAILED 落账会话 UUID/发送 user key、原会话补采、契约校验、补登记、状态推进；断言发送次数始终为 1，恢复不重发。\n\n代码位置：resume 与 _resume_register、_resume_collect / _resume_register；test_08c。\n\n④ 三时点 user unit 计数：未关闭。\n\n代码确实增加了三个时点字段，但证据强度不等：\n\npre_send=0：由 --new-session 语义推定，不是发送前实际读取的会话快照。\n\nat_send=1：固定写入 1，并以派单结果中的 user unit key 作锚定；不是从发送时会话实际读取计数。\n\nat_capture_materialized：从 units-diag.json 或 raw-units.json 按 role=user 实际计数，这一时点有实读。\n\n此外，采集记录中的 target_matches_sent_key 仍写为 None，没有完成发送键与采集定位键的实际交叉核验；user_unit_counts.source 记录的是 result.json/recoll-result.json 来源，而不是实际计数文件的 materialized_source。\n\n代码位置：R3 user_unit_counts、R4 采集快照与计数。\n\n结论：只有采集时点实读；发送前、发送时仍属推定/固定值，且缺少键交叉核验，不能关闭 P2-01。\n\n⑤ 未引入新缺陷、21 用例及替身边界：部分通过，不能据此认定 21/21 独立通过。\n\n静态检查发现 21 个测试方法，包含新增 test_08c、test_09b，原有测试方法仍保留。\n\n替身边界符合申报：普通派单由 gpt_dispatch.mjs 替身处理；test_08c 另外对 recoll_driver.mjs 补采边界作替身；其余 subprocess 路径透传真实执行，包括 Git、Ajv。M1 REST 客户端没有被替换。\n\n但我没有在本轮实际运行测试套件，因此 21/21 PASS 只能记为申报结果，不能记为独立执行结果。\n\n新发现 NEW-P1-02，故“未引入新缺陷”不能判定通过。\n\n替身实现位置：test_review_leg.py；补采边界：test_08c。\n\n⑥ 修改范围：PASS。\n\n按申报基线比较，被测提交只修改 review_leg.py 和 test_review_leg.py。scheduler.py、M1-M4、M2 派单工具链及契约文件均不在本次整改 diff 中。范围符合限定复验要求。\n\n二、四组整改逐项结论\n\nR2 未关闭项\n\n\t\n\nR3 结论\n\n\t\n\n判定依据\n\n\n\n\nP1-01：409 响应键精确核验\n\n\t\n\n未关闭\n\n\t\n\nreport 正则捕获 commit 前缀后未与本方 reviewed_commit 比较\n\n\n\n\nP1-02：message/report 指纹重算\n\n\t\n\n关闭\n\n\t\n\n两类预期请求体重建与指纹比较；test_09b 覆盖 message 成功、report 失败分支\n\n\n\n\nNEW-P1-01：resume 签名与异常逸出\n\n\t\n\n关闭\n\n\t\n\n无参调用匹配签名；异常兜底；test_08c 覆盖完整恢复链和零重发\n\n\n\n\nP2-01：三时点 user unit 计数\n\n\t\n\n未关闭\n\n\t\n\n采集时点实读；发送前和发送时点为推定/固定值，键交叉核验字段未落实\n\n三、总结论\nREJECT\n\n本轮四组整改中，2 组关闭、2 组未关闭。不满足 S1-R3 PASS 条件，不授权进入下一阶段。\n\n新增问题：\n\n编号\n\n\t\n\n严重级别\n\n\t\n\n问题\n\n\t\n\n最小整改要求\n\n\n\n\nNEW-P1-02\n\n\t\n\nP1\n\n\t\n\nreport 409 正则捕获的 commit 前缀未与本次 reviewed_commit 精确比对\n\n\t\n\n将捕获组与 self.reviewed_commit[:12] 比较；不匹配必须 fail-closed，并补充错误 commit 前缀的反例测试\n\n保留未关闭项：\n\nP1-01：修复 NEW-P1-02 后重新核验 409 双证。\n\nP2-01：明确三时点计数的证据来源；发送前/发送时若无法实读，应明确标为推定证据，不得申报为实读；补齐采集目标键与发送键的实际一致性核验。\n\n下一轮仍限定上述两项，不扩大范围。 R2 的 P2-02、P2-03 认可结论继续保持，不要求重复整改。",
+      "text_sha256": "de74148b18f4c15243a8fa39388897e42a5709e8fbb3d4938ddcf34b5669516c",
+      "size_bytes": 6309,
+      "assistant_uuid": "d7b9d2c6-0e7c-422d-aff5-6abb4a368bfc"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+【S2复验R8|b-20261115-gpt03-review-leg】对NEW-P2-02按R7裁定唯一方向做限定复验（纯文档）。
+仓库github.com/damwate/AIEO main，锚点按SHA读：
+A 基线/终点不变=6d39ff97…..a3cfdfd3160701ae755c5ce8440f99dae8d42da6（14commit）
+B 申报=c5afe20后最新：读basic/tasks/b-20261115-gpt03-review-leg/acceptance/review-request-s2-r8.md与steps.md返工表问题21行（R8定稿,14SHA全展开）
+C 依据=S2-R7裁定（reply sha256=63ce53c5…：按R4已接受分类规则逐项判定,不得改判早期已计入项）。
+复验点：①分类核验：计入9（34f2c39/2be8b01/501f3fd/fdba15c/0c5642d/030c947/afc1ee1/c47f69e/50426de——早期已计入项未改判）排除5（73f0050f/43f43e3d R4裁定两项+fef498e1/8e7dd0e/a3cfdfd R5/R6当轮申报回填延伸）②三方一致：R8申报表=steps问题21行（14SHA全展开）=R4规则③NEW-P2-02判定④纯文档无新问题（代码零变更）。
+回执：①-④逐项+NEW-P2-02判定（关闭/未关闭）+总结论（PASS/REJECT+新问题编号）。

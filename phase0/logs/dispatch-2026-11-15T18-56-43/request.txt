@@ -1,0 +1,7 @@
+【S2复验R5|b-20261115-gpt03-review-leg】对S2-R4两处文档口径做限定复验（纯文档，代码零变更）。
+仓库github.com/damwate/AIEO main，锚点按SHA读：
+A 待验收=43f43e3d0a59d1a066da500150a3cde51ce843d1后继回填至HEAD（无代码变更）
+B 申报=回填后最新：读basic/tasks/b-20261115-gpt03-review-leg/acceptance/review-request-s2-r5.md与steps.md返工表问题21/23/24/26行
+C 依据=S2-R4裁定（reply sha256=28f42ec2…）+会商乙方案延续。
+复验点：①NEW-P2-02关闭核验：steps问题21行口径终版=Git完整区间10commit全列(SHA+分类)+ST-01④排除2回填(73f0050f/43f43e3d)→计入范围8——两数并存不混用；本申报ST-01段同口径②NEW-P2-04关闭核验：MANIFEST数量109统一（本申报/steps问题23行/MANIFEST.json三处一致）③纯文档两处无新问题引入（代码零变更,29/29不变）。
+回执：①-③逐项+两问题逐项（关闭/未关闭）+总结论（PASS/REJECT+新问题编号）。

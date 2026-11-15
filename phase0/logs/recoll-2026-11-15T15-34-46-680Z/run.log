@@ -1,0 +1,9 @@
+[2026-11-15T15:34:47.380Z] 会话锁已获取（补采 gpt03-S1R3）
+[2026-11-15T15:34:47.469Z] 页面就位: https://chatgpt.com/c/6af9c5f3-4d00-83ec-8750-d6eef8219152
+[2026-11-15T15:34:55.492Z] 静置门通过（units=2）；滚动到底+额外静置 30000ms
+[2026-11-15T15:35:35.531Z] 物化 unit 共 2 个（诊断落盘 units-diag.json）
+[2026-11-15T15:35:35.532Z] 本轮 user 定位成功: fallback-turn-2:0:user（简报标记唯一且为最后一个 user；发送双验报告键=fallback-turn-1:0:user 供对照）
+[2026-11-15T15:35:39.610Z] checks={"final_stop_button_not_visible":true,"tail_is_assistant":true,"dil_uuid_present":true,"uuid_stable":true,"stable_unit_read":true,"target_range_materialized":true,"not_prev_reply_sha":true}
+[2026-11-15T15:35:39.616Z] reply 已落盘: D:\AIEO\phase0\logs\recoll-2026-11-15T15-34-46-680Z\reply.txt（6309 字节，SHA256=de74148b18f4c152…）
+[2026-11-15T15:35:39.616Z] recoll COMPLETED
+[2026-11-15T15:35:39.743Z] 会话锁已释放（补采 gpt03-S1R3）

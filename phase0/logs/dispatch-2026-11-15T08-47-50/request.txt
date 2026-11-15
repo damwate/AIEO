@@ -1,0 +1,5 @@
+[迁移接棒|AIEO Basic→新会话]
+前审查会话(6af93e42)上下文满,你承接后续全部验收轮次。
+请读 github.com/damwate/AIEO@main commit e65caab2ba07f8c245b7518ba7c6f67158213c34 的 basic/tasks/b-20261115-basic-replication-verify/acceptance/review-request-r3.md——按该文件执行复验R3(接棒声明+裁定链+复验范围+三态请求全在文件内)。
+背景:basic/WORKFLOW.md(v0.3生效)+decision-log尾部(DEC-049/050),同 commit 可读。
+回执:结论表+reply SHA256。

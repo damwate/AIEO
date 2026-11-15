@@ -1,0 +1,181 @@
+{
+  "at": "2026-11-15T10:51:00.247Z",
+  "message_bytes": 508,
+  "reply": "ChatGPT 说：\nBasic 多任务并行治理讨论回执\n\n已完成材料核读 仅治理讨论，不修改代码\n\n讨论基线\n\n仓库：damwate/AIEO\n\n指定基线：0a6b79a3d90a39cd03e381aa50aec3644a7be355\n\n讨论文件：docs/phase1/parallel-tasks-discussion.md\n\n流程依据：basic/WORKFLOW.md v0.3\n\n决策依据：docs/phase1/decision-log.md DEC-049～051\n\n核读后的关键判断：\n\nM1（单执行者交替推进）已经有制度依据，不需要重新设计。\n\nM2（多 ZCode 会话各管一个任务）有现实价值，但当前缺少工作区隔离和任务调度规则，不能直接放开。\n\nM3（多执行者、多工作区、自动并行流水线）与 Basic 首期不做清单冲突，不应纳入当前 Basic 建设范围。\n\nDEC-049～051 所体现的方向是：Basic 优先保持轻量、人工可控、独立验收，不能为了并行而引入一套复杂调度系统。\n\n我的总体建议是：M1 作为默认模式，M2 建立受控试运行制度，M3 明确留给 Standard/Advanced。\n\n1. 模式评估\n\n维度\n\n\t\n\n判断\n\n\t\n\n建议\n\n\n\n\nM1 交替推进\n\n\t\n\n通过\n\n\t\n\n保留默认\n\n\n\n\nM2 多会话隔离并行\n\n\t\n\n有条件通过\n\n\t\n\n建立试运行规则\n\n\n\n\nM3 并行流水线\n\n\t\n\n暂不采用\n\n\t\n\n留给 Standard/Advanced\n\n特别补充：M1 的挂起机制已经存在于 v0.3。挂起任务必须保留阻塞原因、恢复条件与状态，不能将挂起记为完成。\n\n2. 治理方案\n2.1 工作区隔离：优先 Git Worktree\n\n建议 M2 采用：\n\n一任务、一执行会话、一独立 worktree、一任务分支。\n\n主工作区\n\n任务登记、协调、集成准备\n\n任务 A\n\nworktree A\n\ntask/A 分支\n\n独立开发会话\n\n任务 B\n\nworktree B\n\ntask/B 分支\n\n独立开发会话\n\n人工检查、独立验收、用户批准集成\n\nmain\n\n合并仍须用户拍板\n\n取舍：\n\nGit Worktree：首选。 每个工作区有独立工作目录和 index，共享 Git 对象库，减少重复 clone。\n\n多 Clone：备用。隔离更直观，但仓库状态和远端同步管理成本更高。\n\n同一工作区开多个会话：禁止作为 M2 并行方式。\n\n每个任务必须登记基线完整 SHA、分支、worktree 路径。禁止两个会话共用同一个工作区或分支。\n\n不允许自动合并、自动 cherry-pick 或无人确认 push。main 合并仍遵循 DEC-010。\n\n2.2 派单锁与排队\n\nphase0/e2e-poc/session_lock.mjs 的全局互斥限制应当保留。\n\n建议：\n\n派单和回复采集采用人工 FIFO 队列。\n\n高优先级任务允许明确插队，但记录原因。\n\n每次派单核对 task ID、dispatch ID、conversation UUID。\n\n每次回复核对 request/reply 原始字节及 SHA256。\n\n不允许通过并发启动多个派单来绕过锁。\n\n这里需要区分：\n\n派单串行，不等于开发串行。\n\n派单完成后，多个独立开发会话可以同时在各自 worktree 工作。\n\n2.3 开发会话与验收会话\n\n采用以下纪律：\n\n角色\n\n\t\n\n分配规则\n\n\n\n\n任务 A 开发\n\n\t\n\n专属会话 A\n\n\n\n\n任务 A 验收\n\n\t\n\n独立验收会话 A\n\n\n\n\n任务 B 开发\n\n\t\n\n专属会话 B\n\n\n\n\n任务 B 验收\n\n\t\n\n独立验收会话 B\n\n开发会话不得跨任务复用。\n\n验收会话不得与对应开发会话混用。每个任务仍执行现有 WORKFLOW 的六查、PASS/REJECT/BLOCKED 规则。\n\n由于派单采集是单通道，验收派单与回复采集仍然串行。\n\n2.4 优先级和冲突管理\n\n不建议增加复杂优先级算法。\n\n沿用现有任务书的高/普通两级，增加以下管理约束：\n\n每个任务登记依赖任务。\n\n每个任务声明负责修改的文件或目录。\n\n同一文件同一时段只能有一个任务写入。\n\n公共工具、WORKFLOW、decision-log、模板和全局配置默认视为独占资源。\n\n前置任务必须 PASS，依赖任务才能进入相应开发步骤。\n\n发生冲突时：\n\n相关任务停止写入。\n\n记录 BLOCKED 和冲突原因。\n\n指定一个整合责任人。\n\n重新协商修改范围和解决方案。\n\n重新进入独立验收。\n\n不得靠覆盖文件或盲目 rebase 消除冲突。\n\n3. 落地形态\n\n建议采用轻量文档治理，不开发新调度器。\n\n文件\n\n\t\n\n建议\n\n\n\n\nbasic/WORKFLOW.md\n\n\t\n\n增加并行模式入口、适用条件和禁止事项\n\n\n\n\ndocs/phase1/basic-parallel-governance.md\n\n\t\n\n单独承载 M2 试运行规则\n\n\n\n\n任务书模板\n\n\t\n\n试运行期间人工补充并行登记字段\n\n\n\n\ndocs/AI-DEV-LESSONS.md\n\n\t\n\n实战产生教训后再形成 L-0xx\n\n任务书建议增加以下登记字段：\n\n并行模式：M1/M2\n\n依赖任务\n\n基线 SHA\n\nworktree 路径\n\n分支名称\n\n文件所有权\n\n开发会话\n\n验收会话\n\n冲突与阻塞情况\n\n工具改动：目前不需要。\n\n未来如果需要自动队列、并发派单、状态同步或冲突检测，应单独立项，考虑归入 Standard/Advanced。\n\n4. 分步实施建议\n\n第一阶段：继续 M1\n\n使用现有 v0.3 挂起和并行机制，不改变当前工作流程。\n\n第二阶段：建立 M2 规则\n\n形成治理文档，经过复审和用户批准后再生效。\n\n第三阶段：小规模实战\n\n最多两个并行任务\n\n选择低冲突、互不依赖、文件所有权清晰的任务。各自使用独立 worktree、分支和会话。\n\n第四阶段：复盘\n\n至少观察一轮完整闭环，重点统计：\n\n工作区污染次数\n\n文件及分支冲突次数\n\n派单归属错误次数\n\n验收会话串用次数\n\n并行节省时间与额外管理成本\n\n第五阶段：决定是否扩大\n\n根据实战证据决定是否扩大并行数量、固化模板字段。M3 必须另行讨论。\n\n5. 三态裁定\n修改\n\n建议采纳受控 M2，而非全面放开\n\n具体修改意见：\n\nM1 继续作为默认模式。\n\nM2 最多两个任务试运行。\n\n一任务一 worktree、一分支、一开发会话、一验收会话。\n\n派单和采集串行，开发执行并行。\n\n同文件单写者，依赖任务按验收 PASS 解锁。\n\n不改代码、不改工具、不自动合并、不突破 DEC-010。\n\nM3 不纳入 Basic。\n\n明确边界： 本次是治理方案建议，不是用户批准，不构成开发授权或规则生效。后续须经用户确认才能修改仓库规则、启动 M2 试运行。\n\n6. 回执信息\n\n讨论状态\n\n方案已形成\n\n项目\n\n\t\n\n结果\n\n\n\n\n指定文件核读\n\n\t\n\n完成\n\n\n\n\nv0.3 规则对照\n\n\t\n\n完成\n\n\n\n\nDEC-049～051 对照\n\n\t\n\n完成\n\n\n\n\n模式评估\n\n\t\n\n完成\n\n\n\n\n治理方案\n\n\t\n\n完成\n\n\n\n\n代码修改\n\n\t\n\n未执行\n\n\n\n\n仓库提交\n\n\t\n\n未执行\n\n\n\n\n用户最终拍板\n\n\t\n\n待确认\n\n回复正文（第1～5节）SHA256\n\n448de84136147c0c7d9f48b50843483d3c4def1c8fb4e31d9bf55ed6c53ca20b\n\n复制 SHA256\n\n最终意见：Basic 可以支持多任务，但应先解决工作区隔离和治理问题，而不是先追求多 AI、多执行者或自动调度。",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "5cf21220-a6ac-4737-8d55-b718a5d8f1bd",
+  "stability": {
+    "stable": true,
+    "interval_ms": 5128,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-15T10:50:54.441Z",
+      "read_finished_at": "2026-11-15T10:50:56.563Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "f9cf8925c9be6629d22a04e4df59e91f43a2152aa33900d8466c263b0b720bc7",
+          "size_bytes": 6752
+        }
+      ],
+      "assistant_uuid": "5cf21220-a6ac-4737-8d55-b718a5d8f1bd",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-15T10:50:59.568Z",
+      "read_finished_at": "2026-11-15T10:51:00.104Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "f9cf8925c9be6629d22a04e4df59e91f43a2152aa33900d8466c263b0b720bc7",
+          "size_bytes": 6752
+        }
+      ],
+      "assistant_uuid": "5cf21220-a6ac-4737-8d55-b718a5d8f1bd",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "e2e6ffa6162b9e584db19cd3dd5a2e5cf5e0f7babe4e8f177994fdb11c6fee78",
+          "f9cf8925c9be6629d22a04e4df59e91f43a2152aa33900d8466c263b0b720bc7"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "e2e6ffa6162b9e584db19cd3dd5a2e5cf5e0f7babe4e8f177994fdb11c6fee78",
+          "f9cf8925c9be6629d22a04e4df59e91f43a2152aa33900d8466c263b0b720bc7"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "f9cf8925c9be6629d22a04e4df59e91f43a2152aa33900d8466c263b0b720bc7",
+  "size_bytes": 6752,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-15T10-47-39\\reply.txt",
+  "reply_readback_sha256": "f9cf8925c9be6629d22a04e4df59e91f43a2152aa33900d8466c263b0b720bc7",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-15T10-47-39\\raw-units.json",
+  "raw_units_sha256": "ebe7ebde6bf3a4f694406973a12198e47d829169ca03bb4a78dc591e3cb81a76",
+  "raw_units_size_bytes": 9855,
+  "raw_units_readback_sha256": "ebe7ebde6bf3a4f694406973a12198e47d829169ca03bb4a78dc591e3cb81a76",
+  "session_id": "6af98e04-2bf0-83ec-a6cd-aab79ffcd64a",
+  "conversation_url": "https://chatgpt.com/c/6af98e04-2bf0-83ec-a6cd-aab79ffcd64a",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}

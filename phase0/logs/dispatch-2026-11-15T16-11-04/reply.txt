@@ -1,0 +1,8 @@
+ChatGPT 说：
+JSON
+{
+  "result": "PASS",
+  "summary": "逐行审查通过：--version 在参数解析及核验流程前独立输出版本 1.0 并退出 0，无参仍保持 exit 2，--help 原有逻辑未修改，且仅修改指定文件 7 行。",
+  "issues": [],
+  "reviewed_commit": "fda9183dafb77ca15578abb244b3b2d15999fafb"
+}

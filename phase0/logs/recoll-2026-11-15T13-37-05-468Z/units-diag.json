@@ -1,0 +1,14 @@
+[
+  {
+    "key": "fallback-turn-3:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[交付确认|b-20261115-standard-kickoff|S4]\n请读 github.com/damwate/AIEO@main 412576ee1d"
+  },
+  {
+    "key": "fallback-turn-3:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nb-20261115-standard-kickoff｜S4 交付确认回执\n当前指定提交：REJECT\n\n先给结论边界：在用户指定的 41"
+  }
+]

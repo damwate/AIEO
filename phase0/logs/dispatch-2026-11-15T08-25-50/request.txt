@@ -1,0 +1,7 @@
+[独立验收|b-20261115-replication-gaps-fix|S1]
+G1-G4缺口修复,请独立验收(冻结=你R1"修改后同意"五项采纳+三不做,节点授权增补②)。
+材料:被测=3119ef6eb522d8062f96e81f4c0e8bdf1ffa5eff(S1成文),登记837e819(自查修正:输出移acceptance/+SHA明文化,不属被测diff);包basic/tasks/b-20261115-replication-gaps-fix/。
+改动:①toolkit/SETUP-CHECKLIST.md新环境初始化清单六节[基础环境表Node≥20.18.1/仓库获取网络clone与check-push区分/依赖安装/Profile初始化四步人工登录验证+敏感数据检查+与ego-profile分开/外部依赖清单monitor非必备/完成确认]②WORKFLOW部署边界增三条[清单引用/外部依赖清单G2/派单链Windows限制G3]+附录增补③。
+申报:37/37+DV1 6/6+negpos 7/7+专项7/7全0,检查器零修改;你的三不做遵守(未称跨平台/未称新电脑完成/未动工具代码)。
+验收点:①清单六节与R1五项修改逐项对应(对照D1报告G1-G4)②部署边界三声明准确③37项与四命令④边界(不动工具代码/basic语义不变)。
+三态:PASS/REJECT(列项)/BLOCKED。

@@ -1,0 +1,220 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-15T19:18:22.725Z",
+  "user_unit_key": "fallback-turn-8:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-8:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "3c508f95-b467-49ee-a3a5-29f29808e87a",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-8:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant",
+          "fallback-turn-6:0:user",
+          "fallback-turn-6:2:assistant",
+          "fallback-turn-7:0:user",
+          "fallback-turn-7:2:assistant",
+          "fallback-turn-8:0:user",
+          "fallback-turn-8:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "aee4ae2be3f817372fa83cb7c8bbcb9475980a82300be43ff303636ee8b1ed3f",
+          "0f323ef28dbb689fdd83d83d188f059ce837636f366bf97f911fc5d9ad1d961c",
+          "fbb3977dd243244e567a75e50eee6a2cb1b1785450a60b5dbc23b3123315563a",
+          "b6aa34014e47ecedae032825b32d8744a3175f13d54709bafe25f99633a2ac89",
+          "8ec118dd065f10a677460e26f03ec2897d2376f7af743cb9734a9ec7a629799d",
+          "659141690aef684f25c497be66b3dbfd7c4a0f2c4146e0705fb31b6043cd428a",
+          "16389ec277822c189b31314ae97fc9268f44b82cc48dbc9e9a0044621113d928",
+          "f1ab60a927592f2308d272641e192d6cb5c7c1f0f77cabf9b6b844d50bd4bcb0",
+          "4060e2826d97d8e1916822fad7a9db195e7202d82dae72907a0d75a4b0d40152",
+          "28f42ec2d0569a18f10bada2d1caeb3e4bb7a083eef5ec66418a481c6e7f458d",
+          "b66953f77552fc8101db20e8c0c019b368d02a586221afdfd1f0e5385abfed3d",
+          "5465c1638478b88521b049feed91060f7993d374ac89202de7ab90553a636716",
+          "2bbd258d0f6082dbefff9262d5d343f15ae59bb4ccd2857147dedac721040289",
+          "1a8dcb2c35074c8eeed11d9d8c266f7c6844151ec0c9f5f913dc5ffac5eb8360",
+          "5bc52a3882d09949081c64dfc3afd4c63d60176002034fa42b8b057cdf053a89",
+          "63ce53c5bd9ceb25c2b415c89de5b7d37c49806ae5b8985fda4664948c8e7013",
+          "54a21cc96d9e719fc682af4e368a5997e7b29da819ceb3d6b3e64d069f03c9ee",
+          "d60e93fc9737f16e52b4e809cc9902c6a7b26ac82fe6bc9e642f15b2f34224fe"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant",
+          "fallback-turn-6:0:user",
+          "fallback-turn-6:2:assistant",
+          "fallback-turn-7:0:user",
+          "fallback-turn-7:2:assistant",
+          "fallback-turn-8:0:user",
+          "fallback-turn-8:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "aee4ae2be3f817372fa83cb7c8bbcb9475980a82300be43ff303636ee8b1ed3f",
+          "0f323ef28dbb689fdd83d83d188f059ce837636f366bf97f911fc5d9ad1d961c",
+          "fbb3977dd243244e567a75e50eee6a2cb1b1785450a60b5dbc23b3123315563a",
+          "b6aa34014e47ecedae032825b32d8744a3175f13d54709bafe25f99633a2ac89",
+          "8ec118dd065f10a677460e26f03ec2897d2376f7af743cb9734a9ec7a629799d",
+          "659141690aef684f25c497be66b3dbfd7c4a0f2c4146e0705fb31b6043cd428a",
+          "16389ec277822c189b31314ae97fc9268f44b82cc48dbc9e9a0044621113d928",
+          "f1ab60a927592f2308d272641e192d6cb5c7c1f0f77cabf9b6b844d50bd4bcb0",
+          "4060e2826d97d8e1916822fad7a9db195e7202d82dae72907a0d75a4b0d40152",
+          "28f42ec2d0569a18f10bada2d1caeb3e4bb7a083eef5ec66418a481c6e7f458d",
+          "b66953f77552fc8101db20e8c0c019b368d02a586221afdfd1f0e5385abfed3d",
+          "5465c1638478b88521b049feed91060f7993d374ac89202de7ab90553a636716",
+          "2bbd258d0f6082dbefff9262d5d343f15ae59bb4ccd2857147dedac721040289",
+          "1a8dcb2c35074c8eeed11d9d8c266f7c6844151ec0c9f5f913dc5ffac5eb8360",
+          "5bc52a3882d09949081c64dfc3afd4c63d60176002034fa42b8b057cdf053a89",
+          "63ce53c5bd9ceb25c2b415c89de5b7d37c49806ae5b8985fda4664948c8e7013",
+          "54a21cc96d9e719fc682af4e368a5997e7b29da819ceb3d6b3e64d069f03c9ee",
+          "d60e93fc9737f16e52b4e809cc9902c6a7b26ac82fe6bc9e642f15b2f34224fe"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant",
+          "fallback-turn-6:0:user",
+          "fallback-turn-6:2:assistant",
+          "fallback-turn-7:0:user",
+          "fallback-turn-7:2:assistant",
+          "fallback-turn-8:0:user",
+          "fallback-turn-8:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-8:0:user",
+      "fallback-turn-8:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant",
+          "fallback-turn-6:0:user",
+          "fallback-turn-6:2:assistant",
+          "fallback-turn-7:0:user",
+          "fallback-turn-7:2:assistant",
+          "fallback-turn-8:0:user",
+          "fallback-turn-8:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant",
+          "fallback-turn-6:0:user",
+          "fallback-turn-6:2:assistant",
+          "fallback-turn-7:0:user",
+          "fallback-turn-7:2:assistant",
+          "fallback-turn-8:0:user",
+          "fallback-turn-8:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant",
+          "fallback-turn-6:0:user",
+          "fallback-turn-6:2:assistant",
+          "fallback-turn-7:0:user",
+          "fallback-turn-7:2:assistant",
+          "fallback-turn-8:0:user",
+          "fallback-turn-8:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-8:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nS2-R8 独立复验回执\n\nPASS NEW-P2-02 已关闭\n\n复验锚点：\n\n基线：6d39ff97ead78bf56b457f2198b9089f81c32295\n\n固定终点：a3cfdfd3160701ae755c5ce8440f99dae8d42da6\n\nR8 申报：c5afe20 对应文件版本\n\n依据：S2-R7 裁定，按 R4 已接受分类规则，不改判早期已计入项。\n\n① 分类核验：PASS\n\n独立 Compare 确认完整区间为 14 commits。逐项核对 R8 申报表：\n\n分类\n\n\t\n\n数量\n\n\t\n\n核验结果\n\n\n\n\n早期已接受计入项\n\n\t\n\n7\n\n\t\n\n保持计入，无改判\n\n\n\n\nR3 整改及证据修正\n\n\t\n\n2\n\n\t\n\n保持计入\n\n\n\n\nDEC-060 治理登记\n\n\t\n\n1\n\n\t\n\n计入\n\n\n\n\nR4/R5/R6 申报回填类\n\n\t\n\n5\n\n\t\n\n排除\n\n\n\n\n合计\n\n\t\n\n14\n\n\t\n\n计入9、排除5\n\n具体而言：\n\n计入9项： 34f2c393…、2be8b01…、501f3fd…、fdba15c…、0c5642d…、030c947…、afc1ee1…、c47f69e…、50426de…。\n\n排除5项： 73f0050f…、43f43e3d…、fef498e1…、8e7dd0e…、a3cfdfd…。\n\nR4 原来已计入的8项全部维持计入；新增4项中，DEC-060 计入，3项后续申报回填排除。没有把早期已接受项改判为排除。\n\n② 三方一致性：PASS\n\nR8 申报表： 14项逐项列出完整40位 SHA，分类及判定明确。\n\nsteps.md 问题21行： 已同步展开14项完整 SHA 和分类。\n\nR4 已接受规则： 原有计入项不改判；R4 排除的两项继续排除，后续 R5/R6 当轮申报回填按相同规则延伸排除。\n\n我对申报表和 steps 问题21行的 SHA 清单做了逐项比对：\n\n14/14 一致\n\n两边没有缺项，也没有额外 SHA。申报表中的基线 SHA 是区间起点，不属于14个区间提交，因此不计入 steps 的14项清单。\n\n③ NEW-P2-02：关闭\nCLOSED\n\nR7 的两个残留问题均已修复：\n\n分类不再改变 R4 已接受的早期提交判定。\n\nsteps 问题21行已展开全部14项完整 SHA，与 R8 申报表一致。\n\n区间终点保持不变，数量、分类、排除项及范围计数一致。\n\n④ 纯文档与新问题检查：PASS\n\nR7 申报提交 091ec8e1763934e99fd3bf11c7e0b0e20007bc28 至 R8 申报提交 c5afe20：Compare 为1个提交。\n\n变更文件仅：\n\nacceptance/review-request-s2-r8.md\n\nsteps.md\n\n未发现代码文件变更。\n\n29/29 为既有测试记录，本轮未重跑，不作为新测试结果申报。\n\n未发现新的问题编号。\n\n最终裁定\n\nS2-R8\n\nPASS\nNEW-P2-02 CLOSED\n\n验收项\n\n\t\n\n结论\n\n\n\n\n① 14项分类核验\n\n\t\n\nPASS\n\n\n\n\n② 三方一致性\n\n\t\n\nPASS\n\n\n\n\n③ NEW-P2-02\n\n\t\n\n关闭\n\n\n\n\n④ 纯文档、无新问题\n\n\t\n\nPASS\n\n\n\n\n新问题编号\n\n\t\n\n无\n\nS2-R8 = PASS。 NEW-P2-02 终版关闭。本轮不需要再消耗真实 GPT 派单，也不需要重跑29/29测试。",
+      "text_sha256": "d60e93fc9737f16e52b4e809cc9902c6a7b26ac82fe6bc9e642f15b2f34224fe",
+      "size_bytes": 2661,
+      "assistant_uuid": "3c508f95-b467-49ee-a3a5-29f29808e87a"
+    }
+  ]
+}

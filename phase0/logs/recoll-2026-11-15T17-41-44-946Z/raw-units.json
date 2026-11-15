@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-15T17:42:37.925Z",
+  "user_unit_key": "fallback-turn-1:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-1:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "73695efc-959a-4491-9150-bb7c1bb7ffea",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-1:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "fbb3977dd243244e567a75e50eee6a2cb1b1785450a60b5dbc23b3123315563a",
+          "b6aa34014e47ecedae032825b32d8744a3175f13d54709bafe25f99633a2ac89"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "fbb3977dd243244e567a75e50eee6a2cb1b1785450a60b5dbc23b3123315563a",
+          "b6aa34014e47ecedae032825b32d8744a3175f13d54709bafe25f99633a2ac89"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-1:0:user",
+      "fallback-turn-1:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-1:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n复验发现：P1-02（问题12）目前存在关键证据矛盾，不能关闭。\n\n918012 的派单日志 dispatch-2026-11-15T17-12-16/run.log 记录：\n\n17:13:19：发送双验通过。\n\n17:14:35：账本记录人工升级为 R3_SEND_CONFIRMED。\n\n17:15:10：派单进程仍记录 COMPLETED，回复 322 字节。\n\n17:15:11：result.json 记录回复已落盘。\n\n这与申报的“发送后进程终止、reply 未落盘”需要进一步核对：目前能证明发送成功和后续原会话补采，但不能仅凭现有材料确认派单进程树在断点时已经终止。\n\nS2-R2 独立复验回执\n\nREJECT 复验锚点：main @ 501f3fd1f50091d85f761e62bc6b5056ebcd7af5\n\n依据：charter v1.0 §7、附录 C、附录 D。代码整改锚点：2be8b01fc44bf0f41581ca28226404f28d9f464c。\n\n一、七项复验结果\n\n编号\n\n\t\n\n复验内容\n\n\t\n\n结论\n\n\t\n\n依据\n\n\n\n\n①\n\n\t\n\nP1-01 attach 回缩\n\n\t\n\n未通过\n\n\t\n\nconfirmed-send 缺键已拦截，但 INTENT-only 状态仍存在放行漏洞\n\n\n\n\n②\n\n\t\n\nP1-02 A5①真实现场\n\n\t\n\n未通过\n\n\t\n\n发送双验及补采有证据，但进程树终止证据存在矛盾\n\n\n\n\n③\n\n\t\n\nP1-03 103件归档\n\n\t\n\n通过\n\n\t\n\nMANIFEST 103条，归档路径与 Git 树逐项对应\n\n\n\n\n④\n\n\t\n\nP2-01 A3第四组长会话\n\n\t\n\n通过\n\n\t\n\n同错误码天然现场及后续补采证据成立\n\n\n\n\n⑤\n\n\t\n\nP2-02 test_17\n\n\t\n\n通过\n\n\t\n\n独立子进程中断、全新进程恢复、event_id恰1条\n\n\n\n\n⑥\n\n\t\n\nP2-03 test_18\n\n\t\n\n通过\n\n\t\n\n独立进程重启后补登记，report/message各1条\n\n\n\n\n⑦\n\n\t\n\n26/26回归及范围\n\n\t\n\n部分通过\n\n\t\n\n26个测试方法存在；执行结果缺少独立运行记录；代码范围未发现越界\n\n① P1-01：attach 回缩——未通过\n\n整改有效部分：\n\nR3_SEND_CONFIRMED 存在且 sent_user_unit_key 缺失：即便 allow_no_anchor=True 也抛出异常。\n\nR3_SEND_CONFIRMED_COLLECT_FAILED 同样处理。\n\ntest_16c 场景A验证 confirmed + 缺键时拒绝。\n\ntest_16c 场景B验证纯 R3_SEND_FAILED 时允许人工接管，并显式登记 not_applicable。\n\n新发现：INTENT-only 状态绕过。\n\nreview_leg.py 第525—549行：\n\nPython\n运行\nfailed_send_only = True\n\n后续只有发现 confirmed-send 才将它置为 False。\n\n没有检查 R3_SEND_INTENT_RECORDED 是否存在，也没有要求必须存在终态 R3_SEND_FAILED。\n\n因此：\n\n账本存在 R3_SEND_INTENT_RECORDED。\n\n没有 confirmed-send。\n\n发送结果实际上不确定。\n\n人工调用 attach-reply。\n\nallow_no_anchor=True 仍然放行。\n\n这与附录 C 的 fail-closed 规则、附录 D 的 A8 规则冲突。\n\ntest_16c 没有覆盖 INTENT-only + attach 反例。\n\n问题11：未关闭\n② P1-02：A5①真实现场——未通过\n\n已经确认的有效证据：\n\nT-P1-026 / 918012。\n\n发送双验 polls=2 的账本记录。\n\n原会话 UUID：6af9e82c-faf4-83ec-8795-cde560c7e0ea。\n\n原始备份账本存在。\n\nMANUAL_LEDGER_REPAIR 有记录。\n\n后续原会话补采成功。\n\n七项采集检查全部通过。\n\nM1 最终推进至 TEST_ACCEPTANCE。\n\n未发现第二次发送记录。\n\n但是发现一个关键矛盾。\n\ndispatch-2026-11-15T17-12-16/run.log：\n\n时间\n\n\t\n\n记录\n\n\n\n\n17:13:19\n\n\t\n\n发送双验通过\n\n\n\n\n17:15:10\n\n\t\n\n派单进程 COMPLETED，回复322字节\n\n\n\n\n17:15:11\n\n\t\n\n审查会话保存，result.json生成\n\n而申报的 A5 断点是发送后进程树终止、reply 未落盘。\n\n进一步检查 a5-experiment-v4.py：\n\n先执行 proc.kill()。\n\n再执行 taskkill /F /T。\n\n没有检查 taskkill 的执行结果。\n\n没有验证所有子进程确实退出。\n\n派单日志随后仍然记录 COMPLETED，说明至少不能证明派单子进程树已经终止。\n\n此外，918012 主账本还有两个问题：\n\nR3_SEND_CONFIRMED 时间为17:14:35，却排列在17:13:40、17:13:58的 RESUME_START 之前。\n\n主账本的 RESUME_START 仍声明存在 R3_SEND_INTENT_RECORDED，但该记录已经不在主账本中，只能在备份账本找到。\n\n这意味着人工修复改变了原始账本记录，不能直接认定满足附录 C 的追加式账本纪律。\n\n裁定：真实发送与补采成立，但断点及进程树终止的独立证据链不完整。\n\n问题12：未关闭\n③ P1-03：103件归档——通过\n\nMANIFEST 实际核对：\n\n类别\n\n\t\n\n数量\n\n\n\n\n六轮账本及关联材料\n\n\t\n\n34\n\n\n\n\ndispatch\n\n\t\n\n46\n\n\n\n\nrecoll\n\n\t\n\n18\n\n\n\n\nA3 probe\n\n\t\n\n4\n\n\n\n\nM1只读导出\n\n\t\n\n1\n\n\n\n\n合计\n\n\t\n\n103\n\n核验结果：\n\nMANIFEST 有103个条目。\n\n103个 archive 路径均能在对应 Git 树中找到。\n\n没有发现未登记的归档文件。\n\nMANIFEST 自身另外入 Git。\n\n918012 的主账本、备份账本、补采驱动、回复、report 均已归档。\n\n本次确认了归档集合及路径对应关系；未对103件全部重新计算SHA256。\n\n问题13：关闭\n④ P2-01：A3第四组长会话现场——通过\n\n第四组现场证据：\n\ndispatch-2026-11-15T16-25-10/run.log\n\nrecoll-2026-11-15T16-38-25-773Z/result.json\n\n对应 reply 已归档。\n\n关键证据：\n\n发送双验通过。\n\n实际错误码：INBOUND_WINDOW_COMPLETENESS_UNPROVEN。\n\n采集失败后没有重新派单。\n\n补采定位到正确会话和 user unit。\n\n七项检查全部为 true。\n\n补采成功取得回复。\n\n与前三组天然现场结合，四组证据已经形成。\n\n两种构造性 probe 也保留，且没有将构造性证据冒充天然现场。\n\n问题14：关闭\n⑤ P2-02：test_17——通过\n\n检查 test_17_a7_real_process_restart_event_idempotent：\n\nrunner 使用真实独立 Python 子进程。\n\nGIT_VALIDATE 已提交 M1。\n\nos._exit(9) 终止 runner。\n\n新建第二个 Python 子进程。\n\n第二进程重新构造 ReviewLeg 并调用 resume。\n\n查询 M1 task_events，同一 event_id 恰好一条。\n\n最终状态 TEST_ACCEPTANCE。\n\n响应在底层调用返回后、编排层完成处理前被中断，覆盖了本轮要求的客户端进程中断恢复场景。\n\n问题15：关闭\n⑥ P2-03：test_18——通过\n\n检查 test_18_a5b_real_process_restart_register_only：\n\n第一进程完成采集。\n\nreply 已落盘。\n\nR4_REPLY_CAPTURED 已写入账本。\n\nos._exit(9) 强制退出。\n\n第二个独立进程调用 resume。\n\n通过已有 R4 记录进入 _resume_register()。\n\nreview_report 数量=1。\n\nCODE_REVIEW_SUBMITTED message 数量=1。\n\n最终状态 TEST_ACCEPTANCE。\n\n当前实现的恢复分支没有重新调用派单。\n\n补充说明：测试没有独立断言 dispatch 目录数量不变，但代码恢复路径及登记结果支持本项关闭。\n\n问题16：关闭\n⑦ 回归与修改范围\n\n测试：\n\ntest_review_leg.py 中共26个测试方法。\n\ntest_16c、test_17、test_18 均已加入。\n\n申报结果为26/26 PASS。\n\n未找到对应的完整测试运行输出。\n\nGitHub Actions 对整改 commit 没有返回关联 workflow runs。\n\n因此，26个测试用例的存在可以确认，但26/26实际执行成功尚不能独立复核。\n\n范围：\n\nGitHub Compare 核查没有发现以下文件修改：\n\nscheduler.py\n\nM1-M4模块代码\n\nM2派单工具链\n\n冻结契约文件\n\n新增实验脚本位于 phase1/logs/gpt03-review-leg/，属于实验材料，没有发现运行期核心模块越界修改。\n\n另有一处申报绑定差异：GitHub Compare 显示从 bfb7797 到 501f3fd 实际 ahead_by=8，而不是申报的3个后继 commit。具体差异文件均已纳入核查，但应修正 ST-01 的提交数量说明。\n\n二、六项问题关闭表\n\n原问题\n\n\t\n\n级别\n\n\t\n\nR2裁定\n\n\t\n\n主要原因\n\n\n\n\n问题11\n\n\t\n\nP1-01\n\n\t\n\n未关闭\n\n\t\n\nINTENT-only attach 绕过\n\n\n\n\n问题12\n\n\t\n\nP1-02\n\n\t\n\n未关闭\n\n\t\n\nA5进程树终止及账本证据矛盾\n\n\n\n\n问题13\n\n\t\n\nP1-03\n\n\t\n\n关闭\n\n\t\n\n103件归档完整\n\n\n\n\n问题14\n\n\t\n\nP2-01\n\n\t\n\n关闭\n\n\t\n\nA3第四组天然现场补齐\n\n\n\n\n问题15\n\n\t\n\nP2-02\n\n\t\n\n关闭\n\n\t\n\ntest_17真实进程中断恢复\n\n\n\n\n问题16\n\n\t\n\nP2-03\n\n\t\n\n关闭\n\n\t\n\ntest_18独立进程补登记\n\n三、新问题登记\n\n编号\n\n\t\n\n级别\n\n\t\n\n新问题\n\n\n\n\nNEW-P1-01\n\n\t\n\nP1\n\n\t\n\nattach 对 INTENT-only 未确认发送状态没有 fail-closed\n\n\n\n\nNEW-P1-02\n\n\t\n\nP1\n\n\t\n\nA5实验未证明派单进程树终止，后续日志显示派单仍完成\n\n\n\n\nNEW-P1-03\n\n\t\n\nP1\n\n\t\n\n918012主账本人工修复造成记录替换及时间顺序不一致，违反追加式账本审计要求\n\n\n\n\nNEW-P2-01\n\n\t\n\nP2\n\n\t\n\n26/26测试缺少可独立复核的运行记录\n\n\n\n\nNEW-P2-02\n\n\t\n\nP2\n\n\t\n\nST-01申报3个后继提交与实际Compare的8个提交不一致\n\n四、最终裁定\n\nS2-R2\n\nREJECT\n\n原六项问题：4项关闭，2项未关闭。\n\n新增问题：5项。\n\n核心阻断：P1-01、P1-02。\n\n证据归档：通过。\n\nA3、A7、A5②：通过。\n\n核心修改范围：未发现越界。\n\n不予 S2 PASS，不授权进入 S3/S4 验收关闭状态。\n\n建议下一轮只针对 NEW-P1-01、NEW-P1-02、NEW-P1-03 做限定整改与复验，不重开已经关闭的问题13—16，也不重复消耗真实 GPT-03 派单。\n\n本轮最重要的原则是：不能用最终业务成功，替代对断点发生时刻、进程终止和账本原始状态的证明。",
+      "text_sha256": "b6aa34014e47ecedae032825b32d8744a3175f13d54709bafe25f99633a2ac89",
+      "size_bytes": 9014,
+      "assistant_uuid": "73695efc-959a-4491-9150-bb7c1bb7ffea"
+    }
+  ]
+}

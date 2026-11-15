@@ -1,0 +1,335 @@
+ChatGPT 说：
+S3-R2 限定复验回执
+
+问题1 PASS 问题2 PASS
+
+被测对象： 76f9abfe44e78e1f30078841ebb3fbd05a0f2b8b
+
+复验基线： 3e5ef5044aa6ebec39ead5c30066c9e2d5218b48
+
+复验范围： 仅问题1、问题2。不重审 S3-R1 已通过项，不扩大为 S2 新问题，BC-06 状态不动。
+
+一、绑定申报与被测范围
+PASS
+
+独立读取指定 commit 的 GitHub 比较结果：
+
+核验项
+
+	
+
+实际结果
+
+
+
+
+提交数量
+
+	
+
+1
+
+
+
+
+文件数量
+
+	
+
+2
+
+
+
+
+check-binding.py
+
+	
+
++12 / -8
+
+
+
+
+test-check-binding.py
+
+	
+
++64 / -2
+
+
+
+
+基线
+
+	
+
+与申报一致
+
+
+
+
+被测 commit
+
+	
+
+与申报一致
+
+compare_commits 返回 ahead_by=1、behind_by=0、total_commits=1，两个文件的增删行数与申报完全一致。
+
+因此，被测 diff 边界成立，没有发现混入其他文件或额外提交。
+
+二、问题1：R4 / numstat Git 失败必须 BLOCKED
+PASS — 整改成立
+
+逐项检查 toolkit/check-binding.py：
+
+1. R4 的 rev-list target..HEAD：
+
+检查非零退出码。
+
+非零时抛出 GitCmdError。
+
+进入统一异常处理，生成 RX=BLOCKED。
+
+不会把失败输出当作空后代列表，错误放行 R4 PASS。
+
+2. numstat 的 diff --numstat：
+
+同样检查非零退出码。
+
+失败进入 RX=BLOCKED。
+
+不会把命令失败当成空 numstat 证据。
+
+3. 正常路径：
+
+R4 正常判定逻辑保留。
+
+numstat 正常输出逻辑保留。
+
+故障注入测试也进行了针对性检查：
+
+测试
+
+	
+
+注入故障
+
+	
+
+关键断言
+
+
+
+
+b5d
+
+	
+
+R4 rev-list 失败
+
+	
+
+返回码2、BLOCKED、无R4 PASS
+
+
+
+
+b5e
+
+	
+
+numstat diff 失败
+
+	
+
+返回码2、BLOCKED、存在RX
+
+两项测试均不是单纯检查异常发生，而是检查最终判定及禁止错误放行。
+
+裁定：问题1关闭。
+
+三、问题2：负例 commit 身份、R7 断言及 B5c 内容哈希
+REJECT — 尚有一处缺口
+
+逐项检查 toolkit/test-check-binding.py：
+
+检查项
+
+	
+
+实际代码
+
+	
+
+结论
+
+
+
+
+test_03 孤儿 commit 身份
+
+	
+
+assertIn(target, r2["commits"])
+
+	
+
+PASS
+
+
+
+
+test_04 merge commit 身份
+
+	
+
+assertIn(target, r3["commits"])
+
+	
+
+PASS
+
+
+
+
+test_06 过期 target 身份
+
+	
+
+assertIn(target, r4["commits"])
+
+	
+
+PASS
+
+
+
+
+test_08 过期 target 身份
+
+	
+
+assertIn(target, r4["commits"])
+
+	
+
+PASS
+
+
+
+
+test_09 坏 SHA 身份
+
+	
+
+assertIn("a"*40, r6["commits"])
+
+	
+
+PASS
+
+
+
+
+test_05 数量字段
+
+	
+
+申报=3、实际=2
+
+	
+
+PASS
+
+
+
+
+test_10c R7
+
+	
+
+规则ID、BLOCKED、退出码2、原因
+
+	
+
+PASS
+
+
+
+
+test_b5c
+
+	
+
+.git 文件清单及逐文件 SHA-256 前后比较
+
+	
+
+PASS
+
+发现一处不足：
+
+test_10a_empty_range_blocked：
+
+断言退出码2：有。
+
+断言 BLOCKED：有。
+
+断言规则 ID=R7：有。
+
+断言 R7 的具体原因：没有。
+
+test_10b 断言了“不适用”说明，但没有明确断言空区间的原始判定原因。
+
+因此，虽然 R7 的核心行为已经覆盖，且 test_10c 完整断言了原因，但不能认定 R7 所有负例均满足「规则 ID＋原因＋退出码」的完整断言要求。
+
+建议最小修复：
+
+在 test_10a 增加：
+
+Python
+运行
+self.assertIn("区间 commit 数==0", d["rules"][-1]["detail"])
+
+test_10b 也建议补充同一原因断言，再保留原有“不适用”断言。
+
+裁定：问题2尚未关闭。
+
+四、总结论
+
+S3-R2 最终裁定
+
+REJECT
+
+问题编号
+
+	
+
+裁定
+
+
+
+
+问题1
+
+	
+
+PASS 已关闭
+
+
+
+
+问题2
+
+	
+
+REJECT 未关闭
+
+唯一剩余问题：问题2——R7 test_10a 缺少具体原因断言。
+
+补充说明：本轮已独立读取指定 commit 的申报文件、两个被测源码文件及 steps.md，并核对 GitHub commit 比较结果。18/18 是请求中提供的测试执行记录；本轮没有在独立运行环境实际执行 python -I toolkit/test-check-binding.py，不将其冒充为本轮独立实跑结果。
+
+复验严格限定在问题1、问题2，没有新增 S2 问题，也没有改变 BC-06 状态。
+
+后续复验只需针对问题2的最小修复，不需要重新审查问题1及其他已通过项。

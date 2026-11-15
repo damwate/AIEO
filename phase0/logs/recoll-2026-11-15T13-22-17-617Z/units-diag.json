@@ -1,0 +1,26 @@
+[
+  {
+    "key": "fallback-turn-3:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[立项评审|b-20261115-standard-kickoff|S2-Gate2|深度项精化]\nGate1已PASS(问题5/6关闭确认,历史REJECT保"
+  },
+  {
+    "key": "fallback-turn-3:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n[立项评审回执｜b-20261115-standard-kickoff｜S2-Gate2]\n\n评审基线： f93ff2a7f1e00b9f"
+  },
+  {
+    "key": "fallback-turn-4:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[立项复评|b-20261115-standard-kickoff|S2-Gate2R2|修订后再评]\n请读 github.com/damwate/AIEO@m"
+  },
+  {
+    "key": "fallback-turn-4:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n[立项复评回执｜b-20261115-standard-kickoff｜S2-Gate2R2]\n暂不能定稿认可｜复评受阻\n\n指定被测提交："
+  }
+]

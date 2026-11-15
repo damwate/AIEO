@@ -1,0 +1,14 @@
+[
+  {
+    "key": "fallback-turn-2:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【S1复验R3|b-20261115-gpt03-review-leg】对S1-R2四组整改做限定复验（无范围扩大）。\n仓库github.com/damwate"
+  },
+  {
+    "key": "fallback-turn-2:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nS1 独立验收复验 R3 回执\n\n被测对象： c081086ee4a98d430632566ca066b565ec4eac83\n\nST-0"
+  }
+]

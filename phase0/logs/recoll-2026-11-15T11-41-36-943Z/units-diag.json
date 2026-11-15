@@ -1,0 +1,14 @@
+[
+  {
+    "key": "fallback-turn-4:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[验收|b-20261115-standard-kickoff|S2]\n请读 github.com/damwate/AIEO@main 3d5ef22ceceb"
+  },
+  {
+    "key": "fallback-turn-4:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nS2 独立验收结论\n\nREJECT 发现立项任务书的范围与既有决策记录存在实质性歧义，且 I5、I6 尚未达到可验收完整度。\n\n验收对象："
+  }
+]

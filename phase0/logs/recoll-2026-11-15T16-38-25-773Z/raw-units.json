@@ -1,0 +1,70 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-15T16:39:50.081Z",
+  "user_unit_key": "fallback-turn-1:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-1:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "22af910f-1c9d-4112-879a-9b812b080ea4",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-1:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "dad227232e809c6fc40a9fcd99ca0f116b460058ce0e73bda094f6a8c651aeff",
+          "eb8ec9dfcdf67e02d1c972ae1e8b1e55e9c9d16e2724fbfa514dd4ebb04f6de7",
+          "67a6d2b2df26b445cf3c59ad14575a341f946dc93210643602828dcfeddbd556",
+          "a5f15e6dec575232fe81e9092c186b6fbd92033dd8dc1f93746aed992786b1b0"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": []
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-1:0:user",
+      "fallback-turn-1:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STATIC_NON_SCROLLABLE_DOM",
+      "scrollable_window_observed": false,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "overlap_keys": []
+      }
+    ],
+    "window_transitions": 0
+  },
+  "units": [
+    {
+      "key": "fallback-turn-1:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nS2 独立验收回执\n\nREJECT 不通过，存在 P1 级问题及验收证据缺口。\n\n验收对象：b-20261115-gpt03-review-leg / S2\n\n被测锚点：6d39ff97ead78bf56b457f2198b9089f81c32295\n\n申报锚点：34f2c393e3b1b181046a2a125d24a312bcc675a5\n\n依据：charter v1.0 §7、附录 D。\n\n一、验收六查\n\n编号\n\n\t\n\n检查项目\n\n\t\n\n结论\n\n\t\n\n判定依据\n\n\n\n\n①\n\n\t\n\nS2 目标符合性\n\n\t\n\n部分通过\n\n\t\n\nA2/A4/A6/A10 有真实链执行记录；A5①现场与标准不符，A3注入存在等价性缺口\n\n\n\n\n②\n\n\t\n\nCharter §7/附录D\n\n\t\n\n不通过\n\n\t\n\nA5①、A7 未充分满足验收要求\n\n\n\n\n③\n\n\t\n\n修改范围\n\n\t\n\nPASS\n\n\t\n\n精确比较基线与目标 SHA，4 commit，代码仅 review_leg.py\n\n\n\n\n④\n\n\t\n\n真实性审查\n\n\t\n\n证据不足\n\n\t\n\n三任务申报完整，但无法独立核实全部原始账本、派单和回复 SHA 链\n\n\n\n\n⑤\n\n\t\n\nA5② 等价证据裁断\n\n\t\n\n不充分\n\n\t\n\ntest_08a 覆盖核心恢复逻辑，但没有独立进程重启现场\n\n\n\n\n⑥\n\n\t\n\n证据可核查\n\n\t\n\n不通过\n\n\t\n\nGitHub 锚点有申报和材料，但缺少本轮真实现场原始证据归档\n\n① 目标符合性\n\n三项真实审查结果的申报关系清晰：\n\n任务\n\n\t\n\n会话\n\n\t\n\n申报结论\n\n\t\n\nM1 目标状态\n\n\n\n\nT-P1-017\n\n\t\n\n918003\n\n\t\n\nREWORK\n\n\t\n\nREWORK\n\n\n\n\nT-P1-018\n\n\t\n\n918005\n\n\t\n\nPASS\n\n\t\n\nTEST_ACCEPTANCE\n\n\n\n\nT-P1-022\n\n\t\n\n918007\n\n\t\n\nPASS\n\n\t\n\nTEST_ACCEPTANCE\n\n特别认可：\n\nT-P1-017 的真实 REWORK 结果没有被人为改写为 PASS。\n\nT-P1-018 的断点恢复后完成真实审查。\n\nT-P1-022 的人工退路采用 attach-reply，而不是直接修改 M1 状态。\n\n但真实链记录的存在，不等于所有注入场景已经达到 charter 的验收条件。\n\n② Charter 符合性\n\n详见下面的矩阵裁定。\n\n③ 修改范围\nPASS\n\n我重新比较了：\n\n基线：39d6741b65992022df5306b9f14a9844dc2023d8\n\n目标：6d39ff97ead78bf56b457f2198b9089f81c32295\n\nGitHub Compare 确认：\n\n提交数量\n\n4\n\n代码文件\n仅 review_leg.py\n\n代码增加\n\n55 行\n\n代码删除\n\n18 行\n\n其余变更为审查材料、步骤记录、任务状态及决策登记文档。\n\n四个提交与申报一致：\n\n3131a29：S1 PASS 登记。\n\nc199cf4：pointer 简报模式。\n\n73a4a02：A5 审查材料。\n\n6d39ff9：A6 人工退路适配。\n\n没有发现越界修改 M1-M4、scheduler.py 或冻结契约。\n\n④ 真实性审查\n\n目前可以确认的是：\n\n三项真实审查结果在 steps.md 中有明确记录。\n\nreply SHA 前缀与任务标识对应。\n\nM1 状态推进路径描述符合 charter。\n\ntest_review_leg.py 的测试替身范围有明确声明。\n\n但有一个重要限制：\n\n在申报所在 main=34f2c393 的 Git 树中，没有找到以下原始证据：\n\nruntime/review-leg/rvl-918003|918005|918007 账本及 report。\n\nphase0/logs/dispatch-2026-11-15T16-* 对应派单现场。\n\nA3 probe 的实际执行脚本及结果归档。\n\n因此，不能独立复算三轮回复 SHA、发送前后 unit 计数、M1 原始事件与 report 的完整证据链。\n\n这不是认定现场造假，而是独立验收目前缺少足以完成复核的原始材料。\n\n二、矩阵 A2—A10 逐项裁定\n\n矩阵\n\n\t\n\n结论\n\n\t\n\n独立审查意见\n\n\n\n\nA2\n\n\t\n\nPASS\n\n\t\n\n918003 真实 REWORK，未自动开启新开发轮；A10 有对应终态恢复记录\n\n\n\n\nA3\n\n\t\n\nPARTIAL\n\n\t\n\n三组天然 fail-closed 现场有申报，probe v1/v2 覆盖两种构造形态；特定错误码未在短会话小视口注入中完全复现\n\n\n\n\nA4\n\n\t\n\nPASS\n\n\t\n\n真实同请求重放，artifact/message/report 双证据命中，计数 1/1/1 不变，未新增派单\n\n\n\n\nA5①\n\n\t\n\nREJECT\n\n\t\n\n实际终止时只有 INTENT，且发生在发送双验之前，不符合已发送未采集的前置条件\n\n\n\n\nA5②\n\n\t\n\nPARTIAL\n\n\t\n\ntest_08a 有等价恢复逻辑，但没有独立进程重启现场\n\n\n\n\nA6\n\n\t\n\nPASS\n\n\t\n\n918007 人工派单、同契约、同幂等键、三项登记及状态推进路径符合申报要求\n\n\n\n\nA7\n\n\t\n\nREJECT\n\n\t\n\ntest_07 验证 event_id 幂等，但没有真正注入 M1 已提交、客户端未收到响应的进程中断\n\n\n\n\nA8\n\n\t\n\nPARTIAL\n\n\t\n\ntest_08a/08b 覆盖账本断裂和账本/M1矛盾；真实现场并未证明发送成功后账本写入失败\n\n\n\n\nA9\n\n\t\n\nPASS\n\n\t\n\ntest_09/09b 服务端故障注入，真实 REST 路径，成功项保留原 ID，仅补失败项\n\n\n\n\nA10\n\n\t\n\nPASS\n\n\t\n\nREWORK 后 resume 完成停等，无新派单；终态测试亦验证零重派\n\n三个重点问题\n\n问题 P1-01：A6 适配修改扩大了 fail-closed 例外范围。\n\n目标 commit 6d39ff9 的修改：\n\n原逻辑：\n\nPython\n运行\nif allow_no_anchor and not has_dispatch_record:\n\n新逻辑：\n\nPython\n运行\nif allow_no_anchor:\n\n问题在于：\n\nhas_dispatch_record 只统计 R3_SEND_CONFIRMED 和 R3_SEND_CONFIRMED_COLLECT_FAILED。\n\n因此，当已有成功发送记录、但发送键缺失时，新逻辑也会允许人工 attach 路径通过，并将交叉核验记为 not_applicable。\n\n这与原先缺失发送键必须 fail-closed 的原则存在冲突。\n\n尤其是：发送失败记录本身不属于上述两种确认记录，因此原来的 not has_dispatch_record 并不会阻止纯发送失败后的人工接管。\n\n也就是说，新修改扩大了允许范围，却没有充分证明扩大后的安全性。\n\n整改要求： 区分纯发送失败与已确认发送但发送键缺失。后者必须继续 fail-closed，除非取得独立、可验证的人工接管证明。补充对应反例测试。\n\n问题 P1-02：A5①现场不符合验收前置条件。\n\ncharter A5①要求：\n\n已发送 → reply 未落盘 → 进程终止 → resume 禁止重发并补采。\n\n实际申报：\n\n进程终止于发送双验之前，账本仅剩 INTENT，无法证明已经发送。\n\n随后通过人工核查无发送证据、修复账本、重新派单完成任务。\n\n这实际上是发送状态不确定的恢复处置，不是已发送未采集。\n\n两者不能互相替代。\n\ntest_08a 确实模拟了发送成功后账本截断，但使用的是 ChatGPT 派单边界替身，不能将其表述为真实 ChatGPT 现场。\n\n整改要求： 补做真正发送双验成功、回复未落盘即终止进程的现场，验证原会话补采、零重发。\n\n问题 P1-03：原始现场证据链未达到独立核查要求。\n\nsteps.md 的执行摘要、reply SHA 前缀及 report ID 是证据索引，不是完整原始证据。\n\n缺少可独立读取的账本、派单结果、回复文件及 M1 记录对应关系。\n\n需要补充证据归档，不能仅依赖执行者的文字声明。\n\nA5② 等价证据专项裁断\n\ntest_08a 的确有价值：\n\n执行派单。\n\n完成回复采集。\n\n删除发送确认及采集后的账本记录。\n\nresume 进入 fail-closed。\n\n修复账本后恢复登记。\n\n确认没有再次派单。\n\n但它没有真正终止并重新启动一个独立进程，而是同一个 ReviewLeg 实例继续调用 resume()。\n\nA4 的真实重放只能证明幂等登记，不能补足进程重启验证。\n\n因此，我认可它是有效的等价测试证据，但不足以单独替代 A5② 的独立重启现场。\n\n三、最终问题清单\n\n问题编号\n\n\t\n\n严重程度\n\n\t\n\n问题\n\n\n\n\nP1-01\n\n\t\n\nP1\n\n\t\n\nA6 attach-reply 缺失发送键时扩大放行范围\n\n\n\n\nP1-02\n\n\t\n\nP1\n\n\t\n\nA5① 实际断点不符合已发送未采集条件\n\n\n\n\nP1-03\n\n\t\n\nP1\n\n\t\n\n三任务原始现场证据链不能独立复核\n\n\n\n\nP2-01\n\n\t\n\nP2\n\n\t\n\nA3 特定错误码注入未完全等价复现\n\n\n\n\nP2-02\n\n\t\n\nP2\n\n\t\n\nA7 未真正注入响应丢失及进程重启\n\n\n\n\nP2-03\n\n\t\n\nP2\n\n\t\n\nA5② 等价证据缺少独立进程重启验证\n\n四、总结论\n\nS2 独立验收\n\nREJECT\n\n已通过的部分：\n\n4 commit 修改范围符合申报。\n\nA2、A4、A6、A9、A10 有较强执行依据。\n\nA8 的测试级 fail-closed 逻辑覆盖较完整。\n\nA5② 已有可用的等价测试基础。\n\n必须处理：\n\nP1-01、P1-02、P1-03。\n\nP2-01、P2-02、P2-03 需要补足或重新论证等价性。\n\n验收边界： 本次 REJECT 不否定 S1 已经 PASS，也不否定三项真实审查业务结果。它否定的是当前 S2 已经完整满足 charter 注入类验收矩阵、且证据链足以独立审计的申报。\n\nS2 不予 PASS，不授权进入 S3/S4 的验收关闭状态。",
+      "text_sha256": "a5f15e6dec575232fe81e9092c186b6fbd92033dd8dc1f93746aed992786b1b0",
+      "size_bytes": 8202,
+      "assistant_uuid": "22af910f-1c9d-4112-879a-9b812b080ea4"
+    }
+  ]
+}

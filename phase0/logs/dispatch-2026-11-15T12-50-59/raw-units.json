@@ -1,0 +1,108 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-15T12:54:25.586Z",
+  "user_unit_key": "fallback-turn-2:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-2:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "d12748f0-9609-4859-afb1-1caf372df0b6",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-2:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "360f078b117afe1210b01c725b1b5d081675f12c71927d1d724b7171797880c4",
+          "796160adec85d5ce440000b604ad8a90aecf991c0b4ab474b0397e9e90aa9aa1",
+          "dd17496a49dbcbb73d0a01e4513db8ae2a05542b8c7bfbae4d6b805aa6b624cf",
+          "dd1866336b88bdfa825b94f3dc5e3c70baaa02a741f01bcc61ba8df11743b349"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "360f078b117afe1210b01c725b1b5d081675f12c71927d1d724b7171797880c4",
+          "796160adec85d5ce440000b604ad8a90aecf991c0b4ab474b0397e9e90aa9aa1",
+          "dd17496a49dbcbb73d0a01e4513db8ae2a05542b8c7bfbae4d6b805aa6b624cf",
+          "dd1866336b88bdfa825b94f3dc5e3c70baaa02a741f01bcc61ba8df11743b349"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-2:0:user",
+      "fallback-turn-2:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-2:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nS2-Gate1 草案级降档验证回执\n\n当前核验发现一项绑定异常： 请求申报被测为 e1474b3 相对 beafe77 的单 commit，但 GitHub 比较结果显示 ahead_by=2、total_commits=2，且差异包含多个验收回填脚本、任务交付文件及其他文件，不符合“单 commit 申报”的表面口径。以下继续核对草案正文及六项内容；该绑定差异会纳入最终结论，不会擅自把额外差异归入草案正文。\n\n六项验收\n\n#\n\n\t\n\n验收项\n\n\t\n\n结论\n\n\t\n\n核验意见\n\n\n\n\n1\n\n\t\n\nI1-I7 完整性\n\n\t\n\nPASS\n\n\t\n\n§1-§8 对应 I1-I7，需求、架构、状态、异常、安全审计、验收回滚、授权红线均有明确承载；责任边界和草案身份清楚。\n\n\n\n\n2\n\n\t\n\n防膨胀\n\n\t\n\nPASS\n\n\t\n\n§1 明确目标与非目标，§4 限定单任务单轮，§9 列出 GPT-02/04/05、多轮重审、多任务、契约修改等排除项。附录 A 明确属于 Gate 2 输入，不构成一期承诺。\n\n\n\n\n3\n\n\t\n\n授权链闭合\n\n\t\n\nREJECT\n\n\t\n\nOWNER、engine、执行腿、人工执行者四主体及凭据边界已列明；但 engine 白名单仍包含 BLOCKED 状态推进，而 A6 底线又规定 M1 task.status=BLOCKED 仅由 OWNER 决定。两处授权边界未闭合：必须明确 engine 的 BLOCKED 仅限腿级记录，不能代替 OWNER 推进 M1 任务状态。\n\n\n\n\n4\n\n\t\n\n状态路径合法出边\n\n\t\n\nPASS\n\n\t\n\n对照 app/platform/state_machine.py：DEV_REPORTED→GIT_VALIDATING、GIT_VALIDATING→CODE_REVIEW、CODE_REVIEW→TEST_ACCEPTANCE/REWORK/BLOCKED 均有合法出边；M1 BLOCKED 无继续推进审查结论的出边。草案已区分腿级 BLOCKED 与 M1 任务级 BLOCKED。第3项所述是授权主体冲突，不是状态机不存在该出边。\n\n\n\n\n5\n\n\t\n\n矩阵场景齐备\n\n\t\n\nPASS\n\n\t\n\nA1-A6 六种场景齐备，均具备前置条件、动作、预期、失败判定和证据要求；A6 已写明腿级 BLOCKED 时 M1 保持 CODE_REVIEW，符合本轮草案级底线。\n\n\n\n\n6\n\n\t\n\n已过项继承\n\n\t\n\nREJECT\n\n\t\n\n历史已过项按要求继承，不重开问题5/6；但本轮 ST-01 绑定申报存在独立异常：beafe77... 至 e1474b3... 的 GitHub 比较结果为 2 commits，而请求申报为单 commit。草案文件确实由 v0.3 更新到 v0.4（docs/phase1/GPT03-REVIEW-LEG-CHARTER-DRAFT.md，+17/-3），但不能据此确认单 commit 绑定成立。\n\n问题编号与处置\n\nG1-03（新增）—授权边界冲突： engine 的 BLOCKED 状态推进权限与“任务级 BLOCKED 仅 OWNER 决定”的底线冲突。需要明确 engine 不得擅自将 M1 任务推进到 BLOCKED，或明确该事件的 OWNER 授权条件。\n\nG1-06（新增）—ST-01 单 commit 绑定不符： 实际比较为 2 commits，不符合单 commit 申报。需澄清正确基线或重新提交准确绑定材料。\n\n历史问题5/6： 按用户指令保持历史 REJECT，不重开、不计入本轮新增问题；白名单端点精化、A5 字段、回滚分支精化继续留在 Gate 2。\n\n总结论\nREJECT\n\nS2-Gate1 草案级降档验证未通过，问题编号：G1-03、G1-06。\n\n本轮六项中，I1-I7 完整性、防膨胀、状态路径合法性、矩阵场景齐备四项通过。未通过项分别是授权链闭合和单 commit 绑定。问题5/6历史结论保留，不因本轮降档验证而改判。\n\n边界声明： 本轮没有重审 Gate 2 深度项，也没有把历史问题5/6重新纳入整改；未在本地独立运行绑定工具，commit 数量结论来自 GitHub 比较结果。",
+      "text_sha256": "dd1866336b88bdfa825b94f3dc5e3c70baaa02a741f01bcc61ba8df11743b349",
+      "size_bytes": 3490,
+      "assistant_uuid": "d12748f0-9609-4859-afb1-1caf372df0b6"
+    }
+  ]
+}

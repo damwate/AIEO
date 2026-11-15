@@ -1,0 +1,4 @@
+【代码审查请求·GPT-03】【GPT03-R1|918005|T-P1-018】
+任务T-P1-018 审查commit=fda9183dafb77ca15578abb244b3b2d15999fafb（fixture分支单提交）。
+读仓库 github.com/damwate/AIEO（基线main=c199cf45a7d45a9c90e12652d0e9d4a0efd797f7）文件 basic/tasks/b-20261115-gpt03-review-leg/acceptance/s2-a5-material-t-p1-018.md：含验收标准与diff全文（已核验SHA）。逐行审查后回复。
+回复仅一个```json对象：{"result":"PASS|REWORK","summary":"<一句话>","issues":["<具体问题>…"],"reviewed_commit":"fda9183dafb77ca15578abb244b3b2d15999fafb"}；result仅PASS/REWORK。

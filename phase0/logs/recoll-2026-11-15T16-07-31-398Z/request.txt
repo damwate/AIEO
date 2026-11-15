@@ -1,0 +1,7 @@
+【S1复验R3|b-20261115-gpt03-review-leg】对S1-R2四组整改做限定复验（无范围扩大）。
+仓库github.com/damwate/AIEO main，锚点按SHA读：
+A 待验收=c081086ee4a98d430632566ca066b565ec4eac83（相对R2被测6cf9147e6f49d2f43ef2e0b37753b3ca5e351402的diff恰2文件：review_leg.py +127/-15、test_review_leg.py +117/0）
+B 申报=56b18f7后最新：读basic/tasks/b-20261115-gpt03-review-leg/acceptance/review-request-s1-r3.md与steps.md返工表
+C 依据=charter v1.0附录B-E。
+复验点：①409结构化键精确核验（details.execution_id/message_id+M1固定格式正则捕获组）②指纹重算核对（message=canon剔created_at；report=全量重建含账本既有ID）+test_09b分支③NEW-P1-01签名修复+resume兜底+test_08c全链（COLLECT_FAILED→原会话补采→契约校验→只补登记→推进,零重发）④三时点user unit计数实读⑤未引入新缺陷（21用例,替身边界仅ChatGPT收发两侧）⑥范围复核（M1-M4/scheduler.py零修改）。
+回执：①-⑥逐项+四组逐项（关闭/未关闭）+总结论（PASS/REJECT+新问题编号）。

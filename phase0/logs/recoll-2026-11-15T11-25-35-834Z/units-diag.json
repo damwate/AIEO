@@ -1,0 +1,14 @@
+[
+  {
+    "key": "fallback-turn-2:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[验收|b-20261115-standard-kickoff|S1]\n请读 github.com/damwate/AIEO@main 83bd41d7844f"
+  },
+  {
+    "key": "fallback-turn-2:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nS1 独立验收回执｜b-20261115-standard-kickoff\n\nREJECT 结论：REJECT，2 项需修正。\n\n验收对象"
+  }
+]

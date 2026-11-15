@@ -1,0 +1,4 @@
+[治理讨论请求|Basic多任务并行|用户指令]
+请读 github.com/damwate/AIEO@main 0a6b79a3d90a39cd03e381aa50aec3644a7be355 的 docs/phase1/parallel-tasks-discussion.md——按该文件执行讨论(问题陈述/三模式与约束/请给出模式评估+治理方案+落地形态+分步建议+三态)。
+背景:basic/WORKFLOW.md(v0.3生效)+docs/phase1/decision-log.md(DEC-049~051)同仓库可读。边界:只产出治理方案与规则建议,不动代码。
+回执:方案要点+三态+reply SHA256。

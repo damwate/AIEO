@@ -1,0 +1,7 @@
+[2026-11-15T17:27:45.805Z] 会话锁已获取 pid=19648
+[2026-11-15T17:27:45.807Z] === GPT 派单（已有会话，消息 1125 字节）===
+[2026-11-15T17:27:45.844Z] 复用已运行调试端口 9222
+[2026-11-15T17:27:50.084Z] 会话就绪: https://chatgpt.com/c/6af9e82c-faf4-83ec-8795-cde560c7e0ea
+[2026-11-15T17:27:55.101Z] [dispatch] 基线尾部: {"role":"assistant","key":"fallback-turn-0:2:assistant","assistantUuid":"a1d2b994-45bd-408e-abdc-8d510e62f86e"}
+[2026-11-15T17:27:55.725Z] [dispatch] 发送双验通过（polls=1，user_unit_key=fallback-turn-1:0:user，tail 后观察）
+[2026-11-15T17:27:56.105Z] 截图: sent-dispatch.png

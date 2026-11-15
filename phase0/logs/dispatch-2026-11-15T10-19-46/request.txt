@@ -1,0 +1,6 @@
+[验收复验|b-20261115-basic-dod|S1|只复核P1-01/P1-02两处]
+R1裁定(reply 971ca1f5…06278b)两项整改提交(整改commit=b4962722c8be214502afe38e15c42e94fe3181c2):
+P1-01:BC-10当前状态改PASS(初判,统计口径修正已落位)——双口径+review-request+DEC-051三项修正已随交付落地,历史笔误保留判定说明。
+P1-02:git rm剥离phase0/tools/recoll_dod_plan.mjs(冻结边界,你明确要求;脚本历史可溯64e9988;纪律改进=今后recoll一次性驱动归档至任务包acceptance/不进工具目录)。
+材料:读 github.com/damwate/AIEO@main b4962722c8be214502afe38e15c42e94fe3181c2 的docs/phase1/basic-completion-dod.md(BC-10条)+git log确认脚本已剥离。
+复验仅此两处。三态:PASS(问题关闭+S1结论)/REJECT(列项)/BLOCKED。回执含结论表+SHA256。

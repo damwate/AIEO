@@ -1,0 +1,26 @@
+[
+  {
+    "key": "fallback-turn-0:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【代码审查请求·GPT-03】【GPT03-R1|918007|T-P1-022】\n任务T-P1-022 审查commit=fda9183dafb77ca155"
+  },
+  {
+    "key": "fallback-turn-0:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nJSON\n{\n  \"result\": \"PASS\",\n  \"summary\": \"7行新增代码逐行审查通过：--version 输出指定版"
+  },
+  {
+    "key": "fallback-turn-1:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【S2独立验收|b-20261115-gpt03-review-leg】独立验收S2注入类矩阵执行（真实链）。\n仓库github.com/damwate/AIE"
+  },
+  {
+    "key": "fallback-turn-1:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nS2 独立验收回执\n\nREJECT 不通过，存在 P1 级问题及验收证据缺口。\n\n验收对象：b-20261115-gpt03-review"
+  }
+]

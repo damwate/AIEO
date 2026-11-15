@@ -1,0 +1,14 @@
+[
+  {
+    "key": "fallback-turn-1:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[立项复评|b-20261115-standard-kickoff|S2-Gate2R3|只复核R2-01/R2-02]\n请读 github.com/damwa"
+  },
+  {
+    "key": "fallback-turn-1:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nb-20261115-standard-kickoff｜S2-Gate2R3 复评回执\n\n复验范围： 仅 R2-01、R2-02，不重审 "
+  }
+]

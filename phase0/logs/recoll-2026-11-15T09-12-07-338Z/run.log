@@ -1,0 +1,6 @@
+[2026-11-15T09:12:08.029Z] 会话锁已获取（补采v2）
+[2026-11-15T09:12:08.056Z] recoll FAILED: browserType.connectOverCDP: connect ECONNREFUSED 127.0.0.1:9222
+Call log:
+[2m  - <ws preparing> retrieving websocket url from http://127.0.0.1:9222[22m
+
+[2026-11-15T09:12:08.172Z] 会话锁已释放（补采v2）

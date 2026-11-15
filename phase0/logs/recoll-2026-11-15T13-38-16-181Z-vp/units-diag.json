@@ -1,0 +1,50 @@
+[
+  {
+    "key": "fallback-turn-0:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[立项复评|b-20261115-standard-kickoff|S2-Gate2R2|修订后再评]\n请读 github.com/damwate/AIEO@m"
+  },
+  {
+    "key": "fallback-turn-0:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nb-20261115-standard-kickoff｜S2-Gate2R2 立项复评回执\n\n仍需修订 部分关闭\n\n被测对象： 67460"
+  },
+  {
+    "key": "fallback-turn-1:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[立项复评|b-20261115-standard-kickoff|S2-Gate2R3|只复核R2-01/R2-02]\n请读 github.com/damwa"
+  },
+  {
+    "key": "fallback-turn-1:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nb-20261115-standard-kickoff｜S2-Gate2R3 复评回执\n\n复验范围： 仅 R2-01、R2-02，不重审 "
+  },
+  {
+    "key": "fallback-turn-2:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[立项复评|b-20261115-standard-kickoff|S2-Gate2R4|只复核R3-01]\n请读 github.com/damwate/AIE"
+  },
+  {
+    "key": "fallback-turn-2:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nb-20261115-standard-kickoff｜S2-Gate2R4 复评回执\n\n复核范围：仅 R3-01。 已读取 Gate2R"
+  },
+  {
+    "key": "fallback-turn-3:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[交付确认|b-20261115-standard-kickoff|S4]\n请读 github.com/damwate/AIEO@main 412576ee1d"
+  },
+  {
+    "key": "fallback-turn-3:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nb-20261115-standard-kickoff｜S4 交付确认回执\n当前指定提交：REJECT\n\n先给结论边界：在用户指定的 41"
+  }
+]

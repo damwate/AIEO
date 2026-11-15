@@ -1,0 +1,3 @@
+[立项复评|b-20261115-standard-kickoff|S2-Gate2R3|只复核R2-01/R2-02]
+请读 github.com/damwate/AIEO@main ba9853eac0dc4bef4a904056d15cb747dc9061f5 的 basic/tasks/b-20261115-standard-kickoff/acceptance/review-request-s2-gate2r3.md——按你Gate2-R2回执(666b86b2…8ed)复核两整改:R2-01=附录B重构9列(Method/Path独立+Handler机器清单实名8个+授权依据列;8端点不变ACK不回入);R2-02=附录D声明统一(恢复矩阵12行未删分支/回滚7类)+A7-A10补A1-A6同粒度六要素。被测=2commit线性(6746071→e3be3d3→276a3be)。R2已过项①③⑤与Gate1不重审。
+回执:R2-01/R2-02逐项+总结论(定稿认可/仍需修订+清单)。

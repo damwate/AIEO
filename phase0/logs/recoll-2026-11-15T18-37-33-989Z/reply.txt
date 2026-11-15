@@ -1,0 +1,314 @@
+ChatGPT 说：
+
+已先锁定本轮审查锚点：main 当前提交解析为 030c947ac7c4fd7c2e5af9c252185924e8046dfc，不是使用未固定的 HEAD 继续推断。
+
+按 6d39ff97ead78bf56b457f2198b9089f81c32295...030c947ac7c4fd7c2e5af9c252185924e8046dfc 做 GitHub Compare，结果为 ahead_by=6、total_commits=6。因此，R3 将区间基线改为 6d39ff9 是正确的；本轮不再沿用 R2 的 bfb7797 旧锚点。申报中“整改代码两个 commit、回填不计入验收diff”的口径，还需结合实际六个提交的逐项内容核对。
+
+已核验的整改项
+
+复验点
+
+	
+
+当前裁定
+
+	
+
+关键证据
+
+
+
+
+① NEW-P1-01
+
+	
+
+主体通过，但发现一个边界遗漏
+
+	
+
+review_leg.py 已把 INTENT-only 放在人工 attach 放行之前拒绝；test_16d确实用 allow_no_anchor=True 验证了该反例
+
+
+
+
+② NEW-P1-02
+
+	
+
+通过（按会商乙方案）
+
+	
+
+test_19确认断点为 R3_SEND_CONFIRMED 已落账、R4_REPLY_CAPTURED 未落账；runner os._exit 后父进程检查退出码并用 tasklist独立检查 PID；新进程 resume 后 report/message 各一条、状态推进、派单目录数量无新增
+
+
+
+
+③ NEW-P1-03
+
+	
+
+未通过
+
+	
+
+申报声称已归档污染快照、追加 MANUAL_LEDGER_SUPERSEDE，并修复918013；但锚点树中没有污染快照或918013账本，918012主账本仍保留旧的 MANUAL_LEDGER_REPAIR 和时间倒序记录
+
+
+
+
+④ NEW-P2-01
+
+	
+
+运行记录主体通过，完整性元数据有疑点
+
+	
+
+两份输出均有28个测试执行结果及 Ran 28 tests ... OK；MANIFEST共105条，但两份测试日志的声明字节数与Git blob实际大小各差66字节，需按归档字节口径解释
+
+
+
+
+⑤ NEW-P2-02
+
+	
+
+未通过
+
+	
+
+6d39ff9...030c947 的Compare确认为6个提交；R3申报和steps问题21行仍写 count=3
+
+
+
+
+⑥ 回归与范围
+
+	
+
+回归通过；范围需结合上述问题限定
+
+	
+
+两次运行均28/28；六提交区间内代码修改集中于 review_leg.py、测试文件及测试公共件，未看到scheduler、M1–M4或M2派单工具链被修改
+
+下面继续核对两个边界问题：INTENT与明确FAILED终态并存时的处理，以及账本修复材料和章程追加式要求的对应关系。
+
+关键细节与新增问题
+① NEW-P1-01：原问题关闭，但新增一个失败终态边界缺陷
+
+test_16d确实验证了纯 INTENT-only + allow_no_anchor=True 时抛出 send state uncertain，原问题要求的 fail-closed 已实现。
+
+但源码还有一个遗漏：
+
+r3_dispatch()先追加 R3_SEND_INTENT_RECORDED，发送明确失败后再追加 R3_SEND_FAILED。
+
+state_flags()按 kind 分别保留最后一条记录，因此真实失败账本会同时存在 INTENT 和 FAILED。
+
+当前 review_leg.py 先执行 INTENT and not confirmed_send_exists → intent_only=True，没有排除 failed_send_exists。
+
+因此，真实的“INTENT→FAILED”终态仍会被误判为发送状态不确定，进入拒绝路径。
+
+test_16c的失败后 attach 场景只追加了 R3_SEND_FAILED，没有模拟真实追加式账本中的前置 INTENT；test_16d只测 INTENT-only，没有覆盖 INTENT+FAILED。
+
+新增 NEW-P2-03
+
+要求补充真实序列反例：INTENT→FAILED 后 attach 应允许明确登记 not_applicable；同时保留 INTENT-only 拒绝测试。原问题17仍可关闭，这个边界另立问题。
+
+② NEW-P1-02：按乙方案关闭
+
+test_19实现了会商要求的三个部分：
+
+runner 独立进程完成发送确认，账本存在 R3_SEND_CONFIRMED，且尚无 R4_REPLY_CAPTURED。
+
+runner 执行 os._exit(9)；父进程核验退出码，再调用 tasklist 检查 runner PID 不存在。
+
+全新进程 resume，经过补采、补登记后推进到 TEST_ACCEPTANCE；report/message 均为1条，且断点之后派单目录数量没有增加。
+
+test_runner_common.py明确把替身限定在 ChatGPT 派单与采集边界，M1 REST、账本和状态机仍走真实测试路径。两份运行记录都包含 test_19 的通过结果。
+
+验收表述必须保留会商丙的限制：这是918012真实链路证据 + test_18重启语义 + test_19进程故障注入组成的组合证据，不是一次真实GPT派单现场完整捕获。 另外，test_19的tasklist核验对象是runner PID，不能扩大描述为已经验证真实GPT派单浏览器进程树死亡。
+
+③ NEW-P1-03：未关闭，且整改申报与提交内容不一致
+
+这是本轮最明确的阻断项。
+
+在 030c947 的Git树中：
+
+918012主账本仍是24行，包含 MANUAL_LEDGER_REPAIR，没有 MANUAL_LEDGER_SUPERSEDE。
+
+备份账本是11行。
+
+主账本仍保留17:14:35的确认记录排列在17:13:40、17:13:58的恢复记录之前。
+
+声称归档的 ledger.jsonl.polluted-a5-repair-snapshot 不存在。
+
+918013账本也没有出现在仓库树中。
+
+更重要的是，提交差异直接支持这一判断：
+
+提交区间
+
+	
+
+实际修改
+
+
+
+
+501f3fd...fdba15c
+
+	
+
+仅 review_leg.py、test_review_leg.py
+
+
+
+
+fdba15c...0c5642d
+
+	
+
+MANIFEST、两份测试输出、测试文件、test_runner_common.py
+
+
+
+
+0c5642d...030c947
+
+	
+
+R3申报文件、steps.md
+
+没有一个R3整改提交修改或新增了上述账本修复证据。因此，steps问题19行所述的“恢复原账本+追加SUPERSEDE+污染快照归档+918013同口径补账”，在本轮指定锚点上无法成立。
+
+④ NEW-P2-01：运行结果通过，归档校验绑定未通过
+
+两份输出均完整包含28个测试结果，最终分别为：
+
+Ran 28 tests in 37.159s / OK
+
+Ran 28 tests in 38.391s / OK
+
+MANIFEST有105条登记，数量也与申报一致。
+
+但Git树记录的两份日志blob大小均为 6753 bytes，MANIFEST声明的大小均为 6819 bytes，相差66 bytes。这个差异可能来自CRLF/LF规范化，但目前不能把MANIFEST中的SHA和字节数直接视为已绑定到提交后的归档文件。
+
+因此，测试确实跑了两次；但“完整运行记录及其归档校验”还不能整体关闭。应按提交后的Git blob字节重新核算归档SHA256和bytes，或明确区分原始源文件与归档文件的校验值。
+
+⑤ NEW-P2-02：未关闭
+
+六个提交的完整序列为：
+
+34f2c393e3b1b181046a2a125d24a312bcc675a5
+
+2be8b01fc44bf0f41581ca28226404f28d9f464c
+
+501f3fd1f50091d85f761e62bc6b5056ebcd7af5
+
+fdba15c2f9f3d8fb70092766778d34d6d114d542
+
+0c5642d9152012a2fc9f6c3196ba393efbc58a4c
+
+030c947ac7c4fd7c2e5af9c252185924e8046dfc
+
+R3申报和steps问题21行仍写 6d39ff9..HEAD (count=3)，与Compare的6不一致。即便排除最后的申报回填提交，区间也不是3个提交。
+
+若“3”代表某个更窄的整改子范围，必须明确写出该子范围的起止SHA及排除的提交，不能把它标成 6d39ff9..HEAD 的数量。
+
+五个原问题最终关闭表
+
+R2问题
+
+	
+
+R3对应项
+
+	
+
+最终判定
+
+
+
+
+问题17 / NEW-P1-01
+
+	
+
+INTENT-only attach fail-closed
+
+	
+
+关闭（新增NEW-P2-03另行整改）
+
+
+
+
+问题18 / NEW-P1-02
+
+	
+
+A5①乙方案组合证据
+
+	
+
+关闭（按丙口径，不宣称真实派单现场捕获）
+
+
+
+
+问题19 / NEW-P1-03
+
+	
+
+追加式账本审计修复
+
+	
+
+未关闭
+
+
+
+
+问题20 / NEW-P2-01
+
+	
+
+双份运行记录
+
+	
+
+未关闭（运行结果通过，归档校验绑定待修）
+
+
+
+
+问题21 / NEW-P2-02
+
+	
+
+区间口径修正
+
+	
+
+未关闭
+
+⑥ 回归与范围
+
+test_review_leg.py：28/28 × 2，执行记录通过。
+
+代码范围：review_leg.py、test_review_leg.py、新增 test_runner_common.py。
+
+未发现 scheduler.py、M1–M4、M2派单工具链或冻结契约文件被修改。
+
+test_runner_common.py的替身边界与会商乙方案相符。
+
+最终结论：REJECT
+
+未关闭问题： NEW-P1-03、NEW-P2-01、NEW-P2-02。
+
+新增问题： NEW-P2-03——真实追加式账本中的 INTENT+FAILED 被误判为发送状态不确定，导致明确失败后的人工 attach 路径被错误拒绝。
+
+建议下一轮只限定处理这四处：账本三件证据补齐、测试归档字节与SHA绑定、区间数量申报修正、INTENT+FAILED反例补测。已关闭的NEW-P1-01和NEW-P1-02不重开，也不再消耗真实派单。

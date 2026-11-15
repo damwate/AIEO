@@ -1,0 +1,156 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-15T18:55:09.804Z",
+  "user_unit_key": "fallback-turn-4:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-4:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "f9c15125-c481-45da-9527-e8e83d3853d2",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-4:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "aee4ae2be3f817372fa83cb7c8bbcb9475980a82300be43ff303636ee8b1ed3f",
+          "0f323ef28dbb689fdd83d83d188f059ce837636f366bf97f911fc5d9ad1d961c",
+          "fbb3977dd243244e567a75e50eee6a2cb1b1785450a60b5dbc23b3123315563a",
+          "b6aa34014e47ecedae032825b32d8744a3175f13d54709bafe25f99633a2ac89",
+          "8ec118dd065f10a677460e26f03ec2897d2376f7af743cb9734a9ec7a629799d",
+          "659141690aef684f25c497be66b3dbfd7c4a0f2c4146e0705fb31b6043cd428a",
+          "16389ec277822c189b31314ae97fc9268f44b82cc48dbc9e9a0044621113d928",
+          "f1ab60a927592f2308d272641e192d6cb5c7c1f0f77cabf9b6b844d50bd4bcb0",
+          "4060e2826d97d8e1916822fad7a9db195e7202d82dae72907a0d75a4b0d40152",
+          "28f42ec2d0569a18f10bada2d1caeb3e4bb7a083eef5ec66418a481c6e7f458d"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "aee4ae2be3f817372fa83cb7c8bbcb9475980a82300be43ff303636ee8b1ed3f",
+          "0f323ef28dbb689fdd83d83d188f059ce837636f366bf97f911fc5d9ad1d961c",
+          "fbb3977dd243244e567a75e50eee6a2cb1b1785450a60b5dbc23b3123315563a",
+          "b6aa34014e47ecedae032825b32d8744a3175f13d54709bafe25f99633a2ac89",
+          "8ec118dd065f10a677460e26f03ec2897d2376f7af743cb9734a9ec7a629799d",
+          "659141690aef684f25c497be66b3dbfd7c4a0f2c4146e0705fb31b6043cd428a",
+          "16389ec277822c189b31314ae97fc9268f44b82cc48dbc9e9a0044621113d928",
+          "f1ab60a927592f2308d272641e192d6cb5c7c1f0f77cabf9b6b844d50bd4bcb0",
+          "4060e2826d97d8e1916822fad7a9db195e7202d82dae72907a0d75a4b0d40152",
+          "28f42ec2d0569a18f10bada2d1caeb3e4bb7a083eef5ec66418a481c6e7f458d"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-4:0:user",
+      "fallback-turn-4:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-4:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n已锁定本轮 main 锚点为 43f43e3d0a59d1a066da500150a3cde51ce843d1。四件账本材料已全部在该 Git 树中，且追加式修复内容可见：918012修复版保留原始 R3_SEND_INTENT_RECORDED，尾部追加 MANUAL_LEDGER_SUPERSEDE；污染快照、修复前备份及918013账本也均已归档。\n\n另外，MANIFEST实际为 109条，109条均声明 blob_bound=true、sha_basis=git-blob-bytes (post-commit normalization)；目前逐项检查的路径存在性和字节数与Git blob size一致。接下来需要解决的是：实际SHA256抽验，以及申报的count=8与完整Git提交区间之间的口径差异。\n\nS2-R4 限定复验回执\n\nREJECT 复验锚点：43f43e3d0a59d1a066da500150a3cde51ce843d1\n\n一、五项复验结果\n\n项目\n\n\t\n\n复验结果\n\n\t\n\n结论\n\n\n\n\n① NEW-P1-03：四件账本证据\n\n\t\n\n四件均在Git树，追加式证据对应\n\n\t\n\nPASS\n\n\n\n\n② NEW-P2-01：MANIFEST blob绑定\n\n\t\n\n109条登记，全部绑定；抽验SHA256和bytes通过，但申报文件有数量笔误\n\n\t\n\n主体PASS\n\n\n\n\n③ NEW-P2-02：区间count=8\n\n\t\n\n完整Git区间实际10个提交；8只能解释为排除两个回填提交后的范围数\n\n\t\n\n未通过\n\n\n\n\n④ NEW-P2-03：INTENT+FAILED\n\n\t\n\n代码修复和test_16e反例均通过\n\n\t\n\nPASS\n\n\n\n\n⑤ 回归29/29及范围\n\n\t\n\n29/29通过；未发现越界修改\n\n\t\n\nPASS\n\n① NEW-P1-03：四件账本证据——通过\n\n四件文件均已存在于 43f43e3 对应Git树：\n\n文件\n\n\t\n\n核验结果\n\n\n\n\nrvl-918012-ledger.jsonl\n\n\t\n\n修复版，12条记录；原始INTENT保留，末尾追加MANUAL_LEDGER_SUPERSEDE\n\n\n\n\nrvl-918012-ledger.polluted-snapshot.jsonl\n\n\t\n\n污染版快照，24条记录，保留原先错误修复状态\n\n\n\n\nrvl-918012-ledger.bak-a5-repair.jsonl\n\n\t\n\n修复前备份，11条记录\n\n\n\n\nrvl-918013-ledger.jsonl\n\n\t\n\n21条记录；原始INTENT保留，追加发送确认及MANUAL_LEDGER_SUPERSEDE\n\n918012修复版没有再把原始INTENT静默替换成CONFIRMED，而是保留原始记录并在末尾追加取代声明；污染快照和备份也分别归档。918013同样保留INTENT并追加后续判定记录。\n\n原NEW-P1-03关闭。\n\n② NEW-P2-01：MANIFEST blob绑定——主体通过\n\n实际读取 MANIFEST.json：\n\n条目数：109。\n\nblob_bound=true：109/109。\n\nsha_basis：109/109均为 git-blob-bytes (post-commit normalization)。\n\n109个归档路径均在Git树中。\n\n109项声明bytes与对应Git blob size一致，未发现缺失或大小不匹配。\n\nSHA256抽验结果：\n\n抽验文件\n\n\t\n\nMANIFEST SHA256与实际计算\n\n\t\n\nbytes与Git blob\n\n\n\n\n918012修复版账本\n\n\t\n\n一致\n\n\t\n\n一致\n\n\n\n\n918012污染快照\n\n\t\n\n一致\n\n\t\n\n一致\n\n\n\n\n918013账本\n\n\t\n\n一致\n\n\t\n\n一致\n\n\n\n\ntest-run-s2r3b.txt\n\n\t\n\n一致\n\n\t\n\n一致\n\n抽验均通过，符合本轮要求的SHA256及Git blob字节绑定核验。\n\n但发现一个申报文档不一致：review-request-s2-r4.md写的是108条，实际MANIFEST及steps.md问题23行均为109条。\n\n原NEW-P2-01的实质整改通过；新增一个文档一致性问题，见后文NEW-P2-04。\n\n③ NEW-P2-02：区间口径——未通过\n\n本轮实际Git Compare结果：\n\n6d39ff9...43f43e3：10个提交\n\n完整提交序列：\n\n序号\n\n\t\n\nCommit\n\n\t\n\n分类\n\n\n\n\n1\n\n\t\n\n34f2c393\n\n\t\n\nS2全链回填\n\n\n\n\n2\n\n\t\n\n2be8b01f\n\n\t\n\nR1代码整改\n\n\n\n\n3\n\n\t\n\n501f3fd1\n\n\t\n\nR1结果回填、R2申报\n\n\n\n\n4\n\n\t\n\nfdba15c2\n\n\t\n\nR2代码整改\n\n\n\n\n5\n\n\t\n\n0c5642d9\n\n\t\n\nR2代码整改及测试证据\n\n\n\n\n6\n\n\t\n\n030c947a\n\n\t\n\nR2结果回填、R3申报\n\n\n\n\n7\n\n\t\n\nafc1ee13\n\n\t\n\nR3代码整改及账本归档\n\n\n\n\n8\n\n\t\n\n73f0050f\n\n\t\n\nR3结果登记、R4申报\n\n\n\n\n9\n\n\t\n\nc47f69e8\n\n\t\n\nMANIFEST重算及返工表修订\n\n\n\n\n10\n\n\t\n\n43f43e3d\n\n\t\n\nR3/R4回填及返工表补齐\n\n这里需要区分两个数字：\n\nGit完整区间提交数：10。\n\n如果按照ST-01④排除两个回填提交73f0050f、43f43e3d，则可得到8个计入范围的提交。\n\n所以，申报的8并非完全无法解释，但目前把它写成6d39ff9..HEAD count=8，没有准确区分Git实际提交数和排除回填后的计数；同时没有把两个排除的完整SHA及排除理由明确列入申报。\n\n另外，R4申报称030c947之后“本轮2 commit”，实际HEAD之后有4个提交，不是2个。只有将其中两个回填提交明确排除，才能得到2个计入范围的新增提交。\n\n原NEW-P2-02未关闭。\n\n建议修订为：\n\nGit完整区间 6d39ff9..43f43e3 共10个提交；按ST-01④排除73f0050f...及43f43e3...两个回填提交后，计入验收范围8个提交。列明全部10个SHA及各自分类。\n\n这样既保留8个范围计数，也不把它错误表述成Git Compare的原始提交数。\n\n④ NEW-P2-03：INTENT+FAILED——通过\n\nreview_leg.py已经调整为：\n\n先识别R3_SEND_FAILED失败终态；\n\nintent_only仅在存在INTENT、没有CONFIRMED且没有FAILED时成立；\n\nINTENT+FAILED不再被误判为发送状态不确定；\n\n原INTENT-only路径仍然fail-closed。\n\ntest_16e_intent_then_failed_attach_allowed明确构造：\n\n追加R3_SEND_INTENT_RECORDED；\n\n再追加R3_SEND_FAILED；\n\n使用allow_no_anchor=True执行attach；\n\n检查not_applicable显式登记成功。\n\n该测试覆盖的正是R3发现的真实追加式账本序列，不是仅有FAILED记录的简化场景。\n\n原NEW-P2-03关闭。\n\n⑤ 回归29/29及范围零越界——通过\n\ntest-run-s2r3b.txt完整输出包含29个测试结果，最终：\n\n纯文本\nRan 29 tests in 36.515s\n\nOK\n\n范围核验：\n\n修改代码：phase1/tools/review_leg.py。\n\n修改测试：phase1/tools/test_review_leg.py。\n\n新增归档和测试材料：账本、MANIFEST、测试运行输出及任务文档。\n\n未发现scheduler.py、M1–M4、M2派单工具链或冻结契约文件被修改。\n\n回归与范围检查通过。\n\n二、四个原问题关闭表\n\n原问题\n\n\t\n\n最终判定\n\n\t\n\n说明\n\n\n\n\nNEW-P1-03\n\n\t\n\n关闭\n\n\t\n\n四件账本证据齐全，追加式修复对应\n\n\n\n\nNEW-P2-01\n\n\t\n\n关闭\n\n\t\n\n109条blob绑定及SHA256抽验通过；数量笔误另立问题\n\n\n\n\nNEW-P2-02\n\n\t\n\n未关闭\n\n\t\n\n原始Git区间10个提交，申报未明确区分排除回填后的8个范围提交\n\n\n\n\nNEW-P2-03\n\n\t\n\n关闭\n\n\t\n\nINTENT+FAILED修复及test_16e通过\n\n三、新问题\n\nNEW-P2-04 R4申报文档的MANIFEST数量不一致\n\nreview-request-s2-r4.md申报108条；\n\nsteps.md问题23行申报109条；\n\nGit树实际MANIFEST为109条。\n\n实际归档数据没有发现缺项，但同一轮验收材料中的数量不一致，需统一为109。\n\n四、最终结论\nS2-R4 = REJECT\n\n本轮四项整改中，账本证据、INTENT+FAILED修复均已通过；MANIFEST的实际blob绑定也通过抽验。回归29/29及代码范围检查通过。\n\n仍未关闭：\n\nNEW-P2-02：区间计数必须明确区分10个Git提交与排除两个回填提交后的8个范围提交。\n\nNEW-P2-04：R4申报文件108/109数量不一致。\n\n建议下一轮只做这两项文档限定复验，不重开已关闭的NEW-P1-03、NEW-P2-01、NEW-P2-03，也不需要再消耗真实派单。",
+      "text_sha256": "28f42ec2d0569a18f10bada2d1caeb3e4bb7a083eef5ec66418a481c6e7f458d",
+      "size_bytes": 6957,
+      "assistant_uuid": "f9c15125-c481-45da-9527-e8e83d3853d2"
+    }
+  ]
+}

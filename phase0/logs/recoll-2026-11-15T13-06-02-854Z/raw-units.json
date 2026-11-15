@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-15T13:06:57.074Z",
+  "user_unit_key": "fallback-turn-4:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-4:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "3871d31e-b6de-4b1d-a875-98b2770cd1c7",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-4:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "6d520745aa0862accb815a2e5f0c7f7fe66e4cd125efc41d5fc2bb5dd86661d8",
+          "fbd3f0ee3f18b94907d90d614978b1250922a7322d25b0b7141a82149830f70e"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "6d520745aa0862accb815a2e5f0c7f7fe66e4cd125efc41d5fc2bb5dd86661d8",
+          "fbd3f0ee3f18b94907d90d614978b1250922a7322d25b0b7141a82149830f70e"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-4:0:user",
+      "fallback-turn-4:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-4:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n[立项评审回执｜b-20261115-standard-kickoff｜S2-Gate2]\n\n评审基线： f93ff2a7f1e00b9f5f0e460bcb0c197bcbdd2bcf\n\n三材料核对结果： 已读取 GPT-03 立项草案、M1 机器端点清单和 F-001（T-P1-908）定稿任务书。Gate2 的三项深度设计均有可用基础，但还未达到可直接冻结为定稿的程度。以下按“认可部分＋必须精化项”给出评审意见。\n\n① engine M1 白名单端点表\n修订后认可\n\n机器清单声明共 41 个 method×path 端点、33 个唯一路径。附录 A 当前列出 9 个端点，其中 4 个 GET、5 个 POST。路径确实存在于机器清单，但机器清单只证明路由存在及 handler 名称，不能单独证明业务操作范围、权限检查和拒绝条件。定稿表必须把这三者分开写清。\n\n建议的端点逐项裁定\n\nMethod + path\n\n\t\n\n评审意见\n\n\t\n\n允许的操作范围\n\n\t\n\n必须明确的拒绝条件\n\n\n\n\nGET /api/v1/tasks/{task_id}\n\n\t\n\n认可\n\n\t\n\n读取指定任务状态、必要元数据；仅限当前审查任务\n\n\t\n\n任务不存在、身份无读取权限、不得读取或输出秘密字段\n\n\n\n\nGET /api/v1/tasks/{task_id}/dependencies\n\n\t\n\n认可\n\n\t\n\n读取指定任务依赖及依赖状态\n\n\t\n\n任务不存在、无读取权限；不得借此读取无关任务详情\n\n\n\n\nGET /api/v1/artifacts/{artifact_id}\n\n\t\n\n认可\n\n\t\n\n读取已登记的审查输入 artifact\n\n\t\n\nartifact 不存在、无权限、内容超出审查任务关联范围\n\n\n\n\nGET /api/v1/board\n\n\t\n\n有条件认可\n\n\t\n\n仅在确有必要时读取最小化的任务看板信息\n\n\t\n\n不得将全局看板读取当作默认操作；不得读取与当前任务无关的数据\n\n\n\n\nPOST /api/v1/tasks/{task_id}/events\n\n\t\n\n修订重点\n\n\t\n\n只允许 §4 定义的合法事件：GIT_VALIDATE、PASS、REWORK，并按当前 M1 状态限制事件\n\n\t\n\n明确拒绝 BLOCKED、CANCEL 及其他事件；拒绝非法状态出边、缺少 event_id、任务不匹配等情况\n\n\n\n\nPOST /api/v1/artifacts\n\n\t\n\n认可\n\n\t\n\n登记本轮审查证据及回复引用；使用稳定幂等键\n\n\t\n\n缺少任务关联、必填字段、幂等标识；重复键内容不一致；不得覆盖既有证据\n\n\n\n\nPOST /api/v1/messages\n\n\t\n\n认可但需限缩\n\n\t\n\n登记本轮审查消息记录；限定 message 类型、任务关联和幂等键\n\n\t\n\n不得发送任意管理消息；拒绝任务关联不符、非法类型、重复键内容冲突\n\n\n\n\nPOST /api/v1/messages/{message_id}/ack\n\n\t\n\n建议移出\n\n\t\n\n当前任务书未证明审查腿需要主动 ACK outbox\n\n\t\n\nF-001 §12 明确将 Outbox ACK 处置排除在调度器范围之外；如确有必要，须另行说明 ACK 对象、触发条件及副作用，否则不授权\n\n\n\n\nPOST /api/v1/reports/review\n\n\t\n\n修订后认可\n\n\t\n\n登记正式审查结论，限定 task_id、execution_id、审查结果和证据关联\n\n\t\n\n拒绝无对应执行轮、非法结果、任务或 execution 不匹配、证据不完整及重复登记冲突\n\n必须补充的三条白名单规则\n\n端点白名单不等于事件白名单。 POST /tasks/{task_id}/events 是通用事件入口，不能因为允许访问这个 URL，就认为 engine 获得了所有事件的权限。BLOCKED、CANCEL 等必须在 engine 的调用层明确禁止。\n\n事件合法性必须由 M1 状态机最终裁定。 我核对了基线 e19c000f73fcb38bc390194546c7f5b72ce92733 的 app/platform/state_machine.py：DEV_REPORTED→GIT_VALIDATING 对应 GIT_VALIDATE；GIT_VALIDATING→CODE_REVIEW 对应 PASS；CODE_REVIEW→TEST_ACCEPTANCE/REWORK 对应 PASS/REWORK。BLOCKED 没有继续推进审查的合法出边，不能作为 engine 的恢复手段。\n\nACK 必须与其他登记操作分开授权。 messages 登记和 messages/{id}/ack 不是同一种操作。前者是记录审查消息，后者改变消息处理状态；不能以“都属于 messages”而合并授权。\n\n建议定稿表结构\n\n每个端点都应有以下字段，而不是只列路径：\n\nHTTP method、完整 path、handler；\n\n操作对象与作用范围；\n\nengine 身份及授权依据；\n\n允许的请求字段、事件值或消息类型；\n\n幂等键规则及重复请求行为；\n\n拒绝条件与预期错误响应；\n\n是否产生业务副作用；\n\n对应验收用例。\n\n本项结论：修订后认可。 当前九项中，ACK 建议删除；其余八项保留，但必须补足字段级限制和拒绝条件。特别是 events 入口，需要明确“允许访问接口”不代表“允许任意状态推进”。\n\n② A5 恢复证据字段\n修订后认可\n\n当前初稿的四类证据方向正确：\n\ndispatch 目录账本；\n\nconversation UUID；\n\n发送后 user unit 计数快照；\n\nM1 状态及登记前后对比。\n\n但还不足以让独立验收者判断“进程重启后究竟应补采、补登记，还是停止”。建议将 A5 固化为一个可恢复的审查轮账本＋三个阶段快照＋一个 M1 对账记录。\n\n建议账本结构\n\n字段组\n\n\t\n\n必备字段\n\n\t\n\n用途\n\n\n\n\n任务与审查轮标识\n\n\t\n\nrun_id、task_id、review_round、execution_id、idempotency_key\n\n\t\n\n唯一定位本次审查轮，防止跨任务、跨轮误恢复\n\n\n\n\n会话标识\n\n\t\n\nconversation_uuid、会话创建时间、浏览器 profile 标识、会话归属校验结果\n\n\t\n\n证明恢复时连接的是原会话，而不是新会话\n\n\n\n\n派单账本\n\n\t\n\ndispatch_id、SEND_STARTED 记录、发送确认记录、发送时间、发送结果\n\n\t\n\n区分“准备发送”与“已实际发送”\n\n\n\n\n会话快照\n\n\t\n\n发送前 user unit 计数、发送后 user unit 计数、采集时计数、快照时间、快照 SHA\n\n\t\n\n证明是否产生了新的用户发送单元\n\n\n\n\n回复证据\n\n\t\n\nreply 原始文件路径、字节数、SHA-256、采集状态、契约校验结果及输出 SHA\n\n\t\n\n证明回复是否已完整采集、校验\n\n\n\n\nM1 推进证据\n\n\t\n\n推进前后 task status、event_id、事件名、响应原文 SHA、登记结果\n\n\t\n\n判断 M1 状态推进是否已经实际生效\n\n\n\n\n登记证据\n\n\t\n\nartifact_id、message_id、review_report_id、登记请求 SHA、登记响应 SHA\n\n\t\n\n区分已采集但未登记、部分登记、全部登记\n\n\n\n\n恢复记录\n\n\t\n\ncheckpoint_id、恢复前阶段、恢复后阶段、恢复决策、决策依据、恢复时间\n\n\t\n\n形成可审计的恢复轨迹\n\n三个断点快照必须分开\n\n快照\n\n\t\n\n形成时点\n\n\t\n\n关键内容\n\n\t\n\n重启后允许动作\n\n\n\n\nS1：发送后未采集\n\n\t\n\n已确认发送，reply 尚未完整落盘\n\n\t\n\nconversation UUID、发送前后 unit 计数、SEND_STARTED 与发送确认、M1 状态\n\n\t\n\n只允许回到原会话补采；禁止重新派单\n\n\n\n\nS2：已采集未登记\n\n\t\n\nreply 已完整落盘，M1 登记尚未完成\n\n\t\n\nreply SHA、契约校验结果、待登记请求原文 SHA、幂等键\n\n\t\n\n只允许补登记；禁止重新触发 GPT-03\n\n\n\n\nS3：登记或状态推进结果不确定\n\n\t\n\n请求已发出，但进程未取得可靠响应\n\n\t\n\n请求 event_id/幂等键、请求 SHA、M1 查询前后状态及事件记录\n\n\t\n\n先只读核实；已生效则接续，确认未生效才按同一幂等标识重试，无法确认则腿级 BLOCKED\n\n必须补上的证据规则\n\n第一，不能只靠 SEND_STARTED=1 证明没有重发。\n\nSEND_STARTED 可能表示程序准备发送，并不必然等于外部发送已经发生。建议至少区分：\n\nSEND_INTENT_RECORDED：准备发送；\n\nSEND_CONFIRMED：发送已得到外部证据确认；\n\nREPLY_CAPTURED：回复已采集并落盘。\n\n以发送前后 unit 计数、原会话标识和发送账本交叉证明是否发生过第二次发送。\n\n第二，账本必须具备原子性和防篡改能力。\n\n建议每次阶段变化都形成独立记录，记录前后阶段、时间、证据 SHA 和幂等标识。不能只在进程退出时写一个最终 JSON，否则进程被强制终止时可能丢失最关键的断点事实。\n\n第三，恢复决策必须 fail-closed。\n\n如果 conversation UUID 缺失、unit 计数不一致、账本断裂、回复 SHA 不匹配或 M1 状态无法确认，均不得推测恢复。应保持 M1 当前状态，记录腿级 BLOCKED，等待人工处理。\n\n第四，登记必须允许部分成功的可核对状态。\n\nartifacts、messages、review report、状态事件不是一个不可分割的外部请求。若其中一项成功、另一项失败，必须逐项记录已成功的 ID 和请求幂等键，重启后只补未完成项，不能把整轮登记简单地从头执行。\n\n本项结论：修订后认可。 当前初稿可以保留为证据原则，但必须补齐账本字段、三个断点快照、原子记录和部分成功恢复规则。\n\n③ A6 完整恢复设计与回滚分支\n修订后认可\n\n当前 A6 已经明确了重要底线：人工退路发生在腿级 BLOCKED，M1 任务状态不变。但目前只有人工退路场景，没有覆盖所有关键崩溃窗口。\n\n建议按 M1 状态及审查腿阶段分列，形成以下定稿矩阵。\n\nA6 状态分支表\n\nM1 当前状态\n\n\t\n\n可能断点\n\n\t\n\n恢复动作\n\n\t\n\n禁止动作\n\n\n\n\nDEV_REPORTED\n\n\t\n\n尚未发出 GIT_VALIDATE\n\n\t\n\n只读核实任务和依赖；证据齐备后继续校验并提交合法事件\n\n\t\n\n不得跳过 Git 校验直接进入 CODE_REVIEW\n\n\n\n\nDEV_REPORTED\n\n\t\n\nGIT_VALIDATE 请求发出但响应丢失\n\n\t\n\n查询 M1 当前状态和事件记录；确认已推进则接续，确认未推进才用原 event_id 重试\n\n\t\n\n不得换 event_id 盲目重发\n\n\n\n\nGIT_VALIDATING\n\n\t\n\nGit 校验尚未完成\n\n\t\n\n对原审查输入重新执行只读校验；通过后提交 PASS 推进至 CODE_REVIEW\n\n\t\n\n不得假定校验已通过；不得擅自推进到任务级 BLOCKED\n\n\n\n\nGIT_VALIDATING\n\n\t\n\nPASS 已生效但进程未记录响应\n\n\t\n\n只读核实 M1 状态和事件；若已是 CODE_REVIEW 则继续\n\n\t\n\n不得重复创建新的审查轮或重新派单\n\n\n\n\nCODE_REVIEW\n\n\t\n\n尚未派单\n\n\t\n\n使用本轮唯一审查轮标识执行一次派单\n\n\t\n\n不得创建第二个审查轮\n\n\n\n\nCODE_REVIEW\n\n\t\n\n已发送、未采集\n\n\t\n\n连接原 conversation UUID，按 A5 补采\n\n\t\n\n不得新建会话重发\n\n\n\n\nCODE_REVIEW\n\n\t\n\n已采集、未登记\n\n\t\n\n校验原始回复和 SHA，按原幂等键补登记\n\n\t\n\n不得再次触发 GPT-03\n\n\n\n\nCODE_REVIEW\n\n\t\n\n部分登记成功\n\n\t\n\n逐项只读核实 artifacts/messages/review report，补齐缺项\n\n\t\n\n不得覆盖已登记内容或换幂等键重做\n\n\n\n\nCODE_REVIEW\n\n\t\n\n结论已登记、状态推进未确认\n\n\t\n\n先查询 M1 事件和状态；确认未生效才用原 event_id 重试\n\n\t\n\n不得凭本地日志推断 M1 状态\n\n\n\n\nTEST_ACCEPTANCE\n\n\t\n\n审查腿重启后发现已推进\n\n\t\n\n将本轮标记为已完成，交由后续测试验收流程\n\n\t\n\n不得重新派单或回退到 CODE_REVIEW\n\n\n\n\nREWORK\n\n\t\n\n审查结论为返工\n\n\t\n\n记录结论并停止自动审查，等待人工后续安排\n\n\t\n\n不得自动开启第二轮开发或重审\n\n\n\n\nBLOCKED\n\n\t\n\nM1 任务级阻塞\n\n\t\n\n仅允许人工按 OWNER 权限处理；审查腿停止\n\n\t\n\nengine 不得推进或恢复任务级 BLOCKED\n\n这里有一个关键边界：BLOCKED 是 M1 任务状态，而“腿级 BLOCKED”是审查腿自己的停止状态。二者不能混为一谈。审查腿故障时，应保留 M1 原状态，并在 run 账本中记录腿级 BLOCKED。\n\n回滚与人工接管规则\n\n我建议将“回滚”明确定义为停止新增副作用、保留已发生事实、从当前 M1 状态交接人工，而不是将 M1 状态退回前一状态。\n\n故障阶段\n\n\t\n\n回滚动作\n\n\t\n\n人工接管起点\n\n\n\n\nGit 校验阶段\n\n\t\n\n停止后续事件，不改变 M1 状态\n\n\t\n\n当前 DEV_REPORTED 或 GIT_VALIDATING\n\n\n\n\n派单前\n\n\t\n\n不创建会话、不发送；保留任务状态\n\n\t\n\nCODE_REVIEW\n\n\n\n\n已发送未采集\n\n\t\n\n禁止重发，保留原会话及账本\n\n\t\n\nCODE_REVIEW，人工从原会话补采\n\n\n\n\n已采集未登记\n\n\t\n\n保留原始回复和校验材料\n\n\t\n\nCODE_REVIEW，人工按同一幂等键补登记\n\n\n\n\n登记部分成功\n\n\t\n\n保留已登记 ID，仅补缺项\n\n\t\n\nCODE_REVIEW\n\n\n\n\n状态推进结果不确定\n\n\t\n\n停止，先核实 M1 实际状态\n\n\t\n\n核实后的真实 M1 状态\n\n\n\n\n结论已登记\n\n\t\n\n不撤销已登记结论\n\n\t\n\nCODE_REVIEW 或已推进的目标状态\n\nA6 还需补充的四项验收用例\n\n状态推进成功、响应丢失： 模拟 M1 已提交事件但 engine 未收到响应；重启后应通过只读核实识别已推进，不产生第二个事件副作用。\n\n发送成功、账本后续写入失败： 验证不会因为本地账本缺少后续记录而重新发送；若无法证明发送状态，必须停止并人工核查。\n\n部分登记成功： 让 artifact 登记成功、message 或 review report 登记失败；重启后只补失败项，成功项 ID 不变。\n\n任务状态已进入 REWORK： 验证 engine 不会自动开启下一轮 GPT-03 审查或开发任务。\n\n本项结论：修订后认可。 当前 A6 的腿级退路原则正确，但必须把状态推进结果不确定、部分登记成功和已进入 REWORK 等情况纳入验收。\n\n新增发现\n\nF-G2-01 文档版本标识不一致\n\n本次指定的草案文件，其正文标题仍写着“立项任务书（草案 v0.2）”，而版本记录又列出 v0.5 为 Gate1 复验被测对象。正文身份和版本历史存在不一致。\n\n建议修订为：\n\n文件标题明确为“草案 v0.5”；\n\n文档身份说明、版本记录和评审引用统一；\n\n附录 A 标注本次 Gate2 修订版本和每项修订状态。\n\n这不是设计逻辑问题，但会影响后续用户确认需求原文时究竟确认哪一版，必须在 Gate2 定稿前消除。\n\nF-G2-02 审查报告登记与消息登记的职责关系不清\n\n§4 主要描述 artifacts+messages 登记，但附录 A 又列出 POST /api/v1/reports/review。状态机还存在 review report 作为后续 ACCEPTED 判定证据的依赖。因此需要明确：\n\nreview report 是否是本轮正式审查结论的权威记录；\n\nartifacts、messages 分别保存什么；\n\n三者之间如何通过 task_id、execution_id、幂等键和证据 SHA 绑定。\n\n不能只写“登记完整”，却没有定义正式结论记录的唯一来源。\n\nF-G2-03 F-001 先例可借鉴，但不能照搬其恢复边界\n\nF-001 §4/§5 的核心纪律是“调度器只编排、不仲裁”，且无跨 run 断点续传；§6 要求失败 run 仍有完整证据。GPT-03 的 A5 则明确要求进程重启恢复。\n\n因此建议继承 F-001 的状态唯一持有方、先只读核实、幂等登记、失败证据完整、不得盲目重放，但单独定义 GPT-03 同一审查轮内跨进程恢复。不得将 F-001 的“无跨 run 续传”误解为 GPT-03 不能重启恢复，也不得由此开放跨审查轮复用。\n\n三态评审结论\n\n深度项\n\n\t\n\n结论\n\n\t\n\n主要理由\n\n\n\n\n① engine M1 白名单端点表\n\n\t\n\nREWORK\n\n\t\n\n端点存在性已核对，但操作范围、拒绝条件和 ACK 授权边界仍需明确\n\n\n\n\n② A5 恢复证据字段\n\n\t\n\nREWORK\n\n\t\n\n证据方向正确，缺少原子账本、发送确认、部分登记和不确定状态处理\n\n\n\n\n③ A6 完整恢复与回滚分支\n\n\t\n\nREWORK\n\n\t\n\n腿级退路原则认可，状态分支和崩溃窗口覆盖不足\n\nGate2 总结论\n\nREWORK｜修订后再评\n\n三项深度设计均有可保留的设计基础，但尚不能作为定稿直接进入 Gate3。\n\n必须关闭的事项：\n\n统一 v0.5 文档版本标识；\n\n完成端点级操作范围、拒绝条件和事件白名单；\n\n补齐 A5 账本字段、断点快照及部分成功恢复；\n\n补齐 A6 按 M1 状态划分的恢复矩阵和四项新增验收用例；\n\n明确 review report、artifacts、messages 的权威关系。\n\n授权边界： 本回执仅为会务立项评审意见，不授权代码开发，不代表用户确认需求原文，也不代表用户批准开工。Gate3 仍须由用户确认 §1 需求原文并明确拍板开工。Gate1 的 PASS 结论及历史 REJECT 记录均按用户指定保留，本轮不重开。",
+      "text_sha256": "fbd3f0ee3f18b94907d90d614978b1250922a7322d25b0b7141a82149830f70e",
+      "size_bytes": 15885,
+      "assistant_uuid": "3871d31e-b6de-4b1d-a875-98b2770cd1c7"
+    }
+  ]
+}

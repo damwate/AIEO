@@ -1,0 +1,181 @@
+{
+  "at": "2026-11-15T11:08:38.245Z",
+  "message_bytes": 839,
+  "reply": "ChatGPT 说：\nStandard 开发规划复审回执\n修改后同意\n\nS1 · b-20261115-standard-kickoff\n\n被测版本： 881b9052aaea027e0e99cf9d76280c0661fe1138\n\n复审范围： standard/development-plan.md §六四项。\n\n已核对：\n\nbasic/WORKFLOW.md v0.3，特别是节点自主推进授权增补②及两道关口。\n\ndocs/phase1/decision-log.md DEC-049～052。\n\nstandard/WORKFLOW-DESIGN-INPUT.md，特别是 C1～C8 候选及不能入列信号。\n\nstandard/parallel-governance-draft.md。\n\ndocs/PHASE-STATUS.md §5。\n\ndocs/FEASIBILITY-REGISTER.md F-001～F-007。\n\nstandard/README.md 资产归属纪律。\n\n总体意见：规划方向正确，但当前 A→B→C 排序不合理，M2 文件吸收方式需要调整，验收标准还需要补充可机器判定的约束。\n\n① 两轨定性与 A→B→C 顺序\n修改后同意\n1. 两轨划分：同意\n\n当前两轨划分合理：\n\n轨道\n\n\t\n\n定位\n\n\t\n\n复审意见\n\n\n\n\nT1 工作流与治理体系\n\n\t\n\nStandard 作业规范、M2、C1～C8 工具化\n\n\t\n\n同意\n\n\n\n\nT2 平台产品路线\n\n\t\n\nF-001 中央调度及后续 GPT 角色\n\n\t\n\n同意\n\n但需要增加一条重要区分：\n\nM2 与 F-001 不是同一个系统，也不能相互替代。\n\nM2：解决开发过程中多个任务、多个会话、多个 worktree 如何安全并行的问题。\n\nF-001：解决 AIEO 产品自身如何接收需求、拆解任务、派单、监控和推进状态的问题。\n\nM2 是开发治理能力，F-001 是平台产品能力。\n\n两者可能共享部分工程经验，但职责、验收和授权必须独立。\n\n2. A→B→C：不同意原顺序\n建议调整顺序\n\n关键依据是 DEC-026 已批准的平台路线：\n\nF-003 测试 Worker 已完成。\n\n下一项明确为 F-001 中央调度最小版立项。\n\n后续才是 GPT-02/03/04/05 逐角色。\n\n最终进入等级 B 受控试运行。\n\n现在把 F-001 放在 A、B 两个 T1 工作之后，意味着平台路线必须等待治理文档和一个独立工具全部完成。\n\n这个依赖关系没有充分依据。\n\n尤其是 C1 绑定核验工具，并不是 F-001 开工的必要前置条件。\n\n建议改为以下顺序\n\n阶段 A：治理基线\n\n第一优先\n\nstandard/WORKFLOW.md 草案＋M2 治理修订稿。\n\n形成治理文件，生效仍须用户拍板。\n\n阶段 C0：F-001 立项准备\n\n提前\n\n编制 F-001 任务书、范围、架构选择及验收标准，提交用户确认需求原文。\n\n仅立项准备，不等于授权 F-001 开工。\n\n阶段 B：C1 工具落地\n\n后续节点\n实现申报绑定自动核验工具，完成测试矩阵与实战验收。\n\n阶段 C1：F-001 开工\n\n用户确认前置\n用户确认需求原文并拍板后，按独立任务书开工。\n\n这里的 C0、C1 是我建议增加的阶段内部区分，不是要把原有 DEC-026 路线重新编号。\n\n核心原则：平台路线优先准备，不必等 C1 工具开发完成；但 F-001 的实际开工仍然必须经过用户拍板。\n\n② M2 吸收方式\n修改后同意\n建议：保留独立文件，WORKFLOW 集成入口和原则\n\n不建议把 parallel-governance-draft.md 全文并入 standard/WORKFLOW.md。\n\n理由：\n\nM2 是一套相对完整的独立治理机制。\n\n涉及 worktree、任务分支、会话隔离、文件所有权、派单 FIFO、冲突处理和试运行。\n\n后续规则可能独立调整，全部放进 WORKFLOW 会增加主规范维护成本。\n\nM2 本身具有独立生效关口，不能因为 WORKFLOW 文档成文就自动生效。\n\n推荐文件职责\n\n文件\n\n\t\n\n职责\n\n\n\n\nstandard/WORKFLOW.md\n\n\t\n\n中级版主规范，明确 M1/M2 选择原则、启用条件和治理入口\n\n\n\n\nstandard/parallel-governance-draft.md\n\n\t\n\nM2 完整规则、操作约束、试运行和复盘标准\n\n\n\n\nstandard/README.md\n\n\t\n\n资产映射及规范入口\n\n建议将第二份文件从纯粹的草案调整为有版本号的独立规范候选文件。\n\nWORKFLOW 应吸收的内容\n\n至少明确：\n\nM1：交替推进，默认安全模式。\n\nM2：受控并行，必须满足任务隔离条件。\n\nM3：暂不纳入。\n\nM2 启用需要明确授权。\n\nM2 未生效时，不得以多会话形式绕过 M1 规则。\n\nM2 独立文件保留详细规则：\n\n一任务四件套。\n\nsession_lock 全局互斥。\n\nFIFO 派单与采集。\n\n文件所有权和冲突管理。\n\n最多两个并行任务试运行。\n\n试运行数据及扩大并行规模的决策条件。\n\n特别强调：M2 的规则生效必须用户拍板，不能由本次复审授权代替。\n\n③ C1 工具落位与测试矩阵\n修改后同意\n1. toolkit/ 落位：同意\n\nC1 放在根目录公共工具层 toolkit/ 是正确的。\n\n理由：\n\nC1 核验能力不是 Standard 独占能力。\n\nBasic v0.3 已经存在 ST-01 人工核验要求。\n\nStandard 将人工核验升级为机器核验。\n\n后续 Basic 也可能调用同一个工具。\n\n建议采用以下依赖方向：\n\nBasic / Standard\n\n调用方，不持有工具实现\n\ntoolkit/\n\n公共工具实现与测试\n\n必须保持：\n\nBasic 不依赖 Standard 运行时。\n\n工具不 import Standard 运行时模块。\n\nPython 标准库实现。\n\n不修改冻结契约 C1～C8。\n\n工具只读 Git 仓库，不修改工作区、分支或提交。\n\n输入不完整、对象不存在或无法确定时必须 fail-closed。\n\n2. 测试矩阵：方向同意，要求补强\n\n当前 B1、B2 覆盖的主要形态正确。\n\n建议明确为以下矩阵：\n\n测试场景\n\n\t\n\n预期结果\n\n\n\n\n单 commit，parent=基线\n\n\t\n\nPASS\n\n\n\n\n多 commit，完整线性链\n\n\t\n\nPASS\n\n\n\n\n多 commit，parent 断链\n\n\t\n\nFAIL\n\n\n\n\n含 merge commit\n\n\t\n\nFAIL，并提示改报 diff 基线\n\n\n\n\n区间数量与申报数量不一致\n\n\t\n\nFAIL\n\n\n\n\n申报 SHA 不是最终待验收 commit\n\n\t\n\nFAIL\n\n\n\n\n回填声明符合规则\n\n\t\n\nPASS，识别并排除指定范围\n\n\n\n\n回填声明缺失或格式不完整\n\n\t\n\nFAIL\n\n\n\n\n基线或目标 commit 不存在\n\n\t\n\nFAIL\n\n\n\n\n空区间或对象范围无法确定\n\n\t\n\n明确拒绝或提示不适用\n\n另外补充四项工程要求：\n\n第一，逐条 parent 核验。\n\n不能仅凭 git show 的首末 parent 判断多 commit 链完整性。\n\n第二，区分核验结果。\n\n建议至少有：\n\nPASS：全部规则满足。\n\nFAIL：明确违反规则。\n\nBLOCKED：缺少对象或环境无法完成核验。\n\n不能把无法核验当成 PASS。\n\n第三，断言具体拦截原因。\n\n测试不能只检查 exit code，还必须检查：\n\n命中了哪条规则；\n\n指向哪个 commit；\n\n具体错误原因；\n\n是否给出了正确处置建议。\n\n第四，工具自身安全性。\n\n必须验证错误输入、非法路径、异常 Git 输出时不会修改仓库，不会误判通过。\n\n3. B3 实战验收需要调整\n\n当前写的是对本任务申报实跑一次。\n\n同意，但要明确：\n\n使用真实 Git 仓库。\n\n使用真实任务包申报数据。\n\n留存完整命令、输入、输出。\n\n绑定工具版本及测试 commit。\n\n对照人工核验结果。\n\n记录工具不能判定的边界。\n\n实战结果不能自动把 BC-06 改为 PASS，仍按 Basic DoD 原有签核机制处理。\n\n④ A1-A3 / B1-B3 / C 验收标准与遗漏硬约束\n修改后同意\n\n这一项是当前规划最需要补强的部分。\n\nA 阶段：建议补充\n\n标准\n\n\t\n\n当前评价\n\n\t\n\n修改要求\n\n\n\n\nA1 六模块及差异条款\n\n\t\n\n基本可判定\n\n\t\n\n增加模块逐项映射表、来源和文件位置\n\n\n\n\nA2 治理无冲突\n\n\t\n\n方向正确\n\n\t\n\n增加完整决议与红线核对清单\n\n\n\n\nA3 复审和用户拍板\n\n\t\n\n基本可判定\n\n\t\n\n明确草案、复审通过、用户批准、生效四个状态\n\nA2 建议补入：\n\nDEC-010：高危操作红线。\n\nDEC-011：冻结契约不修改。\n\nDEC-017：扩展场景门禁。\n\nDEC-026：平台路线。\n\nDEC-037：分级路线。\n\nDEC-044：Standard 资产归属。\n\nDEC-045：Basic 独立及禁止反向依赖。\n\nDEC-049～052：节点状态、设计输入、DoD 和 M2 移交。\n\n还需要增加一项：\n\nA4：Basic 兼容性及资产纪律检查。\n\n验收时检查：\n\nBasic 现有文件没有被不必要修改。\n\nStandard 没有引入 Basic 对 Standard 的运行时依赖。\n\nphase0/logs/ 历史证据没有移动或重命名。\n\n冻结契约没有修改。\n\nStandard 现有资产映射没有被破坏。\n\nB 阶段：建议补充\n\n当前 B1～B3 基本覆盖功能、负例和实战。\n\n建议增加：\n\nB4：工具可复现性。\n\n同一输入、同一 Git 对象和同一工具版本，应产生确定性判定。\n\nB5：异常与安全边界。\n\n对缺少对象、权限异常、非法输入、Git 命令异常等进行 fail-closed 验证。\n\n这两项能防止出现测试矩阵全绿，但真实环境中错误地给出 PASS 的问题。\n\nC 阶段：当前可判定性不足\n\n当前 C 的验收标准：\n\n立项文档经 ChatGPT 复审＋用户对需求原文确认。\n\n这个标准还不够。\n\n原因是它只能证明文件经过复审、需求经过确认，不能证明 F-001 立项本身完整。\n\n建议增加以下内容：\n\n验收项\n\n\t\n\n可判定条件\n\n\n\n\nC1 需求边界\n\n\t\n\n用户原始需求完整保留，明确目标与非目标\n\n\n\n\nC2 架构边界\n\n\t\n\n明确中央调度引擎职责、模块归属及与 M1-M4 的接口\n\n\n\n\nC3 状态与流程\n\n\t\n\n明确需求→批次→拆解→派单→监控→状态推进的最小闭环\n\n\n\n\nC4 异常处理\n\n\t\n\n超时、失败、重试、阻塞、人工介入有明确处理原则\n\n\n\n\nC5 安全与审计\n\n\t\n\n权限、凭据、操作审计、幂等和敏感信息保护有明确要求\n\n\n\n\nC6 验收与回滚\n\n\t\n\n有具体测试、验收证据和失败处置标准\n\n\n\n\nC7 授权\n\n\t\n\nChatGPT 复审通过，用户确认需求原文并拍板开工\n\n注意：这些是立项文档的完整性要求，不代表要求 F-001 最小版一次性实现全部能力。\n\n尤其要防止立项时把整个中央调度平台的长期建设范围全部塞入第一期。\n\n⑤ 补充的全局硬约束\n\n以下建议直接加入开发规划 §五或 §四。\n\n编号\n\n\t\n\n硬约束\n\n\t\n\n目的\n\n\n\n\nH1\n\n\t\n\nDEC-010 红线不变\n\n\t\n\nmain 合并、生产发布、数据删除必须用户拍板\n\n\n\n\nH2\n\n\t\n\n冻结契约不修改\n\n\t\n\nDEC-011\n\n\n\n\nH3\n\n\t\n\nDEC-017 扩展场景门禁不解除\n\n\t\n\n防止以开发需要为由扩大授权\n\n\n\n\nH4\n\n\t\n\nBasic 独立性不破坏\n\n\t\n\nDEC-045\n\n\n\n\nH5\n\n\t\n\nM2 未获用户批准前不生效\n\n\t\n\n避免草案被当成正式规则\n\n\n\n\nH6\n\n\t\n\nStandard/WORKFLOW 未获用户批准前不生效\n\n\t\n\n文档复审不等于规则生效\n\n\n\n\nH7\n\n\t\n\nF-001 开工必须用户拍板\n\n\t\n\n立项准备不等于实施授权\n\n\n\n\nH8\n\n\t\n\n设计输入不自动转化为实施任务\n\n\t\n\nC1～C8 仍须独立任务书与验收\n\n\n\n\nH9\n\n\t\n\n每节点独立验收\n\n\t\n\n不允许开发者自行宣布 PASS\n\n\n\n\nH10\n\n\t\n\n每节点如实登记 decision-log\n\n\t\n\n遵循 WORKFLOW 增补②\n\n\n\n\nH11\n\n\t\n\nBLOCKED 不等于 PASS 或需求不可行\n\n\t\n\n保留 Basic 状态语义\n\n\n\n\nH12\n\n\t\n\n不得以工具开发扩大任务范围\n\n\t\n\nC1 工具仅实现绑定核验，不顺带建设通用调度系统\n\n其中 H5、H6、H7 是本次尤其需要强调的三条授权边界。\n\n⑥ 最终三态裁定\n\n复审项目\n\n\t\n\n三态\n\n\t\n\n关键修改\n\n\n\n\n① 两轨与实施顺序\n\n\t\n\n修改后同意\n\n\t\n\n调整为 A→C0→B，F-001 开工独立等待用户拍板\n\n\n\n\n② M2 吸收方式\n\n\t\n\n修改后同意\n\n\t\n\n保留独立文件，WORKFLOW 集成入口和原则\n\n\n\n\n③ C1 工具落位\n\n\t\n\n修改后同意\n\n\t\n\ntoolkit/ 保持公共层，补充异常、安全和确定性测试\n\n\n\n\n④ 验收与硬约束\n\n\t\n\n修改后同意\n\n\t\n\n增加 A4、B4、B5、C1～C7 及 H1～H12\n\n本次没有需要整体否定的方向性问题，但不建议按原稿直接冻结。\n\n⑦ 节点授权与拍板边界\n允许进入规划修订节点\n\n按照你指定的 Basic WORKFLOW 增补②，我给出以下节点授权：\n\n事项\n\n\t\n\n本次授权\n\n\n\n\n修改 development-plan.md\n\n\t\n\n允许\n\n\n\n\n按修订方案形成 steps.md\n\n\t\n\n允许\n\n\n\n\n编制 standard/WORKFLOW.md 草案\n\n\t\n\n允许\n\n\n\n\n修订 M2 独立治理文件\n\n\t\n\n允许\n\n\n\n\nF-001 立项准备\n\n\t\n\n允许\n\n\n\n\nC1 工具开发\n\n\t\n\n按修订后的节点顺序启动\n\n\n\n\nstandard/WORKFLOW.md 正式生效\n\n\t\n\n须用户拍板\n\n\n\n\nM2 正式生效\n\n\t\n\n须用户拍板\n\n\n\n\nF-001 实际开工\n\n\t\n\n须用户确认需求原文并拍板\n\n\n\n\nDEC-010 高危操作\n\n\t\n\n始终须用户拍板\n\n特别说明：本次授权是规划复审通过及下一规划修订节点的自主推进授权，不是对 Standard 工作流或 M2 的生效批准，也不是 F-001 的开发授权。\n\n最终结论\n修改后同意\n\n建议执行者按本回执修订规划，不必重新讨论已经达成一致的方向。\n\n修订完成后提交独立复审，核对四项修改和 H1～H12 是否落实，再冻结本任务 steps.md。\n\n平台路线不能继续被 T1 的治理与工具建设无依据地延后。F-001 应提前进入立项准备。",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "6f6392c0-489d-449b-8391-4c29e2986d12",
+  "stability": {
+    "stable": true,
+    "interval_ms": 6764,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-15T11:08:30.754Z",
+      "read_finished_at": "2026-11-15T11:08:34.517Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "e9aa9e78631359eebc097775c8ec625932a88669826b1d6d2027a47604a5fde6",
+          "size_bytes": 12751
+        }
+      ],
+      "assistant_uuid": "6f6392c0-489d-449b-8391-4c29e2986d12",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-15T11:08:37.518Z",
+      "read_finished_at": "2026-11-15T11:08:38.058Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "e9aa9e78631359eebc097775c8ec625932a88669826b1d6d2027a47604a5fde6",
+          "size_bytes": 12751
+        }
+      ],
+      "assistant_uuid": "6f6392c0-489d-449b-8391-4c29e2986d12",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "f198ae02926e941a37b2d3da6b970a833ce306b1928ba759e2f80ce3d82d440a",
+          "e9aa9e78631359eebc097775c8ec625932a88669826b1d6d2027a47604a5fde6"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "f198ae02926e941a37b2d3da6b970a833ce306b1928ba759e2f80ce3d82d440a",
+          "e9aa9e78631359eebc097775c8ec625932a88669826b1d6d2027a47604a5fde6"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "e9aa9e78631359eebc097775c8ec625932a88669826b1d6d2027a47604a5fde6",
+  "size_bytes": 12751,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-15T11-05-17\\reply.txt",
+  "reply_readback_sha256": "e9aa9e78631359eebc097775c8ec625932a88669826b1d6d2027a47604a5fde6",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-15T11-05-17\\raw-units.json",
+  "raw_units_sha256": "9f3ba41b8a6444630909e68e65b093ce3a59267f048c483706d1da6612c1fb42",
+  "raw_units_size_bytes": 16415,
+  "raw_units_readback_sha256": "9f3ba41b8a6444630909e68e65b093ce3a59267f048c483706d1da6612c1fb42",
+  "session_id": "6af99227-0f70-83ec-ad69-63dad4aa2531",
+  "conversation_url": "https://chatgpt.com/c/6af99227-0f70-83ec-ad69-63dad4aa2531",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}

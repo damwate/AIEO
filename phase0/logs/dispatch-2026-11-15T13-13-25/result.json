@@ -1,0 +1,181 @@
+{
+  "at": "2026-11-15T13:16:16.449Z",
+  "message_bytes": 839,
+  "reply": "ChatGPT 说：\nb-20261115-standard-kickoff｜S2-Gate2R2 立项复评回执\n\n仍需修订 部分关闭\n\n被测对象： 674607159625adffd10b9a481243b63169e46824\n\n被测文件： docs/phase1/GPT03-REVIEW-LEG-CHARTER-DRAFT.md\n\n文档版本： v0.6（Gate2 修订稿）\n\n评审范围： 仅复核 Gate2 五项整改，不扩展为工程实施验收，不代替用户确认需求或开工授权。\n\n已读取指定 commit 的完整文件内容。文件确实包含附录 B、C、D、E 四个新增或定稿部分，但存在几处可以直接从文档结构核实的数量不一致和完整性缺口。\n\n一、五项关闭事项逐项复核\n\n编号\n\n\t\n\n复核事项\n\n\t\n\n结论\n\n\n\n\n① F-G2-01 标题版本统一 v0.6\n\n\t\n\n标题、版本记录一致\n\n\t\n\nPASS\n\n\n\n\n② 附录 B 端点定稿表\n\n\t\n\n8 个端点、ACK 移出、事件白名单落实；字段列不足\n\n\t\n\nFAIL\n\n\n\n\n③ 附录 C A5 恢复账本\n\n\t\n\n8 字段组、3 断点、4 证据规则均有内容\n\n\t\n\nPASS\n\n\n\n\n④ 附录 D 恢复矩阵及回滚\n\n\t\n\n数量声明与实际行数不一致，A7-A10 验收定义过于简略\n\n\t\n\nFAIL\n\n\n\n\n⑤ 附录 E 登记权威关系\n\n\t\n\nreview report 权威关系明确\n\n\t\n\nPASS\n\n① 标题版本统一 v0.6（F-G2-01）\nPASS｜关闭\n\n核对结果：\n\n文件 H1 标题明确为「草案 v0.6，Gate2 修订稿」。\n\n文档身份仍为立项草案，没有错误升级为正式生效文件。\n\n版本记录存在 v0.6，明确记录 Gate2 五项整改。\n\nv0.5、v0.4 等历史版本保留，版本沿革没有被删除。\n\n判定： 本项满足要求，不需要继续修改。\n\n② 附录 B：8 端点、9 字段列、ACK 移出\nFAIL｜未完全关闭\n\n已通过的部分：\n\n实际端点数量为 8 个：\n\n4 个 GET 只读端点。\n\n4 个 POST 登记或状态推进端点。\n\nPOST /api/v1/messages/{message_id}/ack 已从白名单移除。\n\nevents 入口明确限定 GIT_VALIDATE/PASS/REWORK。\n\nBLOCKED/CANCEL 明确禁止由 engine 调用。\n\n状态合法性最终由 M1 状态机裁定。\n\n幂等键、拒绝条件、副作用及验收用例均有相应描述。\n\n未通过的部分：字段列不足。\n\n当前附录 B 实际只有 7 列：\n\n端点\n\n操作范围与作用对象\n\n允许请求/事件值\n\n幂等键规则\n\n拒绝条件与预期响应\n\n副作用\n\n验收用例\n\n与要求的 9 字段列不一致。\n\n特别是以下信息尚未独立结构化：\n\nHTTP Method 与完整 Path 的独立字段。\n\n实际 Handler。\n\nEngine 身份及授权依据。\n\n允许请求字段、事件值和消息类型的明确约束。\n\n其中部分信息散落在其他章节，不能代替端点表本身的逐端点授权核验。\n\n整改要求：\n\n将附录 B 补成规定的 9 列结构，逐端点填写，不得仅增加表头而缺少对应数据。\n\n另外，应保持 8 个端点数量不变，ACK 不得重新进入白名单。\n\n③ 附录 C：A5 账本、三断点快照、四证据规则\nPASS｜关闭\n\n逐项核对：\n\nA. 八字段组\n\n任务与审查轮标识\n\n会话标识\n\n派单账本\n\n会话快照\n\n回复证据\n\nM1 推进证据\n\n登记证据\n\n恢复记录\n\n字段覆盖较完整，并明确要求阶段变化时原子追加记录，避免进程强制终止造成断点丢失。\n\nB. 三断点快照\n\nS1：发送后未采集。\n\nS2：已采集未登记。\n\nS3：登记或推进结果不确定。\n\n各自具有允许恢复动作和禁止动作。\n\nC. 四条证据规则\n\n发送状态三态区分及交叉证明。\n\n账本原子追加。\n\n恢复决策 fail-closed。\n\n部分登记成功的逐项核对和补缺。\n\n特别认可 S3 的处理原则：先只读核实 M1，无法确认时停止自动恢复，不推测状态。\n\n判定： 本项达到 Gate2 定稿要求。\n\n④ 附录 D：11 行恢复矩阵、回滚接管规则、A7-A10\nFAIL｜需要修订\n\n这是本轮第二个实质缺口。\n\nA. 恢复矩阵行数不一致\n\n文档声明：\n\nM1 状态×断点恢复矩阵 11 行。\n\n但实际表格为 12 行：\n\nM1 状态\n\n\t\n\n实际行数\n\n\n\n\nDEV_REPORTED\n\n\t\n\n2\n\n\n\n\nGIT_VALIDATING\n\n\t\n\n2\n\n\n\n\nCODE_REVIEW\n\n\t\n\n5\n\n\n\n\nTEST_ACCEPTANCE\n\n\t\n\n1\n\n\n\n\nREWORK\n\n\t\n\n1\n\n\n\n\nBLOCKED\n\n\t\n\n1\n\n\n\n\n合计\n\n\t\n\n12\n\n这不是恢复逻辑本身的问题，而是定稿数量声明与实际内容不一致。\n\n应明确最终采用 11 行还是 12 行，并统一 §7 与附录 D 的表述。\n\n我不建议为了凑 11 行删除必要的恢复分支。\n\nB. 回滚与人工接管规则\n\n当前实际能够识别的规则为 7 类：\n\nGit 校验阶段。\n\n派单前。\n\n已发送未采集。\n\n已采集未登记。\n\n部分登记成功。\n\n推进结果不确定。\n\n结论已登记。\n\n但 §7 声明为 8 行。\n\n需要补齐或修正数量声明，并让每个恢复分支明确对应：\n\n故障发生时的 M1 状态。\n\n已发生的外部副作用。\n\n允许的人工接管动作。\n\n禁止重复执行的动作。\n\n恢复后的证据要求。\n\nC. A7-A10 验收用例\n\n目前四个用例只有简短描述：\n\n用例\n\n\t\n\n当前覆盖内容\n\n\n\n\nA7\n\n\t\n\n状态推进成功但响应丢失\n\n\n\n\nA8\n\n\t\n\n发送成功后账本续写失败\n\n\n\n\nA9\n\n\t\n\n部分登记成功\n\n\n\n\nA10\n\n\t\n\n任务进入 REWORK 后禁止自动开启下一轮\n\n方向正确，但尚未达到 A1-A6 的可执行验收矩阵粒度。\n\n特别是 A8，需要明确如何证明已经发送、如何处理账本不完整、如何证明没有第二次发送。\n\n整改要求：\n\nA7-A10 均补齐：\n\n前置条件\n\n故障注入或执行动作\n\n预期状态\n\n禁止行为\n\n失败判定\n\n必留证据\n\n同时统一恢复矩阵与回滚规则的行数声明。\n\n⑤ 附录 E：登记权威关系\nPASS｜关闭\n\n当前明确规定：\n\n登记对象\n\n\t\n\n权威职责\n\n\n\n\nreview report\n\n\t\n\n审查结论权威记录\n\n\n\n\nartifacts\n\n\t\n\n输入、输出证据登记\n\n\n\n\nmessages\n\n\t\n\n传输与消息记录\n\n并且明确：\n\n三者不一致时，以 review report 为结论权威。\n\nartifacts/messages 负责证据链。\n\n出现冲突时进入腿级 BLOCKED。\n\n不允许自动改写冲突记录。\n\n这项设计解决了审查结论与传输记录、证据记录之间的权威归属问题。\n\n判定： 本项满足要求。\n\n二、最终整改清单\n\n本轮仅保留两个需要继续关闭的事项。\n\n编号\n\n\t\n\n缺口\n\n\t\n\n必须整改内容\n\n\n\n\nR2-01\n\n\t\n\n附录 B 字段列不足\n\n\t\n\n补齐规定的 9 字段列，逐端点填写\n\n\n\n\nR2-02\n\n\t\n\n附录 D 数量及验收粒度\n\n\t\n\n统一 11/12 行、7/8 行差异；补全 A7-A10 可执行验收定义\n\n其余三项不要求重复修改。\n\n三、总结论\n仍需修订\n\n当前不授予 Gate2 定稿认可，不建议进入 Gate3。\n\n3\n\nPASS 项\n\n2\n\n未关闭项\n\n已认可的定稿内容： 版本统一、A5 恢复账本、登记权威关系。\n\n尚未认可的内容： 端点表字段完整性、恢复矩阵及验收规则完整性。\n\nGate3 边界\n\n本次评审不构成：\n\n用户确认 §1 需求原文。\n\n用户拍板开工。\n\n工程实施授权。\n\n允许修改 M1-M4 或冻结契约。\n\n允许自动合并 main。\n\n即使后续 Gate2 复验 PASS，也只代表立项草案达到定稿条件，仍须遵循：\n\nGate2 定稿认可 → Gate3 用户确认需求原文 → 用户拍板开工。\n\n本轮不替用户完成后两个决策。\n\n下一步： 修订 R2-01、R2-02 后，提交新的单 commit 被测对象，进行 S2-Gate2R3 复验，只复核这两项及其关联内容。\n\n被测文件：GPT03-REVIEW-LEG-CHARTER-DRAFT.md @ 6746071。\nGitHub",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "b7e42876-3d13-4a36-80ae-c936a6508464",
+  "stability": {
+    "stable": true,
+    "interval_ms": 5678,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-15T13:16:10.021Z",
+      "read_finished_at": "2026-11-15T13:16:12.696Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "666b86b2ce1545cf1f4c0eb89662f237fde294b08c30248d9cf1d791b4cca8ed",
+          "size_bytes": 7336
+        }
+      ],
+      "assistant_uuid": "b7e42876-3d13-4a36-80ae-c936a6508464",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-15T13:16:15.698Z",
+      "read_finished_at": "2026-11-15T13:16:16.232Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "666b86b2ce1545cf1f4c0eb89662f237fde294b08c30248d9cf1d791b4cca8ed",
+          "size_bytes": 7336
+        }
+      ],
+      "assistant_uuid": "b7e42876-3d13-4a36-80ae-c936a6508464",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "4a5f3b51543811f8096812bb0945801c0c2fd402279e5bf414ed8f6b48d8b59c",
+          "666b86b2ce1545cf1f4c0eb89662f237fde294b08c30248d9cf1d791b4cca8ed"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "4a5f3b51543811f8096812bb0945801c0c2fd402279e5bf414ed8f6b48d8b59c",
+          "666b86b2ce1545cf1f4c0eb89662f237fde294b08c30248d9cf1d791b4cca8ed"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "666b86b2ce1545cf1f4c0eb89662f237fde294b08c30248d9cf1d791b4cca8ed",
+  "size_bytes": 7336,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-15T13-13-25\\reply.txt",
+  "reply_readback_sha256": "666b86b2ce1545cf1f4c0eb89662f237fde294b08c30248d9cf1d791b4cca8ed",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-15T13-13-25\\raw-units.json",
+  "raw_units_sha256": "6ec12820f683e6b9c8bc257a8aed69778b5584d5b3160866e5934344d9a6af56",
+  "raw_units_size_bytes": 10536,
+  "raw_units_readback_sha256": "6ec12820f683e6b9c8bc257a8aed69778b5584d5b3160866e5934344d9a6af56",
+  "session_id": "6af9b028-a314-83ec-bfee-c26ce65dee49",
+  "conversation_url": "https://chatgpt.com/c/6af9b028-a314-83ec-bfee-c26ce65dee49",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}

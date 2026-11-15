@@ -1,0 +1,8 @@
+【S1独立验收|b-20261115-gpt03-review-leg】独立验收GPT-03审查腿S1（编排+测试）。
+仓库github.com/damwate/AIEO main，锚点按SHA读：
+A 被测=512f9c5a7142e23678e5d1972050ee5674d605aa（3新文件：phase1/tools/review_leg.py 921行/review_leg_recoll_template.mjs 188行/test_review_leg.py 660行）
+B 申报=4c888334db9f2a5b38d46f86a531ec7d87af8749：读basic/tasks/b-20261115-gpt03-review-leg/acceptance/review-request-s1.md与steps.md S1节
+C 依据=docs/phase1/GPT03-REVIEW-LEG-CHARTER-DRAFT.md v1.0定稿（§4/§7/附录B-E）
+重点：①附录B白名单/engine边界（events限GIT_VALIDATE/PASS；ACK/approvals/任务级BLOCKED禁入）②附录C账本+三断点resume+A8双重禁推③附录D矩阵+腿级/M1级BLOCKED区分④附录E登记权威⑤§4流程+幂等键⑥18用例真实性：替身边界仅ChatGPT，A1/A3/A5①/A6真实派单留S2/S3⑦M1-M4/scheduler.py零修改。
+基线=c3a13e9fafc08b9a3d24b1a0ec70f71dd96effc8。ST-01 PASS（区间1）。
+回执：六查逐项+标准1-7逐项判定+总结论（PASS/REJECT+问题编号）。

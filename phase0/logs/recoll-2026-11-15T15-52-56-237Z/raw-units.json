@@ -1,0 +1,156 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-15T15:53:53.714Z",
+  "user_unit_key": "fallback-turn-4:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-4:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "57991268-7ce7-4d0a-9f29-35ec0932e61d",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-4:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "fd3474db91de2c87fc0336ea0b2b0ac1ba41ada653c11e644c62c81dc294547f",
+          "21df8c7e031a55faebb5170e1df2f83d15c07916a31ef714a1f2004098e7a4ce",
+          "1b6b092dd4f589545fa76fadc5634d0dcf8fb87f79741aee1bfaa5da7ecd8ff9",
+          "488132da2bbd04cf0ca0b94f7ca9d3200d5ab1389f8cd6ea83e97788fc1e3e18",
+          "6e62c30b782d761c965045d697af57b12bbf72b1a745955a8f7f568154b8ee15",
+          "de74148b18f4c15243a8fa39388897e42a5709e8fbb3d4938ddcf34b5669516c",
+          "fb4b4fff093a19fb21a4c1a61912e272d47e4d617f18c7dd139e9a5ec21e0941",
+          "9a5897989712a4cfc6fadaffa25c1e5855f466540e0915566d6aa4deb6ba667e",
+          "21e0f830a220000eafa50e19361135d0d2baf34a9d0efdbf8a4ef0b9cb72d748",
+          "d2a9c58a9d2ed338320048b5bae062b2bdbd19149de5175779c12c34cc6e519e"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "fd3474db91de2c87fc0336ea0b2b0ac1ba41ada653c11e644c62c81dc294547f",
+          "21df8c7e031a55faebb5170e1df2f83d15c07916a31ef714a1f2004098e7a4ce",
+          "1b6b092dd4f589545fa76fadc5634d0dcf8fb87f79741aee1bfaa5da7ecd8ff9",
+          "488132da2bbd04cf0ca0b94f7ca9d3200d5ab1389f8cd6ea83e97788fc1e3e18",
+          "6e62c30b782d761c965045d697af57b12bbf72b1a745955a8f7f568154b8ee15",
+          "de74148b18f4c15243a8fa39388897e42a5709e8fbb3d4938ddcf34b5669516c",
+          "fb4b4fff093a19fb21a4c1a61912e272d47e4d617f18c7dd139e9a5ec21e0941",
+          "9a5897989712a4cfc6fadaffa25c1e5855f466540e0915566d6aa4deb6ba667e",
+          "21e0f830a220000eafa50e19361135d0d2baf34a9d0efdbf8a4ef0b9cb72d748",
+          "d2a9c58a9d2ed338320048b5bae062b2bdbd19149de5175779c12c34cc6e519e"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-4:0:user",
+      "fallback-turn-4:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-4:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n本轮按限定范围复验：被测锚点固定为 bfb779715eb9b81032cb1610e630abe48decac95，只追踪 R4 遗留的 P2-01；不会把分支最新状态或 HEAD 当作被测依据。重点核对缺键时是否确实 fail-closed，以及人工 attach 路径是否明确登记为 not_applicable。\n\nS1-R5 限定复验回执\n\n被测 commit： bfb779715eb9b81032cb1610e630abe48decac95\n\n① P2-01 缺键处置：PASS\n\n自动路径缺少发送锚点： r4_capture_and_validate() 默认 allow_no_anchor=False。没有可用的 sent_user_unit_key 时抛出 OrchestrationError(4)，不会继续登记采集成功。若存在发送记录但记录中没有有效发送键，同样拒绝。\nreview_leg.py L497-L515\n\n自动路径缺少定位键： 发送锚点存在但采集结果没有 located_user_unit_key/user_unit_key 时，明确抛出 OrchestrationError(4)。\nreview_leg.py L523-L547\n\n人工 attach 路径： 只有确认本腿没有发送记录时，才允许 allow_no_anchor=True，并写入明确状态串 not_applicable_no_leg_send_anchor (manual attach path)；有发送记录但缺发送键时仍拒绝。实际 attach_reply() 路径调用该逻辑。\nreview_leg.py L1112-L1143\n\n取值域： 成功写账时，自动路径两键齐全则记录比较布尔值；人工无发送锚点则记录显式状态串；其他缺键分支抛错，不会成功写入 None。\n\ntest_16b： 已覆盖自动路径无发送锚点拒绝，以及人工路径放行并断言账本状态串。\ntest_review_leg.py L823-L841\n\n补充测试边界：test_16b直接覆盖的是“无发送锚点”反例，没有单独构造“有发送锚点、缺定位键”的测试数据；但对应生产代码分支有明确的 OrchestrationError(4) 防线，静态核验通过。\n\n② resume 重读原现场及恢复链：PASS\n\n_resume_register() 从账本 R4_REPLY_CAPTURED.source_dir 读取原采集现场；仅当原目录不存在时才回退 run_dir。回退后若缺少交叉核验所需定位键，仍会触发 fail-closed，不会把缺证据当作成功。\nreview_leg.py L1071-L1087\n\n测试文件共有 23 个测试方法；恢复链相关用例包括：\n\ntest_08c：采集失败后原会话补采、核对发送键、完成登记，断言零重发；\n\ntest_09：部分登记后 resume，只补缺项；\n\ntest_09b：message 成功、report 失败后 resume，只补 report。\n\n这些用例覆盖了恢复链关键路径。测试文件及申报记录报告 23/23 PASS；本轮通过 GitHub 源码审阅核验用例存在和断言内容，未独立执行测试进程，因此不把申报的运行结果表述为本轮亲自复跑结果。\n\n③ 范围复核：PASS\n\n以申报基线 50ab1cf53994ff8257332ddce4bf441053c194bd 对比被测 SHA，GitHub compare 返回：\n\n文件\n\n\t\n\n增加\n\n\t\n\n删除\n\n\n\n\nphase1/tools/review_leg.py\n\n\t\n\n32\n\n\t\n\n9\n\n\n\n\nphase1/tools/test_review_leg.py\n\n\t\n\n20\n\n\t\n\n0\n\n共 1 个 commit、恰好 2 个文件，与申报 numstat 一致。没有越界文件。\n\n注意：若直接从 R4 被测 SHA 0fed73a... 比较，会额外看到后续回填材料变更；按 R5 申报的正式基线 50ab1cf... 比较，验收 diff 才是上述两个文件。\n\n最终裁定\nPASS\n\nP2-01：关闭\n\n项目\n\n\t\n\n结论\n\n\n\n\n① 缺键 fail-closed / attach 显式状态\n\n\t\n\nPASS\n\n\n\n\n② resume 原现场重读 / 恢复链回归\n\n\t\n\nPASS\n\n\n\n\n③ 两文件范围\n\n\t\n\nPASS\n\n\n\n\nP2-01\n\n\t\n\n关闭\n\n\n\n\n新问题编号\n\n\t\n\n无\n\n总结论：PASS。 R4 唯一遗留的 P2-01 已满足本轮限定复验要求；此前已关闭问题不在本轮重新展开。测试执行状态按上述证据边界保留，不冒称本轮独立复跑。",
+      "text_sha256": "d2a9c58a9d2ed338320048b5bae062b2bdbd19149de5175779c12c34cc6e519e",
+      "size_bytes": 3617,
+      "assistant_uuid": "57991268-7ce7-4d0a-9f29-35ec0932e61d"
+    }
+  ]
+}

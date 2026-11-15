@@ -1,0 +1,14 @@
+[
+  {
+    "key": "fallback-turn-5:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[验收复验|b-20261115-standard-kickoff|S2|只复核问题3~6]\n请读 github.com/damwate/AIEO@main 4"
+  },
+  {
+    "key": "fallback-turn-5:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n三、问题3：状态漂移校正\n\nREJECT 主体整改完成，但 PHASE-STATUS 仍残留一处相互矛盾的旧状态。\n\n逐项核验：\n\n要求\n"
+  }
+]

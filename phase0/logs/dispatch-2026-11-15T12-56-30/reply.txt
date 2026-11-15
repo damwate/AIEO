@@ -1,0 +1,101 @@
+ChatGPT 说：
+S2-Gate1R2 限定复验回执
+
+复验范围：仅 G1-03、G1-06。 Gate1 已通过的四项不重审；历史问题5/6维持 REJECT；Gate2 深度项不纳入本轮。
+
+问题
+
+	
+
+复核内容
+
+	
+
+结论
+
+	
+
+核验依据
+
+
+
+
+G1-03
+
+	
+
+engine 白名单移除任务级 BLOCKED 推进权限
+
+	
+
+PASS
+
+	
+
+v0.5 §6 engine 白名单仅保留 GIT_VALIDATE/PASS/REWORK，禁止项明确写入“推进 M1 任务至 BLOCKED 态”，并注明任务级 BLOCKED 仅 OWNER 决定。
+
+
+
+
+G1-03
+
+	
+
+§4、§5、§7 两种 BLOCKED 语义对齐
+
+	
+
+PASS
+
+	
+
+§4 明确审查腿故障只记腿级 BLOCKED，M1 任务状态不变；§5 明确区分腿级 BLOCKED 与 M1 task.status=BLOCKED；§7 A6 前置条件明确为腿级 BLOCKED、M1 保持 CODE_REVIEW。与授权底线一致。
+
+
+
+
+G1-06
+
+	
+
+正确基线、单 commit 绑定
+
+	
+
+PASS
+
+	
+
+GitHub 比较 bbb420a... → be281f0... 返回 ahead_by=1、behind_by=0、total_commits=1。
+
+
+
+
+G1-06
+
+	
+
+文件范围及 numstat
+
+	
+
+PASS
+
+	
+
+比较结果仅 docs/phase1/GPT03-REVIEW-LEG-CHARTER-DRAFT.md 一个文件，新增 3 行、删除 2 行，与申报一致。
+
+核验说明
+
+已读取 R2 请求文件及被测草案 v0.5 正文。
+
+G1-03 的两种 BLOCKED 语义及 engine 权限边界已在正文中落实，没有发现原冲突残留。
+
+G1-06 的 commit 数量和文件变更统计由本轮 GitHub 比较独立核对；请求文件所载 C1 工具机器核验 PASS 与比较结果一致。本轮未在本地重新运行 C1 工具。
+
+总结论
+PASS
+
+G1-03、G1-06 均通过，本轮新增问题编号：无。
+
+Gate1 两项遗留整改关闭。此前 Gate1 四项 PASS 继承，不重审；历史问题5/6仍保留原 REJECT 结论；白名单端点精化、A5 字段及回滚分支继续留待 Gate2，不作本轮验收判断。

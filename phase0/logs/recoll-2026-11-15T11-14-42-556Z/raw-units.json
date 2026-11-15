@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-15T11:15:36.613Z",
+  "user_unit_key": "fallback-turn-1:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-1:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "c2f27c78-2ac8-48d5-92a6-1bf14a1d33d0",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-1:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "e47f072034c00dfe0fbeec5b1c307c5f6364dd6911e4856d972144ef547517bd",
+          "0f77d25719b1ee06ac481f57de71b41e482c96d76b3693bc8ac4a053c917f3a4"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "e47f072034c00dfe0fbeec5b1c307c5f6364dd6911e4856d972144ef547517bd",
+          "0f77d25719b1ee06ac481f57de71b41e482c96d76b3693bc8ac4a053c917f3a4"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-1:0:user",
+      "fallback-turn-1:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-1:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nStandard 开发规划 R2 复核回执\n仍需修改\n\nS1 · b-20261115-standard-kickoff\n\n被测版本： e9d74ef6d056c2366152d9d802f564e5c13d88c7\n\n被测文件： standard/development-plan.md v0.2\n\n复核基准： R1 回执 e9aa9e78631359eebc097775c8ec625932a88669826b1d6d2027a47604a5fde6\n\n已读取 v0.2 全文，并检查 M2 独立文件及 Standard README 的资产归属。\n\n总体判断：R1 的四项修改和 H1～H12 基本全部落实。没有发现方向性错误，也没有发现授权边界被突破。剩余两处需要精确化，均为局部修改，不需要重新讨论规划架构。\n\n① 两轨区分与 A→C0→B 顺序\n通过\n\n逐项核对：\n\n检查项\n\n\t\n\n结果\n\n\t\n\n依据\n\n\n\n\nT1 工作流与治理体系\n\n\t\n\n落实\n\n\t\n\n§二\n\n\n\n\nT2 平台产品路线\n\n\t\n\n落实\n\n\t\n\n§二\n\n\n\n\nM2 与 F-001 职责区分\n\n\t\n\n落实\n\n\t\n\n§二明确两者不能相互替代\n\n\n\n\nA→C0→B 顺序\n\n\t\n\n落实\n\n\t\n\n§三、§四\n\n\n\n\nC0 仅立项准备\n\n\t\n\n落实\n\n\t\n\n§三明确不等于开工授权\n\n\n\n\nC1 开工用户拍板\n\n\t\n\n落实\n\n\t\n\n§三阶段 C1、§四\n\n关键检查：\n\nC0 已经明确为：\n\n编制 F-001 任务书草案。\n\n明确范围、架构选择、验收标准。\n\n提交用户确认需求原文。\n\n不代表 F-001 开工授权。\n\nC1 则明确为用户确认需求原文并拍板后开工。\n\n这个区分正确。\n\n另外，§四明确 C0 不必等待 C1 工具完成，解决了原来平台路线被治理工具建设拖延的问题。\n\n裁定：完全接受。\n\n② M2 独立文件与 WORKFLOW 集成\n仍需修改\n已落实的部分\n\n检查项\n\n\t\n\n结果\n\n\n\n\nM2 不全文并入 WORKFLOW\n\n\t\n\n落实\n\n\n\n\n保留独立治理文件\n\n\t\n\n落实\n\n\n\n\nWORKFLOW 仅吸收入口与原则\n\n\t\n\n落实\n\n\n\n\nM1 默认、M2 受控、M3 暂不纳入\n\n\t\n\n落实\n\n\n\n\nM2 生效必须用户拍板\n\n\t\n\n落实\n\n\n\n\n保留详细隔离、派单、冲突治理规则\n\n\t\n\n落实\n\n尚有一处具体缺口\n\n我实际检查了同一 commit 的：\n\nstandard/parallel-governance-draft.md\n\n该文件当前标题仍然是：\n\n多任务并行治理规则草案（M2 受控试运行）\n\n文件正文仍以用户裁定的移交草案身份存在，尚未具备明确版本号。\n\n而 development-plan §三阶段 A 的要求是：\n\n从纯草案调整为有版本号的独立规范候选文件。\n\n规划方向正确，但没有把这个要求进一步固化为可验收的文件元数据要求。\n\n建议增加一条 A 阶段验收条件：\n\n文件有明确版本号，例如 v0.1。\n\n文件状态明确为「规范候选／待用户批准」。\n\n明确标注未经用户批准不生效。\n\n版本记录注明本次从 Basic 讨论草案转为 Standard 规范候选。\n\n注意：不要求现在就让 M2 生效。\n\n另外，当前 commit 中 standard/WORKFLOW.md 尚不存在，这符合阶段 A 尚待实施的状态，不构成缺陷。\n\n③ C1 工具落位、10 场景矩阵及四项工程要求\n仍需修改\n3.1 工具落位\n通过\n\n以下要求均已写入：\n\ntoolkit/ 公共工具层。\n\nBasic/Standard 作为调用方。\n\n不 import Standard 运行时模块。\n\nPython 标准库。\n\n只读 Git 仓库。\n\n不修改工作区、分支和提交。\n\n不完整输入 fail-closed。\n\n符合 R1 要求。\n\n3.2 测试矩阵\n10 个场景全部落实\n\n序号\n\n\t\n\n测试场景\n\n\t\n\n结果\n\n\n\n\n1\n\n\t\n\n单 commit，parent=基线\n\n\t\n\nPASS\n\n\n\n\n2\n\n\t\n\n多 commit，完整线性链\n\n\t\n\nPASS\n\n\n\n\n3\n\n\t\n\n多 commit，parent 断链\n\n\t\n\nFAIL\n\n\n\n\n4\n\n\t\n\n含 merge commit\n\n\t\n\nFAIL\n\n\n\n\n5\n\n\t\n\n区间数量不一致\n\n\t\n\nFAIL\n\n\n\n\n6\n\n\t\n\n申报 SHA 非最终验收 commit\n\n\t\n\nFAIL\n\n\n\n\n7\n\n\t\n\n合法回填声明\n\n\t\n\nPASS\n\n\n\n\n8\n\n\t\n\n回填声明缺失或不完整\n\n\t\n\nFAIL\n\n\n\n\n9\n\n\t\n\n基线或目标 commit 不存在\n\n\t\n\nFAIL\n\n\n\n\n10\n\n\t\n\n空区间或对象范围不确定\n\n\t\n\n拒绝／不适用\n\n前九项预期明确。\n\n第十项还存在一个小问题：\n\n明确拒绝或提示不适用。\n\n这两种结果的机器判定语义并不完全相同。\n\n建议修改为：\n\n明确返回 BLOCKED 或 FAIL。\n\n不允许返回 PASS。\n\n输出具体无法核验的原因。\n\n不适用时必须明确标注不适用，不能静默跳过。\n\n这样 B1 才能真正做到自动化判定。\n\n3.3 四项工程要求\n全部落实\n\n工程要求\n\n\t\n\n结果\n\n\n\n\n逐条 parent 核验\n\n\t\n\n落实\n\n\n\n\nPASS/FAIL/BLOCKED 三态\n\n\t\n\n落实\n\n\n\n\n具体错误原因断言\n\n\t\n\n落实\n\n\n\n\n错误输入及异常不污染仓库\n\n\t\n\n落实\n\n3.4 B1～B5 验收标准\n\n五项均已明确：\n\nB1：矩阵全场景覆盖。\n\nB2：负例逐项断言。\n\nB3：真实仓库实战。\n\nB4：可复现性。\n\nB5：异常与安全边界。\n\n特别认可 B3 的这一约束：\n\n工具实战 PASS 不自动将 Basic 的 BC-06 改为 PASS。\n\n这保留了 Basic 原有 DoD 签核纪律。\n\n④ A1～A4、I1～I7 与 H1～H12\n通过\n4.1 A1～A4\n\n标准\n\n\t\n\n核对结果\n\n\t\n\n评价\n\n\n\n\nA1 六模块及差异条款映射表\n\n\t\n\n落实\n\n\t\n\n明确来源和落位文件\n\n\n\n\nA2 决议与红线清单\n\n\t\n\n落实\n\n\t\n\nDEC-010、011、017、026、037、044、045、049～052\n\n\n\n\nA3 四状态机制\n\n\t\n\n落实\n\n\t\n\n草案→复审通过→用户批准→生效\n\n\n\n\nA4 兼容性检查\n\n\t\n\n落实\n\n\t\n\nBasic 独立、历史日志、契约及资产映射\n\n这里有一个重要区别：\n\nA1～A4 当前是阶段 A 的验收标准，并不代表实际的 WORKFLOW 文件已经编制完成。\n\n规划对此没有混淆，符合要求。\n\n4.2 I1～I7\n七项全部落实\n\n编号\n\n\t\n\n内容\n\n\t\n\n结果\n\n\n\n\nI1\n\n\t\n\n需求边界\n\n\t\n\n落实\n\n\n\n\nI2\n\n\t\n\n架构边界\n\n\t\n\n落实\n\n\n\n\nI3\n\n\t\n\n状态与流程\n\n\t\n\n落实\n\n\n\n\nI4\n\n\t\n\n异常处理\n\n\t\n\n落实\n\n\n\n\nI5\n\n\t\n\n安全与审计\n\n\t\n\n落实\n\n\n\n\nI6\n\n\t\n\n验收与回滚\n\n\t\n\n落实\n\n\n\n\nI7\n\n\t\n\n复审及用户授权\n\n\t\n\n落实\n\n特别检查了命名：\n\n原 R1 中 C1～C7 的立项完整性要求，现已改为 I1～I7，与设计输入中的 C1～C8 工具化能力候选区分。\n\n这个修改正确。\n\n另外，I7 明确用户拍板开工，且增加了防止 F-001 长期建设范围整体进入一期的约束。\n\n这两点都很重要。\n\n4.3 H1～H12\n12 项全部落实\n\n编号\n\n\t\n\n核对内容\n\n\t\n\n结果\n\n\n\n\nH1\n\n\t\n\nDEC-010 高危操作红线\n\n\t\n\n落实\n\n\n\n\nH2\n\n\t\n\nDEC-011 冻结契约\n\n\t\n\n落实\n\n\n\n\nH3\n\n\t\n\nDEC-017 扩展场景门禁\n\n\t\n\n落实\n\n\n\n\nH4\n\n\t\n\nBasic 独立性\n\n\t\n\n落实\n\n\n\n\nH5\n\n\t\n\nM2 生效用户批准\n\n\t\n\n落实\n\n\n\n\nH6\n\n\t\n\nWORKFLOW 生效用户批准\n\n\t\n\n落实\n\n\n\n\nH7\n\n\t\n\nF-001 开工用户拍板\n\n\t\n\n落实\n\n\n\n\nH8\n\n\t\n\n设计输入不自动转任务\n\n\t\n\n落实\n\n\n\n\nH9\n\n\t\n\n节点独立验收\n\n\t\n\n落实\n\n\n\n\nH10\n\n\t\n\ndecision-log 登记\n\n\t\n\n落实\n\n\n\n\nH11\n\n\t\n\nBLOCKED 状态语义\n\n\t\n\n落实\n\n\n\n\nH12\n\n\t\n\nC1 工具范围红线\n\n\t\n\n落实\n\n没有发现漏项。\n\n⑤ 最终复核裁定\n主体规划符合 R1\n12/12\n\nH 硬约束落实\n\n7/7\n\nI 立项完整性落实\n\n10/10\n\nC1 测试场景已覆盖\n\n4/4\n\nA 阶段标准已写入\n\n四项复核状态\n\n项目\n\n\t\n\n裁定\n\n\n\n\n① 两轨及顺序\n\n\t\n\n通过\n\n\n\n\n② M2 独立规范\n\n\t\n\n仍需修改\n\n\n\n\n③ C1 工具及矩阵\n\n\t\n\n仍需修改\n\n\n\n\n④ 验收标准及硬约束\n\n\t\n\n通过\n\n只需两项局部修改\n\nM2： 增加独立规范候选文件的明确版本号、状态及版本记录验收要求。\n\nC1： 第十个测试场景明确 BLOCKED/FAIL 的机器判定规则，禁止 PASS。\n\n不要求：\n\n重做两轨划分。\n\n调整 A→C0→B 顺序。\n\n重新讨论 M2 是否独立。\n\n增加新的阶段。\n\n扩大 C1 工具开发范围。\n\n改动 H1～H12。\n\n关于冻结 steps.md\n\n我的意见：完成上述两处文字修订后，即可冻结 steps.md，不需要再进行一轮完整规划复审。\n\n冻结时应保留以下边界：\n\n阶段 A、C0、B 按已批准的节点授权推进。\n\nWORKFLOW 正式生效仍需用户拍板。\n\nM2 正式生效仍需用户拍板。\n\nF-001 实际开工仍需用户确认需求原文并拍板。\n\nDEC-010 红线不动。\n\n最终三态：仍需修改（两处局部修改清单如上）。没有不同意项。",
+      "text_sha256": "0f77d25719b1ee06ac481f57de71b41e482c96d76b3693bc8ac4a053c917f3a4",
+      "size_bytes": 7872,
+      "assistant_uuid": "c2f27c78-2ac8-48d5-92a6-1bf14a1d33d0"
+    }
+  ]
+}

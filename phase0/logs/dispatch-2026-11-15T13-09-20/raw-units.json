@@ -1,0 +1,108 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-15T13:11:19.664Z",
+  "user_unit_key": "fallback-turn-5:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-5:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "2252f352-d2c4-4d46-8c2e-fea04a87205d",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-5:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "6d520745aa0862accb815a2e5f0c7f7fe66e4cd125efc41d5fc2bb5dd86661d8",
+          "fbd3f0ee3f18b94907d90d614978b1250922a7322d25b0b7141a82149830f70e",
+          "4a5f3b51543811f8096812bb0945801c0c2fd402279e5bf414ed8f6b48d8b59c",
+          "a5dacf759f560f8af4cb1ad7fe3bc8b1fbd314439f6bc4be6340e781902218ef"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "6d520745aa0862accb815a2e5f0c7f7fe66e4cd125efc41d5fc2bb5dd86661d8",
+          "fbd3f0ee3f18b94907d90d614978b1250922a7322d25b0b7141a82149830f70e",
+          "4a5f3b51543811f8096812bb0945801c0c2fd402279e5bf414ed8f6b48d8b59c",
+          "a5dacf759f560f8af4cb1ad7fe3bc8b1fbd314439f6bc4be6340e781902218ef"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-5:0:user",
+      "fallback-turn-5:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-4:0:user",
+          "fallback-turn-4:2:assistant",
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-5:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n[立项复评回执｜b-20261115-standard-kickoff｜S2-Gate2R2]\n暂不能定稿认可｜复评受阻\n\n指定被测提交： 674607159625adffd10b9a481243b63169e46824\n\n本轮尝试按指定 SHA 读取：\n\ndocs/phase1/GPT03-REVIEW-LEG-CHARTER-DRAFT.md\n\nGitHub 返回 404：No commit found for the ref。随后以 Gate2 上轮基线 f93ff2a7f1e00b9f5f0e460bcb0c197bcbdd2bcf 对该 SHA 执行 compare，也返回 404。\n\n另读取了仓库默认分支上的同名文件，但其仍是旧版草案，不能替代指定的 v0.6 被测对象。因此不能把默认分支内容当作 v0.6 的验收材料。\n\n五项逐项复核\n\n项目\n\n\t\n\n复评结论\n\n\t\n\n原因\n\n\n\n\n① 标题版本统一 v0.6（F-G2-01）\n\n\t\n\n未核验\n\n\t\n\n无法读取指定提交，不能确认标题、文档身份、版本记录是否统一\n\n\n\n\n② 附录B端点定稿表\n\n\t\n\n未核验\n\n\t\n\n无法核对8端点、9字段列、ACK移出及 events 事件白名单\n\n\n\n\n③ 附录C A5恢复证据\n\n\t\n\n未核验\n\n\t\n\n无法核对8字段组、三断点快照和四项证据规则\n\n\n\n\n④ 附录D恢复与回滚\n\n\t\n\n未核验\n\n\t\n\n无法核对11行恢复矩阵、回滚接管规则及A7-A10\n\n\n\n\n⑤ 附录E登记权威关系\n\n\t\n\n未核验\n\n\t\n\n无法核对 review report、artifacts、messages 的权威关系及关联约束\n\n提交绑定核验\n\n用户申报\n\n\t\n\n本轮独立核验\n\n\n\n\n被测 SHA\n\n\t\n\n失败：404\n\n\n\n\n单 commit\n\n\t\n\n未核验\n\n\n\n\n基线前置关系\n\n\t\n\n未核验\n\n\n\n\nC1 工具 PASS\n\n\t\n\n未独立运行\n\n\n\n\nnumstat 58-3\n\n\t\n\n未核验\n\n总结论\n\n仍需修订/补充复评材料，暂不出具定稿认可，也不进入 Gate3。\n\n当前没有证据证明五项设计存在缺陷；同样没有证据证明五项已经关闭。这里是材料绑定失败导致无法裁定，不是对设计内容作 REJECT 判定。\n\n请先确认并提供一个 GitHub 可读取的完整提交 SHA（或可访问的固定分支引用）。拿到正确被测版本后，我会严格按上述五项逐项复核，不重开 Gate1，也不扩大评审范围。\n\n授权边界不变： Gate2 复评不授权代码开发；Gate3 仍由用户确认需求原文并拍板开工。",
+      "text_sha256": "a5dacf759f560f8af4cb1ad7fe3bc8b1fbd314439f6bc4be6340e781902218ef",
+      "size_bytes": 2139,
+      "assistant_uuid": "2252f352-d2c4-4d46-8c2e-fea04a87205d"
+    }
+  ]
+}

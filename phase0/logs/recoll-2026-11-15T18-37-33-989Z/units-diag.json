@@ -1,0 +1,14 @@
+[
+  {
+    "key": "fallback-turn-3:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【S2复验R3|b-20261115-gpt03-review-leg】对S2-R2五新问题按会商乙方案限定复验。\n仓库github.com/damwate/A"
+  },
+  {
+    "key": "fallback-turn-3:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\n已先锁定本轮审查锚点：main 当前提交解析为 030c947ac7c4fd7c2e5af9c252185924e8046dfc，不是使"
+  }
+]

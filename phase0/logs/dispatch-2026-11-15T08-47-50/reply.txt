@@ -1,0 +1,338 @@
+ChatGPT 说：
+R3 独立复验
+暂定 REJECT：发现 1 项待核实差异
+
+复验对象
+
+仓库：damwate/AIEO
+
+复验请求：e65caab2ba07f8c245b7518ba7c6f67158213c34
+
+实际被测整改版本：2e6ad7112ce1590f03d107699b82de6d58b18f1a
+
+复验依据：review-request-r3.md、basic/WORKFLOW.md v0.3、DEC-049/050。
+
+本轮严格遵守 R3 限定：只复核 P1-1、P1-2，不重新审查已关闭的问题3。
+
+P1-1：11 条 SHA256 独立复算
+
+我逐一从指定 commit 读取了 11 个文件，独立计算 UTF-8 文件内容的 SHA256。
+
+10/11 匹配
+
+序号
+
+	
+
+文件
+
+	
+
+结果
+
+
+
+
+1
+
+	
+
+check-env-1st.txt
+
+	
+
+PASS
+
+
+
+
+2
+
+	
+
+check-env-2nd.txt
+
+	
+
+PASS
+
+
+
+
+3
+
+	
+
+taskpack-activation.txt
+
+	
+
+PASS
+
+
+
+
+4
+
+	
+
+taskpack-lessons-recoll.txt
+
+	
+
+PASS
+
+
+
+
+5
+
+	
+
+taskpack-standard-design-input.txt
+
+	
+
+PASS
+
+
+
+
+6
+
+	
+
+check-push-diag.txt
+
+	
+
+PASS
+
+
+
+
+7
+
+	
+
+clone-log.txt
+
+	
+
+PASS
+
+
+
+
+8
+
+	
+
+fsck-exec.txt
+
+	
+
+PASS
+
+
+
+
+9
+
+	
+
+npm-ci-exec.txt
+
+	
+
+PASS
+
+
+
+
+10
+
+	
+
+check-push-before-after.txt
+
+	
+
+PASS
+
+
+
+
+11
+
+	
+
+replication-report.md
+
+	
+
+HASH MISMATCH
+
+特别确认：npm-ci-exec.txt 的实际 SHA256 与 R3 指定值完全一致：
+
+cadf2eeef945788518536b4a08cce4504977c9f03372e843d3f8c9388aa91004
+
+但是第 11 条目前不能关闭，不能因为其他十条通过就判定整个 MANIFEST 通过。
+
+差异根因已经定位
+
+这不是计算方式或 CRLF/LF 的歧义。
+
+进一步交叉核对发现：
+
+fd8106a9...e386f6 正好是旧报告在 commit 5950512 中的 SHA256。
+
+整改 commit 2e6ad71 修改了 replication-report.md 正文。
+
+但 MANIFEST 没有同步更新该文件的 SHA256。
+
+当前报告实际 SHA256：
+
+943dd0c9d869c12b23cf91168dc3023eae88bf193d241d1a2c2356f0b6d76625
+
+因此，根因是报告修改后，证据清单没有重新生成或同步更新。
+
+P1-2：通过
+PASS
+
+核对结果：
+
+位置
+
+	
+
+核验结果
+
+
+
+
+第五表
+
+	
+
+已改为「零副作用证据部分可证」
+
+
+
+
+第三节
+
+	
+
+已注明「零副作用部分可证，执行时点快照未留存」
+
+
+
+
+第四节
+
+	
+
+继续披露历史前后快照未落盘
+
+
+
+
+一致性
+
+	
+
+通过
+
+没有发现无条件宣称零副作用的问题。
+
+最终裁定
+REJECT
+
+验收项
+
+	
+
+R3 结论
+
+
+
+
+P1-1
+
+	
+
+REJECT，1 条 SHA256 不匹配
+
+
+
+
+P1-2
+
+	
+
+PASS，表述整改完成
+
+
+
+
+问题3
+
+	
+
+按先例关闭，不重审
+
+
+
+
+S1 整体验收
+
+	
+
+REJECT
+
+最小整改要求
+
+只需修复一个条目：
+
+在 acceptance/ls-MANIFEST.txt 中，将 replication-report.md 的 SHA256 更新为：
+
+纯文本
+943dd0c9d869c12b23cf91168dc3023eae88bf193d241d1a2c2356f0b6d76625
+
+随后重新计算全部 11 条，确保清单与最终仓库内容一致，再提交新 commit 申请复验。
+
+不要求重做演练，不要求修改报告内容，也不重开问题3。
+
+R3 正式回执
+
+以下为计算 SHA256 的完整回执原文（UTF-8、LF 换行、不含末尾换行）：
+
+纯文本
+
+R3独立复验回执
+任务：b-20261115-basic-replication-verify
+请求版本：e65caab2ba07f8c245b7518ba7c6f67158213c34
+被测整改版本：2e6ad7112ce1590f03d107699b82de6d58b18f1a
+依据：basic/WORKFLOW.md v0.3；docs/phase1/decision-log.md DEC-049/050。
+范围：仅复核 R2 遗留 P1-1、P1-2；问题3按 R3 请求及既有先例不重复审查。
+
+结论表
+| 项目 | 结论 | 独立核验结果 |
+| P1-1 MANIFEST SHA256 | REJECT | 11条中10条匹配；replication-report.md 不匹配。MANIFEST登记 fd8106a93811c3aca59cbce81149ced85e800b019cefa6e9f801221433e386f6，当前被测文件实际 SHA256=943dd0c9d869c12b23cf91168dc3023eae88bf193d241d1a2c2356f0b6d76625。登记值恰为 59505121c5b69b9aec8a38fa4bf8dcc1d539089a 版本旧报告的 SHA256；2e6ad711 已修改报告正文但未同步更新 MANIFEST。
+| P1-2 “零副作用”表述 | PASS | 第五表改为“零副作用证据部分可证”；第三节同步为“零副作用部分可证，执行时点快照未留存”；第四节继续披露执行时点前后快照未落盘。表述一致，无无条件结论。
+
+总体裁定：REJECT。
+理由：P1-1 仍未关闭，当前 MANIFEST 未准确绑定 11 个文件的最终内容。P1-2 关闭。问题3不在本轮复验范围，不重开。
+最小整改：将 MANIFEST 中 replication-report.md 的 SHA256 更新为 943dd0c9d869c12b23cf91168dc3023eae88bf193d241d1a2c2356f0b6d76625；提交后对 11 条重新全量复算，并以新 commit 请求复验。
+
+
+Reply SHA256
+
+REJECT
+
+745e690c17696c5897fefe3e88a862dd62ec8bf8a9f1944c5f61ff6ae1a9e207
+
+复制 SHA256
+
+本轮接棒完成。 后续收到修复 commit 后，应直接从 R3 遗留的 P1-1 开始复验，不需要重新讨论规划、问题3或已经通过的 P1-2。

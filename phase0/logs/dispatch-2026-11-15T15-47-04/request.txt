@@ -1,0 +1,7 @@
+【S1复验R5|b-20261115-gpt03-review-leg】对S1-R4唯一残留P2-01做限定复验。
+仓库github.com/damwate/AIEO main，锚点按SHA读：
+A 待验收=bfb779715eb9b81032cb1610e630abe48decac95（相对R4被测0fed73ad4f9ee69db9364febb09825f257211a1e的diff恰2文件：review_leg.py +32/-9、test_review_leg.py +20/0）
+B 申报=最新回填：读basic/tasks/b-20261115-gpt03-review-leg/acceptance/review-request-s1-r5.md与steps.md返工表问题10行
+C 依据=charter v1.0附录B-E/C④。
+复验点：①P2-01关闭核验：缺键fail-closed（自动路径无发送锚点/定位键缺失=OrchestrationError(4)，None绝不视为已完成）+attach人工路径显式登记not_applicable（取值域=布尔或显式状态串，无None）+test_16b反例（自动路径拒/attach放行）②resume重读源=R4.source_dir原现场不引入新缺陷（23用例含恢复链回归）③范围复核（2文件零越界）。
+回执：①-③逐项+P2-01判定（关闭/未关闭）+总结论（PASS/REJECT+新问题编号）。

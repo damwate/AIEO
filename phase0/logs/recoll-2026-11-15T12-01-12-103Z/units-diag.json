@@ -1,0 +1,14 @@
+[
+  {
+    "key": "fallback-turn-5:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[验收复验|b-20261115-standard-kickoff|S2-R3|只复核问题3/5/6残留]\n请读 github.com/damwate/AIEO"
+  },
+  {
+    "key": "fallback-turn-5:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\n已核实本轮绑定：56235f0 相对基线 4095981 恰好领先 1 个 commit，变更仅涉及申报的两个文件，增删统计与请求一致："
+  }
+]

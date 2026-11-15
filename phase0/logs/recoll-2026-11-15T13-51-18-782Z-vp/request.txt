@@ -1,0 +1,3 @@
+[交付确认复验|b-20261115-standard-kickoff|S4-R3|两步闭环]
+请读 github.com/damwate/AIEO@main 35252581533537ead4e45a3a0afe9973e142a6f6 三材料——basic/tasks/b-20261115-standard-kickoff/steps.md(S4⑥已登记你R2回执与两步路径/返工表问题9行三方关联/delivery第3项已改DEC-057一致)与 decision-log DEC-057——你R2回执(efc31d79…f00)指明"修复后再把复验结论回填⑥,不能预填PASS"——自指闭环按此两步:本轮请核S4-02修复(第3项)/问题9三方关联/其余六查,若唯一遗留=⑥回填自指,请给条件PASS(回填⑥PASS+检查器Overall:PASS输出后生效,回填commit声明不属验收diff范围)。
+回执:六查逐项+S4-02/04+总结论(条件PASS/REJECT+清单)。

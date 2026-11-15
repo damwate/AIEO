@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-15T12:02:05.938Z",
+  "user_unit_key": "fallback-turn-5:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-5:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "994dc3e0-c02d-4ed5-b9db-2f77a9495a1c",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-5:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "a9acf2c77076b97ae48771673311a52e376239edcb3a3d841c78be64042d8ae4",
+          "f74d3f5886af46dd74c0e9c6704d710a3a0704fcf5e8b1c11713a207494ebb14"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "a9acf2c77076b97ae48771673311a52e376239edcb3a3d841c78be64042d8ae4",
+          "f74d3f5886af46dd74c0e9c6704d710a3a0704fcf5e8b1c11713a207494ebb14"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-5:0:user",
+      "fallback-turn-5:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-5:0:user",
+          "fallback-turn-5:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-5:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n已核实本轮绑定：56235f0 相对基线 4095981 恰好领先 1 个 commit，变更仅涉及申报的两个文件，增删统计与请求一致：\n\n文件\n\n\t\n\n新增\n\n\t\n\n删除\n\n\n\n\ndocs/PHASE-STATUS.md\n\n\t\n\n2\n\n\t\n\n1\n\n\n\n\ndocs/phase1/GPT03-REVIEW-LEG-CHARTER-DRAFT.md\n\n\t\n\n22\n\n\t\n\n18\n\n因此本轮可以按限定范围复验；问题4及此前已通过项不纳入重审。\n\n限定复验结果\n\n问题3：PASS P1-01 已关闭\n\nPHASE-STATUS.md 文件头已更新为 v0.10，明确 F-001 中央调度最小版已落地，平台下一项为 GPT-02~05 逐角色真实腿接入，首项立项准备为 GPT-03 草案待评审与用户确认。\n\n与 §0 的真实状态一致；原 v0.9 文件头残留被明确标注为未同步旧信息。\n\n版本记录新增 v0.10 修正记录。\n\n结论：本轮整改有效，问题3关闭。\n\n问题5：REJECT P1-03 尚未关闭\n\n本轮已有实质改进：\n\n三类凭据已区分 OWNER 人类会话、本机服务身份、外部执行端凭据。\n\nengine 已明确为 C7 §8.6 独立本机服务身份，不得伪装浏览器用户。\n\n四主体表增加了身份类型、操作白名单和禁止操作列。\n\n§8.7 审计要求已落入文档，包括登录失败、敏感操作及 engine 身份标识。\n\n但仍有一个关键缺口：engine 的 M1 权限白名单还没有细化到可核验的具体接口。\n\n目前仍使用：\n\n“M1 只读查询（GET 类）”；\n\n“仅 §4 合法出边事件”；\n\n“artifacts+messages 幂等登记”；\n\n“经 M2 工具链发起审查派单”。\n\n这些描述限定了操作类别，却没有列出具体允许调用的 M1 endpoint、HTTP method 及对应操作范围。“GET 类”也不能直接等同于明确的最小权限白名单。此外，执行腿身份栏只对 M3 明确标注 MCP stdio 服务身份，M2/M4/test_worker 的服务身份映射仍不够具体。\n\n结论：凭据分类和主体边界整改通过，但 C7 §8.6 的权限白名单仍不可直接据此配置和审计，问题5不关闭。\n\n问题6：REJECT P1-04 尚未关闭\n\n逐项复核：\n\n检查项\n\n\t\n\n结果\n\n\t\n\n复核意见\n\n\n\n\n§4 状态路径\n\n\t\n\nPASS\n\n\t\n\n对照 app/platform/state_machine.py，DEV_REPORTED→GIT_VALIDATING→CODE_REVIEW，以及 CODE_REVIEW 的 PASS→TEST_ACCEPTANCE、REWORK→REWORK、BLOCKED→BLOCKED 均有对应合法事件出边。\n\n\n\n\nA1 状态预期\n\n\t\n\nPASS\n\n\t\n\n正常路径已逐步列明状态和事件，不再把状态映射留待以后确定。\n\n\n\n\nA3 故障注入\n\n\t\n\nPASS\n\n\t\n\n已指定采集层注入点、预期错误 INBOUND_WINDOW_COMPLETENESS_UNPROVEN 和双重禁重发证明。现有 inbound_reply.mjs 确有该错误分支：观察到虚拟化且没有独立逻辑序列时 fail-closed。\n\n\n\n\nA4 幂等重放\n\n\t\n\nPASS\n\n\t\n\n已定义 <run 键>+review-round-1，并要求重放登记请求原文、检查 M1 重复登记和外部派单副作用。\n\n\n\n\nA5 重启恢复\n\n\t\n\nPARTIAL\n\n\t\n\n已区分“已发送未采集”和“已采集未登记”，但证据要求只有断点快照及 M1 状态/登记对比，没有明确要求保留并核验派单账本、会话标识或发送计数，难以独立证明第一类恢复没有重新派单。\n\n\n\n\nA6 人工退路\n\n\t\n\nREJECT\n\n\t\n\n“审查腿 BLOCKED”与“从 CODE_REVIEW→结论”的人工登记预期存在状态冲突，见下文。\n\n\n\n\n回滚\n\n\t\n\nPARTIAL\n\n\t\n\n不再假设非法状态回退，方向正确；但仅列 DEV_REPORTED/GIT_VALIDATING/CODE_REVIEW，没有处理 §5 中可能已经登记为 BLOCKED 的情况。\n\nA6 是本项的实质阻塞点。\n\nstate_machine.py 中，BLOCKED 状态没有继续推进到 CODE_REVIEW 或审查结论的合法出边，只有 OWNER 的 CANCEL 操作。与此同时，§5 将补采失败、平台执行腿故障等情况定义为登记 BLOCKED。\n\n因此，A6 把“审查腿 BLOCKED”作为人工退路的触发条件，却要求人工按 CODE_REVIEW→结论推进；如果这里的 BLOCKED 指 M1 任务状态，该路径不合法。如果它指审查腿内部故障状态，则文档尚未明确区分两种 BLOCKED，也没有说明此时 M1 任务状态如何保持为 CODE_REVIEW。\n\n此外，A5 的恢复证据还需补上可核验的发送账本或会话级证据，才能证明恢复时确实没有重新派单。\n\n结论：状态路径和多数矩阵项已明显改善，但人工退路与 M1 状态机仍不闭合，问题6不关闭。\n\n总结论\nREJECT\n\n本轮问题\n\n\t\n\n结论\n\n\t\n\n问题编号\n\n\n\n\n问题3：PHASE-STATUS 文件头同步\n\n\t\n\nPASS，关闭\n\n\t\n\nP1-01\n\n\n\n\n问题5：C7 凭据与四主体授权边界\n\n\t\n\nREJECT，未关闭\n\n\t\n\nP1-03\n\n\n\n\n问题6：状态路径与验收矩阵\n\n\t\n\nREJECT，未关闭\n\n\t\n\nP1-04\n\n剩余问题编号：P1-03、P1-04。\n\n本轮没有重审问题4，也没有撤销 R1/R2 已通过项。绑定范围核验通过；本次验收对象仍然只是立项准备文档，不包含代码实现。\n\n授权边界不变： GPT-03 草案仍待会务评审、用户确认需求原文及用户拍板开工；本次复验不构成代码开发、合并或发布授权（H7）。",
+      "text_sha256": "f74d3f5886af46dd74c0e9c6704d710a3a0704fcf5e8b1c11713a207494ebb14",
+      "size_bytes": 5039,
+      "assistant_uuid": "994dc3e0-c02d-4ed5-b9db-2f77a9495a1c"
+    }
+  ]
+}

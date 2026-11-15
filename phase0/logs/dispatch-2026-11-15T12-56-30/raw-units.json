@@ -1,0 +1,108 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-15T12:58:50.509Z",
+  "user_unit_key": "fallback-turn-3:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-3:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "37709f53-2c94-46b3-8ebb-f50034f369af",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-3:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "dd17496a49dbcbb73d0a01e4513db8ae2a05542b8c7bfbae4d6b805aa6b624cf",
+          "dd1866336b88bdfa825b94f3dc5e3c70baaa02a741f01bcc61ba8df11743b349",
+          "aa15739835a75593a40ef6b4cae35f3e5256264d31b5c7b6b4a04ef647840c39",
+          "76000828115f892e3242033dd3aa22d33b56e13ea7116e426df11a8dd7620c41"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "dd17496a49dbcbb73d0a01e4513db8ae2a05542b8c7bfbae4d6b805aa6b624cf",
+          "dd1866336b88bdfa825b94f3dc5e3c70baaa02a741f01bcc61ba8df11743b349",
+          "aa15739835a75593a40ef6b4cae35f3e5256264d31b5c7b6b4a04ef647840c39",
+          "76000828115f892e3242033dd3aa22d33b56e13ea7116e426df11a8dd7620c41"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-3:0:user",
+      "fallback-turn-3:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-3:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nS2-Gate1R2 限定复验回执\n\n复验范围：仅 G1-03、G1-06。 Gate1 已通过的四项不重审；历史问题5/6维持 REJECT；Gate2 深度项不纳入本轮。\n\n问题\n\n\t\n\n复核内容\n\n\t\n\n结论\n\n\t\n\n核验依据\n\n\n\n\nG1-03\n\n\t\n\nengine 白名单移除任务级 BLOCKED 推进权限\n\n\t\n\nPASS\n\n\t\n\nv0.5 §6 engine 白名单仅保留 GIT_VALIDATE/PASS/REWORK，禁止项明确写入“推进 M1 任务至 BLOCKED 态”，并注明任务级 BLOCKED 仅 OWNER 决定。\n\n\n\n\nG1-03\n\n\t\n\n§4、§5、§7 两种 BLOCKED 语义对齐\n\n\t\n\nPASS\n\n\t\n\n§4 明确审查腿故障只记腿级 BLOCKED，M1 任务状态不变；§5 明确区分腿级 BLOCKED 与 M1 task.status=BLOCKED；§7 A6 前置条件明确为腿级 BLOCKED、M1 保持 CODE_REVIEW。与授权底线一致。\n\n\n\n\nG1-06\n\n\t\n\n正确基线、单 commit 绑定\n\n\t\n\nPASS\n\n\t\n\nGitHub 比较 bbb420a... → be281f0... 返回 ahead_by=1、behind_by=0、total_commits=1。\n\n\n\n\nG1-06\n\n\t\n\n文件范围及 numstat\n\n\t\n\nPASS\n\n\t\n\n比较结果仅 docs/phase1/GPT03-REVIEW-LEG-CHARTER-DRAFT.md 一个文件，新增 3 行、删除 2 行，与申报一致。\n\n核验说明\n\n已读取 R2 请求文件及被测草案 v0.5 正文。\n\nG1-03 的两种 BLOCKED 语义及 engine 权限边界已在正文中落实，没有发现原冲突残留。\n\nG1-06 的 commit 数量和文件变更统计由本轮 GitHub 比较独立核对；请求文件所载 C1 工具机器核验 PASS 与比较结果一致。本轮未在本地重新运行 C1 工具。\n\n总结论\nPASS\n\nG1-03、G1-06 均通过，本轮新增问题编号：无。\n\nGate1 两项遗留整改关闭。此前 Gate1 四项 PASS 继承，不重审；历史问题5/6仍保留原 REJECT 结论；白名单端点精化、A5 字段及回滚分支继续留待 Gate2，不作本轮验收判断。",
+      "text_sha256": "76000828115f892e3242033dd3aa22d33b56e13ea7116e426df11a8dd7620c41",
+      "size_bytes": 1787,
+      "assistant_uuid": "37709f53-2c94-46b3-8ebb-f50034f369af"
+    }
+  ]
+}

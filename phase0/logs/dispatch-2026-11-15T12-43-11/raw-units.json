@@ -1,0 +1,108 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-15T12:45:14.274Z",
+  "user_unit_key": "fallback-turn-1:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-1:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "1463525d-da78-40c4-ba54-af60a10085b0",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-1:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "070ac24c3fff34e2137037fe9cb292ae458a4e3a3d4bcd4a0ef8c111e1eb8c97",
+          "865db50acb5fc05def09b6d38a438247aa28cc1f25bec27a8ded6810b9ade5a0",
+          "360f078b117afe1210b01c725b1b5d081675f12c71927d1d724b7171797880c4",
+          "796160adec85d5ce440000b604ad8a90aecf991c0b4ab474b0397e9e90aa9aa1"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "070ac24c3fff34e2137037fe9cb292ae458a4e3a3d4bcd4a0ef8c111e1eb8c97",
+          "865db50acb5fc05def09b6d38a438247aa28cc1f25bec27a8ded6810b9ade5a0",
+          "360f078b117afe1210b01c725b1b5d081675f12c71927d1d724b7171797880c4",
+          "796160adec85d5ce440000b604ad8a90aecf991c0b4ab474b0397e9e90aa9aa1"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-1:0:user",
+      "fallback-turn-1:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-1:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nS3-R3 限定复验回执\n问题2 PASS\n\n被测 commit： c351d49ed6d29e354c0636237863c041987fad83\n\n一、问题2复验\nPASS — 整改成立\n\n独立读取指定 commit 的 toolkit/test-check-binding.py，核对两处修改：\n\n测试用例\n\n\t\n\n新增断言\n\n\t\n\n结果\n\n\n\n\ntest_10a\n\n\t\n\nassertIn(\"区间 commit 数==0\", detail)\n\n\t\n\nPASS\n\n\n\n\ntest_10b\n\n\t\n\nassertIn(\"区间 commit 数==0\", detail)\n\n\t\n\nPASS\n\n同时确认：\n\n两处均保留原有退出码 2 断言。\n\n两处均保留 BLOCKED 判定断言。\n\n两处均保留 R7 规则 ID 断言。\n\ntest_10b 原有「不适用」说明断言仍然存在。\n\n新增断言直接检查 R7 的具体原因，不是仅检查模糊关键词。\n\n绑定范围核对：\n\n项目\n\n\t\n\nGitHub 实际结果\n\n\n\n\n基线\n\n\t\n\n59db01e...\n\n\n\n\n提交数\n\n\t\n\n1\n\n\n\n\n修改文件\n\n\t\n\n1\n\n\n\n\n新增行数\n\n\t\n\n2\n\n\n\n\n删除行数\n\n\t\n\n0\n\n与申报一致。\n\n问题2：关闭。\n\n二、总结论\nPASS\nS3-R3 验收通过\n\n问题2：PASS，整改完成。\n\nS3-R2 遗留的唯一问题已关闭。此前问题1保持已关闭状态，不重新审查。\n\nBC-06 状态不变。\n\n说明：18/18 测试通过为本次申报提供的执行记录，本轮独立完成了指定源码及 Git diff 核验，但未在本地独立重跑测试。\n\n最终裁定：PASS（问题2关闭，S3-R3 复验通过）。",
+      "text_sha256": "796160adec85d5ce440000b604ad8a90aecf991c0b4ab474b0397e9e90aa9aa1",
+      "size_bytes": 1325,
+      "assistant_uuid": "1463525d-da78-40c4-ba54-af60a10085b0"
+    }
+  ]
+}

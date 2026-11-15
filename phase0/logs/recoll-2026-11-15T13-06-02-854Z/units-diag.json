@@ -1,0 +1,14 @@
+[
+  {
+    "key": "fallback-turn-4:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[立项评审|b-20261115-standard-kickoff|S2-Gate2|深度项精化]\nGate1已PASS(问题5/6关闭确认,历史REJECT保"
+  },
+  {
+    "key": "fallback-turn-4:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n[立项评审回执｜b-20261115-standard-kickoff｜S2-Gate2]\n\n评审基线： f93ff2a7f1e00b9f"
+  }
+]

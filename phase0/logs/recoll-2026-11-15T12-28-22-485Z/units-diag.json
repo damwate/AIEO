@@ -1,0 +1,14 @@
+[
+  {
+    "key": "fallback-turn-5:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[验收|b-20261115-standard-kickoff|S3]\n请读 github.com/damwate/AIEO@main 52acd0f6fc64"
+  },
+  {
+    "key": "fallback-turn-5:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\n已核对验收请求、S3步骤记录、被测 commit 093cd832… 的提交信息及核心源码。绑定申报为单 commit，基线是 a665"
+  }
+]

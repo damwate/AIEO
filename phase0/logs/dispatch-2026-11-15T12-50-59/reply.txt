@@ -1,0 +1,139 @@
+ChatGPT 说：
+S2-Gate1 草案级降档验证回执
+
+当前核验发现一项绑定异常： 请求申报被测为 e1474b3 相对 beafe77 的单 commit，但 GitHub 比较结果显示 ahead_by=2、total_commits=2，且差异包含多个验收回填脚本、任务交付文件及其他文件，不符合“单 commit 申报”的表面口径。以下继续核对草案正文及六项内容；该绑定差异会纳入最终结论，不会擅自把额外差异归入草案正文。
+
+六项验收
+
+#
+
+	
+
+验收项
+
+	
+
+结论
+
+	
+
+核验意见
+
+
+
+
+1
+
+	
+
+I1-I7 完整性
+
+	
+
+PASS
+
+	
+
+§1-§8 对应 I1-I7，需求、架构、状态、异常、安全审计、验收回滚、授权红线均有明确承载；责任边界和草案身份清楚。
+
+
+
+
+2
+
+	
+
+防膨胀
+
+	
+
+PASS
+
+	
+
+§1 明确目标与非目标，§4 限定单任务单轮，§9 列出 GPT-02/04/05、多轮重审、多任务、契约修改等排除项。附录 A 明确属于 Gate 2 输入，不构成一期承诺。
+
+
+
+
+3
+
+	
+
+授权链闭合
+
+	
+
+REJECT
+
+	
+
+OWNER、engine、执行腿、人工执行者四主体及凭据边界已列明；但 engine 白名单仍包含 BLOCKED 状态推进，而 A6 底线又规定 M1 task.status=BLOCKED 仅由 OWNER 决定。两处授权边界未闭合：必须明确 engine 的 BLOCKED 仅限腿级记录，不能代替 OWNER 推进 M1 任务状态。
+
+
+
+
+4
+
+	
+
+状态路径合法出边
+
+	
+
+PASS
+
+	
+
+对照 app/platform/state_machine.py：DEV_REPORTED→GIT_VALIDATING、GIT_VALIDATING→CODE_REVIEW、CODE_REVIEW→TEST_ACCEPTANCE/REWORK/BLOCKED 均有合法出边；M1 BLOCKED 无继续推进审查结论的出边。草案已区分腿级 BLOCKED 与 M1 任务级 BLOCKED。第3项所述是授权主体冲突，不是状态机不存在该出边。
+
+
+
+
+5
+
+	
+
+矩阵场景齐备
+
+	
+
+PASS
+
+	
+
+A1-A6 六种场景齐备，均具备前置条件、动作、预期、失败判定和证据要求；A6 已写明腿级 BLOCKED 时 M1 保持 CODE_REVIEW，符合本轮草案级底线。
+
+
+
+
+6
+
+	
+
+已过项继承
+
+	
+
+REJECT
+
+	
+
+历史已过项按要求继承，不重开问题5/6；但本轮 ST-01 绑定申报存在独立异常：beafe77... 至 e1474b3... 的 GitHub 比较结果为 2 commits，而请求申报为单 commit。草案文件确实由 v0.3 更新到 v0.4（docs/phase1/GPT03-REVIEW-LEG-CHARTER-DRAFT.md，+17/-3），但不能据此确认单 commit 绑定成立。
+
+问题编号与处置
+
+G1-03（新增）—授权边界冲突： engine 的 BLOCKED 状态推进权限与“任务级 BLOCKED 仅 OWNER 决定”的底线冲突。需要明确 engine 不得擅自将 M1 任务推进到 BLOCKED，或明确该事件的 OWNER 授权条件。
+
+G1-06（新增）—ST-01 单 commit 绑定不符： 实际比较为 2 commits，不符合单 commit 申报。需澄清正确基线或重新提交准确绑定材料。
+
+历史问题5/6： 按用户指令保持历史 REJECT，不重开、不计入本轮新增问题；白名单端点精化、A5 字段、回滚分支精化继续留在 Gate 2。
+
+总结论
+REJECT
+
+S2-Gate1 草案级降档验证未通过，问题编号：G1-03、G1-06。
+
+本轮六项中，I1-I7 完整性、防膨胀、状态路径合法性、矩阵场景齐备四项通过。未通过项分别是授权链闭合和单 commit 绑定。问题5/6历史结论保留，不因本轮降档验证而改判。
+
+边界声明： 本轮没有重审 Gate 2 深度项，也没有把历史问题5/6重新纳入整改；未在本地独立运行绑定工具，commit 数量结论来自 GitHub 比较结果。

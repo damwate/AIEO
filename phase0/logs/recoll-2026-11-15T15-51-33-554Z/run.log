@@ -1,0 +1,7 @@
+[2026-11-15T15:51:34.297Z] 会话锁已获取（补采 gpt03-S1R5）
+[2026-11-15T15:51:34.488Z] 页面就位: https://chatgpt.com/c/6af9c5f3-4d00-83ec-8750-d6eef8219152
+[2026-11-15T15:51:42.511Z] 静置门通过（units=2）；滚动到底+额外静置 30000ms
+[2026-11-15T15:52:22.564Z] 物化 unit 共 2 个（诊断落盘 units-diag.json）
+[2026-11-15T15:52:22.564Z] 本轮 user 定位成功: fallback-turn-4:0:user（简报标记唯一且为最后一个 user；发送双验报告键=fallback-turn-1:0:user 供对照）
+[2026-11-15T15:52:23.112Z] recoll FAILED: INBOUND_WINDOW_COMPLETENESS_UNPROVEN: BLOCKED: 滚动中实际观察到渲染 unit 集合变化，且缺少独立逻辑序列，不能排除持续遗漏中间 unit
+[2026-11-15T15:52:23.229Z] 会话锁已释放（补采 gpt03-S1R5）

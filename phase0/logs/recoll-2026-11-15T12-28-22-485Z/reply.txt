@@ -1,0 +1,439 @@
+ChatGPT 说：
+
+已核对验收请求、S3步骤记录、被测 commit 093cd832… 的提交信息及核心源码。绑定申报为单 commit，基线是 a665d2cf…；请求要求核验的范围是工具、16项测试、三条真实申报实战证据及六查，不涉及自动修改 BC-06。
+
+静态审查已发现一个需要重点验证的风险点： check-binding.py 对 R4 的 git rev-list <target>..HEAD 调用没有检查非零退出码；如果该命令失败，当前实现会把后代列表当成空列表，继而可能给出 R4 PASS。这与“git 异常必须 BLOCKED、不得降级为 PASS”的安全承诺存在冲突。是否构成最终验收问题，还需结合可复跑测试和其余证据核实。
+
+S3 独立验收回执
+REJECT
+
+C1 申报绑定自动核验工具
+
+被测 commit： 093cd832eb1f9e0bd5f89ed8c5aa4f77fd8082d3
+
+基线： a665d2cf3ed7a01c683bb2ba68b102248d2957ad
+
+绑定核验： PASS 单 commit、parent 与基线一致、区间数为 1。
+
+范围核对： GitHub compare 确认恰好 1 个 commit、6 个文件，新增 3 个 JSON 实战记录、修改 README、新增两个 Python 文件；没有超出申报范围。
+
+参考：被测 commit、S3 验收请求。
+
+一、验收六查
+
+#
+
+	
+
+检查项
+
+	
+
+判定
+
+	
+
+依据
+
+
+
+
+①
+
+	
+
+是否符合 S3 目标
+
+	
+
+PARTIAL
+
+	
+
+工具、测试矩阵、实战材料均已交付；但 fail-closed 存在缺陷
+
+
+
+
+②
+
+	
+
+是否符合规划阶段 B 设计
+
+	
+
+PARTIAL
+
+	
+
+R1-R7、三态判定、线性链检查均已实现；Git 异常处理不完全符合要求
+
+
+
+
+③
+
+	
+
+修改是否超范围
+
+	
+
+PASS
+
+	
+
+6 个文件均在申报范围内，均为新增或指定 README 修改
+
+
+
+
+④
+
+	
+
+代码质量
+
+	
+
+REJECT
+
+	
+
+R4 和 numstat 两处 Git 命令错误未被正确处理，可能错误输出 PASS
+
+
+
+
+⑤
+
+	
+
+测试是否真实执行
+
+	
+
+BLOCKED
+
+	
+
+当前独立验收环境无法解析 github.com，未能成功 clone 并执行指定命令
+
+
+
+
+⑥
+
+	
+
+证据是否可核查
+
+	
+
+PASS
+
+	
+
+GitHub commit、compare、源码、测试代码及四份 JSON 均可读取
+
+关于第⑤项： 我尝试执行 python -I toolkit/test-check-binding.py，但在获取仓库时遇到 DNS 解析失败。因此不会把任务记录中声称的 16/16 通过冒充成本次独立复跑结果。
+
+二、B1-B5 逐项判定
+
+项目
+
+	
+
+判定
+
+	
+
+复核意见
+
+
+
+
+B1 矩阵全场景
+
+	
+
+PASS（静态）
+
+	
+
+16 个测试方法覆盖十场景；第10场景含普通空区间、标注不适用、目标非基线后代三种情况
+
+
+
+
+B2 负例指名断言
+
+	
+
+REJECT
+
+	
+
+有规则与原因断言，但未完整断言被拦截 commit
+
+
+
+
+B3 真实实战
+
+	
+
+PASS
+
+	
+
+三条历史申报及本次自核验记录齐全，numstat 与机器对照值一致
+
+
+
+
+B4 可复现
+
+	
+
+PASS（静态）
+
+	
+
+测试代码两次运行并比较完整 JSON；本次未能独立执行
+
+
+
+
+B5 异常与安全
+
+	
+
+REJECT
+
+	
+
+初始仓库探针异常有测试，但后续 Git 命令异常存在 fail-open 缺陷
+
+B1：矩阵全场景
+
+静态核对测试文件，覆盖：
+
+正例：单 commit、线性多 commit、回填声明。
+
+负例：断链、merge、数量不符、过期 target、空白回填声明、对象不存在。
+
+BLOCKED：空区间、标注不适用仍 BLOCKED、target 非 baseline 后代。
+
+附加：确定性、非法 SHA、坏仓库、只读快照。
+
+十场景的设计覆盖基本成立。
+
+B2：负例指名断言
+
+不完全满足验收标准。
+
+具体缺口：
+
+test_03_broken_chain_fail 检查 R2 和 parent 错误，但没有断言返回的 commits 中包含实际被测 SHA。
+
+test_04_merge_commit_fail 检查 R3、merge 描述和修复提示，但没有断言具体 merge commit SHA。
+
+test_06_stale_target_without_note、test_09_missing_object_fail 虽然工具输出包含目标 SHA，但测试没有对其进行断言。
+
+test_10a/b/c 没有完整断言 R7 规则 ID，主要检查最终 BLOCKED 和部分描述。
+
+这与请求中的“每负例断言规则 ID＋具体原因＋commit”不完全一致。不能仅凭工具输出字段存在，就认定测试已经验证了这些字段。
+
+B3：真实实战
+PASS
+
+四份记录的核对情况：
+
+证据
+
+	
+
+结果
+
+	
+
+numstat 对照
+
+
+
+
+S1
+
+	
+
+PASS
+
+	
+
+11/1、62/0、13/3
+
+
+
+
+S2 首轮
+
+	
+
+PASS
+
+	
+
+64/0
+
+
+
+
+S2-R3
+
+	
+
+PASS
+
+	
+
+2/1、22/18
+
+
+
+
+S3 自核验
+
+	
+
+PASS
+
+	
+
+6 个文件的机器值与 compare 一致
+
+有一处需要说明：s3-self-binding.json 不在被测 commit 093cd832 中，而是在后续验收请求 commit 52acd0f6 中归档。这是合理的回填安排：自核验结果不可能作为被测 commit 自身的内容参与自己的 SHA 绑定；该 JSON 的 numstat 也正确排除了自身。
+
+B3 的边界声明也如实说明了工具不能验证的事项：
+
+不能核对申报文本原文与调用参数是否一致；
+
+不能验证回填 commit 内容是否真的符合申报声明。
+
+这属于明确的能力边界，不据此额外判错。
+
+B4：可复现
+
+测试代码采用同一仓库、同一输入，连续运行两次，并比较返回码及完整 JSON：
+
+self.assertEqual(d1, d2)
+
+测试设计符合确定性要求。但由于本次环境无法获取仓库，独立实跑结果仍未取得。
+
+B5：异常与安全
+REJECT
+
+存在一个实质性缺陷，详见下面的问题1。
+
+此外，test_b5c_readonly_no_mutation 的快照只比较 .git 文件清单和文件大小，没有比较文件内容哈希。因此它是只读性的基础检查，不是完整的文件内容不变性证明。
+
+三、问题清单
+问题1：R4 和 numstat 的 Git 命令失败可能被错误放行
+阻断验收
+
+文件：toolkit/check-binding.py
+
+R4 当前实现：
+
+Python
+运行
+rc, out, _ = try_git(repo, "rev-list", f"{ns.target}..HEAD")
+descendants = out.splitlines() if rc == 0 and out else []
+
+这里没有处理 rc != 0。
+
+当 Git 命令失败时，descendants 被赋为空列表，随后可能执行：
+
+Python
+运行
+rules.append(Rule("R4", "PASS", "待验收 commit 无后代（=当前 HEAD），为最终申报对象"))
+
+也就是说：
+
+实际上没有成功核验最终性；
+
+工具却可能报告 R4 PASS；
+
+最终聚合 verdict 也可能成为 PASS。
+
+同样的问题还出现在：
+
+Python
+运行
+rc, out, _ = try_git(repo, "diff", "--numstat", ...)
+if rc == 0 and out:
+    numstat = ...
+
+numstat 获取失败时，工具静默返回空数组，仍可能保留 PASS。
+
+违反的要求：
+
+B5：Git 异常必须 BLOCKED。
+
+工具自身声明的 fail-closed 安全边界。
+
+WORKFLOW 对无法核验不得视为 PASS 的约束。
+
+整改要求：
+
+R4 命令非零退出必须明确输出 BLOCKED，不能生成 R4 PASS。
+
+numstat 命令失败也必须进入 BLOCKED，不能静默返回空证据。
+
+增加故障注入测试：仓库探针和对象存在检查成功后，分别使 R4、numstat 命令失败，验证最终 verdict 为 BLOCKED、退出码为 2。
+
+正常情况下的 R4 PASS 和 numstat 输出仍须保持原行为。
+
+问题2：B2 测试没有完整验证负例中的 commit 身份
+需整改
+
+负例测试虽能命中部分规则和原因，但没有完整断言规则输出中的 commit SHA。
+
+整改要求：
+
+对 R2 断链、R3 merge、R4 过期 target、R6 对象不存在等有具体对象的负例，断言 commits 包含预期 SHA。
+
+对 R1 数量不匹配等不对应单个具体 commit 的情况，明确验收其数量差异字段，不强行虚构对象。
+
+对 R7 空区间，断言规则 ID、BLOCKED 原因和退出码。
+
+确保每个负例都验证具体拦截规则，而不是仅检查最终退出码。
+
+四、最终结论
+
+S3 独立验收
+
+REJECT
+
+问题1： Git 命令失败时存在错误 PASS 风险，违反 fail-closed。
+
+问题2： B2 负例未完整断言 commit 身份，验收标准未完全落实。
+
+已通过部分： 绑定申报、修改范围、B1 静态覆盖、B3 实战证据、B4 测试设计。
+
+未独立复核： 本次 16 用例实际执行结果。
+
+验收范围边界：
+
+不修改工作区，不提交代码。
+
+不自动修改 BC-06 状态。
+
+不把 S3 REJECT 扩大为 S2 的新问题。
+
+不影响 S2 当前按用户决议挂起的状态。
+
+本次只针对 S3 C1 交付，不代表 S4 已获通过。
+
+建议下一步： 修复问题1和问题2后，提交最终整改 commit，并提供新的绑定申报及测试执行记录，再按这两个问题限定范围复验。

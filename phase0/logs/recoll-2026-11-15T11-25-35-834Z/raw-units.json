@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-15T11:26:29.048Z",
+  "user_unit_key": "fallback-turn-2:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-2:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "96a35567-4726-4ace-8255-9f2a418f50a4",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-2:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "a803ef86a9713d3e312c060f80b30deaf1d54416e1c20424e99cf995e893a784",
+          "4c5e700a88d688eed1d46c1feb0fbb48e136e3d8b2f0f238fea42f3e9a3ceabb"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "a803ef86a9713d3e312c060f80b30deaf1d54416e1c20424e99cf995e893a784",
+          "4c5e700a88d688eed1d46c1feb0fbb48e136e3d8b2f0f238fea42f3e9a3ceabb"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-2:0:user",
+      "fallback-turn-2:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-2:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nS1 独立验收回执｜b-20261115-standard-kickoff\n\nREJECT 结论：REJECT，2 项需修正。\n\n验收对象：a5d0afdc8712cc38fa70663f239cb74d8d6fec0d\n验收基线：965491411b53102b62c08f5c5a0a6e22091ab11a\n\n已读取 S1 验收请求，并直接读取待验收 commit 的三份交付文件及规划、Basic 工作流、资产映射和决策记录。\n\n一、验收六查\n\n六查项\n\n\t\n\n结论\n\n\t\n\n核查结果\n\n\n\n\n① 是否符合 S1 目标\n\n\t\n\nPASS\n\n\t\n\n三件产出齐全：WORKFLOW 主规范草案、M2 独立规范候选、PHASE-STATUS 快照。\n\n\n\n\n② 是否符合规划 v0.2 阶段 A\n\n\t\n\nPASS\n\n\t\n\n以 Basic 六模块为基座，补充 Standard 差异规则和 M2 入口；没有提前实施 S2/S3。\n\n\n\n\n③ 修改是否超范围\n\n\t\n\nPASS\n\n\t\n\n实际 diff 恰好 3 个文件，均为文档，没有代码或契约文件变更。\n\n\n\n\n④ 文档质量与内部一致性\n\n\t\n\nPASS（有问题待修）\n\n\t\n\n三份文件状态和授权边界基本一致；未发现 WORKFLOW/M2 被误标为生效。但 A2 决议映射不完整，绑定申报的行数统计也有误。\n\n\n\n\n⑤ A1-A5 逐项对照\n\n\t\n\nREJECT\n\n\t\n\nA1、A3、A4、A5 通过；A2 未完整通过。详见下表。\n\n\n\n\n⑥ 证据可核查\n\n\t\n\nPASS（有问题待修）\n\n\t\n\nGitHub 可直读指定 commit；比较基线与目标 commit 得到 ahead_by=1、total_commits=1、merge-base 等于基线，且实际文件清单为 3 个。申报的部分逐文件增删行数与 GitHub 结果不符。\n\n二、绑定申报核验\n单 commit / 3 文件已核实\n\n核验内容\n\n\t\n\n结果\n\n\n\n\n待验收 commit\n\n\t\n\na5d0afdc…d8fec0d，存在且可读取\n\n\n\n\n基线\n\n\t\n\n965491411b53102b62c08f5c5a0a6e22091ab11a\n\n\n\n\n基线至目标 commit\n\n\t\n\n1 个 commit\n\n\n\n\nmerge-base\n\n\t\n\n等于申报基线\n\n\n\n\n实际 diff 文件数\n\n\t\n\n3 个\n\n\n\n\n代码/契约修改\n\n\t\n\n未发现\n\n问题 P1-01：绑定申报逐文件增删行数不准确。\n\n验收请求申报的统计是：\n\nstandard/WORKFLOW.md：新增 62 行\n\nstandard/parallel-governance-draft.md：+16 -4\n\ndocs/PHASE-STATUS.md：+12 -1\n\nGitHub compare 实际返回：\n\n文件\n\n\t\n\n实际新增\n\n\t\n\n实际删除\n\n\n\n\nstandard/WORKFLOW.md\n\n\t\n\n62\n\n\t\n\n0\n\n\n\n\nstandard/parallel-governance-draft.md\n\n\t\n\n13\n\n\t\n\n3\n\n\n\n\ndocs/PHASE-STATUS.md\n\n\t\n\n11\n\n\t\n\n1\n\n文件数量正确，但后两项行数申报不正确。该问题不改变实际 diff 只有三份文档的事实，也不影响 parent/区间数量核验；但绑定申报必须与机器结果一致，不能以文件数正确代替逐文件统计正确。\n\n三、A1-A5 逐项判定\n\n项目\n\n\t\n\n结论\n\n\t\n\n核查说明\n\n\n\n\nA1 六模块、并行入口、版本定档及映射\n\n\t\n\nPASS\n\n\t\n\nWORKFLOW 版本头明确继承 Basic 六模块；§1 有 S1-S5 定档；§3 有 M1/M2/M3 入口和未生效禁绕过规则；附录 A 的 D1-D12 给出差异条款、来源和落位。\n\n\n\n\nA2 决议红线核对\n\n\t\n\nFAIL\n\n\t\n\nDEC-010/011/017/026/037/044/045 均能找到对应条款或来源；DEC-049~052 未形成完整、逐项可审计的核对映射。DEC-049 在 §5 有局部引用，DEC-052 在 D9 有明确引用；DEC-050、DEC-051 缺少明确的决议核对落位。\n\n\n\n\nA3 四状态机制\n\n\t\n\nPASS\n\n\t\n\nWORKFLOW 状态头明确“草案→复审通过→用户批准→生效”，当前为草案；M2 文件也明确候选、待批准和未经批准不生效。\n\n\n\n\nA4 Basic 兼容与资产纪律\n\n\t\n\nPASS\n\n\t\n\ndiff 只有 standard/ 与 docs/ 下三份文档；Basic 文件未改，未引入 Basic→Standard 运行时依赖；没有移动历史日志或修改冻结契约；standard/README.md 资产映射未改。\n\n\n\n\nA5 M2 规范候选元数据\n\n\t\n\nPASS\n\n\t\n\nM2 文件明确 v0.1、规范候选／待用户批准、未经批准不生效；版本记录说明由 Basic 期草案转为 Standard 规范候选，并保留沿革。\n\nA2 的具体缺口\n\n规划 v0.2 要求 DEC-049~052 逐项核对，所涉及的决议分别对应节点状态、设计输入、DoD 和 M2 移交。\n\n当前文件虽然有部分相关引用，但没有完成四项决议的逐条核对和落位说明。尤其：\n\nDEC-049：有局部引用，但未明确核对其节点状态边界。\n\nDEC-050：没有明确列出其设计输入基线及“不构成实施授权”的决议边界。\n\nDEC-051：没有明确列出 Basic DoD 的完成状态及其边界。\n\nDEC-052：有明确移交引用，但未形成与前述决议同口径的核对项。\n\n这不是说现有条款已经违反这些决议，而是A2 要求的可审计核对证据尚未完整交付，因此不能判 PASS。\n\n四、问题清单与复验要求\n\n编号\n\n\t\n\n严重性\n\n\t\n\n问题\n\n\t\n\n修正要求\n\n\n\n\nP1-01\n\n\t\n\nP1\n\n\t\n\n绑定申报中的两份文件增删行数与实际 diff 不一致\n\n\t\n\n按 Git 实际统计修正申报，或附机器核验输出作为准确依据。\n\n\n\n\nP1-02\n\n\t\n\nP1\n\n\t\n\nA2 对 DEC-049~052 缺少完整逐项核对\n\n\t\n\n补齐四项决议的内容、红线检查结果及 WORKFLOW 对应条款/落位；尤其补明 DEC-050、DEC-051。\n\n五、最终裁定与边界\n\n最终结论：REJECT（P1-01、P1-02）。\n\n这是两处局部文档与证据修正，不要求推倒重写三份交付物，也不要求重新讨论 S1 方案。\n\n以下边界继续成立：\n\nstandard/WORKFLOW.md 仍为草案，未生效。\n\nM2 仍为 v0.1 规范候选，未经用户批准不生效。\n\n正式生效均须用户拍板。\n\n本轮没有授权 S2/S3 开工；它们仍未开工。\n\n本次验收 REJECT 不改变已经核实的三文件 diff 范围，也不等于整个 Standard 规划被否定。\n\n修正后只需针对 P1-01、P1-02 提交限定复验，不必重复完整规划复审。\n\n参考： 待验收 commit · 规划 v0.2",
+      "text_sha256": "4c5e700a88d688eed1d46c1feb0fbb48e136e3d8b2f0f238fea42f3e9a3ceabb",
+      "size_bytes": 5623,
+      "assistant_uuid": "96a35567-4726-4ace-8255-9f2a418f50a4"
+    }
+  ]
+}

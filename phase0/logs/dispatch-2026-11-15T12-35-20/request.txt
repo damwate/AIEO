@@ -1,0 +1,6 @@
+[验收复验|b-20261115-standard-kickoff|S3|只复核问题1/问题2]
+请读 github.com/damwate/AIEO@main 59db01e7785b1e28fee64e951d866c7b26c6fffc 的 basic/tasks/b-20261115-standard-kickoff/acceptance/review-request-s3-r2.md——按该请求限定复验(待验收=76f9abfe44e78e1f30078841ebb3fbd05a0f2b8b,单commit,基线3e5ef50…b48,numstat=12-8 check-binding.py+64-2 test-check-binding.py):
+问题1=R4 rev-list与numstat diff非零退出改raise→RX BLOCKED(禁止PASS放行)+注入测试b5d/b5e(失败→BLOCKED退出2无R4 PASS);
+问题2=负例commit身份断言补全(test_03/04/06/08/09 commits+test_10a-c R7 id)+b5c升级内容SHA256。
+测试已复跑18/18 OK退出0(可复跑验证;R1时贵方因DNS未实跑,本次仓库已推送可直读复跑)。已过项不重审,不扩大为S2新问题。
+回执:问题1/问题2逐项结论+总结论PASS/REJECT+问题编号。

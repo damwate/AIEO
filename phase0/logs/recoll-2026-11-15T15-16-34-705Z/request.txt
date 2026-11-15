@@ -1,0 +1,7 @@
+【S1复验R2|b-20261115-gpt03-review-leg】对S1-R1六项整改做限定复验（仅核对关闭）。
+仓库github.com/damwate/AIEO main，锚点按SHA读：
+A 待验收=6cf9147e6f49d2f43ef2e0b37753b3ca5e351402（相对R1被测512f9c5a7142e23678e5d1972050ee5674d605aa的diff恰2文件：review_leg.py +227/-57、test_review_leg.py +93/-38）
+B 申报=010a70b3ddd4c20aa335c047b1f06b8236827a37：读basic/tasks/b-20261115-gpt03-review-leg/acceptance/review-request-s1-r2.md与steps.md返工记录表（问题1-6全链）
+C 依据=charter v1.0定稿附录B-E。
+复验点：①P1-01 409双证核验（响应键指认+账本请求指纹）②P1-02 _ledger_verified逐项只读核实+skip只补缺项③P1-03 COLLECT_FAILED会话证据+resume双锚点④P2-01账本八字段组⑤P2-02 A9服务端注入（客户端零替换）⑥P2-03 A8双场景（test_08a含账本修复恢复段/test_08b矛盾态）⑦整改未引入新缺陷+R1认可项未破坏（19用例回归）⑧范围复核（M1-M4/scheduler.py零修改）。
+回执：①-⑧逐项+六问题逐项（关闭/未关闭）+总结论（PASS/REJECT+新问题编号）。

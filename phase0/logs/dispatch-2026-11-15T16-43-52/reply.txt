@@ -1,0 +1,11 @@
+ChatGPT 说：
+JSON
+{
+  "result": "REWORK",
+  "summary": "代码变更本身满足所附T-P1-018验收标准，但审查材料与本次请求T-P1-023任务编号不一致，无法据此完成T-P1-023有效验收。",
+  "issues": [
+    "P1：验收材料错配。请求任务为T-P1-023，但指定文件basic/tasks/b-20261115-gpt03-review-leg/acceptance/s2-a5-material-t-p1-018.md标题及验收内容均明确属于T-P1-018，缺少T-P1-023对应的验收标准和变更依据，无法确认本次审查范围。",
+    "所附diff中的--version分支位于--help分支之前，输出版本行并以退出码0结束；不会影响无参调用原有参数校验及--help处理逻辑。该部分按T-P1-018标准未发现功能问题。"
+  ],
+  "reviewed_commit": "fda9183dafb77ca15578abb244b3b2d15999fafb"
+}

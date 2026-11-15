@@ -1,0 +1,62 @@
+[
+  {
+    "key": "fallback-turn-0:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【S1独立验收|b-20261115-gpt03-review-leg】独立验收GPT-03审查腿S1（编排+测试）。\n仓库github.com/damwate"
+  },
+  {
+    "key": "fallback-turn-0:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nS1 独立验收回执\n\n任务： b-20261115-gpt03-review-leg\n验收对象： GPT-03 审查腿编排实现与测试\n被测"
+  },
+  {
+    "key": "fallback-turn-1:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【S1复验R2|b-20261115-gpt03-review-leg】对S1-R1六项整改做限定复验（仅核对关闭）。\n仓库github.com/damwate"
+  },
+  {
+    "key": "fallback-turn-1:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nS1 独立验收复验 R2 回执\n\n任务： b-20261115-gpt03-review-leg\n复验对象： S1-R1 六项整改\n被测 "
+  },
+  {
+    "key": "fallback-turn-2:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【S1复验R3|b-20261115-gpt03-review-leg】对S1-R2四组整改做限定复验（无范围扩大）。\n仓库github.com/damwate"
+  },
+  {
+    "key": "fallback-turn-2:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nS1 独立验收复验 R3 回执\n\n被测对象： c081086ee4a98d430632566ca066b565ec4eac83\n\nST-0"
+  },
+  {
+    "key": "fallback-turn-3:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【S1复验R4|b-20261115-gpt03-review-leg】对S1-R3两项整改做限定复验（仍限定两项，无扩大）。\n仓库github.com/dam"
+  },
+  {
+    "key": "fallback-turn-3:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\n④—⑤ 补充核验： 21 项之外，本轮新增 test_16，当前测试文件共 22 个测试方法。test_16 同时覆盖正确前缀放行、错误"
+  },
+  {
+    "key": "fallback-turn-4:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【S1复验R5|b-20261115-gpt03-review-leg】对S1-R4唯一残留P2-01做限定复验。\n仓库github.com/damwate/A"
+  },
+  {
+    "key": "fallback-turn-4:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\n本轮按限定范围复验：被测锚点固定为 bfb779715eb9b81032cb1610e630abe48decac95，只追踪 R4 遗留"
+  }
+]

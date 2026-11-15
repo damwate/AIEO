@@ -1,0 +1,14 @@
+[
+  {
+    "key": "fallback-turn-1:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[规划复核R2|b-20261115-standard-kickoff|S1]\n请读 github.com/damwate/AIEO@main e9d74ef6"
+  },
+  {
+    "key": "fallback-turn-1:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nStandard 开发规划 R2 复核回执\n仍需修改\n\nS1 · b-20261115-standard-kickoff\n\n被测版本： e"
+  }
+]

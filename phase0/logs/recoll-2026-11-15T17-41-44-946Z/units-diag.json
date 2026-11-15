@@ -1,0 +1,14 @@
+[
+  {
+    "key": "fallback-turn-1:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【S2复验R2|b-20261115-gpt03-review-leg】对S2-R1六项整改做限定复验。\n仓库github.com/damwate/AIEO m"
+  },
+  {
+    "key": "fallback-turn-1:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\n复验发现：P1-02（问题12）目前存在关键证据矛盾，不能关闭。\n\n918012 的派单日志 dispatch-2026-11-15T1"
+  }
+]

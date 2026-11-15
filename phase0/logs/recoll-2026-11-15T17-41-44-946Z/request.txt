@@ -1,0 +1,7 @@
+【S2复验R2|b-20261115-gpt03-review-leg】对S2-R1六项整改做限定复验。
+仓库github.com/damwate/AIEO main，锚点按SHA读：
+A 待验收=bfb7797后继3commit至501f3fd（整改代码=2be8b01fc44bf0f41581ca28226404f28d9f464c：review_leg.py +17/-7、test_review_leg.py +254/-2；余=证据归档+申报）
+B 申报=501f3fd：读basic/tasks/b-20261115-gpt03-review-leg/acceptance/review-request-s2-r2.md与steps.md返工表问题11-16行+evidence-s2/MANIFEST.json
+C 依据=charter v1.0 §7/附录C/D。
+复验点：①P1-01 attach回缩（confirmed-send+键缺失即便attach也fail-closed；反例test_16c）②P1-02 A5①真实现场（918012：双验→kill reply未落盘→A8拒→人工核查CDP取证→REPAIR备份→原会话补采→零重发→T-P1-026推进）③P1-03 归档103件（MANIFEST可抽验）④P2-01 长会话现场第4组⑤P2-02 test_17（os._exit后新进程resume同event_id恰1条）⑥P2-03 test_18（采集后os._exit新进程仅补登记）⑦回归26/26+范围零越界。
+回执：①-⑦逐项+六问题逐项（关闭/未关闭）+总结论（PASS/REJECT+新问题编号）。

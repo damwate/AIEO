@@ -1,0 +1,8 @@
+ChatGPT 说：
+JSON
+{
+  "result": "PASS",
+  "summary": "7行新增代码逐行审查通过：--version 输出指定版本行并退出0，无参调用仍保持原exit 2行为，--help独立调用行为不变，且commit仅修改phase1/tools/bundle_gate.mjs。",
+  "issues": [],
+  "reviewed_commit": "fda9183dafb77ca15578abb244b3b2d15999fafb"
+}

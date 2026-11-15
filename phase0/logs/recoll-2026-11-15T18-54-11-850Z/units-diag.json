@@ -1,0 +1,62 @@
+[
+  {
+    "key": "fallback-turn-0:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【代码审查请求·GPT-03】【GPT03-R1|918012|T-P1-026】\n任务T-P1-026 审查commit=fda9183dafb77ca155"
+  },
+  {
+    "key": "fallback-turn-0:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nJSON\n{\n  \"result\": \"PASS\",\n  \"summary\": \"逐行审查通过：--version 在主流程参数解析前输出"
+  },
+  {
+    "key": "fallback-turn-1:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【S2复验R2|b-20261115-gpt03-review-leg】对S2-R1六项整改做限定复验。\n仓库github.com/damwate/AIEO m"
+  },
+  {
+    "key": "fallback-turn-1:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\n复验发现：P1-02（问题12）目前存在关键证据矛盾，不能关闭。\n\n918012 的派单日志 dispatch-2026-11-15T1"
+  },
+  {
+    "key": "fallback-turn-2:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【S2会商|b-20261115-gpt03-review-leg】三方会商（不占返工计数）：A5①现场口径裁定。\n背景：S2-R2复验（reply b6aa3"
+  },
+  {
+    "key": "fallback-turn-2:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nS2会商裁定：选择乙，采用组合证据，不再消耗真实派单\n\n我的裁定是：乙作为主方案，丙作为验收口径上的必要修正；不建议甲。\n\n这不是认定三次"
+  },
+  {
+    "key": "fallback-turn-3:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【S2复验R3|b-20261115-gpt03-review-leg】对S2-R2五新问题按会商乙方案限定复验。\n仓库github.com/damwate/A"
+  },
+  {
+    "key": "fallback-turn-3:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\n已先锁定本轮审查锚点：main 当前提交解析为 030c947ac7c4fd7c2e5af9c252185924e8046dfc，不是使"
+  },
+  {
+    "key": "fallback-turn-4:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【S2复验R4|b-20261115-gpt03-review-leg】对S2-R3四限定项做限定复验。\n仓库github.com/damwate/AIEO m"
+  },
+  {
+    "key": "fallback-turn-4:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\n已锁定本轮 main 锚点为 43f43e3d0a59d1a066da500150a3cde51ce843d1。四件账本材料已全部在该 "
+  }
+]

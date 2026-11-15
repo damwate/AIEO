@@ -1,0 +1,3 @@
+[降档复验|b-20261115-standard-kickoff|S2-Gate1R2|只复核G1-03/G1-06]
+请读 github.com/damwate/AIEO@main b1163ccee70b9845545dc9f07fe0a7d198655237 的 basic/tasks/b-20261115-standard-kickoff/acceptance/review-request-s2-gate1-r2.md——复核两整改:G1-03=charter v0.5@be281f0d9251647a41438cccf0e753facfba69ff(engine白名单移除BLOCKED推进,禁止项增任务级BLOCKED仅OWNER,§4对齐腿级语义);G1-06=重报正确基线bbb420a…(单commit,numstat=3-2,C1工具机器核验PASS)。四项PASS不重审,问题5/6保留,Gate2不重审。
+回执:G1-03/G1-06逐项+总结论PASS/REJECT+问题编号。

@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-15T13:24:41.590Z",
+  "user_unit_key": "fallback-turn-1:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-1:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "7586f79d-9474-4a79-a616-2b0120078493",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-1:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "2611ffc234355e889ca656b32fa62039b2700e7171ff286501a468e9db01116d",
+          "9e8bd5c43fdc1a3af55a0b8a63c5bc7f72c5887ebfb0799403d1e6e52a0504ec"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "2611ffc234355e889ca656b32fa62039b2700e7171ff286501a468e9db01116d",
+          "9e8bd5c43fdc1a3af55a0b8a63c5bc7f72c5887ebfb0799403d1e6e52a0504ec"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-1:0:user",
+      "fallback-turn-1:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-1:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nb-20261115-standard-kickoff｜S2-Gate2R3 复评回执\n\n复验范围： 仅 R2-01、R2-02，不重审 Gate2-R2 已通过的①③⑤及 Gate1。\n\n申报被测对象： 276a3be46579bf3088ed1a51fe9bce5afa445e41\n\n基线： 674607159625adffd10b9a481243b63169e46824\n\n已读取：\n\nreview-request-s2-gate2r3.md\n\n指定被测 commit 的完整 v0.7 任务书。\n\n初步核验结果：\n\n附录 B 已改成明确的 9 列结构，8 个端点保留，ACK 未回入。\n\n附录 D 已明确声明恢复矩阵 12 行、回滚接管规则 7 类。\n\nA7-A10 已增加六要素验收表，不再只是简短描述。\n\n下面继续核对 Handler 实名与实际机器清单的一致性，以及两项整改是否存在内容层面的遗漏。\n\n二、R2-01 复核：附录 B 九列结构\nFAIL｜存在一处授权依据冲突\n1. 结构与端点核对\n\n实际表格为 9 列：\n\n#\n\n\t\n\n字段\n\n\t\n\n结果\n\n\n\n\n1\n\n\t\n\nHTTP Method\n\n\t\n\nPASS\n\n\n\n\n2\n\n\t\n\n完整 Path\n\n\t\n\nPASS\n\n\n\n\n3\n\n\t\n\nHandler\n\n\t\n\nPASS\n\n\n\n\n4\n\n\t\n\n操作对象与作用范围\n\n\t\n\nPASS\n\n\n\n\n5\n\n\t\n\n授权依据\n\n\t\n\n修正\n\n\n\n\n6\n\n\t\n\n允许请求字段/事件值/消息类型\n\n\t\n\nPASS\n\n\n\n\n7\n\n\t\n\n幂等键规则与重复行为\n\n\t\n\nPASS\n\n\n\n\n8\n\n\t\n\n拒绝条件与预期响应\n\n\t\n\nPASS\n\n\n\n\n9\n\n\t\n\n副作用与验收用例\n\n\t\n\nPASS\n\n8 个 Handler 与机器清单逐项核对：\n\nMethod\n\n\t\n\nPath\n\n\t\n\nHandler\n\n\t\n\n结果\n\n\n\n\nGET\n\n\t\n\n/tasks/{task_id}\n\n\t\n\nget_task\n\n\t\n\nPASS\n\n\n\n\nGET\n\n\t\n\n/tasks/{task_id}/dependencies\n\n\t\n\nget_dependencies\n\n\t\n\nPASS\n\n\n\n\nGET\n\n\t\n\n/artifacts/{artifact_id}\n\n\t\n\nget_artifact\n\n\t\n\nPASS\n\n\n\n\nGET\n\n\t\n\n/board\n\n\t\n\nget_board\n\n\t\n\nPASS\n\n\n\n\nPOST\n\n\t\n\n/tasks/{task_id}/events\n\n\t\n\nsubmit_event\n\n\t\n\nPASS\n\n\n\n\nPOST\n\n\t\n\n/artifacts\n\n\t\n\nregister_artifact\n\n\t\n\nPASS\n\n\n\n\nPOST\n\n\t\n\n/messages\n\n\t\n\nsubmit_message\n\n\t\n\nPASS\n\n\n\n\nPOST\n\n\t\n\n/reports/review\n\n\t\n\nregister_review_report\n\n\t\n\nPASS\n\n机器清单来源 phase1/logs/e-check-20261114/m1-endpoints.json，8 个名称全部匹配。\n\n另外确认：\n\n白名单仍为 8 个端点。\n\nACK 没有重新进入。\n\nevents 仅允许 GIT_VALIDATE/PASS/REWORK。\n\nBLOCKED/CANCEL 禁止 engine 调用。\n\n2. 残留问题：授权凭据表述不一致\n\n附录 B 当前 GET 端点授权依据写：\n\nC7 §8.6+会话凭据\n\n但 §6 对凭据作了明确区分：\n\nOWNER 凭据：人类会话凭据。\n\n本机服务身份凭据：engine 独立服务身份。\n\n外部执行端凭据：执行侧身份。\n\n并明确三类凭据互不混用。\n\n附录 B 又声明 engine 使用 §8.6 独立本机服务身份。\n\n因此，GET 端点授权依据中的「会话凭据」与前述凭据边界存在歧义，不能直接作为定稿授权表述。\n\n最小整改：\n\n将 GET 四行的授权依据统一改为明确的 engine 本机服务身份及其 M1 读取权限依据，不再使用含义不明确的「会话凭据」。\n\nPOST 行也建议统一采用相同的身份表述，再分别注明事件推进权限或登记权限。\n\n不需要重构九列，也不需要改变端点。\n\n三、R2-02 复核：附录 D 与 A7-A10\nPASS｜关闭\n1. 恢复矩阵数量\n\n实际逐行统计：\n\nM1 状态\n\n\t\n\n声明行数\n\n\t\n\n实际行数\n\n\n\n\nDEV_REPORTED\n\n\t\n\n2\n\n\t\n\n2\n\n\n\n\nGIT_VALIDATING\n\n\t\n\n2\n\n\t\n\n2\n\n\n\n\nCODE_REVIEW\n\n\t\n\n5\n\n\t\n\n5\n\n\n\n\nTEST_ACCEPTANCE\n\n\t\n\n1\n\n\t\n\n1\n\n\n\n\nREWORK\n\n\t\n\n1\n\n\t\n\n1\n\n\n\n\nBLOCKED\n\n\t\n\n1\n\n\t\n\n1\n\n\n\n\n合计\n\n\t\n\n12\n\n\t\n\n12\n\nPASS 未删除原有恢复分支。\n\n2. 回滚与人工接管规则\n\n实际 7 类：\n\nGit 校验阶段。\n\n派单前。\n\n已发送未采集。\n\n已采集未登记。\n\n登记部分成功。\n\n推进结果不确定。\n\n结论已登记。\n\n数量声明与实际一致。\n\n回滚定义也保留了核心约束：\n\n停止新增副作用。\n\n保留已发生事实。\n\n从当前 M1 状态交接人工。\n\n不将 M1 状态回退到前一状态。\n\n腿级 BLOCKED 与 M1 任务级 BLOCKED 仍然区分。\n\n3. A7-A10 六要素核对\n\n用例\n\n\t\n\n前置\n\n\t\n\n注入/动作\n\n\t\n\n预期状态\n\n\t\n\n禁止行为\n\n\t\n\n失败判定\n\n\t\n\n必留证据\n\n\n\n\nA7\n\n\t\n\nPASS\n\n\t\n\nPASS\n\n\t\n\nPASS\n\n\t\n\nPASS\n\n\t\n\nPASS\n\n\t\n\nPASS\n\n\n\n\nA8\n\n\t\n\nPASS\n\n\t\n\nPASS\n\n\t\n\nPASS\n\n\t\n\nPASS\n\n\t\n\nPASS\n\n\t\n\nPASS\n\n\n\n\nA9\n\n\t\n\nPASS\n\n\t\n\nPASS\n\n\t\n\nPASS\n\n\t\n\nPASS\n\n\t\n\nPASS\n\n\t\n\nPASS\n\n\n\n\nA10\n\n\t\n\nPASS\n\n\t\n\nPASS\n\n\t\n\nPASS\n\n\t\n\nPASS\n\n\t\n\nPASS\n\n\t\n\nPASS\n\n具体评价：\n\nA7： 推进响应丢失后通过 M1 只读核实，不换 event_id 盲目重发。\n\nA8： 发送成功但账本后续写入失败时，停止并人工核查，不因账本缺失而重发。\n\nA9： 部分登记成功后只补失败项，保留成功项 ID。\n\nA10： REWORK 后禁止自动开启下一轮审查或开发。\n\n四项均已达到 A1-A6 的表格验收粒度。\n\n判定：R2-02 完全关闭。\n\n四、提交链与被测对象核验\n\n额外核实了两个整改 commit 的 Git 元数据：\n\n6746071\n\nGate2-R2 基线 v0.6\n\ne3be3d3\n\nv0.7 主体整改：24 additions / 17 deletions\n\n276a3be\n\n§7 截断行修复：1 addition / 1 deletion\n\n线性父子关系核实通过\n\n其中：\n\ne3be3d3 的 parent 是 6746071。\n\n276a3be 的 parent 是 e3be3d3。\n\n两个整改 commit 均只修改任务书文件。\n\nba9853e 是包含本次复验请求文件的后续提交，不属于被测两项整改本身。\n\n注意：Git 元数据证明提交关系，不等同于对文档中所引用的全部历史证据进行重新验收。\n\n五、总结论\n仍需修订\n\nR2-02 已关闭，R2-01 仅剩一处授权依据表述问题。\n\nR2-01 附录 B\n\n未关闭\n\nR2-02 附录 D\n\nPASS\n\n唯一剩余整改：\n\nR3-01：附录 B 授权依据列中，将「C7 §8.6+会话凭据」改为与 §6 凭据三类边界一致的 engine 独立本机服务身份授权表述，明确读取与登记权限。\n\n下一轮复验范围\n\n只需提交 R3-01 修订后的新被测 commit。\n\n下一轮只检查：\n\nGET 四个端点的授权依据。\n\nPOST 四个端点的授权依据。\n\n附录 B 与 §6 凭据边界是否一致。\n\n是否意外改变 8 端点及 ACK 排除规则。\n\n不重审 R2-02，也不重审 Gate1 和此前已通过的 R2 项目。\n\n当前裁定：暂不授予 Gate2 定稿认可，不进入 Gate3。\n\nGate3 仍然必须由用户确认 §1 需求原文并拍板开工，不能由本次技术复评替代。\n\n参考材料：v0.7 被测文件 · 主体整改 commit · 截断行修复 commit。",
+      "text_sha256": "9e8bd5c43fdc1a3af55a0b8a63c5bc7f72c5887ebfb0799403d1e6e52a0504ec",
+      "size_bytes": 6156,
+      "assistant_uuid": "7586f79d-9474-4a79-a616-2b0120078493"
+    }
+  ]
+}

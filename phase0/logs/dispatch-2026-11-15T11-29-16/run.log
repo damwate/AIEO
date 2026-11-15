@@ -1,0 +1,14 @@
+[2026-11-15T11:29:17.403Z] 会话锁已获取 pid=9908
+[2026-11-15T11:29:17.406Z] === GPT 派单（已有会话，消息 778 字节）===
+[2026-11-15T11:29:17.433Z] 复用已运行调试端口 9222
+[2026-11-15T11:29:22.821Z] 会话就绪: https://chatgpt.com/c/6af99227-0f70-83ec-ad69-63dad4aa2531
+[2026-11-15T11:29:27.836Z] [dispatch] 基线尾部: {"role":"assistant","key":"fallback-turn-2:2:assistant","assistantUuid":"96a35567-4726-4ace-8255-9f2a418f50a4"}
+[2026-11-15T11:29:29.253Z] [dispatch] 发送双验通过（polls=1，user_unit_key=fallback-turn-3:0:user，tail 后观察）
+[2026-11-15T11:29:29.546Z] 截图: sent-dispatch.png
+[2026-11-15T11:31:19.564Z] [dispatch] COMPLETED，1 个 assistant unit，回复 2139 UTF-8 字节，区间窗口 2 个
+[2026-11-15T11:31:19.717Z] 截图: reply-dispatch.png
+[2026-11-15T11:31:19.718Z] 审查会话已保存: https://chatgpt.com/c/6af99227-0f70-83ec-ad69-63dad4aa2531
+[2026-11-15T11:31:19.733Z] JSON/Schema/绑定校验: NOT_REQUESTED
+[2026-11-15T11:31:19.734Z] M1 本地登记: NOT_REQUESTED（三 ID 均未提供，通用非登记派单）
+[2026-11-15T11:31:21.072Z] === 派单完成，artifact_sha256=677b1b96722a7cec701d776ea34b453e4ac8b13475b216e6c797da9595546865 size_bytes=2139 ===
+[2026-11-15T11:31:21.194Z] 会话锁已释放

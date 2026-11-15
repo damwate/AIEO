@@ -1,0 +1,7 @@
+【S1复验R4|b-20261115-gpt03-review-leg】对S1-R3两项整改做限定复验（仍限定两项，无扩大）。
+仓库github.com/damwate/AIEO main，锚点按SHA读：
+A 待验收=0fed73ad4f9ee69db9364febb09825f257211a1e（相对R3被测c081086ee4a98d430632566ca066b565ec4eac83的diff恰2文件：review_leg.py +24/-7、test_review_leg.py +23/0）
+B 申报=50ab1cf后最新：读basic/tasks/b-20261115-gpt03-review-leg/acceptance/review-request-s1-r4.md与steps.md返工表问题8/9行
+C 依据=charter v1.0附录B-E。
+复验点：①NEW-P1-02关闭核验：_report_key_evidence捕获组==self.reviewed_commit[:12]精确相等+反例test_16（错前缀/错execution拒）②P1-01 409双证整体重验③P2-01关闭核验：evidence_class如实分级（presumed/presumed-pinned/materialized）+target_matches_sent_key实做（账本发送锚点比对布尔入账）+source指认实际计数文件④未引入新缺陷（22用例,替身边界不变）⑤范围复核（2文件零越界）。
+回执：①-⑤逐项+两项逐项（关闭/未关闭）+总结论（PASS/REJECT+新问题编号）。

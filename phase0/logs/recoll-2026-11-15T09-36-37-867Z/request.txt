@@ -1,0 +1,9 @@
+[验收复核|b-20261115-basic-replication-verify|只复核3P1]
+R1(reply 26bcf99f…)3项P1整改复核,已过项不重复审。
+补正(整改=59505121c5b69b9aec8a38fa4bf8dcc1d539089a,表登记=db5b7e1,两段式):
+问题1:补fsck-exec.txt(退出码0)+npm-ci-exec.txt(如实补记stdout未落盘,退出码0按终端记录,不补造)+报告计数修正(原始输出7+补档3+报告1)+MANIFEST重生成逐文件分类。
+问题2:补check-push-before-after.txt=当前态快照(proxy0/status0/HEAD=origin/main无push)+执行时点快照未落盘如实标"部分可证"不补造。
+问题3:剥离依据=recoll派生脚本系DEC-043/L-018既有恢复机制每任务延续,你lessons-recoll R2(reply 2986a76b…)已裁定recoll_*.mjs属过程审计附件非被测逻辑,申请按先例排除出本任务验收范围。
+材料:github.com/damwate/AIEO@main 读 db5b7e1 的任务包(steps.md返工表+acceptance/补档)。
+复核点:①补档真实与分类准确②MANIFEST一致③部分可证如实④问题3先例剥离成立。
+三态:PASS(问题1/2/3关闭+S1结论)/REJECT(列项)/BLOCKED。

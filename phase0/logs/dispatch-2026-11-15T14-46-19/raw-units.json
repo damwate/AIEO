@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-15T14:52:41.618Z",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "a8f6821d-baf5-4007-82bd-cd1dc02f8ae9",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "fd3474db91de2c87fc0336ea0b2b0ac1ba41ada653c11e644c62c81dc294547f",
+          "21df8c7e031a55faebb5170e1df2f83d15c07916a31ef714a1f2004098e7a4ce"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "fd3474db91de2c87fc0336ea0b2b0ac1ba41ada653c11e644c62c81dc294547f",
+          "21df8c7e031a55faebb5170e1df2f83d15c07916a31ef714a1f2004098e7a4ce"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-0:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nS1 独立验收回执\n\n任务： b-20261115-gpt03-review-leg\n验收对象： GPT-03 审查腿编排实现与测试\n被测 commit： 512f9c5a7142e23678e5d1972050ee5674d605aa\n基线： c3a13e9fafc08b9a3d24b1a0ec70f71dd96effc8\n\nST-01 绑定核验 PASS 修改范围核验 PASS\n\n一、验收对象与范围确认\n\n已直接读取指定 SHA 的申报文件、steps.md、三个被测文件及基线中的 v1.0 定稿任务书。\n\nGit 比较结果：\n\n检查项\n\n\t\n\n实际结果\n\n\t\n\n判定\n\n\n\n\n基线至被测提交\n\n\t\n\nahead 1，behind 0\n\n\t\n\nPASS\n\n\n\n\n提交数量\n\n\t\n\n1\n\n\t\n\nPASS\n\n\n\n\nreview_leg.py\n\n\t\n\n新增 921 行\n\n\t\n\nPASS\n\n\n\n\nrecoll_template.mjs\n\n\t\n\n新增 188 行\n\n\t\n\nPASS\n\n\n\n\ntest_review_leg.py\n\n\t\n\n新增 660 行\n\n\t\n\nPASS\n\n\n\n\n删除文件\n\n\t\n\n0\n\n\t\n\nPASS\n\n\n\n\n额外修改文件\n\n\t\n\n0\n\n\t\n\nPASS\n\n因此，修改范围严格符合 S1 冻结的三个新增文件要求。没有发现通过本次提交修改 scheduler.py、M1-M4 或契约文件的情况。\n\n核查依据：被测提交 · 基线比较\n\n二、验收六查\n① S1 目标符合性\nPASS\n\n实现结构完整：\n\nR0：任务、execution、diff artifact 前置核查。\n\nR1：GIT_VALIDATE → Git 校验 → PASS。\n\nR2：审查简报及 1200B 出站硬限制。\n\nR3：派单及发送失败、采集失败区分。\n\nR4：回复提取、SHA 核验、Ajv 2020 双重契约校验。\n\nR5：artifacts → messages → reports/review。\n\nR6：最终状态只读核实。\n\n主流程和阶段划分符合 charter §4。\n\n但这里的 PASS 仅指实现结构与目标符合，不代表真实 ChatGPT 派单已经通过验收。A1/A3/A5①/A6 留在 S2/S3 是正确的阶段划分。\n\n② Charter v1.0 冻结要求符合性\nPARTIAL\n\n冻结要求\n\n\t\n\n核查结果\n\n\n\n\n附录 B：8 端点白名单\n\n\t\n\nPASS\n\n\n\n\nACK 排除\n\n\t\n\nPASS\n\n\n\n\napprovals 排除\n\n\t\n\nPASS\n\n\n\n\n任务级 BLOCKED/CANCEL 禁止\n\n\t\n\nPASS\n\n\n\n\n事件合法性由 M1 状态机裁定\n\n\t\n\nPASS\n\n\n\n\n附录 C：三态派单账本\n\n\t\n\nPARTIAL\n\n\n\n\n附录 C：八字段组完整性\n\n\t\n\nPARTIAL\n\n\n\n\n三断点恢复\n\n\t\n\nPARTIAL\n\n\n\n\nA8 双重 fail-closed\n\n\t\n\n实现有防线，测试证据不足\n\n\n\n\n附录 D：12 行恢复矩阵\n\n\t\n\nPARTIAL\n\n\n\n\n腿级/M1 任务级 BLOCKED 区分\n\n\t\n\nPASS\n\n\n\n\n附录 E：review report 权威\n\n\t\n\nPASS\n\n发现 1（P1-01）：409 幂等命中判定过宽。\n\nreview_leg.py 第 596–606 行：\n\n查看代码\n\n当前实现只要 HTTP 409 响应包含 code/detail/message/error 任意一个字段，就认定为 IDEMPOTENT_HIT。\n\n但 charter 附录 B 明确要求：\n\n相同幂等键、相同内容：幂等返回。\n\n相同幂等键、不同内容：拒绝。\n\n代码没有进一步核对重复记录的实际 ID、关联对象和请求内容，也没有证明冲突响应确实属于原请求的幂等命中。\n\n这会将普通冲突错误误判为成功登记，尤其影响 artifacts、messages 和 review report 三项登记。\n\n整改要求： 409 必须进行只读核实，确认原记录 ID、任务关联及内容指纹与本次请求一致；无法证明时必须 BLOCKED，不能以通用错误字段代替幂等证明。\n\n发现 2（P1-02）：部分登记恢复没有落实只补缺项。\n\n恢复入口\n\n当前 _resume_register() 直接再次调用完整的 r5_register()。\n\n而 r5_register() 会重新执行：\n\nartifact 登记；\n\nmessage 登记；\n\nreview report 登记。\n\n它没有根据账本中的成功 ID，先逐项只读核实，再仅补未完成项。\n\n虽然实现试图依赖服务端幂等性避免重复记录，但这不等于落实附录 C④和附录 D 的恢复规则。\n\n尤其是不能把重复提交成功，等同于已经证明原记录没有被覆盖、关联没有发生变化。\n\n整改要求： 建立逐项登记状态恢复逻辑，先核实三项既有记录，成功项保留原 ID，只补缺失项。\n\n③ 修改范围与零修改红线\nPASS\n\nGit 比较已确认只有三个新增文件。\n\n没有发现：\n\nscheduler.py 修改；\n\nM1-M4 修改；\n\n契约文件修改；\n\nM2 派单工具链修改。\n\n符合 H1-H12 中本步骤涉及的修改范围要求。\n\n④ 代码质量与内部一致性\nPARTIAL\n\n发现 3（P1-03）：采集失败后的补采恢复存在断链。\n\n派单失败分类\n\n代码能够识别一种重要情况：\n\nChatGPT 已经发送成功；\n\nresult.json 已经存在；\n\n但 gpt_dispatch.mjs 后续采集失败并返回非零。\n\n此时它正确禁止重发，并写入 R3_SEND_CONFIRMED_COLLECT_FAILED。\n\n问题在于：\n\n该记录没有保存 conversation_uuid；\n\n没有保存 sent_user_unit_key；\n\nresume() 的补采入口只识别 R3_SEND_CONFIRMED；\n\n因此无法直接使用该失败记录派生补采驱动。\n\n结果是：已经双验成功的发送，虽然没有被重复派单，却不能按预定的原会话补采路径自动恢复，只能转人工处理。\n\n这与 charter §5 第二类异常的补采恢复承诺不一致。\n\n整改要求： R3_SEND_CONFIRMED_COLLECT_FAILED 必须保存补采所需的原会话和发送证据；恢复逻辑应将其识别为已发送未采集断点，严禁重新派单。\n\n发现 4（P2-01）：账本八字段组尚未完整落实。\n\n账本及派单记录\n正常发送记录\n\nfsync 和阶段追加机制已经存在，这是正确的。\n\n但按附录 C 八字段组核对，当前账本尚未明确完整记录：\n\n会话创建时间、profile 标识及归属校验结果；\n\n发送前后 user unit 数量；\n\n采集时 unit 数量及快照时间；\n\n各阶段独立的 checkpoint 前后状态；\n\n登记请求和响应的完整对应关系。\n\n特别是 assistant_unit_count 不能替代发送前后 user unit 计数。\n\n建议补齐账本字段，并让恢复决策直接消费这些证据，而不是仅依据阶段标志推断。\n\n⑤ 18 用例真实性与断言质量\nPARTIAL\n\n测试代码中确实定义了 18 个 test_ 方法，使用独立临时 M1 实例、独立数据库、真实 Git 夹具及真实 Ajv 校验路径。\n\n认可的部分：\n\nChatGPT 派单边界采用定向替身；\n\nGit、Ajv、正常 M1 REST 调用均走真实路径；\n\nPASS/REWORK 两种状态推进均有断言；\n\nA4 有重复登记前后计数对比；\n\nA7 有同 event_id 单条记录断言；\n\nA9 有 artifact ID 保持不变断言；\n\nA10 有终态恢复不再派单断言。\n\n但有两个问题。\n\n发现 5（P2-02）：A9 额外替换了 M1 客户端调用。\n\ntest_review_leg.py 第 480–530 行附近\n\nA9 通过替换 leg.engine.post，让 /api/v1/messages 直接抛出异常。\n\n这不是仅替换 ChatGPT 边界：M1 客户端的一个调用也被测试替身绕过了。\n\n它可以作为故障注入，但必须与真实服务替身边界区分，不能据此宣称所有 M1 REST 调用都经过真实服务。\n\n建议改用独立 M1 服务端故障注入，在服务端模拟指定登记失败，客户端仍走完整真实 REST 路径。\n\n发现 6（P2-03）：A8 的测试覆盖不充分。\n\n当前 A8 测试主要验证：\n\n有 SEND_INTENT；\n\n没有 SEND_CONFIRMED；\n\nM1 仍处于 DEV_REPORTED；\n\nresume 拒绝重新派单。\n\n但没有分别证明：\n\n已实际发送、发送后账本记录丢失，仅剩 INTENT；\n\n派单账本与 M1 状态出现矛盾；\n\n两种情况均不发生二次发送，均产生腿级 BLOCKED。\n\n所以实现中有相应防线，但申报的 A8 双重故障覆盖尚未被测试充分证明。\n\n另外，本次是静态独立审查，没有在目标 Linux 环境重新运行完整测试套件。因此，18/18 PASS 暂按步骤申报记录接受，不作为本次独立执行结果。\n\n⑥ 证据可核查性\nPASS\n\n已直接读取：\n\n被测 commit 三个文件；\n\n申报文件；\n\nsteps.md；\n\n基线中的 v1.0 定稿任务书；\n\n基线与被测提交的 Git 比较结果。\n\n关键代码位置均可通过指定 SHA 的 GitHub 页面复核。\n\n三、验收标准 1–7 逐项判定\n\n#\n\n\t\n\n验收标准\n\n\t\n\n判定\n\n\t\n\n理由\n\n\n\n\n1\n\n\t\n\nCharter §4 全流程实现\n\n\t\n\nPASS（实现层）\n\n\t\n\nR0-R6 主流程、PASS/REWORK 状态映射完整；真实派单留待 S2/S3\n\n\n\n\n2\n\n\t\n\n附录 B 白名单\n\n\t\n\nPASS\n\n\t\n\n8 端点、ACK 排除、审批及任务级 BLOCKED 禁止均落实\n\n\n\n\n3\n\n\t\n\n附录 C 账本与三断点恢复\n\n\t\n\nREJECT\n\n\t\n\nP1-02、P1-03、P2-01\n\n\n\n\n4\n\n\t\n\n附录 D 恢复矩阵与回滚语义\n\n\t\n\nPARTIAL\n\n\t\n\nBLOCKED 区分正确，但部分登记恢复和 A8 证明不足\n\n\n\n\n5\n\n\t\n\n附录 E 登记权威\n\n\t\n\nPASS（设计层）\n\n\t\n\nreview report 为结论权威，artifacts/messages 为证据链；409 判定存在 P1-01\n\n\n\n\n6\n\n\t\n\n§5 五类异常与 §4 一期边界\n\n\t\n\nREJECT\n\n\t\n\n采集失败后的自动补采断链；异常恢复不完全\n\n\n\n\n7\n\n\t\n\nM1-M4、契约、scheduler.py 零修改\n\n\t\n\nPASS\n\n\t\n\nGit 比较确认严格三个新增文件\n\n四、问题清单\n\n编号\n\n\t\n\n严重度\n\n\t\n\n问题\n\n\t\n\n整改要求\n\n\n\n\nP1-01\n\n\t\n\nP1\n\n\t\n\n409 被过宽认定为幂等命中\n\n\t\n\n核验原记录 ID、关联和内容指纹\n\n\n\n\nP1-02\n\n\t\n\nP1\n\n\t\n\n部分登记恢复重复执行全部登记步骤\n\n\t\n\n逐项只读核实，仅补缺项\n\n\n\n\nP1-03\n\n\t\n\nP1\n\n\t\n\n已发送但采集失败的记录无法进入原会话补采\n\n\t\n\n保存会话证据并接通 resume\n\n\n\n\nP2-01\n\n\t\n\nP2\n\n\t\n\n附录 C 八字段组记录不完整\n\n\t\n\n补齐会话、unit 快照和 checkpoint 证据\n\n\n\n\nP2-02\n\n\t\n\nP2\n\n\t\n\nA9 额外替换 M1 客户端调用\n\n\t\n\n改为服务端故障注入\n\n\n\n\nP2-03\n\n\t\n\nP2\n\n\t\n\nA8 双重故障测试不充分\n\n\t\n\n分别覆盖发送成功账本断裂和账本/M1 矛盾\n\n五、总结论\n\nS1 独立验收\n\nREJECT\n\n原因：3 项 P1，3 项 P2。\n\n本次不通过不是因为架构方向错误，也不是因为修改超范围，而是因为恢复与登记的关键可靠性承诺尚未得到代码和测试的充分保证。\n\n认可且不要求返工的部分：\n\n三文件架构与修改范围。\n\n8 端点白名单及权限边界。\n\nR0-R6 主流程设计。\n\nPASS/REWORK 状态映射。\n\n腿级 BLOCKED 与 M1 任务级 BLOCKED 分离。\n\nreview report 权威登记设计。\n\n真实派单留给 S2/S3 的阶段安排。\n\n下一轮复验建议：\n\n优先关闭 P1-01、P1-02、P1-03，再处理 P2-01 至 P2-03。不要借整改扩大 S1 范围，不修改 scheduler.py、M1-M4 或冻结契约。\n\n整改后应重新提供完整被测 SHA、变更统计和测试结果，按六查及标准 1–7 复验。\n\n最终裁定：本轮 S1 REJECT，不授权进入 S2。 这不否定立项及架构决策，也不影响后续按原冻结方案整改后重新申请验收。",
+      "text_sha256": "21df8c7e031a55faebb5170e1df2f83d15c07916a31ef714a1f2004098e7a4ce",
+      "size_bytes": 10382,
+      "assistant_uuid": "a8f6821d-baf5-4007-82bd-cd1dc02f8ae9"
+    }
+  ]
+}

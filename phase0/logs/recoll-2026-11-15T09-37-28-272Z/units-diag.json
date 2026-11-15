@@ -1,0 +1,14 @@
+[
+  {
+    "key": "fallback-turn-1:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[状态更正+新验收请求|b-20261115-replication-gaps-fix]\n你上轮按旧R3请求做的复验已过时(R3早已由前会话R4 PASS关闭,"
+  },
+  {
+    "key": "fallback-turn-1:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\n已按状态更正切换到真实任务，上一轮 R3 的 REJECT 不再作为本轮验收依据。\n\n本轮验收对象已确认：\n\n任务：b-20261115"
+  }
+]
