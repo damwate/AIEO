@@ -41,11 +41,14 @@
 | 错误类别 | 判定 | 处置 | 重试规则 |
 |---|---|---|---|
 | 网页派单发送失败（未进入发送双验） | M2 发送门禁报错 | 换新会话重派一次（ST-08 ①路径）；再失败登记 BLOCKED 停等人工 | 允许 1 次换会话重派 |
-| 网页采集 fail-closed（发送双验已过） | INBOUND_* 错误码 | **禁重发**；按 L-018 三步诊断→静态 DOM 补采（归属校验型驱动）；补采失败登记 BLOCKED | 补采不限次但不发送；补采亦失败→停等人工 |
+| 网页采集 fail-closed（发送双验已过） | INBOUND_* 错误码 | **禁重发**；按 L-018 三步诊断→静态 DOM 补采（归属校验型驱动）；补采失败→**腿级 BLOCKED** | 补采不限次但不发送；补采亦失败→停等人工 |
+| 网页采集 fail-closed（发送双验已过） | INBOUND_* 错误码 | **禁重发**；按 L-018 三步诊断→静态 DOM 补采（归属校验型驱动）；补采失败→**腿级 BLOCKED** | 补采不限次但不发送；补采亦失败→停等人工 |
 | 审查回复契约校验失败 | 904 Ajv 模式错误 | 保留原始 artifact，不登记成功结果，BLOCKED 停等人工（L-008 语义） | 禁止改数据重放 |
-| 平台执行腿故障（M1 REST 不可达/M4 采集失败等） | 网络/5xx/非零退出码 | M1 outbox 既有重试语义（幂等操作：读取类可自动重试；**业务副作用类（状态推进/登记）无幂等键确认前禁自动重试**） | 重试耗尽→BLOCKED 停等人工 |
+| 平台执行腿故障（M1 REST 不可达/M4 采集失败等） | 网络/5xx/非零退出码 | M1 outbox 既有重试语义（幂等操作：读取类可自动重试；**业务副作用类（状态推进/登记）无幂等键确认前禁自动重试**） | 重试耗尽→**腿级 BLOCKED** 停等人工 |
 | 状态推进非法 | M1 状态机拒绝 | 停止编排，登记事件，不绕过（scheduler 既有纪律） | 禁止重试绕过 |
 | 人工介入 | 任意环节 | OWNER 可暂停/取消；恢复后从 M1 状态断点继续 | — |
+
+**BLOCKED 语义区分（会商底线，两种不得混用）：** ①**腿级 BLOCKED**＝审查腿内部停止（run 记录/任务包登记），**M1 任务保持当前状态（DEV_REPORTED/GIT_VALIDATING/CODE_REVIEW）不变**，人工可接管继续；②**M1 task.status=BLOCKED**＝真实任务状态（仅 OWNER 决定的任务级阻塞才进入；依 state_machine 该状态**无推进审查结论的合法出边**，不得假设人工可直接恢复 CODE_REVIEW）。本任务书 §5/§7 所有"BLOCKED 停等人工"默认指**腿级**。
 
 ## 6. 安全与审计（I5+P1-03 主体—操作—授权边界表，C7 §8.5/8.6/8.7 逐项落实）
 
@@ -69,7 +72,7 @@
 | A3 | 采集 fail-closed 注入 | 派单发送双验已过 | **注入点=采集层只读构造**（强制小视口 reload 触发虚拟化窗口，使 readReplySnapshot 报 INBOUND_WINDOW_COMPLETENESS_UNPROVEN；不改工具代码）| 禁重发（证明：dispatch 账本仅一次 SEND_STARTED+会话内 user unit 计数与发送后快照一致）→按 §5 补采恢复或 BLOCKED | 出现第二次发送=FAIL | dispatch 账本+前后 unit 计数对比+补采 result.json 六查输出 |
 | A4 | 幂等重放 | A1 完成，幂等键=`<run 键>+review-round-1`（沿用 908 幂等键模式） | 重放同一登记请求原文（artifacts+messages+事件） | M1 无重复登记（event_id/messages 幂等）；无新外部副作用（dispatch 目录数不增+ChatGPT 会话 user unit 数不变） | 出现重复登记或新派单=FAIL | 重放前后 M1 查询对比+dispatch 目录计数 |
 | A5 | 重启恢复（两类断点分别测） | ①已发送未采集：派单完成、reply 未落盘时终止进程；②已采集未登记：reply 已落盘、M1 登记未完成时终止 | 重新拉起审查腿 | ①禁重发→补采路径恢复（§5）；②仅补登记，不重新触发 GPT（L-008 语义） | ①重发=FAIL；②重新派单=FAIL | 两类现场各一轮：断点快照+恢复后 M1 状态与登记对比 |
-| A6 | 人工退路 | 停用审查腿配置（或审查腿 BLOCKED） | 人工经既有派单链完成审查并按**同一契约校验+同一幂等键**登记 | M1 内登记完整（artifacts+messages+事件）且状态推进与自动路径一致（CODE_REVIEW→结论）；判定=三项登记齐+状态符合 §4 映射 | 登记缺失/状态不符=FAIL | 人工登记记录+reply SHA+M1 事件 |
+| A6 | 人工退路 | 审查腿**腿级 BLOCKED**（M1 任务保持 CODE_REVIEW 不变） | 人工经既有派单链完成审查并按**同一契约校验+同一幂等键**登记 | M1 内登记完整（artifacts+messages+事件）且状态推进与自动路径一致（CODE_REVIEW→结论）；判定=三项登记齐+状态符合 §4 映射 | 登记缺失/状态不符=FAIL | 人工登记记录+reply SHA+M1 事件 |
 - 回滚/退路（不假设未验证的状态回退转换）：审查腿失败或停用时**不改变任务既有 M1 状态**（保持 DEV_REPORTED/GIT_VALIDATING/CODE_REVIEW 当前态）停等人工，人工经 M1 既有接口继续；审查腿为新增编排步骤，不修改既有模块。
 - 独立验收：双分支惯例（开发分支+证据分支，§2.4 平台纪律）；零 mock 红线（真实 chatgpt.com 审查收发）沿用 DEC-028 授权文本口径。
 
@@ -82,10 +85,21 @@
 
 GPT-02/04/05 真实腿；多轮审查重审自动化；新 commit 重审触发；多任务/多批次编排与监控循环；采集恢复状态机（C5）；管理后台（F-005）；DEC-017 扩展场景；契约修改；M1-M4 代码修改。
 
+## 附录 A：会务立项评审输入初稿（Gate 2 深度项——v0.4 起随草案提交，待评审精化，非草案级验收项）
+
+1. **engine M1 白名单端点表初稿**（来源=phase1/logs/e-check-20261114/m1-endpoints.json 机器清单节选；待评审核定）：
+   - 只读：`GET /api/v1/tasks/{task_id}`、`GET /api/v1/tasks/{task_id}/dependencies`、`GET /api/v1/artifacts/{artifact_id}`、`GET /api/v1/board`
+   - 登记与推进（幂等键）：`POST /api/v1/tasks/{task_id}/events`、`POST /api/v1/artifacts`、`POST /api/v1/messages`、`POST /api/v1/messages/{message_id}/ack`
+   - 审查结论登记：`POST /api/v1/reports/review`
+   - **明确排除**：approvals 类（MERGE_TO_MAIN/RELEASE/DEAD_LETTER_REQUEUE/CONTRACT_CHANGE）、messages cancel/requeue、projects/batches 写操作
+2. **A5 恢复证据字段初稿**：dispatch 目录账本（SEND_STARTED 计数=1 证明）＋conversation UUID＋发送后 user unit 计数快照＋M1 状态/登记前后对比；独立证明未重新派单=账本单次发送+会话 unit 计数一致双证据。
+3. **回滚分支初稿**（按故障时 M1 状态分列，全部=腿级退路，不改变 M1 状态）：DEV_REPORTED（未发 GIT_VALIDATE）→人工接续；GIT_VALIDATING（校验中）→人工完成校验后发 PASS；CODE_REVIEW（审查中）→腿级 BLOCKED 人工接管审查；任何态→腿级 BLOCKED 登记后人工按 M1 既有接口操作。
+
 ## 版本记录
 
 | 版本 | 日期 | 状态 | 变更 | 依据 |
 |---|---|---|---|---|
 | v0.1 | 2026-11-15 | 已被本版取代 | 初稿误定对象为"F-001 立项"（基于未同步漂移状态 F-001 OPEN）——S2 独立验收 REJECT（问题3~6）指出 T-P1-908 已落地 F-001 最小版（DEC-036） | b-20261115-standard-kickoff S2 |
 | v0.2 | 2026-11-15 | 草案（待会务评审→待用户确认需求原文→待用户拍板开工） | 对象重定位=GPT-03 审查真实腿最小版（推荐首角色，顺序留评审决策点）；§2 缺口分析（P1-01）/§4 一期边界（P1-02）/§5 错误分类重试表（P1-02）/§6 授权边界表（P1-03）/§7 可执行验收矩阵（P1-04）；随附 FEASIBILITY/PHASE-STATUS 漂移校正 | S2 验收 REJECT 整改（问题3~6） |
+| v0.4 | 2026-11-15 | 草案（降档验证轮被测对象） | 用户拍板批准会商方案甲+丙（三关口）；§5/§7 落实 A6 底线=两种 BLOCKED 语义区分（腿级 vs M1 任务状态）；新增附录 A《会务立项评审输入初稿》（端点白名单/A5 账本证据/回滚分支——深度项转入 Gate 2 评审） | S2 恢复执行（用户拍板 2026-11-15） |
 | v0.3 | 2026-11-15 | 草案（状态不变） | S2-R2 复验问题4 关闭；问题3 残留=PHASE-STATUS 文件头旧结论（已随本任务修正 commit 校正至 v0.10）；问题5 整改=§6 凭据三类边界+engine C7 §8.6 服务身份与白名单/禁止操作列+§8.7 审计落实；问题6 整改=§4 状态路径明确（state_machine.py:33-37 合法出边 GIT_VALIDATING/CODE_REVIEW/TEST_ACCEPTANCE/REWORK）+§7 A1 状态预期/A3 注入点与禁重发证明/A4 幂等键定义/A5 两类断点恢复/A6 人工登记判定/回滚改"不改变既有状态停等人工" | S2-R2 复验（reply sha256=2de7fd0f…，recoll-2026-11-15T11-52-35-084Z）问题3/5/6 整改 |
