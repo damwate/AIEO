@@ -532,10 +532,10 @@ class ReviewLeg:
                 if rec.get("sent_user_unit_key"):
                     sent_key = rec["sent_user_unit_key"]
                     break
-        if self.ledger.state_flags().get("R3_SEND_INTENT_RECORDED") and not confirmed_send_exists:
-            intent_only = True
         if self.ledger.state_flags().get("R3_SEND_FAILED"):
-            failed_send_exists = True
+            failed_send_exists = True   # 先判失败终态（S2-R3 NEW-P2-03：真实追加式账本 INTENT→FAILED 并存）
+        if self.ledger.state_flags().get("R3_SEND_INTENT_RECORDED") and not confirmed_send_exists                 and not failed_send_exists:
+            intent_only = True   # 仅 INTENT 且无失败终态=发送状态不确定
         cross_check_state = None   # 布尔=完成比对；字符串=显式不可比状态（绝不 None 充数）
         if sent_key is None:
             if confirmed_send_exists:

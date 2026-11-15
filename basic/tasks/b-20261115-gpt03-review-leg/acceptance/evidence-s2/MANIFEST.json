@@ -182,13 +182,6 @@
     "note": "run dir evidence"
   },
   {
-    "archive": "ledger/rvl-918012-ledger.jsonl",
-    "source": "runtime\\review-leg\\rvl-918012\\ledger.jsonl",
-    "bytes": 8864,
-    "sha256": "252339fabe6c6f2bcee49e5b6689c4163a4f8e591851abbf058c007e4dbd2df7",
-    "note": "review round 918012 ledger (append-only)"
-  },
-  {
     "archive": "ledger/rvl-918012-report.json",
     "source": "runtime\\review-leg\\rvl-918012\\review-leg-report.json",
     "bytes": 301,
@@ -733,5 +726,33 @@
     "bytes": 6819,
     "sha256": "459e727fa902c52aa260d39e04ae7e2a9613fc0180af68f51badce5e043d97c1",
     "note": "NEW-P2-01: independent test execution record (full stdout)"
+  },
+  {
+    "archive": "ledger/rvl-918012-ledger.jsonl",
+    "source": "runtime\\review-leg\\rvl-918012\\ledger.jsonl",
+    "bytes": 3432,
+    "sha256": "3df233c1072cfeff66dc24dc19dafe000f1a226d481cbbb18d11b93b8feeaab3",
+    "note": "918012 主账本（S2-R3 NEW-P1-03 审计修复后：原始 INTENT 保留+MANUAL_LEDGER_SUPERSEDE 追加，追加式纪律恢复）"
+  },
+  {
+    "archive": "ledger/rvl-918012-ledger.polluted-snapshot.jsonl",
+    "source": "runtime\\review-leg\\rvl-918012\\ledger.jsonl.polluted-a5-repair-snapshot",
+    "bytes": 8864,
+    "sha256": "252339fabe6c6f2bcee49e5b6689c4163a4f8e591851abbf058c007e4dbd2df7",
+    "note": "污染版快照（审计修复前主账本，证明改写发生与恢复依据）"
+  },
+  {
+    "archive": "ledger/rvl-918012-ledger.bak-a5-repair.jsonl",
+    "source": "runtime\\review-leg\\rvl-918012\\ledger.jsonl.bak-a5-repair",
+    "bytes": 2700,
+    "sha256": "e854c74977d0e89fbfd9f97f4fad2823dbe2d1a1360711cf55648b9ee45c963b",
+    "note": "人工修复前备份（11 条原始记录）"
+  },
+  {
+    "archive": "ledger/rvl-918013-ledger.jsonl",
+    "source": "runtime\\review-leg\\rvl-918013\\ledger.jsonl",
+    "bytes": 7527,
+    "sha256": "6af175e442a6a6946653ec5969ad0f7d55ea48f1e6542cc2ee111c356ddb0093",
+    "note": "918013 孤儿 run 账本（A8 追加式补账：INTENT 保留+CONFIRMED/SUPERSEDE 追加）"
   }
 ]

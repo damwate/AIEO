@@ -1164,6 +1164,23 @@ __BODY__
             leg.r4_capture_and_validate(stage, batch_id=task.get("batch_id"), allow_no_anchor=True)
         self.assertIn("send state uncertain", str(cm.exception))
 
+    def test_16e_intent_then_failed_attach_allowed(self):
+        """S2-R3 NEW-P2-03 反例：真实追加式账本 INTENT→FAILED 并存（state_flags 双记录）
+        + attach → 必须显式 not_applicable 放行（明确失败后人工接管），不得误判
+        发送状态不确定。"""
+        leg, task_id, patch_path, _, commit = self.make_leg("f16f", None)
+        stage = leg.run_dir / "staged16f"
+        stage.mkdir(parents=True, exist_ok=True)
+        (stage / "reply.txt").write_text(self.reply_for(commit, "PASS"), encoding="utf-8")
+        task = leg._refetch_task()
+        leg.ledger.append({"kind": "R3_SEND_INTENT_RECORDED", "attempt": 1, "outcome": "INTENT"})
+        leg.ledger.append({"kind": "R3_SEND_FAILED", "attempt": 1, "error": "send failed", "outcome": "FAIL"})
+        captured = leg.r4_capture_and_validate(stage, batch_id=task.get("batch_id"), allow_no_anchor=True)
+        rec = leg.ledger.latest("R4_REPLY_CAPTURED")
+        self.assertTrue(str(rec["user_unit_counts"]["target_matches_sent_key"]).startswith("not_applicable"),
+                        "INTENT+FAILED (real append-only sequence) attach must be allowed explicitly")
+        self.assertIsNotNone(captured)
+
     def test_16_report_key_evidence_rejects_wrong_commit(self):
         """NEW-P1-02 反例：report 409 响应中 commit 前缀与本方 reviewed_commit 不一致
         → key_evidence 必须拒绝（fail-closed），不得仅凭 execution_id 匹配放行。"""
