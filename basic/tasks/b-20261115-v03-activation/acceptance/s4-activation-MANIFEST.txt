@@ -1,0 +1,7 @@
+52285c9e15b01b074280cc0c9dd73d904c0ef3759ee2f455c386b92fb30340a9 *s4-activation-consistency-output.txt
+0d9ef8ee168f6be3c3a56960db5c1ca611f5730256bbeac2b58c035edc7505f3 *s4-activation-dv1-output.txt
+ad40f17328da81ca35aeea7073cfae3e5b9b563dfa3d3808ee4fe5bccf31c776 *s4-activation-negpos-output.txt
+e62dcd364cd297381c4325d763e09f32bcd5717e69c8d0a074bb26ee505bf2d6 *s4-activation-state-tests-output.txt
+608d26ad036ff4336c06d92dca6245830d93dbb63291b2830ad821a5d0521258 *s4-activation-taskpack-phasec-output.txt
+被测commit=52e1f298fdbc31000b781ced8d55b9591f10c38b
+生成命令见各output头部（python -X utf8 -I ...）

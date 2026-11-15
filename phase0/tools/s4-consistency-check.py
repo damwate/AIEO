@@ -40,8 +40,19 @@ def run_checks(wf, cl, tpl, st, tb, ws, dl):
         (ok if cond else fail).append(f"{name}{(' | '+detail) if detail else ''}")
 
     # ① WORKFLOW 版本头/生效状态/附录 12 行（锚定附录表区域）
-    chk("①a v0.3草案版本头", "v0.3 阶段C统计修订版（草案，待用户拍板生效）" in wf)
-    chk("①b v0.2现行状态blockquote", "v0.2" in wf and "现行" in wf)
+    # 2026-11-15 v0.3 生效落地（b-20261115-v03-activation 冻结方案）：①a/①b 断言随生效态演进，
+    # 检查项数保持 37 不变；附录历史"草案"记录（附录表 12 行/ST-10/11 段）保留，不要求全文清除。
+    wf_title = wf.splitlines()[0] if wf.splitlines() else ""
+    bq_line = next((l for l in wf.splitlines() if l.startswith("> **v0.3 生效状态")), "")
+    chk("①a v0.3已生效版本头+清单正式生效声明",
+        ("v0.3 阶段C统计修订版（已生效 2026-11-15）" in wf_title) and ("草案" not in wf_title)
+        and ("正式版" in cl) and ("正式生效" in cl) and ("2026-11-15" in cl))
+    chk("①b 生效状态blockquote五要素已生效态(日期2026-11-15/v0.3现行/v0.2历史对照/批准依据原话/记录位置;负向拒绝旧草案态)",
+        ("已于 2026-11-15 经用户拍板" in bq_line) and ("为**现行版**" in bq_line)
+        and ("v0.2 保留为历史对照" in bq_line)
+        and ("同意生效，请给我一句话交接给新的会话完成接下来的工作" in bq_line)
+        and ("b-20261115-v03-activation/requirement.md" in bq_line)
+        and ("草案" not in bq_line) and ("仍为现行版" not in bq_line))
     ai = wf.rfind("v0.2↔v0.3 差异记录")  # 取最后一次出现=附录表本体（正文前文亦有引用）
     assert ai > 0, "附录区域未找到"
     # 附录表区域=从附录标题到下一个二级标题（或文件尾）
