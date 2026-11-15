@@ -1,0 +1,4 @@
+[验收复验|b-20261115-basic-dod|S1|只复核P1-02一处]
+上轮(reply 5ccdc8f9…ade80a1)确认P1-01已关闭,P1-02未关(驱动留工具目录)。已追加整改:补采驱动git mv归档至任务包acceptance/(归档commit=a81a8f80cf58b26430944f74198f20eecc61a0ce),工具目录不再承载本任务任何驱动。
+请读 github.com/damwate/AIEO@main b04ae9f0456bcde1d616ae9ae2908232886a1f74 的 basic/tasks/b-20261115-basic-dod/acceptance/review-request-r2.md(已更新:R2结果+追加整改+本轮复验对象a81a8f8)——按该文件复核。
+三态:PASS(问题关闭+S1结论)/REJECT/BLOCKED。回执含结论表+SHA256。

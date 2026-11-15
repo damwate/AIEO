@@ -1,0 +1,94 @@
+ChatGPT 说：
+
+REJECT S1 独立验收复验未通过
+
+复验基线：b4962722c8be214502afe38e15c42e94fe3181c2
+
+结论表
+
+复核项
+
+	
+
+结论
+
+	
+
+依据
+
+
+
+
+P1-01：BC-10 状态修正
+
+	
+
+PASS
+
+	
+
+BC-10 已更新为 PASS（初判，统计口径修正已落位），三项修正均有明确记录。
+
+
+
+
+P1-02：recoll 脚本剥离
+
+	
+
+REJECT
+
+	
+
+原脚本不是从工具目录剥离，而是被 Git 识别为重命名，仍留在 phase0/tools/。
+
+P1-02 驳回依据
+
+对比 S1 与整改 commit，Git 变更记录明确显示：
+
+纯文本
+phase0/tools/recoll_dod_plan.mjs
+    ↓ renamed
+phase0/tools/recoll_dod_acc.mjs
+
+进一步读取整改版本，确认：
+
+recoll_dod_plan.mjs 旧路径确实不存在。
+
+recoll_dod_acc.mjs 仍存在于 phase0/tools/。
+
+新文件仍包含本任务的补采驱动逻辑，包括 Basic DoD 标记和会话 UUID。
+
+因此：
+
+旧文件改名不等于驱动剥离。
+
+这没有满足冻结的边界要求：
+
+不修改工具目录代码。
+
+本任务补采驱动应归档至任务包 acceptance/。
+
+工具目录不应继续承载本任务专用驱动。
+
+最终裁定
+
+本轮只复核 P1-01、P1-02，不重开其他条目。
+
+P1-01 已关闭，P1-02 尚未关闭，因此 S1 整体验收为 REJECT。
+
+不代表 Basic 初级版整体完成。BC-03、BC-06、BC-12 原有硬约束继续有效。
+
+Reply SHA256
+
+2ad2a81eda0601858d9bfc884ec0503c9c2588505da39e0c2b9bacd90ddce981
+
+UTF-8；对应上述完整回执正文，不含 SHA256 声明行。
+
+复验材料：
+
+BC-10 整改文档
+
+仍留在工具目录的补采脚本
+
+S1 至整改版本 Git 变更记录

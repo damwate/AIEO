@@ -27,9 +27,9 @@
 
 | 字段 | 值 |
 |---|---|
-| 当前状态 | 开发中 |
-| 当前步骤 | S1 DoD 文档成文（规划 R1 修改后同意冻结，详见 steps.md） |
-| 最终结果 | （任务完成前暂空） |
+| 当前状态 | 完成 |
+| 当前步骤 | 全部步骤完成（S1 PASS[R3 reply sha256=ecc57a9b…450ca7，3 轮验收链]/S2 交付登记） |
+| 最终结果 | PASS：docs/phase1/basic-completion-dod.md 成文（BC-01~12 四要素+双口径统计+六步签核流程；BC-03=BLOCKED/BC-06=FAIL/BC-12=BLOCKED 如实保留） |
 
 ## 步骤清单（规划协商后冻结）
 

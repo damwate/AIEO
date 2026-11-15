@@ -1,0 +1,179 @@
+ChatGPT 说：
+S1 独立验收复验回执
+PASS
+
+P1-02 已关闭
+
+复验对象： a81a8f80cf58b26430944f74198f20eecc61a0ce
+
+依据： b04ae9f0456bcde1d616ae9ae2908232886a1f74 中的 review-request-r2.md。
+
+本轮严格限定为 P1-02，不重新打开 P1-01，也不扩大 S1 验收范围。
+
+一、P1-02 复验结论
+
+核查项
+
+	
+
+实际核查结果
+
+	
+
+判定
+
+
+
+
+原工具目录驱动剥离
+
+	
+
+phase0/tools/recoll_dod_plan.mjs 不存在
+
+	
+
+PASS
+
+
+
+
+本任务补采驱动迁移
+
+	
+
+Git 记录为 rename
+
+	
+
+PASS
+
+
+
+
+归档目标
+
+	
+
+basic/tasks/b-20261115-basic-dod/acceptance/recoll_dod_acc.mjs
+
+	
+
+PASS
+
+
+
+
+原工具目录不再承载本任务驱动
+
+	
+
+phase0/tools/recoll_dod_acc.mjs 返回 404
+
+	
+
+PASS
+
+
+
+
+归档提交与前次整改衔接
+
+	
+
+a81a8f8 基于 b496272 后续提交
+
+	
+
+PASS
+
+关键证据：
+
+GitHub Compare 显示：
+
+纯文本
+status: ahead
+ahead_by: 2
+behind_by: 0
+
+filename:
+basic/tasks/b-20261115-basic-dod/acceptance/recoll_dod_acc.mjs
+
+status: renamed
+
+previous_filename:
+phase0/tools/recoll_dod_acc.mjs
+
+additions: 0
+deletions: 0
+changes: 0
+
+这不是复制一份文件后留下原件，而是 Git 识别出的真实重命名迁移。
+
+原工具目录中的两个相关路径均已无法读取（404），归档目录中的驱动可以正常读取。
+
+二、最终三态裁定
+
+验收事项
+
+	
+
+最终状态
+
+
+
+
+P1-01 BC-10 状态修正
+
+	
+
+已关闭（沿用前轮结论）
+
+
+
+
+P1-02 驱动越界及归档问题
+
+	
+
+PASS 已关闭
+
+
+
+
+S1 DoD 文档固化验收
+
+	
+
+PASS
+
+最终结论：PASS。
+
+P1-02 的整改满足要求：
+
+原工具目录不再保留本任务驱动。
+
+补采驱动完整迁入任务包 acceptance/。
+
+Git 历史保留迁移记录，文件内容未因迁移而改变。
+
+今后一次性补采驱动归档到各自任务包的纪律得到落实。
+
+三、验收边界
+
+本次 PASS 仅表示 Basic 产品级 DoD 文档固化验收通过。
+
+不代表 Basic 初级版整体完成。BC-03、BC-06、BC-12 的硬约束继续有效。
+
+四、SHA256 回执
+
+以下为本次验收结论规范化记录的 UTF-8 SHA256（不是 Git commit SHA，也不是整个聊天消息原始字节的哈希）。
+
+纯文本
+f256c4fac09ad954e5e5e40ed4b5757f70bd219c248f9d20e48c1096c5a3cd33
+
+复验对象：a81a8f8 Git Commit
+
+复验请求：review-request-r2.md
+
+S1：PASS，P1-02 正式关闭。
