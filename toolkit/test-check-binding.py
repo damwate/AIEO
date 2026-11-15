@@ -6,6 +6,10 @@
 运行：python toolkit/test-check-binding.py  （无需外部依赖，临时 git 仓库自建自清）
 """
 
+import contextlib
+import importlib.util
+import hashlib
+import io as _io
 import json
 import os
 import subprocess
@@ -122,6 +126,7 @@ class BindingTests(unittest.TestCase):
         r2 = [x for x in d["rules"] if x["id"] == "R2"][0]
         self.assertEqual("FAIL", r2["verdict"])
         self.assertIn("parent", r2["detail"])  # 断言具体原因：parent ≠ 基线
+        self.assertIn(target, r2["commits"])  # 断言被拦截 commit 身份
 
     def test_04_merge_commit_fail(self):
         self._repo = r = Repo()
@@ -143,6 +148,7 @@ class BindingTests(unittest.TestCase):
         self.assertEqual("FAIL", r3["verdict"])
         self.assertIn("merge", r3["detail"])
         self.assertIn("diff 基线", r3["remediation"])
+        self.assertIn(target, r3["commits"])  # 断言被拦截的 merge commit 身份
 
     def _branch(self):
         p = git(self._repo.dir, "rev-parse", "--abbrev-ref", "HEAD").stdout.strip()
@@ -170,6 +176,7 @@ class BindingTests(unittest.TestCase):
         r4 = [x for x in d["rules"] if x["id"] == "R4"][0]
         self.assertEqual("FAIL", r4["verdict"])
         self.assertIn("后代", r4["detail"])
+        self.assertIn(target, r4["commits"])  # 断言过期申报对象身份
 
     def test_08_backfill_note_blank_fail(self):
         self._repo = r = Repo()
@@ -181,6 +188,7 @@ class BindingTests(unittest.TestCase):
         r4 = [x for x in d["rules"] if x["id"] == "R4"][0]
         self.assertEqual("FAIL", r4["verdict"])
         self.assertIn("回填声明", r4["detail"])
+        self.assertIn(target, r4["commits"])
 
     def test_09_missing_object_fail(self):
         self._repo = r = Repo()
@@ -190,6 +198,7 @@ class BindingTests(unittest.TestCase):
         r6 = [x for x in d["rules"] if x["id"] == "R6"][0]
         self.assertEqual("FAIL", r6["verdict"])
         self.assertIn("对象不存在", r6["detail"])
+        self.assertIn("a" * 40, r6["commits"])
 
     def test_10a_empty_range_blocked(self):
         self._repo = r = Repo()
@@ -197,6 +206,7 @@ class BindingTests(unittest.TestCase):
         rc, d = check(r.dir, "--baseline", base, "--target", base)
         self.assertEqual(2, rc)  # 禁止 PASS
         self.assertEqual("BLOCKED", d["verdict"])
+        self.assertEqual("R7", d["rules"][-1]["id"])
 
     def test_10b_empty_range_marked_na_still_blocked(self):
         self._repo = r = Repo()
@@ -204,6 +214,7 @@ class BindingTests(unittest.TestCase):
         rc, d = check(r.dir, "--baseline", base, "--target", base, "--mark-na", "无变更轮次")
         self.assertEqual(2, rc)
         self.assertEqual("BLOCKED", d["verdict"])
+        self.assertEqual("R7", d["rules"][-1]["id"])
         self.assertIn("不适用", d["rules"][-1]["detail"])  # 标注不适用但不得静默跳过
 
     def test_10c_target_not_descendant_blocked(self):
@@ -214,6 +225,7 @@ class BindingTests(unittest.TestCase):
         rc, d = check(r.dir, "--baseline", newer, "--target", root)
         self.assertEqual(2, rc)
         self.assertEqual("BLOCKED", d["verdict"])
+        self.assertEqual("R7", d["rules"][-1]["id"])
         self.assertIn("非 baseline 后代", d["rules"][-1]["detail"])
 
     # ---- B4 可复现性 ----
@@ -255,13 +267,63 @@ class BindingTests(unittest.TestCase):
             for root, _, files in os.walk(Path(d) / ".git"):
                 for f in files:
                     p = Path(root) / f
-                    out[str(p.relative_to(d))] = p.stat().st_size
+                    out[str(p.relative_to(d))] = hashlib.sha256(p.read_bytes()).hexdigest()
             return out
 
         before = snap(r.dir)
         check(r.dir, "--baseline", base, "--target", target)
         after = snap(r.dir)
-        self.assertEqual(before, after)  # 只读承诺：.git 文件清单与大小不变
+        self.assertEqual(before, after)  # 只读承诺：.git 文件清单+内容哈希不变
+
+
+
+    # ---- 故障注入（问题1 整改：git 失败→BLOCKED 禁止 PASS 放行）----
+    def _load_tool(self):
+        spec = importlib.util.spec_from_file_location("check_binding_mod", TOOL)
+        mod = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(mod)
+        return mod
+
+    def test_b5d_r4_git_fail_blocked(self):
+        """R4 rev-list target..HEAD 失败→BLOCKED（不得当作无后代放行 R4 PASS）"""
+        self._repo = r = Repo()
+        base = r.head()
+        target = r.commit("c1")
+        mod = self._load_tool()
+        real = mod.try_git
+        buf = _io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            def injected(repo_, *args):
+                if args == ("rev-list", f"{target}..HEAD"):
+                    return (128, "", "fatal: injected failure")
+                return real(repo_, *args)
+            mod.try_git = injected
+            rc = mod.main(["--baseline", base, "--target", target, "--repo", r.dir])
+        d = json.loads(buf.getvalue().strip().splitlines()[-1])
+        self.assertEqual(2, rc)
+        self.assertEqual("BLOCKED", d["verdict"])
+        self.assertTrue(any(x["id"] == "RX" and "无法核验" in x["detail"] for x in d["rules"]))
+        self.assertFalse(any(x["id"] == "R4" and x["verdict"] == "PASS" for x in d["rules"]))
+
+    def test_b5e_numstat_git_fail_blocked(self):
+        """numstat diff 失败→BLOCKED（不得静默返回空证据仍 PASS）"""
+        self._repo = r = Repo()
+        base = r.head()
+        target = r.commit("c1")
+        mod = self._load_tool()
+        real = mod.try_git
+        buf = _io.StringIO()
+        with contextlib.redirect_stdout(buf):
+            def injected(repo_, *args):
+                if args and args[0] == "diff":
+                    return (128, "", "fatal: injected numstat failure")
+                return real(repo_, *args)
+            mod.try_git = injected
+            rc = mod.main(["--baseline", base, "--target", target, "--repo", r.dir])
+        d = json.loads(buf.getvalue().strip().splitlines()[-1])
+        self.assertEqual(2, rc)
+        self.assertEqual("BLOCKED", d["verdict"])
+        self.assertTrue(any(x["id"] == "RX" for x in d["rules"]))
 
 
 if __name__ == "__main__":

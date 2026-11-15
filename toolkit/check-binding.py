@@ -94,7 +94,7 @@ def try_git(repo: str, *args: str):
     return (p.returncode, p.stdout.strip(), p.stderr)
 
 
-def main() -> int:
+def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="C1 申报绑定自动核验（只读）")
     ap.add_argument("--baseline", required=True)
     ap.add_argument("--target", required=True)
@@ -102,7 +102,7 @@ def main() -> int:
     ap.add_argument("--backfill-note", default=None, help="回填声明文本（声明该 commit 及其后代不属验收 diff 范围）")
     ap.add_argument("--mark-na", default=None, help="空区间时申报方'不适用'说明（verdict 仍 BLOCKED）")
     ap.add_argument("--repo", default=".", help="仓库路径（默认当前目录）")
-    ns = ap.parse_args()
+    ns = ap.parse_args(argv)
 
     repo = ns.repo
     rules: list[Rule] = []
@@ -176,9 +176,11 @@ def main() -> int:
                                           if not problems else "；".join(problems),
                                           commits=[c[0] for c in chain],
                                           remediation="逐条核链依据 git rev-list --reverse --parents；单 commit 申报时 parent 必须等于基线" if problems else ""))
-                    # R4/R5 最终性与回填声明
-                    rc, out, _ = try_git(repo, "rev-list", f"{ns.target}..HEAD")
-                    descendants = out.splitlines() if rc == 0 and out else []
+                    # R4/R5 最终性与回填声明（命令失败→fail-closed BLOCKED，不得当空列表放行）
+                    rc, out, err = try_git(repo, "rev-list", f"{ns.target}..HEAD")
+                    if rc != 0:
+                        raise GitCmdError(["rev-list", f"{ns.target}..HEAD"], err)
+                    descendants = out.splitlines()
                     note = (ns.backfill_note or "").strip()
                     if descendants and not note:
                         rules.append(Rule("R4", "FAIL",
@@ -188,9 +190,11 @@ def main() -> int:
                         rules.append(Rule("R5", "PASS", f"回填声明符合规则，识别并排除指定范围：{note}"))
                     else:
                         rules.append(Rule("R4", "PASS", "待验收 commit 无后代（=当前 HEAD），为最终申报对象"))
-                    # 附机器 numstat 供申报对照（只读）
-                    rc, out, _ = try_git(repo, "diff", "--numstat", f"{ns.baseline}..{ns.target}")
-                    if rc == 0 and out:
+                    # 附机器 numstat 供申报对照（只读；失败→fail-closed BLOCKED）
+                    rc, out, err = try_git(repo, "diff", "--numstat", f"{ns.baseline}..{ns.target}")
+                    if rc != 0:
+                        raise GitCmdError(["diff", "--numstat"], err)
+                    if out:
                         numstat = [ln.split("\t", 2) for ln in out.splitlines()]
         except GitCmdError as e:
             rules.append(Rule("RX", "BLOCKED", f"git 调用失败，无法核验（fail-closed）：{e}",
