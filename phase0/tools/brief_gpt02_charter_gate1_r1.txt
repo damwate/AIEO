@@ -1,0 +1,7 @@
+【立项 Gate1·GPT02-ARCH-REVIEW-LEG-CHARTER-DRAFT v0.1】TPT02-GATE1-R1|gpt02-charter
+任务：GPT-02 架构审核真实腿最小版立项任务书草案级验证（Gate1；先例=GPT-03 charter Gate1 76000828115f892e）。
+读仓库 github.com/damwate/AIEO（main=16ffc6ba0f38b2c668b056bfdab42daf2882393f）：
+1. docs/phase1/GPT02-ARCH-REVIEW-LEG-CHARTER-DRAFT.md（草案 v0.1 全文）
+2. 对照 docs/phase1/GPT03-REVIEW-LEG-CHARTER-DRAFT.md（同构框架基线）与 docs/立项/02-GPT角色与会话规范.md §3（GPT-02 职责/输出三态）
+草案级验证重点（Gate1 降档口径）：①§1 需求原文可确认性（用户可拍板）；②§2 事实基础准确性（已具备/待建划分）；③§4 状态路径与 M1 state_machine.py:28-30 合法出边一致性（ARCH_REVIEW：PASS→READY/REWORK→REWORK/BLOCKED→BLOCKED；REWORK→ARCH_REVIEW 重入）；④§9 防膨胀完整；⑤角色顺序推荐（GPT-02 先于 GPT-04/05）理由是否成立。
+回复仅一个```json对象：{"result":"PASS|REWORK","summary":"<一句话>","issues":["<具体问题>…"],"charter":"GPT02-ARCH-REVIEW-LEG"}；result仅PASS/REWORK。

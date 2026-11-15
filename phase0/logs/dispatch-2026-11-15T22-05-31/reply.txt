@@ -1,0 +1,12 @@
+ChatGPT 说：
+JSON
+{
+  "result": "REWORK",
+  "summary": "草案整体框架完整，需求原文、事实基础、防膨胀及角色顺序推荐基本成立，但§4对BLOCKED结论的状态处理尚未与M1合法出边及本次Gate1验证口径明确对齐。",
+  "issues": [
+    "P1-01（§4状态路径）：M1 app/platform/state_machine.py:28-30明确规定ARCH_REVIEW的合法出边为PASS→READY、REWORK→REWORK、BLOCKED→BLOCKED，并存在REWORK→ARCH_REVIEW重入边。草案§4明确PASS/REWORK推进，但BLOCKED仅登记不推进，没有完整呈现BLOCKED→BLOCKED合法出边。建议明确区分两种语义：①GPT-02返回BLOCKED时，是否由OWNER决定提交M1的BLOCKED事件；②腿级BLOCKED仅记录执行腿停止状态，不改变M1任务状态。不得将两者混为一谈。此项属于状态语义澄清，不要求放宽engine权限。",
+    "P2-01（§2事实基础）：已具备部分的复用依据总体充分，但GPT-03 review_leg.py的29用例PASS及M2真实收发能力属于既有交付事实，不等于GPT-02架构审核输入简报组装、角色身份初始化和结论映射已经具备。当前已将这些列入待工程化，分类正确；建议后续Gate2进一步明确GPT-02专属缺口及复用边界。",
+    "P2-02（§1角色顺序）：推荐GPT-02先于GPT-04/05的理由成立。GPT-02位于开发派发之前，架构问题越早发现返工成本越低；GPT-04依赖测试证据，GPT-05依赖批次聚合输入，后置合理。建议保留为推荐方案而非不可变顺序，最终由Gate2裁定。"
+  ],
+  "charter": "GPT02-ARCH-REVIEW-LEG"
+}

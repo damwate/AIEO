@@ -31,7 +31,8 @@
 
 ## 4. 状态与流程（I3）
 
-一期流程（单任务、每进入 ARCH_REVIEW 态一次审核轮，状态路径=M1 既有合法出边）：ARCH_REVIEW 态任务存在 → 腿组装审核简报（任务分解/影响面/依赖/验收标准）→ 真实派单（M2）→ 回复采集与契约校验 → 结论登记 M1（artifacts+messages，幂等键=`<run键>+arch-review-round-1`）→ 结论推进：**PASS→READY／REWORK→REWORK**（ARCH_REVIEW 合法出边）；REWORK 后人工修订方案→经 REWORK→ARCH_REVIEW 重入边重审（重审轮=人工触发，一期不自动循环）；**BLOCKED 结论→仅登记不推进**（任务级 BLOCKED 仅 OWNER，见 §5 语义区分）。
+一期流程（单任务、每进入 ARCH_REVIEW 态一次审核轮，状态路径=M1 既有合法出边）：ARCH_REVIEW 态任务存在 → 腿组装审核简报（任务分解/影响面/依赖/验收标准）→ 真实派单（M2）→ 回复采集与契约校验 → 结论登记 M1（artifacts+messages，幂等键=`<run键>+arch-review-round-1`）→ 结论推进：**PASS→READY／REWORK→REWORK**（ARCH_REVIEW 合法出边）；REWORK 后人工修订方案→经 REWORK→ARCH_REVIEW 重入边重审（重审轮=人工触发，一期不自动循环）。
+**BLOCKED 双语义（Gate1-R1 P1-01 澄清，不得混用）：** M1 状态机 ARCH_REVIEW 存在 `BLOCKED→BLOCKED` 合法出边（state_machine.py:30），但**任务级 BLOCKED=真实任务阻塞状态，仅 OWNER 人工决定提交**——GPT-02 腿收到 BLOCKED 结论时**仅登记（artifacts+messages）+腿级停止，不代为提交 M1 BLOCKED 事件**，M1 任务保持 ARCH_REVIEW 态，是否转 BLOCKED 由 OWNER 会话另行决策；**腿级 BLOCKED**=审核腿内部停止（run 记录），M1 任务状态不动，人工可接管。两种 BLOCKED 全文默认指腿级，与 GPT-03 charter §5 底线条款同构。
 **一期边界：** ①自动触发=每任务进入 ARCH_REVIEW 态**一次**；②REWORK 不自动修订重审；③腿任何环节失败→任务保持 ARCH_REVIEW 态停等人工（腿级 BLOCKED，M1 任务状态不动）。
 
 ## 5. 异常处理（I4）
