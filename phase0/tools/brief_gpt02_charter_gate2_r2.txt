@@ -1,0 +1,5 @@
+[立项评审|GPT02-ARCH-REVIEW-LEG|Gate2-R2|修订复验]
+Gate2-R1(reply 归档 dispatch-2026-11-15T22-34-25)REWORK 各项已落实。请读 github.com/damwate/AIEO@main efdd4cdf925c51bbde716ed4cf91271823df3fb5 docs/phase1/GPT02-ARCH-REVIEW-LEG-CHARTER-DRAFT.md v0.3。
+逐项复验:①状态机记法校正(ARCH_REVIEW→BLOCKED 出边/CANCEL 禁入标注);②A-1 端点表定稿粒度(7 行+identity_scope/idempotency_scope+/agents 出运行期白名单/reports/review 标注不使用);③A-2 路线 B 裁定(零修改自洽+GPT-03 多事务先例+非原子代价如实接受)+arch-review-report.schema.json 契约草案+简报四组输入+绑定字段+1200B 口径冻结;④A-3 九行恢复矩阵(含路线 B 专属行:报告已登记事件未推进按原 event_id 续推/登记不确定只读核实禁凭超时重提交)。
+复验范围:仅上述落实项;新问题另列。边界:仅立项评审,不授权开发;Gate3 留用户。
+回复仅一个```json对象:{"result":"PASS|REWORK","summary":"<一句话>","issues":["<未关闭项/新问题>…"],"charter":"GPT02-ARCH-REVIEW-LEG"};result仅PASS/REWORK。

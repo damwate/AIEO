@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aieo.local/contracts/v1.0/arch-review-report.schema.json",
+  "title": "AIEO architecture review report (GPT-02 leg) — DRAFT candidate",
+  "description": "草案候选契约（b-20261115-gpt02 立项 Gate2 产出）。非冻结文本：Gate3 用户拍板开工后才落位 contracts/v1.0/ 冻结（H2 契约冻结红线；冻结前仅立项评审消费）。登记载体=路线 B（M1 零修改）：artifacts+messages 多事务，不经 POST /reports/review（该端点 _require_execution 绑定 CODE_REVIEW）。字段依据=GPT02-ARCH-REVIEW-LEG-CHARTER-DRAFT.md §A-2（Gate2-R1 裁定稿）。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "task_id",
+    "review_round_id",
+    "reviewer_agent_id",
+    "engine_agent_id",
+    "input_material_commit",
+    "input_material_manifest_sha256",
+    "brief_sha256",
+    "result",
+    "summary"
+  ],
+  "properties": {
+    "contract_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+$" },
+    "task_id": { "type": "string", "pattern": "^T-(P[0-9]+-)?[0-9]{3,}$" },
+    "review_round_id": {
+      "type": "string",
+      "maxLength": 64,
+      "description": "架构审核轮标识；幂等键=<run键>+arch-review-round-N 的结构化落位"
+    },
+    "reviewer_agent_id": { "type": "string", "pattern": "^GPT-02$" },
+    "engine_agent_id": { "type": "string", "pattern": "^ENGINE-02$" },
+    "input_material_commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$",
+      "description": "审核材料版本锚定（固定 commit，禁隐式读最新 main）"
+    },
+    "input_material_manifest_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "brief_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "result": { "enum": ["PASS", "REWORK", "BLOCKED"] },
+    "summary": { "type": "string", "minLength": 1, "maxLength": 2000 },
+    "findings": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "具体发现（架构/依赖/边界/并发冲突）；PASS 时可为空数组"
+    },
+    "required_boundaries": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "审核要求维持的边界条件"
+    },
+    "failure_paths": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "要求补充设计的失败路径"
+    },
+    "remaining_findings": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "有规避但未根除的遗留发现（如实登记，不删记录）"
+    },
+    "unblocked": {
+      "type": "boolean",
+      "description": "辅助判断字段：不替代 result（Gate2-R1 §3.4 裁定）"
+    }
+  }
+}

@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-15T22:41:48.226Z",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "5a688983-8dee-403e-b818-7c256e4baf97",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "9b0f022dede85425f743612ec486a1e9ee2ee3b45bb521aab94e487096a06b9e",
+          "2b41d79f5b4a184523058ca4db9ef3d1914441657d174eab7522ac57df8cdfe4"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "9b0f022dede85425f743612ec486a1e9ee2ee3b45bb521aab94e487096a06b9e",
+          "2b41d79f5b4a184523058ca4db9ef3d1914441657d174eab7522ac57df8cdfe4"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-0:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n已读取指定锚点 efdd4cdf925c51bbde716ed4cf91271823df3fb5 的 v0.3 任务书。附录 A-1 至 A-3 已包含本轮要求的七行端点表、路线 B 裁定及九行恢复矩阵。\n\n```json\n{\n\"result\": \"REWORK\",\n\"summary\": \"v0.3 已落实状态机记法、A-1 七行端点白名单、路线 B 裁定及 A-3 九行恢复矩阵，但指定 SHA 下未找到独立的 arch-review-report.schema.json 契约草案文件。\",\n\"issues\": [\n\"P1-01（未关闭）：A-2 仅在任务书 §A-2 列出 arch-review-report.schema.json 的字段草案，指定 SHA 下 contracts/v1.0/arch-review-report.schema.json 返回 404，contracts/v1.0 目录清单亦无该文件。当前只能确认字段设计，不能确认独立 JSON Schema 契约草案已经形成。需补齐文件或明确将本轮交付口径限定为任务书内的契约字段草案。\",\n\"其余复验项：①通过，ARCH_REVIEW→BLOCKED 出边与 CANCEL 通用出边、engine 禁入边界区分正确；②通过，七行端点表、identity_scope/idempotency_scope、POST /agents 运行期白名单排除及 /reports/review 不使用均已落实；③路线 B 的零修改边界、GPT-03 多事务先例及非原子代价说明通过，四组简报输入、绑定字段及 1200B 口径通过；④通过，九行恢复矩阵包含路线 B 专属续推及登记不确定时只读核实、禁止超时重提交规则。\",\n\"新问题：未发现影响本轮限定复验的其他问题。\"\n],\n\"charter\": \"GPT02-ARCH-REVIEW-LEG\"\n}\n```",
+      "text_sha256": "2b41d79f5b4a184523058ca4db9ef3d1914441657d174eab7522ac57df8cdfe4",
+      "size_bytes": 1506,
+      "assistant_uuid": "5a688983-8dee-403e-b818-7c256e4baf97"
+    }
+  ]
+}

@@ -76,7 +76,7 @@ GPT-04/GPT-05 真实腿；多轮返工重审自动化；规划流（PLANNING 前
 
 **报告登记路线=路线 B（M1 零修改）**（Gate2-R1 架构阻断裁定；依据：①charter §3/§9 M1-M4 零修改边界自洽②GPT-03 腿先例=artifacts+messages+events 多事务登记+幂等+恢复已实战验证③DEC-011 契约冻结纪律）。代价如实接受：**报告登记与状态推进非原子**——恢复协议见 A-3 路线 B 专属行。路线 A（扩展 M1）被否决：违反零修改边界，须正式修改立项范围（不在本任务授权内）。
 
-**结论契约=新增 `contracts/v1.0/arch-review-report.schema.json`**（不照搬 review-report.schema.json——其 execution_id/reviewed_commit 语义绑定 CODE_REVIEW）：contract_version/task_id/review_round_id/reviewer_agent_id(GPT-02)/engine_agent_id(ENGINE-02)/input_material_commit(40hex)/input_material_manifest_sha256/brief_sha256/result(PASS/REWORK/BLOCKED)/summary/findings/required_boundaries/unblocked(辅助字段不替代 result)。登记=artifacts（报告证据）+messages（消息记录），**不经 /reports/review**。
+**结论契约=新增 arch-review-report 契约（草案文件 `docs/phase1/arch-review-report.schema.draft.json`，Gate3 开工拍板后落位 contracts/v1.0/ 冻结——H2 契约冻结红线；不照搬 review-report.schema.json——其 execution_id/reviewed_commit 语义绑定 CODE_REVIEW）：contract_version/task_id/review_round_id/reviewer_agent_id(GPT-02)/engine_agent_id(ENGINE-02)/input_material_commit(40hex)/input_material_manifest_sha256/brief_sha256/result(PASS/REWORK/BLOCKED)/summary/findings/required_boundaries/unblocked(辅助字段不替代 result)。登记=artifacts（报告证据）+messages（消息记录），**不经 /reports/review**。
 
 **简报输入四组**：任务身份（task_id/title/description，必填绑定本轮）/审核范围（files_scope/acceptance_criteria，原始语义不扩展）/依赖信息（task_dependencies+状态，标明未完成依赖）/审核材料（任务书/方案/ADR GitHub 指针，**固定 commit SHA 禁隐式读最新 main**）。新增绑定字段：review_round_id/input_material_commit/input_material_manifest_sha256/brief_sha256/brief_schema_version。
 
