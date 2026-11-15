@@ -449,8 +449,12 @@ class ReviewLeg:
                 # 发送时=1（本腿唯一 user unit，键由发送双验锚定）；采集时=R4 快照。
                 "user_unit_counts": {
                     "pre_send": 0,
-                    "pre_send_basis": "new-session: conversation created by this send",
+                    "pre_send_evidence_class": "presumed",
+                    "pre_send_basis": "new-session: conversation created by this send (no pre-read)",
                     "at_send": 1,
+                    "at_send_evidence_class": "presumed-pinned",
+                    "at_send_basis": "single-shot send; our user unit key pinned by send double-verify "
+                                     "(count not read from session at send time)",
                     "at_send_key": result.get("user_unit_key"),
                     "source": "dispatch result.json (send double-verify pinned user unit key)",
                     "snapshot_sha256": sha256_file(ddir / "result.json"),
@@ -488,6 +492,13 @@ class ReviewLeg:
         # 附录 C ②归属校验结果 / ④采集快照证据：从采集现场 result（dispatch 或 recoll）提取
         snap: dict = {}
         located_key = None
+        # 发送键交叉核验（P2-01）：采集定位键必须与账本发送锚点键一致（键身份一致强于计数）
+        sent_key = None
+        for anchor_kind in ("R3_SEND_CONFIRMED", "R3_SEND_CONFIRMED_COLLECT_FAILED"):
+            rec = self.ledger.state_flags().get(anchor_kind)
+            if rec and rec.get("sent_user_unit_key"):
+                sent_key = rec["sent_user_unit_key"]
+                break
         for cand_name in ("result.json", "recoll-result.json"):
             cand = reply_path.parent / cand_name
             if cand.is_file():
@@ -528,9 +539,12 @@ class ReviewLeg:
                             # 键身份一致=强于计数一致的 L-018 第 4 条归属校验口径）
                             "user_unit_counts": {
                                 "at_capture_materialized": snap.get("materialized_user_count"),
+                                "at_capture_evidence_class": "materialized" if snap.get("materialized_user_count") is not None else "unavailable",
                                 "target_key": located_key,
-                                "target_matches_sent_key": None,  # 由 resume_collect 与 R3 记录交叉后回填
-                                "source": snap.get("source") if isinstance(snap, dict) else None,
+                                "sent_key": sent_key,
+                                "target_matches_sent_key": (located_key == sent_key)
+                                if (located_key and sent_key) else None,
+                                "source": snap.get("materialized_source"),
                                 "snapshot_sha256": snap.get("snapshot_sha256") if isinstance(snap, dict) else None,
                             },
                             "extracted_at": utc_now_iso(),
@@ -801,16 +815,19 @@ class ReviewLeg:
         canon = {k: v for k, v in envelope.items() if k != "created_at"}
         return sha256_bytes(json.dumps(canon, ensure_ascii=False, sort_keys=True).encode("utf-8"))
 
-    @staticmethod
-    def _report_key_evidence(execution_id: str):
+    def _report_key_evidence(self, execution_id: str):
         """report 409 键精确核验：details.execution_id 结构化匹配 + message 文本按
-        M1 固定格式 'review report for (<execution_id>, <commit12>)..' 正则解析（非子串包含）。"""
+        M1 固定格式 'review report for (<execution_id>, <commit12>..)' 正则解析，
+        捕获组必须与本方 reviewed_commit[:12] 精确相等（NEW-P1-02：不匹配即非本方幂等
+        键，fail-closed）。"""
+        expected_commit12 = self.reviewed_commit[:12]
+
         def check(r) -> bool:
             if (r.get("details") or {}).get("execution_id") != execution_id:
                 return False
             m = re.search(r"review report for \(" + re.escape(execution_id)
                           + r", ([0-9a-f]{12})\.\.\)", str(r.get("message", "")))
-            return bool(m)
+            return bool(m) and m.group(1) == expected_commit12
         return check
 
     def _register_step(self, code: int, resp, want: tuple[int, ...], what: str,

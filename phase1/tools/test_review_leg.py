@@ -599,6 +599,11 @@ class ReviewLegTests(unittest.TestCase):
         r4 = leg.ledger.latest("R4_REPLY_CAPTURED")
         self.assertEqual(r4["user_unit_counts"]["at_capture_materialized"], 1,
                          "capture-time user unit count recorded from units-diag")
+        self.assertEqual(r4["user_unit_counts"]["at_capture_evidence_class"], "materialized")
+        self.assertEqual(r4["user_unit_counts"]["target_matches_sent_key"], True,
+                         "capture key must cross-check against sent key (P2-01)")
+        self.assertEqual(r4["user_unit_counts"]["source"], "units-diag.json",
+                         "count source must be the actual counting file")
         self.assertTrue(r4["snapshot"]["source"].startswith("recoll"))
 
     def test_08b_ledger_m1_contradiction_blocks(self):
@@ -815,6 +820,24 @@ class ReviewLegTests(unittest.TestCase):
     # ------------------------------------------------------------------
     # 发送失败 vs 采集失败区分（§5 行1/行2）
     # ------------------------------------------------------------------
+    def test_16_report_key_evidence_rejects_wrong_commit(self):
+        """NEW-P1-02 反例：report 409 响应中 commit 前缀与本方 reviewed_commit 不一致
+        → key_evidence 必须拒绝（fail-closed），不得仅凭 execution_id 匹配放行。"""
+        leg, task_id, _, _, commit = self.make_leg("f15", None)
+        check = leg._report_key_evidence("EXEC-099")
+        good = {"code": "RES-0003", "details": {"execution_id": "EXEC-099"},
+                "message": "DUPLICATE_MESSAGE: review report for (EXEC-099, "
+                           f"{commit[:12]}..) already registered"}
+        bad = {"code": "RES-0003", "details": {"execution_id": "EXEC-099"},
+               "message": "DUPLICATE_MESSAGE: review report for (EXEC-099, "
+                          "bbbbbbbbbbbb..) already registered"}
+        self.assertTrue(check(good), "matching commit prefix must be accepted")
+        self.assertFalse(check(bad), "wrong commit prefix must be rejected (NEW-P1-02)")
+        wrong_exec = {"code": "RES-0003", "details": {"execution_id": "EXEC-111"},
+                      "message": "review report for (EXEC-111, "
+                                 f"{commit[:12]}..) already registered"}
+        self.assertFalse(check(wrong_exec), "wrong execution must be rejected")
+
     def test_15_send_failure_one_redispatch_then_blocked(self):
         leg, task_id, _, ctx, commit = self.make_leg("f14", lambda c: self.reply_for(c, "PASS"),
                                                      fail_first_send=True)
