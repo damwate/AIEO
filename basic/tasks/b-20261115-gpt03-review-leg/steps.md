@@ -74,7 +74,7 @@
 ## S2 注入类验收矩阵执行（A2/A3/A4/A5/A7/A8/A9/A10）
 
 - ①本步骤目标：按 charter §7+附录 D 执行注入类用例并归档证据（真实派单类 A1/A6 留 S3）。
-- ②注入与预期（逐项对应 §7 表与附录 D A7-A10 行）：
+- ②修改文件：phase1/tools/review_leg.py（S2 前置适配：pointer 简报模式/attach 语义/INTENT-only fail-closed/NEW-P2-03 修复）、phase1/tools/test_review_leg.py（test_16c/16d/16e/17/18/19）、任务包申报与 evidence-s2/ 证据归档；③修改内容：注入类用例按 charter §7+附录 D 逐项执行（注入注入点/预期/证据见下与 ④⑤⑥ 实态）。②注入与预期（逐项对应 §7 表与附录 D A7-A10 行）：
   - A3 采集 fail-closed 注入：**注入点=采集层只读构造**（强制小视口 reload 触发虚拟化窗口，使采集报 INBOUND_WINDOW_COMPLETENESS_UNPROVEN；不改工具代码）→证明禁重发（dispatch 账本仅一次 SEND_STARTED+会话内 user unit 计数与发送后快照一致）→按 §5 补采恢复或腿级 BLOCKED；出现第二次发送=FAIL。
   - A4 幂等重放：A1 完成后重放同一登记请求原文（artifacts+messages+事件，幂等键=review-round-1）→M1 无重复登记+无新外部副作用（dispatch 目录数不增+会话 user unit 数不变）。
   - A5 两类断点：①已发送未采集（reply 未落盘时终止进程）→恢复走禁重发+补采路径；②已采集未登记（reply 已落盘、M1 登记未完成时终止）→仅补登记，不重新触发 GPT-03（L-008 语义）。
@@ -99,7 +99,7 @@
 
 - ①本步骤目标：真实闭环——A1 正常审查轮（真实 chatgpt.com GPT-03 派单收发+冻结契约校验+M1 登记+结论推进）与 A6 人工退路演练；双分支证据归档（开发分支+证据分支）。
 - ②场景与对象：DEV_REPORTED 真实任务（908 DB 复用：T-P1-017/T-P1-018 实存 DEV_REPORTED，开工侦察已核实；或按需经既有 bootstrap 先例新造）；A1 预期状态路径逐步核实=DEV_REPORTED→GIT_VALIDATING（GIT_VALIDATE）→CODE_REVIEW（PASS）→审查派单采集→结论登记→PASS→TEST_ACCEPTANCE／REWORK→REWORK；必留证据=dispatch 目录+reply SHA+M1 事件序列（task_events）+契约校验输出。A6=腿级 BLOCKED 现场下人工经既有派单链完成审查并按**同一契约校验+同一幂等键**登记；判定=artifacts+messages+事件三项登记齐+状态推进与自动路径一致。
-- ③执行结果：S3 场景已由 S2 期间真实审查轮**完整承载并超额覆盖**（零 mock 已满足，无新增代码）：
+- ②修改文件：无新增（真实证据由 S2 期间真实轮承载）；③修改内容：S3 场景执行确认（六要素引用详见⑥——dispatch 目录/reply SHA/M1 事件序列齐）。场景承载：S3 场景已由 S2 期间真实审查轮**完整承载并超额覆盖**（零 mock 已满足，无新增代码）：
   - **A1 正常审查轮**（三次真实执行）：918003/T-P1-017（REWORK）——DEV_REPORTED→GIT_VALIDATING→CODE_REVIEW→真实派单→契约校验→登记→REWORK 推进，dispatch+reply SHA（498cbcff…）+M1 事件序列+契约校验输出四件证据齐；918005/T-P1-018（PASS→TEST_ACCEPTANCE）与 918011/T-P1-024（PASS→TEST_ACCEPTANCE）同构复核。
   - **A2 真实达成**（918003）：结论=返工→REWORK→停等人工（A10 resume→RESUME_DONE 零派单）。
   - **A4 真实重放**（918003）：同一请求原文重放→双证命中×2→M1 计数 1/1/1 不变、零新派单。
@@ -107,16 +107,16 @@
   - **A5①+A8 真实现场**（918012/T-P1-026）：发送双验 polls=2→进程中断→A8 fail-closed→人工取证（run.log+CDP）→追加式补账→原会话补采→补登记→推进 TEST_ACCEPTANCE；918013/T-P1-027（REWORK）孤儿 run 同口径恢复。
 - ④执行结果：S3 无新增代码（真实证据承载确认）；S2-R8 复验已对全部真实链证据完成独立核验（MANIFEST blob 绑定抽验通过）。
 - ⑤测试结果：29/29 PASS（test-run-s2r3b.txt 归档）；真实链七任务账本/dispatch/M1 导出全归档（evidence-s2/）。
-- ⑥验收证据引用：**S3 验收=S2-R8 PASS 裁定（reply sha256=d60e93fc…）对 A1/A2/A4/A5①/A6/A8/A10 真实证据的整体确认**（review-request-s2-r8.md 所引 evidence-s2/ 全集+steps S2⑥ 七任务清单）；S3 独立验收并入 S4 交付确认轮一并核验（避免重复派单消耗，凭 S2-R8 对同批证据的 PASS 裁定引用）。
+- ⑥验收证据引用：**S3 验收结论：PASS**（S2-R8 裁定 reply sha256=d60e93fc9737f16e52b4e809cc9902c6a7b26ac82fe6bc9e642f15b2f34224fe 对真实证据整体确认；dispatch 目录引用=dispatch-2026-11-15T16-01-00（918003）/dispatch-2026-11-15T16-11-04（918005）/dispatch-2026-11-15T16-20-16（A6 918007）/dispatch-2026-11-15T16-43-52（918010）/dispatch-2026-11-15T16-59-57（918011）/dispatch-2026-11-15T17-12-16+dispatch-2026-11-15T17-45-19（918013）；reply SHA256 全文=evidence-s2/dispatch/ 各 result.json 的 reply_readback_sha256 字段）。**S3 验收=S2-R8 PASS 裁定（reply sha256=d60e93fc…）对 A1/A2/A4/A5①/A6/A8/A10 真实证据的整体确认**（review-request-s2-r8.md 所引 evidence-s2/ 全集+steps S2⑥ 七任务清单）；S3 独立验收并入 S4 交付确认轮一并核验（避免重复派单消耗，凭 S2-R8 对同批证据的 PASS 裁定引用）。
 
 ## S4 交付登记与完工确认
 
 - ①本步骤目标：delivery.md（按 docs/phase1/handoff-template.md）+decision-log 登记+完工六查+申报（ST-01 绑定核验：git diff --numstat 机器值入申报；ST-05 自检通过后派单）。
 - ②修改文件：本任务包 delivery.md/steps.md⑥ 回填、docs/phase1/decision-log.md、任务包状态字段。
-- ③执行结果：delivery.md 成文（七要素：交付总状态/验收链摘要/红线遵守/决策登记/待确认遗留/证据索引）；完工六查满足（S1-S3 全 PASS+S4 交付确认派单）；ST-01 绑定核验=本次待验收 commit（见⑥）；task-brief 状态更新。
+- ③修改内容：delivery.md 成文与终态回填（七要素+总状态两态演变：申报版→R1 REJECT 如实化→R2 PASS 终版）；steps.md S4 段与返工表问题28/29 行；task-brief 状态字段；ST-01 绑定核验=8e7dd0e..9a3c4c5 count=5。执行结果：delivery.md 成文（七要素：交付总状态/验收链摘要/红线遵守/决策登记/待确认遗留/证据索引）；完工六查满足（S1-S3 全 PASS+S4 交付确认派单）；ST-01 绑定核验=本次待验收 commit（见⑥）；task-brief 状态更新。
 - ④执行结果：S4 交付登记完成；**本次待验收 commit=见⑥**（delivery.md+状态字段+⑦ 本行）。
 - ⑤测试结果：代码零变更（纯交付登记文档）；29/29 既有记录引用（test-run-s2r3b.txt）。
-- ⑥验收证据引用：**S4-R1 交付确认**（dispatch-2026-11-15T19-21-28 发送双验过、采集 fail-closed 禁重发→视口变体 recoll_gpt03_s4final.mjs 成功 recoll-2026-11-15T19-25-58-495Z，reply 4191B sha256=7dad95fc2d09dc262f05a92d8e4aa4e8982b1495bed78475390b36000d04c86e）=**REJECT 2 项**（问题28=NEW-P2-05 区间分类不成立：8e7dd0e 系 Compare 基线非区间成员，且后继申报回填 a3cfdfd/091ec8e/c5afe20 未按规则排除——正解=排除 3（a3cfdfd/091ec8e/c5afe20）计入 2（2321e98 S2 PASS 登记+DEC-061、9a3c4c5 S4 交付登记）；问题29=NEW-P2-06 交付总状态提前宣告完成）→ 整改（delivery 总状态如实化+区间分类重列）→ **S4-R2 限定复验=待验收 commit 见本节更新**（S1/S2/S3 PASS 维持不重开、不消耗真实派单）。
+- ⑥验收证据引用：**S4-R1 交付确认**（dispatch-2026-11-15T19-21-28 发送双验过、采集 fail-closed 禁重发→视口变体 recoll_gpt03_s4final.mjs 成功 recoll-2026-11-15T19-25-58-495Z，reply 4191B sha256=7dad95fc2d09dc262f05a92d8e4aa4e8982b1495bed78475390b36000d04c86e）=**REJECT 2 项**（问题28=NEW-P2-05 区间分类不成立：8e7dd0e 系 Compare 基线非区间成员，且后继申报回填 a3cfdfd/091ec8e/c5afe20 未按规则排除——正解=排除 3（a3cfdfd/091ec8e/c5afe20）计入 2（2321e98 S2 PASS 登记+DEC-061、9a3c4c5 S4 交付登记）；问题29=NEW-P2-06 交付总状态提前宣告完成）→ 整改（delivery 总状态如实化+区间分类重列）→ **S4-R2 限定复验**（前会话 CONTEXT_LIMIT_STOP→按 L-018 第 6 条主动迁移新会话 6afa0860，dispatch-2026-11-15T19-29-50 直接采集成，reply 3338B sha256=e24d5845ac2f828ba49c9b9ae435ea2c69cab46aabedb1e5e7f5e563ff06dd2d）=**PASS**（①NEW-P2-05 关闭：区间分类重列获独立 Compare 核验——5 后继中排除 3（a3cfdfd/091ec8e/c5afe20 申报回填类）计入 2（2321e98/9a3c4c5）；②NEW-P2-06 关闭：delivery 总状态与任务状态一致，未提前宣告）。**S4 验收结论：PASS**。**任务完工：S1-S4 全 PASS（问题 1-29 全部关闭）；最终结果=PASS；任务状态=完成**（DEC-062 登记）。
 
 ## 纪律条款（全步骤有效）
 

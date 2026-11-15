@@ -496,3 +496,12 @@
 - **S3 承载确认**：真实端到端场景（A1 三轮/A2/A4 重放/A5①+A8/A6 人工链/A10）已由 S2 期间七任务真实审查轮完整承载，S3 独立验收并入 S4 交付确认轮核验（免重复派单）。
 - **过程**：S2 链派单 fail-closed 累计 7 次全部"禁重发→归属校验型补采（含视口拉高升级）→七查过"恢复，零重发；会话 6af9e82c 持续承接（tab 泄漏待办已登记 DEC-060）。
 - **关联**：DEC-060、会商乙方案（65914169…）、L-018/L-021、H9/H10。
+
+### DEC-062 GPT-03 审查腿任务 COMPLETED：S4 交付确认 PASS——全任务终态（2026-11-16，任务完成登记）
+
+- **S4 验收链**：R1 交付确认 REJECT 2 项（NEW-P2-05 区间分类/NEW-P2-06 总状态提前宣告）→整改（区间分类重列：8e7dd0e..9a3c4c5 排除 3 计入 2；delivery 总状态如实化）→**R2 限定复验 PASS**（reply sha256=e24d5845ac2f828ba49c9b9ae435ea2c69cab46aabedb1e5e7f5e563ff06dd2d，会话迁移后新会话 6afa0860——前会话 6af9e82c CONTEXT_LIMIT_STOP）。
+- **任务终态：完成/最终结果=PASS**。S1 编排实现 PASS（R1-R5）+S2 注入矩阵 PASS（R1-R8+会商乙方案）+S3 真实证据承载确认+S4 交付确认 PASS——问题 1-29 全部关闭；ST-05 COMPLETED 态全项 PASS。
+- **交付物**：phase1/tools/review_leg.py（GPT-03 审查腿编排）+review_leg_recoll_template.mjs+test_review_leg.py（29 用例）+test_runner_common.py；evidence-s2/ 109 件证据（git-blob 绑定）；delivery.md 七要素终态。
+- **真实业务成果（零 mock）**：七任务真实审查轮全部经真实 chatgpt.com 收发并按 M1 状态机推进（REWORK×3/PASS×4）；A1-A10 验收矩阵全场景覆盖（真实执行+会商乙组合证据）；派单 fail-closed 7 次全补采零重发。
+- **待用户拍板事项（9 点后）**：①T-P1-017 REWORK 处置（--version/--help 优先级 P2 问题）；②Chrome tab 泄漏清理小任务立项；③GPT-02/04/05 接入立项（DEC-026 路线）；④standard/WORKFLOW.md 与 M2 规范候选批准生效（H5/H6）。
+- **关联**：DEC-057~061、charter 定稿 v1.0、会商乙方案（65914169…）、L-018/L-020/L-021、H1~H12。
