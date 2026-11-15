@@ -1,4 +1,4 @@
-// v0.3生效落地复核轮补采驱动v2(recoll_dod_plan.mjs)：仅对已发送成功的会话重新提取回复（不发送、不重发）。
+// v0.3生效落地复核轮补采驱动v2(recoll_rep_acc.mjs)：仅对已发送成功的会话重新提取回复（不发送、不重发）。
 // 背景：recoll_v03act_r2.mjs 用固定键 fallback-turn-5:0:user 补采，结果 reply SHA256 与 R1 轮完全相同
 //       （a9e3059b…）=采到 R1 旧回复——reload 后虚拟化物化键重排，相同键字符串指向了旧 user（L-018 第3条
 //       "采到错误 reply"变体：键字符串相同但语义漂移）。本驱动即发现即弃用该结果。本任务轮：CONV_UUID 换新审查会话 6af93e42（旧会话 6af90e6f 达上限归档），首派漏换经 units-diag 当场发现即纠正（L-018 第 3 条检查单实战）。
@@ -18,10 +18,10 @@ import {
 } from "./inbound_reply.mjs";
 
 const CDP_URL = "http://127.0.0.1:9222";
-const CONV_UUID = "6af978f4-1288-83ec-b240-cc98f86a1915";
-const MARKER = "[规划协商|b-20261115-basic-dod|";
+const CONV_UUID = "6af93e42-91e8-83ec-943f-8e312e1b50a0";
+const MARKER = "[独立验收|b-20261115-basic-replication-verify|";
 const R1_REPLY_SHA256 = "21d3150d1c3f70ba"; // 前轮 reply SHA 前缀排除（R2），not_prev_reply_sha 用前缀匹配
-const FAILED_DIR = join(process.cwd(), "phase0", "logs", "dispatch-2026-11-15T07-54-43");
+const FAILED_DIR = join(process.cwd(), "phase0", "logs", "dispatch-2026-11-15T07-47-38");
 const OUT_DIR = join(process.cwd(), "phase0", "logs", `recoll-${new Date().toISOString().replace(/[:.]/g, "-")}`);
 const IDLE_WAIT_MS = Number(process.env.AIEO_RECOLL_IDLE_WAIT_MS || 30000);
 
@@ -49,8 +49,7 @@ try {
   log(`页面就位: ${page.url()}`);
   const vp = await page.evaluate(() => ({ w: window.innerWidth, h: window.innerHeight, dpr: window.devicePixelRatio }));
   const cdp = await ctx.newCDPSession(page);
-  const SKIP_VP = true; // 诊断：units=0 疑似视口覆盖破坏渲染
-  if (!SKIP_VP) { /* 诊断禁用 */ }
+  await cdp.send("Page.setDeviceMetricsOverride", { width: vp.w, height: 20000, deviceScaleFactor: vp.dpr || 1, mobile: false });
   log(`视口覆盖已应用（${vp.w}×20000）`);
   await page.waitForTimeout(8000);
   try {
@@ -75,29 +74,8 @@ try {
       if (ready.ok) break;
       await page.waitForTimeout(2000);
     }
-    if (!ready.ok) {
-      // L-018 三步诊断②：reload 对照（units=0=渲染未就绪态，reload 重试一次）
-      log(`静置门未通过(${JSON.stringify(ready)})，执行 reload 对照重试`);
-      await page.reload({ waitUntil: "domcontentloaded", timeout: 60000 });
-      await page.waitForTimeout(15000);
-      const t0b = Date.now();
-      while (Date.now() - t0b < 60000) {
-        ready = await page.evaluate(() => {
-          const composer = !!document.querySelector('[aria-label="询问 ChatGPT"], [aria-label="Ask ChatGPT"], #prompt-textarea');
-          const units = document.querySelectorAll("[data-content-search-unit-key]").length;
-          return { composer, units, ok: composer && units > 0 };
-        });
-        if (ready.ok) break;
-        await page.waitForTimeout(2000);
-      }
-      if (!ready.ok) throw new Error(`静置门 reload 后仍未通过: ${JSON.stringify(ready)}`);
-      log(`reload 后静置门通过（units=${ready.units}）`);
-    }
+    if (!ready.ok) throw new Error(`静置门未通过: ${JSON.stringify(ready)}`);
     log(`静置门通过（units=${ready.units}）；额外静置 ${IDLE_WAIT_MS}ms`);
-    await page.keyboard.press("End");
-    await page.waitForTimeout(5000);
-    await page.mouse.wheel(0, 50000);
-    await page.waitForTimeout(5000);
     await page.waitForTimeout(IDLE_WAIT_MS);
 
     // 归属校验型定位：列出全部物化 unit，按简报标记找本轮 user
@@ -147,9 +125,9 @@ try {
     const replySha = createHash("sha256").update(second.reply, "utf8").digest("hex");
     log(`reply 已落盘: ${artifacts.reply.path}（${Buffer.byteLength(second.reply, "utf8")} 字节，SHA256=${replySha.slice(0, 16)}…）`);
     const result = {
-      recollection: true, driver: "recoll_dod_plan.mjs",
+      recollection: true, driver: "recoll_rep_acc.mjs",
       remediation: "归属校验型定位（简报标记文本唯一+最后user断言+R1 SHA排除），未重发任何消息",
-      reference_failed_dispatch_dir: "phase0/logs/phase0/logs/dispatch-2026-11-15T07-54-43",
+      reference_failed_dispatch_dir: "phase0/logs/phase0/logs/dispatch-2026-11-15T07-47-38",
       prior_misrecollection: { driver: "recoll_v03act_r2.mjs", got_r1_reply_sha256: R1_REPLY_SHA256, root_cause: "reload后物化键重排，同名字符串指向旧user" },
       conversation_url: `https://chatgpt.com/c/${CONV_UUID}`,
       sent_user_unit_key: target.key, assistant_uuid: second.assistant_uuid,
