@@ -28,3 +28,9 @@
 - ⑤测试结果：待登记
 - ⑥验收证据引用：待验收派单后登记
 
+
+## 返工记录表（首次 REJECT 时建表；按"同一问题"计数）
+
+| 问题编号 | 轮次来源 | 问题描述 | 整改内容 | 修复 commit | 验证 |
+|---|---|---|---|---|---|
+| 问题1 | R1 验收 REJECT P1 | 证据绑定未闭合：steps.md S1③ 未直接登记完整被测 SHA（写"见交付 commit"拖延句），MANIFEST 末行无被测 SHA，申报完整 SHA 不能代替仓库内登记 | steps.md S1③ 明文登记被测 commit=240ace69f7a0b3af5ff438a4ec834bcf0f040bd9；ls-MANIFEST.txt 重写=被测 commit 完整 SHA+五输出 SHA256+五条生成命令+绑定语义（登记后置不属被测 diff） | 9eaed62f2503e1dca50f1e2b6a903f63fb988a8a | 复核轮确认问题1 关闭 |
