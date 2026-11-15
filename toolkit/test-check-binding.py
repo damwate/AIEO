@@ -207,6 +207,7 @@ class BindingTests(unittest.TestCase):
         self.assertEqual(2, rc)  # 禁止 PASS
         self.assertEqual("BLOCKED", d["verdict"])
         self.assertEqual("R7", d["rules"][-1]["id"])
+        self.assertIn("区间 commit 数==0", d["rules"][-1]["detail"])  # R7 具体原因断言
 
     def test_10b_empty_range_marked_na_still_blocked(self):
         self._repo = r = Repo()
@@ -215,6 +216,7 @@ class BindingTests(unittest.TestCase):
         self.assertEqual(2, rc)
         self.assertEqual("BLOCKED", d["verdict"])
         self.assertEqual("R7", d["rules"][-1]["id"])
+        self.assertIn("区间 commit 数==0", d["rules"][-1]["detail"])  # R7 具体原因断言
         self.assertIn("不适用", d["rules"][-1]["detail"])  # 标注不适用但不得静默跳过
 
     def test_10c_target_not_descendant_blocked(self):
