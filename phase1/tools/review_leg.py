@@ -282,6 +282,7 @@ class ReviewLeg:
             raise OrchestrationError(0, f"diff artifact sha mismatch: m1={art.get('sha256')} local={local_sha}")
         self.ledger.append({"kind": "R0_PRECHECK", "task": {"task_id": self.task_id, "status": status},
                             "execution_id": execution["execution_id"], "batch_id": task.get("batch_id"),
+                            "review_round": 1, "idempotency_key": self.idem_keys["idempotency_key"],
                             "diff_artifact_id": self.diff_artifact_id,
                             "diff_local_sha256": local_sha, "outcome": "PASS"})
         return task
@@ -404,10 +405,22 @@ class ReviewLeg:
                 last_err = f"gpt_dispatch exit {proc.returncode}: {proc.stderr.decode('utf-8', 'replace')[:300]}"
                 fresh = self._find_dispatch_dir(must=False, since=attempt_started)
                 if fresh is not None and (fresh / "result.json").is_file():
-                    # 发送双验已过而后续采集失败：采集 fail-closed 家族——禁重发（§5 行2/L-018）
+                    # 发送双验已过而后续采集失败：采集 fail-closed 家族——禁重发（§5 行2/L-018）。
+                    # P1-03：落账必含原会话与发送证据（conversation_uuid/sent_user_unit_key），
+                    # resume 将本记录视为"已发送未采集"断点接原会话补采。
+                    try:
+                        fres = json.loads((fresh / "result.json").read_text(encoding="utf-8"))
+                    except ValueError:
+                        fres = {}
                     self.ledger.append({"kind": "R3_SEND_CONFIRMED_COLLECT_FAILED",
                                         "attempt": attempt, "dispatch_dir": fresh.name,
-                                        "error": last_err, "note": "resend forbidden; recovery via resume补采",
+                                        "conversation_uuid": (fres.get("conversation_url") or "").rsplit("/", 1)[-1] or None,
+                                        "sent_user_unit_key": fres.get("user_unit_key"),
+                                        "next_user_unit_key": fres.get("next_user_unit_key"),
+                                        "unit_count": fres.get("unit_count"),
+                                        "result_json_sha256": sha256_file(fresh / "result.json"),
+                                        "error": last_err,
+                                        "note": "resend forbidden; resume treats as sent-not-captured breakpoint",
                                         "outcome": "CONFIRMED"})
                     raise OrchestrationError(3, f"send double-verified but collection failed "
                                                 f"(禁重发; run resume for recovery): {last_err}")
@@ -418,11 +431,20 @@ class ReviewLeg:
             result = json.loads((ddir / "result.json").read_text(encoding="utf-8"))
             self.ledger.append({
                 "kind": "R3_SEND_CONFIRMED", "attempt": attempt, "dispatch_dir": ddir.name,
+                # 附录 C ①任务与审查轮标识 / ②会话标识 / ③派单账本 / ④会话快照：
+                "review_round": 1, "idempotency_key": self.idem_keys["idempotency_key"],
                 "conversation_uuid": (result.get("conversation_url") or "").rsplit("/", 1)[-1],
+                "conversation_created_at": utc_now_iso(),
+                "profile": "runtime/chrome_profiles/gpt-poc", "session_role": "reviewer",
+                "ownership_check": "deferred_to_R4_marker_locate",
                 "sent_user_unit_key": result.get("user_unit_key"),
-                "assistant_unit_count": result.get("unit_count"),
+                "next_user_unit_key": result.get("next_user_unit_key"),
+                "assistant_uuid": result.get("assistant_uuid"),
+                "unit_count": result.get("unit_count"),
+                "unit_keys": result.get("unit_keys"),
                 "result_json_sha256": sha256_file(ddir / "result.json"),
                 "completion_checks": result.get("completion_checks"),
+                "send_state": "SEND_CONFIRMED",
                 "outcome": "CONFIRMED"})
             return ddir
         raise OrchestrationError(3, f"dispatch failed after {attempts} attempt(s) "
@@ -452,8 +474,33 @@ class ReviewLeg:
             raise OrchestrationError(4, "reply identical to previous reply (L-018 归属冲突: SHA 全同=排除条件)")
         if reply_path.parent != self.run_dir:
             (self.run_dir / "reply.txt").write_bytes(raw)
+        # 附录 C ②归属校验结果 / ④采集快照证据：从采集现场 result（dispatch 或 recoll）提取
+        snap: dict = {}
+        located_key = None
+        for cand_name in ("result.json", "recoll-result.json"):
+            cand = reply_path.parent / cand_name
+            if cand.is_file():
+                try:
+                    snap_src = json.loads(cand.read_text(encoding="utf-8"))
+                except ValueError:
+                    continue
+                located_key = snap_src.get("located_user_unit_key") or snap_src.get("user_unit_key")
+                snap = {"unit_count": snap_src.get("unit_count"), "unit_keys": snap_src.get("unit_keys"),
+                        "assistant_uuid": snap_src.get("assistant_uuid"),
+                        "stability": bool((snap_src.get("stability") or {}).get("stable", True))
+                        if isinstance(snap_src.get("stability"), dict) else None,
+                        "checks": snap_src.get("completion_checks") or snap_src.get("checks"),
+                        "snapshot_sha256": sha256_file(cand), "source": cand_name}
+                break
         self.ledger.append({"kind": "R4_REPLY_CAPTURED", "bytes": len(raw), "reply_sha256": reply_sha,
-                            "source_dir": str(reply_path.parent), "outcome": "CAPTURED"})
+                            "source_dir": str(reply_path.parent),
+                            "marker_text": self.marker_text,
+                            "located_user_unit_key": located_key,
+                            "marker_hit_count": 1 if located_key else None,
+                            "last_user_assert": bool(located_key),
+                            "snapshot": snap,
+                            "extracted_at": utc_now_iso(),
+                            "outcome": "CAPTURED"})
         parsed = self.extract_review_json(raw.decode("utf-8", "replace"))
         if parsed.get("reviewed_commit") != self.reviewed_commit:
             raise OrchestrationError(4, f"reply reviewed_commit mismatch: {parsed.get('reviewed_commit')}")
@@ -483,7 +530,10 @@ class ReviewLeg:
                                         f"{json.dumps(ajv)[:400]}")
         self.ledger.append({"kind": "R4_CONTRACT_VALID", "reply_sha256": reply_sha,
                             "result": parsed.get("result"), "message_id": self.message_id(),
-                            "batch_id": batch_id, "outcome": "PASS"})
+                            "batch_id": batch_id,
+                            "ajv_envelope_errors": ajv["envelope"]["errors"],
+                            "ajv_request_errors": ajv["request"]["errors"],
+                            "outcome": "PASS"})
         return {"parsed": parsed, "envelope": envelope, "reply_sha256": reply_sha,
                 "reply_path": reply_path, "source_dir": reply_path.parent}
 
@@ -535,34 +585,91 @@ class ReviewLeg:
         return json.loads(proc.stdout.decode("utf-8"))
 
     # ------------------------------------------------------------------
-    # R5 结论登记（artifacts→messages→reports/review；附录 E 权威关系；部分成功可续；
-    # 409=幂等命中语义：核验响应可辨识后视为已完成，无法证明即 fail-closed）
+    # R5 结论登记（artifacts→messages→reports/review；附录 E 权威关系；部分成功可续）
+    # P1-02：skip=账本已逐项核实的既有成功项（保留原 ID，只补缺项，不重发不覆盖）
+    # P1-01：409 幂等命中=双证核验（响应指认本次键 + 账本请求指纹一致），无法证明即 fail-closed
     # ------------------------------------------------------------------
-    def r5_register(self, task: dict, captured: dict) -> dict:
+    @staticmethod
+    def _req_sha(obj) -> str:
+        return sha256_bytes(json.dumps(obj, ensure_ascii=False, sort_keys=True).encode("utf-8"))
+
+    def _ledger_verified(self, task: dict, captured: dict) -> set:
+        """P1-02 逐项只读核实：账本既有成功记录与当前待登记内容链核验。
+        artifact=白名单 GET 实读回核（task 关联+SHA，强证据）；
+        message/report=账本请求指纹链（确定性键+reply SHA+execution 关联一致，附录 C
+        证据规则①账本交叉证明/④逐项记录已成功 ID）。任一链节不符→视为未完成项。"""
+        flags = self.ledger.state_flags()
+        verified: set = set()
+        reply_sha = captured.get("reply_sha256")
+        fa = flags.get("R5_ARTIFACT")
+        if fa and fa.get("artifact_id"):
+            code, art = self.engine.get(f"/api/v1/artifacts/{fa['artifact_id']}")
+            if code == 200 and isinstance(art, dict) and art.get("task_id") == self.task_id \
+                    and art.get("sha256") == reply_sha:
+                verified.add("artifact")
+        fm = flags.get("R5_MESSAGE")
+        if fm and fm.get("message_id") == self.message_id() \
+                and fm.get("reply_sha256") == reply_sha \
+                and fm.get("request_sha"):
+            verified.add("message")
+        fr = flags.get("R5_REPORT")
+        execution_id = (task.get("latest_execution") or {}).get("execution_id")
+        if fr and fr.get("result") == captured["parsed"].get("result") \
+                and fr.get("reply_sha256") == reply_sha \
+                and fr.get("execution_id") == execution_id \
+                and fr.get("request_sha"):
+            verified.add("report")
+        return verified
+
+    def r5_register(self, task: dict, captured: dict, skip: frozenset[str] = frozenset()) -> dict:
         parsed, envelope = captured["parsed"], dict(captured["envelope"])
         envelope["batch_id"] = task.get("batch_id")
         result = parsed["result"]
+        execution_id = (task.get("latest_execution") or {}).get("execution_id")
         out: dict[str, str | None] = {"artifact_id": None, "message_id": None, "review_report_id": None}
 
+        # ① artifact（M1 幂等语义：路径+SHA 相同→201 duplicate:true 返回原记录；
+        #            路径同 SHA 不同→409 真冲突→无幂等命中路径，fail-closed）
         ev_rel = f"runtime/review-leg/rvl-{self.run_key}/reply.txt"
-        body = {"task_id": self.task_id, "type": "REVIEW_EVIDENCE",
-                "path": ev_rel, "sha256": captured["reply_sha256"]}
-        code, resp = self.engine.post("/api/v1/artifacts", body)
-        out["artifact_id"] = self._register_step(code, resp, (200, 201, 202, 409), "artifact",
-                                                 lambda r: str(r.get("artifact_id") or r.get("id") or ""))
-        self.ledger.append({"kind": "R5_ARTIFACT", "artifact_id": out["artifact_id"],
-                            "request_sha": sha256_bytes(
-                                json.dumps(body, ensure_ascii=False, sort_keys=True).encode()),
-                            "outcome": "PASS"})
+        if "artifact" in skip:
+            out["artifact_id"] = self.ledger.state_flags()["R5_ARTIFACT"]["artifact_id"]
+            self.ledger.append({"kind": "R5_SKIP_VERIFIED", "what": "artifact",
+                                "artifact_id": out["artifact_id"],
+                                "evidence": "GET read-back: task+sha256 match (appendix-B GET)",
+                                "outcome": "SKIP"})
+        else:
+            body = {"task_id": self.task_id, "type": "REVIEW_EVIDENCE",
+                    "path": ev_rel, "sha256": captured["reply_sha256"]}
+            code, resp = self.engine.post("/api/v1/artifacts", body)
+            out["artifact_id"] = self._register_step(code, resp, (200, 201, 202), "artifact",
+                                                     lambda r: str(r.get("artifact_id") or r.get("id") or ""))
+            self.ledger.append({"kind": "R5_ARTIFACT", "artifact_id": out["artifact_id"],
+                                "request_sha": self._req_sha(body),
+                                "response_sha": self._req_sha(resp),
+                                "reply_sha256": captured["reply_sha256"], "outcome": "PASS"})
 
-        code, resp = self.engine.post("/api/v1/messages", envelope)
-        out["message_id"] = self._register_step(code, resp, (200, 201, 202, 409), "message",
-                                                lambda r: str(r.get("message_id") or r.get("id")
-                                                              or envelope["message_id"]))
-        self.ledger.append({"kind": "R5_MESSAGE", "message_id": out["message_id"],
-                            "message_type": envelope["message_type"], "outcome": "PASS"})
+        # ② message（幂等=message_id 确定性；409→双证核验）
+        if "message" in skip:
+            out["message_id"] = self.message_id()
+            self.ledger.append({"kind": "R5_SKIP_VERIFIED", "what": "message",
+                                "message_id": out["message_id"],
+                                "evidence": "ledger fingerprint: message_id+reply_sha+request_sha chain",
+                                "outcome": "SKIP"})
+        else:
+            code, resp = self.engine.post("/api/v1/messages", envelope)
+            out["message_id"] = self._register_step(
+                code, resp, (200, 201, 202, 409), "message",
+                lambda r: str(r.get("message_id") or r.get("id") or envelope["message_id"]),
+                request_sha=self._req_sha(envelope),
+                key_evidence=lambda r: envelope["message_id"] in json.dumps(r, ensure_ascii=False))
+            self.ledger.append({"kind": "R5_MESSAGE", "message_id": out["message_id"],
+                                "message_type": envelope["message_type"],
+                                "request_sha": self._req_sha(envelope),
+                                "response_sha": self._req_sha(resp),
+                                "reply_sha256": captured["reply_sha256"], "outcome": "PASS"})
 
-        execution_id = (task.get("latest_execution") or {}).get("execution_id")
+        # ③ review report（结论权威；M1 同事务推进=附录 E；幂等=(execution_id, reviewed_commit)；
+        #    409→双证核验）
         report_body = {
             "task_id": self.task_id,
             "execution_id": execution_id,
@@ -581,27 +688,50 @@ class ReviewLeg:
         if not report_body["task_package_hash"] or not report_body["base_commit"]:
             raise OrchestrationError(5, "task_package_hash/base_commit missing from task view "
                                         "(cannot register report; fail-closed)")
-        code, resp = self.engine.post("/api/v1/reports/review", report_body)
-        out["review_report_id"] = self._register_step(code, resp, (200, 201, 409), "review report",
-                                                      lambda r: str(r.get("review_report_id") or r.get("id")
-                                                                    or f"{r.get('execution_id')}@"
-                                                                    f"{str(r.get('reviewed_commit'))[:12]}"),
-                                                      require_transition=True)
-        self.ledger.append({"kind": "R5_REPORT", "result": result,
-                            "request_sha": sha256_bytes(
-                                json.dumps(report_body, ensure_ascii=False, sort_keys=True).encode()),
-                            "review_report_id": out["review_report_id"], "outcome": "PASS"})
+        if "report" in skip:
+            out["review_report_id"] = self.ledger.state_flags()["R5_REPORT"].get("review_report_id")
+            self.ledger.append({"kind": "R5_SKIP_VERIFIED", "what": "review report",
+                                "review_report_id": out["review_report_id"],
+                                "evidence": "ledger fingerprint: result+reply_sha+execution_id+request_sha chain",
+                                "outcome": "SKIP"})
+        else:
+            code, resp = self.engine.post("/api/v1/reports/review", report_body)
+            out["review_report_id"] = self._register_step(
+                code, resp, (200, 201, 409), "review report",
+                lambda r: str(r.get("review_report_id") or r.get("id")
+                              or f"{r.get('execution_id')}@{str(r.get('reviewed_commit'))[:12]}"),
+                request_sha=self._req_sha(report_body),
+                key_evidence=lambda r: execution_id in json.dumps(r, ensure_ascii=False)
+                and self.reviewed_commit[:12] in json.dumps(r, ensure_ascii=False),
+                require_transition=True)
+            self.ledger.append({"kind": "R5_REPORT", "result": result,
+                                "execution_id": execution_id,
+                                "request_sha": self._req_sha(report_body),
+                                "response_sha": self._req_sha(resp),
+                                "reply_sha256": captured["reply_sha256"],
+                                "review_report_id": out["review_report_id"], "outcome": "PASS"})
         return out
 
     def _register_step(self, code: int, resp, want: tuple[int, ...], what: str,
-                       extract_id, require_transition: bool = False) -> str:
+                       extract_id, request_sha: str | None = None,
+                       key_evidence=None, require_transition: bool = False) -> str:
         if code in want and isinstance(resp, dict):
             if code == 409:
-                if not (resp.get("code") or resp.get("detail") or resp.get("message") or resp.get("error")):
-                    raise OrchestrationError(5, f"{what} duplicate 409 unverifiable: "
-                                                f"{json.dumps(resp, ensure_ascii=False)[:200]}")
+                # P1-01 双证核验：①响应必须指认本次请求键（key_evidence）；
+                # ②账本须有同请求指纹（request_sha）的成功/意图记录——两证缺一即 fail-closed，
+                # 禁止以通用错误字段代替幂等证明。
+                if key_evidence is None or not key_evidence(resp):
+                    raise OrchestrationError(5, f"{what} 409 key verification failed (response does not "
+                                                f"identify our idempotency key; fail-closed): "
+                                                f"{json.dumps(resp, ensure_ascii=False)[:300]}")
+                kind = {"message": "R5_MESSAGE", "review report": "R5_REPORT"}.get(what)
+                rec = self.ledger.state_flags().get(kind) if kind else None
+                if not rec or rec.get("request_sha") != request_sha:
+                    raise OrchestrationError(5, f"{what} 409 without matching ledger request fingerprint "
+                                                f"(cannot prove same-content replay; fail-closed)")
                 self.ledger.append({"kind": "R5_DUPLICATE_OK", "what": what,
-                                    "response": json.dumps(resp, ensure_ascii=False)[:300],
+                                    "response_sha": self._req_sha(resp),
+                                    "evidence": ["response-key-match", "ledger-request-fingerprint-match"],
                                     "outcome": "IDEMPOTENT_HIT"})
                 return extract_id(resp) or "DUPLICATE-VERIFIED"
             if require_transition and resp.get("transition") is None:
@@ -678,6 +808,27 @@ class ReviewLeg:
     # resume：附录 D 12 行矩阵 + 附录 C 三断点快照（fail-closed，不推测恢复）
     # ------------------------------------------------------------------
     def resume(self) -> int:
+        try:
+            return self._resume_inner()
+        except OrchestrationError as exc:
+            self.ledger.append({"kind": "LEG_LEVEL_BLOCKED", "step": exc.step, "reason": exc.reason,
+                                "phase": "resume",
+                                "note": "M1 task status unchanged; manual takeover per appendix D",
+                                "outcome": "BLOCKED_LEG"})
+            self._write_report({"result": "LEG_LEVEL_BLOCKED", "failed_step": exc.step,
+                                "reason": exc.reason, "phase": "resume"})
+            print(f"RESULT=LEG_LEVEL_BLOCKED step={exc.step} reason={exc.reason}", flush=True)
+            return 2
+        except (ConnectionError, OSError, ValueError, subprocess.TimeoutExpired) as exc:
+            self.ledger.append({"kind": "LEG_LEVEL_BLOCKED", "step": -1,
+                                "reason": f"transport/runtime failure during resume: {exc}",
+                                "phase": "resume", "outcome": "BLOCKED_LEG"})
+            self._write_report({"result": "LEG_LEVEL_BLOCKED", "failed_step": -1,
+                                "reason": str(exc), "phase": "resume"})
+            print(f"RESULT=LEG_LEVEL_BLOCKED transport reason={exc}", flush=True)
+            return 2
+
+    def _resume_inner(self) -> int:
         flags = self.ledger.state_flags()
         task = self._refetch_task()
         status = task.get("status")
@@ -707,9 +858,11 @@ class ReviewLeg:
             return self._continue_from_code_review(flags, allow_redispatch=False)
 
         if status == "CODE_REVIEW":
-            # 行5-9：按账本断点分派
-            if "R3_SEND_CONFIRMED" not in flags:
-                if "R3_SEND_INTENT_RECORDED" in flags or "R3_REDISPATCH_INTENT" in flags:
+            # 行5-9：按账本断点分派。发送锚点=SEND_CONFIRMED 或 SEND_CONFIRMED_COLLECT_FAILED
+            #（P1-03：采集失败但发送双验已过的记录同样进入原会话补采路径）
+            sent_anchor = flags.get("R3_SEND_CONFIRMED") or flags.get("R3_SEND_CONFIRMED_COLLECT_FAILED")
+            if sent_anchor is None:
+                if any(k.startswith("R3_") for k in flags):
                     # A8：发送可能已成立而账本断裂——无法证明发送状态→停止并腿级 BLOCKED
                     #（以账本缺失为由重发=禁止；人工核查派单现场目录）
                     raise OrchestrationError(-1, "ledger has send intent without confirmation (appendix D row5 "
@@ -719,26 +872,28 @@ class ReviewLeg:
                 self.r2_compose_brief(task)
                 return self._continue_from_code_review(flags, allow_redispatch=False)
             if "R4_REPLY_CAPTURED" not in flags:
-                return self._resume_collect(flags)                 # 行6：已发送未采集→禁重发走补采
+                return self._resume_collect(sent_anchor)           # 行6：已发送未采集→禁重发走补采
             if "R5_REPORT" not in flags:
-                return self._resume_register(flags)                # 行7/8：补登记（不再次触发 GPT-03）
+                return self._resume_register()                     # 行7/8：补登记（不再次触发 GPT-03）
             # 行9：M1 report 事务原子推进 ⇒ report 已登记而状态仍 CODE_REVIEW=矛盾信号
             raise OrchestrationError(-1, "ledger shows report registered but M1 status=CODE_REVIEW "
                                          "(contradiction; fail-closed BLOCKED, no speculative recovery)")
         raise OrchestrationError(-1, f"resume: unhandled M1 status {status} (appendix D matrix)")
 
-    def _resume_collect(self, flags: dict) -> int:
+    def _resume_collect(self, sent_anchor: dict) -> int:
         """附录 D 行6 / 断点 S1：连原 conversation UUID 补采；新建会话重发=禁止。"""
-        confirmed = flags["R3_SEND_CONFIRMED"]
-        conv_uuid = confirmed.get("conversation_uuid")
-        sent_key = confirmed.get("sent_user_unit_key")
+        conv_uuid = sent_anchor.get("conversation_uuid")
+        sent_key = sent_anchor.get("sent_user_unit_key")
+        if not conv_uuid or not sent_key:
+            raise OrchestrationError(-1, "ledger missing conversation_uuid/sent_user_unit_key "
+                                         "(fail-closed: cannot prove send state; manual check required)")
         if not conv_uuid or not sent_key:
             raise OrchestrationError(-1, "ledger missing conversation_uuid/sent_user_unit_key "
                                          "(fail-closed: cannot prove send state; manual check required)")
         template = PHASE0_TOOLS / "review_leg_recoll_template.mjs"
         driver = self.run_dir / "recoll_driver.mjs"
-        failed_dir = DISPATCH_LOG_DIR / confirmed.get("dispatch_dir", "")
-        if not confirmed.get("dispatch_dir") or not failed_dir.is_dir():
+        failed_dir = DISPATCH_LOG_DIR / sent_anchor.get("dispatch_dir", "")
+        if not sent_anchor.get("dispatch_dir") or not failed_dir.is_dir():
             raise OrchestrationError(-1, f"failed dispatch dir not resolvable: {failed_dir} "
                                          "(fail-closed; manual check required)")
         derive_recoll_driver(template, driver, {
@@ -747,7 +902,8 @@ class ReviewLeg:
             "FAILED_DIR": str(failed_dir),
             "OUT_DIR": str(self.run_dir),
             "MARKER_TEXT": self.marker_text,
-            "PREV_REPLY_SHA": flags.get("R4_REPLY_CAPTURED", {}).get("reply_sha256", "") or "",
+            # 行6 断点定义=R4_REPLY_CAPTURED 不存在（无本轮已采集 reply 可比对）→ 前轮 SHA 排除置空
+            "PREV_REPLY_SHA": "",
         })
         self.ledger.append({"kind": "RESUME_COLLECT_INTENT", "conversation_uuid": conv_uuid,
                             "sent_user_unit_key": sent_key, "driver": driver.name,
@@ -766,11 +922,13 @@ class ReviewLeg:
                             "checks": coll.get("checks"), "outcome": "CAPTURED"})
         return self._resume_register(flags)
 
-    def _resume_register(self, flags: dict) -> int:
-        """附录 D 行7/8 / 断点 S2：按原幂等键补登记（不再次触发 GPT-03）。"""
+    def _resume_register(self) -> int:
+        """附录 D 行7/8 / 断点 S2：按原幂等键补登记（不再次触发 GPT-03）。
+        P1-02：先逐项只读核实既有成功记录，保留原 ID，只补缺失项。"""
         task = self._refetch_task()
         captured = self.r4_capture_and_validate(self.run_dir, batch_id=task.get("batch_id"))
-        out = self.r5_register(task, captured)
+        skip = frozenset(self._ledger_verified(task, captured))
+        out = self.r5_register(task, captured, skip=skip)
         status = self.r6_verify_transition(captured["parsed"]["result"])
         self._write_report({"result": "REVIEW_LEG_PASS", "final_status": status, **out,
                             "reply_sha256": captured["reply_sha256"], "resumed": True})
@@ -803,6 +961,17 @@ class ReviewLeg:
     def attach_reply(self, reply_file: Path) -> int:
         """人工经既有派单链取得审查回复后，按同一契约校验+同一幂等键登记推进。
         M1 任务状态须在 CODE_REVIEW（腿级 BLOCKED 不改 M1 状态，人工接管语义）。"""
+        try:
+            return self._attach_inner(reply_file)
+        except OrchestrationError as exc:
+            self.ledger.append({"kind": "LEG_LEVEL_BLOCKED", "step": exc.step, "reason": exc.reason,
+                                "phase": "attach-reply", "outcome": "BLOCKED_LEG"})
+            self._write_report({"result": "LEG_LEVEL_BLOCKED", "failed_step": exc.step,
+                                "reason": exc.reason, "phase": "attach-reply"})
+            print(f"RESULT=LEG_LEVEL_BLOCKED step={exc.step} reason={exc.reason}", flush=True)
+            return 2
+
+    def _attach_inner(self, reply_file: Path) -> int:
         task = self._refetch_task()
         if task.get("status") != "CODE_REVIEW":
             raise OrchestrationError(-1, f"attach-reply requires CODE_REVIEW (task={task.get('status')})")
@@ -811,7 +980,8 @@ class ReviewLeg:
         staged = stage_dir / "reply.txt"
         staged.write_bytes(reply_file.read_bytes())
         captured = self.r4_capture_and_validate(stage_dir, batch_id=task.get("batch_id"))
-        out = self.r5_register(task, captured)
+        skip = frozenset(self._ledger_verified(task, captured))
+        out = self.r5_register(task, captured, skip=skip)
         status = self.r6_verify_transition(captured["parsed"]["result"])
         self.ledger.append({"kind": "ATTACH_REPLY_OK", "source": str(reply_file),
                             "reply_sha256": captured["reply_sha256"], "outcome": "PASS"})
