@@ -522,16 +522,20 @@ class ReviewLeg:
         # 缺键处置：自动路径（run/resume）缺发送锚点=fail-closed（None 不得视为已完成交叉
         # 核验）；仅 attach-reply 人工路径（本腿未发送）显式登记 not_applicable。
         sent_key = None
-        confirmed_send_exists = False   # 已确认发送（CONFIRMED/COLLECT_FAILED）但键缺失=S2-R1 P1-01 整改点
-        failed_send_only = True         # 仅有失败尝试（纯发送失败，无成功发送证明）
+        confirmed_send_exists = False   # 已确认发送（CONFIRMED/COLLECT_FAILED）
+        intent_only = False             # 仅有 INTENT（发送状态不确定=S2-R2 NEW-P1-01 整改点）
+        failed_send_exists = False      # 存在失败终态（SEND_FAILED）
         for anchor_kind in ("R3_SEND_CONFIRMED", "R3_SEND_CONFIRMED_COLLECT_FAILED"):
             rec = self.ledger.state_flags().get(anchor_kind)
             if rec:
                 confirmed_send_exists = True
-                failed_send_only = False
                 if rec.get("sent_user_unit_key"):
                     sent_key = rec["sent_user_unit_key"]
                     break
+        if self.ledger.state_flags().get("R3_SEND_INTENT_RECORDED") and not confirmed_send_exists:
+            intent_only = True
+        if self.ledger.state_flags().get("R3_SEND_FAILED"):
+            failed_send_exists = True
         cross_check_state = None   # 布尔=完成比对；字符串=显式不可比状态（绝不 None 充数）
         if sent_key is None:
             if confirmed_send_exists:
@@ -540,13 +544,20 @@ class ReviewLeg:
                 raise OrchestrationError(4, "confirmed send exists but sent_user_unit_key missing "
                                             "(ownership cannot be proven; fail-closed even for manual "
                                             "attach; manual ledger forensics required)")
+            if intent_only:
+                # S2-R2 NEW-P1-01：INTENT-only=发送状态不确定（可能已发送）——附录 C fail-closed
+                # 与附录 D A8 同源：即便人工 attach 也不得放行；须先人工核查现场并按 A8
+                # 修复流程处置账本（追加 supersede 记录），之后 attach 才有意义。
+                raise OrchestrationError(4, "send intent without confirmation (send state uncertain; "
+                                            "fail-closed even for manual attach; run manual dispatch-dir "
+                                            "forensics and repair ledger via append-only supersede first)")
             if allow_no_anchor:
-                # 纯发送失败（无成功发送证明）后人工接管：发送责任转移到人工链，
-                # 腿侧键交叉核验不适用——显式登记不可比状态，绝不以 None 充数。
-                cross_check_state = ("not_applicable_no_leg_send_anchor (manual attach path; "
-                                     "leg had failed send attempts only, ownership ensured by manual chain)"
-                                     if failed_send_only else
-                                     "not_applicable_no_leg_send_anchor (manual attach path)")
+                # 纯发送失败（FAILED 终态存在且无成功发送证明）或无任何发送记录后人工接管：
+                # 发送责任转移到人工链——显式登记不可比状态，绝不以 None 充数。
+                basis = ("leg had failed send attempts only" if failed_send_exists
+                         else "leg had no send records")
+                cross_check_state = (f"not_applicable_no_leg_send_anchor (manual attach path; {basis}; "
+                                     "ownership ensured by manual chain)")
             else:
                 raise OrchestrationError(4, "send-anchor key unavailable for ownership cross-check "
                                             "(missing/empty R3 sent_user_unit_key; fail-closed, "
