@@ -32,9 +32,9 @@
   - R6 结论推进：PASS→TEST_ACCEPTANCE／REWORK→REWORK（CODE_REVIEW 合法出边，state_machine.py:35）；REWORK=登记后停等人工，不自动重开开发轮（§4 一期边界②）。
   - 账本与恢复：附录 C 八字段组每次阶段变化原子追加一条（防强制终止丢断点）；--resume 按三断点快照 S1（发送后未采集→禁重发走补采）/S2（已采集未登记→按原幂等键补登记）/S3（结果不确定→先只读核实 M1，无法确认→腿级 BLOCKED）允许动作处置；附录 D 12 行恢复矩阵逐行实现；四条证据规则落实（fail-closed 恢复决策；发送证明=三态+计数+原会话标识交叉，不只靠 SEND_STARTED=1）。
   - 异常处置：§5 五类错误表逐条实现（发送失败换会话重派限 1 次；采集 fail-closed 禁重发→补采；契约校验失败禁重放；平台腿故障=读取类可重试、业务副作用类无幂等确认禁自动重试、耗尽→腿级 BLOCKED；状态推进非法=停止不绕过）；**BLOCKED 语义区分**（腿级=run 层记录、M1 任务状态不动 vs M1 task.status=BLOCKED=仅 OWNER，engine 调用层禁止）。
-- ④执行结果：（实施时回填）
-- ⑤测试结果：（实施时回填；test_review_leg.py 注入类先跑，真实 A1 归 S3）
-- ⑥验收证据引用：（实施时回填；S1-R1 独立验收派单）
+- ④执行结果：review_leg.py（921 行：R0-R6 编排+附录 B 白名单客户端 fail-closed（越界端点/越界事件不发网络请求即拦截）+附录 C 八字段组账本 fsync 原子追加+三断点 resume（S1 补采派生/S2 补登记/S3 只读核实）+attach-reply 人工退路（同一契约+同一幂等键）+A8 账本断裂与账本/M1 矛盾双重 fail-closed+§5 行1/行2 发送失败与采集失败区分（现场目录新鲜度过滤防陈旧误判））+review_leg_recoll_template.mjs（188 行：归属校验三件套+七查+L-021 第 3 条视口拉高升级路径）+test_review_leg.py（660 行 18 用例：自带独立测试 M1 实例与 git 夹具，ChatGPT 边界唯一替身，其余全真实路径）。scheduler.py/M1-M4/M2 工具链零修改；契约文件只消费。**本次待验收 commit=512f9c5a7142e23678e5d1972050ee5674d605aa**（单 commit 申报，基线=c3a13e9fafc08b9a3d24b1a0ec70f71dd96effc8=steps 冻结 commit；numstat 机器值=review_leg.py 921/0+recoll 模板 188/0+测试 660/0 恰 3 新文件；ST-01 核验 PASS，记录=acceptance/review-request-s1.md）。
+- ⑤测试结果：test_review_leg.py **18/18 PASS**（45.5s，自带测试 M1）：附录 B 白名单越界拦截/幂等标识确定性（message_id 模式合规且重启不漂移）/真实 M1 REST 全流程 PASS+REWORK 双结论（状态机推进 TEST_ACCEPTANCE/REWORK 各核实）/契约失败保留原始 artifact 不登记+任务状态不动/BLOCKED 结论拒登记（engine 禁借道任务级）/A4 重放零重复（409 幂等命中入账）/A7 事件同 id 单条/A8 账本断裂与账本-M1 矛盾 fail-closed（零重派）/A9 部分登记续跑（artifact ID 不变不覆盖）/简报 1200B 硬限不截断/diff SHA 交叉核验/终态 resume 零派单/BLOCKED 任务 engine 不触碰/setup-agents 409 复用/发送失败限一次重派。测试自身缺陷（git 方法绑定/subprocess 共享模块递归/契约 \$defs MissingRef/现场目录陈旧误判/A8 矛盾前置缺失）5 类全部修复闭环。
+- ⑥验收证据引用：（S1-R1 派单后回填）
 
 ## S2 注入类验收矩阵执行（A2/A3/A4/A5/A7/A8/A9/A10）
 
