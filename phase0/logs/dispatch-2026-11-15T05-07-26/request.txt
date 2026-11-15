@@ -1,0 +1,9 @@
+[迁移接棒|AIEO Basic→新审查会话]
+前会话(6af90e6f)上下文满CONTEXT_LIMIT_STOP,本会话承接后续全部验收。背景速读:github.com/damwate/AIEO@main 926f7ec 的WORKFLOW(v0.3生效)+AI-DEV-LESSONS.md+handoff交接包。
+在途:b-20261115-v03-lessons-recoll(v0.3首日常任务,用户拍板"同意"冻结)。请验收S1:
+材料:diff=43a4692..240ace69f7a0b3af5ff438a4ec834bcf0f040bd9,包basic/tasks/b-20261115-v03-lessons-recoll/(steps.md+acceptance/五输出+ls-MANIFEST)。
+改动:①L-018新第4条键漂移与归属校验型定位[四部分+两纪律+适用边界]原4/5→5/6②L-014第6条对照表[手工vs工具40s,非SLA]③WORKFLOW验证节追加段[不覆盖历史,附录12行未动]。
+申报:被测=240ace6;37/37+专项7/7+DV1 6/6+negpos 7/7全0,检查器零修改实测成立。
+验收点:①条目齐备+重编号无遗漏②L-014表③不覆盖历史+附录12行未动④四命令实测⑤边界(工具未改/三COMPLETED包零改动)。
+另确认:926f7ec=WORKFLOW用户指令增补①(代授权窗口+挂起并行,用户离开前指令),独立授权不计入被测。
+三态:PASS/REJECT(列项)/BLOCKED,回执含结论表+SHA256。

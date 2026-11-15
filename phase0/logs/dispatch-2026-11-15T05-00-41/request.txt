@@ -1,0 +1,6 @@
+[独立验收|b-20261115-v03-lessons-recoll|S1]
+v0.3首日常任务,冻结(steps.md,基线43a4692,共识reply 7aecb6c4…)S1已执行,请独立验收。
+材料(按SHA读):github.com/damwate/AIEO@main 验收diff=43a4692..240ace6(纯文档+本任务包)。
+改动:①L-018新增第4条键漂移与归属校验型定位[四部分+两纪律定位≠归属/SHA全同=排除条件+适用边界]原4/5顺延5/6,引用1处同步②L-014第6条对照表[手工3轮300s vs工具40s定位3260]+40s非SLA结论③WORKFLOW验证节追加v0.3首日常任务段[不覆盖历史,结果完成后回填]。
+申报:被测=240ace6;证据=…/acceptance/五输出+ls-MANIFEST;37/37+专项7/7+DV1 6/6+negpos 7/7全0,检查器零修改实测成立;本包taskpack IN_PROGRESS(开发期)。
+验收点:①L-018条目齐备+重编号引用无遗漏②L-014表与结论③WORKFLOW不覆盖历史+附录12行未动④四命令实测⑤边界(采集工具未改/三COMPLETED包零改动)。三态:PASS/REJECT(列项)/BLOCKED。

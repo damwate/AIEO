@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-15T05:12:10.020Z",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "fc77f984-e515-4a0f-87ae-ae57febc9191",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "729c5c22c862ade56675ab49cc6ce14abb01afc436f6e52474d8779af050ec61",
+          "071f26de65c8da07661b037e29cf0276d2babc95d92d36b396aecc1c11ed86fb"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "729c5c22c862ade56675ab49cc6ce14abb01afc436f6e52474d8779af050ec61",
+          "071f26de65c8da07661b037e29cf0276d2babc95d92d36b396aecc1c11ed86fb"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-0:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nAIEO Basic｜S1 独立验收\n验收进行中\n\n当前初步结论：发现一项需要重点核实的证据绑定问题，暂不签发 PASS。\n\n已确认 GitHub 仓库 damwate/AIEO 的指定提交存在，且比较结果符合单提交边界：\n\n核查项\n\n\t\n\n实际结果\n\n\n\n\n基线\n\n\t\n\n43a4692\n\n\n\n\n被测提交\n\n\t\n\n240ace69f7a0b3af5ff438a4ec834bcf0f040bd9\n\n\n\n\n提交数\n\n\t\n\n1\n\n\n\n\n文件变更数\n\n\t\n\n9\n\n\n\n\n新增/删除\n\n\t\n\n99 / 7\n\n\n\n\n代码修改\n\n\t\n\n暂未发现，均为文档和验收归档\n\n特别注意：steps.md 当前写的是“待验收 commit 完整 SHA：见本行登记于交付 commit”，并没有在被测提交中直接给出完整 SHA。这会影响验收证据的自包含性，需要结合 MANIFEST 和五份输出核实，不能仅凭申报的测试通过数字放行。\n\n一、五项验收结果\n\n#\n\n\t\n\n验收点\n\n\t\n\n结论\n\n\t\n\n核查结果\n\n\n\n\n①\n\n\t\n\nL-018 条目齐备、重编号无遗漏\n\n\t\n\nPASS\n\n\t\n\n新增第4条，原4/5顺延5/6，外部引用同步\n\n\n\n\n②\n\n\t\n\nL-014 实战对照表\n\n\t\n\nPASS\n\n\t\n\n手工300秒与工具40秒对照完整，明确40秒不是SLA\n\n\n\n\n③\n\n\t\n\nWORKFLOW 不覆盖历史、附录12行未动\n\n\t\n\nPASS\n\n\t\n\nDiff仅新增9行，无删除；原附录内容未修改\n\n\n\n\n④\n\n\t\n\n四命令实测\n\n\t\n\n静态PASS\n\n\t\n\n四份结果归档齐全，37/37、7/7、6/6、7/7均符合申报；未在本审查环境重新执行\n\n\n\n\n⑤\n\n\t\n\n工具未修改、三个COMPLETED包零改动\n\n\t\n\nPASS\n\n\t\n\n9个变更文件中没有检查器代码或三个历史任务包文件\n\n具体内容核查\n\n① L-018\n\n新增内容包含：\n\n故障现象：reload 后同名键发生归属漂移。\n\n失败案例：R2 首次补采取得与 R1 SHA256 完全相同的旧 reply。\n\n修正机制：简报标记唯一定位、最后 user 断言、前轮 SHA 排除。\n\n验证证据：r2b/r3 七查。\n\n两项纪律及明确适用边界。\n\n原第5条正确顺延为第6条，全文引用已同步。\n\n② L-014\n\n对照表明确区分手工猜端口和固化工具两种处置方式，结论没有把单次40秒测试包装成性能承诺。\n\n③ WORKFLOW\n\n追加位置正确，在原「首个真实闭环验证任务」之后。\n\n原有任务历史没有被覆盖。附录原有12行未发生修改。\n\n⑤ 修改边界\n\nGitHub Diff 只有：\n\nbasic/WORKFLOW.md\n\ndocs/AI-DEV-LESSONS.md\n\n当前任务包的 steps.md 和五份测试输出及 MANIFEST。\n\n没有检查器源码修改，也没有修改三个历史 COMPLETED 任务包。\n\n二、阻断问题：证据绑定未闭合\nP1 · 必须补正\n\n这是本轮唯一明确发现的验收缺陷。\n\n当前 MANIFEST：\n\nbasic/tasks/b-20261115-v03-lessons-recoll/acceptance/ls-MANIFEST.txt\n\n包含五份输出文件的 SHA256，但最后一行只有：\n\n被测commit见steps.md登记（S1文档改动+本任务包）\n\n而 steps.md 中实际写的是：\n\n待验收 commit 完整 SHA：见本行登记于交付 commit（S1 为纯文档改动，与登记同 commit 提交）\n\n问题在于：\n\n被测提交完整 SHA 没有登记在当前 steps.md。\n\nMANIFEST 没有直接绑定被测 commit。\n\nsteps.md 将绑定推迟到后续交付 commit，不能证明当前验收对象与归档证据之间已经形成完整绑定。\n\n用户本次请求虽然提供了完整 SHA，但不能代替仓库内缺失的证据登记。\n\n尤其是 WORKFLOW 已明确要求 ST-01 绑定归档路径、SHA256 和被测 commit。这里不能降低标准。\n\n三、独立授权边界核查\nPASS\n\n已核实 926f7ec：\n\n内容确实是用户指令增补①。\n\n涉及会话级代授权窗口和挂起并行。\n\n不属于本轮 43a4692..240ace69 的被测 Diff。\n\n不应计入本轮 S1 修改范围，也不应作为本轮验收缺陷。\n\n四、最终裁定\n\nS1 独立验收\n\nREJECT\nREJECT\n\n一项 P1 遗留，其他四项内容核查通过（测试为静态核对）\n\n项目\n\n\t\n\n结果\n\n\n\n\n内容质量\n\n\t\n\nPASS\n\n\n\n\n修改边界\n\n\t\n\nPASS\n\n\n\n\n历史保护\n\n\t\n\nPASS\n\n\n\n\n测试归档\n\n\t\n\nPASS（静态）\n\n\n\n\n证据绑定\n\n\t\n\nREJECT\n\n\n\n\n最终结论\n\n\t\n\nREJECT\n\n最小整改要求：\n\n在后续补正记录中明确完整被测 SHA：240ace69f7a0b3af5ff438a4ec834bcf0f040bd9。\n\n将五份输出的 SHA256 与该被测 SHA 建立明确绑定。\n\n不修改已经验收的 L-014、L-018 内容。\n\n不修改检查器，不触碰三个历史 COMPLETED 任务包。\n\n补正后提交新的验收请求，明确补正 commit 与被测 commit 的关系。\n\n五、证据 SHA256 回执\n\n以下为当前 MANIFEST 登记值：\n\n文件\n\n\t\n\nSHA256\n\n\n\n\nconsistency\n\n\t\n\n52285c9e15b01b074280cc0c9dd73d904c0ef3759ee2f455c386b92fb30340a9\n\n\n\n\nDV1\n\n\t\n\n0d9ef8ee168f6be3c3a56960db5c1ca611f5730256bbeac2b58c035edc7505f3\n\n\n\n\nnegpos\n\n\t\n\nad40f17328da81ca35aeea7073cfae3e5b9b563dfa3d3808ee4fe5bccf31c776\n\n\n\n\nstate-tests\n\n\t\n\na70d0ba8321a391ee649247bd268786d77b7e46856ed380ab597cb23bb070a2b\n\n\n\n\ntaskpack-self\n\n\t\n\n55027d18a4ca09a4545dda2571bacd1bcba5aae810f0ab584c565573391c31b3\n\n以上为 MANIFEST 中记录的 SHA256，尚未在本审查环境逐字节重新计算验证。\n\n被测 Commit：\n\n240ace69f7a0b3af5ff438a4ec834bcf0f040bd9\n\n查看被测 GitHub Commit\n\n最终意见： 本次不是内容方案不合格，也不是检查器出现问题。只需补齐证据绑定，不应借此扩大修改范围或重新返工已经通过的内容。",
+      "text_sha256": "071f26de65c8da07661b037e29cf0276d2babc95d92d36b396aecc1c11ed86fb",
+      "size_bytes": 5267,
+      "assistant_uuid": "fc77f984-e515-4a0f-87ae-ae57febc9191"
+    }
+  ]
+}

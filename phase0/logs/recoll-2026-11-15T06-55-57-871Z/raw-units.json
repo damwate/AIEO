@@ -1,0 +1,82 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-15T06:56:42.303Z",
+  "user_unit_key": "fallback-turn-3:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-3:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "ffdd5212-ecae-4d3d-bac1-95c801efb830",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-3:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "729c5c22c862ade56675ab49cc6ce14abb01afc436f6e52474d8779af050ec61",
+          "071f26de65c8da07661b037e29cf0276d2babc95d92d36b396aecc1c11ed86fb",
+          "4084bfdcd6e6ce6ce6884460b2787b211ff2cba315dfdfd00fe27c1177faf411",
+          "df55fa967337f7a079e037c6ba1ce08d383b801c999e7e5bd449514ba5ef1141",
+          "cc50d5a89252d6c2658fbcf60e564107355ad1abc7644f0a7733a1498d1092eb",
+          "21d3150d1c3f70baf2d07849ed90588dc096e8eeafb3ff630ef50fe42b824851",
+          "608ad87ef6cac6746609c20979318eeab06c3613a189ab11feb9b8f2d18d06d7",
+          "ee3f919366277579c7d6af3b0f96be07bd4e47c759ce185a562428259e1bc519"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": []
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-3:0:user",
+      "fallback-turn-3:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STATIC_NON_SCROLLABLE_DOM",
+      "scrollable_window_observed": false,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant"
+        ],
+        "overlap_keys": []
+      }
+    ],
+    "window_transitions": 0
+  },
+  "units": [
+    {
+      "key": "fallback-turn-3:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nAGENTS.md 独立复核结论\nREJECT\n\n发现 1 处规则映射表述需要修正\n\n已按指定完整 SHA 6d271b12397cebff72984deef1aff7977c60e8a8 读取：\n\nAGENTS.md\n\ndecision-log.md（DEC-049）\n\n逐项复核\n\n复核点\n\n\t\n\n结论\n\n\t\n\n说明\n\n\n\n\n① 适用范围\n\n\t\n\nPASS\n\n\t\n\n已明确区分 ZCode 执行会话与 ChatGPT 网页审查会话\n\n\n\n\n② 七类异常映射\n\n\t\n\nREJECT\n\n\t\n\n一处 ST-05 执行顺序表述缺少规则依据\n\n\n\n\n③ DEC-049 登记\n\n\t\n\nPASS\n\n\t\n\n节点结论、下一节点优先级及 DEC-043 重启条件与此前判定一致\n\n① 适用范围：通过\n\n修正已经解决此前指出的问题：\n\n明确 ZCode 执行会话自动加载，限定在工作区约定及会话注入范围。\n\n明确 ChatGPT 网页审查会话不会自动读取。\n\n对审查方需要遵守的纪律，采用派单简报明文携带，不假定审查方已经读取。\n\n这一项没有遗留问题。\n\n补充边界：我核实的是文档中的适用范围声明准确、没有再宣称所有会话普遍自动加载；没有在本次复核中实际启动 ZCode 测试其运行时注入行为。\n\n② 七类异常映射：发现一处问题\n\n我逐项对照了 docs/AI-DEV-LESSONS.md 的 L-014、L-017、L-018、L-019，以及 basic/WORKFLOW.md 的 ST-01、ST-05 和止损规则。\n\n七类映射的条目归属基本准确：\n\nAGENTS.md 映射\n\n\t\n\n对照结果\n\n\n\n\nGitHub push 连不上 → L-014 第 6 条\n\n\t\n\nPASS\n\n\n\n\n派单采集 fail-closed → L-018 第 1/2/3 条\n\n\t\n\nPASS\n\n\n\n\n补采定位 → L-018 第 4 条\n\n\t\n\nPASS\n\n\n\n\n审查会话上下文上限 → L-018 第 6 条\n\n\t\n\nPASS\n\n\n\n\n检查项数演进 → L-017\n\n\t\n\nPASS\n\n\n\n\n同问题返工近止损线 → L-019 + WORKFLOW 模块五\n\n\t\n\nPASS\n\n\n\n\n派单/申报前 → ST-05、ST-01\n\n\t\n\n需修正一处\n\n唯一问题：\n\nAGENTS.md 当前写的是：\n\nST-05 检查器自检先于 commit（顺序勿颠倒）。\n\n但我核对的 WORKFLOW 对 ST-05 的原文要求是：\n\n每步派单验收前，对自身任务包运行检查器；\n\n发现记录缺口后再派单。\n\n它规定的是派单/验收申报前自检，并没有明确规定检查器必须在 Git commit 之前运行。\n\n因此，AGENTS.md 把 ST-05 的要求进一步收紧成了“先于 commit”，目前缺少对应的规则依据。这会造成执行者将检查时点误认为一个已经冻结的硬性顺序。\n\n建议只改这一处：\n\n写作\n\n| 派单/申报前 | ST-05 检查器自检：每步派单验收前运行并处理缺口；ST-01 绑定申报：被测 commit 完整 SHA 明文登记，申报前完成绑定核验 | WORKFLOW 模块三 ST-05；模块四 ST-01 |\n\n这样保留两个制度的真实要求，不额外创造 commit 顺序约束。\n\n③ DEC-049 登记：通过\n\nDEC-049 与此前我的裁定一致：\n\n当前节点 PASS，且明确限定 PASS 不代表 AIEO 全部版本建设完成，也不代表 backlog 清空。\n\nP0 AGENTS.md 独立复核。\n\nP1 Basic 日常任务池持续实战。\n\nP2 Standard 设计输入准备，只整理统计基线，暂不实施。\n\nP3 recoll 默认策略与 DEC-043 收集器修复继续挂 backlog。\n\nDEC-043 的三个重启条件：补采恢复失败、错误归属再次发生、补采成本明显影响效率；任一触发即单独提升优先级。\n\nDEC-049 对代授权窗口采纳待用户确认的状态也有明确登记，没有将代授权意见伪装成用户最终拍板。\n\n没有发现失真或擅自扩大授权范围的问题。\n\n最终整改要求\n\n只有一项：\n\n修正 AGENTS.md 中 ST-05 的“先于 commit”表述，改为“每步派单验收前自检”。\n\n其他六类映射、适用范围、DEC-049 均不需要返工。\n\n本轮结论：REJECT，不是整体治理方案不合格，而是一个规则映射细节尚未闭合。\n\n修正后提交新的完整 SHA，我只复验该行及相邻规则，不重复审查已通过的两项，也不扩大修改范围。",
+      "text_sha256": "ee3f919366277579c7d6af3b0f96be07bd4e47c759ce185a562428259e1bc519",
+      "size_bytes": 3889,
+      "assistant_uuid": "ffdd5212-ecae-4d3d-bac1-95c801efb830"
+    }
+  ]
+}

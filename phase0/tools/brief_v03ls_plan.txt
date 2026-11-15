@@ -1,0 +1,7 @@
+[规划协商|b-20261115-v03-lessons-recoll|S1文档类|轮1]
+v0.3已生效(bdb280e COMPLETED)。本任务=v0.3首个日常任务(实战ST-05/ST-01)。本轮=规划协商,共识后呈用户拍板冻结才动工。
+材料(按SHA读):github.com/damwate/AIEO@main commit c753084237971e1e201bff2d4b53da811850e9ac basic/tasks/b-20261115-v03-lessons-recoll/(requirement.md+task-brief.md)。
+拟入库:①L-018增补=键漂移变体(reload后物化键重排,固定键补采误得旧轮reply,SHA全同即发现)+归属校验型修正(简报标记唯一定位+最后user断言+前轮SHA排除;r2b/r3.mjs七查实证)②L-014第6条补对照数据(手工猜端口3轮空转vs check-push 40s定位3260)。
+S2=WORKFLOW「首个真实闭环验证任务节」事实状态回填,附录12行不动,检查器断言如受影响同步演进保持37项。
+边界:不改采集工具代码(r2b/r3.mjs仅作证据引用);禁改两COMPLETED任务包历史裁定;DEC-043挂backlog。
+请求:①两处入库的落点与结构建议(L-018以增条目还是并入既有条目)②WORKFLOW回填的最小改动面③检查器断言影响预判④三态:同意/修改(列点)/否决。

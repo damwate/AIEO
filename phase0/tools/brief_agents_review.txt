@@ -1,0 +1,5 @@
+[AGENTS.md独立复核请求|治理文档专项|DEC-049 P0]
+按你节点判定意见执行:①AGENTS.md适用范围已修正(工作区根,commit 6d271b1):明文限定=ZCode执行会话自动加载(工作区约定随会话注入),ChatGPT网页审查会话不自动读取,对审查方纪律靠派单简报明文携带不假定已读②DEC-049已登记decision-log(节点PASS裁定+下一节点P0-P3+DEC-043重启条件,标注代授权窗口采纳待用户确认)。
+请复核(按SHA读):github.com/damwate/AIEO@main 6d271b12397cebff72984deef1aff7977c60e8a8 的AGENTS.md+docs/phase1/decision-log.md DEC-049条目。
+复核点:①适用范围表述是否已消除"自动加载普遍事实"问题②七类异常映射表与lessons条目指向是否准确无冲突③DEC-049登记与你的判定是否一致无失真。
+三态:PASS/REJECT(列项)/BLOCKED。
