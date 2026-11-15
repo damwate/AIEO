@@ -63,7 +63,17 @@
   - A9 部分登记成功：注入 artifact 登记成功、message 或 review report 失败→重启仅补失败项；成功项 ID 不变、内容不被覆盖（整轮重做/换幂等键=FAIL）。
   - A2 REWORK 路径：审查结论=返工→任务状态=REWORK，仅登记+停等人工，不自动重开开发轮。
   - A10 REWORK 后重启观察：engine 不自动开启下一轮 GPT-03 审查或开发任务（新审查轮或新派单=FAIL）。
-- ③执行结果：（实施时回填）④测试结果：（实施时回填）⑤⑥验收证据引用：（实施时回填；S2-R2 独立验收派单）
+- ③执行结果：S2 全部注入项真实执行完毕（真实 chatgpt.com 派单 2 次+人工链 1 次，零 mock）：
+  - **A2 真实达成**（918003/T-P1-017）：真实审查轮全链（R0→R6 账本 14 条），GPT-03 真实结论=REWORK（--version 检查位于 --help 前的优先级问题，P2 级，issues 2 条），M1 真实推进 DEV_REPORTED→GIT_VALIDATING→CODE_REVIEW→REWORK，review report 落档（EXEC-009@6faa2f00…）；登记后停等，无自动重开。
+  - **A3 真实证据三组**：R2/R3/R5 验收派单天然 fail-closed 现场（INBOUND_WINDOW_COMPLETENESS_UNPROVEN 同错误码；发送双验过→禁重发→归属校验型补采七查全过；user unit 键身份交叉 fallback-turn-1/2/4:0:user 前后一致）+注入构造双形态（probe_a3_smallviewport*.mjs：v1 小视口 800×400+reload→虚拟化物化仅 2 units→marker 0 命中 fail-closed=归属拦截生效；v2 六查过+not_prev_reply_sha=false=SHA 排除守卫生效；如实登记：特定错误码在短会话小视口下未完全等价复现，以天然现场为主证）。
+  - **A4 真实重放**（918003）：同一请求原文重放（artifact 201 duplicate 同 ID/message 409 双证命中/report 409 双证命中，R5_DUPLICATE_OK=2），M1 计数 1/1/1 不变、dispatch 目录无新增、状态不动。重放读源修正暴露的 R4 fail-closed=定位键缺失正确拦截（S1-R4 整改行为实证）。
+  - **A5①+A8 真实现场**（918005/T-P1-018）：进程终止于发送双验前（账本仅 INTENT=账本断裂形态）→ resume fail-closed BLOCKED（cannot prove send state; resend forbidden）→人工核查 dispatch 现场（run.log 无发送证据、无 reply/result）→MANUAL_LEDGER_REPAIR（移除 INTENT 恢复附录 D 行5 态，备份 ledger.jsonl.bak-a8-repair 保留）→resume 恢复→正常派单一次→reply 330B sha256=e2cc1d54…→契约校验→登记（ART-REV-002/MSG-87009714-319990）→**T-P1-018 真实推进 TEST_ACCEPTANCE（GPT-03 结论 PASS）**。
+  - **A6 真实演练**（918007/T-P1-022，bootstrap 新造 DEV_REPORTED）：run 至 R2 后腿级停止（M1 停在 CODE_REVIEW）→人工经既有派单链发送同一简报（dispatch-2026-11-15T16-20-16，reply 342B sha256=eb8ec9df…，PASS）→attach-reply 按同一契约+同一幂等键登记（三项登记齐：ART/MSG/REPORT+R6）→T-P1-022 真实推进 TEST_ACCEPTANCE，状态推进与自动路径一致；键交叉核验显式登记 not_applicable（人工链接管发送责任，A6 实战驱动的 attach 语义适配 commit=6d39ff9）。
+  - **A10 真实**（918003）：REWORK 后 resume→RESUME_DONE（附录 D 行11 停等），零新派单、M1 状态不动。
+  - **A7/A9**：测试矩阵证据（独立测试 M1 实例=真实服务器软件+专用 DB，无 mock 注入：A7 事件同 id 单条/A9 含 09b message 成功 report 失败分支）；A5②=等价证据（08a 恢复段"账本修复后续跑只补登记零发送"+A4 真实重放同构语义；独立现场未构造——两审查轮均已自然推进无残留断点任务，如实登记）。
+- ④执行结果：S2 前置代码适配=pointer 简报模式（c199cf4，charter §3/L-007）+A6 attach 语义适配（6d39ff9）；真实派单消耗=ChatGPT 会话 3 轮（918003/918005/918007 三个新 GPT-03 会话+A6 人工链 1 轮）；T-P1-017=REWORK/T-P1-018=TEST_ACCEPTANCE(PASS)/T-P1-022=TEST_ACCEPTANCE(PASS) 三任务真实落档。
+- ⑤测试结果：test_review_leg.py 23/23 PASS（pointer 模式实现后回归）；真实链证据=上述①-⑥现场归档（runtime/review-leg/rvl-918003|918005|918007 账本+report、phase0/logs/dispatch-2026-11-15T16-*、probe 现场归档）。
+- ⑥验收证据引用：**S2 独立验收=待验收 commit 6d39ff97ead78bf56b457f2198b9089f81c32295**（区间基线=39d6741 后继 4 commit 至 6d39ff9，ST-01 PASS 区间=4；回填 commit 不属验收 diff 范围，ST-01④；申报材料=acceptance/review-request-s2.md）。
 
 ## S3 真实端到端验收（A1+A6，零 mock）
 
