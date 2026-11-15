@@ -1,0 +1,5 @@
+[AGENTS.md复验|只复验ST-05行及相邻规则]
+按你复核意见(reply ee3f9193…1bc519)整改:ST-05行改为"ST-05检查器自检:每步派单验收前运行并处理缺口;ST-01绑定申报:被测commit完整SHA明文登记,申报前完成绑定核验",依据列改"WORKFLOW模块三ST-05;模块四ST-01";其余六类映射/适用范围/DEC-049未动。
+材料:github.com/damwate/AIEO@main 9d3f0ed59a3ec9e7467e7e6aa197b11d15135383 的AGENTS.md。
+复验:该行表述是否已闭合规则依据,无其他扩散改动。
+三态:PASS/REJECT(列项)/BLOCKED。
