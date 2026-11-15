@@ -1,0 +1,8 @@
+ACTIVATION-STATE TESTS PASS 7 / FAIL 0（负向5+正向2=7）
+ [PASS] NT1 标题回退草案态 | 期望拦截=['①a'] 实际FAIL=['①a']
+ [PASS] NT2 blockquote回退v0.2现行旧草案态 | 期望拦截=['①b'] 实际FAIL=['①b']
+ [PASS] NT3 清单生效声明删除 | 期望拦截=['①a'] 实际FAIL=['①a']
+ [PASS] NT4 blockquote删交接包记录位置引用 | 期望拦截=['①b'] 实际FAIL=['①b']
+ [PASS] NT5 清单生效声明移出头部 | 期望拦截=['①a'] 实际FAIL=['①a']
+ [PASS] P1 生效实态全过(37/37) | 实际 PASS=37/FAIL=0 fail=[]
+ [PASS] P2 历史草案记录保留仍全过(37/37) | 实际 PASS=37/FAIL=0 fail=[]

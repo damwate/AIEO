@@ -1,0 +1,5 @@
+[规划协商|b-20261115-replication-gaps-fix|S1文档类|轮1]
+D1可复制性验证(你R4 PASS,reply a8bd85a2…)登记的缺口G1-G4修复,节点自主授权增补②执行。请复审方案:
+请读 github.com/damwate/AIEO@main b94289c 的 basic/tasks/b-20261115-replication-gaps-fix/(requirement+task-brief)+basic/tasks/b-20261115-basic-replication-verify/acceptance/replication-report.md(缺口详情)+basic/WORKFLOW.md部署边界条款。
+拟执行:G1+G4→「新环境初始化清单」成文(自装Node/Git/Python/Chrome/PowerShell→clone网络方案→npm ci→chrome profile初始化9222+人工登录+ego-profile.json→check-env两次对照,按D1演练实测步骤);G2→外部依赖清单(skill/monitor agent-kit获取+ego-profile本机不入Git);G3→派单链Windows专属声明。落位=WORKFLOW部署边界增补(增补③通道)+清单全文或toolkit/README(你定)。不动工具代码,37项保持。
+请求:①落位与结构意见②清单步骤有无遗漏(对照D1报告缺口)③37项断言影响预判④三态:同意/修改/否决。

@@ -1,0 +1,704 @@
+ChatGPT 说：
+S1 规划复审：b-20261115-replication-gaps-fix
+修改后同意
+节点自主授权②
+纯文档增补
+
+复审对象： damwate/AIEO@b94289c
+
+**复审结论：方案方向正确，可以进入步骤冻结；但建议在正式执行前补充几项边界，尤其是 Chrome Profile 初始化、外部依赖的必需性分级，以及 37 项断言的回归口径。
+
+我已核对四份指定文档，并进一步查看了 toolkit/check-env.mjs、toolkit/README.md 和 D1 的实际执行记录。
+
+① 落位与文档结构意见
+
+我的建议是：WORKFLOW 放规则和边界，独立清单放完整操作步骤。不要把初始化操作手册全部塞进 WORKFLOW。
+
+推荐结构：
+
+纯文本
+basic/
+├── WORKFLOW.md
+└── docs/
+    └── new-environment-setup.md
+
+如果项目现有目录约定不适合新增 basic/docs/，也可以放在 toolkit/README.md 旁边，作为独立文档。但我更倾向于前者，因为这是 Basic 的部署与复制说明，而不只是 toolkit 工具说明。
+
+具体分工：
+
+文件
+
+	
+
+写入内容
+
+
+
+
+basic/WORKFLOW.md
+
+	
+
+部署边界增补③：外部依赖、Windows 限制、初始化清单入口
+
+
+
+
+basic/docs/new-environment-setup.md
+
+	
+
+G1+G4 完整初始化手册
+
+
+
+
+toolkit/README.md
+
+	
+
+不修改，除非确实需要增加文档导航
+
+WORKFLOW 只增加一段，不重写现有部署边界，不调整其他模块。
+
+建议将增补内容分成三个小节：
+
+新环境初始化入口与适用范围。
+
+外部依赖清单与获取方式。
+
+派单链 Windows 专属限制。
+
+这样既能解决 G1–G4，也不会把 Basic 的工作流规则变成环境安装教程。
+
+② 新环境初始化清单：遗漏与修正
+
+整体步骤覆盖了 G1+G4，但我认为目前还不能直接冻结。下面是对照 D1 实际记录后的修改意见。
+
+A. 基础软件安装
+
+建议清单按以下顺序写：
+
+软件
+
+	
+
+建议要求
+
+	
+
+用途
+
+
+
+
+Windows 10/11 x64
+
+	
+
+明确当前支持平台
+
+	
+
+派单链运行环境
+
+
+
+
+Node.js
+
+	
+
+建议 ≥20.18.1
+
+	
+
+派单工具及依赖
+
+
+
+
+Git
+
+	
+
+安装并配置 PATH
+
+	
+
+Clone、版本管理
+
+
+
+
+Python 3
+
+	
+
+安装并配置 PATH
+
+	
+
+Basic 检查器
+
+
+
+
+Google Chrome
+
+	
+
+系统安装版
+
+	
+
+ChatGPT 网页派单
+
+
+
+
+PowerShell
+
+	
+
+Windows 自带组件
+
+	
+
+session_lock、Chrome 生命周期
+
+有一处必须修正：Node ≥18 的版本描述。
+
+虽然 WORKFLOW 当前写的是 Node ≥18，但 phase0/tools/package-lock.json 中：
+
+Playwright 1.65.0 要求 Node ≥20。
+
+undici 7.30.2 要求 Node ≥20.18.1。
+
+因此新清单应以实际锁定依赖的运行要求为准，建议 Node ≥20.18.1，而不是机械照搬旧文字。后续可以考虑统一 WORKFLOW 的版本表述，但本任务不应顺手修改工具代码。
+
+B. Clone 与网络
+
+这里有一个重要的流程细节：
+
+D1 实测结果是：
+
+GitHub 直连：Connection was reset。
+
+经系统代理：Clone 成功。
+
+Clone 后 .git/config 没有携带代理配置。
+
+建议明确：
+
+首先尝试直连。
+
+失败后读取当前系统代理的实际可用端口。
+
+使用临时代理方式执行 Clone。
+
+不将个人代理地址、端口写入仓库。
+
+Clone 后检查 HEAD、git fsck、工作区状态。
+
+特别注意：toolkit/check-push.mjs 是推送诊断工具，不是 Clone 工具。不能把它描述成已经实现了 Clone 网络自动切换。
+
+C. npm 依赖恢复
+
+建议明确执行目录：
+
+powershell
+cd AIEO\phase0\tools
+npm ci
+
+依据是这里存在 package.json 和 package-lock.json，而 check-env 检查的是：
+
+纯文本
+phase0/tools/node_modules/playwright
+
+不要在仓库根目录执行后就认为依赖安装完成。
+
+D. Chrome Profile 初始化
+重点补充
+
+这里建议写成独立的可执行子流程：
+
+创建专用目录
+
+runtime/chrome_profiles/gpt-poc
+
+这是专用运行目录，不是用户默认 Chrome Profile。
+
+启动专用 Chrome
+
+使用系统 Chrome，带上：
+
+纯文本
+--remote-debugging-port=9222
+--remote-allow-origins=*
+--user-data-dir=<AIEO>/runtime/chrome_profiles/gpt-poc
+
+并打开 https://chatgpt.com/。
+
+人工登录
+
+用户本人完成 ChatGPT 登录，确认页面正常可用。不得要求复制旧电脑 Cookie 或登录态。
+
+配置 ego-profile.json
+
+按现有 skill 的真实配置规范创建本机配置文件。记录文件位置、字段来源、配置检查方式，但不记录 Cookie、Token 等敏感内容。
+
+验证
+
+确认 Chrome CDP 9222 可以访问 /json/version，Profile 目录存在，并且人工确认登录有效。
+
+这里有两个容易混淆的地方：
+
+Chrome Profile 是浏览器运行数据目录。
+
+ego-profile.json 是本机配置文件。
+
+两者不能混为一个初始化步骤，也不能因为 Profile 目录存在就认定已经登录。
+
+另外，check-env 的 9222 检查只证明 CDP 在线，不能证明 ChatGPT 登录有效；它的 Profile 检查也只检查目录是否存在。
+
+E. 两次环境体检
+
+建议保留 D1 的两次对照机制，但增加明确的验收解释：
+
+阶段
+
+	
+
+操作
+
+	
+
+预期
+
+
+
+
+第一次
+
+	
+
+Clone 后、npm ci 前
+
+	
+
+Playwright 缺失；Profile 缺失
+
+
+
+
+中间
+
+	
+
+npm ci + Chrome Profile 初始化 + 登录 + 配置
+
+	
+
+完成依赖和环境初始化
+
+
+
+
+第二次
+
+	
+
+初始化后运行 check-env
+
+	
+
+Playwright OK；Profile OK；关键文件 OK
+
+需要特别说明：
+
+CDP 不在线可能只是 Chrome 当前未启动，不等于 Profile 损坏。
+
+check-env 是报告型工具，退出码恒为 0，不能只看退出码。
+
+第二次体检不能替代人工登录验证。
+
+不要把预期中的 WARN 直接当成初始化失败。
+
+F. 还建议增加两个步骤
+
+初始化完成后的实际功能检查：至少确认 gpt_dispatch.mjs 所需的 Chrome、Playwright、PowerShell 条件齐备。不要只以目录存在作为派单可用的结论。
+
+敏感数据与 Git 检查：确认 runtime/、本机 ego-profile.json、Cookie、Token 不进入 Git；运行 git status --short，检查是否误生成本机文件。
+
+这样 G1 和 G4 才算真正有可操作的文档闭环。
+
+③ G2、G3 的部署边界建议
+G2：外部依赖清单
+
+建议采用分级表，不要把所有外部依赖都写成 Basic 的强制安装条件。
+
+依赖
+
+	
+
+来源/获取方式
+
+	
+
+属性
+
+
+
+
+chatgpt-web-dispatch skill
+
+	
+
+Hulkhao/agent-kit，按该项目的 skill 安装说明获取
+
+	
+
+派单流程依赖
+
+
+
+
+monitor
+
+	
+
+Hulkhao/agent-kit 外部管理
+
+	
+
+非 Basic 必备组件
+
+
+
+
+ego-profile.json
+
+	
+
+本机自行创建
+
+	
+
+本机配置，不入 Git
+
+
+
+
+Chrome Profile
+
+	
+
+新电脑人工初始化
+
+	
+
+本机运行数据，不入 Git
+
+
+
+
+Playwright
+
+	
+
+phase0/tools/package-lock.json + npm ci
+
+	
+
+仓库可恢复依赖
+
+这里特别强调：
+
+monitor 不能被误写成 Basic 的必备依赖。
+
+D1 报告已经明确它不是 WORKFLOW 规定的 Basic 必备组件。
+
+此外，skill 的具体安装命令、ego-profile.json 的真实字段结构，应该以 agent-kit 对应版本的实际文件为依据。不能为了让清单看起来完整而自行编造命令或配置字段。
+
+G3：Windows 专属声明
+
+建议在 WORKFLOW 中使用明确措辞：
+
+Basic 仓库中的部分基础检查工具支持 Linux/Windows，但派单执行链当前仅在 Windows 环境实测。gpt_dispatch.mjs 使用 Windows Chrome 安装路径及 PowerShell，session_lock.mjs 依赖 PowerShell。Linux/macOS 下不得依据 check-env 的跨平台标记推断派单链可用。跨平台派单能力尚未验证。
+
+这是准确的，因为：
+
+check-env.mjs 自身支持 Linux/Windows。
+
+gpt_dispatch.mjs 写死 Windows Chrome 路径。
+
+session_lock.mjs 通过 PowerShell 实现 OS 句柄锁。
+
+不能把基础工具跨平台与派单链跨平台混为一谈。
+
+④ 对现有 37 项断言的影响预判
+预期零逻辑影响
+
+我的判断是：本任务属于文档层变化，不应改变现有 37 项断言的任何预期结果。
+
+修改内容
+
+	
+
+对断言的预期影响
+
+	
+
+风险
+
+
+
+
+WORKFLOW 增补部署边界
+
+	
+
+无
+
+	
+
+低
+
+
+
+
+新增初始化清单
+
+	
+
+无
+
+	
+
+低
+
+
+
+
+G2 外部依赖登记
+
+	
+
+无
+
+	
+
+低
+
+
+
+
+G3 Windows 限制声明
+
+	
+
+无
+
+	
+
+低
+
+
+
+
+Node 版本说明修正
+
+	
+
+不改检查器逻辑
+
+	
+
+低，但有版本口径差异
+
+
+
+
+Chrome 初始化说明
+
+	
+
+不改工具逻辑
+
+	
+
+低
+
+这里有三个验收纪律：
+
+不修改四个现有工具及其测试代码。
+
+不修改 37 项断言的数量、判断条件及预期结果。
+
+完成文档后，重新执行原有四命令，核对 37/37。
+
+特别提醒：check-env.mjs 目前仍只检查 Node 主版本是否 ≥18。即使文档提高到 ≥20.18.1，它也不会自动替你验证这个更高的要求。
+
+因此，版本符合性需要独立检查，不能将 check-env 的 [OK] 直接作为完整证据。
+
+验收报告应记录：
+
+四命令实际执行结果；
+
+37 项断言逐项结果；
+
+与现有基线的对照；
+
+是否存在任何非预期变化。
+
+预期是 37/37 保持，不是现在提前宣布已经通过。
+
+⑤ 建议冻结的执行步骤
+
+我建议将本轮正式冻结为五步：
+
+步骤
+
+	
+
+目标
+
+	
+
+交付
+
+
+
+
+S1
+
+	
+
+编写新环境初始化清单
+
+	
+
+独立 Markdown
+
+
+
+
+S2
+
+	
+
+WORKFLOW 增补 G2/G3 及初始化入口
+
+	
+
+部署边界增补③
+
+
+
+
+S3
+
+	
+
+文档交叉审查
+
+	
+
+路径、版本、依赖、敏感信息检查
+
+
+
+
+S4
+
+	
+
+四命令回归
+
+	
+
+37/37 对照记录
+
+
+
+
+S5
+
+	
+
+独立验收与交付
+
+	
+
+acceptance + delivery
+
+建议增加一条范围保护：
+
+不修改 phase0/tools/。
+
+不修改 toolkit/check-env.mjs、check-push.mjs。
+
+不修改 session_lock.mjs。
+
+不修改任何现有断言。
+
+不执行跨平台派单改造。
+
+不执行第二台电脑实测，本轮 G5 保持待验证。
+
+另外，WORKFLOW 的增补③应标明这是用户既有授权下的文档边界补充，不得将它写成统计驱动的 v0.3 流程修订。
+
+⑥ 最终三态裁定
+
+最终裁定
+
+修改后同意
+
+同意的部分
+
+G1+G4 合并成初始化清单；G2 外部依赖登记；G3 Windows 专属声明；纯文档增补；37 项保持。
+
+修改后执行的部分
+
+Node 版本提高到 ≥20.18.1。
+
+区分 Clone 与 check-push 的网络能力。
+
+Chrome Profile 和 ego-profile.json 分开说明。
+
+补充人工登录验证和敏感数据检查。
+
+monitor 明确为非必需依赖。
+
+否决的做法
+
+不接受将 Linux/Windows 基础检查支持描述为派单链跨平台；不接受把本机模拟验证描述为新电脑复制验证完成；不接受借本任务修改工具代码或扩大 37 项断言。
+
+授权判断：
+
+依据 WORKFLOW 增补②的节点自主推进授权，本轮属于规划协商阶段的 ChatGPT 复审。我同意在上述修改纳入冻结方案后，节点自主启动 S1，不需要再等待用户逐项拍板。
+
+但这不代表我已经替你修改 GitHub 文件，也不代表已经完成 S1–S5。
+
+最终任务状态建议：
+
+纯文本
+任务：b-20261115-replication-gaps-fix
+当前状态：规划协商通过（修改后同意）
+下一步：S1 新环境初始化清单
+范围：纯文档
+工具代码：不动
+断言：37 项保持
+G1-G4：待修复
+G5：待验证
+
+我的建议是按这个方案冻结，先完成 S1，再进入 S2。不要同时改动 WORKFLOW 和初始化清单的内容边界，先把完整操作手册写扎实，再引用到部署边界。
+
+等 S1、S2 提交后，我可以继续独立复审文档差异及 37 项回归证据。
+
+📋
+
+跟进 S1–S2 文档复审
+
+轻点设置

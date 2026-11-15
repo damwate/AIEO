@@ -1,0 +1,14 @@
+[2026-11-15T08:17:04.737Z] 会话锁已获取 pid=12688
+[2026-11-15T08:17:04.741Z] === GPT 派单（已有会话，消息 1060 字节）===
+[2026-11-15T08:17:09.502Z] Chrome 已启动 pid=6836
+[2026-11-15T08:17:51.688Z] 会话就绪: https://chatgpt.com/c/6af96852-1650-83ec-a6e4-526be1c301b5
+[2026-11-15T08:17:56.700Z] [dispatch] 基线尾部: null
+[2026-11-15T08:17:58.075Z] [dispatch] 发送双验通过（polls=1，user_unit_key=fallback-turn-0:0:user，tail 后观察）
+[2026-11-15T08:17:58.363Z] 截图: sent-dispatch.png
+[2026-11-15T08:21:42.430Z] [dispatch] COMPLETED，1 个 assistant unit，回复 11432 UTF-8 字节，区间窗口 2 个
+[2026-11-15T08:21:42.600Z] 截图: reply-dispatch.png
+[2026-11-15T08:21:42.602Z] 审查会话已保存: https://chatgpt.com/c/6af96ab6-1424-83ec-b15c-2c93f469f835
+[2026-11-15T08:21:42.616Z] JSON/Schema/绑定校验: NOT_REQUESTED
+[2026-11-15T08:21:42.616Z] M1 本地登记: NOT_REQUESTED（三 ID 均未提供，通用非登记派单）
+[2026-11-15T08:21:43.809Z] === 派单完成，artifact_sha256=068a3bf667f5ba73daac6c1d3e047578211fb503d84888c53b46dd56bc0a46ac size_bytes=11432 ===
+[2026-11-15T08:21:43.921Z] 会话锁已释放
