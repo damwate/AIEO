@@ -60,7 +60,7 @@
 | 问题18 | S2-R2 REJECT NEW-P1-02（同上 reply） | A5① 实验未证明派单进程树终止（taskkill /T 后无验证，gpt_dispatch 幸存完成派单）；三次真实派单捕获尝试均未成（窗口<5s+监测缺陷） | **会商裁定乙方案**（reply sha256=65914169…：组合证据验收，停止消耗真实派单）：test_19=runner 于发送确认后采集前（账本状态事件 CONFIRMED 有/R4 无）os._exit+tasklist 独立死亡验证+全新进程 resume 补采补登记零重派；丙口径修正=组合证据不表述为一次真实派单现场完整捕获；918012 保留为真实链路证据（不认定为进程中断样本） | 0c5642d9152012a2fc9f6c3196ba393efbc58a4c | test_19 PASS（28 用例×2 次运行 OK） |
 | 问题19 | S2-R2 REJECT NEW-P1-03（同上 reply） | 918012 主账本人工修复改写记录+时间顺序错乱，违反追加式纪律 | 审计修复：主账本恢复备份原样（11 条原始记录）+尾部追加 MANUAL_LEDGER_SUPERSEDE（取代声明+判定依据），污染版快照归档 ledger.jsonl.polluted-a5-repair-snapshot；918013 孤儿 run 同口径追加式补账 | fdba15c2f9f3d8fb70092766778d34d6d114d542 | 备份/污染快照/追加记录三件齐（evidence-s2 归档） |
 | 问题20 | S2-R2 REJECT NEW-P2-01（同上 reply） | 26/26 测试缺可独立复核的运行记录 | 测试运行输出双份归档（evidence-s2/test-run-s2r3.txt+confirm.txt，28/28 两次运行全文 stdout+MANIFEST 登记） | 0c5642d9152012a2fc9f6c3196ba393efbc58a4c | MANIFEST 105 条 |
-| 问题21 | S2-R2 REJECT NEW-P2-02（同上 reply） | ST-01 申报区间口径混乱（简报写 bfb7797 后继 3 commit 与 Compare 8 不一致） | 口径修正：S2 整改区间统一=**6d39ff9（S2-R1 被测）..HEAD**（ST-01 count=3：2be8b01 代码+34f2c39 R1 回填+501f3fd R2 回填）；bfb7797 为 S1-R5 申报锚点非本区间基线，简报口径已修正 | 0c5642d9152012a2fc9f6c3196ba393efbc58a4c | ST-01 区间=3 PASS（本申报复核） |
+| 问题21 | S2-R2 REJECT NEW-P2-02（同上 reply） | ST-01 申报区间口径混乱（简报写 bfb7797 后继 3 commit 与 Compare 8 不一致） | 口径修正（S2-R3 复核后终版）：S2 整改区间=**6d39ff9（S2-R1 被测）..申报 HEAD，共 6 commit**（34f2c39 S2回填/2be8b01 R1整改代码/501f3fd R1回填/fdba15c R2整改代码/0c5642d R2整改代码/030c947 R2回填）；其中整改代码 commit=2be8b01+fdba15c+0c5642d，回填 commit（34f2c39/501f3fd/030c947）不属验收 diff 范围（ST-01④）；bfb7797 为 S1-R5 申报锚点非本区间基线（R2 简报口径错误已修正，ST-01 count=6 PASS） | 0c5642d9152012a2fc9f6c3196ba393efbc58a4c | ST-01 区间=3 PASS（本申报复核） |
 
 ## S2 注入类验收矩阵执行（A2/A3/A4/A5/A7/A8/A9/A10）
 
