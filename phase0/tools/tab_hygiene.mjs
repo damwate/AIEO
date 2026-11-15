@@ -11,12 +11,13 @@
 //   - 指定会话（recoll/续会话）：只认 URL 含 /c/<uuid> 的页；多命中取数组末位
 //     （playwright ctx.pages() 与 CDP /json 均按创建序返回，末位=最近创建）；
 //     零命中 → null（由调用方决定 newPage）。
-//   - 新会话派单：候选=chatgpt.com 页；优先会话页（/c/）中最近创建者，其次
-//     主页；多候选取末位；零候选 → null。
+//   - 新会话派单：返回第一个 chatgpt.com 页（数组序）——与既有 attachPage 行为
+//     语义一致（--new-session 复用页会先 goto CHATGPT_HOME 再写 composer，无落错
+//     会话风险）；零候选 → null。本件不改此路径选择结果，只提供同一判定的
+//     显式出口供落档审计。
 // 去重规则（维护清理）：按会话 UUID 分组，每组保留末位（最近创建），其余关闭；
 //   无 UUID 的 chatgpt 页（主页/新 tab）保留末位一个；非 chatgpt 页不进计划。
 
-const CHATGPT_HOST_RE = /(^|\.)chatgpt\.com/i;
 const CONV_RE = /\/c\/([0-9a-fA-F-]{36})/;
 
 /** 页描述：{ index, url, createdAt? }（index=调用方数组下位；createdAt 可选 ISO/epoch，缺省用 index 序） */
@@ -27,7 +28,8 @@ export function describePages(pages) {
     return {
       index,
       url,
-      isChatGpt: CHATGPT_HOST_RE.test(url) || url === "about:blank" || url === "",
+      // 与既有 attachPage 判定逐字一致：url().includes("chatgpt.com")（零语义变更红线）
+      isChatGpt: url.includes("chatgpt.com"),
       conversationUuid: m ? m[1].toLowerCase() : null,
       seq: p.createdAt ? Number(p.createdAt) || 0 : index,
     };
@@ -46,10 +48,8 @@ export function pickChatGptPage(descs, { conversationUuid = null } = {}) {
     const matched = newestFirst(chatgpt.filter((d) => d.conversationUuid === want));
     return matched[0] || null;
   }
-  const convPages = newestFirst(chatgpt.filter((d) => d.conversationUuid));
-  if (convPages[0]) return convPages[0];
-  const home = newestFirst(chatgpt.filter((d) => !d.conversationUuid));
-  return home[0] || null;
+  // 新会话：与既有 attachPage 语义一致——第一个 chatgpt.com 页（数组序）。
+  return chatgpt[0] || null;
 }
 
 /** 维护去重计划：{ keep: [index], close: [index] }——每会话留最近创建一页。 */
