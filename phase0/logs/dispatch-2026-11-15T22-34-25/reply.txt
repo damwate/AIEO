@@ -1,0 +1,1151 @@
+ChatGPT 说：
+GPT-02 架构审核真实腿：Gate2-R1 评审回执
+
+建议 REWORK 仅立项评审，不授权开发
+
+评审对象： damwate/AIEO
+
+指定基线： 59467093b2c3da960174b434e5cd81e7303c1397
+
+评审范围： 附录 A 三项深度设计，不扩展为代码审查或实施验收。
+
+一、基线核验与关键发现
+
+已读取指定 SHA 下的：
+
+docs/phase1/GPT02-ARCH-REVIEW-LEG-CHARTER-DRAFT.md
+
+phase1/logs/e-check-20261114/m1-endpoints.json
+
+app/platform/state_machine.py
+
+phase1/tools/review_leg.py
+
+首先有一个需要纠正的版本问题：
+
+指定 SHA 下任务书正文标题实际标记为 草案 v0.1，版本记录也只有 v0.1、v0.2 两条，而不是请求中所说的已提交 v0.2 内容。此次裁定以指定 SHA 的实际文件为准。
+
+另外，41 个 method×path 端点、33 个唯一路径，是机器清单的明确口径。不能把业务概念上的 latest_execution 当作已经存在的独立 API。
+
+最重要的状态机发现：
+
+ARCH_REVIEW 的实际合法出边为：
+
+事件
+
+	
+
+目标状态
+
+
+
+
+PASS
+
+	
+
+READY
+
+
+
+
+REWORK
+
+	
+
+REWORK
+
+
+
+
+BLOCKED
+
+	
+
+BLOCKED
+
+
+
+
+CANCEL
+
+	
+
+CANCELLED
+
+其中 BLOCKED 是从 ARCH_REVIEW 进入 BLOCKED，并非 ARCH_REVIEW 内部的 BLOCKED→BLOCKED 自循环。
+
+原文关于该边的描述需要修正。CANCEL 也确实由状态机通用规则加入，因此不能仅因为它存在合法出边，就允许 GPT-02 engine 调用。
+
+二、深度项①：engine 的 M1 白名单端点表
+修订后认可
+
+当前附录 A 只是端点类别列表，尚不足以直接作为运行期安全边界。
+
+建议定稿时将白名单写成以下粒度。
+
+2.1 建议的端点权限表
+
+以下是建议的最小权限设计，路径必须以机器清单为准。
+
+Method
+
+	
+
+路径
+
+	
+
+操作范围
+
+	
+
+拒绝条件
+
+
+
+
+GET
+
+	
+
+/api/v1/tasks/{task_id}
+
+	
+
+读取当前任务及简报所需字段
+
+	
+
+任务不存在、非目标任务、越权
+
+
+
+
+GET
+
+	
+
+/api/v1/tasks/{task_id}/dependencies
+
+	
+
+读取依赖及状态
+
+	
+
+任务不匹配、越权
+
+
+
+
+GET
+
+	
+
+/api/v1/artifacts/{artifact_id}
+
+	
+
+读取已登记的审核材料
+
+	
+
+非任务关联材料、无权访问
+
+
+
+
+POST
+
+	
+
+/api/v1/artifacts
+
+	
+
+登记审核简报及证据产物
+
+	
+
+内容不符合登记契约、幂等冲突
+
+
+
+
+POST
+
+	
+
+/api/v1/messages
+
+	
+
+发送审核结果相关消息记录
+
+	
+
+非指定消息类型、身份不匹配
+
+
+
+
+POST
+
+	
+
+/api/v1/reports/review
+
+	
+
+登记审核报告
+
+	
+
+结论不符合 schema、任务或执行轮不匹配
+
+
+
+
+POST
+
+	
+
+/api/v1/tasks/{task_id}/events
+
+	
+
+提交允许的状态事件
+
+	
+
+事件不在 engine 白名单、状态不允许
+
+
+
+
+POST
+
+	
+
+/api/v1/agents
+
+	
+
+仅 OWNER bootstrap 注册 GPT-02 和 engine 身份
+
+	
+
+非初始化流程、非 OWNER、重复身份冲突
+
+注意最后一项：
+
+POST /api/v1/agents 不应该属于 GPT-02 engine 的运行期白名单。它属于一次性管理员初始化权限，应当与运行期令牌隔离。
+
+2.2 事件白名单必须明确
+PASS / REWORK
+
+GPT-02 engine 的事件白名单：
+
+PASS
+
+REWORK
+
+明确拒绝：
+
+BLOCKED
+
+CANCEL
+
+ARCH_REVIEW
+
+DISPATCH
+
+START
+
+DEVELOPMENT_COMPLETED
+
+GIT_VALIDATE
+
+原因：
+
+BLOCKED 结论可以登记，但不能由 GPT-02 腿直接改变 M1 任务状态。
+
+CANCEL 属于 OWNER 管理权。
+
+ARCH_REVIEW 是上游触发事件，不是审核结果。
+
+GIT_VALIDATE 是 GPT-03 代码审查腿的职责。
+
+不能因为状态机接受某个事件，就推导出 GPT-02 有权提交该事件。
+
+这里需要特别强调：审核结论的 BLOCKED 与任务状态的 BLOCKED 必须是两套不同的数据语义。
+
+建议将 GPT-02 的审核结果 BLOCKED 定义为：
+
+report.result=BLOCKED，只登记报告、证据及腿级停止记录；不提交 M1 BLOCKED 事件。
+
+2.3 端点表还有一个必要的收紧
+
+建议为每个端点额外增加两列：
+
+identity_scope：ENGINE-02 或 OWNER bootstrap。
+
+idempotency_scope：任务、审核轮、资源 ID 或事件 ID。
+
+否则，即使 method 和 path 正确，也可能出现跨任务读取、跨审核轮重复登记等问题。
+
+三、深度项②：审核简报组装与结论契约
+必须修订，存在架构阻断
+
+这是本轮最重要的 P1 发现。
+
+3.1 简报输入契约
+
+建议明确分为四个输入组。
+
+输入组
+
+	
+
+字段
+
+	
+
+处理要求
+
+
+
+
+任务身份
+
+	
+
+task_id、title、description
+
+	
+
+必填，绑定本轮
+
+
+
+
+审核范围
+
+	
+
+files_scope、acceptance_criteria
+
+	
+
+保留原始语义，不允许模型自行扩展范围
+
+
+
+
+依赖信息
+
+	
+
+task_dependencies、依赖状态
+
+	
+
+标明未完成依赖
+
+
+
+
+审核材料
+
+	
+
+任务书、方案、架构图、相关 ADR 的 GitHub 指针
+
+	
+
+固定 commit SHA，禁止隐式读取最新 main
+
+建议增加以下字段：
+
+review_round_id
+
+input_material_commit
+
+input_material_manifest_sha256
+
+brief_sha256
+
+brief_schema_version
+
+尤其是 input_material_commit，必须把审核材料版本和任务本身绑定，避免审核期间材料变化而无法复现。
+
+3.2 1200B 的计算口径
+
+现有任务书只写出站不超过 1200B，不足以执行。
+
+建议冻结：
+
+单次发送给 chatgpt.com 的完整用户消息 UTF-8 编码字节数不超过 1200。
+
+计入任务标识、审核指令、材料指针、结论格式要求及换行。
+
+不计网页传输协议头、浏览器内部封装。
+
+采用 UTF-8 实际字节数计算，不使用字符数代替。
+
+超限直接拒绝发送，不截断、不拆分、不丢弃审核约束。
+
+完整简报保存在本地账本，网页消息只保留必要内容及可追溯指针。
+
+建议保留完整材料在 GitHub，简报采用指针模式，避免中文材料占满 1200B。
+
+3.3 结论 schema：不能直接照搬现有 review-report
+
+我实际读取了：
+
+contracts/v1.0/review-report.schema.json
+
+它包含：
+
+execution_id
+
+reviewed_commit
+
+input_material_commit
+
+task_package_hash
+
+base_commit
+
+engineering_standard_version
+
+knowledge_base_commit
+
+result
+
+summary
+
+虽然该 schema 的 result 已允许 PASS、REWORK、BLOCKED，但这不代表可以直接用于 GPT-02。
+
+原因是现有 M1 的 POST /api/v1/reports/review：
+
+调用 _require_execution()，要求存在 execution。
+
+主要服务于 CODE_REVIEW 阶段。
+
+对 CODE_REVIEW 的 PASS/REWORK/BLOCKED 执行状态推进。
+
+不接受 ARCH_REVIEW 状态下的审核报告登记。
+
+这意味着当前任务书的两个要求存在冲突：
+
+要求 A： M1-M4 代码零修改。
+
+要求 B： GPT-02 使用现有 review-report 接口完成 ARCH_REVIEW 报告登记及结论推进。
+
+在现有实现下，B 不成立。
+
+不能因为 schema 允许三态，就认为接口也支持 ARCH_REVIEW。
+
+3.4 我的契约裁定
+
+建议新增独立的：
+
+arch-review-report.schema.json
+
+建议结构：
+
+JSON
+{
+  "contract_version": "1.0",
+  "task_id": "T-P1-001",
+  "review_round_id": "ARCH-ROUND-001",
+  "reviewer_agent_id": "GPT-02",
+  "engine_agent_id": "ENGINE-02",
+  "input_material_commit": "<40-hex SHA>",
+  "input_material_manifest_sha256": "<64-hex SHA>",
+  "brief_sha256": "<64-hex SHA>",
+  "result": "PASS",
+  "summary": "架构审核摘要",
+  "findings": [],
+  "required_boundaries": [],
+  "failure_paths": [],
+  "remaining_findings": [],
+  "unblocked": true
+}
+
+这里是建议性契约草案，不是声称现有接口已接受该结构。
+
+建议规则：
+
+结论
+
+	
+
+处理
+
+
+
+
+PASS
+
+	
+
+登记完整报告，随后推进 READY
+
+
+
+
+REWORK
+
+	
+
+登记完整报告，随后推进 REWORK
+
+
+
+
+BLOCKED
+
+	
+
+登记完整报告，腿级停止，不推进 M1 BLOCKED
+
+unblocked 建议仅作为审核报告的辅助判断字段，不应替代 result。
+
+3.5 必须在 Gate2 决定的接口问题
+
+有两条可行路线：
+
+路线 A：扩展 M1 原有报告接口。
+
+新增 ARCH_REVIEW 专用报告登记逻辑，支持同事务完成报告落档和状态推进。
+
+优点：权威登记和状态推进具有原子性。
+
+缺点：违反当前 M1-M4 零修改边界，需要正式修改立项范围。
+
+路线 B：M1 不修改。
+
+使用现有 artifacts 登记报告证据，再使用 events 提交 PASS/REWORK。
+
+优点：保留现有 M1 代码。
+
+缺点：报告登记与状态推进是两个独立事务，必须增加跨事务恢复和幂等核验，不能宣称原子提交。
+
+不能接受
+
+不能继续保留“复用 /reports/review，同时 M1 零修改”的模糊方案。
+
+我的建议是：Gate2 先选择路线，再确定 schema 的最终落点。 不建议在没有接口承载方案时直接宣布结论契约定稿。
+
+四、深度项③：断点恢复与回滚矩阵
+修订后认可
+
+GPT-03 的 review_leg.py 已有可复用的三断点经验：
+
+发送后未采集。
+
+已采集未登记。
+
+登记或推进结果不确定。
+
+GPT-02 不能直接复制 GPT-03 的状态判断，因为起始状态、结论语义和登记接口不同。
+
+4.1 建议冻结的恢复矩阵
+
+M1 状态
+
+	
+
+断点
+
+	
+
+恢复动作
+
+	
+
+是否允许重新派单
+
+
+
+
+ARCH_REVIEW
+
+	
+
+简报组装前
+
+	
+
+重新读取任务和材料，核对输入版本
+
+	
+
+允许首次派单
+
+
+
+
+ARCH_REVIEW
+
+	
+
+简报已组装未发送
+
+	
+
+校验 brief SHA，继续发送
+
+	
+
+允许
+
+
+
+
+ARCH_REVIEW
+
+	
+
+已发送未采集
+
+	
+
+原会话补采，核验发送证明
+
+	
+
+禁止重发
+
+
+
+
+ARCH_REVIEW
+
+	
+
+已采集未登记
+
+	
+
+校验 reply SHA、轮次、契约，按原幂等键登记
+
+	
+
+禁止重发
+
+
+
+
+ARCH_REVIEW
+
+	
+
+报告登记结果不确定
+
+	
+
+只读核实 M1 报告和 artifacts
+
+	
+
+禁止盲目补登记
+
+
+
+
+READY
+
+	
+
+PASS 已推进
+
+	
+
+只读核验，认定本轮完成
+
+	
+
+禁止
+
+
+
+
+REWORK
+
+	
+
+REWORK 已推进
+
+	
+
+停止自动流程，交人工修订
+
+	
+
+禁止
+
+
+
+
+ARCH_REVIEW
+
+	
+
+BLOCKED 已登记
+
+	
+
+保留报告，腿级停止，人工接管
+
+	
+
+禁止
+
+
+
+
+BLOCKED
+
+	
+
+人工任务阻塞
+
+	
+
+OWNER 决策
+
+	
+
+禁止
+
+其中有两行需要特别细化：
+
+登记结果不确定：
+
+必须先读取 M1 已存在的报告、产物、消息及事件记录。若无法确定是否已经成功登记，则腿级 BLOCKED，不允许凭超时重新提交。
+
+报告登记成功但事件推进失败：
+
+必须区分路线 A 和路线 B：
+
+路线 A：检查报告与状态是否处于同一事务结果。
+
+路线 B：检查报告已存在、状态仍为 ARCH_REVIEW 的中间状态，按原事件幂等键继续恢复。
+
+这两个情况不能使用同一个恢复动作。
+
+4.2 腿级 BLOCKED 的严格定义
+
+建议沿用 GPT-03 的语义：
+
+腿级 BLOCKED：GPT-02 内部停止，记录原因、断点、现场证据。
+
+M1 任务 BLOCKED：任务正式进入 BLOCKED 状态，属于 OWNER 的任务管理决策。
+
+另外，当前状态机的 BLOCKED 任务只有 CANCEL 出边。因此不能把 M1 BLOCKED 当作一个可自动恢复的中间状态。
+
+4.3 登记权威关系
+
+建议明确以下三层：
+
+层级
+
+	
+
+权威内容
+
+
+
+
+M1
+
+	
+
+任务状态、状态事件、正式登记的报告和 artifacts
+
+
+
+
+GPT-02 腿账本
+
+	
+
+本地执行进度、派单证据、回复 SHA、断点及恢复决策
+
+
+
+
+chatgpt.com
+
+	
+
+审核回复原始来源，不是任务状态权威
+
+重要规则：
+
+腿账本不能覆盖 M1 状态。
+
+M1 状态不能仅凭本地报告文件推断。
+
+chatgpt.com 的回复不能直接视为已登记结论。
+
+报告和状态事件的关系必须有可核验的幂等键。
+
+回滚只停止新增副作用、保留证据、交接人工，不回退已经发生的 M1 状态。
+
+这部分可以作为定稿基础。
+
+五、新增发现（不局限于三项深度设计）
+
+本轮另发现四项需要进入 Gate2 定稿的事项。
+
+NEW-01：任务发现端点遗漏
+
+任务书规定 GPT-02 轮询 ARCH_REVIEW 态任务，但附录 A 没有明确任务发现接口。
+
+机器清单实际存在：
+
+GET /api/v1/tasks
+
+建议将其加入白名单，限定：
+
+仅查询 status=ARCH_REVIEW。
+
+仅处理授权范围内任务。
+
+不允许通过分页遗漏任务。
+
+每个任务只建立一次自动审核轮。
+
+否则存在一个问题：有读取单个 task 的权限，却没有明确、完整的任务发现机制。
+
+NEW-02：报告接口与事件接口的幂等键不一致
+
+现有 M1 的 review report 登记使用 execution_id 和 reviewed_commit 识别重复报告；状态事件使用 event_id 幂等。
+
+GPT-02 应有自己的审核轮标识，不能简单复用 GPT-03 的 execution_id。
+
+建议：
+
+arch_review_round_id = <task_id> + <round_number>
+
+同时明确：
+
+报告唯一键。
+
+事件唯一键。
+
+人工 attach-reply 使用同一审核轮。
+
+恢复时不得生成新审核轮。
+
+NEW-03：BLOCKED 结果的持久化位置尚未确定
+
+既然 BLOCKED 不推进 M1 状态，就必须明确它在哪里成为正式可查记录。
+
+仅仅写入本地腿账本不够，因为人工接管可能发生在另一个会话或机器上。
+
+建议 BLOCKED 报告必须在 M1 留下可查询的持久化证据，并能与 task_id、审核轮和原始回复 SHA 关联。
+
+这也进一步说明路线 B 必须明确 artifacts 的登记及查询机制。
+
+NEW-04：一次触发的边界不清晰
+
+“每任务进入 ARCH_REVIEW 态一次”存在两个可能解释：
+
+每个 task 整个生命周期只触发一次。
+
+每次从 REWORK 返回 ARCH_REVIEW 后允许触发一次新审核轮，但由人工触发。
+
+建议采用第二种解释，并明确：
+
+初次进入：自动触发一次。
+
+REWORK 重入：只允许人工启动新轮。
+
+新轮使用新的 round_id。
+
+老轮的报告、回复和账本不得覆盖。
+
+这样才能与一期“不自动多轮返工重审”保持一致。
+
+六、Gate2 定稿修订清单
+
+编号
+
+	
+
+事项
+
+	
+
+优先级
+
+	
+
+定稿要求
+
+
+
+
+G2-01
+
+	
+
+engine 白名单
+
+	
+
+P1
+
+	
+
+逐端点 method/path/操作范围/拒绝条件
+
+
+
+
+G2-02
+
+	
+
+任务发现
+
+	
+
+P1
+
+	
+
+加入 GET /tasks，限定 ARCH_REVIEW
+
+
+
+
+G2-03
+
+	
+
+report 接口冲突
+
+	
+
+P1
+
+	
+
+路线 A/B 二选一
+
+
+
+
+G2-04
+
+	
+
+结论 schema
+
+	
+
+P1
+
+	
+
+明确独立契约及持久化位置
+
+
+
+
+G2-05
+
+	
+
+1200B
+
+	
+
+P1
+
+	
+
+冻结 UTF-8 计算口径
+
+
+
+
+G2-06
+
+	
+
+恢复矩阵
+
+	
+
+P1
+
+	
+
+明确四个主要断点及登记不确定情况
+
+
+
+
+G2-07
+
+	
+
+幂等键
+
+	
+
+P1
+
+	
+
+独立审核轮 ID、报告键、事件键
+
+
+
+
+G2-08
+
+	
+
+BLOCKED
+
+	
+
+P1
+
+	
+
+明确 M1 持久化证据与 OWNER 权限
+
+
+
+
+G2-09
+
+	
+
+角色顺序
+
+	
+
+P2
+
+	
+
+保留 GPT-02 优先的推荐，不冻结为强制顺序
+
+
+
+
+G2-10
+
+	
+
+版本记录
+
+	
+
+P2
+
+	
+
+修正 v0.1/v0.2 与指定 SHA 的对应关系
+
+七、最终三态结论
+
+Gate2-R1 总体裁定
+
+REWORK
+
+不是拒绝立项方向，而是当前技术契约尚不具备定稿条件。
+
+深度项
+
+	
+
+裁定
+
+
+
+
+① M1 engine 白名单
+
+	
+
+修订后认可
+
+
+
+
+② 简报与结论契约
+
+	
+
+必须修订
+
+
+
+
+③ 断点恢复与回滚
+
+	
+
+修订后认可
+
+阻断原因： 现有 /reports/review 不支持 ARCH_REVIEW 阶段的报告登记，与 M1-M4 零修改约束存在直接冲突。
+
+其他问题： 任务发现接口遗漏、BLOCKED 持久化位置不明确、恢复幂等关系未冻结。
+
+保留的立项原则
+
+以下原则本轮认可，不要求推翻：
+
+GPT-02 先于 GPT-04/05，保持推荐顺序。
+
+GPT-03 的真实腿框架优先复用。
+
+M2 真实派单链复用，不重造派单机制。
+
+一期只做单轮自动审核。
+
+BLOCKED 结论不等于 M1 任务 BLOCKED。
+
+不允许自动绕过状态机。
+
+零 mock 红线保留。
+
+用户确认需求原文和开工授权必须留在 Gate3。
+
+Gate2-R2 复审入口
+
+建议下一轮只处理以下三个核心交付：
+
+修订附录 A-1：完整 engine 权限矩阵及 bootstrap 边界。
+
+修订附录 A-2：选定报告登记路线，冻结结论 schema 和输入契约。
+
+修订附录 A-3：完整恢复矩阵、账本字段和幂等关系。
+
+特别要求： 如果选择路线 A，必须明确撤销或修改 M1 零修改约束；如果选择路线 B，必须接受报告登记与状态推进非原子化，并补齐恢复协议。不能同时保留两条路线的优点而回避其代价。
+
+最终边界：本轮没有批准代码开发，没有批准修改 M1-M4，没有替用户确认 §1 需求原文，也没有授予开工权。
+
+指定基线文件可在这里核对：
+
+GPT-02 立项任务书
+
+M1 41 端点清单
+
+M1 状态机
+
+现有 review report schema
+
+我的建议：先解决报告登记路线这个架构决策，再精化其他两项。 否则先把简报和恢复细节写得再完整，最终仍可能因为 M1 接口不承载 ARCH_REVIEW 报告而整体返工。

@@ -1,4 +1,4 @@
-# GPT-02 架构审核真实腿最小版接入——立项任务书（草案 v0.1）
+# GPT-02 架构审核真实腿最小版接入——立项任务书（草案 v0.3）
 
 > **文档身份与授权链：** 本文件=Standard 平台路线 GPT-02/04/05 逐角色接入的**首张立项草案**（DEC-063 处置③，2026-11-16；依据=用户开工指令明列"GPT-02/04/05 接入立项"+DEC-026 决议二路线+DEC-062 待办）。生效路径：规划协商复审 → Gate1 草案级验证 → Gate2 会务立项评审 → **用户确认需求原文（§1）** → 用户拍板开工（H7；立项准备≠实施授权）。角色顺序决策点：草案推荐 GPT-02 先于 GPT-04/05（理由见 §1），评审/用户可裁定改序，本任务书按同框架改写对象重报。
 
@@ -32,7 +32,7 @@
 ## 4. 状态与流程（I3）
 
 一期流程（单任务、每进入 ARCH_REVIEW 态一次审核轮，状态路径=M1 既有合法出边）：ARCH_REVIEW 态任务存在 → 腿组装审核简报（任务分解/影响面/依赖/验收标准）→ 真实派单（M2）→ 回复采集与契约校验 → 结论登记 M1（artifacts+messages，幂等键=`<run键>+arch-review-round-1`）→ 结论推进：**PASS→READY／REWORK→REWORK**（ARCH_REVIEW 合法出边）；REWORK 后人工修订方案→经 REWORK→ARCH_REVIEW 重入边重审（重审轮=人工触发，一期不自动循环）。
-**BLOCKED 双语义（Gate1-R1 P1-01 澄清，不得混用）：** M1 状态机 ARCH_REVIEW 存在 `BLOCKED→BLOCKED` 合法出边（state_machine.py:30），但**任务级 BLOCKED=真实任务阻塞状态，仅 OWNER 人工决定提交**——GPT-02 腿收到 BLOCKED 结论时**仅登记（artifacts+messages）+腿级停止，不代为提交 M1 BLOCKED 事件**，M1 任务保持 ARCH_REVIEW 态，是否转 BLOCKED 由 OWNER 会话另行决策；**腿级 BLOCKED**=审核腿内部停止（run 记录），M1 任务状态不动，人工可接管。两种 BLOCKED 全文默认指腿级，与 GPT-03 charter §5 底线条款同构。
+**BLOCKED 双语义（Gate1-R1 P1-01 澄清，不得混用）：** M1 状态机 ARCH_REVIEW 存在指向 BLOCKED 状态的合法出边（`BLOCKED` 事件：ARCH_REVIEW→BLOCKED，state_machine.py:30；非自循环；CANCEL 出边由通用规则存在但 engine 禁入），但**任务级 BLOCKED=真实任务阻塞状态，仅 OWNER 人工决定提交**——GPT-02 腿收到 BLOCKED 结论时**仅登记（artifacts+messages）+腿级停止，不代为提交 M1 BLOCKED 事件**，M1 任务保持 ARCH_REVIEW 态，是否转 BLOCKED 由 OWNER 会话另行决策；**腿级 BLOCKED**=审核腿内部停止（run 记录），M1 任务状态不动，人工可接管。两种 BLOCKED 全文默认指腿级，与 GPT-03 charter §5 底线条款同构。
 **一期边界：** ①自动触发=每任务进入 ARCH_REVIEW 态**一次**；②REWORK 不自动修订重审；③腿任何环节失败→任务保持 ARCH_REVIEW 态停等人工（腿级 BLOCKED，M1 任务状态不动）。
 
 ## 5. 异常处理（I4）
@@ -55,15 +55,54 @@
 
 GPT-04/GPT-05 真实腿；多轮返工重审自动化；规划流（PLANNING 前）改造与任务分解生成；scheduler.py 修改；多任务/多批次编排；新 commit 重审触发；契约修改；M1-M4 代码修改；管理后台。
 
-## 附录 A：会务立项评审输入初稿（Gate2 深度项——随草案提交，待评审精化，非草案级验收项）
+## 附录 A：会务立项评审输入→定稿（Gate2-R1 意见落实，v0.3）
 
-- **深度项①：engine（GPT-02 腿）M1 白名单端点表**——对照 m1-endpoints.json 机器清单（phase1/logs/e-check-20261114/）核定：tasks 读取（GET task/latest_execution/allowed_events）、events POST（事件白名单限 **PASS/REWORK**——ARCH_REVIEW 态合法出边；GIT_VALIDATE 不适用本腿；BLOCKED/CANCEL engine 调用层禁入）、artifacts POST+GET、messages POST、reports/review POST（ARCH_REVIEW 结论登记）、agents bootstrap（GPT-02 服务身份注册，先例=ENGINE-01）；逐端点 HTTP method+路径+操作范围+拒绝条件。
-- **深度项②：架构审核简报组装与材料载体**——输入=M1 任务字段（title/description/files_scope/acceptance_criteria/task_dependencies）+任务书/方案材料 GitHub 指针（L-007）；出站 ≤1200B；结论域 PASS/REWORK/BLOCKED 三态 JSON（904 冻结契约风格，schema 待 Gate2 定稿：复用 review-report.schema.json 或新增 arch-review 契约——决策点）。
-- **深度项③：断点恢复与回滚矩阵**——按 ARCH_REVIEW 态×断点（简报组装前/派单发送后未采集/采集后未登记/登记后结论未推进）列恢复行+腿级 BLOCKED 语义+回滚=不退 M1 状态交接人工；登记权威关系（M1 状态唯一权威/腿只发起合法事件）。
+### A-1 engine（GPT-02 腿）M1 白名单端点表（定稿粒度，路径以 m1-endpoints.json 机器清单 33 唯一路径为准）
 
+| Method | 路径 | 操作范围 | 拒绝条件 | identity_scope | idempotency_scope |
+|---|---|---|---|---|---|
+| GET | /api/v1/tasks/{task_id} | 读取任务与简报所需字段 | 任务不存在/非目标任务 | ENGINE-02 | 按任务 |
+| GET | /api/v1/tasks/{task_id}/dependencies | 读取依赖与状态 | 任务不匹配 | ENGINE-02 | 按任务 |
+| GET | /api/v1/artifacts/{artifact_id} | 读取已登记审核材料 | 非任务关联材料 | ENGINE-02 | 按资源 ID |
+| POST | /api/v1/artifacts | 登记审核简报与证据产物 | 登记契约不符/幂等冲突 | ENGINE-02 | 路径+SHA（M1 语义） |
+| POST | /api/v1/messages | 审核结果相关消息记录 | 非指定消息类型/身份不匹配 | ENGINE-02 | message_id 确定性键 |
+| POST | /api/v1/reports/review | **不使用**（见 A-2 路线 B：该端点 _require_execution 绑定 CODE_REVIEW 执行，不承载 ARCH_REVIEW 登记） | — | — | — |
+| POST | /api/v1/tasks/{task_id}/events | 提交白名单状态事件 | 事件不在白名单/状态不允许 | ENGINE-02 | event_id 确定性键 |
+
+- **事件白名单=PASS/REWORK**（GPT-02 engine 运行期）。明确拒绝：BLOCKED/CANCEL（结论 BLOCKED 只登记报告+腿级停止，不提交 M1 BLOCKED 事件——"报告 result=BLOCKED"与"M1 任务态 BLOCKED"两套数据语义不得混用）/ARCH_REVIEW（上游触发事件）/DISPATCH/START/DEVELOPMENT_COMPLETED/GIT_VALIDATE（GPT-03 腿职责）。**状态机接受某事件≠engine 有权提交该事件。**
+- **POST /api/v1/agents 不入运行期白名单**：GPT-02/ENGINE-02 身份注册=一次性 OWNER bootstrap（先例=ENGINE-01 setup-agents），与运行期令牌隔离。
+
+### A-2 审核简报组装与结论契约（路线 B 已裁定）
+
+**报告登记路线=路线 B（M1 零修改）**（Gate2-R1 架构阻断裁定；依据：①charter §3/§9 M1-M4 零修改边界自洽②GPT-03 腿先例=artifacts+messages+events 多事务登记+幂等+恢复已实战验证③DEC-011 契约冻结纪律）。代价如实接受：**报告登记与状态推进非原子**——恢复协议见 A-3 路线 B 专属行。路线 A（扩展 M1）被否决：违反零修改边界，须正式修改立项范围（不在本任务授权内）。
+
+**结论契约=新增 `contracts/v1.0/arch-review-report.schema.json`**（不照搬 review-report.schema.json——其 execution_id/reviewed_commit 语义绑定 CODE_REVIEW）：contract_version/task_id/review_round_id/reviewer_agent_id(GPT-02)/engine_agent_id(ENGINE-02)/input_material_commit(40hex)/input_material_manifest_sha256/brief_sha256/result(PASS/REWORK/BLOCKED)/summary/findings/required_boundaries/unblocked(辅助字段不替代 result)。登记=artifacts（报告证据）+messages（消息记录），**不经 /reports/review**。
+
+**简报输入四组**：任务身份（task_id/title/description，必填绑定本轮）/审核范围（files_scope/acceptance_criteria，原始语义不扩展）/依赖信息（task_dependencies+状态，标明未完成依赖）/审核材料（任务书/方案/ADR GitHub 指针，**固定 commit SHA 禁隐式读最新 main**）。新增绑定字段：review_round_id/input_material_commit/input_material_manifest_sha256/brief_sha256/brief_schema_version。
+
+**1200B 口径冻结**：单次发往 chatgpt.com 的完整用户消息 UTF-8 实际字节数 ≤1200（计入任务标识/指令/指针/结论格式/换行；不计协议头与浏览器封装）；超限拒绝发送不截断不拆分；完整材料走 GitHub 指针模式，完整简报落本地账本。
+
+### A-3 断点恢复与回滚矩阵（定稿）
+
+| M1 状态 | 断点 | 恢复动作 | 重新派单 |
+|---|---|---|---|
+| ARCH_REVIEW | 简报组装前 | 重读任务与材料，核对输入版本 | 允许首次派单 |
+| ARCH_REVIEW | 简报已组装未发送 | 校验 brief SHA，继续发送 | 允许 |
+| ARCH_REVIEW | 已发送未采集 | 原会话补采，核验发送证明 | **禁止重发** |
+| ARCH_REVIEW | 已采集未登记 | 校验 reply SHA/轮次/契约，按原幂等键登记 | **禁止重发** |
+| ARCH_REVIEW | 登记结果不确定 | 只读核实 M1 artifacts/messages；无法确定→腿级 BLOCKED（禁凭超时重提交） | **禁止重发** |
+| ARCH_REVIEW | 报告已登记但事件推进失败 | **路线 B 专属**：核实报告在档+状态仍 ARCH_REVIEW 中间态→按原 event_id 幂等键续推 | **禁止重发** |
+| READY | PASS 已推进 | 只读核验，认定本轮完成 | 禁止 |
+| REWORK | REWORK 已推进 | 停止自动流程，交人工修订 | 禁止 |
+| BLOCKED | 人工任务阻塞 | OWNER 决策（engine 不触碰） | 禁止 |
+
+- 腿级 BLOCKED=腿内部停止（记录原因/断点/现场证据），M1 任务状态不动，人工可接管——沿 GPT-03 §5 底线语义。
+- 回滚=停止新增副作用、保留已发生事实、从当前 M1 状态交接人工，不退回前一状态。
+- 登记权威关系：M1 状态唯一权威/腿只发起白名单内合法事件/报告证据 artifacts 为准。
 ## 版本记录
 
 | 版本 | 日期 | 状态 | 变更 | 依据 |
 |---|---|---|---|---|
 | v0.1 | 2026-11-16 | 草案 | 初稿成文（GPT-03 charter v1.0 同构框架，落点 ARCH_REVIEW 关口） | DEC-063 处置③；DEC-026 路线；角色规范 docs/立项/02 §3；state_machine.py:28-30 实读 |
 | v0.2 | 2026-11-16 | 草案 | Gate1 闭环：§4 BLOCKED 双语义段（Gate1-R1 P1-01）+附录 A 评审输入初稿（Gate2 深度项三项） | Gate1-R1 REWORK（697a5e54…）→Gate1-R2 PASS（a7aeed29…）；附录 A 按 GPT-03 Gate2 先例成文 |
+| v0.3 | 2026-11-16 | 草案 | Gate2-R1 落实：状态机记法校正（ARCH_REVIEW→BLOCKED 出边/CANCEL 禁入）+A-1 端点表定稿粒度（7 行+identity/idempotency scope+/agents 出运行期白名单）+A-2 路线 B 裁定（/reports/review 不承载 ARCH_REVIEW→artifacts+events 多事务，新增 arch-review-report.schema.json）+1200B 口径冻结+简报四组输入+A-3 九行恢复矩阵（路线 B 专属行） | Gate2-R1 REWORK（reply 归档 dispatch-2026-11-15T22-34-25）；路线裁定依据=charter 零修改边界自洽+GPT-03 腿多事务先例+DEC-011 |

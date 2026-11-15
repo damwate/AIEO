@@ -1,0 +1,5 @@
+[立项评审|GPT02-ARCH-REVIEW-LEG|Gate2-R1|深度项精化]
+Gate1已PASS(BLOCKED双语义关闭,历史REJECT保留)。Gate2=会务立项评审:请读 github.com/damwate/AIEO@main 59467093b2c3da960174b434e5cd81e7303c1397 两材料——docs/phase1/GPT02-ARCH-REVIEW-LEG-CHARTER-DRAFT.md v0.2(正文§1-§9+附录A三深度项)/phase1/logs/e-check-20261114/m1-endpoints.json(41端点机器清单)。
+评审目标:把附录A三深度项精化到定稿级——①engine(GPT-02腿)M1白名单端点表(逐端点method+路径+操作范围+拒绝条件,对照机器清单与state_machine ARCH_REVIEW出边;事件白名单限PASS/REWORK)②审核简报组装与结论契约(输入字段/1200B/结论schema:复用review-report.schema.json或新增,给裁定)③断点恢复与回滚矩阵(ARCH_REVIEW态×断点+腿级语义+登记权威)。逐项给修订要求或直接认可;可提新反例。
+边界:仅立项评审,不授权代码开发;需求原文确认与开工留用户(Gate3);角色顺序建议保留为推荐。
+回执:三深度项逐项(认可/修订要求)+新增发现+三态结论。
