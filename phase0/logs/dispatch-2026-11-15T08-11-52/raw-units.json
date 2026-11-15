@@ -1,0 +1,108 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-15T08:14:06.684Z",
+  "user_unit_key": "fallback-turn-1:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-1:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "aab651b5-9b1d-4a7e-9a02-bad7abe84343",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-1:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "50300d9f7b94dfa3a4f79d97cbe9b9bc3f29fd08039f7f2618456e3159729e15",
+          "913f9a337c927e6c9b57b65c3bcda2aa3a0742ac8ed751429a619f119f343055",
+          "3f319909e03df96c5e3a5eafaed2314f3105fd322802193a78d7e9906a2e5cb3",
+          "59ffaa22fc3d7bf4df27f8629c2366d57c44ed8de7cad9e37d21f368e9c26628"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "50300d9f7b94dfa3a4f79d97cbe9b9bc3f29fd08039f7f2618456e3159729e15",
+          "913f9a337c927e6c9b57b65c3bcda2aa3a0742ac8ed751429a619f119f343055",
+          "3f319909e03df96c5e3a5eafaed2314f3105fd322802193a78d7e9906a2e5cb3",
+          "59ffaa22fc3d7bf4df27f8629c2366d57c44ed8de7cad9e37d21f368e9c26628"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-1:0:user",
+      "fallback-turn-1:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-1:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nAIEO Basic 复验 R4 回执\nPASS\n\n任务： b-20261115-basic-replication-verify\n\n验收 commit： 2f434cecf6078f91acf4cdb18545510e387410de\n\n复验范围： 仅 P1-1，独立重算 MANIFEST 全部 11 条 SHA256。\n\n一、结论表\n\n核验项目\n\n\t\n\n数量\n\n\t\n\n匹配结果\n\n\t\n\n裁定\n\n\n\n\n原始输出\n\n\t\n\n7\n\n\t\n\n7/7\n\n\t\n\nPASS\n\n\n\n\n执行记录补档\n\n\t\n\n3\n\n\t\n\n3/3\n\n\t\n\nPASS\n\n\n\n\nreplication-report.md\n\n\t\n\n1\n\n\t\n\n1/1\n\n\t\n\nPASS\n\n\n\n\n合计\n\n\t\n\n11\n\n\t\n\n11/11\n\n\t\n\nPASS\n\n二、关键 SHA256 复核\n已匹配\n\nreplication-report.md\n\n- MANIFEST 申报：\n\n943dd0c9d869c12b23cf91168dc3023eae88bf193d241d1a2c2356f0b6d76625\n\n- 独立重算：完全一致。\n\n其余 10 条也全部匹配。\n\n特别确认：GitHub 返回的 Git blob SHA-1 仅作为对象标识参考，没有混入 SHA256 比对。\n\nMANIFEST 自身不列入核算，符合自指排除原则。\n\n三、最终裁定\n\n裁定对象\n\n\t\n\n结果\n\n\n\n\nP1-1\n\n\t\n\nPASS\n\n\n\n\n问题1\n\n\t\n\n关闭\n\n\n\n\nP1-2\n\n\t\n\n沿用此前 PASS\n\n\n\n\n问题3\n\n\t\n\n沿用既有裁定\n\n\n\n\nS1 整体验收\n\n\t\n\nPASS\n\n最终三态：PASS。\n\n本轮唯一遗留问题已经闭环，无需继续返工。S1 整体验收通过。\n\n四、Reply SHA256\n\na8bd85a25129fa8f634a4b676551578967ad86ef34db1d52b1e87348b9bfd9af\n\nSHA256 对象：本回执正文，不包含 SHA256 字段本身。",
+      "text_sha256": "59ffaa22fc3d7bf4df27f8629c2366d57c44ed8de7cad9e37d21f368e9c26628",
+      "size_bytes": 1300,
+      "assistant_uuid": "aab651b5-9b1d-4a7e-9a02-bad7abe84343"
+    }
+  ]
+}

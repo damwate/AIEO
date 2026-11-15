@@ -1,0 +1,4 @@
+[复验R4|b-20261115-basic-replication-verify|只复核P1-1一处]
+上轮唯一遗留已修:ls-MANIFEST.txt中replication-report.md条SHA256改为943dd0c9d869c12b23cf91168dc3023eae88bf193d241d1a2c2356f0b6d76625(=你R3的独立计算值;根因=上轮误将git SHA-1混入SHA256清单,已统一为SHA256;MANIFEST自身SHA不列=自指)。
+请读 github.com/damwate/AIEO@main commit 2f434cecf6078f91acf4cdb18545510e387410de 的 basic/tasks/b-20261115-basic-replication-verify/acceptance/ls-MANIFEST.txt——独立重算全部11条。
+三态:PASS(问题1关闭+S1整体验收结论)/REJECT(列项)/BLOCKED。回执含结论表+SHA256。
