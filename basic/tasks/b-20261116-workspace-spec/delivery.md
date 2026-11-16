@@ -8,16 +8,16 @@
 
 - `basic/WORKFLOW.md`：新增《多项目、多 IDE 工作区管理规范（增补④）》一节（九小节），附录尾注登记增补依据；既有 v0.3 条款零删改、附录 12 行修订表未动。
 - R1 整改后口径（经 R2 复验 PASS）：第四节=「项目配置与主机运行环境分离」（项目级可移植无秘密配置可入库／凭据与主机配置禁入库／遵循所用 IDE 规则）；第六节=回传三口径（被测对象=完整 SHA、完整 Diff=可核验完整改动或 GitHub compare/GitPointer、测试=断言+退出码；numstat 仅统计）。
-- `docs/phase1/decision-log.md`：DEC-068～074、DEC-076～079（**编号序列中不存在 DEC-075，未补虚构条目**；范围不连续如实表述），逐轮登记，未覆盖既有 DEC-001～067。
+- `docs/phase1/decision-log.md`：DEC-068～074、DEC-076～080（**编号序列中不存在 DEC-075，未补虚构条目**；范围不连续如实表述），逐轮登记，未覆盖既有 DEC-001～067。
 - `phase0/environment-inventory.md` §4：增补"派单发送双验 UNCERTAIN 的判定顺序"经验（慢链路延迟送达 vs 未送达，禁盲目重发）。
-- 任务包：requirement / task-brief / steps（含返工表问题1～9）+ `acceptance/`（各轮简报、R1～R10 回复与 ST-05 输出、补采驱动与发送双验证据）。
+- 任务包：requirement / task-brief / steps（含返工表问题1～10）+ `acceptance/`（各轮简报、R1～R11 回复与 ST-05 输出、补采驱动与发送双验证据）。
 
 ## 3. 修改文件
 
 | 文件 | 变更 |
 |---|---|
 | `basic/WORKFLOW.md` | +54/−1（首轮）；R1 整改 +4/−3（第四/六节口径） |
-| `docs/phase1/decision-log.md` | DEC-068～074、DEC-076～079（逐轮追加，不改既有条目） |
+| `docs/phase1/decision-log.md` | DEC-068～074、DEC-076～080（逐轮追加，不改既有条目） |
 | `phase0/environment-inventory.md` | §4 增补一条经验（+1） |
 | `basic/tasks/b-20261116-workspace-spec/` | requirement/task-brief/steps/delivery + acceptance 证据包 |
 | C1–C8 契约、既有 DEC-001～067、附录修订表 | 未改动 |
@@ -45,6 +45,7 @@
 | R8 | `dispatch-2026-11-16T09-13-55` | `04c7115ddc53b6a9189a39c442db736f8af6a320efd055249d9880f55298bfe3` | REJECT（仅问题7：索引滞后） |
 | R9 | `dispatch-2026-11-16T09-18-49` | **当轮 result.json 的 reply_sha256 缺失（如实登记）**，回复全文见该目录 `reply.txt` | REJECT（仅问题8：父提交 SHA 缩写） |
 | R10 | `dispatch-2026-11-16T09-22-48/recoll` | `39b37f6723059945500b75b32e2abd548b32b7767a366b2b4796bcd8468f4c99` | REJECT（问题9：4 组交付索引/证据链问题，已按"一次整体同步"整改） |
+| R11（旧会话 CONTEXT_LIMIT_STOP 后迁移至新会话 `6aface14-4f10-83e8-a5d0-e8a5de64c1e2`，首派即通） | `dispatch-2026-11-16T09-32-48` | **当轮 result.json 的 reply_sha256 缺失（如实登记）**，回复全文见该目录 `reply.txt` | REJECT（问题10：§5 提交链缺 R10 整改 commit；steps S2④ DEC 范围表述错误） |
 
 - 纯文档任务：无代码单测项（如实标注不适用）。
 
@@ -82,8 +83,10 @@
 | R9 简报归档 | `58e7943d7f4a7f0dedd07e66c3389bbf6d6c94f7` | `787c2b58902c8de6769bac6820d0740f02504285` |
 | S3-R9 父提交 SHA 补全 DEC-078 | `c8ddb06b851f91c8e11e2b641249fd82d2ba3926` | `58e7943d7f4a7f0dedd07e66c3389bbf6d6c94f7` |
 | 问题8 建行+R10 简报 | `ab6ad23806d9be05be29b11d2150ea702bbf6ed5` | `c8ddb06b851f91c8e11e2b641249fd82d2ba3926` |
+| S3-R10 四组整体同步+DEC-079 | `c8eb7087d47bd06524161edbee911ed060c9c61f` | `ab6ad23806d9be05be29b11d2150ea702bbf6ed5` |
 
-- 交付索引修正 commit 对应关系：问题7＝`c032185…`/`787c2b5…`，问题8＝`c8ddb06…`/`ab6ad23…`，问题9＝本轮整体同步 commit（见返工表问题9 行）。
+- 交付索引修正 commit 对应关系：问题7＝`c032185740dcfcac3c11b158b14f7ed4d8d7824b`/`787c2b58902c8de6769bac6820d0740f02504285`，问题8＝`c8ddb06b851f91c8e11e2b641249fd82d2ba3926`/`ab6ad23806d9be05be29b11d2150ea702bbf6ed5`，问题9＝`c8eb7087d47bd06524161edbee911ed060c9c61f`（整体同步，见返工表问题9 行），问题10＝R11 整改 commit（见返工表问题10 行）。
+- **本表收录口径（避免自引用循环）：** 收录基线→R10 整改（`c8eb708…`）的交付/证据类提交为止；此后（R11 及其后）同样属**证据登记**性质的提交，以 steps.md 返工表对应问题行的"修复 commit"为唯一权威登记（含完整 SHA），不在本表逐条追加。
 - 审查分支：`review/b-20261116-workspace-spec`（远程同名分支，供按 SHA 读取）。**远程 main 仍指向基线 `d563a2a5…`**；本地 main 领先属执行侧现场记录，尚未推送/合并（待用户明文授权，DEC-010）。
 
 ## 6. 未解决问题
@@ -94,7 +97,7 @@
 
 ## 7. 后续建议
 
-- **阶段归属澄清：** S1 阶段（规范内容）验收轮次=R1～R6；S3 阶段（交付记录）验收轮次=R7～R10（及后续收尾轮）。两类轮次不混计：问题计数按"同一问题"口径统计于返工表，跨阶段不重复计数。
+- **阶段归属澄清：** S1 阶段（规范内容）验收轮次=R1～R6；S3 阶段（交付记录）验收轮次=R7～R11（及后续收尾轮）。两类轮次不混计：问题计数按"同一问题"口径统计于返工表，跨阶段不重复计数。
 - 将"Git commit 前须用户明文批准"（DEC-071）评估上升为 WORKFLOW 通用条款（需用户拍板，不在本任务范围）。
 - 审查会话已历 10 轮，后续新任务按 L-018 第 6 条主动迁移新会话，简报自包含（≤1200B）+材料走 GitHub。
 - 派单链在慢链路下的发送判定已固化于 environment-inventory §4，后续任务直接照用。
