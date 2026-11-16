@@ -1,0 +1,7 @@
+[Gate1|GPT-05立项] 验证对象：phase1/GPT05-ENGINEERING-AUDIT-LEG-CHARTER-DRAFT.md v0.1，damwate/AIEO main，commit a89b37123874bd725edfd09cdf91ce428d0c8391，按SHA实读。
+
+【范围】草案级验证（非开工授权）：①内部一致性（§4流程与A-1/A-2/A-3自洽；结论域ACCEPTED/ACCEPTED_WITH_RISKS/BLOCKED与留证语义一致）；②事实核对（messages-create.schema.json AUDIT_SUBMITTED批次级分支=task_id null+batch_id必填；GET /api/v1/tasks?batch_id=过滤；batches状态枚举；立项/02 §6角色规范）；③边界自洽（同构复制不重构三腿/H2新增契约/§9防膨胀/无状态事件贯彻）；④决策点D1触发方式裁定建议或留Gate2。
+
+【自查项】无原生批次审计端点→登记走artifacts+messages（GPT-02路线B同构）+无状态事件——与"结论权威=messages+artifacts证据链"是否自洽请裁；D1显式CLI是否为一期合理解。
+
+【输出】三态：PASS/PASS_WITH_CONSTRAINTS（附约束）/REJECT（逐项依据+整改要求）。抓实质缺陷，不做格式性返工。

@@ -1,6 +1,6 @@
-# GPT-05 工程总审计真实腿最小版接入——立项任务书（草案 v0.1）
+# GPT-05 工程总审计真实腿最小版接入——立项任务书（草案 v0.2）
 
-> **文档身份与授权链：** 本文件=Standard 平台路线 GPT-02/03/04/05 逐角色接入的**第四张立项草案**（GPT-03 v1.0 已生效 DEC-057/062；GPT-02 交付闭环 DEC-088；GPT-04 交付闭环 DEC-091）。启动依据=Gate2 裁定"GPT-05 待 GPT-04 形成可验收闭环后再立项"（顺延条件已达成，DEC-091 登记）。生效路径：charter 草案 → Gate1 草案级验证 → Gate2 会务立项评审 → 开工授权（用户 2026-11-17 授权机制=审查方复审通过替代用户逐项拍板，DEC-089 登记；DEC-010 高危红线仍须用户本人拍板）。
+> **文档身份与授权链：** 本文件=Standard 平台路线 GPT-02/03/04/05 逐角色接入的**第四张立项草案**（GPT-03 v1.0 已生效 DEC-057/062；GPT-02 交付闭环 DEC-088；GPT-04 交付闭环 DEC-091）。启动依据=Gate2 裁定"GPT-05 待 GPT-04 形成可验收闭环后再立项"（顺延条件已达成，DEC-091 登记）。生效路径：charter 草案 → Gate1 草案级验证 → Gate2 会务立项评审 → 开工授权（用户 2026-11-17 授权机制=审查方复审通过替代用户逐项拍板，DEC-089 登记；DEC-010 高危红线仍须用户本人拍板）。**Gate1：PASS_WITH_CONSTRAINTS**（reply sha256=bceb502ac673fa18…完整值见 recoll-result.json，dispatch-2026-11-16T20-57-30/recoll 补采七查全过；三约束 C1/C2/C3+D1 显式 CLI 确立/D2 路线 B 支持；G05-R1 只核对整改通过后进 Gate2）。
 
 ## 1. 需求原文（拟定稿）
 
@@ -8,7 +8,7 @@
 
 - **目标：** 批次审计关口由"无真实审计"升级为真实 GPT-05 收发与结论留证，全程证据可追溯——补齐十步流程第四道真实腿（批次级收口）。
 - **非目标：** 批次状态自动推进（batch.status 变更属批次编排能力）；多批次/自动触发链；任务级审查（GPT-02/03/04 三腿既有）；生产发布审批（角色规范红线：总审计员不能批准生产发布）；契约修改；M1-M4 代码修改。
-- **触发方式（决策点 D1）：** 草案推荐一期=**显式 CLI 指定 batch_id 运行一次**（batch 审计时机属批次编排语义，M1 无批次级状态机钩子；自动触发链待批次编排能力另立项）。评审可裁定轮询触发（EXECUTING/PLANNED 批次轮询，复杂度更高）。
+- **触发方式（D1，Gate1 裁定采纳）：** 一期唯一触发方式=**显式 CLI 指定 batch_id 运行一次**（`engineering_audit_leg.py run --batch-id BATCH-xxx`；每次运行对应一轮审计；自动触发链另行立项——M1 无批次级状态机钩子，轮询需引入触发状态/重复触发/并发控制等额外机制，不符合一期"验证真实审计收发与留证"目标）。
 
 ## 2. 状态事实基础与缺口分析
 
@@ -35,12 +35,23 @@
 
 一期流程（单批次、每显式触发一次审计轮）：指定 batch_id → A0 前置只读核查（批次存在+任务清单非空+任务状态全景取得）→ A1 简报组装（任务身份/批次需求/任务状态全景/遗留风险+绑定字段）→ A2 真实派单（M2）→ A3 采集+归属强制校验+Ajv 冻结契约校验（失败=保留原始 artifact 不登记，L-008 语义）→ A4 结论留证登记（**artifacts×2+messages AUDIT_SUBMITTED 批次级信封；不经任何状态事件**）→ A5 终态=留证完成（M1 批次与任务状态一律不动；批次状态推进=OWNER 人工/批次编排能力）。
 **结论域（角色规范 docs/立项/02 §6）：ACCEPTED／ACCEPTED_WITH_RISKS／BLOCKED**（与任务级三态 PASS/REWORK/BLOCKED 不同域，不混用）；结论语义=批次是否具备提交人工发布审批的建议（**不批准生产发布**——角色红线）。
+**结论×发布建议一致性（C3，Gate1 约束，Gate2 冻结为最终规则）：**
+
+| 审计结论 | 发布审批建议 |
+|---|---|
+| ACCEPTED | 可以建议提交人工发布审批 |
+| ACCEPTED_WITH_RISKS | 可以有条件建议提交人工审批，必须披露风险 |
+| BLOCKED | **不得**建议提交人工发布审批 |
+
+最终是否批准发布仍由人工决定（release_recommendation 仅为建议字段，不构成发布授权；两者矛盾=契约一致性校验 fail-closed）。
 **一期边界：** ①触发=每显式运行一次（幂等键=<run键>+engineering-audit-round-1）；②结论不自动推进任何 M1 状态（无事件提交——GPT-04 腿 D5 同构，且批次无状态机事件接口）；③腿任何环节失败→腿级 BLOCKED 停等人工（run 记录；无 M1 状态语义）。
 **BLOCKED 双语义：** 全文默认腿级（run 层）；本腿不存在 M1 任务级 BLOCKED 提交路径（无 events 写入口）。
 
 ## 5. 异常处理
 
-沿 GPT-04 charter §5 全表（网页发送失败 1 次换会话重派/采集 fail-closed 禁重发补采/契约校验失败 L-008/平台故障幂等纪律/状态非法停止不绕过/人工介入），差异一处：**无 /reports/test 类原生端点**——登记路线=artifacts+messages 多事务（GPT-02 路线 B 同构），部分成功可续（_ledger_verified 逐项只读核实+skip 重放）；messages 409 双证核验（响应指认 message_id+账本请求指纹）沿用。
+沿 GPT-04 charter §5 全表（网页发送失败 1 次换会话重派/采集 fail-closed 禁重发补采/契约校验失败 L-008/平台故障幂等纪律/状态非法停止不绕过/人工介入），差异两处：**①无 /reports/test 类原生端点**——登记路线=artifacts+messages 多事务（GPT-02 路线 B 同构，D2 裁定支持），部分成功可续（_ledger_verified 逐项只读核实+skip 重放，不假设原子提交）；messages 409 双证核验（响应指认 message_id+账本请求指纹）沿用。**②结论权威关系（D2 裁定）：审计报告 artifact=结论内容唯一权威载体**（完整 findings/风险/证据），AUDIT_SUBMITTED message=登记与关联记录（不得成为另一份独立结论）——message 与 artifact 的 batch_id/audit_round_id/result/SHA 绑定关系不一致→腿级 BLOCKED（留证链自洽 fail-closed）。
+
+**②b 批次任务与报告全量读取（C2，Gate1 约束）：** GET /api/v1/tasks?batch_id= 有分页（默认 50、最大 200）——**必须全量遍历任务分页+核对 total 与实收数量+对批次任务逐项读取关联报告（GET /reports 同样全量分页核对）**；查询失败/遗漏/数量不一致→fail-closed 腿级 BLOCKED（不得把第一页当作批次全景）。
 
 ## 6. 安全与审计
 
@@ -65,7 +76,7 @@
 | Method | 路径 | 操作范围 | 拒绝条件 | identity_scope | idempotency_scope |
 |---|---|---|---|---|---|
 | GET | /api/v1/batches/{batch_id} | 读取批次需求/规范版本/状态 | 批次不存在 | ENGINE-04 | 按批次 |
-| GET | /api/v1/tasks?batch_id={batch_id} | 批次任务状态全景 | 批次不匹配 | ENGINE-04 | 按批次 |
+| GET | /api/v1/tasks?batch_id={batch_id} | 批次任务状态全景（**全量分页遍历义务**：默认 50/最大 200，逐页拉取+total 核对，C2） | 批次不匹配 | ENGINE-04 | 按批次 |
 | GET | /api/v1/tasks/{task_id} | 单任务详情（全景核验） | 非本批次任务 | ENGINE-04 | 按任务 |
 | GET | /api/v1/artifacts/{artifact_id} | 读取审计输入材料 | 非关联材料 | ENGINE-04 | 按资源 ID |
 | GET | /api/v1/reports（type/task_id 筛选） | 批次任务报告全景核验 | 非核实目的 | ENGINE-04 | 只读幂等 |
@@ -79,6 +90,8 @@
 
 **回复契约=新增 `engineering-audit-report.schema.json`（新增文件，H2 纪律）**，字段草案：contract_version/batch_id/audit_round_id/reviewer_agent_id(GPT-05)/engine_agent_id(ENGINE-04)/input_material_commit(40hex)/input_material_manifest_sha256/brief_sha256/result(ACCEPTED/ACCEPTED_WITH_RISKS/BLOCKED)/summary/findings(string[])/risks(string[])/required_boundaries/release_recommendation(布尔建议字段——仅建议语义，不替代 result，不构成发布授权)。登记=artifacts（简报+报告证据）+messages（AUDIT_SUBMITTED 批次级信封 batch_id 必填/task_id=null）；**不经任何状态事件**。
 **简报输入四组**：批次身份（batch_id/requirement/engineering_standard_version）/任务状态全景（GET /tasks?batch_id= 各任务 task_id/title/status 计数与明细）/报告与遗留（GET /reports 全景核验指针）/审计材料（GitHub 指针固定 commit）。绑定字段：audit_round_id/input_material_commit/brief_sha256/brief_schema_version。
+
+**七大工程规范逐项审计矩阵（C1，Gate1 约束——角色规范 §6 核心职责的落地面）：** 回复契约新增 `standards_matrix` 数组，逐项=standard_id（规范编号）/applicable（是否适用）/requirement（对应要求）/evidence_refs（证据指针）/result（PASS/ISSUE/BLOCKED）/findings（问题与说明）/residual_risks（遗留风险）；**适用性不等于免检**——确实不适用的项目必须说明理由；矩阵与批次工程规范版本（batches.engineering_standard_version）关联，逐项结论计入总 result 一致性校验（矩阵存在 BLOCKED 而总 result=ACCEPTED→fail-closed）。
 
 ### A-3 恢复矩阵初稿（批次审计轮断点，Gate2 精化）
 
@@ -97,4 +110,5 @@
 
 | 版本 | 日期 | 状态 | 变更 | 依据 |
 |---|---|---|---|---|
-| v0.1 | 2026-11-17 | 草案（待 Gate1） | 初稿成文（GPT-04 charter v0.3 同构框架，落点批次审计关口；登记路线=artifacts+messages AUDIT_SUBMITTED 批次级信封（无原生端点/无状态事件）；决策点 D1 触发方式；ENGINE-04；新增 engineering-audit-report.schema.json 契约） | Gate2 GPT-04 裁定顺延条件达成（DEC-091）；用户 2026-11-17 交接指令；角色规范 docs/立项/02 §6；messages-create.schema.json 分支/api.py:304/tasks.py:108-114 实读 |
+| v0.2 | 2026-11-17 | 草案（Gate1 三约束整改后，待 G05-R1） | Gate1 三约束落实：C1=A-2 七大工程规范逐项审计矩阵（standards_matrix 七字段+适用性不等于免检+矩阵与总 result 一致性 fail-closed）；C2=§5②b+A-1 全量分页读取义务（任务与报告双分页+total 核对+数量不一致 fail-closed）；C3=§4 结论×发布建议一致性矩阵（BLOCKED 不得建议提交发布审批）；D1=触发方式终局化（显式 CLI 一期唯一）；D2=§5 结论权威关系（报告 artifact=唯一权威载体/message=登记关联/绑定不一致腿级 BLOCKED/多事务非原子+逐项核验+断点保留） | Gate1 裁定（reply sha256=bceb502ac673fa18…，dispatch-2026-11-16T20-57-30/recoll 补采七查全过，被测=v0.1@a89b371） |
+| v0.1 | 2026-11-17 | 草案（Gate1 被测对象） | 初稿成文（GPT-04 charter v0.3 同构框架，落点批次审计关口；登记路线=artifacts+messages AUDIT_SUBMITTED 批次级信封（无原生端点/无状态事件）；决策点 D1 触发方式；ENGINE-04；新增 engineering-audit-report.schema.json 契约） | Gate2 GPT-04 裁定顺延条件达成（DEC-091）；用户 2026-11-17 交接指令；角色规范 docs/立项/02 §6；messages-create.schema.json 分支/api.py:304/tasks.py:108-114 实读 |

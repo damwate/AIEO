@@ -1,0 +1,26 @@
+[
+  {
+    "key": "fallback-turn-0:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[会话迁移|GPT05立项复审] 你是新审查会话，接替6afb41ae（6条user消息达4+2再评估点+虚拟化征兆，主动迁移）；旧会话归档，后续轮次全在本会话"
+  },
+  {
+    "key": "fallback-turn-0:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\n已接替 GPT05 审查会话。本会话作为新的连续审查会话，后续轮次在这里累计。\n\n本轮严格限定为 GPT-05 立项 Gate1：\n\n只"
+  },
+  {
+    "key": "fallback-turn-1:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[Gate1|GPT-05立项] 验证对象：phase1/GPT05-ENGINEERING-AUDIT-LEG-CHARTER-DRAFT.md v0.1，d"
+  },
+  {
+    "key": "fallback-turn-1:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nGPT-05 Gate1 立项草案复审\nPASS_WITH_CONSTRAINTS\n\n草案 v0.1 · Gate1\n\n裁定：草案总体架构"
+  }
+]
