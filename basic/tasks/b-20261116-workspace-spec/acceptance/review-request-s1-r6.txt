@@ -1,0 +1,7 @@
+【S1-R6 限定复核】b-20261116-workspace-spec
+仓库 damwate/AIEO 分支 review/b-20261116-workspace-spec（已更新）
+被测对象沿 R2 不变=9efb14bbcc74d397e15558dc720706fc054ac627；其后 commit 均为证据登记（ST-01④）
+R5 最小必改项已原样落实：task-brief 当前步骤=「S1 规范成文（返工中；轮次与结论一律以 steps.md 返工记录表为准）」——不含任何轮次、结论或 DEC 编号；DEC-074 登记 R5 结论，并明确"此后各轮结论只写入返工记录表与 DEC，不回写任务书"
+未改 WORKFLOW 九项规范、未改 R2 被测 SHA、未重写历史、未改 DEC-071/072/073
+另：R5 派单发送双验 UNCERTAIN→按 DEC-072 判定未送达→点击发送兜底→延迟送达单条（turn-4），补采带视口前置升级七查全过
+请核最小必改项是否落实，结论 PASS/REJECT
