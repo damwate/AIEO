@@ -1,0 +1,14 @@
+[
+  {
+    "key": "fallback-turn-1:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【R21 限定复核】b-20261116-workspace-spec\n核验对象 commit=748343ec90f9ebf8ad808f57118478da"
+  },
+  {
+    "key": "fallback-turn-1:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nR21 限定复核\n核心缺陷修复通过，待最终证据确认\n\n核验对象：748343ec90f9ebf8ad808f57118478dae15e9"
+  }
+]

@@ -1,7 +1,7 @@
 # SHA 审计清单（由 phase0/tools/sweep_sha.py 自动生成，R21 版）
 
 - 仓库根：D:\AIEO
-- git rev-list --all 提交数：513（前缀映射覆盖 7~39 位）
+- git rev-list --all 提交数：515（前缀映射覆盖 7~39 位）
 - 运行模式：全量规整
 - 分类规则：UUID 片段（扩展 run 整体命中 UUID 格式）／日期（8 位合法日历日期）／短 commit SHA（前缀映射唯一命中）／其余一律未知（fail-closed，退出码 2）
 
