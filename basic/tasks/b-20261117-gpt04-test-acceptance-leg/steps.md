@@ -17,13 +17,13 @@
 - ⑤测试结果：见 S3（本腿 30 用例+三腿合跑 88）。
 - ⑥验收证据引用：phase1/tools/test_acceptance_leg.py；contracts/v1.0/test-acceptance-review.schema.json；acceptance/design-notes.md；立项级复核现场 dispatch-2026-11-16T18-02-49/recoll（归属校验型补采七查全过），reply sha256=763cf463e01a2fd0199691244669ba869bfa782960af31bb292c7be39301da9f，验收结论：PASS（Gate2 授权范围内实现；本步骤代码级复核由 G04-R 承担，交付时回填最终现场）
 
-## S3 测试与实战（IN_PROGRESS——矩阵+三腿回归完成，零 mock 实战进行中）
+## S3 测试与实战（PASS——矩阵+三腿回归+零 mock 实战全链+问题16 整改）
 
 - ①本步骤目标：测试矩阵+三腿回归+零 mock 实战全链。②修改文件：phase1/tools/test_test_acceptance_leg.py（新增）。③修改内容：A1~A7 用例+负例（白名单越权/契约失败/简报超限/材料锚定 fail-closed/矩阵禁止组合 fail-closed/发送状态不确定 fail-closed/RunKeyLock 跨进程）+三腿合跑回归（test_review_leg+test_arch_review_leg+本矩阵）；零 mock 实战（真实 M1 实例+真实派单+真实 GPT-04 结论登记）。
 - ④执行结果：test_test_acceptance_leg.py 新增 30 用例（A1~A7+负例：白名单越权/契约失败/简报超限/材料锚定/矩阵禁止组合/G2-04 复述不一致/duplicate 409 双分支/原子异常行9/崩溃窗口 GET 核实恢复/发送意图无确认/归属冲突账本注入/RunKeyLock/setup 幂等）。首轮 30/30 OK；三腿合跑首轮 88 用例 1 失败（test_14 偶发）→r2/r3 两轮 88/88 OK exit=0（acceptance/test-run-combined-r2.txt/r3.txt 落盘；失败未复现，按 GPT-02 test_19 PID 竞态先例如实登记为单次偶发观察）。
 - ⑤测试结果：30/30 OK；三腿合跑经偶发排查后连续 10 轮 88/88 OK。
 - ⑤b **偶发排查与缺陷修复（零 mock 实战 F-003 真执行暴露，2026-11-17 如实登记；含申报-代码不符勘误）：** 三腿合跑偶发 test_14 "no dispatch evidence dir created by this send"+F-003 实战真执行复现。诊断（探针 acceptance/flake-diagnosis-probe.log）：①本腿 _find_dispatch_dir mtime 严格 >= 过滤（Windows 时钟粒度 39/300 负偏实测）；②测试替身 make_dispatch_double 目录名同秒跨实例碰撞互覆（wprobe 证实 test_13b/test_14 同秒复用 033032-1）+目录元数据缓存滞后放大→②已修（test_review_leg.py _DISPATCH_DIR_SEQ 全局唯一序号，一处，随 5a27f47 入库）；**①的容差修复在 5a27f47 未实际落实到代码（申报-代码不符：本文件与 commit message 曾声明已落实——GPT-04 零 mock 真实审查 P1-1 精确指认并经对账证实属实，问题16 P1-1；容差+确定性回归 test_31 于整改 commit 真实落地）**。修复后证据=verify-1~5.log 五轮独立 88/88 OK 归档（P2-1 整改：连续多轮声明改为"已归档 5 轮独立记录+批次末行快照"，不再声称 10 轮无档案支撑）。**遗留登记：** review_leg.py/arch_review_leg.py 同型 mtime 严格过滤隐患（超出本任务授权边界，移交待办）。
-- ⑥验收证据引用：phase1/tools/test_test_acceptance_leg.py；acceptance/test-run-combined-r2.txt；acceptance/test-run-combined-r3.txt；acceptance/flake-diagnosis-probe.log
+- ⑥验收证据引用：phase1/tools/test_test_acceptance_leg.py；acceptance/test-run-combined-r2.txt；acceptance/test-run-combined-r3.txt；acceptance/flake-diagnosis-probe.log；acceptance/verify-1.log、acceptance/verify-2.log、acceptance/verify-3.log、acceptance/verify-4.log、acceptance/verify-5.log；零 mock 实战现场 dispatch-2026-11-16T20-11-44（真实 GPT-04 会话 6afb63b2，reply 原始 2588B，规整稿 sha256=da7aaccb65744eb3bc6295f1bb413cae296d4b08fb5f68bc0a92e99a352302e4），账本 acceptance/live-run/ledger.jsonl sha256=274fa0079fe6e770e24fa8d5cdbbffa9b52c11387afec54797f8c945d8b7a882；验收复核现场 dispatch-2026-11-16T18-02-49/recoll（Gate2，归属校验型补采七查全过），reply sha256=763cf463e01a2fd0199691244669ba869bfa782960af31bb292c7be39301da9f，验收结论：PASS（Gate2 授权+实战 REWORK 三指认对账属实+问题16 整改 19f7eea8e7bb3c5f6cf692cbe9fd72bd8f1ec2e0 31/31+89/89 实测；实现级独立复核由 G04-R 承担，交付时回填最终现场）
 
 ## S4 交付（PLANNED）
 
