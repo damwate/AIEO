@@ -655,3 +655,11 @@
 - **整改：** §4 标题改为"（S3 阶段：交付记录，R7～R11）"；同 commit 同步索引（DEC 至 081、问题1～11、R1～R12），避免再生不一致。
 - **后续路径（审查方给出）：** R13 确认 P1-3 关闭后进入 COMPLETED 态，重跑 ST-05 并保存完整原始输出，确认①～⑥全部 PASS 后再回填最终验收记录；**当前不得进入 ST-05 最终验收**。
 - **关联：** DEC-080、L-017、L-019、WORKFLOW 模块四/五。
+
+### DEC-082 S3-R13 PASS（S3 交付复核通过）+COMPLETED 态 ST-05 全 PASS 取证与最终记录回填（2026-11-16，节点自主推进授权执行）
+
+- **R13 结论 PASS（新会话 6aface14-…）：** 现场 `dispatch-2026-11-16T09-44-18/recoll`（派单发送 UNCERTAIN→按 DEC-072 判定未送达→点击发送兜底→延迟送达单条；归属校验型补采七查全过），reply 1897B，sha256=9a0b3fadd67479c179e6406ee27639c36f503b2b83de690f73af988e0ea6927d。P1-3 关闭；审查方明确"本轮 PASS 代表 S3 文档交付复核通过，不代表 COMPLETED 态 ST-05 已通过"，并要求重跑取证。
+- **COMPLETED 态 ST-05 取证：** 任务书状态推进至"完成"（不改写历史结论）后执行 `python -I basic/tool/check_taskpack.py basic/tasks/b-20261116-workspace-spec` → Phase COMPLETED、①～⑥ 全部 PASS、**Overall PASS**、无 FAIL、退出码 **0**；完整原始输出落库 `basic/tasks/b-20261116-workspace-spec/acceptance/st05-completed.txt`（未用摘要替代；中间态两份输出保留）。
+- **回填内容：** steps S3⑤（命令/输出/退出码/证据路径）、S3⑥（R13 PASS）、delivery §4（COMPLETED 取证＋S1/S3 两条验收链 R1～R13）、§2/§3/§7（DEC 至 082、问题1～11、轮次 R1～R13）。
+- **遗留：** 远程 main 未推送/未合并（待用户明文授权，DEC-010）；最终记录一致性复核轮待派（审查方要求）。
+- **关联：** DEC-081、DEC-080、L-017（断言与证据一致）、WORKFLOW 模块三 ST-05/模块四/模块五。
