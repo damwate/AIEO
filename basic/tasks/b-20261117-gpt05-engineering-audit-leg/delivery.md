@@ -8,7 +8,7 @@
 
 - **`phase1/tools/engineering_audit_leg.py` 新增（~1000 行）：** A0 前置核查（批次读取+**C2 双分页全量遍历+total 核对**，数量不一致 fail-closed=A11）→A1 简报（四组输入+绑定字段+≤1200B 硬限）→A2 真实派单（M2 零修改复用，mtime 容差现场定位）→A3 采集+归属强制校验+Ajv 冻结契约校验+**C1 矩阵汇总映射 fail-closed**+**C3 结论×建议一一映射 fail-closed**+豁免理由校验→**A4 三步独立登记**（A4a 简报 artifact→A4b 报告 artifact=结论唯一权威载体→A4c AUDIT_SUBMITTED 批次级信封 task_id=null）+聚合标志 A4_REGISTERED 三子齐才写+**message 409 五条件 AND**（P0-3）+**A4_MESSAGE_INTENT 前置账本**+**M1 readback→canonical envelope 映射**（账本预期骨架+九实质字段读回覆盖+agent_type 账本恢复+source_agent_id 断言）→A5 批次状态零变化核验+A-3 resume+attach-reply+RunKeyLock+setup-agents（GPT-05/ENGINE-04）。**无任何状态事件**（防御层 event_whitelist=空集）。
 - **`contracts/v1.0/engineering-audit-report.schema.json` 落位冻结**（A-2 定稿 21 字段+standards_matrix 七字段，additionalProperties=false；新增文件 H2）。
-- **`app/platform/security.py` 唯一 M1 变更例外（§3 权限方案，约 8 行含注释）：** SERVICE_ALLOWED_ENDPOINTS 增补 ("GET","/api/v1/tasks") 与 ("GET","/api/v1/batches/{batch_id}")+authorize_principal 服务身份 GET /tasks 强制 batch_id 缺省 403 规则；OWNER 人工会话行为零变化。
+- **`app/platform/security.py` 唯一 M1 变更例外（§3 权限方案）：** SERVICE_ALLOWED_ENDPOINTS 增补 ("GET","/api/v1/tasks") 与 ("GET","/api/v1/batches/{batch_id}")+authorize_principal 服务身份 GET /tasks 强制 batch_id 缺省 403 规则；OWNER 人工会话行为零变化。**行数偏差如实记录（问题17）：实际新增 9 行（原授权方案约 6 行）——额外行数对应 GET /api/v1/batches/{batch_id} 白名单勘误（A-1 原标注"已允许"实测缺失，test_20 AUTH-0002 暴露后实现纠偏）及强制规则错误响应；范围仍限 security.py 单模块。**
 - **测试矩阵 `test_engineering_audit_leg.py`（23 用例）：** charter §7 证据矩阵 A1~A11 全覆盖（含 A5a/A5b 崩溃窗口+A8 矩阵矛盾+A9 建议矛盾+A10 权限拒绝+**A10b/c/d 平台权限回归实测**+A11 分页不一致）+负例（白名单越权/契约失败/材料锚定/归属冲突/RunKeyLock/setup 幂等）。
 
 ## 3. 修改文件
@@ -18,7 +18,7 @@
 | phase1/tools/engineering_audit_leg.py | 新增 | GPT-05 腿本体 |
 | contracts/v1.0/engineering-audit-report.schema.json | 新增 | 冻结契约（A-2 定稿） |
 | phase1/tools/test_engineering_audit_leg.py | 新增 | 23 用例测试矩阵 |
-| **app/platform/security.py** | **+约 8 行（§3 唯一例外）** | 白名单增补两行+服务身份 batch_id 强制规则；OWNER 行为零变化 |
+| **app/platform/security.py** | **+9 行（§3 唯一例外；原授权约 6 行，偏差=GET batches 白名单勘误与错误响应行，问题17 正式记录）** | 白名单增补两行+服务身份 batch_id 强制规则；OWNER 行为零变化 |
 | phase1/tools/review_leg.py / arch_review_leg.py / test_acceptance_leg.py / scheduler.py | **零修改** | D2 同构复制边界 |
 | docs/phase1/GPT05-ENGINEERING-AUDIT-LEG-CHARTER-DRAFT.md + decision-log.md（DEC-092） | charter 沿革+A-1 勘误+登记 | 立项链 |
 | basic/tasks/b-20261117-gpt05-engineering-audit-leg/ | 任务包+证据 | 四件套+acceptance（design-notes/test-run×2/探针/live-run 全证据） |
@@ -41,7 +41,7 @@
 | d2548e20786c4bc3ca5a627de522a902006536eb | **S1-S3 实现（腿本体+契约+security.py 例外+23 用例+112 合跑）** |
 | cf5527026fe3bb6fc7bc5d373e2402e38328a49a | Gate2-R6 现场+零 mock 实战全链归档 |
 
-**C1 绑定核验 PASS**（baseline=58da7697976a2465aa7fc641837af97f1190a68a→target=交付终态 commit，acceptance/binding-report.json）。**验收链：** Gate2-R6 设计冻结+开工授权（DEC-092）→S1-S3 实现→零 mock 实战真实 BLOCKED 结论登记（findings 结构化 fail-closed 第四证+A6 规整）→G05-DR 限定复核（本任务 S4 派单，结论见任务包登记）。
+**C1 绑定核验 PASS**（baseline=58da7697976a2465aa7fc641837af97f1190a68a→target=交付终态 commit，acceptance/binding-report.json）。**验收链：** Gate2-R6 设计冻结+开工授权（DEC-092）→S1-S3 实现→零 mock 实战真实 BLOCKED 结论登记（findings 结构化 fail-closed 第四证+A6 规整）→**G05-DR 实现级限定复核 REJECT（限定收口三项）**（reply sha256=f108e753d7fc2ccd…，dispatch-2026-11-16T23-12-38/recoll 七查全过；主体成果认可：真实收发/人工恢复/三步登记/测试回归；三项=①C1 缺失方向校验②A4c 成功路径登记后读回③A5 任务快照核验+9 行偏差记录）→**问题17 整改（commit 9c3c3a19c3156d557cb2fcb7dadc7ea301757fcc：三项全落实+24/24+四腿 113/113 OK）**→**G05-DR2 限定复核：三项技术整改全 PASS+9 行偏差记录修正后**（reply sha256=7c55c2e6e0b76ca4…，dispatch-2026-11-16T23-28-37/recoll 七查全过）→**纯文档收尾（本 commit）后按已核验结果直接登记：任务状态 COMPLETED、最终结果 PASS、复核对象 294f6ad2e6dbbbfd47b501bcba350bd4ca42cc23**（审查方明示无需第三轮实现级复核）。
 
 ## 6. 未解决问题
 
@@ -51,6 +51,10 @@
 - **跨批次隔离延期（Gate2-R6 收尾清单强制保留）：** 持有 ENGINE-04 服务 token 的调用方仍可查询任意已知 batch_id 的任务列表——本方案不构成跨批次完全隔离；per-agent 授权表及迁移不纳入本期。
 - **消息 source-principal 服务端绑定缺失：** 平台级增强候选，登记遗留。
 - **实战 M1 实例（8002）与 GPT-04 实例数据仍在 runtime（gitignored）：** 证据已归档，实例可关闭。
+
+## 任务终态
+
+- **COMPLETED／最终结果=PASS**（G05-DR2 三项技术整改全 PASS+文档收尾；Gate2 设计冻结与开工授权不变；PASS≠合并授权，DEC-010 红线仍用户本人）。
 
 ## 7. 后续建议
 

@@ -1,0 +1,100 @@
+ChatGPT 说：
+
+本轮已按完整 SHA 294f6ad2e6dbbbfd47b501bcba350bd4ca42cc23 锁定读取。先确认两点：绑定报告已将验收目标指向整改实现提交 9c3c3a19c3156d557cb2fcb7dadc7ea301757fcc；四腿合跑记录为 113 tests，OK，其中新增 C1 反向矛盾用例明确触发 fail-closed。下面继续核对实现代码和任务收尾记录，不以测试总数代替代码审查。
+
+三项技术整改
+
+项目
+
+	
+
+结论
+
+	
+
+核验依据
+
+
+
+
+① C1 反向缺失方向
+
+	
+
+PASS
+
+	
+
+a3_capture_and_validate() 新增 ISSUE-only + result=BLOCKED 拒绝分支；错误信息明确指出冻结映射仍按 ISSUE → ACCEPTED_WITH_RISKS，批次级 BLOCKER 语义须经 H2 契约演进。113 项合跑输出中新增负例确实触发 LEG_LEVEL_BLOCKED，没有登记。
+
+
+
+
+② A4c 正常成功路径读回
+
+	
+
+PASS
+
+	
+
+POST 被接受后，先按 correlation 查询 message，再用 _rebuild_canonical_envelope() 重建并与发送 envelope 比较 canonical SHA；同时核对 payload 的 result、batch_id。读回缺失、重建不一致或绑定不符都会 fail-closed。
+
+
+
+
+③ A5 任务状态前后快照
+
+	
+
+PASS
+
+	
+
+run() 将 A0 全量任务快照传入 a5_finalize()；A5 按 task_id 比较前后状态映射，不一致即 fail-closed；A5_DONE 记录 task_statuses_unchanged。test_08 已断言该标志为真。
+
+测试证据： test-run-combined-113.txt 显示 Ran 113 tests ... OK；其中 GPT-05 新增 C1 负例有明确失败关闭输出。这里接受现有测试证据，不要求重跑真实实战或旧有四腿测试。
+
+9 行偏差记录与任务收尾
+REJECT — 文档收尾未完成
+
+这项没有完全落实：
+
+steps.md 问题17记录了“实际 9 行 vs 授权约 6 行”的偏差，也写明整改要求已完成。
+
+但被测 SHA 下的 delivery.md §2、§3 仍写的是 “约 8 行”，没有准确记录“实际新增 9 行、原授权约 6 行”的差异。
+
+因而 steps.md 所称“已写入 delivery”与实际文件不符，不能按已完成接受。
+
+另有一个直接影响任务状态的收尾问题：steps.md 的 S4 仍为 IN_PROGRESS，仍记载 G05-DR 首轮 REJECT 后等待复核；没有回填本轮 G05-DR2 通过结论。delivery.md 也没有更新最终复核结论。
+
+最终裁定
+技术整改通过，任务暂不 COMPLETED
+
+C1：PASS
+
+A4c：PASS
+
+A5：PASS
+
+security.py 9 行偏差记录：REJECT（delivery §3 记录不准确）
+
+S4 最终交付状态：未收口
+
+不需要再改代码，不需要重跑测试，不需要重做实战。 只需完成以下文档修正：
+
+delivery.md §2、§3：明确写出 security.py 实际新增 9 行，原授权方案约 6 行，说明额外行数对应的 GET /api/v1/batches/{batch_id} 白名单勘误及相关实现纠偏。
+
+steps.md：将 S4 更新为完成，登记 G05-DR2 三项整改 PASS、9 行偏差记录修正、113/113 测试证据及本轮完整 SHA。
+
+delivery.md：补充 G05-DR2 最终复核结论及任务最终结果。
+
+完成以上纯文档收尾后，可以按本轮已核验结果直接登记：
+
+任务状态：COMPLETED
+
+最终结果：PASS
+
+复核对象： 294f6ad2e6dbbbfd47b501bcba350bd4ca42cc23
+
+不再需要第三轮实现级复核。此前 Gate2 设计冻结和开工授权不变；本次 PASS 也不等于合并授权。

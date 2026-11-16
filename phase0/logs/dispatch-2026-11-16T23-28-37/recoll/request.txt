@@ -1,0 +1,7 @@
+[G05-DR2|限定复核] 被测=294f6ad2e6dbbbfd47b501bcba350bd4ca42cc23（完整SHA实读），damwate/AIEO main。按你G05-DR裁定：只复核三项收口与9行偏差记录，不重开主体成果与已冻结裁定。
+
+【整改落实】①C1缺失方向=新增矩阵ISSUE-only+result=BLOCKED fail-closed（注释明示批次级BLOCKER语义须H2契约演进，实战登记组合为已披露偏差事实）+回归测试A8b。②A4c成功路径=POST成功后correlation读回+重建canonical+与发送envelope比对+payload绑定核验，任一不符fail-closed。③A5=任务状态前后快照逐项核对（A5_DONE记task_statuses_unchanged）+test_08断言。9行偏差正式记录于返工表问题17与delivery §3。
+
+【附证据】24/24本腿+四腿113/113 OK（test-run-combined-113.txt）；C1绑定target=9c3c3a19…。
+
+【输出】逐项三态+依据；全过则给任务收口结论（COMPLETED/最终结果PASS，同你G05-DR口径）+收尾清单确认。
