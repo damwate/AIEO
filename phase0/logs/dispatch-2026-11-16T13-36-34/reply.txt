@@ -1,0 +1,21 @@
+ChatGPT 说：
+
+R3 当前结论：REJECT（仅第③项未通过；①②通过）。
+
+已按完整 SHA f13e451192feb74535d8e6b371a618281a5a1fe3 读取 steps.md、`delivery.md`，并与 R2 闭环基线 3dce96c3e5044b1a3f87e41f478fde5894b0f26d 做了逐文件提交比较。该提交是基线的直接后继，`ahead_by=1、behind_by=0`，没有使用 HEAD。
+
+① PASS：S2⑥ 已完整列出 R1 现场 dispatch-2026-11-16T13-18-39、reply SHA256 569d89bc34cc6a094a2053b93bc475a95c011f1c0fb020035d46a599fccecc9e、被测 SHA 1022694967e519de8ae2a03fd3e6b799988c09a6。残留报告也准确写明“总命中31 vs 25、LIVE均为7”，没有再称总数一致。
+② PASS：delivery §4 已记录 R2 结论；§5 已回填 R2 核验的闭环 commit 3dce96c3e5044b1a3f87e41f478fde5894b0f26d。COMPLETED 态 ST-05 和最终状态仍明确待 R3 通过后执行，没有提前宣称完成。
+
+- ③ REJECT：提交文件比较显示，本次不止修改任务包和派单证据归档，还新增了两个 phase0/tools/ 文件：
+
+phase0/tools/recoll_migrate4r2.mjs（210行补采驱动脚本）
+phase0/tools/session-migrate-4rounds-recheck-r2.txt（R2复审简报）
+
+第二个属于派单简报归档；第一个是新增工具脚本，不是任务包文件，也不是派单证据归档。即使它用于 R2 补采，也不能把它描述成“仅任务包+派单证据归档”。本项按你给定的范围标准不通过。
+
+建议下一步： 不必重做①②，也不必重跑 R1/R2。只需明确处理新增脚本的范围问题：若它确属本任务必要产物，应取得明确范围认可并如实登记；若不属于本任务交付范围，则从本任务提交中剥离。之后再做一次限定复审。
+
+本轮不执行 COMPLETED 态 ST-05：因 R3 未 PASS，继续保留待执行状态。
+
+重新加载回复

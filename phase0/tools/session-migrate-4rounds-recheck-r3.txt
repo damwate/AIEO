@@ -1,0 +1,5 @@
+【限定复审R3·同会话续派】b-20261116-session-migrate-4rounds 交付闭环复核（R2 两缺口整改）。R2=现场 dispatch-2026-11-16T13-29-15/recoll，reply sha256=aad362e870b747a6aafc131176dad28a47972eb3c7849c432b22864d2ef4c444，③④⑤ PASS、REJECT 仅①S2⑥缺R1完整绑定+②delivery最终状态待回填。
+整改 commit 完整 SHA=f13e451192feb74535d8e6b371a618281a5a1fe3（已推送）。读取 raw.githubusercontent.com/damwate/AIEO/f13e451192feb74535d8e6b371a618281a5a1fe3/ 下 basic/tasks/b-20261116-session-migrate-4rounds/ 的 steps.md 与 delivery.md。
+复核项：①S2⑥ 已完整绑定 R1 三件套（现场+reply SHA+被测 SHA，完整 40/64 位见该文件）且残留对比表述改为"总命中31 vs 25、LIVE 均为7"不称一致；②delivery §4 已登记 R2 结论、§5 已回填闭环 SHA=3dce96c3e5044b1a3f87e41f478fde5894b0f26d，最终态条目如实保留待回填标注；③范围未扩大（本 commit 仅任务包+派单证据归档）。
+说明：delivery 最终态与 COMPLETED 态 ST-05 按 R2 指引于 R3 PASS 后执行并绑定新 SHA，不提前置"完成"。
+结论：PASS/REJECT（逐项）/BLOCKED。
