@@ -1,0 +1,165 @@
+ChatGPT 说：
+R17 限定复核结论
+
+REJECT R17 指定提交已成功读取，但两项验收条件尚未全部满足。
+
+核验对象：86a9f3aecf3e32ad7a8fbe6cc25f913f677317d3
+
+父提交：f0e1d4a1d5dd32f01e8771e32c995a751106259f
+
+GitHub 已确认：
+
+R17 提交存在，且父提交与用户提供的一致。
+
+R17 相对父提交仅删除 phase0/tools/fix_short_shas.py 和 phase0/tools/fix_short_shas2.py 两个一次性修正脚本。
+
+当前分支最新提交 14e3d926f2ef06099a7513ad7164ca1cc45b7d61，其父提交正是 R17 核验对象。R18 仅新增 R17 简报归档文件。
+
+1. R15 记录与完整 SHA
+
+R15 专项记录中的两个关键提交 SHA 已完整：
+
+8c310faf4aadeeaac2ccba7ed31b25de6e4260ee
+
+d15dd50534441b4a84e0c7b1b9456b5466bdb676
+
+但检查三个文件后，发现历史记录中仍有缩写：
+
+文件
+
+	
+
+位置
+
+	
+
+尚未补全的内容
+
+
+
+
+steps.md
+
+	
+
+S3④
+
+	
+
+父提交 d190ed0e...
+
+
+
+
+steps.md
+
+	
+
+S3⑥
+
+	
+
+核验对象 787c2b58...、简报提交 58e7943d...
+
+
+
+
+steps.md
+
+	
+
+问题10
+
+	
+
+c8eb708...、父提交 ab6ad238...
+
+
+
+
+delivery.md
+
+	
+
+§5 收录口径
+
+	
+
+c8eb708...
+
+
+
+
+delivery.md
+
+	
+
+§5 远程 main 描述
+
+	
+
+基线 SHA 后仍有省略号
+
+因此，R15 两个关键 SHA 本身完整，但“历史记录中同类缩写已全部统一”的整改声明不成立。
+
+2. task-brief 与 delivery/steps 轮次一致性
+
+文件
+
+	
+
+当前记录
+
+
+
+
+task-brief.md
+
+	
+
+R16 已复核，结论以 R17 为准
+
+
+
+
+steps.md
+
+	
+
+R16 为最后一轮记录，结论以 R17 为准
+
+
+
+
+delivery.md §4
+
+	
+
+S3 验收链 R7～R16
+
+
+
+
+delivery.md §7
+
+	
+
+S3 验收链 R7～R16
+
+轮次范围基本一致，均将 R17 留作待复核轮次。但 task-brief.md 的最终结果仍将 R16 两项问题表述为“均已修正”，而 R17 实际复核发现仍有历史缩写残留。也就是说，R17 尚未形成新的验收闭环，不能把 R16 的整改状态直接视为最终通过。
+
+3. 最小整改要求
+
+建议一次性完成以下工作，不需要重审 WORKFLOW 九项规范，也不需要重跑 ST-05：
+
+将上述 steps.md、delivery.md 中残留的缩写 SHA 补成完整值。
+
+同步核对三个文件中所有 Git commit 引用，避免只修复本轮列出的几处。
+
+在 task-brief.md、steps.md、delivery.md 中如实登记 R17 的 REJECT 及整改待复核状态，保持轮次与结论一致。
+
+保留 R15、R16 的历史结论，不要覆盖或改写。
+
+本轮不要求删除 phase0/tools/check_conv_units.mjs，也不要求恢复已删除的一次性 SHA 修正脚本。
+
+最终判断：R17 的提交范围符合说明，但 SHA 完整性仍有缺口，且最终验收记录尚未闭环，所以本轮 REJECT。

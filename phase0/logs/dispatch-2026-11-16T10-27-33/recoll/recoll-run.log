@@ -1,0 +1,22 @@
+[2026-11-16T10:33:45.495Z] 会话锁已获取（review-leg 补采；仅采集不发送）
+[2026-11-16T10:33:45.550Z] [tab-hygiene] 会话页命中 1 个，取末位（最近创建）
+[2026-11-16T10:33:45.550Z] 页面就位: https://chatgpt.com/c/6aface14-4f10-83e8-a5d0-e8a5de64c1e2
+[2026-11-16T10:33:45.616Z] 视口已拉高 1920x20000（前置全量物化）
+[2026-11-16T10:34:54.069Z] recoll FAILED: 静置门未通过(首次)
+[2026-11-16T10:34:54.545Z] 会话锁已释放（review-leg 补采）
+[2026-11-16T10:35:29.200Z] 会话锁已获取（review-leg 补采；仅采集不发送）
+[2026-11-16T10:35:29.259Z] [tab-hygiene] 会话页命中 1 个，取末位（最近创建）
+[2026-11-16T10:35:29.260Z] 页面就位: https://chatgpt.com/c/6aface14-4f10-83e8-a5d0-e8a5de64c1e2
+[2026-11-16T10:35:29.313Z] 视口已拉高 1920x20000（前置全量物化）
+[2026-11-16T10:36:37.686Z] recoll FAILED: 静置门未通过(首次)
+[2026-11-16T10:36:38.097Z] 会话锁已释放（review-leg 补采）
+[2026-11-16T10:37:14.072Z] 会话锁已获取（review-leg 补采；仅采集不发送）
+[2026-11-16T10:37:14.130Z] [tab-hygiene] 会话页命中 1 个，取末位（最近创建）
+[2026-11-16T10:37:14.130Z] 页面就位: https://chatgpt.com/c/6aface14-4f10-83e8-a5d0-e8a5de64c1e2
+[2026-11-16T10:37:14.202Z] 视口已拉高 1920x20000（前置全量物化）
+[2026-11-16T10:37:22.227Z] 静置门通过（10 units）；滚动到底+额外静置 30000ms
+[2026-11-16T10:38:02.317Z] 本轮 user 定位成功: fallback-turn-8:0:user（标记唯一+最后 user；发送双验报告键=fallback-turn-6:0:user 供对照）
+[2026-11-16T10:38:05.375Z] checks={"final_stop_button_not_visible":true,"tail_is_assistant":true,"dil_uuid_present":true,"uuid_stable":true,"stable_unit_read":true,"target_range_materialized":true,"not_prev_reply_sha":true}
+[2026-11-16T10:38:05.384Z] reply 已落盘: D:\AIEO\phase0\logs\dispatch-2026-11-16T10-27-33\recoll\reply.txt（2673 字节，SHA256=8ddf1f0e8f94fe3f…）
+[2026-11-16T10:38:05.385Z] recoll COMPLETED
+[2026-11-16T10:38:05.851Z] 会话锁已释放（review-leg 补采）

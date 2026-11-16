@@ -1,0 +1,10 @@
+【R17 限定复核】b-20261116-workspace-spec
+仓库 damwate/AIEO 分支 review/b-20261116-workspace-spec
+核验对象 commit=86a9f3aecf3e32ad7a8fbe6cc25f913f677317d3（父 f0e1d4a1d5dd32f01e8771e32c995a751106259f）
+R16 两处记录问题已改：
+①R15 记录中缩写 SHA 全部替换为完整值（delivery §4 R15 行、steps 问题12 行与 S3⑥）；并顺带把历史记录中同类缩写统一为完整值（bb8e695…、ab6ad23…、cc29fc51…、R4/R5/R14 回复 SHA）——只改书写，不改结论
+②task-brief「最终结果」补记 R15 实际结论（版本差异致占位误判）与 R16（问题12 完整 SHA 通过、仅两处记录），并标注"以 R17 为准"
+另：一次性 SHA 修正脚本未纳入交付（已在 commit 86a9f3a 移除）；只读诊断脚本 phase0/tools/check_conv_units.mjs 按要求保留用途说明与只读边界
+ST-05 复跑仍全 PASS（①～⑥ PASS、Overall PASS、退出码 0，证据 acceptance/st05-completed.txt）
+未改 WORKFLOW 九项、未改被测 9efb14bbcc74d397e15558dc720706fc054ac627
+请核：R15 记录是否均为完整 SHA、task-brief 与 delivery/steps 轮次是否一致；结论 PASS/REJECT

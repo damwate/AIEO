@@ -1,0 +1,8 @@
+【R16 限定复核】b-20261116-workspace-spec
+仓库 damwate/AIEO 分支 review/b-20261116-workspace-spec
+请以 commit 80bf11fcad223786b910e5ad6fa3995e6bb2cce8（父 e516f344b7982631acf4033f40ec8ecbefd9acc8）为核验对象：该提交内 steps 返工表「问题12」行修复 commit=d15dd50534441b4a84e0c7b1b9456b5466bdb676（完整 40 位）
+说明：R15 核验的是整改 commit d15dd50，其内该行确为"待回填"占位；完整 SHA 已在紧随的 8c310fa 回填，故 R15 唯一必改项在当前 HEAD 已满足
+另：phase0/tools/check_conv_units.mjs 为只读诊断脚本（主机崩溃后判定"已送达未采集"→改走归属校验补采，L-018 证据链所需；不修改任何被测文件）；若你认为不应入库，请在结论中明确，我移除后再复核
+ST-05 复跑仍全 PASS（①～⑥ PASS、Overall PASS、退出码 0，证据 acceptance/st05-completed.txt）
+未改 WORKFLOW 九项、未改被测 9efb14bbcc74d397e15558dc720706fc054ac627
+请核：问题12 行是否为完整 SHA、索引是否自洽；结论 PASS/REJECT

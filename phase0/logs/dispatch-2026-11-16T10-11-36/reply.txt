@@ -1,0 +1,104 @@
+ChatGPT 说：
+R15 限定复核结论
+REJECT
+
+P1-1 本身已整改，但索引同步仍有一处遗漏，因此本轮不能 PASS。
+
+复核结果
+
+检查项
+
+	
+
+结论
+
+	
+
+依据
+
+
+
+
+task-brief 最终结果字段
+
+	
+
+PASS
+
+	
+
+已补 S1 R6、S3 R13、ST-05 结果及证据路径；明确 R14 REJECT、结论以 R15 为准
+
+
+
+
+DEC 编号索引
+
+	
+
+PASS
+
+	
+
+delivery 已列 DEC-068～074、DEC-076～083，明确不存在 DEC-075
+
+
+
+
+验收轮次索引
+
+	
+
+PASS
+
+	
+
+delivery 已将 S3 轮次更新为 R7～R14，R14 结论如实保留
+
+
+
+
+返工问题索引
+
+	
+
+REJECT
+
+	
+
+steps.md 问题12行的「修复 commit」仍写着“待本轮整改 commit 回填”
+
+
+
+
+本次提交范围
+
+	
+
+需留意
+
+	
+
+本次提交还新增 phase0/tools/check_conv_units.mjs，不属于本次 P1-1 最小修复的明显必要内容
+
+唯一必改项
+
+steps.md 返工记录表问题12行：
+
+当前：待本轮整改 commit 回填
+
+应改为：d15dd50534441b4a84e0c7b1b9456b5466bdb676
+
+这与用户提供的“问题12修复 commit=d15dd50…”一致，也符合该表要求的完整 SHA 证据纪律。
+
+Git 证据
+
+整改 commit：d15dd50534441b4a84e0c7b1b9456b5466bdb676
+
+声明父提交：0e326409ec3afa84e9ac64e6ad298f1effef5911
+
+GitHub compare：该父提交至整改提交 ahead_by=1、behind_by=0，共 1 个提交。
+
+被测对象 9efb14bbcc74d397e15558dc720706fc054ac627 未出现在本次 Diff 修改文件中；WORKFLOW 九项规范也未出现在本次 Diff 修改文件中。
+
+处理建议： 只需把问题12行的修复 commit 补成完整 SHA，再提交一次索引修正。无需重跑 ST-05，也无需重新审查被测规范。完成后提交新 SHA 和父 SHA，我再做一次限定复核。

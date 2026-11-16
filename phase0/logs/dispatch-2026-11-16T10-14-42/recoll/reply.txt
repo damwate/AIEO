@@ -1,0 +1,52 @@
+ChatGPT 说：
+R16 限定复核
+问题12修复 SHA：PASS
+
+核验对象 80bf11fcad223786b910e5ad6fa3995e6bb2cce8 中，steps.md 返工表「问题12」行的修复 commit 字段已填写完整 40 位 SHA：
+
+d15dd50534441b4a84e0c7b1b9456b5466bdb676
+
+这正是 R15 所指出的占位问题。R15 核验对象是 d15dd50…，而 R16 核验对象已经包含后续回填，因此不能把 R15 对旧提交的 REJECT 延续为当前状态。
+
+本次 GitHub compare 也确认：父提交 e516f344b7982631acf4033f40ec8ecbefd9acc8 到核验提交仅 1 个提交，ahead_by=1、behind_by=0；Diff 只涉及 delivery.md 和 steps.md，没有改动 WORKFLOW 或被测对象。
+
+但索引尚未完全自洽，因此最终结论仍为：
+
+REJECT
+尚需修正的两处记录问题
+
+1. R15 记录仍使用缩写 SHA。
+
+delivery.md 的 R15 记录使用 8c310fa、d15dd50。
+
+steps.md 问题12的验证说明也使用 8c310fa、d15dd50。
+
+已核实完整值分别是：
+
+8c310faf4aadeeaac2ccba7ed31b25de6e4260ee
+
+d15dd50534441b4a84e0c7b1b9456b5466bdb676
+
+建议统一替换为完整 SHA，保持全 SHA 纪律。
+
+2. task-brief 最终结果尚未反映 R15。
+
+当前仍记载 R14 REJECT、结论以 R15 为准。
+
+但 R15 已经发生，并且其结论是 REJECT（核验对象版本差异导致的占位误判）。
+
+应补记 R15 的实际结论，并注明 R16 对当前版本的复核状态，避免任务书与 delivery、steps 的轮次状态脱节。
+
+其他事项
+
+问题12 修复 commit 字段：通过。 完整 SHA 已正确填写。
+
+DEC 索引：通过。 DEC-068～074、DEC-076～083，未虚构 DEC-075。
+
+轮次索引：通过。 S3 已更新至 R15。
+
+被测范围：通过。 本次 Diff 未触及 WORKFLOW 九项或被测对象 9efb14bbcc74d397e15558dc720706fc054ac627。
+
+诊断脚本：本轮不要求移除。 phase0/tools/check_conv_units.mjs 不在 R16 的 Diff 中。按你提供的用途，它是只读诊断辅助工具，不属于被测规范修改；建议保留其用途说明和只读边界。
+
+最小整改范围： 统一 R15 记录中的完整 SHA，并同步 task-brief 最终结果。无需重跑 ST-05，也无需重新审查被测规范。完成后再做一次限定复核。

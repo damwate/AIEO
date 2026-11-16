@@ -1,0 +1,8 @@
+【R15 限定复核】b-20261116-workspace-spec
+仓库 damwate/AIEO 分支 review/b-20261116-workspace-spec
+P1-1 已整改：task-brief.md「最终结果」已补齐——S1 规范内容验收 PASS（R6）／S3 交付记录验收 PASS（R13）／COMPLETED 态 ST-05 全 PASS（①～⑥ PASS、Overall PASS、退出码 0，证据 acceptance/st05-completed.txt）；末尾如实标注"R14 REJECT（仅本字段为空）→已补齐，结论以 R15 复核为准"，未提前宣称最终 PASS
+整改 commit=d15dd50534441b4a84e0c7b1b9456b5466bdb676（父=0e326409ec3afa84e9ac64e6ad298f1effef5911）；同提交同步索引（DEC-068～074、DEC-076～083；返工表问题1～12；轮次 R1～R14）
+返工表问题12 建行（修复 commit=d15dd50…），该行提交=8c310faf4aadeeaac2ccba7ed31b25de6e4260ee（父=d15dd50…）
+ST-05 复跑仍全 PASS（Overall PASS，exit 0，证据文件内容未变）
+未改 WORKFLOW 九项、未改被测 9efb14bbcc74d397e15558dc720706fc054ac627、未改历史结论
+请核 P1-1 是否关闭、索引是否自洽；结论 PASS/REJECT

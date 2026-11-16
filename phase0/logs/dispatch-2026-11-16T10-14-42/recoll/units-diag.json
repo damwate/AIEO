@@ -1,0 +1,86 @@
+[
+  {
+    "key": "fallback-turn-0:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【验收请求·会话迁移】b-20261116-workspace-spec S3 交付复核\n背景：WORKFLOW v0.3 增补④《多项目、多 IDE 工作区管"
+  },
+  {
+    "key": "fallback-turn-0:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nS3 交付复核结论\n\nREJECT\n\n四组整改的主体内容基本落实，但目前不能判定四组全部关闭。发现至少 2 项必须修正的不一致。\n\n本次按"
+  },
+  {
+    "key": "fallback-turn-1:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【S3-R12 限定复核】b-20261116-workspace-spec\n仓库 damwate/AIEO 分支 review/b-20261116-work"
+  },
+  {
+    "key": "fallback-turn-1:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nS3-R12 限定复核结论\nREJECT\n\nR11 的两项整改均已落实，但发现 1 处新增的索引不一致。因此暂不能进入 COMPLETED"
+  },
+  {
+    "key": "fallback-turn-2:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【S3-R12 限定复核】b-20261116-workspace-spec\n仓库 damwate/AIEO 分支 review/b-20261116-work"
+  },
+  {
+    "key": "fallback-turn-2:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nS3-R12 限定复核结论\nREJECT\n\nR11 的两项整改均已落实并关闭，但当前交付记录仍有一处内部不一致，因此本轮不能 PASS。\n"
+  },
+  {
+    "key": "fallback-turn-3:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【S3-R13 限定复核】b-20261116-workspace-spec\n仓库 damwate/AIEO 分支 review/b-20261116-work"
+  },
+  {
+    "key": "fallback-turn-3:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nS3-R13 限定复核结论\nPASS\n\nP1-3 已关闭。本轮只针对该问题复核，未扩大到被测规范内容审查。\n\n核验结果\n\n核验项\n\n\t\n\n"
+  },
+  {
+    "key": "fallback-turn-4:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【最终记录一致性复核】b-20261116-workspace-spec\n仓库 damwate/AIEO 分支 review/b-20261116-worksp"
+  },
+  {
+    "key": "fallback-turn-4:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n最终记录一致性复核结论\nREJECT\n\nST-05 的 COMPLETED 态证据与回填内容基本一致，四项检查中有三项通过；但任务书的「最"
+  },
+  {
+    "key": "fallback-turn-5:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【R15 限定复核】b-20261116-workspace-spec\n仓库 damwate/AIEO 分支 review/b-20261116-workspa"
+  },
+  {
+    "key": "fallback-turn-5:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nR15 限定复核结论\nREJECT\n\nP1-1 本身已整改，但索引同步仍有一处遗漏，因此本轮不能 PASS。\n\n复核结果\n\n检查项\n\n\t\n"
+  },
+  {
+    "key": "fallback-turn-6:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【R16 限定复核】b-20261116-workspace-spec\n仓库 damwate/AIEO 分支 review/b-20261116-workspa"
+  },
+  {
+    "key": "fallback-turn-6:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nR16 限定复核\n问题12修复 SHA：PASS\n\n核验对象 80bf11fcad223786b910e5ad6fa3995e6bb2cc"
+  }
+]
