@@ -1,0 +1,7 @@
+【S3-R12 限定复核】b-20261116-workspace-spec
+仓库 damwate/AIEO 分支 review/b-20261116-workspace-spec（已更新至问题10行提交）
+R11 两项已整改（整改 commit=b3e108f209b6a2aa2154cc0d716637843c3f009e）：
+①delivery §5 增列"R10 四组整体同步+DEC-079"：commit=c8eb7087d47bd06524161edbee911ed060c9c61f，父=ab6ad23806d9be05be29b11d2150ea702bbf6ed5；并补问题7/8/9 对应 commit 完整 SHA；同时写明收录口径（本表收录至 R10 整改，此后证据登记类提交以 steps 返工表问题行"修复 commit"为唯一权威登记，避免自引用循环）
+②steps S2④ 改为"DEC-069～074、DEC-076～079 均已成文（无 DEC-075，编号跳过未补）"
+未改 WORKFLOW 九项、未改被测 9efb14bbcc74d397e15558dc720706fc054ac627、未改历史结论、未虚构 DEC-075；返工表问题10 建行；DEC-080 登记会话迁移与整改
+请核两项是否关闭，结论 PASS/REJECT（通过即进入 COMPLETED 态 ST-05 重跑与最终记录回填）
