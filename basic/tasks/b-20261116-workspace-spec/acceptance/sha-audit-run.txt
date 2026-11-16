@@ -1,7 +1,7 @@
 # SHA 审计清单（由 phase0/tools/sweep_sha.py 自动生成，R21 版）
 
 - 仓库根：D:\AIEO
-- git rev-list --all 提交数：515（前缀映射覆盖 7~39 位）
+- git rev-list --all 提交数：517（前缀映射覆盖 7~39 位）
 - 运行模式：全量规整
 - 分类规则：UUID 片段（扩展 run 整体命中 UUID 格式）／日期（8 位合法日历日期）／短 commit SHA（前缀映射唯一命中）／其余一律未知（fail-closed，退出码 2）
 
@@ -18,7 +18,7 @@
   - `e8a5de64c1e2`（delivery.md 第 58 行）：会话 UUID 片段（扩展连字 run 整体命中 8-4-4-4-12 UUID 格式）
   - `6afb128e`（delivery.md 第 58 行）：会话 UUID 片段（扩展连字 run 整体命中 8-4-4-4-12 UUID 格式）
   - `ad10f90220ee`（delivery.md 第 58 行）：会话 UUID 片段（扩展连字 run 整体命中 8-4-4-4-12 UUID 格式）
-  - `20261116`（delivery.md 第 101 行）：日期（8 位合法日历日期）
+  - `20261116`（delivery.md 第 102 行）：日期（8 位合法日历日期）
 - 未知项（必须为 0，否则退出码 2）：0
 
 ## steps.md

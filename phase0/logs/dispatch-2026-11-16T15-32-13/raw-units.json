@@ -1,0 +1,108 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-16T15:35:20.924Z",
+  "user_unit_key": "fallback-turn-2:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-2:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "885ecdcc-a2b6-49b4-8706-1448b6941621",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-2:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "029314143627b9b9202bbccfc4feec1284d977604d6951f361516d4ebef498d2",
+          "d2183722c143e94eb5f16e0894c4c72594481d82557658f306d888e1f904017a",
+          "130e623b8ae634689e85bdd3f4d99cba0bc88799c0ac0ca4c3e250aa497f9cbd",
+          "29543452c4ded008b3fda4209427cc6d037227e8cc73914cf8a8ab09ea6eb737"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "029314143627b9b9202bbccfc4feec1284d977604d6951f361516d4ebef498d2",
+          "d2183722c143e94eb5f16e0894c4c72594481d82557658f306d888e1f904017a",
+          "130e623b8ae634689e85bdd3f4d99cba0bc88799c0ac0ca4c3e250aa497f9cbd",
+          "29543452c4ded008b3fda4209427cc6d037227e8cc73914cf8a8ab09ea6eb737"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-2:0:user",
+      "fallback-turn-2:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-2:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nR22 限定复核结论\nPASS\n\n核验对象： c1694a76d6c65b7f6999e223f17b01b26a662191\n\n我按指定完整 SHA 读取了 commit 元数据、差异、sweep_sha.py 和两份审计产物。R21 的两项核心缺陷已修复，R22 提出的四项整改均满足。\n\n核验项\n\n\t\n\n结果\n\n\t\n\n代码与证据\n\n\n\n\n① SHA256 上下文识别\n\n\t\n\nPASS\n\n\t\n\n新增 SHA256_CTX，在 Git 前缀唯一命中判断前识别 sha256、sha-256 等行内标记；命中后返回 CAT_SHA256、不补全。该类别进入未知项统计，最终未知非零时退出码为 2。\n\n\n\n\n② selftest 真实退出码\n\n\t\n\nPASS\n\n\t\n\n临时 Git 仓库中通过 subprocess.run 启动脚本；注入未知 token 后断言子进程 returncode == 2 且输出包含 token，移除后断言 returncode == 0。不再只是检查内部列表。\n\n\n\n\n③ --check 零副作用\n\n\t\n\nPASS\n\n\t\n\n清单写入被限制在 if not check_only 分支；--check 只读取、输出，不写清单文件。\n\n\n\n\n④ 全量复跑与证据\n\n\t\n\nPASS\n\n\t\n\n提交的审计报告显示提交数 515、未知 0、例外 29、补全 0；运行记录附 exit=0。\n\nSHA256 上下文语义\n\n这一项我重点核对了 classify() 的顺序：\n\n先识别完整 UUID 格式片段。\n\n再检查当前 token 之前的行内文本是否匹配 SHA256 标记。\n\nSHA256 上下文命中时，直接返回 CAT_SHA256，不会继续执行 Git 前缀唯一命中补全。\n\n因此，普通十六进制截断片段即使恰好是某个 Git commit 的唯一前缀，也会进入未知项，触发 fail-closed。\n\n这解决了 R21 中“SHA256 截断片段碰巧命中 Git 唯一前缀，就被错误补全”的问题。完整 64 位 SHA256 不在 7～39 位 token 扫描范围内，也符合脚本注释中的约定。\n\n边界与证据说明\n\nsha-audit.txt 与审计原始输出正文一致；sha-audit-run.txt 在正文后另附 exit=0，这是运行退出码记录，不应描述成两个文件整体逐字节相同。\n\n--check 零副作用的代码路径已经核实；提交说明也记录了清单前后字节不变。\n\n未在本次环境独立运行 Windows 目标仓库脚本，因此运行结果部分以提交的现场证据为依据，不冒称我亲自复跑。\n\n报告标题仍写着“R21 版”，属于版本标注未更新，不影响本轮功能验收，建议后续有空再统一，不构成本轮拒绝理由。\n\n最终判定：R22 PASS。\n\n边界按原约定维持：被测对象 9efb14bbcc74d397e15558dc720706fc054ac627 未改；不重做 ST-05；R15～R18 历史结论保留；不扩大 WORKFLOW 九项范围。\n\n查看 R22 完整提交",
+      "text_sha256": "29543452c4ded008b3fda4209427cc6d037227e8cc73914cf8a8ab09ea6eb737",
+      "size_bytes": 2591,
+      "assistant_uuid": "885ecdcc-a2b6-49b4-8706-1448b6941621"
+    }
+  ]
+}
