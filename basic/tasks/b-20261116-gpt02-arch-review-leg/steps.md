@@ -16,26 +16,26 @@
 - ④测试结果：见 S3（合跑 50/50）。
 - ⑤证据引用：phase1/tools/arch_review_leg.py；phase1/tools/review_leg.py（diff=参数化段）。
 
-## S3 测试与实战（PASS——测试矩阵；零 mock 实战待验收链前执行）
+## S3 测试与实战（PASS——测试矩阵+零 mock 实战全链）
 
 - ①测试矩阵：test_arch_review_leg.py 21 用例（A1 正常轮 PASS→READY/A2 REWORK 停等/A3 采集失败恢复+禁重发计数/A4 幂等重放/A5 路线 B 续推+A-3 终态行/A6 attach 三态/A7 BLOCKED 仅登记+白名单越权负例+契约校验负例+简报超限+材料锚定 fail-closed+发送状态不确定 fail-closed+setup 幂等）；test_review_leg.py 29 用例回归（含 test_01 白名单断言适配实例方法调用，语义不变）。
 - ②测试过程如实登记：首轮 7 失败→逐项定位修复（attach 绑定链自动组装/材料锚定测试意图修正/超限触发修正/A-3 终态断言口径/BLOCKED 事件契约字段 blocked_reason·blocked_owner·unblock_condition/attach 快照现场复制）→21/21；合跑 50/50（29 回归+21 新增）；首轮回归曾 1 次 fail（test_01 类调用适配期）与 1 次 test_19 PID 复用竞态偶发（复跑全绿，Windows pid 重用非代码缺陷，如实记录）。
 - ②b **零 mock 边界事故与整改（2026-11-17 如实登记）：** 首轮/二轮运行期 test_13 夹具 BUG（BLOCKED 事件字段名不符→HTTP 422）使 leg3.resume 未停在 A-3 行 9 而走完整派单链，测试夹具任务（marker=GPT02-R1|a11）**真实发到 chatgpt.com 两次**（现场 dispatch-2026-11-16T16-08-26/16-11-53，新会话 6afb2ab2/6afb2b80；回复均为 BLOCKED——测试 commit 非 GitHub 可读，审查方正确拒绝；无敏感信息；两现场随 5f1d158 入库作为事故证据）。根因=make_leg 无替身路径无防线+夹具事件字段错误。整改：①测试基类 setUp 全局零 mock 守卫（未装替身路径的 gpt_dispatch 调用一律当场断言失败，不再依赖逐用例自觉）②test_13 夹具 BLOCKED 事件契约字段修复 ③守卫加固后 21/21 OK+双矩阵合跑 50/50 OK。
-- ③执行结果：双矩阵合跑 OK。
+- ③执行结果：双矩阵合跑 OK；零 mock 实战 REWORK 结论四条 P1 缺陷已全修（返工表**问题14**，整改 commit=77318daba69eb9065ccf36f0b02d23f74e7bb005，证明用例 test_17~20）。
 - ④测试结果：50 用例全绿 exit=0（`python -m unittest test_review_leg test_arch_review_leg`，2026-11-17 实测）。
 - ⑤证据引用：phase1/tools/test_arch_review_leg.py；合跑输出随本任务 acceptance 归档。
 
-## S4 交付（PENDING）
+## S4 交付（PASS——验收复核派发，结论待登记）
 
-- ①交付登记+delivery 回填+ST-05 COMPLETED 态取证。
-- ②执行结果：待完成。
-- ③验收证据引用：待填。
+- ①交付登记：delivery.md 七要素回填+C1 绑定核验 PASS（baseline=5b2cc461f990680c64e00d7c4950b2bdcbf42870→target=77318daba69eb9065ccf36f0b02d23f74e7bb005，acceptance/binding-report.json）+实战账本复制件归档（acceptance/live-ledger.jsonl/live-report.json）。
+- ②执行结果：验收复核简报 review-request-g02r1.txt（≤1200B）派发审查会话（第 4 条 user 消息，DEC-084 主动评估=暂不迁移：例外①任务进入最后验收阶段、迁移反增交接成本；若 REJECT 整改轮重评）。
+- ③验收证据引用：见当轮验收 reply（结论登记处）。
 
 ## 返工记录表（首次 REJECT 时建表；按"同一问题"计数）
 
 | 问题编号 | 轮次来源 | 问题描述 | 整改内容 | 修复 commit | 验证 |
 |---|---|---|---|---|---|
-| 问题14 | 零 mock 实战（921001/T-P1-001，GPT-02 真实结论 REWORK） | 真实审核四条 P1 缺陷：P1-01 回复归属校验只记录 target_matches_sent_key 未强制比较（不一致不拦截）；P1-02 run_key 无跨进程互斥+_find_dispatch_dir 按 mtime 选最新目录并发串单风险；P1-03 路线 B artifact 登记不可恢复窗口（M1 已建而账本未写时崩溃→恢复重 POST）；P1-04 事件 409 走 _register_step 的 kind 映射缺失（A-3 行 6 原 event_id 续推无法执行） | 四条全修：P1-01 归属强制断言（双键均存在不等即 fail-closed，test_17）；P1-02 OS 级字节锁 RunKeyLock（Windows msvcrt.locking/POSIX fcntl.flock，进程死自动释放，不用 os.kill(pid,0)——Windows 上等于 TerminateProcess 会误杀；run/resume/attach 三入口全包裹，test_18）+派单现场精确关联定位（request.txt 与本次简报字节一致，现场权威字节=磁盘 brief.txt 原始内容防换行翻译错位，test_11 替身补齐 request.txt）；P1-03 artifact 409 特化（服务端 path+SHA 冲突+GET 回核 task/sha 匹配→恢复 ID；不依赖账本指纹——崩溃窗口正是对象；M1 实测同 path+SHA=201 duplicate 原语义自然恢复，409 语义为真冲突 fail-closed，test_19 两分支）；P1-04 事件独立核验（提交前 A5_EVENT_INTENT 落账本，409 双证=账本 intent 指纹+响应指认或 M1 终态已达；M1 实测重放=200 幂等响应，409 为防御层，test_20 单条记录断言） | 整改 commit=本提交（SHA 随验收轮登记） | 双矩阵合跑 54/54 OK（29 回归+25 GPT-02：21 原矩阵+4 整改证明用例），test-run.txt 落盘 |
+| 问题14 | 零 mock 实战（921001/T-P1-001，GPT-02 真实结论 REWORK） | 真实审核四条 P1 缺陷：P1-01 回复归属校验只记录 target_matches_sent_key 未强制比较（不一致不拦截）；P1-02 run_key 无跨进程互斥+_find_dispatch_dir 按 mtime 选最新目录并发串单风险；P1-03 路线 B artifact 登记不可恢复窗口（M1 已建而账本未写时崩溃→恢复重 POST）；P1-04 事件 409 走 _register_step 的 kind 映射缺失（A-3 行 6 原 event_id 续推无法执行） | 四条全修：P1-01 归属强制断言（双键均存在不等即 fail-closed，test_17）；P1-02 OS 级字节锁 RunKeyLock（Windows msvcrt.locking/POSIX fcntl.flock，进程死自动释放，不用 os.kill(pid,0)——Windows 上等于 TerminateProcess 会误杀；run/resume/attach 三入口全包裹，test_18）+派单现场精确关联定位（request.txt 与本次简报字节一致，现场权威字节=磁盘 brief.txt 原始内容防换行翻译错位，test_11 替身补齐 request.txt）；P1-03 artifact 409 特化（服务端 path+SHA 冲突+GET 回核 task/sha 匹配→恢复 ID；不依赖账本指纹——崩溃窗口正是对象；M1 实测同 path+SHA=201 duplicate 原语义自然恢复，409 语义为真冲突 fail-closed，test_19 两分支）；P1-04 事件独立核验（提交前 A5_EVENT_INTENT 落账本，409 双证=账本 intent 指纹+响应指认或 M1 终态已达；M1 实测重放=200 幂等响应，409 为防御层，test_20 单条记录断言） | 整改 commit=77318daba69eb9065ccf36f0b02d23f74e7bb005 | 双矩阵合跑 54/54 OK（29 回归+25 GPT-02：21 原矩阵+4 整改证明用例），test-run.txt 落盘 |
 
 ### 实战记录（零 mock 全链，2026-11-17）
 

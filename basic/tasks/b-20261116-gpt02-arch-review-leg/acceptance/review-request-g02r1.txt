@@ -1,0 +1,11 @@
+【G02-R1 限定复核】b-20261116-gpt02-arch-review-leg
+核验对象 commit=77318daba69eb9065ccf36f0b02d23f74e7bb005（分支 review/b-20261116-workspace-spec，按 SHA 读取；C1 绑定核验 PASS 报告在库）
+Gate3 拍板开工（DEC-087）。交付：
+①arch_review_leg.py：A0-A5 编排+A-3 恢复+attach 退路；ENGINE-02 六端点白名单；契约 v1.0 落位与草案逐字段一致
+②review_leg.py 唯一修改=白名单参数化（29 回归全绿）；M1-M4/scheduler 零修改
+③测试 54/54（29 回归+25 新增），test-run.txt 在库
+④零 mock 实战（dispatch-2026-11-16T16-32-20，真实 M1，T-P1-001）：简报 918B 材料锚定 d0eb87e→真实结论 REWORK 四条 P1（问题14）→契约拦截→人工保真规整 attach 登记→REWORK 推进；账本归档在库
+⑤四条 P1 已修（归属断言/OS 字节锁/现场定位/artifact 409 回核+事件双证）；测试替身漏派事故已整改+全局守卫
+遗留：契约 findings 结构化演进待办
+会话达 4 条 user 消息（DEC-084）：例外①暂不迁移
+请核：①与 charter A-1/A-2/A-3 一致性 ②测试覆盖与实战证据 ③整改有效性；结论 PASS/REJECT
