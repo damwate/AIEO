@@ -36,7 +36,7 @@
 |---|---|
 | 当前状态 | 完成 |
 | 当前步骤 | S3 交付（S1/S2/S3 验收均 PASS；交付记录见 delivery.md；轮次与结论一律以 steps.md 返工记录表为准） |
-| 最终结果 | |
+| 最终结果 | S1 规范内容验收 PASS（R6）；S3 交付记录验收 PASS（R13）；COMPLETED 态 ST-05 复跑 PASS（①～⑥ 全部 PASS，Overall PASS，退出码 0，证据 `acceptance/st05-completed.txt`）；最终记录一致性复核：R14 REJECT（仅 P1-1「本字段为空」）→已补齐，结论以 R15 复核为准 |
 
 ## Git 操作批准记录（P1-02 整改：如实登记，不伪造批准）
 
