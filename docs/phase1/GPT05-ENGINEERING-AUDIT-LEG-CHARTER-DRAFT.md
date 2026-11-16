@@ -1,4 +1,4 @@
-# GPT-05 工程总审计真实腿最小版接入——立项任务书（草案 v0.2）
+# GPT-05 工程总审计真实腿最小版接入——立项任务书（草案 v0.3）
 
 > **文档身份与授权链：** 本文件=Standard 平台路线 GPT-02/03/04/05 逐角色接入的**第四张立项草案**（GPT-03 v1.0 已生效 DEC-057/062；GPT-02 交付闭环 DEC-088；GPT-04 交付闭环 DEC-091）。启动依据=Gate2 裁定"GPT-05 待 GPT-04 形成可验收闭环后再立项"（顺延条件已达成，DEC-091 登记）。生效路径：charter 草案 → Gate1 草案级验证 → Gate2 会务立项评审 → 开工授权（用户 2026-11-17 授权机制=审查方复审通过替代用户逐项拍板，DEC-089 登记；DEC-010 高危红线仍须用户本人拍板）。**Gate1：PASS_WITH_CONSTRAINTS**（reply sha256=bceb502ac673fa18…完整值见 recoll-result.json，dispatch-2026-11-16T20-57-30/recoll 补采七查全过；三约束 C1/C2/C3+D1 显式 CLI 确立/D2 路线 B 支持；G05-R1 只核对整改通过后进 Gate2）。
 
@@ -55,7 +55,7 @@
 
 ## 6. 安全与审计
 
-沿 GPT-04 charter §6 全文（凭据三类/OWNER 固定角色/engine §8.6 白名单/审计 C7 §8.7/客户端层 method+path 校验/RunKeyLock/1200B/敏感信息不入日志），差异：engine 身份=**ENGINE-04**（bootstrap 一次性 OWNER 注册，先例 ENGINE-01/02/03）；**无 events 端点**（防御层 event_whitelist=空集，任何事件值一律拒绝——GPT-04 同构）；结论权威=AUDIT_SUBMITTED 消息+artifacts 证据链（无原生结论表——批次级审计登记语义，附录 E 权威关系=GPT-03 charter 附录 E 同构：messages=传输记录/artifacts=证据链，两者不一致→腿级 BLOCKED 停等人工不自动改写）。
+沿 GPT-04 charter §6 全文（凭据三类/OWNER 固定角色/engine §8.6 白名单/审计 C7 §8.7/客户端层 method+path 校验/RunKeyLock/1200B/敏感信息不入日志），差异：engine 身份=**ENGINE-04**（bootstrap 一次性 OWNER 注册，先例 ENGINE-01/02/03）；**无 events 端点**（防御层 event_whitelist=空集，任何事件值一律拒绝——GPT-04 同构）。**结论权威关系（D2 统一口径，与 §5 一致）：审计报告 artifact=结论内容唯一权威载体**（完整 findings/standards_matrix/风险/证据）；**AUDIT_SUBMITTED message=登记、关联与检索记录，不得作为独立结论来源**；message 与报告 artifact 的 batch_id/audit_round_id/result/SHA 绑定关系不一致→腿级 BLOCKED（留证链自洽 fail-closed）；两者不一致时停止留证交人工，不自动改写（多事务非原子+逐项只读核验+断点保留沿 §5）。
 
 ## 7. 验收与回滚
 
@@ -91,7 +91,17 @@
 **回复契约=新增 `engineering-audit-report.schema.json`（新增文件，H2 纪律）**，字段草案：contract_version/batch_id/audit_round_id/reviewer_agent_id(GPT-05)/engine_agent_id(ENGINE-04)/input_material_commit(40hex)/input_material_manifest_sha256/brief_sha256/result(ACCEPTED/ACCEPTED_WITH_RISKS/BLOCKED)/summary/findings(string[])/risks(string[])/required_boundaries/release_recommendation(布尔建议字段——仅建议语义，不替代 result，不构成发布授权)。登记=artifacts（简报+报告证据）+messages（AUDIT_SUBMITTED 批次级信封 batch_id 必填/task_id=null）；**不经任何状态事件**。
 **简报输入四组**：批次身份（batch_id/requirement/engineering_standard_version）/任务状态全景（GET /tasks?batch_id= 各任务 task_id/title/status 计数与明细）/报告与遗留（GET /reports 全景核验指针）/审计材料（GitHub 指针固定 commit）。绑定字段：audit_round_id/input_material_commit/brief_sha256/brief_schema_version。
 
-**七大工程规范逐项审计矩阵（C1，Gate1 约束——角色规范 §6 核心职责的落地面）：** 回复契约新增 `standards_matrix` 数组，逐项=standard_id（规范编号）/applicable（是否适用）/requirement（对应要求）/evidence_refs（证据指针）/result（PASS/ISSUE/BLOCKED）/findings（问题与说明）/residual_risks（遗留风险）；**适用性不等于免检**——确实不适用的项目必须说明理由；矩阵与批次工程规范版本（batches.engineering_standard_version）关联，逐项结论计入总 result 一致性校验（矩阵存在 BLOCKED 而总 result=ACCEPTED→fail-closed）。
+**七大工程规范逐项审计矩阵（C1，Gate1 约束——角色规范 §6 核心职责的落地面）：** 回复契约新增 `standards_matrix` 数组，逐项=standard_id（规范编号）/applicable（是否适用）/requirement（对应要求）/evidence_refs（证据指针）/result（PASS/ISSUE/BLOCKED）/findings（问题与说明）/residual_risks（遗留风险）；**适用性不等于免检**——确实不适用的项目必须说明理由；矩阵与批次工程规范版本（batches.engineering_standard_version）关联，逐项结论计入总 result 一致性校验。
+
+**矩阵总结果映射规则（G05-R1 补齐，Gate2 冻结为最终规则）：**
+| 矩阵汇总状态 | 总 result 判定 |
+|---|---|
+| 任一项 BLOCKED | **总 result=BLOCKED**（不得为 ACCEPTED/ACCEPTED_WITH_RISKS） |
+| 无 BLOCKED、存在任一 ISSUE | **总 result=ACCEPTED_WITH_RISKS**（findings 与 residual_risks 必须披露对应问题） |
+| 全部项 PASS 或豁免（applicable=false 且理由充分） | 总 result=ACCEPTED 可选（结合任务全景与遗留判定） |
+- 矩阵与总 result 矛盾（如存在 BLOCKED 而总 result=ACCEPTED）→fail-closed 不登记。
+- **applicable=false 必须在 findings 说明理由**，单列豁免不计入 PASS，也不得从汇总中无条件剔除（豁免项仍须 evidence_refs 空说明或理由引用）。
+- **七项规范按 batches.engineering_standard_version 固定清单逐项识别**（版本锚定清单，禁止模型临场自行解释规范集）。
 
 ### A-3 恢复矩阵初稿（批次审计轮断点，Gate2 精化）
 
@@ -110,5 +120,6 @@
 
 | 版本 | 日期 | 状态 | 变更 | 依据 |
 |---|---|---|---|---|
+| v0.3 | 2026-11-17 | 草案（G05-R1 两项整改后，待 G05-R2） | R1 两项整改落实：C1=矩阵总结果映射规则（BLOCKED→总 BLOCKED/ISSUE→ACCEPTED_WITH_RISKS/全 PASS 或有理由豁免→ACCEPTED 可选；applicable=false 须理由单列豁免不得当 PASS；七项规范按 engineering_standard_version 固定清单识别禁临场解释）；D2=§6 权威关系统一（报告 artifact=唯一权威载体/message 仅登记关联检索/绑定不一致腿级 BLOCKED/全文消除"message+artifact 共同构成结论权威"类表述） | G05-R1 REJECT（reply sha256=abcb99defbf91a93…完整值见 recoll-result.json，dispatch-2026-11-16T21-07-15/recoll 补采七查全过，被测=v0.2@725ec4c） |
 | v0.2 | 2026-11-17 | 草案（Gate1 三约束整改后，待 G05-R1） | Gate1 三约束落实：C1=A-2 七大工程规范逐项审计矩阵（standards_matrix 七字段+适用性不等于免检+矩阵与总 result 一致性 fail-closed）；C2=§5②b+A-1 全量分页读取义务（任务与报告双分页+total 核对+数量不一致 fail-closed）；C3=§4 结论×发布建议一致性矩阵（BLOCKED 不得建议提交发布审批）；D1=触发方式终局化（显式 CLI 一期唯一）；D2=§5 结论权威关系（报告 artifact=唯一权威载体/message=登记关联/绑定不一致腿级 BLOCKED/多事务非原子+逐项核验+断点保留） | Gate1 裁定（reply sha256=bceb502ac673fa18…，dispatch-2026-11-16T20-57-30/recoll 补采七查全过，被测=v0.1@a89b371） |
 | v0.1 | 2026-11-17 | 草案（Gate1 被测对象） | 初稿成文（GPT-04 charter v0.3 同构框架，落点批次审计关口；登记路线=artifacts+messages AUDIT_SUBMITTED 批次级信封（无原生端点/无状态事件）；决策点 D1 触发方式；ENGINE-04；新增 engineering-audit-report.schema.json 契约） | Gate2 GPT-04 裁定顺延条件达成（DEC-091）；用户 2026-11-17 交接指令；角色规范 docs/立项/02 §6；messages-create.schema.json 分支/api.py:304/tasks.py:108-114 实读 |

@@ -1,0 +1,76 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-16T21:14:38.669Z",
+  "user_unit_key": "fallback-turn-2:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-2:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "09ca5f58-d097-46da-8e5e-b0bcedd0d165",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-2:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "0093b14e0b60326e626f6ddb143b175069e557a1c81ca07776d799511c8436e0",
+          "d6742c5276144aca6ce4400b316a58394007c385720198b1e69dc4bfb4b0ce35",
+          "26c90d7142bf8c3b5708bf90b0ffd8e4b5860a888c83aff58cb7614b993d7eff",
+          "bceb502ac673fa187de3db4411f78b8c65a6cbfcfafb7d78342a0af083a5e480",
+          "9d1137874eae3a7a2856e78cb59b436687dc6b2fd35753ff386ca04ef5ac26e9",
+          "abcb99defbf91a93238259085451a2cbb9c94ac94e4ffc5946adc079c8c3c60d"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": []
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-2:0:user",
+      "fallback-turn-2:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STATIC_NON_SCROLLABLE_DOM",
+      "scrollable_window_observed": false,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "overlap_keys": []
+      }
+    ],
+    "window_transitions": 0
+  },
+  "units": [
+    {
+      "key": "fallback-turn-2:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nG05-R1 限定复核结论\n\nREJECT 本轮不通过，暂不进入 Gate2。\n\n被测对象：damwate/AIEO\n固定 commit：725ec4c16561bcaa100debf18e85e01af0885c67\n文件：docs/phase1/GPT05-ENGINEERING-AUDIT-LEG-CHARTER-DRAFT.md\n已按指定完整 SHA 实读 v0.2。复核仅限 C1/C2/C3 与 D1/D2，不重开已裁定设计。\n\n逐项核验\n\n项目\n\n\t\n\n判定\n\n\t\n\n依据\n\n\n\n\nC1 七大规范矩阵\n\n\t\n\n部分通过\n\n\t\n\n附录 A-2 已列出七字段、适用性说明及矩阵与总结果的 fail-closed 要求，但总结果映射规则尚不完整\n\n\n\n\nC2 双分页与 total 核对\n\n\t\n\nPASS\n\n\t\n\n§5②b 明确任务与报告双分页、核对 total、遗漏或数量不一致时 fail-closed；A-1 也明确任务分页义务\n\n\n\n\nC3 结论与发布建议\n\n\t\n\nPASS\n\n\t\n\n§4 明确三种结论对应的发布建议，BLOCKED 不得建议提交人工发布审批，矛盾时 fail-closed\n\n\n\n\nD1 显式 CLI 唯一触发\n\n\t\n\nPASS\n\n\t\n\n§1 明确一期唯一显式 CLI 触发，自动触发另行立项；§9 也排除自动触发链\n\n\n\n\nD2 报告与 message 权威关系\n\n\t\n\nREJECT\n\n\t\n\n§5 与 §6 对结论权威关系存在直接矛盾\n\nC1：矩阵已建立，但总结果映射仍需补齐\n\n附录 A-2 已有七字段：\n\nstandard_id / applicable / requirement / evidence_refs / result / findings / residual_risks\n\n也明确不适用必须说明理由，矩阵结论计入总 result 一致性校验。\n\n不足在于：目前只给出 矩阵存在 BLOCKED、总 result=ACCEPTED 的冲突示例，没有明确 ISSUE 如何影响总 result，也没有完整定义不适用项如何计入矩阵汇总。\n\n补齐要求： 在 A-2 增加最小映射规则，至少明确：\n\n任一规范项 BLOCKED 时，总 result 不得为 ACCEPTED 或 ACCEPTED_WITH_RISKS。\n\n存在 ISSUE 时，总 result 如何在 ACCEPTED_WITH_RISKS 与 BLOCKED 之间判定，必须有明确条件。\n\napplicable=false 必须有理由，且不得被当作 PASS 或从汇总中无条件剔除。\n\n七项规范必须能按固定的 engineering_standard_version 逐项识别，不能只依赖模型临场解释。\n\nC2：PASS\n\n§5②b 明确要求：\n\n任务分页全量遍历；\n\n报告分页全量遍历；\n\n两类读取均核对 total 与实际接收数量；\n\n查询失败、遗漏、数量不一致时 fail-closed。\n\nA-1 对任务分页也有明确约束。该项整改达到 Gate1 要求，不需要继续扩写。\n\nC3：PASS\n\n§4 的矩阵明确：\n\nACCEPTED：可以建议提交人工发布审批；\n\nACCEPTED_WITH_RISKS：可以有条件建议，并披露风险；\n\nBLOCKED：不得建议提交人工发布审批。\n\n同时说明建议不等于发布授权，字段矛盾时 fail-closed。达到要求。\n\nD1：PASS\n\n§1 已将显式 CLI 定为一期唯一触发方式，并给出命令示例；自动触发另行立项。§9 也排除了自动触发链。无需再讨论轮询方案。\n\nD2：REJECT——存在实质性内部矛盾\n\n§5 明确规定：\n\n审计报告 artifact=结论内容唯一权威载体；AUDIT_SUBMITTED message=登记与关联记录。\n\n但 §6 又写：\n\n结论权威=AUDIT_SUBMITTED 消息+artifacts 证据链。\n\n后面还引用附录 E 的“messages=传输记录/artifacts=证据链”关系。\n\n这使 §6 又把 message 纳入了结论权威表达，与 §5 的“报告 artifact 唯一权威载体”不一致。对于需要审计追责的结论记录，这不是措辞问题，而是权威来源定义冲突。\n\n补齐要求：\n\n统一 §6 的表述：审计报告 artifact 是结论内容唯一权威载体。\n\nAUDIT_SUBMITTED message 只负责登记、关联和检索，不得作为独立结论来源。\n\n保留 message 与报告 artifact 的 batch_id / audit_round_id / result / SHA 绑定核验；不一致时腿级 BLOCKED。\n\n保留多事务非原子、逐项只读核验、断点保留和补缺项恢复规则。\n\n全文不得再出现“message+artifact 共同构成结论权威”一类表述。\n\n下一步指令\n\n当前只需形成 v0.3，不需要重新设计 GPT-05，也不需要扩大范围。\n\n交给 WorkBuddy 的限定整改指令\n\n被测文件：docs/phase1/GPT05-ENGINEERING-AUDIT-LEG-CHARTER-DRAFT.md\n\n基线：725ec4c16561bcaa100debf18e85e01af0885c67\n\n仅修改：\n\nC1：补齐七大规范矩阵的总结果映射规则和不适用项汇总规则。\n\nD2：消除 §5 与 §6 的权威关系矛盾，统一为报告 artifact 唯一权威载体、message 仅登记关联。\n\n不修改已 PASS 的 C2、C3、D1；不改 GPT-04 charter、冻结契约、M1–M4；不扩张架构或触发机制。\n\n输出 v0.3、变更摘要、固定 commit 完整 SHA，以及 C1/D2 逐项自证证据。\n\nv0.3 通过后的 Gate2 指令\n\n本轮不授权 Gate2。待 G05-R2 按固定 SHA 复核 C1/D2 通过后，再启动 Gate2。Gate2 的范围应限定为工程实施前的设计冻结评审：\n\nA-1 运行期白名单：逐项确认 method/path、身份权限、资源归属、拒绝条件及幂等范围。\n\nA-2 回复契约：确认字段、七项规范版本绑定、矩阵汇总规则、结论与发布建议校验，以及批次/轮次/简报 SHA/材料 commit 的绑定关系。\n\nA-3 恢复矩阵：逐断点确认账本标志、核验依据、允许动作、禁止重派条件及部分登记恢复方式。\n\n多事务登记：确认两个 artifact 与 message 的登记顺序、部分成功恢复、409 双证核验及断点保护。\n\n真实腿验收设计：确认正常审计、风险审计、BLOCKED、采集失败、幂等重放、两类断点恢复、人工接管的验收证据。\n\n边界与安全：确认 H2 契约纪律、M1–M4 零修改、无状态事件、显式 CLI 唯一触发、真实网页收发与零 mock 红线。\n\nGate2 输出必须包含：逐项 PASS/有条件 PASS/REJECT、固定证据、未决风险、最终设计冻结意见，以及是否具备开工条件的明确建议。\n\nGate2 通过仍不等于开工授权。 按既定授权链，开工须另行明确授权；DEC-010 的高危红线仍由用户本人决定。",
+      "text_sha256": "abcb99defbf91a93238259085451a2cbb9c94ac94e4ffc5946adc079c8c3c60d",
+      "size_bytes": 5970,
+      "assistant_uuid": "09ca5f58-d097-46da-8e5e-b0bcedd0d165"
+    }
+  ]
+}

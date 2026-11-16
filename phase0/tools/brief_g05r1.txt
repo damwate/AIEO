@@ -1,0 +1,5 @@
+[G05-R1|限定复核] 被测=GPT05-ENGINEERING-AUDIT-LEG-CHARTER-DRAFT.md v0.2，damwate/AIEO main，commit 725ec4c16561bcaa100debf18e85e01af0885c67，按SHA实读。按你Gate1裁定范围：只核对三项整改与D1/D2明确化，不重开已裁定设计。
+
+【整改落实声明】C1=附录A-2七大规范逐项审计矩阵（standards_matrix七字段+适用性不等于免检+矩阵与总result一致性fail-closed）；C2=§5②b+A-1全量分页读取义务（任务与报告双分页+total核对+数量不一致fail-closed）；C3=§4结论×发布建议一致性矩阵（BLOCKED不得建议提交发布审批）；D1=§1触发方式终局化（显式CLI一期唯一，自动触发另行立项）；D2=§5结论权威关系（报告artifact=唯一权威载体/message=登记关联/绑定不一致腿级BLOCKED/多事务非原子+逐项核验+断点保留）。
+
+【输出】三态+逐项依据；不足列补齐项；通过后请给Gate2指令（范围与输出口径）。
