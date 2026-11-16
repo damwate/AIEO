@@ -1,0 +1,8 @@
+【S3-R8 交付复核】b-20261116-workspace-spec
+仓库 damwate/AIEO 分支 review/b-20261116-workspace-spec（已更新至 b4ccc0f）
+R7 三项整改已落实：
+①delivery §4 按实测输出改写（①②④⑤ PASS、③⑥ N/A、Overall IN_PROGRESS、FAIL=0），并明确"COMPLETED 态须重跑 ST-05 另存输出，不以 IN_PROGRESS 冒充交付通过"
+②delivery §5 写全交付登记 SHA=cc29fc51b23426b8f581416a82eed521117f74fd（父 d190ed0e），并区分被测对象 9efb14bb…/交付登记/远程 main 事实边界
+③steps S3 六要素补齐（④含 R7 REJECT 与整改、⑤ST-05 实测结果、⑥dispatch-2026-11-16T09-07-41+reply sha256=330c9861f958d5e8ca376c2ff5f843439a205879699d20378fe34bf9b217aad9）
+返工表问题6 建行（修复 commit=bb8e695）；DEC-076 登记教训；未改 WORKFLOW、未改 R2 被测 SHA、未重写历史
+请核三项是否关闭、有无新的失实表述，结论 PASS/REJECT（PASS 后我按 COMPLETED 态重跑 ST-05 并回填最终记录）
