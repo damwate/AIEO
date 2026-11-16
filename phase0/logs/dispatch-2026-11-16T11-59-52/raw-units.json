@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-16T12:02:40.274Z",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "4cc57926-a6a5-4319-82a8-9bcf083562bc",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "9ba3f4a92d8d857ecb5d7dbd6da4574db0600209e50ec9fed580007cb90930ee",
+          "bf4bbc1d305870a6712881cbd3e5957a33aaf0cd1b0e615bb45e09cda6f6bb04"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "9ba3f4a92d8d857ecb5d7dbd6da4574db0600209e50ec9fed580007cb90930ee",
+          "bf4bbc1d305870a6712881cbd3e5957a33aaf0cd1b0e615bb45e09cda6f6bb04"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-0:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n复审结论：原则共识达成，建议补充3处口径后进入 DEC-071 登记及任务包准备阶段。\n\n我支持将原来的「实测约10+轮即评估迁移」收紧为「累计4轮 user 消息即主动评估迁移」。\n\n这次调整方向正确。它不是要求频繁迁移，而是把会话管理从事后发现上下文过载，提前到第4轮进行主动风险评估。\n\n一、改动清单复核\n\n项目\n\n\t\n\n处理意见\n\n\t\n\n说明\n\n\n\n\nM1 AI-DEV-LESSONS.md L-018\n\n\t\n\n保留\n\n\t\n\n修改唯一规则定义\n\n\n\n\nM2 AGENTS.md\n\n\t\n\n保留\n\n\t\n\n映射行补充4轮提示\n\n\n\n\nM3 decision-log\n\n\t\n\n保留\n\n\t\n\n登记 DEC-071\n\n\n\n\nM4 任务包\n\n\t\n\n保留\n\n\t\n\n登记任务并执行 ST-05 自检\n\n\n\n\n中级版 context_limit.mjs\n\n\t\n\n不改\n\n\t\n\n不属于当前轮次阈值管理机制\n\n\n\n\n中级版 tests/\n\n\t\n\n不改\n\n\t\n\n不引入不必要的代码修改\n\n\n\n\n历史交付记录\n\n\t\n\n不改\n\n\t\n\n保持历史事实和证据完整\n\n\n\n\nagent-kit 手册\n\n\t\n\n不改\n\n\t\n\n迁移时机继续由 L-018 统一定义\n\n补充一项检查：\n\n建议全仓搜索不要只检查 10+轮，还应检查：\n\n约10轮、10轮以上等同义表达。\n\n其他文档中是否存在独立的迁移时机规定。\n\n任务模板、提示词、检查脚本是否隐含旧阈值。\n\n避免只修改了定义点，却遗留其他地方的旧规则。\n\n二、累计4轮的口径\n\n建议 DEC-071 明确以下定义：\n\n规则\n\n\t\n\n定义\n\n\n\n\n计数对象\n\n\t\n\n用户发送的消息\n\n\n\n\n触发条件\n\n\t\n\n当前会话累计达到第4条用户消息\n\n\n\n\n不计入\n\n\t\n\nAI 回复、工具调用、系统消息\n\n\n\n\n迁移后\n\n\t\n\n新会话正式接棒后计数归零\n\n\n\n\n触发动作\n\n\t\n\n主动评估是否迁移\n\n\n\n\n是否强制迁移\n\n\t\n\n否\n\n这里有一个细节值得明确：\n\n4轮是评估触发点，不是强制迁移点。\n\n例如：\n\n第4轮：检查上下文容量、任务复杂度、未完成事项、证据链完整性。\n\n判断继续工作风险较低：允许继续。\n\n判断继续工作容易丢失信息或产生错误：启动迁移交接。\n\n建议采用以下规则文字：\n\n写作\n\n会话迁移评估阈值：\n\n当前会话累计达到4条用户消息时，主动评估是否需要迁移交接。计数仅包含用户消息，不包含 AI 回复及工具调用。\n\n迁移交接完成、新会话正式接棒后，计数归零，重新累计。\n\n达到4条消息仅触发主动评估，不代表必须迁移。应结合任务复杂度、上下文质量、未完成事项、证据链完整性及继续工作的风险决定是否迁移。\n\n如评估后决定暂不迁移，应记录理由；后续每增加2条用户消息重新评估一次，不得无限期忽略迁移风险。\n\n三、4轮是否过频？例外如何保留？\n\n我的判断：4轮适合作为检查频率，不适合作为强制迁移频率。\n\n原因：\n\n现在多项目并行，容易出现多个开发任务交叉。\n\n长会话中，关键约束、历史决策、GitPointer 可能逐渐被大量新信息稀释。\n\n之前出现过反复整改、上下文负担过重的问题，提前评估更稳妥。\n\n真正的迁移成本主要在交接质量，而不是启动一次评估。\n\n建议保留三类例外：\n\n临近完成： 任务已经进入最后验收阶段，迁移反而增加交接成本，可以完成当前验收。\n\n简单任务： 上下文清晰、任务边界明确、证据完整，可以继续。\n\n用户明确要求： 用户决定暂不迁移，尊重用户指令，但仍需提示风险。\n\n例外不能成为长期绕过机制。延期后每增加2条用户消息重新评估。\n\n四、实施和验收要求\n\n建议沿用现有流程，不扩大本次修改范围：\n\n登记 DEC-071。\n\n建立任务包，明确 M1～M4。\n\n执行 ST-05 自检。\n\n检查全仓旧阈值残留。\n\n检查历史记录不被改写。\n\n检查交接流程、GitPointer、安全停止、1200B限制均未受影响。\n\n提交完整40位 SHA 证据。\n\npush 前执行 check-push。\n\n尤其注意：不能为了这次小调整顺带修改中级版代码，避免扩大变更面。\n\n五、提交前的审批边界\n方案复审通过\n\n当前可以进行 DEC-071 草案、任务包准备和 ST-05 自检。\n\n但按照你的要求：\n\ncommit 前必须取得用户针对 DEC-071 的明确文字批准。\n\n现在还不是提交授权。\n\n我的最终意见是：共识达成，按上述3处补充口径后实施。\n\n这次改动不追求复杂化，核心是让 AIEO Basic 更早发现会话风险，同时保留合理的人工判断空间。",
+      "text_sha256": "bf4bbc1d305870a6712881cbd3e5957a33aaf0cd1b0e615bb45e09cda6f6bb04",
+      "size_bytes": 4495,
+      "assistant_uuid": "4cc57926-a6a5-4319-82a8-9bcf083562bc"
+    }
+  ]
+}

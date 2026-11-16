@@ -1,0 +1,14 @@
+﻿FILES=33 TOTAL=13
+docs\AI-DEV-LESSONS.md:292 pat='轮换优先级' :: **轮换优先级：**
+docs\AI-DEV-LESSONS.md:297 pat='消息数' :: 4. 消息数量：只作提醒，不作硬依据；
+docs\AI-DEV-LESSONS.md:531 pat='条 user 消息' :: 6. **会话上下文上限（CONTEXT_LIMIT_STOP）处置：** 自动化停止未发送=无重发风险；按手册 §5 迁移路径：旧会话转只读归档→新建自包含迁移简报（≤1200B：接棒声明+任务+主证据路径/SHA256/被测 commit+读取路径+复验项+边界）→`--new-session`
+docs\phase1\agent-contract.md:157 pat='消息数' :: | R1 | 消息数不能反映上下文负载，轮换条件需分级 | review-protocol.md §5 |
+docs\phase1\agent-contract.md:167 pat='轮换优先级' :: | S2 | 轮换优先级、延迟仅辅助信号 | review-protocol.md §5 |
+docs\phase1\decision-log.md:53 pat='消息数' :: - **决策内容：** ①轮换优先级 = 阶段边界（强制）> 上下文容量/完整性（70-80%、压缩迹象、关键约束丢失）> 任务边界 > 消息数（仅提醒）> 响应延迟（辅助）；②每次轮换前生成《会话交接包》并提交仓库，区分事实/决策/待确认；③审查启动简报模板自包含；④审查三态 PASS/REWOR
+docs\phase1\decision-log.md:675 pat='条 user 消息' :: ### DEC-084 会话迁移评估阈值调整：约 10 轮 → 累计 4 条 user 消息（2026-11-16，用户指令+ChatGPT 复审共识）
+docs\phase1\decision-log.md:679 pat='条 user 消息' :: - **裁定（规则变更，取代旧阈值）：** 会话迁移评估阈值由"实测约 10+ 轮 user 消息即评估迁移时机"（L-018 第 6 条旧文）收紧为 **累计达到 4 条 user 消息即主动评估是否迁移交接**。口径定稿（复审共识）：①计数仅含 user 消息（不含 AI 回复/工具调用）；②新
+docs\phase1\decision-log.md:680 pat='条 user 消息' :: - **落点：** M1=`docs/AI-DEV-LESSONS.md` L-018 第 6 条改写（规则唯一定义点）；M2=`AGENTS.md` 第一动作映射行固化"累计达 4 条 user 消息"；M4=任务包 `basic/tasks/b-20261116-session-migrate-
+docs\phase1\decision-log.md:681 pat='迁移时机' :: - **不改项（复审确认）：** 1200 UTF-8 字节单条限制/GitPointer 交接契约/CONTEXT_LIMIT_STOP 安全停止语义/交接四项判定零改动；中级版 `context_limit.mjs`/`session_store.mjs` 与 tests 不涉及轮次阈值，不改；
+docs\phase1\review-protocol.md:76 pat='消息数' :: ### 5.1 触发条件（按优先级，消息数不作硬依据）
+docs\phase1\review-protocol.md:83 pat='消息数' :: | 4（仅提醒） | 消息数量 | 不反映上下文负载，仅作提醒阈值，不作硬依据 |
+AGENTS.md:20 pat='条 user 消息' :: | 审查会话上下文上限 | **主动迁移**：累计达 **4 条 user 消息**即主动评估迁移（评估非强制，暂不迁须记录理由并每增 2 条重评；不等 CONTEXT_LIMIT_STOP 坏死）；迁移简报 ≤1200B 自包含，`--new-session` 首派即活 | L-018 第 6 条

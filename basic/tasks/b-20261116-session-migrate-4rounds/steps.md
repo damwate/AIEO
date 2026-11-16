@@ -1,0 +1,40 @@
+# steps：b-20261116-session-migrate-4rounds（会话迁移评估阈值 约10轮→4轮）
+
+- 拍板记录：用户 2026-11-16 任务指令（requirement.md 全文）+ 方案复审共识（ChatGPT"共识达成，按 3 处补充口径后实施"，reply sha256=bf4bbc1d305870a6712881cbd3e5957a33aaf0cd1b0e615bb45e09cda6f6bb04，现场 dispatch-2026-11-16T11-59-52，新会话 6afaf06f-f9b4-83ee-b6e8-c2f789d1dc4c）+ 用户实施批准（"可以"）；按 L-020 节点自主推进授权执行
+- 冻结方案要点：
+  - 规则唯一定义点=docs/AI-DEV-LESSONS.md L-018 第 6 条；AGENTS.md 映射行同步固化"累计达 4 轮"；decision-log 登记 DEC-084（顺延编号，不覆盖既有 DEC-071）
+  - 口径（共识定稿）：计数仅含 user 消息（不含 AI 回复/工具调用）；新会话正式接棒后归零；第 4 条 user 消息=主动评估触发点，非强制迁移点；暂不迁移须记录理由，此后每增 2 条 user 消息重评一次
+  - 三类例外：临近完成验收/简单任务上下文清晰/用户明确要求暂不迁移——例外不长期绕过，延期后按 2 条重评
+  - 不改动：1200 UTF-8 字节限制/GitPointer 交接契约/CONTEXT_LIMIT_STOP 安全停止语义/交接四项判定/中级版代码与测试/历史任务包记录/agent-kit 手册
+  - 仅修改必需文件：docs/AI-DEV-LESSONS.md、AGENTS.md、docs/phase1/decision-log.md、本任务包三件套
+
+## S1 规则修改（M1~M3）
+
+- ①本步骤目标：L-018 第 6 条阈值文字改为 4 轮口径（含补充口径规则文字）；AGENTS.md 映射行固化"累计达 4 轮"；decision-log 登记 DEC-084
+- ②修改文件：docs/AI-DEV-LESSONS.md、AGENTS.md、docs/phase1/decision-log.md、本任务包三件套
+- ③修改内容：M1=L-018 第 6 条"主动迁移"段改写（4 轮口径+评估非强制+归零+重评+三类例外）；M2=AGENTS.md"审查会话上下文上限"映射行补"累计达 4 轮"；M3=decision-log 追加 DEC-084（用户指令原文/共识依据 reply sha256/生效范围/旧阈值废止）。既有其他条款零删改；历史记录不改写。**被测 commit 完整 SHA 见申报记录（ST-01 绑定申报）**
+- ④执行结果：M1 完成（L-018 第 6 条"主动迁移"段改写：4 条 user 消息阈值+评估非强制+接棒归零+每增 2 条重评+三类例外；旧"实测约 10+ 轮"表述废止）；M2 完成（AGENTS.md 映射行固化"累计达 4 条 user 消息"）；M3 完成（DEC-084 登记，含编号勘误声明）；既有其他条款零删改
+- ⑤测试结果：（S2 ST-05 实际输出回填）
+- ⑥验收证据引用：（随验收派单回填）
+
+## S2 自检与残留排查（ST-05）
+
+- ①本步骤目标：ST-05 检查器自检无 FAIL 缺口；全仓旧阈值残留排查（"10+ 轮/约 10 轮/10 轮以上"同义表达+其他文档独立迁移时机规定+模板/提示词/检查脚本）；GitPointer/安全停止/1200B 零改动核对
+- ②修改文件：本任务包 acceptance/（自检与排查输出落库）
+- ③修改内容：`python -I basic/tool/check_taskpack.py basic/tasks/b-20261116-session-migrate-4rounds` 实际输出落库；残留排查命中清单+逐项处置（改/历史保留）落库
+- ④执行结果：ST-05 自检 IN_PROGRESS（①②PASS、③FAIL=仅 S1⑥ 验收证据引用未回填[待 S3 验收派单后闭环，开发期既定语义，非规则内容缺口]、④⑤⑥N/A、Overall FAIL、退出码 1，无规则内容缺口）；残留排查两轮：①旧阈值同义表达全仓 sweep（8 种模式，命中 25 处：LIVE 7 处均为变更记录/证据语境引用旧值并明示废止——AI-DEV-LESSONS.md:531 变更注记、DEC-084 三处、简报归档三处；其余 18 处均在历史区如实保留）；②独立迁移时机规定排查（33 文件：AI-DEV-LESSONS 轮换优先级条款、review-protocol §5.1、agent-contract 均"消息数不作硬依据"无数值阈值，属执行者主会话/中级版协议范畴，与审查会话 4 轮规则无冲突；DEC-008 为历史决策记录不改）；零改动核对=git diff 仅 AGENTS.md/AI-DEV-LESSONS.md/decision-log.md 三文件+本任务包新增，WORKFLOW/C1-C8/GitPointer/中级版代码/1200B 相关文本零触碰
+- ⑤测试结果：命令与完整输出落库——`python -I basic/tool/check_taskpack.py basic/tasks/b-20261116-session-migrate-4rounds`（acceptance/st05-inprogress.txt，Overall FAIL 退出码 1=③验收证据未回填的开发期既定语义）；`python -I acceptance/residual-sweep.py`（acceptance/residual-sweep.txt）；`python -X utf8 -I acceptance/rotation-sweep.py`（acceptance/rotation-sweep.txt）
+- ⑥验收证据引用：（随验收派单回填）
+
+## S3 独立验收与交付
+
+- ①本步骤目标：向用户报告 diff 待明文批准 → commit → push（check-push）→ ChatGPT 独立验收派单（被测对象绑定完整 40 位 SHA，禁 HEAD/短 SHA）→ delivery.md 七要素
+- ②修改文件：本任务包 delivery.md、steps.md、task-brief.md、acceptance/
+- ③修改内容：交付登记与验收证据按七要素闭环
+- ④执行结果：（随实施回填）
+- ⑤测试结果：（实际输出回填）
+- ⑥验收证据引用：（随验收派单回填）
+
+## 返工记录表（首次 REJECT 时建表；按"同一问题"计数）
+
+（暂无）
