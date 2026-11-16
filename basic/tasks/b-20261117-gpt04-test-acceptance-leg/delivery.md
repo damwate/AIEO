@@ -43,7 +43,7 @@
 | 19f7eea8e7bb3c5f6cf692cbe9fd72bd8f1ec2e0 | **问题16 整改（被测对象）**：P1-1 容差真落地+test_31+P2-1 归档+勘误+实战证据 |
 | ed9d879c78d410741747bfaf528cca058388cc9a | 问题16 SHA 回填（终态） |
 
-**C1 绑定核验 PASS**（baseline=769fcec1f632db47aeef4dab0532cdd011468d95→target=ed9d879c78d410741747bfaf528cca058388cc9a，线性链 8 commits，R2/R4 PASS，acceptance/binding-report.json）。**验收链：** 真实 G04 实战 REWORK（会话 6afb63b2，reply 原始 2588B，规整稿 sha256=da7aaccb65744eb3bc6295f1bb413cae296d4b08fb5f68bc0a92e99a352302e4）→问题16 整改（19f7eea8）→G04-R 限定复核（本任务 S4 派单，结论见任务包登记）。
+**C1 绑定核验 PASS**（baseline=769fcec1f632db47aeef4dab0532cdd011468d95→target=交付终态 commit，线性链核验 R2/R4 PASS，acceptance/binding-report.json 指向固定 SHA）。**验收链：** 真实 G04 实战 REWORK（会话 6afb63b2，reply 原始 2588B，规整稿 sha256=da7aaccb65744eb3bc6295f1bb413cae296d4b08fb5f68bc0a92e99a352302e4）→问题16 整改（19f7eea8）→**G04-R1 限定复核 PASS_WITH_CONSTRAINTS**（reply sha256=ca89d0cf8f22ecc9…，dispatch-2026-11-16T20-26-14/recoll 七查全过；核心实现+问题16 三项整改全过；四项交付补齐整改 G04-R1-01~04 全落实：89/89 真跑归档 test-run-combined-89.txt/delivery 完整回填/steps 收口/绑定报告指向固定 SHA）→G04-R2 限定复核（只核对文档/日志/C1 绑定/最终 SHA——审查方明示不重开架构裁定不重跑真实会话）。
 
 ## 6. 未解决问题
 

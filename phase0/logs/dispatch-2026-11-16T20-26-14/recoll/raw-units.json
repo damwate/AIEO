@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-16T20:34:21.014Z",
+  "user_unit_key": "fallback-turn-3:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-3:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "23a45fd5-53cd-40ce-8566-cbeb392e65e9",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-3:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "b5462c9a957970536b6c0b10b2ee88489545e31c3eda30cd9835af644f5a5384",
+          "ca89d0cf8f22ecc93a59e341a7a6c47308e6522201ab50bff96e24b53480cbac"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "b5462c9a957970536b6c0b10b2ee88489545e31c3eda30cd9835af644f5a5384",
+          "ca89d0cf8f22ecc93a59e341a7a6c47308e6522201ab50bff96e24b53480cbac"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-3:0:user",
+      "fallback-turn-3:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-3:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nG04-R1 限定复核结论\nPASS_WITH_CONSTRAINTS\n\n核心实现通过，问题16三项整改均通过；但本次指定 commit 尚未形成完整交付闭环。 剩余问题集中在交付记录和测试证据绑定，不要求重做已经完成的零 mock 实战，也不重开 Gate2 已通过的裁定。\n\n被测对象：ed9d879c78d410741747bfaf528cca058388cc9a，damwate/AIEO，按完整 SHA 实读。\n\n1. 范围逐项核验\n\n核验项\n\n\t\n\n结论\n\n\t\n\n依据\n\n\n\n\nA-1 七端点白名单\n\n\t\n\nPASS\n\n\t\n\ntest_acceptance_leg.py 的 GPT04_WHITELIST 与 Gate2 定稿一致；含 reports 查询参数路径\n\n\n\n\n15 组合矩阵\n\n\t\n\nPASS\n\n\t\n\n仅三种组合允许登记；其余 PASS/REWORK 组合 fail-closed；BLOCKED 单独走留证路线\n\n\n\n\nA-3 恢复机制\n\n\t\n\nPASS\n\n\t\n\n发送意图无确认停止；已发送未采集补采原会话；duplicate 先 GET 五字段核实；报告与状态不一致停止\n\n\n\n\n登记路线\n\n\t\n\nPASS\n\n\t\n\nPASS/REWORK 使用 /api/v1/reports/test；BLOCKED 使用 artifacts+messages，M1 不推进\n\n\n\n\nM1-M4 零修改\n\n\t\n\nPASS\n\n\t\n\n从任务开工登记 commit beca0970… 对比至被测 SHA，未见 app/ 修改\n\n\n\n\nGPT-02/03 两腿零修改\n\n\t\n\nPASS\n\n\t\n\nreview_leg.py、arch_review_leg.py 均未出现在本任务差异文件中\n\n\n\n\n冻结契约零修改\n\n\t\n\nPASS\n\n\t\n\n仅新增 test-acceptance-review.schema.json，没有修改既有契约\n\n\n\n\nRunKeyLock\n\n\t\n\nPASS\n\n\t\n\nGPT-04 自身实现跨进程锁，覆盖 run/resume/attach-reply\n\n补充：test_review_leg.py 有修改，用于修复测试替身派单目录同秒碰撞。这是测试基建修改，不是 GPT-03 真实腿代码修改；但交付记录应如实列出，不能把它概括成“所有 GPT-03 相关文件零修改”。\n\n2. 问题16三项整改\n三项全部通过\n\n问题\n\n\t\n\n结论\n\n\t\n\n核验依据\n\n\n\n\nP1-1：mtime 容差申报未落实\n\n\t\n\n通过\n\n\t\n\n被测代码现为 st_mtime >= since - 2.0，并保留 request.txt 与本轮 brief 字节严格一致的校验\n\n\n\n\nP1-2：零 mock 实战未完成\n\n\t\n\n通过\n\n\t\n\n真实派单、真实回复、契约拦截、人工规整、原键登记及 M1 REWORK 终态均有现场记录\n\n\n\n\nP2-1：十轮声明缺少独立档案\n\n\t\n\n通过\n\n\t\n\n五份独立 verify-1~5.log 均有 88/88 结束记录；步骤说明已改为五轮归档口径\n\nP1-1：整改真实落地\n\n源码 _find_dispatch_dir() 第 464–484 行：\n\n时间窗口放宽 2 秒，针对 Windows mtime 负偏。\n\n仍要求 request.txt 与本轮简报字节完全一致。\n\n最终按候选目录 mtime 选取，不是单纯放宽后取任意目录。\n\ntest_31_mtime_tolerance_deterministic 明确构造了两种情况：\n\n回拨 1 秒：必须能定位。\n\n回拨 3 秒：必须拒绝。\n\n这不是仅修改注释或提交说明，代码和确定性测试均已落地。\n\nP1-2：真实实战证据成立\n\n实战现场 acceptance/live-run/ 有完整链条：\n\n真实会话 6afb63b2-eba8-83ec-8ba9-31e20a46e165，派单目录 dispatch-2026-11-16T20-11-44。\n\n发送锚点与采集到的用户单元键一致。\n\nGPT-04 原始回复中 findings 为结构化对象，Ajv 按冻结契约 string[] 要求真实拒绝。\n\n人工规整后 normalization-audit.json 记录 loss=NONE。\n\n同一轮回复经人工 attach 登记，POST /reports/test 成功。\n\ntest-acceptance-leg-report.json 记录 result=REWORK、final_status=REWORK。\n\n这里最重要的是：实战中出现了真正的契约失败，系统没有绕过校验，而是保留原始证据、走人工规整和同键登记。 这条证据比单纯的成功模拟更有价值。\n\nP2-1：五轮归档成立，但有一个新证据缺口\n\n五份 verify-1.log 至 verify-5.log 都能核对到 Ran 88 tests、OK。因此原来“十轮无独立记录”的问题已经通过调整声明口径解决。\n\n但这里有一个独立的交付证据问题：\n\ntest_test_acceptance_leg.py 现在包含 test_31，本腿应为 31 项。\n\n三腿合跑对应总数应为 89 项。\n\n当前五份 verify 日志以及 test-run-combined-r2/r3.txt 仍然记载 88/88。\n\n19f7eea8… 的提交说明声称整改后已完成 31/31 和 89/89，但被测 commit 中没有对应的 89/89 执行日志。\n\n因此：问题16 的 P2-1 通过；但 89/89 的新声明尚未获得当前 SHA 内的独立日志支撑。 不能把五轮 88/88 记录当作 89/89 证据。\n\n3. 尚未通过的交付项\n需要补齐交付记录\nD1：delivery.md 仍是占位内容\n\n被测 SHA 的 delivery.md 只有七要素填写提示，没有实际内容：\n\n原始需求\n\n最终实现内容\n\n修改文件\n\n测试结果\n\nGit commit\n\n未解决问题\n\n后续建议\n\nD2：步骤状态没有收口\n\nsteps.md 仍显示：\n\nS3：IN_PROGRESS\n\nS4：PLANNED\n\n虽然问题16表格已经回填整改 commit，但没有把完整实战和复核证据转化为正式交付状态。\n\nD3：C1 绑定证据不在被测 SHA\n\n被测 SHA 中未见 acceptance/binding-report.json。因此本轮不能仅凭交付说明中的 C1 声明，认定绑定报告已经进入该固定提交。\n\n这项不要求重做实战，只需在后续交付提交中补充绑定报告，并确认：\n\nbaseline 为 769fcec1f632db47aeef4dab0532cdd011468d95\n\ntarget 为 ed9d879c78d410741747bfaf528cca058388cc9a\n\n绑定报告明确指向本次固定目标，而不是后续移动的 main。\n\n4. 剩余整改清单\n\n只需要补交付，不重做零 mock 实战。\n\n编号\n\n\t\n\n要求\n\n\t\n\n处理方式\n\n\n\n\nG04-R1-01\n\n\t\n\n89/89 证据\n\n\t\n\n若已有真实执行记录，归档原始日志；若没有，只补跑测试，不重做实战\n\n\n\n\nG04-R1-02\n\n\t\n\ndelivery 七要素\n\n\t\n\n完整回填，明确列出 test_review_leg.py 的测试辅助修改\n\n\n\n\nG04-R1-03\n\n\t\n\nS3/S4 状态收口\n\n\t\n\n依据现有证据回填步骤状态和最终结果\n\n\n\n\nG04-R1-04\n\n\t\n\nC1 绑定报告\n\n\t\n\n在交付提交中补齐并绑定固定 SHA\n\n不要求修改 test_acceptance_leg.py 的业务实现，不要求重新派单 GPT-04，也不要求重做问题16的实战链。\n\n5. 最终裁定\n\nPASS_WITH_CONSTRAINTS，不是 REJECT。\n\nGate2 立项与开工授权：保持有效，不重开。\n\nGPT-04 核心实现：通过。\n\n问题16 P1-1、P1-2、P2-1：逐项全部通过。\n\nM1-M4、既有冻结契约、GPT-02/03 真实腿：零修改边界通过。\n\n最终任务交付：待补齐 D1–D3 及 89/89 证据。\n\n当前不建议把任务标为 COMPLETED / Overall PASS。 补齐上述交付材料后，可以做一次限定复核，只核对文档、日志、C1 绑定和最终 SHA；无需再次检查已通过的架构裁定，也无需重跑真实 GPT-04 会话。\n\n这轮真正值得保留的经验是：问题16不是靠改提交说明解决的，而是通过真实 GPT-04 指认、代码核对、确定性回归和实战链证据闭环解决的。后续交付也应坚持同样的证据纪律。",
+      "text_sha256": "ca89d0cf8f22ecc93a59e341a7a6c47308e6522201ab50bff96e24b53480cbac",
+      "size_bytes": 6749,
+      "assistant_uuid": "23a45fd5-53cd-40ce-8566-cbeb392e65e9"
+    }
+  ]
+}

@@ -1,0 +1,6 @@
+【测试验收请求·GPT-04】[GPT04-R1|921001|T-P1-001]
+任务T-P1-001（GPT-04 test acceptance leg minimal）。验收标准：['验收标准全文=锚定材料 task-brief.md 验收目标节逐项核验', '结论经 POST /reports/test 原子登记推进（PASS→ACCEPTED/REWORK→REWORK）', '三腿合跑 88 用例回归全绿（本腿 30 新增）']
+范围：['phase1/tools/test_acceptance_leg.py']；无未完成依赖。
+执行事实：execution=EXEC-001 commit=5a27f47854e6b10c50088416dba9b2c4da1b8178 execution_result=EXECUTED_PASS（证据=ART-TEST-001+3件）。
+读仓库 github.com/damwate/AIEO 固定commit=5a27f47854e6b10c50088416dba9b2c4da1b8178 文件：basic/tasks/b-20261117-gpt04-test-acceptance-leg/task-brief.md（验收标准/材料全文在材料，逐项审：标准覆盖/缺失测试/异常场景/回归风险）。
+回复仅一个```json对象：{"result":"PASS|REWORK|BLOCKED","execution_result_observed":"EXECUTED_PASS|EXECUTED_FAIL|NOT_EXECUTED|CLAIMED_ONLY|BLOCKED","summary":"<一句话>","findings":[],"required_boundaries":[]}。测试执行结果≠验收结论，测试通过仍可因验收标准不满足给REWORK。

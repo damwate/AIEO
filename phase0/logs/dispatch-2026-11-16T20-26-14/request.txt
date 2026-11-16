@@ -1,0 +1,7 @@
+[G04-R1|限定复核] 被测=ed9d879c78d410741747bfaf528cca058388cc9a（完整SHA实读），damwate/AIEO main。入口：basic/tasks/b-20261117-gpt04-test-acceptance-leg/delivery.md（七要素）+steps.md（含返工表问题16）。
+
+【背景】charter v0.3 Gate2开工授权（DEC-090）。零mock实战全链完成：真实派单会话6afb63b2（dispatch-2026-11-16T20-11-44），真实GPT-04结论REWORK三指认（P1-1容差申报未落实/P1-2实战未完成/P2-1十轮缺档案）对账全属实；A3契约fail-closed真拦截（findings结构化对象）→A6规整loss=NONE→/reports/test登记→M1终态REWORK。问题16整改=19f7eea8（容差真落地+test_31确定性回归+五轮记录归档+steps勘误）。
+
+【范围】①实现与charter v0.3一致性（A-1白名单7端点/15组合矩阵/A-3 12行/登记路线）②M1-M4与冻结契约零修改、两腿零修改③31用例+三腿合跑89/89证据④实战链证据（ledger 274fa007…/规整审计/C1绑定769fcec1→target）⑤问题16整改闭环。
+
+【输出】三态+逐项依据；问题16三项逐项判过/不通过；不重开已PASS的Gate裁定，不要求重做实战。

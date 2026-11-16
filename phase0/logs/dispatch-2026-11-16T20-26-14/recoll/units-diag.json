@@ -1,0 +1,14 @@
+[
+  {
+    "key": "fallback-turn-3:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[G04-R1|限定复核] 被测=ed9d879c78d410741747bfaf528cca058388cc9a（完整SHA实读），damwate/AIEO "
+  },
+  {
+    "key": "fallback-turn-3:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nG04-R1 限定复核结论\nPASS_WITH_CONSTRAINTS\n\n核心实现通过，问题16三项整改均通过；但本次指定 commit "
+  }
+]

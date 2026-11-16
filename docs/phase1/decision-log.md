@@ -735,3 +735,13 @@
 - **实施任务包：** `basic/tasks/b-20261117-gpt04-test-acceptance-leg/`（按 Basic 工作流登记，ST-05 自检后开工）。
 - **审批边界：** 各 commit 按 L-020 自主推进授权执行，push 走 toolkit/check-push.mjs。
 - **关联：** DEC-089（授权机制+会话迁移）、DEC-088（GPT-02 先例）、DEC-026、GPT-03 charter v1.0（DEC-057）、L-018（两轮补采）。
+
+### DEC-091 GPT-04 测试验收真实腿交付：零 mock 实战真实 REWORK→问题16 整改→G04-R1 限定复核（2026-11-17，L-020 节点自主推进）
+
+- **实施与测试：** 任务包 b-20261117-gpt04-test-acceptance-leg（开工登记 beca0970）；test_acceptance_leg.py（同构复制 D2 终裁，/reports/test 原生登记路线，15 组合矩阵，A-3 定稿 12 行恢复矩阵，RunKeyLock）+test-acceptance-review.schema.json 落位（162426bb）+31 用例矩阵；三腿合跑 89/89 OK（test-run-combined-89.txt 真跑归档）。
+- **偶发排查（F-003 真执行暴露）：** ①测试替身派单目录同秒跨实例碰撞互覆→test_review_leg.py 全局唯一序号修复（5a27f47，GPT-02 测试适配先例）；②本腿 mtime 严格过滤时钟负偏隐患——**容差修复曾申报落实而未实际入码（申报-代码不符）**。
+- **零 mock 实战全链（T-P1-001/EXEC-001@5a27f47，真实 M1 8002 独立 DB）：** F-003 真实执行 EXECUTED_PASS（30 用例 worktree 真跑）→真实派单 dispatch-2026-11-16T20-11-44（真实 GPT-04 新会话 6afb63b2-eba8-83ec-8ba9-31e20a46e165，reply 2588B）→**A3 冻结契约校验 fail-closed 真拦截**（真实回复 findings=结构化对象 vs 契约 string[]，raw 保留）→A6 人工保真规整 loss=NONE→attach 经 POST /api/v1/reports/test 登记→**M1 终态 REWORK**。真实结论三条指认（P1-1 mtime 容差申报未落实代码/P1-2 零 mock 当时未完成/P2-1 十轮声明缺档案）**经对账全部属实**——测试验收腿"真实拦截验收风险"功能验证成立。问题16 整改 commit=19f7eea8e7bb3c5f6cf692cbe9fd72bd8f1ec2e0（P1-1 容差真落地+test_31 确定性回归+P2-1 verify-1~5.log 五轮独立记录归档+steps 勘误；31/31+89/89 实测）。
+- **G04-R1 限定复核 PASS_WITH_CONSTRAINTS**（reply sha256=ca89d0cf8f22ecc9…，dispatch-2026-11-16T20-26-14/recoll 归属校验型补采七查全过；首派被测 ed9d879c 早于交付登记 commit 致 D1-D3 交付闭环缺口，非实现缺陷）：核心实现七项全 PASS+M1-M4/冻结契约/两腿零修改+问题16 三项逐项全过；四项交付补齐整改 G04-R1-01~04 全落实（89/89 真跑归档/delivery 完整回填/steps 收口/绑定报告指向固定 SHA）。G04-R2 限定复核范围=只核对文档/日志/C1 绑定/最终 SHA（审查方明示不重开架构裁定、不重跑真实会话）。
+- **遗留待办（移交）：** ①test-acceptance-review findings 结构化演进（与 DEC-088 遗留①同族，H2 流程）②review_leg/arch_review_leg 同型 mtime 过滤隐患+并发锁缺口（DEC-088 遗留②同族）③gpt_dispatch --new-session 指针覆盖缺陷（本实战再次复现，备份-恢复流程固化）④G1-02 契约-实现 duplicate 描述不一致（契约演进流程）。
+- **审批边界：** 各 commit 按 L-020 自主推进授权执行，push 走 toolkit/check-push.mjs；G04-R2 通过前任务保持验收中态，PASS≠合并授权（DEC-010）。
+- **关联：** DEC-089/090（授权机制+charter）、DEC-088（GPT-02 先例+遗留）、L-018（三轮补采）、问题16（steps.md 返工表）。
