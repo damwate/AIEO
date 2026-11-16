@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aieo.local/contracts/v1.0/test-acceptance-review.schema.json",
+  "title": "AIEO test acceptance review report (GPT-04 leg)",
+  "description": "冻结契约 v1.0（b-20261117-gpt04-test-acceptance-leg 立项 Gate2 开工授权后落位，DEC-090；字段依据=GPT04-TEST-ACCEPTANCE-LEG-CHARTER-DRAFT.md v0.3 附录 A-2 定稿）。结论权威登记=M1 原生端点 POST /api/v1/reports/test（TestReportIn，reports.py 绑定 TEST_ACCEPTANCE 态；PASS 须绑 execution_result=EXECUTED_PASS）；本契约为 GPT-04 网页回复的机器校验契约（Ajv 2020），登记映射：result→TestReportIn.result；execution_result（登记值）由腿从 F-003 测试证据事实读入，本契约 execution_result_observed 仅为 GPT-04 复述/交叉核对字段（G2-04：权威值以 F-003 证据为准，两者不一致即 fail-closed）。15 组合矩阵见 charter §4 定稿。修改本文件须走契约版本演进流程，禁止原地改语义（H2）。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "task_id",
+    "review_round_id",
+    "reviewer_agent_id",
+    "engine_agent_id",
+    "commit_sha",
+    "execution_id",
+    "execution_result_observed",
+    "result",
+    "summary"
+  ],
+  "properties": {
+    "contract_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+$"
+    },
+    "task_id": {
+      "type": "string",
+      "pattern": "^T-(P[0-9]+-)?[0-9]{3,}$"
+    },
+    "review_round_id": {
+      "type": "string",
+      "maxLength": 64,
+      "description": "测试验收轮标识；幂等键=<run键>+test-acceptance-round-N 的结构化落位"
+    },
+    "reviewer_agent_id": {
+      "type": "string",
+      "pattern": "^GPT-04$"
+    },
+    "engine_agent_id": {
+      "type": "string",
+      "pattern": "^ENGINE-03$"
+    },
+    "commit_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$",
+      "description": "被验收的测试对象 commit（与 F-003 测试报告 commit_sha 一致；完整 40 位禁短 SHA）"
+    },
+    "execution_id": {
+      "type": "string",
+      "pattern": "^EXEC-[0-9]{3,}$"
+    },
+    "execution_result_observed": {
+      "enum": [
+        "EXECUTED_PASS",
+        "EXECUTED_FAIL",
+        "NOT_EXECUTED",
+        "CLAIMED_ONLY",
+        "BLOCKED"
+      ],
+      "description": "GPT-04 对证据的复述/交叉核对判定（五值枚举与 TestReportIn 同源）；登记用的权威 execution_result 由腿从 F-003 证据事实读入，本字段不作为登记依据（G2-04）"
+    },
+    "result": {
+      "enum": [
+        "PASS",
+        "REWORK",
+        "BLOCKED"
+      ]
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "具体发现（验收标准覆盖缺口/缺失测试/异常场景/回归风险）；PASS 时可为空数组"
+    },
+    "required_boundaries": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "验收要求维持的边界条件"
+    }
+  }
+}
