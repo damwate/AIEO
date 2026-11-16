@@ -1,0 +1,14 @@
+[
+  {
+    "key": "fallback-turn-4:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【G02-R2 限定复核】b-20261116-gpt02-arch-review-leg\n核验对象 commit=9996a992508d67132bab42"
+  },
+  {
+    "key": "fallback-turn-4:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nG02-R2 限定复核结论\n\nPASS 三项整改达到本轮验收要求，可以通过。\n\n核验基准：9996a992508d67132bab428d"
+  }
+]

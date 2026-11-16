@@ -1,0 +1,10 @@
+【G02-R2 限定复核】b-20261116-gpt02-arch-review-leg
+核验对象 commit=9996a992508d67132bab428d0ffe90ecbae58cc8（分支 review/b-20261116-workspace-spec，按 SHA 读取）
+G02-R1 REJECT 三项已修（不重写不扩范围）：
+①P1-1：发送锚点存在时 located_key 必须非空串且严格 == sent_key，None/空串/非字符串/不一致全 fail-closed；test_17b 三形态负例
+②P1-2：多重证据链恢复（账本 A3_CONTRACT_VALID 锚定+report.json 绑定+M1 读回）全一致才补账本续推；test_21 崩溃注入→恢复→推进→派单计数不变
+③测试强度：test_18b 真跨进程（子进程持锁→主进程拒绝→进程死 OS 释放后取得）；test_20b 409 分支实测（指认→通过；不指认+终态不符→拒绝）
+④账本引用：acceptance/live-ledger.jsonl sha256=7190e52dd4dd4cb88a4c40996470f9fbe3bfb3c2363848b3fe2902747a30c703、live-report.json sha256=c953152c41a3b9278ba7274418f3b616c342b9f5d07db1036023690950571703
+合跑 58/58 OK；错发事故（指针被实战覆盖→误发一次）已恢复+留痕
+会话第 5 条 user 消息：例外①暂不迁移
+请核：三项修复+测试强度+账本引用；结论 PASS/REJECT

@@ -707,3 +707,13 @@
 - **开工即办事项（charter A-2 预置）：** 契约草案 `docs/phase1/arch-review-report.schema.draft.json` 落位 `contracts/v1.0/arch-review-report.schema.json` 冻结（H2 纪律：新增文件，不修改既有冻结契约）；实施任务按 Basic 工作流登记任务包（basic/tasks/b-20261116-gpt02-arch-review-leg/）。
 - **授权边界：** 开工授权=实施+验收派单链；PASS≠合并授权（DEC-010）、不改冻结契约文本（H2）、M1-M4 代码零修改（charter §9）。
 - **关联：** DEC-067（Gate1+Gate2 闭环）、DEC-026（路线）、charter v0.3（77ff794）、GPT-03 先例（DEC-058~062）。
+
+### DEC-088 GPT-02 架构审核真实腿交付闭环：G02-R1 REJECT→R2 整改→G02-R2 PASS（2026-11-17，节点自主推进）
+
+- **验收链：** G02-R1 限定复核 REJECT（reply sha256=1aa4f4537da93c222308e6bd556b9d6bd7785675e9832481ffcf55b0f0ebeecc，dispatch-2026-11-16T17-06-48 发送双验通过后采集 fail-closed→recoll_g02r1.mjs 归属校验型补采七查全过，reply 6742B）：A-1/A-2 一致性与问题14 P1-03 整改 PASS，指认 P1-1 归属校验空值绕过（located_key="" 空串真值判断跳过比较）、P1-2 A-3 崩溃窗口（A4_MESSAGE 已落账本而 A4_RESULT_RECORDED 缺失时无法自动续推）、测试强度不足（非真跨进程/未进 409 分支/缺空值负例）；R2 整改（commit 9996a992508d67132bab428d0ffe90ecbae58cc8：空值绕过封堵+多重证据恢复路径 _recover_result_from_evidence+test_17b/18b/20b/21）→**G02-R2 PASS**（reply sha256=7aa1f845817ca43725ad35ce6b8d2b2c07f8a6603a71adde46a519069b16632b，dispatch-2026-11-16T17-25-55/recoll 补采七查全过，reply 4036B：三项整改全过+账本核对一致+边界维持）。
+- **零 mock 实战（任务核心价值实证）：** 真实 M1 实例 8001（独立 DB）+真实派单（dispatch-2026-11-16T16-32-20，简报 918B，材料锚定 d0eb87ecb1d00f190d9d2129ae78db250837b35c）→GPT-02 真实结论 REWORK（四条 P1 实质缺陷=问题14：归属校验未强制断言/run_key 无并发锁/artifact 崩溃窗口/事件 409 映射缺失）→契约校验 fail-closed 真拦截（findings 格式错位）→A6 人工保真规整 attach→REWORK 推进。架构审核腿"真实拦截架构风险"功能验证成立；四条 P1 已全修（77318da）。
+- **错发事故（如实登记）：** 实战 run 的 --new-session 覆盖 gpt-reviewer-session.json→R1 简报误发实战会话一次（dispatch-2026-11-16T17-03-07，留痕 wrong-session-record.json）→恢复指针后向审查主会话正式派发；审查方确认不改判结论；机制缺陷移交派单工具维护任务。
+- **任务终态：** b-20261116-gpt02-arch-review-leg=完成（最终结果 PASS）；ST-05 COMPLETED 态 Overall PASS exit=0；双矩阵合跑 58/58 OK；C1 绑定核验 PASS（baseline 5b2cc461…→target 77318daba69…）。被测对象=77318daba69eb9065ccf36f0b02d23f74e7bb005（问题14 整改 commit；后续 R2 整改 9996a99… 为其增量）。
+- **审批边界：** PASS≠合并授权（DEC-010）；各 commit 按 L-020 节点自主推进授权执行，push 走 toolkit/check-push.mjs。
+- **遗留待办：** ①契约 findings 结构化演进（H2 流程）②review_leg.py 同类并发锁缺口③gpt_dispatch 会话指针覆盖缺陷（派单工具维护）④下一任务开工前审查会话主动迁移（6afb128e 已 5 条 user 消息，超 DEC-084 阈值）。
+- **关联：** DEC-087、DEC-067、DEC-026、GPT-03 先例（DEC-058~062）、问题14/15（steps.md 返工表）。
