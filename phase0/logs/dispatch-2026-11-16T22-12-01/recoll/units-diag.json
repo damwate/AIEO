@@ -1,0 +1,14 @@
+[
+  {
+    "key": "5196ce28-916d-5811-88cb-2780e4e3f691:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[会话迁移|G05-Gate2-R4] 你是新审查会话，接替6afb6d51（Gate2链第4条user消息起按你方建议迁移）；旧会话归档，后续全在本会话。\n\n"
+  },
+  {
+    "key": "5196ce28-916d-5811-88cb-2780e4e3f691:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nGPT-05 Gate2-R4 极窄复核\n\n被测：damwate/AIEO · main · 固定 commit c0d0fdf1fa83"
+  }
+]

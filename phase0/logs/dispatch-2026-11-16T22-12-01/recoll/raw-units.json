@@ -1,0 +1,64 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-16T22:21:20.366Z",
+  "user_unit_key": "5196ce28-916d-5811-88cb-2780e4e3f691:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "5196ce28-916d-5811-88cb-2780e4e3f691:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "141b52f4-7fcf-4020-9034-b8b008efdb6c",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "5196ce28-916d-5811-88cb-2780e4e3f691:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "5196ce28-916d-5811-88cb-2780e4e3f691:0:user",
+          "5196ce28-916d-5811-88cb-2780e4e3f691:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "0b3ecf160e1c729787a4cbb121c5b15228c8983ad8a01c8db8b65c8138a2afac",
+          "dbe7f3f2b8076575d7f20059e32113b8f057a9e091ccfa120bad7940eb1666da"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": []
+      }
+    ],
+    "materialized_unit_keys": [
+      "5196ce28-916d-5811-88cb-2780e4e3f691:0:user",
+      "5196ce28-916d-5811-88cb-2780e4e3f691:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STATIC_NON_SCROLLABLE_DOM",
+      "scrollable_window_observed": false,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "5196ce28-916d-5811-88cb-2780e4e3f691:0:user",
+          "5196ce28-916d-5811-88cb-2780e4e3f691:2:assistant"
+        ],
+        "overlap_keys": []
+      }
+    ],
+    "window_transitions": 0
+  },
+  "units": [
+    {
+      "key": "5196ce28-916d-5811-88cb-2780e4e3f691:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nGPT-05 Gate2-R4 极窄复核\n\n被测：damwate/AIEO · main · 固定 commit c0d0fdf1fa83b89eae877dd47a1ea338957665ce · v0.7\n\n当前结论：REJECT，暂不授权开工\n\n本轮已按指定完整 SHA 读取 v0.7，不以 main 最新状态或旧会话结论替代被测版本。\n\n复核项\n\n\t\n\n结论\n\n\t\n\n说明\n\n\n\n\n① P0-3 映射与正反样例\n\n\t\n\nPASS\n\n\t\n\n映射结构、指纹比较及篡改反例已形成闭环\n\n\n\n\n② 授权链清理\n\n\t\n\nREJECT\n\n\t\n\n§3 仍保留旧的 Gate2-R1/R2 授权条件，与 §8 冲突\n\n\n\n\n③ 残余风险措辞\n\n\t\n\nPASS\n\n\t\n\n已明确不构成跨批次完全隔离，并要求写入开工记录\n\n唯一阻断：②授权链清理不彻底。 不需要重开 P0-1、P0-2、A-3 或其他既定原则。\n\n逐项审查依据\n① P0-3：PASS\n\nv0.7 已正确处理 M1 读回与原始 envelope 不同构的问题：\n\n以账本预期 envelope 为骨架。\n\n九个实质字段由 M1 读回值覆盖。\n\nsource.agent_type、target.agent_type 从账本恢复。\n\nsource_agent_id 与账本预期身份不一致时 fail-closed。\n\n重建对象与账本预期对象使用同一个 _canon_sha。\n\n正例验证相等，反例验证 payload 或 batch_id 篡改后不相等。\n\n与 message_view() 返回扁平化 DB 行的实际结构相符。\n\n判断： P0-3 的设计整改达到本轮要求，不要求修改 M1，也不要求重开五条件 AND。\n\n② 授权链：REJECT\n\n发现 §3 有三处旧口径：\n\n位置\n\n\t\n\n当前遗留内容\n\n\t\n\n应统一为\n\n\n\n\n§3 权限方案标题\n\n\t\n\n待 Gate2-R1 裁定\n\n\t\n\nG05-Gate2-R4 复核及开工授权\n\n\n\n\n§3 提案说明\n\n\t\n\n提案 v0.5\n\n\t\n\n可保留历史版本说明，但不得作为当前授权依据\n\n\n\n\n§3 影响面声明\n\n\t\n\n须 Gate2-R2 裁定批准+用户知情\n\n\t\n\nG05-Gate2-R4 复核通过+开工授权\n\n尤其第三处是实质性冲突。\n\n§8 已经明确 R4 复核通过+开工授权，但 §3 仍要求 Gate2-R2 批准，导致同一份 charter 存在两个不同的生效条件。\n\n③ 残余风险：PASS\n\nv0.7 已明确：\n\n持有服务 token 的调用方可以查询任意已知 batch_id。\n\n当前方案不构成跨批次完全隔离。\n\n完全隔离需要后续 per-agent 批次授权表及迁移。\n\n开工记录和授权记录均须保留该风险。\n\n后续完全隔离须另行立项或批准权限模型变更。\n\n符合此前裁定，不要求本期扩张权限隔离范围。\n\n下一轮唯一整改清单\n\n只允许修改 §3：\n\n清除旧 Gate2-R1 待裁定状态。\n\n清除 Gate2-R2 作为当前授权前置条件的表述。\n\n统一为 G05-Gate2-R4 复核通过+开工授权。\n\n保留历史版本记录，不篡改历史评审事实。\n\n不修改 P0-3 映射、A-3、权限方案实质内容及其他既定设计。\n\n下一轮建议：G05-Gate2-R5 极窄复核，只检查授权链一致性。\n\n当前 Gate2 状态\n\n设计冻结\n\n未通过\n\n开工授权\n\n未授予\n\n剩余整改\n\n1 项\n已通过项目不重开：P0-1、P0-2、P0-3、A-3、A10b/c/d、残余风险披露。\n\n本轮不触发 DEC-089 的开工授权，因为授权链尚未完全闭合。DEC-010 高危红线仍须用户本人决定。\n\n最终目标不变：R5 只要授权链全过，即可明确给出设计冻结、开工授权及收尾清单，不再扩大审查范围。",
+      "text_sha256": "dbe7f3f2b8076575d7f20059e32113b8f057a9e091ccfa120bad7940eb1666da",
+      "size_bytes": 3251,
+      "assistant_uuid": "141b52f4-7fcf-4020-9034-b8b008efdb6c"
+    }
+  ]
+}

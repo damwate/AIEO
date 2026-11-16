@@ -1,4 +1,4 @@
-# GPT-05 工程总审计真实腿最小版接入——立项任务书（草案 v0.7·Gate2-R4 收口修订）
+# GPT-05 工程总审计真实腿最小版接入——立项任务书（草案 v0.8·Gate2-R5 收口修订）
 
 > **文档身份与授权链：** 本文件=Standard 平台路线 GPT-02/03/04/05 逐角色接入的**第四张立项草案**（GPT-03 v1.0 已生效 DEC-057/062；GPT-02 交付闭环 DEC-088；GPT-04 交付闭环 DEC-091）。启动依据=Gate2 裁定"GPT-05 待 GPT-04 形成可验收闭环后再立项"（顺延条件已达成，DEC-091 登记）。生效路径：charter 草案 → Gate1 草案级验证 → Gate2 会务立项评审 → 开工授权（用户 2026-11-17 授权机制=审查方复审通过替代用户逐项拍板，DEC-089 登记；DEC-010 高危红线仍须用户本人拍板）。**评审沿革：** Gate1 PASS_WITH_CONSTRAINTS（reply sha256=bceb502a…083a5e480，dispatch-2026-11-16T20-57-30/recoll）→G05-R1 REJECT 两项整改（reply sha256=abcb99de…c8c3c60d，dispatch-2026-11-16T21-07-15/recoll）→G05-R2 PASS C1/D2 通过+Gate2 启动确认（reply sha256=1f0c51ac…dfaeb076，dispatch-2026-11-16T21-15-51/recoll）→**Gate2 首轮暂不通过（六项：①A-1 REJECT 权限阻断/②A-2 有条件/③A-3 REJECT/④多事务 REJECT/⑤验收设计有条件/⑥边界有条件；未获开工授权）**（reply sha256=0aeecb13…9dfaeb076，dispatch-2026-11-16T21-23-31/recoll 七查全过）→本 v0.4=Gate2-R1 设计修订（按裁定六项处置）→G05-Gate2-R1 复核范围=六项中未通过及有条件通过部分（不重开显式 CLI、同构复制、无状态事件、M1-M4 零修改等已确定设计原则）。
 
@@ -7,7 +7,7 @@
 > "在 GPT-04 测试验收真实腿最小版（`phase1/tools/test_acceptance_leg.py`，b-20261117-gpt04-test-acceptance-leg，DEC-091）同框架基础上，接入 **GPT-05 工程总审计真实腿最小版**：对指定批次（batch_id 显式指定）自动组装批次审计简报并触发**一次**真实 chatgpt.com 总审计派单（复用 M2 派单链与 fail-closed 门禁），采集审计回复并经冻结契约校验后登记 M1（artifacts+messages，AUDIT_SUBMITTED 批次级信封），审计结论（ACCEPTED/ACCEPTED_WITH_RISKS/BLOCKED）落档留证；**批次状态推进、多批次编排、自动触发链不在本期**。异常按 §5 分类处置，人工随时可介入。"
 
 - **目标：** 批次审计关口由"无真实审计"升级为真实 GPT-05 收发与结论留证，全程证据可追溯——补齐十步流程第四道真实腿（批次级收口）。
-- **非目标：** 批次状态自动推进（batch.status 变更属批次编排能力）；多批次/自动触发链；任务级审查（GPT-02/03/04 三腿既有）；生产发布审批（角色红线：总审计员不能批准生产发布）；M1-M4 代码修改（**本 v0.5 唯一例外见 §3 权限方案**，须 Gate2-R2 裁定）。
+- **非目标：** 批次状态自动推进（batch.status 变更属批次编排能力）；多批次/自动触发链；任务级审查（GPT-02/03/04 三腿既有）；生产发布审批（角色红线：总审计员不能批准生产发布）；M1-M4 代码修改（**本 charter 唯一例外见 §3 权限方案**，实施须 Gate2 复核链最终通过+开工授权）。
 - **触发方式（D1，Gate1 裁定采纳）：** 一期唯一触发方式=**显式 CLI 指定 batch_id 运行一次**（`engineering_audit_leg.py run --batch-id BATCH-xxx`；每次运行对应一轮审计；自动触发链另行立项）。
 
 ## 2. 状态事实基础与缺口分析
@@ -28,10 +28,10 @@
 ## 3. 架构边界（v0.4：权限方案为唯一例外）
 
 - **职责（D2 延续终裁=同构复制）：** 新增 `phase1/tools/engineering_audit_leg.py`（以 test_acceptance_leg.py 为主要结构参考同构新增；复用既有公共件；**不抽新公共 runner、不重构已 PASS 三腿**）；scheduler.py 零修改。
-- **权限方案（Gate2 首轮裁定①的处置——本草案唯一 M1 变更提案，待 Gate2-R1 裁定）：**
+- **权限方案（Gate2 首轮裁定①的处置——本草案唯一 M1 变更提案，实施待 Gate2 复核链最终通过+开工授权）：**
   - **事实：** 批次任务全景必须经 GET /api/v1/tasks?batch_id= 列表端点读取；服务端 SERVICE_ALLOWED_ENDPOINTS 未含该路由（Gate2 blob 实读），ENGINE-04 服务身份调用必被 AUTH-0002 拒绝；既有合法接口核查结论=GET /api/v1/board 仅承载批次聚合与 blocked 列表（board.py 实读），GET /tasks/{task_id} 需先知任务 ID——**不存在不修改 M1 又能完整读取批次任务全景的既有合法接口**。
   - **提案 v0.5（Gate2-R1 裁定"服务端必须强制限定查询范围"的落实——最小权限变更方案）：** security.py 定向修改（总量约 6 行，全部位于该模块）：①SERVICE_ALLOWED_ENDPOINTS 增补 `("GET", "/api/v1/tasks")`；②authorize_principal 对该路由增加服务身份强制规则：**服务身份请求 GET /api/v1/tasks 必须携带 batch_id 查询参数，缺省即 403（AUTH-0002 同族）——服务身份无法通过省略 batch_id 获得全局任务列表**；OWNER 人工会话不受影响（kind!="service" 直接放行，现有行为零变化）。
-  - **影响面声明（如实，不包装为原红线内实现细节）：** 这是 security.py 约 6 行的 M1 代码变更——对"M1-M4 零修改"红线的例外范围由此从"一行白名单"扩大为"security.py 单模块约 6 行（增补白名单+服务身份 batch_id 强制规则）"，其余 M1-M4 仍零修改；该变更须经 Gate2-R2 裁定批准+用户知情（本 charter 提交即登记依据），未获裁定批准前不实施。
+  - **影响面声明（如实，不包装为原红线内实现细节）：** 这是 security.py 约 6 行的 M1 代码变更——对"M1-M4 零修改"红线的例外范围由此从"一行白名单"扩大为"security.py 单模块约 6 行（增补白名单+服务身份 batch_id 强制规则）"，其余 M1-M4 仍零修改；该变更须经 Gate2 复核链最终通过+开工授权（DEC-089 机制）后实施，未获批准前不实施（本 charter 提交即授权链登记依据）。
   - **批次资源归属校验的分层声明（Gate2-R1 要求"明确批次资源归属校验"）：** 服务端层=强制 batch_id 存在（结构性限定，杜绝全局枚举）；**跨批次访问的完全隔离需 per-agent 批次授权表（新表+迁移），超出最小版范围——登记遗留待办**（一期残余风险明确保留：**持有服务 token 的调用方可查询任意已知 batch_id 的任务列表——本方案不构成跨批次完全隔离**，开工记录与授权记录均须保留此风险；缓解=ENGINE-04 令牌仅存本机 gitignored runtime+客户端单 --batch-id+简报/报告/账本全链绑定 batch_id+审计证据可追责；后续完全隔离须另行立项或批准权限模型变更）。
   - **回归门槛：** M1 平台既有测试全绿+新增服务身份权限测试（无 batch_id→403/带 batch_id→200/OWNER 无 batch_id→200 行为零变化）+三腿 89 用例合跑回归全绿。
   - **禁止绕行（沿用）：** 不得用 OWNER 凭据代替 ENGINE-04、不得降低批次审计完整性、不得绕过 M1 服务端权限检查。
@@ -86,7 +86,7 @@
 
 ## 8. 授权与红线
 
-生效链：本草案 → Gate1 → Gate2（首轮暂不通过）→ **Gate2-R1 设计修订（本 v0.4）→ G05-Gate2-R1 复核 → 开工授权**（用户 2026-11-17 授权机制=审查方复审通过；登记 decision-log）；开工后 PASS≠合并授权（DEC-010）。红线沿用：DEC-010/DEC-011（契约冻结）/DEC-017/H2；**M1-M4 零修改——唯一例外=§3 权限方案 security.py 单模块约 6 行（白名单增补+服务身份 batch_id 强制规则，须 G05-Gate2-R4 复核通过+开工授权，其余 M1-M4 仍零修改）**；角色红线（不能绕过任务级审查、不能批准生产发布——审计结论仅建议语义）。
+生效链：本草案 → Gate1 → Gate2 复核链（首轮暂不通过→R1/R2/R3/R4 历轮整改→**复核链最终通过**）→ 开工授权（用户 2026-11-17 授权机制=审查方复审通过；登记 decision-log）；开工后 PASS≠合并授权（DEC-010）。红线沿用：DEC-010/DEC-011（契约冻结）/DEC-017/H2；**M1-M4 零修改——唯一例外=§3 权限方案 security.py 单模块约 6 行（白名单增补+服务身份 batch_id 强制规则，须 G05-Gate2-R4 复核通过+开工授权，其余 M1-M4 仍零修改）**；角色红线（不能绕过任务级审查、不能批准生产发布——审计结论仅建议语义）。
 
 ## 9. 不在范围清单（防膨胀）
 
@@ -181,6 +181,7 @@
 
 | 版本 | 日期 | 状态 | 变更 | 依据 |
 |---|---|---|---|---|
+| v0.8（Gate2-R5 收口修订） | 2026-11-17 | 草案（待 G05-Gate2-R5 复核②项） | Gate2-R4 唯一整改：授权链清理彻底化——§1/§3 全部规范性授权条件统一为"须 Gate2 复核链最终通过+开工授权"（消除与 §8 的 Gate2-R1/R2 旧条件残留）；评审沿革/版本记录中的历史轮次标注保留（历史事实非授权条件） | Gate2-R4 REJECT 仅②（reply sha256=dbe7f3f2b8076575…完整值见 recoll-result.json，dispatch-2026-11-16T22-12-01/recoll 补采七查全过——INBOUND_START_UNIT_MISSING→CDP 枚举标签页取得新会话 6afb7fe2 后补采；①P0-3 PASS/③残余风险 PASS） |
 | v0.7（Gate2-R4 收口修订） | 2026-11-17 | 草案（待 G05-Gate2-R4 极窄复核） | R3 唯一整改 P0-3 闭合=M1 readback→canonical envelope 映射冻结（账本预期 envelope 为骨架+九实质字段读回覆盖+agent_type 账本恢复+source_agent_id 一致断言+同一 _canon_sha 比较+正反对照样例；不要求改 M1 代码）；授权链清理（§3/§8/A-1 "须 Gate2-R2 批准"→G05-Gate2-R4 实际依据）；A-1 残余风险措辞按 R3 收尾清单收紧（明确"不构成跨批次完全隔离"写入开工记录要求） | Gate2-R3 整体 REJECT 但 P0-1/P0-2 PASS+A10b/c/d PASS（reply sha256=3f39e37dfa8d4845…完整值见 recoll-result.json，dispatch-2026-11-16T22-00-43/recoll 七查全过；blob 70eb321a 实读+messaging.py:267-270 message_view 实读；会话迁移建议=审查方提出，R4 于新会话执行） |
 | v0.6（Gate2-R3 设计修订） | 2026-11-17 | 草案（待 G05-Gate2-R3 复核三 P0+A10b 断言） | 三 P0 整改：P0-1=§6 身份统一（source=GPT-05 全文档唯一口径，§5/§6/A-2/账本一致；Bearer=ENGINE-04；target=AIEO-ORCHESTRATOR）；P0-2=message_id 算法逐字冻结（run_key SHA-256 折叠 a/b 两段，三腿实战注册成功证据+重放稳定+撞键 409 fail-closed 不换键）；P0-3=message 409 双证改五条件 AND（响应指认+账本指纹+读回+规范化一致+与报告绑定，任一缺失 fail-closed）+A-3 A4c 行同步；A10b 补 A10c（带 batch_id→200）/A10d（OWNER 无 batch_id→200 行为零变化）断言 | Gate2-R2 REJECT（reply sha256=0b9ba7269fa65289…完整值见 recoll-result.json，dispatch-2026-11-16T21-50-31/recoll 七查全过；A-1 PASS_WITH_CONSTRAINTS=残余风险明确披露可保留但不得声称完全隔离） |
 | v0.5（Gate2-R2 设计修订） | 2026-11-17 | 草案（待 G05-Gate2-R2 复核） | Gate2-R1 六项处置：①A-1 权限方案重构=security.py 约 6 行（白名单增补+**服务身份 GET /tasks 强制 batch_id 规则**——杜绝全局枚举）+跨批次完全隔离（per-agent 授权表）登记遗留待办+分层归属校验声明+回归门槛含新增权限测试 ②A-2 身份统一（source=GPT-05 reviewer 三腿先例/提交凭据=ENGINE-04/target=AIEO-ORCHESTRATOR 实读）+message_id 格式与冻结 schema 对齐声明 ③A-3 其余断点逐项六字段表+指纹算法冻结（_req_sha/_canon_sha 先例实读）④duplicate/409 可执行判定表 ⑤§7 A10b 全局任务列表拒绝用例 ⑥边界随 A-1 更新 | Gate2-R1 REJECT（reply sha256=3e5d6ef9788a371e…完整值见 recoll-result.json，dispatch-2026-11-16T21-39-22/recoll 七查全过；A-1 裁定原文"不能把文档提案当作代码事实"+全局列表越权分析） |

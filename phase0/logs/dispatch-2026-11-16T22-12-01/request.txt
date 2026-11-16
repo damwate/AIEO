@@ -1,0 +1,7 @@
+[会话迁移|G05-Gate2-R4] 你是新审查会话，接替6afb6d51（Gate2链第4条user消息起按你方建议迁移）；旧会话归档，后续全在本会话。
+
+【结论】GPT-05 charter v0.7 Gate2链：Gate1 PASS_WITH_CONSTRAINTS→R1 REJECT→R2 PASS→Gate2首轮REJECT（权限阻断）→R1/R2/R3连续REJECT——P0-1身份统一/P0-2 message_id算法/A10b·c·d全PASS，唯一阻断P0-3读回规范化。v0.7已整改：M1 readback→canonical envelope映射冻结（账本预期envelope为骨架+九实质字段读回覆盖+agent_type账本恢复+一致性断言+同一_canon_sha+正反对照样例，不改M1）；授权链已清理；A-1残余风险措辞已收紧。
+
+【首轮待办】G05-Gate2-R4极窄复核：被测=GPT05-ENGINEERING-AUDIT-LEG-CHARTER-DRAFT.md v0.7，main=c0d0fdf1fa83b89eae877dd47a1ea338957665ce（damwate/AIEO按SHA实读）。只核验：①P0-3映射与正反样例闭合②授权链清理③残余风险措辞；A-3/P0-1/P0-2/既定原则不重开。全过→设计冻结+开工授权明确结论（DEC-089机制）+收尾清单。
+
+【机制】沿DEC-089；DEC-010红线仍须用户本人。1200B限制不变；你只评审。
