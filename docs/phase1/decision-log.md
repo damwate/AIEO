@@ -580,3 +580,12 @@
 - **问题4 补齐：** steps S2⑤ 改为实际输出（命令/输出摘要/FAIL=0/退出码=1/证据路径）+`acceptance/st05-inprogress.txt` 落库+返工表问题4 行；ST-05 复检 ④⑤ PASS、无 FAIL。
 - **范围控制：** 不改 WORKFLOW 第四/六节与九节主体（R2 已 PASS），不新增 WORKFLOW 条款（"commit 前明文批准"约束先落于本任务包+本 DEC，下一文档任务再评估上升为通用条款）。
 - **关联：** DEC-070（R2 结论）、DEC-069、L-019（降档阶梯）、L-020（节点授权）、WORKFLOW 模块五。
+
+### DEC-072 S1-R3 收尾确认 REJECT（仅 P1-03）+发送通道异常处置登记（2026-11-16，节点自主推进授权执行）
+
+- **验收对象：** 沿 R2 被测 `9efb14bbcc74d397e15558dc720706fc054ac627`（后续均为证据登记 commit）；现场 `phase0/logs/dispatch-2026-11-16T08-40-08`，reply 3606B，sha256=9c36760b4b200f80593a69b147974011da81a19456afc022bfac0c60c713d242。
+- **R3 结论：** 问题2（不追认+流程偏差登记+DEC-071 硬约束）实质成立、问题4（ST-05 实际输出落库）成立、R2 被测 SHA 未被替换；**REJECT 仅 P1-03**——steps 问题2 返工行仍写"待追认/未完全关闭"，未区分 R2 历史状态与 R3 最终处置。整改=该行补 R3 最终处置（不追认、流程偏差、同根因计 1 次、历史保留、已关闭），原 R2 记录保留不覆盖。
+- **发送通道异常（如实登记，L-018 应用）：** 本轮流派两次发送双验均报 `UNCERTAIN`（tailOk=false/stopOkAfterTail=false/userUnitKey=missing）。三步诊断：①发送证据=无新 unit；②DOM 实况=Composer 仍存本轮 547 字草稿、发送键 enabled、无停止键、会话仍 2 轮；③采集器窗口=不适用（未发送）。根因=代理链路变慢（同刻实测直连 chatgpt.com=000、经注册表代理 9617=200 但 6.65s，早间为 2.4s）→提交在慢链路上延迟生效，30s 双验窗口超时。处置=清自有草稿（--force，ownership 判定为自有内容）→重派仍 UNCERTAIN→点击发送键兜底并自做双验（严格前置：草稿含 R3 标记且长度=547 才发送）→**单条送达** fallback-turn-2:0:user（无重复投递），回复经 recoll 归属校验型补采（标记唯一+最后 user+前轮 SHA 排除）七查全过。**全程未重发已送达消息**。
+- **经验固化建议（已同步 environment-inventory §4）：** 派单 `UNCERTAIN` 时不得凭"未确认"即重发；须以 unit 数增长/草稿态取证判定"延迟送达 vs 未送达"，新增 unit 即转为补采。
+- **证据归档：** 补采驱动、发送双验 JSON、诊断脚本、R3 reply 全文已归档 `basic/tasks/b-20261116-workspace-spec/acceptance/`。
+- **关联：** DEC-071、DEC-070、L-018（禁重发+补采）、L-021 第 3 条、environment-inventory §4。

@@ -23,7 +23,7 @@
 - ③修改内容：DEC-068 状态行修正为真实时间线；追加 DEC-069（问题1/问题2/问题3 逐项整改登记+被测对象+过程）
 - ④执行结果：DEC-069 成文；ST-05 复检执行（结果见⑤）
 - ⑤测试结果（实际执行输出，P2-02/问题4 整改）：命令=`python -I basic/tool/check_taskpack.py basic/tasks/b-20261116-workspace-spec`；实际输出=Phase IN_PROGRESS＋①PASS ②PASS ③N/A（3 步未到期）④PASS ⑤PASS ⑥N/A（交付未到期）＋Overall IN_PROGRESS；FAIL 项数=0；退出码=1（开发期未完成验收的既定语义，非失败）；原始输出落库 `acceptance/st05-inprogress.txt`（同命令可复跑复现）
-- ⑥验收证据引用：S1-R2 复验=dispatch-2026-11-16T08-22-40（发送双验+归属校验型补采，recoll/reply.txt 5092B，reply sha256=f90078de4b55755f4d37d93f9ea18ac13c56262d43c25b5171b8ee727bf38a74），结论 REJECT——问题1/问题3 关闭、回归 PASS；剩余问题2（待用户追认）与问题4（ST-05 实际输出落库，见返工表）
+- ⑥验收证据引用：S1-R2 复验=dispatch-2026-11-16T08-22-40（发送双验+归属校验型补采，recoll/reply.txt 5092B，reply sha256=f90078de4b55755f4d37d93f9ea18ac13c56262d43c25b5171b8ee727bf38a74），结论 REJECT——问题1/问题3 关闭、回归 PASS；剩余问题2（待用户追认）与问题4（ST-05 实际输出落库，见返工表）。**S1-R3 收尾确认**=现场 dispatch-2026-11-16T08-40-08（发送通道异常：两次派单发送双验 UNCERTAIN→只读诊断确认草稿未发出→点击发送键兜底，单条送达 fallback-turn-2:0:user 无重复；回复经 recoll 归属校验型补采七查全过，reply 3606B，sha256=9c36760b4b200f80593a69b147974011da81a19456afc022bfac0c60c713d242），结论 REJECT 仅 P1-03（问题2 状态未同步）→本条与问题2 行已同步（DEC-072 登记过程）
 
 ## S3 独立验收与交付
 
@@ -39,6 +39,6 @@
 | 问题编号 | 轮次来源 | 问题描述 | 整改内容 | 修复 commit | 验证 |
 |---|---|---|---|---|---|
 | 问题1 | S1-R1 REJECT P1-01 | 第六节 diff 回传只写 numstat，缺完整 Diff 证据要求 | 第六节改三口径：被测对象=完整 SHA／完整 Diff 证据=可核验完整改动（diff 全文或 GitHub compare/GitPointer）／测试结果=断言+退出码；numstat 降为统计口径并明示"不替代完整 Diff" | 9efb14bbcc74d397e15558dc720706fc054ac627 | R2 复验 PASS 关闭（未降低 L-021/ST-01 要求） |
-| 问题2 | S1-R1 REJECT P1-02 | commit 前批准状态与实际提交矛盾（requirement/task-brief/steps/DEC-068 四处不一致） | task-brief 增"Git 操作批准记录"表如实登记推定授权与时间线；steps③ 回填首轮被测 SHA；DEC-068 状态行修正；DEC-069 登记；用户追认事项明列（不伪造批准）；**收口（降档，L-019）**：按用户 2026-11-16 指示走审查方给定替代路径——如实登记不予追认、新增"commit 前须用户明文批准"硬约束（DEC-071） | 9efb14bbcc74d397e15558dc720706fc054ac627 | R2 确认四处状态已一致、无伪造；问题4/问题2 的收口登记=06d72bb 与 DEC-071 所在证据 commit（不属被测 diff） |
+| 问题2 | S1-R1 REJECT P1-02 | commit 前批准状态与实际提交矛盾（requirement/task-brief/steps/DEC-068 四处不一致） | task-brief 增"Git 操作批准记录"表如实登记推定授权与时间线；steps③ 回填首轮被测 SHA；DEC-068 状态行修正；DEC-069 登记；用户追认事项明列（不伪造批准）；**收口（降档，L-019）**：按用户 2026-11-16 指示走审查方给定替代路径——如实登记不予追认、新增"commit 前须用户明文批准"硬约束（DEC-071） | 9efb14bbcc74d397e15558dc720706fc054ac627 | R2 确认四处状态已一致、无伪造（**R2 历史结论保留**）；**R3 最终处置：不予追认、按流程偏差如实登记（推定授权、无逐条明文批准，同根因计 1 次）、历史提交保留不重写、新增硬约束见 DEC-071——R3 复验已成立，本条关闭** |
 | 问题3 | S1-R1 REJECT P2-01 | 第四节把 Skills/MCP 一律归主机级不准确 | 第四节改"项目配置与主机运行环境分离"：项目级可移植无秘密配置可入目标仓库版本控制；凭据/账号 profile/机器专属配置禁入库（C6）；作用域遵循所用 IDE 规则 | 9efb14bbcc74d397e15558dc720706fc054ac627 | R2 复验 PASS 关闭（未见对 C6 的削弱） |
 | 问题4 | S1-R2 REJECT P2-02 | steps S2⑤ 写"以实际输出为准"属预期描述，ST-05 实际输出未落库 | S2⑤ 改为实际执行输出（命令/输出摘要/FAIL=0/退出码=1/证据路径）；原始输出落库 acceptance/st05-inprogress.txt；S1⑥ 回填 R2 结论 | 06d72bb83deea9ce3bccfa6bd71ec47ec670a364 | 已补齐：S2⑤ 实际输出+acceptance/st05-inprogress.txt+退出码；ST-05 复检④⑤PASS 无 FAIL；待收尾确认轮（S1-R3）复核 |
