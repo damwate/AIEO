@@ -1,0 +1,11 @@
+[会话迁移|GPT05立项复审] 你是新审查会话，接替6afb41ae（6条user消息达4+2再评估点+虚拟化征兆，主动迁移）；旧会话归档，后续轮次全在本会话。
+
+【项目】AIEO仓库（GitHub按SHA读取）GPT-02/03/04/05逐角色接入（DEC-026决议二）。GPT-03/02/04三腿已闭环（GPT-04=COMPLETED最终结果PASS，DEC-091，收口adfe69f5fa47c04dbae807c712edd906ddbe271e）。本轮起接GPT-05工程总审计真实腿立项复审：charter草案→Gate1→Gate2→开工授权。
+
+【机制】沿用户2026-11-17指令（DEC-089）：遇问题以你意见为准；DEC-010红线（合并/发布/删数据）仍须用户本人。
+
+【基线】main=a89b37123874bd725edfd09cdf91ce428d0c8391。读取：phase1/GPT05-ENGINEERING-AUDIT-LEG-CHARTER-DRAFT.md、GPT04-TEST-ACCEPTANCE-LEG-CHARTER-DRAFT.md、立项/02-GPT角色与会话规范.md §6、contracts/v1.0/messages-create.schema.json。
+
+【首轮】收GPT-05草案做Gate1验证：一致性/事实核对/边界自洽，三态+逐项依据。
+
+【边界】契约冻结不改（H2）；M1-M4零修改；你只评审；1200B限制不变。
