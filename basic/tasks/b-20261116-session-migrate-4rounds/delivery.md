@@ -19,7 +19,7 @@
 - docs/phase1/decision-log.md（追加 DEC-084，+11 行）
 - basic/tasks/b-20261116-session-migrate-4rounds/（requirement.md、task-brief.md、steps.md、delivery.md、acceptance/：commit-msg.txt、st05-inprogress.txt、residual-sweep.py/.txt、rotation-sweep.py/.txt、residual-sweep-utf8.txt）
 - phase0/tools/session-migrate-4rounds-plan-r1.txt（复审简报 1199B）、phase0/tools/session-migrate-4rounds-accept-r1.txt（验收简报 1198B）
-- phase0/tools/recoll_migrate4r2.mjs（R2 归属校验型补采驱动，由 recoll_r20.mjs 模板派生：CONV_UUID/SENT_USER_UNIT_KEY/FAILED_DIR/MARKER/PREV_REPLY_SHA 六参数替换，grep 三参数行核对；依据=L-018 第 3 条派生驱动可核验要求+先例 recoll_r19/r20.mjs 同型归档；R3 REJECT③ 范围表述漏记，本行即如实补录登记，见 steps.md 返工表问题3）
+- phase0/tools/recoll_migrate4r2.mjs（**任务累计产物**，由 R2 整改 commit f13e451192feb74535d8e6b371a618281a5a1fe3 引入；R3 整改 commit f56f8931a796b39ecbcc1cb66950fd30f247e72d 未改动该文件，仅新增 R3 现场归档、R3 复审简报与任务包回填——区分任务累计产物与单次提交变更。驱动=归属校验型补采，由 recoll_r20.mjs 模板派生：CONV_UUID/SENT_USER_UNIT_KEY/FAILED_DIR/MARKER/PREV_REPLY_SHA 六参数替换，grep 三参数行核对；依据=L-018 第 3 条派生驱动可核验要求+先例 recoll_r19/r20.mjs 同型归档；R3 REJECT③ 范围表述漏记，本行即如实补录登记，见 steps.md 返工表问题3/问题4）
 - phase0/logs/dispatch-2026-11-16T11-59-52/（复审现场）、phase0/logs/dispatch-2026-11-16T13-18-39/（验收 R1 现场）、phase0/logs/gpt-reviewer-session.json（会话指针）
 
 ## 4. 测试结果
@@ -37,7 +37,8 @@
 ## 6. 未解决问题
 
 - R3 限定复审（现场 dispatch-2026-11-16T13-36-34，reply 1830B，sha256=055132f39fb786b9ee8ce19460a1b80c67f61e9575ec507722a24df4d33ad082，核验对象=f13e451192feb74535d8e6b371a618281a5a1fe3）：①S2⑥ 绑定 **PASS** ②delivery §4/§5 **PASS**，REJECT 仅③范围表述（简报漏记 recoll_migrate4r2.mjs）→已如实补录 §3 并登记返工表问题3，R4 待派。
-- R4 限定复审待派（绑定 R3 整改 commit 新完整 SHA）。
+- R4 限定复审（现场 dispatch-2026-11-16T13-41-50，reply 1668B，sha256=925d497d2d86a79fda5cf94b64094a6b71b0bfc9f2baa1a5061db5742df96dff，核验对象=f56f8931a796b39ecbcc1cb66950fd30f247e72d）：③范围未扩大 **PASS**，REJECT 仅①问题3 修复 commit 占位未绑定（已绑定）+②"累计产物 vs 本次提交变更"混述（本节已更正，见 steps.md 问题4）→R5 待派。
+- R5 限定复审待派（绑定问题4 整改 commit 新完整 SHA）。
 - COMPLETED 态 ST-05 取证待 R4 通过后执行（要求 ①～⑥ 全 PASS、Overall PASS、退出码 0；审查方明示"以实际运行输出为证据，不预先填写 PASS"）。
 - 会话迁移评估记录：R4 派单达 L-018 第 6 条 4 条 user 消息阈值，按例外①临近完成验收暂不迁移（理由见 steps.md S3⑥），后续每增 2 条重评。
 - 远程 main 已随批准推送（ahead=0）；后续轮次证据 commit 依用户预批准推进。
