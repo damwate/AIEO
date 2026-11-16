@@ -35,7 +35,7 @@
 
 | 问题编号 | 轮次来源 | 问题描述 | 整改内容 | 修复 commit | 验证 |
 |---|---|---|---|---|---|
-| 问题14 | 零 mock 实战（921001/T-P1-001，GPT-02 真实结论 REWORK） | 真实审核四条 P1 缺陷：P1-01 回复归属校验只记录 target_matches_sent_key 未强制比较（不一致不拦截）；P1-02 run_key 无跨进程互斥+_find_dispatch_dir 按 mtime 选最新目录并发串单风险；P1-03 路线 B artifact 登记不可恢复窗口（M1 已建而账本未写时崩溃→恢复重 POST 409 无 key_evidence 必拒）；P1-04 事件 409 走 _register_step 的 kind 映射缺失（A-3 行 6 原 event_id 续推无法执行） | （整改中）P1-01 归属强制断言（不一致 fail-closed）；P1-02 run_key 跨进程文件锁+派单现场精确关联定位；P1-03 artifact 409 按 path+sha256+task_id 服务端核验恢复；P1-04 事件 409 独立双证核验（原 event_id+请求指纹+M1 状态） | （待整改 commit） | 待整改后复核 |
+| 问题14 | 零 mock 实战（921001/T-P1-001，GPT-02 真实结论 REWORK） | 真实审核四条 P1 缺陷：P1-01 回复归属校验只记录 target_matches_sent_key 未强制比较（不一致不拦截）；P1-02 run_key 无跨进程互斥+_find_dispatch_dir 按 mtime 选最新目录并发串单风险；P1-03 路线 B artifact 登记不可恢复窗口（M1 已建而账本未写时崩溃→恢复重 POST）；P1-04 事件 409 走 _register_step 的 kind 映射缺失（A-3 行 6 原 event_id 续推无法执行） | 四条全修：P1-01 归属强制断言（双键均存在不等即 fail-closed，test_17）；P1-02 OS 级字节锁 RunKeyLock（Windows msvcrt.locking/POSIX fcntl.flock，进程死自动释放，不用 os.kill(pid,0)——Windows 上等于 TerminateProcess 会误杀；run/resume/attach 三入口全包裹，test_18）+派单现场精确关联定位（request.txt 与本次简报字节一致，现场权威字节=磁盘 brief.txt 原始内容防换行翻译错位，test_11 替身补齐 request.txt）；P1-03 artifact 409 特化（服务端 path+SHA 冲突+GET 回核 task/sha 匹配→恢复 ID；不依赖账本指纹——崩溃窗口正是对象；M1 实测同 path+SHA=201 duplicate 原语义自然恢复，409 语义为真冲突 fail-closed，test_19 两分支）；P1-04 事件独立核验（提交前 A5_EVENT_INTENT 落账本，409 双证=账本 intent 指纹+响应指认或 M1 终态已达；M1 实测重放=200 幂等响应，409 为防御层，test_20 单条记录断言） | 整改 commit=本提交（SHA 随验收轮登记） | 双矩阵合跑 54/54 OK（29 回归+25 GPT-02：21 原矩阵+4 整改证明用例），test-run.txt 落盘 |
 
 ### 实战记录（零 mock 全链，2026-11-17）
 

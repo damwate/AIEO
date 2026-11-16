@@ -38,6 +38,7 @@ M2 派单链（gpt_dispatch.mjs + inbound 采集 + fail-closed 门禁）零修�
 from __future__ import annotations
 
 import argparse
+import contextlib
 import hashlib
 import json
 import os
@@ -92,6 +93,65 @@ def _canon_sha(obj: dict) -> str:
 
 def _req_sha(obj) -> str:
     return sha256_bytes(json.dumps(obj, ensure_ascii=False, sort_keys=True).encode("utf-8"))
+
+
+class RunKeyLock:
+    """run_key 跨进程互斥（P1-02 整改，问题14）：OS 级字节锁（Windows=msvcrt.locking
+    非阻塞锁首字节；POSIX=fcntl.flock LOCK_NB）——进程退出 OS 自动释放，无 stale 接管
+    需求；无法立即取得=失败不等待（并发语义 fail-closed：幂等 ID≠并发安全）。
+    覆盖 run/resume/attach-reply 全流程。注意：不用 os.kill(pid,0) 存活检测——
+    Windows 上 os.kill 对非 CTRL 信号等于 TerminateProcess（会误杀进程）。"""
+
+    def __init__(self, run_dir: Path, holder: str) -> None:
+        self.path = run_dir / ".run-key.lock"
+        self.holder = holder
+        self._fd = None
+
+    def _try_lock(self, fd) -> bool:
+        if os.name == "nt":
+            import msvcrt
+            try:
+                msvcrt.locking(fd, msvcrt.LK_NBLCK, 1)
+                return True
+            except OSError:
+                return False
+        import fcntl
+        try:
+            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            return True
+        except OSError:
+            return False
+
+    def __enter__(self) -> "RunKeyLock":
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        fd = os.open(self.path, os.O_CREAT | os.O_RDWR)
+        if not self._try_lock(fd):
+            os.close(fd)
+            raise OrchestrationError(-1, f"run_key lock held by another live process "
+                                         f"(concurrent run/resume/attach on same run_key "
+                                         f"forbidden; fail-closed; holder={self.holder})")
+        with contextlib.suppress(OSError):
+            os.ftruncate(fd, 0)
+        os.lseek(fd, 0, os.SEEK_SET)
+        os.write(fd, json.dumps({"holder": self.holder, "pid": os.getpid(),
+                                 "ts": utc_now_iso()}).encode("utf-8"))
+        self._fd = fd   # 持有至退出（进程死=OS 自动释放锁）
+        return self
+
+    def __exit__(self, *exc) -> None:
+        if self._fd is not None:
+            if os.name == "nt":
+                import msvcrt
+                with contextlib.suppress(OSError):
+                    os.lseek(self._fd, 0, os.SEEK_SET)
+                    msvcrt.locking(self._fd, msvcrt.LK_UNLCK, 1)
+            else:
+                import fcntl
+                with contextlib.suppress(OSError):
+                    fcntl.flock(self._fd, fcntl.LOCK_UN)
+            with contextlib.suppress(OSError):
+                os.close(self._fd)
+            self._fd = None
 
 
 class ArchReviewLeg:
@@ -250,6 +310,9 @@ class ArchReviewLeg:
     def a2_dispatch(self, brief: str, allow_one_redispatch: bool = True) -> Path:
         attempts = 2 if allow_one_redispatch else 1
         last_err = ""
+        # 现场精确匹配的权威字节=磁盘 brief.txt 原始内容（Windows 文本模式换行翻译
+        # 会使字符串往返编码与落盘字节不一致——P1-02 整改随附修正）
+        brief_bytes = (self.run_dir / "brief.txt").read_bytes()
         for attempt in range(1, attempts + 1):
             self.ledger.append({"kind": "A2_SEND_INTENT_RECORDED" if attempt == 1
                                 else "A2_REDISPATCH_INTENT",
@@ -267,7 +330,8 @@ class ArchReviewLeg:
             (self.run_dir / f"dispatch-stderr-{attempt}.txt").write_bytes(proc.stderr)
             if proc.returncode != 0:
                 last_err = f"gpt_dispatch exit {proc.returncode}: {proc.stderr.decode('utf-8', 'replace')[:300]}"
-                fresh = self._find_dispatch_dir(must=False, since=attempt_started)
+                fresh = self._find_dispatch_dir(must=False, since=attempt_started,
+                                                brief_bytes=brief_bytes)
                 if fresh is not None and (fresh / "result.json").is_file():
                     # 发送双验已过而后续采集失败：采集 fail-closed 家族——禁重发（§5 行2/L-018）。
                     try:
@@ -289,7 +353,8 @@ class ArchReviewLeg:
                                     "error": last_err, "outcome": "FAILED"})
                 raise OrchestrationError(3, f"dispatch failed (no send evidence): {last_err}")
             # exit==0：发送+采集双成——现场目录含 result.json 与 reply.txt
-            fresh = self._find_dispatch_dir(must=True, since=attempt_started)
+            fresh = self._find_dispatch_dir(must=True, since=attempt_started,
+                                            brief_bytes=brief_bytes)
             fres = json.loads((fresh / "result.json").read_text(encoding="utf-8"))
             self.ledger.append({"kind": "A2_SEND_CONFIRMED", "attempt": attempt,
                                 "dispatch_dir": fresh.name,
@@ -299,10 +364,24 @@ class ArchReviewLeg:
             return fresh
         raise OrchestrationError(3, f"dispatch exhausted: {last_err}")
 
-    def _find_dispatch_dir(self, must: bool, since: float | None = None) -> Path | None:
+    def _find_dispatch_dir(self, must: bool, since: float | None = None,
+                           brief_bytes: bytes | None = None) -> Path | None:
+        """派单现场精确定位（P1-02 整改）：候选必须同时满足 ①mtime≥本次尝试起点
+        ②现场 request.txt 与本次简报字节一致（本次请求唯一关联标识），杜绝并发派单
+        时按全局最新 mtime 串单。"""
         cands = sorted(DISPATCH_LOG_DIR.glob("dispatch-*"), key=lambda d: d.stat().st_mtime)
         if since is not None:
             cands = [d for d in cands if d.stat().st_mtime >= since]
+        if brief_bytes is not None:
+            exact = []
+            for d in cands:
+                req = d / "request.txt"
+                try:
+                    if req.is_file() and req.read_bytes() == brief_bytes:
+                        exact.append(d)
+                except OSError:
+                    continue
+            cands = exact
         if not cands:
             if must:
                 raise OrchestrationError(3, "no dispatch evidence dir created by this send")
@@ -390,6 +469,12 @@ class ArchReviewLeg:
         if located_key is None and sent_key is not None:
             raise OrchestrationError(4, "capture evidence lacks located user unit key while send "
                                         "anchor exists (cannot prove reply ownership; fail-closed)")
+        # P1-01 整改（问题14）：归属强制断言——双键均存在时不等即 fail-closed，
+        # 不再只记录比较结果（不同 user unit 的回复不得仅因"键非空"通过登记）。
+        if located_key and sent_key and located_key != sent_key:
+            raise OrchestrationError(4, f"reply ownership mismatch: located={located_key} "
+                                        f"sent={sent_key} (P1-01 mandatory assertion; fail-closed, "
+                                        "no registration)")
         self.ledger.append({"kind": "A3_REPLY_CAPTURED", "bytes": len(raw), "reply_sha256": reply_sha,
                             "source_dir": str(reply_path.parent),
                             "marker_text": self.marker_text,
@@ -586,10 +671,22 @@ class ArchReviewLeg:
         else:
             body = {"task_id": self.task_id, "type": "REVIEW_EVIDENCE",
                     "path": reply_rel, "sha256": captured["reply_sha256"]}
+
+            def verify_reply_artifact(resp):
+                aid = str(resp.get("artifact_id") or resp.get("id")
+                          or (resp.get("details") or {}).get("artifact_id") or "")
+                if not aid:
+                    return None
+                code2, art = self.engine.get(f"/api/v1/artifacts/{aid}")
+                if code2 == 200 and isinstance(art, dict) and art.get("task_id") == self.task_id \
+                        and art.get("sha256") == body["sha256"]:
+                    return aid
+                return None
             code, resp = self.engine.post("/api/v1/artifacts", body)
-            out["artifact_reply_id"] = self._register_step(code, resp, (200, 201, 202), "artifact reply",
+            out["artifact_reply_id"] = self._register_step(code, resp, (200, 201, 202, 409), "artifact reply",
                                                            lambda r: str(r.get("artifact_id") or r.get("id") or ""),
-                                                           request_sha=_req_sha(body))
+                                                           request_sha=_req_sha(body),
+                                                           artifact_verifier=verify_reply_artifact)
             self.ledger.append({"kind": "A4_ARTIFACT_REPLY", "artifact_id": out["artifact_reply_id"],
                                 "request_sha": _req_sha(body), "reply_sha256": captured["reply_sha256"],
                                 "outcome": "PASS"})
@@ -604,10 +701,22 @@ class ArchReviewLeg:
         else:
             body = {"task_id": self.task_id, "type": "REVIEW_EVIDENCE",
                     "path": report_rel, "sha256": report_sha}
+
+            def verify_report_artifact(resp):
+                aid = str(resp.get("artifact_id") or resp.get("id")
+                          or (resp.get("details") or {}).get("artifact_id") or "")
+                if not aid:
+                    return None
+                code2, art = self.engine.get(f"/api/v1/artifacts/{aid}")
+                if code2 == 200 and isinstance(art, dict) and art.get("task_id") == self.task_id \
+                        and art.get("sha256") == body["sha256"]:
+                    return aid
+                return None
             code, resp = self.engine.post("/api/v1/artifacts", body)
-            out["artifact_report_id"] = self._register_step(code, resp, (200, 201, 202), "artifact report",
+            out["artifact_report_id"] = self._register_step(code, resp, (200, 201, 202, 409), "artifact report",
                                                             lambda r: str(r.get("artifact_id") or r.get("id") or ""),
-                                                            request_sha=_req_sha(body))
+                                                            request_sha=_req_sha(body),
+                                                            artifact_verifier=verify_report_artifact)
             self.ledger.append({"kind": "A4_ARTIFACT_REPORT", "artifact_id": out["artifact_report_id"],
                                 "request_sha": _req_sha(body), "report_sha256": report_sha,
                                 "outcome": "PASS"})
@@ -644,9 +753,24 @@ class ArchReviewLeg:
     def _register_step(self, code: int, resp, want: tuple[int, ...], what: str,
                        extract_id, request_sha: str | None = None,
                        canonical_sha: str | None = None,
-                       key_evidence=None) -> str:
+                       key_evidence=None, artifact_verifier=None) -> str:
         if code in want and isinstance(resp, dict):
             if code == 409:
+                # P1-03：artifact 内容寻址幂等特化——M1 幂等键=path+SHA，服务端 409+GET 回核
+                #（task_id+sha256 匹配本次请求）即证明同内容已登记；不依赖账本指纹
+                #（账本 append 前崩溃的恢复窗口正是本路径对象）。
+                if artifact_verifier is not None:
+                    aid = artifact_verifier(resp)
+                    if not aid:
+                        raise OrchestrationError(5, f"{what} 409 but server record cannot be "
+                                                    f"verified (no resolvable id or content "
+                                                    f"mismatch; fail-closed): "
+                                                    f"{json.dumps(resp, ensure_ascii=False)[:300]}")
+                    self.ledger.append({"kind": "A4_DUPLICATE_OK", "what": what,
+                                        "artifact_id": aid,
+                                        "evidence": ["server-409-path-sha", "get-readback-task-sha-match"],
+                                        "outcome": "IDEMPOTENT_HIT"})
+                    return aid
                 # 双证核验：①响应指认本次键；②账本同请求指纹。缺一 fail-closed。
                 if key_evidence is None or not key_evidence(resp):
                     raise OrchestrationError(5, f"{what} 409 key verification failed (response does not "
@@ -685,17 +809,36 @@ class ArchReviewLeg:
         event = result   # PASS or REWORK（白名单内，值同名）
         ev_id = self.event_id(event, "01" if event == "PASS" else "02")
         self.engine.check_event(event)
-        code, resp = self.engine.post(f"/api/v1/tasks/{self.task_id}/events",
-                                      {"event": event, "event_id": ev_id,
-                                       "correlation_id": self.correlation_id})
-        self._register_step(code, resp, (200, 201, 409), f"event {event}",
-                            lambda r: str(r.get("event_id") or ev_id),
-                            request_sha=_req_sha({"event": event, "event_id": ev_id}),
-                            key_evidence=lambda r: ((r.get("details") or {}).get("event_id") == ev_id
-                                                    or r.get("event_id") == ev_id
-                                                    or (r.get("details") or {}).get("code") == "RES-0002"))
-        task = self._refetch_task()
+        event_body = {"event": event, "event_id": ev_id, "correlation_id": self.correlation_id}
+        event_sha = _req_sha(event_body)
         expected = {"PASS": "READY", "REWORK": "REWORK"}[result]
+        # P1-04 整改（问题14）：事件提交前落 intent（event_id+请求指纹），409 幂等核验
+        # 独立于消息路径——双证=①账本 intent 指纹匹配 ②响应指认 event_id 或 M1 状态已达
+        # 目标终态（事件已生效的最强证据）；不再借道无 kind 映射的 _register_step。
+        self.ledger.append({"kind": "A5_EVENT_INTENT", "event": event, "event_id": ev_id,
+                            "request_sha": event_sha, "outcome": "INTENT"})
+        code, resp = self.engine.post(f"/api/v1/tasks/{self.task_id}/events", event_body)
+        if code == 409:
+            intent = self.ledger.state_flags().get("A5_EVENT_INTENT") or {}
+            fingerprint_ok = intent.get("event_id") == ev_id and intent.get("request_sha") == event_sha
+            task_now = self._refetch_task()
+            response_ok = ((resp.get("details") or {}).get("event_id") == ev_id
+                           or resp.get("event_id") == ev_id
+                           or (resp.get("details") or {}).get("code") == "RES-0002")
+            terminal_ok = task_now.get("status") == expected
+            if not (fingerprint_ok and (response_ok or terminal_ok)):
+                raise OrchestrationError(6, f"event {event} 409 verification failed "
+                                            f"(fingerprint_ok={fingerprint_ok}, "
+                                            f"response_ok={response_ok}, terminal_ok={terminal_ok}; "
+                                            f"fail-closed): {json.dumps(resp, ensure_ascii=False)[:300]}")
+            self.ledger.append({"kind": "A5_DUPLICATE_OK", "event": event, "event_id": ev_id,
+                                "evidence": ["ledger-intent-fingerprint",
+                                             "response-key-match" if response_ok else "terminal-state-match"],
+                                "outcome": "IDEMPOTENT_HIT"})
+        elif code not in (200, 201):
+            raise OrchestrationError(6, f"event {event} HTTP {code}: "
+                                        f"{json.dumps(resp, ensure_ascii=False)[:300]}")
+        task = self._refetch_task()
         status = task.get("status")
         if status != expected:
             raise OrchestrationError(6, f"final status={status}, expected {expected} (result={result})")
@@ -707,6 +850,11 @@ class ArchReviewLeg:
     # run：全流程（A0→A5）
     # ------------------------------------------------------------------
     def run(self) -> int:
+        # P1-02：run_key 跨进程互斥覆盖全流程（并发 run/resume/attach 拒绝，fail-closed）
+        with RunKeyLock(self.run_dir, holder=f"arl-{self.run_key}-run"):
+            return self._run_inner()
+
+    def _run_inner(self) -> int:
         try:
             task, pending = self.a0_precheck()
             self.a1_compose_brief(task, pending)
@@ -758,6 +906,11 @@ class ArchReviewLeg:
     # resume：charter A-3 九行矩阵（fail-closed，不推测恢复）
     # ------------------------------------------------------------------
     def resume(self) -> int:
+        # P1-02：run_key 跨进程互斥覆盖全流程
+        with RunKeyLock(self.run_dir, holder=f"arl-{self.run_key}-resume"):
+            return self._resume_outer()
+
+    def _resume_outer(self) -> int:
         try:
             return self._resume_inner()
         except OrchestrationError as exc:
@@ -914,6 +1067,11 @@ class ArchReviewLeg:
     # attach-reply：人工退路（人工取得审核回复→同一契约+同一幂等键登记）
     # ------------------------------------------------------------------
     def attach_reply(self, reply_file: Path) -> int:
+        # P1-02：run_key 跨进程互斥覆盖全流程
+        with RunKeyLock(self.run_dir, holder=f"arl-{self.run_key}-attach"):
+            return self._attach_outer(reply_file)
+
+    def _attach_outer(self, reply_file: Path) -> int:
         try:
             return self._attach_inner(reply_file)
         except OrchestrationError as exc:

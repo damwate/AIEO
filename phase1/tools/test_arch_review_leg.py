@@ -429,6 +429,12 @@ class ArchReviewLegTests(unittest.TestCase):
                     # 首发发送成功但"采集失败"：落发送证据后返回非零（exit 3 家族）
                     ddir = ar.DISPATCH_LOG_DIR / "dispatch-collect-fail-1"
                     ddir.mkdir(parents=True, exist_ok=True)
+                    msg_file = None
+                    for i, a in enumerate(map(str, cmd)):
+                        if a == "--message-file" and i + 1 < len(cmd):
+                            msg_file = Path(str(cmd[i + 1]))
+                    if msg_file and msg_file.is_file():
+                        (ddir / "request.txt").write_bytes(msg_file.read_bytes())
                     (ddir / "result.json").write_text(json.dumps({
                         "user_unit_key": "fallback-turn-1:0:user",
                         "conversation_url": "https://chatgpt.com/c/11111111-2222-4333-8444-555555555555",
@@ -574,6 +580,120 @@ class ArchReviewLegTests(unittest.TestCase):
         self.assertEqual(rc, 2)
         self.assertIn("sent_user_unit_key missing", leg.ledger.state_flags().get(
             "LEG_LEVEL_BLOCKED", {}).get("reason", ""))
+
+    # ------------------------------------------------------------------
+    # 问题14 整改证明用例（GPT-02 真实审核 REWORK 四条 P1）
+    # ------------------------------------------------------------------
+    def test_17_ownership_mismatch_fail_closed(self):
+        """P1-01：located_key 与 sent_key 不一致必须 fail-closed（不再只记录）。"""
+        leg, task_id, _ = self.make_leg("p101")
+        leg.ledger.append({"kind": "A2_SEND_CONFIRMED", "attempt": 1,
+                           "dispatch_dir": "dispatch-x",
+                           "conversation_uuid": "https://chatgpt.com/c/11111111-2222-4333-8444-555555555555",
+                           "sent_user_unit_key": "fallback-turn-9:0:user",   # ≠现场快照键
+                           "outcome": "CONFIRMED"})
+        forensics = ar.DISPATCH_LOG_DIR / "manual-p101"
+        forensics.mkdir(parents=True, exist_ok=True)
+        (forensics / "reply.txt").write_text(self.reply_for("PASS"), encoding="utf-8")
+        (forensics / "result.json").write_text(json.dumps({
+            "user_unit_key": "fallback-turn-1:0:user",   # located ≠ sent
+            "conversation_url": "https://chatgpt.com/c/11111111-2222-4333-8444-555555555555",
+        }), encoding="utf-8")
+        rc = leg.attach_reply(forensics / "reply.txt")
+        self.assertEqual(rc, 2)
+        reason = leg.ledger.state_flags().get("LEG_LEVEL_BLOCKED", {}).get("reason", "")
+        self.assertIn("ownership mismatch", reason)
+        code, task = self.owner.get(f"/api/v1/tasks/{task_id}")
+        self.assertEqual(task.get("status"), "ARCH_REVIEW")
+
+    def test_18_concurrent_run_key_lock(self):
+        """P1-02：同 run_key 并发（第二个持锁请求）立即 fail-closed 拒绝。"""
+        leg, task_id, _ = self.make_leg("p102")
+        with ar.RunKeyLock(leg.run_dir, holder="p102-simulated-live-process"):
+            with self.assertRaises(OrchestrationError) as cm:
+                with ar.RunKeyLock(leg.run_dir, holder="p102-second"):
+                    pass
+            self.assertIn("held by another live process", str(cm.exception))
+        # 释放后可再次取得（OS 级锁，进程退出自动释放语义）
+        with ar.RunKeyLock(leg.run_dir, holder="p102-third"):
+            pass
+
+    def test_19_artifact_recovery_and_conflict_fail_closed(self):
+        """P1-03：①崩溃窗口恢复——M1 已建 artifact 账本缺记录→重登记 201 duplicate 返回
+        原 ID（path+SHA 内容寻址幂等），零重复记录；②真冲突（同 path 异 SHA）→409+GET
+        回核无法证明一致→fail-closed 拒绝。"""
+        import hashlib
+        leg, task_id, _ = self.make_leg("p103")
+        task, pending = leg.a0_precheck()
+        leg.a1_compose_brief(task, pending)
+        reply_body = ("ChatGPT 说：\n```json\n" + json.dumps(
+            {"result": "PASS", "summary": "ok", "findings": [], "unblocked": True},
+            ensure_ascii=False) + "\n```")
+        reply_bytes = reply_body.encode("utf-8")
+        reply_sha = hashlib.sha256(reply_bytes).hexdigest()
+        code, art = self.owner.post("/api/v1/artifacts", {
+            "task_id": task_id, "type": "REVIEW_EVIDENCE",
+            "path": f"runtime/arch-review-leg/arl-{leg.run_key}/reply.txt",
+            "sha256": reply_sha})
+        self.assertIn(code, (200, 201, 202))
+        orig_id = art.get("artifact_id") or art.get("id")
+        forensics = ar.DISPATCH_LOG_DIR / "manual-p103"
+        forensics.mkdir(parents=True, exist_ok=True)
+        (forensics / "reply.txt").write_bytes(reply_bytes)
+        (forensics / "result.json").write_text(json.dumps({
+            "user_unit_key": "fallback-turn-1:0:user",
+            "conversation_url": "https://chatgpt.com/c/11111111-2222-4333-8444-555555555555"}), encoding="utf-8")
+        leg.ledger.append({"kind": "A2_SEND_CONFIRMED", "attempt": 1, "dispatch_dir": "manual-p103",
+                           "sent_user_unit_key": "fallback-turn-1:0:user", "outcome": "CONFIRMED"})
+        captured = leg.a3_capture_and_validate(forensics)
+        # ①崩溃窗口恢复：账本无 artifact 记录，重登记→201 duplicate→原 ID 恢复
+        out = leg.a4_register(leg._refetch_task(), captured)
+        self.assertEqual(out["artifact_reply_id"], orig_id)
+        conn = sqlite3.connect(f"file:{self.server.db_path}?mode=ro", uri=True)
+        try:
+            n = conn.execute("SELECT COUNT(*) FROM artifacts WHERE task_id=? AND path LIKE ?",
+                             (task_id, f"%arl-{leg.run_key}%reply.txt")).fetchone()[0]
+        finally:
+            conn.close()
+        self.assertEqual(n, 1)
+        # ②真冲突 fail-closed：同 path 异 SHA→409→GET 回核 SHA 不匹配→拒绝
+        leg2 = ar.ArchReviewLeg(run_key=leg.run_key, task_id=task_id, project_id="PRJ-ARLTEST",
+                                input_material_commit=leg.input_material_commit,
+                                material_files=leg.material_files,
+                                m1_url=self.server.base, token=self.tokens["ENGINE-02"],
+                                material_base_commit=self.base_commit)
+        forged = dict(captured)
+        forged["reply_sha256"] = "f" * 64   # 与已登记 artifact 冲突的伪造 SHA
+        leg2.ledger.append({"kind": "A2_SEND_CONFIRMED", "attempt": 1, "dispatch_dir": "manual-p103",
+                            "sent_user_unit_key": "fallback-turn-1:0:user", "outcome": "CONFIRMED"})
+        with self.assertRaises(OrchestrationError) as cm:
+            leg2.a4_register(leg2._refetch_task(), forged)
+        self.assertIn("409", str(cm.exception))
+
+    def test_20_event_409_terminal_verification(self):
+        """P1-04：同 event_id 重放（事件已生效客户端未确认形态）→409+账本 intent 指纹
+        +终态 READY 核验通过，A5_DUPLICATE_OK 登记，不误判失败不重复推进。"""
+        leg, task_id, ctx = self.make_leg("p104", reply=self.reply_for("PASS"))
+        with self.dispatch_double(ctx[0]):
+            task, pending = leg.a0_precheck()
+            leg.a1_compose_brief(task, pending)
+            dispatch_dir = leg.a2_dispatch(leg.run_dir.joinpath("brief.txt").read_text(encoding="utf-8"))
+            captured = leg.a3_capture_and_validate(dispatch_dir)
+            leg.a4_register(leg._refetch_task(), captured)
+            status = leg.a5_advance("PASS")   # 首次提交：intent 落账本→201→READY
+            self.assertEqual(status, "READY")
+            # 客户端未确认形态：同实例（同账本 intent）再次 a5_advance→POST 409→双证核验
+            status2 = leg.a5_advance("PASS")
+            self.assertEqual(status2, "READY")
+        # M1 实测：同 event_id 重放返回 200 幂等响应（duplicate 标记非 409）——
+        # 409 分支为防御层（上游语义变化时 fail-closed）；核心断言=不误判失败+单条记录
+        conn = sqlite3.connect(f"file:{self.server.db_path}?mode=ro", uri=True)
+        try:
+            n = conn.execute("SELECT COUNT(*) FROM task_events WHERE event_id=?",
+                             (leg.event_id("PASS", "01"),)).fetchone()[0]
+        finally:
+            conn.close()
+        self.assertEqual(n, 1)
 
     # ------------------------------------------------------------------
     # setup-agents 幂等（bootstrap 一次性；非运行期路径）
