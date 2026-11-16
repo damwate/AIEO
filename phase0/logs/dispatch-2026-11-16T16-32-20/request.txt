@@ -1,0 +1,5 @@
+【架构审核请求·GPT-02】[GPT02-R1|921001|T-P1-001]
+任务T-P1-001（GPT-02 arch review leg design self-review (live drill)）。范围：['phase1/tools/arch_review_leg.py']
+无未完成依赖。
+读仓库 github.com/damwate/AIEO（基线main=d0eb87ecb1d00f190d9d2129ae78db250837b35c）固定commit=d0eb87ecb1d00f190d9d2129ae78db250837b35c 文件：basic/tasks/b-20261116-gpt02-arch-review-leg/acceptance/design-notes.md、basic/tasks/b-20261116-gpt02-arch-review-leg/task-brief.md、docs/phase1/GPT02-ARCH-REVIEW-LEG-CHARTER-DRAFT.md（任务书/方案/验收标准全文在材料，逐项审：边界/依赖/并发/失败路径）。
+回复仅一个```json对象：{"result":"PASS|REWORK|BLOCKED","summary":"<一句话>","findings":[],"required_boundaries":[],"failure_paths":[],"remaining_findings":[],"unblocked":true}；result：PASS=架构通过／REWORK=须返工／BLOCKED=架构阻塞须人工决策。

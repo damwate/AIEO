@@ -1,0 +1,60 @@
+ChatGPT 说：
+
+{"result":"REWORK","summary":"固定 commit 的实现存在需要先核实并修复的架构风险，当前不能判定通过，重点是断点恢复、跨事务登记一致性及并发幂等保护。","findings":[
+
+
+{
+"id": "P1-01",
+"severity": "P1",
+"location": "phase1/tools/arch_review_leg.py:371-389",
+"problem": "回复归属校验只记录 target_matches_sent_key，未实际比较 located_key 与 sent_key。不同 user unit 的回复只要存在非空 key 就可能通过后续契约校验并登记。",
+"required_fix": "当发送锚点存在时，必须强制 located_key == sent_key；不一致立即 fail-closed，禁止登记及状态推进。",
+"verification": "注入不同 user unit key，必须拒绝；相同 key 才允许继续。"
+},
+{
+"id": "P1-02",
+"severity": "P1",
+"location": "phase1/tools/arch_review_leg.py:113-115, 233-292",
+"problem": "同一 run_key 没有进程级互斥锁。并发 run/resume/attach-reply 会共享 runtime 目录、账本、确定性 message_id 和事件 ID，可能发生重复真实派单、账本交错及报告文件覆盖。此外 _find_dispatch_dir 从全局 DISPATCH_LOG_DIR 按 mtime 选择最新目录，无法可靠隔离并发派单。",
+"required_fix": "增加 run_key 级跨进程排他锁，覆盖 run/resume/attach-reply 全流程；派单现场必须通过本次请求的唯一关联标识精确定位，不能仅依赖全局最新 mtime。",
+"verification": "并发启动同一 run_key 的两个进程，以及不同 run_key 同时派单，证明无重复发送、无串单、无账本覆盖。"
+},
+{
+"id": "P1-03",
+"severity": "P1",
+"location": "phase1/tools/arch_review_leg.py:523-545, 555-587, 616-640",
+"problem": "路线 B 的 artifacts 登记存在不可恢复窗口：M1 已成功创建 artifact，但进程在写入 A4_ARTIFACT_REPLY/A4_ARTIFACT_REPORT 账本记录前崩溃。恢复时 _ledger_verified 无 artifact_id 可核验，只能再次 POST；而 artifact 的 409 没有 key_evidence，必然被 _register_step 拒绝。无法完成设计承诺的部分成功续登记。",
+"required_fix": "为 artifact 登记增加可恢复的请求身份及服务端结果核验机制，能够在账本缺失时按路径、SHA、task_id 核验已存在记录，并安全恢复其 artifact_id；无法证明一致时继续 fail-closed。",
+"verification": "分别注入两个 artifact POST 成功后、账本 append 前崩溃，重启后不得产生重复记录，且能完成后续登记。"
+},
+{
+"id": "P1-04",
+"severity": "P1",
+"location": "phase1/tools/arch_review_leg.py:616-637, 656-675",
+"problem": "事件登记的 409 幂等核验与消息登记共用 _register_step，但事件没有对应的账本记录类型映射。即使服务端响应能证明 event_id 已存在，kind 仍为 None，rec 必然为空，最终拒绝幂等重放。与 A-3 原 event_id 幂等续推要求不一致。",
+"required_fix": "事件登记单独实现可核验的 409 处理，基于原 event_id、事件类型、请求指纹及 M1 当前状态完成双证核验，不得接受仅有通用 RES-0002 的模糊证据。",
+"verification": "注入事件成功但客户端未确认的断点，使用原 event_id 恢复；验证不会重复推进，也不会错误判定失败。"
+}
+],
+"required_boundaries": [
+"严格保持 ENGINE-02 六个运行期端点白名单，仅允许 PASS/REWORK 事件；BLOCKED 结论只登记并腿级停止。",
+"保持 M1-M4、scheduler.py、M2 派单链既有代码零修改边界。",
+"保持冻结契约 v1.0、1200B 出站限制及固定完整 SHA 材料锚定。",
+"run_key 必须具备跨进程互斥；不能将幂等 ID 等同于并发安全。",
+"路线 B 多事务登记必须具备逐项可验证、可恢复的失败语义。",
+"回复归属必须经过实际一致性断言，而非仅记录校验结果。"
+],
+"failure_paths": [
+"发送失败且没有发送证据：最多一次换新会话重派。",
+"发送已确认但采集失败：禁止重发，只能原会话补采。",
+"回复归属不一致或证据缺失：fail-closed，不登记。",
+"契约校验失败：保留原始回复，不登记、不推进。",
+"artifact/message 登记部分成功：逐项核验已成功操作，安全续办，不盲目重复 POST。",
+"事件推进结果不确定：按原 event_id 核验并恢复，不创建新事件。",
+"BLOCKED 结论：仅登记，M1 保持 ARCH_REVIEW，交 OWNER 决策。",
+"并发调用：互斥保护；无法取得锁时拒绝执行，不得进入派单或登记。",
+"其他异常：腿级 BLOCKED，保持 M1 任务状态不变，人工接管。"
+],
+"remaining_findings": [],
+"unblocked": true
+}

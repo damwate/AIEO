@@ -33,4 +33,13 @@
 
 ## 返工记录表（首次 REJECT 时建表；按"同一问题"计数）
 
-（暂无）
+| 问题编号 | 轮次来源 | 问题描述 | 整改内容 | 修复 commit | 验证 |
+|---|---|---|---|---|---|
+| 问题14 | 零 mock 实战（921001/T-P1-001，GPT-02 真实结论 REWORK） | 真实审核四条 P1 缺陷：P1-01 回复归属校验只记录 target_matches_sent_key 未强制比较（不一致不拦截）；P1-02 run_key 无跨进程互斥+_find_dispatch_dir 按 mtime 选最新目录并发串单风险；P1-03 路线 B artifact 登记不可恢复窗口（M1 已建而账本未写时崩溃→恢复重 POST 409 无 key_evidence 必拒）；P1-04 事件 409 走 _register_step 的 kind 映射缺失（A-3 行 6 原 event_id 续推无法执行） | （整改中）P1-01 归属强制断言（不一致 fail-closed）；P1-02 run_key 跨进程文件锁+派单现场精确关联定位；P1-03 artifact 409 按 path+sha256+task_id 服务端核验恢复；P1-04 事件 409 独立双证核验（原 event_id+请求指纹+M1 状态） | （待整改 commit） | 待整改后复核 |
+
+### 实战记录（零 mock 全链，2026-11-17）
+
+- **现场：** 真实 M1 实例 127.0.0.1:8001（独立 DB runtime/arch-leg-20261117/，秘密 gitignored）；真实任务 T-P1-001（PRJ-GPT02LEG/BATCH-001，OWNER bootstrap PLAN→ARCH_REVIEW）；真实派单 dispatch-2026-11-16T16-32-20（简报 918B≤1200，材料锚定 d0eb87ecb1d00f190d9d2129ae78db250837b35c=GitHub 已推送，会话 6afb304c-37d8-83ee-8d7f-09a1471c7547，回复 4633B）。
+- **全链：** A0 前置核查 PASS→A1 简报（绑定字段入账本）→A2 真实派单发送双验→A3 真实采集+契约校验 **fail-closed 真拦截**（审查回复 findings=结构化对象 vs 冻结契约 items=string，格式错位；raw 保留不登记）→A6 人工退路（内容保真规整 loss=NONE→attach→artifacts×2+message 登记）→A5 REWORK→REWORK 推进；**M1 最终状态=REWORK**；账本 14 条、报告 report.json（brief_sha256=a74fb9b2…、manifest=116a39bb…）。
+- **实战价值实证：** GPT-02 真实审核发现四条 P1 实质缺陷（见返工表问题14）——架构审核腿真实拦截架构风险的功能验证成立；契约校验负例与人工退路（A6）均以真实现场验证。
+- **遗留登记：** ①契约演进待办=arch-review-report findings 由 string[] 演进为结构化对象（Gate2 定稿与角色规范真实输出错位；本轮以人工规整保真过渡，正式演进须走契约版本流程 H2）②审核会话 6afb304c 为实战单轮会话（非审查主会话）。

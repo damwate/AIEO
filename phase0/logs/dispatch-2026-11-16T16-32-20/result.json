@@ -1,0 +1,181 @@
+{
+  "at": "2026-11-16T16:34:59.113Z",
+  "message_bytes": 922,
+  "reply": "ChatGPT 说：\n\n{\"result\":\"REWORK\",\"summary\":\"固定 commit 的实现存在需要先核实并修复的架构风险，当前不能判定通过，重点是断点恢复、跨事务登记一致性及并发幂等保护。\",\"findings\":[\n\n\n{\n\"id\": \"P1-01\",\n\"severity\": \"P1\",\n\"location\": \"phase1/tools/arch_review_leg.py:371-389\",\n\"problem\": \"回复归属校验只记录 target_matches_sent_key，未实际比较 located_key 与 sent_key。不同 user unit 的回复只要存在非空 key 就可能通过后续契约校验并登记。\",\n\"required_fix\": \"当发送锚点存在时，必须强制 located_key == sent_key；不一致立即 fail-closed，禁止登记及状态推进。\",\n\"verification\": \"注入不同 user unit key，必须拒绝；相同 key 才允许继续。\"\n},\n{\n\"id\": \"P1-02\",\n\"severity\": \"P1\",\n\"location\": \"phase1/tools/arch_review_leg.py:113-115, 233-292\",\n\"problem\": \"同一 run_key 没有进程级互斥锁。并发 run/resume/attach-reply 会共享 runtime 目录、账本、确定性 message_id 和事件 ID，可能发生重复真实派单、账本交错及报告文件覆盖。此外 _find_dispatch_dir 从全局 DISPATCH_LOG_DIR 按 mtime 选择最新目录，无法可靠隔离并发派单。\",\n\"required_fix\": \"增加 run_key 级跨进程排他锁，覆盖 run/resume/attach-reply 全流程；派单现场必须通过本次请求的唯一关联标识精确定位，不能仅依赖全局最新 mtime。\",\n\"verification\": \"并发启动同一 run_key 的两个进程，以及不同 run_key 同时派单，证明无重复发送、无串单、无账本覆盖。\"\n},\n{\n\"id\": \"P1-03\",\n\"severity\": \"P1\",\n\"location\": \"phase1/tools/arch_review_leg.py:523-545, 555-587, 616-640\",\n\"problem\": \"路线 B 的 artifacts 登记存在不可恢复窗口：M1 已成功创建 artifact，但进程在写入 A4_ARTIFACT_REPLY/A4_ARTIFACT_REPORT 账本记录前崩溃。恢复时 _ledger_verified 无 artifact_id 可核验，只能再次 POST；而 artifact 的 409 没有 key_evidence，必然被 _register_step 拒绝。无法完成设计承诺的部分成功续登记。\",\n\"required_fix\": \"为 artifact 登记增加可恢复的请求身份及服务端结果核验机制，能够在账本缺失时按路径、SHA、task_id 核验已存在记录，并安全恢复其 artifact_id；无法证明一致时继续 fail-closed。\",\n\"verification\": \"分别注入两个 artifact POST 成功后、账本 append 前崩溃，重启后不得产生重复记录，且能完成后续登记。\"\n},\n{\n\"id\": \"P1-04\",\n\"severity\": \"P1\",\n\"location\": \"phase1/tools/arch_review_leg.py:616-637, 656-675\",\n\"problem\": \"事件登记的 409 幂等核验与消息登记共用 _register_step，但事件没有对应的账本记录类型映射。即使服务端响应能证明 event_id 已存在，kind 仍为 None，rec 必然为空，最终拒绝幂等重放。与 A-3 原 event_id 幂等续推要求不一致。\",\n\"required_fix\": \"事件登记单独实现可核验的 409 处理，基于原 event_id、事件类型、请求指纹及 M1 当前状态完成双证核验，不得接受仅有通用 RES-0002 的模糊证据。\",\n\"verification\": \"注入事件成功但客户端未确认的断点，使用原 event_id 恢复；验证不会重复推进，也不会错误判定失败。\"\n}\n],\n\"required_boundaries\": [\n\"严格保持 ENGINE-02 六个运行期端点白名单，仅允许 PASS/REWORK 事件；BLOCKED 结论只登记并腿级停止。\",\n\"保持 M1-M4、scheduler.py、M2 派单链既有代码零修改边界。\",\n\"保持冻结契约 v1.0、1200B 出站限制及固定完整 SHA 材料锚定。\",\n\"run_key 必须具备跨进程互斥；不能将幂等 ID 等同于并发安全。\",\n\"路线 B 多事务登记必须具备逐项可验证、可恢复的失败语义。\",\n\"回复归属必须经过实际一致性断言，而非仅记录校验结果。\"\n],\n\"failure_paths\": [\n\"发送失败且没有发送证据：最多一次换新会话重派。\",\n\"发送已确认但采集失败：禁止重发，只能原会话补采。\",\n\"回复归属不一致或证据缺失：fail-closed，不登记。\",\n\"契约校验失败：保留原始回复，不登记、不推进。\",\n\"artifact/message 登记部分成功：逐项核验已成功操作，安全续办，不盲目重复 POST。\",\n\"事件推进结果不确定：按原 event_id 核验并恢复，不创建新事件。\",\n\"BLOCKED 结论：仅登记，M1 保持 ARCH_REVIEW，交 OWNER 决策。\",\n\"并发调用：互斥保护；无法取得锁时拒绝执行，不得进入派单或登记。\",\n\"其他异常：腿级 BLOCKED，保持 M1 任务状态不变，人工接管。\"\n],\n\"remaining_findings\": [],\n\"unblocked\": true\n}",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "f3333c38-3655-4ce1-bc2a-d9148f2d6316",
+  "stability": {
+    "stable": true,
+    "interval_ms": 3805,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-16T16:34:54.588Z",
+      "read_finished_at": "2026-11-16T16:34:55.391Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "a10b5ceb9523f16a4bb0c431b42259a7b91150fa7784084eda18f1309d364a43",
+          "size_bytes": 4633
+        }
+      ],
+      "assistant_uuid": "f3333c38-3655-4ce1-bc2a-d9148f2d6316",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-16T16:34:58.393Z",
+      "read_finished_at": "2026-11-16T16:34:58.927Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "a10b5ceb9523f16a4bb0c431b42259a7b91150fa7784084eda18f1309d364a43",
+          "size_bytes": 4633
+        }
+      ],
+      "assistant_uuid": "f3333c38-3655-4ce1-bc2a-d9148f2d6316",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "a618920e12fd148859715299ca5d9c417c40836a9e817956347f6a203866bcaa",
+          "a10b5ceb9523f16a4bb0c431b42259a7b91150fa7784084eda18f1309d364a43"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "a618920e12fd148859715299ca5d9c417c40836a9e817956347f6a203866bcaa",
+          "a10b5ceb9523f16a4bb0c431b42259a7b91150fa7784084eda18f1309d364a43"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "a10b5ceb9523f16a4bb0c431b42259a7b91150fa7784084eda18f1309d364a43",
+  "size_bytes": 4633,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-16T16-32-20\\reply.txt",
+  "reply_readback_sha256": "a10b5ceb9523f16a4bb0c431b42259a7b91150fa7784084eda18f1309d364a43",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-16T16-32-20\\raw-units.json",
+  "raw_units_sha256": "064d0d576e5fc6b8ed3c50a8842be13cfac7ec7ddfea80fd12c203a58c65b9de",
+  "raw_units_size_bytes": 7464,
+  "raw_units_readback_sha256": "064d0d576e5fc6b8ed3c50a8842be13cfac7ec7ddfea80fd12c203a58c65b9de",
+  "session_id": "6afb304c-37d8-83ee-8d7f-09a1471c7547",
+  "conversation_url": "https://chatgpt.com/c/6afb304c-37d8-83ee-8d7f-09a1471c7547",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}
