@@ -26,17 +26,18 @@
 - ST-05 检查器自检：开发期 `acceptance/st05-inprogress.txt`（①②PASS、③FAIL=仅 S1⑥ 验收证据未回填[开发期既定语义]、退出码 1）；**COMPLETED 态取证待 R2 复审通过后执行并落库**（检查器未改、开发期原始输出保留）。
 - 残留排查：8 种旧阈值模式全仓 sweep（residual-sweep.txt 原始版+residual-sweep-utf8.txt 规范版，LIVE=7 均为变更记录/证据语境）；独立迁移时机规定排查 33 文件（rotation-sweep.txt，无数值阈值冲突）。
 - 独立验收 R1（现场 dispatch-2026-11-16T13-18-39，reply 4733B，sha256=569d89bc34cc6a094a2053b93bc475a95c011f1c0fb020035d46a599fccecc9e）：**规则内容 ①L-018 PASS ②AGENTS.md PASS ③DEC-084 PASS ⑤零改动 PASS；整体 REJECT 仅 ④交付闭环未完成**（P1-04，见 steps.md 返工表问题1）→已按审查方六项清单收尾。
+- R2 限定复审（现场 dispatch-2026-11-16T13-29-15/recoll 归属校验型补采七查全过未重发，reply 3425B，sha256=aad362e870b747a6aafc131176dad28a47972eb3c7849c432b22864d2ef4c444，核验对象=3dce96c3e5044b1a3f87e41f478fde5894b0f26d）：返工问题1 **PASS**（原始 ST-05 未篡改、历史证据未删）、UTF-8 残留报告 PASS（逐行核验 LIVE=7，审查方提示总命中数差异不得称"完全一致"）、修改范围 PASS；REJECT 仅 ①S2⑥ 缺 R1 完整绑定（已补，见 steps.md S2⑥）+②delivery 最终状态未闭环（待 R3 通过后 COMPLETED 态 ST-05 取证回填，不提前置"完成"）。
 
 ## 5. Git commit
 
 - **被测 commit=1022694967e519de8ae2a03fd3e6b799988c09a6**（完整 40 位 SHA；父=push 时基线；用户 2026-11-16 "同意"明文批准后提交，`toolkit/check-push.mjs` 推送成功 ahead=0 behind=0）；R1 验收严格锁定该 SHA（审查方明示不用 HEAD）。
-- 交付闭环 commit=（待用户批准后回填完整 SHA）。
+- **交付闭环 commit=3dce96c3e5044b1a3f87e41f478fde5894b0f26d**（完整 40 位 SHA；用户 2026-11-16 "yes" 批准后提交并推送，R2 限定复审核验对象，ahead=1 behind=0 已确认）；R2 整改 commit=（R3 前回填完整 SHA）。
 
 ## 6. 未解决问题
 
-- R2 限定复审待派（绑定交付闭环 commit 新完整 SHA）。
-- COMPLETED 态 ST-05 取证待 R2 通过后执行（要求 ①～⑥ 全 PASS、Overall PASS、退出码 0）。
-- 远程 main 已随批准推送（ahead=0）；后续轮次证据 commit 依批准推进。
+- R3 限定复审待派（绑定 R2 整改 commit 新完整 SHA）。
+- COMPLETED 态 ST-05 取证待 R3 通过后执行（要求 ①～⑥ 全 PASS、Overall PASS、退出码 0；审查方明示"以实际运行输出为证据，不预先填写 PASS"）。
+- 远程 main 已随批准推送（ahead=0）；后续轮次证据 commit 依用户预批准推进。
 
 ## 7. 后续建议
 

@@ -1,0 +1,4 @@
+【限定复审R2·同会话续派】b-20261116-session-migrate-4rounds 交付闭环复核。R1（现场 dispatch-2026-11-16T13-18-39，reply sha256=569d89bc…cc9e 完整值见其 reply.txt）REJECT 仅 P1-04 交付闭环，规则①②③⑤已 PASS。
+闭环 commit 完整 SHA=3dce96c3e5044b1a3f87e41f478fde5894b0f26d（已推送）。读取 raw.githubusercontent.com/damwate/AIEO/3dce96c3e5044b1a3f87e41f478fde5894b0f26d/ 下 basic/tasks/b-20261116-session-migrate-4rounds/：steps.md（S1⑥/S2⑥ 证据回填+返工表问题1）、delivery.md（七要素）、task-brief.md（状态=验收中+批准记录）、acceptance/residual-sweep-utf8.txt（原版保留）。
+复核项：①S1⑥/S2⑥ 证据引用完整（R1 现场+reply 完整 SHA256+被测 1022694967e519de8ae2a03fd3e6b799988c09a6）；②delivery 七要素与实际一致；③返工表问题1 整改如实（ST-05 与开发期原始输出未改）；④residual-sweep-utf8.txt 可逐行核验且 LIVE=7 与原版一致；⑤范围未扩大（规则文件本 commit 零改动）。
+结论：PASS/REJECT（逐项）/BLOCKED。PASS 后 COMPLETED 态 ST-05 取证+最终回填（用户预批准）并绑定新完整 SHA。

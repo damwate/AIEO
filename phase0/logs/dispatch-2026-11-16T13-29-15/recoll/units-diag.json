@@ -1,0 +1,26 @@
+[
+  {
+    "key": "fallback-turn-0:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【独立验收·同会话续派】b-20261116-session-migrate-4rounds 交付验收（4轮规则落地；方案共识=bf4bbc1d…6bb04）。"
+  },
+  {
+    "key": "fallback-turn-0:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\n本次验收严格锁定被测提交：\n\n1022694967e519de8ae2a03fd3e6b799988c09a6\n\n不使用 HEAD，不把"
+  },
+  {
+    "key": "fallback-turn-1:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【限定复审R2·同会话续派】b-20261116-session-migrate-4rounds 交付闭环复核。R1（现场 dispatch-2026-11-1"
+  },
+  {
+    "key": "fallback-turn-1:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nR2 限定复审结论\n\n被测提交\n\nREJECT\n\n3dce96c3e5044b1a3f87e41f478fde5894b0f26d\n\n严格"
+  }
+]
