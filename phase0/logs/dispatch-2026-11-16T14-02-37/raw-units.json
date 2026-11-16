@@ -1,0 +1,108 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-16T14:04:23.743Z",
+  "user_unit_key": "fallback-turn-2:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-2:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "03346079-3eda-4c76-9599-97b892f2df84",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-2:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "d3e995ed1dc0c5dbc14b2984538c8914a9f441d30aa2f5de7e744dc0c1fd8e84",
+          "3e9b67cb3a10f42ec7e6f2fea9d59fcb9e284670e2ffe584fcdaffb8fbe51d94",
+          "b77d226f7919520652f563d478b5add2a0693db98181fe78a064c805ce5af0ce",
+          "00c7651d6bd41b1c62da853626b27336bc0baad0a198bb3437770e80c834d49e"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "d3e995ed1dc0c5dbc14b2984538c8914a9f441d30aa2f5de7e744dc0c1fd8e84",
+          "3e9b67cb3a10f42ec7e6f2fea9d59fcb9e284670e2ffe584fcdaffb8fbe51d94",
+          "b77d226f7919520652f563d478b5add2a0693db98181fe78a064c805ce5af0ce",
+          "00c7651d6bd41b1c62da853626b27336bc0baad0a198bb3437770e80c834d49e"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-2:0:user",
+      "fallback-turn-2:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-2:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nR8 限定确认：PASS\n最终定案 PASS\n\n核验对象： 20a3f5fef6051aba62ea680b43972b611ac1b39f\n\n范围证据版本： baac80b0396e7d9970677c3e2fa37ec34788f519\n\n已读取 acceptance/r7-scope-evidence.txt，核对完整 git show --stat 和 git diff-tree --name-status 原始输出。\nGitHub\n\n⑤ 范围确认\nPASS\n\n任务包文件：delivery.md、steps.md、task-brief.md，符合预期。\n\nST-05 整改后证据：st05-after-r6fix.txt，符合预期。\n\nR6 现场归档：8 个现场证据文件，符合预期。\n\nR6 简报：session-migrate-4rounds-recheck-r6.txt，符合预期。\n\n没有规则文件变更。\n\n没有中级版代码变更。\n\n总计 13 个文件变更，19 insertions(+)，4 deletions(-)，与 R7 限定整改范围一致。\n\n最终验收汇总\n\n复核轮次\n\n\t\n\n结果\n\n\n\n\nR6\n\n\t\n\n③ REJECT\n\n\n\n\nR7\n\n\t\n\n④ PASS，⑤ BLOCKED\n\n\n\n\nR8\n\n\t\n\n⑤ PASS\n\nPASS\n\nb-20261116-session-migrate-4rounds\n\n任务交付闭环完成\n\n交付证据闭环：PASS\n\n无夸大表述：PASS\n\n索引自洽：PASS\n\n范围未扩大：PASS\n\n最终状态：PASS\n\n正式定案\n\n结论：本任务正式验收通过，不再需要 R9，不再追加整改。\n\n这次 4 轮迁移规则落地任务，至此完成最终闭环。",
+      "text_sha256": "00c7651d6bd41b1c62da853626b27336bc0baad0a198bb3437770e80c834d49e",
+      "size_bytes": 1230,
+      "assistant_uuid": "03346079-3eda-4c76-9599-97b892f2df84"
+    }
+  ]
+}

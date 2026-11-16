@@ -40,7 +40,8 @@
 - R3 限定复审（现场 dispatch-2026-11-16T13-36-34，reply 1830B，sha256=055132f39fb786b9ee8ce19460a1b80c67f61e9575ec507722a24df4d33ad082，核验对象=f13e451192feb74535d8e6b371a618281a5a1fe3）：①S2⑥ 绑定 **PASS** ②delivery §4/§5 **PASS**，REJECT 仅③范围表述（简报漏记 recoll_migrate4r2.mjs）→已如实补录 §3 并登记返工表问题3，R4 待派。
 - R4 限定复审（现场 dispatch-2026-11-16T13-41-50，reply 1668B，sha256=925d497d2d86a79fda5cf94b64094a6b71b0bfc9f2baa1a5061db5742df96dff，核验对象=f56f8931a796b39ecbcc1cb66950fd30f247e72d）：③范围未扩大 **PASS**，REJECT 仅①问题3 修复 commit 占位未绑定（已绑定）+②"累计产物 vs 本次提交变更"混述（本节已更正，见 steps.md 问题4）→R5 待派。
 - R6 最终闭环复核已完成（现场 dispatch-2026-11-16T13-53-16，reply 2468B，sha256=199ef4ef785b9161fdf8475a159088325c2b01ed8ffbfcb51c200e161960171e，核验对象=086225e4454bc4afd9fc5652a1db5f9979ed4421）：①交付证据闭环 PASS ②无夸大表述 PASS ④范围未扩大 PASS，③状态索引不一致（task-brief/delivery §6 残留"R6 待派"字样）→已最小整改（本提交），定案以 R7 限定复核为准（绑定整改 commit 完整 SHA）。
-- R7 限定复核待派（绑定 R6 整改 commit 完整 SHA）。
+- R7 定案复核已完成（现场 dispatch-2026-11-16T13-59-12，reply sha256=3e9b67cb3a10f42ec7e6f2fea9d59fcb9e284670e2ffe584fcdaffb8fbe51d94，核验对象=20a3f5fef6051aba62ea680b43972b611ac1b39f）：无新缺陷，仅要求补范围证据→`acceptance/r7-scope-evidence.txt`（证据 commit baac80b0396e7d9970677c3e2fa37ec34788f519）。
+- R8 范围确认已完成（现场 dispatch-2026-11-16T14-02-37，reply sha256=00c7651d6bd41b1c62da853626b27336bc0baad0a198bb3437770e80c834d49e，核验对象=baac80b0396e7d9970677c3e2fa37ec34788f519）：**最终状态 PASS——正式定案，本任务验收通过、交付闭环完成，无 R9**。
 - COMPLETED 态 ST-05 取证：R5 通过后已实际执行（输出见 acceptance/st05-completed.txt，回填 S3⑤/delivery §4）。
 - 会话迁移评估记录：R4 派单达 L-018 第 6 条 4 条 user 消息阈值，按例外①临近完成验收暂不迁移（理由见 steps.md S3⑥），后续每增 2 条重评。
 - 远程 main 已随批准推送（ahead=0）；后续轮次证据 commit 依用户预批准推进。

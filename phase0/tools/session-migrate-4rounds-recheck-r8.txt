@@ -1,0 +1,4 @@
+【限定确认R8·同会话续派】b-20261116-session-migrate-4rounds 仅⑤范围确认（R7 其余项无缺陷）。R7=现场 dispatch-2026-11-16T13-59-12，reply sha256=3e9b67cb3a10f42ec7e6f2fea9d59fcb9e284670e2ffe584fcdaffb8fbe51d94。
+证据 commit 完整 SHA=baac80b0396e7d9970677c3e2fa37ec34788f519（已推送，直接后继 20a3f5fef6051aba62ea680b43972b611ac1b39f）。读取 raw.githubusercontent.com/damwate/AIEO/baac80b0396e7d9970677c3e2fa37ec34788f519/ 下 basic/tasks/b-20261116-session-migrate-4rounds/acceptance/r7-scope-evidence.txt（20a3f5fe 的 git show --stat 与 git diff-tree --no-commit-id --name-status -r 完整原始输出，未加工）。
+确认项：⑤范围=任务包文件回填（delivery/steps/task-brief）+st05-after-r6fix.txt+R6 现场归档+R6 简报，无规则文件、无中级版代码——与 R7 ⑤口径一致即 PASS。
+结论：PASS/REJECT/BLOCKED。PASS 即定案：本任务交付闭环完成。

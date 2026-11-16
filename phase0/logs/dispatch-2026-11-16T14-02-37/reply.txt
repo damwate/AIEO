@@ -1,0 +1,84 @@
+ChatGPT 说：
+R8 限定确认：PASS
+最终定案 PASS
+
+核验对象： 20a3f5fef6051aba62ea680b43972b611ac1b39f
+
+范围证据版本： baac80b0396e7d9970677c3e2fa37ec34788f519
+
+已读取 acceptance/r7-scope-evidence.txt，核对完整 git show --stat 和 git diff-tree --name-status 原始输出。
+GitHub
+
+⑤ 范围确认
+PASS
+
+任务包文件：delivery.md、steps.md、task-brief.md，符合预期。
+
+ST-05 整改后证据：st05-after-r6fix.txt，符合预期。
+
+R6 现场归档：8 个现场证据文件，符合预期。
+
+R6 简报：session-migrate-4rounds-recheck-r6.txt，符合预期。
+
+没有规则文件变更。
+
+没有中级版代码变更。
+
+总计 13 个文件变更，19 insertions(+)，4 deletions(-)，与 R7 限定整改范围一致。
+
+最终验收汇总
+
+复核轮次
+
+	
+
+结果
+
+
+
+
+R6
+
+	
+
+③ REJECT
+
+
+
+
+R7
+
+	
+
+④ PASS，⑤ BLOCKED
+
+
+
+
+R8
+
+	
+
+⑤ PASS
+
+PASS
+
+b-20261116-session-migrate-4rounds
+
+任务交付闭环完成
+
+交付证据闭环：PASS
+
+无夸大表述：PASS
+
+索引自洽：PASS
+
+范围未扩大：PASS
+
+最终状态：PASS
+
+正式定案
+
+结论：本任务正式验收通过，不再需要 R9，不再追加整改。
+
+这次 4 轮迁移规则落地任务，至此完成最终闭环。
