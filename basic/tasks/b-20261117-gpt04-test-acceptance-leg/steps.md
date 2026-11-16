@@ -21,8 +21,9 @@
 
 - ①本步骤目标：测试矩阵+三腿回归+零 mock 实战全链。②修改文件：phase1/tools/test_test_acceptance_leg.py（新增）。③修改内容：A1~A7 用例+负例（白名单越权/契约失败/简报超限/材料锚定 fail-closed/矩阵禁止组合 fail-closed/发送状态不确定 fail-closed/RunKeyLock 跨进程）+三腿合跑回归（test_review_leg+test_arch_review_leg+本矩阵）；零 mock 实战（真实 M1 实例+真实派单+真实 GPT-04 结论登记）。
 - ④执行结果：test_test_acceptance_leg.py 新增 30 用例（A1~A7+负例：白名单越权/契约失败/简报超限/材料锚定/矩阵禁止组合/G2-04 复述不一致/duplicate 409 双分支/原子异常行9/崩溃窗口 GET 核实恢复/发送意图无确认/归属冲突账本注入/RunKeyLock/setup 幂等）。首轮 30/30 OK；三腿合跑首轮 88 用例 1 失败（test_14 偶发）→r2/r3 两轮 88/88 OK exit=0（acceptance/test-run-combined-r2.txt/r3.txt 落盘；失败未复现，按 GPT-02 test_19 PID 竞态先例如实登记为单次偶发观察）。
-- ⑤测试结果：30/30 OK；合跑 88/88 OK（两轮复证）。
-- ⑥验收证据引用：phase1/tools/test_test_acceptance_leg.py；acceptance/test-run-combined-r2.txt；acceptance/test-run-combined-r3.txt
+- ⑤测试结果：30/30 OK；三腿合跑经偶发排查后连续 10 轮 88/88 OK。
+- ⑤b **偶发排查与两处真缺陷修复（零 mock 实战 F-003 真执行暴露，2026-11-17 如实登记）：** 三腿合跑首两轮各 1 次失败（test_14 "no dispatch evidence dir created by this send"）+F-003 实战真执行复现同一失败。诊断（探针驱动 acceptance/flake-diagnosis-probe.log）：①本腿 _find_dispatch_dir 的 mtime 严格 >= 过滤——Windows 时钟粒度下文件 mtime 可早于同刻 time.time() 采样（探针实测 39/300 负偏）→加 2 秒容差（request.txt 与本轮 brief 字节严格一致=归属强证据不变，容差仅放宽候选窗口，最新优先仍取本次尝试）；②测试替身 make_dispatch_double 目录名=秒级时间戳+实例内 n——同秒跨实例碰撞时 mkdir(exist_ok=True) 复用同目录互覆现场（探针 wprobe 证实 test_13b/test_14 同秒复用 033032-1）+Windows 目录元数据缓存滞后放大→test_review_leg.py 加全局唯一序号（_DISPATCH_DIR_SEQ，一处；测试基建适配沿 GPT-02 3 行适配先例）。修复后连续 10 轮 88/88 OK（首修复批 1 次失败与已知 test_19 PID 复用竞态（DEC-088 登记）同率且未再现）。**遗留登记：** review_leg.py/arch_review_leg.py 同型 mtime 严格过滤隐患（两腿实战未触发；修复属已 PASS 腿代码，超出本任务授权边界，登记待办移交）。
+- ⑥验收证据引用：phase1/tools/test_test_acceptance_leg.py；acceptance/test-run-combined-r2.txt；acceptance/test-run-combined-r3.txt；acceptance/flake-diagnosis-probe.log
 
 ## S4 交付（PLANNED）
 

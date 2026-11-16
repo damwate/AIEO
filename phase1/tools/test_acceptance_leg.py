@@ -225,7 +225,7 @@ class TestAcceptanceLeg:
         return f"{self.event_base}-{event}-{tail}"
 
     def message_id(self) -> str:
-        """确定性 message_id（模式 MSG-\d{8}-\d{6}）：run_key 散列折叠 14 位数字。"""
+        """确定性 message_id（模式 MSG-<8位>-<6位>）：run_key 散列折叠 14 位数字。"""
         h = int(hashlib.sha256(self.run_key.encode()).hexdigest(), 16)
         a, b = h % 100_000_000, (h // 100_000_000) % 1_000_000
         return f"MSG-{a:08d}-{b:06d}"

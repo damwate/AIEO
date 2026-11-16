@@ -110,9 +110,14 @@ class M1TestServer:
             conn.close()
 
 
+_DISPATCH_DIR_SEQ = [0]  # 全局递增序号（b-20261117-gpt04 S3b：秒级时间戳+实例内 n 的命名在同秒
+                         # 跨实例碰撞，mkdir(exist_ok=True) 复用同目录致现场互覆——真执行暴露）
+
+
 def make_dispatch_double(review_reply: str, dispatch_root: Path, fail_first: bool = False):
     """ChatGPT 边界唯一测试替身：拦截 gpt_dispatch 调用，落盘真实形状派单目录。
-    其余 subprocess（git/ajv）原样透传真实执行。fail_first=首次调用返回非零（发送失败注入）。"""
+    其余 subprocess（git/ajv）原样透传真实执行。fail_first=首次调用返回非零（发送失败注入）。
+    目录名含全局唯一序号（跨 wrapper 实例不碰撞）。"""
     calls = {"n": 0}
 
     def wrapper(cmd, **kw):
@@ -127,7 +132,8 @@ def make_dispatch_double(review_reply: str, dispatch_root: Path, fail_first: boo
         for i, a in enumerate(map(str, cmd)):
             if a == "--message-file" and i + 1 < len(cmd):
                 msg_file = Path(str(cmd[i + 1]))
-        ddir = dispatch_root / f"dispatch-double-{time.strftime('%H%M%S')}-{calls['n']}"
+        _DISPATCH_DIR_SEQ[0] += 1
+        ddir = dispatch_root / f"dispatch-double-{time.strftime('%H%M%S')}-{_DISPATCH_DIR_SEQ[0]:04d}"
         ddir.mkdir(parents=True, exist_ok=True)
         if msg_file and msg_file.is_file():
             (ddir / "request.txt").write_bytes(msg_file.read_bytes())

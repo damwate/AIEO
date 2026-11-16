@@ -1,0 +1,119 @@
+........[wprobe] rc=0 n=1 newest_dir=dispatch-double-033025-1
+[probe] since=1794857425.657165 all=1 time_ok=1 bytes_ok=1 brief_len=1043
+[probe]   cand=dispatch-double-033025-1 mtime=1794857425.659 lag_vs_since=0.002 bytes_match=True req_len=1043
+RESULT=TEST_ACCEPTANCE_LEG_PASS status=ACCEPTED
+.[wprobe] rc=0 n=1 newest_dir=dispatch-double-033027-1
+[probe] since=1794857427.116192 all=2 time_ok=2 bytes_ok=1 brief_len=1043
+[probe]   cand=dispatch-double-033025-1 mtime=1794857425.659 lag_vs_since=-1.457 bytes_match=False req_len=1043
+[probe]   cand=dispatch-double-033027-1 mtime=1794857427.117 lag_vs_since=0.001 bytes_match=True req_len=1043
+RESULT=TEST_ACCEPTANCE_LEG_PASS status=REWORK
+.[wprobe] rc=0 n=1 newest_dir=dispatch-double-033028-1
+[probe] since=1794857428.6076686 all=3 time_ok=2 bytes_ok=1 brief_len=1043
+[probe]   cand=dispatch-double-033025-1 mtime=1794857425.659 lag_vs_since=-2.949 bytes_match=False req_len=1043
+[probe]   cand=dispatch-double-033027-1 mtime=1794857427.117 lag_vs_since=-1.490 bytes_match=False req_len=1043
+[probe]   cand=dispatch-double-033028-1 mtime=1794857428.610 lag_vs_since=0.002 bytes_match=True req_len=1043
+RESULT=TEST_ACCEPTANCE_LEG_PASS status=REWORK
+.[wprobe] rc=0 n=1 newest_dir=dispatch-double-033030-1
+[probe] since=1794857430.129851 all=4 time_ok=2 bytes_ok=1 brief_len=1043
+[probe]   cand=dispatch-double-033027-1 mtime=1794857427.117 lag_vs_since=-3.013 bytes_match=False req_len=1043
+[probe]   cand=dispatch-double-033028-1 mtime=1794857428.610 lag_vs_since=-1.520 bytes_match=False req_len=1043
+[probe]   cand=dispatch-double-033030-1 mtime=1794857430.131 lag_vs_since=0.001 bytes_match=True req_len=1043
+RESULT=LEG_LEVEL_BLOCKED step=4 reason=fact=EXECUTED_FAIL + result=PASS is a forbidden combination (charter §4 matrix G2-01/02; e.g. EXECUTED_FAIL+PASS or NOT_EXECUTED/CLAIMED_ONLY/BLOCKED+PASS/REWORK); fail-closed, no registration; manual takeover
+.[wprobe] rc=0 n=1 newest_dir=dispatch-double-033031-1
+[probe] since=1794857431.1597202 all=5 time_ok=2 bytes_ok=1 brief_len=1047
+[probe]   cand=dispatch-double-033028-1 mtime=1794857428.610 lag_vs_since=-2.550 bytes_match=False req_len=1043
+[probe]   cand=dispatch-double-033030-1 mtime=1794857430.131 lag_vs_since=-1.029 bytes_match=False req_len=1043
+[probe]   cand=dispatch-double-033031-1 mtime=1794857431.161 lag_vs_since=0.001 bytes_match=True req_len=1047
+RESULT=LEG_LEVEL_BLOCKED step=4 reason=fact=CLAIMED_ONLY + result=PASS is a forbidden combination (charter §4 matrix G2-01/02; e.g. EXECUTED_FAIL+PASS or NOT_EXECUTED/CLAIMED_ONLY/BLOCKED+PASS/REWORK); fail-closed, no registration; manual takeover
+[wprobe] rc=0 n=1 newest_dir=dispatch-double-033032-1
+[probe] since=1794857432.107002 all=6 time_ok=3 bytes_ok=1 brief_len=1047
+[probe]   cand=dispatch-double-033030-1 mtime=1794857430.131 lag_vs_since=-1.976 bytes_match=False req_len=1043
+[probe]   cand=dispatch-double-033031-1 mtime=1794857431.161 lag_vs_since=-0.946 bytes_match=False req_len=1047
+[probe]   cand=dispatch-double-033032-1 mtime=1794857432.109 lag_vs_since=0.002 bytes_match=True req_len=1047
+RESULT=LEG_LEVEL_BLOCKED step=4 reason=fact=NOT_EXECUTED + result=REWORK is a forbidden combination (charter §4 matrix G2-01/02; e.g. EXECUTED_FAIL+PASS or NOT_EXECUTED/CLAIMED_ONLY/BLOCKED+PASS/REWORK); fail-closed, no registration; manual takeover
+.[wprobe] rc=0 n=1 newest_dir=dispatch-double-033032-1
+[probe] since=1794857432.9623334 all=6 time_ok=2 bytes_ok=1 brief_len=1043
+[probe]   cand=dispatch-double-033030-1 mtime=1794857430.131 lag_vs_since=-2.831 bytes_match=False req_len=1043
+[probe]   cand=dispatch-double-033031-1 mtime=1794857431.161 lag_vs_since=-1.802 bytes_match=False req_len=1047
+[probe]   cand=dispatch-double-033032-1 mtime=1794857432.109 lag_vs_since=-0.853 bytes_match=True req_len=1043
+RESULT=LEG_LEVEL_BLOCKED step=3 reason=no dispatch evidence dir created by this send
+F[wprobe] rc=0 n=1 newest_dir=dispatch-double-033033-1
+[probe] since=1794857433.9733016 all=7 time_ok=2 bytes_ok=1 brief_len=1043
+[probe]   cand=dispatch-double-033031-1 mtime=1794857431.161 lag_vs_since=-2.813 bytes_match=False req_len=1047
+[probe]   cand=dispatch-double-033032-1 mtime=1794857432.109 lag_vs_since=-1.864 bytes_match=False req_len=1043
+[probe]   cand=dispatch-double-033033-1 mtime=1794857433.974 lag_vs_since=0.001 bytes_match=True req_len=1043
+RESULT=TEST_ACCEPTANCE_BLOCKED_REGISTERED status=TEST_ACCEPTANCE (no report-test; OWNER decides)
+.[wprobe] rc=0 n=1 newest_dir=dispatch-double-033035-1
+[probe] since=1794857435.5965135 all=8 time_ok=2 bytes_ok=1 brief_len=1043
+[probe]   cand=dispatch-double-033032-1 mtime=1794857432.109 lag_vs_since=-3.488 bytes_match=False req_len=1043
+[probe]   cand=dispatch-double-033033-1 mtime=1794857433.974 lag_vs_since=-1.622 bytes_match=False req_len=1043
+[probe]   cand=dispatch-double-033035-1 mtime=1794857435.598 lag_vs_since=0.001 bytes_match=True req_len=1043
+RESULT=LEG_LEVEL_BLOCKED step=4 reason=contract validation failed (raw reply kept; no registration): {"report": {"valid": false, "errors": [{"instancePath": "/findings", "schemaPath": "#/properties/findings/type", "keyword": "type", "params": {"type": "array"}, "message": "must be array"}]}, "envelope": {"valid": true, "errors": []}, "request": {"valid": true, "errors": []}}
+.[wprobe] rc=0 n=1 newest_dir=dispatch-double-033036-1
+[probe] since=1794857436.7490134 all=9 time_ok=2 bytes_ok=1 brief_len=1043
+[probe]   cand=dispatch-double-033033-1 mtime=1794857433.974 lag_vs_since=-2.775 bytes_match=False req_len=1043
+[probe]   cand=dispatch-double-033035-1 mtime=1794857435.598 lag_vs_since=-1.151 bytes_match=False req_len=1043
+[probe]   cand=dispatch-double-033036-1 mtime=1794857436.751 lag_vs_since=0.002 bytes_match=True req_len=1043
+RESULT=TEST_ACCEPTANCE_LEG_PASS status=ACCEPTED
+.[wprobe] rc=0 n=1 newest_dir=dispatch-double-033038-1
+[probe] since=1794857438.104473 all=10 time_ok=2 bytes_ok=1 brief_len=1043
+[probe]   cand=dispatch-double-033035-1 mtime=1794857435.598 lag_vs_since=-2.507 bytes_match=False req_len=1043
+[probe]   cand=dispatch-double-033036-1 mtime=1794857436.751 lag_vs_since=-1.353 bytes_match=False req_len=1043
+[probe]   cand=dispatch-double-033038-1 mtime=1794857438.106 lag_vs_since=0.002 bytes_match=True req_len=1043
+RESULT=LEG_LEVEL_BLOCKED step=5 reason=test report 409 duplicate but GET verification did not confirm registration (cannot prove state; fail-closed; manual takeover per charter A-3)
+.[wprobe] rc=0 n=1 newest_dir=dispatch-double-033039-1
+[probe] since=1794857439.5862641 all=11 time_ok=2 bytes_ok=1 brief_len=1043
+[probe]   cand=dispatch-double-033036-1 mtime=1794857436.751 lag_vs_since=-2.835 bytes_match=False req_len=1043
+[probe]   cand=dispatch-double-033038-1 mtime=1794857438.106 lag_vs_since=-1.480 bytes_match=False req_len=1043
+[probe]   cand=dispatch-double-033039-1 mtime=1794857439.588 lag_vs_since=0.002 bytes_match=True req_len=1043
+RESULT=LEG_LEVEL_BLOCKED step=6 reason=test report registered but M1 still TEST_ACCEPTANCE (atomic registration+advance anomaly; charter A-3 row9: registration BUG — fail-closed leg-level BLOCKED, no manual event bypass)
+.[wprobe] rc=0 n=1 newest_dir=dispatch-double-033041-1
+[probe] since=1794857441.0983913 all=12 time_ok=2 bytes_ok=1 brief_len=1043
+[probe]   cand=dispatch-double-033038-1 mtime=1794857438.106 lag_vs_since=-2.992 bytes_match=False req_len=1043
+[probe]   cand=dispatch-double-033039-1 mtime=1794857439.588 lag_vs_since=-1.510 bytes_match=False req_len=1043
+[probe]   cand=dispatch-double-033041-1 mtime=1794857441.100 lag_vs_since=0.002 bytes_match=True req_len=1043
+RESULT=TEST_ACCEPTANCE_LEG_PASS (resumed) status=ACCEPTED
+.[wprobe] rc=0 n=1 newest_dir=dispatch-double-033043-1
+[probe] since=1794857443.2385175 all=13 time_ok=1 bytes_ok=1 brief_len=1048
+[probe]   cand=dispatch-double-033039-1 mtime=1794857439.588 lag_vs_since=-3.650 bytes_match=False req_len=1043
+[probe]   cand=dispatch-double-033041-1 mtime=1794857441.100 lag_vs_since=-2.138 bytes_match=False req_len=1043
+[probe]   cand=dispatch-double-033043-1 mtime=1794857443.240 lag_vs_since=0.001 bytes_match=True req_len=1048
+RESULT=TEST_ACCEPTANCE_LEG_PASS status=ACCEPTED
+RESULT=TEST_ACCEPTANCE_LEG_DONE status=ACCEPTED
+RESULT=LEG_LEVEL_BLOCKED step=-1 reason=M1 task status=BLOCKED: engine must not touch (A-3 行12; OWNER only)
+.RESULT=LEG_LEVEL_BLOCKED step=-1 reason=ledger has send intent without confirmation (A-3 行3 fail-closed: cannot prove send state -> leg-level BLOCKED; manual dispatch-dir check required; resend forbidden)
+.[wprobe] rc=3 n=1 newest_dir=dispatch-double-033043-1
+[probe] since=1794857446.7227712 all=13 time_ok=0 bytes_ok=0 brief_len=1043
+[probe]   cand=dispatch-double-033039-1 mtime=1794857439.588 lag_vs_since=-7.135 bytes_match=False req_len=1043
+[probe]   cand=dispatch-double-033041-1 mtime=1794857441.100 lag_vs_since=-5.622 bytes_match=False req_len=1043
+[probe]   cand=dispatch-double-033043-1 mtime=1794857443.240 lag_vs_since=-3.483 bytes_match=False req_len=1048
+[wprobe] rc=0 n=2 newest_dir=dispatch-double-033046-2
+[probe] since=1794857446.7302868 all=14 time_ok=1 bytes_ok=1 brief_len=1043
+[probe]   cand=dispatch-double-033041-1 mtime=1794857441.100 lag_vs_since=-5.630 bytes_match=False req_len=1043
+[probe]   cand=dispatch-double-033043-1 mtime=1794857443.240 lag_vs_since=-3.491 bytes_match=False req_len=1048
+[probe]   cand=dispatch-double-033046-2 mtime=1794857446.731 lag_vs_since=0.001 bytes_match=True req_len=1043
+RESULT=TEST_ACCEPTANCE_LEG_PASS status=ACCEPTED
+.[probe] since=1794857448.3272643 all=15 time_ok=2 bytes_ok=1 brief_len=1043
+[probe]   cand=dispatch-double-033043-1 mtime=1794857443.240 lag_vs_since=-5.088 bytes_match=False req_len=1048
+[probe]   cand=dispatch-double-033046-2 mtime=1794857446.731 lag_vs_since=-1.596 bytes_match=False req_len=1043
+[probe]   cand=dispatch-collect-fail-t24 mtime=1794857448.329 lag_vs_since=0.001 bytes_match=True req_len=1043
+RESULT=LEG_LEVEL_BLOCKED step=3 reason=send double-verified but collection failed (禁重发; run resume for recovery): gpt_dispatch exit 3: injected collection failure after send double-verify
+RESULT=TEST_ACCEPTANCE_LEG_PASS (manual attach) status=ACCEPTED
+.RESULT=LEG_LEVEL_BLOCKED step=4 reason=reply ownership mismatch: located=fallback-turn-1:0:user sent=fallback-turn-9:0:user (mandatory strict equality; fail-closed, no registration)
+.RESULT=TEST_ACCEPTANCE_LEG_PASS (manual attach) status=REWORK
+..RESULT=LEG_LEVEL_BLOCKED step=-1 reason=attach-reply requires TEST_ACCEPTANCE (task=REWORK)
+..SETUP_OK agents=[{"agent_id": "GPT-04", "reused_existing": true}, {"agent_id": "ENGINE-03", "reused_existing": true}] tokens=runtime/test-acceptance-leg/service-tokens.json (gitignored)
+SETUP_OK agents=[{"agent_id": "GPT-04", "reused_existing": true}, {"agent_id": "ENGINE-03", "reused_existing": true}] tokens=runtime/test-acceptance-leg/service-tokens.json (gitignored)
+.
+======================================================================
+FAIL: test_14_observed_mismatch_fail_closed (test_test_acceptance_leg.TestAcceptanceLegTests.test_14_observed_mismatch_fail_closed)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "D:\AIEO\phase1\tools\test_test_acceptance_leg.py", line 456, in test_14_observed_mismatch_fail_closed
+    self.assertIn("execution_result_observed", reason)
+AssertionError: 'execution_result_observed' not found in 'no dispatch evidence dir created by this send'
+
+----------------------------------------------------------------------
+Ran 30 tests in 38.892s
+
+FAILED (failures=1)
