@@ -1,0 +1,14 @@
+[
+  {
+    "key": "fallback-turn-3:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【G02-R1 限定复核】b-20261116-gpt02-arch-review-leg\n核验对象 commit=77318daba69eb9065ccf36"
+  },
+  {
+    "key": "fallback-turn-3:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\n本轮核验对象固定为 77318daba69eb9065ccf36f0b02d23f74e7bb005，不会用分支 HEAD 替代。\n\n目"
+  }
+]

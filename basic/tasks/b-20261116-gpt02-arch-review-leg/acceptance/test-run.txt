@@ -1,4 +1,4 @@
-Ran 54 tests in 105.833s
+Ran 58 tests in 100.751s
 
 OK
-EXIT=0 (P1 fixes+25 cases)
+EXIT=0 (G02-R2 fixes: ownership strict equality+crash-window recovery+cross-process lock+409 branch)

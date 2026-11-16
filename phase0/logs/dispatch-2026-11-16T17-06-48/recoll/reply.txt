@@ -1,0 +1,350 @@
+ChatGPT 说：
+
+本轮核验对象固定为 77318daba69eb9065ccf36f0b02d23f74e7bb005，不会用分支 HEAD 替代。
+
+目前已确认：该提交确实包含 arch_review_leg.py 的主要编排实现，以及问题14四项整改的代码变更；test-run.txt 从此前 50 项更新为 54 项，并记录 EXIT=0。但这些记录本身还不能证明架构契约一致、实战证据完整或整改没有引入旁路，我会继续逐项核对。
+
+G02-R1 限定复核结论
+REJECT
+
+核验对象： 77318daba69eb9065ccf36f0b02d23f74e7bb005
+
+本轮不是整体设计方向有问题。A-1、A-2 的主要落位正确，问题14四项整改也有实质进展。但我发现 A3 归属校验仍有一个 fail-open 边界，A-3 仍有一个断点无法自动恢复。这两项涉及审核结果归属和恢复可靠性，不能给 PASS。
+
+① Charter A-1 / A-2 / A-3 一致性
+
+核验内容
+
+	
+
+结论
+
+	
+
+说明
+
+
+
+
+A-1 ENGINE-02 六端点白名单
+
+	
+
+PASS
+
+	
+
+六个运行期端点与 charter 一致；事件限制为 PASS/REWORK；BLOCKED/CANCEL 等在调用层拒绝。
+
+
+
+
+A-2 冻结契约 v1.0
+
+	
+
+PASS
+
+	
+
+contracts/v1.0/arch-review-report.schema.json 与草案的 required、properties、类型及约束逐字段一致。
+
+
+
+
+A-2 路线 B 登记
+
+	
+
+PASS
+
+	
+
+artifacts + messages，不使用绑定 CODE_REVIEW 的 /reports/review；登记和事件推进分开处理。
+
+
+
+
+A-3 断点恢复
+
+	
+
+REJECT
+
+	
+
+存在 A4_MESSAGE 已写账本、A4_RESULT_RECORDED 尚未写入时的恢复缺口。
+
+P1-1：回复归属校验仍有空值绕过
+
+phase1/tools/arch_review_leg.py 第 469～477 行：
+
+Python
+运行
+if located_key is None and sent_key is not None:
+    raise OrchestrationError(...)
+
+
+if located_key and sent_key and located_key != sent_key:
+    raise OrchestrationError(...)
+
+第二个判断使用了真值判断。
+
+当发送锚点 sent_key 有值，但现场证据中的 located_key 是空字符串 "" 时：
+
+第一个判断不触发，因为它不是 None；
+
+第二个判断也不触发，因为空字符串为假；
+
+后续仍可能继续解析契约和登记。
+
+这违反了问题14 P1-01 的整改目标：发送锚点存在时，必须证明两个键一致。
+
+整改要求：
+
+发送锚点存在时，located_key 必须是非空字符串。
+
+必须严格比较 located_key == sent_key。
+
+缺失、空值、类型错误、不一致，全部 fail-closed。
+
+增加空字符串和缺失字段测试，不能只测试两个非空键不相等。
+
+P1-2：A-3 路线 B 存在一个未覆盖的崩溃窗口
+
+a4_register() 第 743～750 行的顺序是：
+
+写入 M1 message；
+
+写入账本 A4_MESSAGE；
+
+再写入 A4_RESULT_RECORDED。
+
+如果进程在第 2 步完成后、第 3 步之前崩溃，M1 已经登记消息，但账本没有 A4_RESULT_RECORDED。
+
+目前 _resume_inner() 第 967～979 行：
+
+检测到 A4_MESSAGE 已存在；
+
+不再进入 _resume_register()；
+
+直接读取 A4_RESULT_RECORDED；
+
+读不到结果就进入 fail-closed，无法按原 event_id 继续推进。
+
+这属于 A-3 路线 B 的恢复缺口：所有登记已经完成，但只因最后一条账本记录未写入，无法自动续推。
+
+整改要求：
+
+A4_MESSAGE 存在但 A4_RESULT_RECORDED 缺失时，不能直接判定无法恢复。
+
+从已验证的 A3_CONTRACT_VALID、报告文件及 M1 登记结果中恢复原始结论。
+
+核实 artifacts、message 与原始请求绑定一致后，补齐账本并按原 event_id 续推。
+
+无法证明一致时仍然 fail-closed。
+
+增加专门模拟这个崩溃位置的恢复测试。
+
+② 测试覆盖与实战证据
+测试数量记录通过
+
+acceptance/test-run.txt 记录：
+
+纯文本
+Ran 54 tests in 105.833s
+
+OK
+EXIT=0 (P1 fixes+25 cases)
+
+测试清单及代码显示：
+
+GPT-03 回归：29 项；
+
+GPT-02 测试矩阵：21 项；
+
+问题14新增整改证明：4 项；
+
+合计 54 项。
+
+不过，测试数量全绿不等于所有整改路径都得到有效覆盖。
+
+测试
+
+	
+
+实际覆盖情况
+
+	
+
+判断
+
+
+
+
+test_17 归属校验
+
+	
+
+覆盖两个非空 key 不一致
+
+	
+
+缺少空字符串绕过测试
+
+
+
+
+test_18 并发锁
+
+	
+
+同一进程内嵌套获取锁
+
+	
+
+未证明两个独立进程竞争
+
+
+
+
+test_19 artifact 恢复
+
+	
+
+覆盖已存在 artifact 的 201 幂等恢复及 409 冲突拒绝
+
+	
+
+有效覆盖主要恢复路径
+
+
+
+
+test_20 event 409
+
+	
+
+实际 M1 重放返回 200 幂等响应
+
+	
+
+没有真正进入代码的 409 分支
+
+特别说明：test_18 的 OS 级锁实现方向是正确的，但测试本身没有达到真实跨进程验证的强度。test_20 也不能作为事件 409 双证分支已经被实测的证明。
+
+③ 四项整改有效性
+
+整改
+
+	
+
+结论
+
+	
+
+复核意见
+
+
+
+
+P1-01 归属强制断言
+
+	
+
+未完全通过
+
+	
+
+非空不一致已拦截，但空字符串绕过仍存在。
+
+
+
+
+P1-02 OS 级锁与现场定位
+
+	
+
+部分通过
+
+	
+
+Windows/POSIX 锁和 request.txt 字节匹配已落位；跨进程测试不足。
+
+
+
+
+P1-03 artifact 409 回核
+
+	
+
+代码通过
+
+	
+
+服务端读取 task_id、SHA 核验后恢复 ID；真冲突拒绝。
+
+
+
+
+P1-04 事件双证
+
+	
+
+部分通过
+
+	
+
+独立 intent 与终态核验已实现，但 409 分支缺少实际测试。
+
+④ 零 mock 实战核验
+
+我核对了仓库中的：
+
+dispatch-2026-11-16T16-32-20/request.txt
+
+result.json
+
+reply.txt
+
+run.log
+
+这些材料支持真实 GPT-02 派单、真实回复采集，以及 GPT-02 给出四条 P1、最终 REWORK 的事实。
+
+还有一个证据边界需要明确：result.json 中 M1 registration 标记为 NOT_REQUESTED，它是 M2 派单阶段的证据，不能单独证明后续 A4/A5 的 M1 登记和状态推进。steps.md 记录了后续真实 M1、人工 attach、REWORK 推进及账本归档，但我本轮没有从 Library 检索到可直接核对的那份账本原件，因此不把它表述为我已独立验证的原始证据。
+
+R2 最小整改范围
+
+不建议重写架构腿，也不建议扩大 charter 或修改冻结契约。只需要：
+
+修复 located_key 空值绕过，补充负向测试。
+
+修复 A4_MESSAGE 已落账、A4_RESULT_RECORDED 缺失时的 A-3 恢复路径，补充崩溃注入测试。
+
+补充真正的跨进程锁测试，以及事件 409 分支测试。
+
+重新合跑 29+25 测试，并补齐真实 M1 账本及报告的可核验引用。
+
+本轮不要求：
+
+不改 M1-M4、scheduler；
+
+不改冻结契约 v1.0；
+
+不重新做零 mock 实战；
+
+不处理已登记的 findings 结构化演进待办；
+
+不推翻 C1 已通过的绑定核验结论。
+
+查看指定提交
+
+最终判定：REJECT，限上述整改后提交 R2。 这次问题范围已经比较集中，不需要再进行大规模返工。
+
+要我在 R2 提交后继续按完整 SHA 做限定复核吗？
+
+🔎
+
+复核 G02-R2 整改提交
+
+轻点设置

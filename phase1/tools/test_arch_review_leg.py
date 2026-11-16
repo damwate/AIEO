@@ -606,6 +606,35 @@ class ArchReviewLegTests(unittest.TestCase):
         code, task = self.owner.get(f"/api/v1/tasks/{task_id}")
         self.assertEqual(task.get("status"), "ARCH_REVIEW")
 
+    def test_17b_ownership_empty_and_missing_key_fail_closed(self):
+        """G02-R1 P1-1：发送锚点存在时 located_key 空串/None/缺失一律 fail-closed
+        （真值判断绕过封堵；空串不得因"为假跳过比较"通过登记）。"""
+        for label, snap in (
+            ("empty-string", {"user_unit_key": "",   # 空串绕过形态（G02-R1 P1-1）
+                              "conversation_url": "https://chatgpt.com/c/11111111-2222-4333-8444-555555555555"}),
+            ("null-key", {"user_unit_key": None,
+                          "conversation_url": "https://chatgpt.com/c/11111111-2222-4333-8444-555555555555"}),
+            ("missing-field", {"conversation_url": "https://chatgpt.com/c/11111111-2222-4333-8444-555555555555"}),
+        ):
+            leg, task_id, _ = self.make_leg(f"p101{label[:5].replace('-', '')}")
+            leg.ledger.append({"kind": "A2_SEND_CONFIRMED", "attempt": 1,
+                               "dispatch_dir": "dispatch-x",
+                               "sent_user_unit_key": "fallback-turn-1:0:user",
+                               "outcome": "CONFIRMED"})
+            forensics = ar.DISPATCH_LOG_DIR / f"manual-{label}"
+            forensics.mkdir(parents=True, exist_ok=True)
+            (forensics / "reply.txt").write_text(self.reply_for("PASS"), encoding="utf-8")
+            (forensics / "result.json").write_text(json.dumps(snap), encoding="utf-8")
+            rc = leg.attach_reply(forensics / "reply.txt")
+            self.assertEqual(rc, 2, f"{label}: must fail-closed")
+            reason = leg.ledger.state_flags().get("LEG_LEVEL_BLOCKED", {}).get("reason", "")
+            # 空串经 or 链归一为 None→"lacks"；null/missing 同路径——fail-closed 语义一致
+            self.assertTrue("located user unit key invalid" in reason
+                            or "lacks located user unit key" in reason,
+                            f"{label}: fail-closed reason={reason!r}")
+            code, task = self.owner.get(f"/api/v1/tasks/{task_id}")
+            self.assertEqual(task.get("status"), "ARCH_REVIEW", label)
+
     def test_18_concurrent_run_key_lock(self):
         """P1-02：同 run_key 并发（第二个持锁请求）立即 fail-closed 拒绝。"""
         leg, task_id, _ = self.make_leg("p102")
@@ -616,6 +645,47 @@ class ArchReviewLegTests(unittest.TestCase):
             self.assertIn("held by another live process", str(cm.exception))
         # 释放后可再次取得（OS 级锁，进程退出自动释放语义）
         with ar.RunKeyLock(leg.run_dir, holder="p102-third"):
+            pass
+
+    def test_18b_cross_process_lock_competition(self):
+        """G02-R1 R2 整改：真跨进程锁竞争——独立子进程 A 持锁期间，本进程取得=拒绝；
+        A 进程退出（OS 释放锁）后本进程可取得（进程死自动释放语义实测）。"""
+        import time as _time
+        holder_script = self.tmp / "lock-holder-a.py"
+        holder_script.write_text(
+            "import sys, time\nfrom pathlib import Path\n"
+            "sys.path.insert(0, r'" + str(REPO_ROOT / "phase1" / "tools") + "')\n"
+            "import os\nos.chdir(r'" + str(REPO_ROOT / "phase1" / "tools") + "')\n"
+            "import arch_review_leg as ar\n"
+            "from scheduler import OrchestrationError\n"
+            "run_dir = Path(r'" + str(ar.RUNTIME_DIR / "arl-p102") + "')\n"   # 与主进程重定向路径逐字一致
+            "with ar.RunKeyLock(run_dir, holder='cross-process-A'):\n"
+            "    print('A_HOLDING', flush=True)\n"
+            "    time.sleep(3)\n"
+            "print('A_RELEASED', flush=True)\n", encoding="utf-8")
+        p = subprocess.Popen([sys.executable, str(holder_script)], cwd=str(REPO_ROOT),
+                             stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True,
+                             encoding="utf-8", errors="replace",
+                             env={**os.environ,
+                                  "AIEO_ARCH_LEG_REPO_ROOT": str(self.tmp)})   # 子进程 RUNTIME_DIR 与主进程重定向对齐
+        try:
+            line = p.stdout.readline().strip()   # 等 A 真正持锁（不猜时序）
+            deadline = _time.time() + 15
+            while line != "A_HOLDING" and _time.time() < deadline:
+                line = p.stdout.readline().strip()
+            self.assertEqual(line, "A_HOLDING", "holder A failed to start: " + line)
+            with self.assertRaises(OrchestrationError) as cm:
+                with ar.RunKeyLock(ar.RUNTIME_DIR / "arl-p102", holder="main-process-while-A-alive"):
+                    pass
+            self.assertIn("held by another live process", str(cm.exception))
+        finally:
+            p.terminate()
+            try:
+                p.wait(timeout=10)
+            except subprocess.TimeoutExpired:
+                p.kill()
+        # A 死亡=OS 释放锁→本进程取得（真实跨进程语义）
+        with ar.RunKeyLock(ar.RUNTIME_DIR / "arl-p102", holder="main-process-after-A-death"):
             pass
 
     def test_19_artifact_recovery_and_conflict_fail_closed(self):
@@ -686,7 +756,7 @@ class ArchReviewLegTests(unittest.TestCase):
             status2 = leg.a5_advance("PASS")
             self.assertEqual(status2, "READY")
         # M1 实测：同 event_id 重放返回 200 幂等响应（duplicate 标记非 409）——
-        # 409 分支为防御层（上游语义变化时 fail-closed）；核心断言=不误判失败+单条记录
+        # 核心断言=不误判失败+单条记录
         conn = sqlite3.connect(f"file:{self.server.db_path}?mode=ro", uri=True)
         try:
             n = conn.execute("SELECT COUNT(*) FROM task_events WHERE event_id=?",
@@ -694,6 +764,73 @@ class ArchReviewLegTests(unittest.TestCase):
         finally:
             conn.close()
         self.assertEqual(n, 1)
+
+    def test_20b_event_409_branch_dual_evidence(self):
+        """G02-R1 R2 整改：真实进入事件 409 分支——注入 POST 409（响应指认 event_id），
+        账本 intent 指纹匹配→A5_DUPLICATE_OK 核验通过；响应不指认→fail-closed。"""
+        leg, task_id, ctx = self.make_leg("p104b", reply=self.reply_for("REWORK"))
+        with self.dispatch_double(ctx[0]):
+            task, pending = leg.a0_precheck()
+            leg.a1_compose_brief(task, pending)
+            dispatch_dir = leg.a2_dispatch(leg.run_dir.joinpath("brief.txt").read_text(encoding="utf-8"))
+            captured = leg.a3_capture_and_validate(dispatch_dir)
+            leg.a4_register(leg._refetch_task(), captured)
+            real_post = leg.engine.post
+            ev_id = leg.event_id("REWORK", "02")
+            # 0)真提交：事件生效（intent 落账本，任务进 REWORK）——409 分支语义="已生效
+            #   但响应异常"，终态须已达 expected
+            self.assertEqual(leg.a5_advance("REWORK"), "REWORK")
+            # ①409+响应指认 event_id（同 event_id 重放且账本 intent 匹配）→核验通过
+            leg.engine.post = lambda path, body: (409, {"details": {"event_id": ev_id}})
+            status = leg.a5_advance("REWORK")
+            self.assertEqual(status, "REWORK")
+            self.assertIsNotNone(leg.ledger.state_flags().get("A5_DUPLICATE_OK"))
+            # ②409+响应不指认+M1 终态不符（PASS 意图 vs REWORK 现状）→fail-closed
+            #（terminal_ok 证据仅在 M1 状态已达意图目标态时成立；不符即拒绝）
+            leg2 = ar.ArchReviewLeg(run_key=leg.run_key, task_id=task_id, project_id="PRJ-ARLTEST",
+                                    input_material_commit=leg.input_material_commit,
+                                    material_files=leg.material_files,
+                                    m1_url=self.server.base, token=self.tokens["ENGINE-02"],
+                                    material_base_commit=self.base_commit)
+            leg2.engine.post = lambda path, body: (409, {"details": {"code": "SYS-0001",
+                                                                     "message": "generic error"}})
+            with self.assertRaises(OrchestrationError) as cm:
+                leg2.a5_advance("PASS")
+            self.assertIn("409 verification failed", str(cm.exception))
+            leg.engine.post = real_post
+
+    def test_21_crash_window_recovery(self):
+        """G02-R1 P1-2：A4_MESSAGE 已落账本、A4_RESULT_RECORDED 缺失（message POST 后
+        崩溃窗口）→resume 从多重证据恢复结论→按原 event_id 续推；不重派不重登记。"""
+        leg, task_id, ctx = self.make_leg("p105", reply=self.reply_for("REWORK"))
+        with self.dispatch_double(ctx[0]):
+            task, pending = leg.a0_precheck()
+            leg.a1_compose_brief(task, pending)
+            dispatch_dir = leg.a2_dispatch(leg.run_dir.joinpath("brief.txt").read_text(encoding="utf-8"))
+            captured = leg.a3_capture_and_validate(dispatch_dir)
+            leg.a4_register(leg._refetch_task(), captured)
+            # 注入崩溃窗口：账本追加式末条移除（模拟"message 登记后、最后一条账本写入前"死亡）
+            ledger_path = leg.run_dir / "ledger.jsonl"
+            lines = ledger_path.read_text(encoding="utf-8").splitlines()
+            kept = [l for l in lines if json.loads(l).get("kind") != "A4_RESULT_RECORDED"]
+            assert len(kept) < len(lines), "crash injection: A4_RESULT_RECORDED row not found"
+            ledger_path.write_text("\n".join(kept) + "\n", encoding="utf-8")
+        self.assertIsNone(leg.ledger.state_flags().get("A4_RESULT_RECORDED"))
+        leg2 = ar.ArchReviewLeg(run_key=leg.run_key, task_id=task_id, project_id="PRJ-ARLTEST",
+                                input_material_commit=leg.input_material_commit,
+                                material_files=leg.material_files,
+                                m1_url=self.server.base, token=self.tokens["ENGINE-02"],
+                                material_base_commit=self.base_commit)
+        rc = leg2.resume()
+        self.assertEqual(rc, 0)
+        flags = leg2.ledger.state_flags()
+        self.assertIsNotNone(flags.get("A4_RESULT_RECOVERED"))
+        self.assertEqual(flags.get("A4_RESULT_RECOVERED", {}).get("result"), "REWORK")
+        self.assertIsNotNone(flags.get("A5_EVENT_ADVANCED"))
+        code, task = self.owner.get(f"/api/v1/tasks/{task_id}")
+        self.assertEqual(task.get("status"), "REWORK")
+        # 禁重发证明：gpt_dispatch 调用计数不变（恢复路径零外部副作用）
+        self.assertEqual(ctx[1]["n"], 1)
 
     # ------------------------------------------------------------------
     # setup-agents 幂等（bootstrap 一次性；非运行期路径）

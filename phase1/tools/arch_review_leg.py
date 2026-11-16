@@ -469,12 +469,18 @@ class ArchReviewLeg:
         if located_key is None and sent_key is not None:
             raise OrchestrationError(4, "capture evidence lacks located user unit key while send "
                                         "anchor exists (cannot prove reply ownership; fail-closed)")
-        # P1-01 整改（问题14）：归属强制断言——双键均存在时不等即 fail-closed，
-        # 不再只记录比较结果（不同 user unit 的回复不得仅因"键非空"通过登记）。
-        if located_key and sent_key and located_key != sent_key:
-            raise OrchestrationError(4, f"reply ownership mismatch: located={located_key} "
-                                        f"sent={sent_key} (P1-01 mandatory assertion; fail-closed, "
-                                        "no registration)")
+        # P1-01 整改（问题14）+G02-R1 P1-1 整改：发送锚点存在时 located_key 必须是非空
+        # 字符串且严格等于 sent_key——None/空串/非字符串/不一致全部 fail-closed
+        #（空串真值判断绕过已封堵；禁止"键非空即可通过"）。
+        if sent_key is not None:
+            if not isinstance(located_key, str) or not located_key:
+                raise OrchestrationError(4, f"located user unit key invalid (type={type(located_key).__name__}, "
+                                            f"value={located_key!r}) while send anchor exists "
+                                            "(ownership cannot be proven; fail-closed, no registration)")
+            if located_key != sent_key:
+                raise OrchestrationError(4, f"reply ownership mismatch: located={located_key} "
+                                            f"sent={sent_key} (P1-01 mandatory strict equality; "
+                                            "fail-closed, no registration)")
         self.ledger.append({"kind": "A3_REPLY_CAPTURED", "bytes": len(raw), "reply_sha256": reply_sha,
                             "source_dir": str(reply_path.parent),
                             "marker_text": self.marker_text,
@@ -971,8 +977,10 @@ class ArchReviewLeg:
         # 行6（路线 B 专属）：报告已登记但状态仍 ARCH_REVIEW→核实后按原 event_id 续推
         result = (flags.get("A4_RESULT_RECORDED") or {}).get("result")
         if result not in ("PASS", "REWORK"):
-            raise OrchestrationError(-1, "ledger shows report registered but no resolvable verdict "
-                                         "(fail-closed; manual verification required)")
+            # G02-R1 P1-2 整改：A4_MESSAGE 已落账本、A4_RESULT_RECORDED 未写的崩溃窗口——
+            # 从多重证据恢复结论（账本 A3_CONTRACT_VALID+report.json+M1 artifact 读回），
+            # 全部一致才补账本并续推；任一链节不符 fail-closed（不推测恢复）。
+            result = self._recover_result_from_evidence(flags)
         self.ledger.append({"kind": "RESUME_ROUTE_B_READVANCE", "result": result,
                             "note": "report registered but M1 still ARCH_REVIEW; re-advance with "
                                     "original event_id (idempotent; A-3 row6 route-B row)"})
@@ -981,6 +989,50 @@ class ArchReviewLeg:
                             "verdict": result, "resumed": True})
         print(f"RESULT=ARCH_REVIEW_LEG_PASS (resumed) status={status}", flush=True)
         return 0
+
+    def _recover_result_from_evidence(self, flags: dict) -> str:
+        """G02-R1 P1-2 整改：A4_MESSAGE 已登记而 A4_RESULT_RECORDED 缺失（message POST 成功
+        与账本最后一条记录写入之间的崩溃窗口）——从多重证据链恢复结论：
+        ①账本 A3_CONTRACT_VALID（reply sha+result）与 A4_MESSAGE（reply sha）互相锚定；
+        ②run_dir/report.json 重读：result 一致+brief_sha256 与 A1_BRIEF 一致；
+        ③M1 读回报告 artifact（task_id+sha256 与本地 report.json 一致）。
+        全部通过→补写 A4_RESULT_RECOVERED 并返回结论；任一链节不符→fail-closed。"""
+        a3v = flags.get("A3_CONTRACT_VALID") or {}
+        fm = flags.get("A4_MESSAGE") or {}
+        a1 = flags.get("A1_BRIEF") or {}
+        if not a3v.get("result") or not a3v.get("reply_sha256"):
+            raise OrchestrationError(-1, "crash-window recovery: A3_CONTRACT_VALID incomplete "
+                                         "(cannot anchor verdict; fail-closed)")
+        if fm.get("reply_sha256") != a3v.get("reply_sha256"):
+            raise OrchestrationError(-1, "crash-window recovery: A4_MESSAGE reply_sha != "
+                                         "A3_CONTRACT_VALID reply_sha (ledger inconsistent; fail-closed)")
+        report_file = self.run_dir / "report.json"
+        if not report_file.is_file():
+            raise OrchestrationError(-1, "crash-window recovery: report.json missing "
+                                         "(cannot rebuild registered report; fail-closed)")
+        report = json.loads(report_file.read_text(encoding="utf-8"))
+        if report.get("result") != a3v["result"]:
+            raise OrchestrationError(-1, "crash-window recovery: report.json result != ledger "
+                                         "A3_CONTRACT_VALID result (fail-closed)")
+        if report.get("brief_sha256") != a1.get("brief_sha256"):
+            raise OrchestrationError(-1, "crash-window recovery: report brief_sha256 != A1_BRIEF "
+                                         "(report not bound to this run; fail-closed)")
+        fa = flags.get("A4_ARTIFACT_REPORT") or {}
+        if not fa.get("artifact_id"):
+            raise OrchestrationError(-1, "crash-window recovery: report artifact_id missing from "
+                                         "ledger (cannot verify M1 registration; fail-closed)")
+        code, art = self.engine.get(f"/api/v1/artifacts/{fa['artifact_id']}")
+        self._expect(code, (200,), "GET report artifact (recovery)", art)
+        if art.get("task_id") != self.task_id or art.get("sha256") != sha256_file(report_file):
+            raise OrchestrationError(-1, "crash-window recovery: M1 report artifact task/sha mismatch "
+                                         "(registered report is not ours; fail-closed)")
+        self.ledger.append({"kind": "A4_RESULT_RECOVERED", "result": report["result"],
+                            "evidence": ["A3_CONTRACT_VALID", "A4_MESSAGE reply_sha anchor",
+                                         "report.json brief binding", "M1 artifact read-back"],
+                            "note": "A4_MESSAGE registered but A4_RESULT_RECORDED missing "
+                                    "(crash window); verdict rebuilt and ledger completed",
+                            "outcome": "PASS"})
+        return report["result"]
 
     def _resume_collect(self, sent_anchor: dict) -> int:
         """A-3 行3 / 断点 S1：连原 conversation UUID 补采；新建会话重发=禁止。"""
