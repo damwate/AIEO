@@ -1,0 +1,10 @@
+【R22 限定复核】b-20261116-workspace-spec
+核验对象 commit=c1694a76d6c65b7f6999e223f17b01b26a662191（分支 review/b-20261116-workspace-spec，按 SHA 读取）
+R21 REJECT（reply sha256=d2183722c143e94eb5f16e0894c4c72594481d82557658f306d888e1f904017a）四项已整改（小改三处）：
+①classify 新增 SHA256 上下文识别（sha256 标记行内前文），命中一律计未知、不作 commit 补全；单测：上下文+git 唯一命中仍不补全 PASS
+②selftest 改临时 git 仓库+子进程真实执行：注入不可解析短 SHA→exit 2（输出含注入项），移除→exit 0，PASS
+③--check 零副作用：清单仅全量模式写入，实测前后清单字节不变
+④复跑 exit=0（未知 0/例外 29），输出+退出码落盘 acceptance/sha-audit-run.txt，清单与原始输出逐字节一致；ST-05 PASS
+边界不变：未改被测 9efb14bbcc74d397e15558dc720706fc054ac627、未重做 ST-05、保留 R15～R18 结论
+另：R21 现场采集 fail-closed→recoll r21 归属校验补采七查全过（dispatch-2026-11-16T15-19-59）
+请核：四项满足+SHA256 上下文语义；结论 PASS/REJECT
