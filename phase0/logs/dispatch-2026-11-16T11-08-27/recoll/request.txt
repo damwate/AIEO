@@ -1,0 +1,10 @@
+【R19 限定复核】b-20261116-workspace-spec
+核验对象 commit=ed333ba4f28a692a04260e28de7d1470011e23c8（父=14e3d92…）
+R18 两项已整改：
+①全量核对：python -I phase0/tools/sweep_sha.py 以 git rev-list --all 构建前缀映射，逐 token 核对 delivery/steps/task-brief——替换数 0，已无可唯一解析的短 commit SHA；审计清单=acceptance/sha-audit.txt（40 位计数+未解析 token，均为会话 UUID 片段）
+②清除两处"完整 SHA 后 …"（delivery §5 收录口径行、§5 远程 main 基线行）
+③R17/R18 已登记：steps S3⑥（R17 推送失败不可见、R18 复核仍 REJECT）、delivery §4 两行（含 R18 reply SHA）、task-brief 最终结果补记
+④保留 R15/R16 历史结论，未覆盖改写
+其后 1ea9bda（仅移除一次性脚本）与 057001f（仅归档现场目录）不含内容修改
+未改 WORKFLOW 九项、未改被测 9efb14bbcc74d397e15558dc720706fc054ac627
+请核：上轮指认 5 处现是否均为完整 40 位、审计清单可否复跑；结论 PASS/REJECT

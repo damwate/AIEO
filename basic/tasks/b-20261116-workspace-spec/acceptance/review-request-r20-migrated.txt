@@ -1,0 +1,9 @@
+【R20 限定复核·会话迁移接棒】b-20261116-workspace-spec
+旧会话 6aface14…（6aface14-4f10-83e8-a5d0-e8a5de64c1e2）已达上下文上限，按迁移规则换会话；本会话承接该任务后续全部轮次。
+核验对象 commit=bf591d03ab461e85d26b7eca4510a514ecc2def8（父=c70965f5fed1d31fbb81a54fa530f6eae8fc6998；分支 review/b-20261116-workspace-spec，按 SHA 读取）
+背景：R19（reply sha256=15ffcc6fe8bedf68f77f66ad014d76135fa3f3992a67fc64d3020349d527c2a7）REJECT 指认审计脚本三项缺口；R20 整改：
+①phase0/tools/sweep_sha.py 重写：仓库根由脚本位置动态推算；前缀映射覆盖 7~39 位；自动生成 acceptance/sha-audit.txt（未解析项逐条带类别与判定依据）
+②目标仓库环境复跑：完整原始输出+退出码落盘 acceptance/sha-audit-run.txt（exit=0；未解析的非 UUID/非日期片段 0 处）
+③ST-05 复跑全 PASS（acceptance/st05-completed.txt；exit=0）
+未改 WORKFLOW 九项、未改被测 9efb14bbcc74d397e15558dc720706fc054ac627、保留 R15~R18 历史结论。
+请核：审计工具三项要求是否满足、清单与原始输出是否一致可复跑；结论 PASS/REJECT

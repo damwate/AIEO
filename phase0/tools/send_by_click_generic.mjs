@@ -21,10 +21,27 @@ if (String(text.length) !== String(EXPECT_LEN)) throw new Error(`草稿长度异
 
 const before = await page.evaluate(() =>
   Array.from(document.querySelectorAll("[data-content-search-unit-key]")).map((u) => u.getAttribute("data-content-search-unit-key")));
-const sendBtn = page.locator('form button[aria-label*="发送"], form button[aria-label*="Send"], button[data-testid="send-button"]').first();
-await sendBtn.waitFor({ state: "visible", timeout: 10000 });
-if (!(await sendBtn.evaluate((el) => !el.disabled && el.getAttribute("aria-disabled") !== "true"))) throw new Error("发送键不可用，STOP");
-await sendBtn.click();
+const sendBtns = page.locator('form button[aria-label*="发送"], form button[aria-label*="Send"], button[data-testid="send-button"]');
+const candCount = await sendBtns.count();
+console.log(`[debug] page=${page.url()} candCount=${candCount}`);
+let clicked = false;
+if (candCount === 1) {
+  // 唯一候选即发送键（inspect_send_btns.mjs 已核实 rects>0、disabled=false）；DOM 级点击
+  await sendBtns.nth(0).evaluate((el) => el.click());
+  clicked = true;
+} else {
+  for (let i = 0; i < candCount; i++) {
+    const b = sendBtns.nth(i);
+    const visible = await b.isVisible();
+    const enabled = visible && !(await b.isDisabled());
+    if (enabled) {
+      await b.evaluate((el) => el.click());
+      clicked = true;
+      break;
+    }
+  }
+}
+if (!clicked) throw new Error("发送键不可用，STOP");
 
 let tailOk = false, stopOk = false, key = null, polls = 0;
 const t0 = Date.now();

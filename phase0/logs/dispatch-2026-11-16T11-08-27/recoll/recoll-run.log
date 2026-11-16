@@ -1,0 +1,20 @@
+[2026-11-16T11:13:41.476Z] 会话锁已获取（review-leg 补采；仅采集不发送）
+[2026-11-16T11:13:41.635Z] [tab-hygiene] 会话页命中 1 个，取末位（最近创建）
+[2026-11-16T11:13:41.635Z] 页面就位: https://chatgpt.com/c/6aface14-4f10-83e8-a5d0-e8a5de64c1e2
+[2026-11-16T11:13:41.646Z] 视口已拉高 1920x20000（前置全量物化）
+[2026-11-16T11:13:49.664Z] 静置门通过（12 units）；滚动到底+额外静置 30000ms
+[2026-11-16T11:14:29.731Z] 本轮 user 定位成功: fallback-turn-9:0:user（标记唯一+最后 user；发送双验报告键=fallback-turn-9:0:user 供对照）
+[2026-11-16T11:14:33.939Z] checks={"final_stop_button_not_visible":true,"tail_is_assistant":true,"dil_uuid_present":true,"uuid_stable":true,"stable_unit_read":true,"target_range_materialized":true,"not_prev_reply_sha":true}
+[2026-11-16T11:14:33.943Z] reply 已落盘: D:\AIEO\phase0\logs\dispatch-2026-11-16T11-08-27\recoll\reply.txt（3173 字节，SHA256=15ffcc6fe8bedf68…）
+[2026-11-16T11:14:33.944Z] recoll COMPLETED
+[2026-11-16T11:14:34.409Z] 会话锁已释放（review-leg 补采）
+[2026-11-16T14:22:47.322Z] 会话锁已获取（review-leg 补采；仅采集不发送）
+[2026-11-16T14:22:49.499Z] 页面就位: https://chatgpt.com/c/6aface14-4f10-83e8-a5d0-e8a5de64c1e2
+[2026-11-16T14:22:50.373Z] 视口已拉高 1920x20000（前置全量物化）
+[2026-11-16T14:22:58.948Z] 静置门通过（20 units）；滚动到底+额外静置 30000ms
+[2026-11-16T14:23:39.020Z] 本轮 user 定位成功: fallback-turn-9:0:user（标记唯一+最后 user；发送双验报告键=fallback-turn-9:0:user 供对照）
+[2026-11-16T14:23:43.216Z] checks={"final_stop_button_not_visible":true,"tail_is_assistant":true,"dil_uuid_present":true,"uuid_stable":true,"stable_unit_read":true,"target_range_materialized":true,"not_prev_reply_sha":true}
+[2026-11-16T14:23:43.227Z] reply 已落盘: D:\AIEO\phase0\logs\dispatch-2026-11-16T11-08-27\recoll\reply.txt（3173 字节，SHA256=15ffcc6fe8bedf68…）
+[2026-11-16T14:23:43.228Z] recoll COMPLETED
+[2026-11-16T14:23:43.798Z] [tab-hygiene] 已关闭自建页
+[2026-11-16T14:23:44.603Z] 会话锁已释放（review-leg 补采）

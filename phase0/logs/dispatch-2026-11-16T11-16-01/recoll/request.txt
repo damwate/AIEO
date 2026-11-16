@@ -1,0 +1,10 @@
+【R20 限定复核】b-20261116-workspace-spec
+核验对象 commit=bf591d03ab461e85d26b7eca4510a514ecc2def8（父=c70965f5fed1d31fbb81a54fa530f6eae8fc6998；上一轮误发旧简报，以本轮指定为准）
+R19 整改已落实：phase0/tools/sweep_sha.py 重写——
+①仓库根由脚本位置动态推算，不再写死 D:/AIEO
+②前缀映射覆盖 7~39 位全部范围
+③自动生成 acceptance/sha-audit.txt（40 位计数、未解析项逐条带类别、例外判定依据）
+④在仓库环境复跑：完整原始输出与退出码落盘 acceptance/sha-audit-run.txt（exit=0；未解析的非 UUID/非日期片段 0 处）
+ST-05 复跑全 PASS（①～⑥ PASS、Overall PASS、退出码 0）
+未改 WORKFLOW 九项、未改被测 9efb14bbcc74d397e15558dc720706fc054ac627、保留 R15/R16/R17/R18 历史结论
+请核：审计工具三项要求是否满足、清单与原始输出是否一致可复跑；结论 PASS/REJECT

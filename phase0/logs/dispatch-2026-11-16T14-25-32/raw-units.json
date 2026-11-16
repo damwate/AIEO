@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-16T14:28:57.683Z",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "913faf29-3cb6-46e0-a0ce-edffde1dce78",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "d0b3a519ac0ab1103552354151213cf991f8e3ea41e6506e2ea700c7682e35a6",
+          "f026060d8cfb8ce719bff09b60e1c20bab07d34ad11bf92620e4cd489a6a3a73"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "d0b3a519ac0ab1103552354151213cf991f8e3ea41e6506e2ea700c7682e35a6",
+          "f026060d8cfb8ce719bff09b60e1c20bab07d34ad11bf92620e4cd489a6a3a73"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-0:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nR20 限定复核结论\nREJECT\n\n核验对象：bf591d03ab461e85d26b7eca4510a514ecc2def8\n\nR20 已落实部分整改，但 SHA 审计脚本仍存在一个会导致错误 PASS 的实质性缺陷，不能通过验收。\n\n1. 三项审计工具要求\n\nR19 整改要求\n\n\t\n\nR20 核验\n\n\n\n\n① 仓库根动态推算\n\n\t\n\nPASS 使用 Path(__file__).resolve().parents[2]\n\n\n\n\n① 前缀映射覆盖 7～39 位\n\n\t\n\nPASS 使用 range(7, 40)\n\n\n\n\n① 自动生成审计清单\n\n\t\n\nPASS 已实现写入 acceptance/sha-audit.txt\n\n\n\n\n① 未解析项逐条分类\n\n\t\n\n部分满足 有逐条记录，但分类与退出判定存在缺陷\n\n2. P0：退出码判定存在致命漏洞\n\n问题位于 phase0/tools/sweep_sha.py：\n\nPython\n运行\nbad = [u for u in unresolved if \"UUID\" not in u[3] and \"日期\" not in u[3]]\n\n而未知项的分类文字是：\n\nPython\n运行\n\"未知（既非日期/UUID，也无法由 git 前缀映射唯一解析）\"\n\n这里包含字符串 UUID。\n\n因此，所有被标记为未知的未解析项，也会被错误地排除在 bad 之外。\n\n实际效果：\n\n未解析项明明存在；\n\n脚本仍将它们判定为非异常；\n\nbad 可能为空；\n\n最终返回退出码 0；\n\n审计报告却显示通过。\n\n这直接破坏了 fail-closed 原则。\n\n还有两个直接影响可复跑性的代码问题：\n\nP0-2：全量规整分支存在运行时异常。\n\nPython\n运行\nif file_replaced:\n    text = \"\\n\".join(\n        new_line if not isinstance(new_line, str) else new_line\n        for new_line in [None]\n    )\n\n只要发现可唯一解析的短 SHA，join() 就会尝试拼接 None，触发 TypeError。因此脚本无法可靠完成它声称的全量规整流程。\n\nP1-1：报告统计与实际替换不是同一轮计算。\n\n前面的逐行扫描计算 file_replaced 和 unresolved，后面的整文替换却重新使用 TOKEN.sub()，没有沿用前面的日期、UUID 排除规则，也没有重新计算审计结果。\n\n这会造成清单反映替换前的扫描结果，而不是替换后的真实文件状态。\n\n3. 清单与原始输出\n\nR20 提交中的两份证据：\n\nacceptance/sha-audit.txt\n\nacceptance/sha-audit-run.txt\n\n提交差异中可以看到两者采用了相同的统计数字和未解析项分类。\n\n但这只能证明报告内容相互吻合，不能证明脚本的判定正确。\n\n尤其是：两份报告同时出现未知项，却同时给出 0 处异常、退出码 0。这是一致地复现了错误判定，不是有效的审计通过。\n\n4. ST-05 与历史结论\n\nacceptance/st05-completed.txt：内容为六项 PASS，Overall: PASS。\n\n本次提交没有修改被测对象 9efb14bbcc74d397e15558dc720706fc054ac627。\n\nR15～R18 历史结论没有发现本次提交要求重新推翻的依据。\n\nST-05 证据可以保留，但不能抵消 SHA 审计工具的缺陷。\n\n5. 下一轮整改要求（R21）\n\n建议只整改审计工具，不扩大工作范围：\n\n修复异常判定：日期、UUID 必须通过独立、严格的格式识别排除，不能依赖分类描述中的字符串包含关系。任何未知项必须使退出码非零。\n\n删除错误的 None 拼接代码。\n\n统一扫描、替换、统计、生成报告的处理流程，确保报告反映最终文件状态。\n\n对 UUID、日期、SHA256 片段、7～39 位 commit SHA 分别建立明确分类规则。\n\n增加负向测试：人为放入一个无法解析的短 SHA，必须返回非零退出码；移除后再通过。\n\n在目标仓库实际执行，保存完整原始输出、退出码及重新生成的清单。\n\n比较清单与原始输出，确认统计、分类、结论完全一致。\n\n本轮最终判定：REJECT。\n\n只针对上述审计工具缺陷返工，不要求重做 ST-05，不修改被测对象，不推翻 R15～R18 历史结论。\n\n本次复核依据：R20 完整提交。",
+      "text_sha256": "f026060d8cfb8ce719bff09b60e1c20bab07d34ad11bf92620e4cd489a6a3a73",
+      "size_bytes": 3822,
+      "assistant_uuid": "913faf29-3cb6-46e0-a0ce-edffde1dce78"
+    }
+  ]
+}

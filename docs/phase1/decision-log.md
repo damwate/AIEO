@@ -682,3 +682,11 @@
 - **勘误登记：** 审查方复审回复中"登记 DEC-071"为编号口误——DEC-071 已被既有决策（R2 收尾整改降档收口）占用，本条按 decision-log 顺延取 DEC-084，不覆盖既有记录。
 - **审批边界：** 方案复审通过≠提交授权；本任务 commit 前须用户明文批准（DEC-071 硬约束延续），push 走 `toolkit/check-push.mjs`，交付证据绑定被测 commit 完整 40 位 SHA。
 - **关联：** L-018 第 6 条、L-015、AGENTS.md 异常处置第一动作映射表、WORKFLOW 会话管理节（执行者自身会话不受影响）、DEC-080（同条首例实战）。
+
+### DEC-085 workspace-spec 第二次会话迁移+R19 补采+R20 复核 REJECT 登记（2026-11-16，L-020 节点自主推进）
+
+- **异常与处置（L-018 第 1/2/3/6 条全链）：** R19 简报发送双验通过（dispatch-2026-11-16T11-08-27）但采集 fail-closed（INBOUND_WINDOW_COMPLETENESS_UNPROVEN）→禁重发，派生 `recoll_r19.mjs` 归属校验型补采（标记唯一+最后 user+前轮 reply SHA 排除，视口前置拉高 1920×20000）七查全过，reply 3173B，sha256=15ffcc6fe8bedf68f77f66ad014d76135fa3f3992a67fc64d3020349d527c2a7（**R19=REJECT，登记问题13**：五处历史 SHA 通过，审计脚本三项缺口）。随后 dispatch-2026-11-16T11-15-29 现场截图证实旧会话 `6aface14-4f10-83e8-a5d0-e8a5de64c1e2` 出现"上文对话已达上限"横幅（该会话累计 10 条 user 消息，远超 DEC-084 的 4 条评估阈值，属评估未执行偏差，如实登记）；R20 简报三种发送方式均未送达（dispatch-2026-11-16T11-16-01，UNCERTAIN）→按 L-018 第 6 条放弃向旧会话重发（交接原计划"重开旧会话重发"依证据修正为迁移）。
+- **迁移执行：** 简报 `acceptance/review-request-r20-migrated.txt`（1192B≤1200B 自包含，含 R19 reply 完整 SHA+证据路径+核验对象）`--new-session` 首派即通，新审查会话 `6afb128e-94bc-83ee-9148-ad10f90220ee`（现场 dispatch-2026-11-16T14-25-32，发送双验 polls=2，user_unit_key=fallback-turn-0:0:user；reply 3822B，sha256=f026060d8cfb8ce719bff09b60e1c20bab07d34ad11bf92620e4cd489a6a3a73），`gpt-reviewer-session.json` 已同步。
+- **R20 裁定（REJECT，问题13 续办）：** 审计工具三项要求（动态根/7~39 前缀/自动生成清单）均 PASS；新增指认 P0-1 未知项分类文字含"UUID"被字符串包含判断误排除（bad 可空→exit 0，fail-open）、P0-2 None 拼接 TypeError、P1-1 报告统计与替换非同一轮；R21 整改要求=严格格式识别排除+未知项必非零退出、删 None 拼接、单轮统一流程、明确分类规则、负向测试、目标仓库复跑落盘并核对一致。被测对象与 R15~R18 历史结论不变。
+- **审批边界：** 交接指示"重发 R20 简报后等待用户说明其发现的问题"——R20 回复已按归属校验取得并登记，R21 整改**暂不启动**，等用户说明问题后合并处置；证据登记 commit 按 L-020 自主推进授权执行，push 走 `toolkit/check-push.mjs`。
+- **关联：** L-018（第 1/2/3/4/6 条）、L-020、DEC-080（同条首例）、DEC-084（阈值，本例暴露"达阈值未评估"偏差）、问题13 行（steps.md 返工表）。
