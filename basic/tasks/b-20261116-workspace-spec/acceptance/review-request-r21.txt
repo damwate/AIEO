@@ -1,0 +1,12 @@
+【R21 限定复核】b-20261116-workspace-spec
+核验对象 commit=748343ec90f9ebf8ad808f57118478dae15e9b18（分支 review/b-20261116-workspace-spec，按 SHA 读取）
+R20 REJECT（reply sha256=f026060d8cfb8ce719bff09b60e1c20bab07d34ad11bf92620e4cd489a6a3a73）三缺陷已按五项要求整改（sweep_sha.py fail-closed 重写）：
+①P0-1 UUID/日期独立严格格式识别（UUID=扩展连字 run 命中 8-4-4-4-12；日期=8 位合法日历 strptime；歧义 fail-closed）；未知项一律→exit 2，不依赖分类文字
+②P0-2 删 None 拼接，逐行 TOKEN.sub 回调替换
+③P1-1 扫描/替换/统计/报告同轮
+④UUID/日期/SHA256 片段/commit SHA 分类规则明列
+⑤--selftest 注入不可解析短 SHA→非零，移除→0 PASS
+复跑 exit=0（未知 0/例外 29），输出+退出码落盘 acceptance/sha-audit-run.txt；清单与输出逐字节一致；--check PASS
+另：delivery/steps 两处缩写会话 UUID（6aface14-4f10-83e8-a5d0-e8a5de64c1e2 前 8 位）已补全 36 位
+未改被测 9efb14bbcc74d397e15558dc720706fc054ac627、未重做 ST-05、保留 R15～R18 结论
+请核：三缺陷修复+五项要求+fail-closed 语义；结论 PASS/REJECT
