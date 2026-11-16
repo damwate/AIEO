@@ -1,0 +1,14 @@
+{
+  "at": "2026-11-16T20:44:50.678Z",
+  "outcome": "failure_scene_preserved",
+  "before": [
+    {
+      "id": "07030946CB906F08E7183C22468657F6",
+      "url": "https://chatgpt.com/"
+    }
+  ],
+  "exit_after_disposal": "not_applicable（现场保留，无处置动作）",
+  "created_pages": 0,
+  "disposal": "已发送后失败：现场保留不关页（L-018 禁重发语义依赖现场），退出后人工/补采链处置",
+  "error": "INBOUND_WINDOW_COMPLETENESS_UNPROVEN: BLOCKED: 滚动中实际观察到渲染 unit 集合变化，且缺少独立逻辑序列，不能排除持续遗漏中间 unit"
+}

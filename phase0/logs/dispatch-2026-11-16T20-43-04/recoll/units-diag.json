@@ -1,0 +1,74 @@
+[
+  {
+    "key": "fallback-turn-0:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[会话迁移] 你是新审查会话，接替6afb128e（5条user消息超阈值，主动迁移）；旧会话归档，后续轮次全在本会话。\n\n【任务】AIEO仓库（GitHub按"
+  },
+  {
+    "key": "fallback-turn-0:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\n已接替旧审查会话，后续统一在本会话推进。\n\n执行顺序锁定：GPT-04 → GPT-05。\n\n本轮只负责 GPT-04 真实测试验收腿的"
+  },
+  {
+    "key": "fallback-turn-1:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[Gate1|GPT-04立项] 验证对象：docs/phase1/GPT04-TEST-ACCEPTANCE-LEG-CHARTER-DRAFT.md v0."
+  },
+  {
+    "key": "fallback-turn-1:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nGPT-04 立项 Gate1 审查结论\nPASS_WITH_CONSTRAINTS\n\n草案 v0.1 · Gate1\n\n核验对象\n\n仓库"
+  },
+  {
+    "key": "fallback-turn-2:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[Gate2|GPT-04立项] 被测对象：GPT04-TEST-ACCEPTANCE-LEG-CHARTER-DRAFT.md v0.2，仓库damwate/"
+  },
+  {
+    "key": "fallback-turn-2:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\n本次按指定完整 SHA bd899e1ff477eecccff75f4695fa1197c54f1ecf 读取了 GPT-04 v0.2"
+  },
+  {
+    "key": "fallback-turn-3:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[G04-R1|限定复核] 被测=ed9d879c78d410741747bfaf528cca058388cc9a（完整SHA实读），damwate/AIEO "
+  },
+  {
+    "key": "fallback-turn-3:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nG04-R1 限定复核结论\nPASS_WITH_CONSTRAINTS\n\n核心实现通过，问题16三项整改均通过；但本次指定 commit "
+  },
+  {
+    "key": "fallback-turn-4:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[G04-R2|限定复核收口] 被测=9ea9603847492fc48a6797b0bf1103471cc784b9（完整SHA实读），damwate/AIE"
+  },
+  {
+    "key": "fallback-turn-4:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nG04-R2 限定复核结论\n\n暂不签发 COMPLETED 复核结论：PASS_WITH_CONSTRAINTS。\n\n被测对象 9ea96"
+  },
+  {
+    "key": "fallback-turn-5:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[G04-R3|极窄收口复核] 被测=adfe69f5fa47c04dbae807c712edd906ddbe271e（完整SHA实读），damwate/AIE"
+  },
+  {
+    "key": "fallback-turn-5:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\nPASS G04-R3 极窄收口成立：任务终态确认为 COMPLETED，最终结果 PASS。\n\nR2结论回填：PASS — steps"
+  }
+]

@@ -1,0 +1,30 @@
+[2026-11-16T20:45:11.773Z] 会话锁已获取（review-leg 补采；仅采集不发送）
+[2026-11-16T20:45:11.921Z] [tab-hygiene] 会话页命中 1 个，取末位（最近创建）
+[2026-11-16T20:45:11.922Z] 页面就位: https://chatgpt.com/c/6afb41ae-4bac-83e8-9135-8592f4107e2f
+[2026-11-16T20:45:19.937Z] 静置门通过（4 units）；滚动到底+额外静置 30000ms
+[2026-11-16T20:45:59.983Z] 本轮 user 定位成功: fallback-turn-5:0:user（标记唯一+最后 user；发送双验报告键=fallback-turn-5:0:user 供对照）
+[2026-11-16T20:46:00.815Z] recoll FAILED: INBOUND_WINDOW_COMPLETENESS_UNPROVEN: BLOCKED: 滚动中实际观察到渲染 unit 集合变化，且缺少独立逻辑序列，不能排除持续遗漏中间 unit
+[2026-11-16T20:46:00.940Z] 会话锁已释放（review-leg 补采）
+[2026-11-16T20:46:10.813Z] 会话锁已获取（review-leg 补采；仅采集不发送）
+[2026-11-16T20:46:10.940Z] [tab-hygiene] 会话页命中 1 个，取末位（最近创建）
+[2026-11-16T20:46:10.940Z] 页面就位: https://chatgpt.com/c/6afb41ae-4bac-83e8-9135-8592f4107e2f
+[2026-11-16T20:46:18.974Z] 静置门通过（4 units）；滚动到底+额外静置 30000ms
+[2026-11-16T20:46:59.040Z] 本轮 user 定位成功: fallback-turn-5:0:user（标记唯一+最后 user；发送双验报告键=fallback-turn-5:0:user 供对照）
+[2026-11-16T20:46:59.892Z] recoll FAILED: INBOUND_WINDOW_COMPLETENESS_UNPROVEN: BLOCKED: 滚动中实际观察到渲染 unit 集合变化，且缺少独立逻辑序列，不能排除持续遗漏中间 unit
+[2026-11-16T20:47:00.024Z] 会话锁已释放（review-leg 补采）
+[2026-11-16T20:47:34.901Z] 会话锁已获取（review-leg 补采；仅采集不发送）
+[2026-11-16T20:47:35.021Z] [tab-hygiene] 会话页命中 1 个，取末位（最近创建）
+[2026-11-16T20:47:35.021Z] 页面就位: https://chatgpt.com/c/6afb41ae-4bac-83e8-9135-8592f4107e2f
+[2026-11-16T20:47:43.039Z] 静置门通过（4 units）；滚动到底+额外静置 30000ms
+[2026-11-16T20:48:23.099Z] 本轮 user 定位成功: fallback-turn-5:0:user（标记唯一+最后 user；发送双验报告键=fallback-turn-5:0:user 供对照）
+[2026-11-16T20:48:23.948Z] recoll FAILED: INBOUND_WINDOW_COMPLETENESS_UNPROVEN: BLOCKED: 滚动中实际观察到渲染 unit 集合变化，且缺少独立逻辑序列，不能排除持续遗漏中间 unit
+[2026-11-16T20:48:24.100Z] 会话锁已释放（review-leg 补采）
+[2026-11-16T20:48:32.941Z] 会话锁已获取（review-leg 补采；仅采集不发送）
+[2026-11-16T20:48:33.061Z] [tab-hygiene] 会话页命中 1 个，取末位（最近创建）
+[2026-11-16T20:48:33.061Z] 页面就位: https://chatgpt.com/c/6afb41ae-4bac-83e8-9135-8592f4107e2f
+[2026-11-16T20:48:51.155Z] 静置门通过（12 units）；滚动到底+额外静置 30000ms
+[2026-11-16T20:49:31.220Z] 本轮 user 定位成功: fallback-turn-5:0:user（标记唯一+最后 user；发送双验报告键=fallback-turn-5:0:user 供对照）
+[2026-11-16T20:49:35.089Z] checks={"final_stop_button_not_visible":true,"tail_is_assistant":true,"dil_uuid_present":true,"uuid_stable":true,"stable_unit_read":true,"target_range_materialized":true,"not_prev_reply_sha":true}
+[2026-11-16T20:49:35.095Z] reply 已落盘: D:\AIEO\phase0\logs\dispatch-2026-11-16T20-43-04\recoll\reply.txt（499 字节，SHA256=bd85176a474f726c…）
+[2026-11-16T20:49:35.096Z] recoll COMPLETED
+[2026-11-16T20:49:35.219Z] 会话锁已释放（review-leg 补采）
