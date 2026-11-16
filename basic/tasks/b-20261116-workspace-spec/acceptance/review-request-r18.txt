@@ -1,0 +1,4 @@
+【R18 补正说明】b-20261116-workspace-spec
+上轮推送失败（Connection reset），导致核验对象 86a9f3aecf3e32ad7a8fbe6cc25f913f677317d3 未可见；现已推送成功
+分支 review/b-20261116-workspace-spec 最新=14e3d926f2ef06099a7513ad7164ca1cc45b7d61（父=86a9f3aecf3e32ad7a8fbe6cc25f913f677317d3，该父仅归档 R17 简报）
+请按原 R17 要求复核 commit 86a9f3aecf3e32ad7a8fbe6cc25f913f677317d3（父 f0e1d4a1d5dd32f01e8771e32c995a751106259f）：R15 记录是否全为完整 SHA、task-brief 与 delivery/steps 轮次是否一致；结论 PASS/REJECT

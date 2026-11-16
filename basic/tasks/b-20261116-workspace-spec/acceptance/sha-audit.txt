@@ -1,0 +1,17 @@
+# SHA 审计清单（自动生成，2026-11-16）
+
+## delivery.md
+- 完整 40 位 SHA 出现次数：55
+- 未解析的 7~39 位 token：2：6aface14, e8a5de64c1e2
+
+## steps.md
+- 完整 40 位 SHA 出现次数：33
+- 未解析的 7~39 位 token：4：6afabbd3, 6aface14, 8a61cf91694c, e8a5de64c1e2
+
+## task-brief.md
+- 完整 40 位 SHA 出现次数：3
+- 未解析的 7~39 位 token：0（无）
+
+## 校验方法
+- `python -I phase0/tools/sweep_sha.py`：以 `git rev-list --all` 构建前缀映射，对三文件逐个 token 校核；可唯一解析者为短 SHA，本清单生成时替换数为 0（即已无短 commit SHA）。
+- 例外：会话 UUID 片段（如 `6aface14-4f10-…`）不是 commit SHA，不纳入 40 位要求。

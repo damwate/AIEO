@@ -9,9 +9,7 @@ const ctx = browser.contexts()[0];
 let page = ctx.pages().find((p) => p.url().includes("chatgpt.com"));
 if (!page) page = await ctx.newPage();
 
-await page.setViewportSize({ width: 1920, height: 20000 }).catch(() => {});
-await page.goto(url, { waitUntil: "domcontentloaded", timeout: 90000 });
-await page.waitForTimeout(12000);
+await page.setViewportSize({ width: 1920, height: 12000 }).catch(() => {});
 
 const read = async () => page.evaluate(() => {
   const composer = document.querySelector('#prompt-textarea, [aria-label="询问 ChatGPT"], [aria-label="Ask ChatGPT"]');
@@ -25,18 +23,32 @@ const read = async () => page.evaluate(() => {
   return {
     url: location.href,
     title: document.title,
+    readyState: document.readyState,
     composerLen: text.length,
     composerHead: text.slice(0, 60),
     stopVisible: stop,
     unitCount: units.length,
     unitKeys: units.map((u) => u.key),
-    lastRole: units.length ? units[units.length - 1].role : null,
   };
 });
 
+// 多次尝试导航，容忍慢链路
+let navigated = false;
+for (let i = 0; i < 3 && !navigated; i++) {
+  try {
+    await page.goto(url, { waitUntil: "commit", timeout: 45000 });
+    navigated = true;
+  } catch (e) {
+    console.log(`goto attempt ${i + 1} failed: ${e.message.split("\n")[0]}`);
+    await page.waitForTimeout(5000);
+  }
+}
+await page.waitForTimeout(15000);
+
 let state = await read();
-if (state.unitCount < 4) {
-  await page.waitForTimeout(10000);
+for (let i = 0; i < 4 && state.unitCount < 4; i++) {
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight)).catch(() => {});
+  await page.waitForTimeout(8000);
   state = await read();
 }
 console.log(JSON.stringify(state, null, 2));
