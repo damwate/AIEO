@@ -1,0 +1,4 @@
+【限定复核R7·同会话续派】b-20261116-session-migrate-4rounds 定案复核（R6 ③状态索引整改）。R6=现场 dispatch-2026-11-16T13-53-16，reply sha256=199ef4ef785b9161fdf8475a159088325c2b01ed8ffbfcb51c200e161960171e，①②④ PASS、③未通过（task-brief/delivery §6 残留"R6 待派"）。
+整改 commit 完整 SHA=20a3f5fef6051aba62ea680b43972b611ac1b39f（已推送，直接后继 086225e4454bc4afd9fc5652a1db5f9979ed4421）。读取 raw.githubusercontent.com/damwate/AIEO/20a3f5fef6051aba62ea680b43972b611ac1b39f/ 下 basic/tasks/b-20261116-session-migrate-4rounds/ 的 task-brief.md、delivery.md、steps.md。
+复核项：①task-brief 当前步骤/最终结果已统一（无"R6 待派"残留，如实登记"③已整改、定案以 R7 为准"）；②delivery §6 已更新 R6 已完成记录并绑定 reply sha256；③steps.md 已补 R6 记录（现场+reply sha256+核验对象）及迁移执行记录（第 6 条重评点已迁移新会话）；④状态语义一致、无夸大（未提前宣称定案 PASS）；⑤范围未扩大（仅任务包两文件+R6 现场归档+简报）。
+结论：PASS/REJECT（逐项）/BLOCKED。

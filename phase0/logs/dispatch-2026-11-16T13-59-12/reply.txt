@@ -1,0 +1,118 @@
+ChatGPT 说：
+R7 限定复核
+固定 SHA 已核验
+
+核验对象： 20a3f5fef6051aba62ea680b43972b611ac1b39f
+
+已直接读取该 commit 下指定的 task-brief.md、delivery.md、steps.md，未使用 HEAD。
+
+初步发现：
+
+task-brief.md 已删除旧的「R6 待派」表述，改为「R6 整改、定案以 R7 为准」。①符合要求。
+GitHub
+
+steps.md 已完整保留 R1～R5 历史记录，但目前可见部分尚未展示 R6 新增记录，需要继续核对文件末尾。
+GitHub
+
+五项复核结果
+
+项目
+
+	
+
+结论
+
+	
+
+核验结果
+
+
+
+
+① task-brief 状态统一
+
+	
+
+PASS
+
+	
+
+当前步骤和最终结果均明确 R6 已整改、R7 定案；没有 R6 待派残留
+
+
+
+
+② delivery §6 更新
+
+	
+
+PASS
+
+	
+
+R6 已完成，现场、完整 reply SHA256、核验对象均已登记；R7 待派属于正确的历史时点状态
+
+
+
+
+③ steps 补充记录
+
+	
+
+PASS
+
+	
+
+R6 现场、reply SHA256、核验对象均有记录；明确第 6 条消息触发重评并执行新会话迁移
+
+
+
+
+④ 状态语义一致
+
+	
+
+PASS
+
+	
+
+没有提前宣称 R7 定案 PASS，R6 整改与 R7 最终定案明确区分
+
+
+
+
+⑤ 范围未扩大
+
+	
+
+BLOCKED
+
+	
+
+三份文件内容符合限定整改方向，但未能独立取得该 commit 的完整文件变更清单，不能据此确认实际 diff 范围
+
+证据：
+GitHub
++2
+
+最终结论
+BLOCKED
+已核验 4/5 项 PASS
+
+① PASS
+
+② PASS
+
+③ PASS
+
+④ PASS
+
+⑤ BLOCKED：缺少 commit 文件变更清单的独立证据
+
+没有发现新的文档整改缺陷。
+
+只需要补充一项证据：20a3f5fef6051aba62ea680b43972b611ac1b39f 相对父提交的完整 git show --stat 和 git diff-tree --no-commit-id --name-status -r 输出。
+
+不需要修改代码或文档，不需要重新运行 ST-05，也不需要重新审查前五轮。
+
+补齐范围证据后，只针对⑤做一次确认即可。

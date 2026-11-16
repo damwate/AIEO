@@ -1,0 +1,36 @@
+﻿=== git show --stat 20a3f5fef6051aba62ea680b43972b611ac1b39f ===
+commit 20a3f5fef6051aba62ea680b43972b611ac1b39f
+Author: mingong@aliyun.com <3280532a>
+Date:   Mon Nov 16 21:58:38 2026 +0800
+
+    b-20261116-session-migrate-4rounds: R6 整改——状态索引统一（问题5：task-brief/delivery§6/steps R6 记录），登记迁移执行记录（第6条重评点已迁移）
+
+ .../acceptance/st05-after-r6fix.txt                    |   9 +++++++++
+ .../b-20261116-session-migrate-4rounds/delivery.md     |   3 ++-
+ .../tasks/b-20261116-session-migrate-4rounds/steps.md  |   2 +-
+ .../b-20261116-session-migrate-4rounds/task-brief.md   |   4 ++--
+ .../logs/dispatch-2026-11-16T13-53-16/raw-units.json   | Bin 0 -> 5230 bytes
+ .../dispatch-2026-11-16T13-53-16/reply-dispatch.png    | Bin 0 -> 119430 bytes
+ phase0/logs/dispatch-2026-11-16T13-53-16/reply.txt     | Bin 0 -> 2468 bytes
+ phase0/logs/dispatch-2026-11-16T13-53-16/request.txt   | Bin 0 -> 1162 bytes
+ phase0/logs/dispatch-2026-11-16T13-53-16/result.json   | Bin 0 -> 8345 bytes
+ phase0/logs/dispatch-2026-11-16T13-53-16/run.log       | Bin 0 -> 1447 bytes
+ .../dispatch-2026-11-16T13-53-16/sent-dispatch.png     | Bin 0 -> 79700 bytes
+ .../logs/dispatch-2026-11-16T13-53-16/tab-audit.json   | Bin 0 -> 614 bytes
+ phase0/tools/session-migrate-4rounds-recheck-r6.txt    |   5 +++++
+ 13 files changed, 19 insertions(+), 4 deletions(-)
+
+=== git diff-tree --no-commit-id --name-status -r 20a3f5fef6051aba62ea680b43972b611ac1b39f ===
+A	basic/tasks/b-20261116-session-migrate-4rounds/acceptance/st05-after-r6fix.txt
+M	basic/tasks/b-20261116-session-migrate-4rounds/delivery.md
+M	basic/tasks/b-20261116-session-migrate-4rounds/steps.md
+M	basic/tasks/b-20261116-session-migrate-4rounds/task-brief.md
+A	phase0/logs/dispatch-2026-11-16T13-53-16/raw-units.json
+A	phase0/logs/dispatch-2026-11-16T13-53-16/reply-dispatch.png
+A	phase0/logs/dispatch-2026-11-16T13-53-16/reply.txt
+A	phase0/logs/dispatch-2026-11-16T13-53-16/request.txt
+A	phase0/logs/dispatch-2026-11-16T13-53-16/result.json
+A	phase0/logs/dispatch-2026-11-16T13-53-16/run.log
+A	phase0/logs/dispatch-2026-11-16T13-53-16/sent-dispatch.png
+A	phase0/logs/dispatch-2026-11-16T13-53-16/tab-audit.json
+A	phase0/tools/session-migrate-4rounds-recheck-r6.txt
