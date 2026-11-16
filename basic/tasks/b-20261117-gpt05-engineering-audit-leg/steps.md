@@ -23,10 +23,12 @@
 - ⑤b **零 mock 实战全链（BATCH-001/PRJ-GPT04LEG@live M1 8002 重启加载 security.py 变更，2026-11-17 如实登记）：** setup-agents（GPT-05/ENGINE-04 bootstrap）→真实派单两次（dispatch-2026-11-16T22-58-11/T23-02-25，发送双验均通过但**新会话采集两连败 INBOUND_START_UNIT_MISSING**——当日已三现的采集缺陷，§5 行 1 换会话重派如实发生=两对话均真实发出审计请求）→按 L-018 手工 recoll 恢复（视口前置拉高 R3 先例+标记归属定位，会话 6afb8bb2-b068-83ee-865a-33ece050be1c，reply 原始 6769B sha256=dd12b6a8…592da12）→**真实 GPT-05 结论=BLOCKED（DO_NOT_SUBMIT）**：七大规范矩阵 6 ISSUE+1 PASS+三条 BLOCKER 发现（BATCH-001 含 REWORK 任务/交付闭环未完成/零 mock 闭环待证——第三项由本实战链自身闭合）→findings 结构化对象 vs 冻结契约 string[]→**契约校验 fail-closed 真拦截（三腿同型第三次实战实证）**→A6 人工保真规整 loss=NONE→attach 三步登记（artifacts×2+AUDIT_SUBMITTED message）→**M1 批次/任务状态零变化核验通过（A5）**。账本 acceptance/live-run/ledger.jsonl sha256=700b7864e4d081b6c6f78109d39fc34b2d63f1b19038ed0e0eeefa9ca9df692b。会话指针恢复（pre-g05live 备份）。
 - ⑥验收证据引用：phase1/tools/test_engineering_audit_leg.py；acceptance/test-run-combined-112.txt；acceptance/test-run-combined-112-r2.txt；acceptance/live-run/（账本+简报+规整稿+原始回复）；验收复核现场 dispatch-2026-11-16T22-30-47/recoll（Gate2-R6，reply sha256=90997e741ffae280…完整值见 recoll-result.json），验收结论：PASS（Gate2-R6 设计冻结+授权覆盖本步骤；实现级复核由 G05-DR 承担）
 
-## S4 交付（PLANNED）
+## S4 交付（IN_PROGRESS——delivery+C1 绑定完成，G05-DR 复核派单）
 
 - ①本步骤目标：交付登记与验收复核闭环（G05-DR 复核派单至审查会话 6afb7fe2）。②修改文件：delivery.md、task-brief.md、acceptance/。③修改内容：交付登记+C1 绑定+实战账本归档+复核简报。
-- ④执行结果：（后回填）⑤测试结果：（后回填）⑥验收证据引用：（交付时回填）
+- ④执行结果：delivery 七要素+C1 绑定核验（acceptance/binding-report.json，baseline=58da7697976a2465aa7fc641837af97f1190a68a）+G05-DR 限定复核简报派单（审查会话 6afb7fe2）。
+- ⑤测试结果：四腿合跑 112/112 OK；零 mock 实战全链（真实 BLOCKED 结论留证）。
+- ⑥验收证据引用：acceptance/live-run/；acceptance/binding-report.json；验收复核现场 dispatch-2026-11-16T22-30-47/recoll（Gate2-R6，reply sha256=90997e741ffae280…完整值见 recoll-result.json），验收结论：PASS（Gate2-R6 设计冻结+开工授权；实现级复核=G05-DR 承担，结论回填待）
 
 ## 返工记录表（首次 REJECT 时建表；按"同一问题"计数）
 
