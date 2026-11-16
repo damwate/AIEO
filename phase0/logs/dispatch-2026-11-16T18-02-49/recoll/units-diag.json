@@ -1,0 +1,14 @@
+[
+  {
+    "key": "fallback-turn-2:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[Gate2|GPT-04立项] 被测对象：GPT04-TEST-ACCEPTANCE-LEG-CHARTER-DRAFT.md v0.2，仓库damwate/"
+  },
+  {
+    "key": "fallback-turn-2:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\n本次按指定完整 SHA bd899e1ff477eecccff75f4695fa1197c54f1ecf 读取了 GPT-04 v0.2"
+  }
+]

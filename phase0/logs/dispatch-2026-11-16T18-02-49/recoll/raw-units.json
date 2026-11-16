@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-16T18:21:52.862Z",
+  "user_unit_key": "fallback-turn-2:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-2:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "275990c8-dcbe-4135-8528-58c3edaaa7f5",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-2:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "edb019263aef39c1cdf8829d98d28367e3aa5f8db0dc1f291949b95e98c1d494",
+          "763cf463e01a2fd0199691244669ba869bfa782960af31bb292c7be39301da9f"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "edb019263aef39c1cdf8829d98d28367e3aa5f8db0dc1f291949b95e98c1d494",
+          "763cf463e01a2fd0199691244669ba869bfa782960af31bb292c7be39301da9f"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-2:0:user",
+      "fallback-turn-2:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-2:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n本次按指定完整 SHA bd899e1ff477eecccff75f4695fa1197c54f1ecf 读取了 GPT-04 v0.2 任务书及两条已通过真实腿源码。先给结论方向：GPT-04 的架构边界可以立项，但 A-2 组合矩阵和 A-3 恢复矩阵仍有需要收紧的语义缺口；公共 runner 不应在本期抽取，采用同构复制更稳妥。 下面把 Gate2 的终裁规则和授权边界说清楚。\n\nGate2：PASS_WITH_CONSTRAINTS 开工授权：生效\n\n裁定：GPT-04 测试验收真实腿立项通过。 以下终裁作为 Gate2 绑定决议执行，不要求再为这些设计选择单独返工一轮。剩余文档修订应纳入实现任务书，但不阻断开工。\n\n1. Gate2 五项终裁\n① G1-03：执行事实 × 验收结论矩阵\n\n终裁原则：执行事实只能由 F-003 证据确定；GPT-04 回复中的 execution_result_observed 不能覆盖或改变它。\n\nF-003 证据事实\n\n\t\n\n回复 PASS\n\n\t\n\n回复 REWORK\n\n\t\n\n回复 BLOCKED\n\n\n\n\nEXECUTED_PASS\n\n\t\n\n允许登记\n\n\t\n\n允许登记\n\n\t\n\n腿级 BLOCKED\n\n\n\n\nEXECUTED_FAIL\n\n\t\n\n禁止\n\n\t\n\n允许登记\n\n\t\n\n腿级 BLOCKED\n\n\n\n\nNOT_EXECUTED\n\n\t\n\n禁止\n\n\t\n\n禁止\n\n\t\n\n腿级 BLOCKED\n\n\n\n\nCLAIMED_ONLY\n\n\t\n\n禁止\n\n\t\n\n禁止\n\n\t\n\n腿级 BLOCKED\n\n\n\n\nBLOCKED\n\n\t\n\n禁止\n\n\t\n\n禁止\n\n\t\n\n腿级 BLOCKED\n\n终裁说明：\n\nEXECUTED_PASS + REWORK 合法：测试执行通过，不代表验收标准全部满足。\n\nEXECUTED_FAIL + REWORK 合法：测试实际失败，可以形成返工结论。\n\nEXECUTED_FAIL + PASS 必须明确列为禁止项。v0.2 原矩阵漏列了这一组合。\n\nNOT_EXECUTED / CLAIMED_ONLY / BLOCKED 不允许形成 PASS 或 REWORK 登记；缺少可接受的执行事实时，走腿级 BLOCKED。\n\n回复 BLOCKED 不论执行事实为何，都走 artifacts+messages，M1 保持 TEST_ACCEPTANCE。\n\n回复字段处理约束： execution_result_observed 可以保留为 GPT-04 的复述/交叉核对字段，但 engine 必须以 F-003 证据计算的值为准；两者不一致即 fail-closed，不得采信回复值继续登记。\n\n② D2：公共 runner 抽取 vs 同构复制\n终裁：同构复制\n\n我实读了两条已 PASS 的实现：\n\n文件\n\n\t\n\n规模\n\n\t\n\n结构特征\n\n\n\n\nreview_leg.py\n\n\t\n\n1309 行\n\n\t\n\nGPT-03 自有流程编排、报告登记、恢复路径\n\n\n\n\narch_review_leg.py\n\n\t\n\n1279 行\n\n\t\n\nGPT-02 自有流程编排、报告登记、恢复路径\n\n源码已经体现了适度公共化：arch_review_leg.py 从 review_leg.py 复用了 EngineM1Client、ReviewLedger、derive_recoll_driver、公共常量和时间工具。两条腿仍分别保留自己的状态判断、简报、契约校验、登记和恢复流程。\n\n这说明目前的复用边界已经比较合理：\n\n公共基础工具可以继续复用。\n\n各角色的流程编排、M1 状态判断、结论登记、恢复逻辑应保持角色独立。\n\n再抽象公共 runner 会把已经 PASS 的两条腿带入回归风险，而且 GPT-04 的 /reports/test 与前两条腿的登记语义不同。\n\nGPT-04 实施方案： 以 arch_review_leg.py 为主要结构参考，同构新增 test_acceptance_leg.py；复用现有公共工具，不重构前两条腿，不抽取新的公共 runner。\n\n特别要求：沿用 GPT-02 的 RunKeyLock 跨进程互斥纪律。review_leg.py 自身没有这层锁，不能简单照搬 GPT-03 的并发控制方式。\n\n源码依据：review_leg.py blob 018b0fd86e9091d4776caad8c34104b57335a529；arch_review_leg.py blob 6cb08423e6d042fd93bf6b15cd734f565a4cb551。\n\n③ A-1：ENGINE-03 运行期 M1 白名单定稿\n7 个端点\n\n#\n\n\t\n\nMethod\n\n\t\n\n允许路径\n\n\t\n\n用途\n\n\n\n\n1\n\n\t\n\nGET\n\n\t\n\n/api/v1/tasks/{task_id}\n\n\t\n\n读取任务、验收标准、执行入口及状态\n\n\n\n\n2\n\n\t\n\nGET\n\n\t\n\n/api/v1/tasks/{task_id}/dependencies\n\n\t\n\n读取依赖及状态\n\n\n\n\n3\n\n\t\n\nGET\n\n\t\n\n/api/v1/artifacts/{artifact_id}\n\n\t\n\n读取任务关联测试证据\n\n\n\n\n4\n\n\t\n\nGET\n\n\t\n\n/api/v1/reports?type=test&task_id={task_id}\n\n\t\n\n只读核实测试报告登记结果\n\n\n\n\n5\n\n\t\n\nPOST\n\n\t\n\n/api/v1/artifacts\n\n\t\n\n登记验收简报、BLOCKED 证据等产物\n\n\n\n\n6\n\n\t\n\nPOST\n\n\t\n\n/api/v1/messages\n\n\t\n\n登记验收结果相关消息\n\n\n\n\n7\n\n\t\n\nPOST\n\n\t\n\n/api/v1/reports/test\n\n\t\n\n仅登记 PASS/REWORK，并由 M1 原子推进状态\n\n排除清单：\n\nPOST /api/v1/tasks/{task_id}/events：禁止，状态推进由 /reports/test 内部原子完成。\n\nPOST /api/v1/agents：禁止运行期调用；ENGINE-03 仅允许 OWNER 一次性 bootstrap。\n\napprovals 类端点：全部排除。\n\nmessages 的 cancel/requeue/ack 操作：全部排除。\n\nprojects、batches 写操作：全部排除。\n\n/reports/test 的 BLOCKED 提交：禁止。\n\n未列入上述七项的所有 M1 端点：默认拒绝。\n\n白名单不能仅靠文档约束；engine 必须在客户端请求层执行 method+path 白名单校验，不能由调用方自由传入任意 URL。\n\n④ A-3：恢复矩阵定稿\n\nv0.2 的恢复思路正确，但需要补上一个关键条件：“简报已组装未发送”不等于“可以直接重发”。必须先检查账本是否存在发送意图。\n\n断点\n\n\t\n\n恢复动作\n\n\t\n\n重新派单\n\n\n\n\n简报组装前\n\n\t\n\n重新读取任务和证据，核对输入版本\n\n\t\n\n允许首次派单\n\n\n\n\n简报已组装，且无发送意图\n\n\t\n\n校验 brief SHA，继续首次发送\n\n\t\n\n允许\n\n\n\n\n存在发送意图，但没有发送确认\n\n\t\n\n无法证明发送状态，腿级 BLOCKED，人工核查派单现场\n\n\t\n\n禁止\n\n\n\n\n已确认发送，未采集回复\n\n\t\n\n原 conversation UUID 补采，校验发送锚点\n\n\t\n\n禁止\n\n\n\n\n已采集，未登记\n\n\t\n\n校验 reply SHA、契约、证据绑定，按原幂等键登记\n\n\t\n\n禁止\n\n\n\n\n/reports/test 提交结果不确定\n\n\t\n\nGET 查询报告，逐项核对五字段\n\n\t\n\n禁止\n\n\n\n\n查询确认已登记，且 M1 已推进\n\n\t\n\n接续完成本轮，不再提交\n\n\t\n\n禁止\n\n\n\n\n查询确认未登记，M1 仍为 TEST_ACCEPTANCE\n\n\t\n\n确认没有已生效登记后，才允许按原键重试\n\n\t\n\n不重新派单\n\n\n\n\n报告已登记，但 M1 仍为 TEST_ACCEPTANCE\n\n\t\n\n原子推进一致性异常，登记 BUG，腿级 BLOCKED\n\n\t\n\n禁止\n\n\n\n\n已推进 ACCEPTED/REWORK\n\n\t\n\n只读核验，本轮完成\n\n\t\n\n禁止\n\n\n\n\nGPT-04 回复 BLOCKED\n\n\t\n\nartifacts+messages 留证，M1 保持 TEST_ACCEPTANCE，人工接管\n\n\t\n\n禁止\n\n\n\n\nM1 为任务级 BLOCKED\n\n\t\n\nengine 不得操作，OWNER 接管\n\n\t\n\n禁止\n\n\n\n\n账本与 M1 状态矛盾或出现未定义状态\n\n\t\n\nfail-closed，保留现场，腿级 BLOCKED\n\n\t\n\n禁止\n\n特别强调：\n\nduplicate 不是成功响应。先 GET 核验，不能把 duplicate 当幂等成功。\n\n查询必须核对 task_id / execution_id / commit_sha / result / execution_result。\n\n无法确认是否已登记，不能靠重试碰运气。\n\n端点同事务原子登记和状态推进；报告存在而状态未推进，是异常，不得绕过 M1 补事件。\n\n这也与已通过的 GPT-02 腿恢复纪律一致：arch_review_leg.py 的 _resume_inner() 在有发送意图却无发送确认时直接 fail-closed，不推测是否发送成功。\n\n⑤ D3：显式证据指针\n终裁：接受显式指针方案\n\nlatest_execution 只能用作发现入口，不能成为运行过程中的动态证据源。\n\nGPT-04 每轮简报必须固定绑定：\n\ntask_id、execution_id。\n\nF-003 测试报告 artifact_id。\n\n三件套原始证据各自的 artifact 标识和 SHA256。\n\nGitHub 固定 commit SHA（完整 40 位），禁止隐式读取最新 main。\n\ninput_material_commit。\n\nbrief_sha256、brief_schema_version、review_round_id。\n\n运行中重新读取到的 latest_execution 如果与本轮已固定的 execution 不一致，必须停止并转人工，不能悄悄切换到新证据。\n\n2. 剩余修订清单\n文档修订：需落实，不阻断开工\n\n我认为只需处理以下四项，不需要重新讨论架构：\n\n编号\n\n\t\n\n修订内容\n\n\t\n\n优先级\n\n\n\n\nG2-01\n\n\t\n\nA-2 补齐 EXECUTED_FAIL + PASS 禁止项，并将上述 15 种组合矩阵作为最终规则\n\n\t\n\nP1\n\n\n\n\nG2-02\n\n\t\n\n明确 NOT_EXECUTED/CLAIMED_ONLY/BLOCKED + REWORK 不登记，统一腿级 BLOCKED；回复 BLOCKED 始终走 artifacts+messages\n\n\t\n\nP1\n\n\n\n\nG2-03\n\n\t\n\nA-3 补充“发送意图存在但无发送确认”的恢复分支；明确原键重试前的 GET 核实条件\n\n\t\n\nP1\n\n\n\n\nG2-04\n\n\t\n\n明确 execution_result_observed 只是回复交叉核对字段，权威值由 F-003 证据决定\n\n\t\n\nP1\n\nG1-02 的契约—实现 duplicate 不一致已正确登记为遗留问题，不再要求 GPT-04 修改冻结契约。按实际实现恢复，后续另走契约演进流程。\n\n3. 开工授权结论\nGPT-04：正式授权开工\n\n授权依据： 用户 2026-11-17 授权机制 + 本次 Gate2 复审通过，按 DEC-089 登记。\n\n授权范围：\n\n新增 phase1/tools/test_acceptance_leg.py。\n\n新增 GPT-04 回复契约文件。\n\n新增 GPT-04 简报、账本、恢复、测试及验收证据。\n\nENGINE-03 bootstrap 与运行期七端点白名单。\n\n复用既有 M2 派单链和公共工具。\n\nGPT-02/03/04 三腿回归验证。\n\n绑定限制：\n\nM1-M4 代码零修改。\n\n既有 v1.0.0 冻结契约零修改。\n\n不抽取公共 runner，不重构已 PASS 的 GPT-02/03。\n\n不扩展多轮返工重验、GPT-05、F-003 测试执行编排。\n\n不解除 DEC-017 门禁，不以本次开工授权代替后续验收。\n\nDEC-010 红线仍然有效： main 合并、生产发布、数据删除必须由用户本人拍板。本授权不包含这些操作。\n\n建议实施顺序： 先完成 G2-01 至 G2-04 的任务书修订并冻结设计，再实现 A0-A5；先完成 GPT-04 独立测试矩阵，再做三腿回归。不要为了抽象公共 runner 影响已经通过的两条腿。\n\nGPT-04 现在可以正式交给 WorkBuddy 开工。GPT-05 仍按既定顺序后置，待 GPT-04 形成可验收闭环后再立项。",
+      "text_sha256": "763cf463e01a2fd0199691244669ba869bfa782960af31bb292c7be39301da9f",
+      "size_bytes": 9707,
+      "assistant_uuid": "275990c8-dcbe-4135-8528-58c3edaaa7f5"
+    }
+  ]
+}

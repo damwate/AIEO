@@ -1,0 +1,7 @@
+[Gate2|GPT-04立项] 被测对象：GPT04-TEST-ACCEPTANCE-LEG-CHARTER-DRAFT.md v0.2，仓库damwate/AIEO分支main，commit bd899e1ff477eecccff75f4695fa1197c54f1ecf，按SHA实读。
+
+【G1三约束落实声明】G1-01=A-3路径改GET /api/v1/reports?type=test&task_id=+逐项核对五字段；G1-02=§5登记契约-实现duplicate不一致为遗留问题（H2不改冻结契约，恢复设计以实际代码为准）；G1-03=A-2组合校验矩阵（三组合禁PASS+未列组合默认从严）+执行事实不可被回复覆盖。
+
+【Gate2范围】会务立项评审：①G1-03组合矩阵终裁；②D2终裁——公共runner抽取vs同构复制：请实读phase1/tools/review_leg.py与arch_review_leg.py评估抽取范围/回归风险（两腿已PASS，抽取有风险则优先同构复制，M1-M4零修改）；③A-1端点白名单定稿（7行+排除清单）；④A-3恢复矩阵定稿；⑤D3显式指针确认。
+
+【输出】三态+逐项依据+剩余修订清单（如有）。Gate2通过后按用户2026-11-17授权机制（DEC-089登记）你复审通过即开工授权——请一并给出明确开工授权结论或整改要求。

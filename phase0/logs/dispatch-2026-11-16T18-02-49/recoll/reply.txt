@@ -1,0 +1,658 @@
+ChatGPT 说：
+
+本次按指定完整 SHA bd899e1ff477eecccff75f4695fa1197c54f1ecf 读取了 GPT-04 v0.2 任务书及两条已通过真实腿源码。先给结论方向：GPT-04 的架构边界可以立项，但 A-2 组合矩阵和 A-3 恢复矩阵仍有需要收紧的语义缺口；公共 runner 不应在本期抽取，采用同构复制更稳妥。 下面把 Gate2 的终裁规则和授权边界说清楚。
+
+Gate2：PASS_WITH_CONSTRAINTS 开工授权：生效
+
+裁定：GPT-04 测试验收真实腿立项通过。 以下终裁作为 Gate2 绑定决议执行，不要求再为这些设计选择单独返工一轮。剩余文档修订应纳入实现任务书，但不阻断开工。
+
+1. Gate2 五项终裁
+① G1-03：执行事实 × 验收结论矩阵
+
+终裁原则：执行事实只能由 F-003 证据确定；GPT-04 回复中的 execution_result_observed 不能覆盖或改变它。
+
+F-003 证据事实
+
+	
+
+回复 PASS
+
+	
+
+回复 REWORK
+
+	
+
+回复 BLOCKED
+
+
+
+
+EXECUTED_PASS
+
+	
+
+允许登记
+
+	
+
+允许登记
+
+	
+
+腿级 BLOCKED
+
+
+
+
+EXECUTED_FAIL
+
+	
+
+禁止
+
+	
+
+允许登记
+
+	
+
+腿级 BLOCKED
+
+
+
+
+NOT_EXECUTED
+
+	
+
+禁止
+
+	
+
+禁止
+
+	
+
+腿级 BLOCKED
+
+
+
+
+CLAIMED_ONLY
+
+	
+
+禁止
+
+	
+
+禁止
+
+	
+
+腿级 BLOCKED
+
+
+
+
+BLOCKED
+
+	
+
+禁止
+
+	
+
+禁止
+
+	
+
+腿级 BLOCKED
+
+终裁说明：
+
+EXECUTED_PASS + REWORK 合法：测试执行通过，不代表验收标准全部满足。
+
+EXECUTED_FAIL + REWORK 合法：测试实际失败，可以形成返工结论。
+
+EXECUTED_FAIL + PASS 必须明确列为禁止项。v0.2 原矩阵漏列了这一组合。
+
+NOT_EXECUTED / CLAIMED_ONLY / BLOCKED 不允许形成 PASS 或 REWORK 登记；缺少可接受的执行事实时，走腿级 BLOCKED。
+
+回复 BLOCKED 不论执行事实为何，都走 artifacts+messages，M1 保持 TEST_ACCEPTANCE。
+
+回复字段处理约束： execution_result_observed 可以保留为 GPT-04 的复述/交叉核对字段，但 engine 必须以 F-003 证据计算的值为准；两者不一致即 fail-closed，不得采信回复值继续登记。
+
+② D2：公共 runner 抽取 vs 同构复制
+终裁：同构复制
+
+我实读了两条已 PASS 的实现：
+
+文件
+
+	
+
+规模
+
+	
+
+结构特征
+
+
+
+
+review_leg.py
+
+	
+
+1309 行
+
+	
+
+GPT-03 自有流程编排、报告登记、恢复路径
+
+
+
+
+arch_review_leg.py
+
+	
+
+1279 行
+
+	
+
+GPT-02 自有流程编排、报告登记、恢复路径
+
+源码已经体现了适度公共化：arch_review_leg.py 从 review_leg.py 复用了 EngineM1Client、ReviewLedger、derive_recoll_driver、公共常量和时间工具。两条腿仍分别保留自己的状态判断、简报、契约校验、登记和恢复流程。
+
+这说明目前的复用边界已经比较合理：
+
+公共基础工具可以继续复用。
+
+各角色的流程编排、M1 状态判断、结论登记、恢复逻辑应保持角色独立。
+
+再抽象公共 runner 会把已经 PASS 的两条腿带入回归风险，而且 GPT-04 的 /reports/test 与前两条腿的登记语义不同。
+
+GPT-04 实施方案： 以 arch_review_leg.py 为主要结构参考，同构新增 test_acceptance_leg.py；复用现有公共工具，不重构前两条腿，不抽取新的公共 runner。
+
+特别要求：沿用 GPT-02 的 RunKeyLock 跨进程互斥纪律。review_leg.py 自身没有这层锁，不能简单照搬 GPT-03 的并发控制方式。
+
+源码依据：review_leg.py blob 018b0fd86e9091d4776caad8c34104b57335a529；arch_review_leg.py blob 6cb08423e6d042fd93bf6b15cd734f565a4cb551。
+
+③ A-1：ENGINE-03 运行期 M1 白名单定稿
+7 个端点
+
+#
+
+	
+
+Method
+
+	
+
+允许路径
+
+	
+
+用途
+
+
+
+
+1
+
+	
+
+GET
+
+	
+
+/api/v1/tasks/{task_id}
+
+	
+
+读取任务、验收标准、执行入口及状态
+
+
+
+
+2
+
+	
+
+GET
+
+	
+
+/api/v1/tasks/{task_id}/dependencies
+
+	
+
+读取依赖及状态
+
+
+
+
+3
+
+	
+
+GET
+
+	
+
+/api/v1/artifacts/{artifact_id}
+
+	
+
+读取任务关联测试证据
+
+
+
+
+4
+
+	
+
+GET
+
+	
+
+/api/v1/reports?type=test&task_id={task_id}
+
+	
+
+只读核实测试报告登记结果
+
+
+
+
+5
+
+	
+
+POST
+
+	
+
+/api/v1/artifacts
+
+	
+
+登记验收简报、BLOCKED 证据等产物
+
+
+
+
+6
+
+	
+
+POST
+
+	
+
+/api/v1/messages
+
+	
+
+登记验收结果相关消息
+
+
+
+
+7
+
+	
+
+POST
+
+	
+
+/api/v1/reports/test
+
+	
+
+仅登记 PASS/REWORK，并由 M1 原子推进状态
+
+排除清单：
+
+POST /api/v1/tasks/{task_id}/events：禁止，状态推进由 /reports/test 内部原子完成。
+
+POST /api/v1/agents：禁止运行期调用；ENGINE-03 仅允许 OWNER 一次性 bootstrap。
+
+approvals 类端点：全部排除。
+
+messages 的 cancel/requeue/ack 操作：全部排除。
+
+projects、batches 写操作：全部排除。
+
+/reports/test 的 BLOCKED 提交：禁止。
+
+未列入上述七项的所有 M1 端点：默认拒绝。
+
+白名单不能仅靠文档约束；engine 必须在客户端请求层执行 method+path 白名单校验，不能由调用方自由传入任意 URL。
+
+④ A-3：恢复矩阵定稿
+
+v0.2 的恢复思路正确，但需要补上一个关键条件：“简报已组装未发送”不等于“可以直接重发”。必须先检查账本是否存在发送意图。
+
+断点
+
+	
+
+恢复动作
+
+	
+
+重新派单
+
+
+
+
+简报组装前
+
+	
+
+重新读取任务和证据，核对输入版本
+
+	
+
+允许首次派单
+
+
+
+
+简报已组装，且无发送意图
+
+	
+
+校验 brief SHA，继续首次发送
+
+	
+
+允许
+
+
+
+
+存在发送意图，但没有发送确认
+
+	
+
+无法证明发送状态，腿级 BLOCKED，人工核查派单现场
+
+	
+
+禁止
+
+
+
+
+已确认发送，未采集回复
+
+	
+
+原 conversation UUID 补采，校验发送锚点
+
+	
+
+禁止
+
+
+
+
+已采集，未登记
+
+	
+
+校验 reply SHA、契约、证据绑定，按原幂等键登记
+
+	
+
+禁止
+
+
+
+
+/reports/test 提交结果不确定
+
+	
+
+GET 查询报告，逐项核对五字段
+
+	
+
+禁止
+
+
+
+
+查询确认已登记，且 M1 已推进
+
+	
+
+接续完成本轮，不再提交
+
+	
+
+禁止
+
+
+
+
+查询确认未登记，M1 仍为 TEST_ACCEPTANCE
+
+	
+
+确认没有已生效登记后，才允许按原键重试
+
+	
+
+不重新派单
+
+
+
+
+报告已登记，但 M1 仍为 TEST_ACCEPTANCE
+
+	
+
+原子推进一致性异常，登记 BUG，腿级 BLOCKED
+
+	
+
+禁止
+
+
+
+
+已推进 ACCEPTED/REWORK
+
+	
+
+只读核验，本轮完成
+
+	
+
+禁止
+
+
+
+
+GPT-04 回复 BLOCKED
+
+	
+
+artifacts+messages 留证，M1 保持 TEST_ACCEPTANCE，人工接管
+
+	
+
+禁止
+
+
+
+
+M1 为任务级 BLOCKED
+
+	
+
+engine 不得操作，OWNER 接管
+
+	
+
+禁止
+
+
+
+
+账本与 M1 状态矛盾或出现未定义状态
+
+	
+
+fail-closed，保留现场，腿级 BLOCKED
+
+	
+
+禁止
+
+特别强调：
+
+duplicate 不是成功响应。先 GET 核验，不能把 duplicate 当幂等成功。
+
+查询必须核对 task_id / execution_id / commit_sha / result / execution_result。
+
+无法确认是否已登记，不能靠重试碰运气。
+
+端点同事务原子登记和状态推进；报告存在而状态未推进，是异常，不得绕过 M1 补事件。
+
+这也与已通过的 GPT-02 腿恢复纪律一致：arch_review_leg.py 的 _resume_inner() 在有发送意图却无发送确认时直接 fail-closed，不推测是否发送成功。
+
+⑤ D3：显式证据指针
+终裁：接受显式指针方案
+
+latest_execution 只能用作发现入口，不能成为运行过程中的动态证据源。
+
+GPT-04 每轮简报必须固定绑定：
+
+task_id、execution_id。
+
+F-003 测试报告 artifact_id。
+
+三件套原始证据各自的 artifact 标识和 SHA256。
+
+GitHub 固定 commit SHA（完整 40 位），禁止隐式读取最新 main。
+
+input_material_commit。
+
+brief_sha256、brief_schema_version、review_round_id。
+
+运行中重新读取到的 latest_execution 如果与本轮已固定的 execution 不一致，必须停止并转人工，不能悄悄切换到新证据。
+
+2. 剩余修订清单
+文档修订：需落实，不阻断开工
+
+我认为只需处理以下四项，不需要重新讨论架构：
+
+编号
+
+	
+
+修订内容
+
+	
+
+优先级
+
+
+
+
+G2-01
+
+	
+
+A-2 补齐 EXECUTED_FAIL + PASS 禁止项，并将上述 15 种组合矩阵作为最终规则
+
+	
+
+P1
+
+
+
+
+G2-02
+
+	
+
+明确 NOT_EXECUTED/CLAIMED_ONLY/BLOCKED + REWORK 不登记，统一腿级 BLOCKED；回复 BLOCKED 始终走 artifacts+messages
+
+	
+
+P1
+
+
+
+
+G2-03
+
+	
+
+A-3 补充“发送意图存在但无发送确认”的恢复分支；明确原键重试前的 GET 核实条件
+
+	
+
+P1
+
+
+
+
+G2-04
+
+	
+
+明确 execution_result_observed 只是回复交叉核对字段，权威值由 F-003 证据决定
+
+	
+
+P1
+
+G1-02 的契约—实现 duplicate 不一致已正确登记为遗留问题，不再要求 GPT-04 修改冻结契约。按实际实现恢复，后续另走契约演进流程。
+
+3. 开工授权结论
+GPT-04：正式授权开工
+
+授权依据： 用户 2026-11-17 授权机制 + 本次 Gate2 复审通过，按 DEC-089 登记。
+
+授权范围：
+
+新增 phase1/tools/test_acceptance_leg.py。
+
+新增 GPT-04 回复契约文件。
+
+新增 GPT-04 简报、账本、恢复、测试及验收证据。
+
+ENGINE-03 bootstrap 与运行期七端点白名单。
+
+复用既有 M2 派单链和公共工具。
+
+GPT-02/03/04 三腿回归验证。
+
+绑定限制：
+
+M1-M4 代码零修改。
+
+既有 v1.0.0 冻结契约零修改。
+
+不抽取公共 runner，不重构已 PASS 的 GPT-02/03。
+
+不扩展多轮返工重验、GPT-05、F-003 测试执行编排。
+
+不解除 DEC-017 门禁，不以本次开工授权代替后续验收。
+
+DEC-010 红线仍然有效： main 合并、生产发布、数据删除必须由用户本人拍板。本授权不包含这些操作。
+
+建议实施顺序： 先完成 G2-01 至 G2-04 的任务书修订并冻结设计，再实现 A0-A5；先完成 GPT-04 独立测试矩阵，再做三腿回归。不要为了抽象公共 runner 影响已经通过的两条腿。
+
+GPT-04 现在可以正式交给 WorkBuddy 开工。GPT-05 仍按既定顺序后置，待 GPT-04 形成可验收闭环后再立项。
