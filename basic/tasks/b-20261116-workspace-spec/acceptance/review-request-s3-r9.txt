@@ -1,0 +1,6 @@
+【S3-R9 交付复核】b-20261116-workspace-spec
+仓库 damwate/AIEO 分支 review/b-20261116-workspace-spec（已更新至 787c2b5）
+问题7 已修：delivery.md 索引同步——§2/§3=DEC-068~077、返工表问题1~7、验收轮次 R1~R8、§5 增列 R7 整改 commit bb8e695 完整 SHA+父提交+归属说明；返工表问题7 行（修复 commit=c032185740dcfcac3c11b158b14f7ed4d8d7824b）；DEC-077 登记教训
+未改 WORKFLOW 九项、未改 R2 被测 SHA 9efb14bbcc74d397e15558dc720706fc054ac627、未重写历史
+请只核：delivery 内全部数值索引（DEC 范围、问题行数、轮次范围、SHA 列表）与其自身内容/返工表/DEC 现状是否一致，有无任何残留不一致；结论 PASS/REJECT
+PASS 后我将按 COMPLETED 态重跑 ST-05 并回填最终记录（此后再不改动被测内容）
