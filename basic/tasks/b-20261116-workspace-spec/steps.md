@@ -32,7 +32,7 @@
 - ③修改内容：delivery.md 七要素成文，ST-05 结果按**实际输出**录入（①②④⑤ PASS、③⑥ N/A、Overall IN_PROGRESS）；交付登记 commit 与远程 main 事实边界写明（远程 main 仍指基线，本地领先属执行侧现场记录）；task-brief 状态=验收中、当前步骤=S3 交付；S3 验收请求 acceptance/review-request-s3.txt
 - ④执行结果：交付登记 commit=`cc29fc51b23426b8f581416a82eed521117f74fd`（父=d190ed0e…）；S3-R7 独立验收=**REJECT**（问题6：ST-05 表述失实"③PASS"、交付登记 SHA 缺失、S3 六要素未闭环）→已按最小整改要求修正；待 S3-R8 复核
 - ⑤测试结果：ST-05 实测（S3 验收前）=①②④⑤ PASS、③⑥ N/A、Overall IN_PROGRESS、FAIL=0（原始输出 acceptance/st05-s3gate.txt）；**S3 复核通过、阶段转完成后须重跑 ST-05 并另存 COMPLETED 态输出**（①~⑥ 全 PASS 方视为交付门通过），不以 IN_PROGRESS 输出冒充交付通过
-- ⑥验收证据引用：S3-R7 现场 dispatch-2026-11-16T09-07-41（发送+归属校验型补采，含视口前置升级 1920×20000），reply sha256=330c9861f958d5e8ca376c2ff5f843439a205879699d20378fe34bf9b217aad9，结论 REJECT（登记为问题6，见返工表）；**S3-R8 交付复核**=现场 dispatch-2026-11-16T09-13-55（补采含视口前置升级），reply 2681B，sha256=04c7115ddc53b6a9189a39c442db736f8af6a320efd055249d9880f55298bfe3，结论 REJECT 仅问题7（delivery 内部索引滞后：DEC~075/问题1~5/§5 未列 R7 整改 SHA）→已四处修正（DEC-077）；验收结论：待 S3-R9 复核回填 PASS
+- ⑥验收证据引用：S3-R7 现场 dispatch-2026-11-16T09-07-41（发送+归属校验型补采，含视口前置升级 1920×20000），reply sha256=330c9861f958d5e8ca376c2ff5f843439a205879699d20378fe34bf9b217aad9，结论 REJECT（登记为问题6，见返工表）；**S3-R8 交付复核**=现场 dispatch-2026-11-16T09-13-55（补采含视口前置升级），reply 2681B，sha256=04c7115ddc53b6a9189a39c442db736f8af6a320efd055249d9880f55298bfe3，结论 REJECT 仅问题7（delivery 内部索引滞后：DEC~075/问题1~5/§5 未列 R7 整改 SHA）→已四处修正（DEC-077）；**S3-R9 交付复核**=现场 dispatch-2026-11-16T09-18-49（指定核验对象=787c2b5…，明确 58e7943 仅为简报归档提交不替代核验对象），结论 REJECT 仅一处：§5 R7 整改 commit 的父提交仍为缩写 →已改为完整 SHA（问题8；DEC-078）；验收结论：待 S3-R10 复核回填 PASS
 
 ## 返工记录表（首次 REJECT 时建表；按"同一问题"计数）
 

@@ -8,16 +8,16 @@
 
 - `basic/WORKFLOW.md`：新增《多项目、多 IDE 工作区管理规范（增补④）》一节（九小节），附录尾注登记增补依据；既有 v0.3 条款零删改、附录 12 行修订表未动。
 - R1 整改后口径（经 R2 复验 PASS）：第四节=「项目配置与主机运行环境分离」（项目级可移植无秘密配置可入库／凭据与主机配置禁入库／遵循所用 IDE 规则）；第六节=回传三口径（被测对象=完整 SHA、完整 Diff=可核验完整改动或 GitHub compare/GitPointer、测试=断言+退出码；numstat 仅统计）。
-- `docs/phase1/decision-log.md`：DEC-068（成文登记）～DEC-077（S3-R8 交付索引修正），逐轮如实登记，未覆盖既有 DEC-001~067。
+- `docs/phase1/decision-log.md`：DEC-068（成文登记）～DEC-078（S3-R9 父提交 SHA 补全），逐轮如实登记，未覆盖既有 DEC-001~067。
 - `phase0/environment-inventory.md` §4：增补"派单发送双验 UNCERTAIN 的判定顺序"经验（慢链路延迟送达 vs 未送达，禁盲目重发）。
-- 任务包：requirement / task-brief / steps（含返工表问题1~7）+ `acceptance/`（各轮简报、R1~R8 回复与 ST-05 输出、补采驱动与发送双验证据）。
+- 任务包：requirement / task-brief / steps（含返工表问题1~8）+ `acceptance/`（各轮简报、R1~R9 回复与 ST-05 输出、补采驱动与发送双验证据）。
 
 ## 3. 修改文件
 
 | 文件 | 变更 |
 |---|---|
 | `basic/WORKFLOW.md` | +54/−1（首轮）；R1 整改 +4/−3（第四/六节口径） |
-| `docs/phase1/decision-log.md` | DEC-068~077（逐轮追加，不改既有条目） |
+| `docs/phase1/decision-log.md` | DEC-068~078（逐轮追加，不改既有条目） |
 | `phase0/environment-inventory.md` | §4 增补一条经验（+1） |
 | `basic/tasks/b-20261116-workspace-spec/` | requirement/task-brief/steps/delivery + acceptance 证据包 |
 | C1–C8 契约、既有 DEC-001~067、附录修订表 | 未改动 |
@@ -35,7 +35,7 @@
 - **S1-R2~R6 被测对象（内容最终定型）：`9efb14bbcc74d397e15558dc720706fc054ac627`**
 - 其后均为证据登记 commit（不属被测 diff）：`72ee196`→`9efb14b`（整改）→`bf96e00`/`80f4928`（返工表）→`06d72bb`（R2 登记+ST-05 落库）→`c92cb0e`（问题1/3 关闭+问题4 行）→`09dbb64`（降档收口 DEC-071）→`0e65d9c`（P1-03+DEC-072+经验固化）→`f9905a8`（R4 简报）→`e32bda9`（P2-03 结构性修正 DEC-073）→`fa2f26b`（问题5 行）→`8c68f54`（R4 归档+R5 简报）→`d190ed0`（R5 最小必改项 DEC-074）→交付登记 commit（本条）
 - **交付登记 commit：`cc29fc51b23426b8f581416a82eed521117f74fd`**（父提交=`d190ed0e6b902c5fc4659297aed95bf94bc8139c`；内容=delivery.md+steps/task-brief 更新+ST-05 输出+验收请求；**不属被测 diff**）。
-- **S3-R7 交付记录整改 commit：`bb8e6958895ed4f54a75e30ebc39d4d4182e69b8`**（父提交=`cc29fc51…`；内容=delivery §4 按实表述、§5 SHA 写全、steps S3 六要素补齐、DEC-076；**属交付记录整改，不属 R2 被测 diff**）。其后的交付索引修正 commit 见 steps 返工表问题7 行。
+- **S3-R7 交付记录整改 commit：`bb8e6958895ed4f54a75e30ebc39d4d4182e69b8`**（父提交=`cc29fc51b23426b8f581416a82eed521117f74fd`；内容=delivery §4 按实表述、§5 SHA 写全、steps S3 六要素补齐、DEC-076；**属交付记录整改，不属 R2 被测 diff**）。其后的交付索引修正 commit 见 steps 返工表问题7 行。
 - 审查分支：`review/b-20261116-workspace-spec`（远程同名分支，供按 SHA 读取）。**远程 main 仍指向基线 `d563a2a5…`（本次复核经 GitHub 核验）；本地 main 领先属执行侧现场记录**，尚未推送/合并（待用户明文授权）。
 
 ## 6. 未解决问题
