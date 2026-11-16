@@ -1,0 +1,5 @@
+【最终闭环复核R6·迁移接棒】b-20261116-session-migrate-4rounds（4 轮迁移规则落地）最终交付复核；旧会话达第 6 条 user 消息重评点，按 L-018 第 6 条迁移，本简报自包含。
+审查链：R1~R5 五轮明细（现场目录/reply 完整 SHA256/逐项结论/返工表问题1~4）见 steps.md；R5=现场 dispatch-2026-11-16T13-47-29（reply sha256=c1206905…688 完整值在该现场），三项 PASS、待 COMPLETED 取证。
+被测 commit=1022694967e519de8ae2a03fd3e6b799988c09a6；证据链（完整 40 位、已推送）3dce96c3→f13e4511→f56f8931→9ac602b7→2164b211→086225e4454bc4afd9fc5652a1db5f9979ed4421（最终取证=COMPLETED 态 ST-05 实跑①～⑥全 PASS/Overall PASS/退出码 0，任务书置完成）。
+读取 raw.githubusercontent.com/damwate/AIEO/086225e4454bc4afd9fc5652a1db5f9979ed4421/ 下 basic/tasks/b-20261116-session-migrate-4rounds/：steps.md、delivery.md（七要素）、task-brief.md（完成+最终结果）、acceptance/st05-completed.txt。
+复核项：①交付证据闭环②无夸大表述③索引自洽④范围未扩大。结论：PASS/REJECT（逐项）/BLOCKED。
