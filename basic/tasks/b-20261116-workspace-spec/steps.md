@@ -20,7 +20,7 @@
 
 - ①本步骤目标：decision-log 登记 R1 结论与整改（DEC-069）；ST-05 检查器复检并处理缺口
 - ②修改文件：docs/phase1/decision-log.md、本任务包
-- ③修改内容：DEC-068 状态行修正为真实时间线；追加 DEC-069（R1 REJECT 三项+整改内容+被测对象+过程）
+- ③修改内容：DEC-068 状态行修正为真实时间线；追加 DEC-069（问题1/问题2/问题3 逐项整改登记+被测对象+过程）
 - ④执行结果：DEC-069 成文；ST-05 复检执行（结果见⑤）
 - ⑤测试结果：python -I basic/tool/check_taskpack.py basic/tasks/b-20261116-workspace-spec → 复检结果以实际输出为准登记（IN_PROGRESS 且无 FAIL 为预期）
 - ⑥验收证据引用：待 R2 派单（验收后回填 dispatch 目录+reply SHA256）
