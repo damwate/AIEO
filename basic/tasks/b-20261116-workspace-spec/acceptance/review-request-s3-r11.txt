@@ -1,0 +1,9 @@
+【S3-R11 限定复核】b-20261116-workspace-spec
+仓库 damwate/AIEO 分支 review/b-20261116-workspace-spec（已更新至问题9行提交）
+R10 四组已按"一次整体同步"整改（整改 commit=c8eb7087d47bd06524161edbee911ed060c9c61f）：
+①§2/§3=DEC-068～074、DEC-076～079（明确无 075、未补虚构；DEC-079 勘误）
+②§4 拆 S1（R1～R6）/S3（R7～R10）两条验收链，逐轮现场目录+reply sha256（R9 当轮 result.json 缺 sha 已如实标注）
+③§5 全链"完整 SHA+父提交"双列表（基线→ab6ad238…），并写明问题7/8/9 与 commit 对应关系
+④§7 澄清 S1/S3 阶段归属与问题计数口径
+返工表问题9 建行；未改 WORKFLOW 九项、未改 R2 被测 SHA 9efb14bbcc74d397e15558dc720706fc054ac627、未重写历史
+请核四组是否全部关闭；如仍有剩余请一次列全；结论 PASS/REJECT
