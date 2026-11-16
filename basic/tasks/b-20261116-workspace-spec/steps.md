@@ -39,6 +39,6 @@
 | 问题编号 | 轮次来源 | 问题描述 | 整改内容 | 修复 commit | 验证 |
 |---|---|---|---|---|---|
 | 问题1 | S1-R1 REJECT P1-01 | 第六节 diff 回传只写 numstat，缺完整 Diff 证据要求 | 第六节改三口径：被测对象=完整 SHA／完整 Diff 证据=可核验完整改动（diff 全文或 GitHub compare/GitPointer）／测试结果=断言+退出码；numstat 降为统计口径并明示"不替代完整 Diff" | 9efb14bbcc74d397e15558dc720706fc054ac627 | R2 复验 PASS 关闭（未降低 L-021/ST-01 要求） |
-| 问题2 | S1-R1 REJECT P1-02 | commit 前批准状态与实际提交矛盾（requirement/task-brief/steps/DEC-068 四处不一致） | task-brief 增"Git 操作批准记录"表如实登记推定授权与时间线；steps③ 回填首轮被测 SHA；DEC-068 状态行修正；DEC-069 登记；用户追认事项明列（不伪造批准） | 9efb14bbcc74d397e15558dc720706fc054ac627 | R2 确认四处状态已一致、无伪造；**历史提交授权仍待用户追认 72ee196c——未完全关闭**（不自行宣布关闭） |
+| 问题2 | S1-R1 REJECT P1-02 | commit 前批准状态与实际提交矛盾（requirement/task-brief/steps/DEC-068 四处不一致） | task-brief 增"Git 操作批准记录"表如实登记推定授权与时间线；steps③ 回填首轮被测 SHA；DEC-068 状态行修正；DEC-069 登记；用户追认事项明列（不伪造批准）；**收口（降档，L-019）**：按用户 2026-11-16 指示走审查方给定替代路径——如实登记不予追认、新增"commit 前须用户明文批准"硬约束（DEC-071） | 9efb14bbcc74d397e15558dc720706fc054ac627 | R2 确认四处状态已一致、无伪造；问题4/问题2 的收口登记=06d72bb 与 DEC-071 所在证据 commit（不属被测 diff） |
 | 问题3 | S1-R1 REJECT P2-01 | 第四节把 Skills/MCP 一律归主机级不准确 | 第四节改"项目配置与主机运行环境分离"：项目级可移植无秘密配置可入目标仓库版本控制；凭据/账号 profile/机器专属配置禁入库（C6）；作用域遵循所用 IDE 规则 | 9efb14bbcc74d397e15558dc720706fc054ac627 | R2 复验 PASS 关闭（未见对 C6 的削弱） |
-| 问题4 | S1-R2 REJECT P2-02 | steps S2⑤ 写"以实际输出为准"属预期描述，ST-05 实际输出未落库 | S2⑤ 改为实际执行输出（命令/输出摘要/FAIL=0/退出码=1/证据路径）；原始输出落库 acceptance/st05-inprogress.txt；S1⑥ 回填 R2 结论 | 06d72bb83deea9ce3bccfa6bd71ec47ec670a364 | 待收尾确认轮复核（用户追认后派） |
+| 问题4 | S1-R2 REJECT P2-02 | steps S2⑤ 写"以实际输出为准"属预期描述，ST-05 实际输出未落库 | S2⑤ 改为实际执行输出（命令/输出摘要/FAIL=0/退出码=1/证据路径）；原始输出落库 acceptance/st05-inprogress.txt；S1⑥ 回填 R2 结论 | 06d72bb83deea9ce3bccfa6bd71ec47ec670a364 | 已补齐：S2⑤ 实际输出+acceptance/st05-inprogress.txt+退出码；ST-05 复检④⑤PASS 无 FAIL；待收尾确认轮（S1-R3）复核 |
