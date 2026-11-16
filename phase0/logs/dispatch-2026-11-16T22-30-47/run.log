@@ -1,0 +1,12 @@
+[2026-11-16T22:30:47.827Z] 会话锁已获取 pid=14516
+[2026-11-16T22:30:47.828Z] === GPT 派单（已有会话，消息 908 字节）===
+[2026-11-16T22:30:47.843Z] 复用已运行调试端口 9222
+[2026-11-16T22:30:47.888Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页
+[2026-11-16T22:30:47.888Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-16T22:30:51.762Z] 会话就绪: https://chatgpt.com/c/6afb7fe2-df1c-83ec-9735-e9a37c234599
+[2026-11-16T22:30:56.784Z] [dispatch] 基线尾部: {"role":"assistant","key":"cd8c3b87-fbb1-59c5-ab85-d4ec56ca1104:2:assistant","assistantUuid":"d247d077-b83b-4adb-98d7-0fa38a40f02e"}
+[2026-11-16T22:30:57.615Z] [dispatch] 发送双验通过（polls=1，user_unit_key=fallback-turn-0:0:user，tail 后观察）
+[2026-11-16T22:30:57.863Z] 截图: sent-dispatch.png
+[2026-11-16T22:32:49.650Z] 会话锁已释放
+[2026-11-16T22:32:49.651Z] 致命错误: INBOUND_START_UNIT_MISSING: 连续向上搜索到顶部仍未找到可分段读取的 fallback-turn-0:0:user
+[2026-11-16T22:32:49.654Z] [tab-hygiene] 发送已发生：保留现场不关页（禁重发语义依赖现场）；退出后由人工/补采链按 L-018 处置

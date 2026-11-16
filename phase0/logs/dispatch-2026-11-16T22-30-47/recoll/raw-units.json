@@ -1,0 +1,76 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-16T22:38:45.937Z",
+  "user_unit_key": "ea41b3db-8374-5889-ac67-34223d90f37d:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "ea41b3db-8374-5889-ac67-34223d90f37d:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "b058bfe8-ca0f-4247-99c7-906cbba4ec0e",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "ea41b3db-8374-5889-ac67-34223d90f37d:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "5196ce28-916d-5811-88cb-2780e4e3f691:0:user",
+          "5196ce28-916d-5811-88cb-2780e4e3f691:2:assistant",
+          "cd8c3b87-fbb1-59c5-ab85-d4ec56ca1104:0:user",
+          "cd8c3b87-fbb1-59c5-ab85-d4ec56ca1104:2:assistant",
+          "ea41b3db-8374-5889-ac67-34223d90f37d:0:user",
+          "ea41b3db-8374-5889-ac67-34223d90f37d:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "0b3ecf160e1c729787a4cbb121c5b15228c8983ad8a01c8db8b65c8138a2afac",
+          "dbe7f3f2b8076575d7f20059e32113b8f057a9e091ccfa120bad7940eb1666da",
+          "e9982a3ce79f08803fc621f3dd97ac7f54fd9b11d235f2ce487b0fa71b79d174",
+          "169854cff5fe8d133b9ffac875fd5ee9eb30e9e24b0f9dd15f5c043ffcb682e5",
+          "00207efb674928b899fad46690c106eaeeef58bbb94fde027fc39976bf0d5478",
+          "90997e741ffae2808a0bbaba9910d67983054caa881bdd0527ec44f1f13c3f87"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": []
+      }
+    ],
+    "materialized_unit_keys": [
+      "ea41b3db-8374-5889-ac67-34223d90f37d:0:user",
+      "ea41b3db-8374-5889-ac67-34223d90f37d:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STATIC_NON_SCROLLABLE_DOM",
+      "scrollable_window_observed": false,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "5196ce28-916d-5811-88cb-2780e4e3f691:0:user",
+          "5196ce28-916d-5811-88cb-2780e4e3f691:2:assistant",
+          "cd8c3b87-fbb1-59c5-ab85-d4ec56ca1104:0:user",
+          "cd8c3b87-fbb1-59c5-ab85-d4ec56ca1104:2:assistant",
+          "ea41b3db-8374-5889-ac67-34223d90f37d:0:user",
+          "ea41b3db-8374-5889-ac67-34223d90f37d:2:assistant"
+        ],
+        "overlap_keys": []
+      }
+    ],
+    "window_transitions": 0
+  },
+  "units": [
+    {
+      "key": "ea41b3db-8374-5889-ac67-34223d90f37d:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nGPT-05 Gate2-R6 极窄复核结论\n\nPASS 授权链整改通过，可以进入设计冻结与开工授权。\n\n被测对象： docs/phase1/GPT05-ENGINEERING-AUDIT-LEG-CHARTER-DRAFT.md v0.9\n仓库： damwate/AIEO\n分支： main\n固定提交： 58da7697976a2465aa7fc641837af97f1190a68a\n核验方式： 按完整 SHA 读取文件全文；未以 HEAD 或分支最新状态替代。\n\n一、两处整改核验\n\n核验位置\n\n\t\n\n结果\n\n\t\n\n依据\n\n\n\n\n§8 红线子句\n\n\t\n\nPASS\n\n\t\n\n已改为“须 Gate2 复核链最终通过+开工授权（DEC-089 机制）”，并明确其余 M1-M4 仍零修改\n\n\n\n\n附录 A-1 第2行\n\n\t\n\nPASS\n\n\t\n\n已改为依赖 Gate2 复核链最终通过+开工授权（DEC-089 机制）的 security.py 约6行变更\n\n两处均已消除 R4 专属授权条件，不再把某一历史轮次的复核通过作为当前开工授权依据。\n\n二、全文规范性授权条件一致性\nPASS\n\n全文核对结果：\n\n位置\n\n\t\n\n结果\n\n\t\n\n核验情况\n\n\n\n\n§1 非目标\n\n\t\n\nPASS\n\n\t\n\n实施条件为 Gate2 复核链最终通过+开工授权\n\n\n\n\n§3 权限方案\n\n\t\n\nPASS\n\n\t\n\n实施待 Gate2 复核链最终通过+开工授权\n\n\n\n\n§3 影响面声明\n\n\t\n\nPASS\n\n\t\n\n明确 DEC-089 机制及未获批准前不实施\n\n\n\n\n§8 生效链\n\n\t\n\nPASS\n\n\t\n\n最终通过后进入开工授权\n\n\n\n\n§8 红线子句\n\n\t\n\nPASS\n\n\t\n\n已完成本轮整改\n\n\n\n\n附录 A-1 第2行\n\n\t\n\nPASS\n\n\t\n\n已完成本轮整改\n\n\n\n\n其他全文规范性授权条件\n\n\t\n\nPASS\n\n\t\n\n未发现与上述授权规则冲突的现行条件\n\n历史评审沿革和版本记录中保留 R1、R2、R3、R4 等历史轮次，属于历史事实，不构成现行授权条件，不要求删除。\n\n补充记录： §8 生效链括号中的历史轮次示例仍写到 R4，未列出 R5/R6。这不改变其明确写出的“复核链最终通过+开工授权”条件，也不构成本轮授权链阻断项；建议后续整理版本记录时同步更新历史轮次描述，不作为本轮新增整改要求。\n\n三、Gate2 最终裁定\n\n授权链清理\n\nPASS\n\nGPT-05 Charter 设计冻结\n\n通过\n开工授权：授予\n根据 DEC-089，本轮 Gate2 复核通过，构成审查方复审通过所对应的开工授权。GPT-05 工程总审计真实腿最小版可以进入工程实现阶段。\n\n本授权仅针对本 SHA 所审查的 charter 设计范围及其明确约束，不扩张为其他模块或其他项目的授权。\n\n四、开工收尾清单\n\n设计冻结： GPT-05 最小版以本次通过的 v0.9 设计为基线。实现不得擅自扩大范围。\n\n开工授权： 按 DEC-089 登记 Gate2-R6 PASS 及本次开工授权结论。\n\nsecurity.py 按 §3 执行： 唯一 M1 变更例外为约6行，包含服务端白名单增补和服务身份 batch_id 强制规则；OWNER 人工会话行为保持不变。\n\n跨批次隔离延期： per-agent 批次授权表及数据库迁移不纳入本期。必须保留风险：持有 ENGINE-04 服务 token 的调用方仍可查询任意已知 batch_id 的任务列表，本方案不构成跨批次完全隔离。\n\n开工记录明确披露风险： 将上述残余风险、缓解措施、延期事项写入开工记录和授权记录，不得使用“已实现跨批次隔离”等表述。\n\n回归验收：\n\nM1 平台既有测试全绿；\n\nA10b：服务身份不带 batch_id → 403；\n\nA10c：服务身份带 batch_id → 200；\n\nA10d：OWNER 不带 batch_id → 200；\n\n三腿 89 用例及 GPT-05 新增用例四腿合跑回归全绿；\n\n保持真实 chatgpt.com 收发，不以 mock 替代真实派单验收。\n\n合并权限独立： Gate2 PASS 和开工授权不等于合并授权。最终合并仍须按既定审查链执行；DEC-010 高危红线仍由用户本人决定。\n\n最终意见：GPT-05 Gate2-R6 PASS，设计冻结通过，开工授权授予。 本轮不再要求其他设计整改，可以交给工程实现方按冻结 charter 开工。",
+      "text_sha256": "90997e741ffae2808a0bbaba9910d67983054caa881bdd0527ec44f1f13c3f87",
+      "size_bytes": 3872,
+      "assistant_uuid": "b058bfe8-ca0f-4247-99c7-906cbba4ec0e"
+    }
+  ]
+}

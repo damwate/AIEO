@@ -1,0 +1,13 @@
+{
+ "normalized_fields": {
+  "findings": "structured objects -> strings (severity/finding/evidence_refs/required_action 全文保留，仅格式重组)",
+  "result": "unchanged",
+  "release_recommendation": "unchanged",
+  "standards_matrix": "unchanged",
+  "summary": "unchanged",
+  "risks": "unchanged"
+ },
+ "loss": "NONE",
+ "source_scene": "dispatch-2026-11-16T23-02-25/recoll (conversation 6afb8bb2-b068-83ee-865a-33ece050be1c)",
+ "raw_reply_sha256_source": "dd12b6a8692cca8e"
+}

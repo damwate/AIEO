@@ -1,0 +1,111 @@
+ChatGPT 说：
+```json
+{
+ "result": "BLOCKED",
+ "release_recommendation": "DO_NOT_SUBMIT",
+ "standards_matrix": [
+  {
+   "standard_id": "requirements",
+   "applicable": true,
+   "requirement": "需求完整、范围明确、验收标准可验证，需求与实际交付一致。",
+   "evidence_refs": [
+    "basic/tasks/b-20261117-gpt05-engineering-audit-leg/requirement.md",
+    "basic/tasks/b-20261117-gpt05-engineering-audit-leg/task-brief.md"
+   ],
+   "result": "ISSUE",
+   "findings": "需求与授权边界已有明确记录，但当前交付记录仍为空，不能证明全部需求已经完成交付。",
+   "residual_risks": "缺少完整交付登记和最终验收结论。"
+  },
+  {
+   "standard_id": "architecture",
+   "applicable": true,
+   "requirement": "遵循冻结架构、接口契约、权限边界及模块职责，不得擅自扩大修改范围。",
+   "evidence_refs": [
+    "docs/phase1/GPT05-ENGINEERING-AUDIT-LEG-CHARTER-DRAFT.md",
+    "basic/tasks/b-20261117-gpt05-engineering-audit-leg/acceptance/design-notes.md",
+    "phase1/tools/engineering_audit_leg.py",
+    "app/platform/security.py"
+   ],
+   "result": "ISSUE",
+   "findings": "同构实现、ENGINE-04 权限约束、批次级信封和 security.py 变更均有设计及代码证据。已披露跨批次完全隔离尚未实现，以及消息 source-principal 服务端绑定缺失。",
+   "residual_risks": "持有 ENGINE-04 token 的调用方仍可查询任意已知 batch_id；尚无 per-agent 批次授权表。"
+  },
+  {
+   "standard_id": "implementation",
+   "applicable": true,
+   "requirement": "实现符合冻结需求，具有幂等、断点恢复、失败关闭和人工接管能力。",
+   "evidence_refs": [
+    "phase1/tools/engineering_audit_leg.py",
+    "contracts/v1.0/engineering-audit-report.schema.json",
+    "phase1/tools/test_engineering_audit_leg.py"
+   ],
+   "result": "PASS",
+   "findings": "已实现批次全景分页、简报组装、真实派单入口、契约校验、三步登记、409 五条件核验、恢复和 RunKeyLock。",
+   "residual_risks": "本次审计未获得真实 chatgpt.com 派单及回复的完整生产实战证据。"
+  },
+  {
+   "standard_id": "code_quality",
+   "applicable": true,
+   "requirement": "代码结构清晰、异常处理完整、日志不泄露敏感信息、维护边界明确。",
+   "evidence_refs": [
+    "phase1/tools/engineering_audit_leg.py",
+    "phase1/tools/test_engineering_audit_leg.py",
+    "app/platform/security.py"
+   ],
+   "result": "ISSUE",
+   "findings": "具备较完整的异常分类、恢复机制及白名单控制，但缺少独立实现级审查结论及敏感信息扫描结果的完整证据。",
+   "residual_risks": "不能仅凭单元测试通过认定代码质量和安全审计全部通过。"
+  },
+  {
+   "standard_id": "testing",
+   "applicable": true,
+   "requirement": "自动化测试实际执行，异常路径、权限回归及跨模块回归均有可验证结果；真实收发不得以 mock 替代。",
+   "evidence_refs": [
+    "phase1/tools/test_engineering_audit_leg.py",
+    "basic/tasks/b-20261117-gpt05-engineering-audit-leg/acceptance/test-run-combined-112.txt",
+    "basic/tasks/b-20261117-gpt05-engineering-audit-leg/acceptance/test-run-combined-112-r2.txt"
+   ],
+   "result": "ISSUE",
+   "findings": "本腿 23/23 用例及四腿 112/112 合跑两轮通过，包含 A10b/c/d 权限回归。但测试文件明确使用 gpt_dispatch 替身，尚不能替代零 mock 的真实 chatgpt.com 实战验收。",
+   "residual_risks": "真实派单、回复归属、M1 实际登记及最终报告留证的完整链路仍缺少本批次实战证据。"
+  },
+  {
+   "standard_id": "git",
+   "applicable": true,
+   "requirement": "固定完整 SHA，修改范围可追溯，交付和审查证据绑定实际提交。",
+   "evidence_refs": [
+    "d2548e20786c4bc3ca5a627de522a902006536eb",
+    "basic/tasks/b-20261117-gpt05-engineering-audit-leg/steps.md"
+   ],
+   "result": "ISSUE",
+   "findings": "本次审计基线固定为完整 40 位 SHA，但当前 steps.md 未完成 S4，delivery.md 仍为空，尚未形成完整的交付 commit 绑定及最终证据闭环。",
+   "residual_risks": "无法确认交付审查链与最终验收结论均绑定最终被测提交。"
+  },
+  {
+   "standard_id": "security",
+   "applicable": true,
+   "requirement": "服务身份最小权限、白名单默认拒绝、敏感凭据保护及越权访问防护。",
+   "evidence_refs": [
+    "app/platform/security.py",
+    "phase1/tools/test_engineering_audit_leg.py",
+    "docs/phase1/GPT05-ENGINEERING-AUDIT-LEG-CHARTER-DRAFT.md"
+   ],
+   "result": "ISSUE",
+   "findings": "已实现服务身份 GET /tasks 必须携带 batch_id，并有无参数 403、带参数 200、OWNER 行为不变的实测设计及测试。跨批次授权隔离和 source-principal 服务端绑定仍未实现。",
+   "residual_risks": "已披露的权限残余风险属于明确遗留事项，不得误报为完全隔离。"
+  }
+ ],
+ "summary": "GPT-05 真实腿已完成主要实现且 112/112 回归通过，但当前任务仍处于 S3 IN_PROGRESS、S4 PLANNED，交付记录为空，且 BATCH-001 存在一个 REWORK 任务，真实零 mock 审计闭环尚未得到证明，因此批次工程总审计 BLOCKED，不建议提交人工发布审批。",
+ "findings": [
+  "[BLOCKER] BATCH-001 当前存在 T-P1-001(REWORK)，任务级未通过，不能认定批次工程验收完成。 证据: [\"basic/tasks/b-20261117-gpt05-engineering-audit-leg/task-brief.md\"] 必要行动: 完成 T-P1-001 返工并重新执行 GPT-04 测试验收，取得正式 ACCEPTED 证据。",
+  "[BLOCKER] GPT-05 自身交付闭环尚未完成，steps.md S4 为 PLANNED，delivery.md 仍为空。 证据: [\"basic/tasks/b-20261117-gpt05-engineering-audit-leg/steps.md\", \"basic/tasks/b-20261117-gpt05-engineering-audit-leg/delivery.md\"] 必要行动: 完成 S4，登记最终被测 commit、交付文件、验收结论和证据绑定。",
+  "[BLOCKER] 尚无充分证据证明本批次完成一次真实 chatgpt.com 总审计派单、回复采集及 M1 三步登记。 证据: [\"basic/tasks/b-20261117-gpt05-engineering-audit-leg/requirement.md\", \"basic/tasks/b-20261117-gpt05-engineering-audit-leg/acceptance/test-run-combined-112-r2.txt\", \"phase1/tools/engineering_audit_leg.py\"] 必要行动: 执行真实零 mock 实战，提交派单现场、回复原文、契约验证、artifacts 与 AUDIT_SUBMITTED message 读回证据。"
+ ],
+ "risks": [
+  "ENGINE-04 服务 token 仍可查询任意已知 batch_id，尚不构成跨批次完全隔离。",
+  "消息 source-agent 与认证 principal 尚未进行服务端绑定。",
+  "本次读取固定 SHA 的材料，不代表已经独立执行该 SHA 下的全部测试。",
+  "七项规范矩阵中的分类依据为现有角色规范和任务要求；正式规范清单仍应与 engineering_standard_version=1.0.0 的权威目录逐项核对。"
+ ]
+}
+```

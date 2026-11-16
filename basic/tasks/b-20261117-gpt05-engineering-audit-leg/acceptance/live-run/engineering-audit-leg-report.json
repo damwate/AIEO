@@ -1,0 +1,10 @@
+{
+  "result": "ENGINEERING_AUDIT_LEG_PASS",
+  "final_status": "AUDIT_REGISTERED",
+  "verdict": "BLOCKED",
+  "reply_sha256": "dc2d94499ad5e25d3b021c3fcb3f9de7192094ecfd6b22a70db9716bcfcc63fd",
+  "manual_attach": true,
+  "artifact_brief_id": "ART-OTH-001",
+  "artifact_report_id": "ART-OTH-002",
+  "message_id": "MSG-66286109-635093"
+}

@@ -15,12 +15,13 @@
 - ⑤测试结果：见 S3（本腿 23 用例+四腿 112 合跑）。
 - ⑥验收证据引用：phase1/tools/engineering_audit_leg.py；contracts/v1.0/engineering-audit-report.schema.json；app/platform/security.py（diff=约 8 行）；acceptance/design-notes.md；立项级复核现场同上，验收结论：PASS（Gate2-R6 授权范围内实现；实现级复核由 G05-DR 承担）
 
-## S3 测试与实战（IN_PROGRESS——矩阵+四腿回归完成，零 mock 实战进行中）
+## S3 测试与实战（PASS——矩阵+四腿回归+零 mock 实战全链完成）
 
 - ①本步骤目标：测试矩阵+四腿回归+平台权限回归+零 mock 实战全链。②修改文件：phase1/tools/test_engineering_audit_leg.py（新增）。③修改内容：A1~A11 用例+负例+四腿合跑（89+新增）+M1 平台测试+A10b/c/d 实测；零 mock 实战（真实 M1+真实批次+真实派单+真实 GPT-05 结论留证）。
 - ④执行结果：test_engineering_audit_leg.py 新增 23 用例（A1~A11+负例：白名单越权/C2 分页不一致/矩阵矛盾/建议矛盾/豁免无理由/契约失败/message 409 双分支/崩溃窗口 correlation 读回/归属冲突/发送重派/RunKeyLock/setup 幂等）。本腿 23/23 OK；四腿合跑 **112/112 OK** 两轮复证（acceptance/test-run-combined-112.txt/r2.txt）。**A10b/c/d 平台权限回归实测**：test_17 真 HTTP 断言（服务身份无 batch_id→403/带 batch_id→200+total=2/OWNER 会话无 batch_id→200 行为零变化）。实现期实测发现并修正：GET /batches 服务端白名单缺失（charter A-1 勘误，见 S2）。
 - ⑤测试结果：23/23 OK；四腿合跑 112/112 OK（两轮）。
-- ⑥验收证据引用：phase1/tools/test_engineering_audit_leg.py；acceptance/test-run-combined-112.txt；acceptance/test-run-combined-112-r2.txt
+- ⑤b **零 mock 实战全链（BATCH-001/PRJ-GPT04LEG@live M1 8002 重启加载 security.py 变更，2026-11-17 如实登记）：** setup-agents（GPT-05/ENGINE-04 bootstrap）→真实派单两次（dispatch-2026-11-16T22-58-11/T23-02-25，发送双验均通过但**新会话采集两连败 INBOUND_START_UNIT_MISSING**——当日已三现的采集缺陷，§5 行 1 换会话重派如实发生=两对话均真实发出审计请求）→按 L-018 手工 recoll 恢复（视口前置拉高 R3 先例+标记归属定位，会话 6afb8bb2-b068-83ee-865a-33ece050be1c，reply 原始 6769B sha256=dd12b6a8…592da12）→**真实 GPT-05 结论=BLOCKED（DO_NOT_SUBMIT）**：七大规范矩阵 6 ISSUE+1 PASS+三条 BLOCKER 发现（BATCH-001 含 REWORK 任务/交付闭环未完成/零 mock 闭环待证——第三项由本实战链自身闭合）→findings 结构化对象 vs 冻结契约 string[]→**契约校验 fail-closed 真拦截（三腿同型第三次实战实证）**→A6 人工保真规整 loss=NONE→attach 三步登记（artifacts×2+AUDIT_SUBMITTED message）→**M1 批次/任务状态零变化核验通过（A5）**。账本 acceptance/live-run/ledger.jsonl sha256=700b7864e4d081b6c6f78109d39fc34b2d63f1b19038ed0e0eeefa9ca9df692b。会话指针恢复（pre-g05live 备份）。
+- ⑥验收证据引用：phase1/tools/test_engineering_audit_leg.py；acceptance/test-run-combined-112.txt；acceptance/test-run-combined-112-r2.txt；acceptance/live-run/（账本+简报+规整稿+原始回复）；验收复核现场 dispatch-2026-11-16T22-30-47/recoll（Gate2-R6，reply sha256=90997e741ffae280…完整值见 recoll-result.json），验收结论：PASS（Gate2-R6 设计冻结+授权覆盖本步骤；实现级复核由 G05-DR 承担）
 
 ## S4 交付（PLANNED）
 
