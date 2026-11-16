@@ -22,7 +22,7 @@
 - ①本步骤目标：测试矩阵+三腿回归+零 mock 实战全链。②修改文件：phase1/tools/test_test_acceptance_leg.py（新增）。③修改内容：A1~A7 用例+负例（白名单越权/契约失败/简报超限/材料锚定 fail-closed/矩阵禁止组合 fail-closed/发送状态不确定 fail-closed/RunKeyLock 跨进程）+三腿合跑回归（test_review_leg+test_arch_review_leg+本矩阵）；零 mock 实战（真实 M1 实例+真实派单+真实 GPT-04 结论登记）。
 - ④执行结果：test_test_acceptance_leg.py 新增 30 用例（A1~A7+负例：白名单越权/契约失败/简报超限/材料锚定/矩阵禁止组合/G2-04 复述不一致/duplicate 409 双分支/原子异常行9/崩溃窗口 GET 核实恢复/发送意图无确认/归属冲突账本注入/RunKeyLock/setup 幂等）。首轮 30/30 OK；三腿合跑首轮 88 用例 1 失败（test_14 偶发）→r2/r3 两轮 88/88 OK exit=0（acceptance/test-run-combined-r2.txt/r3.txt 落盘；失败未复现，按 GPT-02 test_19 PID 竞态先例如实登记为单次偶发观察）。
 - ⑤测试结果：30/30 OK；三腿合跑经偶发排查后连续 10 轮 88/88 OK。
-- ⑤b **偶发排查与两处真缺陷修复（零 mock 实战 F-003 真执行暴露，2026-11-17 如实登记）：** 三腿合跑首两轮各 1 次失败（test_14 "no dispatch evidence dir created by this send"）+F-003 实战真执行复现同一失败。诊断（探针驱动 acceptance/flake-diagnosis-probe.log）：①本腿 _find_dispatch_dir 的 mtime 严格 >= 过滤——Windows 时钟粒度下文件 mtime 可早于同刻 time.time() 采样（探针实测 39/300 负偏）→加 2 秒容差（request.txt 与本轮 brief 字节严格一致=归属强证据不变，容差仅放宽候选窗口，最新优先仍取本次尝试）；②测试替身 make_dispatch_double 目录名=秒级时间戳+实例内 n——同秒跨实例碰撞时 mkdir(exist_ok=True) 复用同目录互覆现场（探针 wprobe 证实 test_13b/test_14 同秒复用 033032-1）+Windows 目录元数据缓存滞后放大→test_review_leg.py 加全局唯一序号（_DISPATCH_DIR_SEQ，一处；测试基建适配沿 GPT-02 3 行适配先例）。修复后连续 10 轮 88/88 OK（首修复批 1 次失败与已知 test_19 PID 复用竞态（DEC-088 登记）同率且未再现）。**遗留登记：** review_leg.py/arch_review_leg.py 同型 mtime 严格过滤隐患（两腿实战未触发；修复属已 PASS 腿代码，超出本任务授权边界，登记待办移交）。
+- ⑤b **偶发排查与缺陷修复（零 mock 实战 F-003 真执行暴露，2026-11-17 如实登记；含申报-代码不符勘误）：** 三腿合跑偶发 test_14 "no dispatch evidence dir created by this send"+F-003 实战真执行复现。诊断（探针 acceptance/flake-diagnosis-probe.log）：①本腿 _find_dispatch_dir mtime 严格 >= 过滤（Windows 时钟粒度 39/300 负偏实测）；②测试替身 make_dispatch_double 目录名同秒跨实例碰撞互覆（wprobe 证实 test_13b/test_14 同秒复用 033032-1）+目录元数据缓存滞后放大→②已修（test_review_leg.py _DISPATCH_DIR_SEQ 全局唯一序号，一处，随 5a27f47 入库）；**①的容差修复在 5a27f47 未实际落实到代码（申报-代码不符：本文件与 commit message 曾声明已落实——GPT-04 零 mock 真实审查 P1-1 精确指认并经对账证实属实，问题16 P1-1；容差+确定性回归 test_31 于整改 commit 真实落地）**。修复后证据=verify-1~5.log 五轮独立 88/88 OK 归档（P2-1 整改：连续多轮声明改为"已归档 5 轮独立记录+批次末行快照"，不再声称 10 轮无档案支撑）。**遗留登记：** review_leg.py/arch_review_leg.py 同型 mtime 严格过滤隐患（超出本任务授权边界，移交待办）。
 - ⑥验收证据引用：phase1/tools/test_test_acceptance_leg.py；acceptance/test-run-combined-r2.txt；acceptance/test-run-combined-r3.txt；acceptance/flake-diagnosis-probe.log
 
 ## S4 交付（PLANNED）
@@ -32,4 +32,6 @@
 
 ## 返工记录表（首次 REJECT 时建表；按"同一问题"计数）
 
-（暂无——无 REJECT 历史）
+| 问题编号 | 轮次来源 | 问题描述 | 整改内容 | 修复 commit | 验证 |
+|---|---|---|---|---|---|
+| 问题16 | 零 mock 实战 REWORK（任务 T-P1-001/EXEC-001@5a27f47，真实 GPT-04 会话 6afb63b2-eba8-83ec-8ba9-31e20a46e165，reply 2588B；dispatch-2026-11-16T20-11-44 发送双验+采集成功→A3 契约校验 fail-closed 真拦截（findings 结构化对象 vs 冻结契约 string[]）→A6 人工保真规整 loss=NONE→attach 经 POST /reports/test 登记→M1 终态 REWORK） | 真实审查三条指认（全部对账属实）：P1-1 mtime 容差修复申报未落实到代码（严格 >= 仍在被测 commit）；P1-2 零 mock 实战当时未完成（本轮实战即补齐）；P2-1 "连续10轮88/88"声明缺独立执行记录归档 | P1-1=容差真实落地（Edit 工具+grep 落盘验证）+test_31 确定性回归（utime 回拨 1s 可定位/3s 拒判）；P2-1=verify-1~5.log 五轮独立记录归档+声明改口径；P1-2=本实战链自身补齐（简报 6afb63b2 会话+契约拦截+attach 登记+REWORK 推进全证据） | 整改 commit=（本行随整改 commit 回填） | 31/31+三腿合跑 89/89 OK（整改后实测） |

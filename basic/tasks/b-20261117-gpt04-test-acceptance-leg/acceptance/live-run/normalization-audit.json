@@ -1,0 +1,11 @@
+{
+ "normalized_fields": {
+  "findings": "structured objects -> strings (id/severity/location/issue/required_fix 全文保留，仅格式重组)",
+  "result": "unchanged",
+  "execution_result_observed": "unchanged",
+  "summary": "unchanged",
+  "required_boundaries": "unchanged (strings as-is)"
+ },
+ "loss": "NONE",
+ "source_reply_sha256_source_scene": "dispatch-2026-11-16T20-11-44"
+}

@@ -363,18 +363,17 @@ class TestAcceptanceLeg:
         reply_fmt = ('回复仅一个```json对象：{"result":"PASS|REWORK|BLOCKED",'
                      '"execution_result_observed":"EXECUTED_PASS|EXECUTED_FAIL|NOT_EXECUTED|'
                      'CLAIMED_ONLY|BLOCKED","summary":"<一句话>","findings":[],'
-                     '"required_boundaries":[]}；result：PASS=验收通过／REWORK=须返工／'
-                     'BLOCKED=验收阻塞须人工。测试执行结果≠验收结论：测试通过仍可能因验收'
-                     '标准不满足给REWORK。')
+                     '"required_boundaries":[]}。测试执行结果≠验收结论，测试通过仍可因'
+                     '验收标准不满足给REWORK。')
         brief = (
             f"【测试验收请求·GPT-04】{self.marker_text}\n"
             f"任务{self.task_id}（{task.get('title')}）。验收标准：{task.get('acceptance_criteria')}\n"
             f"范围：{task.get('files_scope') or '（见材料）'}；{dep_line}。\n"
             f"执行事实：execution={self.execution_id} commit={self.commit_sha} "
-            f"execution_result={fact}（F-003 真实执行报告 artifact={self.test_report_artifact_id}"
-            + (f"+证据{len(self.evidence_artifact_ids)}件" if self.evidence_artifact_ids else "")
+            f"execution_result={fact}（证据={self.test_report_artifact_id}"
+            + (f"+{len(self.evidence_artifact_ids)}件" if self.evidence_artifact_ids else "")
             + "）。\n"
-            f"读仓库 github.com/damwate/AIEO（基线main={base}）固定commit="
+            f"读仓库 github.com/damwate/AIEO 固定commit="
             f"{self.input_material_commit} 文件：{files}（验收标准/材料全文在材料，逐项审："
             f"标准覆盖/缺失测试/异常场景/回归风险）。\n{reply_fmt}"
         )
@@ -463,7 +462,11 @@ class TestAcceptanceLeg:
         并发派单时按全局最新 mtime 串单。"""
         cands = sorted(DISPATCH_LOG_DIR.glob("dispatch-*"), key=lambda d: d.stat().st_mtime)
         if since is not None:
-            cands = [d for d in cands if d.stat().st_mtime >= since]
+            # 2 秒容差（零 mock 实战 GPT-04 真实审查 P1-1 整改，问题16）：Windows 时钟
+            # 粒度下文件 mtime 可早于同刻 time.time() 采样（探针实测 39/300 负偏），
+            # 严格 >= 会间歇性误杀本轮派单目录——本轮归属的强证据=request.txt 与本轮
+            # brief 字节严格一致，容差只放宽候选窗口，最新优先仍取本次尝试目录。
+            cands = [d for d in cands if d.stat().st_mtime >= since - 2.0]
         if brief_bytes is not None:
             exact = []
             for d in cands:

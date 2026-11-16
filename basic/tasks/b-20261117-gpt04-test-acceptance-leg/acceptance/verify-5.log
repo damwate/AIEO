@@ -1,0 +1,86 @@
+..RESULT=REVIEW_LEG_PASS status=TEST_ACCEPTANCE
+.RESULT=REVIEW_LEG_PASS status=REWORK
+RESULT=REVIEW_LEG_DONE status=REWORK
+.RESULT=LEG_LEVEL_BLOCKED step=4 reason=no review JSON found in GPT-03 reply
+.RESULT=LEG_LEVEL_BLOCKED step=4 reason=reply result 'BLOCKED' outside ['PASS', 'REWORK'] (BLOCKED is not a content verdict; engine must not set task-level BLOCKED)
+.RESULT=REVIEW_LEG_PASS status=TEST_ACCEPTANCE
+.RESULT=REVIEW_LEG_PASS status=TEST_ACCEPTANCE
+.RESULT=LEG_LEVEL_BLOCKED step=-1 reason=ledger has send intent without confirmation (appendix D row5 vs A8: cannot prove send state -> fail-closed BLOCKED; manual dispatch-dir check required; resend forbidden)
+RESULT=REVIEW_LEG_PASS (resumed) status=TEST_ACCEPTANCE
+.RESULT=LEG_LEVEL_BLOCKED step=-1 reason=ledger has dispatch records but M1 status=DEV_REPORTED (contradiction; fail-closed BLOCKED, no speculative recovery)
+.RESULT=LEG_LEVEL_BLOCKED step=3 reason=send double-verified but collection failed (禁重发; run resume for recovery): gpt_dispatch exit 3: injected collection failure after send double-verify
+RESULT=REVIEW_LEG_PASS (resumed) status=TEST_ACCEPTANCE
+.RESULT=LEG_LEVEL_BLOCKED step=5 reason=message register HTTP 500: {"code": "SYS-0001", "message": "INTERNAL_ERROR: platform request failed", "retryable": false, "correlation_id": "a4c99449-1fb5-42e0-8790-abe5f7772009"}
+RESULT=REVIEW_LEG_PASS (resumed) status=TEST_ACCEPTANCE
+.RESULT=LEG_LEVEL_BLOCKED step=5 reason=review report register HTTP 500: {"code": "SYS-0001", "message": "INTERNAL_ERROR: platform request failed", "retryable": false, "correlation_id": "863b84b1-7f2d-4792-a537-484834666d35"}
+RESULT=REVIEW_LEG_PASS (resumed) status=TEST_ACCEPTANCE
+.....RESULT=REVIEW_LEG_PASS status=TEST_ACCEPTANCE
+RESULT=REVIEW_LEG_DONE status=TEST_ACCEPTANCE
+.RESULT=LEG_LEVEL_BLOCKED step=-1 reason=M1 task status=BLOCKED: engine must not touch (appendix D row12; OWNER only)
+.SETUP_OK agents=[{"agent_id": "GPT-03", "reused_existing": true}, {"agent_id": "ENGINE-01", "reused_existing": true}] tokens=runtime/review-leg/service-tokens.json (gitignored)
+SETUP_OK agents=[{"agent_id": "GPT-03", "reused_existing": true}, {"agent_id": "ENGINE-01", "reused_existing": true}] tokens=runtime/review-leg/service-tokens.json (gitignored)
+.RESULT=REVIEW_LEG_PASS status=TEST_ACCEPTANCE
+............RESULT=ARCH_REVIEW_LEG_PASS status=READY
+.RESULT=ARCH_REVIEW_LEG_PASS status=REWORK
+.RESULT=ARCH_REVIEW_BLOCKED_REGISTERED status=ARCH_REVIEW (no event; OWNER decides)
+.RESULT=LEG_LEVEL_BLOCKED step=4 reason=reply result 'PENDING' outside ['BLOCKED', 'PASS', 'REWORK'] (charter §4 结论域)
+..RESULT=ARCH_REVIEW_LEG_PASS status=READY
+RESULT=ARCH_REVIEW_LEG_DONE status=READY
+.RESULT=ARCH_REVIEW_LEG_PASS status=REWORK
+.RESULT=ARCH_REVIEW_LEG_PASS status=READY
+.RESULT=LEG_LEVEL_BLOCKED step=3 reason=dispatch failed (no send evidence): gpt_dispatch exit 3: injected send failure (test double)
+.RESULT=LEG_LEVEL_BLOCKED step=3 reason=send double-verified but collection failed (禁重发; run resume for recovery): gpt_dispatch exit 3: injected collection failure after send double-verify
+RESULT=ARCH_REVIEW_LEG_PASS (manual attach) status=READY
+.RESULT=ARCH_REVIEW_LEG_PASS (resumed) status=READY
+.RESULT=ARCH_REVIEW_LEG_PASS status=READY
+RESULT=ARCH_REVIEW_LEG_DONE status=READY
+RESULT=LEG_LEVEL_BLOCKED step=-1 reason=M1 task status=BLOCKED: engine must not touch (A-3 行9; OWNER only)
+.RESULT=ARCH_REVIEW_LEG_PASS (manual attach) status=REWORK
+.RESULT=ARCH_REVIEW_BLOCKED_REGISTERED status=ARCH_REVIEW (no event; OWNER decides)
+.RESULT=ARCH_REVIEW_LEG_PASS status=READY
+RESULT=LEG_LEVEL_BLOCKED step=-1 reason=attach-reply requires ARCH_REVIEW (task=READY)
+.RESULT=LEG_LEVEL_BLOCKED step=4 reason=send intent without confirmation (send state uncertain; fail-closed even for manual attach; manual forensics + append-only supersede first)
+.RESULT=LEG_LEVEL_BLOCKED step=4 reason=confirmed send exists but sent_user_unit_key missing (ownership cannot be proven; fail-closed even for manual attach)
+.SETUP_OK agents=[{"agent_id": "GPT-02", "reused_existing": true}, {"agent_id": "ENGINE-02", "reused_existing": true}] tokens=runtime/arch-review-leg/service-tokens.json (gitignored)
+SETUP_OK agents=[{"agent_id": "GPT-02", "reused_existing": true}, {"agent_id": "ENGINE-02", "reused_existing": true}] tokens=runtime/arch-review-leg/service-tokens.json (gitignored)
+.RESULT=LEG_LEVEL_BLOCKED step=4 reason=reply ownership mismatch: located=fallback-turn-1:0:user sent=fallback-turn-9:0:user (P1-01 mandatory strict equality; fail-closed, no registration)
+.RESULT=LEG_LEVEL_BLOCKED step=4 reason=located user unit key invalid (type=str, value='') while send anchor exists (ownership cannot be proven; fail-closed, no registration)
+RESULT=LEG_LEVEL_BLOCKED step=4 reason=capture evidence lacks located user unit key while send anchor exists (cannot prove reply ownership; fail-closed)
+RESULT=LEG_LEVEL_BLOCKED step=4 reason=capture evidence lacks located user unit key while send anchor exists (cannot prove reply ownership; fail-closed)
+..C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\unittest\case.py:589: ResourceWarning: unclosed file <_io.TextIOWrapper name=3 encoding='utf-8'>
+  if method() is not None:
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\unittest\case.py:589: ResourceWarning: unclosed file <_io.TextIOWrapper name=4 encoding='utf-8'>
+  if method() is not None:
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+....RESULT=ARCH_REVIEW_LEG_PASS (resumed) status=REWORK
+.........RESULT=TEST_ACCEPTANCE_LEG_PASS status=ACCEPTED
+.RESULT=TEST_ACCEPTANCE_LEG_PASS status=REWORK
+.RESULT=TEST_ACCEPTANCE_LEG_PASS status=REWORK
+.RESULT=LEG_LEVEL_BLOCKED step=4 reason=fact=EXECUTED_FAIL + result=PASS is a forbidden combination (charter §4 matrix G2-01/02; e.g. EXECUTED_FAIL+PASS or NOT_EXECUTED/CLAIMED_ONLY/BLOCKED+PASS/REWORK); fail-closed, no registration; manual takeover
+.RESULT=LEG_LEVEL_BLOCKED step=4 reason=fact=CLAIMED_ONLY + result=PASS is a forbidden combination (charter §4 matrix G2-01/02; e.g. EXECUTED_FAIL+PASS or NOT_EXECUTED/CLAIMED_ONLY/BLOCKED+PASS/REWORK); fail-closed, no registration; manual takeover
+RESULT=LEG_LEVEL_BLOCKED step=4 reason=fact=NOT_EXECUTED + result=REWORK is a forbidden combination (charter §4 matrix G2-01/02; e.g. EXECUTED_FAIL+PASS or NOT_EXECUTED/CLAIMED_ONLY/BLOCKED+PASS/REWORK); fail-closed, no registration; manual takeover
+.RESULT=LEG_LEVEL_BLOCKED step=4 reason=execution_result_observed='EXECUTED_PASS' != F-003 fact 'EXECUTED_FAIL' (G2-04: reply observation is cross-check only; authoritative value comes from evidence; fail-closed)
+.RESULT=TEST_ACCEPTANCE_BLOCKED_REGISTERED status=TEST_ACCEPTANCE (no report-test; OWNER decides)
+.RESULT=LEG_LEVEL_BLOCKED step=4 reason=contract validation failed (raw reply kept; no registration): {"report": {"valid": false, "errors": [{"instancePath": "/findings", "schemaPath": "#/properties/findings/type", "keyword": "type", "params": {"type": "array"}, "message": "must be array"}]}, "envelope": {"valid": true, "errors": []}, "request": {"valid": true, "errors": []}}
+.RESULT=TEST_ACCEPTANCE_LEG_PASS status=ACCEPTED
+.RESULT=LEG_LEVEL_BLOCKED step=5 reason=test report 409 duplicate but GET verification did not confirm registration (cannot prove state; fail-closed; manual takeover per charter A-3)
+.RESULT=LEG_LEVEL_BLOCKED step=6 reason=test report registered but M1 still TEST_ACCEPTANCE (atomic registration+advance anomaly; charter A-3 row9: registration BUG — fail-closed leg-level BLOCKED, no manual event bypass)
+.RESULT=TEST_ACCEPTANCE_LEG_PASS (resumed) status=ACCEPTED
+.RESULT=TEST_ACCEPTANCE_LEG_PASS status=ACCEPTED
+RESULT=TEST_ACCEPTANCE_LEG_DONE status=ACCEPTED
+RESULT=LEG_LEVEL_BLOCKED step=-1 reason=M1 task status=BLOCKED: engine must not touch (A-3 行12; OWNER only)
+.RESULT=LEG_LEVEL_BLOCKED step=-1 reason=ledger has send intent without confirmation (A-3 行3 fail-closed: cannot prove send state -> leg-level BLOCKED; manual dispatch-dir check required; resend forbidden)
+.RESULT=TEST_ACCEPTANCE_LEG_PASS status=ACCEPTED
+.RESULT=LEG_LEVEL_BLOCKED step=3 reason=send double-verified but collection failed (禁重发; run resume for recovery): gpt_dispatch exit 3: injected collection failure after send double-verify
+RESULT=TEST_ACCEPTANCE_LEG_PASS (manual attach) status=ACCEPTED
+.RESULT=LEG_LEVEL_BLOCKED step=4 reason=reply ownership mismatch: located=fallback-turn-1:0:user sent=fallback-turn-9:0:user (mandatory strict equality; fail-closed, no registration)
+.RESULT=TEST_ACCEPTANCE_LEG_PASS (manual attach) status=REWORK
+..RESULT=LEG_LEVEL_BLOCKED step=-1 reason=attach-reply requires TEST_ACCEPTANCE (task=REWORK)
+..SETUP_OK agents=[{"agent_id": "GPT-04", "reused_existing": true}, {"agent_id": "ENGINE-03", "reused_existing": true}] tokens=runtime/test-acceptance-leg/service-tokens.json (gitignored)
+SETUP_OK agents=[{"agent_id": "GPT-04", "reused_existing": true}, {"agent_id": "ENGINE-03", "reused_existing": true}] tokens=runtime/test-acceptance-leg/service-tokens.json (gitignored)
+.
+----------------------------------------------------------------------
+Ran 88 tests in 98.435s
+
+OK

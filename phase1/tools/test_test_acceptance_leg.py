@@ -778,6 +778,31 @@ class TestAcceptanceLegTests(unittest.TestCase):
             pass
 
     # ------------------------------------------------------------------
+    # P1-1 整改回归（问题16）：mtime 负偏场景确定性测试——容差内可定位/容差外拒判
+    # ------------------------------------------------------------------
+    def test_31_mtime_tolerance_deterministic(self):
+        """确定性构造 mtime 负偏（os.utime 回拨目录 mtime，不依赖真实时钟抖动）：
+        容差 2s 内（回拨 1s）必须仍能按字节定位本轮目录；超出容差（回拨 3s）必须
+        拒判（no dispatch evidence）——严格 >= 回归护栏（GPT-04 真实审查 P1-1）。"""
+        leg, task_id, _, fact, _ = self.make_leg("t31")
+        brief = "brief-bytes-for-t31\n"
+        (leg.run_dir / "brief.txt").write_text(brief, encoding="utf-8")
+        brief_bytes = (leg.run_dir / "brief.txt").read_bytes()
+        base = time.time()
+        ddir = tal.DISPATCH_LOG_DIR / "dispatch-mtime-t31"
+        ddir.mkdir(parents=True, exist_ok=True)
+        (ddir / "request.txt").write_bytes(brief_bytes)
+        # 容差内：回拨 1 秒（<=2s 容差）仍可定位
+        os.utime(ddir, (base - 1.0, base - 1.0))
+        found = leg._find_dispatch_dir(must=True, since=base, brief_bytes=brief_bytes)
+        self.assertEqual(found, ddir)
+        # 容差外：回拨 3 秒（>2s 容差）必须拒判
+        os.utime(ddir, (base - 3.0, base - 3.0))
+        with self.assertRaises(OrchestrationError) as cm:
+            leg._find_dispatch_dir(must=True, since=base, brief_bytes=brief_bytes)
+        self.assertIn("no dispatch evidence", str(cm.exception))
+
+    # ------------------------------------------------------------------
     # setup-agents（OWNER bootstrap；幂等复用）
     # ------------------------------------------------------------------
     def test_30_setup_agents_idempotent(self):

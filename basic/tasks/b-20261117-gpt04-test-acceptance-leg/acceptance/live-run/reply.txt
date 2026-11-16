@@ -1,0 +1,22 @@
+ChatGPT 说：
+```json
+{
+ "result": "REWORK",
+ "execution_result_observed": "EXECUTED_PASS",
+ "summary": "30项新增测试及三腿88项回归均有通过证据，但零mock真实派单验收尚未完成，且派单目录mtime竞态修复未实际落实到被测代码，暂不满足完整验收标准。",
+ "findings": [
+  "[P1/P1-1] phase1/tools/test_acceptance_leg.py::_find_dispatch_dir: 代码仍使用 d.stat().st_mtime >= since 严格过滤，没有落实 steps.md 所声明的2秒时间容差。acceptance/flake-diagnosis-probe.log 已证明 Windows 文件时间粒度存在负偏，300次探测出现39次负偏，可能导致真实派单成功后找不到证据目录。 修复建议: 核对并落实2秒容差，同时保留 request.txt 与本轮 brief 字节完全一致的归属校验，增加针对负偏场景的确定性回归测试。",
+  "[P1/P1-2] phase1/tools/test_test_acceptance_leg.py / acceptance/: 工程验收要求③明确规定真实 chatgpt.com 收发、零mock。现有30项测试使用 make_dispatch_double 替代派单；steps.md 仍将零mock实战标记为进行中，未见真实派单及真实GPT-04回复登记的完整证据。 修复建议: 完成真实M1环境、真实chatgpt.com派单、回复采集、契约校验、POST /reports/test登记及最终状态推进的端到端实战，保存完整证据。",
+  "[P2/P2-1] acceptance/test-run-combined-r3.txt: 当前归档日志证明三腿合跑88/88通过，但不能单独证明steps.md所声明的连续10轮88/88均有独立执行记录。 修复建议: 如保留连续10轮的验收声明，应归档可核对的10轮独立执行记录；否则将声明调整为有证据支持的范围。"
+ ],
+ "required_boundaries": [
+  "仅整改上述问题，不重构GPT-02/GPT-03既有PASS腿。",
+  "M1-M4代码及既有冻结契约保持零修改。",
+  "保留RunKeyLock跨进程互斥、七端点白名单及15组合矩阵fail-closed。",
+  "保留POST /api/v1/reports/test原子登记推进，不得改为直接提交状态事件。",
+  "BLOCKED仍仅登记artifacts和messages，M1保持TEST_ACCEPTANCE。",
+  "保留duplicate 409先GET五字段核实、禁止盲目重试的恢复纪律。",
+  "整改后重新执行本腿30项测试及三腿88项完整回归，并补齐零mock真实实战证据。"
+ ]
+}
+```

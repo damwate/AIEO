@@ -1,0 +1,14 @@
+{
+  "result": "TEST_ACCEPTANCE_LEG_PASS",
+  "final_status": "REWORK",
+  "verdict": "REWORK",
+  "reply_sha256": "da7aaccb65744eb3bc6295f1bb413cae296d4b08fb5f68bc0a92e99a352302e4",
+  "manual_attach": true,
+  "artifact_reply_id": "ART-REV-001",
+  "artifact_report_id": "ART-REV-002",
+  "message_id": "MSG-09354248-813089",
+  "test_report": {
+    "registered": true,
+    "source": "created"
+  }
+}
