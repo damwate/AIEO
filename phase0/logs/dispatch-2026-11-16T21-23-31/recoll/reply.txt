@@ -1,0 +1,313 @@
+ChatGPT 说：
+GPT-05 Gate2 会务立项评审
+
+当前结论：暂不通过 Gate2，不具备开工条件。
+
+这次评审发现一项直接影响真实运行的接口权限阻断：GPT-05 必须调用的批次任务列表接口，当前并未开放给服务身份。它与“M1–M4 零修改”的既定边界发生冲突，不能仅靠在 GPT-05 客户端增加白名单解决。
+
+被测对象：damwate/AIEO
+固定 commit：85fd361b7efe642bc9812f0e23b42ac5c9ac9a54
+文件：docs/phase1/GPT05-ENGINEERING-AUDIT-LEG-CHARTER-DRAFT.md v0.3
+
+以下是按六项范围的审查结果。所有代码事实均以该固定 commit 实读，不使用 HEAD。
+
+① A-1：运行期白名单
+REJECT
+
+关键证据：
+
+app/platform/api.py，blob 62a8c60c1902f1771776bda1d5094f7b23b24477，第 304–316 行：确实存在 GET /api/v1/tasks，支持 batch_id、分页及 total。
+
+app/platform/security.py，blob 7b1efc8db8d22327aeeb81de5b9dfdf7f73e0e31，SERVICE_ALLOWED_ENDPOINTS：允许 GET /api/v1/tasks/{task_id}，但没有允许 GET /api/v1/tasks。
+
+同一权限表已允许 GET /api/v1/reports、POST /api/v1/artifacts、GET /api/v1/artifacts/{artifact_id}、POST /api/v1/messages。
+
+因此，ENGINE-04 使用服务身份执行 GPT-05 的核心前置读取时，会被服务端权限门拒绝。即使 GPT-05 客户端白名单写得正确，也无法绕过服务端授权。
+
+这是开工阻断项。 不能用 OWNER 用户凭据代替 ENGINE-04 服务身份，也不能默默放宽 M1–M4 零修改红线。
+
+此外还有两个需要在 Gate2 方案中明确的点：
+
+当前服务端白名单是所有 service agent 共用的集合，并非 ENGINE-04 专属权限表。必须明确 ENGINE-04 身份验证、token 绑定及客户端 method/path 默认拒绝如何共同形成有效边界。
+
+GET /reports 支持 type、task_id 过滤；应按批次任务逐项查询，而不能假设它有 batch_id 过滤。
+
+② A-2：回复契约
+PASS_WITH_CONSTRAINTS
+
+已具备的基础：
+
+contracts/v1.0/messages-create.schema.json，blob d4a8046139ac43ca9080eef9a962746a1afd8aba：AUDIT_SUBMITTED 属于批次级分支，要求 batch_id，且 task_id=null。
+
+app/platform/schemas.py，blob 7c2947d50c3083a00fd01f053160fe1a090ae7fe：artifact 类型允许 OTHER 等既有类型，artifact 可以不关联 task。
+
+app/platform/reports.py，blob a4451d7094c04615da42dc193bdadfbeb84085ec：artifact 登记按 path 唯一；相同 path、相同 SHA 返回 duplicate，不同 SHA 冲突。
+
+尚未冻结的内容：
+
+A-2 仍是字段草案，没有完整 JSON Schema 的 required、类型、长度、格式、枚举及 additionalProperties 规则。
+
+engineering_standard_version 目前只是批次字段绑定；没有明确七项规范清单对应的不可变文件路径、版本和 SHA256 清单。
+
+release_recommendation 与总 result 的映射已定义方向，但契约层应固定每一种组合的合法值，不能只靠自然语言审查。
+
+report artifact 与 AUDIT_SUBMITTED message 的完整 payload 绑定结构尚未定稿。尤其要明确报告 artifact SHA、brief SHA、reply SHA、manifest SHA 各自含义，避免同一个 SHA 字段被不同对象复用。
+
+message 的 source_agent_id、target_agent_id、correlation_id、payload 与 ENGINE-04/GPT-05 身份的对应关系需要固定。现有 messaging.register_inbound_message 检查 source/target agent 是否存在，但没有把消息 source 与认证 principal 做相等性绑定。
+
+补齐要求： Gate2 定稿应给出字段级契约表及 message envelope 示例，并明确每个 SHA 的对象、计算范围、生成时点和交叉核验规则。七项规范必须绑定不可变版本清单，而不只是一个版本字符串。
+
+③ A-3：恢复矩阵
+REJECT
+
+依据： v0.3 附录 A-3 目前只有断点、恢复动作、是否允许重新派单三列。
+
+它列出了简报前、简报后、发送意图未确认、已发送未采集、已采集未登记、登记部分成功、登记完成等状态，但缺少实际可执行的恢复账本定义。
+
+尤其是登记部分成功：目前只写 _ledger_verified 逐项只读核实补缺项，没有明确两份 artifact 和一条 message 各自对应的账本标志、证据核验和恢复动作。
+
+补齐要求： 每个断点至少固定：
+
+必须存在的账本标志及其字段；
+
+用于确认该步骤真实成功的 M1 读回证据；
+
+允许执行的唯一恢复动作；
+
+明确禁止的重派、重登记或覆盖动作；
+
+操作完成后应追加的账本标志；
+
+证据不完整或相互矛盾时的 fail-closed 结果。
+
+特别要将两个 artifact 和 message 拆成独立登记步骤，不能只用一个笼统的 A4_REGISTERED 标志代表三项均成功。
+
+④ 多事务登记
+REJECT
+
+固定代码事实：
+
+app/platform/reports.py，blob a4451d7094c04615da42dc193bdadfbeb84085ec：register_artifact 按 path 唯一；相同 SHA 返回 duplicate，不同 SHA 冲突。
+
+app/platform/messaging.py，blob 96e199225375741d9262c47b559f385200fd3fd4：message 以 message_id 为主键；重复提交会返回 RES-0003 类 duplicate 错误，附带 message 状态信息。
+
+app/platform/api.py，blob 62a8c60c1902f1771776bda1d5094f7b23b24477：GET /api/v1/messages 支持 correlation_id 查询；GET /api/v1/messages/{message_id} 虽然存在，但不在当前服务身份权限白名单中。
+
+设计缺口：
+
+没有冻结两份 artifact 与 message 的精确登记顺序。
+
+没有将三项登记拆成三个独立的 ledger 标志和读回核验。
+
+没有明确 artifact duplicate 的读回核验条件，以及 message 409 后如何通过 correlation_id 读回并比对完整 envelope。
+
+A-1 未把 GET /api/v1/messages 纳入 GPT-05 运行期客户端白名单。它是核实 message 是否已登记、验证 409 和恢复部分成功的重要接口。
+
+message_id 确定性键没有给出生成规则。必须确保同一审计轮重放得到相同 ID，不能因为恢复而生成新 ID。
+
+账本请求指纹需要定义规范化算法和字段覆盖范围；不能只比对 message_id 或本地记录。
+
+补齐要求： 固定三项登记顺序、每项成功标志、M1 读回字段、duplicate 判定、409 双证以及每种部分成功组合的恢复动作。登记过程中禁止新开审计轮或重新派单。
+
+⑤ 真实腿验收设计
+PASS_WITH_CONSTRAINTS
+
+依据： v0.3 §7 已列出：
+
+A1 正常审计轮；
+
+A2 ACCEPTED_WITH_RISKS；
+
+A3 采集 fail-closed；
+
+A4 幂等重放；
+
+A5 已发送未采集、已采集未登记两类断点；
+
+A6 attach-reply 人工退路；
+
+A7 BLOCKED 仅留证。
+
+并明确真实 chatgpt.com 收发、零 mock 红线。
+
+不足：
+
+各用例没有给出明确的预期 ledger 标志和 M1 读回证据。
+
+A5 没有覆盖“两份 artifact 已部分登记、message 尚未登记”及“message 已登记、账本尚未完成”的崩溃窗口。
+
+没有单列验证七项规范矩阵的 BLOCKED/ISSUE/豁免汇总行为。
+
+没有明确验证 BLOCKED 与 release_recommendation 矛盾时必须拒绝登记。
+
+没有明确验证 ENGINE-04 服务身份访问被拒绝的接口时，腿级如何 fail-closed。
+
+补齐要求： 将验收矩阵增加“注入点、前置账本状态、操作、预期 HTTP/业务结果、预期 ledger 标志、M1 读回证据、是否允许重派”字段。补入多事务部分成功和结论矩阵边界用例。上述补齐应纳入 Gate2 冻结设计，而非留到实现阶段临场决定。
+
+⑥ 边界与安全
+PASS_WITH_CONSTRAINTS
+
+已通过的边界：
+
+§1：显式 CLI 一期唯一触发；自动触发另行立项。
+
+§3：M1/M2/M3/M4 代码零修改，不抽公共 runner，不重构既有三腿。
+
+§3、§4：无状态事件、批次与任务状态不动。
+
+§8：H2 既有契约不修改，新回复契约新增文件。
+
+§9：明确排除 scheduler、批次自动推进、多批次编排、管理后台等范围。
+
+未决风险：
+
+A-1 的 GET /tasks?batch_id= 服务端权限阻断，和 M1–M4 零修改红线冲突。
+
+service agent 的服务端权限白名单是通用集合，不是 ENGINE-04 独立权限策略。
+
+消息提交时，现有代码检查 source_agent_id 是否存在，但没有将它与认证 principal 绑定。需要明确客户端如何防止错误身份或错误目标被写入，并确认此处是否需要既有架构允许的服务端约束。
+
+A-1 尚未列出 message 读回核验所需的 GET 接口。
+
+裁定： 边界原则本身通过，但在权限冲突和身份绑定问题解决前，不能冻结为可实施设计。
+
+六项最终汇总
+
+项目
+
+	
+
+结论
+
+	
+
+是否阻断开工
+
+
+
+
+① A-1 运行期白名单
+
+	
+
+REJECT
+
+	
+
+是
+
+
+
+
+② A-2 回复契约
+
+	
+
+PASS_WITH_CONSTRAINTS
+
+	
+
+是，须冻结字段和绑定规则
+
+
+
+
+③ A-3 恢复矩阵
+
+	
+
+REJECT
+
+	
+
+是
+
+
+
+
+④ 多事务登记
+
+	
+
+REJECT
+
+	
+
+是
+
+
+
+
+⑤ 真实腿验收设计
+
+	
+
+PASS_WITH_CONSTRAINTS
+
+	
+
+是，须补充验收证据标准
+
+
+
+
+⑥ 边界与安全
+
+	
+
+PASS_WITH_CONSTRAINTS
+
+	
+
+是，权限冲突未解决
+
+设计冻结意见
+
+目前不能冻结 GPT-05 工程设计。
+
+最重要的是先解决 A-1 的权限矛盾。建议 WorkBuddy 暂停进入代码实现，先提交一份极窄的 Gate2-R1 设计修订：
+
+明确 GET /api/v1/tasks 的服务身份访问方案。优先研究是否存在不修改 M1–M4、又能完整读取批次任务全景的既有合法接口。若不存在，必须明确提出最小权限变更及其对 M1–M4 零修改约束的影响，不得自行突破。
+
+补全 A-1 的身份、资源归属和 message 读回权限定义。
+
+冻结 A-2 的完整字段契约、七规范版本清单和 SHA 绑定规则。
+
+将 A-3 变成逐步骤账本恢复矩阵。
+
+冻结两个 artifact 与 message 的登记顺序、部分成功恢复规则。
+
+将验收矩阵补成可判定的证据矩阵。
+
+不允许通过降低批次审计完整性、使用 OWNER 凭据代替 ENGINE-04、绕过 M1 服务端权限检查来消除阻断。
+
+授权结论
+未获开工授权
+
+DEC-089 的机制是审查方复审通过后可以替代用户逐项拍板，形成开工授权。本轮 Gate2 未通过，因此授权条件不成立。
+
+不授权新增 engineering_audit_leg.py 实现。
+
+不授权 ENGINE-04 bootstrap 和运行期部署。
+
+不授权任何 M1–M4 代码修改。
+
+不授权合并、发布或数据操作；DEC-010 仍然有效。
+
+Gate2 后续文档修订清单
+
+以下是设计问题解决后可以一并完成的文档收尾事项，不需要单独扩大评审范围：
+
+将 A-1/A-2/A-3 标注为 Gate2 最终定稿，而非初稿。
+
+将六项评审结果和最终设计决议写入版本记录。
+
+明确实现任务书与新增回复契约文件的路径。
+
+将验收矩阵和恢复矩阵作为实现阶段的强制验收依据。
+
+更新授权链记录，只有最终复审通过后才能登记开工授权。
+
+建议下一轮命名为 G05-Gate2-R1，只复核本次六项中未通过及有条件通过的部分；不重开显式 CLI、同构复制、无状态事件、M1–M4 零修改等已经确定的设计原则。
+
+这次最重要的止损点是：先解决“ENGINE-04 根本读不到批次任务列表”的真实权限问题，再谈代码实现。
