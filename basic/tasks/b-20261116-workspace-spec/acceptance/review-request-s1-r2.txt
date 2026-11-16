@@ -1,0 +1,10 @@
+【S1-R2 限定复验】b-20261116-workspace-spec
+仓库 damwate/AIEO 分支 review/b-20261116-workspace-spec（已更新）
+基线 d563a2a5fa2e518a6da7f041d36218b89a2ad12a
+待验收 9efb14bbcc74d397e15558dc720706fc054ac627（整改被测）
+其后 bf96e00、80f4928 仅改任务包 steps.md 证据登记，不属被测 diff（ST-01④，可对照 diff 核实）
+问题1（P1-01）：第六节改三口径——被测对象=完整SHA；完整Diff=可核验完整改动（diff全文/GitHub compare/GitPointer），numstat仅统计不替代；测试=断言+退出码。
+问题2（P1-02）：task-brief 增"Git 操作批准记录"：用户08:0x消息=推进验收授权，commit=推定授权非明文批准，待用户追认；DEC-068 状态修正；DEC-069 登记；未伪造批准。
+问题3（P2-01）：第四节改"项目配置与主机运行环境分离"：项目级可移植无秘密配置可入库；凭据/profile/机器配置禁入库（C6）；作用域遵循所用IDE规则。
+自测：ST-05 复检④⑤PASS、无FAIL（IN_PROGRESS开发期）。
+请六查限定复验：三问题是否关闭+有无回归；结论PASS/REJECT（REJECT给编号）。

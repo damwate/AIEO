@@ -1,0 +1,11 @@
+﻿Taskpack: b-20261116-workspace-spec
+Phase: IN_PROGRESS
+[PASS] ① 需求记录
+[PASS] ② 步骤清单
+[N/A] ③ 步骤验收记录
+       - 0 步记录完整 PASS；未到期步骤（3 个）: S1 规范成文（WORKFLOW 增补④）、S2 登记与自检（DEC-069+ST-05）、S3 独立验收与交付
+[PASS] ④ REJECT返工记录
+[PASS] ⑤ 返工次数
+[N/A] ⑥ 交付记录
+       - 阶段=IN_PROGRESS，交付记录未到期（COMPLETED 时检查 delivery.md 七要素）
+Overall: IN_PROGRESS

@@ -14,7 +14,7 @@
 - ③修改内容：新增一节"多项目、多 IDE 工作区管理规范（增补④，2026-11-16，用户指令增补，非统计驱动）"，含定位引言（边界红线声明）+九个小节；附录尾注追加增补④登记句；decision-log 追加 DEC-068。既有条款零删改，附录 12 行修订表不动。**S1-R1 被测 commit 完整 SHA=72ee196c1ede434b7ddfb72a2450834505e1d2c4**（parent=d563a2a5fa2e518a6da7f041d36218b89a2ad12a 基线，单 commit 已核）；R1 整改后被测对象=本整改轮 commit（完整 SHA 见 R2 申报记录，不属本行范围）
 - ④执行结果：首轮成文完成（九项覆盖齐备）；S1-R1 验收结论 REJECT（问题1/2/3，见⑥）→按整改要求修订 WORKFLOW 第四、六节（P2-01 配置作用域分离、P1-01 完整 Diff 与 numstat 口径区分）+任务包与 DEC 状态如实化（P1-02）；未改动 v0.3 既有正文与 C1-C8/既有 DEC
 - ⑤测试结果：ST-05 检查器自检——首轮 IN_PROGRESS（①②PASS，余开发期 N/A，无 FAIL）；整改后复跑结果见返工表"验证"列与 R2 申报记录；纯文档任务无代码单测项（如实标注不适用）
-- ⑥验收证据引用：S1-R1 独立验收=审查会话 6afabbd3-ddec-83e8-afca-8a61cf91694c，现场 dispatch-2026-11-16T08-15-12，reply sha256=d8a1cbbfda9add20e5055a3214353c51c2a45d47801c3eca27ad4f1d6e80cf7a，**结论 REJECT**（问题1=Diff 回传口径缺完整 Diff/问题2=commit 前批准状态与实际提交矛盾/问题3=Skills/MCP 一律归主机级不准确）；首派尝试 goto 超时未发送（不产生投递，按 ST-08 不计验收轮次），重派成功采集；S1-R2 复验证据待 R2 派单后回填
+- ⑥验收证据引用：S1-R1 独立验收=审查会话 6afabbd3-ddec-83e8-afca-8a61cf91694c，现场 dispatch-2026-11-16T08-15-12，reply sha256=d8a1cbbfda9add20e5055a3214353c51c2a45d47801c3eca27ad4f1d6e80cf7a，**结论 REJECT**（问题1=Diff 回传口径缺完整 Diff/问题2=commit 前批准状态与实际提交矛盾/问题3=Skills/MCP 一律归主机级不准确）；首派尝试 goto 超时未发送（不产生投递，按 ST-08 不计验收轮次），重派成功采集；**S1-R2 限定复验**=现场 dispatch-2026-11-16T08-22-40（发送双验 polls=1，user_unit_key=fallback-turn-1:0:user；采集 fail-closed INBOUND_WINDOW_COMPLETENESS_UNPROVEN→按 L-018 禁重发、派生 recoll_workspace_spec_r2.mjs 归属校验型补采七查全过，产物 recoll/reply.txt 5092B，reply sha256=f90078de4b55755f4d37d93f9ea18ac13c56262d43c25b5171b8ee727bf38a74），结论 REJECT：问题1/问题3 关闭、回归 PASS，剩余问题2（待用户追认 72ee196c）+问题4（ST-05 实际输出未落库，见返工表）
 
 ## S2 登记与自检（DEC-069+ST-05）
 
@@ -22,8 +22,8 @@
 - ②修改文件：docs/phase1/decision-log.md、本任务包
 - ③修改内容：DEC-068 状态行修正为真实时间线；追加 DEC-069（问题1/问题2/问题3 逐项整改登记+被测对象+过程）
 - ④执行结果：DEC-069 成文；ST-05 复检执行（结果见⑤）
-- ⑤测试结果：python -I basic/tool/check_taskpack.py basic/tasks/b-20261116-workspace-spec → 复检结果以实际输出为准登记（IN_PROGRESS 且无 FAIL 为预期）
-- ⑥验收证据引用：待 R2 派单（验收后回填 dispatch 目录+reply SHA256）
+- ⑤测试结果（实际执行输出，P2-02/问题4 整改）：命令=`python -I basic/tool/check_taskpack.py basic/tasks/b-20261116-workspace-spec`；实际输出=Phase IN_PROGRESS＋①PASS ②PASS ③N/A（3 步未到期）④PASS ⑤PASS ⑥N/A（交付未到期）＋Overall IN_PROGRESS；FAIL 项数=0；退出码=1（开发期未完成验收的既定语义，非失败）；原始输出落库 `acceptance/st05-inprogress.txt`（同命令可复跑复现）
+- ⑥验收证据引用：S1-R2 复验=dispatch-2026-11-16T08-22-40（发送双验+归属校验型补采，recoll/reply.txt 5092B，reply sha256=f90078de4b55755f4d37d93f9ea18ac13c56262d43c25b5171b8ee727bf38a74），结论 REJECT——问题1/问题3 关闭、回归 PASS；剩余问题2（待用户追认）与问题4（ST-05 实际输出落库，见返工表）
 
 ## S3 独立验收与交付
 
@@ -39,5 +39,5 @@
 | 问题编号 | 轮次来源 | 问题描述 | 整改内容 | 修复 commit | 验证 |
 |---|---|---|---|---|---|
 | 问题1 | S1-R1 REJECT P1-01 | 第六节 diff 回传只写 numstat，缺完整 Diff 证据要求 | 第六节改三口径：被测对象=完整 SHA／完整 Diff 证据=可核验完整改动（diff 全文或 GitHub compare/GitPointer）／测试结果=断言+退出码；numstat 降为统计口径并明示"不替代完整 Diff" | 9efb14bbcc74d397e15558dc720706fc054ac627 | 整改内容已入 S1-R2 被测 diff，待 R2 限定复验确认 |
-| 问题2 | S1-R1 REJECT P1-02 | commit 前批准状态与实际提交矛盾（requirement/task-brief/steps/DEC-068 四处不一致） | task-brief 增"Git 操作批准记录"表如实登记推定授权与时间线；steps③ 回填首轮被测 SHA；DEC-068 状态行修正；DEC-069 登记；用户追认事项明列（不伪造批准） | 9efb14bbcc74d397e15558dc720706fc054ac627 | 待 R2 复验确认四处状态一致；用户追认待办 |
+| 问题2 | S1-R1 REJECT P1-02 | commit 前批准状态与实际提交矛盾（requirement/task-brief/steps/DEC-068 四处不一致） | task-brief 增"Git 操作批准记录"表如实登记推定授权与时间线；steps③ 回填首轮被测 SHA；DEC-068 状态行修正；DEC-069 登记；用户追认事项明列（不伪造批准） | 9efb14bbcc74d397e15558dc720706fc054ac627 | R2 确认四处状态已一致、无伪造；**历史提交授权仍待用户追认 72ee196c——未完全关闭**（不自行宣布关闭） |
 | 问题3 | S1-R1 REJECT P2-01 | 第四节把 Skills/MCP 一律归主机级不准确 | 第四节改"项目配置与主机运行环境分离"：项目级可移植无秘密配置可入目标仓库版本控制；凭据/账号 profile/机器专属配置禁入库（C6）；作用域遵循所用 IDE 规则 | 9efb14bbcc74d397e15558dc720706fc054ac627 | 待 R2 限定复验确认 |
