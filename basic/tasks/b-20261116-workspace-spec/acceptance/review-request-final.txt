@@ -1,0 +1,8 @@
+【最终记录一致性复核】b-20261116-workspace-spec
+仓库 damwate/AIEO 分支 review/b-20261116-workspace-spec（最新 549d4f6，父 06b76eb）
+状态：task-brief 已转"完成"（COMPLETED，未改写历史结论）
+ST-05 COMPLETED 态实测：命令=python -I basic/tool/check_taskpack.py basic/tasks/b-20261116-workspace-spec → Phase COMPLETED、①～⑥ 全部 PASS、Overall PASS、无 FAIL、退出码 0；完整原始输出落库 basic/tasks/b-20261116-workspace-spec/acceptance/st05-completed.txt（非摘要，同命令可复跑）
+回填位置：steps S3⑤（命令/输出/退出码/路径）与 S3⑥（R13 PASS）；delivery §4（COMPLETED 取证＋S1 R1~R6 / S3 R7~R13 两条链）、§2/§3/§7（DEC-068~074、076~082；问题1~11；轮次 R1~R13）
+最终记录 commit=549d4f6d57ea8c7bb2e76c8c2d4248d4458e880b（父=06b76eb3fd84265e389f404a3bc28567ef7ab440）
+未改被测 9efb14bbcc74d397e15558dc720706fc054ac627、未改 WORKFLOW 九项规范、未改写历史验收结论
+请核：①ST-05 证据与落库/回填一致且可复跑 ②回填无夸大 ③索引自洽 ④被测与范围未变；结论 PASS/REJECT
