@@ -217,6 +217,8 @@ def enforce_csrf(request: Request, principal: Principal) -> None:
 # 信封，消息投递是 agent 工作流本体而非管理操作；缺它则任何服务身份都无法履行 03-协议。）
 SERVICE_ALLOWED_ENDPOINTS: frozenset[tuple[str, str]] = frozenset({
     ("GET", "/api/v1/auth/session"),
+    ("GET", "/api/v1/tasks"),
+    ("GET", "/api/v1/batches/{batch_id}"),
     ("GET", "/api/v1/tasks/{task_id}"),
     ("GET", "/api/v1/tasks/{task_id}/dependencies"),
     ("POST", "/api/v1/tasks/{task_id}/events"),
@@ -247,6 +249,13 @@ def authorize_principal(request: Request, principal: Principal) -> None:
         raise forbidden(
             "AUTH-0002 FORBIDDEN: service identity is restricted to the C7 §8.6 permission whitelist"
         )
+    # GPT-05 腿 §3 权限方案（charter v0.9/Gate2-R6 授权，b-20261117-gpt05-engineering-audit-leg）：
+    # 服务身份任务列表查询必须携带 batch_id——杜绝全局任务枚举（OWNER 人工会话不受影响）。
+    if (request.method, route_path) == ("GET", "/api/v1/tasks"):
+        if not request.query_params.get("batch_id"):
+            raise forbidden(
+                "AUTH-0002 FORBIDDEN: service identity task list queries require batch_id"
+            )
 
 
 def audit_login(conn: sqlite3.Connection, *, username: str, success: bool, correlation_id: str | None,

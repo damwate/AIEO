@@ -1,0 +1,145 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aieo.local/contracts/v1.0/engineering-audit-report.schema.json",
+  "title": "AIEO engineering audit report (GPT-05 leg)",
+  "description": "冻结契约 v1.0（b-20261117-gpt05-engineering-audit-leg 立项 Gate2-R6 设计冻结+开工授权后落位，DEC-092；字段依据=GPT05-ENGINEERING-AUDIT-LEG-CHARTER-DRAFT.md v0.9 附录 A-2 定稿表，逐字段一致）。登记路线=artifacts（报告 artifact=结论内容唯一权威载体）+messages（AUDIT_SUBMITTED 批次级信封=登记关联，task_id=null）；无任何状态事件。一致性规则（腿端 fail-closed）：①standards_matrix 汇总映射——任一项 BLOCKED→result=BLOCKED；无 BLOCKED 有 ISSUE→ACCEPTED_WITH_RISKS；全 PASS 或有理由豁免→ACCEPTED 可选；矛盾不登记。②result×release_recommendation 一一映射：ACCEPTED→SUBMIT_FOR_APPROVAL/ACCEPTED_WITH_RISKS→CONDITIONAL_SUBMIT_WITH_RISKS/BLOCKED→DO_NOT_SUBMIT；其他组合 fail-closed。修改本文件须走契约版本演进流程，禁止原地改语义（H2）。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "batch_id",
+    "audit_round_id",
+    "reviewer_agent_id",
+    "engine_agent_id",
+    "input_material_commit",
+    "input_material_manifest_sha256",
+    "brief_sha256",
+    "standards_matrix",
+    "result",
+    "release_recommendation",
+    "summary",
+    "findings",
+    "risks"
+  ],
+  "properties": {
+    "contract_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+$"
+    },
+    "batch_id": {
+      "type": "string",
+      "pattern": "^BATCH-[0-9]{3,}$"
+    },
+    "audit_round_id": {
+      "type": "string",
+      "maxLength": 64,
+      "description": "审计轮标识；幂等键=<run键>+engineering-audit-round-N 的结构化落位"
+    },
+    "reviewer_agent_id": {
+      "type": "string",
+      "pattern": "^GPT-05$"
+    },
+    "engine_agent_id": {
+      "type": "string",
+      "pattern": "^ENGINE-04$"
+    },
+    "input_material_commit": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$",
+      "description": "审计材料版本锚定（完整 40 位，禁隐式读最新 main）"
+    },
+    "input_material_manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "brief_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "standards_matrix": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "standard_id",
+          "applicable",
+          "requirement",
+          "evidence_refs",
+          "result",
+          "findings",
+          "residual_risks"
+        ],
+        "properties": {
+          "standard_id": {
+            "type": "string",
+            "description": "规范编号（按 batches.engineering_standard_version 固定清单识别，禁临场解释）"
+          },
+          "applicable": {
+            "type": "boolean",
+            "description": "false 须 findings 说明理由；适用性不等于免检"
+          },
+          "requirement": {
+            "type": "string"
+          },
+          "evidence_refs": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "证据指针（空须理由）"
+          },
+          "result": {
+            "enum": [
+              "PASS",
+              "ISSUE",
+              "BLOCKED"
+            ]
+          },
+          "findings": {
+            "type": "string",
+            "description": "问题与说明（豁免理由在此）"
+          },
+          "residual_risks": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "result": {
+      "enum": [
+        "ACCEPTED",
+        "ACCEPTED_WITH_RISKS",
+        "BLOCKED"
+      ]
+    },
+    "release_recommendation": {
+      "enum": [
+        "SUBMIT_FOR_APPROVAL",
+        "CONDITIONAL_SUBMIT_WITH_RISKS",
+        "DO_NOT_SUBMIT"
+      ],
+      "description": "发布建议（仅建议语义，不构成发布授权；与 result 一一映射，矛盾 fail-closed）"
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000
+    },
+    "findings": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "批次级发现"
+    },
+    "risks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "批次级风险"
+    }
+  }
+}
