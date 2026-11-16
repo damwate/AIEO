@@ -1,0 +1,204 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-16T22:10:33.810Z",
+  "user_unit_key": "f57f86a0-b3fd-52b9-aac1-3be1689b98b2:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "f57f86a0-b3fd-52b9-aac1-3be1689b98b2:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "e8bbca67-f2c2-4d25-bc0a-40075b7b7bfb",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "f57f86a0-b3fd-52b9-aac1-3be1689b98b2:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "45310f65-9314-5b1c-8b32-d08da8f2be53:0:user",
+          "45310f65-9314-5b1c-8b32-d08da8f2be53:2:assistant",
+          "42cfefdf-d233-5abc-9279-4e36339d2f79:0:user",
+          "42cfefdf-d233-5abc-9279-4e36339d2f79:2:assistant",
+          "5395b975-13dd-5794-ad76-72579b6f1917:0:user",
+          "5395b975-13dd-5794-ad76-72579b6f1917:2:assistant",
+          "f57f86a0-b3fd-52b9-aac1-3be1689b98b2:0:user",
+          "f57f86a0-b3fd-52b9-aac1-3be1689b98b2:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "0093b14e0b60326e626f6ddb143b175069e557a1c81ca07776d799511c8436e0",
+          "d6742c5276144aca6ce4400b316a58394007c385720198b1e69dc4bfb4b0ce35",
+          "26c90d7142bf8c3b5708bf90b0ffd8e4b5860a888c83aff58cb7614b993d7eff",
+          "bceb502ac673fa187de3db4411f78b8c65a6cbfcfafb7d78342a0af083a5e480",
+          "9d1137874eae3a7a2856e78cb59b436687dc6b2fd35753ff386ca04ef5ac26e9",
+          "abcb99defbf91a93238259085451a2cbb9c94ac94e4ffc5946adc079c8c3c60d",
+          "056a2aa80daab5b33afa473ce45c1a92099630afaa49b16f58e205fdf76bd815",
+          "1f0c51ac6fcb93022952386d5da33a3d1fb95e0ac3b647e5437f40f9dfaeb076",
+          "8b91d9fa836700cce1f862806d9e56cd16599634dd3c12e49f56bc0e3a9cb361",
+          "0aeecb13e1b47a4eb49830f862e099697a614462988aa83e6549f7037b147182",
+          "8ee169d2da8beeef9cb188b22f72522d1f4828f3ccc81a30e0cd4c65bb4c2215",
+          "3e5d6ef9788a371ee4553928c4cda58dfcb155aaaf0cfbf0778db6c2e4eaa8e7",
+          "9730a6edc263437d37a123caf01f3560b5d462b02b6460f225e9763d1890b890",
+          "0b9ba7269fa652895fe1879db0f5653ace49b859a383e797a58abee4f3aa5895",
+          "8b9fcde6660bb79d4521f1241510c0e76d2dad7f391099ca8b23c8878a2cd05b",
+          "3f39e37dfa8d4845b941ecae97c5b312405bacabf568936978f060fdb43d66f3"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "45310f65-9314-5b1c-8b32-d08da8f2be53:0:user",
+          "45310f65-9314-5b1c-8b32-d08da8f2be53:2:assistant",
+          "42cfefdf-d233-5abc-9279-4e36339d2f79:0:user",
+          "42cfefdf-d233-5abc-9279-4e36339d2f79:2:assistant",
+          "5395b975-13dd-5794-ad76-72579b6f1917:0:user",
+          "5395b975-13dd-5794-ad76-72579b6f1917:2:assistant",
+          "f57f86a0-b3fd-52b9-aac1-3be1689b98b2:0:user",
+          "f57f86a0-b3fd-52b9-aac1-3be1689b98b2:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "0093b14e0b60326e626f6ddb143b175069e557a1c81ca07776d799511c8436e0",
+          "d6742c5276144aca6ce4400b316a58394007c385720198b1e69dc4bfb4b0ce35",
+          "26c90d7142bf8c3b5708bf90b0ffd8e4b5860a888c83aff58cb7614b993d7eff",
+          "bceb502ac673fa187de3db4411f78b8c65a6cbfcfafb7d78342a0af083a5e480",
+          "9d1137874eae3a7a2856e78cb59b436687dc6b2fd35753ff386ca04ef5ac26e9",
+          "abcb99defbf91a93238259085451a2cbb9c94ac94e4ffc5946adc079c8c3c60d",
+          "056a2aa80daab5b33afa473ce45c1a92099630afaa49b16f58e205fdf76bd815",
+          "1f0c51ac6fcb93022952386d5da33a3d1fb95e0ac3b647e5437f40f9dfaeb076",
+          "8b91d9fa836700cce1f862806d9e56cd16599634dd3c12e49f56bc0e3a9cb361",
+          "0aeecb13e1b47a4eb49830f862e099697a614462988aa83e6549f7037b147182",
+          "8ee169d2da8beeef9cb188b22f72522d1f4828f3ccc81a30e0cd4c65bb4c2215",
+          "3e5d6ef9788a371ee4553928c4cda58dfcb155aaaf0cfbf0778db6c2e4eaa8e7",
+          "9730a6edc263437d37a123caf01f3560b5d462b02b6460f225e9763d1890b890",
+          "0b9ba7269fa652895fe1879db0f5653ace49b859a383e797a58abee4f3aa5895",
+          "8b9fcde6660bb79d4521f1241510c0e76d2dad7f391099ca8b23c8878a2cd05b",
+          "3f39e37dfa8d4845b941ecae97c5b312405bacabf568936978f060fdb43d66f3"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "45310f65-9314-5b1c-8b32-d08da8f2be53:0:user",
+          "45310f65-9314-5b1c-8b32-d08da8f2be53:2:assistant",
+          "42cfefdf-d233-5abc-9279-4e36339d2f79:0:user",
+          "42cfefdf-d233-5abc-9279-4e36339d2f79:2:assistant",
+          "5395b975-13dd-5794-ad76-72579b6f1917:0:user",
+          "5395b975-13dd-5794-ad76-72579b6f1917:2:assistant",
+          "f57f86a0-b3fd-52b9-aac1-3be1689b98b2:0:user",
+          "f57f86a0-b3fd-52b9-aac1-3be1689b98b2:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "f57f86a0-b3fd-52b9-aac1-3be1689b98b2:0:user",
+      "f57f86a0-b3fd-52b9-aac1-3be1689b98b2:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "45310f65-9314-5b1c-8b32-d08da8f2be53:0:user",
+          "45310f65-9314-5b1c-8b32-d08da8f2be53:2:assistant",
+          "42cfefdf-d233-5abc-9279-4e36339d2f79:0:user",
+          "42cfefdf-d233-5abc-9279-4e36339d2f79:2:assistant",
+          "5395b975-13dd-5794-ad76-72579b6f1917:0:user",
+          "5395b975-13dd-5794-ad76-72579b6f1917:2:assistant",
+          "f57f86a0-b3fd-52b9-aac1-3be1689b98b2:0:user",
+          "f57f86a0-b3fd-52b9-aac1-3be1689b98b2:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "45310f65-9314-5b1c-8b32-d08da8f2be53:0:user",
+          "45310f65-9314-5b1c-8b32-d08da8f2be53:2:assistant",
+          "42cfefdf-d233-5abc-9279-4e36339d2f79:0:user",
+          "42cfefdf-d233-5abc-9279-4e36339d2f79:2:assistant",
+          "5395b975-13dd-5794-ad76-72579b6f1917:0:user",
+          "5395b975-13dd-5794-ad76-72579b6f1917:2:assistant",
+          "f57f86a0-b3fd-52b9-aac1-3be1689b98b2:0:user",
+          "f57f86a0-b3fd-52b9-aac1-3be1689b98b2:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "45310f65-9314-5b1c-8b32-d08da8f2be53:0:user",
+          "45310f65-9314-5b1c-8b32-d08da8f2be53:2:assistant",
+          "42cfefdf-d233-5abc-9279-4e36339d2f79:0:user",
+          "42cfefdf-d233-5abc-9279-4e36339d2f79:2:assistant",
+          "5395b975-13dd-5794-ad76-72579b6f1917:0:user",
+          "5395b975-13dd-5794-ad76-72579b6f1917:2:assistant",
+          "f57f86a0-b3fd-52b9-aac1-3be1689b98b2:0:user",
+          "f57f86a0-b3fd-52b9-aac1-3be1689b98b2:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "f57f86a0-b3fd-52b9-aac1-3be1689b98b2:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nGPT-05 Gate2-R3 限定复核\n\n整体 REJECT P0-1、P0-2 PASS\n\n被测对象： damwate/AIEO\n固定 commit： 0ad84d4cddf3cbd5a47ac9b49d0a31dae758897d\n实读 charter blob： 70eb321ae2c8d351c964c01f58c3219bec7c8e7d\n\n本轮只复核三项 P0 和 A10b 补充，不重开 A-3 已通过结论。\n\n一、逐项裁定\n\n复核项\n\n\t\n\n结论\n\n\t\n\n核验依据\n\n\n\n\nP0-1 身份统一\n\n\t\n\nPASS\n\n\t\n\n§6、A-2、envelope 示例统一为 source=GPT-05、Bearer=ENGINE-04、target=AIEO-ORCHESTRATOR。全文没有发现 source 仍写 ENGINE-04 的冲突。\n\n\n\n\nP0-2 message_id 算法\n\n\t\n\nPASS\n\n\t\n\nrun_key 输入、SHA-256 散列折叠、a/b 两段取模、格式输出和重放稳定性均已明确。与 GPT-04 test_acceptance_leg.py 的 message_id() 实现一致；冻结 schema 也接受 MSG-8位-6位 格式。\n\n\n\n\nP0-3 message 409 五条件 AND\n\n\t\n\nREJECT\n\n\t\n\n五项 AND 已写入 A-3，但第④项“读回 envelope 规范化指纹与账本一致”尚未定义如何从 M1 实际返回结构重建原 envelope，现有结构不能直接按已冻结算法比对。\n\n\n\n\nA10b/A10c/A10d\n\n\t\n\nPASS\n\n\t\n\n已覆盖服务身份无 batch_id→403、带 batch_id→200、OWNER 无 batch_id→200 三种预期断言。\n\nP0-1：PASS\n\n核验到的身份口径：\n\nsource.agent_id = GPT-05：审计角色 reviewer。\n\nBearer 服务身份：ENGINE-04。\n\ntarget.agent_id = AIEO-ORCHESTRATOR。\n\npayload.reviewer_agent_id = GPT-05。\n\n§6、A-2、envelope 示例相互一致。source-principal 未绑定仍作为平台级遗留待办披露，没有把它伪装成已解决。\n\nP0-2：PASS\n\n冻结算法：\n\nPython\n运行\nh = int(hashlib.sha256(run_key.encode()).hexdigest(), 16)\na = h % 100_000_000\nb = (h // 100_000_000) % 1_000_000\nmessage_id = f\"MSG-{a:08d}-{b:06d}\"\n\n实读 GPT-04 test_acceptance_leg.py 的 message_id()，其计算步骤完全一致。现有 messages-create.schema.json 的正则为：\n\n纯文本\n^MSG-\\d{8}-\\d{6}$\n\n同 run_key 重放稳定，不同 run_key 撞键时不静默换键，转入 409 fail-closed 处理。此项可以冻结。\n\nP0-3：REJECT——存在一个实质性缺口\n\n五条件 AND 已经写清楚：\n\n409 响应明确指认本次 message_id；\n\n账本 canonical_sha 与本次请求匹配；\n\n按 correlation_id 读回 message；\n\n读回 envelope 规范化指纹与账本一致；\n\n读回 message 与报告 artifact 的 batch_id、audit_round_id、result 绑定一致。\n\n问题在第④项。\n\n我固定 SHA 实读了当前 M1：\n\napp/platform/messaging.py 的 message_view() 返回数据库行，字段包括 source_agent_id、target_agent_id，payload 被反序列化。\n\nmessages-create.schema.json 的请求 envelope 则使用嵌套的 source、target 对象，其中还包含 agent_type。\n\nGPT-04 _canon_sha() 的算法是对原对象剔除 created_at 后，按完整 JSON 对象计算 SHA-256。\n\n因此，M1 读回对象不是原始请求 envelope 的同构结构。目前 charter 没有规定从读回结果转换成 canonical 对象的字段映射，也没有规定缺失的 source.agent_type、target.agent_type 如何处理。\n\n不能直接把数据库读回 JSON 当作原 envelope 计算 SHA；这样会因为字段结构不同而产生不同指纹。也不能只凭 message_id 相同就判定内容一致。\n\n建议只补这一处，不扩大范围：\n\n明确 M1 readback → canonical envelope 的字段映射；\n\n明确 source/target 的 agent_type 如何恢复或验证；\n\n明确规范化对象与原始 envelope 使用同一 _canon_sha 算法；\n\n给出一个原 envelope 与 M1 readback 的正反对照样例，证明正确内容可匹配、任一关键字段被篡改则不匹配；\n\n保留五条件严格 AND，任一条件缺失或矛盾均 fail-closed。\n\n这不是要求改 M1 代码，而是要求把 GPT-05 腿端的读回规范化方法冻结清楚。\n\nA10b/A10c/A10d：PASS\n\n三个用例已经补齐：\n\nA10b：服务身份无 batch_id，预期 HTTP 403。\n\nA10c：服务身份带 batch_id，预期 HTTP 200 并返回分页 items。\n\nA10d：OWNER 不带 batch_id，预期 HTTP 200，保持人工会话原有行为。\n\n这里通过的是立项验收设计断言，不是声称平台权限测试已经执行通过。真正实施后仍须运行平台测试并取得结果。\n\n二、总体裁定与授权\n\n本轮整体 REJECT，不通过 Gate2-R3。\n\n原因只有一个：P0-3 的读回规范化算法尚未闭合。其余限定项通过，不要求重新修改身份定义、message_id 算法或 A10 用例。\n\n因此：\n\n设计冻结：暂不批准。\n\n开工授权：暂不授予。\n\n暂不授权新增 engineering_audit_leg.py、ENGINE-04 bootstrap/部署或实施 security.py 权限变更。\n\nDEC-010 高危操作红线继续有效。\n\n三、下轮极窄收尾清单\n\n建议下一轮命名为 G05-Gate2-R4，只核验以下事项：\n\nP0-3 唯一整改：冻结 M1 readback 到 canonical envelope 的映射及指纹计算，提供正反对照证据。\n\nA-1 残余风险保留：per-agent 批次授权表及迁移继续延期，明确接受“持有服务 token 的调用方可查询任意已知 batch_id”的风险；不得描述为跨批次完全隔离。\n\n文档授权链清理：§3、§8 仍有“须 Gate2-R2 裁定批准”的旧表述。下一轮通过后应更新为 Gate2-R3/R4 的实际授权依据，避免旧授权条件与新裁定冲突。\n\n实施后回归门槛：security.py 变更严格限于已批准例外；完成服务身份 403/200、OWNER 200、M1 测试及三腿 89 用例回归。实际执行结果单独留证。\n\nA-3 不重开，P0-1/P0-2 不重开，显式 CLI、同构复制、无状态事件等既定原则不重开。\n\n四、会话迁移建议\n\n这是本轮 Gate2 审查链的第4条用户消息。建议从 G05-Gate2-R4 开始迁移到新审查会话，交接内容只保留本轮结论、固定 SHA、P0-3 唯一阻断和收尾清单，避免继续在长会话中累积上下文。",
+      "text_sha256": "3f39e37dfa8d4845b941ecae97c5b312405bacabf568936978f060fdb43d66f3",
+      "size_bytes": 5875,
+      "assistant_uuid": "e8bbca67-f2c2-4d25-bc0a-40075b7b7bfb"
+    }
+  ]
+}

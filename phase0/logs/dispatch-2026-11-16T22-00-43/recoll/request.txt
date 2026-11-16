@@ -1,0 +1,5 @@
+[G05-Gate2-R3|限定复核] 被测=GPT05-ENGINEERING-AUDIT-LEG-CHARTER-DRAFT.md v0.6，damwate/AIEO main，commit 0ad84d4cddf3cbd5a47ac9b49d0a31dae758897d，按SHA实读。只复核三P0整改与A10b断言补充，A-3已通过不重开。
+
+【整改落实】P0-1=§6身份统一（source.agent_id="GPT-05"全文档唯一口径：§5/§6/A-2/账本一致；Bearer=ENGINE-04；target=AIEO-ORCHESTRATOR）。P0-2=message_id算法逐字冻结（输入run_key；h=sha256折叠；a=h%1e8；b=(h//1e8)%1e6；MSG-{a:08d}-{b:06d}；重放稳定；撞键409按A-3 fail-closed不换键；三腿实战注册成功=兼容证据）。P0-3=message 409五条件AND（响应指认+账本指纹+correlation_id读回+规范化一致+与报告绑定，任一缺失fail-closed）+A-3 A4c同步。A10b补A10c/A10d断言。
+
+【输出】逐项三态+依据；全过则给设计冻结+开工授权明确结论（DEC-089机制）+收尾清单（含跨批次授权表延期残余风险保留）。

@@ -1,0 +1,12 @@
+[2026-11-16T22:00:44.137Z] 会话锁已获取 pid=10944
+[2026-11-16T22:00:44.138Z] === GPT 派单（已有会话，消息 975 字节）===
+[2026-11-16T22:00:44.154Z] 复用已运行调试端口 9222
+[2026-11-16T22:00:44.200Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页
+[2026-11-16T22:00:44.201Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-16T22:00:48.027Z] 会话就绪: https://chatgpt.com/c/6afb6d51-ff1c-83e8-ab55-96eef3422c9d
+[2026-11-16T22:00:53.051Z] [dispatch] 基线尾部: {"role":"assistant","key":"5395b975-13dd-5794-ad76-72579b6f1917:2:assistant","assistantUuid":"2d9b6363-affb-42e9-bfdd-94462f400bb6"}
+[2026-11-16T22:00:53.953Z] [dispatch] 发送双验通过（polls=1，user_unit_key=fallback-turn-2:0:user，tail 后观察）
+[2026-11-16T22:00:54.178Z] 截图: sent-dispatch.png
+[2026-11-16T22:04:16.712Z] 会话锁已释放
+[2026-11-16T22:04:16.713Z] 致命错误: INBOUND_WINDOW_DISCONTINUOUS: 相邻虚拟列表窗口没有重叠 unit key，可能裁掉中间内容 details={"previous_unit_keys":["42cfefdf-d233-5abc-9279-4e36339d2f79:0:user","42cfefdf-d233-5abc-9279-4e36339d2f79:2:assistant"],"current_unit_keys":["45310f65-9314-5b1c-8b32-d08da8f2be53:0:user","45310f65-9314-5b1c-8b32-d08da8f2be53:2:assistant"]}
+[2026-11-16T22:04:16.714Z] [tab-hygiene] 发送已发生：保留现场不关页（禁重发语义依赖现场）；退出后由人工/补采链按 L-018 处置

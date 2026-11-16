@@ -1,0 +1,9 @@
+[2026-11-16T22:09:31.456Z] 会话锁已获取（review-leg 补采；仅采集不发送）
+[2026-11-16T22:09:31.607Z] [tab-hygiene] 会话页命中 1 个，取末位（最近创建）
+[2026-11-16T22:09:31.607Z] 页面就位: https://chatgpt.com/c/6afb6d51-ff1c-83e8-ab55-96eef3422c9d
+[2026-11-16T22:09:49.793Z] 静置门通过（16 units）；滚动到底+额外静置 30000ms
+[2026-11-16T22:10:29.869Z] 本轮 user 定位成功: f57f86a0-b3fd-52b9-aac1-3be1689b98b2:0:user（标记唯一+最后 user；发送双验报告键=fallback-turn-2:0:user 供对照）
+[2026-11-16T22:10:33.809Z] checks={"final_stop_button_not_visible":true,"tail_is_assistant":true,"dil_uuid_present":true,"uuid_stable":true,"stable_unit_read":true,"target_range_materialized":true,"not_prev_reply_sha":true}
+[2026-11-16T22:10:33.813Z] reply 已落盘: D:\AIEO\phase0\logs\dispatch-2026-11-16T22-00-43\recoll\reply.txt（5875 字节，SHA256=3f39e37dfa8d4845…）
+[2026-11-16T22:10:33.814Z] recoll COMPLETED
+[2026-11-16T22:10:33.940Z] 会话锁已释放（review-leg 补采）
