@@ -690,3 +690,20 @@
 - **R20 裁定（REJECT，问题13 续办）：** 审计工具三项要求（动态根/7~39 前缀/自动生成清单）均 PASS；新增指认 P0-1 未知项分类文字含"UUID"被字符串包含判断误排除（bad 可空→exit 0，fail-open）、P0-2 None 拼接 TypeError、P1-1 报告统计与替换非同一轮；R21 整改要求=严格格式识别排除+未知项必非零退出、删 None 拼接、单轮统一流程、明确分类规则、负向测试、目标仓库复跑落盘并核对一致。被测对象与 R15~R18 历史结论不变。
 - **审批边界：** 交接指示"重发 R20 简报后等待用户说明其发现的问题"——R20 回复已按归属校验取得并登记，R21 整改**暂不启动**，等用户说明问题后合并处置；证据登记 commit 按 L-020 自主推进授权执行，push 走 `toolkit/check-push.mjs`。
 - **关联：** L-018（第 1/2/3/4/6 条）、L-020、DEC-080（同条首例）、DEC-084（阈值，本例暴露"达阈值未评估"偏差）、问题13 行（steps.md 返工表）。
+
+### DEC-086 workspace-spec R21 整改+R22 复核 PASS——问题13 关闭，SHA 审计工具 fail-closed 闭环（2026-11-16，L-020 节点自主推进）
+
+- **R21 整改（commit 748343ec90f9ebf8ad808f57118478dae15e9b18）：** 按用户已在工作区完成的 sweep_sha.py fail-closed 重写验证落地——独立严格格式识别（UUID=扩展连字 run 整体命中 8-4-4-4-12；日期=8 位合法日历 strptime 校验；歧义 fail-closed）、未知项必退出码 2、删 None 拼接、单轮统一扫描/替换/统计/报告、四类分类规则、--selftest 负向测试；目标仓库复跑 exit=0（未知 0/例外 29/补全 0）、sha-audit.txt 与原始输出逐字节一致；另将 delivery/steps 两处缩写会话 UUID（6aface14-4f10-83e8-a5d0-e8a5de64c1e2 前 8 位）补全完整 36 位（fail-closed 口径截断 UUID 不可豁免）。R20 简报送达状态勘误：dispatch-2026-11-16T14-25-32 证实迁移简报已送达并采集（前述"三种方式未送达"为旧会话 11:16 历史）。
+- **R21 复核 REJECT（reply sha256=d2183722c143e94eb5f16e0894c4c72594481d82557658f306d888e1f904017a，现场 dispatch-2026-11-16T15-19-59）：** 派发采集 fail-closed（INBOUND_WINDOW_COMPLETENESS_UNPROVEN）→按 L-018 禁重发，派生 recoll_workspace_spec_r21.mjs 归属校验型补采七查全过；三项修复 PASS 但新指 P1-1 SHA256 截断片段未真正独立识别（恰与 git 唯一前缀重合仍可误补全）、P1-2 selftest 未真正执行子进程断言退出码、--check 仍写 sha-audit.txt；审查方建议不再大规模重写。历史 recoll_workspace_spec_r5.mjs（S1-R5 版）保留不动，本轮驱动另名 r21 归档（文件名冲突即发现即纠正）。
+- **R22 整改（commit c1694a76d6c65b7f6999e223f17b01b26a662191，三处小改）：** ①classify 新增 SHA256_CTX 行内前文识别（sha256 标记后截断十六进制一律计未知不补全，单测断言"上下文+git 唯一命中"仍不补全 PASS）②selftest 改临时 git 仓库+子进程真实执行断言退出码（注入 exit=2/移除 exit=0，PASS）③--check 零副作用（清单仅全量模式写入，实测前后清单字节不变）；复跑落盘 exit=0（未知 0/例外 29）+ST-05 Overall PASS。
+- **R22 复核 PASS（reply sha256=29543452c4ded008b3fda4209427cc6d037227e8cc73914cf8a8ab09ea6eb737，现场 dispatch-2026-11-16T15-32-13 一次成功采集 2591B）：** 四项整改全过、SHA256 上下文语义重点核对通过（唯一命中不补全、fail-closed 成立）；**问题13 关闭**，workspace-spec 任务全链闭环（返工表问题1~13 全关、ST-05 COMPLETED 态 Overall PASS）。非拒绝遗留：审计报告标题"R21 版"版本标注待后续统一（审查方明示不构成拒绝理由）。
+- **审批边界：** 各轮 commit 按 L-020 节点自主推进授权执行，push 走 toolkit/check-push.mjs（main+review/b-20261116-workspace-spec 双分支 ahead=0）。
+- **关联：** DEC-085、问题13（steps.md 返工表）、L-018（补采处置序）、L-020。
+
+### DEC-087 GPT-02 架构审核真实腿接入 Gate3 用户拍板——确认需求原文+批准开工（2026-11-16，用户拍板）
+
+- **拍板事实：** 用户 2026-11-16 于主会话 Gate3 问答确认选择"确认原文，批准开工"——charter `docs/phase1/GPT02-ARCH-REVIEW-LEG-CHARTER-DRAFT.md` v0.3（Gate1+Gate2 全闭环，DEC-067）§1 需求原文冻结为用户确认版，开工授权生效。
+- **需求原文（§1 冻结）：** "在 GPT-03 审查真实腿最小版（phase1/tools/review_leg.py，b-20261115-gpt03-review-leg，DEC-058~062）同框架基础上，接入 GPT-02 架构审核真实腿最小版：M1 状态机 ARCH_REVIEW 态任务自动触发一次真实 chatgpt.com 架构审核派单（复用 M2 派单链与 fail-closed 门禁），采集审核回复并经冻结契约校验后登记 M1，审核结论（通过/返工/阻塞）落档并按 M1 既有状态机推进（PASS→READY／REWORK→REWORK）；GPT-04/05、多轮返工重审自动化不在本期。异常按 §5 分类处置，人工随时可介入。"
+- **开工即办事项（charter A-2 预置）：** 契约草案 `docs/phase1/arch-review-report.schema.draft.json` 落位 `contracts/v1.0/arch-review-report.schema.json` 冻结（H2 纪律：新增文件，不修改既有冻结契约）；实施任务按 Basic 工作流登记任务包（basic/tasks/b-20261116-gpt02-arch-review-leg/）。
+- **授权边界：** 开工授权=实施+验收派单链；PASS≠合并授权（DEC-010）、不改冻结契约文本（H2）、M1-M4 代码零修改（charter §9）。
+- **关联：** DEC-067（Gate1+Gate2 闭环）、DEC-026（路线）、charter v0.3（77ff794）、GPT-03 先例（DEC-058~062）。
