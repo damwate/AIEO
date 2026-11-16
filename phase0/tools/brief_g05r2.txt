@@ -1,0 +1,5 @@
+[G05-R2|限定复核] 被测=GPT05-ENGINEERING-AUDIT-LEG-CHARTER-DRAFT.md v0.3，damwate/AIEO main，commit 85fd361b7efe642bc9812f0e23b42ac5c9ac9a54，按SHA实读。按你G05-R1指令：只复核 C1/D2 两项整改，不重开已 PASS 的 C2/C3/D1。
+
+【整改落实声明】C1=A-2 矩阵总结果映射规则（任一BLOCKED→总BLOCKED；无BLOCKED有ISSUE→ACCEPTED_WITH_RISKS须披露；全PASS或有理由豁免→ACCEPTED可选；矛盾fail-closed；applicable=false须findings理由单列豁免不计PASS不无条件剔除；七项规范按batches.engineering_standard_version固定清单逐项识别禁临场解释）。D2=§6 权威关系统一（报告artifact=结论内容唯一权威载体；message=登记关联检索不得作独立结论来源；batch_id/audit_round_id/result/SHA绑定不一致→腿级BLOCKED；全文消除"message+artifact共同构成结论权威"表述）。
+
+【输出】C1/D2 逐项 PASS/REJECT+依据；通过则给 Gate2 启动确认（按你已给出的 Gate2 范围六项执行）。

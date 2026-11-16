@@ -96,7 +96,7 @@
 
 | # | Method | 路径 | 操作范围 | 服务端白名单现状 | 幂等/读回 |
 |---|---|---|---|---|---|
-| 1 | GET | /api/v1/batches/{batch_id} | 批次需求/规范版本/状态 | 已允许 | 只读 |
+| 1 | GET | /api/v1/batches/{batch_id} | 批次需求/规范版本/状态 | **服务端现状勘误（实现期测试实测）**：原标注"已允许"有误——SERVICE_ALLOWED_ENDPOINTS 未含该路由，同属 §3 权限方案增补（+1 行，例外范围仍限 security.py 单模块约 7 行）；G05-DR 复核对账项 | 只读 |
 | 2 | GET | /api/v1/tasks?batch_id={batch_id} | **批次任务全景（全量分页遍历+total 核对，C2；服务身份强制带 batch_id——§3 规则②）** | **§3 权限方案对象**（现为 AUTH-0002 拒绝——本行许可依赖 Gate2 复核链最终通过+开工授权（DEC-089 机制）的 security.py 约 6 行变更） | 只读分页 |
 | 3 | GET | /api/v1/tasks/{task_id} | 单任务详情（全景核验） | 已允许 | 只读 |
 | 4 | GET | /api/v1/artifacts/{artifact_id} | 审计材料/留证读回 | 已允许 | 只读 |
