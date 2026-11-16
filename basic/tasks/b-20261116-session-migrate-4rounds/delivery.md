@@ -24,7 +24,7 @@
 
 ## 4. 测试结果
 
-- ST-05 检查器自检：开发期 `acceptance/st05-inprogress.txt`（①②PASS、③FAIL=仅 S1⑥ 验收证据未回填[开发期既定语义]、退出码 1）；**COMPLETED 态取证待 R2 复审通过后执行并落库**（检查器未改、开发期原始输出保留）。
+- ST-05 检查器自检：开发期 `acceptance/st05-inprogress.txt`（①②PASS、③FAIL=仅 S1⑥ 验收证据未回填[开发期既定语义]、退出码 1，原样保留）；**COMPLETED 态实测（R5 通过后实跑）=Phase COMPLETED、①～⑥ 全 PASS、Overall PASS、退出码 0**，完整原始输出 `acceptance/st05-completed.txt`（首轮 COMPLETED 输出含④FAIL[问题4 修复 commit 未绑定]如实保留 `st05-completed-run1-fail4.txt`，绑定后复跑通过；检查器未改、未伪造）。
 - 残留排查：8 种旧阈值模式全仓 sweep（residual-sweep.txt 原始版+residual-sweep-utf8.txt 规范版，LIVE=7 均为变更记录/证据语境）；独立迁移时机规定排查 33 文件（rotation-sweep.txt，无数值阈值冲突）。
 - 独立验收 R1（现场 dispatch-2026-11-16T13-18-39，reply 4733B，sha256=569d89bc34cc6a094a2053b93bc475a95c011f1c0fb020035d46a599fccecc9e）：**规则内容 ①L-018 PASS ②AGENTS.md PASS ③DEC-084 PASS ⑤零改动 PASS；整体 REJECT 仅 ④交付闭环未完成**（P1-04，见 steps.md 返工表问题1）→已按审查方六项清单收尾。
 - R2 限定复审（现场 dispatch-2026-11-16T13-29-15/recoll 归属校验型补采七查全过未重发，reply 3425B，sha256=aad362e870b747a6aafc131176dad28a47972eb3c7849c432b22864d2ef4c444，核验对象=3dce96c3e5044b1a3f87e41f478fde5894b0f26d）：返工问题1 **PASS**（原始 ST-05 未篡改、历史证据未删）、UTF-8 残留报告 PASS（逐行核验 LIVE=7，审查方提示总命中数差异不得称"完全一致"）、修改范围 PASS；REJECT 仅 ①S2⑥ 缺 R1 完整绑定（已补，见 steps.md S2⑥）+②delivery 最终状态未闭环（待 R3 通过后 COMPLETED 态 ST-05 取证回填，不提前置"完成"）。
@@ -32,14 +32,15 @@
 ## 5. Git commit
 
 - **被测 commit=1022694967e519de8ae2a03fd3e6b799988c09a6**（完整 40 位 SHA；父=push 时基线；用户 2026-11-16 "同意"明文批准后提交，`toolkit/check-push.mjs` 推送成功 ahead=0 behind=0）；R1 验收严格锁定该 SHA（审查方明示不用 HEAD）。
-- **交付闭环 commit=3dce96c3e5044b1a3f87e41f478fde5894b0f26d**（完整 40 位 SHA；用户 2026-11-16 "yes" 批准后提交并推送，R2 限定复审核验对象，ahead=1 behind=0 已确认）；R2 整改 commit=（R3 前回填完整 SHA）。
+- **交付闭环 commit=3dce96c3e5044b1a3f87e41f478fde5894b0f26d**（完整 40 位 SHA；用户 2026-11-16 "yes" 批准后提交并推送，R2 限定复审核验对象，ahead=1 behind=0 已确认）。
+- 后续证据 commit 链（逐级直接后继、均已推送，用户预批准）：f13e451192feb74535d8e6b371a618281a5a1fe3（R2 整改：S2⑥ 绑定+驱动引入）→f56f8931a796b39ecbcc1cb66950fd30f247e72d（R3 整改：范围如实登记，问题3）→9ac602b76624598e5d52a0689fabf6ee905209c7（R4 整改：问题3 绑定+问题4 口径区分）→2164b211894ffa375d2e1b600dcce1287d1b0e74（R4 现场归档+简报，纯证据）→最终取证 commit=本 delivery 所在提交（COMPLETED 态 ST-05 取证+最终回填；完整 SHA 于 R6 限定复核简报绑定核验）。
 
 ## 6. 未解决问题
 
 - R3 限定复审（现场 dispatch-2026-11-16T13-36-34，reply 1830B，sha256=055132f39fb786b9ee8ce19460a1b80c67f61e9575ec507722a24df4d33ad082，核验对象=f13e451192feb74535d8e6b371a618281a5a1fe3）：①S2⑥ 绑定 **PASS** ②delivery §4/§5 **PASS**，REJECT 仅③范围表述（简报漏记 recoll_migrate4r2.mjs）→已如实补录 §3 并登记返工表问题3，R4 待派。
 - R4 限定复审（现场 dispatch-2026-11-16T13-41-50，reply 1668B，sha256=925d497d2d86a79fda5cf94b64094a6b71b0bfc9f2baa1a5061db5742df96dff，核验对象=f56f8931a796b39ecbcc1cb66950fd30f247e72d）：③范围未扩大 **PASS**，REJECT 仅①问题3 修复 commit 占位未绑定（已绑定）+②"累计产物 vs 本次提交变更"混述（本节已更正，见 steps.md 问题4）→R5 待派。
-- R5 限定复审待派（绑定问题4 整改 commit 新完整 SHA）。
-- COMPLETED 态 ST-05 取证待 R4 通过后执行（要求 ①～⑥ 全 PASS、Overall PASS、退出码 0；审查方明示"以实际运行输出为证据，不预先填写 PASS"）。
+- R6 最终闭环复核待派（绑定最终取证 commit 完整 SHA）。
+- COMPLETED 态 ST-05 取证：R5 通过后已实际执行（输出见 acceptance/st05-completed.txt，回填 S3⑤/delivery §4）。
 - 会话迁移评估记录：R4 派单达 L-018 第 6 条 4 条 user 消息阈值，按例外①临近完成验收暂不迁移（理由见 steps.md S3⑥），后续每增 2 条重评。
 - 远程 main 已随批准推送（ahead=0）；后续轮次证据 commit 依用户预批准推进。
 

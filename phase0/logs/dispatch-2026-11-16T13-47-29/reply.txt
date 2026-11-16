@@ -1,0 +1,90 @@
+ChatGPT 说：
+R5 限定复审结论
+R5 核验项 PASS；整体闭环 BLOCKED
+
+核验基线及提交链：
+
+R4 基线：f56f8931a796b39ecbcc1cb66950fd30f247e72d
+
+任务包整改提交：9ac602b76624598e5d52a0689fabf6ee905209c7
+
+R4 纯证据提交：2164b211894ffa375d2e1b600dcce1287d1b0e74
+
+已确认两次比较均为直接后继，各自 ahead_by=1、behind_by=0。
+
+复核项
+
+	
+
+结论
+
+	
+
+核验结果
+
+
+
+
+① 问题3修复 commit 完整绑定
+
+	
+
+PASS
+
+	
+
+steps.md 返工表问题3已填写完整 SHA：f56f8931a796b39ecbcc1cb66950fd30f247e72d，不再是占位符。
+
+
+
+
+② 累计产物与单次提交变更区分
+
+	
+
+PASS
+
+	
+
+delivery.md §3 已明确 recoll_migrate4r2.mjs 是任务累计产物，由 f13e451192feb74535d8e6b371a618281a5a1fe3 引入；f56f893... 没有修改该脚本。
+
+
+
+
+③ 范围未扩大、规则文件零改动
+
+	
+
+PASS
+
+	
+
+f56f893... → 9ac602b... 仅修改任务包 delivery.md、steps.md；9ac602b... → 2164b211... 仅新增 R4 现场归档和复审简报。两次提交均未修改规则文件。
+
+② 的提交差异核对细节：
+
+9ac602b...：只修改任务包两份文档，符合本轮登记整改范围。
+
+2164b211...：新增 R4 现场归档文件及 session-migrate-4rounds-recheck-r4.txt，没有任务包或规则文件改动。
+
+recoll_migrate4r2.mjs 的引入归属和本次提交边界现在表达清楚，没有发现额外漏记。
+
+为什么整体仍是 BLOCKED
+
+R5 的三项复核均通过，可以进入 COMPLETED 态 ST-05 阶段；但我无法通过 GitHub 只读审阅替代你本地环境的实际命令执行。
+
+另外，delivery.md §6 目前仍写着“COMPLETED 态 ST-05 取证待 R4 通过后执行”，这个轮次指向已经过时。建议实际执行 ST-05 时一并改为“R5 通过后执行”，再回填真实输出。
+
+下一步只做 ST-05，不重跑历史验收：
+
+在本地实际执行 python -I basic/tool/check_taskpack.py basic/tasks/b-20261116-session-migrate-4rounds。
+
+保存完整原始输出，要求①～⑥全 PASS、Overall PASS、退出码 0。
+
+回填 steps.md 的 S2⑤、S3⑤及 delivery.md §4、§6，保留开发期原始 IN_PROGRESS 输出，不覆盖、不伪造。
+
+提交并推送后，再用新完整 SHA 做最终闭环复核。
+
+本次是第5条 user 消息，按已定规则，下次第6条 user 消息再进行会话迁移评估；目前无需提前迁移。
+
+最终判定：R5 三项 PASS；任务 COMPLETED 闭环 BLOCKED，待本地 ST-05 实际取证。

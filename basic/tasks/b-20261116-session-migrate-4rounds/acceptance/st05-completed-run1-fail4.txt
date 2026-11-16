@@ -1,0 +1,11 @@
+﻿Taskpack: b-20261116-session-migrate-4rounds
+Phase: COMPLETED
+[PASS] ① 需求记录
+[PASS] ② 步骤清单
+[PASS] ③ 步骤验收记录
+[FAIL] ④ REJECT返工记录
+       - 修复 commit 列缺 40 位 hex SHA
+       - REJECT 关联的「问题4」无有效返工记录行（问题编号+修复 commit 40 位 SHA）
+[PASS] ⑤ 返工次数
+[PASS] ⑥ 交付记录
+Overall: FAIL

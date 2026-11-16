@@ -1,0 +1,6 @@
+【限定复审R5·同会话续派】b-20261116-session-migrate-4rounds 闭环复核（R4 两处整改）。R4=现场 dispatch-2026-11-16T13-41-50（reply sha256=925d497d…dfff 完整值在该现场），③ PASS、REJECT 仅①修复commit占位+②累计产物/单次变更混述。
+基线 f56f8931…72d（R4 核验对象）后两个直接后继 commit（已推送）：①9ac602b76624598e5d52a0689fabf6ee905209c7=任务包两文件回填（问题3绑定+问题4登记+R4结论+§3归属补注）；②2164b211894ffa375d2e1b600dcce1287d1b0e74=纯证据（R4 现场+简报），无任务包/规则改动。
+读取 raw.githubusercontent.com/damwate/AIEO/2164b211894ffa375d2e1b600dcce1287d1b0e74/ 下 basic/tasks/b-20261116-session-migrate-4rounds/ 的 steps.md、delivery.md。
+复核项：①问题3修复commit已绑定完整 SHA（见 steps.md 问题3 行）；②delivery §3 已区分"累计产物（驱动由 f13e4511 引入）vs 单次提交变更"，口径与两 commit 实际变更一致、无漏记；③范围未扩大（规则文件零改动）。
+本派单=第 5 条 user 消息；PASS 后执行 COMPLETED 态 ST-05 取证回填。
+结论：PASS/REJECT（逐项）/BLOCKED。

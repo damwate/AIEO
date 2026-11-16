@@ -35,9 +35,9 @@
 
 | 字段 | 值 |
 |---|---|
-| 当前状态 | 验收中 |
-| 当前步骤 | S3 交付闭环（R1 REJECT 仅 P1-04 交付闭环→已收尾；R2 限定复审待派；轮次与结论一律以 steps.md 返工记录表为准） |
-| 最终结果 | （R2 复审通过并完成 COMPLETED 态 ST-05 取证后填写） |
+| 当前状态 | 完成 |
+| 当前步骤 | S3 交付闭环（R5 三项 PASS；COMPLETED 态 ST-05 已实跑取证；R6 最终闭环复核待派；轮次与结论一律以 steps.md 返工记录表为准） |
+| 最终结果 | S1 规则修改验收 PASS（R1 规则内容①L-018/②AGENTS.md/③DEC-084/⑤零改动全 PASS；登记/口径缺口经 R2/R3/R4 整改、R5 复核三项全 PASS）；阈值已生效=L-018 第 6 条"累计 4 条 user 消息主动评估迁移"（含口径/例外/重评规则），AGENTS.md 映射行同步，DEC-084 登记；COMPLETED 态 ST-05 ①～⑥ 全 PASS、Overall PASS、退出码 0（证据 `acceptance/st05-completed.txt`）；交付证据链绑定被测 commit 1022694967e519de8ae2a03fd3e6b799988c09a6 及后续证据 commit 完整 40 位 SHA（见 delivery §5）；R6 最终闭环复核待派 |
 
 ## Git 操作批准记录（DEC-071 硬约束，如实登记）
 
