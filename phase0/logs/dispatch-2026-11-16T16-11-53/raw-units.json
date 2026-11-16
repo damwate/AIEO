@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-16T16:14:26.999Z",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "be1a1da4-b5f1-42ce-9bf5-c84fa4785327",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "8f751ba5065228c10086a6a0af5480f91079be3bb0ba6178bd575a39f1afb35a",
+          "0f11dfaeafe5f79cfed1d3021f8e8f496bd69622475b734c84e5c8f5e39fdaca"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "8f751ba5065228c10086a6a0af5480f91079be3bb0ba6178bd575a39f1afb35a",
+          "0f11dfaeafe5f79cfed1d3021f8e8f496bd69622475b734c84e5c8f5e39fdaca"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-0:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n{\"result\":\"BLOCKED\",\"summary\":\"指定固定 commit=67f134be3f92228ff4edeb1054baa4117205ce83 无法从 GitHub 获取（API 返回 404：No commit found），因此尚不能对 design-a11.md 全文进行可靠架构审核。\",\"findings\":[\"固定 commit SHA 无法解析，目标文件内容及其完整性均未得到验证；不能以其他分支或 HEAD 内容替代指定版本。\"],\"required_boundaries\":[],\"failure_paths\":[],\"remaining_findings\":[\"请核实固定 commit SHA 是否正确，以及该提交是否已推送至 damwate/AIEO 且当前 GitHub 账户可访问。\"],\"unblocked\":false}\n\n}",
+      "text_sha256": "0f11dfaeafe5f79cfed1d3021f8e8f496bd69622475b734c84e5c8f5e39fdaca",
+      "size_bytes": 615,
+      "assistant_uuid": "be1a1da4-b5f1-42ce-9bf5-c84fa4785327"
+    }
+  ]
+}

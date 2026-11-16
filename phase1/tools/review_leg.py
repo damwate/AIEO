@@ -90,17 +90,25 @@ def utc_now_iso() -> str:
 class EngineM1Client:
     """engine 服务身份（Bearer 令牌）M1 客户端。
 
-    每次调用先对照附录 B 白名单：越界端点/越界事件值一律 fail-closed 拒发
+    每次调用先对照白名单：越界端点/越界事件值一律 fail-closed 拒发
     （允许访问接口≠允许任意状态推进；事件合法性最终由 M1 状态机裁定，
     本客户端只做调用层前置拦截）。Bearer 认证非 cookie，无 CSRF。
+
+    白名单参数化（GPT-02 腿复用，b-20261116-gpt02-arch-review-leg S1 裁定）：
+    默认值=GPT-03 附录 B 常量（现行为零变化）；arch_review_leg 传入自己的
+    charter A-1 表。白名单本类不做跨腿共享常量——各腿 charter 是唯一权威源。
     """
 
-    def __init__(self, base_url: str, token: str) -> None:
+    def __init__(self, base_url: str, token: str, whitelist=None,
+                 event_whitelist=None, event_forbidden=None) -> None:
         self.base = base_url.rstrip("/")
         self.token = token
+        self._whitelist = whitelist or ENGINE_WHITELIST
+        self._event_whitelist = event_whitelist or ENGINE_EVENT_WHITELIST
+        self._event_forbidden = event_forbidden or ENGINE_EVENT_FORBIDDEN
         self._tmpl_rx = {
             (m, re.compile("^" + re.sub(r"\{[^}]+\}", r"[^/]+", p) + "$"))
-            for m, p in ENGINE_WHITELIST
+            for m, p in self._whitelist
         }
 
     def check_whitelisted(self, method: str, path: str) -> None:
@@ -109,11 +117,10 @@ class EngineM1Client:
                 return
         raise OrchestrationError(-1, f"engine whitelist violation: {method} {path} not in charter appendix B")
 
-    @staticmethod
-    def check_event(event: str) -> None:
-        if event in ENGINE_EVENT_FORBIDDEN:
+    def check_event(self, event: str) -> None:
+        if event in self._event_forbidden:
             raise OrchestrationError(-1, f"engine forbidden event value: {event} (task-level only by OWNER)")
-        if event not in ENGINE_EVENT_WHITELIST:
+        if event not in self._event_whitelist:
             raise OrchestrationError(-1, f"engine event outside whitelist: {event}")
 
     def _req(self, method: str, path: str, body: dict | None = None,

@@ -410,11 +410,12 @@ __BODY__
                 client.check_whitelisted(m, p)
             self.assertIn("whitelist", str(cm.exception))
         # 事件值：GIT_VALIDATE/PASS/REWORK 允许；BLOCKED/CANCEL 调用层禁止
+        # （白名单参数化后 check_event 为实例方法，默认参数=GPT-03 附录 B 常量，语义不变）
         for ev in ("GIT_VALIDATE", "PASS", "REWORK"):
-            rl.EngineM1Client.check_event(ev)
+            client.check_event(ev)
         for ev in ("BLOCKED", "CANCEL", "START", "DEVELOPMENT_COMPLETED"):
             with self.assertRaises(OrchestrationError) as cm:
-                rl.EngineM1Client.check_event(ev)
+                client.check_event(ev)
             self.assertIn("forbidden", str(cm.exception))
 
     def test_02_idempotent_ids_deterministic(self):

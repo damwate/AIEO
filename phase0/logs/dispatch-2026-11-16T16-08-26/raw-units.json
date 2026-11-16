@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-16T16:11:05.949Z",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "67985ade-5277-48a4-bc02-02fc1242cbb5",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "acb783f82a755f13bd4ad1cb036ebea642c9c5d3665de87fa770de6353958feb",
+          "9c095f5c8092e2dc6a825ecbca9c75a6d9cd7101141b89bfcb57ea979d109343"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "acb783f82a755f13bd4ad1cb036ebea642c9c5d3665de87fa770de6353958feb",
+          "9c095f5c8092e2dc6a825ecbca9c75a6d9cd7101141b89bfcb57ea979d109343"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-0:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n{\n\"result\": \"BLOCKED\",\n\"summary\": \"指定固定 commit 79aac49e3b868ab1ce28468f83e3b2186a4d96eb 无法在 GitHub 仓库解析，无法取得 design-a11.md 原文，因此不能进行有效架构审核。\",\n\"findings\": [\n{\n\"id\": \"P0-01\",\n\"severity\": \"BLOCKER\",\n\"description\": \"GitHub 按指定完整 SHA 获取文件返回 404，进一步按 commit SHA 获取元数据返回 422：No commit found for SHA。无法确认审核对象及文件内容。\"\n}\n],\n\"required_boundaries\": [],\n\"failure_paths\": [\n\"固定 SHA 不存在或当前仓库不可访问时，必须停止审核，不得退回 main、HEAD 或其他提交读取替代内容。\",\n\"取得正确 SHA 并确认 design-a11.md 存在后，再执行边界、依赖、并发及失败路径审查。\"\n],\n\"remaining_findings\": [\n\"design-a11.md 全文尚未取得。\",\n\"任务书、方案、验收标准均未完成核验。\",\n\"不能判断是否存在架构缺陷。\"\n],\n\"unblocked\": false\n}",
+      "text_sha256": "9c095f5c8092e2dc6a825ecbca9c75a6d9cd7101141b89bfcb57ea979d109343",
+      "size_bytes": 958,
+      "assistant_uuid": "67985ade-5277-48a4-bc02-02fc1242cbb5"
+    }
+  ]
+}

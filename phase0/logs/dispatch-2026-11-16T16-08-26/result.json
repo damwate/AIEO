@@ -1,0 +1,181 @@
+{
+  "at": "2026-11-16T16:11:05.949Z",
+  "message_bytes": 683,
+  "reply": "ChatGPT 说：\n\n{\n\"result\": \"BLOCKED\",\n\"summary\": \"指定固定 commit 79aac49e3b868ab1ce28468f83e3b2186a4d96eb 无法在 GitHub 仓库解析，无法取得 design-a11.md 原文，因此不能进行有效架构审核。\",\n\"findings\": [\n{\n\"id\": \"P0-01\",\n\"severity\": \"BLOCKER\",\n\"description\": \"GitHub 按指定完整 SHA 获取文件返回 404，进一步按 commit SHA 获取元数据返回 422：No commit found for SHA。无法确认审核对象及文件内容。\"\n}\n],\n\"required_boundaries\": [],\n\"failure_paths\": [\n\"固定 SHA 不存在或当前仓库不可访问时，必须停止审核，不得退回 main、HEAD 或其他提交读取替代内容。\",\n\"取得正确 SHA 并确认 design-a11.md 存在后，再执行边界、依赖、并发及失败路径审查。\"\n],\n\"remaining_findings\": [\n\"design-a11.md 全文尚未取得。\",\n\"任务书、方案、验收标准均未完成核验。\",\n\"不能判断是否存在架构缺陷。\"\n],\n\"unblocked\": false\n}",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "67985ade-5277-48a4-bc02-02fc1242cbb5",
+  "stability": {
+    "stable": true,
+    "interval_ms": 3283,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-16T16:11:01.937Z",
+      "read_finished_at": "2026-11-16T16:11:02.206Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "9c095f5c8092e2dc6a825ecbca9c75a6d9cd7101141b89bfcb57ea979d109343",
+          "size_bytes": 958
+        }
+      ],
+      "assistant_uuid": "67985ade-5277-48a4-bc02-02fc1242cbb5",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-16T16:11:05.219Z",
+      "read_finished_at": "2026-11-16T16:11:05.755Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "9c095f5c8092e2dc6a825ecbca9c75a6d9cd7101141b89bfcb57ea979d109343",
+          "size_bytes": 958
+        }
+      ],
+      "assistant_uuid": "67985ade-5277-48a4-bc02-02fc1242cbb5",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "acb783f82a755f13bd4ad1cb036ebea642c9c5d3665de87fa770de6353958feb",
+          "9c095f5c8092e2dc6a825ecbca9c75a6d9cd7101141b89bfcb57ea979d109343"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "acb783f82a755f13bd4ad1cb036ebea642c9c5d3665de87fa770de6353958feb",
+          "9c095f5c8092e2dc6a825ecbca9c75a6d9cd7101141b89bfcb57ea979d109343"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "9c095f5c8092e2dc6a825ecbca9c75a6d9cd7101141b89bfcb57ea979d109343",
+  "size_bytes": 958,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-16T16-08-26\\reply.txt",
+  "reply_readback_sha256": "9c095f5c8092e2dc6a825ecbca9c75a6d9cd7101141b89bfcb57ea979d109343",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-16T16-08-26\\raw-units.json",
+  "raw_units_sha256": "30b020a353ce141d89b83877fbf9a8aae8eae31d2bd7f2bd952a3969022424c8",
+  "raw_units_size_bytes": 3648,
+  "raw_units_readback_sha256": "30b020a353ce141d89b83877fbf9a8aae8eae31d2bd7f2bd952a3969022424c8",
+  "session_id": "6afb2ab2-f9f4-83ee-bece-3eac5b7105f8",
+  "conversation_url": "https://chatgpt.com/c/6afb2ab2-f9f4-83ee-bece-3eac5b7105f8",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}

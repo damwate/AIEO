@@ -1,0 +1,17 @@
+[2026-11-16T16:11:54.688Z] 会话锁已获取 pid=27192
+[2026-11-16T16:11:54.690Z] === GPT 派单（新建会话，消息 683 字节）===
+[2026-11-16T16:11:58.620Z] Chrome 已启动 pid=19036
+[2026-11-16T16:12:00.033Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页
+[2026-11-16T16:12:00.034Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-16T16:12:41.579Z] 新聊天页面就绪
+[2026-11-16T16:12:46.607Z] [dispatch] 基线尾部: null
+[2026-11-16T16:12:50.413Z] [dispatch] 发送双验通过（polls=2，user_unit_key=fallback-turn-0:0:user，tail 后观察）
+[2026-11-16T16:12:51.502Z] 截图: sent-dispatch.png
+[2026-11-16T16:14:26.820Z] [dispatch] COMPLETED，1 个 assistant unit，回复 615 UTF-8 字节，区间窗口 2 个
+[2026-11-16T16:14:26.995Z] 截图: reply-dispatch.png
+[2026-11-16T16:14:26.998Z] 审查会话已保存: https://chatgpt.com/c/6afb2b80-50b4-83ec-8ec4-53be9d05b779
+[2026-11-16T16:14:27.010Z] JSON/Schema/绑定校验: NOT_REQUESTED
+[2026-11-16T16:14:27.011Z] M1 本地登记: NOT_REQUESTED（三 ID 均未提供，通用非登记派单）
+[2026-11-16T16:14:28.475Z] [tab-hygiene] 成功退出：浏览器连接已关+profile Chrome 已杀（含本次自建页 0 页）；tab 清零
+[2026-11-16T16:14:28.476Z] === 派单完成，artifact_sha256=0f11dfaeafe5f79cfed1d3021f8e8f496bd69622475b734c84e5c8f5e39fdaca size_bytes=615 ===
+[2026-11-16T16:14:28.594Z] 会话锁已释放

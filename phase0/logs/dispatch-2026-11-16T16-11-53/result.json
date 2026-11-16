@@ -1,0 +1,181 @@
+{
+  "at": "2026-11-16T16:14:26.999Z",
+  "message_bytes": 683,
+  "reply": "ChatGPT 说：\n\n{\"result\":\"BLOCKED\",\"summary\":\"指定固定 commit=67f134be3f92228ff4edeb1054baa4117205ce83 无法从 GitHub 获取（API 返回 404：No commit found），因此尚不能对 design-a11.md 全文进行可靠架构审核。\",\"findings\":[\"固定 commit SHA 无法解析，目标文件内容及其完整性均未得到验证；不能以其他分支或 HEAD 内容替代指定版本。\"],\"required_boundaries\":[],\"failure_paths\":[],\"remaining_findings\":[\"请核实固定 commit SHA 是否正确，以及该提交是否已推送至 damwate/AIEO 且当前 GitHub 账户可访问。\"],\"unblocked\":false}\n\n}",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "be1a1da4-b5f1-42ce-9bf5-c84fa4785327",
+  "stability": {
+    "stable": true,
+    "interval_ms": 3545,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-16T16:14:22.725Z",
+      "read_finished_at": "2026-11-16T16:14:23.261Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "0f11dfaeafe5f79cfed1d3021f8e8f496bd69622475b734c84e5c8f5e39fdaca",
+          "size_bytes": 615
+        }
+      ],
+      "assistant_uuid": "be1a1da4-b5f1-42ce-9bf5-c84fa4785327",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-16T16:14:26.269Z",
+      "read_finished_at": "2026-11-16T16:14:26.810Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "0f11dfaeafe5f79cfed1d3021f8e8f496bd69622475b734c84e5c8f5e39fdaca",
+          "size_bytes": 615
+        }
+      ],
+      "assistant_uuid": "be1a1da4-b5f1-42ce-9bf5-c84fa4785327",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "8f751ba5065228c10086a6a0af5480f91079be3bb0ba6178bd575a39f1afb35a",
+          "0f11dfaeafe5f79cfed1d3021f8e8f496bd69622475b734c84e5c8f5e39fdaca"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "8f751ba5065228c10086a6a0af5480f91079be3bb0ba6178bd575a39f1afb35a",
+          "0f11dfaeafe5f79cfed1d3021f8e8f496bd69622475b734c84e5c8f5e39fdaca"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "0f11dfaeafe5f79cfed1d3021f8e8f496bd69622475b734c84e5c8f5e39fdaca",
+  "size_bytes": 615,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-16T16-11-53\\reply.txt",
+  "reply_readback_sha256": "0f11dfaeafe5f79cfed1d3021f8e8f496bd69622475b734c84e5c8f5e39fdaca",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-16T16-11-53\\raw-units.json",
+  "raw_units_sha256": "c5e664f9a63727c23f82124ed6b741ddc2a9cb2e1e5faa72520722e6ba3c297e",
+  "raw_units_size_bytes": 3268,
+  "raw_units_readback_sha256": "c5e664f9a63727c23f82124ed6b741ddc2a9cb2e1e5faa72520722e6ba3c297e",
+  "session_id": "6afb2b80-50b4-83ec-8ec4-53be9d05b779",
+  "conversation_url": "https://chatgpt.com/c/6afb2b80-50b4-83ec-8ec4-53be9d05b779",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}

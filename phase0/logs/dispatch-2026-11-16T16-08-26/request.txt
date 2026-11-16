@@ -1,0 +1,5 @@
+【架构审核请求·GPT-02】[GPT02-R1|a11]
+任务T-P1-015（arl test task a11）。范围：['design-a11.md']
+无未完成依赖。
+读仓库 github.com/damwate/AIEO（基线main=d1045b6ebfb4e8c17c7e551e13dab55986c207a4）固定commit=79aac49e3b868ab1ce28468f83e3b2186a4d96eb 文件：design-a11.md（任务书/方案/验收标准全文在材料，逐项审：边界/依赖/并发/失败路径）。
+回复仅一个```json对象：{"result":"PASS|REWORK|BLOCKED","summary":"<一句话>","findings":[],"required_boundaries":[],"failure_paths":[],"remaining_findings":[],"unblocked":true}；result：PASS=架构通过／REWORK=须返工／BLOCKED=架构阻塞须人工决策。
