@@ -33,3 +33,11 @@
 - ④执行结果：待验收
 - ⑤测试结果：未测（未到期）
 - ⑥验收证据引用：待派单（验收后回填 dispatch 目录+reply SHA256）
+
+## 返工记录表（首次 REJECT 时建表；按"同一问题"计数）
+
+| 问题编号 | 轮次来源 | 问题描述 | 整改内容 | 修复 commit | 验证 |
+|---|---|---|---|---|---|
+| 问题1 | S1-R1 REJECT P1-01 | 第六节 diff 回传只写 numstat，缺完整 Diff 证据要求 | 第六节改三口径：被测对象=完整 SHA／完整 Diff 证据=可核验完整改动（diff 全文或 GitHub compare/GitPointer）／测试结果=断言+退出码；numstat 降为统计口径并明示"不替代完整 Diff" | 9efb14bbcc74d397e15558dc720706fc054ac627 | 整改内容已入 S1-R2 被测 diff，待 R2 限定复验确认 |
+| 问题2 | S1-R1 REJECT P1-02 | commit 前批准状态与实际提交矛盾（requirement/task-brief/steps/DEC-068 四处不一致） | task-brief 增"Git 操作批准记录"表如实登记推定授权与时间线；steps③ 回填首轮被测 SHA；DEC-068 状态行修正；DEC-069 登记；用户追认事项明列（不伪造批准） | 9efb14bbcc74d397e15558dc720706fc054ac627 | 待 R2 复验确认四处状态一致；用户追认待办 |
+| 问题3 | S1-R1 REJECT P2-01 | 第四节把 Skills/MCP 一律归主机级不准确 | 第四节改"项目配置与主机运行环境分离"：项目级可移植无秘密配置可入目标仓库版本控制；凭据/账号 profile/机器专属配置禁入库（C6）；作用域遵循所用 IDE 规则 | 9efb14bbcc74d397e15558dc720706fc054ac627 | 待 R2 限定复验确认 |
