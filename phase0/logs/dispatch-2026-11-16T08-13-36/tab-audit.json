@@ -1,0 +1,25 @@
+{
+  "at": "2026-11-16T08:14:43.331Z",
+  "outcome": "failure_created_pages_closed",
+  "before": [
+    {
+      "id": "A4E76732E0757E00A7E65BA26C620DE3",
+      "url": "https://chatgpt.com/"
+    }
+  ],
+  "exit_before_disposal": [
+    {
+      "id": "A4E76732E0757E00A7E65BA26C620DE3",
+      "url": "https://chatgpt.com/"
+    }
+  ],
+  "exit_after_disposal": [
+    {
+      "id": "A4E76732E0757E00A7E65BA26C620DE3",
+      "url": "https://chatgpt.com/"
+    }
+  ],
+  "created_pages": 0,
+  "disposal": "发送前失败：仅关闭本次自建页；既有页零触碰（exit_before/exit_after 对照=值守页零关闭证明）",
+  "error": "page.goto: Timeout 60000ms exceeded.\nCall log:\n\u001b[2m  - navigating to \"https://chatgpt.com/\", waiting until \"domcontentloaded\"\u001b[22m\n"
+}

@@ -1,0 +1,6 @@
+【S1-R4 限定复核】b-20261116-workspace-spec
+仓库 damwate/AIEO 分支 review/b-20261116-workspace-spec（已更新）
+被测对象沿 R2 不变=9efb14bbcc74d397e15558dc720706fc054ac627；其后 commit 均为证据登记（ST-01④）
+P1-03 整改：steps 问题2 返工行已补 R3 最终处置（不予追认、流程偏差登记、同根因计1次、历史提交保留不重写、已关闭），原 R2 结论原文保留标注为历史状态；DEC-072 登记 R3 结论与发送异常处置；environment-inventory §4 增补慢链路判定经验（未改 WORKFLOW 九项规范）
+过程如实登记：R3 派单两次发送双验 UNCERTAIN（同刻代理链路 6.65s，直连000），只读诊断确认未送达→清自有草稿→点击发送兜底→单条送达 fallback-turn-2:0:user（无重复），回复经 recoll 归属校验补采七查全过
+请仅核 P1-03 是否关闭+记录是否自洽，结论 PASS/REJECT

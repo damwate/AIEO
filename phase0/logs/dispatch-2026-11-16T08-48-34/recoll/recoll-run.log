@@ -1,0 +1,24 @@
+[2026-11-16T08:52:56.191Z] 会话锁已获取（review-leg 补采；仅采集不发送）
+[2026-11-16T08:52:56.319Z] [tab-hygiene] 会话页命中 1 个，取末位（最近创建）
+[2026-11-16T08:52:56.320Z] 页面就位: https://chatgpt.com/c/6afabbd3-ddec-83e8-afca-8a61cf91694c
+[2026-11-16T08:53:04.338Z] 静置门通过（2 units）；滚动到底+额外静置 30000ms
+[2026-11-16T08:53:44.402Z] 本轮 user 定位成功: fallback-turn-3:0:user（标记唯一+最后 user；发送双验报告键=fallback-turn-3:0:user 供对照）
+[2026-11-16T08:53:45.251Z] recoll FAILED: INBOUND_WINDOW_COMPLETENESS_UNPROVEN: BLOCKED: 滚动中实际观察到渲染 unit 集合变化，且缺少独立逻辑序列，不能排除持续遗漏中间 unit
+[2026-11-16T08:53:45.665Z] 会话锁已释放（review-leg 补采）
+[2026-11-16T08:53:54.672Z] 会话锁已获取（review-leg 补采；仅采集不发送）
+[2026-11-16T08:53:54.819Z] [tab-hygiene] 会话页命中 1 个，取末位（最近创建）
+[2026-11-16T08:53:54.819Z] 页面就位: https://chatgpt.com/c/6afabbd3-ddec-83e8-afca-8a61cf91694c
+[2026-11-16T08:54:02.835Z] 静置门通过（2 units）；滚动到底+额外静置 30000ms
+[2026-11-16T08:54:42.884Z] 本轮 user 定位成功: fallback-turn-3:0:user（标记唯一+最后 user；发送双验报告键=fallback-turn-3:0:user 供对照）
+[2026-11-16T08:54:43.710Z] recoll FAILED: INBOUND_WINDOW_COMPLETENESS_UNPROVEN: BLOCKED: 滚动中实际观察到渲染 unit 集合变化，且缺少独立逻辑序列，不能排除持续遗漏中间 unit
+[2026-11-16T08:54:44.104Z] 会话锁已释放（review-leg 补采）
+[2026-11-16T08:54:52.602Z] 会话锁已获取（review-leg 补采；仅采集不发送）
+[2026-11-16T08:54:52.734Z] [tab-hygiene] 会话页命中 1 个，取末位（最近创建）
+[2026-11-16T08:54:52.735Z] 页面就位: https://chatgpt.com/c/6afabbd3-ddec-83e8-afca-8a61cf91694c
+[2026-11-16T08:54:52.775Z] 视口已拉高 1920x20000（前置全量物化）
+[2026-11-16T08:55:00.796Z] 静置门通过（8 units）；滚动到底+额外静置 30000ms
+[2026-11-16T08:55:40.843Z] 本轮 user 定位成功: fallback-turn-3:0:user（标记唯一+最后 user；发送双验报告键=fallback-turn-3:0:user 供对照）
+[2026-11-16T08:55:43.907Z] checks={"final_stop_button_not_visible":true,"tail_is_assistant":true,"dil_uuid_present":true,"uuid_stable":true,"stable_unit_read":true,"target_range_materialized":true,"not_prev_reply_sha":true}
+[2026-11-16T08:55:43.919Z] reply 已落盘: D:\AIEO\phase0\logs\dispatch-2026-11-16T08-48-34\recoll\reply.txt（2520 字节，SHA256=5f2da9d73f809d7b…）
+[2026-11-16T08:55:43.921Z] recoll COMPLETED
+[2026-11-16T08:55:44.372Z] 会话锁已释放（review-leg 补采）

@@ -1,0 +1,14 @@
+[
+  {
+    "key": "fallback-turn-1:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【S1-R2 限定复验】b-20261116-workspace-spec\n仓库 damwate/AIEO 分支 review/b-20261116-works"
+  },
+  {
+    "key": "fallback-turn-1:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nS1-R2 限定复验\n复验中：发现需核实的提交范围问题\n\n本轮只复核 R1 的三个问题是否关闭，以及整改有没有引入回归，不重新审查九节规范"
+  }
+]

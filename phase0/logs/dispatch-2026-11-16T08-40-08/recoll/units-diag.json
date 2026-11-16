@@ -1,0 +1,14 @@
+[
+  {
+    "key": "fallback-turn-2:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【S1-R3 收尾确认】b-20261116-workspace-spec\n仓库 damwate/AIEO 分支 review/b-20261116-works"
+  },
+  {
+    "key": "fallback-turn-2:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nS1-R3 收尾确认\nREJECT\n\n问题4（ST-05 证据落库）已成立；问题2（不追认及流程偏差收口）实质方向正确，但仓库记录尚未完全"
+  }
+]

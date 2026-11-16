@@ -1,0 +1,10 @@
+[2026-11-16T08:40:08.497Z] 会话锁已获取 pid=26208
+[2026-11-16T08:40:08.499Z] === GPT 派单（已有会话，消息 1001 字节）===
+[2026-11-16T08:40:08.519Z] 复用已运行调试端口 9222
+[2026-11-16T08:40:08.739Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页
+[2026-11-16T08:40:08.739Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-16T08:40:33.215Z] 会话就绪: https://chatgpt.com/c/6afabbd3-ddec-83e8-afca-8a61cf91694c
+[2026-11-16T08:40:38.233Z] [dispatch] 基线尾部: {"role":"assistant","key":"fallback-turn-1:2:assistant","assistantUuid":"4b81bb24-be4b-4119-b588-e00c8ecbaca4"}
+[2026-11-16T08:41:09.349Z] 会话锁已释放
+[2026-11-16T08:41:09.350Z] 致命错误: 发送双验未通过（tailOk=false stopOkAfterTail=false userUnitKey=missing），UNCERTAIN，不重发
+[2026-11-16T08:41:09.351Z] [tab-hygiene] 发送已发生：保留现场不关页（禁重发语义依赖现场）；退出后由人工/补采链按 L-018 处置

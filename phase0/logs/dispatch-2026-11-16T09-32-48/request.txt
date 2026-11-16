@@ -1,0 +1,12 @@
+【验收请求·会话迁移】b-20261116-workspace-spec S3 交付复核
+背景：WORKFLOW v0.3 增补④《多项目、多 IDE 工作区管理规范》已成文；S1 内容验收 R1-R6 旧会话已 PASS（旧会话触上限，本会话自包含）。现处 S3 交付记录验收，需本轮限定复核。
+仓库 github.com/damwate/AIEO 分支 review/b-20261116-workspace-spec
+基线 d563a2a5fa2e518a6da7f041d36218b89a2ad12a
+被测（定型）9efb14bbcc74d397e15558dc720706fc054ac627；其后均为证据/交付登记 commit（不属被测 diff）
+R10 四组整改 commit=c8eb7087d47bd06524161edbee911ed060c9c61f：
+①§2/§3=DEC-068～074、DEC-076～079（无 075，未补虚构）
+②§4 拆 S1(R1~R6)/S3(R7~R10) 两链，逐轮现场+reply sha（R9 缺 sha 如实标注）
+③§5 全链完整 SHA+父提交双列表（基线→ab6ad23）
+④§7 澄清阶段归属与计数口径
+材料：basic/tasks/b-20261116-workspace-spec/（返工表问题1~9、delivery、acceptance）+DEC-068~079
+请核四组是否关闭、有无其他不一致（一次列全）；结论 PASS/REJECT

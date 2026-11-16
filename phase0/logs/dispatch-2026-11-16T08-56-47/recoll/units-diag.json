@@ -1,0 +1,62 @@
+[
+  {
+    "key": "fallback-turn-0:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【验收请求】b-20261116-workspace-spec S1（AIEO 文档任务）\n仓库 github.com/damwate/AIEO 分支 revi"
+  },
+  {
+    "key": "fallback-turn-0:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nb-20261116-workspace-spec S1 独立验收\n暂定 REJECT\n\n当前发现：文档规范主体基本符合要求，但存在一项明"
+  },
+  {
+    "key": "fallback-turn-1:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【S1-R2 限定复验】b-20261116-workspace-spec\n仓库 damwate/AIEO 分支 review/b-20261116-works"
+  },
+  {
+    "key": "fallback-turn-1:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nS1-R2 限定复验\n复验中：发现需核实的提交范围问题\n\n本轮只复核 R1 的三个问题是否关闭，以及整改有没有引入回归，不重新审查九节规范"
+  },
+  {
+    "key": "fallback-turn-2:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【S1-R3 收尾确认】b-20261116-workspace-spec\n仓库 damwate/AIEO 分支 review/b-20261116-works"
+  },
+  {
+    "key": "fallback-turn-2:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nS1-R3 收尾确认\nREJECT\n\n问题4（ST-05 证据落库）已成立；问题2（不追认及流程偏差收口）实质方向正确，但仓库记录尚未完全"
+  },
+  {
+    "key": "fallback-turn-3:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【S1-R4 限定复核】b-20261116-workspace-spec\n仓库 damwate/AIEO 分支 review/b-20261116-works"
+  },
+  {
+    "key": "fallback-turn-3:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nS1-R4 限定复核\nREJECT\n\nP1-03 的实质整改已关闭，但当前任务记录仍有一处状态未同步，因此整体记录尚未完全自洽。\n\n1. "
+  },
+  {
+    "key": "fallback-turn-4:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【S1-R5 收尾确认】b-20261116-workspace-spec\n仓库 damwate/AIEO 分支 review/b-20261116-works"
+  },
+  {
+    "key": "fallback-turn-4:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nS1-R5 收尾确认\n\nREJECT P2-03 尚未完全关闭，只有一处最小必改项。\n\n被测对象仍按要求固定为：\n\n9efb14bbcc7"
+  }
+]

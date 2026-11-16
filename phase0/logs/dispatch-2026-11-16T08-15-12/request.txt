@@ -1,0 +1,9 @@
+【验收请求】b-20261116-workspace-spec S1（AIEO 文档任务）
+仓库 github.com/damwate/AIEO 分支 review/b-20261116-workspace-spec
+基线 d563a2a5fa2e518a6da7f041d36218b89a2ad12a
+待验收 commit 72ee196c1ede434b7ddfb72a2450834505e1d2c4（单commit，parent=基线已核）
+范围=基线→该commit
+交付：basic/WORKFLOW.md 新增《多项目、多IDE工作区管理规范》（增补④，九节）+附录尾注；decision-log 增 DEC-068；任务包 basic/tasks/b-20261116-workspace-spec/ 三件套
+标准：①九项覆盖齐（职责边界/落点指定/多IDE统一/项目级配置/任务包交付/结果回传/审查衔接/拆分防错仓/升级处理）②v0.3 既有条款零删改、无冲突③不虚构自动化、不降全SHA/fail-closed④不改C1-C8与既有DEC⑤ST-05无FAIL
+自测：check_taskpack=IN_PROGRESS无FAIL；numstat +54/-1、+9/-0
+请按六查自查（自行拉取diff）；结论PASS/REJECT/BLOCKED+原因，REJECT给问题编号与整改要求。

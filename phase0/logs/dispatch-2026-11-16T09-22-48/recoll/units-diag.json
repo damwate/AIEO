@@ -1,0 +1,62 @@
+[
+  {
+    "key": "fallback-turn-0:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【S1-R6 限定复核】b-20261116-workspace-spec\n仓库 damwate/AIEO 分支 review/b-20261116-works"
+  },
+  {
+    "key": "fallback-turn-0:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nS1-R6 限定复核\n\nPASS P2-03 已关闭。\n\n本次核验对象：\n\nR2 被测 SHA：9efb14bbcc74d397e1555"
+  },
+  {
+    "key": "fallback-turn-1:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【S3 交付验收】b-20261116-workspace-spec\n仓库 damwate/AIEO 分支 review/b-20261116-workspac"
+  },
+  {
+    "key": "fallback-turn-1:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nS3 交付验收：初步结论为 REJECT\n\n已定位到本次分支最新提交：cc29fc51b23426b8f581416a82eed52111"
+  },
+  {
+    "key": "fallback-turn-2:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【S3-R8 交付复核】b-20261116-workspace-spec\n仓库 damwate/AIEO 分支 review/b-20261116-works"
+  },
+  {
+    "key": "fallback-turn-2:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nS3-R8 交付复核\n\nREJECT R7 三项实质整改均已落实，但交付文档出现新的版本记录滞后，暂不建议进入 COMPLETED 态。\n"
+  },
+  {
+    "key": "fallback-turn-3:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【S3-R9 交付复核】b-20261116-workspace-spec\n仓库 damwate/AIEO 分支 review/b-20261116-works"
+  },
+  {
+    "key": "fallback-turn-3:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nS3-R9 交付复核\n\n当前暂定：REJECT（发现一处 SHA 登记不完整，正在核对其余索引）。\n\n本次按分支指定提交 787c2b58"
+  },
+  {
+    "key": "fallback-turn-4:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "【S3-R10 交付复核】b-20261116-workspace-spec\n仓库 damwate/AIEO 分支 review/b-20261116-work"
+  },
+  {
+    "key": "fallback-turn-4:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nS3-R10 交付复核\n\nREJECT R9 唯一必改项已修复，但本轮发现多处交付索引与实际记录不一致。 按你的要求，一次列出目前能确认的"
+  }
+]

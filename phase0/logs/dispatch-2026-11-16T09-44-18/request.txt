@@ -1,0 +1,6 @@
+【S3-R13 限定复核】b-20261116-workspace-spec
+仓库 damwate/AIEO 分支 review/b-20261116-workspace-spec（已更新至问题11行提交）
+P1-3 已改：delivery §4 标题="独立验收链（S3 阶段：交付记录，R7～R11）"（整改 commit=90f471aef5c1fdcaa4c6f2e9be4b7ecefd8b987d，父=ac7afbe464867ce29e5bfcf3011a50fd1f69a710）
+同一提交同步索引（DEC 至 081、问题1～11、R1～R12）以避免再生不一致；返工表问题11 建行；DEC-081 登记
+未改 WORKFLOW 九项、未改被测 9efb14bbcc74d397e15558dc720706fc054ac627、未改历史结论
+请核 P1-3 是否关闭，结论 PASS/REJECT（PASS 后按你给的路径进入 COMPLETED 态重跑 ST-05 并回填最终记录）

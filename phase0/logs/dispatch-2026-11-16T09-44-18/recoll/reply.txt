@@ -1,0 +1,113 @@
+ChatGPT 说：
+S3-R13 限定复核结论
+PASS
+
+P1-3 已关闭。本轮只针对该问题复核，未扩大到被测规范内容审查。
+
+核验结果
+
+核验项
+
+	
+
+结论
+
+	
+
+依据
+
+
+
+
+delivery §4 标题
+
+	
+
+PASS
+
+	
+
+已改为“独立验收链（S3 阶段：交付记录，R7～R11）”
+
+
+
+
+§4 标题与表格范围
+
+	
+
+PASS
+
+	
+
+表格列出 R7～R11，标题与实际行范围一致
+
+
+
+
+§7 阶段归属
+
+	
+
+PASS
+
+	
+
+仍明确 S3 为 R7～R11 及后续收尾轮
+
+
+
+
+索引同步
+
+	
+
+PASS
+
+	
+
+DEC 更新至 081、问题更新至 11、验收轮次更新至 R12
+
+
+
+
+整改范围
+
+	
+
+PASS
+
+	
+
+Diff 显示同步修改集中于 delivery、steps 和 decision-log 的索引及 R12 整改登记；未触及 basic/WORKFLOW.md 被测规范
+
+整改提交：
+
+Commit：90f471aef5c1fdcaa4c6f2e9be4b7ecefd8b987d
+
+用户提供的父提交：ac7afbe464867ce29e5bfcf3011a50fd1f69a710
+
+已读取该 commit 的实际 Diff，确认 §4 标题已修正，并同步 DEC-081、问题11及 R12 索引。
+
+说明：当前 GitHub 提交读取结果未暴露 parent 字段，因此父提交 SHA 暂按你提供的记录登记，不能称为已独立核实。
+
+后续：进入 COMPLETED 态 ST-05
+
+现在可以按既定路径推进：
+
+将任务包状态推进至 COMPLETED，不得改写历史验收结论。
+
+在仓库执行：
+
+Bash
+python -I basic/tool/check_taskpack.py basic/tasks/b-20261116-workspace-spec
+
+保存完整 ST-05 原始输出，不能只保存摘要。
+
+核对 ①～⑥ 全部 PASS，确认 Overall=PASS，且无 FAIL。
+
+将实际命令、完整输出路径、退出码和最终结果回填 steps.md、delivery.md。
+
+提交最终记录后，再做一次针对最终记录和 ST-05 证据的一致性复核。
+
+注意：本轮 PASS 代表 S3 文档交付复核通过，不代表 COMPLETED 态 ST-05 已经通过。 只有 ST-05 实际重跑并取得全部 PASS，才能完成最终交付验收。
