@@ -1,0 +1,6 @@
+【限定复审R4·同会话续派】b-20261116-session-migrate-4rounds 闭环复核（R3 单缺口整改：范围如实登记）。R3=现场 dispatch-2026-11-16T13-36-34，reply sha256=055132f39fb786b9ee8ce19460a1b80c67f61e9575ec507722a24df4d33ad082，①② PASS、REJECT 仅③漏记补采驱动。
+整改 commit 完整 SHA=f56f8931a796b39ecbcc1cb66950fd30f247e72d（已推送）。读取 raw.githubusercontent.com/damwate/AIEO/f56f8931a796b39ecbcc1cb66950fd30f247e72d/ 下 basic/tasks/b-20261116-session-migrate-4rounds/ 的 steps.md、delivery.md。
+R3 整改 commit 范围口径：任务包回填+派单简报归档（recheck-r3.txt）+R3 现场归档+L-018 第 3 条补采驱动 recoll_migrate4r2.mjs（delivery §3 已补录）。
+复核项：①delivery §3 补录与返工表问题3 登记完整如实；②范围表述与实际 commit 一致、无其他漏记；③范围未扩大（规则文件零改动）。
+本派单=本会话第 4 条 user 消息（达 L-018 第 6 条新阈值），按例外①临近完成暂不迁移、理由已记录（steps S3⑥）；PASS 后即执行 COMPLETED 态 ST-05 取证回填。
+结论：PASS/REJECT（逐项）/BLOCKED。

@@ -1,0 +1,68 @@
+ChatGPT 说：
+
+R4 结论：REJECT。尚有两处登记/范围口径问题，不执行 COMPLETED 态 ST-05。
+
+核验对象严格锁定：
+
+f56f8931a796b39ecbcc1cb66950fd30f247e72d
+
+与父提交 f13e451192feb74535d8e6b371a618281a5a1fe3 比较，确认是直接后继，ahead_by=1、behind_by=0，共 1 个提交。
+
+复核项
+
+	
+
+结论
+
+	
+
+说明
+
+
+
+
+① §3 补录、问题3登记
+
+	
+
+REJECT
+
+	
+
+delivery §3 已补录 recoll_migrate4r2.mjs 及依据；问题3也记录了 R3 的范围漏记和整改方式。但返工表“修复 commit”仍是空白占位符，未绑定本次完整 SHA，登记尚不完整。
+
+
+
+
+② 范围与实际 commit 一致
+
+	
+
+REJECT
+
+	
+
+实际 f56f893 相对父提交只修改 delivery.md、steps.md，新增 R3 现场归档和 session-migrate-4rounds-recheck-r3.txt。recoll_migrate4r2.mjs 已存在于父提交 f13e451，并非本次 commit 新增或修改。它可以列为任务累计产物，但不能描述为本次 commit 的变更内容。
+
+
+
+
+③ 规则文件零改动
+
+	
+
+PASS
+
+	
+
+本次提交文件清单没有规则文件，也没有扩大到规则正文或中级版代码。
+
+最小整改建议：
+
+返工表问题3“修复 commit”填入本次完整 SHA：f56f8931a796b39ecbcc1cb66950fd30f247e72d。
+
+区分“任务累计产物”和“本次提交变更”：明确 recoll_migrate4r2.mjs 是父提交已有的补采驱动，本次提交实际新增的是 R3 现场归档及 R3 复审简报，并回填任务包记录。
+
+不需要重做前几轮验收，也不需要重新运行 R1/R2/R3。完成上述两处后再做一次限定复审。
+
+ST-05 暂不执行。 R4 尚未 PASS，不能提前把任务标记为完成。
