@@ -755,3 +755,13 @@
 - **实施任务包：** `basic/tasks/b-20261117-gpt05-engineering-audit-leg/`（Basic 工作流+ST-05 自检后开工）。
 - **审批边界：** 各 commit 按 L-020 自主推进授权执行，push 走 toolkit/check-push.mjs。
 - **关联：** DEC-089/090/091（授权机制+GPT-04 先例）、DEC-026、Gate1-R3 会话迁移建议（6afb6d51→6afb7fe2）。
+
+### DEC-093 GPT-05 工程总审计真实腿交付闭环：零 mock 实战真实 BLOCKED→问题17 三项收口→G05-DR2 PASS→任务 COMPLETED（2026-11-17，L-020 节点自主推进）
+
+- **实现与测试：** 任务包 b-20261117-gpt05-engineering-audit-leg；engineering_audit_leg.py（同构复制，三步独立登记 A4a/A4b/A4c+聚合标志，message 409 五条件 AND，readback→canonical envelope 映射，C2 双分页，矩阵汇总映射+结论×建议映射 fail-closed，RunKeyLock，无状态事件）+engineering-audit-report.schema.json 落位（A-2 定稿 21 字段）+24 用例矩阵；**security.py 唯一 M1 例外（实际 9 行，原授权约 6 行，偏差=GET batches 白名单勘误与错误响应，问题17 正式记录）**：SERVICE_ALLOWED_ENDPOINTS 增补 GET /api/v1/tasks 与 GET /api/v1/batches/{batch_id}+服务身份 GET /tasks 强制 batch_id 缺省 403（OWNER 行为零变化）。
+- **零 mock 实战全链（BATCH-001@live M1 8002 重启加载权限变更）：** 真实派单两对话（发送双验均过；新会话采集缺陷两连败如实登记，§5 行 1 换会话重派）→L-018 手工 recoll 恢复（视口前置拉高+标记归属，会话 6afb8bb2，raw reply sha256=dd12b6a8692cca8e9edca0a45eefed84c6d144e5690a40ac25ba1b4c0592da12）→**真实 GPT-05 结论=BLOCKED（DO_NOT_SUBMIT）**：standards_matrix 七项（6 ISSUE+1 PASS）+三条 BLOCKER 发现（BATCH-001 含 REWORK 任务/交付闭环未完成/零 mock 闭环待证）→findings 结构化对象 vs 冻结契约 string[]→**契约校验 fail-closed 真拦截（四腿同型第四次实战实证）**→A6 人工保真规整 loss=NONE→attach 三步登记→**A5 批次/任务状态零变化核验通过**。账本 sha256=700b7864e4d081b6c6f78109d39fc34b2d63f1b19038ed0e0eeefa9ca9df692b。
+- **验收链：** G05-DR 实现级限定复核 REJECT（reply sha256=f108e753d7fc2ccd…02a6021，dispatch-2026-11-16T23-12-38/recoll 七查全过；主体成果认可，三项收口=①C1 缺失方向②A4c 成功路径读回③A5 任务快照+9 行偏差记录）→问题17 整改（commit 9c3c3a19c3156d557cb2fcb7dadc7ea301757fcc：24/24+四腿 113/113 OK）→**G05-DR2 三项技术整改全 PASS**（reply sha256=7c55c2e6e0b76ca43b2fb8cd986eb75c19bf2737f66cd7093faa2b3a96e3eca8，dispatch-2026-11-16T23-28-37/recoll 七查全过；文档收尾仅剩）→纯文档收尾（commit 6690ed7c1307fe4f1018e9bf07d76c9f1672f6ec）后**按已核验结果直接登记：任务 b-20261117-gpt05-engineering-audit-leg 终态=COMPLETED，最终结果=PASS，复核对象=294f6ad2e6dbbbfd47b501bcba350bd4ca42cc23**（审查方明示无需第三轮实现级复核）。C1 绑定 PASS（baseline 58da7697976a2465aa7fc641837af97f1190a68a→target 9c3c3a19…757fcc，binding-report.json@生成时 HEAD）。ST-05 COMPLETED 态 Overall PASS。
+- **里程碑：** GPT-02/03/04/05 四腿全部真实交付闭环（DEC-088/091/092/093）——DEC-026 决议二"逐角色接入"完成，受控试运行（等级 B）前置能力就绪。
+- **遗留待办（移交）：** ①findings 结构化演进（四契约同族，H2 流程）②矩阵×批次级 BLOCKER 语义细化（G05-DR 指认，随①一并）③新会话采集缺陷根因（当日四现：INBOUND_START_UNIT_MISSING/COMPLETENESS 两型；手工 recoll+视口前置拉高为有效恢复）④--new-session 指针覆盖缺陷（两次复现）⑤per-agent 批次授权表（跨批次完全隔离）⑥消息 source-principal 服务端绑定 ⑦review_leg/arch_review_leg mtime 同型隐患+并发锁缺口（DEC-088 遗留②同族）。
+- **审批边界：** 各 commit 按 L-020 自主推进授权执行，push 走 toolkit/check-push.mjs；PASS≠合并授权（DEC-010）；live M1 实例（8002）证据归档后关闭。
+- **关联：** DEC-089/090/091/092、DEC-026、L-018（多轮补采+视口前置拉高固化）、问题17（steps.md 返工表）。
