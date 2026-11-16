@@ -1,0 +1,86 @@
+[
+  {
+    "key": "fallback-turn-0:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[会话迁移|GPT05立项复审] 你是新审查会话，接替6afb41ae（6条user消息达4+2再评估点+虚拟化征兆，主动迁移）；旧会话归档，后续轮次全在本会话"
+  },
+  {
+    "key": "fallback-turn-0:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\n已接替 GPT05 审查会话。本会话作为新的连续审查会话，后续轮次在这里累计。\n\n本轮严格限定为 GPT-05 立项 Gate1：\n\n只"
+  },
+  {
+    "key": "fallback-turn-1:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[Gate1|GPT-05立项] 验证对象：phase1/GPT05-ENGINEERING-AUDIT-LEG-CHARTER-DRAFT.md v0.1，d"
+  },
+  {
+    "key": "fallback-turn-1:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nGPT-05 Gate1 立项草案复审\nPASS_WITH_CONSTRAINTS\n\n草案 v0.1 · Gate1\n\n裁定：草案总体架构"
+  },
+  {
+    "key": "fallback-turn-2:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[G05-R1|限定复核] 被测=GPT05-ENGINEERING-AUDIT-LEG-CHARTER-DRAFT.md v0.2，damwate/AIEO "
+  },
+  {
+    "key": "fallback-turn-2:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nG05-R1 限定复核结论\n\nREJECT 本轮不通过，暂不进入 Gate2。\n\n被测对象：damwate/AIEO\n固定 commit："
+  },
+  {
+    "key": "fallback-turn-3:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[G05-R2|限定复核] 被测=GPT05-ENGINEERING-AUDIT-LEG-CHARTER-DRAFT.md v0.3，damwate/AIEO "
+  },
+  {
+    "key": "fallback-turn-3:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nG05-R2 限定复核结论\n\nPASS C1、D2 两项整改均通过。GPT-05 正式进入 Gate2 会务立项评审阶段。\n\n被测文件：d"
+  },
+  {
+    "key": "45310f65-9314-5b1c-8b32-d08da8f2be53:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[Gate2|GPT-05立项] 被测=GPT05-ENGINEERING-AUDIT-LEG-CHARTER-DRAFT.md v0.3，damwate/AI"
+  },
+  {
+    "key": "45310f65-9314-5b1c-8b32-d08da8f2be53:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nGPT-05 Gate2 会务立项评审\n\n当前结论：暂不通过 Gate2，不具备开工条件。\n\n这次评审发现一项直接影响真实运行的接口权限阻"
+  },
+  {
+    "key": "42cfefdf-d233-5abc-9279-4e36339d2f79:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[G05-Gate2-R1|限定复核] 被测=GPT05-ENGINEERING-AUDIT-LEG-CHARTER-DRAFT.md v0.4，damwate"
+  },
+  {
+    "key": "42cfefdf-d233-5abc-9279-4e36339d2f79:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nGPT-05 Gate2-R1 限定复核\n\n被测文档已按完整 SHA da5e5aaa5e2828190c655ecb6d8121503c"
+  },
+  {
+    "key": "5395b975-13dd-5794-ad76-72579b6f1917:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[G05-Gate2-R2|限定复核] 被测=GPT05-ENGINEERING-AUDIT-LEG-CHARTER-DRAFT.md v0.5，damwate"
+  },
+  {
+    "key": "5395b975-13dd-5794-ad76-72579b6f1917:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n六项复核结论\n\n整体 REJECT v0.5 比 v0.4 有实质进步，但仍有两处明确契约冲突，以及一处 409 双证规则未按上一轮要求落"
+  }
+]

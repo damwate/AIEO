@@ -1,0 +1,5 @@
+[G05-Gate2-R2|限定复核] 被测=GPT05-ENGINEERING-AUDIT-LEG-CHARTER-DRAFT.md v0.5，damwate/AIEO main，commit 589e164b2361a1acc0922d9e6222e771c10e1f27，按SHA实读。只复核Gate2-R1六项整改，已定原则不重开。
+
+【整改落实】①A-1=§3权限方案重构：security.py约6行=白名单增补+服务身份GET /tasks强制batch_id规则（缺省403杜绝全局枚举）+跨批次完全隔离（per-agent授权表）登记遗留+分层归属声明（服务端结构性限定+残余风险如实接受+缓解=令牌gitignored/单--batch-id/全链绑定batch_id）+回归门槛（M1平台测试+A10b权限测试+三腿89合跑+OWNER行为零变化）+例外范围如实扩大不包装。②A-2身份统一：source=GPT-05（reviewer，三腿先例）、提交凭据=ENGINE-04令牌、target=AIEO-ORCHESTRATOR实读；message_id=^MSG-\d{8}-\d{6}$与冻结schema一致。③A-3其余断点逐项六字段表+指纹算法冻结（_req_sha/_canon_sha先例）。④409可执行判定表。⑤A10b全局拒绝用例。⑥边界随A-1更新。
+
+【输出】逐项三态+依据+未决风险；全过则给设计冻结+开工授权明确结论（DEC-089机制）+收尾清单。

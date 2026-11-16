@@ -1,0 +1,155 @@
+ChatGPT 说：
+六项复核结论
+
+整体 REJECT v0.5 比 v0.4 有实质进步，但仍有两处明确契约冲突，以及一处 409 双证规则未按上一轮要求落实。不通过 Gate2-R2，不触发 DEC-089 开工授权。
+
+项目
+
+	
+
+三态
+
+	
+
+依据与结论
+
+
+
+
+① A-1 运行期权限
+
+	
+
+PASS_WITH_CONSTRAINTS
+
+	
+
+§3 已明确白名单增补、服务身份必须携带 batch_id、缺省 403、OWNER 行为不变、回归门槛及 M1 例外范围，设计上回应了上一轮的全局枚举问题。但 per-agent 批次授权表被明确推迟，当前方案只防止不带 batch_id 的全局查询，不能防止持有服务 token 的调用方查询任意其他批次。风险披露充分，但这是有意接受的跨批次隔离缺口，必须在开工记录中保留为明确风险。
+
+
+
+
+② A-2 回复契约
+
+	
+
+REJECT
+
+	
+
+身份定义仍有冲突：§6 写 source.agent_id=ENGINE-04，附录 A-2 却写 source.agent_id=GPT-05。此外，message_id 格式虽与现有 schema 正则一致，但“run_key SHA-256 散列折叠”如何生成符合 MSG-YYYYMMDD-NNNNNN 的 ID 没有定义，也没有证明与 M1 现有生成规则兼容。
+
+
+
+
+③ A-3 逐步骤恢复矩阵
+
+	
+
+PASS
+
+	
+
+三步登记分别记录状态、读回、恢复和禁止动作；聚合标志要求三子标志齐全；其余断点已逐项列出六字段。实读 GPT-04 test_acceptance_leg.py（blob 7d1a9f90…）第109–116行，_canon_sha 剔除 created_at、_req_sha 全量序列化的算法与本稿一致。
+
+
+
+
+④ 多事务登记
+
+	
+
+REJECT
+
+	
+
+artifact 的 409 路径基本明确；但 message 409 判定写成“响应 details.message_id 匹配或账本 canonical_sha 匹配”，不是上一轮要求的两项双证同时成立。读回 envelope 一致不能替代提交响应和账本意图的双重证据。
+
+
+
+
+⑤ 真实腿验收设计
+
+	
+
+PASS_WITH_CONSTRAINTS
+
+	
+
+A10b 已覆盖服务身份不带 batch_id 的服务端 403，A11 覆盖分页不一致；崩溃窗口、矩阵矛盾、建议矛盾和零 mock 真实收发也均有场景。还需补充带 batch_id 的合法请求通过，以及 OWNER 无 batch_id 仍通过的实际平台测试结果断言。
+
+
+
+
+⑥ 边界与安全
+
+	
+
+PASS_WITH_CONSTRAINTS
+
+	
+
+M1 约6行例外、其余 M1-M4 零修改、source-principal 未绑定、跨批次授权缺口均如实披露。当前风险不是隐藏问题，而是设计明确接受的限制；但 A-2 身份矛盾仍使 envelope 安全边界尚不能冻结。
+
+必须整改的三项
+
+P0-1：统一 message source 身份。
+
+只保留一套定义，所有章节、示例、账本和实现任务书一致：
+
+source.agent_id：GPT-05 reviewer；
+
+Bearer 凭据：ENGINE-04；
+
+target.agent_id：AIEO-ORCHESTRATOR。
+
+如果选择这套定义，§6 必须同步修改，不能只修附录。
+
+P0-2：冻结 message_id 的真实生成算法。
+
+当前 schema messages-create.schema.json（blob d4a80461…）的格式是 MSG-YYYYMMDD-NNNNNN。v0.5 声称通过 run_key SHA-256 散列折叠生成，但没有给出可执行映射规则，也没有说明如何处理日期、碰撞和并发。
+
+需要明确：
+
+输入和输出的精确算法；
+
+同一 run_key 重放时 ID 稳定；
+
+不同 run_key 的冲突处理；
+
+与现有 schema 和 M1 消息登记机制兼容。
+
+不能仅以“正则格式一致”判定兼容。
+
+P0-3：修正 message 409 双证判定。
+
+应改为：
+
+409 响应明确指认本次 message_id；
+
+账本中存在与本次请求匹配的 canonical_sha；
+
+按 correlation_id 读回 message；
+
+规范化 envelope 与账本指纹一致；
+
+batch_id/audit_round_id/result 与报告 artifact 绑定一致。
+
+以上任一项缺失或矛盾，均 fail-closed，不得判为 DUP_OK。
+
+设计冻结意见与开工授权
+
+暂不设计冻结。暂不开工。
+
+A-1 的安全风险已经从“未解决的设计漏洞”转化为“明确披露的残余风险”，可以保留在设计中，但不能声称已经实现跨批次完全隔离。若后续要实现完全隔离，必须另行立项或批准权限模型变更。
+
+下一轮建议命名 G05-Gate2-R3，只复核上述三项 P0，以及 A10b 的正向/OWNER 回归断言。A-3 已通过，不必重开。
+
+收尾清单
+统一 §6 与 A-2 的 source 身份。
+给出可执行、兼容现有 schema 的 message_id 算法。
+将 message 409 双证条件改为 AND，并冻结读回比较规则。
+补齐 A10b 正向和 OWNER 行为测试断言。
+在最终授权记录中保留跨批次授权表延期的残余风险。
+
+授权状态：未授权。 仍不得新增 engineering_audit_leg.py、ENGINE-04 bootstrap/部署或实施 security.py 修改。待 Gate2-R3 复审通过后，才按 DEC-089 触发开工授权；DEC-010 的合并、发布和数据操作仍须用户本人决定。

@@ -1,4 +1,4 @@
-# GPT-05 工程总审计真实腿最小版接入——立项任务书（草案 v0.5·Gate2-R2 设计修订）
+# GPT-05 工程总审计真实腿最小版接入——立项任务书（草案 v0.6·Gate2-R3 设计修订）
 
 > **文档身份与授权链：** 本文件=Standard 平台路线 GPT-02/03/04/05 逐角色接入的**第四张立项草案**（GPT-03 v1.0 已生效 DEC-057/062；GPT-02 交付闭环 DEC-088；GPT-04 交付闭环 DEC-091）。启动依据=Gate2 裁定"GPT-05 待 GPT-04 形成可验收闭环后再立项"（顺延条件已达成，DEC-091 登记）。生效路径：charter 草案 → Gate1 草案级验证 → Gate2 会务立项评审 → 开工授权（用户 2026-11-17 授权机制=审查方复审通过替代用户逐项拍板，DEC-089 登记；DEC-010 高危红线仍须用户本人拍板）。**评审沿革：** Gate1 PASS_WITH_CONSTRAINTS（reply sha256=bceb502a…083a5e480，dispatch-2026-11-16T20-57-30/recoll）→G05-R1 REJECT 两项整改（reply sha256=abcb99de…c8c3c60d，dispatch-2026-11-16T21-07-15/recoll）→G05-R2 PASS C1/D2 通过+Gate2 启动确认（reply sha256=1f0c51ac…dfaeb076，dispatch-2026-11-16T21-15-51/recoll）→**Gate2 首轮暂不通过（六项：①A-1 REJECT 权限阻断/②A-2 有条件/③A-3 REJECT/④多事务 REJECT/⑤验收设计有条件/⑥边界有条件；未获开工授权）**（reply sha256=0aeecb13…9dfaeb076，dispatch-2026-11-16T21-23-31/recoll 七查全过）→本 v0.4=Gate2-R1 设计修订（按裁定六项处置）→G05-Gate2-R1 复核范围=六项中未通过及有条件通过部分（不重开显式 CLI、同构复制、无状态事件、M1-M4 零修改等已确定设计原则）。
 
@@ -58,7 +58,7 @@
 
 ## 6. 安全与审计
 
-沿 GPT-04 charter §6 全文（凭据三类/OWNER 固定角色/engine §8.6 白名单/审计 C7 §8.7/客户端层 method+path 校验/RunKeyLock/1200B/敏感信息不入日志），差异：engine 身份=**ENGINE-04**（bootstrap 一次性 OWNER 注册）；**无 events 端点**（防御层 event_whitelist=空集，任何事件值一律拒绝）；**结论权威关系=审计报告 artifact 唯一权威载体，message 仅登记关联检索（与 §5 一致）**；message envelope 的 source.agent_id=ENGINE-04 常量（腿端固定写入；**已知平台约束如实登记：** 服务端 messaging.register_inbound_message 校验 source agent 存在性但未与认证 principal 相等性绑定——属平台级增强候选，登记遗留待办不在本期改造，客户端侧以常量+账本指纹约束身份正确性）。
+沿 GPT-04 charter §6 全文（凭据三类/OWNER 固定角色/engine §8.6 白名单/审计 C7 §8.7/客户端层 method+path 校验/RunKeyLock/1200B/敏感信息不入日志），差异：engine 身份=**ENGINE-04**（bootstrap 一次性 OWNER 注册）；**无 events 端点**（防御层 event_whitelist=空集，任何事件值一律拒绝）；**结论权威关系=审计报告 artifact 唯一权威载体，message 仅登记关联检索（与 §5 一致）**；message envelope 的 **source.agent_id="GPT-05"（reviewer 角色，全文档唯一口径——§5/§6/A-2/账本/实现任务书一致；提交 Bearer 凭据=ENGINE-04 服务令牌，C7 §8.6 分工同三腿先例）；target.agent_id="AIEO-ORCHESTRATOR"**（腿端固定写入；**已知平台约束如实登记：** 服务端 messaging.register_inbound_message 校验 source agent 存在性但未与认证 principal 相等性绑定——属平台级增强候选，登记遗留待办不在本期改造，客户端侧以常量+账本指纹约束身份正确性）。
 
 ## 7. 验收与回滚（v0.4：验收证据矩阵化）
 
@@ -77,7 +77,9 @@
 | A8 | 矩阵汇总一致性 | reply 矩阵含 BLOCKED 而 result=ACCEPTED | run | fail-closed 不登记（契约校验层拦截） | LEG_LEVEL_BLOCKED | 无登记 | 禁止 |
 | A9 | 结论×建议矛盾 | reply result=BLOCKED 且 release_recommendation≠DO_NOT_SUBMIT | run | fail-closed 不登记 | LEG_LEVEL_BLOCKED | 无登记 | 禁止 |
 | A10 | 服务端权限拒绝 | 服务身份调未授权端点 | run | 客户端白名单先行拦截；AUTH-0002 兜底=腿级 BLOCKED | LEG_LEVEL_BLOCKED | 无 | 禁止 |
-| A10b | **全局任务列表拒绝（Gate2-R1 要求的权限回归用例）** | 权限变更落地后：服务身份 GET /api/v1/tasks 不带 batch_id | 平台测试直调 | 403（服务端强制规则）——服务身份无法获得全局任务列表 | （平台测试断言） | HTTP 403 响应 | 禁止 |
+| A10b | **全局任务列表拒绝（Gate2-R1 要求的权限回归用例）** | 权限变更落地后：服务身份 GET /api/v1/tasks 不带 batch_id | 平台测试直调 | **403**（服务端强制规则）——服务身份无法获得全局任务列表 | （平台测试断言） | HTTP 403 响应 | 禁止 |
+| A10c | **合法批次范围查询通过（Gate2-R2 补充）** | 服务身份 GET /api/v1/tasks?batch_id=BATCH-xxx | 平台测试直调 | **200**+分页 items | （平台测试断言） | HTTP 200 响应 | — |
+| A10d | **OWNER 行为零变化（Gate2-R2 补充）** | OWNER 会话 GET /api/v1/tasks 不带 batch_id | 平台测试直调 | **200**（人工会话不受服务身份规则影响，现有行为零变化） | （平台测试断言） | HTTP 200 响应 | — |
 | A11 | 分页数量不一致 | 替身任务全景 total≠实收 | A0 | fail-closed 腿级 BLOCKED（C2） | A0_PRECHECK FAIL | 无 | 禁止 |
 
 回滚=恢复矩阵按批次审计轮断点重排（附录 A-3），不退回 M1 状态原则不变。零 mock 红线（真实 chatgpt.com 收发）沿用 DEC-028 口径。测试矩阵=四腿合跑回归（89 用例+本腿新增）。
@@ -139,7 +141,14 @@
 **SHA 对象语义表（每字段唯一对象，防复用）：** brief_sha256=A1 简报磁盘字节（发送原件）；input_material_manifest_sha256=input_material_commit 下逐材料 git blob SHA 的清单哈希；report artifact 的 sha256=report.json（含绑定字段的完整契约报告）内容哈希；reply_sha256（账本内）=原始网页回复字节哈希。交叉核验=message.payload 嵌入 report_artifact_sha+brief_sha，读回时与本地重算比对；不一致→腿级 BLOCKED。
 
 **身份定义统一（Gate2-R1 裁定②落实，沿三腿先例）：** envelope **source.agent_id="GPT-05"**（审计角色 reviewer 身份，平台注册 agent；三腿先例同构——GPT-02/03/04 腿的 message source 均为各自 reviewer agent，提交凭据=各 ENGINE 服务身份令牌，C7 §8.6 分工）；payload.reviewer_agent_id="GPT-05"；**提交服务身份（Bearer）=ENGINE-04**（bootstrap 注册+签发令牌，不写入 envelope source）；**target.agent_id="AIEO-ORCHESTRATOR"**（平台实际 agent ID，三腿同源常量 ORCHESTRATOR_AGENT 实读）。
-**message envelope 示例（AUDIT_SUBMITTED 批次级分支）：** {schema_version:"1.0", message_id:<^MSG-\d{8}-\d{6}$ 格式（与 messages-create.schema.json 冻结格式完全一致），生成算法=run_key SHA-256 散列折叠（三腿同构先例），同轮重放同 ID>, message_type:"AUDIT_SUBMITTED", created_at, source:{agent_id:"GPT-05",agent_type:"reviewer"}, target:{agent_id:"AIEO-ORCHESTRATOR",agent_type:"system"}, project_id, batch_id:"BATCH-xxx", task_id:null, correlation_id:"CORR-<run_key>", payload:<上述完整契约报告>}。
+**message_id 确定性算法冻结（P0-2，逐字沿三腿实现 review_leg.py blob 已核版 message_id() 实读）：**
+- 输入=run_key 字符串（^\d{3,}$，CLI 显式提供）。
+- 算法：h=int(hashlib.sha256(run_key.encode()).hexdigest(),16)；a=h % 100_000_000；b=(h // 100_000_000) % 1_000_000；输出=f"MSG-{a:08d}-{b:06d}"（满足冻结 schema ^MSG-\d{8}-\d{6}$——格式正则与 8+6 数字位数完全一致；该算法已在 GPT-02/03/04 三次零 mock 实战中真实注册成功，与 M1 消息登记机制兼容性有实战证据）。
+- 重放稳定性：同 run_key→同散列→同 ID（确定性）。
+- 冲突处理：不同 run_key 理论可撞（14 位数字空间，概率可忽略）；M1 以 message_id 为主键，撞键登记返回 409 RES-0003→按 A-3/④ fail-closed 判定处理，**不静默换键重生成**。
+- 与 schema 关系：不另行定义格式，仅复用冻结格式+冻结算法。
+
+**message envelope 示例（AUDIT_SUBMITTED 批次级分支）：** {schema_version:"1.0", message_id:<按上述算法>, message_type:"AUDIT_SUBMITTED", created_at, source:{agent_id:"GPT-05",agent_type:"reviewer"}, target:{agent_id:"AIEO-ORCHESTRATOR",agent_type:"system"}, project_id, batch_id:"BATCH-xxx", task_id:null, correlation_id:"CORR-<run_key>", payload:<上述完整契约报告>}。
 
 ## 附录 A-3：逐步骤账本恢复矩阵（Gate2-R1 定稿——登记拆三步独立标志）
 
@@ -149,7 +158,7 @@
 |---|---|---|---|---|---|---|
 | A4a 简报 artifact | A4_ARTIFACT_BRIEF{artifact_id,request_sha,brief_sha256} | GET /artifacts/{id}：path+sha256 与请求一致 | skip 已核实项/原键重试（409→GET 回核 path+SHA 匹配=DUP_OK） | 覆盖/换键重做 | A4_SKIP_VERIFIED 或 A4_DUPLICATE_OK | 409 且回核不匹配→腿级 BLOCKED |
 | A4b 报告 artifact | A4_ARTIFACT_REPORT{artifact_id,request_sha,report_sha256} | 同上（path+sha256 一致） | 同上 | 同上 | 同上 | 同上 |
-| A4c message | A4_MESSAGE{message_id,request_sha,canonical_sha,report_artifact_sha,brief_sha} | GET /messages?correlation_id=CORR-<run_key>：检索本轮 message，envelope 规范化指纹（_canon_sha 剔除 created_at）与账本比对；result/batch_id/audit_round_id 与报告 artifact 绑定核验 | skip 已核实项/原键重试（409→响应指认 message_id+账本指纹双证→读回 envelope 全文比对） | 新开审计轮/重新派单/换键 | A4_DUPLICATE_OK / A4_SKIP_VERIFIED | 409 且双证不全→腿级 BLOCKED |
+| A4c message | A4_MESSAGE{message_id,request_sha,canonical_sha,report_artifact_sha,brief_sha} | GET /messages?correlation_id=CORR-<run_key>：检索本轮 message | 409→**五条件 AND**（P0-3）：响应指认 message_id+账本 canonical_sha 匹配+correlation_id 读回+规范化指纹一致+与报告 artifact 绑定一致→DUP_OK | 新开审计轮/重新派单/换键 | A4_DUPLICATE_OK / A4_SKIP_VERIFIED | 五条件任一缺失或矛盾→腿级 BLOCKED |
 | 全部完成 | A4_REGISTERED（聚合标志，三子标志齐才写） | 三项读回+绑定核验全过 | — | — | A5_DONE | 任一链节不符→腿级 BLOCKED |
 
 **其余断点逐项六字段表（G05-Gate2-R1 补齐）：**
@@ -163,7 +172,7 @@
 | 登记完成 | A4_REGISTERED 三子齐 | 三项读回+绑定核验 | 只读核验认定完成 | 任何重派/覆盖 | A5_DONE | 链节不符→腿级 BLOCKED |
 | 账本与 M1 矛盾/未定义状态 | 任意 | 双向核对 | fail-closed 保留现场 | 推测恢复 | LEG_LEVEL_BLOCKED | 一律 fail-closed |
 
-**指纹算法冻结（request_sha/canonical_sha，沿三腿同构先例 review_leg._req_sha/_canon_sha 实读）：** request_sha=请求体 JSON `json.dumps(obj, ensure_ascii=False, sort_keys=True).encode("utf-8")` 的 SHA-256（字段全量覆盖）；canonical_sha=同算法但剔除 created_at 键后的规范化指纹（信封重启重建可比对）；账本请求指纹比对=按上述算法重算而非仅比 message_id。多事务 duplicate/409 可执行判定表：**artifact**：HTTP 409+GET 回核 path+sha256 与本次请求一致→DUP_OK；不一致或无法解析 ID→fail-closed。**message**：HTTP 409+（响应 details.message_id==本次 message_id 或账本 canonical_sha 匹配）+GET /messages?correlation_id= 读回 envelope 规范化指纹一致→DUP_OK；双证不全→fail-closed。
+**指纹算法冻结（request_sha/canonical_sha，沿三腿同构先例 review_leg._req_sha/_canon_sha 实读）：** request_sha=请求体 JSON `json.dumps(obj, ensure_ascii=False, sort_keys=True).encode("utf-8")` 的 SHA-256（字段全量覆盖）；canonical_sha=同算法但剔除 created_at 键后的规范化指纹（信封重启重建可比对）；账本请求指纹比对=按上述算法重算而非仅比 message_id。多事务 duplicate/409 可执行判定表：**artifact**：HTTP 409+GET 回核 path+sha256 与本次请求一致→DUP_OK；不一致或无法解析 ID→fail-closed。**message（P0-3 修正：五条件 AND，任一缺失或矛盾→fail-closed 不得判 DUP_OK）**：①HTTP 409 响应明确指认本次 message_id（details.message_id==本次值）②账本存在与本次请求匹配的 canonical_sha ③按 correlation_id 读回 message（GET /messages?correlation_id=）④读回 envelope 规范化指纹与账本一致 ⑤读回 message 的 batch_id/audit_round_id/result 与报告 artifact 绑定一致——五项全成立才判 DUP_OK。
 
 **登记顺序冻结（④）：** A4a→A4b→A4c 严格顺序；每步成功标志独立落账本（原子追加）；禁止合并为笼统 A4_REGISTERED；登记期间禁止新开审计轮或重新派单。部分成功恢复=A5a/A5b 路径+上表逐项动作。
 
@@ -171,6 +180,7 @@
 
 | 版本 | 日期 | 状态 | 变更 | 依据 |
 |---|---|---|---|---|
+| v0.6（Gate2-R3 设计修订） | 2026-11-17 | 草案（待 G05-Gate2-R3 复核三 P0+A10b 断言） | 三 P0 整改：P0-1=§6 身份统一（source=GPT-05 全文档唯一口径，§5/§6/A-2/账本一致；Bearer=ENGINE-04；target=AIEO-ORCHESTRATOR）；P0-2=message_id 算法逐字冻结（run_key SHA-256 折叠 a/b 两段，三腿实战注册成功证据+重放稳定+撞键 409 fail-closed 不换键）；P0-3=message 409 双证改五条件 AND（响应指认+账本指纹+读回+规范化一致+与报告绑定，任一缺失 fail-closed）+A-3 A4c 行同步；A10b 补 A10c（带 batch_id→200）/A10d（OWNER 无 batch_id→200 行为零变化）断言 | Gate2-R2 REJECT（reply sha256=0b9ba7269fa65289…完整值见 recoll-result.json，dispatch-2026-11-16T21-50-31/recoll 七查全过；A-1 PASS_WITH_CONSTRAINTS=残余风险明确披露可保留但不得声称完全隔离） |
 | v0.5（Gate2-R2 设计修订） | 2026-11-17 | 草案（待 G05-Gate2-R2 复核） | Gate2-R1 六项处置：①A-1 权限方案重构=security.py 约 6 行（白名单增补+**服务身份 GET /tasks 强制 batch_id 规则**——杜绝全局枚举）+跨批次完全隔离（per-agent 授权表）登记遗留待办+分层归属校验声明+回归门槛含新增权限测试 ②A-2 身份统一（source=GPT-05 reviewer 三腿先例/提交凭据=ENGINE-04/target=AIEO-ORCHESTRATOR 实读）+message_id 格式与冻结 schema 对齐声明 ③A-3 其余断点逐项六字段表+指纹算法冻结（_req_sha/_canon_sha 先例实读）④duplicate/409 可执行判定表 ⑤§7 A10b 全局任务列表拒绝用例 ⑥边界随 A-1 更新 | Gate2-R1 REJECT（reply sha256=3e5d6ef9788a371e…完整值见 recoll-result.json，dispatch-2026-11-16T21-39-22/recoll 七查全过；A-1 裁定原文"不能把文档提案当作代码事实"+全局列表越权分析） |
 | v0.4（Gate2-R1 设计修订） | 2026-11-17 | 草案（待 G05-Gate2-R1 复核） | Gate2 首轮六项裁定处置：①A-1 REJECT（**权限阻断事实**=SERVICE_ALLOWED_ENDPOINTS 无 GET /tasks 列表，blob 实读）→§3 权限方案（唯一例外=一行只读白名单增补提案+影响面声明+禁止绕行+回归门槛；既有合法接口核查=board 仅聚合不足）②A-2 有条件→附录 A-2 定稿（字段级契约表/standards_matrix 七字段/一致性规则/SHA 对象语义表/envelope 示例/message_id 确定性规则）③A-3 REJECT→附录 A-3 定稿（三步独立登记标志+六字段粒度逐步骤恢复矩阵+登记顺序冻结）④多事务 REJECT→并入 A-3/§5（登记顺序/409 双证/correlation_id 读回/规范化指纹）⑤验收设计有条件→§7 证据矩阵化（七字段×12 用例含 A5a/A5b 崩溃窗口+A8/A9/A10/A11 边界用例）⑥边界有条件→§6 身份边界如实登记（共享白名单事实+source-principal 绑定为遗留待办）+A-1 补 GET /messages 读回+GET /reports 无 batch_id 过滤声明 | Gate2 首轮裁定（reply sha256=0aeecb13…9dfaeb076，dispatch-2026-11-16T21-23-31/recoll 七查全过；代码事实=security.py blob 7b1efc8d/board.py/reports.py blob a4451d70/messaging.py blob 96e19922/api.py blob 62a8c60c 实读） |
 | v0.3 | 2026-11-17 | 草案（G05-R1 两项整改后） | R1 两项整改：C1 矩阵总结果映射规则+D2 §6 权威关系统一 | G05-R1 REJECT（reply sha256=abcb99de…c8c3c60d，dispatch-2026-11-16T21-07-15/recoll） |
