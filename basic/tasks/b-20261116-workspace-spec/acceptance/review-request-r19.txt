@@ -1,0 +1,10 @@
+【R19 限定复核】b-20261116-workspace-spec
+仓库 damwate/AIEO 分支 review/b-20261116-workspace-spec
+核验对象 commit=ed333ba4f28a692a04260e28de7d1470011e23c8（父=14e3d926f2ef06099a7513ad7164ca1cc45b7d61，即 R18 整改）；其后 1ea9bda（仅移除两份一次性整理脚本）与 057001f（仅归档现场目录）不含内容修改
+R18 两项已整改：
+①全量核对（一次性满足"同步核对三文件所有 Git commit 引用"）：`python -I phase0/tools/sweep_sha.py` 以 git rev-list --all 构建前缀映射、对 delivery/steps/task-brief 逐 token 核对——替换数 0，即已无任何可唯一解析的短 commit SHA；审计清单=acceptance/sha-audit.txt（各文件 40 位 SHA 计数与未解析 token，未解析者均为会话 UUID 片段，非 commit）
+②清除两处"完整 SHA 后残留 …"：delivery §5 收录口径行（c8eb7087…）、§5 远程 main 基线行（d563a2a5…）
+③R17/R18 已如实登记：steps S3⑥（R17 推送失败不可见、R18 复核仍 REJECT 与全量核对结果）、delivery §4 两行（含 R18 reply sha256=8ddf1f0e8f94fe3fd40a28d5f33e5e3570fe25eca422cd660f75315a49e1153f）、task-brief 最终结果补记
+④保留 R15/R16 历史结论，未覆盖改写
+未改 WORKFLOW 九项、未改被测 9efb14bbcc74d397e15558dc720706fc054ac627
+请核：你上轮指认的 5 处位置现是否均为完整 40 位、全量核对与审计清单是否可复跑；结论 PASS/REJECT
