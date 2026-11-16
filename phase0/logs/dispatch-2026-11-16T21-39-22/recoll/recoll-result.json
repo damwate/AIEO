@@ -1,0 +1,82 @@
+{
+  "recollection": true,
+  "driver": "review_leg_recoll_template.mjs (derived)",
+  "remediation": "归属校验型定位（标记文本唯一+最后user断言+前轮SHA排除），未重发任何消息",
+  "reference_failed_dispatch_dir": "D:/AIEO/phase0/logs/dispatch-2026-11-16T21-39-22",
+  "conversation_url": "https://chatgpt.com/c/6afb6d51-ff1c-83e8-ab55-96eef3422c9d",
+  "sent_user_unit_key_reported": "fallback-turn-4:0:user",
+  "located_user_unit_key": "42cfefdf-d233-5abc-9279-4e36339d2f79:0:user",
+  "assistant_uuid": "c17f616f-2493-48a1-ac73-4d017e242a39",
+  "unit_keys": [
+    "42cfefdf-d233-5abc-9279-4e36339d2f79:2:assistant"
+  ],
+  "unit_count": 1,
+  "reply_bytes": 6181,
+  "reply_sha256": "3e5d6ef9788a371ee4553928c4cda58dfcb155aaaf0cfbf0778db6c2e4eaa8e7",
+  "checks": {
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "not_prev_reply_sha": true
+  },
+  "stability": {
+    "stable": true,
+    "interval_ms": 3309,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-16T21:48:20.619Z",
+      "read_finished_at": "2026-11-16T21:48:20.921Z",
+      "unit_keys": [
+        "42cfefdf-d233-5abc-9279-4e36339d2f79:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "42cfefdf-d233-5abc-9279-4e36339d2f79:2:assistant",
+          "sha256": "3e5d6ef9788a371ee4553928c4cda58dfcb155aaaf0cfbf0778db6c2e4eaa8e7",
+          "size_bytes": 6181
+        }
+      ],
+      "assistant_uuid": "c17f616f-2493-48a1-ac73-4d017e242a39",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-16T21:48:23.927Z",
+      "read_finished_at": "2026-11-16T21:48:24.543Z",
+      "unit_keys": [
+        "42cfefdf-d233-5abc-9279-4e36339d2f79:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "42cfefdf-d233-5abc-9279-4e36339d2f79:2:assistant",
+          "sha256": "3e5d6ef9788a371ee4553928c4cda58dfcb155aaaf0cfbf0778db6c2e4eaa8e7",
+          "size_bytes": 6181
+        }
+      ],
+      "assistant_uuid": "c17f616f-2493-48a1-ac73-4d017e242a39",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "extracted_at": "2026-11-16T21:48:24.562Z",
+  "artifacts": {
+    "reply": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-16T21-39-22\\recoll\\reply.txt",
+    "raw_units": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-16T21-39-22\\recoll\\raw-units.json"
+  }
+}

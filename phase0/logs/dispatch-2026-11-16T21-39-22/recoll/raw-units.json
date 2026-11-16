@@ -1,0 +1,172 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-16T21:48:24.562Z",
+  "user_unit_key": "42cfefdf-d233-5abc-9279-4e36339d2f79:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "42cfefdf-d233-5abc-9279-4e36339d2f79:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "c17f616f-2493-48a1-ac73-4d017e242a39",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "42cfefdf-d233-5abc-9279-4e36339d2f79:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "45310f65-9314-5b1c-8b32-d08da8f2be53:0:user",
+          "45310f65-9314-5b1c-8b32-d08da8f2be53:2:assistant",
+          "42cfefdf-d233-5abc-9279-4e36339d2f79:0:user",
+          "42cfefdf-d233-5abc-9279-4e36339d2f79:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "0093b14e0b60326e626f6ddb143b175069e557a1c81ca07776d799511c8436e0",
+          "d6742c5276144aca6ce4400b316a58394007c385720198b1e69dc4bfb4b0ce35",
+          "26c90d7142bf8c3b5708bf90b0ffd8e4b5860a888c83aff58cb7614b993d7eff",
+          "bceb502ac673fa187de3db4411f78b8c65a6cbfcfafb7d78342a0af083a5e480",
+          "9d1137874eae3a7a2856e78cb59b436687dc6b2fd35753ff386ca04ef5ac26e9",
+          "abcb99defbf91a93238259085451a2cbb9c94ac94e4ffc5946adc079c8c3c60d",
+          "056a2aa80daab5b33afa473ce45c1a92099630afaa49b16f58e205fdf76bd815",
+          "1f0c51ac6fcb93022952386d5da33a3d1fb95e0ac3b647e5437f40f9dfaeb076",
+          "8b91d9fa836700cce1f862806d9e56cd16599634dd3c12e49f56bc0e3a9cb361",
+          "0aeecb13e1b47a4eb49830f862e099697a614462988aa83e6549f7037b147182",
+          "8ee169d2da8beeef9cb188b22f72522d1f4828f3ccc81a30e0cd4c65bb4c2215",
+          "3e5d6ef9788a371ee4553928c4cda58dfcb155aaaf0cfbf0778db6c2e4eaa8e7"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "45310f65-9314-5b1c-8b32-d08da8f2be53:0:user",
+          "45310f65-9314-5b1c-8b32-d08da8f2be53:2:assistant",
+          "42cfefdf-d233-5abc-9279-4e36339d2f79:0:user",
+          "42cfefdf-d233-5abc-9279-4e36339d2f79:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "0093b14e0b60326e626f6ddb143b175069e557a1c81ca07776d799511c8436e0",
+          "d6742c5276144aca6ce4400b316a58394007c385720198b1e69dc4bfb4b0ce35",
+          "26c90d7142bf8c3b5708bf90b0ffd8e4b5860a888c83aff58cb7614b993d7eff",
+          "bceb502ac673fa187de3db4411f78b8c65a6cbfcfafb7d78342a0af083a5e480",
+          "9d1137874eae3a7a2856e78cb59b436687dc6b2fd35753ff386ca04ef5ac26e9",
+          "abcb99defbf91a93238259085451a2cbb9c94ac94e4ffc5946adc079c8c3c60d",
+          "056a2aa80daab5b33afa473ce45c1a92099630afaa49b16f58e205fdf76bd815",
+          "1f0c51ac6fcb93022952386d5da33a3d1fb95e0ac3b647e5437f40f9dfaeb076",
+          "8b91d9fa836700cce1f862806d9e56cd16599634dd3c12e49f56bc0e3a9cb361",
+          "0aeecb13e1b47a4eb49830f862e099697a614462988aa83e6549f7037b147182",
+          "8ee169d2da8beeef9cb188b22f72522d1f4828f3ccc81a30e0cd4c65bb4c2215",
+          "3e5d6ef9788a371ee4553928c4cda58dfcb155aaaf0cfbf0778db6c2e4eaa8e7"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "45310f65-9314-5b1c-8b32-d08da8f2be53:0:user",
+          "45310f65-9314-5b1c-8b32-d08da8f2be53:2:assistant",
+          "42cfefdf-d233-5abc-9279-4e36339d2f79:0:user",
+          "42cfefdf-d233-5abc-9279-4e36339d2f79:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "42cfefdf-d233-5abc-9279-4e36339d2f79:0:user",
+      "42cfefdf-d233-5abc-9279-4e36339d2f79:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "45310f65-9314-5b1c-8b32-d08da8f2be53:0:user",
+          "45310f65-9314-5b1c-8b32-d08da8f2be53:2:assistant",
+          "42cfefdf-d233-5abc-9279-4e36339d2f79:0:user",
+          "42cfefdf-d233-5abc-9279-4e36339d2f79:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "45310f65-9314-5b1c-8b32-d08da8f2be53:0:user",
+          "45310f65-9314-5b1c-8b32-d08da8f2be53:2:assistant",
+          "42cfefdf-d233-5abc-9279-4e36339d2f79:0:user",
+          "42cfefdf-d233-5abc-9279-4e36339d2f79:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant",
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant",
+          "fallback-turn-2:0:user",
+          "fallback-turn-2:2:assistant",
+          "fallback-turn-3:0:user",
+          "fallback-turn-3:2:assistant",
+          "45310f65-9314-5b1c-8b32-d08da8f2be53:0:user",
+          "45310f65-9314-5b1c-8b32-d08da8f2be53:2:assistant",
+          "42cfefdf-d233-5abc-9279-4e36339d2f79:0:user",
+          "42cfefdf-d233-5abc-9279-4e36339d2f79:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "42cfefdf-d233-5abc-9279-4e36339d2f79:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nGPT-05 Gate2-R1 限定复核\n\n被测文档已按完整 SHA da5e5aaa5e2828190c655ecb6d8121503c047f67 实读，文档 blob SHA 为 20202733968b30cb895f6827ef9baf4df99a6fe0。\n\n先给出一个关键区分：v0.4 已把 GET /api/v1/tasks 的权限变更写成明确提案及唯一红线例外，但这不等于该权限已在平台代码中生效。Gate2-R1 必须分别判断设计是否可接受、实现前置条件是否明确，不能把文档提案当作代码事实。\n\n六项复核结果\n\n整体 REJECT Gate2-R1 尚未通过，不具备开工条件；不授权进入代码实现。\n\n项目\n\n\t\n\n三态\n\n\t\n\n固定依据与判断\n\n\n\n\n① A-1 运行期权限\n\n\t\n\nREJECT\n\n\t\n\n§3 明确承认需要修改服务端白名单，但提案让所有服务身份共享获得 GET /api/v1/tasks 权限。实读 security.py（blob 7b1efc8d…）确认当前白名单没有该路由；实读 api.py（blob 62a8c60c…）确认任务列表的 batch_id 是可选过滤条件。仅增加白名单行，就会使服务身份能够不带 batch_id 查询全局任务列表。客户端白名单不是服务端资源隔离，不能作为访问控制补偿。\n\n\n\n\n② A-2 回复契约\n\n\t\n\nREJECT\n\n\t\n\n字段表、七字段矩阵、一致性规则和 SHA 对象语义已有明显进展，但 envelope 身份定义自相矛盾：§6 规定 source.agent_id=ENGINE-04，附录 A-2 示例却写 source.agent_id=GPT-05。另外，示例 message_id=MSG-<8位>-<6位> 声称由 run_key SHA-256 折叠生成，与现有 messages-create.schema.json（blob d4a80461…）要求的 ^MSG-\\d{8}-\\d{6}$ 不一致。当前示例的 ORCHESTRATOR 也应核实是否为实际平台 agent ID AIEO-ORCHESTRATOR。\n\n\n\n\n③ A-3 逐步骤恢复矩阵\n\n\t\n\nPASS_WITH_CONSTRAINTS\n\n\t\n\nA4a/A4b/A4c 独立登记、读回、恢复和禁止动作，以及三子标志齐全才写聚合标志，方向正确。未决点：A-3 对“其余断点”只作概括性描述，没有像三项登记步骤一样逐项列出六字段；request_sha、canonical_sha 的规范化字段范围和序列化规则也没有完全冻结。\n\n\n\n\n④ 多事务登记\n\n\t\n\nPASS_WITH_CONSTRAINTS\n\n\t\n\nA4a→A4b→A4c 顺序、部分成功跳过、409 双证、correlation_id 读回均已写入。仍需把 duplicate 响应与 HTTP 状态、响应中的 message_id/请求指纹、读回 envelope 的规范化比较规则统一成可执行判定表，避免实现方自行解释。\n\n\n\n\n⑤ 真实腿验收设计\n\n\t\n\nPASS_WITH_CONSTRAINTS\n\n\t\n\n§7 已覆盖正常、风险、采集失败、幂等重放、两类崩溃窗口、人工接管、BLOCKED、矩阵矛盾、建议矛盾、权限拒绝和分页不一致。12 个场景的覆盖面基本足够；但 A10 目前只验证客户端先行拦截和 AUTH-0002 兜底，不能证明服务端权限变更后的最小权限边界；还应加入“不带 batch_id 的任务列表请求必须被拒绝”这一权限回归用例。\n\n\n\n\n⑥ 边界与安全\n\n\t\n\nPASS_WITH_CONSTRAINTS\n\n\t\n\n显式 CLI、无状态事件、同构复制、M1-M4 零修改原则及唯一例外均有明确记录；source-principal 未绑定也没有隐瞒。但 A-1 权限扩大风险尚未解决，且 A-2 身份冲突使安全边界无法冻结。\n\n关键阻断分析\n1. A-1 不能按当前方案批准\n\n问题不在于是否可以接受一行白名单变更，而在于这一行的实际权限范围：\n\nSERVICE_ALLOWED_ENDPOINTS 是共享集合，增补后所有服务身份都能访问任务列表。\n\napi.py 的任务列表支持不带 batch_id 查询。\n\n客户端白名单只能约束遵守客户端代码的调用方，不能约束持有服务 token 的其他调用方。\n\n因此“只读”并不等于“最小权限”，全局任务信息仍可能被越权读取。\n\n整改方向： 先确定服务端如何强制限定查询范围。至少应保证服务身份不能通过省略 batch_id 获得全局任务列表，并明确批次资源归属校验。若这需要超出当前一行白名单的 M1 变更，必须明确列出变更范围及对 M1-M4 零修改红线的影响，不能把它包装成原红线内的普通实现细节。\n\n2. A-2 必须统一身份和 ID 格式\n\n只需解决两个明确冲突：\n\n明确 source.agent_id 到底是 ENGINE-04 还是 GPT-05。建议区分清楚：ENGINE-04 是实际提交 message 的服务身份，GPT-05 是审计角色/报告中的 reviewer 身份；最终以平台 agent 注册信息及消息契约为准。\n\nmessage_id 生成算法必须符合 M1 已冻结的 schema。不能在新 charter 中另行定义一种与现有 schema 不兼容的格式。\n\n设计冻结与授权结论\n\n本轮不予设计冻结，也不触发 DEC-089 开工授权。\n\n这不是对 v0.4 整体设计推倒重来。A-3、④、⑤、⑥的主体设计已经达到可保留状态，下一轮只需处理以下事项：\n\nA-1： 重做服务端最小权限边界，解决全局任务列表访问问题；明确是否需要超出一行白名单的 M1 变更及红线影响。\n\nA-2： 统一 ENGINE-04/GPT-05 的 envelope 身份；修正 message_id 格式与现有 schema 的冲突；明确 target agent 的真实 ID。\n\nA-3： 补齐其余断点的逐项恢复字段；冻结 request_sha/canonical_sha 的计算规则。\n\n④： 补齐 duplicate/409 的状态与双证判定表。\n\n⑤： 增加服务端全局任务读取拒绝用例，并验证权限边界。\n\n⑥： 根据 A-1 的最终方案更新安全边界及红线说明。\n\n下一轮复核范围\n\n建议命名为 G05-Gate2-R2，固定完整 SHA 后只复核以上整改项。以下已定原则不重开：\n\n显式 CLI 是一期唯一触发方式；\n\n同构复制，不抽公共 runner；\n\n无状态事件；\n\nM1-M4 零修改原则，除非用户明确批准变更；\n\n审计报告 artifact 是结论唯一权威载体；\n\n多事务登记和断点恢复，不得通过重新派单掩盖部分成功。\n\n授权状态：未授权新增 engineering_audit_leg.py、ENGINE-04 bootstrap/部署或任何 M1-M4 代码修改。 DEC-010 关于合并、发布和数据操作的用户本人决策红线继续有效。\n\n本轮已完成限定复核；下一版不需要重写整份任务书，围绕 A-1 和 A-2 两个阻断点做最小修订即可。",
+      "text_sha256": "3e5d6ef9788a371ee4553928c4cda58dfcb155aaaf0cfbf0778db6c2e4eaa8e7",
+      "size_bytes": 6181,
+      "assistant_uuid": "c17f616f-2493-48a1-ac73-4d017e242a39"
+    }
+  ]
+}

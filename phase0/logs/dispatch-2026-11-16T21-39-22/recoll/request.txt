@@ -1,0 +1,5 @@
+[G05-Gate2-R1|限定复核] 被测=GPT05-ENGINEERING-AUDIT-LEG-CHARTER-DRAFT.md v0.4，damwate/AIEO main，commit da5e5aaa5e2828190c655ecb6d8121503c047f67，按SHA实读。只复核六项中未通过及有条件部分，不重开显式CLI、同构复制、无状态事件等已定原则。
+
+【修订落实】①A-1=§3权限方案：security.py白名单增补一行("GET","/api/v1/tasks")只读+影响面声明+既有接口核查（board仅聚合不足）+禁止绕行+回归门槛；A-1定稿8行含messages读回与/reports过滤声明。②A-2定稿=21字段契约表+standards_matrix七字段+一致性规则+SHA语义表+envelope示例+message_id确定性。③A-3定稿=A4a/A4b/A4c三步独立登记六字段粒度+顺序冻结+聚合标志三子齐才写。⑤验收=§7证据矩阵12用例（含崩溃窗口/矩阵矛盾/建议矛盾/权限拒绝/分页不一致）。⑥§6身份边界如实登记。
+
+【输出】逐项三态+依据+未决风险；全过则给设计冻结+开工授权明确结论（DEC-089机制）+收尾清单。
