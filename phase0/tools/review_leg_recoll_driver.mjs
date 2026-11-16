@@ -5,8 +5,8 @@
 // 派生参数（L-018 第 3/4 条三参数+归属校验五件套）：
 //   CONV_UUID=33333333-4444-4555-8666-777777777777            （原会话 ID；来自账本 R3_SEND_CONFIRMED）
 //   SENT_USER_UNIT_KEY=fallback-turn-0:0:user（发送双验报告键；定位以标记文本为准，键仅参考）
-//   FAILED_DIR=C:/Users/youting/AppData/Local/Temp/rvl-test-diemunsl/dispatch-logs/dispatch-runner-3          （发送失败现场 dispatch 目录；request.txt 证据源）
-//   OUT_DIR=C:/Users/youting/AppData/Local/Temp/rvl-test-diemunsl/runtime/rvl-997019                （补采产物落盘目录=审查腿 run 目录）
+//   FAILED_DIR=C:/Users/youting/AppData/Local/Temp/rvl-test-v8d6m7a0/dispatch-logs/dispatch-runner-3          （发送失败现场 dispatch 目录；request.txt 证据源）
+//   OUT_DIR=C:/Users/youting/AppData/Local/Temp/rvl-test-v8d6m7a0/runtime/rvl-997019                （补采产物落盘目录=审查腿 run 目录）
 //   MARKER_TEXT=[GPT03-R1|997019|T-P1-027]        （简报标记文本；归属校验唯一锚点）
 //   PREV_REPLY_SHA256=（前轮 reply SHA 前缀排除；not_prev_reply_sha）
 //
@@ -29,8 +29,8 @@ const CONV_UUID = "33333333-4444-4555-8666-777777777777";
 const MARKER = "[GPT03-R1|997019|T-P1-027]";
 const PREV_REPLY_SHA256 = ""; // 空串=无前轮可比（首轮），not_prev_reply_sha 恒真
 const SENT_KEY_REPORTED = "fallback-turn-0:0:user";
-const FAILED_DIR = "C:/Users/youting/AppData/Local/Temp/rvl-test-diemunsl/dispatch-logs/dispatch-runner-3"; // 派生为绝对路径（驱动在 phase0/tools cwd 下运行）
-const OUT_DIR = "C:/Users/youting/AppData/Local/Temp/rvl-test-diemunsl/runtime/rvl-997019";       // 派生为绝对路径（审查腿 run 目录）
+const FAILED_DIR = "C:/Users/youting/AppData/Local/Temp/rvl-test-v8d6m7a0/dispatch-logs/dispatch-runner-3"; // 派生为绝对路径（驱动在 phase0/tools cwd 下运行）
+const OUT_DIR = "C:/Users/youting/AppData/Local/Temp/rvl-test-v8d6m7a0/runtime/rvl-997019";       // 派生为绝对路径（审查腿 run 目录）
 const IDLE_WAIT_MS = Number(process.env.AIEO_RECOLL_IDLE_WAIT_MS || 30000);
 
 function log(msg) {

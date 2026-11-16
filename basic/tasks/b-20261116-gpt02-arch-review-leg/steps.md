@@ -19,7 +19,8 @@
 ## S3 测试与实战（PASS——测试矩阵；零 mock 实战待验收链前执行）
 
 - ①测试矩阵：test_arch_review_leg.py 21 用例（A1 正常轮 PASS→READY/A2 REWORK 停等/A3 采集失败恢复+禁重发计数/A4 幂等重放/A5 路线 B 续推+A-3 终态行/A6 attach 三态/A7 BLOCKED 仅登记+白名单越权负例+契约校验负例+简报超限+材料锚定 fail-closed+发送状态不确定 fail-closed+setup 幂等）；test_review_leg.py 29 用例回归（含 test_01 白名单断言适配实例方法调用，语义不变）。
-- ②测试过程如实登记：首轮 7 失败→逐项定位修复（attach 绑定链自动组装/材料锚定测试意图修正/超限触发修正/A-3 终态断言口径/BLOCKED 事件契约字段 blocked_reason·blocked_owner·unblock_condition/attach 快照现场复制）→21/21；合跑 50/50（29 回归+21 新增）；首轮回归曾 1 次 fail（test_01 类调用适配期）与 1 次环境偶发（复跑两次均全绿，判定端口残留非代码缺陷，如实记录）。
+- ②测试过程如实登记：首轮 7 失败→逐项定位修复（attach 绑定链自动组装/材料锚定测试意图修正/超限触发修正/A-3 终态断言口径/BLOCKED 事件契约字段 blocked_reason·blocked_owner·unblock_condition/attach 快照现场复制）→21/21；合跑 50/50（29 回归+21 新增）；首轮回归曾 1 次 fail（test_01 类调用适配期）与 1 次 test_19 PID 复用竞态偶发（复跑全绿，Windows pid 重用非代码缺陷，如实记录）。
+- ②b **零 mock 边界事故与整改（2026-11-17 如实登记）：** 首轮/二轮运行期 test_13 夹具 BUG（BLOCKED 事件字段名不符→HTTP 422）使 leg3.resume 未停在 A-3 行 9 而走完整派单链，测试夹具任务（marker=GPT02-R1|a11）**真实发到 chatgpt.com 两次**（现场 dispatch-2026-11-16T16-08-26/16-11-53，新会话 6afb2ab2/6afb2b80；回复均为 BLOCKED——测试 commit 非 GitHub 可读，审查方正确拒绝；无敏感信息；两现场随 5f1d158 入库作为事故证据）。根因=make_leg 无替身路径无防线+夹具事件字段错误。整改：①测试基类 setUp 全局零 mock 守卫（未装替身路径的 gpt_dispatch 调用一律当场断言失败，不再依赖逐用例自觉）②test_13 夹具 BLOCKED 事件契约字段修复 ③守卫加固后 21/21 OK+双矩阵合跑 50/50 OK。
 - ③执行结果：双矩阵合跑 OK。
 - ④测试结果：50 用例全绿 exit=0（`python -m unittest test_review_leg test_arch_review_leg`，2026-11-17 实测）。
 - ⑤证据引用：phase1/tools/test_arch_review_leg.py；合跑输出随本任务 acceptance 归档。

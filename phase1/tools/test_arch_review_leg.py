@@ -37,6 +37,20 @@ ADMIN_PW = "rvl-test-admin-pw-2026-1116x"
 
 
 class ArchReviewLegTests(unittest.TestCase):
+    def setUp(self):
+        """零 mock 边界全局守卫（事故整改 2026-11-17：首轮/二轮 test_13 夹具 BUG
+        （BLOCKED 事件字段 422）使 resume 走完整派单链漏出真实 gpt_dispatch 两次——
+        此后任何未装替身路径的真实派单调用一律当场失败，不再依赖逐用例自觉）。"""
+        def guard(cmd, **kw):
+            if "gpt_dispatch.mjs" in " ".join(map(str, cmd)):
+                raise AssertionError("zero-mock boundary: real gpt_dispatch call leaked into test "
+                                     "(install dispatch double or fix the test path)")
+            return REAL_SUBPROCESS_RUN(cmd, **kw)
+        self._real_run_before_guard = ar.subprocess.run
+        ar.subprocess.run = guard
+
+    def tearDown(self):
+        ar.subprocess.run = self._real_run_before_guard
     @classmethod
     def setUpClass(cls):
         cls.tmp = Path(tempfile.mkdtemp(prefix="arl-test-"))
