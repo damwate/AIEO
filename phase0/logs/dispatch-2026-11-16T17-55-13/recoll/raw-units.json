@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-16T18:00:36.740Z",
+  "user_unit_key": "fallback-turn-1:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-1:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "dd9fe450-849f-435f-a268-f3e21e4804ae",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-1:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "0de11cc8567c5307983939fca9d1d27aea6e5d9b818eb5e7758eb56d0e97b375",
+          "fc9ffcbe7522c3c44a0b722feee2895b5ea30441f0cfa88e8cd6171b82a4076c"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "0de11cc8567c5307983939fca9d1d27aea6e5d9b818eb5e7758eb56d0e97b375",
+          "fc9ffcbe7522c3c44a0b722feee2895b5ea30441f0cfa88e8cd6171b82a4076c"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-1:0:user",
+      "fallback-turn-1:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-1:0:user",
+          "fallback-turn-1:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-1:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nGPT-04 立项 Gate1 审查结论\nPASS_WITH_CONSTRAINTS\n\n草案 v0.1 · Gate1\n\n核验对象\n\n仓库：damwate/AIEO\n\n分支：main\n\n固定 commit：da17717fb35233c597d90f3c945e98703f02d3e2\n\n草案：docs/phase1/GPT04-TEST-ACCEPTANCE-LEG-CHARTER-DRAFT.md\n\nCharter blob：31ef0f98f865508c5fa1400dd63fd28756522aa3\n\n本次按指定 SHA 实读了 Charter、状态机、报告登记实现、Pydantic Schema、两份 v1.0 测试报告契约，以及 API 路由。\n\n总体判断：立项方向成立，没有发现需要推翻 GPT-04 真实腿方案的架构性缺陷。但有一处既有契约与实际代码的语义冲突，以及一处恢复矩阵路径错误，需要在 Gate2 锁定处理规则。\n\n一、逐项核验\n\n审查项目\n\n\t\n\n结论\n\n\t\n\n判断\n\n\n\n\n§4 与 A-1/A-2/A-3 流程自洽\n\n\t\n\nPASS_WITH_CONSTRAINTS\n\n\t\n\n主流程成立，重复登记恢复路径有一处错误\n\n\n\n\n状态机端点事实\n\n\t\n\nPASS\n\n\t\n\n三种出边均有源码依据\n\n\n\n\n/reports/test 登记门\n\n\t\n\nPASS_WITH_CONSTRAINTS\n\n\t\n\n代码事实成立，但与冻结响应契约冲突\n\n\n\n\nTestReportIn 字段\n\n\t\n\nPASS\n\n\t\n\n五值枚举、三态结果均一致\n\n\n\n\nH2/M1-M4 边界\n\n\t\n\nPASS\n\n\t\n\n没有发现越界授权\n\n\n\n\n§9 防膨胀\n\n\t\n\nPASS\n\n\t\n\n一期范围控制合理\n\n\n\n\nD1-D5\n\n\t\n\nPASS_WITH_CONSTRAINTS\n\n\t\n\n建议裁定见下文\n\n1. 状态机端点事实\nPASS\n\napp/platform/state_machine.py:37：\n\nPython\n运行\n\"TEST_ACCEPTANCE\": {\n    \"PASS\": \"ACCEPTED\",\n    \"REWORK\": \"REWORK\",\n    \"BLOCKED\": \"BLOCKED\"\n}\n\n与 Charter §4 的三种结果一致。\n\n特别确认：\n\nPASS：进入 ACCEPTED。\n\nREWORK：进入 REWORK。\n\nBLOCKED：进入任务级 BLOCKED。\n\n因此，草案提出 BLOCKED 不调用 /reports/test，避免 ENGINE-03 擅自推进任务状态，这个设计方向是正确的。\n\n2. /reports/test 登记事实\nPASS\n\napp/platform/reports.py:201-260 核实：\n\nexecution 必须属于指定 task。\n\nresult=PASS 必须满足 execution_result=EXECUTED_PASS。\n\n登记测试报告。\n\n调用 apply_event 推进状态。\n\n整个登记和推进处于同一事务。\n\napp/platform/api.py:436-441 也确认了真实路由：\n\nPOST /api/v1/reports/test\n\napp/platform/schemas.py:181-188 确认：\n\nexecution_result 五值枚举。\n\nresult 三值枚举。\n\nartifact_id 可选。\n\npayload 为字典。\n\n这些与草案的主要事实描述一致。\n\n3. 发现的重要问题：重复登记语义冲突\nGate2 必须处理\n\n这是本轮最重要的发现。\n\nreports.py:208-216 的实际代码：\n\nPython\n运行\nif existing:\n    raise duplicate_message(...)\n\n也就是说，重复登记不是返回原登记结果，而是报 duplicate。\n\n但冻结契约：\n\ncontracts/v1.0/reports-test.schema.json\n\n其 description 明确写的是：\n\n重复→返回原登记结果 duplicate=true\n\n而 reports.py 的实际实现与这项契约描述不一致。\n\n这意味着：\n\nCharter §5 按实际代码描述 duplicate 行为，事实正确。\n\n冻结契约描述的 duplicate 行为与实际代码不一致。\n\nH2 禁止修改既有契约，因此不能在 GPT-04 立项中顺手修改它。\n\n裁定：GPT-04 应以实际运行行为作为异常恢复设计依据，但必须将既有契约与实现的不一致登记为遗留问题。\n\n不得把 duplicate 当成成功返回，也不得未经只读核验直接重发。\n\n4. 重复登记恢复路径\n需修正 A-3\n\nA-1 的只读查询路径正确：\n\nGET /api/v1/reports\n\n支持 type=test 和 task_id 筛选。\n\n但 A-3 写成：\n\nGET /reports/test_reports\n\n这个路径并不存在。\n\n建议统一改为：\n\n纯文本\nGET /api/v1/reports?type=test&task_id={task_id}\n\n恢复时至少核对：\n\ntask_id\n\nexecution_id\n\ncommit_sha\n\nresult\n\nexecution_result\n\n核实已登记则接续，不存在则按原键处理；无法确定则腿级 BLOCKED。\n\n不要修改 M1，也不要改变冻结契约来解决这个问题。\n\n二、D1-D5 裁定建议\n\n决策点\n\n\t\n\n建议\n\n\t\n\n理由\n\n\n\n\nD1：GPT-04 是否先于 GPT-05\n\n\t\n\n接受\n\n\t\n\n任务级闭环清晰，GPT-05 批次审计需要独立设计\n\n\n\n\nD2：抽公共 runner 还是同构复制\n\n\t\n\nGate2 决定\n\n\t\n\n当前两种方案都成立，不应在 Gate1 提前锁定\n\n\n\n\nD3：测试证据定位方式\n\n\t\n\n推荐显式 artifact 指针\n\n\t\n\n固定输入、避免 latest_execution 派生造成证据漂移\n\n\n\n\nD4：执行事实一致性校验\n\n\t\n\n推荐严格区分事实与结论\n\n\t\n\nPASS 必须绑定 EXECUTED_PASS；其他组合不能简单等同于失败\n\n\n\n\nD5：BLOCKED 处理\n\n\t\n\n接受草案推荐\n\n\t\n\n不调用 /reports/test，使用 artifacts+messages 留证，M1 保持 TEST_ACCEPTANCE\n\nD1：接受 GPT-04 优先\n\nGPT-04 是任务级测试验收关口，GPT-05 是批次审计关口。\n\n先完成 GPT-04，可以验证真实测试证据如何进入最终任务验收闭环，再独立设计 GPT-05 的批次聚合与生产发布边界。\n\n没有必要为 GPT-05 提前引入批次能力。\n\nD2：公共 runner 决策留 Gate2\n\n我的倾向是：\n\n优先复用公共能力，但不为了抽象而抽象。\n\n需要检查 GPT-02、GPT-03 的实际代码，确认公共 runner 的抽取范围、回归风险和维护成本。\n\n如果抽取会影响已经 PASS 的两条腿，优先选择同构复制，公共化留待后续。\n\nM1-M4 不允许因为这项决策而修改。\n\nD3：推荐显式证据指针\n\n推荐：\n\nexecution_id 明确绑定。\n\n测试报告 artifact_id 明确绑定。\n\n三件套原始证据分别可追溯。\n\nGitHub commit SHA 固定。\n\nbrief_sha256 绑定本次简报。\n\n不建议让运行中的 GPT-04 自行猜测最新证据。\n\nlatest_execution 可以作为发现入口，但最终输入必须固定并记录。\n\nD4：严格区分执行事实与验收结论\n\n这是一个需要特别注意的业务语义问题。\n\n执行事实\n\n\t\n\n验收结论\n\n\t\n\n建议\n\n\n\n\nEXECUTED_PASS\n\n\t\n\nPASS\n\n\t\n\n允许\n\n\n\n\nEXECUTED_FAIL\n\n\t\n\nREWORK\n\n\t\n\n允许\n\n\n\n\nEXECUTED_PASS\n\n\t\n\nREWORK\n\n\t\n\n允许，可能存在验收标准不满足\n\n\n\n\nNOT_EXECUTED\n\n\t\n\nPASS\n\n\t\n\n禁止\n\n\n\n\nCLAIMED_ONLY\n\n\t\n\nPASS\n\n\t\n\n禁止\n\n\n\n\nBLOCKED\n\n\t\n\nPASS\n\n\t\n\n禁止\n\n核心原则：\n\n测试执行结果不等于验收结论。\n\nGPT-04 可以在测试执行通过的情况下，因验收标准不满足而给出 REWORK。\n\n但不能在没有实际通过证据时给出 PASS。\n\n其他组合的语义校验规则建议在 Gate2 冻结，不能让 GPT-04 回复内容直接覆盖 F-003 的执行事实。\n\nD5：接受 BLOCKED 推荐方案\n建议采纳\n\n草案设计：\n\n纯文本\nGPT-04 返回 BLOCKED\n       |\n       v\n不调用 /reports/test\n       |\n       +--> POST /artifacts\n       |\n       +--> POST /messages\n       |\n       v\n腿级 BLOCKED\n       |\n       v\nM1 保持 TEST_ACCEPTANCE\n       |\n       v\n人工接管\n\n这是正确的权限分离。\n\n原因：\n\n/reports/test 的 BLOCKED 分支会通过 apply_event 推进 M1 到任务级 BLOCKED。\n\nENGINE-03 不应替 OWNER 作出任务级阻塞决定。\n\nartifacts+messages 可以保留证据和结论。\n\n人工接管后仍可按照 M1 原生状态机处理。\n\n与 GPT-02 的 BLOCKED 处理先例同构，建议保留。\n\n三、Gate1 约束清单\n\n进入 Gate2 前只要求处理以下三项：\n\n编号\n\n\t\n\n要求\n\n\t\n\n优先级\n\n\n\n\nG1-01\n\n\t\n\n修正 A-3 中不存在的 /reports/test_reports 查询路径\n\n\t\n\nP1\n\n\n\n\nG1-02\n\n\t\n\n登记冻结契约 duplicate 描述与实际实现不一致的问题，明确 GPT-04 以实际代码行为进行恢复\n\n\t\n\nP1\n\n\n\n\nG1-03\n\n\t\n\nGate2 明确 D4 的非 PASS 组合校验规则，以及执行事实不可被回复覆盖的约束\n\n\t\n\nP1\n\nD2、D3、D5 不要求在 Gate1 返工，进入 Gate2 形成最终决策即可。\n\n四、最终意见\n建议进入 Gate2\n\n不建议 REJECT，也不建议直接 PASS。\n\n理由：\n\n主架构没有根本性问题。\n\nM1 原生 /reports/test 是合理的登记入口。\n\nBLOCKED 权限隔离方案成立。\n\nH2、M1-M4 零修改、§9 防膨胀边界成立。\n\n有一处真实的契约与实现冲突，必须留下正式记录，不能假装不存在。\n\n我的建议是：修正 G1-01，登记 G1-02，明确 G1-03，然后进入 Gate2。\n\nGate1 不构成开工授权，不允许据此开始 GPT-04 工程实现。GPT-05 继续等待 GPT-04 完成立项决策。",
+      "text_sha256": "fc9ffcbe7522c3c44a0b722feee2895b5ea30441f0cfa88e8cd6171b82a4076c",
+      "size_bytes": 8153,
+      "assistant_uuid": "dd9fe450-849f-435f-a268-f3e21e4804ae"
+    }
+  ]
+}

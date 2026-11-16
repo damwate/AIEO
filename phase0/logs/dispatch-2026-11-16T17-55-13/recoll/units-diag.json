@@ -1,0 +1,14 @@
+[
+  {
+    "key": "fallback-turn-1:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[Gate1|GPT-04立项] 验证对象：docs/phase1/GPT04-TEST-ACCEPTANCE-LEG-CHARTER-DRAFT.md v0."
+  },
+  {
+    "key": "fallback-turn-1:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nGPT-04 立项 Gate1 审查结论\nPASS_WITH_CONSTRAINTS\n\n草案 v0.1 · Gate1\n\n核验对象\n\n仓库"
+  }
+]

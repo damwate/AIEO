@@ -1,0 +1,7 @@
+[Gate1|GPT-04立项] 验证对象：docs/phase1/GPT04-TEST-ACCEPTANCE-LEG-CHARTER-DRAFT.md v0.1，仓库damwate/AIEO分支main，commit da17717fb35233c597d90f3c945e98703f02d3e2，按SHA实读。
+
+【范围】草案级验证（非开工授权）：①内部一致性（§4流程与附录A-1/A-2/A-3自洽）；②事实核对（state_machine.py:37 TEST_ACCEPTANCE出边；reports.py:201-250 /reports/test绑定+PASS须绑EXECUTED_PASS门；schemas.py:181 TestReportIn字段；contracts/v1.0/test-report.schema.json）；③边界自洽（§3 M1-M4零修改/H2新增契约不改既有/§9防膨胀）；④决策点D1-D5逐项给出裁定建议或留Gate2并说明理由。
+
+【供核对的自查项】BLOCKED处置（D5）推荐不调/reports/test而走artifacts+messages登记（M1保持TEST_ACCEPTANCE），与GPT-02腿BLOCKED先例同构——是否成立请裁；/reports/test重复登记报duplicate（非幂等返回），§5恢复路径是否充分。
+
+【输出】三态：PASS/PASS_WITH_CONSTRAINTS（附约束清单）/REJECT（逐项依据+整改要求）。抓实质缺陷，不做格式性返工要求。

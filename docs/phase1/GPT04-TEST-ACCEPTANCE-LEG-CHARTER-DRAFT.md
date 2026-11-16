@@ -1,4 +1,4 @@
-# GPT-04 测试验收真实腿最小版接入——立项任务书（草案 v0.1）
+# GPT-04 测试验收真实腿最小版接入——立项任务书（草案 v0.2）
 
 > **文档身份与授权链：** 本文件=Standard 平台路线 GPT-02/03/04/05 逐角色接入的**第三张立项草案**（GPT-03 charter v1.0 已生效 DEC-057/062；GPT-02 charter 已交付闭环 DEC-088）。生效路径：charter 草案 → Gate1 草案级验证 → Gate2 会务立项评审 → 开工授权。**授权机制（用户 2026-11-17 指令）：** 立项各关口遇问题与审查方（ChatGPT）讨论并以审查方意见为准，开工授权=审查方复审通过替代用户逐项拍板（依据登记 decision-log）；DEC-010 高危红线（main 合并/生产发布/数据删除）仍须用户本人拍板，用户保留手动介入权。角色顺序决策点：草案推荐 GPT-04 先于 GPT-05（理由见 §1），评审可裁定改序。
 
@@ -46,8 +46,8 @@
 
 | 差异点 | 规则 |
 |---|---|
-| `/reports/test` 重复登记 | 端点幂等键=(execution_id, commit_sha)，重复报 duplicate（非幂等返回）——恢复路径=先 `GET /api/v1/reports` 只读核实已登记行；已生效接续；确认未生效才可按原键重试，无法确认→腿级 BLOCKED（禁凭超时重提交） |
-| PASS↔EXECUTED_PASS 证据门 | 回复 result=PASS 而证据事实 execution_result≠EXECUTED_PASS（或反之）→契约一致性校验 fail-closed，不登记，腿级 BLOCKED 停等人工（该矛盾本身即"claims are not evidence"要拦截的形态） |
+| `/reports/test` 重复登记 | 端点幂等键=(execution_id, commit_sha)，重复报 duplicate（**非幂等返回**，reports.py:208-216 实际行为）——恢复路径=先 `GET /api/v1/reports?type=test&task_id={task_id}` 只读核实（逐项核对 task_id/execution_id/commit_sha/result/execution_result）；已生效接续；确认未生效才可按原键重试，无法确认→腿级 BLOCKED（禁凭超时重提交、禁把 duplicate 当成功）。**既有契约描述与实现不一致登记（G1-02，Gate1 发现）：** `contracts/v1.0/reports-test.schema.json` description 称"重复→返回原登记结果 duplicate=true"，与实现 raise duplicate_message 不符——本任务不改冻结契约（H2），GPT-04 恢复设计以实际代码行为为准；该不一致登记为独立遗留问题走契约演进流程 |
+| PASS↔EXECUTED_PASS 证据门 | 回复 result=PASS 而证据事实 execution_result≠EXECUTED_PASS→fail-closed 不登记，腿级 BLOCKED 停等人工（M1 内建门 reports.py:212-217+腿一致性校验双层拦截）；执行事实与验收结论严格区分（G1-03 原则：测试执行结果≠验收结论，组合校验矩阵见附录 A-2，Gate2 冻结） |
 
 ## 6. 安全与审计
 
@@ -82,9 +82,23 @@ GPT-05 批次审计真实腿；多轮返工重验自动化；测试执行编排�
 - **明确排除：** POST /tasks/{task_id}/events（推进由端点内原子完成）/POST /agents（bootstrap 一次性 OWNER 操作）/approvals 类/messages cancel-requeue-ack/projects、batches 写操作/BLOCKED 经 /reports/test 提交（D5）。
 - **POST /api/v1/agents 不入运行期白名单**：GPT-04/ENGINE-03 身份注册=一次性 OWNER bootstrap（先例=ENGINE-01/02）。
 
-### A-2 验收简报组装与回复契约（初稿）
+### A-2 验收简报组装与回复契约（初稿，Gate1 后 v0.2 修订）
 
-**回复契约=新增 `test-acceptance-review.schema.json`（新增文件，H2 纪律）**，字段草案：contract_version/task_id/review_round_id/reviewer_agent_id(GPT-04)/engine_agent_id(ENGINE-03)/commit_sha(40hex)/execution_id/execution_result_observed(GPT-04 对证据的事实判定，五值枚举与 TestReportIn 同源)/result(PASS/REWORK/BLOCKED)/summary/findings/required_boundaries。登记映射：result→TestReportIn.result；execution_result→**由腿从 F-003 证据事实读入**（不采信回复自述）；一致性校验=回复 execution_result_observed 与证据事实不一致→fail-closed 腿级 BLOCKED【决策点 D4：校验方向与宽严度（仅 PASS↔EXECUTED_PASS 硬门为 M1 内建；其余错位是否也 fail-closed 由 Gate2 裁定）】。
+**回复契约=新增 `test-acceptance-review.schema.json`（新增文件，H2 纪律）**，字段草案：contract_version/task_id/review_round_id/reviewer_agent_id(GPT-04)/engine_agent_id(ENGINE-03)/commit_sha(40hex)/execution_id/execution_result_observed(GPT-04 对证据的事实判定，五值枚举与 TestReportIn 同源)/result(PASS/REWORK/BLOCKED)/summary/findings/required_boundaries。登记映射：result→TestReportIn.result；execution_result→**由腿从 F-003 证据事实读入（不采信回复自述）**；一致性校验矩阵如下（G1-03，Gate1 裁定方向，Gate2 冻结为最终规则）：
+
+**执行事实×验收结论组合校验矩阵（原则：测试执行结果≠验收结论；执行事实以 F-003 证据为准，禁止被 GPT-04 回复覆盖）：**
+
+| 证据事实 execution_result | 回复结论 result | 裁定 |
+|---|---|---|
+| EXECUTED_PASS | PASS | 允许 |
+| EXECUTED_FAIL | REWORK | 允许 |
+| EXECUTED_PASS | REWORK | 允许（测试通过但验收标准不满足） |
+| NOT_EXECUTED | PASS | **禁止**（fail-closed 不登记，腿级 BLOCKED） |
+| CLAIMED_ONLY | PASS | **禁止**（同上——"claims are not evidence"） |
+| BLOCKED | PASS | **禁止**（同上） |
+| 其他未列组合 | — | Gate2 冻结补齐（默认从严：PASS 结论之外的组合按 §5 平台故障/人工语义处置，不自动登记） |
+
+**简报输入四组**：任务身份（task_id/title/acceptance_criteria 原始语义不扩展）/执行事实（latest_execution+execution_result 事实值+证据来源）/测试证据（F-003 三件套+报告 GitHub 指针，固定 commit 禁隐式读最新 main）/验收边界（files_scope）。新增绑定字段：review_round_id/input_material_commit/brief_sha256/brief_schema_version。**证据定位（D3，Gate1 裁定方向）：显式 artifact 指针为准**——execution_id 明确绑定+测试报告 artifact_id 明确绑定+三件套原始证据分别可追溯+commit SHA 固定+brief_sha256 绑定本次简报；latest_execution 仅作发现入口，最终输入固定并记录（禁止运行中自行猜测最新证据）。
 
 **简报输入四组**：任务身份（task_id/title/acceptance_criteria 原始语义不扩展）/执行事实（latest_execution+execution_result 事实值+证据来源）/测试证据（F-003 三件套+报告 GitHub 指针，固定 commit 禁隐式读最新 main）/验收边界（files_scope）。新增绑定字段：review_round_id/input_material_commit/brief_sha256/brief_schema_version。
 
@@ -96,7 +110,7 @@ GPT-05 批次审计真实腿；多轮返工重验自动化；测试执行编排�
 | 简报已组装未发送 | 校验 brief SHA，继续发送 | 允许 |
 | 已发送未采集 | 原会话补采（归属校验型），核验发送证明 | **禁止重发** |
 | 已采集未登记 | 校验 reply SHA/契约，按原幂等键登记 | **禁止重发** |
-| /reports/test 提交结果不确定 | 只读核实 GET /reports/test_reports 行；已生效接续；未生效按原键重试；无法确定→腿级 BLOCKED | **禁止重发** |
+| /reports/test 提交结果不确定 | 只读核实 `GET /api/v1/reports?type=test&task_id={task_id}`（逐项核对 task_id/execution_id/commit_sha/result/execution_result）；已生效接续；未生效按原键重试；无法确定→腿级 BLOCKED | **禁止重发** |
 | 登记成功推进失败 | 端点同事务原子设计下不应出现；出现=登记 BUG→腿级 BLOCKED 上报（不绕过） | **禁止重发** |
 | ACCEPTED/REWORK 已推进 | 只读核验，认定本轮完成 | 禁止 |
 | BLOCKED 结论（腿级） | artifacts+messages 已登记，M1 保持 TEST_ACCEPTANCE，人工接管 | 禁止 |
@@ -105,4 +119,5 @@ GPT-05 批次审计真实腿；多轮返工重验自动化；测试执行编排�
 
 | 版本 | 日期 | 状态 | 变更 | 依据 |
 |---|---|---|---|---|
-| v0.1 | 2026-11-17 | 草案（待 Gate1） | 初稿成文（GPT-02 charter v0.3 同构框架，落点 TEST_ACCEPTANCE 关口；登记路线=/reports/test 原生端点；决策点 D1-D5 汇总见 §1/§3/§4/附录 A-2） | 用户 2026-11-17 交接指令；DEC-026 决议二；DEC-088 遗留④迁移先行；角色规范 docs/立项/02 §5；state_machine.py:37/reports.py:201-250/schemas.py:181-188 实读 |
+| v0.2 | 2026-11-17 | 草案（Gate1 PASS_WITH_CONSTRAINTS 三项整改后，待 Gate2） | Gate1 三约束落实：G1-01=A-3 恢复路径修正为 `GET /api/v1/reports?type=test&task_id=`（原 /reports/test_reports 路径不存在，逐项核对五字段）；G1-02=§5 登记 frozen 契约 duplicate 描述与实现不一致为遗留问题（恢复设计以实际代码行为为准，不改冻结契约）；G1-03=附录 A-2 组合校验矩阵（执行事实≠验收结论原则+三组合禁止 PASS）+D3 显式 artifact 指针落稿 | Gate1 裁定（reply sha256=fc9ffcbe7522c3c4…，recoll 七查全过，dispatch-2026-11-16T17-55-13/recoll；blob 31ef0f98f865508c5fa1400dd63fd28756522aa3） |
+| v0.1 | 2026-11-17 | 草案（Gate1 被测对象） | 初稿成文（GPT-02 charter v0.3 同构框架，落点 TEST_ACCEPTANCE 关口；登记路线=/reports/test 原生端点；决策点 D1-D5 汇总见 §1/§3/§4/附录 A-2） | 用户 2026-11-17 交接指令；DEC-026 决议二；DEC-088 遗留④迁移先行；角色规范 docs/立项/02 §5；state_machine.py:37/reports.py:201-250/schemas.py:181-188 实读 |
