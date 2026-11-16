@@ -1,0 +1,33 @@
+﻿PATTERNS=['10+ 轮', '10+轮', '约 10 轮', '约10轮', '10 轮以上', '10轮以上', '10 多轮', '十余轮']
+TOTAL_HITS=31  LIVE=7  SKIP=24
+[SKIP(历史区)] basic\tasks\b-20261116-session-migrate-4rounds\requirement.md:1 pat='约 10 轮' :: # 会话迁移评估阈值调整（约 10 轮 → 4 轮）
+[SKIP(历史区)] basic\tasks\b-20261116-session-migrate-4rounds\requirement.md:3 pat='约 10 轮' :: 请将 AIEO basic 版本现有约 10 轮的会话迁移评估机制调整为 4 轮，即累计达到 4 轮后主动评估并执行新聊天交接，不再等到 10 轮。沿用现有 GitPointer、安全停止和交接流程，不改变单条消息 1200 UTF-8 字节限制及其他规则。同步检查并更新相关文档、代码、测试和示例，避免规则不一致。所有
+[SKIP(历史区)] basic\tasks\b-20261116-session-migrate-4rounds\steps.md:1 pat='约10轮' :: # steps：b-20261116-session-migrate-4rounds（会话迁移评估阈值 约10轮→4轮）
+[SKIP(历史区)] basic\tasks\b-20261116-session-migrate-4rounds\steps.md:16 pat='10+ 轮' :: - ④执行结果：M1 完成（L-018 第 6 条"主动迁移"段改写：4 条 user 消息阈值+评估非强制+接棒归零+每增 2 条重评+三类例外；旧"实测约 10+ 轮"表述废止）；M2 完成（AGENTS.md 映射行固化"累计达 4 条 user 消息"）；M3 完成（DEC-084 登记，含编号勘误声明）；既有
+[SKIP(历史区)] basic\tasks\b-20261116-session-migrate-4rounds\steps.md:22 pat='10+ 轮' :: - ①本步骤目标：ST-05 检查器自检无 FAIL 缺口；全仓旧阈值残留排查（"10+ 轮/约 10 轮/10 轮以上"同义表达+其他文档独立迁移时机规定+模板/提示词/检查脚本）；GitPointer/安全停止/1200B 零改动核对
+[SKIP(历史区)] basic\tasks\b-20261116-session-migrate-4rounds\task-brief.md:1 pat='约 10 轮' :: # 任务书：会话迁移评估阈值调整（约 10 轮 → 4 轮）
+[SKIP(历史区)] basic\tasks\b-20261116-session-migrate-4rounds\task-brief.md:17 pat='约 10 轮' :: - 将审查会话迁移评估阈值由"约 10 轮"收紧为"累计 4 轮 user 消息即主动评估迁移"（第 4 轮=评估触发点非强制迁移点）；规则唯一定义点=docs/AI-DEV-LESSONS.md L-018 第 6 条，AGENTS.md 映射行同步固化。
+[SKIP(历史区)] basic\tasks\b-20261116-session-migrate-4rounds\task-brief.md:18 pat='10+ 轮' :: - 采纳 ChatGPT 复审 3 处补充口径（reply sha256=bf4bbc1d305870a6712881cbd3e5957a33aaf0cd1b0e615bb45e09cda6f6bb04）：①计数口径（仅 user 消息/新会话接棒归零/评估非强制/暂不迁移须记录理由且每增 2 条 user 消息重评）
+[SKIP(历史区)] basic\tasks\b-20261116-session-migrate-4rounds\task-brief.md:29 pat='10+ 轮' :: - 全仓残留排查：无"10+ 轮/约 10 轮/10 轮以上"类旧阈值表述残留于现行规则文本（历史记录除外，逐一登记排除项）；
+[SKIP(历史区)] basic\tasks\b-20261116-session-migrate-4rounds\acceptance\commit-msg.txt:1 pat='约10轮' :: b-20261116-session-migrate-4rounds: 会话迁移评估阈值 约10轮→累计4条user消息（DEC-084）
+[SKIP(历史区)] basic\tasks\b-20261116-session-migrate-4rounds\acceptance\residual-sweep.py:15 pat='10+ 轮' :: PATTERNS = ["10+ 轮", "10+轮", "约 10 轮", "约10轮", "10 轮以上", "10轮以上", "10 多轮", "十余轮"]
+[SKIP(历史区)] basic\tasks\b-20261116-session-migrate-4rounds\acceptance\rotation-sweep.txt:8 pat='约 10 轮' :: docs\phase1\decision-log.md:675 pat='条 user 消息' :: ### DEC-084 会话迁移评估阈值调整：约 10 轮 → 累计 4 条 user 消息（2026-11-16，用户指令+ChatGPT 复审共识）
+[SKIP(历史区)] basic\tasks\b-20261116-session-migrate-4rounds\acceptance\rotation-sweep.txt:9 pat='10+ 轮' :: docs\phase1\decision-log.md:679 pat='条 user 消息' :: - **裁定（规则变更，取代旧阈值）：** 会话迁移评估阈值由"实测约 10+ 轮 user 消息即评估迁移时机"（L-018 第 6 条旧文）收紧为 **累计达到 4 条 user 消息即主动评估是否迁移交接**。口
+[LIVE] docs\AI-DEV-LESSONS.md:531 pat='约 10 轮' :: 6. **会话上下文上限（CONTEXT_LIMIT_STOP）处置：** 自动化停止未发送=无重发风险；按手册 §5 迁移路径：旧会话转只读归档→新建自包含迁移简报（≤1200B：接棒声明+任务+主证据路径/SHA256/被测 commit+读取路径+复验项+边界）→`--new-session` 首派即活→**后续
+[LIVE] docs\phase1\decision-log.md:675 pat='约 10 轮' :: ### DEC-084 会话迁移评估阈值调整：约 10 轮 → 累计 4 条 user 消息（2026-11-16，用户指令+ChatGPT 复审共识）
+[LIVE] docs\phase1\decision-log.md:677 pat='约 10 轮' :: - **用户指令（原文，2026-11-16）：** "请将 AIEO basic 版本现有约 10 轮的会话迁移评估机制调整为 4 轮，即累计达到 4 轮后主动评估并执行新聊天交接，不再等到 10 轮。沿用现有 GitPointer、安全停止和交接流程，不改变单条消息 1200 UTF-8 字节限制及其他规则。同步检
+[LIVE] docs\phase1\decision-log.md:679 pat='10+ 轮' :: - **裁定（规则变更，取代旧阈值）：** 会话迁移评估阈值由"实测约 10+ 轮 user 消息即评估迁移时机"（L-018 第 6 条旧文）收紧为 **累计达到 4 条 user 消息即主动评估是否迁移交接**。口径定稿（复审共识）：①计数仅含 user 消息（不含 AI 回复/工具调用）；②新会话正式接棒后计数归
+[SKIP(历史区)] phase0\logs\dispatch-2026-11-16T11-59-52\raw-units.json:86 pat='10+轮' :: "text": "ChatGPT 说：\n\n复审结论：原则共识达成，建议补充3处口径后进入 DEC-071 登记及任务包准备阶段。\n\n我支持将原来的「实测约10+轮即评估迁移」收紧为「累计4轮 user 消息即主动评估迁移」。\n\n这次调整方向正确。它不是要求频繁迁移，而是把会话管理从事后发现上下文过载，提前到
+[SKIP(历史区)] phase0\logs\dispatch-2026-11-16T11-59-52\reply.txt:5 pat='10+轮' :: 我支持将原来的「实测约10+轮即评估迁移」收紧为「累计4轮 user 消息即主动评估迁移」。
+[SKIP(历史区)] phase0\logs\dispatch-2026-11-16T11-59-52\reply.txt:127 pat='10+轮' :: 建议全仓搜索不要只检查 10+轮，还应检查：
+[SKIP(历史区)] phase0\logs\dispatch-2026-11-16T11-59-52\reply.txt:129 pat='约10轮' :: 约10轮、10轮以上等同义表达。
+[SKIP(历史区)] phase0\logs\dispatch-2026-11-16T11-59-52\request.txt:1 pat='约10轮' :: 【方案复审·新会话接棒】AIEO Basic：审查会话迁移评估阈值由"约10轮"收紧为"累计4轮 user 消息即主动评估迁移交接"（用户2026-11-16指令）。沿用 GitPointer/安全停止/交接流程与1200B限制。
+[SKIP(历史区)] phase0\logs\dispatch-2026-11-16T11-59-52\request.txt:2 pat='10+轮' :: 现状核对：唯一定义点=AI-DEV-LESSONS.md L-018第6条"实测约10+轮即评估迁移"；AGENTS.md 映射表引用该条未写数字；中级版 context_limit.mjs 与 tests/ 无轮次阈值；历史记录（b-20261116-workspace-spec delivery"已历10轮"）不改
+[SKIP(历史区)] phase0\logs\dispatch-2026-11-16T11-59-52\request.txt:4 pat='10+轮' :: 验证：改后全仓 grep 无"10+轮"残留（历史除外）；证据绑定完整40位SHA；push 走 check-push。
+[SKIP(历史区)] phase0\logs\dispatch-2026-11-16T11-59-52\result.json:4 pat='10+轮' :: "reply": "ChatGPT 说：\n\n复审结论：原则共识达成，建议补充3处口径后进入 DEC-071 登记及任务包准备阶段。\n\n我支持将原来的「实测约10+轮即评估迁移」收紧为「累计4轮 user 消息即主动评估迁移」。\n\n这次调整方向正确。它不是要求频繁迁移，而是把会话管理从事后发现上下文过载，提前
+[SKIP(历史区)] phase0\logs\dispatch-2026-11-16T13-18-39\raw-units.json:86 pat='约10轮' :: "text": "ChatGPT 说：\n\n本次验收严格锁定被测提交：\n\n1022694967e519de8ae2a03fd3e6b799988c09a6\n\n不使用 HEAD，不把后续提交或其他分支的状态作为验收依据。\n\n已读取该 SHA 下的 AI-DEV-LESSONS.md、AGENTS.md 和 
+[SKIP(历史区)] phase0\logs\dispatch-2026-11-16T13-18-39\reply.txt:98 pat='约10轮' :: L-018 第6条已经替换旧的约10轮经验，没有把第4条错误地变成强制迁移指令。三类例外也明确不能成为长期规避机制。
+[SKIP(历史区)] phase0\logs\dispatch-2026-11-16T13-18-39\result.json:4 pat='约10轮' :: "reply": "ChatGPT 说：\n\n本次验收严格锁定被测提交：\n\n1022694967e519de8ae2a03fd3e6b799988c09a6\n\n不使用 HEAD，不把后续提交或其他分支的状态作为验收依据。\n\n已读取该 SHA 下的 AI-DEV-LESSONS.md、AGENTS.md 和
+[LIVE] phase0\tools\session-migrate-4rounds-plan-r1.txt:1 pat='约10轮' :: 【方案复审·新会话接棒】AIEO Basic：审查会话迁移评估阈值由"约10轮"收紧为"累计4轮 user 消息即主动评估迁移交接"（用户2026-11-16指令）。沿用 GitPointer/安全停止/交接流程与1200B限制。
+[LIVE] phase0\tools\session-migrate-4rounds-plan-r1.txt:2 pat='10+轮' :: 现状核对：唯一定义点=AI-DEV-LESSONS.md L-018第6条"实测约10+轮即评估迁移"；AGENTS.md 映射表引用该条未写数字；中级版 context_limit.mjs 与 tests/ 无轮次阈值；历史记录（b-20261116-workspace-spec delivery"已历10轮"）不改
+[LIVE] phase0\tools\session-migrate-4rounds-plan-r1.txt:4 pat='10+轮' :: 验证：改后全仓 grep 无"10+轮"残留（历史除外）；证据绑定完整40位SHA；push 走 check-push。

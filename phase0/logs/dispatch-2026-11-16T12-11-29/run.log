@@ -1,0 +1,12 @@
+[2026-11-16T12:11:30.268Z] 会话锁已获取 pid=3556
+[2026-11-16T12:11:30.270Z] === GPT 派单（已有会话，消息 1198 字节）===
+[2026-11-16T12:11:30.289Z] 复用已运行调试端口 9222
+[2026-11-16T12:11:30.339Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页
+[2026-11-16T12:11:30.340Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-16T12:12:11.688Z] 会话就绪: https://chatgpt.com/c/6afaf06f-f9b4-83ee-b6e8-c2f789d1dc4c
+[2026-11-16T12:12:16.712Z] [dispatch] 基线尾部: null
+[2026-11-16T12:12:27.138Z] 会话锁已释放
+[2026-11-16T12:12:27.139Z] 致命错误: locator.waitFor: Timeout 10000ms exceeded.
+Call log:
+[2m  - waiting for locator('[aria-label="询问 ChatGPT"], [aria-label="Ask ChatGPT"], #prompt-textarea').visible().first() to be visible[22m
+

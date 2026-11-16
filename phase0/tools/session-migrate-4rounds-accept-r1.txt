@@ -1,0 +1,6 @@
+【独立验收·同会话续派】b-20261116-session-migrate-4rounds 交付验收（4轮规则落地；方案共识=bf4bbc1d…6bb04）。
+被测 commit 完整 SHA=1022694967e519de8ae2a03fd3e6b799988c09a6（已推送）。
+读取 raw.githubusercontent.com/damwate/AIEO/1022694967e519de8ae2a03fd3e6b799988c09a6/ 下：
+docs/AI-DEV-LESSONS.md（L-018 第6条）、AGENTS.md、docs/phase1/decision-log.md（DEC-084）、basic/tasks/b-20261116-session-migrate-4rounds/（三件套+acceptance/ 全部）。
+验收项：①L-018 第6条=累计4条user消息主动评估迁移，口径齐备（仅user消息计/接棒归零/评估非强制/暂不迁记录理由且每增2条重评）+三类例外，与共识一致；②AGENTS.md 映射行固化4轮；③DEC-084 完整（含"审查方DEC-071编号口误"勘误）；④任务包与ST-05（IN_PROGRESS，③FAIL=仅S1⑥验收证据未回填，开发期既定语义）+残留排查（LIVE命中均为变更记录/证据语境，历史区保留）；⑤零改动核对（GitPointer/安全停止/1200B限制/中级版代码零触碰）。
+结论：PASS/REJECT（逐项）/BLOCKED（如实）。边界：不扩大修改面；证据绑定本完整SHA。

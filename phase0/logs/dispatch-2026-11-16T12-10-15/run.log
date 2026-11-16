@@ -1,0 +1,10 @@
+[2026-11-16T12:10:16.420Z] 会话锁已获取 pid=18204
+[2026-11-16T12:10:16.422Z] === GPT 派单（已有会话，消息 1198 字节）===
+[2026-11-16T12:10:19.750Z] Chrome 已启动 pid=27336
+[2026-11-16T12:10:21.156Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页
+[2026-11-16T12:10:21.157Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-16T12:11:21.610Z] 会话锁已释放
+[2026-11-16T12:11:21.610Z] 致命错误: page.goto: Timeout 60000ms exceeded.
+Call log:
+[2m  - navigating to "https://chatgpt.com/c/6afaf06f-f9b4-83ee-b6e8-c2f789d1dc4c", waiting until "domcontentloaded"[22m
+

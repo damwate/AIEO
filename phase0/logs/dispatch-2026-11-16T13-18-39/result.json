@@ -1,0 +1,181 @@
+{
+  "at": "2026-11-16T13:21:50.598Z",
+  "message_bytes": 1198,
+  "reply": "ChatGPT 说：\n\n本次验收严格锁定被测提交：\n\n1022694967e519de8ae2a03fd3e6b799988c09a6\n\n不使用 HEAD，不把后续提交或其他分支的状态作为验收依据。\n\n已读取该 SHA 下的 AI-DEV-LESSONS.md、AGENTS.md 和 decision-log.md。目前可以确认：\n\nAGENTS.md 第17行已经明确固化累计4条 user 消息主动评估迁移。\n\n规则包含评估非强制、暂不迁移须记录理由、每增加2条重新评估。\n\n1200B 自包含迁移简报及新会话首派要求仍然保留。\n\nGitHub\n+2\n逐项验收\n\n项目\n\n\t\n\n结论\n\n\t\n\n核验结果\n\n\n\n\n① L-018 第6条\n\n\t\n\nPASS\n\n\t\n\n4条 user 消息、接棒归零、非强制评估、每增2条重评、三类例外均已落实\n\n\n\n\n② AGENTS.md\n\n\t\n\nPASS\n\n\t\n\n映射表与 L-018 一致\n\n\n\n\n③ DEC-084\n\n\t\n\nPASS\n\n\t\n\n用户指令、共识 SHA、规则口径、修改范围及 DEC-071 编号口误勘误均齐全\n\n\n\n\n④ 任务包及 ST-05\n\n\t\n\n待确认\n\n\t\n\n开发期 ST-05 明确为 IN_PROGRESS，③ FAIL 仅因 S1⑥尚未回填验收证据\n\n\n\n\n⑤ 零改动核对\n\n\t\n\n范围初审通过\n\n\t\n\n已检查提交变更清单，尚需结合完整差异确认所有保护对象\n\n① 规则内容核验通过。\n\nL-018 第6条已经替换旧的约10轮经验，没有把第4条错误地变成强制迁移指令。三类例外也明确不能成为长期规避机制。\n\n③ 决策记录核验通过。\n\nDEC-084 第523行明确指出 DEC-071 已被既有决策占用，因此顺延使用 DEC-084，没有覆盖历史决策。\nGitHub\n+1\n\n④ 任务包：REJECT（交付闭环未完成）\n\n这里发现了明确的交付缺口，不只是形式问题。\n\n1. ST-05 仍未通过\n\n实际归档的 acceptance/st05-inprogress.txt 内容：\n\n①需求记录：PASS\n\n②步骤清单：PASS\n\n③步骤验收记录：FAIL\n\nS1⑥缺派单目录引用\n\n缺少 reply 完整 SHA256\n\n缺少「验收结论：PASS」\n\n④⑤⑥：N/A\n\nOverall：FAIL，退出码 1\n\n这与开发期解释一致：规则修改已经完成，但独立验收证据尚未回填。\n\n2. S3 交付记录仍是模板状态\n\n我核对了 steps.md 和 task-brief.md：\n\nS3④执行结果仍为待填写。\n\nS3⑤测试结果仍为待填写。\n\nS3⑥验收证据引用仍为待填写。\n\ntask-brief 当前状态仍为「开发中」。\n\n最终结果仍为空。\n\n任务目录没有 delivery.md。\n\n因此，不能把开发期 IN_PROGRESS 的合理状态解释为最终交付已经完成。\n\n3. 残留排查\n\n排查材料已经归档：\n\n旧阈值同义表达：报告25处命中，7处 LIVE、18处历史区。\n\n其他迁移时机规定：33个文件、13处命中。\n\n历史记录保留的原则正确，没有要求篡改历史事实。\n\n但 residual-sweep.txt 当前读取存在字符编码问题，不能把报告摘要冒充为我已独立逐行验证的完整原始输出。\n\nGitHub\n+2\n⑤ 零改动核对：PASS（限定于可见 Git 差异）\n\n我检查了完整提交差异及文件清单：\n\n保护范围未发现代码触碰\n\nGitPointer：没有修改实现。\n\nCONTEXT_LIMIT_STOP：没有修改安全停止实现。\n\n1200 UTF-8 字节限制：没有修改限制实现。\n\n交接流程：没有修改交接实现。\n\n中级版 context_limit.mjs、session_store.mjs 和 tests：没有修改。\n\nWORKFLOW、C1–C8：没有修改。\n\n历史任务记录：没有修改。\n\n本次实际变更集中在三个治理文件、任务包、方案复审证据归档及审查会话状态文件。没有发现扩大到中级版代码的情况。\n\nGitHub\n+1\n最终裁定\n\nb-20261116-session-migrate-4rounds\n\nREJECT\n规则通过，交付未通过\n\n验收项\n\n\t\n\n结论\n\n\n\n\n① L-018\n\n\t\n\nPASS\n\n\n\n\n② AGENTS.md\n\n\t\n\nPASS\n\n\n\n\n③ DEC-084\n\n\t\n\nPASS\n\n\n\n\n④ 任务包与 ST-05\n\n\t\n\nREJECT\n\n\n\n\n⑤ 零改动\n\n\t\n\nPASS（限定范围）\n\n主要问题：P1——交付证据及任务状态没有闭环。\n\n没有发现4轮规则本身的实质性错误。\n\n建议下一步\n\n不需要重新设计方案，也不需要再改规则正文。\n\n只做交付收尾：\n\n将本次独立审查派单的完整证据回填 S1⑥、S2⑥、S3⑥。\n\n补齐 S3 的执行结果、测试结果和验收结论。\n\n建立 delivery.md，完成七要素交付记录。\n\n更新 task-brief 最终状态及最终结果。\n\n重新运行 ST-05，要求 COMPLETED、①～⑥ 全 PASS、Overall PASS、退出码 0。\n\n产生新的完整 SHA，再进行限定复审。\n\n特别强调： 不要为了消除 ST-05 的 FAIL 而修改检查器，也不要删除开发期 IN_PROGRESS 的原始记录。应保留历史输出，追加最终验收输出。\n\n这次核心工作其实做得不错：4轮迁移规则已经准确落地，决策编号也处理正确。现在差的是最后的证据闭环，不值得再投入多轮去重做已经通过的部分。",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "a01e1e47-d215-4666-b598-5d2730049a3b",
+  "stability": {
+    "stable": true,
+    "interval_ms": 4355,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-16T13:21:45.544Z",
+      "read_finished_at": "2026-11-16T13:21:46.893Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "569d89bc34cc6a094a2053b93bc475a95c011f1c0fb020035d46a599fccecc9e",
+          "size_bytes": 4733
+        }
+      ],
+      "assistant_uuid": "a01e1e47-d215-4666-b598-5d2730049a3b",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-16T13:21:49.899Z",
+      "read_finished_at": "2026-11-16T13:21:50.439Z",
+      "unit_keys": [
+        "fallback-turn-0:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "fallback-turn-0:2:assistant",
+          "sha256": "569d89bc34cc6a094a2053b93bc475a95c011f1c0fb020035d46a599fccecc9e",
+          "size_bytes": 4733
+        }
+      ],
+      "assistant_uuid": "a01e1e47-d215-4666-b598-5d2730049a3b",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "6259e5a2bd8bea2595af2cce1594cee21b220b1d391f636382b1ba62adce7f36",
+          "569d89bc34cc6a094a2053b93bc475a95c011f1c0fb020035d46a599fccecc9e"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "6259e5a2bd8bea2595af2cce1594cee21b220b1d391f636382b1ba62adce7f36",
+          "569d89bc34cc6a094a2053b93bc475a95c011f1c0fb020035d46a599fccecc9e"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "569d89bc34cc6a094a2053b93bc475a95c011f1c0fb020035d46a599fccecc9e",
+  "size_bytes": 4733,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-16T13-18-39\\reply.txt",
+  "reply_readback_sha256": "569d89bc34cc6a094a2053b93bc475a95c011f1c0fb020035d46a599fccecc9e",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-16T13-18-39\\raw-units.json",
+  "raw_units_sha256": "08771d70b0c7ad6feb28b4a7f4e485e4267e831c8c81916298a090dcae779cfc",
+  "raw_units_size_bytes": 7648,
+  "raw_units_readback_sha256": "08771d70b0c7ad6feb28b4a7f4e485e4267e831c8c81916298a090dcae779cfc",
+  "session_id": "6afb02e6-cb80-83ec-b241-2f35a51ca659",
+  "conversation_url": "https://chatgpt.com/c/6afb02e6-cb80-83ec-b241-2f35a51ca659",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}

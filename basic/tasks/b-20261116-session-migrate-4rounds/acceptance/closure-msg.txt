@@ -1,0 +1,9 @@
+b-20261116-session-migrate-4rounds: S3 交付闭环（R1 REJECT 仅 P1-04 整改）
+
+- steps.md：S1⑥/S2⑥/S3⑥ 验收证据回填+返工表问题1（R1 现场/reply sha256=569d89bc…/被测 1022694967…）
+- delivery.md 七要素成文；task-brief 状态=验收中+批准记录追加
+- residual-sweep-utf8.txt 规范编码版追加（原始 GBK 版保留；LIVE=7 一致）
+- 验收简报与派单现场归档（含两次未投递尝试证据）；会话指针更新
+- ST-05 检查器与开发期原始输出未改动
+
+用户批准：2026-11-16 "yes"（闭环 commit+后续证据 commit 预批准）
