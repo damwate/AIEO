@@ -8,16 +8,16 @@
 
 - `basic/WORKFLOW.md`：新增《多项目、多 IDE 工作区管理规范（增补④）》一节（九小节），附录尾注登记增补依据；既有 v0.3 条款零删改、附录 12 行修订表未动。
 - R1 整改后口径（经 R2 复验 PASS）：第四节=「项目配置与主机运行环境分离」（项目级可移植无秘密配置可入库／凭据与主机配置禁入库／遵循所用 IDE 规则）；第六节=回传三口径（被测对象=完整 SHA、完整 Diff=可核验完整改动或 GitHub compare/GitPointer、测试=断言+退出码；numstat 仅统计）。
-- `docs/phase1/decision-log.md`：DEC-068（成文登记）～DEC-076（S3-R7 交付证据整改），逐轮如实登记，未覆盖既有 DEC-001~067。
+- `docs/phase1/decision-log.md`：DEC-068（成文登记）～DEC-077（S3-R8 交付索引修正），逐轮如实登记，未覆盖既有 DEC-001~067。
 - `phase0/environment-inventory.md` §4：增补"派单发送双验 UNCERTAIN 的判定顺序"经验（慢链路延迟送达 vs 未送达，禁盲目重发）。
-- 任务包：requirement / task-brief / steps（含返工表问题1~6）+ `acceptance/`（各轮简报、R1~R8 回复与 ST-05 输出、补采驱动与发送双验证据）。
+- 任务包：requirement / task-brief / steps（含返工表问题1~7）+ `acceptance/`（各轮简报、R1~R8 回复与 ST-05 输出、补采驱动与发送双验证据）。
 
 ## 3. 修改文件
 
 | 文件 | 变更 |
 |---|---|
 | `basic/WORKFLOW.md` | +54/−1（首轮）；R1 整改 +4/−3（第四/六节口径） |
-| `docs/phase1/decision-log.md` | DEC-068~076（逐轮追加，不改既有条目） |
+| `docs/phase1/decision-log.md` | DEC-068~077（逐轮追加，不改既有条目） |
 | `phase0/environment-inventory.md` | §4 增补一条经验（+1） |
 | `basic/tasks/b-20261116-workspace-spec/` | requirement/task-brief/steps/delivery + acceptance 证据包 |
 | C1–C8 契约、既有 DEC-001~067、附录修订表 | 未改动 |
