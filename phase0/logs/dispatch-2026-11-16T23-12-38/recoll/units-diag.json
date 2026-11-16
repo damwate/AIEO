@@ -1,0 +1,50 @@
+[
+  {
+    "key": "5196ce28-916d-5811-88cb-2780e4e3f691:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[会话迁移|G05-Gate2-R4] 你是新审查会话，接替6afb6d51（Gate2链第4条user消息起按你方建议迁移）；旧会话归档，后续全在本会话。\n\n"
+  },
+  {
+    "key": "5196ce28-916d-5811-88cb-2780e4e3f691:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nGPT-05 Gate2-R4 极窄复核\n\n被测：damwate/AIEO · main · 固定 commit c0d0fdf1fa83"
+  },
+  {
+    "key": "cd8c3b87-fbb1-59c5-ab85-d4ec56ca1104:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[G05-Gate2-R5|极窄复核] 被测=GPT05-ENGINEERING-AUDIT-LEG-CHARTER-DRAFT.md v0.8，damwate"
+  },
+  {
+    "key": "cd8c3b87-fbb1-59c5-ab85-d4ec56ca1104:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nG05-Gate2-R5 复核裁定\nREJECT — 唯一授权链残留\n\n被测版本： v0.8\n固定依据： cb0683c6589ef91d"
+  },
+  {
+    "key": "ea41b3db-8374-5889-ac67-34223d90f37d:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[G05-Gate2-R6|极窄复核] 被测=GPT05-ENGINEERING-AUDIT-LEG-CHARTER-DRAFT.md v0.9，damwate"
+  },
+  {
+    "key": "ea41b3db-8374-5889-ac67-34223d90f37d:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nGPT-05 Gate2-R6 极窄复核结论\n\n(PASS) 授权链整改通过，可以进入设计冻结与开工授权。\n\n被测对象： docs/pha"
+  },
+  {
+    "key": "de676a3a-e545-5c48-b4b2-902d7ca68210:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[G05-DR|限定复核] 被测=34ef75450659905fdafa53e49686c270ddf625da（完整SHA实读），damwate/AIEO "
+  },
+  {
+    "key": "de676a3a-e545-5c48-b4b2-902d7ca68210:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nGPT-05 G05-DR 实现级限定复核\nREJECT — 有限范围内两项实质不一致\n\n被测提交： 34ef75450659905fda"
+  }
+]

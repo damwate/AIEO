@@ -28,8 +28,10 @@
 - ①本步骤目标：交付登记与验收复核闭环（G05-DR 复核派单至审查会话 6afb7fe2）。②修改文件：delivery.md、task-brief.md、acceptance/。③修改内容：交付登记+C1 绑定+实战账本归档+复核简报。
 - ④执行结果：delivery 七要素+C1 绑定核验（acceptance/binding-report.json，baseline=58da7697976a2465aa7fc641837af97f1190a68a）+G05-DR 限定复核简报派单（审查会话 6afb7fe2）。
 - ⑤测试结果：四腿合跑 112/112 OK；零 mock 实战全链（真实 BLOCKED 结论留证）。
-- ⑥验收证据引用：acceptance/live-run/；acceptance/binding-report.json；验收复核现场 dispatch-2026-11-16T22-30-47/recoll（Gate2-R6，reply sha256=90997e741ffae280…完整值见 recoll-result.json），验收结论：PASS（Gate2-R6 设计冻结+开工授权；实现级复核=G05-DR 承担，结论回填待）
+- ⑥验收证据引用：acceptance/live-run/；acceptance/binding-report.json；验收复核现场 dispatch-2026-11-16T22-30-47/recoll（Gate2-R6，reply sha256=90997e741ffae280…完整值见 recoll-result.json），验收结论：G05-DR REJECT（限定实现级收口三项，主体成果认可）→问题17 整改→G05-DR2 限定复核（回填待）
 
 ## 返工记录表（首次 REJECT 时建表；按"同一问题"计数）
 
-（暂无——无 REJECT 历史）
+| 问题编号 | 轮次来源 | 问题描述 | 整改内容 | 修复 commit | 验证 |
+|---|---|---|---|---|---|
+| 问题17 | G05-DR 实现级限定复核 REJECT（reply sha256=f108e753d7fc2ccd…完整值见 recoll-result.json，dispatch-2026-11-16T23-12-38/recoll 七查全过；主体成果认可，阻断集中三项收口） | ①C1 实现缺失方向校验：矩阵仅 ISSUE+总结果 BLOCKED 组合被默许（冻结映射未定义；实战登记组合为已披露偏差事实）②A4c 正常成功路径无登记后读回核验（409 路径有、成功路径无）③A5 仅核验 batch.status 未核任务状态快照；另 security.py 实际 9 行 vs 授权"约6行"须正式偏差记录（GET batches 勘误已登记） | ①补矩阵 ISSUE-only+result=BLOCKED fail-closed（批次级 BLOCKER 语义经正式契约演进处理，登记遗留）②A4c 成功路径登记后 correlation 读回+重建 canonical+payload 绑定比对 fail-closed ③A5 任务状态前后快照逐项核对（run 传入 A0 全景）+A10c/A10d 断言补强；security.py 9 行偏差写入本表与 delivery（已含） | 整改 commit=（本行随整改 commit 回填） | 24/24+四腿合跑 113/113 OK（acceptance/test-run-combined-113.txt） |

@@ -1,0 +1,7 @@
+[G05-DR|限定复核] 被测=34ef75450659905fdafa53e49686c270ddf625da（完整SHA实读），damwate/AIEO main。入口：basic/tasks/b-20261117-gpt05-engineering-audit-leg/delivery.md（七要素）+steps.md。
+
+【背景】charter v0.9 Gate2-R6设计冻结+开工授权（DEC-092）。零mock实战全链：真实派单两对话（采集缺陷两连败如实登记，§5行1换会话重派）→手工recoll恢复→真实GPT-05结论BLOCKED/DO_NOT_SUBMIT（矩阵6ISSUE+1PASS+三条BLOCKER）→findings结构化契约fail-closed（第四次实证）→A6规整loss=NONE→三步登记→M1状态零变化核验。
+
+【范围】①与charter v0.9一致性（A-1白名单8端点/三步登记/409五条件AND/readback映射/C1/C3映射/无状态事件）②M1变更=security.py唯一例外核对（实际约8行vs授权约6行——差异如实说明，仍限单模块；含实测发现batches路由缺失增补+A-1勘误）③23用例+四腿112合跑两轮+A10b/c/d实测④实战链证据（ledger 700b7864…/规整loss=NONE/C1绑定）⑤遗留勘误核对。
+
+【输出】三态+逐项依据；遗留勘误逐项判过/不通过；不重开已冻结裁定，不要求重做实战。

@@ -1,0 +1,12 @@
+[2026-11-16T23:12:38.916Z] 会话锁已获取 pid=26488
+[2026-11-16T23:12:38.917Z] === GPT 派单（已有会话，消息 1194 字节）===
+[2026-11-16T23:12:38.932Z] 复用已运行调试端口 9222
+[2026-11-16T23:12:39.059Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页
+[2026-11-16T23:12:39.060Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-16T23:12:42.410Z] 会话就绪: https://chatgpt.com/c/6afb7fe2-df1c-83ec-9735-e9a37c234599
+[2026-11-16T23:12:47.417Z] [dispatch] 基线尾部: {"role":"assistant","key":"ea41b3db-8374-5889-ac67-34223d90f37d:2:assistant","assistantUuid":"b058bfe8-ca0f-4247-99c7-906cbba4ec0e"}
+[2026-11-16T23:12:47.980Z] [dispatch] 发送双验通过（polls=1，user_unit_key=fallback-turn-0:0:user，tail 后观察）
+[2026-11-16T23:12:48.263Z] 截图: sent-dispatch.png
+[2026-11-16T23:16:33.238Z] 会话锁已释放
+[2026-11-16T23:16:33.238Z] 致命错误: INBOUND_WINDOW_OVERLAP_CHANGED: 重叠 unit 的角色、UUID 或原文发生变化 details={"unit_key":"ea41b3db-8374-5889-ac67-34223d90f37d:2:assistant"}
+[2026-11-16T23:16:33.249Z] [tab-hygiene] 发送已发生：保留现场不关页（禁重发语义依赖现场）；退出后由人工/补采链按 L-018 处置

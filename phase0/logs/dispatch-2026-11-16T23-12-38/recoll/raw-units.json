@@ -1,0 +1,82 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-16T23:22:52.431Z",
+  "user_unit_key": "de676a3a-e545-5c48-b4b2-902d7ca68210:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "de676a3a-e545-5c48-b4b2-902d7ca68210:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "700f8672-f11d-4e9e-8a33-845cb8ee2981",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "de676a3a-e545-5c48-b4b2-902d7ca68210:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "5196ce28-916d-5811-88cb-2780e4e3f691:0:user",
+          "5196ce28-916d-5811-88cb-2780e4e3f691:2:assistant",
+          "cd8c3b87-fbb1-59c5-ab85-d4ec56ca1104:0:user",
+          "cd8c3b87-fbb1-59c5-ab85-d4ec56ca1104:2:assistant",
+          "ea41b3db-8374-5889-ac67-34223d90f37d:0:user",
+          "ea41b3db-8374-5889-ac67-34223d90f37d:2:assistant",
+          "de676a3a-e545-5c48-b4b2-902d7ca68210:0:user",
+          "de676a3a-e545-5c48-b4b2-902d7ca68210:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "0b3ecf160e1c729787a4cbb121c5b15228c8983ad8a01c8db8b65c8138a2afac",
+          "dbe7f3f2b8076575d7f20059e32113b8f057a9e091ccfa120bad7940eb1666da",
+          "e9982a3ce79f08803fc621f3dd97ac7f54fd9b11d235f2ce487b0fa71b79d174",
+          "169854cff5fe8d133b9ffac875fd5ee9eb30e9e24b0f9dd15f5c043ffcb682e5",
+          "00207efb674928b899fad46690c106eaeeef58bbb94fde027fc39976bf0d5478",
+          "eebe1a2e960ac09b0d2321a99433c520a75b72b98b7e62c706ef2cf93494c649",
+          "c66323a2ac602f44603ab8a0b921e9e326a9d328ae73328d104fd105ff6476b9",
+          "f108e753d7fc2ccd3409a4932c2ac0b6f4b828162340ebb9f1c940190dea6021"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": []
+      }
+    ],
+    "materialized_unit_keys": [
+      "de676a3a-e545-5c48-b4b2-902d7ca68210:0:user",
+      "de676a3a-e545-5c48-b4b2-902d7ca68210:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STATIC_NON_SCROLLABLE_DOM",
+      "scrollable_window_observed": false,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "5196ce28-916d-5811-88cb-2780e4e3f691:0:user",
+          "5196ce28-916d-5811-88cb-2780e4e3f691:2:assistant",
+          "cd8c3b87-fbb1-59c5-ab85-d4ec56ca1104:0:user",
+          "cd8c3b87-fbb1-59c5-ab85-d4ec56ca1104:2:assistant",
+          "ea41b3db-8374-5889-ac67-34223d90f37d:0:user",
+          "ea41b3db-8374-5889-ac67-34223d90f37d:2:assistant",
+          "de676a3a-e545-5c48-b4b2-902d7ca68210:0:user",
+          "de676a3a-e545-5c48-b4b2-902d7ca68210:2:assistant"
+        ],
+        "overlap_keys": []
+      }
+    ],
+    "window_transitions": 0
+  },
+  "units": [
+    {
+      "key": "de676a3a-e545-5c48-b4b2-902d7ca68210:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nGPT-05 G05-DR 实现级限定复核\nREJECT — 有限范围内两项实质不一致\n\n被测提交： 34ef75450659905fdafa53e49686c270ddf625da\n仓库： damwate/AIEO\n分支： main\n入口： delivery.md、steps.md，并按该 SHA 实读实现代码、契约、测试及实战证据。\n\n本次只做实现级一致性审查，不重开 Gate2-R6 的设计冻结与开工授权，不要求重新执行真实派单或四腿测试。\n\n一、范围核验总表\n\n审查项\n\n\t\n\n三态\n\n\t\n\n结论\n\n\n\n\n① A-1 白名单8端点\n\n\t\n\nPASS\n\n\t\n\n客户端白名单8项与 A-1 对齐\n\n\n\n\n② 三步独立登记\n\n\t\n\nPASS\n\n\t\n\nA4a、A4b、A4c 分步登记，聚合标志最后写入\n\n\n\n\n③ message 409 五条件 AND\n\n\t\n\nPASS\n\n\t\n\n代码确实要求五项同时成立\n\n\n\n\n④ readback→canonical 映射\n\n\t\n\n有条件通过\n\n\t\n\n映射实现存在，但正常登记成功路径未执行 message 读回核验\n\n\n\n\n⑤ C1 矩阵汇总映射\n\n\t\n\nREJECT\n\n\t\n\n允许了冻结规则未允许的 BLOCKED 组合\n\n\n\n\n⑥ C3 结论×建议映射\n\n\t\n\nPASS\n\n\t\n\n一一映射检查及矛盾 fail-closed 已实现\n\n\n\n\n⑦ 无状态事件\n\n\t\n\nPASS\n\n\t\n\nGPT05_EVENT_WHITELIST 为空；实战账本无状态事件登记\n\n\n\n\n⑧ security.py 唯一 M1 例外\n\n\t\n\n有条件通过\n\n\t\n\n仍限单模块，但实际9行新增，超过原约6行方案\n\n\n\n\n⑨ 23用例、四腿112合跑两轮\n\n\t\n\nPASS\n\n\t\n\n证据文件记录两轮112/112 OK\n\n\n\n\n⑩ A10b/c/d 权限回归\n\n\t\n\nPASS\n\n\t\n\n403/200/200 结果有测试及交付记录\n\n\n\n\n⑪ 零 mock 实战链\n\n\t\n\nPASS\n\n\t\n\n真实派单、人工 recoll、真实 BLOCKED 结论、三步登记有归档\n\n\n\n\n⑫ M1 批次/任务状态零变化\n\n\t\n\n有条件通过\n\n\t\n\n实战记录声称通过，但实现中的 A5 只复核批次状态，没有复核任务状态\n\n下面说明真正影响裁定的项目。\n\n二、冻结设计一致性\n1. A-1 白名单与三步登记\nPASS\n\nengineering_audit_leg.py 中的 GPT05_WHITELIST 为8个运行期端点：\n\nGET batch\n\nGET tasks（带 batch_id，分页参数允许随行）\n\nGET task detail\n\nGET artifact\n\nGET reports\n\nGET messages（correlation_id）\n\nPOST artifacts\n\nPOST messages\n\n事件白名单为空。登记路径为：\n\nA4a：简报 artifact；\n\nA4b：报告 artifact；\n\nA4c：AUDIT_SUBMITTED message；\n\n三个子步骤完成后才写 A4_REGISTERED。\n\n报告 artifact 是结论权威载体，message 是关联检索记录，符合 charter 的职责划分。\n\n2. 409 五条件 AND 与 readback 映射\n\n五条件实现 PASS 正常路径读回有条件通过\n\n代码中的 message 409 分支确实检查：\n\n响应指认本次 message_id；\n\n账本 canonical_sha 匹配；\n\ncorrelation_id 查询读回 message；\n\n重建 canonical envelope 指纹匹配；\n\npayload 与报告 artifact 的批次、审计轮绑定一致。\n\n五项全部成立才接受 DUP_OK，符合 A-3 的五条件 AND。\n\n_rebuild_canonical_envelope() 也实现了账本预期 envelope 为骨架、九个实质字段以 M1 读回值覆盖、agent_type 从账本恢复、source_agent_id 一致性断言。\n\n但有一个实现覆盖缺口： 正常 POST message 成功后，代码直接接受返回结果并追加 A4_MESSAGE；没有像 409 分支一样通过 GET /messages?correlation_id= 读回并重建 canonical envelope。也就是说，映射算法有实现、有测试，但正常成功登记路径并未实际执行这项读回核验。\n\n这不是要求重新跑实战，而是需要确认并补齐正常成功路径的登记后读回证据。\n\n3. C1 矩阵映射\nREJECT — 本轮主要阻断项\n\n冻结 charter 的 C1 规则是：\n\n矩阵情况\n\n\t\n\n允许的总 result\n\n\n\n\n任一矩阵项 BLOCKED\n\n\t\n\nBLOCKED\n\n\n\n\n无 BLOCKED，但存在 ISSUE\n\n\t\n\nACCEPTED_WITH_RISKS\n\n\n\n\n全 PASS 或有理由豁免\n\n\t\n\nACCEPTED\n\n本次真实审计报告：\n\nstandards_matrix：6 ISSUE + 1 PASS；\n\n没有任何矩阵项 BLOCKED；\n\n总结论：BLOCKED；\n\n发布建议：DO_NOT_SUBMIT；\n\nfindings：另有三条批次级 BLOCKER。\n\nC3 的 BLOCKED → DO_NOT_SUBMIT 是正确的，但不能替代 C1。\n\n实现代码目前只拒绝：\n\n矩阵有 BLOCKED、总结果却不是 BLOCKED；\n\n矩阵有 ISSUE 且无 BLOCKED、总结果却是 ACCEPTED。\n\n它没有拒绝“矩阵只有 ISSUE、总结果为 BLOCKED”。\n\n因此，当前代码实际允许了一个冻结规则没有定义的组合。\n\ndelivery.md 已经诚实披露“矩阵×批次级 BLOCKER 语义细化”待办。这项披露是正确的，但披露遗留问题不等于实现符合冻结契约。\n\n这项需要明确处理：批次级 BLOCKER 是否可以独立于矩阵项决定总结果。如果要允许这种情况，应走正式契约/设计演进流程，而不是在当前实现中默默放宽 C1。\n\n三、M1 权限变更范围核验\nPASS_WITH_CONSTRAINTS\n\n固定 SHA 的 security.py 相对于基线 d2548e20786c4bc3ca5a627de522a902006536eb 的实现提交，实际增加9行：\n\nSERVICE_ALLOWED_ENDPOINTS 增补 GET /api/v1/tasks；\n\n增补 GET /api/v1/batches/{batch_id}；\n\nauthorize_principal() 增加服务身份 GET tasks 必须携带 batch_id 的规则及错误响应。\n\n原方案约6行，实际约9行。差异需要如实记录，不能仍称“实际仅修改约6行”。\n\n其中 GET batches 的增补有合理依据：charter A-1 第1项原本就把它列为已允许端点，但实现前实际服务端白名单缺失，test_20 暴露 AUTH-0002 后才补齐。它是对 A-1 既定端点的实现纠偏，不是新增第9个客户端运行期端点。\n\n我的判断：\n\n修改仍只在 security.py 单模块；\n\n没有证据显示改动扩展到其他 M1-M4 模块；\n\n新增路由属于 A-1 已冻结的8端点；\n\n但应把“授权约6行、实际9行、其中额外2行用于修正 A-1 已声明允许但实际缺失的 GET batches”作为正式实施偏差记录。\n\n不要求因此重开 Gate2。\n\n四、测试与真实实战证据\nPASS\n自动化测试\n\n交付记录及两份测试输出支持：\n\nGPT-05 本腿：23/23；\n\n四腿合跑：112/112；\n\n两轮均通过；\n\nA10b：服务身份无 batch_id → 403；\n\nA10c：服务身份带 batch_id → 200；\n\nA10d：OWNER 无 batch_id → 200。\n\n这部分接受现有证据，不要求重跑。\n\n零 mock 实战链\nPASS\n\n本轮读取到的证据相互对应：\n\n真实派单现场及两次 dispatch 记录；\n\n新会话采集缺陷如实登记；\n\n手工 recoll 恢复；\n\n原始回复及规整回复；\n\n真实结论 BLOCKED / DO_NOT_SUBMIT；\n\n三步登记账本；\n\nA4_REGISTERED 与 ATTACH_REPLY_OK。\n\n账本 SHA-256：\n\n700b7864e4d081b6c6f78109d39fc34b2d63f1b19038ed0e0eeefa9ca9df692b\n\n规整稿 SHA-256：\n\ndc2d94499ad5e25d3b021c3fcb3f9de7192094ecfd6b22a70db9716bcfcc63fd\n\nfindings 从结构化对象转换为契约要求的字符串数组，normalization-audit.json 记录 loss=NONE，并保留字段内容。这是透明的人工过渡处理；正式结构化 findings 演进仍应走 H2，不能据此宣称当前冻结契约已经支持结构化对象。\n\nM1 状态零变化核验\n有条件通过\n\na5_finalize() 目前重新读取并比较的是 batch.status。它没有重新读取任务列表并逐项比较 task status。\n\n因此，现有代码足以证明它检查了批次状态，但不足以单靠 A5 实现证明批次和任务状态均零变化。账本 A4_REGISTERED 中的“batch/task status untouched”是记录说明，不等同于独立的任务状态读回证据。\n\n建议补充任务状态前后快照核对；不需要重新执行真实 GPT-05 派单。\n\n五、遗留勘误逐项判定\n\n遗留/偏差\n\n\t\n\n判定\n\n\t\n\n说明\n\n\n\n\nGET batches 原标“已允许”，实际缺失\n\n\t\n\n已纠正\n\n\t\n\n增补服务端白名单，A-1 事实勘误有依据\n\n\n\n\nsecurity.py 约6行实际约9行\n\n\t\n\n须补偏差登记\n\n\t\n\n单模块、端点范围可接受，但数量必须如实\n\n\n\n\nfindings 结构化对象与 string[] 不兼容\n\n\t\n\n过渡处理通过\n\n\t\n\nfail-closed 被触发，人工规整 loss=NONE；正式演进走 H2\n\n\n\n\n矩阵6 ISSUE+1 PASS、总结果 BLOCKED\n\n\t\n\n不通过\n\n\t\n\n与冻结 C1 汇总映射不一致\n\n\n\n\n新会话采集缺陷\n\n\t\n\n遗留登记通过\n\n\t\n\n两次失败及手工 recoll 恢复均如实记录，不要求本轮重做\n\n\n\n\n跨批次完全隔离未实现\n\n\t\n\n遗留登记通过\n\n\t\n\n保留 ENGINE-04 token 可查询任意已知 batch_id 的风险\n\n\n\n\nsource-principal 服务端绑定缺失\n\n\t\n\n遗留登记通过\n\n\t\n\n已列为平台级增强候选\n\n\n\n\nA5 未复核任务状态\n\n\t\n\n须补证据/实现\n\n\t\n\n目前只核验 batch.status\n\n六、唯一收口建议\n\n本轮不要求重新做实战，也不要求重跑112用例。只需要收口三个明确事项：\n\nC1： 明确批次级 BLOCKER 与矩阵项的关系。要么保持冻结规则并调整该组合的处理，要么提出正式契约演进，不得继续默许 ISSUE+BLOCKED。\n\n登记后读回： 正常 A4c 成功路径补充 message GET 读回及 canonical envelope 核验，或提交已有的独立读回证据。\n\nA5： 增加任务状态前后核验，或提供能够证明实战任务状态零变化的独立证据；同时把 security.py 实际9行偏差及 GET batches 勘误登记清楚。\n\n最终裁定：REJECT（限定实现级收口）。\n\n这不是否定 GPT-05 真实腿主体已经完成，也不是撤销 DEC-092 的设计冻结和开工授权。真实收发、人工恢复、三步登记、测试回归等主体成果均予以认可。本轮阻断集中在冻结 C1 的实际执行，以及两项读回证据闭环。完成上述有限收口后再做一次限定复核即可，不需要重新立项或重做实战。",
+      "text_sha256": "f108e753d7fc2ccd3409a4932c2ac0b6f4b828162340ebb9f1c940190dea6021",
+      "size_bytes": 9508,
+      "assistant_uuid": "700f8672-f11d-4e9e-8a33-845cb8ee2981"
+    }
+  ]
+}

@@ -365,7 +365,8 @@ class EngineeringAuditLegTests(unittest.TestCase):
         flags = leg.ledger.state_flags()
         self.assertIsNotNone(flags.get("A4_REGISTERED"))
         self.assertIsNotNone(flags.get("A4_MESSAGE"))
-        # 三步登记读回：message correlation 读回+payload 绑定
+        self.assertTrue(flags["A5_DONE"]["task_statuses_unchanged"])   # G05-DR 整改3：任务快照核验
+        # 三步登记读回：message correlation 读回+payload 绑定（A4c 成功路径读回核验已在 a4 内执行）
         code, msgs = self.owner.get(f"/api/v1/messages?correlation_id=CORR-{leg.run_key}")
         items = msgs.get("items") if isinstance(msgs, dict) else msgs
         self.assertTrue(any(m.get("message_id") == leg.message_id() for m in items))
@@ -417,6 +418,18 @@ class EngineeringAuditLegTests(unittest.TestCase):
             rc = leg.run()
         self.assertEqual(rc, 2)
         self.assertIn("适用性不等于免检", (leg.ledger.state_flags().get("LEG_LEVEL_BLOCKED") or {}).get("reason", ""))
+
+    # ------------------------------------------------------------------
+    # G05-DR 整改1回归：矩阵仅 ISSUE+总结果 BLOCKED→fail-closed（冻结映射未定义组合）
+    # ------------------------------------------------------------------
+    def test_24_matrix_issue_only_blocked_fail_closed(self):
+        leg, batch_id, ctx = self.make_leg("t24", reply=self.reply_for(
+            "BLOCKED", matrix_results=["PASS", "ISSUE"]))
+        with self.dispatch_double(ctx[0]):
+            rc = leg.run()
+        self.assertEqual(rc, 2)
+        reason = (leg.ledger.state_flags().get("LEG_LEVEL_BLOCKED") or {}).get("reason", "")
+        self.assertIn("matrix ISSUE-only but total result=BLOCKED", reason)
 
     # ------------------------------------------------------------------
     # A3 契约校验失败：保留原始 artifact 不登记

@@ -1,0 +1,519 @@
+ChatGPT 说：
+GPT-05 G05-DR 实现级限定复核
+REJECT — 有限范围内两项实质不一致
+
+被测提交： 34ef75450659905fdafa53e49686c270ddf625da
+仓库： damwate/AIEO
+分支： main
+入口： delivery.md、steps.md，并按该 SHA 实读实现代码、契约、测试及实战证据。
+
+本次只做实现级一致性审查，不重开 Gate2-R6 的设计冻结与开工授权，不要求重新执行真实派单或四腿测试。
+
+一、范围核验总表
+
+审查项
+
+	
+
+三态
+
+	
+
+结论
+
+
+
+
+① A-1 白名单8端点
+
+	
+
+PASS
+
+	
+
+客户端白名单8项与 A-1 对齐
+
+
+
+
+② 三步独立登记
+
+	
+
+PASS
+
+	
+
+A4a、A4b、A4c 分步登记，聚合标志最后写入
+
+
+
+
+③ message 409 五条件 AND
+
+	
+
+PASS
+
+	
+
+代码确实要求五项同时成立
+
+
+
+
+④ readback→canonical 映射
+
+	
+
+有条件通过
+
+	
+
+映射实现存在，但正常登记成功路径未执行 message 读回核验
+
+
+
+
+⑤ C1 矩阵汇总映射
+
+	
+
+REJECT
+
+	
+
+允许了冻结规则未允许的 BLOCKED 组合
+
+
+
+
+⑥ C3 结论×建议映射
+
+	
+
+PASS
+
+	
+
+一一映射检查及矛盾 fail-closed 已实现
+
+
+
+
+⑦ 无状态事件
+
+	
+
+PASS
+
+	
+
+GPT05_EVENT_WHITELIST 为空；实战账本无状态事件登记
+
+
+
+
+⑧ security.py 唯一 M1 例外
+
+	
+
+有条件通过
+
+	
+
+仍限单模块，但实际9行新增，超过原约6行方案
+
+
+
+
+⑨ 23用例、四腿112合跑两轮
+
+	
+
+PASS
+
+	
+
+证据文件记录两轮112/112 OK
+
+
+
+
+⑩ A10b/c/d 权限回归
+
+	
+
+PASS
+
+	
+
+403/200/200 结果有测试及交付记录
+
+
+
+
+⑪ 零 mock 实战链
+
+	
+
+PASS
+
+	
+
+真实派单、人工 recoll、真实 BLOCKED 结论、三步登记有归档
+
+
+
+
+⑫ M1 批次/任务状态零变化
+
+	
+
+有条件通过
+
+	
+
+实战记录声称通过，但实现中的 A5 只复核批次状态，没有复核任务状态
+
+下面说明真正影响裁定的项目。
+
+二、冻结设计一致性
+1. A-1 白名单与三步登记
+PASS
+
+engineering_audit_leg.py 中的 GPT05_WHITELIST 为8个运行期端点：
+
+GET batch
+
+GET tasks（带 batch_id，分页参数允许随行）
+
+GET task detail
+
+GET artifact
+
+GET reports
+
+GET messages（correlation_id）
+
+POST artifacts
+
+POST messages
+
+事件白名单为空。登记路径为：
+
+A4a：简报 artifact；
+
+A4b：报告 artifact；
+
+A4c：AUDIT_SUBMITTED message；
+
+三个子步骤完成后才写 A4_REGISTERED。
+
+报告 artifact 是结论权威载体，message 是关联检索记录，符合 charter 的职责划分。
+
+2. 409 五条件 AND 与 readback 映射
+
+五条件实现 PASS 正常路径读回有条件通过
+
+代码中的 message 409 分支确实检查：
+
+响应指认本次 message_id；
+
+账本 canonical_sha 匹配；
+
+correlation_id 查询读回 message；
+
+重建 canonical envelope 指纹匹配；
+
+payload 与报告 artifact 的批次、审计轮绑定一致。
+
+五项全部成立才接受 DUP_OK，符合 A-3 的五条件 AND。
+
+_rebuild_canonical_envelope() 也实现了账本预期 envelope 为骨架、九个实质字段以 M1 读回值覆盖、agent_type 从账本恢复、source_agent_id 一致性断言。
+
+但有一个实现覆盖缺口： 正常 POST message 成功后，代码直接接受返回结果并追加 A4_MESSAGE；没有像 409 分支一样通过 GET /messages?correlation_id= 读回并重建 canonical envelope。也就是说，映射算法有实现、有测试，但正常成功登记路径并未实际执行这项读回核验。
+
+这不是要求重新跑实战，而是需要确认并补齐正常成功路径的登记后读回证据。
+
+3. C1 矩阵映射
+REJECT — 本轮主要阻断项
+
+冻结 charter 的 C1 规则是：
+
+矩阵情况
+
+	
+
+允许的总 result
+
+
+
+
+任一矩阵项 BLOCKED
+
+	
+
+BLOCKED
+
+
+
+
+无 BLOCKED，但存在 ISSUE
+
+	
+
+ACCEPTED_WITH_RISKS
+
+
+
+
+全 PASS 或有理由豁免
+
+	
+
+ACCEPTED
+
+本次真实审计报告：
+
+standards_matrix：6 ISSUE + 1 PASS；
+
+没有任何矩阵项 BLOCKED；
+
+总结论：BLOCKED；
+
+发布建议：DO_NOT_SUBMIT；
+
+findings：另有三条批次级 BLOCKER。
+
+C3 的 BLOCKED → DO_NOT_SUBMIT 是正确的，但不能替代 C1。
+
+实现代码目前只拒绝：
+
+矩阵有 BLOCKED、总结果却不是 BLOCKED；
+
+矩阵有 ISSUE 且无 BLOCKED、总结果却是 ACCEPTED。
+
+它没有拒绝“矩阵只有 ISSUE、总结果为 BLOCKED”。
+
+因此，当前代码实际允许了一个冻结规则没有定义的组合。
+
+delivery.md 已经诚实披露“矩阵×批次级 BLOCKER 语义细化”待办。这项披露是正确的，但披露遗留问题不等于实现符合冻结契约。
+
+这项需要明确处理：批次级 BLOCKER 是否可以独立于矩阵项决定总结果。如果要允许这种情况，应走正式契约/设计演进流程，而不是在当前实现中默默放宽 C1。
+
+三、M1 权限变更范围核验
+PASS_WITH_CONSTRAINTS
+
+固定 SHA 的 security.py 相对于基线 d2548e20786c4bc3ca5a627de522a902006536eb 的实现提交，实际增加9行：
+
+SERVICE_ALLOWED_ENDPOINTS 增补 GET /api/v1/tasks；
+
+增补 GET /api/v1/batches/{batch_id}；
+
+authorize_principal() 增加服务身份 GET tasks 必须携带 batch_id 的规则及错误响应。
+
+原方案约6行，实际约9行。差异需要如实记录，不能仍称“实际仅修改约6行”。
+
+其中 GET batches 的增补有合理依据：charter A-1 第1项原本就把它列为已允许端点，但实现前实际服务端白名单缺失，test_20 暴露 AUTH-0002 后才补齐。它是对 A-1 既定端点的实现纠偏，不是新增第9个客户端运行期端点。
+
+我的判断：
+
+修改仍只在 security.py 单模块；
+
+没有证据显示改动扩展到其他 M1-M4 模块；
+
+新增路由属于 A-1 已冻结的8端点；
+
+但应把“授权约6行、实际9行、其中额外2行用于修正 A-1 已声明允许但实际缺失的 GET batches”作为正式实施偏差记录。
+
+不要求因此重开 Gate2。
+
+四、测试与真实实战证据
+PASS
+自动化测试
+
+交付记录及两份测试输出支持：
+
+GPT-05 本腿：23/23；
+
+四腿合跑：112/112；
+
+两轮均通过；
+
+A10b：服务身份无 batch_id → 403；
+
+A10c：服务身份带 batch_id → 200；
+
+A10d：OWNER 无 batch_id → 200。
+
+这部分接受现有证据，不要求重跑。
+
+零 mock 实战链
+PASS
+
+本轮读取到的证据相互对应：
+
+真实派单现场及两次 dispatch 记录；
+
+新会话采集缺陷如实登记；
+
+手工 recoll 恢复；
+
+原始回复及规整回复；
+
+真实结论 BLOCKED / DO_NOT_SUBMIT；
+
+三步登记账本；
+
+A4_REGISTERED 与 ATTACH_REPLY_OK。
+
+账本 SHA-256：
+
+700b7864e4d081b6c6f78109d39fc34b2d63f1b19038ed0e0eeefa9ca9df692b
+
+规整稿 SHA-256：
+
+dc2d94499ad5e25d3b021c3fcb3f9de7192094ecfd6b22a70db9716bcfcc63fd
+
+findings 从结构化对象转换为契约要求的字符串数组，normalization-audit.json 记录 loss=NONE，并保留字段内容。这是透明的人工过渡处理；正式结构化 findings 演进仍应走 H2，不能据此宣称当前冻结契约已经支持结构化对象。
+
+M1 状态零变化核验
+有条件通过
+
+a5_finalize() 目前重新读取并比较的是 batch.status。它没有重新读取任务列表并逐项比较 task status。
+
+因此，现有代码足以证明它检查了批次状态，但不足以单靠 A5 实现证明批次和任务状态均零变化。账本 A4_REGISTERED 中的“batch/task status untouched”是记录说明，不等同于独立的任务状态读回证据。
+
+建议补充任务状态前后快照核对；不需要重新执行真实 GPT-05 派单。
+
+五、遗留勘误逐项判定
+
+遗留/偏差
+
+	
+
+判定
+
+	
+
+说明
+
+
+
+
+GET batches 原标“已允许”，实际缺失
+
+	
+
+已纠正
+
+	
+
+增补服务端白名单，A-1 事实勘误有依据
+
+
+
+
+security.py 约6行实际约9行
+
+	
+
+须补偏差登记
+
+	
+
+单模块、端点范围可接受，但数量必须如实
+
+
+
+
+findings 结构化对象与 string[] 不兼容
+
+	
+
+过渡处理通过
+
+	
+
+fail-closed 被触发，人工规整 loss=NONE；正式演进走 H2
+
+
+
+
+矩阵6 ISSUE+1 PASS、总结果 BLOCKED
+
+	
+
+不通过
+
+	
+
+与冻结 C1 汇总映射不一致
+
+
+
+
+新会话采集缺陷
+
+	
+
+遗留登记通过
+
+	
+
+两次失败及手工 recoll 恢复均如实记录，不要求本轮重做
+
+
+
+
+跨批次完全隔离未实现
+
+	
+
+遗留登记通过
+
+	
+
+保留 ENGINE-04 token 可查询任意已知 batch_id 的风险
+
+
+
+
+source-principal 服务端绑定缺失
+
+	
+
+遗留登记通过
+
+	
+
+已列为平台级增强候选
+
+
+
+
+A5 未复核任务状态
+
+	
+
+须补证据/实现
+
+	
+
+目前只核验 batch.status
+
+六、唯一收口建议
+
+本轮不要求重新做实战，也不要求重跑112用例。只需要收口三个明确事项：
+
+C1： 明确批次级 BLOCKER 与矩阵项的关系。要么保持冻结规则并调整该组合的处理，要么提出正式契约演进，不得继续默许 ISSUE+BLOCKED。
+
+登记后读回： 正常 A4c 成功路径补充 message GET 读回及 canonical envelope 核验，或提交已有的独立读回证据。
+
+A5： 增加任务状态前后核验，或提供能够证明实战任务状态零变化的独立证据；同时把 security.py 实际9行偏差及 GET batches 勘误登记清楚。
+
+最终裁定：REJECT（限定实现级收口）。
+
+这不是否定 GPT-05 真实腿主体已经完成，也不是撤销 DEC-092 的设计冻结和开工授权。真实收发、人工恢复、三步登记、测试回归等主体成果均予以认可。本轮阻断集中在冻结 C1 的实际执行，以及两项读回证据闭环。完成上述有限收口后再做一次限定复核即可，不需要重新立项或重做实战。

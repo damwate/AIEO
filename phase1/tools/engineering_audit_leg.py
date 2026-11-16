@@ -536,6 +536,15 @@ class EngineeringAuditLeg:
                 and parsed["result"] == "ACCEPTED":
             raise OrchestrationError(4, "matrix has ISSUE (no BLOCKED) but total result=ACCEPTED "
                                         "(C1: ISSUE→ACCEPTED_WITH_RISKS; fail-closed)")
+        # G05-DR 整改1：冻结映射未定义"矩阵仅 ISSUE、总结果 BLOCKED"组合——批次级
+        # BLOCKER 独立决定总结果须经正式契约演进（H2），当前实现不得默许（实战登记
+        # 的组合为已披露偏差事实，登记后按本规则执行）。
+        if "ISSUE" in matrix_results and "BLOCKED" not in matrix_results \
+                and parsed["result"] == "BLOCKED":
+            raise OrchestrationError(4, "matrix ISSUE-only but total result=BLOCKED "
+                                        "(C1 frozen mapping: ISSUE→ACCEPTED_WITH_RISKS; "
+                                        "batch-level BLOCKER semantics require formal "
+                                        "contract evolution; fail-closed)")
         # 绑定字段由腿权威注入
         a1 = self.ledger.state_flags().get("A1_BRIEF") or {}
         if not a1.get("brief_sha256"):
@@ -789,6 +798,20 @@ class EngineeringAuditLeg:
                 lambda r: str(r.get("message_id") or r.get("id") or envelope["message_id"]),
                 request_sha=_req_sha(envelope), canonical_sha=_canon_sha(envelope),
                 key_evidence=lambda r: (r.get("details") or {}).get("message_id") == envelope["message_id"])
+            # G05-DR 整改2：正常成功路径登记后读回核验（与 409 路径同标准）——
+            # correlation 读回+重建 canonical envelope+payload 绑定比对，任一不符 fail-closed
+            rb = self._fetch_message_by_correlation()
+            if rb is None:
+                raise OrchestrationError(5, "message POST succeeded but correlation readback found "
+                                            "nothing (登记后读回核验 fail-closed)")
+            rebuilt = self._rebuild_canonical_envelope(rb, envelope)
+            if _canon_sha(rebuilt) != _canon_sha(envelope):
+                raise OrchestrationError(5, "message readback rebuilt canonical sha != sent envelope "
+                                            "(登记后读回核验 fail-closed)")
+            rb_payload = rb.get("payload") or {}
+            if rb_payload.get("result") != result or rb_payload.get("batch_id") != self.batch_id:
+                raise OrchestrationError(5, "message readback payload binding mismatch "
+                                            "(result/batch_id; fail-closed)")
             self.ledger.append({"kind": "A4_MESSAGE", "message_id": out["message_id"],
                                 "message_type": envelope["message_type"],
                                 "request_sha": _req_sha(envelope),
@@ -900,14 +923,25 @@ class EngineeringAuditLeg:
     # ------------------------------------------------------------------
     # A5 终态：留证完成（M1 批次/任务状态零变化核验）
     # ------------------------------------------------------------------
-    def a5_finalize(self, result: str, status_before: str) -> str:
+    def a5_finalize(self, result: str, status_before: str, tasks_before: list[dict] | None = None) -> str:
         code, batch = self.engine.get(f"/api/v1/batches/{self.batch_id}")
         batch = self._expect(code, (200,), "GET batch (finalize)", batch)
         if batch.get("status") != status_before:
             raise OrchestrationError(6, f"batch status changed {status_before}→{batch.get('status')} "
                                         "(GPT-05 不推进任何 M1 状态——出现变化=非法副作用; fail-closed)")
+        # G05-DR 整改3：任务状态前后快照逐项核对（批次状态之外的任务级零变化独立证据）
+        tasks_after = {t["task_id"]: t["status"] for t in self._fetch_batch_tasks()}
+        if tasks_before is not None:
+            before = {t["task_id"]: t["status"] for t in tasks_before}
+            if before != tasks_after:
+                changed = {k: (before.get(k), tasks_after.get(k)) for k in before
+                           if before.get(k) != tasks_after.get(k)}
+                raise OrchestrationError(6, f"task statuses changed during audit run: {changed} "
+                                            "(GPT-05 不推进任何 M1 状态; fail-closed)")
         self.ledger.append({"kind": "A5_DONE", "result": result,
-                            "batch_status_unchanged": status_before, "outcome": "PASS"})
+                            "batch_status_unchanged": status_before,
+                            "task_statuses_unchanged": bool(tasks_before is not None),
+                            "outcome": "PASS"})
         return "AUDIT_REGISTERED"
 
     # ------------------------------------------------------------------
@@ -922,12 +956,13 @@ class EngineeringAuditLeg:
             code, batch_before = self.engine.get(f"/api/v1/batches/{self.batch_id}")
             batch_before = self._expect(code, (200,), "GET batch (pre)", batch_before)
             task, panorama = self.a0_precheck()
+            tasks_before = [{"task_id": t["task_id"], "status": t["status"]} for t in panorama]
             self.a1_compose_brief(task, panorama)
             dispatch_dir = self.a2_dispatch(self.run_dir.joinpath("brief.txt").read_text(encoding="utf-8"))
             captured = self.a3_capture_and_validate(dispatch_dir)
             out = self.a4_register(captured)
             result = captured["parsed"]["result"]
-            status = self.a5_finalize(result, batch_before.get("status"))
+            status = self.a5_finalize(result, batch_before.get("status"), tasks_before)
             self._write_report({"result": "ENGINEERING_AUDIT_LEG_PASS", "final_status": status,
                                 "verdict": result, **out,
                                 "reply_sha256": captured["reply_sha256"],
