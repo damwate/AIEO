@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-16T17:49:37.604Z",
+  "user_unit_key": "fallback-turn-0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fallback-turn-0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "d61c68d8-9086-492d-99d2-4603ce3a44b8",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fallback-turn-0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "d012cb4fc0a3f2544a89461f1dcca5740707549953ad80a30d7a648970cbf8c4",
+          "76a049b4a8b06a64329779971f9bde54e093bd4d982e9fb60768369d38e92682"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "d012cb4fc0a3f2544a89461f1dcca5740707549953ad80a30d7a648970cbf8c4",
+          "76a049b4a8b06a64329779971f9bde54e093bd4d982e9fb60768369d38e92682"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fallback-turn-0:0:user",
+      "fallback-turn-0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "overlap_keys": [
+          "fallback-turn-0:0:user",
+          "fallback-turn-0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fallback-turn-0:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n已接替旧审查会话，后续统一在本会话推进。\n\n执行顺序锁定：GPT-04 → GPT-05。\n\n本轮只负责 GPT-04 真实测试验收腿的立项复审，按以下阶段执行：\n\nCharter 草案审查。\n\nGate1：一致性、状态机端点事实、边界自洽性。\n\nGate2：根据 Gate1 结果复核立项条件。\n\n开工授权：形成明确的授权结论，不越权修改仓库。\n\nGPT-02 的 G02-R2 PASS（DEC-088）作为先例，但不意味着 GPT-04 可以直接照搬通过。\n\n验收边界继续冻结：H2 契约冻结、M1–M4 零修改、只评审、不实施。DEC-010 红线仍由你本人决定。\n\n基线核验：\n\n已将 main=769fcec 解析为完整 SHA：\n\n769fcec1f632db47aeef4dab0532cdd011468d95\n\n已按该 SHA 读取：\n\napp/platform/state_machine.py\n\napp/platform/reports.py\n\n已确认状态机包含 TEST_ACCEPTANCE → ACCEPTED / REWORK / BLOCKED 等端点，以及 ACCEPTED 对 PASS 代码审查和 EXECUTED_PASS 测试证据的要求。\n\n另外，部分文档路径读取返回 404，暂不把它们视为已核验依据。\n\n下一步：请提供 GPT-04 Charter 草案。\n\n收到后直接做 Gate1，按以下三态输出：\n\nPASS：有充分证据支持。\n\nPASS_WITH_CONSTRAINTS：有限条件下成立，明确约束。\n\nREJECT：存在实质性问题，列出具体依据和整改要求。\n\n我会优先识别真正影响立项的缺陷，不为格式问题反复返工，也不提前授权开工。",
+      "text_sha256": "76a049b4a8b06a64329779971f9bde54e093bd4d982e9fb60768369d38e92682",
+      "size_bytes": 1465,
+      "assistant_uuid": "d61c68d8-9086-492d-99d2-4603ce3a44b8"
+    }
+  ]
+}

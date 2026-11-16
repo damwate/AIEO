@@ -717,3 +717,11 @@
 - **审批边界：** PASS≠合并授权（DEC-010）；各 commit 按 L-020 节点自主推进授权执行，push 走 toolkit/check-push.mjs。
 - **遗留待办：** ①契约 findings 结构化演进（H2 流程）②review_leg.py 同类并发锁缺口③gpt_dispatch 会话指针覆盖缺陷（派单工具维护）④下一任务开工前审查会话主动迁移（6afb128e 已 5 条 user 消息，超 DEC-084 阈值）。
 - **关联：** DEC-087、DEC-067、DEC-026、GPT-03 先例（DEC-058~062）、问题14/15（steps.md 返工表）。
+
+### DEC-089 审查会话主动迁移（6afb128e→6afb41ae）+GPT-04/05 逐角色立项启动（2026-11-17，L-020 节点自主推进）
+
+- **会话迁移（DEC-088 遗留④，L-018 第 6 条主动迁移）：** 旧审查会话 6afb128e-94bc-83ee-9148-ad10f90220ee 累计 5 条 user 消息超 DEC-084 阈值 4——交接包明示迁移为开工前置，本会话执行：迁移简报 `phase0/tools/brief_gpt0405_migrate.txt`（恰 1200B≤1200B 自包含：接棒声明+任务+主证据 reply SHA256 7aa1f845…/被测 commit 9996a99…+读取路径+首轮待办+边界）`--new-session` 首派即活（现场 `phase0/logs/dispatch-2026-11-16T17-46-33`，user_unit_key=fallback-turn-0:0:user，assistant_uuid=d61c68d8-9086-492d-99d2-4603ce3a44b8，stability 十查全过）；**新审查会话=6afb41ae-4bac-83e8-9135-8592f4107e2f**，`phase0/logs/gpt-reviewer-session.json` 已更新（旧指针备份 gpt-reviewer-session.pre-migrate-20261117.json）；旧会话转只读归档，后续轮次全在新会话。审查方接棒回复确认：基线 main=769fcec1f632db47aeef4dab0532cdd011468d95 已核验（state_machine.py/reports.py 实读）、顺序锁定 GPT-04→GPT-05、Gate1 三态口径（PASS/PASS_WITH_CONSTRAINTS/REJECT）。
+- **授权机制登记（用户 2026-11-17 交接指令）：** "接下来的工作如遇到问题你与chatgpt讨论，以chatgpt的意见为准，不用我拍板"——立项各关口（含开工授权）以审查方（ChatGPT）复审意见为准，替代用户逐项拍板；DEC-010 高危红线（main 合并/生产发布/数据删除）仍须用户本人拍板；用户保留手动介入权。承载于 GPT-04/05 charter 授权链条款；与 L-020（节点自主推进）叠加适用。
+- **GPT-04 立项启动（DEC-026 决议二路线续行）：** charter 草案 `docs/phase1/GPT04-TEST-ACCEPTANCE-LEG-CHARTER-DRAFT.md` v0.1 成文——落点 TEST_ACCEPTANCE 关口，登记路线=M1 原生端点 POST /reports/test（reports.py:201-250 实读：PASS 须绑 EXECUTED_PASS"claims are not evidence"、test_reports 行+apply_event 同事务原子、幂等键=(execution_id,commit_sha) 重复报 duplicate）；决策点 D1-D5（角色顺序/框架件复用方式/证据定位/一致性校验方向/BLOCKED 处置）留 Gate1/Gate2 裁定；ENGINE-03 服务身份（先例 ENGINE-01/02）；回复契约 test-acceptance-review.schema.json=新增文件（H2）。
+- **审批边界：** 各 commit 按 L-020 自主推进授权执行，push 走 toolkit/check-push.mjs；Gate1/Gate2 派单至新会话 6afb41ae；charter 开工授权=审查方复审通过（本 DEC 授权机制），实施任务包待 Gate 后登记。
+- **关联：** DEC-088（遗留④闭环）、DEC-084（阈值）、L-018 第 6 条、L-020、DEC-026、GPT-02 charter 先例（DEC-063/067/087）。

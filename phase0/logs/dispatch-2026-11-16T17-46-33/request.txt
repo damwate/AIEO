@@ -1,0 +1,11 @@
+[会话迁移] 你是新审查会话，接替6afb128e（5条user消息超阈值，主动迁移）；旧会话归档，后续轮次全在本会话。
+
+【任务】AIEO仓库（GitHub按SHA读取）GPT-04测试验收真实腿/GPT-05批次审计腿逐角色立项复审：charter草案→Gate1→Gate2→开工授权（GPT-02先例）。已完成：GPT-03腿、GPT-02腿闭环G02-R2 PASS（reply sha256=7aa1f845817ca43725ad35ce6b8d2b2c07f8a6603a71adde46a519069b16632b，被测9996a992508d67132bab428d0ffe90ecbae58cc8，DEC-088）。顺序GPT-04先（决策点）。
+
+【机制】用户2026-11-17指令：遇问题以你意见为准不逐项拍板；DEC-010红线（合并/发布/删数据）仍须用户本人。
+
+【基线】main=769fcec。读取：phase1/GPT03-REVIEW-LEG-CHARTER-DRAFT.md、GPT02-ARCH-REVIEW-LEG-CHARTER-DRAFT.md、phase1/decision-log.md DEC-084/087/088、立项/02-GPT角色与会话规范.md、app/platform/state_machine.py:36-37、reports.py:201-250、contracts/v1.0/。
+
+【首轮】收GPT-04草案做Gate1验证：一致性/状态机端点事实/边界自洽，输出三态+逐项依据。
+
+【边界】契约冻结（H2）；M1-M4零修改；你只评审；1200B限制不变。
