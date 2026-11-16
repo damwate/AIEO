@@ -24,7 +24,7 @@
 
 ## 4. 测试结果
 
-- ST-05 检查器：`python -I basic/tool/check_taskpack.py basic/tasks/b-20261116-workspace-spec`；交付前实测 ①PASS ②PASS ③PASS（S1/S2 到期且结论 PASS）④PASS（返工表问题1~5 编号级三方关联）⑤PASS（各问题返工次数 ≤3）⑥见交付登记；FAIL=0；两处原始输出落库：`acceptance/st05-inprogress.txt`（S2 期，③N/A）与 `acceptance/st05-s3gate.txt`（交付门，③=「2 步记录完整 PASS；未到期 S3」）。
+- ST-05 检查器：`python -I basic/tool/check_taskpack.py basic/tasks/b-20261116-workspace-spec`。**实际输出（据原始落库，S3 验收前）**：①PASS ②PASS **③N/A**（提示"2 步记录完整 PASS；未到期 S3"）④PASS ⑤PASS **⑥N/A**（阶段=IN_PROGRESS，交付记录未到期），Overall=IN_PROGRESS，FAIL=0。原始输出：`acceptance/st05-inprogress.txt`（S2 期）、`acceptance/st05-s3gate.txt`（S3 验收前）。S3 完成态（COMPLETED）需在 S3 验收通过、阶段转完成后重跑并另存新输出。
 - 独立验收链（ChatGPT 会话 `6afabbd3-ddec-83e8-afca-8a61cf91694c`）：R1 REJECT（问题1/2/3）→ R2 REJECT（仅收尾：问题2 待追认、问题4 ST-05 落库）→ R3 REJECT（仅 P1-03）→ R4 REJECT（仅 P2-03）→ R5 REJECT（P2-03 最小必改项）→ **R6 PASS（P2-03 关闭，明确无需 R7）**；各轮现场目录与 reply SHA256 见 steps.md ⑥。
 - 纯文档任务：无代码单测项（如实标注不适用）。
 
@@ -34,7 +34,8 @@
 - S1-R1 首轮被测：`72ee196c1ede434b7ddfb72a2450834505e1d2c4`
 - **S1-R2~R6 被测对象（内容最终定型）：`9efb14bbcc74d397e15558dc720706fc054ac627`**
 - 其后均为证据登记 commit（不属被测 diff）：`72ee196`→`9efb14b`（整改）→`bf96e00`/`80f4928`（返工表）→`06d72bb`（R2 登记+ST-05 落库）→`c92cb0e`（问题1/3 关闭+问题4 行）→`09dbb64`（降档收口 DEC-071）→`0e65d9c`（P1-03+DEC-072+经验固化）→`f9905a8`（R4 简报）→`e32bda9`（P2-03 结构性修正 DEC-073）→`fa2f26b`（问题5 行）→`8c68f54`（R4 归档+R5 简报）→`d190ed0`（R5 最小必改项 DEC-074）→交付登记 commit（本条）
-- 审查分支：`review/b-20261116-workspace-spec`（远程同名分支，供按 SHA 读取；**远程 main 未推送**）
+- **本次交付登记 commit：`cc29fc51b23426b8f581416a82eed521117f74fd`**（父提交=`d190ed0e6b902c5fc4659297aed95bf94bc8139c`；内容=delivery.md+steps/task-brief 更新+ST-05 输出+本验收请求；**不属被测 diff**）。其后的交付记录修正 commit 另行列出（本轮 S3-R7 整改）。
+- 审查分支：`review/b-20261116-workspace-spec`（远程同名分支，供按 SHA 读取）。**远程 main 仍指向基线 `d563a2a5…`（本次复核经 GitHub 核验）；本地 main 领先属执行侧现场记录**，尚未推送/合并（待用户明文授权）。
 
 ## 6. 未解决问题
 
