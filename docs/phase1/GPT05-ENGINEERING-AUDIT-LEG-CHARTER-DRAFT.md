@@ -1,4 +1,4 @@
-# GPT-05 工程总审计真实腿最小版接入——立项任务书（草案 v0.8·Gate2-R5 收口修订）
+# GPT-05 工程总审计真实腿最小版接入——立项任务书（草案 v0.9·Gate2-R6 收口修订）
 
 > **文档身份与授权链：** 本文件=Standard 平台路线 GPT-02/03/04/05 逐角色接入的**第四张立项草案**（GPT-03 v1.0 已生效 DEC-057/062；GPT-02 交付闭环 DEC-088；GPT-04 交付闭环 DEC-091）。启动依据=Gate2 裁定"GPT-05 待 GPT-04 形成可验收闭环后再立项"（顺延条件已达成，DEC-091 登记）。生效路径：charter 草案 → Gate1 草案级验证 → Gate2 会务立项评审 → 开工授权（用户 2026-11-17 授权机制=审查方复审通过替代用户逐项拍板，DEC-089 登记；DEC-010 高危红线仍须用户本人拍板）。**评审沿革：** Gate1 PASS_WITH_CONSTRAINTS（reply sha256=bceb502a…083a5e480，dispatch-2026-11-16T20-57-30/recoll）→G05-R1 REJECT 两项整改（reply sha256=abcb99de…c8c3c60d，dispatch-2026-11-16T21-07-15/recoll）→G05-R2 PASS C1/D2 通过+Gate2 启动确认（reply sha256=1f0c51ac…dfaeb076，dispatch-2026-11-16T21-15-51/recoll）→**Gate2 首轮暂不通过（六项：①A-1 REJECT 权限阻断/②A-2 有条件/③A-3 REJECT/④多事务 REJECT/⑤验收设计有条件/⑥边界有条件；未获开工授权）**（reply sha256=0aeecb13…9dfaeb076，dispatch-2026-11-16T21-23-31/recoll 七查全过）→本 v0.4=Gate2-R1 设计修订（按裁定六项处置）→G05-Gate2-R1 复核范围=六项中未通过及有条件通过部分（不重开显式 CLI、同构复制、无状态事件、M1-M4 零修改等已确定设计原则）。
 
@@ -86,7 +86,7 @@
 
 ## 8. 授权与红线
 
-生效链：本草案 → Gate1 → Gate2 复核链（首轮暂不通过→R1/R2/R3/R4 历轮整改→**复核链最终通过**）→ 开工授权（用户 2026-11-17 授权机制=审查方复审通过；登记 decision-log）；开工后 PASS≠合并授权（DEC-010）。红线沿用：DEC-010/DEC-011（契约冻结）/DEC-017/H2；**M1-M4 零修改——唯一例外=§3 权限方案 security.py 单模块约 6 行（白名单增补+服务身份 batch_id 强制规则，须 G05-Gate2-R4 复核通过+开工授权，其余 M1-M4 仍零修改）**；角色红线（不能绕过任务级审查、不能批准生产发布——审计结论仅建议语义）。
+生效链：本草案 → Gate1 → Gate2 复核链（首轮暂不通过→R1/R2/R3/R4 历轮整改→**复核链最终通过**）→ 开工授权（用户 2026-11-17 授权机制=审查方复审通过；登记 decision-log）；开工后 PASS≠合并授权（DEC-010）。红线沿用：DEC-010/DEC-011（契约冻结）/DEC-017/H2；**M1-M4 零修改——唯一例外=§3 权限方案 security.py 单模块约 6 行（白名单增补+服务身份 batch_id 强制规则，须 Gate2 复核链最终通过+开工授权（DEC-089 机制），其余 M1-M4 仍零修改）**；角色红线（不能绕过任务级审查、不能批准生产发布——审计结论仅建议语义）。
 
 ## 9. 不在范围清单（防膨胀）
 
@@ -97,7 +97,7 @@
 | # | Method | 路径 | 操作范围 | 服务端白名单现状 | 幂等/读回 |
 |---|---|---|---|---|---|
 | 1 | GET | /api/v1/batches/{batch_id} | 批次需求/规范版本/状态 | 已允许 | 只读 |
-| 2 | GET | /api/v1/tasks?batch_id={batch_id} | **批次任务全景（全量分页遍历+total 核对，C2；服务身份强制带 batch_id——§3 规则②）** | **§3 权限方案对象**（现为 AUTH-0002 拒绝——本行许可依赖 G05-Gate2-R4 复核通过+开工授权的 security.py 约 6 行变更） | 只读分页 |
+| 2 | GET | /api/v1/tasks?batch_id={batch_id} | **批次任务全景（全量分页遍历+total 核对，C2；服务身份强制带 batch_id——§3 规则②）** | **§3 权限方案对象**（现为 AUTH-0002 拒绝——本行许可依赖 Gate2 复核链最终通过+开工授权（DEC-089 机制）的 security.py 约 6 行变更） | 只读分页 |
 | 3 | GET | /api/v1/tasks/{task_id} | 单任务详情（全景核验） | 已允许 | 只读 |
 | 4 | GET | /api/v1/artifacts/{artifact_id} | 审计材料/留证读回 | 已允许 | 只读 |
 | 5 | GET | /api/v1/reports（type/task_id 筛选；**无 batch_id 过滤——按批次任务逐项查询**） | 批次报告全景核验 | 已允许 | 只读分页 |
@@ -181,6 +181,7 @@
 
 | 版本 | 日期 | 状态 | 变更 | 依据 |
 |---|---|---|---|---|
+| v0.9（Gate2-R6 收口修订） | 2026-11-17 | 草案（待 G05-Gate2-R6 复核两处） | Gate2-R5 唯一整改：§8 红线子句与附录 A-1 第 2 行的两处 "R4 专属条件"→"须 Gate2 复核链最终通过+开工授权（DEC-089 机制）"；其余全 PASS 不变（P0-1/2/3、A10b/c/d、残余风险、§1/§3/生效链） | Gate2-R5 REJECT 仅两处（reply sha256=169854cff5fe8d13…完整值见 recoll-result.json，dispatch-2026-11-16T22-22-49/recoll 补采七查全过；裁定原则="只差授权文字收口，不再借此扩大设计审查范围"） |
 | v0.8（Gate2-R5 收口修订） | 2026-11-17 | 草案（待 G05-Gate2-R5 复核②项） | Gate2-R4 唯一整改：授权链清理彻底化——§1/§3 全部规范性授权条件统一为"须 Gate2 复核链最终通过+开工授权"（消除与 §8 的 Gate2-R1/R2 旧条件残留）；评审沿革/版本记录中的历史轮次标注保留（历史事实非授权条件） | Gate2-R4 REJECT 仅②（reply sha256=dbe7f3f2b8076575…完整值见 recoll-result.json，dispatch-2026-11-16T22-12-01/recoll 补采七查全过——INBOUND_START_UNIT_MISSING→CDP 枚举标签页取得新会话 6afb7fe2 后补采；①P0-3 PASS/③残余风险 PASS） |
 | v0.7（Gate2-R4 收口修订） | 2026-11-17 | 草案（待 G05-Gate2-R4 极窄复核） | R3 唯一整改 P0-3 闭合=M1 readback→canonical envelope 映射冻结（账本预期 envelope 为骨架+九实质字段读回覆盖+agent_type 账本恢复+source_agent_id 一致断言+同一 _canon_sha 比较+正反对照样例；不要求改 M1 代码）；授权链清理（§3/§8/A-1 "须 Gate2-R2 批准"→G05-Gate2-R4 实际依据）；A-1 残余风险措辞按 R3 收尾清单收紧（明确"不构成跨批次完全隔离"写入开工记录要求） | Gate2-R3 整体 REJECT 但 P0-1/P0-2 PASS+A10b/c/d PASS（reply sha256=3f39e37dfa8d4845…完整值见 recoll-result.json，dispatch-2026-11-16T22-00-43/recoll 七查全过；blob 70eb321a 实读+messaging.py:267-270 message_view 实读；会话迁移建议=审查方提出，R4 于新会话执行） |
 | v0.6（Gate2-R3 设计修订） | 2026-11-17 | 草案（待 G05-Gate2-R3 复核三 P0+A10b 断言） | 三 P0 整改：P0-1=§6 身份统一（source=GPT-05 全文档唯一口径，§5/§6/A-2/账本一致；Bearer=ENGINE-04；target=AIEO-ORCHESTRATOR）；P0-2=message_id 算法逐字冻结（run_key SHA-256 折叠 a/b 两段，三腿实战注册成功证据+重放稳定+撞键 409 fail-closed 不换键）；P0-3=message 409 双证改五条件 AND（响应指认+账本指纹+读回+规范化一致+与报告绑定，任一缺失 fail-closed）+A-3 A4c 行同步；A10b 补 A10c（带 batch_id→200）/A10d（OWNER 无 batch_id→200 行为零变化）断言 | Gate2-R2 REJECT（reply sha256=0b9ba7269fa65289…完整值见 recoll-result.json，dispatch-2026-11-16T21-50-31/recoll 七查全过；A-1 PASS_WITH_CONSTRAINTS=残余风险明确披露可保留但不得声称完全隔离） |
