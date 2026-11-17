@@ -1,0 +1,3 @@
+[M2-PLAN-R4|20261118] v0.4请终审(承接R3两点)。commit=212439ff7dffed81fbba694bab9e88445e1c0cfe(可直读)。
+落位:③五件套必需文件全量SHA256逐一计算校验通过方可COMPLETED(R3③指正抽核不足),SHA256SUMS随证据入库。⑤自指缺陷已修正:tag message只登记被测commit完整40位SHA+回归日志路径与SHA(日志入库release-v0.1.0-alpha/+SHA256SUMS);tag对象SHA不写自身message,创建后入独立发布记录RELEASE-RECORD.md登记tag名↔tag对象SHA↔被测commit SHA三者映射;tag不移动不删,删除重打=版本事故登记。
+请终审五点,JSON{"result":"PASS|REWORK","points":[{"n":1,"v":""},{"n":2,"v":""},{"n":3,"v":""},{"n":4,"v":""},{"n":5,"v":""}],"conditions":[]}≤700B
