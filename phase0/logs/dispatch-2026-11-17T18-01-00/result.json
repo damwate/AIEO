@@ -1,0 +1,181 @@
+{
+  "at": "2026-11-17T18:03:40.253Z",
+  "message_bytes": 1071,
+  "reply": "ChatGPT 说：\n\n{\n\"result\": \"A\",\n\"summary\": \"启动AIEO基础版实战待命模式。以DEC-049 P1日常任务池为入口，真实需求到达后按Basic工作流v0.3执行。当前不主动制造任务清理挂起项，避免为完成指标而制造无效工作。BC-03、BC-06、BC-12按前置条件自然激活。\",\n\"conditions\": [\n\"维持Basic边界M1，S1进入Basic，S2按风险分流，S3进入Standard。\",\n\"BC-03等待跨电脑实测设备；BC-06等待真实代码类需求；BC-12等待前置条件。\",\n\"DEC-010红线不变：main合并、生产发布、数据删除必须用户本人拍板。\",\n\"906及代码写入仍须用户本人拍板，本裁定不构成写入授权。\",\n\"不得将等级B试运行结项PASS解释为扩围授权。\",\n\"每项任务保留可追溯证据，按工作流DoD验收。\"\n],\n\"first_action\": \"将AIEO基础版状态切换为ACTIVE-READY，建立日常任务入口；下一项真实S1需求直接进入Basic工作流v0.3，不额外安排空转验证任务。\"\n}",
+  "user_unit_key": "796f184f-bc82-5823-be25-bfd94bc4d9f6:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "796f184f-bc82-5823-be25-bfd94bc4d9f6:1:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "af28ccb8-aefa-4cf0-949d-b12af635394d",
+  "stability": {
+    "stable": true,
+    "interval_ms": 3587,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-17T18:03:35.846Z",
+      "read_finished_at": "2026-11-17T18:03:36.416Z",
+      "unit_keys": [
+        "796f184f-bc82-5823-be25-bfd94bc4d9f6:1:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "796f184f-bc82-5823-be25-bfd94bc4d9f6:1:assistant",
+          "sha256": "a4bfb23ea0365f462911e87ab747771d85944b54ac47ed7b5d85c34dedb90a1b",
+          "size_bytes": 1006
+        }
+      ],
+      "assistant_uuid": "af28ccb8-aefa-4cf0-949d-b12af635394d",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-17T18:03:39.433Z",
+      "read_finished_at": "2026-11-17T18:03:39.985Z",
+      "unit_keys": [
+        "796f184f-bc82-5823-be25-bfd94bc4d9f6:1:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "796f184f-bc82-5823-be25-bfd94bc4d9f6:1:assistant",
+          "sha256": "a4bfb23ea0365f462911e87ab747771d85944b54ac47ed7b5d85c34dedb90a1b",
+          "size_bytes": 1006
+        }
+      ],
+      "assistant_uuid": "af28ccb8-aefa-4cf0-949d-b12af635394d",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "796f184f-bc82-5823-be25-bfd94bc4d9f6:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "796f184f-bc82-5823-be25-bfd94bc4d9f6:0:user",
+          "796f184f-bc82-5823-be25-bfd94bc4d9f6:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "f70f1aa1a460566b07b414eee89a903f87bca68882504de6a2682a7530002cd5",
+          "a4bfb23ea0365f462911e87ab747771d85944b54ac47ed7b5d85c34dedb90a1b"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "796f184f-bc82-5823-be25-bfd94bc4d9f6:0:user",
+          "796f184f-bc82-5823-be25-bfd94bc4d9f6:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "f70f1aa1a460566b07b414eee89a903f87bca68882504de6a2682a7530002cd5",
+          "a4bfb23ea0365f462911e87ab747771d85944b54ac47ed7b5d85c34dedb90a1b"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "796f184f-bc82-5823-be25-bfd94bc4d9f6:0:user",
+          "796f184f-bc82-5823-be25-bfd94bc4d9f6:1:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "796f184f-bc82-5823-be25-bfd94bc4d9f6:0:user",
+      "796f184f-bc82-5823-be25-bfd94bc4d9f6:1:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "796f184f-bc82-5823-be25-bfd94bc4d9f6:0:user",
+          "796f184f-bc82-5823-be25-bfd94bc4d9f6:1:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "796f184f-bc82-5823-be25-bfd94bc4d9f6:0:user",
+          "796f184f-bc82-5823-be25-bfd94bc4d9f6:1:assistant"
+        ],
+        "overlap_keys": [
+          "796f184f-bc82-5823-be25-bfd94bc4d9f6:0:user",
+          "796f184f-bc82-5823-be25-bfd94bc4d9f6:1:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "a4bfb23ea0365f462911e87ab747771d85944b54ac47ed7b5d85c34dedb90a1b",
+  "size_bytes": 1006,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-17T18-01-00\\reply.txt",
+  "reply_readback_sha256": "a4bfb23ea0365f462911e87ab747771d85944b54ac47ed7b5d85c34dedb90a1b",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-17T18-01-00\\raw-units.json",
+  "raw_units_sha256": "aae99ccda4999afd58489873f4abe9c9861ff599b3c1ed4d095e638b228b19f1",
+  "raw_units_size_bytes": 4052,
+  "raw_units_readback_sha256": "aae99ccda4999afd58489873f4abe9c9861ff599b3c1ed4d095e638b228b19f1",
+  "session_id": "6afc9699-8c7c-83e8-b34a-efed1ff237be",
+  "conversation_url": "https://chatgpt.com/c/6afc9699-8c7c-83e8-b34a-efed1ff237be",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}

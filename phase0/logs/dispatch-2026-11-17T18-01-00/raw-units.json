@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-17T18:03:40.253Z",
+  "user_unit_key": "796f184f-bc82-5823-be25-bfd94bc4d9f6:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "796f184f-bc82-5823-be25-bfd94bc4d9f6:1:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "af28ccb8-aefa-4cf0-949d-b12af635394d",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "796f184f-bc82-5823-be25-bfd94bc4d9f6:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "796f184f-bc82-5823-be25-bfd94bc4d9f6:0:user",
+          "796f184f-bc82-5823-be25-bfd94bc4d9f6:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "f70f1aa1a460566b07b414eee89a903f87bca68882504de6a2682a7530002cd5",
+          "a4bfb23ea0365f462911e87ab747771d85944b54ac47ed7b5d85c34dedb90a1b"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "796f184f-bc82-5823-be25-bfd94bc4d9f6:0:user",
+          "796f184f-bc82-5823-be25-bfd94bc4d9f6:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "f70f1aa1a460566b07b414eee89a903f87bca68882504de6a2682a7530002cd5",
+          "a4bfb23ea0365f462911e87ab747771d85944b54ac47ed7b5d85c34dedb90a1b"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "796f184f-bc82-5823-be25-bfd94bc4d9f6:0:user",
+          "796f184f-bc82-5823-be25-bfd94bc4d9f6:1:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "796f184f-bc82-5823-be25-bfd94bc4d9f6:0:user",
+      "796f184f-bc82-5823-be25-bfd94bc4d9f6:1:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "796f184f-bc82-5823-be25-bfd94bc4d9f6:0:user",
+          "796f184f-bc82-5823-be25-bfd94bc4d9f6:1:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "796f184f-bc82-5823-be25-bfd94bc4d9f6:0:user",
+          "796f184f-bc82-5823-be25-bfd94bc4d9f6:1:assistant"
+        ],
+        "overlap_keys": [
+          "796f184f-bc82-5823-be25-bfd94bc4d9f6:0:user",
+          "796f184f-bc82-5823-be25-bfd94bc4d9f6:1:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "796f184f-bc82-5823-be25-bfd94bc4d9f6:1:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n{\n\"result\": \"A\",\n\"summary\": \"启动AIEO基础版实战待命模式。以DEC-049 P1日常任务池为入口，真实需求到达后按Basic工作流v0.3执行。当前不主动制造任务清理挂起项，避免为完成指标而制造无效工作。BC-03、BC-06、BC-12按前置条件自然激活。\",\n\"conditions\": [\n\"维持Basic边界M1，S1进入Basic，S2按风险分流，S3进入Standard。\",\n\"BC-03等待跨电脑实测设备；BC-06等待真实代码类需求；BC-12等待前置条件。\",\n\"DEC-010红线不变：main合并、生产发布、数据删除必须用户本人拍板。\",\n\"906及代码写入仍须用户本人拍板，本裁定不构成写入授权。\",\n\"不得将等级B试运行结项PASS解释为扩围授权。\",\n\"每项任务保留可追溯证据，按工作流DoD验收。\"\n],\n\"first_action\": \"将AIEO基础版状态切换为ACTIVE-READY，建立日常任务入口；下一项真实S1需求直接进入Basic工作流v0.3，不额外安排空转验证任务。\"\n}",
+      "text_sha256": "a4bfb23ea0365f462911e87ab747771d85944b54ac47ed7b5d85c34dedb90a1b",
+      "size_bytes": 1006,
+      "assistant_uuid": "af28ccb8-aefa-4cf0-949d-b12af635394d"
+    }
+  ]
+}
