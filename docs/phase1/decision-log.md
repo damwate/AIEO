@@ -804,3 +804,14 @@
 - **拍板边界：** v1.0 冻结零修改；v1.1 新增文件保留历史兼容；不借机改造其他冻结契约；两项均独立验收，完成后再申请等级 B Gate。
 - **下一节点：** 立项 Basic 任务包完成 #1/#2 定向清理（仅此两项，不重审四腿已交付成果、不扩大范围）；每步交 ChatGPT 独立验收；收口后再走《受控试运行(等级B) Charter》→规划复审→Gate。
 - **关联：** DEC-093（遗留 #1/#2 原始描述）、DEC-096（路径拍板 B）、DEC-067（H2 先例）、DEC-026（路线）、L-018（fail-closed 实证）。
+
+### DEC-098 DEC-093 #1/#2 H2 契约演进任务交付闭环（2026-11-17，节点完成登记）
+
+- **节点结果：** Basic 任务包 `b-20261117-h2-contract-findings-evolution` = **COMPLETED / 最终结果 PASS**（ST-05 COMPLETED Overall PASS；基线 36b9ade 未漂移）。交付记录 basic/tasks/b-20261117-h2-contract-findings-evolution/delivery.md。
+- **#1 findings 结构化（ChatGPT 独立验收 PASS）：** contracts/v1.1/ 新增统一 `_defs/findings.schema.json`（稳定 $id、四契约共用）+ 四份 v1.1 契约（顶层 findings 改 $ref 结构化，v1.0 字节级零 diff、历史报告可读）；三腿 ARCH/TEST/AUDIT SCHEMA+CONTRACT_VERSION 切 v1.1 + Ajv addSchema；GPT-03 经追加会商 ChatGPT 裁定 C——保留 envelope、新增 issues[] 字符串数组 fail-closed 校验(R4_ISSUES_VALID)，不映射 findings/不构造完整 report/不改业务逻辑。四腿 118/118、v1.1 契约 6/6、v1.0 契约 141/141。
+- **#2 BLOCKER 语义钉死（PASS）：** 仅补 test_25（多项 BLOCKED→批次 BLOCKED/DO_NOT_SUBMIT）+ blocker-semantics.md（8 条既有规则+四型映射，来源 v1.0 description 非新增），零契约改动；工程审计 25/25。
+- **四轮独立验收收敛（fail-closed 全程生效）：** ①08:24 未推送拒判（流程缺口，验收前漏 push）→②08:25 重派采集 INBOUND_WINDOW_COMPLETENESS_UNPROVEN→禁重发→L-018 补采（锚定最后 user+标记+前轮 SHA 排除，七查全过）得仍不可核验 FAIL→③08:34 审查方成功读取源码、核验全通过但缺 v1.1 6/6/lint0/独立 25/25 三项运行证据→④证据落 acceptance/evidence/ 并 push →08:38 **#1 PASS #2 PASS 可交付**（dispatch-2026-11-17T08-36-25，reply 462B SHA-256=`3b4c094c41af0b7631a4a52404519aa0e534ce12870da5b86aa43cd26c76b5d1`）。四轮均为流程/证据补齐，非代码缺陷，被测源码 commit 恒定。
+- **C1 绑定：** 被测源码 commit `245108c379335453abe250131908cfe747bb9d3a`（完整 40 位）；证据补齐 commit `4af23cc86b9927fcc8e0e8236ddccc22250801e5`；交付收口 commit `28cd8b6e5914e34a5dfc80557222952758476317`；均已推送。
+- **边界与残留：** 未碰冻结契约 v1.0（SHA 与基线一致，审查方核验）、未碰 M1-M4/DEC-010；审查会话 6afc054f 累计 6+ 消息超 DEC-084 阈值，因任务中段迁移断证据链暂不迁（steps.md 登记），收口后评估。
+- **下一节点：** 按 DEC-096 建议顺序新建《受控试运行(等级 B) Charter》→规划复审（范围/数量/权限/退出标准，依 DEC-096 八维边界+三红线）→正式 Gate 授权→首批真实任务受控试跑→阶段复盘→906 顺延决策。
+- **关联：** DEC-093/094/095/096/097（全链）、DEC-026（路线）、DEC-067（H2 先例）、L-014/L-016/L-018（push/诊断/补采纪律）。
