@@ -1,0 +1,64 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-17T03:18:41.959Z",
+  "user_unit_key": "9bf401e6-a799-53e2-b893-9c616a74a2ac:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "9bf401e6-a799-53e2-b893-9c616a74a2ac:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "8a666226-0168-4f8e-965e-3665bad35b11",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "9bf401e6-a799-53e2-b893-9c616a74a2ac:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "9bf401e6-a799-53e2-b893-9c616a74a2ac:0:user",
+          "9bf401e6-a799-53e2-b893-9c616a74a2ac:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "ef31868ab76c0773324c068af53dfb2554072e3e3a6a706ef3b21d360b25e806",
+          "13cc2caa399f680ff1ebf934ce0ff13109051a04a548671f4b98b16ffefff228"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": []
+      }
+    ],
+    "materialized_unit_keys": [
+      "9bf401e6-a799-53e2-b893-9c616a74a2ac:0:user",
+      "9bf401e6-a799-53e2-b893-9c616a74a2ac:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STATIC_NON_SCROLLABLE_DOM",
+      "scrollable_window_observed": false,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "9bf401e6-a799-53e2-b893-9c616a74a2ac:0:user",
+          "9bf401e6-a799-53e2-b893-9c616a74a2ac:2:assistant"
+        ],
+        "overlap_keys": []
+      }
+    ],
+    "window_transitions": 0
+  },
+  "units": [
+    {
+      "key": "9bf401e6-a799-53e2-b893-9c616a74a2ac:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\nDEC026-续行会商｜拍板结论（20261117）\n\n问1：选 B。\n\n先清除阻塞受控试运行的派单缺陷 #3、#4、#7，再建立等级 B 受控试运行 Gate。理由：这三项直接影响新会话任务采集、指针正确性及并发安全，不能带着已知派单风险进入真实任务试跑；H2 契约演进不应成为当前试运行的前置条件。\n\n问2：选甲。\n\n归档后清除：\n\nM review_leg_recoll_driver.mjs：恢复 HEAD，清除运行时派生的临时路径修改。\n\n?? recoll_g05r2.mjs：纳入 G05 acceptance 证据归档，完成归档确认后从工作区清除。\n\n理由：既保留一次性补采驱动的审计追溯能力，又恢复干净工作区，避免临时工具混入正式交付。\n\n执行边界：\n\n被测基线固定 ee76a34，不得漂移。\n\n不触碰 DEC-010 高危操作。\n\nB 完成后重新验收，再申请等级 B 受控试运行授权。\n\n不因本次拍板自动授权真实任务开工。\n\n两问均已拍板",
+      "text_sha256": "13cc2caa399f680ff1ebf934ce0ff13109051a04a548671f4b98b16ffefff228",
+      "size_bytes": 996,
+      "assistant_uuid": "8a666226-0168-4f8e-965e-3665bad35b11"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+[DEC026-续行会商|20261117] 请拍板两问，细节我俩定。现状 HEAD=ee76a34，GPT-02/03/04/05四腿全COMPLETED，DEC-026"逐角色接入"完成，名义下一节点=受控试运行(等级B)，DEC-093移交七项遗留待办。
+
+问1 下一节点优先级(唯一选+一句理由)：
+A 直接立受控试运行(Gate+开工授权+真实任务试跑)；
+B 先清阻塞试运行的派单缺陷(#3新会话采集INBOUND_START_UNIT_MISSING当日四现/#4--new-session指针覆盖两次/#7 mtime+并发锁)再立试运行；
+C 先做契约演进H2(#1 findings结构化+#2矩阵×批次BLOCKER语义，四契约同族)。
+
+问2 工作区残留(交接称净树，实查2处未提交)：M review_leg_recoll_driver.mjs(运行时派生，diff仅临时路径)、?? recoll_g05r2.mjs(G05-R2一次性补采驱动)。甲=归档后清除(前者恢复HEAD/后者入G05 acceptance)；乙=保持仅记录；丙=丢弃。请定。
+
+边界：不涉DEC-010高危(main合并/生产发布/数据删除)；按DEC-089/031以你意见为准。被测基线ee76a34。输出：逐问结论+一句理由。证据 basic/tasks/b-20261117-gpt05-engineering-audit-leg/delivery.md §7、decision-log DEC-093。

@@ -765,3 +765,13 @@
 - **遗留待办（移交）：** ①findings 结构化演进（四契约同族，H2 流程）②矩阵×批次级 BLOCKER 语义细化（G05-DR 指认，随①一并）③新会话采集缺陷根因（当日四现：INBOUND_START_UNIT_MISSING/COMPLETENESS 两型；手工 recoll+视口前置拉高为有效恢复）④--new-session 指针覆盖缺陷（两次复现）⑤per-agent 批次授权表（跨批次完全隔离）⑥消息 source-principal 服务端绑定 ⑦review_leg/arch_review_leg mtime 同型隐患+并发锁缺口（DEC-088 遗留②同族）。
 - **审批边界：** 各 commit 按 L-020 自主推进授权执行，push 走 toolkit/check-push.mjs；PASS≠合并授权（DEC-010）；live M1 实例（8002）证据归档后关闭。
 - **关联：** DEC-089/090/091/092、DEC-026、L-018（多轮补采+视口前置拉高固化）、问题17（steps.md 返工表）。
+
+### DEC-094 受控试运行前置决策会商拍板：ChatGPT 裁定「先清派单缺陷#3/#4/#7→再建等级B试运行Gate」+残留处置甲（归档后清除），会话迁移 6afb7fe2→6afbc6a9（2026-11-17，DEC-089 以 ChatGPT 意见为准机制+DEC-020 节点授权）
+
+- **会商背景与授权依据：** 用户 2026-11-17 指令"跟 ChatGPT 讨论、由它拍板，只要大方案没问题，细节你俩解决"——按 DEC-089/031「以 ChatGPT 意见为准」+ DEC-020 节点自主推进授权执行；AIEO 基础版（basic/WORKFLOW.md v0.3）承接后续开发。本次仅决策「下一节点选择+工作区残留处置」，不涉 DEC-010 高危。
+- **会话迁移：** 上一审查会话 6afb7fe2 已承载 4 条 user 消息（22-22-49/22-30-47/23-12-38/23-28-37，逐轮实查送达），达 DEC-084 主动评估阈值且属四腿完成后阶段边界→`--new-session` 派单至新会话 6afbc6a9-b26c-83ee-9c27-b6c6e6f75664。旧指针备份 gpt-reviewer-session.pre-dec026-continuation.json；新会话首派即活（发送双验通过 polls=2）。
+- **采集恢复：** 首派发送双验通过但采集 fail-closed（INBOUND_START_UNIT_MISSING，第 N 次实证）→**禁重发**→L-018 补采（recoll_dec026_meeting.mjs，视口前置拉高 1920×20000+标记文本 `[DEC026-续行会商|20261117]` 归属校验）七查全过；reply 996B SHA-256=`13cc2caa399f680ff1ebf934ce0ff13109051a04a548671f4b98b16ffefff228`（独立复核一致）；落盘 dispatch-2026-11-17T03-13-54/recoll/。located key≠reported key 再次证实键漂移，归属靠标记锚点而非固定键。
+- **ChatGPT 拍板结论（reply 原文归档上述路径）：** **问1=选 B**——先清除阻塞受控试运行的派单缺陷 #3（新会话采集 INBOUND_START_UNIT_MISSING/COMPLETENESS 当日四现）、#4（--new-session 指针覆盖两次）、#7（review_leg/arch_review_leg mtime 同型隐患+并发锁缺口），再建立等级 B 受控试运行 Gate；H2 契约演进不作为试运行前置。**问2=选甲**——归档后清除：`review_leg_recoll_driver.mjs` 恢复 HEAD（清运行时派生临时路径）；`recoll_g05r2.mjs` 纳入 G05 acceptance 归档后从工作区清除。
+- **执行边界（审查方明示）：** 被测基线固定 ee76a34 不漂移；不触碰 DEC-010 高危；B 三项完成后重新验收再申请等级 B 受控试运行授权；本次拍板**不自动授权真实任务开工**。
+- **下一节点：** 立项 Basic 任务包，清理派单缺陷 #3/#4/#7（目标=派单链在新会话稳态下采集可靠、指针不被 --new-session 误覆盖、mtime 过滤+并发锁无缺口）；完成后重新验收，再行申请等级 B 受控试运行 Gate。
+- **关联：** DEC-093（遗留七项）、DEC-089/031（以 ChatGPT 意见为准）、DEC-020（节点授权）、DEC-084（会话迁移阈值）、L-018（禁重发+补采+键漂移）、basic/WORKFLOW.md v0.3（基础版流程）。
