@@ -43,14 +43,14 @@
 - ⑤测试结果：inbound-reply **24/24**（含新增标记唯一/歧义/零命中/仅 assistant 含标记 fail-closed 用例）；dispatch-options **15/15**；四腿 116/116 零回归；lint 0。证据 acceptance/local-test-runs/。
 - ⑥验收证据引用：dispatch-2026-11-17T06-11-17（独立验收，SHA-256=`a5d099d62e6881c3d625c3bf1c08454f49fe62c098a0eb9bf25fa18cb036a631`，#3 判 "PASS — 24/24歧义与零命中均fail-closed；现场首采成功并完成内联采集，未重发任务"）；**验收结论：PASS**。被测 commit 绑定见 delivery.md C1。
 
-## S5 交付（待验收）
+## S5 交付（PASS）
 
-- ①本步骤目标：整体合跑+交付登记+C1 绑定；申请"重新验收"确认三项收口（ChatGPT 明示 B 完成后重新验收再申请等级 B 试运行授权）。
-- ②修改文件：delivery.md、task-brief.md、acceptance/。
-- ③修改内容：交付七要素；被测 commit 绑定；合跑证据；后续建议（等级 B 试运行 Gate 立项）。
-- ④执行结果：（待执行回填）。
-- ⑤测试结果：（待执行回填：合跑计数）。
-- ⑥验收证据引用：（待派单回填）。
+- ①本步骤目标：整体合跑+交付登记+C1 绑定；三项独立验收 PASS 已由 ChatGPT 给出（等级 B 试运行 Gate 另行申请，本任务不申请）。
+- ②修改文件：delivery.md、task-brief.md、steps.md、acceptance/。
+- ③修改内容：交付七要素；被测 commit 绑定（7f7830b8…完整 40 位）；合跑证据；后续建议（等级 B 试运行 Gate 立项）。
+- ④执行结果：delivery.md 成文（七要素+C1 绑定）；task-brief 状态更新为完成。
+- ⑤测试结果：合跑 116/116 + dispatch-options 15/15 + inbound-reply 24/24（见 S2-S4 与 delivery §4）。
+- ⑥验收证据引用：dispatch-2026-11-17T06-11-17 独立验收三项 PASS（reply SHA-256=`a5d099d62e6881c3d625c3bf1c08454f49fe62c098a0eb9bf25fa18cb036a631`，"三项PASS可交付"）；**验收结论：PASS**。被测 commit 绑定 7f7830b80bdaa6a5c48510c74a621319bf32e419。
 
 ## 返工记录表（首次 REJECT 时建表；按"同一问题"计数）
 
