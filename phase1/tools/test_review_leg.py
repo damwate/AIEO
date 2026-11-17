@@ -1218,6 +1218,41 @@ __BODY__
         self.assertIn("R3_SEND_FAILED", kinds)
         self.assertIn("R3_REDISPATCH_INTENT", kinds)
 
+    # ------------------------------------------------------------------
+    # DEC-094 #7 整改回归：mtime 负偏容差 + run_key 跨进程锁（同构对齐另两腿）
+    # ------------------------------------------------------------------
+    def test_32_mtime_tolerance_deterministic(self):
+        """确定性 mtime 负偏（不依赖真实时钟抖动）：回拨 1s（≤2s 容差）按字节定位成功；
+        回拨 3s（>2s 容差）拒判。review_leg 此前严格 >=，会误杀本轮目录。"""
+        leg, task_id, _, _, commit = self.make_leg("d094m")
+        brief = "brief-bytes-for-d094m\n"
+        (leg.run_dir / "brief.txt").write_text(brief, encoding="utf-8")
+        brief_bytes = (leg.run_dir / "brief.txt").read_bytes()
+        base = time.time()
+        ddir = rl.DISPATCH_LOG_DIR / "dispatch-d094m-mtime"
+        ddir.mkdir(parents=True, exist_ok=True)
+        (ddir / "request.txt").write_bytes(brief_bytes)
+        os.utime(ddir, (base - 1.0, base - 1.0))
+        self.assertEqual(leg._find_dispatch_dir(must=True, since=base, brief_bytes=brief_bytes), ddir)
+        os.utime(ddir, (base - 3.0, base - 3.0))
+        with self.assertRaises(OrchestrationError) as cm:
+            leg._find_dispatch_dir(must=True, since=base, brief_bytes=brief_bytes)
+        self.assertIn("no dispatch evidence", str(cm.exception))
+
+    def test_33_run_key_lock_rejects_concurrent(self):
+        """同 run_key 并发 run/resume/attach 一律拒（fail-closed）；释放后可再取。"""
+        leg, task_id, _, _, commit = self.make_leg("d094l")
+        lock = rl.RunKeyLock(leg.run_dir, holder="d094-external")
+        lock.__enter__()
+        try:
+            with self.assertRaises(OrchestrationError) as cm:
+                leg.run()
+            self.assertIn("run_key lock", str(cm.exception))
+        finally:
+            lock.__exit__()
+        with rl.RunKeyLock(leg.run_dir, holder="d094-after-release"):
+            pass
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

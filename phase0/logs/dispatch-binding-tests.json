@@ -1,9 +1,9 @@
 {
-  "started_at": "2026-11-15T22:17:44.676Z",
-  "finished_at": "2026-11-15T22:17:45.290Z",
+  "started_at": "2026-11-17T04:30:19.806Z",
+  "finished_at": "2026-11-17T04:30:20.629Z",
   "node": "v24.14.0",
-  "total": 12,
-  "passed": 12,
+  "total": 13,
+  "passed": 13,
   "failed": 0,
   "tests": [
     {
@@ -16,6 +16,10 @@
     },
     {
       "name": "三 ID 均未提供时允许通用非登记派单",
+      "result": "PASS"
+    },
+    {
+      "name": "DEC-094 #4：--no-update-pointer 默认关闭，显式给出才开启",
       "result": "PASS"
     },
     {

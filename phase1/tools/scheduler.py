@@ -617,7 +617,7 @@ class Scheduler:
         env = dict(os.environ)
         env["AIEO_GPT_CONTROLLER_GENERATION_TIMEOUT_MS"] = "600000"
         proc = subprocess.run(
-            ["node", "gpt_dispatch.mjs", "--new-session", "--message-file", str(req_file)],
+            ["node", "gpt_dispatch.mjs", "--new-session", "--no-update-pointer", "--message-file", str(req_file)],
             cwd=str(PHASE0_TOOLS), env=env, capture_output=True, timeout=900)
         self.ev.triplet(2, "dispatch-stdout", proc.stdout, proc.stderr,
                         {"exit_code": proc.returncode, "cmd": "node gpt_dispatch.mjs --new-session",

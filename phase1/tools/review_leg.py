@@ -36,6 +36,7 @@ M2 派单链（gpt_dispatch.mjs + inbound 采集 + fail-closed 门禁）零修�
 from __future__ import annotations
 
 import argparse
+import contextlib
 import hashlib
 import json
 import os
@@ -85,6 +86,65 @@ REPLY_RESULT_ALLOWED = {"PASS", "REWORK"}   # 审查内容结论域（BLOCKED �
 
 def utc_now_iso() -> str:
     return time.strftime("%Y-%m-%dT%H:%M:%S", time.gmtime()) + "Z"
+
+
+class RunKeyLock:
+    """run_key 跨进程互斥（DEC-094 遗留#7 同构复制：arch_review_leg/test_acceptance_leg
+    既有件；D2 同构纪律不抽公共 runner）：OS 级字节锁（Windows=msvcrt.locking 非阻塞
+    锁首字节；POSIX=fcntl.flock LOCK_NB）——进程退出 OS 自动释放，无 stale 接管需求；
+    无法立即取得=失败不等待（并发 run/resume/attach 同一 run_key fail-closed）。
+    不用 os.kill(pid,0) 存活检测——Windows 上非 CTRL 信号等于 TerminateProcess（误杀）。"""
+
+    def __init__(self, run_dir: Path, holder: str) -> None:
+        self.path = run_dir / ".run-key.lock"
+        self.holder = holder
+        self._fd = None
+
+    def _try_lock(self, fd) -> bool:
+        if os.name == "nt":
+            import msvcrt
+            try:
+                msvcrt.locking(fd, msvcrt.LK_NBLCK, 1)
+                return True
+            except OSError:
+                return False
+        import fcntl
+        try:
+            fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+            return True
+        except OSError:
+            return False
+
+    def __enter__(self) -> "RunKeyLock":
+        self.path.parent.mkdir(parents=True, exist_ok=True)
+        fd = os.open(self.path, os.O_CREAT | os.O_RDWR)
+        if not self._try_lock(fd):
+            os.close(fd)
+            raise OrchestrationError(-1, f"run_key lock held by another live process "
+                                         f"(concurrent run/resume/attach on same run_key "
+                                         f"forbidden; fail-closed; holder={self.holder})")
+        with contextlib.suppress(OSError):
+            os.ftruncate(fd, 0)
+        os.lseek(fd, 0, os.SEEK_SET)
+        os.write(fd, json.dumps({"holder": self.holder, "pid": os.getpid(),
+                                 "ts": utc_now_iso()}).encode("utf-8"))
+        self._fd = fd
+        return self
+
+    def __exit__(self, *exc) -> None:
+        if self._fd is not None:
+            if os.name == "nt":
+                import msvcrt
+                with contextlib.suppress(OSError):
+                    os.lseek(self._fd, 0, os.SEEK_SET)
+                    msvcrt.locking(self._fd, msvcrt.LK_UNLCK, 1)
+            else:
+                import fcntl
+                with contextlib.suppress(OSError):
+                    fcntl.flock(self._fd, fcntl.LOCK_UN)
+            with contextlib.suppress(OSError):
+                os.close(self._fd)
+            self._fd = None
 
 
 class EngineM1Client:
@@ -418,6 +478,9 @@ class ReviewLeg:
     def r3_dispatch(self, brief: str, allow_one_redispatch: bool = True) -> Path:
         attempts = 2 if allow_one_redispatch else 1
         last_err = ""
+        # 现场精确匹配的权威字节=磁盘 brief.txt 原始内容（DEC-094 #7 同构对齐另两腿：
+        # Windows 文本模式换行翻译会使字符串往返编码与落盘字节不一致，以磁盘字节为准）
+        brief_bytes = (self.run_dir / "brief.txt").read_bytes()
         for attempt in range(1, attempts + 1):
             self.ledger.append({"kind": "R3_SEND_INTENT_RECORDED" if attempt == 1
                                 else "R3_REDISPATCH_INTENT",
@@ -428,14 +491,15 @@ class ReviewLeg:
             env["AIEO_GPT_CONTROLLER_GENERATION_TIMEOUT_MS"] = "600000"
             attempt_started = time.time()   # 现场目录新鲜度=本次发送尝试起点（防陈旧目录误判已发送）
             proc = subprocess.run(
-                ["node", "gpt_dispatch.mjs", "--new-session", "--message-file",
+                ["node", "gpt_dispatch.mjs", "--new-session", "--no-update-pointer", "--message-file",
                  str(self.run_dir / "brief.txt")],
                 cwd=str(PHASE0_TOOLS), env=env, capture_output=True, timeout=900)
             (self.run_dir / f"dispatch-stdout-{attempt}.txt").write_bytes(proc.stdout)
             (self.run_dir / f"dispatch-stderr-{attempt}.txt").write_bytes(proc.stderr)
             if proc.returncode != 0:
                 last_err = f"gpt_dispatch exit {proc.returncode}: {proc.stderr.decode('utf-8', 'replace')[:300]}"
-                fresh = self._find_dispatch_dir(must=False, since=attempt_started)
+                fresh = self._find_dispatch_dir(must=False, since=attempt_started,
+                                                brief_bytes=brief_bytes)
                 if fresh is not None and (fresh / "result.json").is_file():
                     # 发送双验已过而后续采集失败：采集 fail-closed 家族——禁重发（§5 行2/L-018）。
                     # P1-03：落账必含原会话与发送证据（conversation_uuid/sent_user_unit_key），
@@ -459,7 +523,7 @@ class ReviewLeg:
                 self.ledger.append({"kind": "R3_SEND_FAILED", "attempt": attempt,
                                     "error": last_err, "outcome": "FAIL"})
                 continue
-            ddir = self._find_dispatch_dir(since=attempt_started)
+            ddir = self._find_dispatch_dir(since=attempt_started, brief_bytes=brief_bytes)
             result = json.loads((ddir / "result.json").read_text(encoding="utf-8"))
             self.ledger.append({
                 "kind": "R3_SEND_CONFIRMED", "attempt": attempt, "dispatch_dir": ddir.name,
@@ -497,10 +561,29 @@ class ReviewLeg:
         raise OrchestrationError(3, f"dispatch failed after {attempts} attempt(s) "
                                     f"(§5 row1 limit reached; leg-level BLOCKED): {last_err}")
 
-    def _find_dispatch_dir(self, must: bool = True, since: float | None = None) -> Path | None:
-        lower = time.time() - 3600 if since is None else since
-        cands = [d for d in DISPATCH_LOG_DIR.glob("dispatch-*")
-                 if d.is_dir() and d.stat().st_mtime >= lower]
+    def _find_dispatch_dir(self, must: bool = True, since: float | None = None,
+                           brief_bytes: bytes | None = None) -> Path | None:
+        """派单现场精确定位（DEC-094 #7 同构对齐 test_acceptance_leg/arch_review_leg）：
+        候选须同时满足 ①mtime≥本次尝试起点（含 2.0s 时钟负偏容差）②现场 request.txt
+        与本次简报字节一致——杜绝并发串单与 Windows 时钟粒度负偏误杀本轮目录。"""
+        cands = sorted(DISPATCH_LOG_DIR.glob("dispatch-*"), key=lambda d: d.stat().st_mtime)
+        if since is not None:
+            # 2.0s 容差（问题16 实战：Windows 时钟粒度下 mtime 可早于同刻 time.time() 采样，
+            # 39/300 负偏；严格 >= 会间歇性误杀本轮——强归属证据=request.txt 字节一致）
+            cands = [d for d in cands if d.is_dir() and d.stat().st_mtime >= since - 2.0]
+        else:
+            lower = time.time() - 3600
+            cands = [d for d in cands if d.is_dir() and d.stat().st_mtime >= lower]
+        if brief_bytes is not None:
+            exact = []
+            for d in cands:
+                req = d / "request.txt"
+                try:
+                    if req.is_file() and req.read_bytes() == brief_bytes:
+                        exact.append(d)
+                except OSError:
+                    continue
+            cands = exact
         if not cands:
             if must:
                 raise OrchestrationError(3, "no dispatch evidence dir created by this send")
@@ -952,6 +1035,12 @@ class ReviewLeg:
     # run：全流程（R0→R6）
     # ------------------------------------------------------------------
     def run(self) -> int:
+        # run_key 跨进程互斥（DEC-094 #7 同构复制另两腿）：并发 run/resume/attach 同
+        # run_key 一律拒（fail-closed）；进程退出 OS 自动释放锁，无 stale 接管。
+        with RunKeyLock(self.run_dir, holder=f"rl-{self.run_key}-run"):
+            return self._run_inner()
+
+    def _run_inner(self) -> int:
         try:
             task = self.r0_precheck()
             self.r1_git_validate_and_pass()
@@ -1002,6 +1091,10 @@ class ReviewLeg:
     # resume：附录 D 12 行矩阵 + 附录 C 三断点快照（fail-closed，不推测恢复）
     # ------------------------------------------------------------------
     def resume(self) -> int:
+        with RunKeyLock(self.run_dir, holder=f"rl-{self.run_key}-resume"):
+            return self._resume_with_lock()
+
+    def _resume_with_lock(self) -> int:
         try:
             return self._resume_inner()
         except OrchestrationError as exc:
@@ -1170,6 +1263,10 @@ class ReviewLeg:
     def attach_reply(self, reply_file: Path) -> int:
         """人工经既有派单链取得审查回复后，按同一契约校验+同一幂等键登记推进。
         M1 任务状态须在 CODE_REVIEW（腿级 BLOCKED 不改 M1 状态，人工接管语义）。"""
+        with RunKeyLock(self.run_dir, holder=f"rl-{self.run_key}-attach"):
+            return self._attach_with_lock(reply_file)
+
+    def _attach_with_lock(self, reply_file: Path) -> int:
         try:
             return self._attach_inner(reply_file)
         except OrchestrationError as exc:

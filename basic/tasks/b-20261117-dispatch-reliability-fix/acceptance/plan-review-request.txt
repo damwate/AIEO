@@ -1,0 +1,8 @@
+[PLAN-RELIABILITY|20261117] 承接你 DEC-094 拍板B（先清#3/#4/#7再建等级B试运行Gate）。任务包 b-20261117-dispatch-reliability-fix 已建（basic/tasks/ 下，基线ee76a34生产树逐字节一致），请复审大方案三点，细节我俩定。
+
+修复顺序=#7→#4→#3（风险低→高：腿脚本→指针写盘→采集判定核心）。根因均带行号坐实：
+#7 review_leg/arch_review_leg 的_find_dispatch_dir 无 since-2.0 负偏容差（test_acceptance 已修），review_leg.py 无 RunKeyLock（另两腿有）→同构补齐+负例。
+#4 gpt_dispatch 发送后无条件 page.url() 覆盖 reviewer 指针，多页可能选错（wrong-session 两次复现）→写盘前显式开关+页归属校验+集成负例。
+#3 新会话首采固定key漂移→视口前置拉高前移+标记归属定位+失败自动同会话recoll(不重发)，fail-closed负例不降。
+
+请确认：①三项修复不碰冻结契约/M1运行时/DEC-010；②顺序#7→#4→#3妥否；③#4倾向"开关+归属校验两者都要"是否过设计、可否简化。全认可请给"方案通过，按此开工"；有异议列点。每步仍交你独立验收。输出≤800B。

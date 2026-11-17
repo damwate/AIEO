@@ -855,6 +855,24 @@ class ArchReviewLegTests(unittest.TestCase):
             ar.RUNTIME_DIR = orig_runtime
             os.environ.pop("AIEO_PLATFORM_ADMIN_PASSWORD", None)
 
+    def test_30_mtime_tolerance_deterministic(self):
+        """DEC-094 #7：arch_review_leg 的 mtime 负偏容差确定性回归——回拨 1s 定位成功、
+        回拨 3s 拒判（此前严格 >= 会误杀本轮目录）。"""
+        leg, task_id, commit = self.make_leg("d094m")
+        brief = "brief-bytes-for-ar-d094m\n"
+        (leg.run_dir / "brief.txt").write_text(brief, encoding="utf-8")
+        brief_bytes = (leg.run_dir / "brief.txt").read_bytes()
+        base = time.time()
+        ddir = ar.DISPATCH_LOG_DIR / "dispatch-ar-d094m-mtime"
+        ddir.mkdir(parents=True, exist_ok=True)
+        (ddir / "request.txt").write_bytes(brief_bytes)
+        os.utime(ddir, (base - 1.0, base - 1.0))
+        self.assertEqual(leg._find_dispatch_dir(must=True, since=base, brief_bytes=brief_bytes), ddir)
+        os.utime(ddir, (base - 3.0, base - 3.0))
+        with self.assertRaises(OrchestrationError) as cm:
+            leg._find_dispatch_dir(must=True, since=base, brief_bytes=brief_bytes)
+        self.assertIn("no dispatch evidence", str(cm.exception))
+
 
 if __name__ == "__main__":
     unittest.main()

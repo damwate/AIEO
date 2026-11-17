@@ -1,0 +1,10 @@
+[2026-11-17T04:13:35.983Z] 会话锁已获取 pid=2872
+[2026-11-17T04:13:35.986Z] === GPT 派单（已有会话，消息 1185 字节）===
+[2026-11-17T04:13:36.026Z] 复用已运行调试端口 9222
+[2026-11-17T04:13:36.139Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页
+[2026-11-17T04:13:36.140Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-17T04:13:46.655Z] 会话锁已释放
+[2026-11-17T04:13:46.656Z] 致命错误: page.goto: net::ERR_CONNECTION_RESET at https://chatgpt.com/c/6afbc6a9-b26c-83ee-9c27-b6c6e6f75664
+Call log:
+[2m  - navigating to "https://chatgpt.com/c/6afbc6a9-b26c-83ee-9c27-b6c6e6f75664", waiting until "domcontentloaded"[22m
+

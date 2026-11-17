@@ -1,0 +1,25 @@
+{
+  "at": "2026-11-17T04:13:46.667Z",
+  "outcome": "failure_created_pages_closed",
+  "before": [
+    {
+      "id": "2BD6CE04681C10938D050FBA7AD60BDD",
+      "url": "https://chatgpt.com/c/6afbc6a9-b26c-83ee-9c27-b6c6e6f75664"
+    }
+  ],
+  "exit_before_disposal": [
+    {
+      "id": "2BD6CE04681C10938D050FBA7AD60BDD",
+      "url": "https://chatgpt.com/c/6afbc6a9-b26c-83ee-9c27-b6c6e6f75664"
+    }
+  ],
+  "exit_after_disposal": [
+    {
+      "id": "2BD6CE04681C10938D050FBA7AD60BDD",
+      "url": "https://chatgpt.com/c/6afbc6a9-b26c-83ee-9c27-b6c6e6f75664"
+    }
+  ],
+  "created_pages": 0,
+  "disposal": "发送前失败：仅关闭本次自建页；既有页零触碰（exit_before/exit_after 对照=值守页零关闭证明）",
+  "error": "page.goto: net::ERR_CONNECTION_RESET at https://chatgpt.com/c/6afbc6a9-b26c-83ee-9c27-b6c6e6f75664\nCall log:\n\u001b[2m  - navigating to \"https://chatgpt.com/c/6afbc6a9-b26c-83ee-9c27-b6c6e6f75664\", waiting until \"domcontentloaded\"\u001b[22m\n"
+}

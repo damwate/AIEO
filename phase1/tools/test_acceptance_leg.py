@@ -414,7 +414,7 @@ class TestAcceptanceLeg:
             env["AIEO_GPT_CONTROLLER_GENERATION_TIMEOUT_MS"] = "600000"
             attempt_started = time.time()   # 现场目录新鲜度=本次发送尝试起点
             proc = subprocess.run(
-                ["node", "gpt_dispatch.mjs", "--new-session", "--message-file",
+                ["node", "gpt_dispatch.mjs", "--new-session", "--no-update-pointer", "--message-file",
                  str(self.run_dir / "brief.txt")],
                 cwd=str(PHASE0_TOOLS), env=env, capture_output=True, timeout=900)
             (self.run_dir / f"dispatch-stdout-{attempt}.txt").write_bytes(proc.stdout)

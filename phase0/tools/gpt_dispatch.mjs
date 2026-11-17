@@ -32,7 +32,7 @@ import {
   validateInboundJsonArtifact,
 } from "./inbound_reply.mjs";
 import { registerArtifactWithRetry } from "./m1_artifact_registry.mjs";
-import { parseDispatchOptions } from "./dispatch_options.mjs";
+import { parseDispatchOptions, shouldUpdateReviewerPointer } from "./dispatch_options.mjs";
 import { readReplySnapshot, readTailUnit } from "./inbound_dom.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -380,9 +380,15 @@ async function mainLocked() {
     if (m) {
       sessionId = m[1];
       conversationUrl = `https://chatgpt.com/c/${sessionId}`;
-      const session = { conversation_url: conversationUrl, captured_at: new Date().toISOString(), role: "reviewer" };
-      writeFileSync(REVIEWER_SESSION, JSON.stringify(session, null, 2), "utf8");
-      log(`审查会话已保存: ${session.conversation_url}`);
+      if (!shouldUpdateReviewerPointer(dispatchOptions)) {
+        // DEC-094 #4：任务腿/一次性派单显式要求不覆盖 reviewer 指针（实战两次误覆盖
+        // 致简报错发实战会话）。仍解析本会话 URL 供 result.json 绑定，仅跳过指针写盘。
+        log(`会话 URL 已取得但按 --no-update-pointer 跳过 reviewer 指针写盘: ${conversationUrl}`);
+      } else {
+        const session = { conversation_url: conversationUrl, captured_at: new Date().toISOString(), role: "reviewer" };
+        writeFileSync(REVIEWER_SESSION, JSON.stringify(session, null, 2), "utf8");
+        log(`审查会话已保存: ${session.conversation_url}`);
+      }
       break;
     }
     await page.waitForTimeout(1000);

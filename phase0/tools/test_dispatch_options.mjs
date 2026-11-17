@@ -4,7 +4,7 @@ import { spawnSync } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { parseDispatchOptions } from "./dispatch_options.mjs";
+import { parseDispatchOptions, shouldUpdateReviewerPointer } from "./dispatch_options.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const logDir = join(__dirname, "..", "logs");
@@ -37,6 +37,18 @@ const tests = [
     assert.equal(parsed.m1RegistrationRequested, false);
     assert.equal(parsed.m1RegistrationStatus, "NOT_REQUESTED");
     assert.deepEqual(parsed.ids, { task_id: null, execution_id: null, correlation_id: null });
+  }],
+  ["DEC-094 #4：--no-update-pointer 默认关闭，显式给出才开启", () => {
+    assert.equal(parseDispatchOptions([...base, "--new-session"]).noUpdatePointer, false,
+      "默认必须更新 reviewer 指针（审查会话迁移既有语义不变）");
+    assert.equal(parseDispatchOptions([...base, "--new-session", "--no-update-pointer"]).noUpdatePointer, true,
+      "任务腿显式跳过指针写盘，避免误覆盖");
+    assert.equal(parseDispatchOptions(base).noUpdatePointer, false,
+      "非新会话派单默认也不开启（纯增量）");
+    // 写盘决策纯函数：默认写、显式 flag 跳过、缺省 options 容错
+    assert.equal(shouldUpdateReviewerPointer(parseDispatchOptions([...base, "--new-session"])), true);
+    assert.equal(shouldUpdateReviewerPointer(parseDispatchOptions([...base, "--new-session", "--no-update-pointer"])), false);
+    assert.equal(shouldUpdateReviewerPointer({}), true);
   }],
   ["仅 Schema 可做通用校验但不触发 M1 登记", () => {
     const parsed = parseDispatchOptions([...base, "--schema", "contract.json"]);

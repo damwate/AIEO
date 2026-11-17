@@ -28,10 +28,22 @@ function optionalArg(argv, flag) {
   return value;
 }
 
+/**
+ * 是否应写 reviewer 指针（DEC-094 #4）。默认写（保持审查会话迁移语义）；
+ * 显式 --no-update-pointer 时跳过。中心化以便纯函数回归。
+ */
+export function shouldUpdateReviewerPointer(options) {
+  return options?.noUpdatePointer !== true;
+}
+
 export function parseDispatchOptions(argv, { readMessageFile = (path) => readFileSync(path, "utf8") } = {}) {
   if (!Array.isArray(argv)) throw new TypeError("argv 必须是数组");
   const newSession = argv.includes("--new-session");
   const registerM1Flag = argv.includes("--register-m1");
+  // DEC-094 #4：任务腿/一次性 --new-session 派单不得覆盖 reviewer 指针（实战两次
+  // 误覆盖→简报错发实战会话）。默认仍更新（保持审查会话迁移既有语义）；显式
+  // --no-update-pointer 才跳过写盘，纯增量、零默认行为变化。
+  const noUpdatePointer = argv.includes("--no-update-pointer");
   const messageValue = optionalArg(argv, "--message");
   const messageFile = optionalArg(argv, "--message-file");
   if (messageValue !== null && messageFile !== null) {
@@ -73,6 +85,7 @@ export function parseDispatchOptions(argv, { readMessageFile = (path) => readFil
   return {
     message,
     newSession,
+    noUpdatePointer,
     ids,
     schemaPath,
     m1RegistrationRequested,
