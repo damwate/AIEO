@@ -1,5 +1,5 @@
-[M2-PLAN-R1|20261118] 新会话自包含简报。多任务模式实施方案请规划复审(DEC-106④GO顺序2,先方案后实施;本评审=P0设计评审)。
-背景：等级B试运行已结项(DEC-104);用户授权扩展开工(控制可行/不伤主功能);DEC-106裁定906①已交付闭环(六项复审经你直读证据commit签核:②虚拟裁切恢复PASS/③INVALIDATED仓库实为public/①④⑤⑥REWORK进下一批,reply 16a723c6…);写操作M4暂不开放;打版暂缓至两项完成+验收+全绿。
-现提交standard/MULTITASK-IMPLEMENTATION-PLAN.md v0.1设计稿,commit=e3196751d551fec652f4c88af41d25e92ea4cca0(可直读)。要点:任务级并行+通道级串行(浏览器派单/会话/reviewer指针互斥不动);scheduler扩展=任务队列+max_parallel默认1+任务-会话绑定表+per-task证据命名空间;四维隔离=worktree/证据/会话/失败;分级放量P0评审→P1双任务只读并行→P2平台级并发用例(=906⑥验证门)→P3并行度≤3,每级另批不自动滚动;§7版本边界与回滚=打版前置件(v0.1.0-standard-alpha annotated tag,仅打版不部署)。
-请复审五点:①架构原则(并行只在非通道环节,通道互斥不动)认可否②接口最小增量够否③隔离与风险表有漏项否④分级放量与即停边界够否⑤§7可作打版前置件否。
+[M2-PLAN-R1|20261118] 新会话自包含简报。多任务实施方案请规划复审(DEC-106④顺序2,本轮=P0设计评审)。
+背景:用户授权扩展开工(控制可行/不伤主功能);DEC-106=906①已闭环(②裁切恢复PASS签核/③INVALIDATED仓库public/①④⑤⑥REWORK下一批,reply 16a723c6);写操作M4暂不开放;打版暂缓至两项完成+验收+全绿。
+提交standard/MULTITASK-IMPLEMENTATION-PLAN.md v0.1,commit=e3196751d551fec652f4c88af41d25e92ea4cca0(可直读)。要点:任务级并行+通道级串行(派单/会话/指针互斥不动);scheduler扩展=队列+max_parallel默认1+任务会话绑定表+证据命名空间;四维隔离=worktree/证据/会话/失败;放量P0评审→P1双任务只读并行→P2平台级并发(=906⑥门)→P3≤3,每级另批;§7版本边界回滚=v0.1.0-standard-alpha annotated tag打版前置件(仅打版不部署)。
+请复审:①架构原则认可否②接口增量够否③隔离风险漏项否④放量即停够否⑤§7可作打版前置否。
 JSON{"result":"PASS|REWORK","points":[{"n":1,"v":"","note":""},{"n":2},{"n":3},{"n":4},{"n":5}],"conditions":[]}≤800B

@@ -1,0 +1,5 @@
+[M2-PLAN-R1|20261118] 新会话自包含简报。多任务实施方案请规划复审(DEC-106④顺序2,本轮=P0设计评审)。
+背景:用户授权扩展开工(控制可行/不伤主功能);DEC-106=906①已闭环(②裁切恢复PASS签核/③INVALIDATED仓库public/①④⑤⑥REWORK下一批,reply 16a723c6);写操作M4暂不开放;打版暂缓至两项完成+验收+全绿。
+提交standard/MULTITASK-IMPLEMENTATION-PLAN.md v0.1,commit=e3196751d551fec652f4c88af41d25e92ea4cca0(可直读)。要点:任务级并行+通道级串行(派单/会话/指针互斥不动);scheduler扩展=队列+max_parallel默认1+任务会话绑定表+证据命名空间;四维隔离=worktree/证据/会话/失败;放量P0评审→P1双任务只读并行→P2平台级并发(=906⑥门)→P3≤3,每级另批;§7版本边界回滚=v0.1.0-standard-alpha annotated tag打版前置件(仅打版不部署)。
+请复审:①架构原则认可否②接口增量够否③隔离风险漏项否④放量即停够否⑤§7可作打版前置否。
+JSON{"result":"PASS|REWORK","points":[{"n":1,"v":"","note":""},{"n":2},{"n":3},{"n":4},{"n":5}],"conditions":[]}≤800B

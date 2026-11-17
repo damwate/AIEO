@@ -1,0 +1,181 @@
+{
+  "at": "2026-11-17T18:44:59.217Z",
+  "message_bytes": 1137,
+  "reply": "ChatGPT 说：\n\n{\n\"result\": \"REWORK\",\n\"points\": [\n{\"n\":1,\"v\":\"PASS\",\"note\":\"任务级并行、通道级串行原则正确，浏览器、会话、指针互斥必须保留。\"},\n{\"n\":2,\"v\":\"REWORK\",\"note\":\"缺队列持久化与恢复、任务生命周期、取消重试、锁所有权及并发状态转换契约。\"},\n{\"n\":3,\"v\":\"REWORK\",\"note\":\"补充崩溃恢复、锁超时与死锁、会话绑定冲突、证据覆盖、跨任务数据污染及全局暂停竞态。\"},\n{\"n\":4,\"v\":\"REWORK\",\"note\":\"即停方向正确，但须定义触发矩阵、全局熔断范围、在途任务处置及人工恢复条件。\"},\n{\"n\":5,\"v\":\"PASS_WITH_CONSTRAINTS\",\"note\":\"可作为打版前置设计，但须补齐不可变SHA、tag保护、父提交回滚及全量回归证据约束。\"}\n],\n\"conditions\": [\n\"修正M1幂等即代表可并发的推断，必须以906⑥真实并发验证为准。\",\n\"明确通道闸锁顺序、唯一持有者及异常释放机制。\",\n\"定义任务状态机、队列持久化、重启恢复和任务间失败隔离契约。\",\n\"P1仍须独立批准；P2不得绕过906⑥；M4写操作继续封闭。\",\n\"修订方案并提交新SHA，再进行P0复审。\"\n]\n}",
+  "user_unit_key": "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "ced75c8a-a556-4796-a2c1-a282a78fa537",
+  "stability": {
+    "stable": true,
+    "interval_ms": 3544,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-17T18:44:54.978Z",
+      "read_finished_at": "2026-11-17T18:44:55.520Z",
+      "unit_keys": [
+        "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:2:assistant",
+          "sha256": "50e4c530659693258e57a2255e8b3159504f5697ce9c920e293efd146f3f03a2",
+          "size_bytes": 1176
+        }
+      ],
+      "assistant_uuid": "ced75c8a-a556-4796-a2c1-a282a78fa537",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-17T18:44:58.521Z",
+      "read_finished_at": "2026-11-17T18:44:59.070Z",
+      "unit_keys": [
+        "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:2:assistant",
+          "sha256": "50e4c530659693258e57a2255e8b3159504f5697ce9c920e293efd146f3f03a2",
+          "size_bytes": 1176
+        }
+      ],
+      "assistant_uuid": "ced75c8a-a556-4796-a2c1-a282a78fa537",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:0:user",
+          "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "9aff7cbecfa0e5c98f2ca27cbd6e7f75322534f7c54f36f92d9d76c290eea1aa",
+          "50e4c530659693258e57a2255e8b3159504f5697ce9c920e293efd146f3f03a2"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:0:user",
+          "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "9aff7cbecfa0e5c98f2ca27cbd6e7f75322534f7c54f36f92d9d76c290eea1aa",
+          "50e4c530659693258e57a2255e8b3159504f5697ce9c920e293efd146f3f03a2"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:0:user",
+          "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:0:user",
+      "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:0:user",
+          "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:0:user",
+          "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:2:assistant"
+        ],
+        "overlap_keys": [
+          "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:0:user",
+          "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "50e4c530659693258e57a2255e8b3159504f5697ce9c920e293efd146f3f03a2",
+  "size_bytes": 1176,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-17T18-42-16\\reply.txt",
+  "reply_readback_sha256": "50e4c530659693258e57a2255e8b3159504f5697ce9c920e293efd146f3f03a2",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-17T18-42-16\\raw-units.json",
+  "raw_units_sha256": "cd348eab3daae3d98c6abd463d3df000910f8746b136d3439702da975dfdf1b2",
+  "raw_units_size_bytes": 4268,
+  "raw_units_readback_sha256": "cd348eab3daae3d98c6abd463d3df000910f8746b136d3439702da975dfdf1b2",
+  "session_id": "6afca03d-31bc-83ec-b32e-512f6bbb93b7",
+  "conversation_url": "https://chatgpt.com/c/6afca03d-31bc-83ec-b32e-512f6bbb93b7",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}
