@@ -775,3 +775,13 @@
 - **执行边界（审查方明示）：** 被测基线固定 ee76a34 不漂移；不触碰 DEC-010 高危；B 三项完成后重新验收再申请等级 B 受控试运行授权；本次拍板**不自动授权真实任务开工**。
 - **下一节点：** 立项 Basic 任务包，清理派单缺陷 #3/#4/#7（目标=派单链在新会话稳态下采集可靠、指针不被 --new-session 误覆盖、mtime 过滤+并发锁无缺口）；完成后重新验收，再行申请等级 B 受控试运行 Gate。
 - **关联：** DEC-093（遗留七项）、DEC-089/031（以 ChatGPT 意见为准）、DEC-020（节点授权）、DEC-084（会话迁移阈值）、L-018（禁重发+补采+键漂移）、basic/WORKFLOW.md v0.3（基础版流程）。
+
+### DEC-095 派单可靠性缺陷清理任务交付闭环（DEC-094 B 项收口；2026-11-17，节点完成登记）
+
+- **节点结果：** Basic 任务包 `b-20261117-dispatch-reliability-fix` = **COMPLETED / 最终结果 PASS**（ST-05 COMPLETED Overall PASS；被测基线 ee76a34 未漂移）。交付记录 basic/tasks/b-20261117-dispatch-reliability-fix/delivery.md。
+- **三项修复（均 ChatGPT 独立验收 PASS）：** #7 mtime 2.0s 容差+brief_bytes 字节归属+review_leg RunKeyLock 同构（四腿 116/116）；#4 `--no-update-pointer` 开关+`sessionIdIsAttributable` 归属校验（新会话≠既有 UUID、失败 fail-closed 拒写指针，dispatch-options 15/15，现场指针前后 SHA 一致）；#3 `resolveStartUnitByMarker` 标记唯一重绑消除新会话固定 key 漂移（inbound-reply 24/24，现场真实派单未再 INBOUND_START_UNIT_MISSING、内联采集 COMPLETED，未引入自动 recoll 无重发风险）。
+- **验收链：** 规划复审 PASS（dispatch-2026-11-17T04-45-47/recoll，reply SHA-256=`ff2701c9ca48f20327aee868ca5d012bd51ed746564a19b3696efc0f1179a7e8`，"方案通过，按此开工"）→S4 现场实证（dispatch-2026-11-17T06-08-30）→独立验收三项 PASS（dispatch-2026-11-17T06-11-17，reply SHA-256=`a5d099d62e6881c3d625c3bf1c08454f49fe62c098a0eb9bf25fa18cb036a631`，"三项PASS可交付"）。审查方明示按验收记录结论、未直读 acceptance/ 原始日志，如实登记不冒称。
+- **测量误差纠正（L-016 实证）：** 早前"chatgpt.com 不可达 BLOCKED"系 SakuraCat VPN 端口漂移（10581→2497）后我整串解析取错端口所致（L-016 明禁）；分协议解析 https 端口 2497 后 chatgpt.com 200（1.4s），纠正后规划复审/验收均正常派单。04-13-35/04-14-04 两现场为发送前 reset（无发送无重发），归档任务包 acceptance/dispatch-blocked/。
+- **C1 绑定：** 被测 commit `7f7830b80bdaa6a5c48510c74a621319bf32e419`（完整 40 位）；交付收口 commit `b3dd27b0e58c7047d824dc358639ce665c9de5bc`；均已推送（HEAD=b3dd27b，ahead=0）。
+- **边界与后续：** 未碰冻结契约/M1/DEC-010；未申请等级 B 试运行开工（三项 PASS≠试运行授权）。**下一节点：按 DEC-026 路线向 ChatGPT 提请等级 B 受控试运行 Gate 审议**；建议前置处理 DEC-093 遗留 #1/#2（findings 结构化契约演进四契约同族、矩阵×批次 BLOCKER 语义）避免真实任务审查契约口径不一致。
+- **关联：** DEC-094（拍板 B）、DEC-093（遗留七项）、DEC-026（路线）、DEC-089/031（以 ChatGPT 意见为准）、L-016（端口分协议解析）、L-018（禁重发+键漂移）、basic/WORKFLOW.md。
