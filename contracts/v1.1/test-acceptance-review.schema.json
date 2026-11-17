@@ -1,0 +1,85 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aieo.local/contracts/v1.1/test-acceptance-review.schema.json",
+  "title": "AIEO test acceptance review report v1.1 (GPT-04 leg)",
+  "description": "结构化契约 v1.1（DEC-097 #1=A：findings 由 string[] 演进为统一结构化定义，v1.0 冻结历史报告仍可读）。相对 v1.0 唯一变更=顶层 findings 改 $ref 统一定义（contracts/v1.1/_defs/findings.schema.json）；其余字段/约束/登记路线（POST /api/v1/reports/test，权威 execution_result 由 F-003 证据读入，G2-04）零改动。Ajv 使用方须先 addSchema 注册统一定义 $id。",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_version",
+    "task_id",
+    "review_round_id",
+    "reviewer_agent_id",
+    "engine_agent_id",
+    "commit_sha",
+    "execution_id",
+    "execution_result_observed",
+    "result",
+    "summary"
+  ],
+  "properties": {
+    "contract_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+$"
+    },
+    "task_id": {
+      "type": "string",
+      "pattern": "^T-(P[0-9]+-)?[0-9]{3,}$"
+    },
+    "review_round_id": {
+      "type": "string",
+      "maxLength": 64,
+      "description": "测试验收轮标识；幂等键=<run键>+test-acceptance-round-N 的结构化落位"
+    },
+    "reviewer_agent_id": {
+      "type": "string",
+      "pattern": "^GPT-04$"
+    },
+    "engine_agent_id": {
+      "type": "string",
+      "pattern": "^ENGINE-03$"
+    },
+    "commit_sha": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{40}$",
+      "description": "被验收的测试对象 commit（与 F-003 测试报告 commit_sha 一致；完整 40 位禁短 SHA）"
+    },
+    "execution_id": {
+      "type": "string",
+      "pattern": "^EXEC-[0-9]{3,}$"
+    },
+    "execution_result_observed": {
+      "enum": [
+        "EXECUTED_PASS",
+        "EXECUTED_FAIL",
+        "NOT_EXECUTED",
+        "CLAIMED_ONLY",
+        "BLOCKED"
+      ],
+      "description": "GPT-04 对证据的复述/交叉核对判定（五值枚举与 TestReportIn 同源）；登记用的权威 execution_result 由腿从 F-003 证据事实读入，本字段不作为登记依据（G2-04）"
+    },
+    "result": {
+      "enum": [
+        "PASS",
+        "REWORK",
+        "BLOCKED"
+      ]
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 2000
+    },
+    "findings": {
+      "$ref": "https://aieo.local/contracts/v1.1/_defs/findings.schema.json#/$defs/findings_array",
+      "description": "具体发现（验收标准覆盖缺口/缺失测试/异常场景/回归风险）；PASS 时可为空数组"
+    },
+    "required_boundaries": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "验收要求维持的边界条件"
+    }
+  }
+}

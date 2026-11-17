@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aieo.local/contracts/v1.1/review-report.schema.json",
+  "title": "AIEO review report v1.1",
+  "description": "结构化契约 v1.1（DEC-097 #1=A：findings 改用统一结构化定义，v1.0 冻结历史报告仍可读）。相对 v1.0 唯一变更=顶层 findings 由内联结构化对象改为 $ref 统一定义（contracts/v1.1/_defs/findings.schema.json），字段口径与 v1.0 完全一致；其余字段/约束零改动。Ajv 使用方须先 addSchema 注册统一定义 $id。",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "contract_version",
+    "task_id",
+    "execution_id",
+    "correlation_id",
+    "reviewer_agent_id",
+    "reviewed_commit",
+    "input_material_commit",
+    "input_material_manifest_path",
+    "input_material_manifest_sha256",
+    "task_package_hash",
+    "base_commit",
+    "engineering_standard_version",
+    "knowledge_base_commit",
+    "result",
+    "summary"
+  ],
+  "properties": {
+    "contract_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+$" },
+    "task_id": { "type": "string", "pattern": "^T-(P[0-9]+-)?[0-9]{3,}$" },
+    "execution_id": { "type": "string", "pattern": "^EXEC-[0-9]{3,}$" },
+    "correlation_id": {
+      "type": "string",
+      "maxLength": 64,
+      "anyOf": [
+        { "pattern": "^CORR-[0-9]{3,}$" },
+        { "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$" }
+      ]
+    },
+    "reviewer_agent_id": { "type": "string", "pattern": "^[A-Z0-9-]{1,32}$" },
+    "reviewed_commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "input_material_commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "input_material_manifest_path": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^(?!/)(?!^[A-Za-z][A-Za-z0-9+.-]*:)(?!.*\\\\)(?!.*(?:^|/)\\.\\.?(?:/|$))(?!.*(?:^|/)\\.git(?:/|$))(?!.*/$).+$"
+    },
+    "input_material_manifest_sha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "task_package_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "base_commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "engineering_standard_version": { "type": "string", "minLength": 1, "maxLength": 100 },
+    "knowledge_base_commit": { "type": "string", "pattern": "^[0-9a-f]{40}$" },
+    "result": { "type": "string", "enum": ["PASS", "REWORK", "BLOCKED"] },
+    "summary": { "type": "string", "minLength": 1 },
+    "findings": { "$ref": "https://aieo.local/contracts/v1.1/_defs/findings.schema.json#/$defs/findings_array" },
+    "required_boundaries": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "failure_paths": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "remaining_findings": { "type": "array", "items": { "type": "string", "minLength": 1 } },
+    "unblocked": { "type": "boolean" }
+  }
+}

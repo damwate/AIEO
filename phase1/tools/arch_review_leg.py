@@ -58,7 +58,10 @@ from review_leg import (  # noqa: E402
 
 REPO_ROOT = Path(os.environ.get("AIEO_ARCH_LEG_REPO_ROOT", "D:/AIEO")).resolve()
 RUNTIME_DIR = REPO_ROOT / "runtime" / "arch-review-leg"
-ARCH_SCHEMA = CONTRACT_DIR / "arch-review-report.schema.json"
+# DEC-097 #1=A：报告契约切 v1.1（统一结构化 findings）；envelope/请求体仍 v1.0 零改
+CONTRACT_DIR_V11 = CONTRACT_DIR.parent / "v1.1"
+FINDINGS_DEF = CONTRACT_DIR_V11 / "_defs" / "findings.schema.json"
+ARCH_SCHEMA = CONTRACT_DIR_V11 / "arch-review-report.schema.json"
 
 REVIEWER_AGENT = "GPT-02"        # 审核角色（回复 source；结论域 PASS/REWORK/BLOCKED）
 ENGINE_AGENT = "ENGINE-02"       # 本机服务身份（engine；C7 §8.6；charter A-1）
@@ -82,7 +85,7 @@ GPT02_EVENT_FORBIDDEN = {"BLOCKED", "CANCEL", "START", "DISPATCH", "PLAN",
                          "ARCH_REVIEW", "DEVELOPMENT_COMPLETED", "GIT_VALIDATE"}
 
 RESULT_DOMAIN = {"PASS", "REWORK", "BLOCKED"}
-CONTRACT_VERSION = "1.0"
+CONTRACT_VERSION = "1.1"  # DEC-097 #1=A：报告契约 v1.1（envelope 的 schema_version 仍 v1.0 独立）
 
 
 def _canon_sha(obj: dict) -> str:
@@ -584,6 +587,8 @@ class ArchReviewLeg:
             'const report = JSON.parse(readFileSync(process.argv[1], "utf8"));\n'
             'const rpSchema = JSON.parse(readFileSync("'
             + str(ARCH_SCHEMA).replace("\\", "/") + '", "utf8"));\n'
+            'const findingsDef = JSON.parse(readFileSync("'
+            + str(FINDINGS_DEF).replace("\\", "/") + '", "utf8"));\n'
             'const envSchema = JSON.parse(readFileSync("'
             + str(CONTRACT_DIR / "message-envelope.schema.json").replace("\\", "/") + '", "utf8"));\n'
             'const msgAll = JSON.parse(readFileSync("'
@@ -592,6 +597,7 @@ class ArchReviewLeg:
             '  ? { $defs: msgAll.$defs, allOf: [{ $ref: "#/$defs/request" }] }\n'
             '  : msgAll;\n'
             'const ajv = new Ajv2020({ allErrors: true, strict: false });\n'
+            'ajv.addSchema(findingsDef);\n'
             'const rp = ajv.compile(rpSchema); const rpOk = rp(report);\n'
             'console.log(JSON.stringify({ report: { valid: !!rpOk, errors: rp.errors ?? [] } }));\n'
         )

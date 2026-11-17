@@ -1,0 +1,139 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-17T08:07:55.739Z",
+  "user_unit_key": "3d2225e4-f86a-5a8f-b8d7-3ff07eb3f96a:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "3d2225e4-f86a-5a8f-b8d7-3ff07eb3f96a:1:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "f34ab3d9-103c-46d0-971f-1462c275976c",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "3d2225e4-f86a-5a8f-b8d7-3ff07eb3f96a:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:0:user",
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:2:assistant",
+          "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:0:user",
+          "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:2:assistant",
+          "3d2225e4-f86a-5a8f-b8d7-3ff07eb3f96a:0:user",
+          "3d2225e4-f86a-5a8f-b8d7-3ff07eb3f96a:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "ae9cfa8774a8444b841f269be077e2c8a99f75350834045664ba9092e5f9d5c3",
+          "46b21068aa867e2c443b5ec2664ea9ee1da0ef8ae10bed2359c1dfa4707d7047",
+          "5cbef69b3c15d29a2b77e1f489d300e0d52b540ecaa0cd31c0d4bac371b60d17",
+          "635e60469ac3bcee3aba6a1229a80eda82db0583a28f4c3bd35cde2bec64369a",
+          "8d54e79e61c3986ad581e832ed681f30db05e69406b74a3b7ee9e829f2e4ead9",
+          "e42c2a20556d13c1747a5c045140d890f7a1a66d93d6d3649cdf295458ff6883"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:0:user",
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:2:assistant",
+          "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:0:user",
+          "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:2:assistant",
+          "3d2225e4-f86a-5a8f-b8d7-3ff07eb3f96a:0:user",
+          "3d2225e4-f86a-5a8f-b8d7-3ff07eb3f96a:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "ae9cfa8774a8444b841f269be077e2c8a99f75350834045664ba9092e5f9d5c3",
+          "46b21068aa867e2c443b5ec2664ea9ee1da0ef8ae10bed2359c1dfa4707d7047",
+          "5cbef69b3c15d29a2b77e1f489d300e0d52b540ecaa0cd31c0d4bac371b60d17",
+          "635e60469ac3bcee3aba6a1229a80eda82db0583a28f4c3bd35cde2bec64369a",
+          "8d54e79e61c3986ad581e832ed681f30db05e69406b74a3b7ee9e829f2e4ead9",
+          "e42c2a20556d13c1747a5c045140d890f7a1a66d93d6d3649cdf295458ff6883"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:0:user",
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:2:assistant",
+          "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:0:user",
+          "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:2:assistant",
+          "3d2225e4-f86a-5a8f-b8d7-3ff07eb3f96a:0:user",
+          "3d2225e4-f86a-5a8f-b8d7-3ff07eb3f96a:1:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "3d2225e4-f86a-5a8f-b8d7-3ff07eb3f96a:0:user",
+      "3d2225e4-f86a-5a8f-b8d7-3ff07eb3f96a:1:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:0:user",
+          "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:2:assistant",
+          "3d2225e4-f86a-5a8f-b8d7-3ff07eb3f96a:0:user",
+          "3d2225e4-f86a-5a8f-b8d7-3ff07eb3f96a:1:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:0:user",
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:2:assistant",
+          "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:0:user",
+          "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:2:assistant",
+          "3d2225e4-f86a-5a8f-b8d7-3ff07eb3f96a:0:user",
+          "3d2225e4-f86a-5a8f-b8d7-3ff07eb3f96a:1:assistant"
+        ],
+        "overlap_keys": [
+          "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:0:user",
+          "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:2:assistant",
+          "3d2225e4-f86a-5a8f-b8d7-3ff07eb3f96a:0:user",
+          "3d2225e4-f86a-5a8f-b8d7-3ff07eb3f96a:1:assistant"
+        ],
+        "relative_offset": -2
+      },
+      {
+        "unit_keys": [
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:0:user",
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:2:assistant",
+          "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:0:user",
+          "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:2:assistant",
+          "3d2225e4-f86a-5a8f-b8d7-3ff07eb3f96a:0:user",
+          "3d2225e4-f86a-5a8f-b8d7-3ff07eb3f96a:1:assistant"
+        ],
+        "overlap_keys": [
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:0:user",
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:2:assistant",
+          "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:0:user",
+          "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:2:assistant",
+          "3d2225e4-f86a-5a8f-b8d7-3ff07eb3f96a:0:user",
+          "3d2225e4-f86a-5a8f-b8d7-3ff07eb3f96a:1:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 3
+  },
+  "units": [
+    {
+      "key": "3d2225e4-f86a-5a8f-b8d7-3ff07eb3f96a:1:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n选择 C。\n\n理由：GPT-03 的真实回复契约是 issues[] 字符串，显式校验其类型、结构并将校验结果落 ledger，能补齐 fail-closed 校验能力，同时不伪造 review-report 必填字段、不改变既有业务语义。\n\n边界：\n\n保留现有 envelope Ajv 校验。\n\nissues 必须为字符串数组；缺失、类型错误或元素非字符串均拒绝。\n\n不映射为 findings，不构造完整 v1.1 review-report。\n\n不声称 GPT-03 已完成 v1.1 review-report 校验；其余三腿按统一 $defs 校验。\n\n将来若 GPT-03 正式产出结构化 findings，再单独评估完整报告契约接入。",
+      "text_sha256": "e42c2a20556d13c1747a5c045140d890f7a1a66d93d6d3649cdf295458ff6883",
+      "size_bytes": 653,
+      "assistant_uuid": "f34ab3d9-103c-46d0-971f-1462c275976c"
+    }
+  ]
+}

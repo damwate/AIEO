@@ -236,7 +236,9 @@ class TestAcceptanceLegTests(unittest.TestCase):
                            "summary": {"PASS": "验收标准逐项覆盖，证据齐备",
                                        "REWORK": "验收标准两项未覆盖，须补测试",
                                        "BLOCKED": "执行证据链断裂，验收阻塞须人工"}[result],
-                           "findings": [] if result == "PASS" else ["异常场景未覆盖"],
+                           "findings": [] if result == "PASS" else [
+                               {"finding_id": "F-TEST-1", "severity": "MAJOR",
+                                "description": "异常场景未覆盖"}],
                            "required_boundaries": ["F-003 证据事实不可被回复覆盖"]},
                           ensure_ascii=False)
         return f"ChatGPT 说：\n```json\n{body}\n```{extra}"

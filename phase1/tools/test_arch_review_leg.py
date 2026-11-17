@@ -181,7 +181,9 @@ class ArchReviewLegTests(unittest.TestCase):
         body = json.dumps({"result": result,
                            "summary": {"PASS": "架构最小闭环成立", "REWORK": "依赖边界缺失须返工",
                                        "BLOCKED": "外部系统契约未定，架构阻塞须人工决策"}[result],
-                           "findings": [] if result == "PASS" else ["依赖边界未定义"],
+                           "findings": [] if result == "PASS" else [
+                               {"finding_id": "F-ARCH-1", "severity": "MAJOR",
+                                "description": "依赖边界未定义"}],
                            "required_boundaries": ["M1-M4 零修改"],
                            "failure_paths": [] if result == "PASS" else ["M1 不可达时的派单路径"],
                            "remaining_findings": [], "unblocked": result != "BLOCKED"},

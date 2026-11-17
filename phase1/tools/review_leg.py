@@ -756,6 +756,15 @@ class ReviewLeg:
         missing = required - set(parsed)
         if missing:
             raise OrchestrationError(4, f"review reply missing required fields: {sorted(missing)}")
+        # DEC-097 规划复审定案②(C)：GPT-03 真实回复契约=issues[] 字符串。补显式
+        # fail-closed 校验（缺失/类型错误/元素非字符串均拒绝），不映射 findings、不构造
+        # 完整 v1.1 review-report、不改业务语义；其余三腿按统一 $defs 校验。
+        issues = parsed.get("issues")
+        if not isinstance(issues, list) or any(not isinstance(x, str) for x in issues):
+            raise OrchestrationError(4,
+                "reply issues must be an array of strings (fail-closed; no findings mapping)")
+        self.ledger.append({"kind": "R4_ISSUES_VALID", "issues_count": len(issues),
+                            "issues_all_strings": True, "outcome": "PASS"})
         return parsed
 
     def run_ajv_validation(self, envelope: dict) -> dict:

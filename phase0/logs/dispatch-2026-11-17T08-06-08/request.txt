@@ -1,0 +1,11 @@
+[GPT03-VAL-SCOPE|20261117] 承接 PLAN-H2 你定案②"GPT-03 增加 v1.1 报告校验、保留 envelope、失败fail-closed、不重审业务逻辑"。实读发现 GPT-03 与另三腿结构不同，请裁定校验落点，细节我俩定。
+
+事实：GPT-03 回复契约={"result":"PASS|REWORK","summary","issues":[字符串],"reviewed_commit"}——用 issues 非 findings；当前只做 envelope Ajv，无报告校验。而 review-report v1.1 required 含 contract_version/execution_id/manifest_path/sha256/base_commit/knowledge_base_commit 等 GPT-03 流程不产字段；findings=结构化对象，GPT-03 是 issues 字符串。
+
+问"新增 v1.1 报告校验"具体指哪种(唯一选+一句理由)：
+A 仅对回复 findings 用统一_defs 校验；issues 不变不校验(GPT-03 不产 findings 则等于无校验)；
+B 构造完整 v1.1 review-report(task/context 补齐 required+issues→findings 映射)再整体验证(更一致但新增字段构造≈改业务逻辑)；
+C 仅把 issues[] 元素是字符串做成 fail-closed 显式校验+落 ledger(纯补校验能力、零业务逻辑变更、不依赖全schema)；
+D 其它。
+
+输出≤600B。

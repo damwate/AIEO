@@ -67,7 +67,10 @@ from review_leg import (  # noqa: E402
 
 REPO_ROOT = Path(os.environ.get("AIEO_TEST_LEG_REPO_ROOT", "D:/AIEO")).resolve()
 RUNTIME_DIR = REPO_ROOT / "runtime" / "test-acceptance-leg"
-TEST_SCHEMA = CONTRACT_DIR / "test-acceptance-review.schema.json"
+# DEC-097 #1=A：报告契约切 v1.1（统一结构化 findings）；envelope/请求体仍 v1.0 零改
+CONTRACT_DIR_V11 = CONTRACT_DIR.parent / "v1.1"
+FINDINGS_DEF = CONTRACT_DIR_V11 / "_defs" / "findings.schema.json"
+TEST_SCHEMA = CONTRACT_DIR_V11 / "test-acceptance-review.schema.json"
 
 REVIEWER_AGENT = "GPT-04"        # 验收角色（回复 source；结论域 PASS/REWORK/BLOCKED）
 ENGINE_AGENT = "ENGINE-03"       # 本机服务身份（engine；C7 §8.6；charter A-1 定稿）
@@ -103,7 +106,7 @@ ALLOWED_FACT_RESULT = {
     ("EXECUTED_PASS", "REWORK"),
     ("EXECUTED_FAIL", "REWORK"),
 }
-CONTRACT_VERSION = "1.0"
+CONTRACT_VERSION = "1.1"  # DEC-097 #1=A：报告契约 v1.1（envelope 的 schema_version 仍 v1.0 独立）
 
 
 def _canon_sha(obj: dict) -> str:
@@ -693,7 +696,10 @@ class TestAcceptanceLeg:
             'const report = JSON.parse(readFileSync(process.argv[1], "utf8"));\n'
             'const rpSchema = JSON.parse(readFileSync("'
             + str(TEST_SCHEMA).replace("\\", "/") + '", "utf8"));\n'
+            'const findingsDef = JSON.parse(readFileSync("'
+            + str(FINDINGS_DEF).replace("\\", "/") + '", "utf8"));\n'
             'const ajv = new Ajv2020({ allErrors: true, strict: false });\n'
+            'ajv.addSchema(findingsDef);\n'
             'const rp = ajv.compile(rpSchema); const rpOk = rp(report);\n'
             'console.log(JSON.stringify({ report: { valid: !!rpOk, errors: rp.errors ?? [] } }));\n'
         )

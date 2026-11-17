@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aieo.local/contracts/v1.1/_defs/findings.schema.json",
+  "title": "AIEO unified structured findings definition v1.1",
+  "description": "统一结构化 findings 定义（DEC-097/#1=A，四份 v1.1 审查契约共用同一 URI，避免字段口径分叉）。字段集承袭 review-report.schema.json v1.0 已实战验证的结构化形态；四腿结构化 findings 原样传递，禁止有损转换；单个 finding 的附加字段允许（additionalProperties=true）以承载各腿差异，required=finding_id/severity/description 统一。Ajv 使用方须先 addSchema 注册本 $id 再编译引用契约，禁止依赖远程自动加载。",
+  "$defs": {
+    "finding": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["finding_id", "severity", "description"],
+      "properties": {
+        "finding_id": { "type": "string", "minLength": 1 },
+        "severity": { "type": "string", "enum": ["BLOCKER", "CRITICAL", "MAJOR", "MINOR", "INFO"] },
+        "file": { "type": "string" },
+        "line": { "type": "integer", "minimum": 1 },
+        "category": { "type": "string" },
+        "description": { "type": "string", "minLength": 1 },
+        "impact": { "type": "string" },
+        "recommendation": { "type": "string" }
+      }
+    },
+    "findings_array": {
+      "type": "array",
+      "items": { "$ref": "https://aieo.local/contracts/v1.1/_defs/findings.schema.json#/$defs/finding" }
+    }
+  }
+}

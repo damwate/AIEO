@@ -1,0 +1,81 @@
+ChatGPT 说：
+PLAN-H2 三确认点拍板
+
+确认点
+
+	
+
+结论
+
+	
+
+理由
+
+
+
+
+① findings 定义放法
+
+	
+
+选择前者：独立 $defs 文件 + $ref + Ajv addSchema
+
+	
+
+真正物理唯一，避免四份契约长期漂移。
+
+
+
+
+② GPT-03 校验范围
+
+	
+
+新增 v1.1 报告校验
+
+	
+
+仅新增文件却不执行校验，不算真正切换 v1.1；只补校验能力，不重审既有业务逻辑。
+
+
+
+
+③ engineering-audit 矩阵内 findings
+
+	
+
+保持 string
+
+	
+
+它是单项说明文本，顶层 findings 才是结构化发现记录，不扩大本次演进范围。
+
+实施约束补充
+
+$defs 使用稳定 $id，四份契约引用同一 URI；Ajv 每个实例注册一次，禁止依赖远程自动加载。
+
+GPT-03 保留原 envelope 校验，增加报告 schema 校验，失败仍 fail-closed。
+
+standards_matrix[].findings 原样保留，禁止为了统一而改变其语义。
+
+v1.0 四文件字节级零修改，历史报告继续可读。
+
+#2 BLOCKER 拍板
+
+选择 A 仅补测试和文档。
+
+单项 BLOCKED → 批次 BLOCKED。
+
+多项 BLOCKED → 批次 BLOCKED。
+
+无 BLOCKED → 按既有 ISSUE/PASS 规则汇总。
+
+矩阵与批次 result 矛盾 → fail-closed，禁止登记。
+
+不增加字段、不修改契约、不升级版本。
+
+最终定案：#1 三项依次为前者、增加校验、保持 string；#2=A。
+
+本次范围只覆盖契约演进和 BLOCKER 语义，不触碰 M1-M4、DEC-010，也不重新验收四腿既有业务交付。
+
+验收仍按你提出的标准：v1.0 零 diff、v1.1 Ajv 正负例、四腿 116/116 零回归、两项独立验收。

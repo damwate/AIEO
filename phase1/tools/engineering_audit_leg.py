@@ -58,7 +58,10 @@ from review_leg import (  # noqa: E402
 
 REPO_ROOT = Path(os.environ.get("AIEO_EAL_REPO_ROOT", "D:/AIEO")).resolve()
 RUNTIME_DIR = REPO_ROOT / "runtime" / "engineering-audit-leg"
-AUDIT_SCHEMA = CONTRACT_DIR / "engineering-audit-report.schema.json"
+# DEC-097 #1=A：报告契约切 v1.1（统一结构化 findings）；envelope/请求体仍 v1.0 零改
+CONTRACT_DIR_V11 = CONTRACT_DIR.parent / "v1.1"
+FINDINGS_DEF = CONTRACT_DIR_V11 / "_defs" / "findings.schema.json"
+AUDIT_SCHEMA = CONTRACT_DIR_V11 / "engineering-audit-report.schema.json"
 
 REVIEWER_AGENT = "GPT-05"        # 审计角色（envelope source；结论域 ACCEPTED/ACCEPTED_WITH_RISKS/BLOCKED）
 ENGINE_AGENT = "ENGINE-04"       # 本机服务身份（提交 Bearer 凭据；C7 §8.6；charter A-1）
@@ -94,7 +97,7 @@ RESULT_RECO_MAP = {
     "ACCEPTED_WITH_RISKS": "CONDITIONAL_SUBMIT_WITH_RISKS",
     "BLOCKED": "DO_NOT_SUBMIT",
 }
-CONTRACT_VERSION = "1.0"
+CONTRACT_VERSION = "1.1"  # DEC-097 #1=A：报告契约 v1.1（envelope 的 schema_version 仍 v1.0 独立）
 PAGE_SIZE = 200   # C2：分页上限（tasks.py 默认 50/最大 200——全量遍历取上限）
 
 
@@ -623,7 +626,10 @@ class EngineeringAuditLeg:
             'const report = JSON.parse(readFileSync(process.argv[1], "utf8"));\n'
             'const rpSchema = JSON.parse(readFileSync("'
             + str(AUDIT_SCHEMA).replace("\\", "/") + '", "utf8"));\n'
+            'const findingsDef = JSON.parse(readFileSync("'
+            + str(FINDINGS_DEF).replace("\\", "/") + '", "utf8"));\n'
             'const ajv = new Ajv2020({ allErrors: true, strict: false });\n'
+            'ajv.addSchema(findingsDef);\n'
             'const rp = ajv.compile(rpSchema); const rpOk = rp(report);\n'
             'console.log(JSON.stringify({ report: { valid: !!rpOk, errors: rp.errors ?? [] } }));\n'
         )

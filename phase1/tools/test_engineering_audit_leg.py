@@ -218,7 +218,9 @@ class EngineeringAuditLegTests(unittest.TestCase):
                            "summary": {"ACCEPTED": "批次任务状态与规范执行证据齐备",
                                        "ACCEPTED_WITH_RISKS": "存在规范执行缺口须披露风险",
                                        "BLOCKED": "存在规范 BLOCKED 项，审计阻塞须人工"}[result],
-                           "findings": [] if result == "ACCEPTED" else ["S2 执行证据缺口"],
+                           "findings": [] if result == "ACCEPTED" else [
+                               {"finding_id": "F-AUDIT-1", "severity": "MAJOR",
+                                "description": "S2 执行证据缺口"}],
                            "risks": [] if result == "ACCEPTED" else ["S2 遗留风险"]},
                           ensure_ascii=False)
         return f"ChatGPT 说：\n```json\n{body}\n```"
@@ -430,6 +432,21 @@ class EngineeringAuditLegTests(unittest.TestCase):
         self.assertEqual(rc, 2)
         reason = (leg.ledger.state_flags().get("LEG_LEVEL_BLOCKED") or {}).get("reason", "")
         self.assertIn("matrix ISSUE-only but total result=BLOCKED", reason)
+
+    def test_25_matrix_multi_blocked_maps_batch_blocked(self):
+        """DEC-097 #2=A：多项矩阵 BLOCKED→批次 result=BLOCKED/DO_NOT_SUBMIT（单项见 test_09）。"""
+        leg, batch_id, ctx = self.make_leg("t25", reply=self.reply_for(
+            "BLOCKED", matrix_results=["BLOCKED", "PASS", "BLOCKED", "ISSUE"]))
+        with self.dispatch_double(ctx[0]):
+            rc = leg.run()
+        self.assertEqual(rc, 0, "multi-BLOCKED must map to batch BLOCKED and register")
+        flags = leg.ledger.state_flags()
+        self.assertEqual(flags["A3_CONTRACT_VALID"]["result"], "BLOCKED")
+        self.assertEqual(flags["A5_DONE"]["result"], "BLOCKED")
+        report = json.loads((leg.run_dir / "report.json").read_text(encoding="utf-8"))
+        self.assertEqual(report["release_recommendation"], "DO_NOT_SUBMIT")
+        _, batch = self.owner.get(f"/api/v1/batches/{batch_id}")
+        self.assertEqual(batch.get("status"), "PLANNING")  # 审计不推进 M1 状态
 
     # ------------------------------------------------------------------
     # A3 契约校验失败：保留原始 artifact 不登记

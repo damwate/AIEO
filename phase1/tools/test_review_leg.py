@@ -512,6 +512,27 @@ __BODY__
         task = self.server.query("SELECT status FROM tasks WHERE task_id=?", (task_id,))
         self.assertEqual(task[0]["status"], "CODE_REVIEW", "M1 task unchanged (leg-level BLOCKED)")
 
+    def test_05c_issues_validation_fail_closed(self):
+        """DEC-097 规划复审定案②(C)：issues 缺失/类型错误/元素非字符串均 fail-closed。"""
+        import json as _json
+        leg, task_id, _, ctx, commit = self.make_leg("f05c", lambda c: "")
+        bad_bodies = [
+            {"result": "PASS", "summary": "s", "reviewed_commit": commit},                  # 缺 issues
+            {"result": "PASS", "summary": "s", "reviewed_commit": commit, "issues": "not-a-list"},
+            {"result": "PASS", "summary": "s", "reviewed_commit": commit, "issues": ["ok", 123]},
+            {"result": "PASS", "summary": "s", "reviewed_commit": commit, "issues": {"bad": 1}},
+        ]
+        for body in bad_bodies:
+            text = "ChatGPT 说：\n```json\n" + _json.dumps(body, ensure_ascii=False) + "\n```"
+            with self.assertRaises(OrchestrationError):
+                leg.extract_review_json(text)
+        good = {"result": "REWORK", "summary": "s", "reviewed_commit": commit,
+                "issues": ["问题一", "问题二"]}
+        parsed = leg.extract_review_json(
+            "ChatGPT 说：\n```json\n" + _json.dumps(good, ensure_ascii=False) + "\n```")
+        self.assertEqual(parsed["issues"], ["问题一", "问题二"])
+        self.assertTrue(any(r["kind"] == "R4_ISSUES_VALID" for r in leg.ledger.load()))
+
     def test_05b_blocked_verdict_rejected(self):
         leg, task_id, _, ctx, commit = self.make_leg("f03b", lambda c: self.reply_for(c, "BLOCKED"))
         wrapper, _ = ctx

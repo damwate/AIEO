@@ -1,0 +1,10 @@
+[PLAN-H2|20261117] 承接你 DEC-097 拍板 #1=A/#2=A。任务包已建(b-20261117-h2-contract-findings-evolution，基线36b9ade)，请复审设计三确认点后定稿，细节我俩定。
+
+#1 设计：contracts/v1.1/ 新增四份结构化契约+统一 findings 定义；v1.0 零改。实读发现三决策点：
+①统一 findings 定义放法：独立_defs文件+四契约$ref+四腿Ajv addSchema(物理唯一)，还是各v1.1内嵌相同$defs(内容统一物理四分)？我倾向前者(真正唯一)。
+②GPT-03 review_leg.py 当前只校验envelope、不校验review-report.schema：v1.1对它是仅新增契约文件腿零改(倾向，合"不重审四腿已交付")，还是新增报告校验？
+③engineering-audit 的 standards_matrix[].findings 是单项string(非findings列表)：保持string不动(倾向，合"不借机改其他契约")还是也改结构化？
+
+#2 设计：仅补测试(单项/多项/无/矛盾BLOCKED四型)+文档钉死既有description语义，零契约改动。
+
+验收：v1.0四文件字节级零diff；v1.1 Ajv正/负例；四腿116/116零回归；两项独立验收。输出逐点结论+一句理由，≤1000B。

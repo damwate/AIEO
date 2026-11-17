@@ -1,0 +1,17 @@
+ChatGPT 说：
+
+选择 C。
+
+理由：GPT-03 的真实回复契约是 issues[] 字符串，显式校验其类型、结构并将校验结果落 ledger，能补齐 fail-closed 校验能力，同时不伪造 review-report 必填字段、不改变既有业务语义。
+
+边界：
+
+保留现有 envelope Ajv 校验。
+
+issues 必须为字符串数组；缺失、类型错误或元素非字符串均拒绝。
+
+不映射为 findings，不构造完整 v1.1 review-report。
+
+不声称 GPT-03 已完成 v1.1 review-report 校验；其余三腿按统一 $defs 校验。
+
+将来若 GPT-03 正式产出结构化 findings，再单独评估完整报告契约接入。

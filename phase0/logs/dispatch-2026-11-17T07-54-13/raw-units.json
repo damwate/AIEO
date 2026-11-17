@@ -1,0 +1,108 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-17T07:56:38.155Z",
+  "user_unit_key": "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "075d7086-5a8e-4e0e-af79-f9c1de5c4951",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:0:user",
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:2:assistant",
+          "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:0:user",
+          "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "ae9cfa8774a8444b841f269be077e2c8a99f75350834045664ba9092e5f9d5c3",
+          "46b21068aa867e2c443b5ec2664ea9ee1da0ef8ae10bed2359c1dfa4707d7047",
+          "5cbef69b3c15d29a2b77e1f489d300e0d52b540ecaa0cd31c0d4bac371b60d17",
+          "635e60469ac3bcee3aba6a1229a80eda82db0583a28f4c3bd35cde2bec64369a"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:0:user",
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:2:assistant",
+          "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:0:user",
+          "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "ae9cfa8774a8444b841f269be077e2c8a99f75350834045664ba9092e5f9d5c3",
+          "46b21068aa867e2c443b5ec2664ea9ee1da0ef8ae10bed2359c1dfa4707d7047",
+          "5cbef69b3c15d29a2b77e1f489d300e0d52b540ecaa0cd31c0d4bac371b60d17",
+          "635e60469ac3bcee3aba6a1229a80eda82db0583a28f4c3bd35cde2bec64369a"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:0:user",
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:2:assistant",
+          "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:0:user",
+          "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:0:user",
+      "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:0:user",
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:2:assistant",
+          "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:0:user",
+          "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:0:user",
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:2:assistant",
+          "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:0:user",
+          "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:2:assistant"
+        ],
+        "overlap_keys": [
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:0:user",
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:2:assistant",
+          "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:0:user",
+          "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nPLAN-H2 三确认点拍板\n\n确认点\n\n\t\n\n结论\n\n\t\n\n理由\n\n\n\n\n① findings 定义放法\n\n\t\n\n选择前者：独立 $defs 文件 + $ref + Ajv addSchema\n\n\t\n\n真正物理唯一，避免四份契约长期漂移。\n\n\n\n\n② GPT-03 校验范围\n\n\t\n\n新增 v1.1 报告校验\n\n\t\n\n仅新增文件却不执行校验，不算真正切换 v1.1；只补校验能力，不重审既有业务逻辑。\n\n\n\n\n③ engineering-audit 矩阵内 findings\n\n\t\n\n保持 string\n\n\t\n\n它是单项说明文本，顶层 findings 才是结构化发现记录，不扩大本次演进范围。\n\n实施约束补充\n\n$defs 使用稳定 $id，四份契约引用同一 URI；Ajv 每个实例注册一次，禁止依赖远程自动加载。\n\nGPT-03 保留原 envelope 校验，增加报告 schema 校验，失败仍 fail-closed。\n\nstandards_matrix[].findings 原样保留，禁止为了统一而改变其语义。\n\nv1.0 四文件字节级零修改，历史报告继续可读。\n\n#2 BLOCKER 拍板\n\n选择 A 仅补测试和文档。\n\n单项 BLOCKED → 批次 BLOCKED。\n\n多项 BLOCKED → 批次 BLOCKED。\n\n无 BLOCKED → 按既有 ISSUE/PASS 规则汇总。\n\n矩阵与批次 result 矛盾 → fail-closed，禁止登记。\n\n不增加字段、不修改契约、不升级版本。\n\n最终定案：#1 三项依次为前者、增加校验、保持 string；#2=A。\n\n本次范围只覆盖契约演进和 BLOCKER 语义，不触碰 M1-M4、DEC-010，也不重新验收四腿既有业务交付。\n\n验收仍按你提出的标准：v1.0 零 diff、v1.1 Ajv 正负例、四腿 116/116 零回归、两项独立验收。",
+      "text_sha256": "635e60469ac3bcee3aba6a1229a80eda82db0583a28f4c3bd35cde2bec64369a",
+      "size_bytes": 1587,
+      "assistant_uuid": "075d7086-5a8e-4e0e-af79-f9c1de5c4951"
+    }
+  ]
+}
