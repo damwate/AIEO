@@ -1,6 +1,6 @@
 # AIEO 可行性风险与未验证假设登记（FEASIBILITY-REGISTER）
 
-**版本：** v0.3【T-P1-905 D1′ 执行后更新：F-002 补证据收窄缺口、F-004/F-007 转 VERIFIED；全文仍待用户审阅定稿（TECHNICALLY_PASSED 级，未 USER_REVIEWED）】
+**版本：** v0.6【2026-11-18 状态校正：F-002 多角色多轮真实收发 VERIFIED（Standard 平台轨收尾漂移修正，四腿交付+等级B试运行证据）；F-001 CLOSED（v0.5）；F-003/F-004/F-007 VERIFIED 成果保护区；全文仍待用户审阅定稿（TECHNICALLY_PASSED 级，未 USER_REVIEWED）】
 **定位：** 项目全部未验证技术假设与可行性风险的单一登记处（EXP-PLANNING-001 §五）；每会话发现新问题**先登记、评估，不得无边界扩展当前任务**（§二.5）。
 **纪律：** 每项必须含假设内容、当前证据、缺口、风险等级、验证路径与状态；关闭一项须附证据并记版本；"已验证假设区"保留成果防止重复开发（§八）。
 **初始化依据：** 复盘盘点 `docs/reviews/2026-11-14-总体规划与可行性复盘-主会话盘点.md` 议题 2/5/6；DEC-017/DEC-021 边界。
@@ -25,7 +25,8 @@
 - **缺口（D1′ 后收窄）：** 真实 chatgpt.com **多角色（GPT-03 审查等）多轮**收发仍未进入业务链；单角色单轮已证。
 - **风险：** 高——十步闭环 5 个节点依赖此腿；模拟级证据不构成真实链路验收（🔶 CLAIMED_ONLY 边界）；D1′ 后风险降级为多角色扩展面。
 - **验证路径：** D1′ 真实规划会话（DEC-017 边界内：公开仓库/单 unit/稳定 DOM/fail-closed）→ Phase 4 逐角色扩展；扩展场景（多 assistant unit/动态裁切恢复等）随 T-P1-906 分批复审。
-- **状态：** OPEN
+- **【2026-11-18 校正（Standard 平台轨收尾，文档漂移修正，节点授权执行）】状态：VERIFIED（多角色多轮真实收发已实证）**——原缺口"多角色（GPT-03 审查等）多轮收发未进业务链"已被后续真实腿交付逐项覆盖：GPT-03 审查腿七任务真实审查轮（DEC-058~062）；GPT-02 架构审核腿交付闭环（DEC-088，零 mock 实战账本 14 条）；GPT-04 测试验收腿交付闭环（DEC-091，三腿合跑 89/89+本腿 31/31）；GPT-05 工程总审计腿交付闭环（DEC-093，真实 BLOCKED→三项收口→G05-DR2 PASS）；派单可靠性修复实战（DEC-095，#3/#4/#7 内联采集 COMPLETED+归属校验）；等级B受控试运行三批 5 任务多轮收发全 PASS（DEC-099~104，T2/T3/T4 BLOCKED→补证→PASS、T5 REWORK→PASS，逐轮 reply SHA+被测 commit 绑定）。**边界（如实保留，不因校正关闭）：** ①以上腿由派单工具链（phase0/tools/gpt_dispatch.mjs+recoll）驱动并经归属校验，T-P1-908 调度器已编排单任务全链；②"M1 平台内自动多角色/多任务循环"仍未验证，属 906/C2 扩展面（F-006/DEC-104 未授权项）。本条原样保留作历史，现状以此校正为准。
+- **状态：** VERIFIED（2026-11-18 校正；原 OPEN 保留作历史）
 
 ### F-003 测试执行 Worker 缺位【已验证，移入 §2 成果保护区】
 
@@ -59,6 +60,7 @@
 | F-004 D1′ 真实端到端垂直切片 | **真实全链九步 PASS（2026-11-14，T-P1-905）**：M1 REST 建制→真实 ChatGPT 规划（826B 出/1636B 回，UUID `944f5ad1`）→904 Schema 双验证+登记（幂等三重验证过）→状态机 DRAFT→DEV_REPORTED 七事件全经 REST/MCP→M3 真实 claim（TASK-0003 负例过）→真实 commit `916d8b2`→M4 采集→报告闭环（DEVELOPMENT_COMPLETED 入 Inbox）。**边界：单角色/单轮/单任务；未合并 main（DEC-010）；另行独立验收** | `phase1/logs/t-p1-905-d1prime-20261114/RUN-RECORD.md`（全链 ID/SHA 绑定）；分支 `feature/T-P1-001-bundle-gate-help` |
 | F-007 契约体系消费者缺位 | **第一个真实消费者落地（2026-11-14，T-P1-905）**：M2/M3/M4 与编排首次通过 M1 REST 互通过一单真实消息——消息信封+task-plan-submitted payload Schema（904 冻结交付）对真实 GPT 回复 Ajv 双 valid；C3 错误码（REQ-0001/RES-0003/TASK-0003）在真实链路 5 次实际拦截（含 2 次 submit_result fail-closed 拒绝）；三 ID 强制+幂等键全链生效 | `phase1/logs/t-p1-905-d1prime-20261114/RUN-RECORD.md` §3/§5；`s4-schema-validation.json` |
 | F-003 测试执行 Worker 缺位 | **最小版已交付并独立验收（2026-11-14，T-P1-907）**：Python 标准库单文件 Worker（dev `b711160` Blob `0e4d7ab9`，193 行）——四道输入门禁（完整 40 位 SHA+worktree toplevel+HEAD 精确比对+清单校验/允许列表/超时 1..600s，六项拒绝全 BLOCKED exit=2 零执行）；四次真实执行覆盖 EXECUTED_PASS/EXECUTED_FAIL/TIMEOUT/START_ERROR（失败与启动异常留全记录且继续后续）；三件套原始字节+双 SHA 采集+SHA256SUMS；报告符合冻结契约（Ajv 141/141 环境回归+两报告独立 PASS，blob `1bda905c` 未动）；方案 B 零 REST 零凭据（artifact_id=null）；R1-R5 扫描 CLEAN。独立验收 8 PASS/0 REWORK/0 BLOCKED（DEC-029）。**边界：GPT-04 消费链路未提前开放；多环境/并发/重试/调度不在最小版范围** | `phase1/logs/t-p1-907-20261114/RUN-RECORD.md`（§9 验收记录）；分支 `feature/T-P1-907-test-worker`（dev）/`feature/T-P1-907-evidence`（证据） |
+| F-002 真实网页 GPT 多角色收发 | **VERIFIED（2026-11-18 校正）**：真实 chatgpt.com 多角色多轮业务收发实证——GPT-01（D1′ 单轮+908 编排）/GPT-03（七审查轮 DEC-058~062）/GPT-02（DEC-088+试运行 T1/T4/T5）/GPT-04（DEC-091+试运行 T2/T3）/GPT-05（DEC-093）五角色全真实收发；多轮 BLOCKED→补证→PASS 链逐轮 reply SHA+被测 commit 绑定；派单可靠性 #3/#4/#7 修复后归属校验+禁重发纪律实战验证（DEC-095）。**边界：M1 平台内自动多任务循环未验证（906/C2 扩展面，未授权不关）** | DEC-058~062/088/091/093/095/099~104；`basic/tasks/trial-run-b/FINAL-REVIEW.md`；各 dispatch 现场 reply.txt+result.json |
 
 ## 3. 版本记录
 
@@ -69,3 +71,4 @@
 | v0.3 | 2026-11-14 | T-P1-905 D1′ 执行后更新：F-002 补真实单角色单轮证据、缺口收窄为多角色多轮（保持 OPEN）；F-004/F-007 转 VERIFIED 移入 §2 成果保护区（附 D1′ 全链证据）；状态：TECHNICALLY_PASSED，待用户审阅定稿 | 主会话（依据 DEC-024-C 开工授权执行，验收另行） |
 | v0.5 | 2026-11-15 | F-001 状态校正：CLOSED（最小版落地，T-P1-908/DEC-036 全链证据）——修正 T-P1-908 闭合后未同步的 OPEN 漂移（b-20261115-standard-kickoff S2 验收 P1-01 整改）；扩展面另列入 Standard 平台路线后续立项 | 主会话（b-20261115-standard-kickoff S2 修正，节点授权执行） |
 | v0.4 | 2026-11-14 | T-P1-907 执行后更新：F-003 关闭——最小测试执行 Worker 已交付并独立验收（8 PASS/0 REWORK/0 BLOCKED，DEC-029），移入 §2 成果保护区；v0.3 批注 TECHNICALLY_PASSED 仍待用户审阅定稿（归档不等于定稿） | 主会话（依据 DEC-028 开工授权执行，验收已闭合，合并待用户批准） |
+| v0.6 | 2026-11-18 | F-002 状态校正：VERIFIED（真实 chatgpt.com 多角色多轮收发已实证，GPT-01/02/03/04/05 五角色+多轮 BLOCKED→补证→PASS 链）——修正四腿交付与等级B试运行（DEC-099~104）闭合后未同步的 OPEN 漂移；头部版本行 v0.3→v0.6 一并同步（v0.5 登记时头部未跟的漂移）；边界如实保留：M1 平台内自动多任务循环未验证（906/C2，未授权不关） | 主会话（Standard 收尾，节点授权执行） |
