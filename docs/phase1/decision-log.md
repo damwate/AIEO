@@ -794,3 +794,13 @@
 - **下一节点顺序（审查方建议）：** ①#1/#2 定向清理+独立验收 → ②新建《受控试运行(等级B) Charter》→ ③规划复审（范围/数量/权限/退出标准）→ ④正式 Gate 授权 → ⑤首批真实任务受控试跑+阶段复盘 → ⑥按结果决定 906 顺延是否启动。
 - **caveat 如实登记：** ChatGPT 明示本次为路径决策、未重读仓库、不冒充对 #1/#2 的代码验收。
 - **关联：** DEC-093（遗留七项）、DEC-095（上节点）、DEC-026（路线）、DEC-084（会话迁移）、DEC-089/031/020（授权）、L-018（键漂移实证）。
+
+### DEC-097 H2 契约演进范围拍板：ChatGPT 裁定 #1=A（新增 v1.1 四契约统一结构化 findings）+ #2=A（仅补测试/文档钉死 BLOCKER 语义）（2026-11-17）
+
+- **会商授权：** 用户 2026-11-17 授权细节由 ChatGPT 拍板（DEC-096 承接）。本次 ChatGPT 实读仓库后拍板（reply 1328B SHA-256=`46b21068aa867e2c443b5ec2664ea9ee1da0ef8ae10bed2359c1dfa4707d7047`，dispatch-2026-11-17T07-49-00），基线 5c23668、未改仓库。
+- **实读事实（本次查证）：** 四契约 findings 不同族——review-report.schema.json=结构化对象数组(finding_id/severity 枚举/description/file/line/category/impact/recommendation)；arch-review-report / test-acceptance-review / engineering-audit-report=string[]。四腿实战真实产出均结构化对象→契约校验 fail-closed 真拦截（四腿同型多次实证），历次靠"A6 人工规整 loss=NONE"绕过。engineering-audit schema description 明写"修改本文件须走契约版本演进流程，禁止原地改语义（H2）"；DEC-067 H2 先例=新增文件不修改既有冻结契约。
+- **#1 裁定=A：** 新增四份 v1.1 结构化契约 + 四腿校验切 v1.1；v1.0 冻结零改、历史报告保持可读（双版本并存）；**四份 v1.1 共用统一 findings 定义（避免字段口径分叉）**；四腿结构化 findings 原样传递、禁止有损转换。理由：四腿四次实战证明结构化输出是稳定事实，继续依赖 A6 人工规整非长期契约方案，符合 DEC-067 先例。
+- **#2 裁定=A：** 仅补测试+文档钉死既有 BLOCKER 语义，不新增字段、不改契约版本。理由：engineering-audit schema description 已明确"任一矩阵项 BLOCKED→批次 result=BLOCKED"，属实现语义验证与回归覆盖，非契约缺失。测试须覆盖：单项 BLOCKED、多项 BLOCKED、无 BLOCKED、矛盾组合。
+- **拍板边界：** v1.0 冻结零修改；v1.1 新增文件保留历史兼容；不借机改造其他冻结契约；两项均独立验收，完成后再申请等级 B Gate。
+- **下一节点：** 立项 Basic 任务包完成 #1/#2 定向清理（仅此两项，不重审四腿已交付成果、不扩大范围）；每步交 ChatGPT 独立验收；收口后再走《受控试运行(等级B) Charter》→规划复审→Gate。
+- **关联：** DEC-093（遗留 #1/#2 原始描述）、DEC-096（路径拍板 B）、DEC-067（H2 先例）、DEC-026（路线）、L-018（fail-closed 实证）。

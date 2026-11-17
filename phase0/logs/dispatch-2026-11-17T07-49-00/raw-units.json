@@ -1,0 +1,108 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-17T07:51:30.072Z",
+  "user_unit_key": "2bde3d83-6f32-5e37-8252-7d92ef4381c5:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "2bde3d83-6f32-5e37-8252-7d92ef4381c5:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "e00ebc41-ea24-4ce9-b6b2-c070a00962fe",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "2bde3d83-6f32-5e37-8252-7d92ef4381c5:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "bd328631-e3c7-50ba-9c46-4ea46908b595:0:user",
+          "bd328631-e3c7-50ba-9c46-4ea46908b595:2:assistant",
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:0:user",
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "cb8bdcdd45fe217d1e4259c7d4d2282e7af418e9a983af1eecdf7c33837e9ba8",
+          "9b61ad44fce049e2dde956ed7e3cdde0c0f7a7c84fdd198af59c83b602a9b9bb",
+          "ae9cfa8774a8444b841f269be077e2c8a99f75350834045664ba9092e5f9d5c3",
+          "46b21068aa867e2c443b5ec2664ea9ee1da0ef8ae10bed2359c1dfa4707d7047"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "bd328631-e3c7-50ba-9c46-4ea46908b595:0:user",
+          "bd328631-e3c7-50ba-9c46-4ea46908b595:2:assistant",
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:0:user",
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "cb8bdcdd45fe217d1e4259c7d4d2282e7af418e9a983af1eecdf7c33837e9ba8",
+          "9b61ad44fce049e2dde956ed7e3cdde0c0f7a7c84fdd198af59c83b602a9b9bb",
+          "ae9cfa8774a8444b841f269be077e2c8a99f75350834045664ba9092e5f9d5c3",
+          "46b21068aa867e2c443b5ec2664ea9ee1da0ef8ae10bed2359c1dfa4707d7047"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "bd328631-e3c7-50ba-9c46-4ea46908b595:0:user",
+          "bd328631-e3c7-50ba-9c46-4ea46908b595:2:assistant",
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:0:user",
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "2bde3d83-6f32-5e37-8252-7d92ef4381c5:0:user",
+      "2bde3d83-6f32-5e37-8252-7d92ef4381c5:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "bd328631-e3c7-50ba-9c46-4ea46908b595:0:user",
+          "bd328631-e3c7-50ba-9c46-4ea46908b595:2:assistant",
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:0:user",
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "bd328631-e3c7-50ba-9c46-4ea46908b595:0:user",
+          "bd328631-e3c7-50ba-9c46-4ea46908b595:2:assistant",
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:0:user",
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:2:assistant"
+        ],
+        "overlap_keys": [
+          "bd328631-e3c7-50ba-9c46-4ea46908b595:0:user",
+          "bd328631-e3c7-50ba-9c46-4ea46908b595:2:assistant",
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:0:user",
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "2bde3d83-6f32-5e37-8252-7d92ef4381c5:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n实读仓库后拍板\n\n基线：5c23668，未修改仓库。\n\n问1：选择 A。 新增四份 v1.1 结构化契约，四腿校验切换 v1.1，v1.0 冻结不动、历史报告保持可读；理由：四腿已四次实战证明结构化输出是稳定事实，继续依赖 A6 人工规整不是长期契约方案，且符合 DEC-067「新增文件、不修改冻结契约」先例。\n\n建议四份 v1.1 共用统一 findings 定义，避免四份结构化对象再次出现字段口径分叉。\n\n问2：选择 A。 只补测试和文档，钉死现有 BLOCKER 语义，不新增字段、不改契约版本；理由：engineering-audit-report.schema.json 的 description 已明确任一矩阵项 BLOCKED → 批次 result=BLOCKED，属于实现语义验证和回归覆盖，不是契约缺失。\n\n拍板边界\n\nv1.0：冻结，零修改。\n\nv1.1：新增文件，保留历史兼容。\n\n四腿：结构化 findings 原样传递，禁止有损转换。\n\n矩阵 BLOCKER：测试覆盖单项 BLOCKED、多项 BLOCKED、无 BLOCKED、矛盾组合。\n\n两项均独立验收，完成后再申请等级 B Gate。\n\n实读依据：\n\nreview-report v1.0\n\nengineering-audit v1.0\n\nDEC-067、DEC-093、DEC-095\n\n最终结论：#1=A，#2=A。先解决结构化契约，再钉死 BLOCKER 语义；不借机改造其他冻结契约。",
+      "text_sha256": "46b21068aa867e2c443b5ec2664ea9ee1da0ef8ae10bed2359c1dfa4707d7047",
+      "size_bytes": 1328,
+      "assistant_uuid": "e00ebc41-ea24-4ce9-b6b2-c070a00962fe"
+    }
+  ]
+}

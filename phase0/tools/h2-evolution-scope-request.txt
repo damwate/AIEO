@@ -1,0 +1,12 @@
+[H2-SCOPE|20261117] 承接 DEC-096 选 B（先清 #1/#2）。实读仓库后请拍板，细节我俩定。
+
+四契约 findings 不同族：review-report=结构化对象(finding_id/severity/description…)，arch-review/test-acceptance/engineering-audit=string[]。四腿实战产出均结构化→契约校验 fail-closed 拦截，历次靠"A6 规整 loss=NONE"绕过。engineering-audit schema 明写"禁原地改语义(H2)"；DEC-067 先例=新增文件不改既有冻结契约。
+
+问1 #1 H2 路径(唯一选+一句理由)：
+A 新增 v1.1 四契约(结构化)+四腿校验切 v1.1，v1.0 零改、旧报告仍可读；
+B 仅新增统一 findings 子契约+四腿做保真映射(v1.0 不改，可能仍需改 leg)；
+C 不改契约，只把 A6 规整标准化为文档+测试(最小，结构化不一致仍在)。
+
+问2 #2 矩阵×批次 BLOCKER：现 engineering-audit description 已含规则(任一矩阵项 BLOCKED→result=BLOCKED)。"细化"=A 仅补测试/文档钉死既有语义(零契约改动)还是 B 新增字段走 v1.1？
+
+逐问结论+一句理由。≤1000B。
