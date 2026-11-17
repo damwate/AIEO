@@ -1,0 +1,25 @@
+{
+  "at": "2026-11-17T08:30:25.245Z",
+  "outcome": "failure_created_pages_closed",
+  "before": [
+    {
+      "id": "34D355A2AC43988745AAFC080C87B1C2",
+      "url": "https://chatgpt.com/c/6afc054f-b0b8-83ee-a333-11821e0880e0"
+    }
+  ],
+  "exit_before_disposal": [
+    {
+      "id": "34D355A2AC43988745AAFC080C87B1C2",
+      "url": "https://chatgpt.com/c/6afc054f-b0b8-83ee-a333-11821e0880e0"
+    }
+  ],
+  "exit_after_disposal": [
+    {
+      "id": "34D355A2AC43988745AAFC080C87B1C2",
+      "url": "https://chatgpt.com/c/6afc054f-b0b8-83ee-a333-11821e0880e0"
+    }
+  ],
+  "created_pages": 0,
+  "disposal": "发送前失败：仅关闭本次自建页；既有页零触碰（exit_before/exit_after 对照=值守页零关闭证明）",
+  "error": "locator.waitFor: Timeout 10000ms exceeded.\nCall log:\n\u001b[2m  - waiting for locator('[aria-label=\"询问 ChatGPT\"], [aria-label=\"Ask ChatGPT\"], #prompt-textarea').visible().first() to be visible\u001b[22m\n"
+}

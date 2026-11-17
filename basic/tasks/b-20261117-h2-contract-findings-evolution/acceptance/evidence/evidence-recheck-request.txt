@@ -1,0 +1,8 @@
+[H2-EVIDENCE-RECHECK|20261117] 承接你上轮源码核验通过、仅缺三项运行证据的 FAIL。证据已补齐并推送，请复验缺口（源码 commit 245108c3 不变，证据 commit=4af23cc86b9927fcc8e0e8236ddccc22250801e5）。
+
+三项缺口证据（任务包 basic/tasks/b-20261117-h2-contract-findings-evolution/acceptance/evidence/，现 GitHub 可读）：
+①v1.1 契约 6/6 实际输出=v11-schema-run.log（SUMMARY total=6 passed=6 failed=0）；
+②工程审计独立 25/25 运行记录=eng-audit-25-run.log（25 passed in 32.00s）；
+③lint0 证据=lint-evidence.log（8 个改动 Python 文件 ast.parse=PASS count=8；test_schemas_v11.mjs ESM 已成功执行；IDE read_lints totalCount=0）。
+
+你上轮已确认：源码核验通过（统一_defs/四契约$ref/三腿addSchema/GPT-03 R4_ISSUES_VALID 符合裁定C）、v1.0 四 schema 与基线 SHA 一致、141/141 与 118/118 有日志、blocker-semantics.md 与四型用例符合 #2=A。现三项缺口补齐，请给 #1/#2 最终 PASS/FAIL。≤600B。

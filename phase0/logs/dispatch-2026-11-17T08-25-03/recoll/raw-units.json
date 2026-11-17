@@ -1,0 +1,94 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-17T08:28:51.470Z",
+  "user_unit_key": "d36b0991-1de4-5402-8559-5900f761dc93:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "d36b0991-1de4-5402-8559-5900f761dc93:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "069b6a42-17fc-4421-b95a-77d95ab71fc5",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "d36b0991-1de4-5402-8559-5900f761dc93:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "bd328631-e3c7-50ba-9c46-4ea46908b595:0:user",
+          "bd328631-e3c7-50ba-9c46-4ea46908b595:2:assistant",
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:0:user",
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:2:assistant",
+          "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:0:user",
+          "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:2:assistant",
+          "3d2225e4-f86a-5a8f-b8d7-3ff07eb3f96a:0:user",
+          "3d2225e4-f86a-5a8f-b8d7-3ff07eb3f96a:1:assistant",
+          "0511ca9e-46b2-56e0-a4c6-dbdc1a1d8466:0:user",
+          "0511ca9e-46b2-56e0-a4c6-dbdc1a1d8466:2:assistant",
+          "d36b0991-1de4-5402-8559-5900f761dc93:0:user",
+          "d36b0991-1de4-5402-8559-5900f761dc93:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "cb8bdcdd45fe217d1e4259c7d4d2282e7af418e9a983af1eecdf7c33837e9ba8",
+          "9b61ad44fce049e2dde956ed7e3cdde0c0f7a7c84fdd198af59c83b602a9b9bb",
+          "ae9cfa8774a8444b841f269be077e2c8a99f75350834045664ba9092e5f9d5c3",
+          "46b21068aa867e2c443b5ec2664ea9ee1da0ef8ae10bed2359c1dfa4707d7047",
+          "5cbef69b3c15d29a2b77e1f489d300e0d52b540ecaa0cd31c0d4bac371b60d17",
+          "635e60469ac3bcee3aba6a1229a80eda82db0583a28f4c3bd35cde2bec64369a",
+          "8d54e79e61c3986ad581e832ed681f30db05e69406b74a3b7ee9e829f2e4ead9",
+          "e42c2a20556d13c1747a5c045140d890f7a1a66d93d6d3649cdf295458ff6883",
+          "0700daeffd76c015b57072b1818888b53e1bf6762f1e4d7410618ce402f13868",
+          "49be6777aef9eff26e7bdd7d3db220a29b857273460e5dd436ce655cd44f3eb7",
+          "0700daeffd76c015b57072b1818888b53e1bf6762f1e4d7410618ce402f13868",
+          "8697ddb2d6049ead5e4209bd5f6527fe194cb494c1fe20cfd5d3d7130f5635bd"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": []
+      }
+    ],
+    "materialized_unit_keys": [
+      "d36b0991-1de4-5402-8559-5900f761dc93:0:user",
+      "d36b0991-1de4-5402-8559-5900f761dc93:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STATIC_NON_SCROLLABLE_DOM",
+      "scrollable_window_observed": false,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "bd328631-e3c7-50ba-9c46-4ea46908b595:0:user",
+          "bd328631-e3c7-50ba-9c46-4ea46908b595:2:assistant",
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:0:user",
+          "2bde3d83-6f32-5e37-8252-7d92ef4381c5:2:assistant",
+          "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:0:user",
+          "1bb28677-dbc6-5afc-a8b6-63fa55802b2e:2:assistant",
+          "3d2225e4-f86a-5a8f-b8d7-3ff07eb3f96a:0:user",
+          "3d2225e4-f86a-5a8f-b8d7-3ff07eb3f96a:1:assistant",
+          "0511ca9e-46b2-56e0-a4c6-dbdc1a1d8466:0:user",
+          "0511ca9e-46b2-56e0-a4c6-dbdc1a1d8466:2:assistant",
+          "d36b0991-1de4-5402-8559-5900f761dc93:0:user",
+          "d36b0991-1de4-5402-8559-5900f761dc93:2:assistant"
+        ],
+        "overlap_keys": []
+      }
+    ],
+    "window_transitions": 0
+  },
+  "units": [
+    {
+      "key": "d36b0991-1de4-5402-8559-5900f761dc93:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n独立验收结论：\n\n#1 FAIL（验收证据不可核验）：指定完整 SHA 245108c379335453abe250131908cfe747bb9d3a 在 damwate/AIEO 中无法读取，无法检查 v1.1 契约、三腿切换、GPT-03 R4_ISSUES_VALID 及测试记录。\n\n#2 FAIL（验收证据不可核验）：同一 SHA 无法读取，无法检查 blocker-semantics.md、test09/10/11/24/25 及 25/25 测试结果。\n\n这里的 FAIL 是本轮验收未通过，不等于已证明代码实现有缺陷。此前 GitHub 对该 SHA 返回 commit not found，提交搜索也无结果。\n\n结论：暂不可交付为 PASS。 请确认 SHA 是否有误，或将该 commit 推送到可读取的仓库分支；取得证据后再验。",
+      "text_sha256": "8697ddb2d6049ead5e4209bd5f6527fe194cb494c1fe20cfd5d3d7130f5635bd",
+      "size_bytes": 711,
+      "assistant_uuid": "069b6a42-17fc-4421-b95a-77d95ab71fc5"
+    }
+  ]
+}

@@ -1,0 +1,7 @@
+[H2-ACCEPT|20261117] 请对 #1/#2 分别独立验收，各给 PASS/FAIL+一句理由。被测 commit=245108c379335453abe250131908cfe747bb9d3a，基线36b9ade。证据在任务包 acceptance/。本轮按你此前拍板(DEC-097 #1=A/#2=A、规划复审三点、GPT-03 校验落点C)实现。
+
+#1 findings结构化：contracts/v1.1 新增统一_defs+四契约(物理共享$id、v1.0字节级零diff实查通过)；三腿SCHEMA/CONTRACT_VERSION切v1.1+Ajv addSchema；GPT-03按C仅补issues[]字符串数组fail-closed校验(R4_ISSUES_VALID)+ledger，不映射findings/不构造完整report/不改业务逻辑。测试：v1.1契约6/6、v1.0契约141/141零回归、四腿118/118(基线116+2新增)。请验。
+
+#2 BLOCKER语义：仅补测试+blocker-semantics.md文档(零契约改动)。四型覆盖=单项BLOCKED(test09)/多项BLOCKED(test25新增)/无BLOCKED(test09)/矛盾(test10/11/24)；test_engineering_audit_leg 25/25。请验。
+
+边界自查：v1.0零改、未碰M1/DEC-010、standards_matrix[].findings保持string、不重审四腿已交付成果。两项PASS请给"#1 PASS #2 PASS 可交付"，FAIL列点。≤1000B。

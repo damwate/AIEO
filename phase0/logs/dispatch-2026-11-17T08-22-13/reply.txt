@@ -1,0 +1,11 @@
+ChatGPT 说：
+
+当前无法给出两项 PASS：我按指定完整 SHA 245108c379335453abe250131908cfe747bb9d3a 查询 damwate/AIEO，GitHub 返回该 commit 不存在（提交读取 422，基线比较 404）。因此尚未取得 acceptance/ 证据，不能把你提供的测试汇总当作独立验收结果。
+
+当前结论：
+
+#1：暂不能判 PASS/FAIL——被测 commit 无法定位，v1.1 契约、三腿切换、GPT-03 C 落点及回归证据均未能核验。
+
+#2：暂不能判 PASS/FAIL——无法读取 blocker-semantics.md 和对应测试证据，25/25 目前仅是提交方报告。
+
+请先确认 SHA 是否正确、是否已推送到 main。拿到可读取的精确 commit 后，我再分别验收；不会用推测替代 PASS。

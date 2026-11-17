@@ -1,0 +1,21 @@
+{
+  "at": "2026-11-17T08:24:14.638Z",
+  "outcome": "success",
+  "before": [
+    {
+      "id": "DE2052E225615BFE09A13BB2C1A466B8",
+      "url": "https://chatgpt.com/"
+    }
+  ],
+  "exit_before_disposal": [
+    {
+      "id": "DE2052E225615BFE09A13BB2C1A466B8",
+      "url": "https://chatgpt.com/c/6afc054f-b0b8-83ee-a333-11821e0880e0"
+    }
+  ],
+  "exit_after_disposal": {
+    "error": "CDP_UNREACHABLE"
+  },
+  "created_pages": 0,
+  "disposal": "browser.close+killProfileChrome（profile 级整浏览器关闭=既有成功语义，含既有页与自建页）；exit_after_disposal CDP_UNREACHABLE=tab 清零证明"
+}
