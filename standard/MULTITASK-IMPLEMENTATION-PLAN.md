@@ -1,6 +1,6 @@
-# Standard 多任务模式实施方案 v0.3（设计稿——未生效，待 P0 复审+用户批准）
+# Standard 多任务模式实施方案 v0.4（设计稿——未生效，待 P0 复审+用户批准）
 
-> **文档身份：** DEC-106④ 裁定产物（GO 顺序2）。v0.1 经 P0 复审 R1 REWORK（reply `50e4c530…`）；v0.2 经 R2 REWORK 收敛（reply `2d093edc…`：①PASS/②④⑤PASS_WITH_CONSTRAINTS/③REWORK）→ 本 v0.3 落位全部约束。**设计稿不构成实施授权；分级放量每级另批。**
+> **文档身份：** DEC-106④ 裁定产物（GO 顺序2）。复审收敛链：R1 REWORK（`50e4c530…`）→ R2 REWORK（`2d093edc…`）→ R3 REWORK 仅余两点（`a8d96479…`：①④PASS/②PASS_WITH_CONSTRAINTS）→ 本 v0.4 落位。**设计稿不构成实施授权；分级放量每级另批。**
 
 ## 一、目标与范围
 
@@ -36,7 +36,7 @@
 ## 四、任务隔离设计
 
 - **代码：** 每任务独立 worktree（禁共享工作树写）；
-- **证据（R2③ 约束落位）：** 按 task_id 分目录；**COMPLETED 前置校验=五件套必需文件清单逐文件存在+非空**（清单按任务类型在 task-brief 中显式定义：record/delivery/验收 reply 原始字节/测试日志/审计链），**SHA 校验：** 证据文件 SHA256 记录入 delivery 并抽核，**基线一致性：** 证据内 base_commit=队列登记 base_commit=任务包开工登记 commit 三方一致，**防跨任务误绑定：** 归属三元组（task_id+会话 UUID+简报标记文本）一致才判归属，C1 绑定按任务基线比对；
+- **证据（R2③/R3③ 约束落位）：** 按 task_id 分目录；**COMPLETED 前置校验=五件套必需文件清单逐文件存在+非空+全量 SHA256 逐一计算校验通过**（R3③：抽核不足，必需文件**全部**计入 SHA256SUMS 并逐一比对通过方可 COMPLETED；清单按任务类型在 task-brief 中显式定义：record/delivery/验收 reply 原始字节/测试日志/审计链），**基线一致性：** 证据内 base_commit=队列登记 base_commit=任务包开工登记 commit 三方一致，**防跨任务误绑定：** 归属三元组（task_id+会话 UUID+简报标记文本）一致才判归属，C1 绑定按任务基线比对；
 - **会话：** 绑定表强隔离；跨任务禁止复用审查会话承载无关任务（远桥实例教训：多任务下从"标记区分"升级为"强隔离"）；**跨任务数据污染防线：** 禁共享写路径+证据 SHA 绑定+通道互斥保证消息不串（R1③）；
 - **失败：** 单任务 fail-closed 不阻断队列；全局五类即停见 §五触发矩阵。
 
@@ -66,7 +66,7 @@
 ## 七、版本边界与回滚（打版前置件，R1⑤ PASS_WITH_CONSTRAINTS 修订落位）
 
 - **候选版：** `v0.1.0-standard-alpha`（**不可变 annotated tag**）；
-- **不可变 SHA 约束（R2⑤ 落位）：** **tag 对象 SHA 与被测 commit SHA 分别记录**（两者不同对象，tag message 双登记）；tag message 同时记录 M1-M4 回归日志的路径+SHA256——**日志必须入库 `phase1/logs/release-v0.1.0-alpha/` 并附 SHA256SUMS 文件**（SHA 对应可复核归档原文，不留孤证）；tag 打后不移动不删除（删除/重打视为版本事故登记）；
+- **不可变 SHA 约束（R3⑤ 修正自指缺陷）：** **tag message 只登记被测 commit 完整 40 位 SHA+M1-M4 回归日志路径与 SHA256**（日志入库 `phase1/logs/release-v0.1.0-alpha/` 附 SHA256SUMS，可复核原文）；**tag 对象 SHA 不写入自身 message**（对象 SHA 由内容计算，自指不可能——R3⑤ 指正）——tag 创建后，在**独立发布记录** `phase1/logs/release-v0.1.0-alpha/RELEASE-RECORD.md` 登记三者映射（tag 名↔tag 对象 SHA↔被测 commit SHA）；tag 打后不移动不删除（删除/重打视为版本事故登记）；
 - **tag 保护：** 推送后 GitHub 侧建议启用 tag 保护（用户侧操作，登记建议不代做）；
 - **父提交回滚：** 回滚目标=`<tag>^`（被测 commit 的 parent）明确登记于 tag message；回滚动作=checkout 该 parent，main 演进不受影响；
 - **全量回归证据约束：** 打版前置=M1-M4 四模块回归 exit=0 的新鲜实跑日志入库（含 SHA256SUMS），tag message 引用其路径+SHA；

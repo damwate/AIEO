@@ -1,0 +1,3 @@
+[M2-PLAN-R3|20261118] v0.3已提交请终审(承接R2四约束)。commit=94e89233b4a678736182032135e596dc167b579e(可直读)。
+落位:②队列+绑定表并入单一scheduler-state.json(消除跨文件原子面),写tmp→fsync→原子rename→fsync父目录(Windows目录fsync尽力而为已登记),崩溃半写=tmp清理+schema版本校验失败STOP;attempts仅人工重试+1上限2入口硬校验;SUSPENDED恢复前置核验无未决发送(未决拒恢复提示补采)。③五件套必需文件清单按任务类型显式定义,COMPLETED前置逐文件存在+非空;SHA256入delivery抽核;base_commit三方一致(证据=队列=开工登记);归属三元组(task_id+会话UUID+标记文本)防误绑定。④pause并入单文件原子rename发布;获取通道闸后发送前强制重读state,pause=true即中止让出闸(杜绝竞态放行);运行中轮不中断。⑤回归日志入库phase1/logs/release-v0.1.0-alpha/+SHA256SUMS文件(SHA对应可复核原文);tag对象SHA与被测commit SHA双登记于tag message。
+请终审五点,JSON{"result":"PASS|REWORK","points":[{"n":1,"v":""},{"n":2,"v":""},{"n":3,"v":""},{"n":4,"v":""},{"n":5,"v":""}],"conditions":[]}≤700B
