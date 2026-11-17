@@ -1,0 +1,7 @@
+[T1-GPT02-ARCH|20261117] 受控试运行首批 T1——请你以 GPT-02 架构审核角色，对已交付成果做**只读架构复审**并给真实结论(PASS/REWORK/BLOCKED)。验证四腿真实协作可靠性，非新功能；只据下述事实判断，无需读写仓库或推进状态。
+
+被测：DEC-093 #1/#2 H2 契约演进(b-20261117-h2-contract-findings-evolution，已 PASS)。源码 commit=245108c379335453abe250131908cfe747bb9d3a；证据 commit=4af23cc8…；你上轮验收 reply SHA=3b4c094c41af0b7631a4a52404519aa0e534ce12870da5b86aa43cd26c76b5d1。
+
+复审点：①v1.1 四契约与统一 _defs/findings 口径一致否；②v1.0 冻结契约字节级零改否(你上轮已核验)；③四腿切 v1.1 后是否不触 M1/M4 与 DEC-010；④"新报告v1.1/历史v1.0"路由未实施是否如实登记为边界(非谎称闭环)。
+
+严格 JSON：{"result":"PASS|REWORK|BLOCKED","summary":"<一句话>","findings":[{"finding_id":"F1","severity":"BLOCKER|CRITICAL|MAJOR|MINOR|INFO","description":"..."}]}。只给结论+发现，不写仓库不发状态。≤900B。

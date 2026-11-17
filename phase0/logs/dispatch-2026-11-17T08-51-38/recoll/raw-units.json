@@ -1,0 +1,76 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-17T08:55:11.540Z",
+  "user_unit_key": "d6508f98-8701-51df-a765-5be1784dc720:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "d6508f98-8701-51df-a765-5be1784dc720:1:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "22e20d13-0770-42a8-935b-56c49381033b",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "d6508f98-8701-51df-a765-5be1784dc720:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fef74a7f-0523-5029-958d-812da9f584a8:0:user",
+          "fef74a7f-0523-5029-958d-812da9f584a8:2:assistant",
+          "70738a31-a110-5707-bccf-16ad15d84312:0:user",
+          "70738a31-a110-5707-bccf-16ad15d84312:2:assistant",
+          "d6508f98-8701-51df-a765-5be1784dc720:0:user",
+          "d6508f98-8701-51df-a765-5be1784dc720:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "6c79317501a0775f6d843613b11f6d69fa798faa1ccebdb173a31b7c25dd9ad5",
+          "7ba51a533edcd77b86e6a83500027847a3140264d101a671fca20c446095789b",
+          "85ad5cac98b749afb123ebbd421803a585548acf90502028f4209b9496762013",
+          "cc1315098599cefa129fc81fca08b69bff5b99a88d5d208355c1c4afa5995ddf",
+          "0ef90a0c99036fcdfa5d879e2cce8d69106d3b816cb9cd55674a534b91ff2a3c",
+          "714e22828f716ef238f89625f01f72fa0645674fa01f9ea0e40973bc1a21389c"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": []
+      }
+    ],
+    "materialized_unit_keys": [
+      "d6508f98-8701-51df-a765-5be1784dc720:0:user",
+      "d6508f98-8701-51df-a765-5be1784dc720:1:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STATIC_NON_SCROLLABLE_DOM",
+      "scrollable_window_observed": false,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fef74a7f-0523-5029-958d-812da9f584a8:0:user",
+          "fef74a7f-0523-5029-958d-812da9f584a8:2:assistant",
+          "70738a31-a110-5707-bccf-16ad15d84312:0:user",
+          "70738a31-a110-5707-bccf-16ad15d84312:2:assistant",
+          "d6508f98-8701-51df-a765-5be1784dc720:0:user",
+          "d6508f98-8701-51df-a765-5be1784dc720:1:assistant"
+        ],
+        "overlap_keys": []
+      }
+    ],
+    "window_transitions": 0
+  },
+  "units": [
+    {
+      "key": "d6508f98-8701-51df-a765-5be1784dc720:1:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n{\n\"result\": \"PASS\",\n\"summary\": \"基于本次提供的已验收事实，四项架构复审均通过；v1.1 契约演进未突破既有权限与模块边界，历史路由未实施亦如实保留为边界。\",\n\"findings\": [\n{\n\"finding_id\": \"F1\",\n\"severity\": \"INFO\",\n\"description\": \"四契约与统一 _defs/findings 口径一致，未提供相互矛盾的证据。\"\n},\n{\n\"finding_id\": \"F2\",\n\"severity\": \"INFO\",\n\"description\": \"v1.0 冻结契约字节级零改，沿用上轮已核验结论。\"\n},\n{\n\"finding_id\": \"F3\",\n\"severity\": \"INFO\",\n\"description\": \"四腿切换 v1.1 不触及 M1/M4，也未突破 DEC-010 用户拍板边界。\"\n},\n{\n\"finding_id\": \"F4\",\n\"severity\": \"INFO\",\n\"description\": \"新报告 v1.1、历史 v1.0 路由尚未实施，作为明确登记的未完成边界，不构成虚报闭环。\"\n}\n]\n}",
+      "text_sha256": "714e22828f716ef238f89625f01f72fa0645674fa01f9ea0e40973bc1a21389c",
+      "size_bytes": 830,
+      "assistant_uuid": "22e20d13-0770-42a8-935b-56c49381033b"
+    }
+  ]
+}

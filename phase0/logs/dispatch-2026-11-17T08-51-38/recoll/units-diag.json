@@ -1,0 +1,38 @@
+[
+  {
+    "key": "fef74a7f-0523-5029-958d-812da9f584a8:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[TRIAL-B-CHARTER|20261117] 新会话迁移自包含简报。承接 DEC-096 你拍板 B（四腿交付后立等级B受控试运行 Gate），前置清理已完成：#3/#4/#7 派单缺陷 PASS(DEC-095)、#1/#2 H2"
+  },
+  {
+    "key": "fef74a7f-0523-5029-958d-812da9f584a8:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\n总裁定：原则认可 B 级受控试运行，八维方案基本通过，但首批任务选择和退出条件需要明确后再冻结 Charter。\n\n1. 八维值：有条件认可。 首批2个真实授权任务、GPT-02+GPT-04两腿只读、零代码写入、零"
+  },
+  {
+    "key": "70738a31-a110-5707-bccf-16ad15d84312:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[TRIAL-B-GATE|20261117] 承接你上轮规划复审（八维有条件认可+指定任务ID+退出闭环，reply 7ba51a53…）与执行条件\"Charter 修改冻结+首批任务ID写入Gate记录后再启动\"。两项已落实，请正式 G"
+  },
+  {
+    "key": "70738a31-a110-5707-bccf-16ad15d84312:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nGate PASS\n\n裁定理由：\n\nCharter v0.2 已冻结，八维约束、三红线及退出闭环满足前置条件。\n\nT1、T2 已明确具体任务 ID、完整被测 commit SHA 和原验收 reply，可追溯。\n\n两项"
+  },
+  {
+    "key": "d6508f98-8701-51df-a765-5be1784dc720:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[T1-GPT02-ARCH|20261117] 受控试运行首批 T1——请你以 GPT-02 架构审核角色，对已交付成果做**只读架构复审**并给真实结论(PASS/REWORK/BLOCKED)。验证四腿真实协作可靠性，非新功能；只据下"
+  },
+  {
+    "key": "d6508f98-8701-51df-a765-5be1784dc720:1:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\n{\n\"result\": \"PASS\",\n\"summary\": \"基于本次提供的已验收事实，四项架构复审均通过；v1.1 契约演进未突破既有权限与模块边界，历史路由未实施亦如实保留为边界。\",\n\"findings\": "
+  }
+]

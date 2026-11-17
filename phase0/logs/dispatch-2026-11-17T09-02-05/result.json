@@ -1,0 +1,197 @@
+{
+  "at": "2026-11-17T09:03:58.400Z",
+  "message_bytes": 1197,
+  "reply": "ChatGPT 说：\n\n{\n\"result\": \"PASS\",\n\"summary\": \"依据补充的原始日志行及版本对照，F1-F4 缺口均已补齐，测试结果、指针不变性、现场采集及负例覆盖符合验收要求。\",\n\"findings\": [\n{\n\"finding_id\": \"F1\",\n\"severity\": \"INFO\",\n\"description\": \"四腿 116/116、dispatch-options 15/15、inbound-reply 24/24 均有对应日志汇总行支持。\"\n},\n{\n\"finding_id\": \"F2\",\n\"severity\": \"INFO\",\n\"description\": \"两个源码版本 URL 均为 6afbc6a9…；现场明确使用 --no-update-pointer，未写盘；5e6545a9…为现场指针内容 SHA，未发现指针漂移。\"\n},\n{\n\"finding_id\": \"F3\",\n\"severity\": \"INFO\",\n\"description\": \"双验 polls=1，COMPLETED，1 assistant unit，41B，支持单次采集成功且无重发。\"\n},\n{\n\"finding_id\": \"F4\",\n\"severity\": \"INFO\",\n\"description\": \"wrong-session、非法 ID、归属校验及键漂移零/多命中、无区间负例均有明确 PASS 或 fail-closed 记录。\"\n},\n{\n\"finding_id\": \"F5\",\n\"severity\": \"INFO\",\n\"description\": \"本次依据提供的原始日志行及版本对照作出判断，不冒称独立下载或直读仓库文件。\"\n}\n]\n}",
+  "user_unit_key": "1dc449ea-2e58-51d2-b5f6-32e8737ffbbf:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "1dc449ea-2e58-51d2-b5f6-32e8737ffbbf:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "6c7942cf-05cd-4654-93ea-fd80216a077d",
+  "stability": {
+    "stable": true,
+    "interval_ms": 3549,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-17T09:03:54.162Z",
+      "read_finished_at": "2026-11-17T09:03:54.697Z",
+      "unit_keys": [
+        "1dc449ea-2e58-51d2-b5f6-32e8737ffbbf:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "1dc449ea-2e58-51d2-b5f6-32e8737ffbbf:2:assistant",
+          "sha256": "a2b5bd9480c94dd1eb6d55cd044445531a4cec50b01cf2093f84b6948e6929d9",
+          "size_bytes": 1126
+        }
+      ],
+      "assistant_uuid": "6c7942cf-05cd-4654-93ea-fd80216a077d",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-17T09:03:57.711Z",
+      "read_finished_at": "2026-11-17T09:03:58.246Z",
+      "unit_keys": [
+        "1dc449ea-2e58-51d2-b5f6-32e8737ffbbf:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "1dc449ea-2e58-51d2-b5f6-32e8737ffbbf:2:assistant",
+          "sha256": "a2b5bd9480c94dd1eb6d55cd044445531a4cec50b01cf2093f84b6948e6929d9",
+          "size_bytes": 1126
+        }
+      ],
+      "assistant_uuid": "6c7942cf-05cd-4654-93ea-fd80216a077d",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "1dc449ea-2e58-51d2-b5f6-32e8737ffbbf:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "4185ad09-ac48-58f3-8629-59e6b7482670:0:user",
+          "4185ad09-ac48-58f3-8629-59e6b7482670:1:assistant",
+          "1dc449ea-2e58-51d2-b5f6-32e8737ffbbf:0:user",
+          "1dc449ea-2e58-51d2-b5f6-32e8737ffbbf:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "9cdb4c4e25f4d581547fb9be1746e7c149402cbc37ec361e627ee2d85830fde4",
+          "781fe65ab15e143eee3f14052f6701ada05ad15b1ba23cf221b42c0054f60e60",
+          "8013fc4d80ed2e836d322b6cccaf03ef3572384d46c6a15b7a1daf4a4fc49ef9",
+          "a2b5bd9480c94dd1eb6d55cd044445531a4cec50b01cf2093f84b6948e6929d9"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "4185ad09-ac48-58f3-8629-59e6b7482670:0:user",
+          "4185ad09-ac48-58f3-8629-59e6b7482670:1:assistant",
+          "1dc449ea-2e58-51d2-b5f6-32e8737ffbbf:0:user",
+          "1dc449ea-2e58-51d2-b5f6-32e8737ffbbf:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "9cdb4c4e25f4d581547fb9be1746e7c149402cbc37ec361e627ee2d85830fde4",
+          "781fe65ab15e143eee3f14052f6701ada05ad15b1ba23cf221b42c0054f60e60",
+          "8013fc4d80ed2e836d322b6cccaf03ef3572384d46c6a15b7a1daf4a4fc49ef9",
+          "a2b5bd9480c94dd1eb6d55cd044445531a4cec50b01cf2093f84b6948e6929d9"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "4185ad09-ac48-58f3-8629-59e6b7482670:0:user",
+          "4185ad09-ac48-58f3-8629-59e6b7482670:1:assistant",
+          "1dc449ea-2e58-51d2-b5f6-32e8737ffbbf:0:user",
+          "1dc449ea-2e58-51d2-b5f6-32e8737ffbbf:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "1dc449ea-2e58-51d2-b5f6-32e8737ffbbf:0:user",
+      "1dc449ea-2e58-51d2-b5f6-32e8737ffbbf:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "4185ad09-ac48-58f3-8629-59e6b7482670:0:user",
+          "4185ad09-ac48-58f3-8629-59e6b7482670:1:assistant",
+          "1dc449ea-2e58-51d2-b5f6-32e8737ffbbf:0:user",
+          "1dc449ea-2e58-51d2-b5f6-32e8737ffbbf:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "4185ad09-ac48-58f3-8629-59e6b7482670:0:user",
+          "4185ad09-ac48-58f3-8629-59e6b7482670:1:assistant",
+          "1dc449ea-2e58-51d2-b5f6-32e8737ffbbf:0:user",
+          "1dc449ea-2e58-51d2-b5f6-32e8737ffbbf:2:assistant"
+        ],
+        "overlap_keys": [
+          "4185ad09-ac48-58f3-8629-59e6b7482670:0:user",
+          "4185ad09-ac48-58f3-8629-59e6b7482670:1:assistant",
+          "1dc449ea-2e58-51d2-b5f6-32e8737ffbbf:0:user",
+          "1dc449ea-2e58-51d2-b5f6-32e8737ffbbf:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "a2b5bd9480c94dd1eb6d55cd044445531a4cec50b01cf2093f84b6948e6929d9",
+  "size_bytes": 1126,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-17T09-02-05\\reply.txt",
+  "reply_readback_sha256": "a2b5bd9480c94dd1eb6d55cd044445531a4cec50b01cf2093f84b6948e6929d9",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-17T09-02-05\\raw-units.json",
+  "raw_units_sha256": "97b68c560ac56c1a3cbcc5861c11f68eb8bb8f3e6fb2ac458c6f85a76c65b8d5",
+  "raw_units_size_bytes": 5260,
+  "raw_units_readback_sha256": "97b68c560ac56c1a3cbcc5861c11f68eb8bb8f3e6fb2ac458c6f85a76c65b8d5",
+  "session_id": "6afc13c5-176c-83e8-a0b4-774c3a884904",
+  "conversation_url": "https://chatgpt.com/c/6afc13c5-176c-83e8-a0b4-774c3a884904",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}

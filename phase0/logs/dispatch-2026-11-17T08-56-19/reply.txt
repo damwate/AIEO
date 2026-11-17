@@ -1,0 +1,33 @@
+ChatGPT 说：
+
+{
+"result": "BLOCKED",
+"summary": "现有材料不足以独立复核五项测试证据，尤其缺少原始归档日志及指针前后 SHA 对照，不能将既有 PASS 直接升级为独立证据 PASS。",
+"findings": [
+{
+"finding_id": "F1",
+"severity": "MAJOR",
+"description": "116/116、15/15、24/24 仅提供汇总数字，未提供原始归档日志，无法核对一致性。"
+},
+{
+"finding_id": "F2",
+"severity": "MAJOR",
+"description": "提供了单个指针 SHA，但缺少前后两侧原始记录，无法独立确认一致。"
+},
+{
+"finding_id": "F3",
+"severity": "MAJOR",
+"description": "现场内联采集成功及无重发缺少可核对的执行记录。"
+},
+{
+"finding_id": "F4",
+"severity": "MAJOR",
+"description": "wrong-session、非法 UUID、标记零命中歧义仅列出覆盖项，缺少负例执行结果。"
+},
+{
+"finding_id": "F5",
+"severity": "INFO",
+"description": "明确披露此前未直读 acceptance/ 原始文件，没有冒称直读；本次结论同样不冒称已核验原始证据。"
+}
+]
+}

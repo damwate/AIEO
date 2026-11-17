@@ -1,0 +1,7 @@
+[T2-GPT04-EVIDENCE|20261117] 受控试运行首批 T2——请你以 GPT-04 测试验收角色，对已交付成果测试证据做**只读复核**并给真实结论(PASS/REWORK/BLOCKED)。验证四腿协作可靠性，非新功能；只据下述事实判断，无需读写仓库或推进状态。
+
+被测：派单可靠性#3/#4/#7(b-20261117-dispatch-reliability-fix，已 PASS)。源码 commit=7f7830b80bdaa6a5c48510c74a621319bf32e419；你上轮验收 reply SHA=a5d099d62e6881c3d625c3bf1c08454f49fe62c098a0eb9bf25fa18cb036a631(当时明示"依据验收记录作结论、未直读 acceptance/ 原始文件")。
+
+复核点：①四腿116/116、dispatch-options 15/15、inbound-reply 24/24 与归档日志一致否；②#4 指针前后 SHA 5e6545a9c9903b755f1c200b316141ad929846c4458b99a9ab42edcbce61699e 一致否；③#3 现场内联采集成功无重发否；④负例覆盖 wrong-session/非法UUID/标记零命中歧义否；⑤有无证据失真/冒称直读。
+
+严格 JSON：{"result":"PASS|REWORK|BLOCKED","summary":"<一句话>","findings":[{"finding_id":"F1","severity":"BLOCKER|CRITICAL|MAJOR|MINOR|INFO","description":"..."}]}。只给结论+发现，不写仓库不发状态。≤900B。

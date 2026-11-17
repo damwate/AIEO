@@ -1,0 +1,108 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-17T08:58:01.262Z",
+  "user_unit_key": "4185ad09-ac48-58f3-8629-59e6b7482670:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "4185ad09-ac48-58f3-8629-59e6b7482670:1:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "d91be1ac-4b1f-4bc3-b296-79de906cc2c8",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "4185ad09-ac48-58f3-8629-59e6b7482670:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "d6508f98-8701-51df-a765-5be1784dc720:0:user",
+          "d6508f98-8701-51df-a765-5be1784dc720:1:assistant",
+          "4185ad09-ac48-58f3-8629-59e6b7482670:0:user",
+          "4185ad09-ac48-58f3-8629-59e6b7482670:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "0ef90a0c99036fcdfa5d879e2cce8d69106d3b816cb9cd55674a534b91ff2a3c",
+          "714e22828f716ef238f89625f01f72fa0645674fa01f9ea0e40973bc1a21389c",
+          "9cdb4c4e25f4d581547fb9be1746e7c149402cbc37ec361e627ee2d85830fde4",
+          "781fe65ab15e143eee3f14052f6701ada05ad15b1ba23cf221b42c0054f60e60"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "d6508f98-8701-51df-a765-5be1784dc720:0:user",
+          "d6508f98-8701-51df-a765-5be1784dc720:1:assistant",
+          "4185ad09-ac48-58f3-8629-59e6b7482670:0:user",
+          "4185ad09-ac48-58f3-8629-59e6b7482670:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "0ef90a0c99036fcdfa5d879e2cce8d69106d3b816cb9cd55674a534b91ff2a3c",
+          "714e22828f716ef238f89625f01f72fa0645674fa01f9ea0e40973bc1a21389c",
+          "9cdb4c4e25f4d581547fb9be1746e7c149402cbc37ec361e627ee2d85830fde4",
+          "781fe65ab15e143eee3f14052f6701ada05ad15b1ba23cf221b42c0054f60e60"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "d6508f98-8701-51df-a765-5be1784dc720:0:user",
+          "d6508f98-8701-51df-a765-5be1784dc720:1:assistant",
+          "4185ad09-ac48-58f3-8629-59e6b7482670:0:user",
+          "4185ad09-ac48-58f3-8629-59e6b7482670:1:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "4185ad09-ac48-58f3-8629-59e6b7482670:0:user",
+      "4185ad09-ac48-58f3-8629-59e6b7482670:1:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "d6508f98-8701-51df-a765-5be1784dc720:0:user",
+          "d6508f98-8701-51df-a765-5be1784dc720:1:assistant",
+          "4185ad09-ac48-58f3-8629-59e6b7482670:0:user",
+          "4185ad09-ac48-58f3-8629-59e6b7482670:1:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "d6508f98-8701-51df-a765-5be1784dc720:0:user",
+          "d6508f98-8701-51df-a765-5be1784dc720:1:assistant",
+          "4185ad09-ac48-58f3-8629-59e6b7482670:0:user",
+          "4185ad09-ac48-58f3-8629-59e6b7482670:1:assistant"
+        ],
+        "overlap_keys": [
+          "d6508f98-8701-51df-a765-5be1784dc720:0:user",
+          "d6508f98-8701-51df-a765-5be1784dc720:1:assistant",
+          "4185ad09-ac48-58f3-8629-59e6b7482670:0:user",
+          "4185ad09-ac48-58f3-8629-59e6b7482670:1:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "4185ad09-ac48-58f3-8629-59e6b7482670:1:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n{\n\"result\": \"BLOCKED\",\n\"summary\": \"现有材料不足以独立复核五项测试证据，尤其缺少原始归档日志及指针前后 SHA 对照，不能将既有 PASS 直接升级为独立证据 PASS。\",\n\"findings\": [\n{\n\"finding_id\": \"F1\",\n\"severity\": \"MAJOR\",\n\"description\": \"116/116、15/15、24/24 仅提供汇总数字，未提供原始归档日志，无法核对一致性。\"\n},\n{\n\"finding_id\": \"F2\",\n\"severity\": \"MAJOR\",\n\"description\": \"提供了单个指针 SHA，但缺少前后两侧原始记录，无法独立确认一致。\"\n},\n{\n\"finding_id\": \"F3\",\n\"severity\": \"MAJOR\",\n\"description\": \"现场内联采集成功及无重发缺少可核对的执行记录。\"\n},\n{\n\"finding_id\": \"F4\",\n\"severity\": \"MAJOR\",\n\"description\": \"wrong-session、非法 UUID、标记零命中歧义仅列出覆盖项，缺少负例执行结果。\"\n},\n{\n\"finding_id\": \"F5\",\n\"severity\": \"INFO\",\n\"description\": \"明确披露此前未直读 acceptance/ 原始文件，没有冒称直读；本次结论同样不冒称已核验原始证据。\"\n}\n]\n}",
+      "text_sha256": "781fe65ab15e143eee3f14052f6701ada05ad15b1ba23cf221b42c0054f60e60",
+      "size_bytes": 1046,
+      "assistant_uuid": "d91be1ac-4b1f-4bc3-b296-79de906cc2c8"
+    }
+  ]
+}

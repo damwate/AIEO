@@ -1,0 +1,10 @@
+[TRIAL-B-REVIEW|20261117] 受控试运行(等级B)首批阶段复盘，请按 Charter §5(a) 三分法裁定下一步（扩围/暂停整改/终止）。Charter=docs/phase1/TRIAL-RUN-B-CHARTER-DRAFT.md v0.2。
+
+首批2任务(会话6afc13c5,全只读、零写入、零M1推进)：
+T1 GPT-02架构复审H2契约(245108c3)→PASS，reply 714e2282…（recoll七查全过）。
+T2 GPT-04测试证据复核(7f7830b8)→首轮BLOCKED(证据供给不足非实现缺陷)→§5(b)暂停整改补原始日志行+指针版本对照→复核PASS，reply a2b5bd94…。
+
+成功标准：五件套齐备✅；零P0✅(T2首轮F1-F4为MAJOR证据供给,复核全INFO)；零越权✅；零证据失真✅(未冒称直读,采集异常禁重发+recoll)；零角色串位✅(--no-update-pointer指针不变)。未触发§3即停。
+会话4条user消息达DEC-084阈值,评估暂不迁移(已进最后验收阶段例外①)。
+
+裁定三选一给理由：A扩围(需明确数量/角色/写权限另行授权)；B暂停整改(指定缺陷+复验条件)；C终止(留证+回退)。906/写操作/DEC-010红线不在本Gate授权内。严格JSON：{"result":"A|B|C","summary":"...","conditions":["..."]}≤700B。

@@ -1,0 +1,108 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-17T09:06:39.964Z",
+  "user_unit_key": "000dd175-a552-5f8c-805a-4561d2970a4c:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "000dd175-a552-5f8c-805a-4561d2970a4c:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "684909f7-bdb7-4deb-bc4f-021806b6605e",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "000dd175-a552-5f8c-805a-4561d2970a4c:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "1dc449ea-2e58-51d2-b5f6-32e8737ffbbf:0:user",
+          "1dc449ea-2e58-51d2-b5f6-32e8737ffbbf:2:assistant",
+          "000dd175-a552-5f8c-805a-4561d2970a4c:0:user",
+          "000dd175-a552-5f8c-805a-4561d2970a4c:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "8013fc4d80ed2e836d322b6cccaf03ef3572384d46c6a15b7a1daf4a4fc49ef9",
+          "a2b5bd9480c94dd1eb6d55cd044445531a4cec50b01cf2093f84b6948e6929d9",
+          "a43d436060bf3b0572473ca5826fe96eb442ad89f00ad5850131a64dac859c79",
+          "ce7e099a3e9c0e5a0f79b93dade08a5d855a747368b04d698907c9e345bab34d"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "1dc449ea-2e58-51d2-b5f6-32e8737ffbbf:0:user",
+          "1dc449ea-2e58-51d2-b5f6-32e8737ffbbf:2:assistant",
+          "000dd175-a552-5f8c-805a-4561d2970a4c:0:user",
+          "000dd175-a552-5f8c-805a-4561d2970a4c:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "8013fc4d80ed2e836d322b6cccaf03ef3572384d46c6a15b7a1daf4a4fc49ef9",
+          "a2b5bd9480c94dd1eb6d55cd044445531a4cec50b01cf2093f84b6948e6929d9",
+          "a43d436060bf3b0572473ca5826fe96eb442ad89f00ad5850131a64dac859c79",
+          "ce7e099a3e9c0e5a0f79b93dade08a5d855a747368b04d698907c9e345bab34d"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "1dc449ea-2e58-51d2-b5f6-32e8737ffbbf:0:user",
+          "1dc449ea-2e58-51d2-b5f6-32e8737ffbbf:2:assistant",
+          "000dd175-a552-5f8c-805a-4561d2970a4c:0:user",
+          "000dd175-a552-5f8c-805a-4561d2970a4c:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "000dd175-a552-5f8c-805a-4561d2970a4c:0:user",
+      "000dd175-a552-5f8c-805a-4561d2970a4c:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "1dc449ea-2e58-51d2-b5f6-32e8737ffbbf:0:user",
+          "1dc449ea-2e58-51d2-b5f6-32e8737ffbbf:2:assistant",
+          "000dd175-a552-5f8c-805a-4561d2970a4c:0:user",
+          "000dd175-a552-5f8c-805a-4561d2970a4c:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "1dc449ea-2e58-51d2-b5f6-32e8737ffbbf:0:user",
+          "1dc449ea-2e58-51d2-b5f6-32e8737ffbbf:2:assistant",
+          "000dd175-a552-5f8c-805a-4561d2970a4c:0:user",
+          "000dd175-a552-5f8c-805a-4561d2970a4c:2:assistant"
+        ],
+        "overlap_keys": [
+          "1dc449ea-2e58-51d2-b5f6-32e8737ffbbf:0:user",
+          "1dc449ea-2e58-51d2-b5f6-32e8737ffbbf:2:assistant",
+          "000dd175-a552-5f8c-805a-4561d2970a4c:0:user",
+          "000dd175-a552-5f8c-805a-4561d2970a4c:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "000dd175-a552-5f8c-805a-4561d2970a4c:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n{\n\"result\": \"A\",\n\"summary\": \"首批等级B受控试运行通过。T1、T2均最终PASS，T2证据缺口经暂停整改和独立复验闭环；五件套齐备，未触发停止条件，同意有限扩围。\",\n\"conditions\": [\n\"下一批最多2项真实授权任务。\",\n\"角色仍限GPT-02架构审核、GPT-04测试验收，只读。\",\n\"零代码写入、零M1状态推进，不授予M4写权限。\",\n\"开工前登记具体任务ID、被测commit及验收目标。\",\n\"继续执行五件套、五类失败即停及P1暂停整改独立验收。\",\n\"下一批完成后再次阶段复盘，不自动滚动扩围。\",\n\"906、任何写操作及DEC-010红线均不在本次授权内，须另行拍板。\"\n]\n}",
+      "text_sha256": "ce7e099a3e9c0e5a0f79b93dade08a5d855a747368b04d698907c9e345bab34d",
+      "size_bytes": 715,
+      "assistant_uuid": "684909f7-bdb7-4deb-bc4f-021806b6605e"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+[T2-RECHECK|20261117] 承接你上轮 BLOCKED（F1-F4 缺原始日志/指针前后记录）。已补齐，请 GPT-04 只读复核给 PASS/REWORK/BLOCKED。repo damwate/AIEO，被测 7f7830b8/证据 f14c7d1 均 origin/main。
+
+F1 原始日志 basic/tasks/b-20261117-dispatch-reliability-fix/acceptance/local-test-runs/：leg-suite-full.log 末行"116 passed in 180.48s"；dispatch-options-final.log L17"SUMMARY total=15 passed=15 failed=0"；inbound-reply-final.log L26"SUMMARY total=24 passed=24 failed=0"。
+
+F2 指针：phase0/logs/dispatch-2026-11-17T06-08-30/run.log L12 原文"会话 URL 已取得且归属校验 PASS，但按 --no-update-pointer 跳过 reviewer 指针写盘"；gpt-reviewer-session.json 在 cb0683c 与 7f7830b 两版 URL 均 6afbc6a9… 未变（S4 现场未写盘）；你上轮所见 5e6545a9… 即该现场指针内容 SHA。
+
+F3 同 run.log L8"发送双验通过(polls=1)"、L10"COMPLETED，1 assistant unit，41B"，无重发。
+
+F4 dispatch-options-final.log L6/10/15 归属/wrong-session/ID 负例 PASS；inbound-reply-final.log L5 键漂移零/多处命中 fail-closed、L20 无区间不得持久化 PASS。
+
+据原始行判定，严格 JSON 同前轮，≤900B。
