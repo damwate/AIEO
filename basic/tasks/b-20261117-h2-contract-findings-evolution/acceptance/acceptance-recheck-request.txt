@@ -1,0 +1,5 @@
+[H2-ACCEPT-RECHECK|20261117] 承接你 08:24/08:25 两次"commit not found"拒判——那是真实流程缺口：我提交后漏 push，你读时远端确无该 commit。现已按 check-push.mjs 推送，请重新拉取核验后给 #1/#2 独立验收结论。
+
+被测 commit=245108c379335453abe250131908cfe747bb9d3a，GitHub API 现返回：sha=245108c3…、node_id=C_kwDOVq6F5toAKDI0NTEwOGMzNzkzMzU0NTNhYmUyNTAxMzE5MDhjZmU3NDdiYjlkM2E、author date=2026-11-17T08:21:57Z，origin/main 已 ahead=0。请用该完整 SHA 重新读取 damwate/AIEO 提交树核验：contracts/v1.1 四契约+_defs、三腿 SCHEMA/CONTRACT_VERSION 切 v1.1、GPT-03 R4_ISSUES_VALID、v1.0 零 diff、blocker-semantics.md、测试用例。
+
+验收标准同前（DEC-097 #1=A/#2=A、规划复审三点、GPT-03 落点C），测试：v1.1契约6/6、v1.0契约141/141、四腿118/118、工程审计25/25、lint0、v1.0零diff。两项 PASS 请给"#1 PASS #2 PASS 可交付"，FAIL 列点。≤1000B。
