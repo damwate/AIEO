@@ -1,0 +1,108 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-17T09:38:08.586Z",
+  "user_unit_key": "4728a94f-f8af-53cf-84b2-837ba680bdc6:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "4728a94f-f8af-53cf-84b2-837ba680bdc6:1:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "b8e49836-af97-4b4c-915e-4eda1ef42ece",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "4728a94f-f8af-53cf-84b2-837ba680bdc6:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "1ba45899-1e34-50c9-8a4f-5315c51c591c:0:user",
+          "1ba45899-1e34-50c9-8a4f-5315c51c591c:1:assistant",
+          "4728a94f-f8af-53cf-84b2-837ba680bdc6:0:user",
+          "4728a94f-f8af-53cf-84b2-837ba680bdc6:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "f9f2b54c4d02277321f88e37b71b9a578c506a7fdaa0f8a971cff0b38dad0aee",
+          "1785618ba5435eb9c2044322fcd3875b8118a9da5cdade572727e952eaae5596",
+          "8aca72ed8383e91c3584a39a939582bbccf79e52577e53db2b864bc6a70ec86c",
+          "7747c5a561b851fc7b7794a5c795a257bc68a1df25353c9c53112c91990034bc"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "1ba45899-1e34-50c9-8a4f-5315c51c591c:0:user",
+          "1ba45899-1e34-50c9-8a4f-5315c51c591c:1:assistant",
+          "4728a94f-f8af-53cf-84b2-837ba680bdc6:0:user",
+          "4728a94f-f8af-53cf-84b2-837ba680bdc6:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "f9f2b54c4d02277321f88e37b71b9a578c506a7fdaa0f8a971cff0b38dad0aee",
+          "1785618ba5435eb9c2044322fcd3875b8118a9da5cdade572727e952eaae5596",
+          "8aca72ed8383e91c3584a39a939582bbccf79e52577e53db2b864bc6a70ec86c",
+          "7747c5a561b851fc7b7794a5c795a257bc68a1df25353c9c53112c91990034bc"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "1ba45899-1e34-50c9-8a4f-5315c51c591c:0:user",
+          "1ba45899-1e34-50c9-8a4f-5315c51c591c:1:assistant",
+          "4728a94f-f8af-53cf-84b2-837ba680bdc6:0:user",
+          "4728a94f-f8af-53cf-84b2-837ba680bdc6:1:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "4728a94f-f8af-53cf-84b2-837ba680bdc6:0:user",
+      "4728a94f-f8af-53cf-84b2-837ba680bdc6:1:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "1ba45899-1e34-50c9-8a4f-5315c51c591c:0:user",
+          "1ba45899-1e34-50c9-8a4f-5315c51c591c:1:assistant",
+          "4728a94f-f8af-53cf-84b2-837ba680bdc6:0:user",
+          "4728a94f-f8af-53cf-84b2-837ba680bdc6:1:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "1ba45899-1e34-50c9-8a4f-5315c51c591c:0:user",
+          "1ba45899-1e34-50c9-8a4f-5315c51c591c:1:assistant",
+          "4728a94f-f8af-53cf-84b2-837ba680bdc6:0:user",
+          "4728a94f-f8af-53cf-84b2-837ba680bdc6:1:assistant"
+        ],
+        "overlap_keys": [
+          "1ba45899-1e34-50c9-8a4f-5315c51c591c:0:user",
+          "1ba45899-1e34-50c9-8a4f-5315c51c591c:1:assistant",
+          "4728a94f-f8af-53cf-84b2-837ba680bdc6:0:user",
+          "4728a94f-f8af-53cf-84b2-837ba680bdc6:1:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "4728a94f-f8af-53cf-84b2-837ba680bdc6:1:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n{\"result\":\"BLOCKED\",\"summary\":\"当前仅收到交付方对证据内容的摘要及原文摘录，未提供可独立读取的 acceptance/ 文件、完整 delivery.md 或完整 commit SHA。不能据此宣称已直读 GitHub、验证测试日志真实性、复算 C1 链或核实整改证据。现有事实未显示明确造假，但独立证据核验尚未成立。维持只读，不推进状态。\",\"findings\":[{\"finding_id\":\"T3-BLK-01\",\"severity\":\"BLK\",\"description\":\"缺少可独立读取的 acceptance/ 原始材料，89/89 测试结果及 verify-1~5 无法交叉核验。\"},{\"finding_id\":\"T3-BLK-02\",\"severity\":\"BLK\",\"description\":\"C1 线性链、10 commit 绑定及 R4 无后代尚未独立验证。\"},{\"finding_id\":\"T3-BLK-03\",\"severity\":\"MAJ\",\"description\":\"问题16整改、零mock账本、loss=NONE及真实REWORK对账均仅有摘要陈述，尚不能排除证据失真或冒称直读。\"}]}",
+      "text_sha256": "7747c5a561b851fc7b7794a5c795a257bc68a1df25353c9c53112c91990034bc",
+      "size_bytes": 917,
+      "assistant_uuid": "b8e49836-af97-4b4c-915e-4eda1ef42ece"
+    }
+  ]
+}

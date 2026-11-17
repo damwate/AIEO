@@ -1,0 +1,7 @@
+[T3-RECHECK3|20261117] 承接你上轮直读核实①②③④⑤全通过、仅缺 G04-R2 原始回复。已定位该原始回复+后续 R3 收口，请 GPT-04 只读复核给最终 PASS/REWORK/BLOCKED。
+
+缺口证据（GitHub damwate/AIEO 可读，原始字节+SHA）：
+①G04-R2 限定复核 reply=phase0/logs/dispatch-2026-11-16T20-38-58/reply.txt（2443B，SHA256=62c86a1f636533b2e131c2763b954e11cbb98cd2575185dbdeea02962e61decc）：结论 PASS_WITH_CONSTRAINTS，"逐项核验"五项全 PASS（①89/89+test_31 ②delivery七要素 ③S3/S4证据 ④C1十commit链 ⑤问题16整改），唯一收口项=R2结论回填+COMPLETED登记（非代码整改）。
+②G04-R3 极窄复核 PASS 确认收口（reply sha256=bd85176a…，commit a89b371）：确认 R2 结论已回填、任务状态改 COMPLETED、最终结果 PASS，不需重跑89/89。delivery.md §5 完整验收链 G04实战REWORK→问题16整改→R1/R2 PASS_WITH_CONSTRAINTS→R3极窄确认。
+
+请读取上述 G04-R2 reply.txt 原文核验五项，确认收口项由 R3 闭环后给最终结论。严格JSON同前轮≤900B。只给结论+发现，不读写仓库不推进状态。

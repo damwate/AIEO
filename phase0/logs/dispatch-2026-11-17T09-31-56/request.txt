@@ -1,0 +1,7 @@
+[TRIAL-B-BATCH2|20261117] 会话迁移接棒+下批开工登记。承DEC-100首批：T1 GPT-02架构复审PASS(714e2282…)、T2 GPT-04证据复核BLOCKED→§5(b)整改→PASS(a2b5bd94…)；阶段复盘裁A有限扩围(reply ce7e099a…)：下批≤2真实授权任务/两腿GPT-02+04只读/零写入零M1/开工前登记任务ID+被测commit+验收目标/完成后再复盘/906+写操作+DEC-010不在授权内。
+
+据条件登记两项候选（均已授权、已PASS、只读）：
+T3 GPT-04证据复核：b-20261117-gpt04-test-acceptance-leg，被测19f7eea8e7bb3c5f6cf692cbe9fd72bd8f1ec2e0；目标=三腿合跑89/89+本腿31/31、C1绑定10commit链、问题16三项整改(G04-R1/R2 PASS)、契约演进待办已由H2#1(DEC-098)解决；材料delivery.md+acceptance/。
+T4 GPT-02架构复审：b-20261116-gpt02-arch-review-leg，被测77318daba69eb9065ccf36f0b02d23f74e7bb005；目标=双矩阵58/58、C1绑定链、问题14四P1整改、G02-R2 PASS、零mock账本14条；材料同上。
+
+请确认候选符合裁定条件、目标恰当（可提调整），声明只读边界照旧。JSON：{"result":"CONFIRM|ADJUST","summary":"...","adjustments":[]}≤600B。本轮仅登记，不开跑。

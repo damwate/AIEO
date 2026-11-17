@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-17T09:48:15.699Z",
+  "user_unit_key": "9e281ebb-e177-58cd-bac4-d61cdc75634a:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "9e281ebb-e177-58cd-bac4-d61cdc75634a:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "1b229756-717f-468f-9d9d-7baf9d4b632c",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "9e281ebb-e177-58cd-bac4-d61cdc75634a:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "9e281ebb-e177-58cd-bac4-d61cdc75634a:0:user",
+          "9e281ebb-e177-58cd-bac4-d61cdc75634a:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "e532e67434dbfda83bcb084edc7affa6cecc2c89f46b7afef956055f67fb0fbb",
+          "f9b1d31c9478fcd44ee035e8184fe2ec1533fd6910396af0e4ae244e32917497"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "9e281ebb-e177-58cd-bac4-d61cdc75634a:0:user",
+          "9e281ebb-e177-58cd-bac4-d61cdc75634a:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "e532e67434dbfda83bcb084edc7affa6cecc2c89f46b7afef956055f67fb0fbb",
+          "f9b1d31c9478fcd44ee035e8184fe2ec1533fd6910396af0e4ae244e32917497"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "9e281ebb-e177-58cd-bac4-d61cdc75634a:0:user",
+          "9e281ebb-e177-58cd-bac4-d61cdc75634a:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "9e281ebb-e177-58cd-bac4-d61cdc75634a:0:user",
+      "9e281ebb-e177-58cd-bac4-d61cdc75634a:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "9e281ebb-e177-58cd-bac4-d61cdc75634a:0:user",
+          "9e281ebb-e177-58cd-bac4-d61cdc75634a:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "9e281ebb-e177-58cd-bac4-d61cdc75634a:0:user",
+          "9e281ebb-e177-58cd-bac4-d61cdc75634a:2:assistant"
+        ],
+        "overlap_keys": [
+          "9e281ebb-e177-58cd-bac4-d61cdc75634a:0:user",
+          "9e281ebb-e177-58cd-bac4-d61cdc75634a:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "9e281ebb-e177-58cd-bac4-d61cdc75634a:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n{\"result\":\"BLOCKED\",\"summary\":\"已直读指定 commit 77318daba69eb9065ccf36f0b02d23f74e7bb005。确认四项 P1 整改代码及 test_17~20 已进入提交，但验收证据与请求陈述存在实质差异，不能签发 PASS。\",\"findings\":[{\"finding_id\":\"G02-T4-01\",\"severity\":\"P1\",\"description\":\"test-run.txt 原文为 Ran 54 tests in 105.833s、EXIT=0，并非所称 58 tests。\"},{\"finding_id\":\"G02-T4-02\",\"severity\":\"P1\",\"description\":\"指定 commit 下 acceptance/binding-report.json 和 live-ledger.jsonl 均未找到，无法核验绑定链、零 mock 14 行实战及真实 REWORK 对账。\"},{\"finding_id\":\"G02-T4-03\",\"severity\":\"P1\",\"description\":\"delivery.md 原文仍标 IN_PROGRESS，实施、实战、ST-05 最终取证均待填，与 COMPLETED/PASS 声明不一致。\"},{\"finding_id\":\"G02-T4-04\",\"severity\":\"P1\",\"description\":\"G02-R2 reply 原始文件及 SHA 7aa1f845... 未能独立核验，七查全过不能采信为已证实事实。\"}]}",
+      "text_sha256": "f9b1d31c9478fcd44ee035e8184fe2ec1533fd6910396af0e4ae244e32917497",
+      "size_bytes": 975,
+      "assistant_uuid": "1b229756-717f-468f-9d9d-7baf9d4b632c"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+[T4-RECHECK|20261117] 你上轮4项P1指认全部属实——是我登记错误：前轮被测commit误填77318da…(问题14源码对象，当时54 tests/delivery IN_PROGRESS/证据未落盘)，真正交付终态=769fcec1f632db47aeef4dab0532cdd011468d95。请按正确commit重新只读复核给结论(PASS/REWORK/BLOCKED)。只据事实，不读写仓库不推进。
+
+被测 b-20261116-gpt02-arch-review-leg(COMPLETED/PASS)，交付终态commit=769fcec1f632db47aeef4dab0532cdd011468d95，C1源码被测=77318da…、G02-R1 REJECT→R2 PASS。材料 GitHub damwate/AIEO：该任务 delivery.md+acceptance/。
+
+请直读769fcec快照复核(原文行)：
+①test-run.txt尾"Ran 58 tests in 100.751s/OK EXIT=0"(58/58)。
+②binding-report.json verdict=PASS(5b2cc461…→77318da…)、live-ledger.jsonl 14行均在该commit。
+③问题14四P1整改G02-R2 reply PASS(sha=7aa1f845…、dispatch-17-25-55/recoll七查全过)。
+④delivery.md §5收口COMPLETED/最终PASS、G02-R2验收链。
+⑤findings结构化待办已由H2#1(DEC-098 v1.1)解决；判断证据失真/冒称直读。
+
+严格JSON{"result":"PASS|REWORK|BLOCKED","summary":"...","findings":[{finding_id,severity,description}]}≤900B。

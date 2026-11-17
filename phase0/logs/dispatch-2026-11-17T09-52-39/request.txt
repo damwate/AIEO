@@ -1,0 +1,10 @@
+[TRIAL-B-REVIEW2|20261117] 受控试运行(等级B)批二阶段复盘，请按 Charter §5(a) 三分法裁定下一步（扩围/暂停整改/终止）。承DEC-101：批二T3/T4均完成。
+
+批二2任务(裁定A条件：≤2任务/两腿只读/零写入零M1)：
+T3 GPT-04测试证据复核→BLOCKED→BLOCKED→PASS，reply 6f9dd703…，三轮直读收敛(摘要→补SHA→补G04-R2原始reply)。
+T4 GPT-02架构复审→BLOCKED→PASS，reply 7d99c0d6…；首轮我误填被测commit(77318da中间态)，ChatGPT 4项P1指认属实，纠正为交付终态769fcec后直读PASS。
+
+成功标准：2任务五件套齐备✅；最终全PASS、findings全INFO✅(BLOCKED均证据供给/登记错非实现缺陷)；零越权✅；零证据失真✅(逐轮直读、首轮错误request保留不覆盖)；零角色串位✅(--no-update-pointer)。未触发§3即停。
+会话6afc227d承载2条user消息,复盘第3条未达DEC-084阈值。
+
+裁定三选一给理由：A扩围(需明确数量/角色/写权限另行授权)；B暂停整改(指定缺陷+复验条件)；C终止(留证+回退)。906/写操作/DEC-010红线不在授权内。JSON{"result":"A|B|C","summary":"...","conditions":[]}≤700B。

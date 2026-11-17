@@ -1,0 +1,12 @@
+[T3-GPT04-EVIDENCE|20261117] 受控试运行(等级B)批二 T3——以 GPT-04 测试验收角色对已交付测试验收腿证据只读复核给结论(PASS/REWORK/BLOCKED)。只据下述事实，不读写仓库不推进状态。
+
+被测 b-20261117-gpt04-test-acceptance-leg(COMPLETED/PASS)，实现commit 19f7eea8…(完整见delivery)，C1链769fcec1…→184b7458…，验收G04-R1/R2 PASS_WITH_CONSTRAINTS→PASS。材料 GitHub damwate/AIEO: 该任务 acceptance/。
+
+复核点(原文行)：
+①test-run-combined-89.txt尾"Ran 89 tests in 102.145s/OK"(含本腿31/31)；verify-1~5各"Ran 88 tests...OK"。
+②binding-report.json verdict=PASS、R2线性链10commit、R4无后代；19f7eea8在链内。
+③问题16整改G04-R1/R2 PASS_WITH_CONSTRAINTS(ca89d0cf…、dispatch-2026-11-16T20-26-14七查全过)，delivery §4对账。
+④零mock ledger.jsonl 16行、normalization-audit.json loss=NONE、真实GPT-04 REWORK对账属实。
+⑤findings结构化待办已由H2#1(DEC-098 v1.1)解决；判断证据失真/冒称直读。
+
+JSON{"result":"PASS|REWORK|BLOCKED","summary":"...","findings":[{finding_id,severity:BLK|CRIT|MAJ|MIN|INFO,description}]}≤900B。

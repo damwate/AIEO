@@ -1,0 +1,124 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-17T09:41:21.097Z",
+  "user_unit_key": "fbe42c52-46bf-5d81-92b3-09d3e064bfca:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "fbe42c52-46bf-5d81-92b3-09d3e064bfca:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "00b0bc8f-a105-4068-b48a-0bea97c4c63e",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "fbe42c52-46bf-5d81-92b3-09d3e064bfca:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "1ba45899-1e34-50c9-8a4f-5315c51c591c:0:user",
+          "1ba45899-1e34-50c9-8a4f-5315c51c591c:1:assistant",
+          "4728a94f-f8af-53cf-84b2-837ba680bdc6:0:user",
+          "4728a94f-f8af-53cf-84b2-837ba680bdc6:1:assistant",
+          "fbe42c52-46bf-5d81-92b3-09d3e064bfca:0:user",
+          "fbe42c52-46bf-5d81-92b3-09d3e064bfca:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "f9f2b54c4d02277321f88e37b71b9a578c506a7fdaa0f8a971cff0b38dad0aee",
+          "1785618ba5435eb9c2044322fcd3875b8118a9da5cdade572727e952eaae5596",
+          "8aca72ed8383e91c3584a39a939582bbccf79e52577e53db2b864bc6a70ec86c",
+          "7747c5a561b851fc7b7794a5c795a257bc68a1df25353c9c53112c91990034bc",
+          "cf683e4aaef7dcee1fbb11cf9cd6a5ce6df1155d90ddb7dd2caaef0794f06ee9",
+          "f8914f3addce44c5dd6922d70f75d5ce4f3ee4d0d7d32883be68a9c6e602fc2e"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "1ba45899-1e34-50c9-8a4f-5315c51c591c:0:user",
+          "1ba45899-1e34-50c9-8a4f-5315c51c591c:1:assistant",
+          "4728a94f-f8af-53cf-84b2-837ba680bdc6:0:user",
+          "4728a94f-f8af-53cf-84b2-837ba680bdc6:1:assistant",
+          "fbe42c52-46bf-5d81-92b3-09d3e064bfca:0:user",
+          "fbe42c52-46bf-5d81-92b3-09d3e064bfca:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "f9f2b54c4d02277321f88e37b71b9a578c506a7fdaa0f8a971cff0b38dad0aee",
+          "1785618ba5435eb9c2044322fcd3875b8118a9da5cdade572727e952eaae5596",
+          "8aca72ed8383e91c3584a39a939582bbccf79e52577e53db2b864bc6a70ec86c",
+          "7747c5a561b851fc7b7794a5c795a257bc68a1df25353c9c53112c91990034bc",
+          "cf683e4aaef7dcee1fbb11cf9cd6a5ce6df1155d90ddb7dd2caaef0794f06ee9",
+          "f8914f3addce44c5dd6922d70f75d5ce4f3ee4d0d7d32883be68a9c6e602fc2e"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "1ba45899-1e34-50c9-8a4f-5315c51c591c:0:user",
+          "1ba45899-1e34-50c9-8a4f-5315c51c591c:1:assistant",
+          "4728a94f-f8af-53cf-84b2-837ba680bdc6:0:user",
+          "4728a94f-f8af-53cf-84b2-837ba680bdc6:1:assistant",
+          "fbe42c52-46bf-5d81-92b3-09d3e064bfca:0:user",
+          "fbe42c52-46bf-5d81-92b3-09d3e064bfca:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "fbe42c52-46bf-5d81-92b3-09d3e064bfca:0:user",
+      "fbe42c52-46bf-5d81-92b3-09d3e064bfca:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "1ba45899-1e34-50c9-8a4f-5315c51c591c:0:user",
+          "1ba45899-1e34-50c9-8a4f-5315c51c591c:1:assistant",
+          "4728a94f-f8af-53cf-84b2-837ba680bdc6:0:user",
+          "4728a94f-f8af-53cf-84b2-837ba680bdc6:1:assistant",
+          "fbe42c52-46bf-5d81-92b3-09d3e064bfca:0:user",
+          "fbe42c52-46bf-5d81-92b3-09d3e064bfca:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "1ba45899-1e34-50c9-8a4f-5315c51c591c:0:user",
+          "1ba45899-1e34-50c9-8a4f-5315c51c591c:1:assistant",
+          "4728a94f-f8af-53cf-84b2-837ba680bdc6:0:user",
+          "4728a94f-f8af-53cf-84b2-837ba680bdc6:1:assistant",
+          "fbe42c52-46bf-5d81-92b3-09d3e064bfca:0:user",
+          "fbe42c52-46bf-5d81-92b3-09d3e064bfca:2:assistant"
+        ],
+        "overlap_keys": [
+          "1ba45899-1e34-50c9-8a4f-5315c51c591c:0:user",
+          "1ba45899-1e34-50c9-8a4f-5315c51c591c:1:assistant",
+          "4728a94f-f8af-53cf-84b2-837ba680bdc6:0:user",
+          "4728a94f-f8af-53cf-84b2-837ba680bdc6:1:assistant",
+          "fbe42c52-46bf-5d81-92b3-09d3e064bfca:0:user",
+          "fbe42c52-46bf-5d81-92b3-09d3e064bfca:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "fbe42c52-46bf-5d81-92b3-09d3e064bfca:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n{\"result\":\"BLOCKED\",\"summary\":\"已直接读取 delivery.md、89/89合跑日志、verify-1~5、binding-report.json、live-run完整账本及规整审计，并按完整SHA读取19f7eea8源码与测试。①89/89、五轮88/88均有对应日志；②C1十commit线性链包含19f7eea8，R4 PASS；③问题16的P1-1容差实现及test_31确定性回归源码属实；④16行账本、真实GPT-04 REWORK、loss=NONE相互吻合；⑤未发现已读取材料存在明显伪造或冒称直读。但G04-R2原始复核回复及七项核验记录未能独立读取，仅delivery.md记载其PASS_WITH_CONSTRAINTS。因此不能无保留签发PASS，也没有证据支持直接判定REWORK。\",\"findings\":[{\"finding_id\":\"T3-BLK-01\",\"severity\":\"BLK\",\"description\":\"缺少G04-R2原始回复及七项核验记录的可独立读取证据，R2结论尚未完成独立复核。\"},{\"finding_id\":\"T3-INFO-01\",\"severity\":\"INFO\",\"description\":\"其余四组核心证据已直接读取，未发现明显失真；19f7eea8实现、89/89测试及C1绑定链均有原始材料支持。\"}]}",
+      "text_sha256": "f8914f3addce44c5dd6922d70f75d5ce4f3ee4d0d7d32883be68a9c6e602fc2e",
+      "size_bytes": 1079,
+      "assistant_uuid": "00b0bc8f-a105-4068-b48a-0bea97c4c63e"
+    }
+  ]
+}

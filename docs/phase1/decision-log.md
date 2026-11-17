@@ -838,3 +838,26 @@
 - **口径纪律：** ChatGPT 两轮 reply（T2 复核 F5、阶段复盘 caveat）均明示未独立下载/直读仓库文件，本登记不表述为"云端直读强验收"；T2 首轮 BLOCKED 为证据供给缺陷非实现缺陷，不改写为返工。
 - **下一节点：** 按裁定 A 条件④，先从用户已明确授权的真实 AIEO 任务清单中筛定下一批 ≤2 项（候选需满足真实授权/证据可追溯/只读可完成），登记任务 ID + 被测 commit + 验收目标后开工；完成后再阶段复盘，不自动滚动。906/写操作/DEC-010 仍不在授权内。
 - **关联：** DEC-099（Gate）、DEC-096（八维三红线）、DEC-084（会话阈值）、DEC-089/031/020（授权）、L-018（采集 fail-closed + 主动迁移）。
+
+### DEC-101 下一批开工登记 + 审查会话主动迁移（6afc13c5→6afc1f46）（2026-11-17）
+
+- **节点依据：** DEC-100（首批完成 + ChatGPT 裁 A 有限扩围，reply ce7e099a…）条件④要求开工前登记任务 ID + 被测 commit + 验收目标。授权链：用户"细节由 ChatGPT 拍板"+ DEC-020/089/031。
+- **会话迁移（DEC-084/L-018 第 6 条）：** 会话 6afc13c5 已承载 5 条 user 消息（Gate/T1/T2首轮/T2复核/阶段复盘）；阶段复盘"暂不迁移"理由（已进最后验收阶段）在首批收尾后失效，恰逢每增 2 条重评点→主动迁移。指针备份 gpt-reviewer-session.pre-batch2.json；`--new-session` 自包含简报首派即活，迁至 6afc1f46-d5c4-83ec-8990-2eae4a453e99（归属校验 PASS）；后续本批各轮在新会话继续。
+- **ChatGPT 确认（reply SHA-256=`1785618ba5435eb9c2044322fcd3875b8118a9da5cdade572727e952eaae5596`，350B，dispatch-2026-11-17T09-31-56）：** `{"result":"CONFIRM","adjustments":[]}`——T3/T4 均符合 A 裁定条件、任务 ID + 被测 commit + 验收目标明确、登记有效；本轮仅登记不开跑；继续执行两腿 GPT-04+GPT-02 只读复核，零写入零 M1 推进，完成后统一复盘；906/写操作/DEC-010 不在授权内。caveat：依提交事实裁定未独立读仓库。
+- **下一批登记（待实际只读复核）：**
+  - **T3 GPT-04 测试证据只读复核：** 任务 `b-20261117-gpt04-test-acceptance-leg`，被测 commit `19f7eea8e7bb3c5f6cf692cbe9fd72bd8f1ec2e0`；验收目标=三腿合跑 89/89 + 本腿 31/31 日志一致、C1 绑定 10 commit 线性链、问题16 三项整改（G04-R1/R2 PASS）、契约演进 findings 结构化待办已由 H2#1（DEC-098 v1.1）解决；材料 delivery.md + acceptance/（binding-report.json / test-run / live-run/ledger.jsonl）。
+  - **T4 GPT-02 架构只读复审：** 任务 `b-20261116-gpt02-arch-review-leg`，被测 commit `77318daba69eb9065ccf36f0b02d23f74e7bb005`；验收目标=双矩阵 58/58、C1 绑定线性链（baseline 5b2cc461→target 77318da）、问题14 四 P1 整改、G02-R2 PASS（7aa1f845）、零 mock 实战账本 14 条；材料 delivery.md + acceptance/（live-ledger.jsonl / binding-report.json）。
+- **下一节点：** 在会话 6afc1f46 执行 T3/T4 实际只读复核派单（真实 GPT-04/GPT-02 角色）→ 各五件套留证 → 阶段复盘 → ChatGPT 复审决定扩围/暂停/终止。任一采集异常按 L-018 禁重发+recoll；试跑任务 `--no-update-pointer` 保护指针。
+- **关联：** DEC-100（Gate 首批）、DEC-099（Gate）、DEC-084/L-018（迁移）、DEC-089/031/020（授权）。
+
+### DEC-102 受控试运行（等级 B）第二批完成 + 阶段复盘 ChatGPT 再裁 A（有限扩围）（2026-11-17）
+
+- **节点依据：** DEC-100（批一 + 裁 A）、DEC-101（会话迁移 + 开工登记）→ 批二 T3/T4 只读复核 → 阶段复盘 → 本裁定。授权链：用户"细节 ChatGPT 拍板"+ DEC-020/089/031。
+- **会话迁移：** 6afc1f46→6afc227d（09-45-45 迁移首派，T4 新任务阶段边界，L-018 第 6 条，指针备份 pre-t4.json）；此前 6afc13c5→6afc1f46（DEC-101，备份 pre-batch2.json）。
+- **T3（GPT-04 测试证据只读复核）：** 被测 b-20261117-gpt04-test-acceptance-leg，实现 commit `19f7eea8e7bb3c5f6cf692cbe9fd72bd8f1ec2e0`、C1 终态 `184b7458e89d37b8a786603a3732a7a423721c69`；BLOCKED（`7747c5a5…90034bc`，摘要缺 SHA）→BLOCKED（`f8914f3a…2fc2e`，直读后仅缺 G04-R2 原始回复）→PASS（`6f9dd70348cc7ad9a996459cd9f809441b01027a0eb8a995e688fe2bed1baddc`，补 G04-R2/R3 原始回复）。F1 口径纠正：G04-R2 原文③为"部分通过"非"五项全 PASS"，收口由 R3 完成——如实登记。
+- **T4（GPT-02 架构只读复审）：** 被测 b-20261116-gpt02-arch-review-leg，C1 源码被测对象 `77318daba69eb9065ccf36f0b02d23f74e7bb005`、交付终态 `769fcec1f632db47aeef4dab0532cdd011468d95`；BLOCKED（`f9b1d31c…17497`）→PASS（`7d99c0d654bc6b9005a6246230ad10ce99470496c7801c67cba5b697b46b9ec2`）。**关键教训：前轮误把 77318da（源码被测对象）当交付终态登记，ChatGPT 直读该 commit 后 4 项 P1 指认（54 tests 非 58 / delivery IN_PROGRESS / 证据未落盘 / G02-R2 SHA 无法核验）全部属实；纠正为 769fcec 后直读 PASS。** 首轮错误 request.txt 如实保留不覆盖（L-018 定位成功≠归属正确 / C1 被测 commit 精确绑定）。
+- **成功标准（Charter §5）全达：** 2 任务五件套齐备、最终全 PASS findings 全 INFO、零 P0、零越权写入、零证据失真（逐轮直读，登记错误如实纠正）、零角色串位（--no-update-pointer 保护指针）；未触发 §3 五类即停。BLOCKED 均证据供给/登记错误非实现缺陷，未触 L-019 止损线（每轮实质收敛）。
+- **阶段复盘报告：** basic/tasks/trial-run-b/PHASE-REVIEW-BATCH2.md。会话 6afc227d 承载 2 条 user 消息，阶段复盘为第 3 条，未达 DEC-084 阈值。
+- **ChatGPT 三分法裁定 = A 有限扩围（reply SHA-256=`112b58f327555273c8b3083729c074658749fd308d37eafabc35776d0b293bea`，624B，dispatch-2026-11-17T09-52-39）：** 条件——①下一批最多 2 项，须逐项登记任务 ID + 被测 commit + 验收目标；②角色限 GPT-02/GPT-04 只读，零写入零 M1，不授予 M4；③906/任何写操作/DEC-010 仍不在授权内，新增角色或写权限须另行明确授权；④完成后再次阶段复盘，不自动滚动扩围。caveat=依提交事实裁定未独立读仓库。
+- **下一节点：** 按条件①，从用户已授权真实任务中筛定下一批 ≤2 项，逐项登记任务 ID + 被测 commit（**须区分源码被测对象与交付终态，避免 T4 式错误**）+ 验收目标，经 ChatGPT 确认后开工；完成后再阶段复盘。906/写操作/DEC-010 不在授权内。
+- **关联：** DEC-099/100/101（Gate/批一/登记）、DEC-084/L-018（迁移/归属/C1绑定）、L-019（止损评估）、DEC-089/031/020（授权）。

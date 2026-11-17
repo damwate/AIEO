@@ -1,0 +1,12 @@
+[TRIAL-B-T4|20261117] 会话迁移+受控试运行(等级B)批二 T4——以 GPT-02 架构审核角色对已交付架构审核腿证据只读复核给结论(PASS/REWORK/BLOCKED)。承DEC-101：T3已PASS，本轮属裁定A两腿只读之一。只据事实，不读写仓库不推进状态。
+
+被测 b-20261116-gpt02-arch-review-leg(COMPLETED/PASS)，被测=C1终态commit=77318daba69eb9065ccf36f0b02d23f74e7bb005(问题14四P1整改)，原验收G02-R1 REJECT→R2 PASS。材料 GitHub damwate/AIEO 可读：该任务 delivery.md 与 acceptance/。
+
+复核点(原文行)：
+①test-run.txt尾"Ran 58 tests in 100.751s/OK EXIT=0"(58/58)。
+②binding-report.json verdict=PASS、baseline5b2cc461…→target77318da…、R2链+R4无后代。
+③问题14四P1整改G02-R2 reply PASS(sha=7aa1f845…、dispatch-2026-11-16T17-25-55/recoll七查全过)，三项整改通过。
+④零mock实战live-ledger.jsonl 14行+report.json、真实GPT-02 REWORK对账属实。
+⑤findings结构化待办已由H2#1(DEC-098 v1.1)解决；判断证据失真/冒称直读。
+
+读上述文件后给结论，严格JSON{"result":"PASS|REWORK|BLOCKED","summary":"...","findings":[{finding_id,severity,description}]}≤900B。

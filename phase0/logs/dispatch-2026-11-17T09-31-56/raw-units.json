@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-17T09:34:20.164Z",
+  "user_unit_key": "1ba45899-1e34-50c9-8a4f-5315c51c591c:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "1ba45899-1e34-50c9-8a4f-5315c51c591c:1:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "e49ac6f1-0630-4c10-8eb1-7e86d26b7cb3",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "1ba45899-1e34-50c9-8a4f-5315c51c591c:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "1ba45899-1e34-50c9-8a4f-5315c51c591c:0:user",
+          "1ba45899-1e34-50c9-8a4f-5315c51c591c:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "f9f2b54c4d02277321f88e37b71b9a578c506a7fdaa0f8a971cff0b38dad0aee",
+          "1785618ba5435eb9c2044322fcd3875b8118a9da5cdade572727e952eaae5596"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "1ba45899-1e34-50c9-8a4f-5315c51c591c:0:user",
+          "1ba45899-1e34-50c9-8a4f-5315c51c591c:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "f9f2b54c4d02277321f88e37b71b9a578c506a7fdaa0f8a971cff0b38dad0aee",
+          "1785618ba5435eb9c2044322fcd3875b8118a9da5cdade572727e952eaae5596"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "1ba45899-1e34-50c9-8a4f-5315c51c591c:0:user",
+          "1ba45899-1e34-50c9-8a4f-5315c51c591c:1:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "1ba45899-1e34-50c9-8a4f-5315c51c591c:0:user",
+      "1ba45899-1e34-50c9-8a4f-5315c51c591c:1:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "1ba45899-1e34-50c9-8a4f-5315c51c591c:0:user",
+          "1ba45899-1e34-50c9-8a4f-5315c51c591c:1:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "1ba45899-1e34-50c9-8a4f-5315c51c591c:0:user",
+          "1ba45899-1e34-50c9-8a4f-5315c51c591c:1:assistant"
+        ],
+        "overlap_keys": [
+          "1ba45899-1e34-50c9-8a4f-5315c51c591c:0:user",
+          "1ba45899-1e34-50c9-8a4f-5315c51c591c:1:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "1ba45899-1e34-50c9-8a4f-5315c51c591c:1:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n{\"result\":\"CONFIRM\",\"summary\":\"T3、T4均符合A有限扩围裁定条件，任务ID、被测commit及验收目标明确，登记有效。本轮仅登记，不开跑。继续执行两腿GPT-04+GPT-02只读复核，零写入、零M1推进；完成后统一复盘。906、写操作及DEC-010均不在授权范围内。\",\"adjustments\":[]}",
+      "text_sha256": "1785618ba5435eb9c2044322fcd3875b8118a9da5cdade572727e952eaae5596",
+      "size_bytes": 350,
+      "assistant_uuid": "e49ac6f1-0630-4c10-8eb1-7e86d26b7cb3"
+    }
+  ]
+}

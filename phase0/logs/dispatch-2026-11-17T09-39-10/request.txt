@@ -1,0 +1,12 @@
+[T3-RECHECK|20261117] 承接你上轮 BLOCKED（仅摘要缺完整SHA与可读材料）。已补完整40位被测SHA与GitHub可读路径，请 GPT-04 只读复核给 PASS/REWORK/BLOCKED。只据事实不读写仓库不推进状态。
+
+被测 b-20261117-gpt04-test-acceptance-leg(COMPLETED/PASS)，实现commit=19f7eea8e7bb3c5f6cf692cbe9fd72bd8f1ec2e0。材料现 GitHub damwate/AIEO 可读：basic/tasks/b-20261117-gpt04-test-acceptance-leg/（acceptance/ 下 binding-report.json、test-run-combined-89.txt、verify-1~5.log、live-run/；delivery.md）。
+
+复核点(原文行)：
+①test-run-combined-89.txt尾"Ran 89 tests in 102.145s/OK"含本腿31/31；verify-1~5各"Ran 88 tests...OK"。
+②binding-report.json verdict=PASS、R2十commit链、R4无后代，被测commit在链内(首尾769fcec1…/184b7458…)。
+③问题16整改G04-R1/R2 PASS_WITH_CONSTRAINTS(ca89d0cf…、dispatch-20-26-14七查全过)，delivery §4对账。
+④live-run/ledger.jsonl 16行、normalization-audit.json loss=NONE、真实GPT-04 REWORK对账属实。
+⑤findings结构化待办已由H2#1(DEC-098 v1.1)解决；判断证据失真/冒称直读否。
+
+读上述文件后给结论，严格JSON同前轮≤900B。
