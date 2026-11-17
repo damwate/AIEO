@@ -1,0 +1,19 @@
+ChatGPT 说：
+
+{
+"result": "REWORK",
+"points": [
+{"n":1,"v":"PASS"},
+{"n":2,"v":"PASS_WITH_CONSTRAINTS"},
+{"n":3,"v":"REWORK"},
+{"n":4,"v":"PASS_WITH_CONSTRAINTS"},
+{"n":5,"v":"PASS_WITH_CONSTRAINTS"}
+],
+"conditions": [
+"②明确队列与绑定表跨文件原子一致性、fsync目录项、崩溃半写恢复及attempts计数边界；SUSPENDED恢复不得绕过在途消息核验。",
+"③证据目录非空不足以证明完整，须定义五件套必需文件清单、SHA校验及基线commit一致性；防止合法路径下跨任务误绑定。",
+"④全局熔断须明确所有任务暂停标志的原子发布及派单前强制检查，避免熔断竞态放出新任务。",
+"⑤tag message中的回归日志SHA须对应可复核归档原文；tag对象SHA与被测commit SHA分别记录。",
+"修订后再做P0复审；P1仍须另行批准，M4保持封闭。"
+]
+}

@@ -1,0 +1,3 @@
+[M2-PLAN-R2|20261118] v0.2已提交请复审(承接R1五点)。修订commit=b6c0c87019bb09ad83fcbc8f85860bb52dccb111(可直读)。
+逐点:②生命周期状态机+转换表(SUSPENDED仅人工解除)/队列fsync单写损坏STOP/重启不自动续跑/重试attempts≤2且即停禁自动重试/通道闸锁序session_lock→指针写,唯一持有者scheduler,stale回收。③绑定表一会话一任务冲突fail-closed/COMPLETED前置证据校验/跨任务污染防线(禁共享写+SHA绑定)/暂停标志单写不中断在途轮。④触发矩阵:权限越界与数据污染=全局熔断,证据缺失/状态不一致/单任务重复失败=单任务,≥2任务无进展升级全局;熔断仅人工解除。⑤§7不可变SHA(tag message含被测commit 40位+回归日志SHA)/tag不移动不删/父提交回滚登记/M1-M4回归exit=0入库为前置。condition①:M1并发改"待验证不预设",验证前并行不作用于M1写路径。
+请复审五点,JSON{"result":"PASS|REWORK","points":[{"n":1,"v":""},{"n":2,"v":""},{"n":3,"v":""},{"n":4,"v":""},{"n":5,"v":""}],"conditions":[]}≤700B
