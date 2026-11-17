@@ -1,0 +1,181 @@
+{
+  "at": "2026-11-17T10:08:12.793Z",
+  "message_bytes": 1199,
+  "reply": "ChatGPT 说：\n\n方向拍板：A — 继续批三，实行有限扩围。\n\n理由：批二 T3/T4 均 PASS，说明前两批的受控流程已有可靠性证据；但 GPT-05 工程审计腿尚未经过独立复核，现在直接收尾会留下真实腿覆盖缺口。\n\n批三不应变成无限扩围。我的建议是：T5 作为最后一项补充验证，完成后统一复盘，决定是否正式结束受控试运行。\n\n{\n\"direction\": \"A\",\n\"confirm_T5\": true,\n\"summary\": \"批三有限扩围获准。已核验GPT-05交付COMPLETED/PASS、113/113测试、G05-DR2三项整改PASS及零mock实战证据。T5复核对象严格锁定294f6ad2e6dbbbfd47b501bcba350bd4ca42cc23；交付终态锁定6690ed7c1307fe4f1018e9bf07d76c9f1672f6ec。\",\n\"conditions\": [\n\"只读、零写入、零M1推进；仅T5单任务。\",\n\"C1基线58da769；绑定报告指向9c3c3a19代码整改提交，须与294f6ad文档回填提交区分核验。\",\n\"复核113/113、问题17三项整改、G05-DR2 PASS链及零mock实战。\",\n\"T5完成后停止扩围，进行最终阶段复盘。\",\n\"不授权906、任何写操作或DEC-010事项。\"\n]\n}",
+  "user_unit_key": "a32f68f0-541b-530d-97e1-d5996c9ba964:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "a32f68f0-541b-530d-97e1-d5996c9ba964:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "744cd839-7f42-4dbc-b43d-1b60e4b503c1",
+  "stability": {
+    "stable": true,
+    "interval_ms": 3599,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-17T10:08:08.491Z",
+      "read_finished_at": "2026-11-17T10:08:09.081Z",
+      "unit_keys": [
+        "a32f68f0-541b-530d-97e1-d5996c9ba964:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "a32f68f0-541b-530d-97e1-d5996c9ba964:2:assistant",
+          "sha256": "d324c1efdd9d5f85631350e5263d25fb3363988dff865064bd6df3c40465c236",
+          "size_bytes": 1113
+        }
+      ],
+      "assistant_uuid": "744cd839-7f42-4dbc-b43d-1b60e4b503c1",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-17T10:08:12.090Z",
+      "read_finished_at": "2026-11-17T10:08:12.647Z",
+      "unit_keys": [
+        "a32f68f0-541b-530d-97e1-d5996c9ba964:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "a32f68f0-541b-530d-97e1-d5996c9ba964:2:assistant",
+          "sha256": "d324c1efdd9d5f85631350e5263d25fb3363988dff865064bd6df3c40465c236",
+          "size_bytes": 1113
+        }
+      ],
+      "assistant_uuid": "744cd839-7f42-4dbc-b43d-1b60e4b503c1",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "a32f68f0-541b-530d-97e1-d5996c9ba964:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "a32f68f0-541b-530d-97e1-d5996c9ba964:0:user",
+          "a32f68f0-541b-530d-97e1-d5996c9ba964:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "f4568eb9ff9b9e9f00282b6e5ca4116cd7be41f8b24404832458c16a6ba75be6",
+          "d324c1efdd9d5f85631350e5263d25fb3363988dff865064bd6df3c40465c236"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "a32f68f0-541b-530d-97e1-d5996c9ba964:0:user",
+          "a32f68f0-541b-530d-97e1-d5996c9ba964:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "f4568eb9ff9b9e9f00282b6e5ca4116cd7be41f8b24404832458c16a6ba75be6",
+          "d324c1efdd9d5f85631350e5263d25fb3363988dff865064bd6df3c40465c236"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "a32f68f0-541b-530d-97e1-d5996c9ba964:0:user",
+          "a32f68f0-541b-530d-97e1-d5996c9ba964:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "a32f68f0-541b-530d-97e1-d5996c9ba964:0:user",
+      "a32f68f0-541b-530d-97e1-d5996c9ba964:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "a32f68f0-541b-530d-97e1-d5996c9ba964:0:user",
+          "a32f68f0-541b-530d-97e1-d5996c9ba964:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "a32f68f0-541b-530d-97e1-d5996c9ba964:0:user",
+          "a32f68f0-541b-530d-97e1-d5996c9ba964:2:assistant"
+        ],
+        "overlap_keys": [
+          "a32f68f0-541b-530d-97e1-d5996c9ba964:0:user",
+          "a32f68f0-541b-530d-97e1-d5996c9ba964:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "d324c1efdd9d5f85631350e5263d25fb3363988dff865064bd6df3c40465c236",
+  "size_bytes": 1113,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-17T10-04-24\\reply.txt",
+  "reply_readback_sha256": "d324c1efdd9d5f85631350e5263d25fb3363988dff865064bd6df3c40465c236",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-17T10-04-24\\raw-units.json",
+  "raw_units_sha256": "bfc8bfe4aa0ff602d528e5ccb639279d5985cb23d5b9857029e382160740405b",
+  "raw_units_size_bytes": 4160,
+  "raw_units_readback_sha256": "bfc8bfe4aa0ff602d528e5ccb639279d5985cb23d5b9857029e382160740405b",
+  "session_id": "6afc26db-f3e8-83ee-82ce-885ab47a324c",
+  "conversation_url": "https://chatgpt.com/c/6afc26db-f3e8-83ee-82ce-885ab47a324c",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}

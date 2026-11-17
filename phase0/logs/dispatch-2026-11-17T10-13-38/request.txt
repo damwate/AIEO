@@ -1,0 +1,8 @@
+[TRIAL-B-T5-RECHECK|20261117] 承接你上轮 REWORK 的 P1——属实，R4"9c3c3a19无后代"仅绑定生成时成立，终态294f6ad2确为其后代(仅1提交)。补时点澄清证据，请 GPT-02 重新裁定 PASS/REWORK/BLOCKED。只据事实，不读写仓库不推进。
+
+时点澄清(GitHub damwate/AIEO)：
+①9c3c3a19…→294f6ad2… git diff --stat=2文件2行(binding-report.json+steps.md)，纯文档SHA回填零代码变更；294f6ad2 commit message原文"SHA回填+绑定报告重生成(target=9c3c3a19…,baseline58da769…R2/R4 PASS@生成时)——G05-DR2被测对象"，R4时点口径有原始依据。
+②binding-report.json R4原文"待验收commit无后代(=当前HEAD)，最终申报对象"=生成时快照非终态事实；源码被测9c3c3a19与交付终态294f6ad2已区分，C1链(58da769…→9c3c3a19…7commit)不变。
+③113/113、问题17三项整改、G05-DR2 PASS链、零mock实战上轮已确认无变化。
+
+两P2(结构化findings人工规整loss=NONE、批次级BLOCKER映射语义)属已披露契约遗留不在本次修复范围。请重裁，JSON{"result":"PASS|REWORK|BLOCKED","summary":"...","findings":[{finding_id,severity,description}]}≤800B

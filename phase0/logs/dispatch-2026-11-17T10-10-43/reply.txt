@@ -1,0 +1,23 @@
+ChatGPT 说：
+
+{
+"result": "REWORK",
+"summary": "113/113测试、零mock实战及问题17整改链有证据支持。但当前交付终态294f6ad2下，binding-report仍将9c3c3a19声明为无后代的最终HEAD，未证明该R4断言在最终交付版本下仍成立。源码被测与交付终态区分正确，但C1最终绑定证据存在时点及口径缺口。建议补充历史绑定时点说明及终态复核证据后再PASS。",
+"findings": [
+{
+"finding_id": "T5-01",
+"severity": "P1",
+"description": "binding-report.json的R4声明target=9c3c3a19无后代，但最终交付294f6ad2是其后代。需要明确R4仅证明绑定生成时的HEAD状态，不能直接表述为终态无后代。"
+},
+{
+"finding_id": "T5-02",
+"severity": "P2",
+"description": "真实GPT-05返回结构化findings，冻结契约要求string[]，通过人工规整达到loss=NONE。格式保真有记录，但正式结构化契约演进仍是遗留事项。"
+},
+{
+"finding_id": "T5-03",
+"severity": "P2",
+"description": "真实审计为BLOCKED、矩阵为6 ISSUE+1 PASS，批次级BLOCKER与矩阵映射语义仍待契约演进。该限制已披露，不应误报为已解决。"
+}
+]
+}

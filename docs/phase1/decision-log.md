@@ -868,3 +868,14 @@
 - **推送受阻：** `node toolkit/check-push.mjs --push --yes` 两轮失败——直连 github.com:443 不可达；代理 2497（注册表 preferred，TCP 监听正常但上游 timeout）；6822（git config，TCP 未监听）；netstat 其他端口（2179/3389/5040 connection reset / CONNECT aborted）。上一提交 7bbe79d 曾于 09:20 左右经 2497 成功推送，本次为代理客户端上游链路暂时降级（09:54 派单后）。
 - **纪律处置（L-014/L-016）：** 不改 .git/config、不手工猜端口绕行、不罢工；网络恢复后重试 check-push；本登记确保中断交接时状态可查。
 - **下一节点（网络恢复后）：** ①先推 HEAD 0e8d0be；②按 DEC-102 条件①筛第三批 ≤2 项（候选 GPT-05 工程审计腿 b-20261117-gpt05-engineering-audit-leg，复核对象 294f6ad2…/交付终态 6690ed7…，须区分二者避免 T4 式错误），逐项登记任务 ID + 被测 commit + 验收目标 → ChatGPT 确认后开工；③906/写操作/DEC-010 仍不在授权内。
+
+### DEC-104 受控试运行（等级 B）正式结项：三批 5 任务全部完成 + ChatGPT 最终裁定 A（2026-11-17）
+
+- **节点依据：** DEC-099（Charter v0.2）→ DEC-100/101/102（批一/批二裁 A + 登记）→ DEC-103（推送受阻后已恢复）→ 批三会商 d324c1ef（方向 A，T5 最后补充验证）→ 最终复盘 → 本结项裁定。授权链：用户"细节 ChatGPT 拍板"+ DEC-020/089/031。
+- **会话迁移链：** 6afc13c5→6afc1f46（DEC-101）→6afc227d（DEC-102）→6afc26db（批三，备份 pre-batch3.json）；当前达 DEC-084 阈值评估暂不迁移（最后收尾例外①，ChatGPT 结项条件③确认）。
+- **T5（GPT-02 架构只读复审 GPT-05 工程审计腿）：** 被测三 SHA 严格区分——C1 基线 `58da7697976a2465aa7fc641837af97f1190a68a`、源码被测对象 `9c3c3a19c3156d557cb2fcb7dadc7ea301757fcc`、交付终态 `294f6ad2e6dbbbfd47b501bcba350bd4ca42cc23`（后者为前者后代，仅 2 文件 2 行纯文档回填）。REWORK（`b92c46b30ddc928e508f9d70e06709b4c59c8d108313d0755c7c6e3e0301d53a`，P1=R4"9c3c3a19 无后代"仅生成时成立）→PASS（`d56ad6aa6d3332d90d3ed5afe8139a53486ed591e458b321c5a13c58f1c24521`，时点澄清：R4 为生成时 HEAD 快照非终态断言）。两 P2（结构化 findings 人工规整 loss=NONE、批次级 BLOCKER 映射语义）为已披露契约遗留，不阻断。
+- **三批五任务总览：** T1 GPT-02 架构复审 PASS（714e2282…）、T2 GPT-04 证据复核 BLOCKED→PASS（a2b5bd94…）、T3 GPT-04 证据复核 BLOCKED×2→PASS（6f9dd703…）、T4 GPT-02 复审 BLOCKED→PASS（7d99c0d6…）、T5 GPT-02 复审 REWORK→PASS（d56ad6aa…）。最终复盘报告 basic/tasks/trial-run-b/FINAL-REVIEW.md。
+- **成功标准（Charter §5）全达：** 5 任务五件套齐备、最终全 PASS findings 全 INFO、零 P0、零越权写入、零证据失真（4 类证据问题——摘要/R2 原始回复/被测 commit/R4 时点——均如实暴露并纠正，错误请求保留不覆盖）、零角色串位（--no-update-pointer）、未触发 §3 五类即停。所有 BLOCKED/REWORK 均为证据供给/登记/时点口径问题，非实现缺陷，未触 L-019 止损线。
+- **ChatGPT 最终裁定 = A 正式结束（reply SHA-256=`6351870e874b7ab9a4a3acac4e6a33cc95c001bc953edce782c617fd78d0e36b`，704B，dispatch-2026-11-17T10-16-46）：** 条件——①结项仅确认本轮等级 B 结果，不构成续扩授权；②906/任何写操作/DEC-010 仍未授权，后续须另行审批；③按 DEC-084 阈值暂不迁移，最后收尾例外仅限既有授权范围。caveat=不据此推定系统整体或未测试能力已获认证。
+- **结项口径（如实登记，不夸大）：** 本结项仅确认"等级 B 受控试运行"这一流程验证目标达成（三批 5 只读复审任务可靠性达标），不推定系统整体或其他未测试能力已获认证；不构成任何续扩、写操作或 906 顺延授权。
+- **关联：** DEC-099/100/101/102/103（Gate/批一/批二/推送）、DEC-084/L-018（迁移/归属/C1 精确绑定/R4 时点）、L-019（止损评估）、DEC-089/031/020（授权）。

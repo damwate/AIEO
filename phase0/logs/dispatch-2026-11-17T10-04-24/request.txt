@@ -1,0 +1,7 @@
+[TRIAL-B-BATCH3|20261117] 会话迁移接棒+批三开工登记会商。承DEC-102：批二T3/T4均PASS，阶段复盘 ChatGPT 再裁A有限扩围(reply 112b58f3…)。请先拍板方向三选一，再确认登记。
+
+问1方向：A继续批三(还有未复核真实腿)；B试运行收尾(两批4任务已验证可靠性,出总结报告)；C调整(请指示)。
+
+若A，登记T5 GPT-02架构复审 GPT-05工程审计腿 b-20261117-gpt05-engineering-audit-leg(COMPLETED/PASS，第四腿未复核，符合裁定A只读)：复核对象(源码被测)=294f6ad2e6dbbbfd47b501bcba350bd4ca42cc23(问题17修复SHA回填)、交付终态=6690ed7c1307fe4f1018e9bf07d76c9f1672f6ec(含全部证据)，二者严格区分(避免T4式错误)；C1 baseline=58da769…；证据 test-run-combined-113.txt尾"Ran 113 tests in 120.478s/OK"、G05-DR REJECT→DR2 PASS(reply 7c55c2e6…)、binding-report.json；材料 GitHub damwate/AIEO 该任务 delivery.md+acceptance/。验收目标=113/113、C1绑定、问题17三项整改、G05-DR2 PASS链、零mock实战；只读零写入零M1。
+
+JSON{"direction":"A|B|C","confirm_T5":true|false,"summary":"...","conditions":[]}≤700B。906/写操作/DEC-010不在授权内。

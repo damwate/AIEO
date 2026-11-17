@@ -1,0 +1,12 @@
+[TRIAL-B-T5|20261117] 受控试运行(等级B)批三 T5——以 GPT-02 架构审核角色对 GPT-05 工程审计腿只读复核给结论(PASS/REWORK/BLOCKED)。承批三会商方向A(d324c1ef…)。只据事实不读写仓库不推进。
+
+被测 b-20261117-gpt05-engineering-audit-leg(COMPLETED/PASS)。三SHA区分：基线58da7697976a2465aa7fc641837af97f1190a68a；源码被测=9c3c3a19c3156d557cb2fcb7dadc7ea301757fcc；交付终态=294f6ad2e6dbbbfd47b501bcba350bd4ca42cc23。材料 GitHub damwate/AIEO：该任务 delivery.md+acceptance/。
+
+复核点(原文行)：
+①test-run-combined-113.txt尾"Ran 113 tests in 120.478s/OK"。
+②binding-report.json verdict=PASS、58da769…→9c3c3a19…、R4无后代。
+③问题17三项整改G05-DR REJECT→DR2 PASS(reply 7c55c2e6…、dispatch-23-28-37/recoll七查全过)。
+④零mock实战ledger.jsonl 14行+normalization-audit.json loss=NONE、真实GPT-05 BLOCKED结论。
+⑤A4三步登记+AUDIT_SUBMITTED批次级信封(task_id=null)、事件白名单空集；判断失真/冒称直读。
+
+读上述文件后给结论，严格JSON{"result":"PASS|REWORK|BLOCKED","summary":"...","findings":[{finding_id,severity,description}]}≤800B
