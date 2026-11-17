@@ -1,0 +1,108 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-17T08:50:02.728Z",
+  "user_unit_key": "70738a31-a110-5707-bccf-16ad15d84312:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "70738a31-a110-5707-bccf-16ad15d84312:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "45e9ff02-5321-4ab8-a902-b1e42700326f",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "70738a31-a110-5707-bccf-16ad15d84312:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fef74a7f-0523-5029-958d-812da9f584a8:0:user",
+          "fef74a7f-0523-5029-958d-812da9f584a8:2:assistant",
+          "70738a31-a110-5707-bccf-16ad15d84312:0:user",
+          "70738a31-a110-5707-bccf-16ad15d84312:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "6c79317501a0775f6d843613b11f6d69fa798faa1ccebdb173a31b7c25dd9ad5",
+          "7ba51a533edcd77b86e6a83500027847a3140264d101a671fca20c446095789b",
+          "85ad5cac98b749afb123ebbd421803a585548acf90502028f4209b9496762013",
+          "cc1315098599cefa129fc81fca08b69bff5b99a88d5d208355c1c4afa5995ddf"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fef74a7f-0523-5029-958d-812da9f584a8:0:user",
+          "fef74a7f-0523-5029-958d-812da9f584a8:2:assistant",
+          "70738a31-a110-5707-bccf-16ad15d84312:0:user",
+          "70738a31-a110-5707-bccf-16ad15d84312:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "6c79317501a0775f6d843613b11f6d69fa798faa1ccebdb173a31b7c25dd9ad5",
+          "7ba51a533edcd77b86e6a83500027847a3140264d101a671fca20c446095789b",
+          "85ad5cac98b749afb123ebbd421803a585548acf90502028f4209b9496762013",
+          "cc1315098599cefa129fc81fca08b69bff5b99a88d5d208355c1c4afa5995ddf"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fef74a7f-0523-5029-958d-812da9f584a8:0:user",
+          "fef74a7f-0523-5029-958d-812da9f584a8:2:assistant",
+          "70738a31-a110-5707-bccf-16ad15d84312:0:user",
+          "70738a31-a110-5707-bccf-16ad15d84312:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "70738a31-a110-5707-bccf-16ad15d84312:0:user",
+      "70738a31-a110-5707-bccf-16ad15d84312:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fef74a7f-0523-5029-958d-812da9f584a8:0:user",
+          "fef74a7f-0523-5029-958d-812da9f584a8:2:assistant",
+          "70738a31-a110-5707-bccf-16ad15d84312:0:user",
+          "70738a31-a110-5707-bccf-16ad15d84312:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fef74a7f-0523-5029-958d-812da9f584a8:0:user",
+          "fef74a7f-0523-5029-958d-812da9f584a8:2:assistant",
+          "70738a31-a110-5707-bccf-16ad15d84312:0:user",
+          "70738a31-a110-5707-bccf-16ad15d84312:2:assistant"
+        ],
+        "overlap_keys": [
+          "fef74a7f-0523-5029-958d-812da9f584a8:0:user",
+          "fef74a7f-0523-5029-958d-812da9f584a8:2:assistant",
+          "70738a31-a110-5707-bccf-16ad15d84312:0:user",
+          "70738a31-a110-5707-bccf-16ad15d84312:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "70738a31-a110-5707-bccf-16ad15d84312:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nGate PASS\n\n裁定理由：\n\nCharter v0.2 已冻结，八维约束、三红线及退出闭环满足前置条件。\n\nT1、T2 已明确具体任务 ID、完整被测 commit SHA 和原验收 reply，可追溯。\n\n两项均限定为已交付成果的独立只读复审，符合等级 B 试运行边界。\n\n授权范围严格限定：\n\n仅 T1、T2 两项试跑。\n\n仅 GPT-02、GPT-04 两腿只读。\n\n零代码写入、零 M1 状态推进。\n\n完成后提交五件套并进行阶段复盘。\n\n906 顺延、写操作、扩围均不在本次授权内。\n\nDEC-010 用户拍板红线不变。\n\n最终结论：等级 B 受控试运行正式放行。\n\n注：本裁定依据本条提交的冻结及任务登记事实，不冒称已独立读取仓库文件。",
+      "text_sha256": "cc1315098599cefa129fc81fca08b69bff5b99a88d5d208355c1c4afa5995ddf",
+      "size_bytes": 761,
+      "assistant_uuid": "45e9ff02-5321-4ab8-a902-b1e42700326f"
+    }
+  ]
+}
