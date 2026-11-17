@@ -1,0 +1,9 @@
+[ACCEPT-RELIABILITY|20261117] 逐项独立验收（各给 PASS/FAIL+一句理由）。基线 ee76a34 未漂移。证据在 acceptance/。
+
+#7：review_leg._find_dispatch_dir 加 since-2.0 容差+brief_bytes 字节归属；arch_review_leg 加容差；review_leg RunKeyLock 同构包裹 run/resume/attach。测试 四腿 116/116 绿(leg-suite-full.log)。
+
+#4：新 --no-update-pointer 开关+shouldUpdateReviewerPointer+sessionIdIsAttributable 归属校验(新会话≠既有UUID，失败fail-closed)；5任务腿派单加flag。测试 dispatch-options 15/15 含wrong-session/非法UUID负例。现场 dispatch-2026-11-17T06-08-30：pointer前后SHA一致(5e6545a9…61699e)、归属PASS。
+
+#3：inbound_dom.resolveStartUnitByMarker 标记唯一重绑+readReplySnapshot 接 startMarker；gpt_dispatch 首行[TAG]提取。测试 inbound-reply 24/24含歧义/零命中fail-closed。现场同dispatch-06-08-30：真实派单未再INBOUND_START_UNIT_MISSING、内联采集COMPLETED(41B/2窗)、回复"ACK S4 采集修复验证"。
+
+边界：未碰冻结契约/M1/DEC-010；#3未加自动recoll(沿用L-018，无重发)；负例全留。三项PASS给"三项PASS可交付"，FAIL列点。≤900B。

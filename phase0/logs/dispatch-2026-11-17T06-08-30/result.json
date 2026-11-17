@@ -1,0 +1,213 @@
+{
+  "at": "2026-11-17T06:10:05.090Z",
+  "message_bytes": 321,
+  "reply": "ChatGPT 说：\n\nACK S4 采集修复验证",
+  "user_unit_key": "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:1:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "f7c545fa-2550-4ce4-a83e-d519353a23f2",
+  "stability": {
+    "stable": true,
+    "interval_ms": 3270,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-17T06:10:01.120Z",
+      "read_finished_at": "2026-11-17T06:10:01.390Z",
+      "unit_keys": [
+        "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:1:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:1:assistant",
+          "sha256": "62551af48e7a3954eca24922c89ad65b89407d784390972b1b03f83792b24f8c",
+          "size_bytes": 41
+        }
+      ],
+      "assistant_uuid": "f7c545fa-2550-4ce4-a83e-d519353a23f2",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-17T06:10:04.390Z",
+      "read_finished_at": "2026-11-17T06:10:04.929Z",
+      "unit_keys": [
+        "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:1:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:1:assistant",
+          "sha256": "62551af48e7a3954eca24922c89ad65b89407d784390972b1b03f83792b24f8c",
+          "size_bytes": 41
+        }
+      ],
+      "assistant_uuid": "f7c545fa-2550-4ce4-a83e-d519353a23f2",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "9bf401e6-a799-53e2-b893-9c616a74a2ac:0:user",
+          "9bf401e6-a799-53e2-b893-9c616a74a2ac:2:assistant",
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:0:user",
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:2:assistant",
+          "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:0:user",
+          "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "ef31868ab76c0773324c068af53dfb2554072e3e3a6a706ef3b21d360b25e806",
+          "13cc2caa399f680ff1ebf934ce0ff13109051a04a548671f4b98b16ffefff228",
+          "8e1e4cc4e37db372e93ec1bf9d512651b7576898c3b9aa1daed817d2efdfefcc",
+          "ff2701c9ca48f20327aee868ca5d012bd51ed746564a19b3696efc0f1179a7e8",
+          "13b3e2265e317f8a608c89feef9368c25df0827daf98b239006a5eb650cf35b8",
+          "62551af48e7a3954eca24922c89ad65b89407d784390972b1b03f83792b24f8c"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "9bf401e6-a799-53e2-b893-9c616a74a2ac:0:user",
+          "9bf401e6-a799-53e2-b893-9c616a74a2ac:2:assistant",
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:0:user",
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:2:assistant",
+          "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:0:user",
+          "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "ef31868ab76c0773324c068af53dfb2554072e3e3a6a706ef3b21d360b25e806",
+          "13cc2caa399f680ff1ebf934ce0ff13109051a04a548671f4b98b16ffefff228",
+          "8e1e4cc4e37db372e93ec1bf9d512651b7576898c3b9aa1daed817d2efdfefcc",
+          "ff2701c9ca48f20327aee868ca5d012bd51ed746564a19b3696efc0f1179a7e8",
+          "13b3e2265e317f8a608c89feef9368c25df0827daf98b239006a5eb650cf35b8",
+          "62551af48e7a3954eca24922c89ad65b89407d784390972b1b03f83792b24f8c"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "9bf401e6-a799-53e2-b893-9c616a74a2ac:0:user",
+          "9bf401e6-a799-53e2-b893-9c616a74a2ac:2:assistant",
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:0:user",
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:2:assistant",
+          "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:0:user",
+          "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:1:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:0:user",
+      "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:1:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "9bf401e6-a799-53e2-b893-9c616a74a2ac:0:user",
+          "9bf401e6-a799-53e2-b893-9c616a74a2ac:2:assistant",
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:0:user",
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:2:assistant",
+          "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:0:user",
+          "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:1:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "9bf401e6-a799-53e2-b893-9c616a74a2ac:0:user",
+          "9bf401e6-a799-53e2-b893-9c616a74a2ac:2:assistant",
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:0:user",
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:2:assistant",
+          "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:0:user",
+          "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:1:assistant"
+        ],
+        "overlap_keys": [
+          "9bf401e6-a799-53e2-b893-9c616a74a2ac:0:user",
+          "9bf401e6-a799-53e2-b893-9c616a74a2ac:2:assistant",
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:0:user",
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:2:assistant",
+          "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:0:user",
+          "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:1:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "62551af48e7a3954eca24922c89ad65b89407d784390972b1b03f83792b24f8c",
+  "size_bytes": 41,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-17T06-08-30\\reply.txt",
+  "reply_readback_sha256": "62551af48e7a3954eca24922c89ad65b89407d784390972b1b03f83792b24f8c",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-17T06-08-30\\raw-units.json",
+  "raw_units_sha256": "3ec2e4e25afd65ed7b009ada44944d4c30d19dbc43628ee4fbb1d7228d70a6fd",
+  "raw_units_size_bytes": 5099,
+  "raw_units_readback_sha256": "3ec2e4e25afd65ed7b009ada44944d4c30d19dbc43628ee4fbb1d7228d70a6fd",
+  "session_id": "6afbc6a9-b26c-83ee-9c27-b6c6e6f75664",
+  "conversation_url": "https://chatgpt.com/c/6afbc6a9-b26c-83ee-9c27-b6c6e6f75664",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}

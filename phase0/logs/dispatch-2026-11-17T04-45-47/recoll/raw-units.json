@@ -1,0 +1,70 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-17T04:51:06.881Z",
+  "user_unit_key": "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "24a70508-f7da-4dc8-9fa0-b0f7e3ff67bc",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "9bf401e6-a799-53e2-b893-9c616a74a2ac:0:user",
+          "9bf401e6-a799-53e2-b893-9c616a74a2ac:2:assistant",
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:0:user",
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "ef31868ab76c0773324c068af53dfb2554072e3e3a6a706ef3b21d360b25e806",
+          "13cc2caa399f680ff1ebf934ce0ff13109051a04a548671f4b98b16ffefff228",
+          "8e1e4cc4e37db372e93ec1bf9d512651b7576898c3b9aa1daed817d2efdfefcc",
+          "ff2701c9ca48f20327aee868ca5d012bd51ed746564a19b3696efc0f1179a7e8"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": []
+      }
+    ],
+    "materialized_unit_keys": [
+      "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:0:user",
+      "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STATIC_NON_SCROLLABLE_DOM",
+      "scrollable_window_observed": false,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "9bf401e6-a799-53e2-b893-9c616a74a2ac:0:user",
+          "9bf401e6-a799-53e2-b893-9c616a74a2ac:2:assistant",
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:0:user",
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:2:assistant"
+        ],
+        "overlap_keys": []
+      }
+    ],
+    "window_transitions": 0
+  },
+  "units": [
+    {
+      "key": "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n我的原则性判断：三项修复可以保持在派单可靠性层，不应借修复之机扩大冻结契约或 M1 运行时的变更范围。\n\n方案通过，按此开工。\n\n① 边界认可。 三项限定为派单腿脚本、指针写盘保护及首采判定修复，不修改冻结契约、M1 运行时及 DEC-010 高危范围。若实现发现必须修改上述边界，暂停并重新会商。\n\n② 顺序认可：#7 → #4 → #3。 先补齐脚本同构与锁，再修复指针归属，最后处理核心采集判定，风险递进合理。\n\n③ #4 保留开关+归属校验，不算过设计。 两者职责不同：\n\n开关：控制是否允许写入 reviewer 指针。\n\n归属校验：确认目标页面确实属于本次任务/会话。\n\n可以简化实现，但不能删掉任一安全条件；校验失败必须 fail-closed。\n\n验收要求：\n\n每项独立提交、独立测试、独立验收。\n\n#3 自动 recoll 必须保证不重发任务。\n\n保留 wrong-session、并发、负容差及采集失败负例。\n\n基线固定 ee76a34，不混入其他改动。\n\n三项全部独立 PASS 后，再进入等级 B 试运行 Gate 审议。本次方案通过不等于试运行授权。",
+      "text_sha256": "ff2701c9ca48f20327aee868ca5d012bd51ed746564a19b3696efc0f1179a7e8",
+      "size_bytes": 1214,
+      "assistant_uuid": "24a70508-f7da-4dc8-9fa0-b0f7e3ff67bc"
+    }
+  ]
+}

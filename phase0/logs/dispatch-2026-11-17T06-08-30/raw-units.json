@@ -1,0 +1,124 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-17T06:10:05.090Z",
+  "user_unit_key": "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:1:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "f7c545fa-2550-4ce4-a83e-d519353a23f2",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "9bf401e6-a799-53e2-b893-9c616a74a2ac:0:user",
+          "9bf401e6-a799-53e2-b893-9c616a74a2ac:2:assistant",
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:0:user",
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:2:assistant",
+          "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:0:user",
+          "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "ef31868ab76c0773324c068af53dfb2554072e3e3a6a706ef3b21d360b25e806",
+          "13cc2caa399f680ff1ebf934ce0ff13109051a04a548671f4b98b16ffefff228",
+          "8e1e4cc4e37db372e93ec1bf9d512651b7576898c3b9aa1daed817d2efdfefcc",
+          "ff2701c9ca48f20327aee868ca5d012bd51ed746564a19b3696efc0f1179a7e8",
+          "13b3e2265e317f8a608c89feef9368c25df0827daf98b239006a5eb650cf35b8",
+          "62551af48e7a3954eca24922c89ad65b89407d784390972b1b03f83792b24f8c"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "9bf401e6-a799-53e2-b893-9c616a74a2ac:0:user",
+          "9bf401e6-a799-53e2-b893-9c616a74a2ac:2:assistant",
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:0:user",
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:2:assistant",
+          "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:0:user",
+          "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "ef31868ab76c0773324c068af53dfb2554072e3e3a6a706ef3b21d360b25e806",
+          "13cc2caa399f680ff1ebf934ce0ff13109051a04a548671f4b98b16ffefff228",
+          "8e1e4cc4e37db372e93ec1bf9d512651b7576898c3b9aa1daed817d2efdfefcc",
+          "ff2701c9ca48f20327aee868ca5d012bd51ed746564a19b3696efc0f1179a7e8",
+          "13b3e2265e317f8a608c89feef9368c25df0827daf98b239006a5eb650cf35b8",
+          "62551af48e7a3954eca24922c89ad65b89407d784390972b1b03f83792b24f8c"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "9bf401e6-a799-53e2-b893-9c616a74a2ac:0:user",
+          "9bf401e6-a799-53e2-b893-9c616a74a2ac:2:assistant",
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:0:user",
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:2:assistant",
+          "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:0:user",
+          "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:1:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:0:user",
+      "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:1:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "9bf401e6-a799-53e2-b893-9c616a74a2ac:0:user",
+          "9bf401e6-a799-53e2-b893-9c616a74a2ac:2:assistant",
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:0:user",
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:2:assistant",
+          "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:0:user",
+          "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:1:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "9bf401e6-a799-53e2-b893-9c616a74a2ac:0:user",
+          "9bf401e6-a799-53e2-b893-9c616a74a2ac:2:assistant",
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:0:user",
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:2:assistant",
+          "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:0:user",
+          "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:1:assistant"
+        ],
+        "overlap_keys": [
+          "9bf401e6-a799-53e2-b893-9c616a74a2ac:0:user",
+          "9bf401e6-a799-53e2-b893-9c616a74a2ac:2:assistant",
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:0:user",
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:2:assistant",
+          "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:0:user",
+          "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:1:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:1:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\nACK S4 采集修复验证",
+      "text_sha256": "62551af48e7a3954eca24922c89ad65b89407d784390972b1b03f83792b24f8c",
+      "size_bytes": 41,
+      "assistant_uuid": "f7c545fa-2550-4ce4-a83e-d519353a23f2"
+    }
+  ]
+}

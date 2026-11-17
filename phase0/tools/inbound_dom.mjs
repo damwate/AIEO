@@ -98,10 +98,19 @@ function findStartIndex(windowUnits, userUnitKey) {
   return windowUnits.findIndex((unit) => unit.key === userUnitKey && unit.role === "user");
 }
 
+// DEC-094 #3：键漂移时按标记文本定位起点。仅当标记在 user unit 中唯一命中才解析，
+// 否则 fail-closed（返回 null 交上层继续按既有 fail-closed 路径处理）。
+export function resolveStartUnitByMarker(windowUnits, marker) {
+  if (!marker) return null;
+  const hits = (windowUnits || []).filter((u) => u.role === "user" && String(u.text || "").includes(marker));
+  if (hits.length !== 1) return null;
+  return { key: hits[0].key, index: windowUnits.indexOf(hits[0]) };
+}
+
 // 两段式实体化：先向上逐窗定位起点，再向下逐窗收集至下一 user 或真实底部。
 // expectedUnitKeys 必须来自独立于渲染 DOM 的逻辑序列（仅测试/已有可信清单可提供）。
 // 可滚动虚拟列表没有该独立序列时，重叠证明不足以排除持续遗漏，build() 将 fail-closed。
-export async function readReplySnapshot(page, userUnitKey, { expectedUnitKeys = null } = {}) {
+export async function readReplySnapshot(page, userUnitKey, { expectedUnitKeys = null, startMarker = null } = {}) {
   const readStartedAt = Date.now();
   const maxWindowTransitions = Number(process.env.AIEO_GPT_CONTROLLER_MAX_RANGE_SCROLLS || 200);
   let current = await readDomWindow(page);
@@ -109,6 +118,9 @@ export async function readReplySnapshot(page, userUnitKey, { expectedUnitKeys = 
   let previousSearch = null;
   const searchProof = [];
   let transitions = 0;
+  // DEC-094 #3：起点的权威 key 可被标记唯一解析后重绑（键漂移）；解析不出则沿用传入 key。
+  let startKey = userUnitKey;
+  let resolvedByMarker = false;
 
   while (true) {
     if (previousSearch) {
@@ -117,11 +129,19 @@ export async function readReplySnapshot(page, userUnitKey, { expectedUnitKeys = 
     } else {
       searchProof.push({ unit_keys: current.units.map((unit) => unit.key), overlap_keys: [] });
     }
-    const startFound = findStartIndex(current.units, userUnitKey) >= 0;
+    let startFound = findStartIndex(current.units, startKey) >= 0;
+    if (!startFound && !resolvedByMarker && startMarker) {
+      const resolved = resolveStartUnitByMarker(current.units, startMarker);
+      if (resolved) {
+        startKey = resolved.key; // 重绑到漂移后的真实 key
+        resolvedByMarker = true;
+        startFound = true;
+      }
+    }
     // 可滚动页面即使起点和尾部同屏 DOM 存在，也先向上离开底部，再向下分段复核。
     if (startFound && (!current.at_bottom || !current.scrollable)) break;
     if (current.at_top) {
-      throw new Error(`INBOUND_START_UNIT_MISSING: 连续向上搜索到顶部仍未找到可分段读取的 ${userUnitKey}`);
+      throw new Error(`INBOUND_START_UNIT_MISSING: 连续向上搜索到顶部仍未找到可分段读取的 ${startKey}${startMarker ? ` (marker=${startMarker})` : ""}`);
     }
     if (transitions >= maxWindowTransitions) throw new Error("INBOUND_RANGE_SCROLL_LIMIT: 起点搜索超过窗口转换上限");
     const moved = await scrollDomWindow(page, -1);
@@ -131,7 +151,7 @@ export async function readReplySnapshot(page, userUnitKey, { expectedUnitKeys = 
     if (moved.before === moved.after) throw new Error("INBOUND_START_SEARCH_NO_PROGRESS: 向上滚动无位移且尚未到顶部");
   }
 
-  const collector = createInboundRangeCollector(userUnitKey, { expectedUnitKeys });
+  const collector = createInboundRangeCollector(startKey, { expectedUnitKeys });
   let collectionState = collector.ingest(current.units, { atBottom: current.at_bottom, scrollable: current.scrollable });
   while (!collectionState.complete) {
     if (current.at_bottom) throw new Error("INBOUND_RANGE_INCOMPLETE: 已到底但未形成完整目标区间");
@@ -144,11 +164,13 @@ export async function readReplySnapshot(page, userUnitKey, { expectedUnitKeys = 
   }
 
   const materialized = collector.build();
-  const selected = selectInboundReply(materialized.units, userUnitKey);
+  const selected = selectInboundReply(materialized.units, startKey);
   const visibleUnits = current.units.filter((unit) => unit.visible);
   const tail = visibleUnits.length > 0 ? visibleUnits[visibleUnits.length - 1] : null;
   return {
     ...selected,
+    start_key_resolved: startKey,
+    start_resolved_by_marker: resolvedByMarker,
     range_proof: { ...materialized.range_proof, start_search_windows: searchProof, window_transitions: transitions },
     read_started_at: new Date(readStartedAt).toISOString(),
     read_finished_at: new Date().toISOString(),

@@ -1,0 +1,124 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-17T06:13:24.845Z",
+  "user_unit_key": "8525f665-7eae-516c-b94f-13f695064640:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "8525f665-7eae-516c-b94f-13f695064640:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "cbed1948-d6ab-45c7-9e57-47f26a43147c",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "8525f665-7eae-516c-b94f-13f695064640:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:0:user",
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:2:assistant",
+          "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:0:user",
+          "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:1:assistant",
+          "8525f665-7eae-516c-b94f-13f695064640:0:user",
+          "8525f665-7eae-516c-b94f-13f695064640:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "8e1e4cc4e37db372e93ec1bf9d512651b7576898c3b9aa1daed817d2efdfefcc",
+          "ff2701c9ca48f20327aee868ca5d012bd51ed746564a19b3696efc0f1179a7e8",
+          "13b3e2265e317f8a608c89feef9368c25df0827daf98b239006a5eb650cf35b8",
+          "62551af48e7a3954eca24922c89ad65b89407d784390972b1b03f83792b24f8c",
+          "d49ab4965e9a545e4aaccff505c270dbc52c23031407537ad19ab76025c2d854",
+          "a5d099d62e6881c3d625c3bf1c08454f49fe62c098a0eb9bf25fa18cb036a631"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:0:user",
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:2:assistant",
+          "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:0:user",
+          "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:1:assistant",
+          "8525f665-7eae-516c-b94f-13f695064640:0:user",
+          "8525f665-7eae-516c-b94f-13f695064640:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "8e1e4cc4e37db372e93ec1bf9d512651b7576898c3b9aa1daed817d2efdfefcc",
+          "ff2701c9ca48f20327aee868ca5d012bd51ed746564a19b3696efc0f1179a7e8",
+          "13b3e2265e317f8a608c89feef9368c25df0827daf98b239006a5eb650cf35b8",
+          "62551af48e7a3954eca24922c89ad65b89407d784390972b1b03f83792b24f8c",
+          "d49ab4965e9a545e4aaccff505c270dbc52c23031407537ad19ab76025c2d854",
+          "a5d099d62e6881c3d625c3bf1c08454f49fe62c098a0eb9bf25fa18cb036a631"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:0:user",
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:2:assistant",
+          "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:0:user",
+          "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:1:assistant",
+          "8525f665-7eae-516c-b94f-13f695064640:0:user",
+          "8525f665-7eae-516c-b94f-13f695064640:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "8525f665-7eae-516c-b94f-13f695064640:0:user",
+      "8525f665-7eae-516c-b94f-13f695064640:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:0:user",
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:2:assistant",
+          "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:0:user",
+          "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:1:assistant",
+          "8525f665-7eae-516c-b94f-13f695064640:0:user",
+          "8525f665-7eae-516c-b94f-13f695064640:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:0:user",
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:2:assistant",
+          "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:0:user",
+          "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:1:assistant",
+          "8525f665-7eae-516c-b94f-13f695064640:0:user",
+          "8525f665-7eae-516c-b94f-13f695064640:2:assistant"
+        ],
+        "overlap_keys": [
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:0:user",
+          "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:2:assistant",
+          "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:0:user",
+          "a3c57d62-3ebf-5ad7-a194-9c9146a9fec6:1:assistant",
+          "8525f665-7eae-516c-b94f-13f695064640:0:user",
+          "8525f665-7eae-516c-b94f-13f695064640:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "8525f665-7eae-516c-b94f-13f695064640:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n按你提供的验收记录，三项均有对应测试及现场证据；我会区分“记录支持的验收结论”和“已直接读取原始证据”，不把前者冒充后者。\n\n#7：PASS — 四腿 116/116；容差、字节归属及 RunKeyLock 同构覆盖，未见遗漏。\n\n#4：PASS — 15/15，含 wrong-session/非法 UUID 负例；现场指针前后 SHA 一致，归属校验通过。\n\n#3：PASS — 24/24，歧义与零命中均 fail-closed；现场首采成功并完成内联采集，未重发任务。\n\n三项PASS可交付。\n\n边界检查：按所述记录，冻结契约、M1、DEC-010 未触碰；未增加自动 recoll，负例保留。\n\n说明：以上依据本轮提交的验收记录作结论，尚未直接读取 acceptance/ 原始文件；不冒称已核验原始日志。",
+      "text_sha256": "a5d099d62e6881c3d625c3bf1c08454f49fe62c098a0eb9bf25fa18cb036a631",
+      "size_bytes": 814,
+      "assistant_uuid": "cbed1948-d6ab-45c7-9e57-47f26a43147c"
+    }
+  ]
+}

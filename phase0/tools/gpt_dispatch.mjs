@@ -32,7 +32,7 @@ import {
   validateInboundJsonArtifact,
 } from "./inbound_reply.mjs";
 import { registerArtifactWithRetry } from "./m1_artifact_registry.mjs";
-import { parseDispatchOptions, shouldUpdateReviewerPointer } from "./dispatch_options.mjs";
+import { parseDispatchOptions, shouldUpdateReviewerPointer, sessionIdIsAttributable, extractSessionId, extractBriefMarker } from "./dispatch_options.mjs";
 import { readReplySnapshot, readTailUnit } from "./inbound_dom.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -158,8 +158,10 @@ async function attachPage() {
   const picked = pickChatGptPage(descs, {});
   const page = picked ? existing[picked.index] : await ctx.newPage();
   const createdPages = picked ? [] : [page];
-  log(`[tab-hygiene] 选页: ${picked ? `复用既有页#${picked.index}` : "新建页"}（既有 ${existing.length} 页）；自建页注册 ${createdPages.length} 页`);
-  return { browser, page, createdPages };
+  // DEC-094 归属校验：记录 attach 时既有会话 UUID；新会话派单不得捕获到这些 UUID（错页）
+  const preexistingSessionIds = descs.map((d) => d.conversationUuid).filter(Boolean);
+  log(`[tab-hygiene] 选页: ${picked ? `复用既有页#${picked.index}` : "新建页"}（既有 ${existing.length} 页）；自建页注册 ${createdPages.length} 页；既有会话 UUID ${preexistingSessionIds.length} 个`);
+  return { browser, page, createdPages, preexistingSessionIds };
 }
 
 async function stopButtonVisible(page) {
@@ -277,11 +279,13 @@ async function sendAndCollect(page, text, label, attachPath = null) {
 
   // 确认窗后进行两次完整 unit 读取；任何全文、key、数量或 UUID 变化都会抛错。
   const finalStopVisible = await stopButtonVisible(page);
+  // DEC-094 #3：简报标记作为键漂移时的唯一定位锚点（无标记则沿用固定 key，不降负例强度）
+  const startMarker = extractBriefMarker(text);
   const firstReadStartedMs = Date.now();
-  const firstSnapshot = await readReplySnapshot(page, sentUserUnitKey);
+  const firstSnapshot = await readReplySnapshot(page, sentUserUnitKey, { startMarker });
   await page.waitForTimeout(STABLE_READ_INTERVAL_MS);
   const secondReadStartedMs = Date.now();
-  const secondSnapshot = await readReplySnapshot(page, sentUserUnitKey);
+  const secondSnapshot = await readReplySnapshot(page, sentUserUnitKey, { startMarker });
   const stability = compareInboundSnapshots(firstSnapshot, secondSnapshot, secondReadStartedMs - firstReadStartedMs);
   const tailAfter = firstSnapshot.tail;
   const tailAgain = secondSnapshot.tail;
@@ -334,8 +338,9 @@ async function mainLocked() {
   await startChromeWithDebugPort();
   const tabAuditBefore = await cdpTargetList();
   tabAuditBeforeRef.value = tabAuditBefore;
-  const { browser, page, createdPages } = await attachPage();
+  const { browser, page, createdPages, preexistingSessionIds } = await attachPage();
   ownedCreatedPages = createdPages;
+  let targetSessionId = null; // 既有会话派单的目标 UUID（归属校验用）；新会话为 null
   log(`[tab-hygiene] attach 前页清单 ${Array.isArray(tabAuditBefore) ? tabAuditBefore.length + " 页" : "不可达"}`);
 
   if (newSession) {
@@ -354,6 +359,7 @@ async function mainLocked() {
   } else {
     const sessionFile = existsSync(REVIEWER_SESSION) ? REVIEWER_SESSION : SESSION_JSON;
     const { conversation_url: targetUrl } = JSON.parse(readFileSync(sessionFile, "utf8"));
+    targetSessionId = extractSessionId(targetUrl);
     const t0 = Date.now();
     await page.goto(targetUrl, { waitUntil: "domcontentloaded", timeout: 60000 });
     while (Date.now() - t0 < READY_TIMEOUT_MS) {
@@ -375,25 +381,39 @@ async function mainLocked() {
   // 保存当前真实会话 URL（local-chatgpt 草稿态跳过；上限已在发送前安全停止）
   let conversationUrl = null;
   let sessionId = null;
+  let pointerAttribution = "NOT_EVALUATED";
   for (let i = 0; i < 10; i++) {
-    const m = page.url().match(/chatgpt\.com\/(?:.*\/)?c\/([0-9a-f-]{36})/i);
-    if (m) {
-      sessionId = m[1];
+    const sid = extractSessionId(page.url());
+    if (sid) {
+      sessionId = sid;
       conversationUrl = `https://chatgpt.com/c/${sessionId}`;
+      // DEC-094 规划复审归属校验：确认捕获页确属本次会话（新会话≠既有 UUID；既有会话须=目标 UUID）。
+      // 校验失败 fail-closed：不写 reviewer 指针、不写成功结果（下方抛错）。
+      const attributable = sessionIdIsAttributable({
+        newSession, sessionId, targetSessionId, preexistingSessionIds,
+      });
+      pointerAttribution = attributable ? "PASS" : "FAIL";
+      if (!attributable) {
+        log(`[归属校验] FAIL — 捕获会话 ${sessionId} 不属本次派单（target=${targetSessionId}, 既有=${JSON.stringify(preexistingSessionIds)}）；fail-closed 拒写指针`);
+        break;
+      }
       if (!shouldUpdateReviewerPointer(dispatchOptions)) {
         // DEC-094 #4：任务腿/一次性派单显式要求不覆盖 reviewer 指针（实战两次误覆盖
         // 致简报错发实战会话）。仍解析本会话 URL 供 result.json 绑定，仅跳过指针写盘。
-        log(`会话 URL 已取得但按 --no-update-pointer 跳过 reviewer 指针写盘: ${conversationUrl}`);
+        log(`会话 URL 已取得且归属校验 PASS，但按 --no-update-pointer 跳过 reviewer 指针写盘: ${conversationUrl}`);
       } else {
         const session = { conversation_url: conversationUrl, captured_at: new Date().toISOString(), role: "reviewer" };
         writeFileSync(REVIEWER_SESSION, JSON.stringify(session, null, 2), "utf8");
-        log(`审查会话已保存: ${session.conversation_url}`);
+        log(`审查会话已保存（归属校验 PASS）: ${session.conversation_url}`);
       }
       break;
     }
     await page.waitForTimeout(1000);
   }
   if (!conversationUrl || !sessionId) throw new Error("SESSION_URL_UNAVAILABLE: 未取得真实会话 URL，拒绝写成功结果");
+  if (pointerAttribution === "FAIL") {
+    throw new Error("SESSION_ATTRIBUTION_FAIL: 捕获会话页不属本次派单，fail-closed 拒绝写指针与成功结果");
+  }
 
   // 原始 unit 与合成回复先落盘、回读核验；任一失败都不会写 result.json。
   const extractedAt = new Date().toISOString();

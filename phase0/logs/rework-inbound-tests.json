@@ -1,15 +1,15 @@
 {
-  "started_at": "2026-11-17T04:30:20.961Z",
-  "finished_at": "2026-11-17T04:30:21.923Z",
+  "started_at": "2026-11-17T06:07:49.075Z",
+  "finished_at": "2026-11-17T06:07:50.000Z",
   "node": "v24.14.0",
-  "total": 23,
-  "passed": 23,
+  "total": 24,
+  "passed": 24,
   "failed": 0,
   "artifact_evidence": {
     "reply_bytes": 4530,
     "reply_sha256": "d72176a20e6e17b90100b2c4a4dbf86685b723d842ce0bbf728a82d1ec1153c1",
     "raw_units_bytes": 6087,
-    "raw_units_sha256": "87ff10467ebfdea48294246718fe5add6728efb4b858c929ddfebb45d85d2e51"
+    "raw_units_sha256": "c994346d792f4af30eadd25c2a170ac841b6dd7394cb6d1147609ee08e15de51"
   },
   "tests": [
     {
@@ -22,6 +22,10 @@
     },
     {
       "name": "发送起点因虚拟列表缺失时失败",
+      "result": "PASS"
+    },
+    {
+      "name": "DEC-094 #3 键漂移：标记唯一定位起点，多处/零处命中 fail-closed",
       "result": "PASS"
     },
     {

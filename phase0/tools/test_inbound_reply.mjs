@@ -15,6 +15,7 @@ import {
   validateInboundJsonArtifact,
   verifyArtifactFile,
 } from "./inbound_reply.mjs";
+import { resolveStartUnitByMarker } from "./inbound_dom.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const logDir = join(__dirname, "..", "logs");
@@ -95,6 +96,23 @@ const tests = [
     expectCode("INBOUND_START_UNIT_MISSING", () => selectInboundReply(baseDom.slice(3), "turn-1:user"));
     const collector = createInboundRangeCollector("turn-1:user");
     expectCode("INBOUND_START_UNIT_MISSING", () => collector.ingest(baseDom.slice(3), { atBottom: true }));
+  }],
+  ["DEC-094 #3 键漂移：标记唯一定位起点，多处/零处命中 fail-closed", () => {
+    const marker = "[PLAN-RELIABILITY|20261117]";
+    const drifted = { key: "9c2adaf4-e5d7-59fe-adfc-839cb8c7a62a:0:user", role: "user", text: marker + " 承接你 DEC-094 拍板" };
+    const other = { key: "turn-1:user", role: "user", text: "另一条 user" };
+    const asst = { key: "x:assistant", role: "assistant", text: marker + "  assistant 也含标记" };
+    // 唯一命中 user unit → 解析到漂移后的真实 key
+    const resolved = resolveStartUnitByMarker([other, drifted, asst], marker);
+    assert.deepEqual(resolved, { key: drifted.key, index: 1 });
+    // 零命中 → null（上层沿用固定 key fail-closed）
+    assert.equal(resolveStartUnitByMarker([other, asst], marker), null);
+    // 两个 user 都含标记 → null（歧义 fail-closed，不误判）
+    assert.equal(resolveStartUnitByMarker([{ ...other, text: marker + " A" }, { ...drifted, text: marker + " B" }], marker), null);
+    // 仅 assistant 含标记、user 不含 → null
+    assert.equal(resolveStartUnitByMarker([other, asst], marker), null);
+    // 无标记 → null
+    assert.equal(resolveStartUnitByMarker([drifted], null), null);
   }],
   ["多窗口多 assistant unit 以重叠 key 实体化并保序", () => {
     const a = { key: "a", role: "assistant", text: "甲", assistantUuid: null };

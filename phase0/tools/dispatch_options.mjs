@@ -36,6 +36,36 @@ export function shouldUpdateReviewerPointer(options) {
   return options?.noUpdatePointer !== true;
 }
 
+/**
+ * 归属校验（DEC-094 规划复审要求：确认目标页确属本次会话，校验失败 fail-closed）。
+ * 新会话派单：捕获到的 sessionId 不得与 attach 时已存在的会话 UUID 相同——相同意味着
+ * 复用/误捕获了既有页（wrong-session 事故形态），必须拒写 reviewer 指针。
+ * 既有会话派单：捕获到的 sessionId 必须等于目标会话 UUID，否则为错页。
+ */
+export function sessionIdIsAttributable({ newSession, sessionId, targetSessionId, preexistingSessionIds = [] }) {
+  if (!sessionId || !/^[0-9a-f-]{36}$/i.test(sessionId)) return false;
+  const pre = new Set(preexistingSessionIds.filter(Boolean).map((x) => String(x).toLowerCase()));
+  if (newSession) {
+    return !pre.has(sessionId.toLowerCase());
+  }
+  return !targetSessionId || targetSessionId.toLowerCase() === sessionId.toLowerCase();
+}
+
+export function extractSessionId(url) {
+  const m = String(url || "").match(/chatgpt\.com\/(?:.*\/)?c\/([0-9a-f-]{36})/i);
+  return m ? m[1] : null;
+}
+
+/**
+ * 从简报首行提取 [TAG|...] 标记，供 #3 键漂移时唯一定位起点 user unit。
+ * 无标记返回 null（回退既有固定 key 路径，负例强度不降）。
+ */
+export function extractBriefMarker(text) {
+  const first = String(text || "").split(/\r?\n/, 1)[0] || "";
+  const m = first.match(/^\[([^\]]{3,80})\]/);
+  return m ? `[${m[1]}]` : null;
+}
+
 export function parseDispatchOptions(argv, { readMessageFile = (path) => readFileSync(path, "utf8") } = {}) {
   if (!Array.isArray(argv)) throw new TypeError("argv 必须是数组");
   const newSession = argv.includes("--new-session");

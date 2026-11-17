@@ -4,7 +4,7 @@ import { spawnSync } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { parseDispatchOptions, shouldUpdateReviewerPointer } from "./dispatch_options.mjs";
+import { parseDispatchOptions, shouldUpdateReviewerPointer, sessionIdIsAttributable, extractSessionId, extractBriefMarker } from "./dispatch_options.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const logDir = join(__dirname, "..", "logs");
@@ -49,6 +49,31 @@ const tests = [
     assert.equal(shouldUpdateReviewerPointer(parseDispatchOptions([...base, "--new-session"])), true);
     assert.equal(shouldUpdateReviewerPointer(parseDispatchOptions([...base, "--new-session", "--no-update-pointer"])), false);
     assert.equal(shouldUpdateReviewerPointer({}), true);
+  }],
+  ["DEC-094 规划复审：归属校验确认目标页确属本次会话，失败 fail-closed", () => {
+    const A = "6afbc6a9-b26c-83ee-9c27-b6c6e6f75664";
+    const B = "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
+    // 新会话：捕获 UUID 不在 attach 既有集合 → 归属 PASS；命中既有 UUID → FAIL（wrong-session 事故形态）
+    assert.equal(sessionIdIsAttributable({ newSession: true, sessionId: A, preexistingSessionIds: [] }), true);
+    assert.equal(sessionIdIsAttributable({ newSession: true, sessionId: A, preexistingSessionIds: [A] }), false,
+      "新会话不得捕获到既有会话 UUID");
+    assert.equal(sessionIdIsAttributable({ newSession: true, sessionId: A, preexistingSessionIds: [B] }), true);
+    // 既有会话：捕获 UUID 必须等于目标 UUID
+    assert.equal(sessionIdIsAttributable({ newSession: false, sessionId: A, targetSessionId: A }), true);
+    assert.equal(sessionIdIsAttributable({ newSession: false, sessionId: A, targetSessionId: B }), false,
+      "既有会话派单不得捕获到非目标 UUID");
+    // 非法/缺失 UUID → fail-closed
+    assert.equal(sessionIdIsAttributable({ newSession: true, sessionId: "bad", preexistingSessionIds: [] }), false);
+    assert.equal(sessionIdIsAttributable({ newSession: true, sessionId: null, preexistingSessionIds: [] }), false);
+    // URL 提取
+    assert.equal(extractSessionId(`https://chatgpt.com/c/${A}`), A);
+    assert.equal(extractSessionId("https://chatgpt.com/"), null);
+  }],
+  ["DEC-094 #3：简报标记提取（首行 [TAG|...]，无标记回退 null）", () => {
+    assert.equal(extractBriefMarker("[PLAN-RELIABILITY|20261117] 承接...\n第二行"), "[PLAN-RELIABILITY|20261117]");
+    assert.equal(extractBriefMarker("[DEC026-续行会商|20261117] 请拍板"), "[DEC026-续行会商|20261117]");
+    assert.equal(extractBriefMarker("无标记正文\n[不该提取]"), null, "标记只在首行生效");
+    assert.equal(extractBriefMarker(""), null);
   }],
   ["仅 Schema 可做通用校验但不触发 M1 登记", () => {
     const parsed = parseDispatchOptions([...base, "--schema", "contract.json"]);
