@@ -1,0 +1,124 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-17T18:55:53.252Z",
+  "user_unit_key": "a3bf666c-1fff-58cf-9356-f1b4cca565bc:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "a3bf666c-1fff-58cf-9356-f1b4cca565bc:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "0d0f1318-0423-436b-9fdc-7b2df2078cf1",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "a3bf666c-1fff-58cf-9356-f1b4cca565bc:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "bc4d007a-cc4e-5d55-97c1-226780e96234:0:user",
+          "bc4d007a-cc4e-5d55-97c1-226780e96234:2:assistant",
+          "ecf9cc54-e6f2-59b3-a72f-636777e1fc7f:0:user",
+          "ecf9cc54-e6f2-59b3-a72f-636777e1fc7f:2:assistant",
+          "a3bf666c-1fff-58cf-9356-f1b4cca565bc:0:user",
+          "a3bf666c-1fff-58cf-9356-f1b4cca565bc:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "2d65104fc633515a25bf174fff648df5e642983f5afc4af6406e10fcae1b2e2b",
+          "2d093edcf61c4da160ae2ff3a64a826b468c87230834121a108d4f59a024ba11",
+          "185ac625bf33a90bab36c7d68c5afc64932a30ba968a23aed3a219156e895f80",
+          "a8d96479829133a623c898aaab969be352ae58b7484d46e876516010f4a21d1e",
+          "ad07e93e4c3e2a0e71a43cc39dc8b99eb9c1c15fd8c60066a20f8684fbd3584f",
+          "a463a29f5ec15a169da0381e9544658f9b0b2d7b8965f1ecd13cad740994cd76"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "bc4d007a-cc4e-5d55-97c1-226780e96234:0:user",
+          "bc4d007a-cc4e-5d55-97c1-226780e96234:2:assistant",
+          "ecf9cc54-e6f2-59b3-a72f-636777e1fc7f:0:user",
+          "ecf9cc54-e6f2-59b3-a72f-636777e1fc7f:2:assistant",
+          "a3bf666c-1fff-58cf-9356-f1b4cca565bc:0:user",
+          "a3bf666c-1fff-58cf-9356-f1b4cca565bc:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "2d65104fc633515a25bf174fff648df5e642983f5afc4af6406e10fcae1b2e2b",
+          "2d093edcf61c4da160ae2ff3a64a826b468c87230834121a108d4f59a024ba11",
+          "185ac625bf33a90bab36c7d68c5afc64932a30ba968a23aed3a219156e895f80",
+          "a8d96479829133a623c898aaab969be352ae58b7484d46e876516010f4a21d1e",
+          "ad07e93e4c3e2a0e71a43cc39dc8b99eb9c1c15fd8c60066a20f8684fbd3584f",
+          "a463a29f5ec15a169da0381e9544658f9b0b2d7b8965f1ecd13cad740994cd76"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "bc4d007a-cc4e-5d55-97c1-226780e96234:0:user",
+          "bc4d007a-cc4e-5d55-97c1-226780e96234:2:assistant",
+          "ecf9cc54-e6f2-59b3-a72f-636777e1fc7f:0:user",
+          "ecf9cc54-e6f2-59b3-a72f-636777e1fc7f:2:assistant",
+          "a3bf666c-1fff-58cf-9356-f1b4cca565bc:0:user",
+          "a3bf666c-1fff-58cf-9356-f1b4cca565bc:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "a3bf666c-1fff-58cf-9356-f1b4cca565bc:0:user",
+      "a3bf666c-1fff-58cf-9356-f1b4cca565bc:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "bc4d007a-cc4e-5d55-97c1-226780e96234:0:user",
+          "bc4d007a-cc4e-5d55-97c1-226780e96234:2:assistant",
+          "ecf9cc54-e6f2-59b3-a72f-636777e1fc7f:0:user",
+          "ecf9cc54-e6f2-59b3-a72f-636777e1fc7f:2:assistant",
+          "a3bf666c-1fff-58cf-9356-f1b4cca565bc:0:user",
+          "a3bf666c-1fff-58cf-9356-f1b4cca565bc:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "bc4d007a-cc4e-5d55-97c1-226780e96234:0:user",
+          "bc4d007a-cc4e-5d55-97c1-226780e96234:2:assistant",
+          "ecf9cc54-e6f2-59b3-a72f-636777e1fc7f:0:user",
+          "ecf9cc54-e6f2-59b3-a72f-636777e1fc7f:2:assistant",
+          "a3bf666c-1fff-58cf-9356-f1b4cca565bc:0:user",
+          "a3bf666c-1fff-58cf-9356-f1b4cca565bc:2:assistant"
+        ],
+        "overlap_keys": [
+          "bc4d007a-cc4e-5d55-97c1-226780e96234:0:user",
+          "bc4d007a-cc4e-5d55-97c1-226780e96234:2:assistant",
+          "ecf9cc54-e6f2-59b3-a72f-636777e1fc7f:0:user",
+          "ecf9cc54-e6f2-59b3-a72f-636777e1fc7f:2:assistant",
+          "a3bf666c-1fff-58cf-9356-f1b4cca565bc:0:user",
+          "a3bf666c-1fff-58cf-9356-f1b4cca565bc:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "a3bf666c-1fff-58cf-9356-f1b4cca565bc:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n{\n\"result\": \"PASS\",\n\"points\": [\n{\"n\":1,\"v\":\"PASS\"},\n{\"n\":2,\"v\":\"PASS_WITH_CONSTRAINTS\"},\n{\"n\":3,\"v\":\"PASS\"},\n{\"n\":4,\"v\":\"PASS\"},\n{\"n\":5,\"v\":\"PASS\"}\n],\n\"conditions\": [\n\"②实施时验证Windows目录fsync降级行为、原子替换及崩溃恢复；失败必须STOP，不得降级为非原子写。\",\n\"③实施时确保SHA256SUMS覆盖全部必需文件且校验失败禁止COMPLETED。\",\n\"⑤RELEASE-RECORD.md须在tag创建后记录并独立复核三者映射；tag保护由用户侧落实。\",\n\"本PASS仅代表P0设计通过，不构成实施授权；用户批准冻结v1.0后，P1/P2/P3仍逐级独立批准，906⑥不得绕过，M4继续封闭。\"\n]\n}",
+      "text_sha256": "a463a29f5ec15a169da0381e9544658f9b0b2d7b8965f1ecd13cad740994cd76",
+      "size_bytes": 675,
+      "assistant_uuid": "0d0f1318-0423-436b-9fdc-7b2df2078cf1"
+    }
+  ]
+}

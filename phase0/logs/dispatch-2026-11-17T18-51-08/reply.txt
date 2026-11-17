@@ -1,0 +1,17 @@
+ChatGPT 说：
+
+{
+"result": "REWORK",
+"points": [
+{"n":1,"v":"PASS"},
+{"n":2,"v":"PASS_WITH_CONSTRAINTS"},
+{"n":3,"v":"REWORK"},
+{"n":4,"v":"PASS"},
+{"n":5,"v":"REWORK"}
+],
+"conditions": [
+"③五件套清单及三方基线绑定已补齐；但SHA仅抽核不足以证明完整性，须对全部必需文件逐一计算并校验SHA256，校验通过方可COMPLETED。",
+"⑤tag对象SHA不能写入其自身tag message：对象SHA由message等内容计算，写入后必然改变自身SHA。改为tag message登记被测commit SHA，tag创建后在独立发布记录登记tag对象SHA及二者映射。",
+"修订后再做P0终审；P1仍须独立批准，906⑥不得绕过，M4继续封闭。"
+]
+}

@@ -1,0 +1,124 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-17T18:53:07.305Z",
+  "user_unit_key": "ecf9cc54-e6f2-59b3-a72f-636777e1fc7f:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "ecf9cc54-e6f2-59b3-a72f-636777e1fc7f:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "f6c42d42-ea27-4633-bd23-b94064fe761e",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "ecf9cc54-e6f2-59b3-a72f-636777e1fc7f:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:0:user",
+          "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:2:assistant",
+          "bc4d007a-cc4e-5d55-97c1-226780e96234:0:user",
+          "bc4d007a-cc4e-5d55-97c1-226780e96234:2:assistant",
+          "ecf9cc54-e6f2-59b3-a72f-636777e1fc7f:0:user",
+          "ecf9cc54-e6f2-59b3-a72f-636777e1fc7f:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "9aff7cbecfa0e5c98f2ca27cbd6e7f75322534f7c54f36f92d9d76c290eea1aa",
+          "50e4c530659693258e57a2255e8b3159504f5697ce9c920e293efd146f3f03a2",
+          "2d65104fc633515a25bf174fff648df5e642983f5afc4af6406e10fcae1b2e2b",
+          "2d093edcf61c4da160ae2ff3a64a826b468c87230834121a108d4f59a024ba11",
+          "185ac625bf33a90bab36c7d68c5afc64932a30ba968a23aed3a219156e895f80",
+          "a8d96479829133a623c898aaab969be352ae58b7484d46e876516010f4a21d1e"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:0:user",
+          "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:2:assistant",
+          "bc4d007a-cc4e-5d55-97c1-226780e96234:0:user",
+          "bc4d007a-cc4e-5d55-97c1-226780e96234:2:assistant",
+          "ecf9cc54-e6f2-59b3-a72f-636777e1fc7f:0:user",
+          "ecf9cc54-e6f2-59b3-a72f-636777e1fc7f:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "9aff7cbecfa0e5c98f2ca27cbd6e7f75322534f7c54f36f92d9d76c290eea1aa",
+          "50e4c530659693258e57a2255e8b3159504f5697ce9c920e293efd146f3f03a2",
+          "2d65104fc633515a25bf174fff648df5e642983f5afc4af6406e10fcae1b2e2b",
+          "2d093edcf61c4da160ae2ff3a64a826b468c87230834121a108d4f59a024ba11",
+          "185ac625bf33a90bab36c7d68c5afc64932a30ba968a23aed3a219156e895f80",
+          "a8d96479829133a623c898aaab969be352ae58b7484d46e876516010f4a21d1e"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:0:user",
+          "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:2:assistant",
+          "bc4d007a-cc4e-5d55-97c1-226780e96234:0:user",
+          "bc4d007a-cc4e-5d55-97c1-226780e96234:2:assistant",
+          "ecf9cc54-e6f2-59b3-a72f-636777e1fc7f:0:user",
+          "ecf9cc54-e6f2-59b3-a72f-636777e1fc7f:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "ecf9cc54-e6f2-59b3-a72f-636777e1fc7f:0:user",
+      "ecf9cc54-e6f2-59b3-a72f-636777e1fc7f:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:0:user",
+          "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:2:assistant",
+          "bc4d007a-cc4e-5d55-97c1-226780e96234:0:user",
+          "bc4d007a-cc4e-5d55-97c1-226780e96234:2:assistant",
+          "ecf9cc54-e6f2-59b3-a72f-636777e1fc7f:0:user",
+          "ecf9cc54-e6f2-59b3-a72f-636777e1fc7f:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:0:user",
+          "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:2:assistant",
+          "bc4d007a-cc4e-5d55-97c1-226780e96234:0:user",
+          "bc4d007a-cc4e-5d55-97c1-226780e96234:2:assistant",
+          "ecf9cc54-e6f2-59b3-a72f-636777e1fc7f:0:user",
+          "ecf9cc54-e6f2-59b3-a72f-636777e1fc7f:2:assistant"
+        ],
+        "overlap_keys": [
+          "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:0:user",
+          "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:2:assistant",
+          "bc4d007a-cc4e-5d55-97c1-226780e96234:0:user",
+          "bc4d007a-cc4e-5d55-97c1-226780e96234:2:assistant",
+          "ecf9cc54-e6f2-59b3-a72f-636777e1fc7f:0:user",
+          "ecf9cc54-e6f2-59b3-a72f-636777e1fc7f:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "ecf9cc54-e6f2-59b3-a72f-636777e1fc7f:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n{\n\"result\": \"REWORK\",\n\"points\": [\n{\"n\":1,\"v\":\"PASS\"},\n{\"n\":2,\"v\":\"PASS_WITH_CONSTRAINTS\"},\n{\"n\":3,\"v\":\"REWORK\"},\n{\"n\":4,\"v\":\"PASS\"},\n{\"n\":5,\"v\":\"REWORK\"}\n],\n\"conditions\": [\n\"③五件套清单及三方基线绑定已补齐；但SHA仅抽核不足以证明完整性，须对全部必需文件逐一计算并校验SHA256，校验通过方可COMPLETED。\",\n\"⑤tag对象SHA不能写入其自身tag message：对象SHA由message等内容计算，写入后必然改变自身SHA。改为tag message登记被测commit SHA，tag创建后在独立发布记录登记tag对象SHA及二者映射。\",\n\"修订后再做P0终审；P1仍须独立批准，906⑥不得绕过，M4继续封闭。\"\n]\n}",
+      "text_sha256": "a8d96479829133a623c898aaab969be352ae58b7484d46e876516010f4a21d1e",
+      "size_bytes": 698,
+      "assistant_uuid": "f6c42d42-ea27-4633-bd23-b94064fe761e"
+    }
+  ]
+}
