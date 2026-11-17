@@ -1,0 +1,4 @@
+[C2-BATCH1-R2|20261118] 证据commit已推送:55603281240c11b7ebeabc2df6e1a80cdf31a60b(parent=7819c30),请重做逐项独立复核。
+路径=basic/tasks/b-20261118-c2-batch1-review/(报告c2-batch1-assessment.md+task-brief/steps/requirement)。项②原始证据=phase0/logs/dispatch-2026-11-17T08-51-38/(run.log含INBOUND_WINDOW_COMPLETENESS_UNPROVEN;recoll/含raw-units.json/recoll-result.json/reply.txt;T1最终PASS=DEC-100 reply 714e2282…)。项③已按你裁定剔除为INVALIDATED审计记录;①④⑤⑥按你裁定列入下一批受控验证。
+请直读复核:报告六项结论与证据可溯源否?项②PASS可否签核?
+JSON{"result":"PASS|REWORK","items":[{"n":1,"v":""},{"n":2,"v":"","note":""},{"n":3},{"n":4},{"n":5},{"n":6}],"next":"","conditions":[]}≤700B

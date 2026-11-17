@@ -1,0 +1,108 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-17T18:35:28.723Z",
+  "user_unit_key": "329e7c77-e485-59d1-8447-5ce40f7ed365:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "329e7c77-e485-59d1-8447-5ce40f7ed365:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "2a0f1f5a-c91f-4297-9556-30776a2c0bd6",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "329e7c77-e485-59d1-8447-5ce40f7ed365:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "e514ae9c-b71b-5051-b726-c749fcf42b36:0:user",
+          "e514ae9c-b71b-5051-b726-c749fcf42b36:2:assistant",
+          "329e7c77-e485-59d1-8447-5ce40f7ed365:0:user",
+          "329e7c77-e485-59d1-8447-5ce40f7ed365:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "8e51c421a1511945e3d8b9b9808e48d0b73072d62ac9bc0fbb15aa59e477ef68",
+          "2584d1c47ce5e4ccd2e4fb791a3d5f52e18206479f3503fd794276018926f9ed",
+          "76f7e94bdf2b3bd4c9da16fc81ad707e5369958ff32f4aacfecc24214b38782d",
+          "af674bfc8041a31d102472b4e2e71ab75b17b6151d788b9b036a20f22bb82d24"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "e514ae9c-b71b-5051-b726-c749fcf42b36:0:user",
+          "e514ae9c-b71b-5051-b726-c749fcf42b36:2:assistant",
+          "329e7c77-e485-59d1-8447-5ce40f7ed365:0:user",
+          "329e7c77-e485-59d1-8447-5ce40f7ed365:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "8e51c421a1511945e3d8b9b9808e48d0b73072d62ac9bc0fbb15aa59e477ef68",
+          "2584d1c47ce5e4ccd2e4fb791a3d5f52e18206479f3503fd794276018926f9ed",
+          "76f7e94bdf2b3bd4c9da16fc81ad707e5369958ff32f4aacfecc24214b38782d",
+          "af674bfc8041a31d102472b4e2e71ab75b17b6151d788b9b036a20f22bb82d24"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "e514ae9c-b71b-5051-b726-c749fcf42b36:0:user",
+          "e514ae9c-b71b-5051-b726-c749fcf42b36:2:assistant",
+          "329e7c77-e485-59d1-8447-5ce40f7ed365:0:user",
+          "329e7c77-e485-59d1-8447-5ce40f7ed365:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "329e7c77-e485-59d1-8447-5ce40f7ed365:0:user",
+      "329e7c77-e485-59d1-8447-5ce40f7ed365:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "e514ae9c-b71b-5051-b726-c749fcf42b36:0:user",
+          "e514ae9c-b71b-5051-b726-c749fcf42b36:2:assistant",
+          "329e7c77-e485-59d1-8447-5ce40f7ed365:0:user",
+          "329e7c77-e485-59d1-8447-5ce40f7ed365:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "e514ae9c-b71b-5051-b726-c749fcf42b36:0:user",
+          "e514ae9c-b71b-5051-b726-c749fcf42b36:2:assistant",
+          "329e7c77-e485-59d1-8447-5ce40f7ed365:0:user",
+          "329e7c77-e485-59d1-8447-5ce40f7ed365:2:assistant"
+        ],
+        "overlap_keys": [
+          "e514ae9c-b71b-5051-b726-c749fcf42b36:0:user",
+          "e514ae9c-b71b-5051-b726-c749fcf42b36:2:assistant",
+          "329e7c77-e485-59d1-8447-5ce40f7ed365:0:user",
+          "329e7c77-e485-59d1-8447-5ce40f7ed365:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "329e7c77-e485-59d1-8447-5ce40f7ed365:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n{\n\"result\": \"REWORK\",\n\"items\": [\n{\"n\":1,\"v\":\"REWORK\",\"note\":\"缺少全仓成功采集实例，解析单测不能替代真实多unit链路验收。\"},\n{\"n\":2,\"v\":\"PASS（待证据复核）\",\"note\":\"触发→禁重发→recoll补采→PASS逻辑成立，但未取得原始证据包，暂不能独立签核。\"},\n{\"n\":3,\"v\":\"INVALIDATED\",\"note\":\"认可。独立查询确认damwate/AIEO为public，私有仓库权限前提不成立，不能计为有效测试场景。\"},\n{\"n\":4,\"v\":\"REWORK\",\"note\":\"已有DEC-103处置实证，但退避耗尽判死缺少真实链路实例。\"},\n{\"n\":5,\"v\":\"REWORK\",\"note\":\"源码路径存在不等于多文件部分读取失败已实证。\"},\n{\"n\":6,\"v\":\"REWORK\",\"note\":\"43用例及D1'/908单任务PASS不能证明M1平台级并发。\"}\n],\n\"next\":\"认可①④⑤⑥四项进入下一批受控验证；②保留PASS候选，补齐原始证据后签核；③从有效场景清单剔除，保留为INVALIDATED审计记录。\",\n\"conditions\":[\n\"当前独立复核发现：指定证据目录在7819c30及当前main均无法读取，路径提交记录亦未检出。故本轮不能冒充完成原始证据复核。\",\n\"请提供实际证据提交的完整40位SHA及对应目录，重新执行逐项独立复核。\",\n\"下一批四项均采用小批量、只读优先、五类即停、五件套留证及批次复盘。\",\n\"不得因本轮裁定自动授权代码写入、M1扩展或生产操作。\"\n]\n}",
+      "text_sha256": "af674bfc8041a31d102472b4e2e71ab75b17b6151d788b9b036a20f22bb82d24",
+      "size_bytes": 1439,
+      "assistant_uuid": "2a0f1f5a-c91f-4297-9556-30776a2c0bd6"
+    }
+  ]
+}

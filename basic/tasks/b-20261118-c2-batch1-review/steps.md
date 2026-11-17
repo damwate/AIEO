@@ -3,10 +3,14 @@
 | 步骤 | 内容 | 状态 | 证据 |
 |---|---|---|---|
 | S1 | 开工登记（requirement/task-brief/steps） | COMPLETED | 本任务包；DEC-106 |
-| S2 | 六项证据采集（只读实查） | IN_PROGRESS | assessment 报告 §证据 |
-| S3 | 逐项评估报告（PASS/REWORK/BLOCKED） | PENDING | c2-batch1-assessment.md |
-| S4 | 独立验收派单（审查腿只读复核，五件套） | PENDING | dispatch 现场+record |
-| S5 | 交付收口（delivery.md） | PENDING | delivery.md |
+| S2 | 六项证据采集（只读实查） | COMPLETED | c2-batch1-assessment.md §表 |
+| S3 | 逐项评估报告（PASS/REWORK/BLOCKED） | COMPLETED | c2-batch1-assessment.md（commit 5560328） |
+| S4 | 独立验收派单（审查方直读复核） | COMPLETED | R1 REWORK（证据未推送，如实登记）→R2 **PASS**（reply `16a723c6…`，dispatch-2026-11-17T18-36-47） |
+| S5 | 交付收口（delivery.md） | COMPLETED | delivery.md |
 
-**当前状态：** IN_PROGRESS（S2）
-**返工表：** 无 REJECT 历史，不建表（Basic 工作流惯例）
+**当前状态：** COMPLETED（最终 PASS，六项 1 PASS/1 INVALIDATED/4 REWORK 进下一批）
+**返工表：**
+
+| 轮 | 结论 | 整改 | 复核 |
+|---|---|---|---|
+| R1 | REWORK（证据 commit 未推送无法直读——派单顺序缺陷） | 推送证据 commit 5560328→带完整 SHA 重派（ST-03 路径） | R2 PASS |
