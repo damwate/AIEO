@@ -1,0 +1,5 @@
+[C2-BATCH2-S4-04A|20261119] 场景④-A 独立验收（死会话派单层）
+读:github.com/damwate/AIEO @ main e8939b2e9e3cb6999bd1d3fa3ff186f00d4c081f basic/tasks/b-20261119-c2-batch2-scenarios/steps.md 的 S3-④-A 节（五阶段执行记录+全部证据目录指针）。
+要点:一次性会话6afdfaf1创建→PATCH删除GET404死态→死会话派单dispatch-2026-11-18T19-24-59→ChatGPT重定向副作用会话6afdfbba(模型按简报指令答"错误成功：死会话收到消息")→SESSION_ATTRIBUTION_FAIL当场拦截拒写指针/拒写成功/无result.json→现场留存;副作用+①测试会话先存证后删除双验证;审查会话核验完好(尾SHA=552a463a=R3裁定)。
+断言对照冻结方案④-A:无错误成功登记/无误更新审查指针/无重复发送/退出清理+错误现场留存——四项全成立;附加发现=壳层就绪检查不拦死页,归属校验为决定性防线(演进建议已登记)。
+请求三态:④-A PASS/ADJUST/REJECT(PASS=签核派单层死会话安全失败,解除建议仅限派单层死会话处理限制)。

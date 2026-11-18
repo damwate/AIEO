@@ -1,0 +1,6 @@
+[C2-BATCH2-S4-04B|20261119] 场景④-B 独立验收（限时断网派单层）
+读:github.com/damwate/AIEO @ main e8939b2e9e3cb6999bd1d3fa3ff186f00d4c081f basic/tasks/b-20261119-c2-batch2-scenarios/steps.md 的 S3-④-B 节（全部证据目录指针）。
+要点:一次性会话6afdfd07→页面级CDP offline隔离窗口(armed 19:33:14.092Z,不触碰系统代理/GitHub/VPN)→窗口内派单dispatch-2026-11-18T19-33-14→page.goto ERR_INTERNET_DISCONNECTED即刻中止(无result.json/零发送双验行=无发送无错误成功无重发)→disarmed 19:33:15.353Z→恢复验证驱动c2batch2-s3-04b-restore-2026-11-18T19-33-42-270Z页内fetch=200 RESTORED=true→清理c2batch2-s3-04b-cleanup-2026-11-18T19-34-03-683Z(先存证2units后删GET404)→指针恢复。
+边界:隔离仅测试对象✓窗口有界✓恢复验证✓(首查6ms竞态失败如实登记,补显式恢复)。
+迁移评估(L-018.6):第4条user达阈值,按例外①(验收阶段迁移反增成本)暂不迁移,每增2条重评。
+请求三态:④-B PASS/ADJUST/REJECT(PASS=签核派单层断网安全失败,解除建议仅限派单层断网处理限制)。

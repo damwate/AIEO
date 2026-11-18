@@ -1,0 +1,72 @@
+ChatGPT 说：
+④-A：PASS
+JSON
+{
+  "scenario": "C2-BATCH2-S4-04A",
+  "review_round": "S4",
+  "reviewed_commit": "e8939b2e9e3cb6999bd1d3fa3ff186f00d4c081f",
+  "review_status": "PASS",
+  "terminal_classification": "SAFE_FAILURE",
+  "findings": [
+    {
+      "id": "G1",
+      "status": "PASS",
+      "reason": "一次性会话创建证据完整：6afdfaf1 创建成功，原始派单结果及 raw-units 均记录该会话 ID。"
+    },
+    {
+      "id": "G2",
+      "status": "PASS",
+      "reason": "PATCH 返回 200，GET 返回 404，UI convUnits=0；死态验证成立。DELETE=405、POST delete=404 的尝试也有原始记录。"
+    },
+    {
+      "id": "G3",
+      "status": "PASS",
+      "reason": "死会话派单仅执行一次。ChatGPT 实际将消息承接到副作用会话 6afdfbba，并返回诱导性错误成功文本；SESSION_ATTRIBUTION_FAIL 检测到捕获会话不等于目标会话，拒绝写指针及成功结果。"
+    },
+    {
+      "id": "G4",
+      "status": "PASS",
+      "reason": "失败现场明确保留，无 result.json；未登记错误成功，未误更新审查会话指针，无重复发送。"
+    },
+    {
+      "id": "G5",
+      "status": "PASS",
+      "reason": "后续清理先保存副作用会话和①测试会话的现场快照，再分别 PATCH=200、GET=404；审查会话核验 unit_count=6，尾 SHA256 与 R3 裁定前缀 552a463a 一致。"
+    },
+    {
+      "id": "G6",
+      "status": "PASS",
+      "reason": "五阶段证据链相互吻合，包含创建、删除、派单、归属拦截、清理恢复及审查会话完整性验证。"
+    }
+  ],
+  "additional_findings": [
+    {
+      "id": "A1",
+      "status": "OBSERVED",
+      "reason": "壳层就绪检查未识别死页：bodyLen=281 时仍判定会话就绪。"
+    },
+    {
+      "id": "A2",
+      "status": "CONFIRMED",
+      "reason": "会话归属校验是本次阻止错误成功登记的决定性防线；应保留 fail-closed 行为。"
+    }
+  ],
+  "collector_failure": false,
+  "false_success_recorded": false,
+  "reviewer_pointer_corrupted": false,
+  "duplicate_dispatch": false,
+  "failure_scene_preserved": true,
+  "cleanup_verified": true,
+  "dec017": {
+    "dispatch_dead_session_restriction": "ELIGIBLE_FOR_ITEM_SCOPED_RELEASE",
+    "release_scope": "DISPATCH_LAYER_DEAD_SESSION_HANDLING_ONLY",
+    "restriction_released": false,
+    "other_restrictions": "UNCHANGED"
+  },
+  "final_decision": "PASS",
+  "next_action": "④-A 可提交逐项解除建议；不得据此解除④-B、D1、D2、⑤或其他 DEC-017 限制。"
+}
+
+独立核验依据： steps.md blob 587fa098...；死态验证 30492f77...；派单日志 7739ce56...；副作用快照 8c09df94...；清理验证 af508660...；审查会话核验 2fa2f6d4...。以上均来自指定完整 SHA 的 Git tree/blob，不以执行者自述作为验收依据。
+
+边界裁定： 本项 PASS 证明的是派单层安全失败，而不是壳层就绪检查已经具备死会话识别能力。后者作为工具链演进建议登记，不构成本项阻断，也不能扩大解除范围。

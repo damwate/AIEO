@@ -1,0 +1,108 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-18T19:50:18.538Z",
+  "user_unit_key": "f8025691-1d84-5ebc-847f-33eb05f07cad:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "f8025691-1d84-5ebc-847f-33eb05f07cad:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "41790801-02df-4149-9a75-6088e8a848ef",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "f8025691-1d84-5ebc-847f-33eb05f07cad:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "f14e75d2-55ac-5949-98d9-136c76edbfc7:0:user",
+          "f14e75d2-55ac-5949-98d9-136c76edbfc7:2:assistant",
+          "f8025691-1d84-5ebc-847f-33eb05f07cad:0:user",
+          "f8025691-1d84-5ebc-847f-33eb05f07cad:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "d33fec6623911f7a2098880bcdc3184d257c0e896005a3e749f5c94c24b8e8bb",
+          "a89805a961868a3c5a1d2f45f483c636c32308b05da440f21dfc3480f753ac28",
+          "37dc04cc4307433df578722342b05fbab40400a6ee66ca81145441f4ed58ba52",
+          "b28313234a0a50f20ae617a4943dc0b735a55ea97321e7c013bfa7fa621fbc49"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "f14e75d2-55ac-5949-98d9-136c76edbfc7:0:user",
+          "f14e75d2-55ac-5949-98d9-136c76edbfc7:2:assistant",
+          "f8025691-1d84-5ebc-847f-33eb05f07cad:0:user",
+          "f8025691-1d84-5ebc-847f-33eb05f07cad:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "d33fec6623911f7a2098880bcdc3184d257c0e896005a3e749f5c94c24b8e8bb",
+          "a89805a961868a3c5a1d2f45f483c636c32308b05da440f21dfc3480f753ac28",
+          "37dc04cc4307433df578722342b05fbab40400a6ee66ca81145441f4ed58ba52",
+          "b28313234a0a50f20ae617a4943dc0b735a55ea97321e7c013bfa7fa621fbc49"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "f14e75d2-55ac-5949-98d9-136c76edbfc7:0:user",
+          "f14e75d2-55ac-5949-98d9-136c76edbfc7:2:assistant",
+          "f8025691-1d84-5ebc-847f-33eb05f07cad:0:user",
+          "f8025691-1d84-5ebc-847f-33eb05f07cad:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "f8025691-1d84-5ebc-847f-33eb05f07cad:0:user",
+      "f8025691-1d84-5ebc-847f-33eb05f07cad:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "f14e75d2-55ac-5949-98d9-136c76edbfc7:0:user",
+          "f14e75d2-55ac-5949-98d9-136c76edbfc7:2:assistant",
+          "f8025691-1d84-5ebc-847f-33eb05f07cad:0:user",
+          "f8025691-1d84-5ebc-847f-33eb05f07cad:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "f14e75d2-55ac-5949-98d9-136c76edbfc7:0:user",
+          "f14e75d2-55ac-5949-98d9-136c76edbfc7:2:assistant",
+          "f8025691-1d84-5ebc-847f-33eb05f07cad:0:user",
+          "f8025691-1d84-5ebc-847f-33eb05f07cad:2:assistant"
+        ],
+        "overlap_keys": [
+          "f14e75d2-55ac-5949-98d9-136c76edbfc7:0:user",
+          "f14e75d2-55ac-5949-98d9-136c76edbfc7:2:assistant",
+          "f8025691-1d84-5ebc-847f-33eb05f07cad:0:user",
+          "f8025691-1d84-5ebc-847f-33eb05f07cad:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "f8025691-1d84-5ebc-847f-33eb05f07cad:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n④-A：PASS\nJSON\n{\n  \"scenario\": \"C2-BATCH2-S4-04A\",\n  \"review_round\": \"S4\",\n  \"reviewed_commit\": \"e8939b2e9e3cb6999bd1d3fa3ff186f00d4c081f\",\n  \"review_status\": \"PASS\",\n  \"terminal_classification\": \"SAFE_FAILURE\",\n  \"findings\": [\n    {\n      \"id\": \"G1\",\n      \"status\": \"PASS\",\n      \"reason\": \"一次性会话创建证据完整：6afdfaf1 创建成功，原始派单结果及 raw-units 均记录该会话 ID。\"\n    },\n    {\n      \"id\": \"G2\",\n      \"status\": \"PASS\",\n      \"reason\": \"PATCH 返回 200，GET 返回 404，UI convUnits=0；死态验证成立。DELETE=405、POST delete=404 的尝试也有原始记录。\"\n    },\n    {\n      \"id\": \"G3\",\n      \"status\": \"PASS\",\n      \"reason\": \"死会话派单仅执行一次。ChatGPT 实际将消息承接到副作用会话 6afdfbba，并返回诱导性错误成功文本；SESSION_ATTRIBUTION_FAIL 检测到捕获会话不等于目标会话，拒绝写指针及成功结果。\"\n    },\n    {\n      \"id\": \"G4\",\n      \"status\": \"PASS\",\n      \"reason\": \"失败现场明确保留，无 result.json；未登记错误成功，未误更新审查会话指针，无重复发送。\"\n    },\n    {\n      \"id\": \"G5\",\n      \"status\": \"PASS\",\n      \"reason\": \"后续清理先保存副作用会话和①测试会话的现场快照，再分别 PATCH=200、GET=404；审查会话核验 unit_count=6，尾 SHA256 与 R3 裁定前缀 552a463a 一致。\"\n    },\n    {\n      \"id\": \"G6\",\n      \"status\": \"PASS\",\n      \"reason\": \"五阶段证据链相互吻合，包含创建、删除、派单、归属拦截、清理恢复及审查会话完整性验证。\"\n    }\n  ],\n  \"additional_findings\": [\n    {\n      \"id\": \"A1\",\n      \"status\": \"OBSERVED\",\n      \"reason\": \"壳层就绪检查未识别死页：bodyLen=281 时仍判定会话就绪。\"\n    },\n    {\n      \"id\": \"A2\",\n      \"status\": \"CONFIRMED\",\n      \"reason\": \"会话归属校验是本次阻止错误成功登记的决定性防线；应保留 fail-closed 行为。\"\n    }\n  ],\n  \"collector_failure\": false,\n  \"false_success_recorded\": false,\n  \"reviewer_pointer_corrupted\": false,\n  \"duplicate_dispatch\": false,\n  \"failure_scene_preserved\": true,\n  \"cleanup_verified\": true,\n  \"dec017\": {\n    \"dispatch_dead_session_restriction\": \"ELIGIBLE_FOR_ITEM_SCOPED_RELEASE\",\n    \"release_scope\": \"DISPATCH_LAYER_DEAD_SESSION_HANDLING_ONLY\",\n    \"restriction_released\": false,\n    \"other_restrictions\": \"UNCHANGED\"\n  },\n  \"final_decision\": \"PASS\",\n  \"next_action\": \"④-A 可提交逐项解除建议；不得据此解除④-B、D1、D2、⑤或其他 DEC-017 限制。\"\n}\n\n独立核验依据： steps.md blob 587fa098...；死态验证 30492f77...；派单日志 7739ce56...；副作用快照 8c09df94...；清理验证 af508660...；审查会话核验 2fa2f6d4...。以上均来自指定完整 SHA 的 Git tree/blob，不以执行者自述作为验收依据。\n\n边界裁定： 本项 PASS 证明的是派单层安全失败，而不是壳层就绪检查已经具备死会话识别能力。后者作为工具链演进建议登记，不构成本项阻断，也不能扩大解除范围。",
+      "text_sha256": "b28313234a0a50f20ae617a4943dc0b735a55ea97321e7c013bfa7fa621fbc49",
+      "size_bytes": 3075,
+      "assistant_uuid": "41790801-02df-4149-9a75-6088e8a848ef"
+    }
+  ]
+}

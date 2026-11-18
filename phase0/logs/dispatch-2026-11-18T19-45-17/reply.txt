@@ -1,0 +1,69 @@
+ChatGPT 说：
+PASS｜场景① BLOCKED 终态签核
+JSON
+{
+  "scenario": "C2-BATCH2-S4-01",
+  "review_round": "R2",
+  "reviewed_commit": "e8939b2e9e3cb6999bd1d3fa3ff186f00d4c081f",
+  "review_status": "PASS",
+  "terminal_classification": "BLOCKED",
+  "attribution": "MODEL_SIDE_UNABLE_TO_TRIGGER",
+  "findings": [
+    {
+      "id": "G1",
+      "status": "PASS",
+      "reason": "主尝试unit_count=1，模型将三段文本合并为单个assistant unit，原始artifact及SHA256证据对应。"
+    },
+    {
+      "id": "G2",
+      "status": "PASS",
+      "reason": "备用策略仅触发一次，明确要求三个独立气泡；模型明确回答无法拆分。"
+    },
+    {
+      "id": "G3",
+      "status": "PASS",
+      "reason": "四unit静态DOM诊断成立：2 user+2 assistant，备用assistant正文16字节，索引连续。"
+    },
+    {
+      "id": "G4",
+      "status": "PASS",
+      "reason": "已严格区分RECOLL FAILED与断言前成功落盘的units-diag.json，不再混淆驱动终态和静态诊断结果。"
+    },
+    {
+      "id": "G5",
+      "status": "PASS",
+      "reason": "MANIFEST登记18项SHA256及文件大小，四类证据目录覆盖完整；缺失文件如实标注，没有伪造原始结果。"
+    },
+    {
+      "id": "G6",
+      "status": "PASS",
+      "reason": "清理记录闭环：先存证4 units，再删除测试会话，PATCH=200、GET=404；审查会话6 units完整性得到复核。"
+    }
+  ],
+  "collector_failure": false,
+  "model_side_blocked": true,
+  "reexecution_required": false,
+  "additional_model_attempt_allowed": false,
+  "dec017": {
+    "multi_assistant_unit_restriction": "RETAINED",
+    "restriction_released": false
+  },
+  "final_decision": "PASS",
+  "next_action": "进入场景④-A独立验收，不因本项BLOCKED影响其他场景"
+}
+
+最终裁定说明：
+
+原 ADJUST 的四项整改均已落实，且没有通过重新消耗模型尝试来制造结果。
+
+①的模型触发条件确实未满足，不能把三段文本误认成三个独立 assistant unit。
+
+采集器没有被证明存在缺陷，不能把模型能力限制转嫁为采集器失败。
+
+清理记录证明测试会话已删除，审查会话保持完整。
+
+DEC-017：不解除。
+
+场景①正式签核 PASS，但其业务能力终态仍为 BLOCKED。这是两个不同层次的结论。
+
+允许继续 S4 场景④-A独立验收，不构成批量放行。

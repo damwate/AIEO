@@ -1,0 +1,82 @@
+[
+  {
+    "key": "88e8f56c-e8dc-567d-9a5e-48680d3e4f41:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 748,
+    "text_head": "[C2-BATCH2-S4-01|20261119] 会话迁移+场景①独立验收（BLOCKED 签核）\n接棒:旧审查会话6afdf44d承载v0.3冻结三轮(R1 ADJUST/R2 PASS/R3终局拍板PASS+GO,3条user消息),换阶段迁出只读归档;本会话承接906/C2第二批S4六项逐项独立验收,本轮=①",
+    "text_tail": "DEC-017对应限制保留不解除。\n请求三态:对①BLOCKED归因与证据签核(PASS=认可BLOCKED终态/ADJUST=给条件/REJECT=给理由)。"
+  },
+  {
+    "key": "88e8f56c-e8dc-567d-9a5e-48680d3e4f41:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 2135,
+    "text_head": "ChatGPT 说：\nADJUST｜证据补齐后签核\nJSON\n{\n  \"scenario\": \"C2-BATCH2-S4-01\",\n  \"scenario_id\": \"①\",\n  \"reviewed_commit\": \"23487c97afeddf9e92fbf9721c0eca86500cc519\",\n  \"revi",
+    "text_tail": "规定的证据交付完整性。\n\n特别强调：①即使最终签核 PASS，也只认可 BLOCKED 终态，不解除 DEC-017 的多 assistant unit 限制。"
+  },
+  {
+    "key": "f14e75d2-55ac-5949-98d9-136c76edbfc7:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 747,
+    "text_head": "[C2-BATCH2-S4-01-R2|20261119] 场景①整改复核（原证据复核,无重新尝试）\n承 S4-01 ADJUST(7427b1f9…3353B),四项 required_adjustments 已落实:\n1)MANIFEST=acceptance/s4-01-manifest.txt(18 文件 SH",
+    "text_tail": "请求:对①BLOCKED 终态签核(PASS=认可 BLOCKED 终态,DEC-017 多 unit 限制仍保留/ADJUST/REJECT)。\n…\n显示更多"
+  },
+  {
+    "key": "f14e75d2-55ac-5949-98d9-136c76edbfc7:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 1634,
+    "text_head": "ChatGPT 说：\nPASS｜场景① BLOCKED 终态签核\nJSON\n{\n  \"scenario\": \"C2-BATCH2-S4-01\",\n  \"review_round\": \"R2\",\n  \"reviewed_commit\": \"e8939b2e9e3cb6999bd1d3fa3ff186f00d4c081f\"",
+    "text_tail": "7：不解除。\n\n场景①正式签核 PASS，但其业务能力终态仍为 BLOCKED。这是两个不同层次的结论。\n\n允许继续 S4 场景④-A独立验收，不构成批量放行。"
+  },
+  {
+    "key": "f8025691-1d84-5ebc-847f-33eb05f07cad:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 580,
+    "text_head": "[C2-BATCH2-S4-04A|20261119] 场景④-A 独立验收（死会话派单层）\n读:github.com/damwate/AIEO @ main e8939b2e9e3cb6999bd1d3fa3ff186f00d4c081f basic/tasks/b-20261119-c2-batch2-scenar",
+    "text_tail": "决定性防线(演进建议已登记)。\n请求三态:④-A PASS/ADJUST/REJECT(PASS=签核派单层死会话安全失败,解除建议仅限派单层死会话处理限制)。"
+  },
+  {
+    "key": "f8025691-1d84-5ebc-847f-33eb05f07cad:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 2157,
+    "text_head": "ChatGPT 说：\n④-A：PASS\nJSON\n{\n  \"scenario\": \"C2-BATCH2-S4-04A\",\n  \"review_round\": \"S4\",\n  \"reviewed_commit\": \"e8939b2e9e3cb6999bd1d3fa3ff186f00d4c081f\",\n  \"review_",
+    "text_tail": "\n边界裁定： 本项 PASS 证明的是派单层安全失败，而不是壳层就绪检查已经具备死会话识别能力。后者作为工具链演进建议登记，不构成本项阻断，也不能扩大解除范围。"
+  },
+  {
+    "key": "10636489-8f24-592f-b6d7-9b343fa05ee7:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 718,
+    "text_head": "[C2-BATCH2-S4-04B|20261119] 场景④-B 独立验收（限时断网派单层）\n读:github.com/damwate/AIEO @ main e8939b2e9e3cb6999bd1d3fa3ff186f00d4c081f basic/tasks/b-20261119-c2-batch2-scena",
+    "text_tail": "反增成本)暂不迁移,每增2条重评。\n请求三态:④-B PASS/ADJUST/REJECT(PASS=签核派单层断网安全失败,解除建议仅限派单层断网处理限制)。"
+  },
+  {
+    "key": "10636489-8f24-592f-b6d7-9b343fa05ee7:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 2748,
+    "text_head": "ChatGPT 说：\n④-B：PASS\nJSON\n{\n  \"scenario\": \"C2-BATCH2-S4-04B\",\n  \"review_round\": \"S4\",\n  \"reviewed_commit\": \"e8939b2e9e3cb6999bd1d3fa3ff186f00d4c081f\",\n  \"review_",
+    "text_tail": "径没有触及指针写入。\n\n最终裁定：④-B PASS。 仅建议解除 DEC-017 中派单层临时断网处理限制；解除动作仍待后续正式决策登记，不因本次验收自动生效。"
+  },
+  {
+    "key": "a60a773b-b650-504d-a1dc-f8409769c633:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 711,
+    "text_head": "[C2-BATCH2-S4-04D1|20261119] 场景④-D1 独立验收（GitPointer 网络连接耗尽）\n读:github.com/damwate/AIEO @ main e8939b2e9e3cb6999bd1d3fa3ff186f00d4c081f basic/tasks/b-20261119-c2-",
+    "text_tail": "测试侧realFetch适配,生产代码零改动。\n请求三态:④-D1 PASS/ADJUST/REJECT(PASS=签核网络异常有限重试能力,解除仅限该限制)。"
+  },
+  {
+    "key": "a60a773b-b650-504d-a1dc-f8409769c633:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 10,
+    "text_head": "ChatGPT 说：",
+    "text_tail": "ChatGPT 说："
+  }
+]

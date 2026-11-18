@@ -1,0 +1,156 @@
+ChatGPT 说：
+④-B：PASS
+JSON
+{
+  "scenario": "C2-BATCH2-S4-04B",
+  "review_round": "S4",
+  "reviewed_commit": "e8939b2e9e3cb6999bd1d3fa3ff186f00d4c081f",
+  "review_status": "PASS",
+  "terminal_classification": "SAFE_FAILURE",
+  "findings": [
+    {
+      "id": "G1",
+      "status": "PASS",
+      "reason": "专用一次性会话 6afdfd07 已创建并用于本场景，目标与审查会话隔离。"
+    },
+    {
+      "id": "G2",
+      "status": "PASS",
+      "reason": "CDP Network.emulateNetworkConditions 仅对目标页面 target 设置 offline；驱动源码未操作系统代理、VPN 或 GitHub 网络。离线摸底 fetch 失败，隔离生效。"
+    },
+    {
+      "id": "G3",
+      "status": "PASS",
+      "reason": "断网窗口内派单在 page.goto 阶段因 ERR_INTERNET_DISCONNECTED 中止。dispatch 日志没有发送双验记录，没有进入发送阶段；无 result.json，无 COMPLETED 或错误成功登记，无重发。"
+    },
+    {
+      "id": "G4",
+      "status": "PASS",
+      "reason": "离线窗口有明确 armed_at=19:33:14.092Z、disarmed_at=19:33:15.353Z，持续约1.261秒；失败现场及 tab-audit 保留，既有值守页未被关闭。"
+    },
+    {
+      "id": "G5",
+      "status": "PASS",
+      "reason": "窗口驱动解除后的首次恢复探测仍失败，已如实记录；后续显式恢复驱动清除 offline 覆盖，页内 fetch 返回 HTTP 200，RESTORED=true。恢复结果有独立日志和 JSON。"
+    },
+    {
+      "id": "G6",
+      "status": "PASS",
+      "reason": "清理前完整快照记录目标会话2 units；随后 PATCH=200、GET=404，dead=true。派单在 goto 阶段失败，未到达会话归属校验及 reviewer 指针写入阶段，因此本次失败没有覆盖审查指针。"
+    }
+  ],
+  "collector_failure": false,
+  "false_success_recorded": false,
+  "message_sent": false,
+  "duplicate_dispatch": false,
+  "offline_window_bounded": true,
+  "network_scope_isolated": true,
+  "restore_verified": true,
+  "cleanup_verified": true,
+  "dec017": {
+    "dispatch_offline_restriction": "ELIGIBLE_FOR_ITEM_SCOPED_RELEASE",
+    "release_scope": "DISPATCH_LAYER_TEMPORARY_OFFLINE_HANDLING_ONLY",
+    "restriction_released": false,
+    "other_restrictions": "UNCHANGED"
+  },
+  "migration": {
+    "reviewer_session_migration": "DEFERRED",
+    "reason": "按L-018.6例外①，验收阶段迁移预计增加成本；每新增2条user消息重新评估",
+    "acceptance_blocker": false
+  },
+  "final_decision": "PASS",
+  "next_action": "④-B可提交逐项解除建议；不得据此解除④-A、D1、D2、⑤或其他DEC-017限制。"
+}
+
+独立核验的关键证据及 blob SHA：
+
+证据
+
+	
+
+Blob SHA
+
+
+
+
+offline-window.json
+
+	
+
+194d9cd1e2409355988cc4306eeb90b1444be089
+
+
+
+
+断网窗口运行日志
+
+	
+
+e6ed07540993ab3b09a3ad937f6a2b11a7c460c1
+
+
+
+
+派单运行日志
+
+	
+
+36b072157bd20176f7fe1928214adbbcfe7ee1af
+
+
+
+
+派单 tab-audit
+
+	
+
+fd926e84ca5fc211828ef2fdd52de4ac3728911c
+
+
+
+
+显式恢复验证
+
+	
+
+1c2452a603987da5cccf596843d0f334f73a34f6
+
+
+
+
+清理快照
+
+	
+
+90cc142991c1bb6c34b3634c39851737b9c7a134
+
+
+
+
+清理验证
+
+	
+
+4562fbdd6805ca6c1e210401e66a61a1f6b39b3d
+
+
+
+
+窗口驱动源码
+
+	
+
+baeb85d698f76bd6b73c39f36ca4a4fe35dec96a
+
+
+
+
+恢复驱动源码
+
+	
+
+261a5058a5dbc0938e31ed447bdea5b957535f55
+
+边界说明： 首次恢复探测失败不是隐藏的 PASS 条件，而是一次真实竞态；后续显式清除覆盖并以 HTTP 200 验证恢复，才构成闭环。审查指针方面，本次派单在 page.goto 即中止，源码中的指针写入发生在后续会话归属验证通过之后，因此本次路径没有触及指针写入。
+
+最终裁定：④-B PASS。 仅建议解除 DEC-017 中派单层临时断网处理限制；解除动作仍待后续正式决策登记，不因本次验收自动生效。

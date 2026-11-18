@@ -1,0 +1,8 @@
+[C2-BATCH2-S4-01-R2|20261119] 场景①整改复核（原证据复核,无重新尝试）
+承 S4-01 ADJUST(7427b1f9…3353B),四项 required_adjustments 已落实:
+1)MANIFEST=acceptance/s4-01-manifest.txt(18 文件 SHA256,覆盖主尝试/备用派单/补采诊断/清理记录四目录;备用目录缺 reply.txt/result.json 如实标注缺失,未伪造);
+2)G4 口径修正于 steps.md:补采驱动终态=RECOLL FAILED("回复过短疑似空正文:16"断言抛出),units-diag.json=断言前落盘的独立静态 DOM 诊断成功,两者不再混同;
+3)备用回复原始内容("ChatGPT 说：\n\n无法拆分")与 16 字节长度、四 unit 诊断引用已入 steps.md S3-①;
+4)测试会话清理记录已登记闭环(6afdf8eb 先存证 4 units 后删除 GET404,现场 c2batch2-s3-04a-cleanup-2026-11-18T19-27-57-583Z)。
+读:github.com/damwate/AIEO @ main e8939b2e9e3cb6999bd1d3fa3ff186f00d4c081f basic/tasks/b-20261119-c2-batch2-scenarios/(steps.md+acceptance/s4-01-manifest.txt)。
+请求:对①BLOCKED 终态签核(PASS=认可 BLOCKED 终态,DEC-017 多 unit 限制仍保留/ADJUST/REJECT)。

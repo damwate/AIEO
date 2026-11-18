@@ -1,0 +1,108 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-18T19:53:28.890Z",
+  "user_unit_key": "10636489-8f24-592f-b6d7-9b343fa05ee7:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "10636489-8f24-592f-b6d7-9b343fa05ee7:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "1802bc3c-0cc2-4508-8768-f46f884d589f",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "10636489-8f24-592f-b6d7-9b343fa05ee7:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "f8025691-1d84-5ebc-847f-33eb05f07cad:0:user",
+          "f8025691-1d84-5ebc-847f-33eb05f07cad:2:assistant",
+          "10636489-8f24-592f-b6d7-9b343fa05ee7:0:user",
+          "10636489-8f24-592f-b6d7-9b343fa05ee7:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "37dc04cc4307433df578722342b05fbab40400a6ee66ca81145441f4ed58ba52",
+          "b28313234a0a50f20ae617a4943dc0b735a55ea97321e7c013bfa7fa621fbc49",
+          "a18f3ac7fded9332bf74d97de26b1e518840d737aa319520872c5735652a2768",
+          "e9325b63bd255753c5225b663c55949c2f695b58260f79cb9938d3040f841cf7"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "f8025691-1d84-5ebc-847f-33eb05f07cad:0:user",
+          "f8025691-1d84-5ebc-847f-33eb05f07cad:2:assistant",
+          "10636489-8f24-592f-b6d7-9b343fa05ee7:0:user",
+          "10636489-8f24-592f-b6d7-9b343fa05ee7:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "37dc04cc4307433df578722342b05fbab40400a6ee66ca81145441f4ed58ba52",
+          "b28313234a0a50f20ae617a4943dc0b735a55ea97321e7c013bfa7fa621fbc49",
+          "a18f3ac7fded9332bf74d97de26b1e518840d737aa319520872c5735652a2768",
+          "e9325b63bd255753c5225b663c55949c2f695b58260f79cb9938d3040f841cf7"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "f8025691-1d84-5ebc-847f-33eb05f07cad:0:user",
+          "f8025691-1d84-5ebc-847f-33eb05f07cad:2:assistant",
+          "10636489-8f24-592f-b6d7-9b343fa05ee7:0:user",
+          "10636489-8f24-592f-b6d7-9b343fa05ee7:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "10636489-8f24-592f-b6d7-9b343fa05ee7:0:user",
+      "10636489-8f24-592f-b6d7-9b343fa05ee7:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "f8025691-1d84-5ebc-847f-33eb05f07cad:0:user",
+          "f8025691-1d84-5ebc-847f-33eb05f07cad:2:assistant",
+          "10636489-8f24-592f-b6d7-9b343fa05ee7:0:user",
+          "10636489-8f24-592f-b6d7-9b343fa05ee7:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "f8025691-1d84-5ebc-847f-33eb05f07cad:0:user",
+          "f8025691-1d84-5ebc-847f-33eb05f07cad:2:assistant",
+          "10636489-8f24-592f-b6d7-9b343fa05ee7:0:user",
+          "10636489-8f24-592f-b6d7-9b343fa05ee7:2:assistant"
+        ],
+        "overlap_keys": [
+          "f8025691-1d84-5ebc-847f-33eb05f07cad:0:user",
+          "f8025691-1d84-5ebc-847f-33eb05f07cad:2:assistant",
+          "10636489-8f24-592f-b6d7-9b343fa05ee7:0:user",
+          "10636489-8f24-592f-b6d7-9b343fa05ee7:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "10636489-8f24-592f-b6d7-9b343fa05ee7:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n④-B：PASS\nJSON\n{\n  \"scenario\": \"C2-BATCH2-S4-04B\",\n  \"review_round\": \"S4\",\n  \"reviewed_commit\": \"e8939b2e9e3cb6999bd1d3fa3ff186f00d4c081f\",\n  \"review_status\": \"PASS\",\n  \"terminal_classification\": \"SAFE_FAILURE\",\n  \"findings\": [\n    {\n      \"id\": \"G1\",\n      \"status\": \"PASS\",\n      \"reason\": \"专用一次性会话 6afdfd07 已创建并用于本场景，目标与审查会话隔离。\"\n    },\n    {\n      \"id\": \"G2\",\n      \"status\": \"PASS\",\n      \"reason\": \"CDP Network.emulateNetworkConditions 仅对目标页面 target 设置 offline；驱动源码未操作系统代理、VPN 或 GitHub 网络。离线摸底 fetch 失败，隔离生效。\"\n    },\n    {\n      \"id\": \"G3\",\n      \"status\": \"PASS\",\n      \"reason\": \"断网窗口内派单在 page.goto 阶段因 ERR_INTERNET_DISCONNECTED 中止。dispatch 日志没有发送双验记录，没有进入发送阶段；无 result.json，无 COMPLETED 或错误成功登记，无重发。\"\n    },\n    {\n      \"id\": \"G4\",\n      \"status\": \"PASS\",\n      \"reason\": \"离线窗口有明确 armed_at=19:33:14.092Z、disarmed_at=19:33:15.353Z，持续约1.261秒；失败现场及 tab-audit 保留，既有值守页未被关闭。\"\n    },\n    {\n      \"id\": \"G5\",\n      \"status\": \"PASS\",\n      \"reason\": \"窗口驱动解除后的首次恢复探测仍失败，已如实记录；后续显式恢复驱动清除 offline 覆盖，页内 fetch 返回 HTTP 200，RESTORED=true。恢复结果有独立日志和 JSON。\"\n    },\n    {\n      \"id\": \"G6\",\n      \"status\": \"PASS\",\n      \"reason\": \"清理前完整快照记录目标会话2 units；随后 PATCH=200、GET=404，dead=true。派单在 goto 阶段失败，未到达会话归属校验及 reviewer 指针写入阶段，因此本次失败没有覆盖审查指针。\"\n    }\n  ],\n  \"collector_failure\": false,\n  \"false_success_recorded\": false,\n  \"message_sent\": false,\n  \"duplicate_dispatch\": false,\n  \"offline_window_bounded\": true,\n  \"network_scope_isolated\": true,\n  \"restore_verified\": true,\n  \"cleanup_verified\": true,\n  \"dec017\": {\n    \"dispatch_offline_restriction\": \"ELIGIBLE_FOR_ITEM_SCOPED_RELEASE\",\n    \"release_scope\": \"DISPATCH_LAYER_TEMPORARY_OFFLINE_HANDLING_ONLY\",\n    \"restriction_released\": false,\n    \"other_restrictions\": \"UNCHANGED\"\n  },\n  \"migration\": {\n    \"reviewer_session_migration\": \"DEFERRED\",\n    \"reason\": \"按L-018.6例外①，验收阶段迁移预计增加成本；每新增2条user消息重新评估\",\n    \"acceptance_blocker\": false\n  },\n  \"final_decision\": \"PASS\",\n  \"next_action\": \"④-B可提交逐项解除建议；不得据此解除④-A、D1、D2、⑤或其他DEC-017限制。\"\n}\n\n独立核验的关键证据及 blob SHA：\n\n证据\n\n\t\n\nBlob SHA\n\n\n\n\noffline-window.json\n\n\t\n\n194d9cd1e2409355988cc4306eeb90b1444be089\n\n\n\n\n断网窗口运行日志\n\n\t\n\ne6ed07540993ab3b09a3ad937f6a2b11a7c460c1\n\n\n\n\n派单运行日志\n\n\t\n\n36b072157bd20176f7fe1928214adbbcfe7ee1af\n\n\n\n\n派单 tab-audit\n\n\t\n\nfd926e84ca5fc211828ef2fdd52de4ac3728911c\n\n\n\n\n显式恢复验证\n\n\t\n\n1c2452a603987da5cccf596843d0f334f73a34f6\n\n\n\n\n清理快照\n\n\t\n\n90cc142991c1bb6c34b3634c39851737b9c7a134\n\n\n\n\n清理验证\n\n\t\n\n4562fbdd6805ca6c1e210401e66a61a1f6b39b3d\n\n\n\n\n窗口驱动源码\n\n\t\n\nbaeb85d698f76bd6b73c39f36ca4a4fe35dec96a\n\n\n\n\n恢复驱动源码\n\n\t\n\n261a5058a5dbc0938e31ed447bdea5b957535f55\n\n边界说明： 首次恢复探测失败不是隐藏的 PASS 条件，而是一次真实竞态；后续显式清除覆盖并以 HTTP 200 验证恢复，才构成闭环。审查指针方面，本次派单在 page.goto 即中止，源码中的指针写入发生在后续会话归属验证通过之后，因此本次路径没有触及指针写入。\n\n最终裁定：④-B PASS。 仅建议解除 DEC-017 中派单层临时断网处理限制；解除动作仍待后续正式决策登记，不因本次验收自动生效。",
+      "text_sha256": "e9325b63bd255753c5225b663c55949c2f695b58260f79cb9938d3040f841cf7",
+      "size_bytes": 3808,
+      "assistant_uuid": "1802bc3c-0cc2-4508-8768-f46f884d589f"
+    }
+  ]
+}
