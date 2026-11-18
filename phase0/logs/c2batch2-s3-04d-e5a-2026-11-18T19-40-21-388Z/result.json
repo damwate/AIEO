@@ -1,0 +1,58 @@
+{
+  "mode": "e5a",
+  "config": "defaults(maxRetries=3,base=2s,timeout=30s)",
+  "assertions": {
+    "failed_whole_transaction": true,
+    "failure_identifies_B_404": true,
+    "no_partial_success_result": true,
+    "no_degrade_no_fallback": true
+  },
+  "timing": {
+    "wall_total_ms": 53,
+    "measured_delays": [],
+    "server_requests": [
+      {
+        "t": 507,
+        "url": "/aieo-test/c2batch2-local/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/handoff/manifest.json"
+      },
+      {
+        "t": 525,
+        "url": "/aieo-test/c2batch2-local/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/handoff/task.md"
+      },
+      {
+        "t": 528,
+        "url": "/aieo-test/c2batch2-local/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/handoff/missing.md"
+      }
+    ],
+    "delay_windows": [
+      [
+        1600,
+        2400
+      ],
+      [
+        3200,
+        4800
+      ],
+      [
+        6400,
+        9600
+      ]
+    ]
+  },
+  "error": {
+    "code": "GIT_POINTER_NOT_FOUND",
+    "message": "GIT_POINTER_NOT_FOUND: 指定 SHA 或路径不存在；不得回退分支 HEAD 或相似路径",
+    "details": {
+      "url": "http://127.0.0.1:10886/aieo-test/c2batch2-local/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/handoff/missing.md",
+      "path": "handoff/missing.md",
+      "status": 404,
+      "attempts": [
+        {
+          "attempt": 1,
+          "outcome": "NOT_FOUND",
+          "status": 404
+        }
+      ]
+    }
+  }
+}

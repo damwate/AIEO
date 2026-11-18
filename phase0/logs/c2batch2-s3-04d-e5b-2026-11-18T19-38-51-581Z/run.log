@@ -1,0 +1,4 @@
+[2026-11-18T19:38:51.590Z] ⑤-run2: 端点=127.0.0.1:14041，manifest=[A 正常, C 篡改同长度内容(SHA 不符)]
+[2026-11-18T19:39:05.819Z] 捕获: code=GIT_POINTER_NETWORK_RETRY_EXHAUSTED msg=GIT_POINTER_NETWORK_RETRY_EXHAUSTED: 暂时网络错误在有限重试后仍未恢复
+[2026-11-18T19:39:05.820Z] 实测退避区间: [{"planned_ms":1722,"actual_ms":1729},{"planned_ms":4571,"actual_ms":4580},{"planned_ms":7893,"actual_ms":7904}]（窗口 [[1600,2400],[3200,4800],[6400,9600]]）→ PASS
+[2026-11-18T19:39:05.821Z] e5b 结论: FAIL（断言 {"failed_whole_transaction":false,"failure_identifies_C":false,"no_partial_success_result":true,"actual_delays_in_window":true,"no_degrade_no_fallback":true}）

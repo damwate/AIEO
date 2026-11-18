@@ -1,0 +1,8 @@
+{
+  "mode": "d1",
+  "config": "defaults(maxRetries=3,base=2s,timeout=30s)",
+  "assertions": {},
+  "timing": null,
+  "error": null,
+  "fatal": "GIT_POINTER_MANIFEST_SCHEMA_INVALID: manifest 不符合 v1.0 Schema"
+}

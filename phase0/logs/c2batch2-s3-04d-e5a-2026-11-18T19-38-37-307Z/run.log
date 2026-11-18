@@ -1,0 +1,4 @@
+[2026-11-18T19:38:37.315Z] ⑤-run1: 端点=127.0.0.1:1270，manifest=[A 正常, B 不存在(404)]
+[2026-11-18T19:38:51.142Z] 捕获: code=GIT_POINTER_NETWORK_RETRY_EXHAUSTED msg=GIT_POINTER_NETWORK_RETRY_EXHAUSTED: 暂时网络错误在有限重试后仍未恢复
+[2026-11-18T19:38:51.143Z] 实测退避区间: [{"planned_ms":2279,"actual_ms":2280},{"planned_ms":3471,"actual_ms":3477},{"planned_ms":8048,"actual_ms":8055}]（窗口 [[1600,2400],[3200,4800],[6400,9600]]）→ PASS
+[2026-11-18T19:38:51.145Z] e5a 结论: FAIL（断言 {"failed_whole_transaction":true,"failure_identifies_B_404":false,"no_partial_success_result":true,"actual_delays_in_window":true,"no_degrade_no_fallback":true}）

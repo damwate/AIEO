@@ -76,6 +76,25 @@
   - 清理：c2batch2-s3-04b-cleanup-2026-11-18T19-34-03-683Z——先存证（2 units）后删除 PATCH=200/GET 404，指针恢复 6afdf44d；
   - 环境守卫插曲（如实登记）：恢复验证首用 ad-hoc node -e 被环境守卫拒绝（CHATGPT_DISPATCH_MANAGER_REQUIRED）——按 skill 纪律改文件化驱动执行，守卫行为本身符合"每轮新写完整文件"要求；
   - DEC-017 对应限制（派单层断网处理）解除建议=本项 S4 签核后逐项解除。
+- **S3-④-D1 网络连接耗尽——终态 PASS（预结论，待 S4 独立验收）：**
+  - 受控端点=本机已关闭端口（连接拒绝路径，不触碰真实网络）；真实读取入口 readGitPointer+真实 fetch+真实重试；**默认配置验收**（maxRetries=3/基间隔 2s/超时 30s，未改配置）；
+  - 证据目录 c2batch2-s3-04d-d1-2026-11-18T19-39-32-135Z：4 次尝试全 NETWORK_ERROR（TypeError=连接拒绝）→ `GIT_POINTER_NETWORK_RETRY_EXHAUSTED` → attempts 逐次留证；
+  - 退避实测（单调时钟）：2085ms/3682ms/8289ms，全在窗口 [1600-2400]/[3200-4800]/[6400-9600]ms；无降级无换源无部分返回；
+  - **两轮无效运行如实登记**：首轮 fetch 报 ERR_ASSERTION×4——定位为 Node v24.14.0 对 `fetch(url,{dispatcher:null})` 抛内部断言，而 readGitPointer 无代理 env 时即传 `dispatcher:null`（第 1 版驱动显式传 null 与生产路径同型）——该形态下 4 次尝试/退避窗口照样"全 PASS"形状，**机制核验（服务端请求日志/attempts 错误码）揭穿空心**（L-017 实战再证）；测试侧以 realFetch 包装剥离 null dispatcher 适配（生产代码零改动），重跑后 attempts 错误码=TypeError（真实连接失败）方判 PASS；
+  - **生产路径回归风险发现（交 ChatGPT 会商）：** Node v24.14.0 + 无代理 env 时 readGitPointer 生产路径同样会传 dispatcher:null → fetch ERR_ASSERTION → 材料读取必失败（本轮实证）。建议另立缺陷修复任务（如 `dispatcher ?? undefined` 归一），经规划协商后实施；
+  - DEC-017 对应限制（网络异常有限重试）解除建议=本项 S4 签核后逐项解除。
+- **S3-④-D2 暂时性 HTTP 耗尽——终态 PASS（预结论，待 S4 独立验收）：**
+  - 受控端点=本机 HTTP 服务持续 503（隔离测试端点）；证据目录 c2batch2-s3-04d-d2-2026-11-18T19-39-46-698Z：**服务端请求日志 4 次同 URL**（跨端印证）+attempts 4×{TRANSIENT_HTTP, status:503, planned_delay_ms 留证}→ `GIT_POINTER_HTTP_RETRY_EXHAUSTED`；
+  - 退避实测：2339/3357/6737ms 全在窗口；无降级无换源无部分返回；
+  - DEC-017 对应限制（暂时性 HTTP 错误有限重试）解除建议=本项 S4 签核后逐项解除。
+- **S3-⑤ 多文件部分读取失败——终态 PASS（预结论，两子例，待 S4 独立验收）：**
+  - 契约绑定登记=contract-binding.md（契约路径+blob SHA1+SHA256+§2.6.6/§2.6.7 原文摘录+被测源码 SHA——R2/R3 条件）；
+  - ⑤-run1（B 404）：证据目录 c2batch2-s3-04d-e5a-2026-11-18T19-40-21-388Z——manifest=[A,B]，服务端日志证明 A 200→B 404→`GIT_POINTER_NOT_FOUND`（错误语内嵌"不得回退分支 HEAD 或相似路径"）→整体事务失败、无部分成功结果；
+  - ⑤-run2（C SHA 不符）：证据目录 c2batch2-s3-04d-e5b-2026-11-18T19-38-51-581Z——C 同长度篡改内容→尺寸校验过→SHA 校验失败 `GIT_POINTER_FILE_HASH_MISMATCH`（details 指认 C 路径）→整体失败无部分返回；
+  - 无效运行登记：e5a 首版服务端误把 B 当正常文件服务（BASE_FILES 共享导致"缺失"不成立）→"意外成功"暴露后修复服务端重跑——两轮 e5a 无效现场（19-37-17/19-38-37/19-40-05 序列）如实保留作 L-017 教材；
+  - 断言全过：不允许部分成功✓/失败原因分别可辨认（NOT_FOUND vs HASH_MISMATCH）✓/无自动降级换源 HEAD 回退✓/临时条目仅存在于受控端点（进程退出即清，无生产登记簿触碰）✓/**整个多文件事务 fail-closed**✓；
+  - DEC-017 对应限制（多文件部分读取失败）解除建议=本项 S4 签核后逐项解除。
+- S3-⑥：仅登记关联（并入 DEC-106④ 多任务 P1 验证门），本批不执行。
 
 ⑤测试结果：S3-① 派单发送双验 2/2 通过；补采驱动语法检查+实跑（上）；主尝试采集 COMPLETED（单 unit）；备用尝试完成判定 fail-closed 后补采成立。
 

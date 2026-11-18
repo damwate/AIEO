@@ -1,0 +1,73 @@
+{
+  "mode": "d1",
+  "config": "defaults(maxRetries=3,base=2s,timeout=30s)",
+  "assertions": {
+    "error_code_is_network_retry_exhausted": true,
+    "attempts_count_is_4": true,
+    "all_outcomes_network_error": true,
+    "no_partial_material_returned": true,
+    "actual_delays_in_window": true,
+    "no_degrade_no_fallback": true
+  },
+  "timing": {
+    "wall_total_ms": 14174,
+    "measured_delays": [
+      {
+        "planned_ms": 2048,
+        "actual_ms": 2060
+      },
+      {
+        "planned_ms": 4785,
+        "actual_ms": 4790
+      },
+      {
+        "planned_ms": 7292,
+        "actual_ms": 7298
+      }
+    ],
+    "server_requests": [],
+    "delay_windows": [
+      [
+        1600,
+        2400
+      ],
+      [
+        3200,
+        4800
+      ],
+      [
+        6400,
+        9600
+      ]
+    ]
+  },
+  "error": {
+    "code": "GIT_POINTER_NETWORK_RETRY_EXHAUSTED",
+    "message": "GIT_POINTER_NETWORK_RETRY_EXHAUSTED: 暂时网络错误在有限重试后仍未恢复",
+    "attempts": [
+      {
+        "attempt": 1,
+        "outcome": "NETWORK_ERROR",
+        "error_code": "ERR_ASSERTION",
+        "planned_delay_ms": 2048
+      },
+      {
+        "attempt": 2,
+        "outcome": "NETWORK_ERROR",
+        "error_code": "ERR_ASSERTION",
+        "planned_delay_ms": 4785
+      },
+      {
+        "attempt": 3,
+        "outcome": "NETWORK_ERROR",
+        "error_code": "ERR_ASSERTION",
+        "planned_delay_ms": 7292
+      },
+      {
+        "attempt": 4,
+        "outcome": "NETWORK_ERROR",
+        "error_code": "ERR_ASSERTION"
+      }
+    ]
+  }
+}

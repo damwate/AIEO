@@ -1,0 +1,3 @@
+[2026-11-18T19:40:05.931Z] ⑤-run2: 端点=127.0.0.1:2302，manifest=[A 正常, C 篡改同长度内容(SHA 不符)]
+[2026-11-18T19:40:05.975Z] 捕获: code=GIT_POINTER_FILE_HASH_MISMATCH msg=GIT_POINTER_FILE_HASH_MISMATCH: 材料 SHA-256 与 manifest 不一致
+[2026-11-18T19:40:05.977Z] e5b 结论: PASS（断言 {"failed_whole_transaction":true,"failure_identifies_C":true,"no_partial_success_result":true,"no_degrade_no_fallback":true}）

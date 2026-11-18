@@ -1,0 +1,76 @@
+{
+  "mode": "e5a",
+  "config": "defaults(maxRetries=3,base=2s,timeout=30s)",
+  "assertions": {
+    "failed_whole_transaction": true,
+    "failure_identifies_B_404": false,
+    "no_partial_success_result": true,
+    "actual_delays_in_window": true,
+    "no_degrade_no_fallback": true
+  },
+  "timing": {
+    "wall_total_ms": 15369,
+    "measured_delays": [
+      {
+        "planned_ms": 1890,
+        "actual_ms": 1901
+      },
+      {
+        "planned_ms": 4032,
+        "actual_ms": 4044
+      },
+      {
+        "planned_ms": 9384,
+        "actual_ms": 9388
+      }
+    ],
+    "server_requests": [],
+    "delay_windows": [
+      [
+        1600,
+        2400
+      ],
+      [
+        3200,
+        4800
+      ],
+      [
+        6400,
+        9600
+      ]
+    ]
+  },
+  "error": {
+    "code": "GIT_POINTER_NETWORK_RETRY_EXHAUSTED",
+    "message": "GIT_POINTER_NETWORK_RETRY_EXHAUSTED: 暂时网络错误在有限重试后仍未恢复",
+    "details": {
+      "url": "http://127.0.0.1:1766/aieo-test/c2batch2-local/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/handoff/manifest.json",
+      "path": "handoff/manifest.json",
+      "attempts": [
+        {
+          "attempt": 1,
+          "outcome": "NETWORK_ERROR",
+          "error_code": "ERR_ASSERTION",
+          "planned_delay_ms": 1890
+        },
+        {
+          "attempt": 2,
+          "outcome": "NETWORK_ERROR",
+          "error_code": "ERR_ASSERTION",
+          "planned_delay_ms": 4032
+        },
+        {
+          "attempt": 3,
+          "outcome": "NETWORK_ERROR",
+          "error_code": "ERR_ASSERTION",
+          "planned_delay_ms": 9384
+        },
+        {
+          "attempt": 4,
+          "outcome": "NETWORK_ERROR",
+          "error_code": "ERR_ASSERTION"
+        }
+      ]
+    }
+  }
+}

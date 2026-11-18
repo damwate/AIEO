@@ -1,0 +1,4 @@
+[2026-11-18T19:39:46.705Z] D2: 受控端点=127.0.0.1:7237（持续 503）
+[2026-11-18T19:39:59.181Z] 捕获: code=GIT_POINTER_HTTP_RETRY_EXHAUSTED attempts=4
+[2026-11-18T19:39:59.182Z] 实测退避区间: [{"planned_ms":2327,"actual_ms":2339},{"planned_ms":3354,"actual_ms":3357},{"planned_ms":6733,"actual_ms":6737}]（窗口 [[1600,2400],[3200,4800],[6400,9600]]）→ PASS
+[2026-11-18T19:39:59.183Z] d2 结论: PASS（断言 {"error_code_is_http_retry_exhausted":true,"attempts_count_is_4":true,"all_transient_503":true,"planned_delays_recorded":true,"no_partial_material_returned":true,"actual_delays_in_window":true,"no_degrade_no_fallback":true}）

@@ -1,0 +1,51 @@
+{
+  "mode": "e5b",
+  "config": "defaults(maxRetries=3,base=2s,timeout=30s)",
+  "assertions": {
+    "failed_whole_transaction": true,
+    "failure_identifies_C": true,
+    "no_partial_success_result": true,
+    "no_degrade_no_fallback": true
+  },
+  "timing": {
+    "wall_total_ms": 54,
+    "measured_delays": [],
+    "server_requests": [
+      {
+        "t": 463,
+        "url": "/aieo-test/c2batch2-local/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/handoff/manifest.json"
+      },
+      {
+        "t": 479,
+        "url": "/aieo-test/c2batch2-local/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/handoff/task.md"
+      },
+      {
+        "t": 482,
+        "url": "/aieo-test/c2batch2-local/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/handoff/data.json"
+      }
+    ],
+    "delay_windows": [
+      [
+        1600,
+        2400
+      ],
+      [
+        3200,
+        4800
+      ],
+      [
+        6400,
+        9600
+      ]
+    ]
+  },
+  "error": {
+    "code": "GIT_POINTER_FILE_HASH_MISMATCH",
+    "message": "GIT_POINTER_FILE_HASH_MISMATCH: 材料 SHA-256 与 manifest 不一致",
+    "details": {
+      "path": "handoff/data.json",
+      "expected": "92a8c7d9a8630b5b591f5733df970df85f463eec5a9333accb892792fe5ac41e",
+      "actual": "dbd1b9d659b3eacb1c7c1346290b53d1ea72a892ccce8d5109716af9794b65ea"
+    }
+  }
+}

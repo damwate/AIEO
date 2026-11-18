@@ -1,0 +1,4 @@
+[2026-11-18T19:39:32.142Z] D1: 目标=已关闭端口 10891（连接拒绝路径）
+[2026-11-18T19:39:46.225Z] 捕获: code=GIT_POINTER_NETWORK_RETRY_EXHAUSTED attempts=4
+[2026-11-18T19:39:46.225Z] 实测退避区间: [{"planned_ms":2075,"actual_ms":2085},{"planned_ms":3667,"actual_ms":3682},{"planned_ms":8277,"actual_ms":8289}]（窗口 [[1600,2400],[3200,4800],[6400,9600]]）→ PASS
+[2026-11-18T19:39:46.226Z] d1 结论: PASS（断言 {"error_code_is_network_retry_exhausted":true,"attempts_count_is_4":true,"all_outcomes_network_error":true,"no_partial_material_returned":true,"actual_delays_in_window":true,"no_degrade_no_fallback":true}）

@@ -1,0 +1,91 @@
+{
+  "mode": "d2",
+  "config": "defaults(maxRetries=3,base=2s,timeout=30s)",
+  "assertions": {
+    "error_code_is_http_retry_exhausted": true,
+    "attempts_count_is_4": true,
+    "all_transient_503": true,
+    "planned_delays_recorded": true,
+    "no_partial_material_returned": true,
+    "actual_delays_in_window": true,
+    "no_degrade_no_fallback": true
+  },
+  "timing": {
+    "wall_total_ms": 12483,
+    "measured_delays": [
+      {
+        "planned_ms": 2327,
+        "actual_ms": 2339
+      },
+      {
+        "planned_ms": 3354,
+        "actual_ms": 3357
+      },
+      {
+        "planned_ms": 6733,
+        "actual_ms": 6737
+      }
+    ],
+    "server_requests": [
+      {
+        "t": 432,
+        "url": "/aieo-test/c2batch2-local/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/handoff/manifest.json"
+      },
+      {
+        "t": 2782,
+        "url": "/aieo-test/c2batch2-local/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/handoff/manifest.json"
+      },
+      {
+        "t": 6146,
+        "url": "/aieo-test/c2batch2-local/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/handoff/manifest.json"
+      },
+      {
+        "t": 12886,
+        "url": "/aieo-test/c2batch2-local/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/handoff/manifest.json"
+      }
+    ],
+    "delay_windows": [
+      [
+        1600,
+        2400
+      ],
+      [
+        3200,
+        4800
+      ],
+      [
+        6400,
+        9600
+      ]
+    ]
+  },
+  "error": {
+    "code": "GIT_POINTER_HTTP_RETRY_EXHAUSTED",
+    "message": "GIT_POINTER_HTTP_RETRY_EXHAUSTED: 暂时性 HTTP 错误在有限重试后仍未恢复",
+    "attempts": [
+      {
+        "attempt": 1,
+        "outcome": "TRANSIENT_HTTP",
+        "status": 503,
+        "planned_delay_ms": 2327
+      },
+      {
+        "attempt": 2,
+        "outcome": "TRANSIENT_HTTP",
+        "status": 503,
+        "planned_delay_ms": 3354
+      },
+      {
+        "attempt": 3,
+        "outcome": "TRANSIENT_HTTP",
+        "status": 503,
+        "planned_delay_ms": 6733
+      },
+      {
+        "attempt": 4,
+        "outcome": "TRANSIENT_HTTP",
+        "status": 503
+      }
+    ]
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "mode": "e5a",
+  "config": "defaults(maxRetries=3,base=2s,timeout=30s)",
+  "assertions": {
+    "failed_whole_transaction": false,
+    "failure_identifies_B_404": false,
+    "no_partial_success_result": true,
+    "no_degrade_no_fallback": true
+  },
+  "timing": {
+    "wall_total_ms": 53,
+    "measured_delays": [],
+    "server_requests": [
+      {
+        "t": 633,
+        "url": "/aieo-test/c2batch2-local/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/handoff/manifest.json"
+      },
+      {
+        "t": 649,
+        "url": "/aieo-test/c2batch2-local/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/handoff/task.md"
+      },
+      {
+        "t": 652,
+        "url": "/aieo-test/c2batch2-local/aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa/handoff/missing.md"
+      }
+    ],
+    "delay_windows": [
+      [
+        1600,
+        2400
+      ],
+      [
+        3200,
+        4800
+      ],
+      [
+        6400,
+        9600
+      ]
+    ]
+  },
+  "error": {
+    "message": "不应到达：部分读取失败场景意外成功",
+    "details": null
+  }
+}
