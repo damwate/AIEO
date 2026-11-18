@@ -1,0 +1,10 @@
+[C2-BATCH2-PLAN-R2|20261119] 方案修订复审
+承R1 ADJUST(reply baef39e5…),三件套已按裁定修订。
+读:github.com/damwate/AIEO @ main f5c6c8cc3d4a946583d0de929765119d86b6fd2d basic/tasks/b-20261119-c2-batch2-scenarios/task-brief.md(v0.2)+steps.md。
+修订要点:
+1)④重构:④-A死会话派单层/④-B限时断网派单层(各按你给的断言与隔离约束);④-C核验门已完成=仓内grep零梯子实现,§6.2归属agent-kit monitor层本机无克隆→拟BLOCKED;④-D新增提案=git_pointer网络退避耗尽(契约§2.6.6/§2.6.7出处,实现入口git_pointer.mjs:374-417,maxRetries=3/指数退避/双耗尽错误码/attempts留证,既有单测缺受控实例)——④-D锚定与取舍请裁定
+2)①两道独立判断(触发/采集)+特殊裁定+一次尝试+一次备用上限
+3)⑤A/B/C材料+五断言+事务级fail-closed
+4)轮次逐项一轮(独立派单/独立SHA/独立结论,不合并PASS)
+5)即停线五类具体化+四操作约束+五件套清单+DEC-017逐项解除规则
+请求三态:PASS/ADJUST/REJECT;若共识即报用户拍板冻结,S3仍待拍板。

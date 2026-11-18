@@ -28,9 +28,9 @@
 
 ④执行结果：R1 完成=**ADJUST**（已认可①⑤⑥方向与逐项解除原则；冻结前须修改五项=④层次区分/④-C 实现入口核验条件/④-A④-B 独立验收条件/轮次逐项一轮/网络恢复与会话归属清理检查——已全部落进 v0.2 修订）。会话迁移已执行：旧审查会话 6afde23c（F3 三轮）换题迁出，指针备份 gpt-reviewer-session.pre-c2batch2.json，新会话 6afdf44d-8d54-83ec-9fca-1bbde1ba1654 `--new-session` 首派即活。中断首跑现场 dispatch-2026-11-18T18-51-36（发送前中止未发送，原位如实归档）。④-C 核验门已完成：AIEO 仓零梯子实现（grep 证据），git_pointer.mjs:374-417 有契约退避真实现→④-D 新增提案。
 
-⑤测试结果：ST-05 自检 PLANNING 合法态（①② PASS）；v0.2 修订后复检待 S2 提交前执行。
+⑤测试结果：ST-05 自检 PLANNING 合法态（①② PASS）；v0.2 修订后复检=IN_PROGRESS 合法态；v0.3 修订后复检见提交前记录。
 
-⑥验收证据引用：R1 dispatch 目录=phase0/logs/dispatch-2026-11-18T18-53-11；reply SHA256=baef39e5d077307cde33a04c405e99fa0a1df0c111c8c5111049b1f15d778275（11496B，ADJUST）；审查会话 6afdf44d（发送双验 polls=2，归属校验 PASS）；R2 待派单。
+⑥验收证据引用：R1 dispatch=phase0/logs/dispatch-2026-11-18T18-53-11，reply SHA256=baef39e5d077307cde33a04c405e99fa0a1df0c111c8c5111049b1f15d778275（11496B，**ADJUST**）。R2 dispatch=phase0/logs/dispatch-2026-11-18T19-01-01（发送双验通过后采集 fail-closed=INBOUND_WINDOW_COMPLETENESS_UNPROVEN，禁重发，浏览器现场保留）→按 L-018 静态 DOM 补采：驱动 recoll_c2batch2_r2.mjs（派生自 recoll_f2f3f4_final.mjs，三参数+前轮 SHA 全换，grep 核对），现场 recoll-c2batch2-r2-2026-11-18T19-04-54-726Z 七查全过（marked_user_unique/last_user_assertion/adjacent_assistant_tail/stable_static_dom_read/final_stop_button_not_visible/not_prev_reply_sha/response_length_plausible 全 true），reply SHA256=820ca44b3bea3dda…（7395B，**PASS**，④-D 附条件纳入拆 D1/D2+冻结前五项文字性补充）。审查会话 6afdf44d；R3 终局拍板待派（用户委托 ChatGPT 渠道）。
 
 ## S3 受控场景执行（①④⑤ 逐项）
 
