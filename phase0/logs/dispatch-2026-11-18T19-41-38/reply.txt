@@ -1,0 +1,61 @@
+ChatGPT 说：
+ADJUST｜证据补齐后签核
+JSON
+{
+  "scenario": "C2-BATCH2-S4-01",
+  "scenario_id": "①",
+  "reviewed_commit": "23487c97afeddf9e92fbf9721c0eca86500cc519",
+  "review_status": "ADJUST",
+  "terminal_classification": "BLOCKED",
+  "attribution": "MODEL_SIDE_UNABLE_TO_TRIGGER",
+  "dec017_restriction": "RETAINED",
+  "findings": [
+    {
+      "id": "G1",
+      "severity": "PASS",
+      "finding": "主尝试归因成立。request.txt明确要求三条独立消息，raw-units.json和result.json均记录unit_count=1。唯一assistant unit包含三段文本，不能认定为三个独立消息。"
+    },
+    {
+      "id": "G2",
+      "severity": "PASS",
+      "finding": "备用触发符合冻结方案。更强指令明确要求三个独立消息气泡，并设置无法拆分时的明确退路。备用只执行一次，没有无限重试。"
+    },
+    {
+      "id": "G3",
+      "severity": "PASS",
+      "finding": "备用结果支持模型侧无法拆分。units-diag.json记录四个可见unit，结构为2 user+2 assistant；第二个assistant的text_len=16，内容为无法拆分。"
+    },
+    {
+      "id": "G4",
+      "severity": "PASS_WITH_NOTE",
+      "finding": "采集器没有被证明失败。主尝试区间完整性、连续性、稳定性、UUID和artifact回读均有机器证据。备用静态DOM诊断也取得四unit结构。但备用recoll run.log明确记录RECOLL FAILED: 回复过短疑似空正文:16，因此不能将这一次描述为完整recoll成功。"
+    },
+    {
+      "id": "G5",
+      "severity": "ADJUST",
+      "finding": "证据包尚未完全满足冻结方案的五件套及附加MANIFEST要求。主尝试证据完整度较好；备用dispatch目录目前可见request.txt、run.log、sent-dispatch.png、tab-audit.json，但缺少独立reply.txt、result.json、raw-units.json。recoll目录只有units-diag.json和run.log。"
+    },
+    {
+      "id": "G6",
+      "severity": "PASS",
+      "finding": "BLOCKED归因符合task-brief.md的特殊裁定。模型未产生有效多assistant unit，不应判为采集器失败，也不能解除DEC-017对应限制。"
+    }
+  ],
+  "required_adjustments": [
+    "补充本场景MANIFEST，列明主尝试、备用派单、补采目录全部现有证据文件的SHA256。",
+    "明确区分备用recoll失败与独立静态DOM诊断成功，不得将RECOLL FAILED记为完整采集成功。",
+    "在steps.md中记录备用回复的原始内容、16字节长度及四unit诊断证据引用；缺失的完整机器结果不得伪造或补写成历史原始结果。",
+    "保留测试会话清理待办，待S3全部场景结束后按冻结方案执行并登记清理记录。"
+  ],
+  "reexecution_required": false,
+  "additional_model_attempt_allowed": false,
+  "collector_failure": false,
+  "dec017解除": false,
+  "final_decision": "ADJUST",
+  "decision_scope": "仅证据归档与记录完整性，不否定模型侧BLOCKED终态",
+  "next_action": "补齐证据索引及记录后提交原证据复核，不重新消耗真实模型尝试"
+}
+
+核心裁定： 这次不是 REWORK，也不要求重新触发模型。模型侧 BLOCKED 的事实已经成立；ADJUST 只针对冻结方案规定的证据交付完整性。
+
+特别强调：①即使最终签核 PASS，也只认可 BLOCKED 终态，不解除 DEC-017 的多 assistant unit 限制。

@@ -1,0 +1,21 @@
+# S4-01 场景①证据 MANIFEST（生成于 2026-11-19，覆盖主尝试/备用派单/补采诊断/清理记录四目录）
+# 口径：文件相对路径 | 字节数 | SHA256；无 reply.txt/result.json 于备用目录=如实缺失（RECOLL FAILED 过短断言，units-diag 为独立诊断成功），不得伪造
+
+cff20b4d8cb62fc6ec509cc3a2b78d46860dd5d4af73fc34da582db56f6f2027      3115  phase0/logs/dispatch-2026-11-18T19-12-57/raw-units.json
+20274124bf3c76455f64f1bdbf38dc85d1b36155bb518af9ce70f51d0d7ae169     79561  phase0/logs/dispatch-2026-11-18T19-12-57/reply-dispatch.png
+9d11a5889a4224e8b7c822d7c964767c26e2b3414e92cf37274a92afadee9563       104  phase0/logs/dispatch-2026-11-18T19-12-57/reply.txt
+e2139f343d9f8c65026a986b71be961fa9b207b356db1f93fc9b8bed7726b0da       636  phase0/logs/dispatch-2026-11-18T19-12-57/request.txt
+63b68cd0c1c9fc793a8c2916f2c1d760da354a15af16a728a9bf63c137fd8005      6290  phase0/logs/dispatch-2026-11-18T19-12-57/result.json
+4d90ade92934f092da9c159885f5ff44c51afe2f4757b9eeeee868a6eb2ffd0c      1519  phase0/logs/dispatch-2026-11-18T19-12-57/run.log
+c6cc174be8b5337d2255626137f062dcf2fbfe422d181a65cec6eabff1bfba1a     74140  phase0/logs/dispatch-2026-11-18T19-12-57/sent-dispatch.png
+379061892f511b2b48c70d40ddfb8fbfcccbcde1379e294caf10bd3648aee6e6       652  phase0/logs/dispatch-2026-11-18T19-12-57/tab-audit.json
+98c8fa95573065f4b0f2177e22f779bf2fb5f59850f0fa20578f0cbe4a50126f       483  phase0/logs/dispatch-2026-11-18T19-15-44/request.txt
+6ed5da8b15e65111873ed9f7882d7a21c8baccdd812914fce622755badfaf401      1401  phase0/logs/dispatch-2026-11-18T19-15-44/run.log
+691d75e05a4b31d526d2b8218f027329bf23cc4e1edecdbf245dc8f264e46d1d    117702  phase0/logs/dispatch-2026-11-18T19-15-44/sent-dispatch.png
+d1058819094daf8c849f80ca471de224eb79b8f48d837f307a2c3255b4e0e4f3       757  phase0/logs/dispatch-2026-11-18T19-15-44/tab-audit.json
+a5e8ddce7e9c5c8bfd658d464c50fb8510b37024714c9b71450e688e39ed5759       265  phase0/logs/recoll-c2batch2-s3-01-2026-11-18T19-19-12-464Z/run.log
+366f926333e7790ed5839b2d1fb063773f9e0ad917bb55c2778b02efeaa769aa      1184  phase0/logs/recoll-c2batch2-s3-01-2026-11-18T19-19-12-464Z/units-diag.json
+5cff534313934681a760897774a2c00b80920e201e45afb8f3444170f38ad23d       266  phase0/logs/c2batch2-s3-04a-cleanup-2026-11-18T19-27-57-583Z/cleanup-verify.json
+66f96e10a2ed2a5bfc97e53dd39f63560bb739f4a6324dc3d0d31542fc00de08       221  phase0/logs/c2batch2-s3-04a-cleanup-2026-11-18T19-27-57-583Z/reviewer-verify.json
+f5746d2078a39dd66f2402fe75c12ee6015b1177ebcb9dcd67c3d3f1fa3df128       606  phase0/logs/c2batch2-s3-04a-cleanup-2026-11-18T19-27-57-583Z/run.log
+22225e505beee56e87b438ffd14de940e0be5726e9689532cbd38c049da8fe9a      2311  phase0/logs/c2batch2-s3-04a-cleanup-2026-11-18T19-27-57-583Z/side-effect-snapshot.json

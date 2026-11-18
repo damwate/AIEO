@@ -56,9 +56,9 @@
 
 - **S3-① 多 assistant unit 采集全链——终态 BLOCKED（模型侧无法触发，非采集器失败）：**
   - 主尝试（一次真实尝试）：专用测试会话 6afdf8eb-4acc-83ec-923d-7f38ab2e9f14 `--new-session` 派单（brief_c2batch2_s3_01.txt 637B，显式请求拆 3 条独立消息）→ dispatch-2026-11-18T19-12-57 发送双验通过+COMPLETED，但 **unit_count=1**（模型把三段文本合并进一个 assistant 气泡，104B，六查全过，artifact_sha256=9d11a5889a4224e8…）——不构成有效多 unit 实例；
-  - 备用触发（仅此一次，冻结预案）：更强显式指令（brief_c2batch2_s3_01_backup.txt，要求三个分开的消息气泡+做不到即答"无法拆分"）→ dispatch-2026-11-18T19-15-44 发送双验通过后完成判定未通过（composer_empty:false）→禁重发→多 unit 感知补采驱动 recoll_c2batch2_s3_01.mjs（标记 user 后全部 unit+索引连续性扩展）→ 现场 recoll-c2batch2-s3-01-2026-11-18T19-19-12-464Z：**模型终答=单 assistant unit"无法拆分"**（units-diag 四 unit 结构完整：2 user+2 assistant，备用回复 len=16B）；
+  - 备用触发（仅此一次，冻结预案）：更强显式指令（brief_c2batch2_s3_01_backup.txt，要求三个分开的消息气泡+做不到即答"无法拆分"）→ dispatch-2026-11-18T19-15-44 发送双验通过后完成判定未通过（composer_empty:false）→禁重发→多 unit 感知补采驱动 recoll_c2batch2_s3_01.mjs（标记 user 后全部 unit+索引连续性扩展）→ 现场 recoll-c2batch2-s3-01-2026-11-18T19-19-12-464Z——**如实区分（S4-01 G4 指正后修正）：补采驱动最终状态=RECOLL FAILED（"回复过短疑似空正文:16"断言抛出，reply.txt/result.json 未生成=如实缺失，不得伪造）；但驱动在断言前已将 units-diag.json 全量落盘=独立的静态 DOM 诊断成功**——诊断证据：四 unit 结构（2 user+2 assistant），备用回复=单 assistant unit，原始内容"ChatGPT 说：\n\n无法拆分"，**16 字节**（text_len=16 记录于 units-diag.json），索引连续（:0:user→:1:assistant 无缺口）；
   - 结论：按冻结方案特殊裁定登记 **BLOCKED（模型侧无法触发）**——模型在标准聊天界面无法于单轮产生多独立 assistant 气泡；采集器能力旁证=区间完整性纯函数+负例 24/24+本批 R2/R3/① 三次静态 DOM 补采实战全过；DEC-017 对应限制保留不解除；
-  - 边界动作登记：测试派单覆盖了审查指针（gpt_dispatch 每轮保存会话），已恢复至 6afdf44d（恢复前备份 gpt-reviewer-session.pre-s3-restore.json）；测试会话 6afdf8eb 留待 S3 完成后清理（清理记录随 ④-A 清理登记）；
+  - 边界动作登记：测试派单覆盖了审查指针（gpt_dispatch 每轮保存会话），已恢复至 6afdf44d（恢复前备份 gpt-reviewer-session.pre-s3-restore.json）；**测试会话清理记录（已执行）**：6afdf8eb 于 c2batch2-s3-04a-cleanup-2026-11-18T19-27-57-583Z 先存证（side-effect-snapshot.json 4 units）后删除（PATCH=200/GET 404=已死）——清理待办已闭环，非悬置；
   - 迁移评估（L-018.6）：审查会话 6afdf44d 现有 3 条 user 消息（R1/R2/R3），S3 场景尝试均用专用会话未再消耗；S4 逐项验收前**迁新会话**（达 4 条评估阈值的前置处置，换阶段迁移）。
 - **S3-④-A 死会话派单层闭环——终态 PASS（预结论，待 S4 独立验收）：**
   - 阶段一 既有会话清单（操作约束#1）：c2batch2-s3-04a-inventory-2026-11-18T19-21-18-445Z（15 条会话链接快照，含审查会话 6afdf44d/①测试会话 6afdf8eb；侧边栏可视区口径已注明）；
@@ -96,9 +96,9 @@
   - DEC-017 对应限制（多文件部分读取失败）解除建议=本项 S4 签核后逐项解除。
 - S3-⑥：仅登记关联（并入 DEC-106④ 多任务 P1 验证门），本批不执行。
 
-⑤测试结果：S3-① 派单发送双验 2/2 通过；补采驱动语法检查+实跑（上）；主尝试采集 COMPLETED（单 unit）；备用尝试完成判定 fail-closed 后补采成立。
+⑤测试结果：S3-① 派单发送双验 2/2 通过；补采驱动语法检查+实跑；主尝试采集 COMPLETED（单 unit）；备用尝试完成判定 fail-closed 后驱动实跑=RECOLL FAILED（过短断言）但 units-diag 独立诊断成功落盘（S4-01 G4 修正口径）。
 
-⑥验收证据引用：主尝试 dispatch-2026-11-18T19-12-57（artifact_sha256=9d11a5889a4224e8b7c822d7c964767c26e2b3414e92cf37274a92afadee9563）；备用 dispatch-2026-11-18T19-15-44+补采现场 recoll-c2batch2-s3-01-2026-11-18T19-19-12-464Z（units-diag.json 四 unit 全量诊断）；驱动 phase0/tools/recoll_c2batch2_s3_01.mjs。逐项独立验收=S4（审查方按冻结方案直读证据签核）。
+⑥验收证据引用：主尝试 dispatch-2026-11-18T19-12-57（artifact_sha256=9d11a5889a4224e8b7c822d7c964767c26e2b3414e92cf37274a92afadee9563）；备用 dispatch-2026-11-18T19-15-44+诊断现场 recoll-c2batch2-s3-01-2026-11-18T19-19-12-464Z（units-diag.json 四 unit 全量诊断；**recoll 状态=FAILED 过短断言，reply/result 未生成如实缺失**）；**场景①全证据 MANIFEST=acceptance/s4-01-manifest.txt（18 文件 SHA256，S4-01 G5 整改）**；驱动 phase0/tools/recoll_c2batch2_s3_01.mjs。逐项独立验收=S4（审查方按冻结方案直读证据签核）。
 
 **S3-① 预结论：BLOCKED（模型侧无法触发；独立验收待 S4）**
 

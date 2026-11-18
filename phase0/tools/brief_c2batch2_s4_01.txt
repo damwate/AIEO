@@ -1,0 +1,5 @@
+[C2-BATCH2-S4-01|20261119] 会话迁移+场景①独立验收（BLOCKED 签核）
+接棒:旧审查会话6afdf44d承载v0.3冻结三轮(R1 ADJUST/R2 PASS/R3终局拍板PASS+GO,3条user消息),换阶段迁出只读归档;本会话承接906/C2第二批S4六项逐项独立验收,本轮=①。
+读:github.com/damwate/AIEO @ main 23487c97afeddf9e92fbf9721c0eca86500cc519 basic/tasks/b-20261119-c2-batch2-scenarios/ 的 task-brief.md(v0.3冻结版)+steps.md(S3-①执行记录)。
+①执行终态=BLOCKED(模型侧):主尝试unit_count=1(三段文本合并单气泡,dispatch-2026-11-18T19-12-57,artifact_sha256=9d11a5889a4224e8b7c822d7c964767c26e2b3414e92cf37274a92afadee9563);备用一次更强显式指令→模型答"无法拆分"(现场recoll-c2batch2-s3-01-2026-11-18T19-19-12-464Z units-diag:四unit=2user+2assistant);采集器能力旁证=区间完整性纯函数+负例24/24+本批R2/R3/①三次静态DOM补采实战。按冻结方案特殊裁定登记BLOCKED(模型侧无法触发,不判采集器失败),DEC-017对应限制保留不解除。
+请求三态:对①BLOCKED归因与证据签核(PASS=认可BLOCKED终态/ADJUST=给条件/REJECT=给理由)。
