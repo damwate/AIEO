@@ -1,0 +1,86 @@
+[
+  {
+    "key": "88e8f56c-e8dc-567d-9a5e-48680d3e4f41:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 748,
+    "text_head": "[C2-BATCH2-S4-01|20261119] 会话迁移+场景①独立验收（BLOCKED 签核）\n接棒:旧审查会话6afdf44d承载v0.3冻结三轮(R1 ADJUST/R2 PASS/R3终"
+  },
+  {
+    "key": "88e8f56c-e8dc-567d-9a5e-48680d3e4f41:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 2135,
+    "text_head": "ChatGPT 说：\nADJUST｜证据补齐后签核\nJSON\n{\n  \"scenario\": \"C2-BATCH2-S4-01\",\n  \"scenario_id\": \"①\",\n  \"reviewed_"
+  },
+  {
+    "key": "f14e75d2-55ac-5949-98d9-136c76edbfc7:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 747,
+    "text_head": "[C2-BATCH2-S4-01-R2|20261119] 场景①整改复核（原证据复核,无重新尝试）\n承 S4-01 ADJUST(7427b1f9…3353B),四项 required_adjust"
+  },
+  {
+    "key": "f14e75d2-55ac-5949-98d9-136c76edbfc7:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 1634,
+    "text_head": "ChatGPT 说：\nPASS｜场景① BLOCKED 终态签核\nJSON\n{\n  \"scenario\": \"C2-BATCH2-S4-01\",\n  \"review_round\": \"R2\",\n  \""
+  },
+  {
+    "key": "f8025691-1d84-5ebc-847f-33eb05f07cad:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 580,
+    "text_head": "[C2-BATCH2-S4-04A|20261119] 场景④-A 独立验收（死会话派单层）\n读:github.com/damwate/AIEO @ main e8939b2e9e3cb6999bd1"
+  },
+  {
+    "key": "f8025691-1d84-5ebc-847f-33eb05f07cad:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 2157,
+    "text_head": "ChatGPT 说：\n④-A：PASS\nJSON\n{\n  \"scenario\": \"C2-BATCH2-S4-04A\",\n  \"review_round\": \"S4\",\n  \"reviewed_com"
+  },
+  {
+    "key": "10636489-8f24-592f-b6d7-9b343fa05ee7:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 718,
+    "text_head": "[C2-BATCH2-S4-04B|20261119] 场景④-B 独立验收（限时断网派单层）\n读:github.com/damwate/AIEO @ main e8939b2e9e3cb6999bd"
+  },
+  {
+    "key": "10636489-8f24-592f-b6d7-9b343fa05ee7:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 2748,
+    "text_head": "ChatGPT 说：\n④-B：PASS\nJSON\n{\n  \"scenario\": \"C2-BATCH2-S4-04B\",\n  \"review_round\": \"S4\",\n  \"reviewed_com"
+  },
+  {
+    "key": "a60a773b-b650-504d-a1dc-f8409769c633:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 711,
+    "text_head": "[C2-BATCH2-S4-04D1|20261119] 场景④-D1 独立验收（GitPointer 网络连接耗尽）\n读:github.com/damwate/AIEO @ main e8939b2"
+  },
+  {
+    "key": "a60a773b-b650-504d-a1dc-f8409769c633:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 10,
+    "text_head": "ChatGPT 说："
+  },
+  {
+    "key": "f24f8699-83a5-5ad5-a496-ad9e1bc47126:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 711,
+    "text_head": "[C2-BATCH2-S4-04D1|20261119] 场景④-D1 独立验收（GitPointer 网络连接耗尽）\n读:github.com/damwate/AIEO @ main e8939b2"
+  },
+  {
+    "key": "f24f8699-83a5-5ad5-a496-ad9e1bc47126:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 2661,
+    "text_head": "ChatGPT 说：\nJSON\n{\n  \"scenario\": \"C2-BATCH2-S4-04D1\",\n  \"review_round\": \"S4\",\n  \"reviewed_commit\": \"e"
+  }
+]

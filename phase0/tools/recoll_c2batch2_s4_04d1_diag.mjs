@@ -9,8 +9,8 @@ import { join } from "node:path";
 
 const CONV_UUID = "6afdffa2-fbb8-83ec-b44b-a22faf93a8a3";
 const MARKER = "[C2-BATCH2-S4-04D1|20261119]";
-const PREV_REPLY_SHA = "e9325b63bd255753"; // 本会话最近已归档回复（S4-04B PASS，dispatch-2026-11-18T19-50-41）SHA 前缀
-const FAILED_DIR = "phase0/logs/dispatch-2026-11-18T19-54-06";
+const PREV_REPLY_SHA = "6b86968ec1780354"; // 本会话最近已归档回复（S4-04D1 空回复轮次，dispatch-2026-11-18T19-54-06）SHA 前缀
+const FAILED_DIR = "phase0/logs/dispatch-2026-11-18T19-56-07";
 const OUT_DIR = join(process.cwd(), "phase0", "logs",
   `recoll-c2batch2-s4-04d1-diag-${new Date().toISOString().replace(/[:.]/g, "-")}`);
 mkdirSync(OUT_DIR, { recursive: true });

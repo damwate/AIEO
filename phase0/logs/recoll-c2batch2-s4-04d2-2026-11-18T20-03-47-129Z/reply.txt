@@ -1,0 +1,119 @@
+ChatGPT 说：
+
+④-D2：PASS
+
+验收通过 仅限本项能力
+
+核验项
+
+	
+
+结果
+
+	
+
+依据
+
+
+
+
+受控端点
+
+	
+
+PASS
+
+	
+
+本机 HTTP 服务持续返回 503；未触碰真实外网
+
+
+
+
+真实入口与重试
+
+	
+
+PASS
+
+	
+
+驱动调用 readGitPointer，通过 globalThis.fetch 发起真实 HTTP 请求；默认配置 maxRetries=3、基间隔 2 秒、未修改
+
+
+
+
+跨端请求次数
+
+	
+
+PASS
+
+	
+
+服务端记录同一 manifest URL 请求 4 次；结果中的 attempts 也为 4 次
+
+
+
+
+错误分类与终态
+
+	
+
+PASS
+
+	
+
+4 次均为 TRANSIENT_HTTP、状态码 503，最终 GIT_POINTER_HTTP_RETRY_EXHAUSTED
+
+
+
+
+退避实测
+
+	
+
+PASS
+
+	
+
+2339ms / 3357ms / 6737ms，全部落入冻结窗口
+
+
+
+
+Fail-closed
+
+	
+
+PASS
+
+	
+
+未返回部分材料；未降级、未换源
+
+证据绑定
+
+验收基线：e8939b2e9e3cb6999bd1d3fa3ff186f00d4c081f
+
+steps.md blob：587fa098dba5a5d43b2550e285f8f669c130cc0b
+
+contract-binding.md blob：ccf169a5107c27083503200727f7177e11f465fb
+
+驱动 blob：95c0b3a14410e52b3c2326df8e66c7bd3dba5fa1
+
+result.json blob：06de46d8723f181b1641a35c7a39383f6f72f939
+
+run.log blob：5a34e97e5f14f60fbf4aa45a01c4f0a514248687
+
+契约原文 SHA-1：31cf7a4f58f6e6ba7da202cee55d89e123f36037
+
+被测源码 SHA-1：992b34a27d69a6570b5ef02ee2c377ccb1b2207f
+
+边界说明： 驱动的 realFetch 会剥离 dispatcher:null，再调用真实 globalThis.fetch。因此，本项签核的是暂时性 HTTP 503 的有限重试行为，不代表未经适配的 Node 24 生产读取路径已经可用。④-D1 已发现的 dispatcher:null 生产路径缺陷仍须另立任务修复；本次不重复签核该问题。
+
+DEC-017 裁定： 可提交逐项解除建议，范围严格限定为 GIT_POINTER_TRANSIENT_HTTP_FINITE_RETRY_ONLY。建议不等于已解除；其他限制保持不变。
+
+迁移评估： 6 条 user 消息，仍适用例外①：验收末段、轻回复、证据外置，暂不迁移；每增加 2 条重新评估。
+
+最终结论：④-D2 PASS。 仅签核暂时性 HTTP 错误有限重试能力，不扩大到其他场景或生产路径整体可用性。

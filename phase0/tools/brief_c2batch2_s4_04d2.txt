@@ -1,0 +1,5 @@
+[C2-BATCH2-S4-04D2|20261119] 场景④-D2 独立验收（GitPointer 暂时性 HTTP 耗尽）
+读:github.com/damwate/AIEO @ main e8939b2e9e3cb6999bd1d3fa3ff186f00d4c081f basic/tasks/b-20261119-c2-batch2-scenarios/ 的 steps.md S3-④-D2 节+contract-binding.md+驱动 c2batch2_s3_04d_05_driver.mjs。
+要点:受控端点=本机HTTP服务持续503;真实入口+真实fetch+真实重试;默认配置未改;证据c2batch2-s3-04d-d2-2026-11-18T19-39-46-698Z result.json:服务端请求日志4次同URL(跨端印证)+attempts 4×{TRANSIENT_HTTP,status:503,planned_delay_ms留证}→GIT_POINTER_HTTP_RETRY_EXHAUSTED;退避实测2339/3357/6737ms全在窗[1600-2400]/[3200-4800]/[6400-9600];无降级无换源无部分返回。
+请求三态:④-D2 PASS/ADJUST/REJECT(PASS=签核暂时性HTTP错误有限重试能力,解除建议仅限该限制)。
+迁移评估(6条user,每增2条重评):仍适用例外①验收末段+轻回复+证据外置,暂不迁移。

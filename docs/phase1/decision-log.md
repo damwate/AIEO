@@ -928,3 +928,21 @@
 - **DEC-017 解除边界：** 本次 GO 不等于解除任何限制——①/④-A/④-B/④-D1/④-D2/⑤ 各自 PASS 仅解除各自对应限制；④-C 继续 BLOCKED 不解除 monitor 梯子限制；逐项签核，不批量放行。
 - **边界重申：** 本条登记=规划协商与授权闭环（R1-R3 三轮全部零代码写入、零故障注入、零真实会话删除）；S3 场景执行另记；未触 DEC-010。
 - **关联：** DEC-107/106（授权链）、DEC-018/F-006（906 出处）、DEC-023/026（906 号段与前置）、L-014/018（推送与补采实战）、ST-02/ST-05（轮次与自检）。
+
+### DEC-109 906/C2 第二批受控用例交付闭环：S3 六场景执行 + S4 逐项签核 + DEC-017 逐项解除登记（2026-11-19，用户拍板委托 ChatGPT 渠道）
+
+- **节点依据：** DEC-108（v0.3 冻结+S3 执行授权 GO，R3 终局拍板 reply `552a463a…`）+用户委托（拍板派单 ChatGPT 渠道，DEC-010 红线除外）；授权链=用户本人指令+DEC-108/107/106。
+- **S3 执行（六场景，零生产代码写入）：** ①多 unit 采集=主尝试 unit_count=1+备用一次模型答"无法拆分"（units-diag 四 unit 诊断）→**BLOCKED 模型侧**；④-A 死会话派单=一次性会话 6afdfaf1 创建→PATCH 删除 GET404 死态→死会话派单触发 ChatGPT 重定向副作用会话 6afdfbba→**SESSION_ATTRIBUTION_FAIL 当场拦截错误成功**（拒写指针/结果/现场留存）；④-B 限时断网=页面级 CDP offline 隔离窗口→ERR_INTERNET_DISCONNECTED 即刻中止→恢复验证 RESTORED=true；④-D1 连接拒绝耗尽=4 尝试/3 退避（单调时钟实测 2085/3682/8289ms 在冻结窗）→`GIT_POINTER_NETWORK_RETRY_EXHAUSTED`；④-D2 503 耗尽=服务端日志 4 次跨端印证→`GIT_POINTER_HTTP_RETRY_EXHAUSTED`（2339/3357/6737ms 在窗）；⑤ 部分读取失败两子例=B 404→`GIT_POINTER_NOT_FOUND`（错误语内嵌禁回退 HEAD）、C SHA 不符→`GIT_POINTER_FILE_HASH_MISMATCH`，整体事务 fail-closed。测试会话先存证后删除双验证；审查会话核验完好（尾 SHA=552a463a…）。
+- **无效运行如实登记（L-017 教材现场全保留）：** ④-D 首轮 fetch ERR_ASSERTION×4 空心 PASS 被机制核验（服务端日志/attempts 错误码）揭穿；e5a 首版服务端 bug 致"缺失"不成立；S4-04D1 空回复轮次（DOM 诊断 TAIL_EMPTY=true，重派=新轮次非重发）；recoll FAILED_DIR 派生笔误（重跑修正，双跑 SHA 一致=bfd7d4fd…）。
+- **S4 逐项独立签核（新审查会话 6afdffa2-8d54…f93a8a3 前缀 6afdffa2-fbb8-83ec-b44b-a22faf93a8a3，8 轮）：** ①R1 ADJUST（仅证据完整性，模型侧归因签核）→整改（s4-01-manifest.txt 18 文件+G4 口径修正：recoll=FAILED 过短断言如实缺失，units-diag=独立诊断成功）→R2 **PASS 签核**（终态 BLOCKED，reply `a89805a9…`）；④-A **PASS**（`b2831323…`，SAFE_FAILURE）；④-B **PASS**（`e9325b63…`）；④-D1 空回复轮→R2 **PASS**（补采 `9277f1ce…`，3372B）；④-D2 **PASS**（补采 `bfd7d4fd…`，两次补采 SHA 一致）；⑤ **PASS**（`73710982…`，3355B，blob 级核验）。全部 reply SHA256 归档登记（steps.md S4 表）。
+- **DEC-017 逐项解除（本条=正式决策登记，scope 以审查方裁定 JSON 为准）：**
+  - ④-A PASS → 解除「派单层死会话处理限制」（DISPATCH_LAYER_DEAD_SESSION_HANDLING_ONLY）；
+  - ④-B PASS → 解除「派单层临时断网处理限制」；
+  - ④-D1 PASS → 解除「GitPointer 网络异常有限重试限制」；
+  - ④-D2 PASS → 解除「GitPointer 暂时性 HTTP 错误有限重试限制」（GIT_POINTER_TRANSIENT_HTTP_FINITE_RETRY_ONLY）；
+  - ⑤ PASS → 解除「多文件部分读取失败限制」；
+  - **不解除**：①多 assistant unit 限制（BLOCKED 模型侧签核保留）；④-C monitor 死页梯子限制（BLOCKED_IMPLEMENTATION_OUT_OF_SCOPE 保留）；⑥不适用（关联多任务 P1 门）。逐项解除不批量放行，其余 DEC-017 限制不变。
+- **生产路径缺陷发现（SEPARATE_DEFECT_CONFIRMED，另立任务必办）：** Node v24.14.0 无代理 env 时 readGitPointer 传 `dispatcher:null`→fetch ERR_ASSERTION→材料读取必失败（④-D 驱动首轮实证）；修复+双环境验证另立缺陷任务经规划协商后实施；本批测试侧 realFetch 包装适配、生产代码零改动，④-D1/D2 签核不含未经适配生产路径。
+- **会话与现场：** 审查会话迁移 6afde23c→6afdf44d（规划三轮）→6afdffa2（S4 八轮）；指针备份链 5 个；中断首跑 18-51-36（未发送）如实归档；派单/补采/诊断/清理现场 40+ 目录全量入库；环境守卫拦截 recoll 自带启动（架构口径=补采仅限保留现场）与 ad-hoc node -e（skill 纪律），均按守卫引导改为合规路径并如实登记。
+- **边界重申：** 零生产代码写入、零 M1 推进、未触 DEC-010（无 main 合并/生产发布/真实数据删除——仅删除本任务创建的 3 个一次性/测试会话且先存证后验证）；打版/部署无关。
+- **关联：** DEC-108/107/106（授权链）、DEC-018/F-006（906 出处）、DEC-023/026（号段）、platform-contract §2.6.6-2.6.8（契约锚定，contract-binding.md 绑定登记）、L-014/017/018（推送/一致性/补采实战）、ST-01/02/05（绑定/轮次/自检）。

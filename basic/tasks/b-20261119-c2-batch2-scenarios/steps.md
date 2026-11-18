@@ -96,36 +96,55 @@
   - DEC-017 对应限制（多文件部分读取失败）解除建议=本项 S4 签核后逐项解除。
 - S3-⑥：仅登记关联（并入 DEC-106④ 多任务 P1 验证门），本批不执行。
 
+
 ⑤测试结果：S3-① 派单发送双验 2/2 通过；补采驱动语法检查+实跑；主尝试采集 COMPLETED（单 unit）；备用尝试完成判定 fail-closed 后驱动实跑=RECOLL FAILED（过短断言）但 units-diag 独立诊断成功落盘（S4-01 G4 修正口径）。
 
 ⑥验收证据引用：主尝试 dispatch-2026-11-18T19-12-57（artifact_sha256=9d11a5889a4224e8b7c822d7c964767c26e2b3414e92cf37274a92afadee9563）；备用 dispatch-2026-11-18T19-15-44+诊断现场 recoll-c2batch2-s3-01-2026-11-18T19-19-12-464Z（units-diag.json 四 unit 全量诊断；**recoll 状态=FAILED 过短断言，reply/result 未生成如实缺失**）；**场景①全证据 MANIFEST=acceptance/s4-01-manifest.txt（18 文件 SHA256，S4-01 G5 整改）**；驱动 phase0/tools/recoll_c2batch2_s3_01.mjs。逐项独立验收=S4（审查方按冻结方案直读证据签核）。
 
 **S3-① 预结论：BLOCKED（模型侧无法触发；独立验收待 S4）**
 
-## S4 独立验收派单（审查腿）
+**验收结论：PASS**（六场景执行闭环+证据全量入库；独立验收=S4 六项逐项签核全过，dispatch-2026-11-18T20-05-03 reply SHA256=7371098267baabf90475e0dc077fd160fab1864f17376c52d89a297c493e352a）
 
-①本步骤目标：证据包推送后派 ChatGPT 直读复核，逐项签核。
+## S4 独立验收派单（审查腿，逐项一轮）
 
-②修改文件：无（证据 commit+派单）。
+①本步骤目标：证据包推送后派 ChatGPT 直读复核，逐项签核（每项独立 SHA/独立 reply SHA256/独立结论，R3 冻结）。
 
-③修改内容：待 S3 后细化。
+②修改文件：无代码写入（证据 commit+派单+steps 登记）。
 
-④执行结果：未开工。
+③修改内容：六项逐项独立验收+①的 ADJUST 整改一轮（MANIFEST+口径修正）。
 
-⑤测试结果：未测（未开工）。
+④执行结果（新审查会话 6afdffa2-fbb8-83ec-b44b-a22faf93a8a3，6afdf44d 三轮换阶段迁出只读归档，指针备份 pre-s4.json）：
 
-⑥验收证据引用：待登记。
+| 项 | 轮次 | 裁定 | reply SHA256（dispatch 目录） |
+|---|---|---|---|
+| ① | R1→ADJUST（仅证据完整性；G1-G3/G6 归因签核）→整改（s4-01-manifest.txt 18 文件+G4 口径修正+清理闭环登记）→R2 | **PASS 签核**（终态=BLOCKED 模型侧，DEC-017 多 unit 限制**保留不解除**） | R1=7427b1f9e740b87c…（19-41-38，3353B）/R2=a89805a961868a3c…（19-45-17，2406B） |
+| ④-A | 一轮 | **PASS**（终态=SAFE_FAILURE；派单层死会话限制 ELIGIBLE_FOR_ITEM_SCOPED_RELEASE，scope=DISPATCH_LAYER_DEAD_SESSION_HANDLING_ONLY） | b28313234a0a50f2…（19-48-13，3075B） |
+| ④-B | 一轮 | **PASS**（SAFE_FAILURE；派单层断网限制解除建议仅限该项） | e9325b63bd255753…（19-50-41，3808B） |
+| ④-D1 | R1=空回复轮次（采集有效/模型轮次空，DOM 诊断 TAIL_EMPTY=true，非采集器缺陷）→R2 fail-closed→补采 | **PASS**（NETWORK_RETRY_EXHAUSTED 能力签核；dispatcher:null 生产路径缺陷=SEPARATE_DEFECT_CONFIRMED 必办另立任务） | 补采 9277f1cef2f72db7…（recoll-…-04d1-r2-2026-11-18T20-00-27-964Z，3372B） |
+| ④-D2 | R1 fail-closed→补采（两轮 SHA 一致 bfd7d4fdd5525508…） | **PASS**（scope=GIT_POINTER_TRANSIENT_HTTP_FINITE_RETRY_ONLY） | 补采 bfd7d4fdd5525508…（recoll-…-04d2b-2026-11-18T20-04-19-735Z，dir 20-01-10） |
+| ⑤ | 一轮 | **PASS**（两子例 blob 级核验；多文件部分读取失败限制解除建议仅限该项） | 7371098267baabf9…（20-05-03，3355B） |
+
+- 会话迁移评估（L-018.6）：第 4 条 user 达阈值→按例外①（验收末段迁移反增交接成本）+轻回复+证据外置 GitHub 按 SHA 直读，暂不迁移；第 6 条重评同口径；审查方在④-D2 裁定中独立复评并同意例外①口径。
+- 边界事件如实登记：④-D1 空回复轮次（重派=新轮次非重发，ST-02 口径）；recoll 补采被归属校验正确拦截一次（两轮同标记命中 2，改最后 user 断言+前轮 SHA 排除）；一次 FAILED_DIR 派生笔误（lexicographic 排序误指 log 文件）以重跑修正（两次补采 SHA 一致证明采集确定性）；recoll 家族自带启动被环境守卫拦截（架构口径：补采仅限保留现场），改 c2batch2 家族诊断驱动。
+
+⑤测试结果：六项独立签核完成（②项经整改复核）；全部 reply 经 SHA256 登记；审查方多轮 blob 级直读核验（不以执行者自述为据）。
+
+⑥验收证据引用：dispatch-2026-11-18T19-45-17（①R2，reply SHA256=a89805a961868a3c5a1d2f45f483c636c32308b05da440f21dfc3480f753ac28）、dispatch-2026-11-18T19-48-13（④-A，b28313234a0a50f20ae617a4943dc0b735a55ea97321e7c013bfa7fa621fbc49）、dispatch-2026-11-18T19-50-41（④-B，e9325b63bd255753c5225b663c55949c2f695b58260f79cb9938d3040f841cf7）、recoll-c2batch2-s4-04d1-r2-2026-11-18T20-00-27-964Z（④-D1，9277f1cef2f72db72b2975c6327fff793dac7f1e65deffb1d42ea40e245d9e13）、recoll-c2batch2-s4-04d2b-2026-11-18T20-04-19-735Z（④-D2，bfd7d4fdd5525508bf6f9c50f497da011a9f6037a326484922797fae11188887）、dispatch-2026-11-18T20-05-03（⑤，7371098267baabf90475e0dc077fd160fab1864f17376c52d89a297c493e352a）；验收基线 commit=e8939b2e9e3cb6999bd1d3fa3ff186f00d4c081f（①整改后基线）。
+
+**验收结论：PASS**（六项逐项签核闭环；逐项解除登记见 DEC-109）
 
 ## S5 交付收口（delivery.md）
 
-①本步骤目标：七要素完工总结+DEC 登记+逐项解除建议提交用户。
+①本步骤目标：七要素完工总结+DEC-109 登记（含逐项解除正式决策登记）+向用户汇报。
 
-②修改文件：delivery.md、docs/phase1/decision-log.md（新 DEC 条目）。
+②修改文件：delivery.md、docs/phase1/decision-log.md（DEC-109）、task-brief.md 状态表（→完成）。
 
-③修改内容：待 S4 后细化。
+③修改内容：S3 执行+S4 六项签核+逐项解除登记+生产缺陷发现移交（另立任务）+①/④-C BLOCKED 保留+⑥关联登记。
 
-④执行结果：未开工。
+④执行结果：delivery.md 七要素落盘；DEC-109 登记；ST-05 终检 COMPLETED 态。
 
-⑤测试结果：未测（未开工）。
+⑤测试结果：python -I basic/tool/check_taskpack.py —— COMPLETED 态终检（见 delivery 提交记录）。
 
-⑥验收证据引用：待登记。
+⑥验收证据引用：DEC-109（docs/phase1/decision-log.md）；delivery.md；最终验收证据=dispatch-2026-11-18T20-05-03（reply SHA256=7371098267baabf90475e0dc077fd160fab1864f17376c52d89a297c493e352a）；全任务证据链=本 steps.md 各节。
+
+**验收结论：PASS**（交付收口完成）

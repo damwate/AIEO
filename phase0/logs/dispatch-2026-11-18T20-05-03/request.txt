@@ -1,0 +1,6 @@
+[C2-BATCH2-S4-05|20261119] 场景⑤ 独立验收（多文件部分读取失败,两子例）
+读:github.com/damwate/AIEO @ main e8939b2e9e3cb6999bd1d3fa3ff186f00d4c081f basic/tasks/b-20261119-c2-batch2-scenarios/ 的 steps.md S3-⑤ 节+contract-binding.md+驱动 c2batch2_s3_04d_05_driver.mjs。
+要点:⑤-run1(B 404)=证据c2batch2-s3-04d-e5a-2026-11-18T19-40-21-388Z:服务端请求日志证明 manifest→A(200)→B(404)→GIT_POINTER_NOT_FOUND(错误语内嵌"不得回退分支 HEAD或相似路径")→整体事务失败无部分返回;⑤-run2(C SHA不符)=c2batch2-s3-04d-e5b-2026-11-18T19-38-51-581Z:C同长度篡改→尺寸过→SHA校验失败GIT_POINTER_FILE_HASH_MISMATCH(details指认C路径)→整体失败。
+无效运行如实登记:e5a首版服务端bug致"缺失"不成立→意外成功暴露→修复重跑,三轮现场全保留;A在两子例中均真实读取通过(正向对照)。
+断言:不允许部分成功✓/失败原因分别可辨认(NOT_FOUND vs HASH_MISMATCH)✓/无自动降级换源HEAD回退✓/整个多文件事务fail-closed✓。
+请求三态:⑤ PASS/ADJUST/REJECT(PASS=签核多文件部分读取失败对应限制解除建议,仅限该项)。

@@ -1,0 +1,6 @@
+[C2-BATCH2-S4-04D1|20261119] 场景④-D1 独立验收（GitPointer 网络连接耗尽）
+读:github.com/damwate/AIEO @ main e8939b2e9e3cb6999bd1d3fa3ff186f00d4c081f basic/tasks/b-20261119-c2-batch2-scenarios/ 的 steps.md S3-④-D1 节+contract-binding.md+驱动 c2batch2_s3_04d_05_driver.mjs。
+要点:受控端点=本机已关闭端口;真实入口+真实fetch+真实重试;默认配置未改;证据c2batch2-s3-04d-d1-2026-11-18T19-39-32-135Z:4次尝试全NETWORK_ERROR(TypeError=连接拒绝)→GIT_POINTER_NETWORK_RETRY_EXHAUSTED→attempts留证;退避实测2085/3682/8289ms全在窗;无降级无换源无部分返回。
+两轮无效运行如实登记(首轮ERR_ASSERTION×4空心PASS被机制核验揭穿,L-017再证),终版attempts=TypeError(真实连接失败)。
+生产路径发现(建议另立缺陷任务):Node24无代理env时readGitPointer传dispatcher:null→fetch ERR_ASSERTION材料读取必失败已实证;测试侧realFetch适配,生产代码零改动。
+请求三态:④-D1 PASS/ADJUST/REJECT(PASS=签核网络异常有限重试能力,解除仅限该限制)。

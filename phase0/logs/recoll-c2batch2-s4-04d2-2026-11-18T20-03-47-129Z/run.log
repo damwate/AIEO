@@ -1,0 +1,7 @@
+[2026-11-18T20:03:47.472Z] 会话锁已获取（C2-BATCH2 R3 补采）
+[2026-11-18T20:04:10.830Z] 定位口径=最后user断言（标记命中1条,两轮同标记为预期,前轮SHA排除兜底）
+[2026-11-18T20:04:10.836Z] checks={"marked_user_unique":true,"last_user_assertion":true,"adjacent_assistant_tail":true,"stable_static_dom_read":true,"index_continuity":false,"final_stop_button_not_visible":true,"not_prev_reply_sha":true,"response_length_plausible":true,"uuid_based_locator":false}
+[2026-11-18T20:04:10.838Z] reply 已落盘（2070 字节，SHA=bfd7d4fdd5525508…）
+[2026-11-18T20:04:10.839Z] RECOLL COMPLETED
+[2026-11-18T20:04:10.855Z] 视口覆盖已清除
+[2026-11-18T20:04:10.974Z] 会话锁已释放（C2-BATCH2 R3 补采）

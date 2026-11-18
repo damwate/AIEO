@@ -1,0 +1,65 @@
+ChatGPT 说：
+JSON
+{
+  "scenario": "C2-BATCH2-S4-04D1",
+  "review_round": "S4",
+  "reviewed_commit": "e8939b2e9e3cb6999bd1d3fa3ff186f00d4c081f",
+  "review_status": "PASS",
+  "terminal_classification": "NETWORK_RETRY_EXHAUSTED",
+  "findings": [
+    {
+      "id": "G1",
+      "status": "PASS",
+      "reason": "受控目标为本机已关闭端口，驱动通过真实 readGitPointer 入口和 globalThis.fetch 发起请求；未触碰真实外网。"
+    },
+    {
+      "id": "G2",
+      "status": "PASS",
+      "reason": "被测源码 git_pointer.mjs 的 Git blob SHA-1 为 992b34a27d69a6570b5ef02ee2c377ccb1b2207f，与 contract-binding.md 绑定一致。默认 maxRetries=3、基间隔2秒、timeout=30秒，未修改配置。"
+    },
+    {
+      "id": "G3",
+      "status": "PASS",
+      "reason": "终版 result.json 留存4次 NETWORK_ERROR，attempts 均为 TypeError，最终错误码 GIT_POINTER_NETWORK_RETRY_EXHAUSTED；未返回部分材料。"
+    },
+    {
+      "id": "G4",
+      "status": "PASS",
+      "reason": "单调时钟实测退避为2085ms、3682ms、8289ms，分别处于冻结窗口1600–2400ms、3200–4800ms、6400–9600ms。"
+    },
+    {
+      "id": "G5",
+      "status": "PASS",
+      "reason": "失败以耗尽错误终止，无降级、无换源、无部分成功返回。"
+    },
+    {
+      "id": "G6",
+      "status": "PASS",
+      "reason": "两轮无效运行如实登记。首轮 ERR_ASSERTION×4 的空心 PASS 被机制核验揭穿；终版 realFetch 仅剥离 dispatcher:null，底层仍调用真实 globalThis.fetch，终版 attempts 不再是 ERR_ASSERTION。"
+    }
+  ],
+  "evidence": {
+    "steps_blob_sha1": "587fa098dba5a5d43b2550e285f8f669c130cc0b",
+    "contract_binding_blob_sha1": "ccf169a5107c27083503200727f7177e11f465fb",
+    "contract_blob_sha1_registered": "31cf7a4f58f6e6ba7da202cee55d89e123f36037",
+    "contract_sha256_registered": "31890dff1a16923b712a6a2899b5d120dd48cd57e222382e99b1921d4268e7ff",
+    "implementation_blob_sha1": "992b34a27d69a6570b5ef02ee2c377ccb1b2207f",
+    "driver_blob_sha1": "95c0b3a14410e52b3c2326df8e66c7bd3dba5fa1",
+    "result_blob_sha1": "8ac2232202755ee4b73a6276243e9e36a00c1633",
+    "run_log_blob_sha1": "85af1e28f8011256716a2954f3220477aed5f2ad"
+  },
+  "production_path_finding": {
+    "status": "SEPARATE_DEFECT_CONFIRMED",
+    "reason": "Node 24 无代理环境变量时，createGitPointerProxyDispatcher 返回 null；readGitPointer 将 null 作为 dispatcher 传入 fetch。终版测试通过 realFetch 适配剥离 null，因此没有修复或验证未经适配的生产调用路径。",
+    "impact": "Node 24 无代理环境下，生产 GitPointer 读取路径可能在实际网络请求前因 ERR_ASSERTION 失败。",
+    "required_action": "另立缺陷任务，修复 dispatcher:null（例如归一为 undefined），并分别验证无代理和有代理环境下的生产读取路径。"
+  },
+  "dec017": {
+    "network_error_finite_retry_restriction": "ELIGIBLE_FOR_ITEM_SCOPED_RELEASE",
+    "release_scope": "GIT_POINTER_NETWORK_ERROR_FINITE_RETRY_ONLY",
+    "restriction_released": false,
+    "other_restrictions": "UNCHANGED"
+  },
+  "final_decision": "PASS",
+  "next_action": "④-D1 可提交逐项解除建议；本 PASS 仅签核网络异常有限重试能力，不代表生产读取路径整体可用，也不解除④-D2、⑤或其他 DEC-017 限制。"
+}

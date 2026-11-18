@@ -1,0 +1,108 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-18T20:07:41.559Z",
+  "user_unit_key": "b0a9a1df-936d-5029-b34d-e4ecd7da7f42:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "b0a9a1df-936d-5029-b34d-e4ecd7da7f42:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "201e57e1-b74d-4ba1-8d39-ef26df29b07e",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "b0a9a1df-936d-5029-b34d-e4ecd7da7f42:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "e6ca6ab1-13dc-5969-bc9d-e7ec76b8ae19:0:user",
+          "e6ca6ab1-13dc-5969-bc9d-e7ec76b8ae19:2:assistant",
+          "b0a9a1df-936d-5029-b34d-e4ecd7da7f42:0:user",
+          "b0a9a1df-936d-5029-b34d-e4ecd7da7f42:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "10e3254716e236233528b9ccf2a45520a80be21c882e94ac4d434ecdee4720da",
+          "bfd7d4fdd5525508bf6f9c50f497da011a9f6037a326484922797fae11188887",
+          "81313313b14feb34e85e12fe052bd6fbbe24cd9004cd304a728774159a60c778",
+          "7371098267baabf90475e0dc077fd160fab1864f17376c52d89a297c493e352a"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "e6ca6ab1-13dc-5969-bc9d-e7ec76b8ae19:0:user",
+          "e6ca6ab1-13dc-5969-bc9d-e7ec76b8ae19:2:assistant",
+          "b0a9a1df-936d-5029-b34d-e4ecd7da7f42:0:user",
+          "b0a9a1df-936d-5029-b34d-e4ecd7da7f42:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "10e3254716e236233528b9ccf2a45520a80be21c882e94ac4d434ecdee4720da",
+          "bfd7d4fdd5525508bf6f9c50f497da011a9f6037a326484922797fae11188887",
+          "81313313b14feb34e85e12fe052bd6fbbe24cd9004cd304a728774159a60c778",
+          "7371098267baabf90475e0dc077fd160fab1864f17376c52d89a297c493e352a"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "e6ca6ab1-13dc-5969-bc9d-e7ec76b8ae19:0:user",
+          "e6ca6ab1-13dc-5969-bc9d-e7ec76b8ae19:2:assistant",
+          "b0a9a1df-936d-5029-b34d-e4ecd7da7f42:0:user",
+          "b0a9a1df-936d-5029-b34d-e4ecd7da7f42:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "b0a9a1df-936d-5029-b34d-e4ecd7da7f42:0:user",
+      "b0a9a1df-936d-5029-b34d-e4ecd7da7f42:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "e6ca6ab1-13dc-5969-bc9d-e7ec76b8ae19:0:user",
+          "e6ca6ab1-13dc-5969-bc9d-e7ec76b8ae19:2:assistant",
+          "b0a9a1df-936d-5029-b34d-e4ecd7da7f42:0:user",
+          "b0a9a1df-936d-5029-b34d-e4ecd7da7f42:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "e6ca6ab1-13dc-5969-bc9d-e7ec76b8ae19:0:user",
+          "e6ca6ab1-13dc-5969-bc9d-e7ec76b8ae19:2:assistant",
+          "b0a9a1df-936d-5029-b34d-e4ecd7da7f42:0:user",
+          "b0a9a1df-936d-5029-b34d-e4ecd7da7f42:2:assistant"
+        ],
+        "overlap_keys": [
+          "e6ca6ab1-13dc-5969-bc9d-e7ec76b8ae19:0:user",
+          "e6ca6ab1-13dc-5969-bc9d-e7ec76b8ae19:2:assistant",
+          "b0a9a1df-936d-5029-b34d-e4ecd7da7f42:0:user",
+          "b0a9a1df-936d-5029-b34d-e4ecd7da7f42:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "b0a9a1df-936d-5029-b34d-e4ecd7da7f42:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\nPASS 场景⑤：多文件部分读取失败，两子例均通过独立验收。\n\n已按指定完整 commit e8939b2e9e3cb6999bd1d3fa3ff186f00d4c081f 直读步骤、契约绑定、驱动、实现源码及两组最终证据。结论不是仅依据执行者预结论。\n\n逐项验收\n\n核验项\n\n\t\n\n⑤-run1：B 404\n\n\t\n\n⑤-run2：C SHA 不符\n\n\n\n\nmanifest 读取\n\n\t\n\n成功\n\n\t\n\n成功\n\n\n\n\nA 正向对照\n\n\t\n\n服务端按驱动逻辑返回 200\n\n\t\n\n服务端按驱动逻辑返回 200\n\n\n\n\n失败材料\n\n\t\n\nB，HTTP 404\n\n\t\n\nC，同长度篡改内容\n\n\n\n\n终态错误\n\n\t\n\nGIT_POINTER_NOT_FOUND\n\n\t\n\nGIT_POINTER_FILE_HASH_MISMATCH\n\n\n\n\n错误定位\n\n\t\n\nhandoff/missing.md、status 404\n\n\t\n\nhandoff/data.json，details 含 expected/actual SHA-256\n\n\n\n\n整体事务\n\n\t\n\n失败，不返回部分结果\n\n\t\n\n失败，不返回部分结果\n\n\n\n\n自动回退/换源\n\n\t\n\n未发生；错误明确禁止回退 HEAD 或相似路径\n\n\t\n\n未发生；直接以 SHA 不匹配终止\n\n证据核对\n\n⑤-run1（B 404）\n\n最终证据目录：c2batch2-s3-04d-e5a-2026-11-18T19-40-21-388Z\n\nresult.json blob：058afafc51d187eb12b0eb2ed73ca0689e3a4558\n\nrun.log blob：f7d460e112a481bedd7bd968504ac99f224fd267\n\n服务端请求顺序：manifest → A → B；B 返回 404。\n\n最终错误：GIT_POINTER_NOT_FOUND，错误信息明确包含“不得回退分支 HEAD 或相似路径”。\n\n⑤-run2（C SHA 不符）\n\n最终证据目录：c2batch2-s3-04d-e5b-2026-11-18T19-40-05-921Z\n\nresult.json blob：037602ed464077722f578718bbc93e05e923e079\n\nrun.log blob：c345dc9e3489fb263c96f714d29e8643afb1cf1e\n\n服务端请求顺序：manifest → A → C。\n\nC 内容同长度篡改，尺寸检查通过，SHA-256 检查失败；错误 details 明确指向 handoff/data.json，并保留 expected/actual 哈希。\n\n实现路径交叉核验\n\n被测源码 phase0/tools/git_pointer.mjs blob SHA-1：\n\n992b34a27d69a6570b5ef02ee2c377ccb1b2207f\n\nreadGitPointer 先将读取成功的材料放入局部 files 数组，所有材料均通过尺寸、SHA 和秘密信息检查后才返回 complete: true。任一材料读取或校验失败都会抛出错误，无法通过正常返回路径交付已经读取的 A。因此，两个子例的整体 fail-closed 结论有实现源码支撑，不只是驱动中的断言。\n\n无效运行与证据完整性\n\n无效运行没有被隐去：\n\ne5a 前两轮因 ERR_ASSERTION 在 manifest 请求阶段失败，未真正触及 B 404。\n\ne5a 第三轮因测试服务端错误把 B 当正常文件提供，出现意外成功；该结果被记录为 FAIL。\n\ne5b 首轮同样因 ERR_ASSERTION 在 manifest 请求阶段失败；修正后重跑才取得 SHA 不匹配终态。\n\n这些现场均保留。最终有效证据分别是上述 e5a 19:40:21 和 e5b 19:40:05 两轮，不能把无效运行算作成功验证。\n\n最终裁定\n\n⑤：PASS\n\nB 404 与 C SHA 不符两种失败原因可区分。\n\n不允许部分成功返回，整个多文件读取事务 fail-closed。\n\n未发生自动降级、自动换源或 HEAD/相似路径回退。\n\nA 在两个子例中均作为正向对照被读取。\n\nDEC-017：可提交逐项解除建议，仅限“多文件部分读取失败时整体 fail-closed”对应限制。\n\n该 PASS 不解除其他 GitPointer 限制，也不代表此前发现的 Node 24 dispatcher:null 生产路径缺陷已修复。\n\n终局：⑤ PASS。",
+      "text_sha256": "7371098267baabf90475e0dc077fd160fab1864f17376c52d89a297c493e352a",
+      "size_bytes": 3355,
+      "assistant_uuid": "201e57e1-b74d-4ba1-8d39-ef26df29b07e"
+    }
+  ]
+}
