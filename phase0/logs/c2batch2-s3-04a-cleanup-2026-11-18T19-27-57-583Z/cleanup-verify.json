@@ -1,0 +1,14 @@
+[
+  {
+    "uuid": "6afdfbba-a6f8-83ec-b1a9-e7f8e6fdabe4",
+    "patch_status": 200,
+    "get_status_after": 404,
+    "dead": true
+  },
+  {
+    "uuid": "6afdf8eb-4acc-83ec-923d-7f38ab2e9f14",
+    "patch_status": 200,
+    "get_status_after": 404,
+    "dead": true
+  }
+]

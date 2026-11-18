@@ -1,0 +1,23 @@
+{
+  "uuid": "6afdfaf1-afcc-83ec-b377-8d560fcfcc90",
+  "attempts": [
+    {
+      "method": "DELETE",
+      "path": "/backend-api/conversation/6afdfaf1-afcc-83ec-b377-8d560fcfcc90",
+      "body": "{\"detail\":\"Method Not Allowed\"}",
+      "status": 405
+    },
+    {
+      "method": "POST",
+      "path": "/backend-api/conversation/6afdfaf1-afcc-83ec-b377-8d560fcfcc90/delete",
+      "body": "{\"detail\":\"Not Found\"}",
+      "status": 404
+    },
+    {
+      "method": "PATCH",
+      "path": "/backend-api/conversation/6afdfaf1-afcc-83ec-b377-8d560fcfcc90",
+      "body": "{\"success\":true}",
+      "status": 200
+    }
+  ]
+}

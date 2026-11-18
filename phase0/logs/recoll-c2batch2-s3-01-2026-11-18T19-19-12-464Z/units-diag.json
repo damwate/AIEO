@@ -1,0 +1,30 @@
+[
+  {
+    "key": "a5d5cfb5-e554-5046-afdc-f49cc7424ac3:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 258,
+    "text_head": "[C2-BATCH2-S3-01|20261119] 场景①采集验证（专用测试会话，非审查会话）\n本会话为 906/C2 第二批受控用例场景①（多 assistant unit 采集全链）的专用测试会"
+  },
+  {
+    "key": "a5d5cfb5-e554-5046-afdc-f49cc7424ac3:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 44,
+    "text_head": "ChatGPT 说：\n\n确认收到本场景请求。\n\n这是第二条独立消息\n\n这是第三条独立消息"
+  },
+  {
+    "key": "2f93c958-e346-5555-af97-63f2433eb246:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 201,
+    "text_head": "[C2-BATCH2-S3-01-BACKUP|20261119] 场景①备用触发（仅此一次）\n严格按以下方式回复：把你的回答拆成三条【独立的消息】连续发送，三条消息在界面上必须是三个【分开的消息气泡"
+  },
+  {
+    "key": "2f93c958-e346-5555-af97-63f2433eb246:1:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 16,
+    "text_head": "ChatGPT 说：\n\n无法拆分"
+  }
+]

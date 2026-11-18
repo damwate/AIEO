@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-18T19:23:48.619Z",
+  "user_unit_key": "196a7be4-a551-5098-a80b-3026382c323f:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "196a7be4-a551-5098-a80b-3026382c323f:1:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "4002c87f-fc16-4ce3-af07-d87a0ea64856",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "196a7be4-a551-5098-a80b-3026382c323f:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "196a7be4-a551-5098-a80b-3026382c323f:0:user",
+          "196a7be4-a551-5098-a80b-3026382c323f:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "8893bc877ca869f320f473d22bd33d4af3c666ea4d28ce1a0df414bb05cd7f75",
+          "4fce7f603b4f09b3d0a066221283384578436a8b78065b8a1999a1b4d736deef"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "196a7be4-a551-5098-a80b-3026382c323f:0:user",
+          "196a7be4-a551-5098-a80b-3026382c323f:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "8893bc877ca869f320f473d22bd33d4af3c666ea4d28ce1a0df414bb05cd7f75",
+          "4fce7f603b4f09b3d0a066221283384578436a8b78065b8a1999a1b4d736deef"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "196a7be4-a551-5098-a80b-3026382c323f:0:user",
+          "196a7be4-a551-5098-a80b-3026382c323f:1:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "196a7be4-a551-5098-a80b-3026382c323f:0:user",
+      "196a7be4-a551-5098-a80b-3026382c323f:1:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "196a7be4-a551-5098-a80b-3026382c323f:0:user",
+          "196a7be4-a551-5098-a80b-3026382c323f:1:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "196a7be4-a551-5098-a80b-3026382c323f:0:user",
+          "196a7be4-a551-5098-a80b-3026382c323f:1:assistant"
+        ],
+        "overlap_keys": [
+          "196a7be4-a551-5098-a80b-3026382c323f:0:user",
+          "196a7be4-a551-5098-a80b-3026382c323f:1:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "196a7be4-a551-5098-a80b-3026382c323f:1:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n一次性测试会话已就绪",
+      "text_sha256": "4fce7f603b4f09b3d0a066221283384578436a8b78065b8a1999a1b4d736deef",
+      "size_bytes": 46,
+      "assistant_uuid": "4002c87f-fc16-4ce3-af07-d87a0ea64856"
+    }
+  ]
+}

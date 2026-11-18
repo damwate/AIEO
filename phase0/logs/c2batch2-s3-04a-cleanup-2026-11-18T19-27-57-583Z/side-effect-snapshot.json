@@ -1,0 +1,48 @@
+{
+  "6afdfbba-a6f8-83ec-b1a9-e7f8e6fdabe4": {
+    "reason": "S3-④-A 死会话派单副作用会话（dispatch-2026-11-18T19-24-59 归属校验拦截所捕获）",
+    "units": [
+      {
+        "key": "dc08969b-6369-5c81-b78c-f266384305a3:0:user",
+        "role": "user",
+        "text_len": 128,
+        "text_head": "[C2-BATCH2-S3-04A-DISPATCH|20261119] 死会话派单测试（场景④-A）\n本消息面向一个已删除的一次性测试会话。若你收到本条消息，说明派单层发生了错误成功——请立即回答\"错误成功：死会话收到消息\"。本消息不应送"
+      },
+      {
+        "key": "dc08969b-6369-5c81-b78c-f266384305a3:1:assistant",
+        "role": "assistant",
+        "text_len": 24,
+        "text_head": "ChatGPT 说：\n\n错误成功：死会话收到消息"
+      }
+    ]
+  },
+  "6afdf8eb-4acc-83ec-923d-7f38ab2e9f14": {
+    "reason": "S3-① 多unit采集测试会话（主尝试+备用触发已完成取证）",
+    "units": [
+      {
+        "key": "a5d5cfb5-e554-5046-afdc-f49cc7424ac3:0:user",
+        "role": "user",
+        "text_len": 258,
+        "text_head": "[C2-BATCH2-S3-01|20261119] 场景①采集验证（专用测试会话，非审查会话）\n本会话为 906/C2 第二批受控用例场景①（多 assistant unit 采集全链）的专用测试会话，与项目审查会话隔离；任务内容与项目审"
+      },
+      {
+        "key": "a5d5cfb5-e554-5046-afdc-f49cc7424ac3:2:assistant",
+        "role": "assistant",
+        "text_len": 44,
+        "text_head": "ChatGPT 说：\n\n确认收到本场景请求。\n\n这是第二条独立消息\n\n这是第三条独立消息"
+      },
+      {
+        "key": "2f93c958-e346-5555-af97-63f2433eb246:0:user",
+        "role": "user",
+        "text_len": 201,
+        "text_head": "[C2-BATCH2-S3-01-BACKUP|20261119] 场景①备用触发（仅此一次）\n严格按以下方式回复：把你的回答拆成三条【独立的消息】连续发送，三条消息在界面上必须是三个【分开的消息气泡】，而不是一条消息里的三段文字。\n每条消"
+      },
+      {
+        "key": "2f93c958-e346-5555-af97-63f2433eb246:1:assistant",
+        "role": "assistant",
+        "text_len": 16,
+        "text_head": "ChatGPT 说：\n\n无法拆分"
+      }
+    ]
+  }
+}

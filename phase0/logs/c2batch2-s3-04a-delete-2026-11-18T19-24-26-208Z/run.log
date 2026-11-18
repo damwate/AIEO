@@ -1,0 +1,10 @@
+[2026-11-18T19:24:26.663Z] 会话锁已获取（S3-④-A delete）
+[2026-11-18T19:24:27.725Z] Chrome 已启动 pid=13692
+[2026-11-18T19:24:33.491Z] accessToken 获取: OK(len=2052)
+[2026-11-18T19:24:33.945Z] DELETE /backend-api/conversation/6afdfaf1-afcc-83ec-b377-8d560fcfcc90 -> 405 {"detail":"Method Not Allowed"}
+[2026-11-18T19:24:34.283Z] POST /backend-api/conversation/6afdfaf1-afcc-83ec-b377-8d560fcfcc90/delete -> 404 {"detail":"Not Found"}
+[2026-11-18T19:24:36.994Z] PATCH /backend-api/conversation/6afdfaf1-afcc-83ec-b377-8d560fcfcc90 -> 200 {"success":true}
+[2026-11-18T19:24:37.800Z] GET 验证 -> 404
+[2026-11-18T19:24:44.823Z] UI 直载死态验证: bodyLen=281 convUnits=0 main="跳转到内容 ChatGPT 新聊天 图像 定时任务 资料库 插件 健康 探索 项目 项目开发 公司业务框架整理 最近 拆分发送请求 方案复审协商 方案复审裁定 F3整改复审结果 流式读体修复评审 发布验证方案 代码终审复核 独立审核结论 验"
+[2026-11-18T19:24:44.824Z] DELETE VERIFIED: 会话已死（API 404 或 UI 无会话体）
+[2026-11-18T19:24:44.943Z] 会话锁已释放

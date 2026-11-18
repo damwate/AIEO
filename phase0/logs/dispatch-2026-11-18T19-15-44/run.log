@@ -1,0 +1,12 @@
+[2026-11-18T19:15:44.925Z] 会话锁已获取 pid=21508
+[2026-11-18T19:15:44.927Z] === GPT 派单（已有会话，消息 483 字节）===
+[2026-11-18T19:15:48.629Z] Chrome 已启动 pid=648
+[2026-11-18T19:15:49.622Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 0 个
+[2026-11-18T19:15:49.623Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-18T19:15:55.897Z] 会话就绪: https://chatgpt.com/c/6afdf8eb-4acc-83ec-923d-7f38ab2e9f14
+[2026-11-18T19:16:01.551Z] [dispatch] 基线尾部: {"role":"assistant","key":"a5d5cfb5-e554-5046-afdc-f49cc7424ac3:2:assistant","assistantUuid":"1f9ad0fb-ea37-484c-8928-6b057f3c8681"}
+[2026-11-18T19:16:02.442Z] [dispatch] 发送双验通过（polls=1，user_unit_key=fallback-turn-0:0:user，tail 后观察）
+[2026-11-18T19:16:02.728Z] 截图: sent-dispatch.png
+[2026-11-18T19:17:25.707Z] 会话锁已释放
+[2026-11-18T19:17:25.707Z] 致命错误: 完成判定未通过: {"generation_observed":true,"generation_ended":true,"final_stop_button_not_visible":true,"tail_is_assistant":true,"dil_uuid_present":true,"uuid_stable":true,"target_tail_matches_overall":true,"stable_unit_read":true,"target_range_materialized":true,"composer_empty":false}
+[2026-11-18T19:17:25.710Z] [tab-hygiene] 发送已发生：保留现场不关页（禁重发语义依赖现场）；退出后由人工/补采链按 L-018 处置
