@@ -1,0 +1,9 @@
+[F3b-01修复复核|AI-Image-Service]
+独立复核,直读GitHub源码,不采信自述。上轮你裁定REWORK仅余F3b-01(连接超时测试elapsed<7无法排除5s总超时单独生效)。
+仓库 github.com/YotinGarden/AI-Image-Service 分支 fix/yuanqiao-http1-20261117
+被审SHA 6e38cdeecb259de51e8a42ca39f6ff5dc4898ab4(远端HEAD已推送;上轮被审59319e6c9f47906f6d151898c0adf802fe3fb2c0,本轮仅改1文件1断言)
+读 backend/tests/test_real_stream_transport.py(test_connect_timeout_real_stall)
+核对F3b-01:时间界收紧elapsed<4(真connect=2s预算+CI抖动余量;若CONNECTTIMEOUT_MS失效由5s总超时终止则5>4必红),stall探测skip守卫与28断言保留,满足你的required?
+另:上轮Contents接口404因文件实际路径带backend/前缀,本轮已用全路径,可补逐行审计一并裁定。
+全量582 passed/11 failed(基线已复现)。
+只回JSON:{"result":"PASS|REWORK","file_access":{},"findings":[],"conditions_check":{},"notes":""}

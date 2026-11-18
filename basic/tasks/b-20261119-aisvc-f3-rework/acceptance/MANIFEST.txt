@@ -1,0 +1,11 @@
+ST-12 证据清单(SHA256=文件原始字节,2026-11-19;raw原文含DOM标签,解析件为纯JSON)
+c11cbb8bc0cc51c2bf389558378534b018525f80da6d894bc700eb8c3fcf404c  brief-rereview.txt
+31352dba41c2ebb0ff6328841b00d7734325a16d8a8c959ed79856332438e338  brief-f3b01-recheck.txt
+9e943426e4617a079b36c0dce9edc730be07e30478b5ef245301e50d41a7abce  brief-f3b01-recheck-r2.txt
+4268f4bfe2e32950d00324c8322d092882ec3cffc90bc02c24ff88bd711ab899  reply-r1-raw.txt
+0a7799bcf44bd7d938f8223628eafab531007502eb3512432e439f7fff15dca3  reply-r1.json
+d61332f1cf4555dd1e47a07b21e7ab98a4111c1f4550a0eeea3fb6ee49a8f2f8  reply-r2-raw.txt
+43e2ded5ba6e7d45b662ff133e1f941762e9e37cd41671afbb15ef328ca9af00  reply-r2.json
+ddf605d5d6bf4771b480aada4e178e277e89dd3d6568233c50a19a65846655b3  reply-r3-pass-raw.txt
+8d899d2c0e13de04af5ec119619ce7f65d7457ed97f190a091d7ce85b410ab31  reply-r3.json
+dispatch dirs: 17-36-04(R1 REWORK)/17-40-56(R2 REWORK)/17-45-46(R3 PASS)

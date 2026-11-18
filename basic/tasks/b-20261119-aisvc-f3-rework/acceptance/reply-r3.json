@@ -1,0 +1,22 @@
+{
+  "result": "PASS",
+  "file_access": {
+    "repository": "YotinGarden/AI-Image-Service",
+    "branch": "fix/yuanqiao-http1-20261117",
+    "commit": "d50ce915cb047537640a8393e08882e922443d47",
+    "branch_head": "CONFIRMED",
+    "parent": "6e38cdeecb259de51e8a42ca39f6ff5dc4898ab4",
+    "file": "backend/tests/test_real_stream_transport.py",
+    "verification": "已读取指定SHA完整测试文件及http_transport.py，并核对提交diff。"
+  },
+  "findings": [],
+  "conditions_check": {
+    "F3b_original_2s_case": "PASS：保留low_speed模式、connect_timeout_seconds=2、elapsed<4、真实stall探测及transport_code==28。",
+    "F3b_5s_control": "PASS：新增非low_speed模式、同一SYN黑洞、timeout=5的独立对照，断言4<elapsed<8且transport_code==28。",
+    "timeout_semantics": "PASS：核对http_transport.py，非low_speed分支显式设置CurlOpt.TIMEOUT_MS=timeout_seconds*1000及LOW_SPEED_LIMIT=0；因此对照实际验证的是5秒总传输时限，覆盖连接阶段。low_speed分支则显式设置CONNECTTIMEOUT_MS=connect_timeout*1000及LOW_SPEED_TIME=timeout_seconds，不设置TIMEOUT_MS。两种机制已被分别构造和区分。",
+    "stall_probe": "PASS：两用例均先探测真实stall；快速拒绝或无法构造时skip，不伪造连接超时证据。",
+    "transport_code": "PASS：两档均强断言transport_code==28。",
+    "full_suite": "NOT_VERIFIED：584 passed/11 failed及基线复现是用户提供数据，本轮未独立运行。"
+  },
+  "notes": "F3b-01 required已满足，可以关闭。一个非阻断性文字问题：新测试docstring及提交说明称非low_speed对照映射CONNECTTIMEOUT_MS=5s，但源码实际映射的是TIMEOUT_MS=5000；该总时限覆盖连接阶段，测试设计和4<elapsed<8的对照目的仍然成立。建议后续将这处说明改准确，避免混淆总传输超时与连接超时。"
+}
