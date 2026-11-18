@@ -1,0 +1,181 @@
+{
+  "at": "2026-11-18T18:57:34.489Z",
+  "message_bytes": 1092,
+  "reply": "ChatGPT 说：\n906/C2 第二批受控用例方案复审 R1\n\nADJUST — 暂不冻结 零代码写入\n\n审查基线： damwate/AIEO，main，完整 SHA：\n\n7998c3519eb1de540815f763f7f4118ad546691f\n\n已读取三件套，确认本轮是 S2 规划协商，不是场景执行授权。\n\n初步判断：①⑤可以保留并收紧验收条件；④必须先纠正验收对象语义；⑥并入多任务 P1 门是正确的。\n\n另外，我支持你提出的原则：①④⑤分别取得证据、分别裁定、分别解除 DEC-017，不允许一个场景的 PASS 替代另一个场景的验收。\n\n一、三项场景逐项裁定\n① 多 assistant unit 采集全链\n有条件保留\n\n场景方向正确，但需要区分两个事实：\n\n真实模型回复自然产生至少两个独立 assistant unit。\n\n采集器完整识别这些 unit，并通过六查、区间完整性校验和登记闭环。\n\n建议验收分成两道独立判断：\n\n触发有效性： 必须是同一真实会话中自然产生的多个独立 assistant unit，不能用 DOM 复制、人工拆分或测试 fixture 充数。\n\n采集有效性： unit_count >= 2，unit key 顺序连续，区间起止完整，全文稳定，UUID 一致，原始 artifact 回读与 SHA256 一致，登记成功。\n\n特殊情况：\n\n模型未产生多 unit：BLOCKED，不能判采集器失败。\n\n模型产生多 unit，但采集器遗漏或无法证明完整：REWORK 或 BLOCKED，依具体故障归因。\n\n不允许通过反复消耗真实审查会话来追求成功样本。\n\n建议：一次真实尝试，允许在冻结方案中规定一次备用触发策略；不得无限重试。\n\n④ 退避耗尽／死页梯子\n必须重构验收定义\n\n这是本批最重要的问题。\n\n当前任务书实际上混合了两个不同层次：\n\n层次\n\n\t\n\n真实对象\n\n\t\n\n应验证的内容\n\n\n\n\n派单层\n\n\t\n\nphase0/tools/gpt_dispatch.mjs\n\n\t\n\n死会话或网络故障时是否 fail-closed，是否拒绝错误成功、错误重发\n\n\n\n\n梯子层\n\n\t\n\n手册 §6.2 / monitor\n\n\t\n\n刷新、strike、退避、判死和状态持久化语义\n\n我核对了指定 SHA 的 gpt_dispatch.mjs。代码中确实存在：\n\n页面就绪等待与超时失败；\n\n发送双验；\n\n生成结束及采集稳定性检查；\n\n失败时不把不确定状态冒充成功；\n\n发送后采集失败不允许重新派单。\n\n但这不能证明派单工具自身具有三次 strike、8 分钟退避、三 strike 判死的梯子机制。\n\n因此不能把一次 gpt_dispatch 超时直接记成梯子机制 PASS。\n\n建议将④拆为两个验收对象：\n\n④-A：AIEO 派单层真实故障闭环\n\n创建一次性会话。\n\n保存其独立身份和现场证据。\n\n删除该一次性会话。\n\n仅向该一次性会话发起派单。\n\n验证页面就绪失败或死页识别。\n\n验证没有错误成功登记、没有误更新审查会话指针、没有重复发送。\n\n验证退出清理和错误现场留存。\n\n判定重点：派单层是否安全失败，而不是是否执行了梯子。\n\n④-B：monitor 梯子机制\n\n独立确认 §6.2 所描述的实现归属，再验证：\n\n单次刷新失败是否产生正确 strike；\n\n退避是否真正生效；\n\n退避期内是否禁止再次尝试；\n\n第三次 strike 是否触发判死；\n\n判死状态是否可追溯，是否存在错误自动恢复。\n\n这里有一个前置条件：必须能指出实际执行上述动作的程序入口、状态存储和调用链。仅凭手册描述不能验收实现。\n\n我的建议：④-A 纳入本批；④-B 只有在 monitor 实际实现及其可控测试入口确认后，才纳入本批。否则登记 BLOCKED，不用派单层的测试替代。\n\n⑤ 多文件部分读取失败\n有条件保留\n\n这是三项中最适合做确定性故障注入的一项。\n\n建议保留草案中的三种材料：\n\n材料\n\n\t\n\n故障条件\n\n\t\n\n预期\n\n\n\n\nA\n\n\t\n\n正常文件\n\n\t\n\n能读取、校验\n\n\n\n\nB\n\n\t\n\n文件不存在，返回 404\n\n\t\n\n整体失败\n\n\n\n\nC\n\n\t\n\n文件存在但 SHA 不符\n\n\t\n\n整体失败\n\n必须补充以下断言：\n\n不允许只返回 A 的部分成功结果。\n\n不允许把 A 的内容写入最终成功登记。\n\nB、C 的失败原因必须分别可辨认。\n\n不允许自动切换到 branch HEAD 或其他 commit 兜底。\n\n失败现场保留，临时登记条目在证据完整归档后清理。\n\n清理不得涉及真实登记簿和其他任务正在使用的条目。\n\n特别强调：测试必须证明的是整个多文件事务的 fail-closed，而不是仅仅证明两个文件读取异常。\n\n二、④的两类真实实例应如何判定\n\n我建议明确下面的验收责任矩阵：\n\n验收项\n\n\t\n\n负责对象\n\n\t\n\nPASS 的必要条件\n\n\n\n\n④-A 死会话\n\n\t\n\nAIEO 派单工具\n\n\t\n\n安全失败、不误发送、不误登记、不污染指针\n\n\n\n\n④-B 网络故障\n\n\t\n\nAIEO 派单工具\n\n\t\n\n断网期间不产生虚假成功、不进行未授权重发\n\n\n\n\n④-C strike 梯子\n\n\t\n\nmonitor 实际实现\n\n\t\n\n三次失败、退避和判死状态均有真实证据\n\n这里不能把三个概念混成一个：\n\n派单超时不等于 strike。\n\n派单短路不等于退避。\n\n页面不可访问不等于 monitor 已判死。\n\nmonitor 判死不等于 AIEO 已经完成对应任务状态管理。\n\n建议④-A、④-B作为本批的受控验证主体，④-C作为前置实现核验门。\n\n如果④-C找不到可独立验证的实现入口，本批不应宣称完成了死页梯子验收。④-A、④-B即使通过，也只能解除其各自对应的派单层限制。\n\n三、轮次安排裁定\n建议逐项一轮\n\n两种安排的比较：\n\n方案\n\n\t\n\n优点\n\n\t\n\n风险\n\n\n\n\n一次派单，三个场景分别出结论\n\n\t\n\n节约派单次数\n\n\t\n\n容易出现一个场景证据问题影响其他场景，且容易产生批量放行歧义\n\n\n\n\n每项独立派单、独立一轮\n\n\t\n\n责任清晰，证据绑定简单\n\n\t\n\n派单次数增加\n\n我选择第二种。\n\n具体执行顺序：\n\n①完成现场执行、证据提交、独立审查，形成单项终态。\n\n④完成现场执行、证据提交、独立审查，形成单项终态。\n\n⑤完成现场执行、证据提交、独立审查，形成单项终态。\n\n每项均以独立完整 SHA 为审查基线。\n\n轮次规则：\n\nR1 是每个场景自己的首轮审查，不是整个批次的统一首轮。\n\n某项 REWORK，只允许该项进入下一轮，不牵连其他已经 PASS 的项目。\n\n某项 BLOCKED，不得以其他项目的 PASS 抵消。\n\n不允许把三个项目合并成一个批次 PASS。\n\n每项最终必须有独立审查回复 SHA256 和独立结论。\n\n这样做比一次性打包审查更符合 DEC-107 的「逐级另批」原则。\n\n四、风险及即停线补充\n\n沿用 DEC-106/107 的五类即停，不降低标准。\n\n即停类别\n\n\t\n\n本批具体触发条件\n\n\n\n\n权限越界\n\n\t\n\n访问、删除或修改了非本次创建的一次性会话，或真实登记簿\n\n\n\n\n证据缺失\n\n\t\n\n原始 unit、原始回复、SHA、现场状态无法完整证明\n\n\n\n\n状态不一致\n\n\t\n\n派单结果、会话实际状态、登记结果互相矛盾\n\n\n\n\n数据污染\n\n\t\n\n临时故障注入影响真实任务、真实登记或其他会话\n\n\n\n\n重复失败\n\n\t\n\n同一故障重复出现而原因没有收敛，继续执行只是在消耗真实资源\n\n我建议增加四条具体操作约束：\n\n1. 一次性会话隔离\n\n创建前记录既有会话清单。\n\n测试会话必须有独立身份标记。\n\n删除操作只能作用于本次创建并登记的一次性会话。\n\n不允许复用当前审查会话作为故障注入对象。\n\n2. 网络故障隔离\n\n只在没有在途派单时开始。\n\n只针对本次一次性测试对象。\n\n事先限定断网窗口和恢复时点。\n\n网络恢复后先检查状态，再决定是否进行任何后续操作。\n\n不允许通过反复断网制造更多失败样本。\n\n3. 失败后的恢复纪律\n\n已发送但采集失败：禁重发，沿用 L-018 补采路径。\n\n未发送而失败：按实际发送状态决定是否可以重新准备。\n\n无法确定是否发送：按不确定状态处理，保留现场并停止。\n\n4. 现场清理\n\n清理前必须完成证据归档和独立性检查。无法证明归属的临时产物不删除，转 BLOCKED 报告。\n\n五、五件套留证与证据绑定\n\n每个场景独立建立证据目录，不共用现场文件。\n\n派单现场的五件套：\n\nrequest.txt：实际请求内容。\n\nraw-units.json：原始 unit 数据。\n\nreply.txt：完整原始回复。\n\nresult.json：机器结果、检查项与最终状态。\n\n截图：关键操作及现场状态。\n\n另外必须提供：\n\nMANIFEST：文件 SHA256 清单。\n\n被测 commit：完整 40 位 SHA。\n\n场景执行记录：注入时间、恢复时间、操作对象。\n\n独立验收回复 SHA256。\n\n清理记录：清理对象、结果、残留检查。\n\n注意：五件套缺一不可；截图不能替代机器证据，机器结果也不能替代原始回复。\n\n六、⑥多任务 P1 门\n同意并入，不单独造场景\n\n本批只登记关联关系：\n\n⑥属于 DEC-106④ 多任务实施方案的 P1 验证门。\n\n不单独制造并发场景。\n\n不提前宣称 P1 通过。\n\n不因①④⑤通过而自动解除⑥限制。\n\n后续按照多任务方案自己的 P1 授权和验收程序处理。\n\n这样可以避免重复建设两套并发验证。\n\n七、建议冻结版方案\n\n我建议将任务书修订为以下结构：\n\n编号\n\n\t\n\n本批安排\n\n\t\n\n独立结论\n\n\n\n\n①\n\n\t\n\n真实多 assistant unit 采集\n\n\t\n\nPASS/REWORK/BLOCKED\n\n\n\n\n④-A\n\n\t\n\n一次性死会话派单\n\n\t\n\nPASS/REWORK/BLOCKED\n\n\n\n\n④-B\n\n\t\n\n限时断网派单\n\n\t\n\nPASS/REWORK/BLOCKED\n\n\n\n\n④-C\n\n\t\n\nmonitor 梯子实现核验门\n\n\t\n\nPASS/BLOCKED，前置确认\n\n\n\n\n⑤\n\n\t\n\n多文件部分读取失败\n\n\t\n\nPASS/REWORK/BLOCKED\n\n\n\n\n⑥\n\n\t\n\n并入多任务 P1 门\n\n\t\n\n不在本批执行\n\n其中④-A和④-B共同属于④的验收对象，不能把它们的证据混成一条结论。\n\nDEC-017解除规则：\n\n① PASS → 仅解除真实多 assistant unit 对应限制。\n\n④ PASS → 仅解除实际完成验证的故障处理限制；未验证的 monitor 梯子仍保持限制。\n\n⑤ PASS → 仅解除多文件部分读取失败对应限制。\n\n任一 REWORK/BLOCKED → 对应限制继续保留。\n\n三个项目之间没有相互授权关系。\n\n八、最终裁定\nR1：ADJUST\n\n已认可的设计\n\n①真实多 unit 验收方向。\n\n⑤多文件整体 fail-closed 验收方向。\n\n⑥并入多任务 P1 门。\n\n五类即停与五件套留证。\n\n每项独立审查、独立解除 DEC-017。\n\n冻结前必须修改\n\n④明确区分派单层与 monitor 梯子层。\n\n④-C增加实际实现入口和状态存储的核验条件。\n\n明确④-A、④-B的独立验收条件。\n\n将轮次改成逐项独立派单、独立一轮。\n\n补充网络恢复、会话归属和清理前检查。\n\n执行权限\n\n允许继续方案修订\n尚不允许场景动工\n\n零生产代码写入。\n\n不触 DEC-010。\n\n不删除真实会话。\n\n不对真实任务及在途派单注入故障。\n\n未经用户拍板，不进入 S3。\n\n九、交给用户拍板\n\n我的推荐是：按上述 ADJUST 方向修改三件套，④-C先做实现入口核验，再提交 R2 复审；R2 达成共识后，再由你拍板冻结。\n\n当前不建议直接冻结 R1 草案，原因不是①⑤不可行，而是④的验收对象尚未完全确定。\n\n参考审查基线：\n\nDEC-107 决策记录\n\n派单工具源码\n\n任务书\n\n本轮结论：规划协商 R1 完成，等待方案修订；S3 未启动，DEC-017 不解除。",
+  "user_unit_key": "5d8cb688-0be1-5552-8a24-003f13cefca7:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "5d8cb688-0be1-5552-8a24-003f13cefca7:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "a831a58d-e62e-48ab-9365-0cdcd96c1296",
+  "stability": {
+    "stable": true,
+    "interval_ms": 7710,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-18T18:57:26.065Z",
+      "read_finished_at": "2026-11-18T18:57:30.766Z",
+      "unit_keys": [
+        "5d8cb688-0be1-5552-8a24-003f13cefca7:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "5d8cb688-0be1-5552-8a24-003f13cefca7:2:assistant",
+          "sha256": "baef39e5d077307cde33a04c405e99fa0a1df0c111c8c5111049b1f15d778275",
+          "size_bytes": 11496
+        }
+      ],
+      "assistant_uuid": "a831a58d-e62e-48ab-9365-0cdcd96c1296",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-18T18:57:33.775Z",
+      "read_finished_at": "2026-11-18T18:57:34.312Z",
+      "unit_keys": [
+        "5d8cb688-0be1-5552-8a24-003f13cefca7:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "5d8cb688-0be1-5552-8a24-003f13cefca7:2:assistant",
+          "sha256": "baef39e5d077307cde33a04c405e99fa0a1df0c111c8c5111049b1f15d778275",
+          "size_bytes": 11496
+        }
+      ],
+      "assistant_uuid": "a831a58d-e62e-48ab-9365-0cdcd96c1296",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "5d8cb688-0be1-5552-8a24-003f13cefca7:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "5d8cb688-0be1-5552-8a24-003f13cefca7:0:user",
+          "5d8cb688-0be1-5552-8a24-003f13cefca7:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "dd3a1bd192936ceff4bc9c12a7d8719e148d70aeae723840f8423421a3316677",
+          "baef39e5d077307cde33a04c405e99fa0a1df0c111c8c5111049b1f15d778275"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "5d8cb688-0be1-5552-8a24-003f13cefca7:0:user",
+          "5d8cb688-0be1-5552-8a24-003f13cefca7:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "dd3a1bd192936ceff4bc9c12a7d8719e148d70aeae723840f8423421a3316677",
+          "baef39e5d077307cde33a04c405e99fa0a1df0c111c8c5111049b1f15d778275"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "5d8cb688-0be1-5552-8a24-003f13cefca7:0:user",
+          "5d8cb688-0be1-5552-8a24-003f13cefca7:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "5d8cb688-0be1-5552-8a24-003f13cefca7:0:user",
+      "5d8cb688-0be1-5552-8a24-003f13cefca7:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "5d8cb688-0be1-5552-8a24-003f13cefca7:0:user",
+          "5d8cb688-0be1-5552-8a24-003f13cefca7:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "5d8cb688-0be1-5552-8a24-003f13cefca7:0:user",
+          "5d8cb688-0be1-5552-8a24-003f13cefca7:2:assistant"
+        ],
+        "overlap_keys": [
+          "5d8cb688-0be1-5552-8a24-003f13cefca7:0:user",
+          "5d8cb688-0be1-5552-8a24-003f13cefca7:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "baef39e5d077307cde33a04c405e99fa0a1df0c111c8c5111049b1f15d778275",
+  "size_bytes": 11496,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-18T18-53-11\\reply.txt",
+  "reply_readback_sha256": "baef39e5d077307cde33a04c405e99fa0a1df0c111c8c5111049b1f15d778275",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-18T18-53-11\\raw-units.json",
+  "raw_units_sha256": "6b307bd6b1b2fe82a1fb470688d3857b9b3ba1c8fb6c894a1877b764ec9933a7",
+  "raw_units_size_bytes": 15195,
+  "raw_units_readback_sha256": "6b307bd6b1b2fe82a1fb470688d3857b9b3ba1c8fb6c894a1877b764ec9933a7",
+  "session_id": "6afdf44d-8d54-83ec-9fca-1bbde1ba1654",
+  "conversation_url": "https://chatgpt.com/c/6afdf44d-8d54-83ec-9fca-1bbde1ba1654",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}

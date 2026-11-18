@@ -22,15 +22,15 @@
 
 ①本步骤目标：方案草案经 ChatGPT 逐项复审（R1-Rn）至共识，报用户拍板后冻结场景执行方案与 steps 细化。
 
-②修改文件：task-brief.md（冻结版）、steps.md（步骤固化）、（如有）场景执行细案文件。
+②修改文件：task-brief.md（R1 后修订为冻结候选 v0.2）、steps.md、简报 phase0/tools/brief_c2batch2_plan_r1.txt（1093B）。
 
-③修改内容：按审查方 ADJUST/REWORK 意见逐项修订（含④验收对象语义厘清、故障注入授权范围）；登记 reply SHA256 与 dispatch 目录。
+③修改内容：R1 裁定 ADJUST 后按裁定逐项修订——④拆④-A/④-B/④-C/④-D 四层验收对象、①两道独立判断+次数上限、⑤五断言+事务级 fail-closed、轮次改逐项一轮、即停线具体化+四操作约束、五件套留证清单、DEC-017 逐项解除规则。
 
-④执行结果：R1 待派单（会话迁移评估：旧审查会话 6afde23c 已承载 F3 REWORK R1-R3 三条 user 消息，本轮为换题新任务，按 DEC-107"换题迁移"先例迁新会话，指针备份后 `--new-session` 首派即活）。
+④执行结果：R1 完成=**ADJUST**（已认可①⑤⑥方向与逐项解除原则；冻结前须修改五项=④层次区分/④-C 实现入口核验条件/④-A④-B 独立验收条件/轮次逐项一轮/网络恢复与会话归属清理检查——已全部落进 v0.2 修订）。会话迁移已执行：旧审查会话 6afde23c（F3 三轮）换题迁出，指针备份 gpt-reviewer-session.pre-c2batch2.json，新会话 6afdf44d-8d54-83ec-9fca-1bbde1ba1654 `--new-session` 首派即活。中断首跑现场 dispatch-2026-11-18T18-51-36（发送前中止未发送，原位如实归档）。④-C 核验门已完成：AIEO 仓零梯子实现（grep 证据），git_pointer.mjs:374-417 有契约退避真实现→④-D 新增提案。
 
-⑤测试结果：未测（未开工）。
+⑤测试结果：ST-05 自检 PLANNING 合法态（①② PASS）；v0.2 修订后复检待 S2 提交前执行。
 
-⑥验收证据引用：待登记（派单后补）。
+⑥验收证据引用：R1 dispatch 目录=phase0/logs/dispatch-2026-11-18T18-53-11；reply SHA256=baef39e5d077307cde33a04c405e99fa0a1df0c111c8c5111049b1f15d778275（11496B，ADJUST）；审查会话 6afdf44d（发送双验 polls=2，归属校验 PASS）；R2 待派单。
 
 ## S3 受控场景执行（①④⑤ 逐项）
 
