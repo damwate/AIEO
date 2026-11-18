@@ -45,3 +45,9 @@
 1. F1-F4 修复链全条件 PASS，可进入发版决策（发版红线仍按 DEC-010 由用户拍板）。
 2. AIEO 本地 commit 待用户确认后经 check-push 推送（AIEO 仓库专用工具，勿再跨仓库使用）。
 3. admin auth 基线失败排查 + 3 条历史回复归档建议各另立任务。
+
+## 8. 追加登记（2026-11-19）：main合并与分支清理（用户拍板）
+
+- **用户拍板原文：** "另外AI-IMAGE-SERVICE各个分支清理下吧，能不能合并到main主分支呢"
+- **执行（DEC-010 红线·用户本人拍板）：** fix/yuanqiao-http1-20261117 fast-forward 合并入 main（5c7ec3e→0c53c96，48 files +7345/−159，零冲突），已推送远端；合并后删除远端 fix/yuanqiao-http1-20261117 与 fix/pre-launch-review（后者早已并入 main，远端实际已不存在，仅清理本地残影），本地仅存 main。main=origin/main=0c53c963d93e33c15ebd4498742828fcf9ffc57d。
+- **对 217 交接的影响：** 获取路径改为 main 分支，SHA 不变（fast-forward），此前交接块中的 0c53c96… 继续有效。
