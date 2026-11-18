@@ -1,0 +1,18 @@
+{
+  "session": "6afdfd07-92fc-83ec-8350-be4bff239277",
+  "armed_at": "2026-11-18T19:33:14.092Z",
+  "disarmed_at": "2026-11-18T19:33:15.353Z",
+  "dispatch_exit": 3221226505,
+  "dispatch_summary": [
+    "[2026-11-18T19:33:15.148Z] 致命错误: page.goto: net::ERR_INTERNET_DISCONNECTED at https://chatgpt.com/c/6afdfd07-92fc-83ec-8350-be4bff239277"
+  ],
+  "offline_sanity": {
+    "ok": false,
+    "err": "Failed to fetch"
+  },
+  "restore_check": {
+    "ok": false,
+    "err": "Failed to fetch"
+  },
+  "chrome_restarted": false
+}

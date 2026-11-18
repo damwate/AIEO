@@ -1,0 +1,17 @@
+{
+  "uuid": "6afdfd07-92fc-83ec-8350-be4bff239277",
+  "units": [
+    {
+      "key": "bbe80f35-5ef3-5c90-a0f2-8eb118079b0c:0:user",
+      "role": "user",
+      "text_len": 135,
+      "text_head": "[C2-BATCH2-S3-04B|20261119] 一次性会话创建（场景④-B 专用，非审查会话）\n本会话为 906/C2 第二批受控用例场景④-B（限时断网派单层安全失败）的专用测试会话，与项目"
+    },
+    {
+      "key": "bbe80f35-5ef3-5c90-a0f2-8eb118079b0c:1:assistant",
+      "role": "assistant",
+      "text_len": 22,
+      "text_head": "ChatGPT 说：\n\n④-B测试会话已就绪"
+    }
+  ]
+}

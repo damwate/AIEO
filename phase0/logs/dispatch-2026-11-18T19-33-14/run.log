@@ -1,0 +1,10 @@
+[2026-11-18T19:33:14.875Z] 会话锁已获取 pid=23500
+[2026-11-18T19:33:14.877Z] === GPT 派单（已有会话，消息 311 字节）===
+[2026-11-18T19:33:14.894Z] 复用已运行调试端口 9222
+[2026-11-18T19:33:15.021Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 1 个
+[2026-11-18T19:33:15.022Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-18T19:33:15.147Z] 会话锁已释放
+[2026-11-18T19:33:15.148Z] 致命错误: page.goto: net::ERR_INTERNET_DISCONNECTED at https://chatgpt.com/c/6afdfd07-92fc-83ec-8350-be4bff239277
+Call log:
+[2m  - navigating to "https://chatgpt.com/c/6afdfd07-92fc-83ec-8350-be4bff239277", waiting until "domcontentloaded"[22m
+

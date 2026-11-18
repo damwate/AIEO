@@ -68,6 +68,14 @@
   - 阶段五 清理+恢复+核验：c2batch2-s3-04a-cleanup-2026-11-18T19-27-57-583Z——副作用会话先存证后删除（2 units 全量快照）+①测试会话删除，双验证 GET 404；指针恢复 6afdf44d（备份链 pre-s3-04a.json）；审查会话核验完好（6 units，尾 assistant SHA=552a463a…=R3 终局裁定）；
   - 附加发现（如实登记）：死 URL+composer 发送会触发 ChatGPT 新建会话承接（平台行为），归属校验层是拦住错误成功的**决定性防线**——建议后续把"死会话"识别前置到就绪层（不在本批范围，留作工具链演进建议）；
   - DEC-017 对应限制（派单层死会话处理）解除建议=本项 S4 签核后逐项解除。
+- **S3-④-B 限时断网派单层——终态 PASS（预结论，待 S4 独立验收）：**
+  - 一次性会话创建：dispatch-2026-11-18T19-31-xx（brief_c2batch2_s3_04b_create.txt）→ 会话 **6afdfd07-92fc-83ec-8350-be4bff239277**（"④-B测试会话已就绪"）；
+  - 断网窗口（隔离口径=仅本页 target CDP offline，不触碰系统代理/GitHub/VPN）：窗口驱动 c2batch2_s3_04b_window-2026-11-18T19-33-06-610Z——armed_at=19:33:14.092Z→离线摸底 fetch 失败✓→窗口内派单（brief_c2batch2_s3_04b_offline.txt）→ **page.goto: net::ERR_INTERNET_DISCONNECTED 即刻中止**（dispatch-2026-11-18T19-33-14：无 result.json、零"发送双验"行=无发送、无错误成功、无重发）→disarmed_at=19:33:15.353Z；
+  - 恢复验证（纪律要求）：首查 6ms 竞态失败→显式恢复驱动 c2batch2-s3-04b-restore-2026-11-18T19-33-42-270Z 清覆盖+页内 fetch=200→**RESTORED=true**；
+  - 断言：断网期间无虚假成功✓、无未授权重发✓（工具无重试机制,fail-closed 短路）、窗口有界且恢复验证✓、隔离仅测试对象✓；
+  - 清理：c2batch2-s3-04b-cleanup-2026-11-18T19-34-03-683Z——先存证（2 units）后删除 PATCH=200/GET 404，指针恢复 6afdf44d；
+  - 环境守卫插曲（如实登记）：恢复验证首用 ad-hoc node -e 被环境守卫拒绝（CHATGPT_DISPATCH_MANAGER_REQUIRED）——按 skill 纪律改文件化驱动执行，守卫行为本身符合"每轮新写完整文件"要求；
+  - DEC-017 对应限制（派单层断网处理）解除建议=本项 S4 签核后逐项解除。
 
 ⑤测试结果：S3-① 派单发送双验 2/2 通过；补采驱动语法检查+实跑（上）；主尝试采集 COMPLETED（单 unit）；备用尝试完成判定 fail-closed 后补采成立。
 
