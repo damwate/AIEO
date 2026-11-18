@@ -24,9 +24,9 @@
 
 ⑤测试结果：python -I basic/tool/check_taskpack.py basic/tasks/b-20261119-c2-batch2-scenarios —— 复检 Overall=IN_PROGRESS（Phase=PLANNING，①需求记录 PASS/②步骤清单 PASS，③-⑥ N/A 未到期，PLANNING 期合法态，退出码语义符合工具头部约定）。
 
-⑥验收证据引用：本任务包 commit SHA（推送后登记于规划协商派单简报，避免 batch1 R1"证据未推送即派单"缺陷复现）。
+⑥验收证据引用：本任务包 commit 7998c3519eb1de540815f763f7f4118ad546691f（推送后登记于规划协商派单简报，避免 batch1 R1"证据未推送即派单"缺陷复现）；S1 独立验收经 S2 协商链完成——审查方直读本包三件套（blob SHA task-brief d67ec2e5…/requirement 77ff9242…/steps fa556427…，R3 裁定确认）：dispatch-2026-11-18T18-53-11，reply SHA256=baef39e5d077307cde33a04c405e99fa0a1df0c111c8c5111049b1f15d778275。
 
-**验收结论：PASS**（开工登记完成；独立验收=S2 规划协商链）
+**验收结论：PASS**（开工登记完成；独立验收=S2 规划协商链直读签核）
 
 ## S2 规划协商（ChatGPT 复审→共识→用户拍板→冻结）
 
@@ -41,6 +41,8 @@
 ⑤测试结果：ST-05 自检 PLANNING 合法态（①② PASS）；v0.2 修订后复检=IN_PROGRESS 合法态；v0.3 修订后复检见提交前记录。
 
 ⑥验收证据引用：R1 dispatch=phase0/logs/dispatch-2026-11-18T18-53-11，reply SHA256=baef39e5d077307cde33a04c405e99fa0a1df0c111c8c5111049b1f15d778275（11496B，**ADJUST**）。R2 dispatch=phase0/logs/dispatch-2026-11-18T19-01-01（发送双验通过后采集 fail-closed=INBOUND_WINDOW_COMPLETENESS_UNPROVEN，禁重发，浏览器现场保留）→按 L-018 静态 DOM 补采：驱动 recoll_c2batch2_r2.mjs（派生自 recoll_f2f3f4_final.mjs，三参数+前轮 SHA 全换，grep 核对），现场 recoll-c2batch2-r2-2026-11-18T19-04-54-726Z 七查全过（marked_user_unique/last_user_assertion/adjacent_assistant_tail/stable_static_dom_read/final_stop_button_not_visible/not_prev_reply_sha/response_length_plausible 全 true），reply SHA256=820ca44b3bea3dda…（7395B，**PASS**，④-D 附条件纳入拆 D1/D2+冻结前五项文字性补充）。审查会话 6afdf44d；R3 终局拍板待派（用户委托 ChatGPT 渠道）。
+
+**验收结论：PASS**（R3 终局拍板 PASS=reply SHA256=552a463afc5137ad…，批准 v0.3 冻结+S3 执行授权 GO；v0.3 为正式执行依据）
 
 ## S3 受控场景执行（①→④-A→④-B→④-D1→④-D2→⑤ 逐项）
 
