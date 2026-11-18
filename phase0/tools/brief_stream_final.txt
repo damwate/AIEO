@@ -1,0 +1,14 @@
+[流式读体缺口终审|AI-Image-Service]
+独立终审:直接读GitHub源码,不采信自述。上次你读a8a5977报404——现已确认推送成功,这次代码+材料都在远端。
+
+仓库 github.com/YotinGarden/AI-Image-Service
+分支 fix/yuanqiao-http1-20261117
+完整SHA d1d920c849f2945e34eb0e3c8ab6db8bbcb912a6（远端HEAD,已确认Everything up-to-date）
+用 raw.githubusercontent.com/YotinGarden/AI-Image-Service/d1d920c.../<路径> 或分支名读以下文件：
+- docs/review/20261118_p0p1/流式读体缺口技术核查_20261118.md（217AI反馈+curl_cffi源码事实+缺口G-A~D+你上次的裁定已附在第8节）
+- backend/app/ai/http_transport.py
+- backend/tests/test_supplier_http_version.py
+
+本次只需独立复核：①G-A隐式依赖是否属实(读http_transport.py的curl_options/stream/timeout组合);②G-C的.content无界读是否属实;③你上次的方向1+有界流式读+真实测试+0009方案是否仍成立;④有无遗漏。读不到任何文件则明确报哪份404。
+
+只回JSON:{"result":"PASS|REWORK|BLOCKED","file_access":{"核查文档":"OK|404","http_transport":"OK|404","测试":"OK|404"},"findings":[],"final_fix_plan":[],"notes":""}

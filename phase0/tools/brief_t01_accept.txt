@@ -1,0 +1,8 @@
+[T01阶段日志验收|AI-Image-Service|20261119]
+独立验收T01，只回JSON。commit 285851233ae3a056cb2f9a4d71851ad393ff4b1a。无历史上下文，据本简报判断。
+
+实现：provider_outcome.py新增十阶段phase_events(就地更新not_reached/running/succeeded/failed/not_applicable，终态不回退)、record_phase(吞异常+脱敏)、derive_phase_summary(未记失败落worker_unclassified兜底，取最后failed派生failed_phase/failed_at/exception_type/error_detail_safe)。error_detail_safe只用阶段+ProviderError.code白名单模板，绝不写原始message/URL/base64/凭据。
+覆盖：4个adapter HTTP边界与解析点；job_spec storage/output_commit；worker/routing初始化并在finish_failure派生。三层：execution_json白名单加4字段+前端展示。
+测试：9用例(HTTP200非法JSON→response_parse、缺data0→result_extract、非法b64→image_decode、脱敏、兜底、投影)；相邻66 passed；全量448 passed，14失败为基线既有(stash验证)。前端无node_modules未tsc。
+
+验收(JSON,result=PASS/REWORK,issues,conditions)：1)真"只观测不改判定"？2)脱敏够吗？3)覆盖/兜底遗漏？4)故障注入证据可接受？

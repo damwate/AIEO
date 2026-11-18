@@ -1,0 +1,42 @@
+ChatGPT 说：
+
+{
+"decision": "PASS_WITH_CONSTRAINTS",
+"Q1": {
+"choice": "限定needs_human阻断范围，保留PO既有522跨vendor failover决策",
+"judgment": "不应全局阻断unknown failover。此前G3表述过宽，与2026-11-17既有PO决策及其测试契约冲突，应修正G3边界，而不是未经评审推翻既有决策。",
+"blocked": [
+"result_invalid：供应商可能已经执行并扣费，但结果无法通过本地校验。",
+"accepted-unknown：请求已被接受，但无法确认最终执行结果。",
+"stale-inflight：任务遗留执行中，无法确认是否完成或扣费。",
+"resume不确定态：查询失败、超时或结果无法判定，不允许重新提交或再次自动切换。"
+],
+"preserved": [
+"522等既有PO定义的可自动failover错误，继续执行跨vendor切换。",
+"test_unknown_outcome_fails_over_without_hiding_uncertainty及相关既有测试继续有效。",
+"保留原供应商失败证据，即使后续供应商成功也不得覆盖。"
+],
+"condition": "needs_human不能简单等同于billing_status=unknown或所有unknown错误。必须按错误类别、执行阶段和已有PO规则判定。"
+},
+"Q2": {
+"choice": "A，但采用分阶段接线",
+"judgment": "不必整体退回B。已有resume能力具有实际恢复价值，但不应为了覆盖routing路径而扩大本期核心路径改造。",
+"scope": {
+"single_vendor": "本期接通task_id持久化、reclaim识别及自动resume，严格复用原attempt。",
+"routed": "本期不接自动resume。保留原routing守卫及既有failover行为；对符合可能已扣费且无法确认执行结果的情况设置needs_human并fail-closed。",
+"unsupported": "不支持task_id查询的适配器继续使用原有安全策略，不假设其具备恢复能力。"
+},
+"condition": "必须明确区分单供应商路径与routing路径的能力边界，不能让routed路径误进入单供应商resume逻辑。"
+},
+"conditions": [
+"1. 修订G3定义，采用按错误类别和执行阶段分类的人工介入规则，不改变既有PO的522 failover契约。",
+"2. 对result_invalid、accepted-unknown、stale-inflight及resume不确定态，阻断可能造成重复扣费的自动重发。",
+"3. needs_human必须与具体attempt、错误类别及原始证据关联，不能只设置一个无法解释原因的布尔标记。",
+"4. 单供应商resume必须使用原vendor_id、原attempt及原task_id，不创建新的生成请求。",
+"5. routed路径本期不实现自动resume，但必须保证task_id持久化和人工恢复所需证据不丢失；无法安全判断时fail-closed。",
+"6. 增加测试验证522仍可跨vendor failover、result_invalid阻断自动重发、accepted-unknown阻断自动重发、stale-inflight按路径执行正确保护。",
+"7. 保留原有unknown-outcome测试，不通过放宽断言或删除测试解决冲突。",
+"8. 单供应商resume与routed路径的范围、限制及后续扩展条件必须写入设计文档。"
+],
+"final_ruling": "Q1选择分类阻断，保留522既有failover。Q2选择A的分阶段实施：单供应商接自动resume，routed本期保持fail-closed及人工介入，不为覆盖routing而扩大改造。该方案兼顾既有决策兼容性、重复扣费风险控制和本期实施复杂度。"
+}

@@ -1,0 +1,30 @@
+[
+  {
+    "key": "9ee9a5ba-4ee3-5a19-8cdb-16a4d5e3ef3c:0:user",
+    "role": "user",
+    "visible": true,
+    "assistantUuid": null,
+    "text_head": "[T03实现验收|AI-Image-Service|20261119]\n只回JSON。commit ab9864e5，父26f4e4ae(T02)。附t03_full_r1.diff(SHA 5144"
+  },
+  {
+    "key": "9ee9a5ba-4ee3-5a19-8cdb-16a4d5e3ef3c:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "assistantUuid": "19da68e7-1264-4584-8a99-d45ae69c5f26",
+    "text_head": "ChatGPT 说：\n\n{\n\"result\": \"REWORK_SMALL\",\n\"issues\": [\n{\n\"id\": \"R01\",\n\"severity\": \"P1\",\n\"finding\": \"att"
+  },
+  {
+    "key": "b682eb20-a960-592e-b10e-800d76cc1643:0:user",
+    "role": "user",
+    "visible": true,
+    "assistantUuid": null,
+    "text_head": "[T03小修复验|AI-Image-Service|20261119]\n只回JSON。commit 42a74a4bc0860c2d19077a7d31ddf5d1bedb8eea，父ab9864e5"
+  },
+  {
+    "key": "b682eb20-a960-592e-b10e-800d76cc1643:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "assistantUuid": "4d2ea046-e365-45a5-a02f-62a65bbaf28c",
+    "text_head": "ChatGPT 说：\n\n{\n\"result\": \"REWORK_SMALL\",\n\"issues\": [\n{\n\"id\": \"R01\",\n\"severity\": \"P2\",\n\"finding\": \"真实 "
+  }
+]

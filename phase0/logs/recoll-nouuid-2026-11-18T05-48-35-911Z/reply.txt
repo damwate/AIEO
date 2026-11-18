@@ -1,0 +1,519 @@
+ChatGPT 说：
+
+可以。基于已复核基线 a9c485e97659586e2ea3c2d2b9c415b818d78006，我建议两个逻辑完全独立的提交：先修 timeout，再做总大小预算。两者都不修改现有 HTTP/1.1 路由语义。
+
+一、提交①：timeout 语义修复
+目标
+
+把现在的：
+
+纯文本
+timeout=180
+→ 非流式总传输超时
+→ DNS/TCP/TLS/上传/等待/收体全部共用180s
+
+改成：
+
+纯文本
+stream=True
+CONNECTTIMEOUT_MS=10_000
+LOW_SPEED_LIMIT=1
+LOW_SPEED_TIME=180
+
+curl_cffi 0.17.0 在 stream=True 下，标量 timeout=180 本身会设置：
+
+纯文本
+CONNECTTIMEOUT_MS=180000
+LOW_SPEED_LIMIT=1
+LOW_SPEED_TIME=180
+
+所以正确做法就是继续传 timeout=180，再通过 curl_options 覆盖连接超时。
+
+1. 连接超时
+
+推荐：
+
+Python
+运行
+curl_options={
+    CurlOpt.CONNECTTIMEOUT_MS: 10_000,
+}
+
+即 10 秒连接预算。
+
+这里包括 DNS/连接建立/TLS 等连接阶段。
+
+我不建议现在设 30 秒，因为 T4b 的问题正是连接阶段和供应商处理阶段被混成一个预算；10 秒更容易尽早暴露网络/代理故障。
+
+2. 请求调用
+
+目标形态：
+
+Python
+运行
+requests.request(
+    ...,
+    timeout=180,
+    stream=True,
+    curl_options={
+        CurlOpt.CONNECTTIMEOUT_MS: 10_000,
+    },
+)
+
+不要自行增加 TIMEOUT_MS。
+
+否则又重新引入总传输超时。
+
+3. 必须增加两个时间点
+
+至少记录：
+
+纯文本
+request_started_at
+response_headers_received_at
+response_body_completed_at
+
+其中核心指标：
+
+纯文本
+header_wait_ms
+body_read_ms
+total_transport_ms
+
+这样 T4b 以后可以明确区分：
+
+纯文本
+连接阶段
+    ↓
+请求上传
+    ↓
+供应商等待
+    ↓
+首字节/响应头
+    ↓
+响应体下载
+
+尤其是：
+
+收到响应头 ≠ 响应体已经完整收到。
+
+4. body 阶段异常
+
+必须保持现在的 transport 错误语义。
+
+例如：
+
+纯文本
+CurlError code=28
+→ transport_code=28
+→ timeout classification
+→ actual HTTP metadata 如果已有则保留
+→ 不自动重发
+
+如果已经收到响应头，异常记录中应该尽可能保留：
+
+纯文本
+actual_http_version
+http_status
+response_headers_received_at
+transport_code=28
+
+而不是重新变成：
+
+纯文本
+actual=null
+
+如果根本没有收到响应头，`actual=null` 才是合理结果。
+
+5. 最重要的幂等规则
+
+任何 POST 已经发出去之后的 timeout，都必须按“供应商是否已接受未知”处理。
+
+因此：
+
+纯文本
+transport_code=28
+        ↓
+禁止自动 retry
+        ↓
+禁止自动切换供应商重发
+        ↓
+进入 recoll
+
+这与你现有的“派单成功≠采集成功，采集失败禁重发”纪律一致。
+
+否则 stream 改造后，反而可能把隐藏的重复计费问题放大。
+
+6. timeout 提交①最小验收
+
+至少做这 7 个测试：
+
+测试	期望
+正常远桥请求	正常完成
+建连 >10s	CONNECT timeout
+供应商约30–42s返回	正常完成，不被180总超时误杀
+供应商持续无数据 ≥180s	timeout
+已收到header、body读取超时	transport_code=28 且保留HTTP metadata
+timeout后	不retry、不换供应商重发
+悟空既有调用	行为不变
+
+特别是最后一项：悟空兼容性必须作为回归项，不要因为 stream=True 把供应商通用 transport 的行为全部改变。
+
+二、提交②：总输入大小预算
+
+这里我建议采用：
+
+AI Service 提交门做最终强制限制，网关可以提前拒绝，但不能成为唯一防线。
+
+原因很简单：
+
+纯文本
+网关
+  ↓
+可能有其他调用方
+  ↓
+AI Service
+  ↓
+供应商
+
+AI Service 才是真正的资源/供应商保护边界。
+
+1. 两层限制
+
+目前：
+
+纯文本
+网关：
+≤10MB/图
+≤10张
+
+AI Service：
+≤20MB/图
+≤8张
+
+因此理论最大请求：
+
+纯文本
+8 × 20MB = 160MB
+
+但远桥当前：
+
+纯文本
+≤2张
+
+因此远桥场景实际应该是：
+
+纯文本
+2 × 20MiB = 40MiB
+
+我建议不要把全局硬限制直接改成 40MB，否则以后支持 4/8 张供应商时会被这个历史策略卡死。
+
+采用：
+
+纯文本
+全局硬上限：
+max_total_input_bytes = 160 MiB
+
+供应商/路由策略：
+Yuanqiao：
+max_images = 2
+max_total_input_bytes = 40 MiB
+max_single_input_bytes = 20 MiB
+
+也就是说：
+
+纯文本
+全局防爆
+    +
+供应商实际能力限制
+2. 字段名
+
+推荐统一使用：
+
+纯文本
+max_total_input_bytes
+
+而不是：
+
+纯文本
+max_total_size
+max_upload_size
+request_size
+body_size
+
+因为限制对象不是 HTTP body 本身，而是提交给 AI Service 的输入文件总字节数。
+
+同时保留已有：
+
+纯文本
+max_single_input_bytes
+max_images
+
+形成：
+
+纯文本
+max_images
+max_single_input_bytes
+max_total_input_bytes
+
+三个维度。
+
+3. 单位
+
+内部统一使用：
+
+纯文本
+bytes
+
+远桥：
+
+纯文本
+max_images = 2
+max_single_input_bytes = 20 * 1024 * 1024
+max_total_input_bytes = 40 * 1024 * 1024
+
+不要使用浮点 MB。
+
+4. 放在哪里
+
+最终强制校验：
+
+纯文本
+AI Service request submission gate
+        ↓
+解析输入
+        ↓
+计算每个文件 bytes
+        ↓
+单文件限制
+        ↓
+总 bytes 限制
+        ↓
+张数限制
+        ↓
+进入 provider worker
+
+一定要在进入供应商 Worker/HTTP transport 之前拒绝。
+
+这样超限请求：
+
+纯文本
+不会进入远桥
+不会产生供应商计费
+不会占用 provider timeout
+不会产生 retry/recoll
+5. 错误码
+
+HTTP：
+
+纯文本
+413 Payload Too Large
+
+业务错误码建议固定：
+
+纯文本
+INPUT_TOTAL_BYTES_EXCEEDED
+
+同时单文件：
+
+纯文本
+INPUT_FILE_BYTES_EXCEEDED
+
+张数：
+
+纯文本
+INPUT_IMAGE_COUNT_EXCEEDED
+
+这样调用方可以稳定区分：
+
+纯文本
+413
+├── INPUT_FILE_BYTES_EXCEEDED
+├── INPUT_TOTAL_BYTES_EXCEEDED
+└── INPUT_IMAGE_COUNT_EXCEEDED
+
+不要把它们都返回成普通 400。
+
+三、这个配置是否进入冻结快照？
+
+是。
+
+因为它已经不是内部优化，而是：
+
+纯文本
+调用契约
++
+供应商路由能力
++
+资源保护边界
+
+因此至少：
+
+纯文本
+max_images
+max_single_input_bytes
+max_total_input_bytes
+
+都应该进入当前配置/路由冻结快照，并有对应证据。
+
+尤其远桥必须明确冻结：
+
+纯文本
+max_images=2
+max_single_input_bytes=20MiB
+max_total_input_bytes=40MiB
+
+否则以后改配置，很容易出现：
+
+代码仍然认为远桥最多2图，但配置已经允许4图。
+
+四、两个提交怎么做
+
+我建议严格拆成两个逻辑独立、可分别回滚的提交。
+
+Commit A：timeout
+
+基线：
+
+纯文本
+a9c485e97659586e2ea3c2d2b9c415b818d78006
+
+只包含：
+
+纯文本
+stream=True
+CONNECTTIMEOUT_MS=10s
+header/body timing
+body exception transport_code=28
+no retry
+相关测试
+
+不要同时加入总大小限制。
+
+验收通过后再进入第二个。
+
+Commit B：size budget
+
+从同一个基线逻辑分支出来，或者在 Commit A 之后制作一个可独立 cherry-pick 的提交。
+
+只包含：
+
+纯文本
+max_total_input_bytes
+vendor 40MiB policy
+AI service submission gate
+413
+业务错误码
+配置/冻结快照
+相关测试
+
+这样两项可以分别：
+
+纯文本
+A PASS → 保留
+B FAIL → 只回滚 B
+
+而不会把 timeout 修复一起带走。
+
+五、计费、幂等、悟空三个风险
+计费
+
+timeout 修复不能改变重试策略。
+
+尤其：
+
+纯文本
+HTTP POST已经发送
+↓
+180s timeout
+↓
+供应商可能已经生成图片
+
+因此：
+
+绝对不能因为 timeout 改成 stream=True 就自动 retry。
+
+幂等
+
+当前必须继续保持：
+
+纯文本
+发送成功
+≠
+采集成功
+
+所以 timeout 后：
+
+纯文本
+unknown outcome
+→ recoll
+→ 查询/采集原任务结果
+→ 禁止重新创建任务
+
+如果供应商支持 idempotency key，未来可以进一步增强，但这两个提交不要顺手引入新的幂等机制，避免扩大变更面。
+
+悟空
+
+悟空的兼容性重点不是“是否也能 180 秒”，而是：
+
+纯文本
+HTTP transport
+response streaming
+exception mapping
+retry policy
+response parsing
+
+因此 Commit A 必须专门跑悟空回归。
+
+如果悟空使用的是同一个 _post_raw()，则尤其要确认它不会因为 stream=True 得到不同的响应生命周期。
+
+不要为了远桥问题把全供应商 transport 一刀切成新的行为。
+
+最稳妥的是：
+
+纯文本
+远桥路径使用新 timeout policy
+其他供应商保持原语义
+
+如果架构已经把 _post_raw() 设计成统一 transport，则至少通过 provider policy 明确：
+
+纯文本
+timeout_mode / streaming policy
+
+而不是隐式改变所有供应商。
+
+六、最终拍板
+
+我的建议直接定为：
+
+纯文本
+基线
+a9c485e97659586e2ea3c2d2b9c415b818d78006
+
+        │
+        ├── Commit A：Timeout semantics
+        │     stream=True
+        │     CONNECTTIMEOUT_MS=10000
+        │     LOW_SPEED_LIMIT=1
+        │     LOW_SPEED_TIME=180
+        │     header/body独立打点
+        │     code=28保留
+        │     timeout禁止retry
+        │
+        └── Commit B：Input size budget
+              global hard ceiling=160MiB
+              Yuanqiao=2 images
+              per-file=20MiB
+              total=40MiB
+              submission gate
+              HTTP 413
+              INPUT_TOTAL_BYTES_EXCEEDED
+              freeze snapshot
+
+顺序：A → 验收 → B → 验收。
+
+而且我建议对开发明确一个边界：
+
+这两个提交都不是“顺手优化”。只解决 timeout 语义和输入大小预算；不改计费、不改 retry、不改 provider failover、不改悟空协议策略。
+
+这样这次变更的风险面非常干净，后续如果远桥仍出现问题，我们才能确定问题究竟来自 timeout、HTTP/1.1、网络代理还是供应商本身，而不会再次出现多个变量同时变化导致无法定位。

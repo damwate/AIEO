@@ -1,0 +1,6 @@
+[远桥180s边界分析|AI-Image-Service|20261118]
+只分析不改码。commit a9c485e97659586e2ea3c2d2b9c415b818d78006。
+事实：冻结路由 provider_timeout_seconds=180 → cfg timeout_seconds=180 → _post_raw(timeout) → urlopen(timeout) → curl_cffi.requests.request(timeout=180)。0.17.0 utils.py:828-834：标量 timeout 且 stream=False 时 setopt(CURLOPT_TIMEOUT_MS,180000)，即总传输超时，含 DNS/TCP/TLS/上传/等待/收体。
+T4b 日志：configured=v1、Timeout、transport_code=28、180015ms、actual=null；服务商后台仅30-42s。PO 设计意图：180s 应只计供应商处理时间，不应计入请求到供应商之前的建连/上传。
+请裁定：①当前实现是否偏离设计；②curl_cffi 0.17.0 下最小正确实现（connect timeout+low-speed idle？进度回调打点上传完成/首字节？还是总超时+上传余量？）及风险；③不动已复核SHA前提下是否建议单独变更；④结论绑定SHA。
+开发经验：你不会自动读 AGENTS.md。连接故障先跑 AIEO node toolkit/check-push.mjs，禁手工猜端口；派单发送成功≠采集成功，采集失败禁重发走recoll；会话满4条user消息评估迁移。

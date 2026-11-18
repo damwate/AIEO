@@ -1,0 +1,28 @@
+T01 REWORK 验收证据（HEAD a5300151ca47de428cab2b5d45827252e575468c；基线提交 285851233ae3a056cb2f9a4d71851ad393ff4b1a）
+
+== GitHub 422 说明 ==
+两提交均在本地分支 fix/yuanqiao-http1-20261117，未 push（DEC-010 不擅自 push/部署）。改以附件 t01_full_v2.diff（两提交合并，12 文件）离线核验。
+
+== 上轮 REWORK 问题逐项修复 ==
+1) 终态可互相覆盖 → record_phase 改为终态(succeeded/failed/not_applicable)一旦写入即不可被任何状态覆盖；新增双向不可覆盖测试+终态摘要不被清空断言。
+2) output_commit 成功在 commit 后写内存未落库 → 成功后再次写入快照并二次 db.commit()；提交失败记 output_commit=failed 并回滚语义。
+3) storage 准备在 try 外失败漏记 → write_job_output() 与 finalize() 均纳入 storage 阶段 try，失败记 storage=failed。
+4) output_commit 无失败路径 → 增加 try/except 记录 failed。
+5) 每阶段仅一个 at → 终态新增 completed_at（开始 at / 结束 completed_at，可算耗时）；测试断言。
+6) image_validate 未接线 → download_image(url,timeout,attempt=None) 在 PIL 校验边界记 running/failed/succeeded；openai/seedream/async/rightapi 的 _download 均透传 attempt；测试验证成功路径落 succeeded。
+7) _safe_detail code 非真白名单 → 改为显式 _SAFE_DETAIL_CODES 枚举，仅白名单内 code 才拼接。
+8) HTTPError 误记 response_received=failed → 改为 succeeded（确实收到响应），非 2xx 由 http_status 表达；测试断言 400 场景。
+9) 测试深度不足 → 新增端到端用例：monkeypatch urlopen 返回非法 JSON 的 HTTP200，走 generate_image 完整链→finish_failure 收口→execution_json 投影，断言 response_received=succeeded / response_parse=failed / failed_phase=response_parse / http_status=200；另加 image_validate 与 HTTPError 用例。
+10) 文件数不符 → 合并 diff 实际 12 文件（含 image_download.py 与 test_phase_events.py）。
+
+== 测试结果 ==
+聚焦 test_phase_events.py：13 passed（原 9 + 终态双向/时间/端到端/HTTPError/image_validate）。
+相邻回归 9 文件：137 passed。
+全量 tests/：452 passed, 14 failed；14 项为基线既有（Windows 路径/GBK/secure cookie，前轮已用 stash 对照确认），与 T01 无关。
+前端无 node_modules，未运行 vue-tsc/vite build，明确记为未验收项。
+
+== 脱敏复核 ==
+error_detail_safe 只用「阶段固定模板 + 显式白名单 code」；原始 message/URL/base64/凭据均不写入 phase_events、execution_json 或前端。测试 test_error_detail_safe_never_leaks_raw_message 断言 secret 不落库。
+
+== 判定语义复核 ==
+本轮未修改路由选择、重试决策、failure_decision、acceptance、STOP_CODES 或既有任务失败判定；所有新增均为观测字段与记录调用。

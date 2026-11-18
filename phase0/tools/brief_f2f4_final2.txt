@@ -1,0 +1,10 @@
+[F2F3F4补强终审|AI-Image-Service]
+独立终审,直读GitHub源码核对,不采信自述。代码已推送。
+仓库 github.com/YotinGarden/AI-Image-Service 分支 fix/yuanqiao-http1-20261117
+被审SHA 47f2ecc1f17f51cc1cbb2e326602f9447ed3407e(远端HEAD已确认)
+读 backend/app/ai/http_transport.py、provider_outcome.py、tests/test_real_stream_transport.py、tests/test_migrations_baseline.py、tests/test_supplier_http_version.py
+你上轮:F2 FAIL(非low_speed仍全量缓冲/全局failover覆盖本地超限stop)、F3 PARTIAL、F4 PASS_WITH_CONSTRAINTS。现复核:
+F2:所有curl请求一律stream=True+iter_content有界读;非low_speed用TIMEOUT_MS+LOW_SPEED_LIMIT=0保持总时限;超限ResponseBodyTooLargeError本地stop;failover豁免仅result_invalid与response_body_too_large(未泛化STOP_CODES)?
+F3:真实curl_cffi测增量/低速/停滞/超限/连接超时/总时限不误杀/超限不被failover覆盖,强断言?
+F4:0009逐列对比ORM列集合+nullable+类型族+索引+downgrade?
+全量14 failed(基线)/577 passed。只回JSON:{"result":"PASS|REWORK","file_access":{},"findings":[],"conditions_check":{},"notes":""}

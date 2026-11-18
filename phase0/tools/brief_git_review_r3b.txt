@@ -1,0 +1,14 @@
+[三轮终审-校验|AI-Image-Service]
+你上轮BLOCKED因环境无法算SHA-256。MANIFEST每条含git_blob_sha1字段——你已确认Git blob SHA-1三份均一致。请以git_blob_sha1为校验依据,material校验即OK。
+
+被审 02c9d7a20f4c9b94c50d779ec0acb6383926e005 / 材料 3aacd6ffafe4b2382bdd296bc5f57acc8e1f9914 / 基线 abd7116e30e17d9669a8551c0985bd09aa8a601a / 仓库 github.com/YotinGarden/AI-Image-Service 分支 fix/yuanqiao-http1-20261117
+
+范围收窄:T01-T09前几轮已审,本轮只确认RW修复落地及新回归:
+RW-01 rightapi/async首次提交解析失败→provider_error→result_invalid→stop
+RW-02 local_result_failure加task_id受理保护
+RW-03 供应商尝试统计覆盖failover
+RW-04(三轮)scope_key/scope_original叠加降级链,最后到期统一恢复+人工改动skipped
+RW-05 set_routing enabled_vendors审计
+读02c9d7a的vendor_admin.py/db.py/provider_outcome.py/monitoring.py/admin_api.py/适配器复核。
+
+只回JSON:{"result":"PASS|REWORK","findings":[{"severity":"MAJOR|MINOR","file":"","line":0,"description":"","recommendation":""}],"reviewed_commit":"02c9d7a","evidence_checks":{"manifest":"OK|FAIL","test_log":"OK","baseline":"OK"},"notes":""}

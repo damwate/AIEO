@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-18T12:53:16.446Z",
+  "user_unit_key": "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "aa299b3a-57cc-493d-92a7-f04e08ff2d15",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:0:user",
+          "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "377b875eef385470949146025e2d41d8e57b367d18a7be7401c8730c1de0540c",
+          "d7de4985c6635becebab376f2ee1af5b31a985996ce5e0ccf6b728944d882210"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:0:user",
+          "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "377b875eef385470949146025e2d41d8e57b367d18a7be7401c8730c1de0540c",
+          "d7de4985c6635becebab376f2ee1af5b31a985996ce5e0ccf6b728944d882210"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:0:user",
+          "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:0:user",
+      "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:0:user",
+          "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:0:user",
+          "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:2:assistant"
+        ],
+        "overlap_keys": [
+          "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:0:user",
+          "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n{\n\"result\": \"BLOCKED\",\n\"findings\": [\n{\n\"severity\": \"MAJOR\",\n\"file\": \"docs/review/20261118_p0p1/full_test.log\",\n\"line\": 0,\n\"description\": \"独立校验发现材料完整性不一致。MANIFEST.json 声明 full_test.log 的 SHA256 为 5fbee277578e608fd5458211281327088863f81cad0bf23df610f7706e01a131，文件大小 15895 bytes；实际从材料 commit 9be0ad214e89aa2d024a9adf2d98ebfdff4fbdce 读取后计算，SHA256 为 a2bf5c0fe145be9514a737691cd26500ebbb1accc5d50b1b7dbcf8820e1410fa，大小 15602 bytes。SHA256 和尺寸均不匹配。\",\n\"recommendation\": \"核对 full_test.log 的实际提交内容，重新生成 MANIFEST.json，确保 SHA256 和字节数对应同一版本的原始测试日志，然后重新提交材料并进行独立复核。\"\n}\n],\n\"reviewed_commit\": \"fe88afc8465dc6e9b4cfd7aacfdf0be510674592\",\n\"evidence_checks\": {\n\"manifest\": \"FAIL\",\n\"test_log\": \"FAIL\"\n},\n\"notes\": \"已确认 REVIEW_BRIEF.md 来自指定材料 commit，独立计算 SHA256=514b3ab891bdd756b6ec6a695c9c7ae7920a3c826b7ed6b446b3e6178fba1927，大小 4461 bytes，与 MANIFEST 声明一致。已读取 reviewed_commit 对应的 GitHub commit 信息及部分实际代码差异，确认被审代码 SHA 与材料 commit 分开绑定。测试日志声明被测 commit 为 fe88afc8465dc6e9b4cfd7aacfdf0be510674592，记录 558 passed、14 failed。由于测试日志完整性校验失败，不能将其作为可信的全量测试证据，也不能据此出具 P0+P1 PASS。按照审核标准，证据校验失败必须 BLOCKED，而非推定通过。\"\n}",
+      "text_sha256": "d7de4985c6635becebab376f2ee1af5b31a985996ce5e0ccf6b728944d882210",
+      "size_bytes": 1556,
+      "assistant_uuid": "aa299b3a-57cc-493d-92a7-f04e08ff2d15"
+    }
+  ]
+}

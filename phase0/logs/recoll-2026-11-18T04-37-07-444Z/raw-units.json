@@ -1,0 +1,88 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-18T04:37:49.206Z",
+  "user_unit_key": "c49ad95b-551d-5c00-a87d-4e8377bfa8fd:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "c49ad95b-551d-5c00-a87d-4e8377bfa8fd:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "0444a7a5-46e4-467f-9687-3744128e31ca",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "c49ad95b-551d-5c00-a87d-4e8377bfa8fd:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:0:user",
+          "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:2:assistant",
+          "bc4d007a-cc4e-5d55-97c1-226780e96234:0:user",
+          "bc4d007a-cc4e-5d55-97c1-226780e96234:2:assistant",
+          "ecf9cc54-e6f2-59b3-a72f-636777e1fc7f:0:user",
+          "ecf9cc54-e6f2-59b3-a72f-636777e1fc7f:2:assistant",
+          "a3bf666c-1fff-58cf-9356-f1b4cca565bc:0:user",
+          "a3bf666c-1fff-58cf-9356-f1b4cca565bc:2:assistant",
+          "c49ad95b-551d-5c00-a87d-4e8377bfa8fd:0:user",
+          "c49ad95b-551d-5c00-a87d-4e8377bfa8fd:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "9aff7cbecfa0e5c98f2ca27cbd6e7f75322534f7c54f36f92d9d76c290eea1aa",
+          "50e4c530659693258e57a2255e8b3159504f5697ce9c920e293efd146f3f03a2",
+          "2d65104fc633515a25bf174fff648df5e642983f5afc4af6406e10fcae1b2e2b",
+          "2d093edcf61c4da160ae2ff3a64a826b468c87230834121a108d4f59a024ba11",
+          "185ac625bf33a90bab36c7d68c5afc64932a30ba968a23aed3a219156e895f80",
+          "a8d96479829133a623c898aaab969be352ae58b7484d46e876516010f4a21d1e",
+          "ad07e93e4c3e2a0e71a43cc39dc8b99eb9c1c15fd8c60066a20f8684fbd3584f",
+          "a463a29f5ec15a169da0381e9544658f9b0b2d7b8965f1ecd13cad740994cd76",
+          "58bdf7754c814c128a2003dc6eaba6ae140bfd1a459548fd1e0b7b72f8e1ccce",
+          "76a3e42c24bffca450e1965603dd3b2aa1f641b804228ba08c8fad4f261a5637"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": []
+      }
+    ],
+    "materialized_unit_keys": [
+      "c49ad95b-551d-5c00-a87d-4e8377bfa8fd:0:user",
+      "c49ad95b-551d-5c00-a87d-4e8377bfa8fd:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STATIC_NON_SCROLLABLE_DOM",
+      "scrollable_window_observed": false,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:0:user",
+          "5b2395c9-fe2c-55f3-93b5-462333aa9fe7:2:assistant",
+          "bc4d007a-cc4e-5d55-97c1-226780e96234:0:user",
+          "bc4d007a-cc4e-5d55-97c1-226780e96234:2:assistant",
+          "ecf9cc54-e6f2-59b3-a72f-636777e1fc7f:0:user",
+          "ecf9cc54-e6f2-59b3-a72f-636777e1fc7f:2:assistant",
+          "a3bf666c-1fff-58cf-9356-f1b4cca565bc:0:user",
+          "a3bf666c-1fff-58cf-9356-f1b4cca565bc:2:assistant",
+          "c49ad95b-551d-5c00-a87d-4e8377bfa8fd:0:user",
+          "c49ad95b-551d-5c00-a87d-4e8377bfa8fd:2:assistant"
+        ],
+        "overlap_keys": []
+      }
+    ],
+    "window_transitions": 0
+  },
+  "units": [
+    {
+      "key": "c49ad95b-551d-5c00-a87d-4e8377bfa8fd:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n初步裁定：①是，当前实现偏离了所述设计意图。\n\ntimeout=180 被一路传给 curl_cffi.requests.request()，而 curl_cffi 0.17.0 对标量 timeout、stream=False 使用的是整个传输过程的 CURLOPT_TIMEOUT_MS。因此这 180 秒不是“供应商处理时间”，而是从请求开始到传输完成的总时限。DNS、TCP、TLS、请求体上传和等待响应都在同一预算内。T4b 的 180015ms + transport_code=28 + actual=null 与总超时触发相符；后台 30–42 秒的记录不能证明请求已经完整到达供应商，也不能据此认定供应商处理了 180 秒。\n\n这不是 HTTP/1.1 配置本身的问题，而是现有 timeout 参数的语义与 PO 设计意图不一致。\n\n② 最小正确实现与方案比较\n\n先说一个容易踩的坑：timeout=(10, 180) 也不能解决当前问题。\n\n我核对了 curl_cffi 0.17.0 的源码：\n\nstream=False：元组被解释为 CONNECTTIMEOUT_MS=10s，同时设置 TIMEOUT_MS=190s，仍然是整个传输的总时限。\n\nstream=True：元组才会设置连接超时和 LOW_SPEED_LIMIT/LOW_SPEED_TIME，而不是总传输时限。\n\ncurl_options 在默认选项之后应用，可以覆盖连接超时。\n\n源码：curl_cffi 0.17.0 utils.py、session.py。\n\n三种方案的判断\n\n方案\n\n\t\n\n能否满足意图\n\n\t\n\n我的判断\n\n\n\n\n连接超时 + low-speed idle\n\n\t\n\n基本满足，属于空闲超时，不是精确的处理计时器\n\n\t\n\n推荐的最小改造\n\n\n\n\n上传完成回调 → 首字节回调\n\n\t\n\n最精确，可以真正定义供应商处理时间\n\n\t\n\n需要扩展底层\n\n\n\n\n总超时 + 上传余量\n\n\t\n\n只能保证留出足够预算，不能精确限制处理时间\n\n\t\n\n不作为最终方案\n\n我建议先采用第一种，理由是它能利用 curl_cffi 0.17.0 已有的公开接口，不需要修改第三方库。\n\n具体设计：\n\nstream=True，使请求在收到响应头后就返回，而不是等完整响应体下载结束。\n\n连接阶段单独设置 CONNECTTIMEOUT_MS，建议先采用 10 秒，具体数值再结合代理环境确认。\n\n将 180 秒用于 LOW_SPEED_TIME，设置 LOW_SPEED_LIMIT=1 字节/秒，作为传输空闲保护。\n\n响应头到达时立即记录 actual_http_version、HTTP 状态和 response_received_at。\n\n随后再读取响应体，单独记录 response_completed_at。\n\n实现上的关键点是：curl_cffi 0.17.0 在 stream=True 时，标量 timeout 会设置连接超时和 low-speed 超时；通过 curl_options 在最后覆盖连接超时即可。例如：\n\nPython\n运行\nrequests.request(\n    ...,\n    timeout=180,\n    stream=True,\n    curl_options={\n        CurlOpt.CONNECTTIMEOUT_MS: 10_000,\n    },\n)\n\n这里的 180 秒是低速空闲保护，不是 TIMEOUT_MS 总时限。连接超时的范围包括 DNS 解析和连接协议握手；low-speed 则是传输速度持续低于阈值时才中止。二者语义不同。 【turn779974search0】【turn225247search0】【turn225247search1】\n\n必须明确它的边界： low-speed 不是严格的“上传完成后启动一个 180 秒秒表”。它也会保护上传和响应体接收阶段的长时间停滞；如果传输持续有数据，即使总耗时超过 180 秒，也可能继续。因此它是低改造成本的工程近似，不是严格的供应商处理 SLA。\n\n如果 PO 要求严格的 180 秒处理期限\n\n严格定义应该是：\n\n纯文本\n连接建立\n    ↓\n请求体上传\n    ↓\n确认上传完成 —— 启动 180 秒计时\n    ↓\n收到供应商响应头 —— 停止处理计时\n    ↓\n下载响应体 —— 使用独立的响应体超时策略\n\n这需要 libcurl 的 XFERINFOFUNCTION 进度回调判断上传完成，再用响应头回调确定首个有效响应的到达时间，超过 180 秒就主动中止。\n\n但我检查了 curl_cffi 0.17.0 的 Python 封装：虽然常量中存在 XFERINFOFUNCTION，Curl.setopt() 并没有像 WRITEFUNCTION、HEADERFUNCTION 那样提供对应的 Python 回调适配；通过普通 curl_options 直接传入 Python 函数并不是可用的现成方案。要实现严格计时，需要扩展或维护自己的底层封装。libcurl 官方也将进度回调列为实现自定义超时逻辑的灵活方式。 【turn225247search3】\n\n另一个容易误用的选项是 CURLOPT_SERVER_RESPONSE_TIMEOUT_MS：它虽然名字很像所需功能，但官方列出的适用协议不包括 HTTP，不能拿它解决这里的问题。 【turn651291search0】\n\n当前日志还存在一个诊断盲点\n\nactual=null 不能证明供应商没有返回响应头。\n\n当前 stream=False 时，requests.request() 要等整个响应传输完成才返回 Response。即使供应商已经发回响应头，后续响应体读取超时，调用仍可能直接抛异常；现有代码在异常分支没有 Response 对象可读取，所以记录的 actual_http_version 仍然是 null。\n\n因此，T4b 的 180015ms 超时与后台 30–42 秒之间的差异，至少存在两种可能：\n\n请求到达供应商，但响应返回链路发生阻塞；\n\n供应商已经返回响应头，客户端在读取响应体时发生阻塞。\n\n如果后台日志确实能通过同一 request ID 对应上这次请求，那么可以确认请求到达了供应商，但仍不能仅凭后台耗时断定客户端在哪个阶段卡住。\n\n这也是我推荐 stream=True 的另一个原因：可以把收到响应头和完整收到响应体分开记录，避免把两种故障混在一起。\n\n③ 是否建议单独变更\n建议单独变更\n\n不动已经复核的：\n\na9c485e97659586e2ea3c2d2b9c415b818d78006\n\n建议在它之后建立一个独立的 timeout 语义修复提交，不要回头修改或重写这个 SHA，也不要把 HTTP/1.1 协议修复与 timeout 语义调整混在一个提交里。\n\n建议该独立变更至少验收以下项目：\n\n验收项\n\n\t\n\n必须证明的结果\n\n\n\n\n连接超时\n\n\t\n\nDNS/TCP/TLS 建连超过连接上限时及时终止\n\n\n\n\n上传阶段\n\n\t\n\n正常上传时间不消耗供应商处理空闲预算；长时间上传停滞可终止\n\n\n\n\n供应商等待\n\n\t\n\n上传结束后持续无响应达到 180 秒，触发超时\n\n\n\n\n响应头\n\n\t\n\n供应商提前返回响应头时，立即记录实际 HTTP 版本和状态\n\n\n\n\n响应体\n\n\t\n\n响应头已到达但响应体下载停滞时，能独立识别\n\n\n\n\n计费安全\n\n\t\n\nPOST 超时仍按未知结果处理，不自动重发，不因超时盲目切换供应商\n\n\n\n\n兼容性\n\n\t\n\nurllib 路径和未配置 http_version 的其他供应商不发生意外变化\n\n特别注意：改为 stream=True 后，响应体读取阶段的异常发生位置会变化。必须在读取阶段也正确捕获、转换 curl 异常，保留 transport_code=28 等错误分类，不能只处理 requests.request() 调用阶段。\n\n如果未来要求严格的 180 秒供应商处理期限，再独立升级为底层进度回调方案，不要把 low-speed idle 宣称为精确的处理时间 SLA。\n\n④ 结论绑定 SHA\n\n审查对象\n\nYotinGarden/AI-Image-Service\n\n完整 commit SHA\n\na9c485e97659586e2ea3c2d2b9c415b818d78006\n\n最终裁定\n\n当前 180 秒实现偏离 PO 设计意图：PASS（确认偏离）。\n\n最小改造建议：stream=True + 独立连接超时 + low-speed idle；严格语义需要扩展底层回调。\n\n独立变更建议：PASS（建议单独提交，不改已复核 SHA）。\n\n本次仅分析，没有修改代码、创建提交或触发派单。\n\n附带核查：该 SHA 的递归 Git tree 中没有发现 AGENTS.md。这次是直接读取指定 SHA 的代码和 curl_cffi 0.17.0 对应版本源码，不是按 HEAD 推断。\n\n你补充的 AIEO 操作纪律也适用于后续实际派单：连接故障先跑 AIEO node toolkit/check-push.mjs，不猜代理端口；发送成功不等于采集成功，采集失败走 recoll 而不是重发；会话达到 4 条 user 消息时评估迁移。\n\n我的最终建议：先做独立的流式响应与空闲超时修复，不要直接把 180 改成 240 或 300 秒。 那样只是把错误的总超时边界往后挪，并没有解决语义问题。",
+      "text_sha256": "76a3e42c24bffca450e1965603dd3b2aa1f641b804228ba08c8fad4f261a5637",
+      "size_bytes": 8020,
+      "assistant_uuid": "0444a7a5-46e4-467f-9687-3744128e31ca"
+    }
+  ]
+}

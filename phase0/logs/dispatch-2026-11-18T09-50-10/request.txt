@@ -1,0 +1,15 @@
+[T02实现验收|AI-Image-Service|20261119]
+只回JSON。基线HEAD 93f22b3c，附t02_full_r1.diff(SHA 141fedc8)。逐条核对你上轮C01-C12。
+
+实现要点：
+1)两适配器删2xx即写accepted；accepted仅由checkpoint据task_id/url写入(C01)。
+2)local_result_failure：response_received=succeeded且末个failed∈{parse/extract/decode/validate/download}才命中，细分error_code(C02/C03)。
+3)failure_decision本地失败置于accepted保护前；provider_task_status先判(C08)。
+4)finish_failure对result_invalid强制stop/retryable=False，不被failover覆盖，code=细分code(C05/C06)。
+5)layer_status落库+投影三层状态+billing_status恒unknown不反推not_charged(C04/C07/C11)。
+6)safe_error_message补6条固定文案；execution_json纳入新字段(C11)。
+7)新增21用例(五类故障注入+反向保护522/523/524/已受理/body读失败/worker兜底)。
+
+测试：聚焦97+21通过；全量480 passed/14 failed=原基线无新增回归。未改路由/重试/熔断/优先级(C12)。
+
+请评(JSON,result,issues[],conditions[])：C01-C12是否全关闭？result_invalid边界/计费独立/反向保护有无漏洞？必补项？

@@ -1,0 +1,103 @@
+ChatGPT 说：
+
+{
+"result": "PASS_WITH_CONSTRAINTS",
+"issues": [
+{
+"id": "T07-01",
+"severity": "P1",
+"decision": "治理建议只读投影必须实现",
+"requirements": [
+"基于metrics和health映射六态，输出建议状态、原因及可追溯证据",
+"不得自动修改vendor状态、priority或routing",
+"evaluation与governance suggestion严格分离",
+"建议不等于审批，不得直接触发治理动作"
+]
+},
+{
+"id": "T07-02",
+"severity": "P1",
+"decision": "新增append-only governance_record表，必须实现",
+"requirements": [
+"记录actor、对象类型及对象ID、操作类型、before、after、reason、evidence、created_at",
+"admin端点执行成功后写入记录",
+"记录与治理变更必须保证一致性，不能出现变更成功但审计记录缺失",
+"失败时整体回滚或明确拒绝操作",
+"普通用户不可修改或删除历史记录",
+"记录必须能追溯到具体治理操作及其证据"
+]
+},
+{
+"id": "T07-03",
+"severity": "P1",
+"decision": "demote_failed_vendor必须增加expiry，必须实现",
+"requirements": [
+"priority降级属于临时治理措施，不允许永久隐式生效",
+"记录expires_at及降级前后的priority",
+"到期恢复原priority，但不得覆盖到期前发生的人工新决策",
+"恢复动作同样写入append-only governance_record",
+"到期恢复失败必须保留可见状态，不得假装已恢复"
+],
+"notes": "expiry按治理操作单独记录，不要求另建复杂定时调度系统。可复用现有cooldown到期处理机制，但必须区分vendor状态恢复与priority恢复。"
+},
+{
+"id": "T07-04",
+"severity": "P2",
+"decision": "cooldown自动重开纳入治理审计边界",
+"requirements": [
+"区分系统自动操作与人工操作",
+"自动操作actor标识为system",
+"记录触发原因、对象及前后状态",
+"不得把自动恢复伪装成人工审批"
+]
+},
+{
+"id": "T09-01",
+"severity": "P1",
+"decision": "两个monitoring check必须实现",
+"requirements": [
+"needs_human按reason分类统计堆积，至少覆盖result_invalid和resume_uncertain",
+"设置可配置阈值及持续时间，避免单个瞬时异常导致告警风暴",
+"使用delivery_success_rate检测供应商交付率异常",
+"insufficient=true时不得据此判定供应商交付率异常",
+"复用现有Alert、webhook和scan()流程",
+"告警证据包含统计窗口、样本量、阈值和异常分类"
+]
+},
+{
+"id": "T09-02",
+"severity": "P2",
+"decision": "主动探针不纳入本批前置要求",
+"requirements": [
+"本批继续采用RESOLVED通知与真实成功信号恢复",
+"不得仅凭cooldown到期认定供应商已恢复",
+"不得建立第二套独立健康状态系统",
+"主动探针CLI作为独立后续任务评审"
+]
+},
+{
+"id": "T09-03",
+"severity": "P2",
+"decision": "恢复与告警必须保持状态一致性",
+"requirements": [
+"恢复条件必须有真实成功证据",
+"RESOLVED通知应与实际恢复条件一致",
+"needs_human未解决时不得因供应商恢复而错误清除相关告警",
+"保留告警历史及恢复证据"
+]
+}
+],
+"submission": {
+"T07": "独立提交，建议分为T07-A只读治理建议、T07-B治理审计与临时降级恢复；也可同一任务分阶段实现和验收",
+"T09": "独立提交，包含两个monitoring check及测试；主动探针另案",
+"dependency": "T07与T09无强制先后依赖，可以并行，但不得混合提交或共用验收结论",
+"acceptance": "分别按完整commit SHA进行独立代码与测试验收"
+},
+"blocking_conditions": [
+"T07不得只实现文档而缺少实际只读建议投影",
+"T07不得存在无actor、无证据或不可追溯的治理变更",
+"T07不得留下永久性、无记录的priority降级",
+"T09不得把insufficient样本误判为供应商故障",
+"T09不得因告警恢复机制而掩盖尚未解决的needs_human任务"
+]
+}

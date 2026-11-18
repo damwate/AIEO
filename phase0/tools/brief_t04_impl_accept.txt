@@ -1,0 +1,13 @@
+[T04实现验收|1118]
+只回JSON。commit 6b4a8fb父24ac5f0e。附t04_code_r1.diff(SHA 2c677481)。对你的裁定条件逐条。
+
+1)checkpoint加persist：合法task_id(≤120)立即落resume_task_id+commit；只存id不存URL/凭证；同id不重复；失败显式抛出。单供应商与routed均落库(routed不自动resume)。
+2)needs_human按类别+reason：result_invalid/accepted-unknown/resume_uncertain→true；522/523/524→false保留PO failover；普通失败→false。失败attempt带needs_human+reason；stale分路径打reason。
+3)单供应商reclaim分路径：routed/不支持/无id→原fail-closed；支持且已落库→守卫后移，复用原attempt/id调resume_image，成功走write_success标resume_recovered，不确定→fail-closed不重发不自动failover。不新建attempt/不重POST。
+4)routed不接自动resume，保留failover；522跨vendor测试原样过。
+5)单供应商attempt补retry_round；execution_json投影新增字段。
+6)文档§5写边界；不改路由/计费/DB结构。
+
+测试：T04聚焦9通过；全量526 passed/14 failed=原基线(不删不改既有测试)。
+
+请评(JSON,result,issues[],conditions[])：全关闭？可final PASS？

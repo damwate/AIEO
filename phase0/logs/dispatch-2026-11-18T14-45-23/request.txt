@@ -1,0 +1,11 @@
+[发版验证方案讨论|AI-Image-Service]
+你是独立工程顾问。只讨论方案,不执行发版。请直接读GitHub原文,不采信自述。
+
+仓库 github.com/YotinGarden/AI-Image-Service 分支 fix/yuanqiao-http1-20261117
+材料commit 1dd39805932f6025e31cd365b6ed9d3e9eb7e2e0
+先读 docs/review/20261118_p0p1/RELEASE_VALIDATION_DISCUSSION.md(全部事实+待讨论Q1-Q5),按需读 backend/app/db.py、backend/migrations/versions/0008_admin_sessions.py、scripts/deploy/release.sh、docker-compose.yml、docs/integration/04_DEPLOYMENT_RUNBOOK.md。
+
+背景:P0+P1共31提交代码审核已PASS但未合main/无tag;T07-B新增2张表但迁移只到0008(缺0009);release.sh走alembic upgrade head不自动建表;221目标192.168.0.221:8300;生产切流须PO书面确认。
+
+请给JSON:{"result":"PASS|REWORK|BLOCKED","release_plan_steps":[有序步骤],"validation_matrix":[{"item":"T0x","how":"","auto_or_manual":""}],"blockers":[],"open_questions":[],"po_approval_points":[],"notes":""}
+Q1-Q5逐条回答进对应字段。指出我遗漏的发版风险。

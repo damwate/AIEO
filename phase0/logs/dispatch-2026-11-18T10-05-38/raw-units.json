@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-18T10:08:02.470Z",
+  "user_unit_key": "33450f22-c394-5a02-b2d3-c970d760f358:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "33450f22-c394-5a02-b2d3-c970d760f358:1:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "be0e47bf-64d7-4187-b1f5-f183207a6902",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "33450f22-c394-5a02-b2d3-c970d760f358:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "33450f22-c394-5a02-b2d3-c970d760f358:0:user",
+          "33450f22-c394-5a02-b2d3-c970d760f358:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "c1ea32c4092958a7d0ce0550070897c9d84286a53f75f7d7f371b5d29ee30e46",
+          "91f93dda439796150c7b13c271f6f3524cd7559763880849ac71ec7d4f52f899"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "33450f22-c394-5a02-b2d3-c970d760f358:0:user",
+          "33450f22-c394-5a02-b2d3-c970d760f358:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "c1ea32c4092958a7d0ce0550070897c9d84286a53f75f7d7f371b5d29ee30e46",
+          "91f93dda439796150c7b13c271f6f3524cd7559763880849ac71ec7d4f52f899"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "33450f22-c394-5a02-b2d3-c970d760f358:0:user",
+          "33450f22-c394-5a02-b2d3-c970d760f358:1:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "33450f22-c394-5a02-b2d3-c970d760f358:0:user",
+      "33450f22-c394-5a02-b2d3-c970d760f358:1:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "33450f22-c394-5a02-b2d3-c970d760f358:0:user",
+          "33450f22-c394-5a02-b2d3-c970d760f358:1:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "33450f22-c394-5a02-b2d3-c970d760f358:0:user",
+          "33450f22-c394-5a02-b2d3-c970d760f358:1:assistant"
+        ],
+        "overlap_keys": [
+          "33450f22-c394-5a02-b2d3-c970d760f358:0:user",
+          "33450f22-c394-5a02-b2d3-c970d760f358:1:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "33450f22-c394-5a02-b2d3-c970d760f358:1:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n{\n\"result\": \"PASS_WITH_CONDITIONS\",\n\"issues\": [\n{\n\"id\": \"P1-01\",\n\"description\": \"attempt目前只有整数n，缺少job_id、attempt_id、worker_id，无法完整建立任务、尝试与执行节点之间的关联。\"\n},\n{\n\"id\": \"P1-02\",\n\"description\": \"直发路径缺少vendor_id，导致两种执行路径的供应商审计字段不一致。\"\n},\n{\n\"id\": \"P1-03\",\n\"description\": \"rightapi和async尚未采集X-Request-Id，供应商侧请求追踪能力不完整。\"\n},\n{\n\"id\": \"P2-01\",\n\"description\": \"execution_json allowlist必须同步扩展，否则新增关联字段可能在持久化或审计输出时丢失。\"\n}\n],\n\"conditions\": [\n\"1. 同意复用现有job_id作为任务级关联标识，不新增trace_id或correlation_id列，符合先复用现有ID的原则。\",\n\"2. 每次attempt必须生成独立且稳定的attempt_id，同一次attempt内部不得重复生成；重试必须生成新的attempt_id。\",\n\"3. worker_id必须来自实际执行worker的身份参数，不得使用供应商ID、进程临时随机值或未经定义的占位值。\",\n\"4. job_id、attempt_id、worker_id应在attempt创建时固化，后续状态更新不得改变其归属。\",\n\"5. vendor_id必须取实际选定的provider_vendor_id。直发和路由两条路径采用相同字段语义，不得仅根据配置推测实际供应商。\",\n\"6. rightapi和async仅采集响应中明确存在的X-Request-Id；缺失、空值或异常响应不得伪造request_id。注意HTTP响应头大小写不敏感。\",\n\"7. execution_json allowlist应覆盖上述新增字段，同时保留现有字段及向后兼容能力；不得借机扩大敏感信息采集范围。\",\n\"8. 成功attempt不得覆盖此前失败attempt的原始证据；失败原因、阶段事件、供应商请求ID及历史attempt均应独立保留。\",\n\"9. 测试必须覆盖job_id跨attempt一致、attempt_id跨attempt唯一、worker_id来源正确、直发与路由vendor_id一致、rightapi与async request_id采集，以及失败后重试成功仍保留失败证据。\",\n\"10. 建议增加一个完整性测试：同一job_id下多个attempt可以按attempt_id独立定位，并能通过request_id反查对应attempt；缺失request_id时仍可通过job_id和attempt_id定位。\",\n\"11. 严格限定本次P0范围：仅补关联字段及其持久化、测试，不修改路由决策、供应商选择、重试策略、计费逻辑或数据库结构。\"\n]\n}",
+      "text_sha256": "91f93dda439796150c7b13c271f6f3524cd7559763880849ac71ec7d4f52f899",
+      "size_bytes": 2428,
+      "assistant_uuid": "be0e47bf-64d7-4187-b1f5-f183207a6902"
+    }
+  ]
+}

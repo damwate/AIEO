@@ -1,0 +1,197 @@
+{
+  "at": "2026-11-18T13:26:18.232Z",
+  "message_bytes": 1147,
+  "reply": "ChatGPT 说：\n\n{\n\"result\": \"REWORK\",\n\"findings\": [\n{\n\"severity\": \"MAJOR\",\n\"file\": \"backend/app/ai/vendor_admin.py\",\n\"line\": 261,\n\"description\": \"RW-04仍有未覆盖的降级恢复分支：当priority_policy_id指向全局RoutingPolicy（policy.project_id为None）时，代码将snapshot标记为mode=policy，仅保存vendor_plan_before/vendor_plan_after；但第274-277行仍会同时重写所有供应商的Provider.priority。到期恢复在第317-347行的policy分支只恢复vendor_plan，不恢复这些priority，也没有检查priority是否被人工修改。结果是全局策略模式下临时降级造成的priority变更会永久残留，违反完整快照恢复要求。当前test_policy_demote_restores_vendor_plan只覆盖project_id非空的项目策略；test_global_demote_restores_all_vendors_priorities则删除全局策略后测试纯global模式，均未覆盖全局RoutingPolicy这一分支。\",\n\"recommendation\": \"明确区分项目级policy、全局policy和无policy三种模式。全局policy模式既然会修改vendor_plan也会修改Provider.priority，就必须在snapshot中同时保存两类对象的before/after，并在到期时分别检查人工改动、恢复未被人工修改的对象；或者调整实现，使全局policy模式不再额外改写Provider.priority。新增全局RoutingPolicy存在时的降级、到期恢复及人工修改保护测试。\"\n}\n],\n\"reviewed_commit\": \"1a5a0a1e0a7004ccd615862f5c1a28888ece1fb4\",\n\"evidence_checks\": {\n\"manifest\": \"OK\",\n\"test_log\": \"OK\",\n\"baseline\": \"OK\"\n},\n\"notes\": \"材料完整性：从材料commit 9446d571fffd78093f5fc3d32a1ee7d6c9880170读取MANIFEST.json及其列出的3份材料，独立按UTF-8字节计算SHA256和字节数。REVIEW_BRIEF.md：5856 bytes，SHA256=b97542661da263e718a3e6e4aa1bd58e6c86d53c57722b7711c845e85b5bc4e2；full_test.log：15743 bytes，SHA256=72204d64e6db6bd84fd3899a97dc7c0a6c38969a70d3b4afac428beb47ac91d9；baseline_test.log：1887 bytes，SHA256=2caa43ef8612ce27631ac4bf179117ad9d2646b3f9407579db396992423c5a97。三项均与manifest一致。被审commit、基线commit和材料commit分别核对；被审commit相对基线为22个提交。测试证据：full_test.log明确绑定reviewed_commit=1a5a0a1e0a7004ccd615862f5c1a28888ece1fb4，平台为win32/Python3.12.10，结果566 passed、14 failed。baseline_test.log绑定abd7116e30e17d9669a8551c0985bd09aa8a601a，声明同一venv及Python3.12.10，结果439 passed、14 failed；14项失败测试名称与本轮full_test.log逐项一致，因此将其视为基线既存失败。RW-01：RightAPI和async适配器的完整响应JSON解析失败现在转为provider_error，配合response_received/response_parse阶段证据可进入result_invalid；首次提交回归验证failover_on_any_error下stop。RW-02：local_result_failure已增加resume_task_id/has_task_id保护。RW-03：供应商尝试样本不再按最终provider_vendor_id筛选，并将任务耗时样本独立处理；新增跨供应商failover查询测试。RW-05：set_routing的enabled_vendors变更前后状态已进入同事务审计证据。以上修复未发现本轮范围内的其他确定性阻断缺陷。RW-04项目级策略和无全局策略模式的恢复路径已有测试，但全局RoutingPolicy模式存在实际遗漏，故不能PASS。\"\n}",
+  "user_unit_key": "f468dd50-9c5d-50b7-8843-c60395d893ef:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "f468dd50-9c5d-50b7-8843-c60395d893ef:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "76c40643-8cb2-4ce0-a1f1-403c3725f78e",
+  "stability": {
+    "stable": true,
+    "interval_ms": 3815,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-18T13:26:13.722Z",
+      "read_finished_at": "2026-11-18T13:26:14.531Z",
+      "unit_keys": [
+        "f468dd50-9c5d-50b7-8843-c60395d893ef:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "f468dd50-9c5d-50b7-8843-c60395d893ef:2:assistant",
+          "sha256": "4ef18e2e38062bcab61fd7d554a5ebaea8c7748b279a6cf23675b49335f107ba",
+          "size_bytes": 3303
+        }
+      ],
+      "assistant_uuid": "76c40643-8cb2-4ce0-a1f1-403c3725f78e",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-18T13:26:17.537Z",
+      "read_finished_at": "2026-11-18T13:26:18.082Z",
+      "unit_keys": [
+        "f468dd50-9c5d-50b7-8843-c60395d893ef:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "f468dd50-9c5d-50b7-8843-c60395d893ef:2:assistant",
+          "sha256": "4ef18e2e38062bcab61fd7d554a5ebaea8c7748b279a6cf23675b49335f107ba",
+          "size_bytes": 3303
+        }
+      ],
+      "assistant_uuid": "76c40643-8cb2-4ce0-a1f1-403c3725f78e",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "f468dd50-9c5d-50b7-8843-c60395d893ef:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "d0269771-65ac-593e-aff8-89d6de1cdc31:0:user",
+          "d0269771-65ac-593e-aff8-89d6de1cdc31:2:assistant",
+          "f468dd50-9c5d-50b7-8843-c60395d893ef:0:user",
+          "f468dd50-9c5d-50b7-8843-c60395d893ef:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "761967181bb61d41915ba52b2b8c387f2cef3f6d38ee77659ca99665bd5e84f4",
+          "7734ca3753927601b46671f5abf063f4c7b4c526c4fa1751286e164d06d6f77b",
+          "46cd8255c1c009a46ded4403f10541a4cb046186a5bfbbe04da967e6aaffa914",
+          "4ef18e2e38062bcab61fd7d554a5ebaea8c7748b279a6cf23675b49335f107ba"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "d0269771-65ac-593e-aff8-89d6de1cdc31:0:user",
+          "d0269771-65ac-593e-aff8-89d6de1cdc31:2:assistant",
+          "f468dd50-9c5d-50b7-8843-c60395d893ef:0:user",
+          "f468dd50-9c5d-50b7-8843-c60395d893ef:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "761967181bb61d41915ba52b2b8c387f2cef3f6d38ee77659ca99665bd5e84f4",
+          "7734ca3753927601b46671f5abf063f4c7b4c526c4fa1751286e164d06d6f77b",
+          "46cd8255c1c009a46ded4403f10541a4cb046186a5bfbbe04da967e6aaffa914",
+          "4ef18e2e38062bcab61fd7d554a5ebaea8c7748b279a6cf23675b49335f107ba"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "d0269771-65ac-593e-aff8-89d6de1cdc31:0:user",
+          "d0269771-65ac-593e-aff8-89d6de1cdc31:2:assistant",
+          "f468dd50-9c5d-50b7-8843-c60395d893ef:0:user",
+          "f468dd50-9c5d-50b7-8843-c60395d893ef:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "f468dd50-9c5d-50b7-8843-c60395d893ef:0:user",
+      "f468dd50-9c5d-50b7-8843-c60395d893ef:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "d0269771-65ac-593e-aff8-89d6de1cdc31:0:user",
+          "d0269771-65ac-593e-aff8-89d6de1cdc31:2:assistant",
+          "f468dd50-9c5d-50b7-8843-c60395d893ef:0:user",
+          "f468dd50-9c5d-50b7-8843-c60395d893ef:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "d0269771-65ac-593e-aff8-89d6de1cdc31:0:user",
+          "d0269771-65ac-593e-aff8-89d6de1cdc31:2:assistant",
+          "f468dd50-9c5d-50b7-8843-c60395d893ef:0:user",
+          "f468dd50-9c5d-50b7-8843-c60395d893ef:2:assistant"
+        ],
+        "overlap_keys": [
+          "d0269771-65ac-593e-aff8-89d6de1cdc31:0:user",
+          "d0269771-65ac-593e-aff8-89d6de1cdc31:2:assistant",
+          "f468dd50-9c5d-50b7-8843-c60395d893ef:0:user",
+          "f468dd50-9c5d-50b7-8843-c60395d893ef:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "4ef18e2e38062bcab61fd7d554a5ebaea8c7748b279a6cf23675b49335f107ba",
+  "size_bytes": 3303,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-18T13-22-51\\reply.txt",
+  "reply_readback_sha256": "4ef18e2e38062bcab61fd7d554a5ebaea8c7748b279a6cf23675b49335f107ba",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-18T13-22-51\\raw-units.json",
+  "raw_units_sha256": "c40e9f0949d91724aba7fe3168eb7425a5d261b57bc7085126b59a25ce8c5b49",
+  "raw_units_size_bytes": 7401,
+  "raw_units_readback_sha256": "c40e9f0949d91724aba7fe3168eb7425a5d261b57bc7085126b59a25ce8c5b49",
+  "session_id": "6afd9f0c-ff44-83ee-973f-55c1b302d0c0",
+  "conversation_url": "https://chatgpt.com/c/6afd9f0c-ff44-83ee-973f-55c1b302d0c0",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}

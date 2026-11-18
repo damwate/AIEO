@@ -1,0 +1,13 @@
+﻿2858512 feat(ai): T01 全链路阶段事件 phase_events（只观测不改判定）
+ backend/app/ai/ai_provider_async.py    |  30 +++++++-
+ backend/app/ai/ai_provider_openai.py   |  96 ++++++++++++++++++++-----
+ backend/app/ai/ai_provider_rightapi.py |  33 ++++++++-
+ backend/app/ai/ai_provider_seedream.py |  38 +++++++++-
+ backend/app/ai/ai_worker.py            |   6 +-
+ backend/app/ai/job_spec.py             |   8 ++-
+ backend/app/ai/provider_outcome.py     | 124 ++++++++++++++++++++++++++++++++-
+ backend/app/ai/routing.py              |   6 +-
+ backend/tests/test_phase_events.py     | 120 +++++++++++++++++++++++++++++++
+ frontend/src/types.ts                  |  13 ++++
+ frontend/src/views/JobDetail.vue       |  34 +++++++++
+ 11 files changed, 478 insertions(+), 30 deletions(-)

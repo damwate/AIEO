@@ -1,0 +1,108 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-18T08:38:34.526Z",
+  "user_unit_key": "d3a094be-fc88-55b4-81e4-87bd8bcedd05:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "d3a094be-fc88-55b4-81e4-87bd8bcedd05:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "b5cb625d-5c97-4ebb-b0f8-a40b82f08849",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "d3a094be-fc88-55b4-81e4-87bd8bcedd05:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "9518a6a7-87fe-528e-921b-1485afdeb9d3:0:user",
+          "9518a6a7-87fe-528e-921b-1485afdeb9d3:2:assistant",
+          "d3a094be-fc88-55b4-81e4-87bd8bcedd05:0:user",
+          "d3a094be-fc88-55b4-81e4-87bd8bcedd05:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "f9797cfcb311d5a2f44b5a17b47e99d75c4d2fa168ef4d0fe7e4b3885dca69b5",
+          "0aafb1b4cafbb0ab65e63913f17c87d2d4052d7e19216a43965836b22fc5008b",
+          "6ccc4e7b1a75a9001426c9b8f54676c36d2b6a22624c3f7b3210bb48dc1692b1",
+          "2ed63317d13d7868e8b3640d4369fc5d098e907fde29bee9ea5316cc249c358f"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "9518a6a7-87fe-528e-921b-1485afdeb9d3:0:user",
+          "9518a6a7-87fe-528e-921b-1485afdeb9d3:2:assistant",
+          "d3a094be-fc88-55b4-81e4-87bd8bcedd05:0:user",
+          "d3a094be-fc88-55b4-81e4-87bd8bcedd05:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "f9797cfcb311d5a2f44b5a17b47e99d75c4d2fa168ef4d0fe7e4b3885dca69b5",
+          "0aafb1b4cafbb0ab65e63913f17c87d2d4052d7e19216a43965836b22fc5008b",
+          "6ccc4e7b1a75a9001426c9b8f54676c36d2b6a22624c3f7b3210bb48dc1692b1",
+          "2ed63317d13d7868e8b3640d4369fc5d098e907fde29bee9ea5316cc249c358f"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "9518a6a7-87fe-528e-921b-1485afdeb9d3:0:user",
+          "9518a6a7-87fe-528e-921b-1485afdeb9d3:2:assistant",
+          "d3a094be-fc88-55b4-81e4-87bd8bcedd05:0:user",
+          "d3a094be-fc88-55b4-81e4-87bd8bcedd05:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "d3a094be-fc88-55b4-81e4-87bd8bcedd05:0:user",
+      "d3a094be-fc88-55b4-81e4-87bd8bcedd05:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "9518a6a7-87fe-528e-921b-1485afdeb9d3:0:user",
+          "9518a6a7-87fe-528e-921b-1485afdeb9d3:2:assistant",
+          "d3a094be-fc88-55b4-81e4-87bd8bcedd05:0:user",
+          "d3a094be-fc88-55b4-81e4-87bd8bcedd05:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "9518a6a7-87fe-528e-921b-1485afdeb9d3:0:user",
+          "9518a6a7-87fe-528e-921b-1485afdeb9d3:2:assistant",
+          "d3a094be-fc88-55b4-81e4-87bd8bcedd05:0:user",
+          "d3a094be-fc88-55b4-81e4-87bd8bcedd05:2:assistant"
+        ],
+        "overlap_keys": [
+          "9518a6a7-87fe-528e-921b-1485afdeb9d3:0:user",
+          "9518a6a7-87fe-528e-921b-1485afdeb9d3:2:assistant",
+          "d3a094be-fc88-55b4-81e4-87bd8bcedd05:0:user",
+          "d3a094be-fc88-55b4-81e4-87bd8bcedd05:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "d3a094be-fc88-55b4-81e4-87bd8bcedd05:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n{\"result\":\"BLOCKED\",\"issues\":[\"指定完整 SHA 在仓库 YotinGarden/AI-Image-Service 中未能读取到：GitHub 返回 422 No commit found for SHA。当前无法核实代码差异、测试实现及故障注入证据，因此不能仅凭实现简报给出 PASS。\"],\"conditions\":[\"请确认该 SHA 已推送到 YotinGarden/AI-Image-Service，且仓库/分支无误；提供可读取的提交或 PR 地址后再进行独立验收。\"]}\n\n{\"result\":\"BLOCKED\",\"issues\":[\"已确认仓库 YotinGarden/AI-Image-Service 存在且当前连接有读取权限，但指定完整 SHA 285851233ae3a056cb2f9a4d71851ad393ff4b1a 在该仓库仍返回 422 No commit found。\",\"1) 不能确认是否真正只观测不改判定：需检查 record_phase、derive_phase_summary、worker.finish_failure 及各 adapter 调用点是否影响原有异常传播、任务状态、重试或路由。\",\"2) 脱敏方案从简报看方向正确，但尚不能确认全路径安全：需检查日志、异常堆栈、execution_json、adapter记录及前端是否存在原始异常信息旁路泄漏。\",\"3) 十阶段覆盖及 worker_unclassified 兜底尚未完成源码核验，尤其需检查阶段未记录、终态重复更新、异常吞掉后的可观测性，以及 storage/output_commit 与实际执行边界是否一致。\",\"4) 9个故障注入用例和448 passed目前只有简报陈述，没有可核验的测试代码、运行输出或对应提交证据；14项基线失败也未看到stash前后对照证据。\",\"前端未运行tsc属于未验证项；不能据此认定前端构建通过。\"],\"conditions\":[\"请将该提交推送到此仓库，或提供正确仓库名及完整 SHA。\",\"复验时需读取提交diff和相关完整源码，并核对原有状态判定/路由/重试行为未被改变。\",\"提供9个故障注入测试的具体代码与运行记录，以及14项基线失败的可复现对照；前端至少补充依赖安装后的类型检查或明确记录为未验收。\"]}",
+      "text_sha256": "2ed63317d13d7868e8b3640d4369fc5d098e907fde29bee9ea5316cc249c358f",
+      "size_bytes": 1989,
+      "assistant_uuid": "b5cb625d-5c97-4ebb-b0f8-a40b82f08849"
+    }
+  ]
+}

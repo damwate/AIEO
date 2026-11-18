@@ -1,0 +1,39 @@
+ChatGPT 说：
+
+{
+"result": "PASS_WITH_CONSTRAINTS",
+"choice": "A",
+"issues": [
+{
+"id": "G1-01",
+"severity": "P1",
+"finding": "当前reclaim守卫位于request构造之前，确实无法直接调用resume_image。checkpoint_attempt仅修改内存，不持久化task_id，存在进程崩溃后丢失恢复凭据的问题。",
+"judgment": "B虽然改动较小，但放弃了已有resume能力，留下可避免的人工恢复负担。优先选择A。"
+},
+{
+"id": "G1-02",
+"severity": "P1",
+"finding": "A将reclaim守卫后移可能影响原有任务回收、attempt状态转换及供应商调用路径。",
+"judgment": "允许后移，但必须采用最小范围调整，不得简单绕过原有守卫或放宽执行条件。"
+},
+{
+"id": "G1-03",
+"severity": "P1",
+"finding": "task_id持久化与供应商调用之间仍存在无法完全消除的崩溃窗口。",
+"judgment": "必须承认该窗口，不得宣称实现了完整崩溃恢复。task_id尚未持久化时只能fail-closed，不得重新提交。"
+}
+],
+"conditions": [
+"1. checkpoint_attempt在获得task_id后立即触发持久化回调，持久化失败必须显式暴露，不能仅更新内存后继续声称可恢复。",
+"2. 只持久化resume_task_id，不持久化签名URL、鉴权信息或其他敏感数据。",
+"3. reclaim守卫后移仅用于满足resume所需的最小上下文构造，不得因此触发新的provider生成请求。",
+"4. 仅async/rightapi且明确支持task_id查询的适配器允许进入resume路径；其他适配器保持原有fail-closed行为。",
+"5. resume必须使用原attempt和原task_id，不能创建新的生成attempt或重新提交生成请求。",
+"6. resume成功才允许进入现有write_success流程；处理中、查询失败、结果不确定均保持unknown并停止自动failover及重新提交。",
+"7. resume结果必须经过现有结果校验和成功写入路径，禁止绕过图片校验、任务状态检查或审计记录。",
+"8. needs_human必须在无法确认执行结果时阻断自动failover及可能产生新扣费的重发。",
+"9. 补充测试：task_id持久化成功、持久化失败、reclaim恢复查询成功、查询处理中、查询异常、不支持resume、缺少task_id、崩溃窗口及禁止重复提交。",
+"10. 只允许围绕G1进行必要的核心路径调整，不借机重构供应商调度、attempt状态机或补偿系统。"
+],
+"decision": "选择A。已有resume能力应当真正接入生命周期，而不是只保留一个孤立接口。守卫后移可以接受，但必须证明不会绕过原有安全检查，也不会重新发起生成请求。若实现过程中无法满足上述约束，应退回B，保留持久化task_id、needs_human和人工显式恢复，不扩大核心路径改造。"
+}

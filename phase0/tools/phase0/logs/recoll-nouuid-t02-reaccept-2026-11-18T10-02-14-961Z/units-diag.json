@@ -1,0 +1,44 @@
+[
+  {
+    "key": "7d441241-a03d-59a9-bed3-17c72271999b:0:user",
+    "role": "user",
+    "visible": true,
+    "assistantUuid": null,
+    "text_head": "[T02设计评审|AI-Image-Service|20261119]\n只回JSON。T01已PASS(HEAD 93f22b3c)，附provider_outcome.py。\n\n问题：远桥HTTP2"
+  },
+  {
+    "key": "7d441241-a03d-59a9-bed3-17c72271999b:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "assistantUuid": "02ea5cff-4626-4bb0-8e20-f2b71655a6e8",
+    "text_head": "ChatGPT 说：\n\n{\n\"result\": \"PASS_WITH_CONDITIONS\",\n\"issues\": [\n{\n\"id\": \"I01\",\n\"severity\": \"P1\",\n\"findin"
+  },
+  {
+    "key": "b6c195b3-4ac0-5190-b81d-37f71211dd6f:0:user",
+    "role": "user",
+    "visible": true,
+    "assistantUuid": null,
+    "text_head": "[T02实现验收|AI-Image-Service|20261119]\n只回JSON。基线HEAD 93f22b3c，附t02_full_r1.diff(SHA 141fedc8)。逐条核对你上轮C0"
+  },
+  {
+    "key": "b6c195b3-4ac0-5190-b81d-37f71211dd6f:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "assistantUuid": "0c5e5f22-a9ce-4e0f-b351-ea77a486495a",
+    "text_head": "ChatGPT 说：\n\n{\n\"result\": \"PASS_WITH_CONDITIONS\",\n\"issues\": [\n{\n\"id\": \"I01\",\n\"severity\": \"P1\",\n\"findin"
+  },
+  {
+    "key": "7129aad4-dd25-51c2-b51d-0aedfea2b6d1:0:user",
+    "role": "user",
+    "visible": true,
+    "assistantUuid": null,
+    "text_head": "[T02小修复验|AI-Image-Service|20261119]\n只回JSON。commit 26f4e4ae8b428f46e2dfd28daea308208ee1b736，父93f22b3c"
+  },
+  {
+    "key": "7129aad4-dd25-51c2-b51d-0aedfea2b6d1:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "assistantUuid": "767098e6-6fc9-4166-98a3-1dab48a08576",
+    "text_head": "ChatGPT 说：\n\n{\n\"result\": \"PASS_WITH_CONDITIONS\",\n\"issues\": [\n{\n\"id\": \"I01\",\n\"severity\": \"P2\",\n\"findin"
+  }
+]

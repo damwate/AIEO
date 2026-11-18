@@ -1,0 +1,108 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-18T13:51:54.091Z",
+  "user_unit_key": "07040ef1-401b-5154-bf1e-503a2bebf435:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "07040ef1-401b-5154-bf1e-503a2bebf435:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "f993144d-8c87-4f1c-9132-bd8161fdd03a",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "07040ef1-401b-5154-bf1e-503a2bebf435:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "4d346f6f-1dc8-57e0-92c7-3889778c335c:0:user",
+          "4d346f6f-1dc8-57e0-92c7-3889778c335c:2:assistant",
+          "07040ef1-401b-5154-bf1e-503a2bebf435:0:user",
+          "07040ef1-401b-5154-bf1e-503a2bebf435:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "14f9e05cd882b8bb285fea353de320692c9198db010e99cc98fc7363876a2c8a",
+          "c7a66728b41a266924d37cf176643f834488f6f22da703dd14188bbd6fd0cd16",
+          "979af0f49c1bf43b529ed8a6aeda5f2b8340133dd83eea06650f61ca46c594cb",
+          "96f533c929a464ca9c9b21cc3bc4110b9c33ccd3da62b8cb869febeb5e510be3"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "4d346f6f-1dc8-57e0-92c7-3889778c335c:0:user",
+          "4d346f6f-1dc8-57e0-92c7-3889778c335c:2:assistant",
+          "07040ef1-401b-5154-bf1e-503a2bebf435:0:user",
+          "07040ef1-401b-5154-bf1e-503a2bebf435:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "14f9e05cd882b8bb285fea353de320692c9198db010e99cc98fc7363876a2c8a",
+          "c7a66728b41a266924d37cf176643f834488f6f22da703dd14188bbd6fd0cd16",
+          "979af0f49c1bf43b529ed8a6aeda5f2b8340133dd83eea06650f61ca46c594cb",
+          "96f533c929a464ca9c9b21cc3bc4110b9c33ccd3da62b8cb869febeb5e510be3"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "4d346f6f-1dc8-57e0-92c7-3889778c335c:0:user",
+          "4d346f6f-1dc8-57e0-92c7-3889778c335c:2:assistant",
+          "07040ef1-401b-5154-bf1e-503a2bebf435:0:user",
+          "07040ef1-401b-5154-bf1e-503a2bebf435:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "07040ef1-401b-5154-bf1e-503a2bebf435:0:user",
+      "07040ef1-401b-5154-bf1e-503a2bebf435:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "4d346f6f-1dc8-57e0-92c7-3889778c335c:0:user",
+          "4d346f6f-1dc8-57e0-92c7-3889778c335c:2:assistant",
+          "07040ef1-401b-5154-bf1e-503a2bebf435:0:user",
+          "07040ef1-401b-5154-bf1e-503a2bebf435:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "4d346f6f-1dc8-57e0-92c7-3889778c335c:0:user",
+          "4d346f6f-1dc8-57e0-92c7-3889778c335c:2:assistant",
+          "07040ef1-401b-5154-bf1e-503a2bebf435:0:user",
+          "07040ef1-401b-5154-bf1e-503a2bebf435:2:assistant"
+        ],
+        "overlap_keys": [
+          "4d346f6f-1dc8-57e0-92c7-3889778c335c:0:user",
+          "4d346f6f-1dc8-57e0-92c7-3889778c335c:2:assistant",
+          "07040ef1-401b-5154-bf1e-503a2bebf435:0:user",
+          "07040ef1-401b-5154-bf1e-503a2bebf435:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "07040ef1-401b-5154-bf1e-503a2bebf435:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n{\n\"result\": \"PASS\",\n\"findings\": [],\n\"reviewed_commit\": \"02c9d7a\",\n\"evidence_checks\": {\n\"manifest\": \"OK\",\n\"test_log\": \"OK\",\n\"baseline\": \"OK\"\n},\n\"notes\": \"独立读取02c9d7a实际代码及测试。材料校验采用MANIFEST声明的git_blob_sha1作为本轮认可依据，REVIEW_BRIEF、full_test.log、baseline_test.log三份blob SHA-1全部一致。RW-01 PASS：RightAPI及Async首次完整响应解析失败抛provider_error，response_parse失败事件满足local_result_failure双证据，failure_decision标记result_invalid并stop，不误切供应商。RW-02 PASS：local_result_failure优先检查resume_task_id/has_task_id，已有任务受理保护，续查及本地处理失败不降级为result_invalid。RW-03 PASS：monitoring.metrics_snapshot尝试级样本仅按时间窗口抽取Job，不再按最终provider_vendor_id过滤；随后按attempt.vendor_id独立统计，覆盖failover中失败供应商。RW-04 PASS：PriorityDemotion新增scope_key/scope_original；同作用域叠加降级共享首条原始态；到期记录在仍有活动降级时标记consumed，最后一条到期统一恢复；policy/global_policy/global分别恢复实际修改对象；人工修改检测不通过时整体skipped，不覆盖人工决策。新增test_stacked_demotions_restore_only_after_last_expires验证先到期consumed、最后到期恢复初始priority。RW-05 PASS：set_routing对enabled_vendors变更前后完整记录所有Provider的enabled/priority状态，并与actor、路由策略前后值、reason、evidence在同一事务提交；新增专项审计测试验证。测试证据：被审版本14 failed、568 passed；基线14 failed、439 passed，失败集合一致，未发现本轮新增失败。五项修复均未发现阻断性或必须返工问题，准予通过。\"\n}",
+      "text_sha256": "96f533c929a464ca9c9b21cc3bc4110b9c33ccd3da62b8cb869febeb5e510be3",
+      "size_bytes": 1812,
+      "assistant_uuid": "f993144d-8c87-4f1c-9132-bd8161fdd03a"
+    }
+  ]
+}

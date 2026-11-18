@@ -1,0 +1,20 @@
+ChatGPT 说：
+
+{
+"result": "REWORK",
+"issues": [
+{
+"id": "P1-01",
+"location": "backend/app/ai/job_spec.py::_GenericSpec.persist_output",
+"problem": "output_commit 的二次提交失败路径仍存在状态不一致风险。第一次 commit 持久化 running，随后内存记录 succeeded，再执行第二次 commit。若第二次 commit 失败，数据库可能仍保存 running，而内存已是不可回退的 succeeded。worker 后续异常收口也无法将其改为 failed。",
+"required_fix": "明确区分输出数据提交成功与阶段终态提交成功。第二次 commit 失败时，不得保留 succeeded 作为最终审计结论；设计可恢复的持久化收口机制，并增加第二次 commit 故障注入测试，验证数据库最终状态与 execution_json 一致。"
+}
+],
+"conditions": [
+"本次审查依据为上传的 t01_full_v2.diff；未取得简报提及的 t01_verification_notes_v2.txt，因此测试报告及基线对照数字暂按用户提供的信息引用，未独立验证。",
+"前端未执行 tsc，前端类型及模板编译仍属于未验收范围。"
+]
+}
+
+],
+"assessment":

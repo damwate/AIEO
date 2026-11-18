@@ -1,0 +1,100 @@
+ChatGPT 说：
+
+{
+"result": "REWORK_SMALL",
+"issues": [
+{
+"id": "R01",
+"severity": "P2",
+"finding": "真实 routing worker 执行路径已覆盖，job_id、worker_id、vendor_id 均有实际落库断言。但 attempt_id 目前仅验证字符串长度>=8，不能证明其符合 UUID 格式。",
+"required": "使用 uuid.UUID(attempt_id) 解析并验证格式，确保真实生成的 attempt_id 是合法 UUID。"
+},
+{
+"id": "R02",
+"severity": "P2",
+"finding": "真实重试路径已覆盖。首轮失败 ID 被保留、后续 attempt 数量增加、全部 ID 无重复，能够证明重试生成新 ID 且历史记录没有覆盖。但尚未明确断言第二轮执行最终成功。",
+"required": "补充重试完成后的 job.status == 'succeeded' 断言，并可复用 UUID 格式验证。"
+},
+{
+"id": "R03",
+"severity": "P2",
+"finding": "真实 vendor-a 401 失败、vendor-b 成功的故障切换路径已覆盖，execution_json 确认两类记录同时存在。但失败记录完整性目前只检查 attempt_id 和 job_id，没有检查 worker_id、vendor_id。",
+"required": "对失败记录补充 worker_id、vendor_id 非空及与实际执行上下文一致的断言，确保失败证据的关联字段没有被成功记录覆盖。"
+}
+],
+"conditions": [
+{
+"id": "C01",
+"status": "CLOSED"
+},
+{
+"id": "C02",
+"status": "CLOSED",
+"reason": "真实路由执行及重试路径已验证 attempt_id 重新生成、唯一性和历史保留。UUID 格式属于上述小修复。"
+},
+{
+"id": "C03",
+"status": "CLOSED",
+"reason": "真实 routing worker 已验证 worker_id 从执行上下文进入实际 attempt 记录。"
+},
+{
+"id": "C04",
+"status": "CLOSED"
+},
+{
+"id": "C05",
+"status": "CLOSED"
+},
+{
+"id": "C06",
+"status": "CLOSED"
+},
+{
+"id": "C07",
+"status": "CLOSED"
+},
+{
+"id": "C08",
+"status": "CLOSED"
+},
+{
+"id": "C09",
+"status": "CLOSED"
+},
+{
+"id": "C10",
+"status": "CLOSED",
+"reason": "真实重试及故障切换测试证明多次 attempt 保留；execution_json 能按 attempt_id 定位并关联 request_id。"
+},
+{
+"id": "C11",
+"status": "PARTIAL",
+"reason": "真实失败后成功的记录累积已验证，但失败记录全部关联字段的完整性断言仍需补齐。"
+}
+],
+"summary": {
+"R01": "PARTIAL",
+"R02": "PARTIAL",
+"R03": "PARTIAL",
+"CLOSED": 10,
+"PARTIAL": 1,
+"BLOCKED": 0,
+"test_report": "T03聚焦11 passed、全量517 passed/14 failed，均为提交方提供的结果，未独立执行。",
+"scope_assessment": "本次新增测试没有改变业务实现、数据库结构、路由选择、重试策略或计费逻辑。"
+},
+"decision": {
+"final_pass": false,
+"authorize_T04": false,
+"next_step": "REWORK_SMALL",
+"rework_scope": "仅补充UUID格式、重试最终成功状态、失败记录worker_id/vendor_id完整性三项断言。",
+"architecture_change_required": false,
+"database_migration_required": false,
+"implementation_change_required": false,
+"reassessment": "提交小修复后的完整commit、diff SHA及11项聚焦测试结果，进行最终验收。"
+},
+"limitations": [
+"已检查t03_full_r2.diff中的实现及新增测试代码。",
+"未独立获取GitHub完整commit对象，未独立执行测试。",
+"本次没有发现需要扩大T03范围的问题。"
+]
+}

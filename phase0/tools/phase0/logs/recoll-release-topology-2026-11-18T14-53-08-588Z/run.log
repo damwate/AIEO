@@ -1,0 +1,6 @@
+[2026-11-18T14:53:09.393Z] 会话锁已获取（发版拓扑终判补采）
+[2026-11-18T14:53:32.812Z] checks={"marked_user_unique":true,"last_user_assertion":true,"adjacent_assistant_tail":true,"stable_static_dom_read":true,"final_stop_button_not_visible":true,"not_prev_reply_sha":true,"response_length_plausible":true,"uuid_based_locator":false}
+[2026-11-18T14:53:32.814Z] reply 已落盘（9950 字节，SHA=c85ffac1927e46b2…）
+[2026-11-18T14:53:32.815Z] RECOLL COMPLETED
+[2026-11-18T14:53:32.831Z] 视口覆盖已清除
+[2026-11-18T14:53:33.676Z] 会话锁已释放（发版拓扑终判补采）

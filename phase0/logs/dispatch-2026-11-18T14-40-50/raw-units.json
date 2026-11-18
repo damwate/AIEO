@@ -1,0 +1,139 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-18T14:43:49.608Z",
+  "user_unit_key": "7c1e0783-8111-5b57-9059-0594e9d7eb4d:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "7c1e0783-8111-5b57-9059-0594e9d7eb4d:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "7b756592-b1e5-4a88-9361-1d5e13becb70",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "7c1e0783-8111-5b57-9059-0594e9d7eb4d:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "4d346f6f-1dc8-57e0-92c7-3889778c335c:0:user",
+          "4d346f6f-1dc8-57e0-92c7-3889778c335c:2:assistant",
+          "07040ef1-401b-5154-bf1e-503a2bebf435:0:user",
+          "07040ef1-401b-5154-bf1e-503a2bebf435:2:assistant",
+          "7c1e0783-8111-5b57-9059-0594e9d7eb4d:0:user",
+          "7c1e0783-8111-5b57-9059-0594e9d7eb4d:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "14f9e05cd882b8bb285fea353de320692c9198db010e99cc98fc7363876a2c8a",
+          "c7a66728b41a266924d37cf176643f834488f6f22da703dd14188bbd6fd0cd16",
+          "979af0f49c1bf43b529ed8a6aeda5f2b8340133dd83eea06650f61ca46c594cb",
+          "96f533c929a464ca9c9b21cc3bc4110b9c33ccd3da62b8cb869febeb5e510be3",
+          "498c1debfeb241d5c2bdf99d4dbb44707cd86a13b1f7ff386ce671dab08d4442",
+          "6b86968ec1780354e929156f2cc9a5b132e7eefb6d56317d0b3734666704849a"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "4d346f6f-1dc8-57e0-92c7-3889778c335c:0:user",
+          "4d346f6f-1dc8-57e0-92c7-3889778c335c:2:assistant",
+          "07040ef1-401b-5154-bf1e-503a2bebf435:0:user",
+          "07040ef1-401b-5154-bf1e-503a2bebf435:2:assistant",
+          "7c1e0783-8111-5b57-9059-0594e9d7eb4d:0:user",
+          "7c1e0783-8111-5b57-9059-0594e9d7eb4d:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "14f9e05cd882b8bb285fea353de320692c9198db010e99cc98fc7363876a2c8a",
+          "c7a66728b41a266924d37cf176643f834488f6f22da703dd14188bbd6fd0cd16",
+          "979af0f49c1bf43b529ed8a6aeda5f2b8340133dd83eea06650f61ca46c594cb",
+          "96f533c929a464ca9c9b21cc3bc4110b9c33ccd3da62b8cb869febeb5e510be3",
+          "498c1debfeb241d5c2bdf99d4dbb44707cd86a13b1f7ff386ce671dab08d4442",
+          "6b86968ec1780354e929156f2cc9a5b132e7eefb6d56317d0b3734666704849a"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "4d346f6f-1dc8-57e0-92c7-3889778c335c:0:user",
+          "4d346f6f-1dc8-57e0-92c7-3889778c335c:2:assistant",
+          "07040ef1-401b-5154-bf1e-503a2bebf435:0:user",
+          "07040ef1-401b-5154-bf1e-503a2bebf435:2:assistant",
+          "7c1e0783-8111-5b57-9059-0594e9d7eb4d:0:user",
+          "7c1e0783-8111-5b57-9059-0594e9d7eb4d:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "7c1e0783-8111-5b57-9059-0594e9d7eb4d:0:user",
+      "7c1e0783-8111-5b57-9059-0594e9d7eb4d:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "07040ef1-401b-5154-bf1e-503a2bebf435:0:user",
+          "07040ef1-401b-5154-bf1e-503a2bebf435:2:assistant",
+          "7c1e0783-8111-5b57-9059-0594e9d7eb4d:0:user",
+          "7c1e0783-8111-5b57-9059-0594e9d7eb4d:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "4d346f6f-1dc8-57e0-92c7-3889778c335c:0:user",
+          "4d346f6f-1dc8-57e0-92c7-3889778c335c:2:assistant",
+          "07040ef1-401b-5154-bf1e-503a2bebf435:0:user",
+          "07040ef1-401b-5154-bf1e-503a2bebf435:2:assistant",
+          "7c1e0783-8111-5b57-9059-0594e9d7eb4d:0:user",
+          "7c1e0783-8111-5b57-9059-0594e9d7eb4d:2:assistant"
+        ],
+        "overlap_keys": [
+          "07040ef1-401b-5154-bf1e-503a2bebf435:0:user",
+          "07040ef1-401b-5154-bf1e-503a2bebf435:2:assistant",
+          "7c1e0783-8111-5b57-9059-0594e9d7eb4d:0:user",
+          "7c1e0783-8111-5b57-9059-0594e9d7eb4d:2:assistant"
+        ],
+        "relative_offset": -2
+      },
+      {
+        "unit_keys": [
+          "4d346f6f-1dc8-57e0-92c7-3889778c335c:0:user",
+          "4d346f6f-1dc8-57e0-92c7-3889778c335c:2:assistant",
+          "07040ef1-401b-5154-bf1e-503a2bebf435:0:user",
+          "07040ef1-401b-5154-bf1e-503a2bebf435:2:assistant",
+          "7c1e0783-8111-5b57-9059-0594e9d7eb4d:0:user",
+          "7c1e0783-8111-5b57-9059-0594e9d7eb4d:2:assistant"
+        ],
+        "overlap_keys": [
+          "4d346f6f-1dc8-57e0-92c7-3889778c335c:0:user",
+          "4d346f6f-1dc8-57e0-92c7-3889778c335c:2:assistant",
+          "07040ef1-401b-5154-bf1e-503a2bebf435:0:user",
+          "07040ef1-401b-5154-bf1e-503a2bebf435:2:assistant",
+          "7c1e0783-8111-5b57-9059-0594e9d7eb4d:0:user",
+          "7c1e0783-8111-5b57-9059-0594e9d7eb4d:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 3
+  },
+  "units": [
+    {
+      "key": "7c1e0783-8111-5b57-9059-0594e9d7eb4d:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：",
+      "text_sha256": "6b86968ec1780354e929156f2cc9a5b132e7eefb6d56317d0b3734666704849a",
+      "size_bytes": 14,
+      "assistant_uuid": "7b756592-b1e5-4a88-9361-1d5e13becb70"
+    }
+  ]
+}

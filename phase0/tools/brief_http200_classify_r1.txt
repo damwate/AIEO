@@ -1,0 +1,15 @@
+[HTTP200分类排查评审|AI-Image-Service|20261118]
+独立复核，只回JSON。HEAD abd7116e30e17d9669a8551c0985bd09aa8a601a。
+
+事件：Yuanqiao HTTP200，attempt有200+响应完成时间但无download_*/storage_*，0.5ms后判unknown_outcome+切Wukong成功。用户判断：不是远桥问题，是程序问题——前端报"未知错误"说明本地解析失败被误判为供应商结果未知，没抓住重点。
+
+第一阶段三路径：
+1) ai_provider_openai.py:141 在read()前写acceptance='accepted'；失败点:245-250/481-502。
+2) safe_error_message把provider_error覆盖为通用文案，execution_json无parse_stage/exception_type，原因在DB+日志丢失。
+3) provider_outcome.py:32 acceptance=='accepted'先于:36 STOP_CODES，本地解析失败进stop_unknown。
+
+请评审(JSON)：
+- 同意"程序分类问题而非供应商问题"吗？
+- 两阶段方案(阶段1证据定位/阶段2全局补强+修复拆分)满足"消除前端未知错误"吗？缺口？
+- 最小修复(acceptance时机/failure_decision顺序/解析阶段日志)够吗？还缺什么？
+输出{result:PASS/REWORK,points:[],conditions:[],reviewed_commit}。只读，不改码不部署。

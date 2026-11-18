@@ -1,0 +1,24 @@
+{
+  "recollection": true,
+  "driver": "recoll_git_review_retry.mjs",
+  "conversation_url": "https://chatgpt.com/c/6afd9f0c-ff44-83ee-973f-55c1b302d0c0",
+  "reference_failed_dispatch_dir": "phase0/logs/dispatch-2026-11-18T12-54-19",
+  "failure_code": "GENERATION_TIMEOUT",
+  "recovery": "视口拉高静态DOM全量物化+归属校验型定位（禁重发）",
+  "marked_user_unit_key": "d0269771-65ac-593e-aff8-89d6de1cdc31:0:user",
+  "assistant_unit_key": "d0269771-65ac-593e-aff8-89d6de1cdc31:2:assistant",
+  "assistant_uuid": "3b29d430-13d8-457d-98ef-7db2857abbec",
+  "reply_bytes": 6004,
+  "reply_sha256": "7734ca3753927601b46671f5abf063f4c7b4c526c4fa1751286e164d06d6f77b",
+  "checks": {
+    "marked_user_unique": true,
+    "last_user_assertion": true,
+    "adjacent_assistant_tail": true,
+    "stable_static_dom_read": true,
+    "final_stop_button_not_visible": true,
+    "not_prev_reply_sha": true,
+    "response_length_plausible": true,
+    "uuid_based_locator": false
+  },
+  "extracted_at": "2026-11-18T13:05:09.510Z"
+}

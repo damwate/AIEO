@@ -1,0 +1,13 @@
+[T02设计评审|AI-Image-Service|20261119]
+只回JSON。T01已PASS(HEAD 93f22b3c)，附provider_outcome.py。
+
+问题：远桥HTTP200+本地解析失败→_post_raw收2xx即写accepted→stop_unknown→前端"未知错误"；真因T01已记录，分类层未用。
+
+T02提案(P0独立提交)：
+1)acceptance收窄：2xx只记status/stage不写accepted；仅checkpoint得task_id/url才写accepted；新增result_invalid=收响应但本地结果非法。
+2)三层分列：HTTP传输层/供应商业务层/我方交付层，互不替代，各记状态字段。
+3)本地确定失败(phase∈parse/extract/decode/validate/download且200)→细分error_code+固定文案→known_failed；计费可能留独立flag。
+4)决策序：本地失败判定提到accepted保护前；保留task_id受理与522/523/524保护；STOP_CODES/403/auth不变。
+5)请裁：HTTP200+本地失败时failover_on_any_error=True会切下一家(重复计费)。我倾向不改action(§8.4计费需人工审批)，只改分类+文案+flag，同意否？
+
+边界：只改分类/文案，不碰路由/重试/熔断；带SHA+故障注入。回JSON{result,issues,conditions}：满足§3.1-3.3/§5？抉择5如何定？必补项？

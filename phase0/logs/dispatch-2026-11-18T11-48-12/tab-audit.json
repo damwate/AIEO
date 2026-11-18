@@ -1,0 +1,25 @@
+{
+  "at": "2026-11-18T11:49:17.769Z",
+  "outcome": "failure_created_pages_closed",
+  "before": [
+    {
+      "id": "6D66F66E2E027B8618F9E69B0F6E2355",
+      "url": "https://chatgpt.com/"
+    }
+  ],
+  "exit_before_disposal": [
+    {
+      "id": "6D66F66E2E027B8618F9E69B0F6E2355",
+      "url": "https://chatgpt.com/"
+    }
+  ],
+  "exit_after_disposal": [
+    {
+      "id": "6D66F66E2E027B8618F9E69B0F6E2355",
+      "url": "https://chatgpt.com/"
+    }
+  ],
+  "created_pages": 0,
+  "disposal": "发送前失败：仅关闭本次自建页；既有页零触碰（exit_before/exit_after 对照=值守页零关闭证明）",
+  "error": "附件挂载未验证（form 内未见文件名 chip），STOP"
+}

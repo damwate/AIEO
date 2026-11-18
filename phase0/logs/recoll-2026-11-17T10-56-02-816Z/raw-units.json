@@ -1,0 +1,88 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-17T10:56:44.741Z",
+  "user_unit_key": "f2bfa592-ae6f-52ff-bdff-155e33e57604:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "f2bfa592-ae6f-52ff-bdff-155e33e57604:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "641d8700-2243-446f-8c63-d039e17df341",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "f2bfa592-ae6f-52ff-bdff-155e33e57604:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "a32f68f0-541b-530d-97e1-d5996c9ba964:0:user",
+          "a32f68f0-541b-530d-97e1-d5996c9ba964:2:assistant",
+          "17152aba-ecaf-59cb-80f9-9d855463a5ea:0:user",
+          "17152aba-ecaf-59cb-80f9-9d855463a5ea:2:assistant",
+          "6795f6dc-3135-510c-99f3-fed955767193:0:user",
+          "6795f6dc-3135-510c-99f3-fed955767193:1:assistant",
+          "cdaa3700-70cd-54e2-b296-886f47ffa84c:0:user",
+          "cdaa3700-70cd-54e2-b296-886f47ffa84c:1:assistant",
+          "f2bfa592-ae6f-52ff-bdff-155e33e57604:0:user",
+          "f2bfa592-ae6f-52ff-bdff-155e33e57604:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "f4568eb9ff9b9e9f00282b6e5ca4116cd7be41f8b24404832458c16a6ba75be6",
+          "d324c1efdd9d5f85631350e5263d25fb3363988dff865064bd6df3c40465c236",
+          "1e3eec8e4fc0836e50313c7512239f177dcb00d835e801a6dbfedde1391d2dd2",
+          "b92c46b30ddc928e508f9d70e06709b4c59c8d108313d0755c7c6e3e0301d53a",
+          "8f09722b53acced754bbffd8e1614d9c20e829c006f3cff563d0909e00c6daaa",
+          "d56ad6aa6d3332d90d3ed5afe8139a53486ed591e458b321c5a13c58f1c24521",
+          "6fc4231c6a97b3c0a022162314544c3ddcfa73e7be5756a10fb5710f052916b8",
+          "6351870e874b7ab9a4a3acac4e6a33cc95c001bc953edce782c617fd78d0e36b",
+          "b3dcfea5780f282e1684cd7e8a16b1c89fe3aaa93f67ff1f192a0968d6909fe7",
+          "ae239464511c4c1c45aa5132f15edbe057552c4a59afb3bbf0f66083a6a75477"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": []
+      }
+    ],
+    "materialized_unit_keys": [
+      "f2bfa592-ae6f-52ff-bdff-155e33e57604:0:user",
+      "f2bfa592-ae6f-52ff-bdff-155e33e57604:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STATIC_NON_SCROLLABLE_DOM",
+      "scrollable_window_observed": false,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "a32f68f0-541b-530d-97e1-d5996c9ba964:0:user",
+          "a32f68f0-541b-530d-97e1-d5996c9ba964:2:assistant",
+          "17152aba-ecaf-59cb-80f9-9d855463a5ea:0:user",
+          "17152aba-ecaf-59cb-80f9-9d855463a5ea:2:assistant",
+          "6795f6dc-3135-510c-99f3-fed955767193:0:user",
+          "6795f6dc-3135-510c-99f3-fed955767193:1:assistant",
+          "cdaa3700-70cd-54e2-b296-886f47ffa84c:0:user",
+          "cdaa3700-70cd-54e2-b296-886f47ffa84c:1:assistant",
+          "f2bfa592-ae6f-52ff-bdff-155e33e57604:0:user",
+          "f2bfa592-ae6f-52ff-bdff-155e33e57604:2:assistant"
+        ],
+        "overlap_keys": []
+      }
+    ],
+    "window_transitions": 0
+  },
+  "units": [
+    {
+      "key": "f2bfa592-ae6f-52ff-bdff-155e33e57604:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n目前已直读指定 commit a9c485e97659586e2ea3c2d2b9c415b818d78006 的 GitHub 提交差异。初步确认：改动不只是传输层加参数，已涉及供应商归一化、扁平配置、路由冻结字段、OpenAI 兼容适配器及传输层；新增测试也包含双供应商冻结路由和 failover 场景。\n\n但“代码路径已接通”不等于“真实远桥请求已验证”。我会把静态链路、测试证据和真实调用证据分开裁定。\n\n远桥 HTTP/1.1 独立复审\nPASS WITH CONDITIONS\n\n允许进入 221 受控测试\n\n复核对象： YotinGarden/AI-Image-Service\n分支： fix/yuanqiao-http1-20261117\n被审 SHA： a9c485e97659586e2ea3c2d2b9c415b818d78006\n父提交： 5c7ec3e73321a76c53e9d91a128d73bbe38b485c\n\n已确认分支指向指定 SHA。提交修改 6 个文件，新增 434 行、删除 15 行。以下结论绑定该 SHA，不代表后续提交或生产版本。\n\n① 配置链是否真正到达 Worker？\nPASS\n\n静态代码链完整：\n\nai_provider.py::_norm_vendor：归一 http_version。\n\n_vendor_flat：把合法值传入适配器配置。\n\nbuild_generation_snapshot：通过扁平配置保存供应商快照。\n\nrouting.py::ROUTE_CONFIG_FIELDS：允许该字段进入任务冻结路由。\n\nfreeze_route：将供应商配置写入 route_plan_json.vendor_configs。\n\nprocess_routed：读取历史凭证配置，再用冻结配置覆盖相应字段。\n\nai_provider_openai.py：将配置传给 urlopen。\n\nhttp_transport.py：在 curl_cffi 请求参数中追加 http_version='v1'。\n\n因此，不是只在配置文件里增加了一个字段，代码确实存在从供应商配置到 Worker 实际传输层的通路。\n\n证据：\n\nai_provider.py\n\nrouting.py\n\nai_provider_openai.py\n\n配置操作有一个实际限制： 当前管理 API 的供应商编辑模型没有 http_version 字段，/config 也是只读展示。因此，当前不能假设在管理后台就能设置该字段，需要通过受控方式更新供应商 secrets JSON，并确保新任务冻结到正确配置。建议同时检查 vendors 和对应 generations 快照的一致性。\n\n② 悟空、请求体和认证是否受影响？\nPASS\n\n悟空没有配置该字段时，归一结果为 None，不会追加 http_version 参数。\n\n该实现不是硬编码“只有远桥才能设置”，而是供应商级通用配置；悟空保持不变的前提是其配置不写入该字段。\n\n原有 data、请求方法、headers、Authorization: Bearer ...、impersonate='chrome'、allow_redirects=False 均保留。\n\n新测试检查了 generations、multipart edits、JSON edits、responses 等通道的请求体和认证头。\n\n没有发现这次改动主动改变请求体结构或认证方式。\n\n证据：test_supplier_http_version.py\n\n③ 日志和错误分类是否安全正确？\n基本通过，有观测缺口\n\n安全方面通过：\n\n日志字段包含供应商、任务标识、配置协议、实际协议、HTTP 状态、耗时、错误类型和数值 transport code。没有直接记录 API Key、Authorization、URL、请求体、响应原文或原始 curl 错误文本。\n\nHTTP/2 传输错误的分类链也有依据：\n\ncurl code 92 保留为数值 transport_code；\n\n适配器将 92 映射为 http2_error；\n\n没有收到响应时不伪造 actual_http_version。\n\n有两处需要注意：\n\nHTTP 非 2xx 响应目前在 _log_protocol 中先按 INFO 记录状态，日志没有补充 error_type，不够利于区分成功响应和 HTTP 失败。\n\nAI_HTTP_TRANSPORT 走标准库 urllib 时，配置的协议会被忽略，只记录一条 ignored warning，不会产生同等完整的协议、状态、耗时日志。\n\n另外，logger 自己添加 StreamHandler 又设置 propagate=True，在已有 root handler 的运行环境可能出现重复日志；不是凭证泄露问题，但建议后续检查日志重复。\n\n证据：http_transport.py\n\n④ 测试覆盖是否充分？\n部分覆盖，不能称为全部验证\n\n新测试文件静态核对共 19 个测试用例（含参数化展开），覆盖情况如下：\n\n项目\n\n\t\n\n复核结果\n\n\n\n\n配置归一、扁平化、快照\n\n\t\n\nPASS\n\n\n\n\n冻结路由字段\n\n\t\n\nPASS\n\n\n\n\nWorker 取得冻结配置\n\n\t\n\nPASS\n\n\n\n\n悟空无协议覆盖\n\n\t\n\nPASS\n\n\n\n\nmock failover 到备用供应商\n\n\t\n\nPASS\n\n\n\n\nHTTP/2 code 92 单次传输调用\n\n\t\n\nPASS\n\n\n\n\n真正的 Worker 进程重启恢复\n\n\t\n\n未覆盖\n\n\n\n\n真实远桥请求\n\n\t\n\n未覆盖\n\n\n\n\n真实网关协商协议\n\n\t\n\n未覆盖\n\n这里有两个重要区别：\n\n第一，重启测试不完整。 测试将 route_plan_json 做了 JSON 序列化/反序列化，但没有真正终止 Worker 进程、重启进程，再恢复同一任务。因此证明了冻结字段的 JSON 形态和 Worker 读取路径，不足以证明完整的进程重启恢复场景。\n\n第二，“HTTP2不重发”需要准确限定。 传输层测试证明一次 urlopen 调用只执行一次 requests.request，不会自动重复发送同一请求。但生产路由的 finish_failure(..., failover_on_any_error=True) 会把包括未知受理结果在内的错误改为 failover。因此：\n\n不会自动重试同一个远桥请求；\n\n如果路由里还有悟空，HTTP/2 错误后仍可能向悟空发起一次新的生成请求；\n\n新测试没有验证这一整套路由行为。\n\n这不是说实现一定错误，而是必须区分“同一供应商不重发”和“整个任务绝不再次生成”。\n\n416 通过、14 项既存失败： 我没有在本轮执行测试，也没有找到该 SHA 对应的 GitHub CI 状态记录。因此这两个数字目前按你提供的执行结果记录，不能冒称为我独立复跑确认。\n\n⑤ 能否进入 221 测试？\n可以，但限定为受控真实测试\n\n建议进入 221，前置条件如下：\n\n运行环境确认： AI_HTTP_TRANSPORT=curl_cffi，运行依赖确认 curl_cffi==0.17.0。当前 Compose 默认值是 curl_cffi，但仍须确认实际测试容器没有被环境变量覆盖。\n\n配置确认： 远桥供应商配置确实为 http_version: \"v1\"，新建测试任务后检查冻结路由中的字段，不要只看配置文件。\n\n隔离测试： 首轮只启用远桥单供应商，避免 HTTP/2 未知结果触发备用供应商生成，混淆协议验证结果。\n\n真实 Playground 调用： 使用原来失败的调用通道、请求体和认证方式，至少完成一次真实请求，检查响应成功、实际协议为 V1_1、HTTP 状态、耗时及请求关联 ID。\n\n失败场景验证： 单独验证传输失败不会对远桥自动重复发送；如果还要验证备用切换，应另设双供应商场景，并明确记录备用供应商是否收到请求。\n\n证据收口： 保存测试任务 ID、配置快照、执行日志、实际协议和最终结果，全部绑定本次 SHA；不要把“请求成功”直接等同于“根因已证实”。\n\n官方 curl_cffi 文档确认 http_version 是请求参数，v1 可用于限制 HTTP/1.1；实际协商协议可通过响应的 http_version 与 CurlHttpVersion.V1_1 比较。\ncurl_cffi documentation\n+2\n\n最终结论\n\n代码配置链：通过。请求兼容性：通过。日志安全：基本通过。测试覆盖：尚有边界缺口。真实根因：未验证。\n\n我支持进入 221 受控真实测试，但不支持仅凭这次 19 项 mock 测试就合并部署到生产。最终是否解决远桥 HTTP/2 故障，应以 Playground 真实请求成功且实际协商协议确认为 V1_1 为准；Garden 只能作为旁证。",
+      "text_sha256": "ae239464511c4c1c45aa5132f15edbe057552c4a59afb3bbf0f66083a6a75477",
+      "size_bytes": 7469,
+      "assistant_uuid": "641d8700-2243-446f-8c63-d039e17df341"
+    }
+  ]
+}

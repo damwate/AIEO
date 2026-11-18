@@ -1,0 +1,30 @@
+[
+  {
+    "key": "e7838221-845c-5062-8d82-30b0174433ae:0:user",
+    "role": "user",
+    "visible": true,
+    "assistantUuid": null,
+    "text_head": "[规范落实讨论|AI-Image-Service|20261118]\n新会话接棒，独立复核者。HEAD abd7116e30e17d9669a8551c0985bd09aa8a601a。无历史上下文，"
+  },
+  {
+    "key": "e7838221-845c-5062-8d82-30b0174433ae:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "assistantUuid": "0b5937a3-d8fc-4997-820a-8ead2b75edf4",
+    "text_head": "ChatGPT 说：\n\n{\n\"result\": \"BLOCKED\",\n\"rollout_tasks\": [],\n\"first_step\": {\n\"action\": \"先建立十章规范到现有代码能力的落实"
+  },
+  {
+    "key": "9518a6a7-87fe-528e-921b-1485afdeb9d3:0:user",
+    "role": "user",
+    "visible": true,
+    "assistantUuid": null,
+    "text_head": "[规范落实讨论R2|AI-Image-Service|20261118]\n上条你BLOCKED正确：新会话无历史、读不到docs正文。现附上规范Markdown全文(十章v1.0-draft)，请基于"
+  },
+  {
+    "key": "9518a6a7-87fe-528e-921b-1485afdeb9d3:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "assistantUuid": "19149ac8-4ac3-48d8-b0f6-50c0e978955a",
+    "text_head": "ChatGPT 说：\n\n{\n\"result\": \"PASS_WITH_CONSTRAINTS\",\n\"basis\": {\n\"document\": \"AI生图服务可靠性与供应商治理规范.md\",\n\"ver"
+  }
+]

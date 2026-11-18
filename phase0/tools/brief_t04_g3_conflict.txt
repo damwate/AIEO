@@ -1,0 +1,10 @@
+[T04 G3冲突裁定|1121]
+只回JSON。已选A。实现前读码发现两点冲突请裁定：
+
+1)G3"needs_human阻断自动failover"与既有PO 2026-11-17决策冲突：routing的failover_on_any_error对522等unknown也自动切下一家，测试test_unknown_outcome_fails_over_without_hiding_uncertainty明确要求成功切换。若全局阻断unknown failover会破坏该PO决策+约4个既有测试。
+
+2)async/rightapi生产多经route_plan走routing.process_routed（单vendor也冻结计划），resume守卫后移在单供应商路径好做，routing路径要按vendor_id复用原attempt、复杂得多。
+
+请裁(JSON,decision,conditions)：
+Q1 needs_human阻断范围=仅"可能已扣费类"(result_invalid/accepted-unknown/stale-inflight)与resume不确定态(停、不重发)，保留PO的522跨vendor failover？还是全局阻断unknown failover(接受改PO测试)？
+Q2 退回B(只持久化task_id+needs_human+人工恢复，不接自动resume)是否更稳妥？若仍选A，routing路径resume可否本期仅单供应商路径接线、routed保持fail-closed+needs_human标注？

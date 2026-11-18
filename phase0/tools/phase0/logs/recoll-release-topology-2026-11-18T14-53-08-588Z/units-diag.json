@@ -1,0 +1,34 @@
+[
+  {
+    "key": "cfc4ae12-dfec-5e91-81eb-83756abec506:0:user",
+    "role": "user",
+    "visible": true,
+    "assistantUuid": null,
+    "text_head": "[发版验证方案讨论|AI-Image-Service]\n你是独立工程顾问。只讨论方案,不执行发版。请直接读GitHub原文,不采信自述。\n\n仓库 github.com/YotinGarden/AI-I",
+    "text_len": 806
+  },
+  {
+    "key": "cfc4ae12-dfec-5e91-81eb-83756abec506:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "assistantUuid": "6b6babb5-3f91-46eb-9deb-6d7ebb3fb683",
+    "text_head": "ChatGPT 说：\n\n{\n\"result\": \"BLOCKED\",\n\"release_plan_steps\": [\n\"S0：冻结本次发布基线。以完整 commit SHA 02c9d7a20f4c9",
+    "text_len": 9900
+  },
+  {
+    "key": "18ef445d-0679-5294-ad00-8b87cc266fd5:0:user",
+    "role": "user",
+    "visible": true,
+    "assistantUuid": null,
+    "text_head": "[发版拓扑补充终判|AI-Image-Service]\n补充上轮讨论的关键约束,请更新\"能不能发版\"判断。只回JSON。\n\n仓库 github.com/YotinGarden/AI-Image-Ser",
+    "text_len": 607
+  },
+  {
+    "key": "18ef445d-0679-5294-ad00-8b87cc266fd5:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "assistantUuid": "42fd4ac7-7194-4c56-966b-c3cba245f072",
+    "text_head": "ChatGPT 说：\n\n{\n\"result\": \"BLOCKED\",\n\"issues\": [\n{\n\"id\": \"I01\",\n\"severity\": \"P0\",\n\"description\": \"AI侧与",
+    "text_len": 5266
+  }
+]

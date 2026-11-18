@@ -1,0 +1,13 @@
+[REWORK修复复审|AI-Image-Service]
+上轮你判REWORK(5 MAJOR+1 MINOR),已逐条修复。请直接读Git独立复审。
+
+仓库 github.com/YotinGarden/AI-Image-Service 分支 fix/yuanqiao-http1-20261117
+新被审commit(reviewed_commit) 1a5a0a1e0a7004ccd615862f5c1a28888ece1fb4
+上版被审 fe88afc8465dc6e9b4cfd7aacfdf0be510674592
+基线 abd7116e30e17d9669a8551c0985bd09aa8a601a
+新材料commit 9446d571fffd78093f5fc3d32a1ee7d6c9880170
+
+先读docs/review/20261118_p0p1/: MANIFEST.json(3文件sha256/bytes独立校验)、REVIEW_BRIEF.md(含RW-01~05修复记录)、full_test.log(被测SHA/platfrom=3.12.10)、baseline_test.log(基线abd7116同venv 14 failed/439 passed,失败清单逐项一致→证明14项既存)。
+再按REVIEW_BRIEF读1a5a0a1实际代码,逐条复核RW-01~05是否真修复、有无新问题。读不到/校验失败判BLOCKED。
+
+只回JSON:{"result":"PASS|REWORK|BLOCKED","findings":[{"severity":"MAJOR|MINOR","file":"","line":0,"description":"","recommendation":""}],"reviewed_commit":"1a5a0a1e0a7004ccd615862f5c1a28888ece1fb4","evidence_checks":{"manifest":"OK|FAIL","test_log":"OK|FAIL","baseline":"OK|FAIL"},"notes":""}

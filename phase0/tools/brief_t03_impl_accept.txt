@@ -1,0 +1,14 @@
+[T03实现验收|AI-Image-Service|20261119]
+只回JSON。commit ab9864e5，父26f4e4ae(T02)。附t03_full_r1.diff(SHA 51443458)。逐条核对你上轮C01-C11。
+
+实现：
+1)两attempt构造(ai_worker/routing)补job_id=job.job_id、attempt_id=_uid() UUID、worker_id=参数；每尝试生成一次、重试换新、稳定唯一；直发补vendor_id=job.provider_vendor_id，路由用既有vendor_id(C2/C3/C5)。
+2)rightapi/async的_json补X-Request-Id→request_id[:128]，大小写不敏感、无header不写；openai/seedream沿用既有(C6/C8)。
+3)execution_json纳入attempt_id/job_id/worker_id，投影可见(C4/C9)。
+4)不新增trace_id/correlation_id列，不加表/迁移/追踪平台(C1/C8)。
+5)成功不覆盖失败：既有attempts累积语义保留，测试按attempt_id定位+request_id反查、失败证据仍在(C10/C11)。
+6)新增8用例(四家采集+大小写+不伪造+关联投影+成功保留)。
+
+测试：聚焦8通过；全量514 passed/14 failed=原基线(单次偶发15已隔离复测通过)。改动6文件，未碰路由选择/重试/计费。
+
+请评(JSON,result,issues[],conditions[])：C01-C11全关闭？可否final PASS进T04？必补项？

@@ -1,0 +1,11 @@
+[T03小修复验|AI-Image-Service|20261119]
+只回JSON。commit 42a74a4bc0860c2d19077a7d31ddf5d1bedb8eea，父ab9864e5。附t03_full_r2.diff(SHA ea9791e7)/增量t03_r2_tests.diff。逐条回R01-R03。
+
+实现未改(7项PASS/CLOSED保留)，仅补真实执行路径测试：
+-R01：用routed_env真实routing worker跑一次成功job，断言每条attempt的job_id=jid、worker_id=routed-w、vendor_id∈{a,b}、attempt_id为UUID串。
+-R02：两家provider_unreachable+去failover→retry_wait，记录首轮attempt_id集合；拨lease到过去+清错误重跑→成功，断言新attempt_id集合严格更多、原集合是子集、全程无重复(重试换新不覆盖)。
+-R03：vendor-a 401失败→vendor-b成功，execution_json断言failed与succeeded两套attempt都在、失败attempt关联字段完整未被覆盖。
+
+测试：T03聚焦11通过(原8+新3)；全量517 passed/14 failed=原14基线无新增回归。仍只改测试，未碰架构/DB/路由/重试/计费。
+
+请评(JSON,result,issues[],conditions[])：R01-R03是否关闭？C02/C03/C10/C11转CLOSED？可否final PASS授权进T04？必补项？

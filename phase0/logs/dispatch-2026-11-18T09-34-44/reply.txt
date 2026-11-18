@@ -1,0 +1,87 @@
+ChatGPT 说：
+
+{
+"result": "PASS_WITH_CONDITIONS",
+"issues": [
+{
+"id": "I01",
+"severity": "P1",
+"finding": "当前实现确实存在核心分类缺陷。_post_raw 收到 HTTP 2xx 后提前写入 acceptance=accepted，而 failure_decision 第177-178行将 accepted 直接归入 stop_unknown，导致本地解析、提取、解码、校验等确定性失败被错误归类为未知结果。",
+"evidence": "provider_outcome.py:149-168, 171-200"
+},
+{
+"id": "I02",
+"severity": "P1",
+"finding": "T01 已提供 phase_events、failed_phase、error_detail_safe 等观测基础，但 finish_failure 仍使用原始 ProviderError.code 决定分类，未将本地失败阶段纳入决策，因此目前只有可观测性，没有完成确定性失败分类。",
+"evidence": "provider_outcome.py:127-145, 243-265"
+},
+{
+"id": "I03",
+"severity": "P1",
+"finding": "三层状态应独立记录。HTTP 200 只能证明收到成功状态码，不能证明供应商业务任务成功，更不能证明我方已取得合法、可交付图片。禁止将 HTTP 2xx 等同于 acceptance=accepted。",
+"evidence": "provider_outcome.py:149-168"
+},
+{
+"id": "I04",
+"severity": "P1",
+"finding": "现有 failover_on_any_error 会覆盖 failure_decision 得出的 stop_unknown。若仅调整 failure_decision 而不处理该覆盖逻辑，仍可能在本地结果非法后切换供应商，产生重复计费风险。",
+"evidence": "provider_outcome.py:243-250"
+},
+{
+"id": "I05",
+"severity": "P2",
+"finding": "现有 error_code 白名单和 safe_error_message 默认文案尚未覆盖 result_invalid、response_parse、result_extract、image_decode、image_validate 等本地确定性失败，必须补充稳定错误码和固定中文文案。",
+"evidence": "provider_outcome.py:24-43, 217-240"
+}
+],
+"conditions": [
+{
+"id": "C01",
+"requirement": "acceptance 语义收窄。HTTP 2xx 仅记录 http_status、response_received 等状态，不得直接写 accepted。只有符合既定协议的 task_id 或有效结果 URL 等明确受理证据，才允许写 accepted。必须区分 HTTP 成功、供应商业务受理和最终结果有效。"
+},
+{
+"id": "C02",
+"requirement": "增加 result_invalid 分类。HTTP 200 后本地解析、结果提取、图片解码、下载及图片校验确定失败时，标记 result_invalid，并根据具体 failed_phase 细分 error_code。不能把所有本地异常统一伪装为未知结果。"
+},
+{
+"id": "C03",
+"requirement": "分类优先级调整。本地确定失败判定必须位于 acceptance=accepted 的 stop_unknown 保护之前，但仅限能够证明供应商响应已完整接收、且失败发生在我方本地处理边界的情况。不得仅凭 HTTP 200 推断这一条件成立。"
+},
+{
+"id": "C04",
+"requirement": "三层状态分别保留：transport_status、provider_business_status、delivery_status。字段命名可以与现有结构协调，但必须避免一个状态覆盖另一层事实。建议明确区分 response_received、accepted、result_invalid、delivered。"
+},
+{
+"id": "C05",
+"requirement": "必须处理 failover_on_any_error 覆盖问题。明确禁止 result_invalid 进入自动 failover 和自动 retry；不能只修改 failure_decision 而遗漏 finish_failure 的强制覆盖分支。"
+},
+{
+"id": "C06",
+"requirement": "第5项裁决：同意用户倾向。HTTP 200 + 本地确定性失败时，不改变 failover_on_any_error 的既有路由配置，但在本地失败分类完成后强制 action=stop、retryable=False。不得自动调用下一家，避免重复计费。该限制仅针对已证实的 result_invalid，不扩展到其他既有失败分类。"
+},
+{
+"id": "C07",
+"requirement": "计费状态独立记录，例如 billing_status=unknown/not_charged/charged，或等价字段。result_invalid 不得直接推导 not_charged。是否计费仍以供应商账单或人工核对为准。"
+},
+{
+"id": "C08",
+"requirement": "保持原有 522/523/524 未知结果保护、STOP_CODES、403/auth 语义及已有 task_id 受理保护。新增分类不得改变这些既有决策。尤其不能将供应商已经受理任务后的失败或取消直接认定为本地 result_invalid。"
+},
+{
+"id": "C09",
+"requirement": "增加故障注入测试：HTTP 200 分别注入 JSON 解析失败、图片结果提取失败、Base64 解码失败、下载失败、图片格式或尺寸校验失败；验证 failed_phase、error_code、固定文案、delivery_status、billing_status 和 action。"
+},
+{
+"id": "C10",
+"requirement": "增加反向保护测试：HTTP 200 + task_id 已受理后异常、522/523/524、403、auth、STOP_CODES、普通 HTTP 5xx，以及 failover_on_any_error=True 时的决策。确认既有语义不回退，且 result_invalid 不触发下一家。"
+},
+{
+"id": "C11",
+"requirement": "execution_json 必须纳入新增审计字段，并保持 allowlist 投影纪律；管理端、用户端和供应商统计应一致识别 result_invalid 为 known_failed，而不是 unknown_outcome。error_detail_safe 只能使用固定白名单文案，不得输出原始响应、异常消息、URL 或凭证。"
+},
+{
+"id": "C12",
+"requirement": "P0 独立提交，提交前后提供完整 SHA、变更文件清单、针对性测试结果和故障注入证据。不得顺手修改路由策略、重试策略、熔断策略或供应商优先级。"
+}
+]
+}

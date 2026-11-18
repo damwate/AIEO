@@ -1,0 +1,12 @@
+[流式读体修复讨论|AI-Image-Service]
+独立顾问,评方案不执行。读GitHub原文。
+
+仓库 github.com/YotinGarden/AI-Image-Service 分支 fix/yuanqiao-http1-20261117
+材料commit a8a5977
+先读 docs/review/20261118_p0p1/流式读体缺口技术核查_20261118.md(217AI反馈+curl_cffi源码+缺口G-A~D+方向1-4),按需读 backend/app/ai/http_transport.py、tests/test_supplier_http_version.py。
+
+背景:217AI指出两处盲区——low_speed只mock验证参数、迁移测试只比任务表列,要求修流式读体+补0009。核实curl_cffi源码:标量timeout+stream=True设CONNECTTIMEOUT_MS=180000+LOW_SPEED_LIMIT=1+LOW_SPEED_TIME=180,我方curl_options覆盖connect=10s,净效果语义正确,但LOW_SPEED靠库内trick(issue#156非稳定API)、无真实stream读测试。
+
+裁定：①G-A隐式依赖要显式修吗?方向1(显式LOW_SPEED_LIMIT/TIME)还是方向2(tuple timeout)?②G-C(.content一次性读)是真问题?③真实stream测试怎么设计(本地server慢速注入)?④0009最小内容?给可执行修复清单。
+
+只回JSON:{"result":"PASS|REWORK","root_cause":"","fix_plan":[],"tests_to_add":[],"migration_0009_notes":"","conditions":[],"notes":""}

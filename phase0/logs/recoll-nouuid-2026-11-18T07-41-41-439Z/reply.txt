@@ -1,0 +1,69 @@
+ChatGPT 说：
+
+{
+"result": "REWORK",
+"points": [
+{
+"id": "P1",
+"judgment": "同意，当前证据更支持程序分类问题，而非远桥 HTTP 调用失败。",
+"evidence": "HTTP 200、响应完成时间已存在，说明远桥已返回完整 HTTP 响应。0.5ms 后进入 unknown_outcome，且没有 download/storage 阶段证据，问题应优先定位在本地响应解析、校验及异常分类链。尚不能仅凭这些证据断言具体是哪一个解析函数失败。"
+},
+{
+"id": "P2",
+"judgment": "两阶段方案方向正确，但不能仅凭两阶段实施就承诺消除前端未知错误。",
+"stage1": "逐条还原 HTTP 响应完成→JSON/SSE 解析→图片提取→Base64 解码→图片校验→下载→存储→结果提交的执行链，确定实际失败点及异常类型。保留原始 attempt、数据库记录和日志证据。",
+"stage2": "统一异常分类、错误信息投影、前端展示及供应商切换决策。修复应拆分提交，先证据定位，再修复分类规则，最后全局回归。",
+"gap": "必须检查所有 provider、所有响应通道及 worker 的异常边界，不能只修 OpenAICompatImageProvider。还需检查前端是否把非供应商错误统一映射成未知错误，以及历史任务详情是否能正确展示新错误分类。"
+},
+{
+"id": "P3",
+"judgment": "所提最小修复不充分。",
+"details": [
+"acceptance 时机：ai_provider_openai.py 在 read() 前写 accepted，至少应区分 HTTP 响应头到达、完整响应体读取、供应商任务受理、解析成功、结果交付。HTTP 200 不等于本地已经成功处理。",
+"failure_decision 顺序：provider_outcome.py 当前 acceptance 判断先于 STOP_CODES。不能简单把所有 STOP_CODES 前移；应增加明确的本地解析失败分类，优先识别已确定的本地处理错误，同时保留真实供应商受理但结果不确定的保护。",
+"解析阶段日志：增加 parse_stage、exception_type、稳定的 error_code 和阶段时间戳。禁止记录 API Key、完整 URL、图片内容及敏感响应原文。",
+"safe_error_message：当前 execution_json 通过 safe_error_message 重建错误展示，可能丢失具体失败原因。需要为本地解析、Base64、图片校验、下载、存储分别提供明确安全文案。",
+"切换策略：已收到 HTTP 200 不代表可以安全地切换备用供应商。必须区分本地确定性失败与结果确实未知，避免重复计费。",
+"完整性：检查 _post_raw、_decode_json、_decode_b64_image、_download、_edits_image_from_json、SSE 解析及存储提交的异常传播和审计持久化。"
+]
+},
+{
+"id": "P4",
+"judgment": "必须建立明确的错误分类边界。",
+"required_classes": [
+"provider_transport_unknown：供应商是否受理或完成无法确认。",
+"provider_response_invalid：供应商返回内容不符合协议。",
+"local_parse_failed：本地 JSON/SSE/Base64 解析失败。",
+"local_image_validation_failed：本地图片格式或完整性校验失败。",
+"local_download_failed：结果 URL 下载失败。",
+"local_storage_failed：本地存储或结果提交失败。"
+],
+"rule": "本地已确定失败不得再显示为供应商受理结果未知；但已发生供应商计费的可能性仍须独立保留，不能因此自动重发或切换。"
+},
+{
+"id": "P5",
+"judgment": "验收不能只看 unknown_outcome 消失。",
+"required_tests": [
+"HTTP 200 + 合法 JSON + 合法图片：正常成功。",
+"HTTP 200 + 非法 JSON：明确本地解析错误。",
+"HTTP 200 + 非法 Base64：明确图片解码错误。",
+"HTTP 200 + 缺少 data/url/b64_json：明确响应协议错误。",
+"HTTP 200 + URL 下载失败：明确下载错误。",
+"HTTP 200 + 存储失败：明确存储错误。",
+"HTTP 200 + 本地处理失败：不得错误标记为供应商 HTTP 传输未知。",
+"HTTP/2 中断、body timeout、522/523/524：原有未知结果保护不得回归。",
+"其他供应商及默认配置：原有行为不得回归。",
+"前端轮询、历史任务详情和管理后台：错误分类与安全文案一致。"
+]
+}
+],
+"conditions": [
+"阶段一必须提交实际失败位置的证据，不接受仅凭推测修改 acceptance。",
+"阶段二必须明确区分供应商受理状态与本地处理状态，不能简单删除 acceptance 保护。",
+"failure_decision 必须同时保证本地确定性错误不被误判为未知，以及真实计费风险不触发危险重发。",
+"新增错误字段必须进入数据库 attempt、execution_json 和前端展示链，不能只写日志。",
+"修复完成后逐项回归上述测试，并以完整 Git SHA 绑定最终验收。",
+"不部署、不以 Playground 未验证结果宣称修复完成。"
+],
+"reviewed_commit": "abd7116e30e17d9669a8551c0985bd09aa8a601a"
+}

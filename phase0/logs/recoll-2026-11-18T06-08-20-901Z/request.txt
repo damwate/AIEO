@@ -1,0 +1,7 @@
+[提交AB最终验收|AI-Image-Service|20261118]
+请验收最终代码。分支 fix/yuanqiao-http1-20261117 新增两提交：A a9741b0e4783118dcbf2b90c83212a2dca842c71；B 6adf0062a1bcff093f443b6fc9e6a9886fc7bc5b。a9c485e 已验收过，本次只验新增。
+A：供应商级 timeout_mode=low_speed + connect_timeout_seconds；curl_cffi stream=True 且 curl_options 只设 CONNECTTIMEOUT_MS，不设 TIMEOUT_MS；新增 header/body 打点与 body 阶段错误保留 actual/status/request_id/code28；未配置供应商零变化。
+B：max_single_input_bytes 默认20MiB、max_total_input_bytes 硬顶160MiB；归一→快照→ROUTE_CONFIG_FIELDS；提交门在幂等/存储前校验，413 码 INPUT_IMAGE_COUNT/FILE_BYTES/TOTAL_BYTES_EXCEEDED；能力不匹配仍422。
+测试：438 passed，14 项为既存失败；A新增17项、B新增5项。未部署221、未跑Playground。
+请裁定 PASS/REWORK/BLOCKED 及是否可发布221。结论绑定上述SHA。
+开发经验：你不会自动读AGENTS.md。连接故障先跑 AIEO node toolkit/check-push.mjs，禁手工猜端口；派单发送成功≠采集成功，采集失败禁重发走recoll；会话满4条user消息评估迁移。

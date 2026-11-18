@@ -1,0 +1,6 @@
+[新会话接棒-提交AB终验|YotinGarden/AI-Image-Service|20261118]
+你是独立复核者。请只审最终代码并给JSON结论。仓库 YotinGarden/AI-Image-Service，分支 fix/yuanqiao-http1-20261117，HEAD abd7116e30e17d9669a8551c0985bd09aa8a601a。历史：a9c485e 已 PASS WITH CONDITIONS；a9741b0(A 空闲超时) 与 6adf006(B 字节预算) 在旧会话被判 REWORK，唯一阻断是 A 的 body 阶段 URLError 未向 attempt 传播头部元数据。本次 abd7116 已修：异常对象携带 actual_http_version/http_status/response_request_id/headers_received_at/transport_code=28，_post_raw 回填 attempt；新增断言日志与 attempt 双侧的测试。B 未再改。
+测试：439 passed，14 项既存失败集合未扩大。未部署221、未跑Playground。
+验收标准：A 满足旧条件；B 保持 PASS；默认供应商零回归；结论绑定 HEAD SHA；输出 {result,points,conditions,reviewed_commit}。边界：不改代码、不部署。
+旧证据：D:/AIEO/phase0/logs/recoll-nouuid-2026-11-18T06-09-27-901Z/reply.txt。
+开发经验：连接故障先跑 AIEO node toolkit/check-push.mjs；派单发送成功≠采集成功，采集失败禁重发走recoll。

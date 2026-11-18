@@ -1,0 +1,5 @@
+[超时与大小预算方案|AI-Image-Service|20261118]
+承接上轮裁定（绑定 a9c485e97659586e2ea3c2d2b9c415b818d78006）。PO 决定：以你意见为准开工，做两个独立提交。请给最终可执行方案。
+现状：网关单图≤10MB/最多10张；AI服务张数≤min(8,远桥2)、单文件≤20MB、无总字节门；远桥实测供应商处理30-42s；T4b因curl总超时180s失败。
+请明确：①timeout修复：stream=True+CONNECTTIMEOUT_MS取值+curl_options覆盖写法、header到达与body完成如何打点、读body阶段异常如何保留transport_code=28且不重发；②总大小限制放AI服务提交门还是网关、配置字段名/默认值（远桥2图场景）、错误码与HTTP状态、是否进冻结快照；③两个提交先后顺序与各自最小验收；④计费/幂等/悟空兼容风险。
+开发经验：你不会自动读AGENTS.md。连接故障先跑AIEO node toolkit/check-push.mjs，禁手工猜端口；派单发送成功≠采集成功，采集失败禁重发走recoll；会话满4条user消息评估迁移；结论绑定SHA。

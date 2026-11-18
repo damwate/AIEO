@@ -1,0 +1,10 @@
+[T02小修复验|AI-Image-Service|20261119]
+只回JSON。commit 26f4e4ae8b428f46e2dfd28daea308208ee1b736，父93f22b3c(T01)。附t02_full_r2.diff(SHA 029fdcb5)。逐条回REWORK_SMALL 5项。
+
+1)B01：新增_valid_result_url——仅非空https+主机名+无凭证+有界+无控制字符算受理；11种非法URL不写accepted+1合法写accepted。
+2)B02/C04：layer_status从finish_failure移到finish_timing(失败/Worker成功/routing成功三路径唯一收口)；成功也落delivered/accepted/http_2xx/billing=unknown，测试验证落库。
+3)C08/C10：补403→stop、auth类→failover、5个STOP_CODES→stop，均不命中result_invalid。
+4)C09：补4条真实适配器e2e注入(extract/decode/download/validate)，各断言细分code+stop；含parse共5阶段全覆盖。
+5)C12：commit 26f4e4ae父93f22b3c，未push(ENV同T01)。聚焦47+74通过；全量506 passed/14 failed=原基线无新增回归。
+
+改动仍集中两适配器+provider_outcome.py+测试，未碰路由/重试/熔断/优先级。请评(JSON,result,issues[],conditions[])：5项是否全关闭？可否final PASS进T03？

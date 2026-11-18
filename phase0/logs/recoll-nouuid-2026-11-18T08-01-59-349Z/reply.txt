@@ -1,0 +1,113 @@
+ChatGPT 说：
+
+{
+"result": "PASS",
+"points": [
+{
+"id": 1,
+"decision": "认可先日志、后分类的两步切分。",
+"reason": "第一步只补充可观测性，不修改 acceptance、failure_decision 或路由，能避免证据采集与行为修复混在一起。第二步在取得真实失败节点、异常类型及传播链证据后，再单独制定分类修复。",
+"phase1_sufficiency": "方向上满足上轮阶段一要求，但必须真正捕获一次可复现失败，形成从供应商响应到本地处理、结果交付的完整节点证据。只增加字段、没有失败样本，不能算完成阶段一。建议用故障注入覆盖 JSON、SSE、Base64、图片提取、校验、下载和存储失败，不必等待线上故障再次发生。"
+},
+{
+"id": 2,
+"decision": "推荐阶段数组作为主记录，扁平字段作为查询和展示摘要。",
+"reason": "单纯扁平字段难以表达完整处理链，也难以区分未到达、失败和不适用。阶段数组可以保留节点顺序、状态和时间信息。",
+"suggested_schema": {
+"phase_events": [
+{
+"name": "response_parse",
+"status": "succeeded",
+"at": "timestamp",
+"exception_type": null,
+"error_detail_safe": null
+},
+{
+"name": "image_decode",
+"status": "failed",
+"at": "timestamp",
+"exception_type": "具体异常类型",
+"error_detail_safe": "脱敏后的错误摘要"
+}
+],
+"status_values": [
+"not_reached",
+"running",
+"succeeded",
+"failed",
+"not_applicable"
+],
+"summary_fields": {
+"failed_phase": "image_decode",
+"failed_at": "timestamp",
+"exception_type": "具体异常类型",
+"error_detail_safe": "脱敏后的错误摘要"
+}
+},
+"constraints": "每个 attempt 独立记录阶段数组；重试不得覆盖前一次 attempt 的阶段记录。未到达节点应明确显示 not_reached，不能用缺字段或空值代替；不适用节点应明确标记 not_applicable。failed_phase 和 failed_at 应由实际失败事件派生，不能由最后一个成功节点推断。"
+},
+{
+"id": 3,
+"decision": "采用 adapter 精确记录、worker except 兜底的双层落库机制。",
+"adapter_responsibility": "在 JSON/SSE 解析、图片提取、Base64 解码、图片校验、URL 下载等具体节点边界记录 started、succeeded、failed。节点内部捕获异常时记录失败事件后原样重新抛出，不能吞掉异常或改变现有错误分类。",
+"worker_responsibility": "worker except 负责最终兜底：若 adapter 没有记录失败节点，则记录 worker_unclassified 或当前仍处于 running 的节点，并保留原始异常类型。不能把兜底节点伪装成已经确定的具体解析失败节点。",
+"persistence": "阶段事件应在发生时可靠持久化，而不是只在任务结束时从内存汇总；确保失败事件在任务最终状态写入前已提交。日志落库自身失败时不得覆盖原始业务异常，应保留独立的日志持久化失败信息。"
+},
+{
+"id": 4,
+"decision": "error_detail_safe 必须是安全生成的摘要，不能直接保存或展示原始 exception.message。",
+"redaction_boundary": [
+"禁止记录 API Key、Authorization、Cookie、签名、访问令牌及其他凭据。",
+"禁止记录完整请求/响应原文、Base64、图片二进制、用户提示词及输入图片内容。",
+"URL 只允许记录脱敏后的必要信息；移除 query、token、签名和敏感路径参数。",
+"异常摘要中的本机绝对路径、用户名、内部 IP、数据库连接信息等必须脱敏。",
+"对摘要长度、控制字符和换行进行限制，避免超长内容及日志注入。"
+],
+"safe_detail_policy": "优先采用按异常类型和阶段生成的白名单模板；确需保留异常中的动态信息时，只允许经过字段级白名单和脱敏处理的内容。原始 traceback 如确有诊断价值，应放在受限访问的内部日志中，不进入前端 execution_json。",
+"compatibility": "保留现有 error_code、error、safe_error_message 兼容字段。新增 error_detail_safe 不得覆盖或重建原始错误分类，也不得让前端直接展示未经处理的异常消息。"
+},
+{
+"id": 5,
+"decision": "必须同步完善数据投影和前端展示，否则日志补充仍然无法解决用户看到笼统未知错误的问题。",
+"required_items": [
+"DB attempt 持久化阶段事件及失败摘要。",
+"execution_json 白名单明确纳入阶段事件、failed_phase、failed_at、exception_type、error_detail_safe。",
+"前端能够展示失败阶段、阶段状态、失败时间及安全摘要，并区分未到达和不适用。",
+"日志记录按 attempt 隔离，保留时间顺序，避免并发或重试时事件串线。",
+"建立阶段事件字段的兼容性测试，确保旧任务记录缺少新字段时仍可正常展示。"
+]
+},
+{
+"id": 6,
+"decision": "第一阶段验收必须验证真实失败节点，而不只是验证日志字段存在。",
+"acceptance_tests": [
+"HTTP 200 后 JSON 解析失败，能够定位 response_parse。",
+"SSE 解析失败，能够定位 SSE 对应节点。",
+"缺少图片数据、非法 Base64，能够定位图片提取或解码节点。",
+"图片格式或内容校验失败，能够定位图片校验节点。",
+"URL 下载失败，能够定位 download 节点。",
+"存储失败，能够定位 storage 节点。",
+"未执行的后续节点显示 not_reached，不适用节点显示 not_applicable。",
+"adapter 未覆盖的异常由 worker 兜底记录，且不覆盖原始异常。",
+"多次 attempt 的阶段事件相互独立，历史记录不被覆盖。",
+"敏感信息扫描确认 DB、execution_json 和前端均无凭据、Base64、原始响应或用户输入泄漏。"
+]
+},
+{
+"id": 7,
+"decision": "本轮纯可观测性范围必须严格保持。",
+"reason": "不修改 acceptance 的语义、不调整 STOP_CODES 顺序、不改变 failure_decision、不启用新的自动重试或供应商切换规则。HTTP 200 后本地处理失败仍可能存在供应商计费风险，日志补强不能被解释为允许自动切换。分类修复应作为第二阶段独立提交和验收。"
+}
+],
+"conditions": [
+"第一阶段先提交日志字段设计、节点清单和落库方案，明确每个节点的开始、成功、失败及未到达语义。",
+"阶段数组作为权威记录，扁平字段只作摘要；所有事件必须绑定具体 attempt。",
+"adapter 在具体失败边界记录，worker except 兜底；异常必须原样传播，日志失败不得掩盖原始异常。",
+"error_detail_safe 必须经过白名单和脱敏处理；不得将原始异常消息直接暴露给前端。",
+"DB、execution_json、前端三层必须打通，不能只完成后端日志。",
+"使用故障注入取得至少一组可验证的失败链路证据，确认实际失败节点及异常类型后，阶段一才可验收 PASS。",
+"阶段一不得顺带修改 acceptance、failure_decision、STOP_CODES 或供应商路由；第二阶段另行提交方案和代码。",
+"完成后提供完整 Git SHA、逐节点测试证据及敏感信息检查结果；本轮评审不授权代码修改或部署。"
+],
+"reviewed_commit": "abd7116e30e17d9669a8551c0985bd09aa8a601a"
+}

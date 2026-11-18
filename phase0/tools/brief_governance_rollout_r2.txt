@@ -1,0 +1,7 @@
+[规范落实讨论R2|AI-Image-Service|20261118]
+上条你BLOCKED正确：新会话无历史、读不到docs正文。现附上规范Markdown全文(十章v1.0-draft)，请基于原文逐章核对，不再凭推测。
+
+前序共识：①Yuanqiao HTTP200后本地解析失败被误判unknown_outcome=我方程序问题非供应商；②"先日志、后分类"两步，日志方案已PASS(phase_events阶段数组+扁平摘要/adapter记录+worker兜底/脱敏error_detail_safe/DB+execution_json+前端三层/故障注入取证)；③分类修复为第二阶段独立提交，本阶段不改acceptance/failure_decision/路由。
+
+请基于全文给JSON：1)十章拆成可验收任务、P0/P1/P2优先级与依赖？2)第一步做什么、范围？3)哪些先落、哪些需运行数据后再落？4)如何避免大重构、每步验收标准？5)与现有能力(路由/健康/租约/字节预算)对齐、哪些属重复建设应禁止？6)规范与前序日志/分类方案如何衔接？
+输出{result,rollout_tasks,first_step,conditions}。只给方案，不改码不部署。

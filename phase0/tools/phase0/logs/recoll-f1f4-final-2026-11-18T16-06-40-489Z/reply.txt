@@ -1,0 +1,60 @@
+ChatGPT 说：
+
+{
+"result": "REWORK",
+"file_access": {
+"backend/app/ai/http_transport.py": "OK",
+"backend/app/ai/provider_outcome.py": "OK",
+"backend/migrations/versions/0009_governance_audit.py": "OK",
+"backend/tests/test_real_stream_transport.py": "OK",
+"backend/tests/test_migrations_baseline.py": "OK",
+"backend/app/db.py（额外核对ORM定义）": "OK"
+},
+"findings": [
+{
+"id": "F1",
+"severity": "PASS_WITH_CONSTRAINTS",
+"finding": "http_transport.py 已显式设置 CurlOpt.LOW_SPEED_LIMIT=1、CurlOpt.LOW_SPEED_TIME=timeout，并保留 CONNECTTIMEOUT_MS、stream=True 和标量 timeout；未显式设置 TIMEOUT_MS。显式参数消除了对 curl_cffi 隐式低速参数副作用的依赖。",
+"evidence": "low_speed 分支中的 curl_options 包含 CONNECTTIMEOUT_MS、LOW_SPEED_LIMIT、LOW_SPEED_TIME。LOW_SPEED_TIME 的语义是低于阈值持续指定时间后终止，不是严格的无数据空闲计时器，也不构成总传输时限。"
+},
+{
+"id": "F2",
+"severity": "P1",
+"finding": "有界读取只在 timeout_mode='low_speed' 时使用 iter_content。其他 curl_cffi 请求仍走 response.content，先将整个响应体读入内存，再检查25MiB上限；因此当前实现并未对所有请求实现下载阶段的内存上限。另外，超限异常虽进入 STOP_CODES，但 finish_failure() 的 failover_on_any_error 分支会在 result_invalid 为空时将 action 强制改为 failover，覆盖原本的 stop 判定。",
+"evidence": "_read_body_bounded() 仅在 prefer_stream 且 iter_content 可用时分块读取；调用处 prefer_stream=(mode == 'low_speed')。provider_outcome.failure_decision() 将 response_body_too_large 归入 STOP_CODES，但 finish_failure() 随后执行 if failover_on_any_error and not result_invalid: action='failover'，没有排除 response_body_too_large。",
+"required_fix": "对需要受保护的请求在下载前启用流式读取，确保响应体上限在下载过程中生效，而不是读取完成后检查。并在 finish_failure() 中明确保证 response_body_too_large 不受 failover_on_any_error 覆盖；增加 finish_failure(failover_on_any_error=True) 的回归测试。"
+},
+{
+"id": "F3",
+"severity": "P1",
+"finding": "新增真实 curl_cffi + 本地 HTTP server 测试，方向正确，但测试断言不足以证明全部声称的行为。test_stream_reads_incrementally 只检查最终内容，没有证明响应结束前已消费数据；低速和停滞测试使用 pytest.raises(Exception)，任何异常都能通过，未验证异常分类及触发时机；test_connect_timeout_separate_from_low_speed 实际测试的是正常连接成功，没有测试连接超时。",
+"evidence": "test_real_stream_transport.py 中低速和停滞测试均只断言抛出宽泛 Exception；连接超时测试只启动正常本地服务并断言读取到 fast。"
+},
+{
+"id": "F4",
+"severity": "PASS_WITH_CONSTRAINTS",
+"finding": "0009 的 down_revision 正确指向 0008_admin_sessions，创建 governance_records 和 priority_demotions 两表及 ORM 对应索引，downgrade 只删除本次新增索引和表。测试覆盖从0008升级、两表存在、部分schema字段、downgrade后保留0008的 admin_sessions 数据。迁移主体未发现误删0008对象的问题。但所谓完整schema测试实际只断言列存在、少量nullable/type、主键和索引，并未逐列比对两表的类型、nullable、server default，也没有完整比对ORM约束。",
+"evidence": "0009_governance_audit.py 与 db.py 中两模型的字段及索引定义基本对应；test_migration_0009_schema_complete 仅对少数列断言类型或nullable，未对全部字段做schema等价断言。"
+},
+{
+"id": "C3",
+"severity": "PASS_WITH_CONSTRAINTS",
+"finding": "test_real_stream_transport.py 确实导入真实 curl_cffi，并通过本地 HTTP server 发起真实请求，不是 stub 测试。但低速测试只以宽泛异常作为成功条件，尚不足以单独证明显式 LOW_SPEED_LIMIT/LOW_SPEED_TIME 在真实请求中按预期触发。且 curl_cffi 不可用时整个测试模块会 skip，需确保目标CI环境安装该依赖并实际执行。"
+},
+{
+"id": "C1-C8",
+"severity": "NOT_FULLY_VERIFIABLE",
+"finding": "当前请求未附上轮C1-C8的逐项定义，不能可靠地将其编号与本轮代码证据逐一映射；不虚构逐项通过结论。"
+}
+],
+"conditions_check": {
+"F1": "PASS：低速参数显式设置，无显式TIMEOUT_MS。",
+"F2": "FAIL：非low_speed请求仍可能先全量缓冲；全局failover策略可覆盖本地超限stop。",
+"F3": "PARTIAL：真实curl_cffi本地服务测试存在，但增量读取、低速/停滞异常分类及连接超时测试断言不足。",
+"F4": "PASS_WITH_CONSTRAINTS：迁移及downgrade主体正确，schema测试尚非完整逐字段核验。",
+"C3": "PARTIAL：真实请求测试不是stub，但不能充分证明低速参数的触发语义。",
+"C1-C2": "无法在缺少上轮原始定义时可靠映射。",
+"C4-C8": "无法在缺少上轮原始定义时可靠映射。"
+},
+"notes": "指定的5个文件均在完整SHA 6c89ce4656ac58646232b08ee124b103aa3b3dd3成功读取，无404。额外读取 backend/app/db.py 对照ORM模型。当前最关键阻断是F2：有界读取没有覆盖非low_speed路径，且全局failover策略可能把本地响应体超限重新变成failover。F3还需收紧真实集成测试断言。用户提供的14 failed（基线）/576 passed数字无法从本轮指定源码文件独立验证，不作为通过或失败证据。"
+}

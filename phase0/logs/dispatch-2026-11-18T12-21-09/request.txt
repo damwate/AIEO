@@ -1,0 +1,10 @@
+[T07/T09设计|118]
+只回JSON。T06/T08已提交。据审计评方案。
+
+T07缺口：①无治理建议(6态仅文档)；②无决策/审批表(admin改vendor/routing无actor/证据)；③demote_failed_vendor持久改priority无expiry无记录。已有：set_fields、require_admin+CSRF、cooldown自动重开、evaluation不写回。
+方案：(a)只读建议投影=metrics+health映射6态+证据，不自动动作；(b)append-only governance_record表(actor/before/after/reason/证据/时间)由现有admin端点写；(c)cooldown与demote标临时记录，demote是否加expiry请裁。
+
+T09缺口：①needs_human堆积(含result_invalid/resume_uncertain)无告警；②恢复仅cooldown到期+真实成功，无主动探针(有设计无代码)。已有：五类check+Alert+webhook、租约接管、RESOLVED通知。
+方案：(a)monitoring.py加2个check(needs_human按reason堆积；vendor交付率尖峰用delivery_success_rate+insufficient守卫)复用Alert/webhook进scan()+测试；(b)恢复用RESOLVED+真实成功信号不建第二健康系统；主动探针cli probe属另案非前置。
+
+请评(JSON,result,issues)：T07新表+demote expiry？T09探针本批？分别提交？必补？

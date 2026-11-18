@@ -1,0 +1,12 @@
+[T06/T08设计|1118]
+只回JSON。T05已PASS。据审计(复用优先)评最小方案。
+
+审计：T06数据(metrics真实运行/供应商vs我方故障/样本窗口/追溯/不建评分)已由T05+metrics_snapshot覆盖；T08字节预算(20MiB单图/160MiB总/413测试)+阶段耗时字段(含supplier_process_ms排除排队上传)+各限制代码位置均已存在。
+
+T06真缺口：window_hours/vendor_id未暴露HTTP(api_v1仅默认调用)；真实运行无结果质量来源(离线evaluation.py有judged_by但非真实运行)。
+方案：(a)加1个只读admin端点透传metrics_snapshot两参数(复用require_admin)；(b)delivery_success_rate诚实标为交付代理，质量来源指向离线评测，不建评分公式/不写路由。
+
+T08真缺口：无统一"限制+代码位置"清单文档。
+方案：治理规范加一张limits表(限制名/当前值/file:line/测试文件/变更依据)，零代码改动、不新增或调整任何限制、不把性能问题归因供应商。
+
+请评(JSON,result,issues,conditions)：两任务最小方案可否？端点是否多余？必补项/裁剪？

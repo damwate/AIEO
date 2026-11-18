@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-18T09:16:09.055Z",
+  "user_unit_key": "c48d89d5-594d-5ebf-b921-46338df155bb:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "c48d89d5-594d-5ebf-b921-46338df155bb:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "3226860d-17d5-434e-b695-c45ebe947532",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "c48d89d5-594d-5ebf-b921-46338df155bb:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "c48d89d5-594d-5ebf-b921-46338df155bb:0:user",
+          "c48d89d5-594d-5ebf-b921-46338df155bb:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "3a5de1893b4ebc32556d160bcdc95f32410ef384d5a65301bc421172e9d85551",
+          "435000151c033028e0fbcb5ee3cb193239ba49232b699143b844eab012d92768"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "c48d89d5-594d-5ebf-b921-46338df155bb:0:user",
+          "c48d89d5-594d-5ebf-b921-46338df155bb:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "3a5de1893b4ebc32556d160bcdc95f32410ef384d5a65301bc421172e9d85551",
+          "435000151c033028e0fbcb5ee3cb193239ba49232b699143b844eab012d92768"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "c48d89d5-594d-5ebf-b921-46338df155bb:0:user",
+          "c48d89d5-594d-5ebf-b921-46338df155bb:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "c48d89d5-594d-5ebf-b921-46338df155bb:0:user",
+      "c48d89d5-594d-5ebf-b921-46338df155bb:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "c48d89d5-594d-5ebf-b921-46338df155bb:0:user",
+          "c48d89d5-594d-5ebf-b921-46338df155bb:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "c48d89d5-594d-5ebf-b921-46338df155bb:0:user",
+          "c48d89d5-594d-5ebf-b921-46338df155bb:2:assistant"
+        ],
+        "overlap_keys": [
+          "c48d89d5-594d-5ebf-b921-46338df155bb:0:user",
+          "c48d89d5-594d-5ebf-b921-46338df155bb:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "c48d89d5-594d-5ebf-b921-46338df155bb:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n{\n\"result\": \"REWORK\",\n\"issues\": [\n{\n\"id\": \"T01-P1-01\",\n\"severity\": \"P1\",\n\"location\": \"backend/app/ai/image_download.py:download_image\",\n\"issue\": \"download 阶段缺少完整的成功状态记录。当前代码记录了 image_validate 的 running/failed/succeeded，但没有在实际下载开始和完成时记录 download 阶段。对于 Seedream、RightAPI 等直接 URL 下载路径，即使下载成功，download 仍可能停留在 not_reached 或 running。\",\n\"required_fix\": \"在实际下载开始时记录 download=running，响应数据完整读取后记录 download=succeeded；下载异常时记录 download=failed。确保不会覆盖终态，并补充成功、读取失败测试。\"\n}\n],\n\"conditions\": [\n{\n\"id\": \"P1-02\",\n\"result\": \"CLOSED\",\n\"reason\": \"四适配器的响应体读取失败注入测试已补齐。RightAPI、Async、Seedream 和 OpenAI 相关覆盖能够验证 response_received=failed、request_send=succeeded，并验证失败阶段定位。此前唯一测试覆盖条件关闭。\"\n},\n{\n\"id\": \"ENV-01\",\n\"result\": \"NON_BLOCKING\",\n\"reason\": \"远端 HEAD 尚未验证。五个提交未 push，属于 DEC-010 既定约束，不构成当前离线代码复核阻断。\"\n},\n{\n\"id\": \"ENV-02\",\n\"result\": \"NON_BLOCKING\",\n\"reason\": \"前端缺少 node_modules，未执行 tsc。前端类型检查尚未验收，但属于环境验证缺口，不要求因此修改业务代码。\"\n},\n{\n\"id\": \"TEST-01\",\n\"result\": \"PASS_WITH_EVIDENCE\",\n\"reason\": \"聚焦测试18 passed，全量457 passed。14项失败据简报为基线既有，stash对照结果支持该判断。本次未独立执行测试，接受所提供的测试证据。\"\n}\n],\n\"t01_closure\": {\n\"result\": \"NOT_YET\",\n\"reason\": \"P1-02已关闭，但download阶段成功状态缺失，仍存在可观测性不完整的问题。\",\n\"next_step\": \"仅修复download阶段状态记录并补充针对性测试，然后进行一次收口复验。\"\n},\n\"additional_code_issues\": [],\n\"review_scope\": {\n\"basis\": \"HEAD ecc7485057b337207993378b4862def98d42be5b 对应的离线补丁 t01_full_v5.diff\",\n\"verification\": \"已检查阶段事件核心实现、四适配器接入、失败摘要、安全白名单、存储提交回滚处理及新增测试。\",\n\"limitations\": [\n\"未连接远端验证提交 SHA。\",\n\"未在完整项目环境重新执行测试。\",\n\"未执行前端 TypeScript 编译。\"\n]\n}\n}",
+      "text_sha256": "435000151c033028e0fbcb5ee3cb193239ba49232b699143b844eab012d92768",
+      "size_bytes": 2372,
+      "assistant_uuid": "3226860d-17d5-434e-b695-c45ebe947532"
+    }
+  ]
+}

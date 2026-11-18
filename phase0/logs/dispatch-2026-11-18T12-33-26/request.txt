@@ -1,0 +1,12 @@
+[T07-B验收|1118]
+只回JSON。commit fe88afc父bc2c256。附t07b_code.diff(SHA 557e7f36)。对你T07-02/03/04逐条。
+
+02)新增GovernanceRecord表(actor/object/action/before/after/reason/evidence/time)；record_action只add+flush由调用方同事务提交；set_vendor(加commit=False)/set_routing/set_routing_order均在commit前写审计；只读GET /admin/governance/records(require_admin)，无delete/update=append-only。
+
+03)新增PriorityDemotion表(orig/demoted_priority/expires_at/status)；demote记录前后+expiry+审计(actor=system)；restore_expired_demotions惰性恢复(人工改priority≠demoted则skipped不覆盖、异常标failed留可见、恢复也审计)，resolve_route调用有恢复才commit。
+
+04)进cooldown写system审计(仅状态转换一次)、到期恢复写system审计(标明非供应商恢复证明)。
+
+测试7项(审计actor/前后/证据、expiry、恢复、人工改跳过、cooldown、只读无delete)+关联41项通过；全量558 passed/14 failed=原基线。
+
+请评(JSON,result,issues[])：可final PASS？必补项？

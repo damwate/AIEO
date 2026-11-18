@@ -1,0 +1,10 @@
+[发版拓扑补充终判|AI-Image-Service]
+补充上轮讨论的关键约束,请更新"能不能发版"判断。只回JSON。
+
+仓库 github.com/YotinGarden/AI-Image-Service 分支 fix/yuanqiao-http1-20261117
+材料commit 6de57a43f9771ddd65707fb8ec7e03473a7626c8(第9节新增部署拓扑)
+先读 docs/review/20261118_p0p1/RELEASE_VALIDATION_DISCUSSION.md 第9节+第8.1阻断项。
+
+新约束:AI无法访问221服务器或217电脑。真实发布链路=代码提交推送GitHub→公司电脑217拉取代码→217侧执行部署到221(192.168.0.221:8300)。AI侧只负责把可部署候选(代码+迁移+tag+交接说明)准备到位推Git;217侧负责实际release.sh/备份/迁移/验证/回滚;切流仍需PO书面批准。
+
+请评(JSON,result,issues,conditions)：①这个AI/217分工下当前能否发版?②要交付给217的"可部署候选交接包"最小应含哪些项(完整SHA/tag/迁移版本/前置/验收清单/回滚)?③B01-B06中哪些是AI侧必须清零才能交给217,哪些可留给217侧?④给217的一句可开工指令。

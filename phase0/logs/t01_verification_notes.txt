@@ -1,0 +1,27 @@
+T01 验收证据说明（commit 285851233ae3a056cb2f9a4d71851ad393ff4b1a）
+
+== 为何 GitHub 422 ==
+该提交在本地分支 fix/yuanqiao-http1-20261117，尚未 push（项目纪律：不擅自 push/部署，DEC-010 需人工拍板）。故 ChatGPT 通过 GitHub 取 SHA 返回 422。本轮改以附件提供完整 diff（t01_full.diff）与测试文件（包含在 diff 内）离线核验，不需要 push。
+
+== 测试命令与环境 ==
+后端 venv：d:/YotinGarden/AI-Image-Service/.venv/Scripts/python.exe
+工作目录：d:/YotinGarden/AI-Image-Service/backend
+聚焦：python -m pytest tests/test_phase_events.py -q → 9 passed
+相邻回归：tests/test_phase_events.py + test_any_error_failover.py + test_execution_outcome_contract.py + test_provider_failover_regression.py + test_routing_reasons.py → 66 passed
+全量：python -m pytest tests/ -q → 448 passed, 14 failed
+
+== 14 项失败为基线既有（非 T01 引入）==
+用 git stash push -- backend/app 临时撤掉全部 T01 生产代码后，单跑
+test_admin_auth.py + test_deploy_artifacts.py + test_development_tasks.py → 同样 14 failed, 19 passed。
+失败原因环境相关：Windows 路径分隔符（config_write_path endswith '/.cache/...' 断言）、GBK 编解码、secure cookie KeyError。stash 已 pop 恢复。
+
+== 前端未验收项 ==
+frontend 无 node_modules，未运行 vue-tsc 类型检查 / vite build；types.ts 新增 PhaseEvent 接口、JobDetail.vue 新增阶段 chips 渲染仅为源码改动，构建未验证，明确记为未验收。
+
+== 故障注入证据（test_phase_events.py 摘录）==
+- test_http200_invalid_json_locates_response_parse: _decode_json(b'{not json') → failed_phase=response_parse, exception_type=JSONDecodeError
+- test_http200_missing_data0_locates_result_extract: _edits_image_from_json({'created':1}) → failed_phase=result_extract
+- test_http200_invalid_b64_locates_image_decode: b64_json='!!!not-base64!!!' → failed_phase=image_decode
+- test_error_detail_safe_never_leaks_raw_message: secret='sk-SECRET-...token=LEAKME' → 不出现在 attempt，error_detail_safe 为固定模板
+- test_worker_fallback_when_adapter_did_not_record_failed_phase: RuntimeError 未记阶段 → failed_phase=worker_unclassified, 原始消息不落库
+- test_execution_json_projects_phase_fields: 新 4 字段进 execution_json 白名单，secret 字段被投影丢弃

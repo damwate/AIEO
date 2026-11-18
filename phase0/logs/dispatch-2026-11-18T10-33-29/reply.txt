@@ -1,0 +1,60 @@
+ChatGPT 说：
+
+{
+"result": "PASS_WITH_CONSTRAINTS",
+"issues": [
+{
+"id": "G1",
+"severity": "P1",
+"finding": "task_id已由适配器支持查询，resume也已实现并测试，但checkpoint未持久化task_id，reclaim未接通resume，导致进程崩溃或任务回收后丢失可恢复能力。",
+"judgment": "不属于复杂补偿系统。属于现有异步任务查询能力的持久化与生命周期接线，复用已有resume即可。",
+"required": "checkpoint新增resume_task_id，仅存供应商task_id，不存签名URL、凭证或敏感请求信息。reclaim仅在in_flight、resume_task_id非空且适配器明确支持resume时调用续查。",
+"boundary": "resume只负责查询既有任务状态，不重新提交生成请求、不重新扣费、不创建新attempt。查询成功、失败、处理中分别按现有状态机处理。查询结果不确定或resume异常时保持unknown并停止自动重试。",
+"unsupported": "适配器不支持resume、task_id缺失、task_id无效或查询能力不可用时，不推测任务未执行，不自动重新提交。"
+},
+{
+"id": "G2",
+"severity": "P2",
+"finding": "billing_status恒为unknown，不能作为真实扣费状态依据。",
+"judgment": "当前阶段不需要增加账单查询、扣费补偿或供应商对账系统。",
+"required": "文档明确billing_status=unknown表示系统无法确认实际扣费结果，不得将其解释为未扣费或未执行。保留字段供未来供应商提供可靠证据后扩展。"
+},
+{
+"id": "G3",
+"severity": "P1",
+"finding": "failover对unknown状态仍自动切换下一供应商，可能导致重复扣费。",
+"judgment": "需要增加人工介入边界，但不需要新增复杂决策系统。",
+"required": "增加needs_human布尔字段。对执行结果unknown且无法通过既有resume确认的情况，设置needs_human=true，停止自动failover和可能产生新扣费的重新提交。保留原失败及执行证据。",
+"boundary": "needs_human仅作为审计及流程控制标志，不负责自动决策、不推断实际扣费、不替代billing_status。明确只有获得足够证据或人工授权后才能恢复可能产生费用的操作。"
+},
+{
+"id": "G4",
+"severity": "P2",
+"finding": "单供应商attempt缺少retry_round，任务级重试上限定义不够明确。",
+"judgment": "属于现有attempt模型补充，不需要独立重试调度系统。",
+"required": "增加retry_round，并明确cap=任务级最多2次重试。首次执行不计为重试，retry_round从0开始，重试递增。跨供应商failover不得重置任务级重试计数。",
+"boundary": "unknown状态不得通过增加retry_round绕过needs_human限制。重试计数和attempt记录必须一致。"
+},
+{
+"id": "T04-TEST",
+"severity": "P1",
+"finding": "需要固化新增生命周期边界的测试证据。",
+"required": [
+"checkpoint持久化task_id并在reclaim后正确调用resume。",
+"resume查询处理中不重新提交；查询成功或失败按既有状态机收敛。",
+"无task_id或不支持resume时不盲目重提。",
+"unknown且无法确认执行结果时needs_human=true，禁止自动failover。",
+"确定未执行的失败仍按既有安全规则处理。",
+"retry_round与任务级2次重试cap一致，跨供应商不重置。",
+"billing_status保持unknown时不被误判为未扣费。"
+]
+}
+],
+"conditions": [
+"G1限定为既有resume能力接线，不新增补偿队列、补偿事务、自动退款、供应商账单对账或复杂恢复编排。",
+"task_id应在获得后及时持久化，避免进程崩溃发生在获得task_id与checkpoint更新之间的窗口。该窗口无法恢复时必须fail-closed。",
+"needs_human必须实际阻断可能产生重复扣费的自动操作，不能仅增加一个不参与流程控制的展示字段。",
+"retry_round的计数口径、任务级cap及跨供应商共享规则必须在文档和测试中保持一致。",
+"本轮不重做T01-T03已PASS的验收内容，仅对新增改动及其回归影响进行定向验收。"
+]
+}

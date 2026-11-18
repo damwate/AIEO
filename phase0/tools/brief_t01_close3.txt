@@ -1,0 +1,8 @@
+[T01收口3|AI-Image-Service|20261119]
+独立复核，只回JSON。HEAD 93f22b3c3a38b16b25123a022e4313f1ae113353。七提交未push(DEC-010)，附t01_full_v7.diff。
+
+上轮T01-P1-01-R2：download异常分支遗漏(ValueError/TypeError/DecompressionBomb未记failed、_validate_url失败停留running)。已修：download_image的except(ValueError,TypeError,DecompressionBombError)现记download=failed；终态不可覆盖确保图片校验失败时download=succeeded不被覆盖(保留image_validate=failed)。
+已穷举download_image出口：URL校验失败/超时/重定向缺地址/非200/长度非法/空超限/read OSError/重定向超限→download=failed；读成功→succeeded；图片校验失败→image_validate=failed且download保持succeeded。
+测试新增test_image_validation_failure_keeps_download_succeeded(校验失败保留download=succeeded)。聚焦20用例/全量459 passed，14失败基线既有(stash对照)。前端无node_modules未tsc(非阻断)。
+
+请确认(JSON,result=PASS/REWORK,issues,conditions)：T01-P1-01-R2是否关闭？download所有出口是否完整？T01是否可收口进T02？ENV项标注非阻断。仅列必须改的代码问题。

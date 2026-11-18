@@ -1,0 +1,10 @@
+[材料完整性修复复核|AI-Image-Service]
+你上轮判BLOCKED:full_test.log的manifest SHA/尺寸不符(按工作区CRLF算成15895/5fbee277，commit内实为LF 15602/a2bf5c0f)。已修正。
+
+新材料commit 9ebb68697d0e0e5ab0c5d603ccd98aaa96f52733(被审commit仍fe88afc8465dc6e9b4cfd7aacfdf0be510674592，未变)。请从该新commit重读docs/review/20261118_p0p1/MANIFEST.json并独立校验两条:
+- REVIEW_BRIEF.md 4461 / 514b3ab891bdd756b6ec6a695c9c7ae7920a3c826b7ed6b446b3e6178fba1927
+- full_test.log 15602 / a2bf5c0fe145be9514a737691cd26500ebbb1accc5d50b1b7dbcf8820e1410fa
+
+校验通过后,继续按REVIEW_BRIEF对fe88afc做P0+P1逐项独立审核(直接读Git代码)。证据仍不全则维持BLOCKED。
+
+只回JSON:{"result":"PASS|REWORK|BLOCKED","findings":[{"severity":"MAJOR|MINOR","file":"","line":0,"description":"","recommendation":""}],"reviewed_commit":"...","evidence_checks":{"manifest":"OK|FAIL","test_log":"OK|FAIL"},"notes":""}

@@ -1,0 +1,4 @@
+[远桥HTTP1复审|AI-Image-Service|20261117]
+请独立复核分支 fix/yuanqiao-http1-20261117，commit a9c485e97659586e2ea3c2d2b9c415b818d78006。改动：供应商级 http_version=v1 经 normalize→_vendor_flat→ROUTE_CONFIG_FIELDS→freeze→Worker→curl_cffi(http_version='v1')；悟空/未配置不变；日志记配置/实际协议、状态、耗时、错误类型，不记密钥。19项新测通过，全量416通过/14既存失败。Playground真实调用未做：本机无凭证、无网关、禁生产部署；根因未验证。
+请裁定：①配置链是否真到Worker ②是否影响悟空或请求体/认证 ③日志与错误分类是否安全正确 ④测试是否覆盖冻结/重启/failover/HTTP2不重发 ⑤能否上221测试及前置条件。
+开发经验（你不会自动读到）：连接故障先跑 AIEO node toolkit/check-push.mjs，禁手工猜端口；派单发送成功≠采集成功，采集失败禁重发走recoll；会话满4条user消息评估迁移；结论须绑定commit SHA与证据路径。

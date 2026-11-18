@@ -1,0 +1,10 @@
+[T04小修复验|1118]
+只回JSON。commit 94300ab，父6b4a8fb。附t04_full_all.diff(SHA 2fa7d4d6，T04全量代码+规范)。G1-G6你已PASS，仅关R01/R02。
+
+R01：治理规范(doc/AI生图服务可靠性与供应商治理规范.md)§6.4新增恢复接线边界，明写：task_id只存id+失败显式暴露；崩溃窗口不宣称完整恢复；单供应商resume三条件+复用原attempt/id不重POST；resume不确定fail-closed+needs_human；routed不接自动resume保留failover；needs_human分类边界+不阻断跨vendor首次failover。
+
+R02：execution_json投影测试补断言item['retry_round']==0，证明API可读(retry_round本就在白名单)。
+
+测试：T04聚焦9通过；全量526 passed/14 failed=原基线。仅改文档+1测试断言，未动G1-G6实现。
+
+请评(JSON,result,issues[])：R01/R02关闭？可final PASS？

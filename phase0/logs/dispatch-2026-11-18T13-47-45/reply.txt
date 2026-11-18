@@ -1,0 +1,13 @@
+ChatGPT 说：
+
+{
+"result": "PASS",
+"findings": [],
+"reviewed_commit": "02c9d7a",
+"evidence_checks": {
+"manifest": "OK",
+"test_log": "OK",
+"baseline": "OK"
+},
+"notes": "独立读取02c9d7a实际代码及测试。材料校验采用MANIFEST声明的git_blob_sha1作为本轮认可依据，REVIEW_BRIEF、full_test.log、baseline_test.log三份blob SHA-1全部一致。RW-01 PASS：RightAPI及Async首次完整响应解析失败抛provider_error，response_parse失败事件满足local_result_failure双证据，failure_decision标记result_invalid并stop，不误切供应商。RW-02 PASS：local_result_failure优先检查resume_task_id/has_task_id，已有任务受理保护，续查及本地处理失败不降级为result_invalid。RW-03 PASS：monitoring.metrics_snapshot尝试级样本仅按时间窗口抽取Job，不再按最终provider_vendor_id过滤；随后按attempt.vendor_id独立统计，覆盖failover中失败供应商。RW-04 PASS：PriorityDemotion新增scope_key/scope_original；同作用域叠加降级共享首条原始态；到期记录在仍有活动降级时标记consumed，最后一条到期统一恢复；policy/global_policy/global分别恢复实际修改对象；人工修改检测不通过时整体skipped，不覆盖人工决策。新增test_stacked_demotions_restore_only_after_last_expires验证先到期consumed、最后到期恢复初始priority。RW-05 PASS：set_routing对enabled_vendors变更前后完整记录所有Provider的enabled/priority状态，并与actor、路由策略前后值、reason、evidence在同一事务提交；新增专项审计测试验证。测试证据：被审版本14 failed、568 passed；基线14 failed、439 passed，失败集合一致，未发现本轮新增失败。五项修复均未发现阻断性或必须返工问题，准予通过。"
+}

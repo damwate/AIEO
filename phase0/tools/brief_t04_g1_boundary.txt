@@ -1,0 +1,9 @@
+[T04 G1边界|1121]
+只回JSON。设计PASS_WITH_CONSTRAINTS，实现前发现技术约束请裁定。
+
+事实：checkpoint_attempt在provider调用中只改内存attempt不落库，task_id丢失于崩溃窗口；reclaim守卫在request构造前，无prov/request无法调resume；仅async/rightapi支持task_id查询。
+
+A(完整接线)：checkpoint加persist回调落库resume_task_id(非URL)；reclaim守卫后移，有task_id且支持则resume_image查询，成功走write_success否则unknown→stop。触碰核心路径，改动大。
+B(保守)：checkpoint落库resume_task_id+needs_human阻断自动failover/重发；不接自动resume(留人工显式恢复)，理由"不假设可查"、窗口无法恢复fail-closed。
+
+请评(JSON,result,choice,issues)：选A/B？A的守卫后移可接受吗？必补项？

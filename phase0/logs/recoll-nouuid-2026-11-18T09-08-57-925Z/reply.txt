@@ -1,0 +1,28 @@
+ChatGPT 说：
+
+{
+"result": "REWORK",
+"issues": [
+{
+"id": "P1-02",
+"status": "PASS_WITH_CONDITIONS",
+"problem": "上轮响应体读取失败被错误归入 request_send、导致 response_received 停留 running 的问题，代码层面已修复。",
+"verification": "已检查 v4 diff。OpenAI、Seedream、RightAPI、AsyncImageProvider 四个适配器均在 resp.read() 边界单独捕获异常，记录 response_received=failed 并原样重抛；读取成功后才记录 response_received=succeeded。读取失败后外层即使尝试将 request_send 改为 failed，也会被终态不可覆盖规则阻止，因此 request_send 保持 succeeded。",
+"remaining": "自动化故障注入测试只覆盖 OpenAI 和 Seedream；RightAPI 与 AsyncImageProvider 缺少对应测试。Seedream 测试也未显式断言 request_send=succeeded。四个适配器的实现已覆盖，但回归测试覆盖尚不完整。"
+},
+{
+"id": "OBSERVATION_ONLY",
+"status": "PASS_WITH_CONDITIONS",
+"verification": "本次 diff 中阶段记录、异常边界捕获和摘要投影均属于可观测性增强。未发现改动供应商选择、路由顺序、重试条件、切换条件、失败分类或计费规则的代码。读取异常仍按原有异常类型向外传播，新增记录不替代原有业务异常处理。",
+"remaining": "结论基于本次离线 diff，不代表已对未包含在 diff 中的代码或运行时行为完成全量验证。"
+}
+],
+"conditions": [
+"补充 RightAPI 的 resp.read() OSError 注入测试，断言 response_received=failed、request_send=succeeded、failed_phase=response_received。",
+"补充 AsyncImageProvider 的 resp.read() OSError 注入测试，断言 response_received=failed、request_send=succeeded、failed_phase=response_received。",
+"建议 Seedream 测试补充 request_send=succeeded 断言，形成四适配器一致的回归验证。",
+"本轮只取得并检查 t01_full_v4.diff，未取得 t01_verification_notes_v4.txt；聚焦16 passed、全量455 passed及14项基线失败的 stash 对照均未独立核验。",
+"未直接读取远端 HEAD dcf5df942b1b3c1e951981d31e1b90627aa613fe；无法确认离线 diff 与该提交的实际字节一致。",
+"前端未执行 tsc，仍属于未验收项；应在依赖可用后补类型检查及生产构建。"
+]
+}

@@ -1,0 +1,181 @@
+{
+  "at": "2026-11-18T10:36:05.065Z",
+  "message_bytes": 1195,
+  "reply": "ChatGPT 说：\n\n{\n\"result\": \"PASS_WITH_CONSTRAINTS\",\n\"issues\": [\n{\n\"id\": \"G1\",\n\"severity\": \"P1\",\n\"finding\": \"task_id已由适配器支持查询，resume也已实现并测试，但checkpoint未持久化task_id，reclaim未接通resume，导致进程崩溃或任务回收后丢失可恢复能力。\",\n\"judgment\": \"不属于复杂补偿系统。属于现有异步任务查询能力的持久化与生命周期接线，复用已有resume即可。\",\n\"required\": \"checkpoint新增resume_task_id，仅存供应商task_id，不存签名URL、凭证或敏感请求信息。reclaim仅在in_flight、resume_task_id非空且适配器明确支持resume时调用续查。\",\n\"boundary\": \"resume只负责查询既有任务状态，不重新提交生成请求、不重新扣费、不创建新attempt。查询成功、失败、处理中分别按现有状态机处理。查询结果不确定或resume异常时保持unknown并停止自动重试。\",\n\"unsupported\": \"适配器不支持resume、task_id缺失、task_id无效或查询能力不可用时，不推测任务未执行，不自动重新提交。\"\n},\n{\n\"id\": \"G2\",\n\"severity\": \"P2\",\n\"finding\": \"billing_status恒为unknown，不能作为真实扣费状态依据。\",\n\"judgment\": \"当前阶段不需要增加账单查询、扣费补偿或供应商对账系统。\",\n\"required\": \"文档明确billing_status=unknown表示系统无法确认实际扣费结果，不得将其解释为未扣费或未执行。保留字段供未来供应商提供可靠证据后扩展。\"\n},\n{\n\"id\": \"G3\",\n\"severity\": \"P1\",\n\"finding\": \"failover对unknown状态仍自动切换下一供应商，可能导致重复扣费。\",\n\"judgment\": \"需要增加人工介入边界，但不需要新增复杂决策系统。\",\n\"required\": \"增加needs_human布尔字段。对执行结果unknown且无法通过既有resume确认的情况，设置needs_human=true，停止自动failover和可能产生新扣费的重新提交。保留原失败及执行证据。\",\n\"boundary\": \"needs_human仅作为审计及流程控制标志，不负责自动决策、不推断实际扣费、不替代billing_status。明确只有获得足够证据或人工授权后才能恢复可能产生费用的操作。\"\n},\n{\n\"id\": \"G4\",\n\"severity\": \"P2\",\n\"finding\": \"单供应商attempt缺少retry_round，任务级重试上限定义不够明确。\",\n\"judgment\": \"属于现有attempt模型补充，不需要独立重试调度系统。\",\n\"required\": \"增加retry_round，并明确cap=任务级最多2次重试。首次执行不计为重试，retry_round从0开始，重试递增。跨供应商failover不得重置任务级重试计数。\",\n\"boundary\": \"unknown状态不得通过增加retry_round绕过needs_human限制。重试计数和attempt记录必须一致。\"\n},\n{\n\"id\": \"T04-TEST\",\n\"severity\": \"P1\",\n\"finding\": \"需要固化新增生命周期边界的测试证据。\",\n\"required\": [\n\"checkpoint持久化task_id并在reclaim后正确调用resume。\",\n\"resume查询处理中不重新提交；查询成功或失败按既有状态机收敛。\",\n\"无task_id或不支持resume时不盲目重提。\",\n\"unknown且无法确认执行结果时needs_human=true，禁止自动failover。\",\n\"确定未执行的失败仍按既有安全规则处理。\",\n\"retry_round与任务级2次重试cap一致，跨供应商不重置。\",\n\"billing_status保持unknown时不被误判为未扣费。\"\n]\n}\n],\n\"conditions\": [\n\"G1限定为既有resume能力接线，不新增补偿队列、补偿事务、自动退款、供应商账单对账或复杂恢复编排。\",\n\"task_id应在获得后及时持久化，避免进程崩溃发生在获得task_id与checkpoint更新之间的窗口。该窗口无法恢复时必须fail-closed。\",\n\"needs_human必须实际阻断可能产生重复扣费的自动操作，不能仅增加一个不参与流程控制的展示字段。\",\n\"retry_round的计数口径、任务级cap及跨供应商共享规则必须在文档和测试中保持一致。\",\n\"本轮不重做T01-T03已PASS的验收内容，仅对新增改动及其回归影响进行定向验收。\"\n]\n}",
+  "user_unit_key": "f9b2341f-3ad3-5b7a-8285-5f693c15ca19:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "f9b2341f-3ad3-5b7a-8285-5f693c15ca19:1:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "fd8572f4-3278-4134-8c72-187b7c41f84f",
+  "stability": {
+    "stable": true,
+    "interval_ms": 3819,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-18T10:36:00.569Z",
+      "read_finished_at": "2026-11-18T10:36:01.381Z",
+      "unit_keys": [
+        "f9b2341f-3ad3-5b7a-8285-5f693c15ca19:1:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "f9b2341f-3ad3-5b7a-8285-5f693c15ca19:1:assistant",
+          "sha256": "a13b15548113d4b7dbbbcc979538a6d666616e1111b596118fd3648ee4c5f72e",
+          "size_bytes": 4030
+        }
+      ],
+      "assistant_uuid": "fd8572f4-3278-4134-8c72-187b7c41f84f",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-18T10:36:04.389Z",
+      "read_finished_at": "2026-11-18T10:36:04.919Z",
+      "unit_keys": [
+        "f9b2341f-3ad3-5b7a-8285-5f693c15ca19:1:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "f9b2341f-3ad3-5b7a-8285-5f693c15ca19:1:assistant",
+          "sha256": "a13b15548113d4b7dbbbcc979538a6d666616e1111b596118fd3648ee4c5f72e",
+          "size_bytes": 4030
+        }
+      ],
+      "assistant_uuid": "fd8572f4-3278-4134-8c72-187b7c41f84f",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "f9b2341f-3ad3-5b7a-8285-5f693c15ca19:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "f9b2341f-3ad3-5b7a-8285-5f693c15ca19:0:user",
+          "f9b2341f-3ad3-5b7a-8285-5f693c15ca19:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "b6ed1a9b4827610a22c67333d8067e9ef7ce3d0bce327646a66d2da8e171a824",
+          "a13b15548113d4b7dbbbcc979538a6d666616e1111b596118fd3648ee4c5f72e"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "f9b2341f-3ad3-5b7a-8285-5f693c15ca19:0:user",
+          "f9b2341f-3ad3-5b7a-8285-5f693c15ca19:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "b6ed1a9b4827610a22c67333d8067e9ef7ce3d0bce327646a66d2da8e171a824",
+          "a13b15548113d4b7dbbbcc979538a6d666616e1111b596118fd3648ee4c5f72e"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "f9b2341f-3ad3-5b7a-8285-5f693c15ca19:0:user",
+          "f9b2341f-3ad3-5b7a-8285-5f693c15ca19:1:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "f9b2341f-3ad3-5b7a-8285-5f693c15ca19:0:user",
+      "f9b2341f-3ad3-5b7a-8285-5f693c15ca19:1:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "f9b2341f-3ad3-5b7a-8285-5f693c15ca19:0:user",
+          "f9b2341f-3ad3-5b7a-8285-5f693c15ca19:1:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "f9b2341f-3ad3-5b7a-8285-5f693c15ca19:0:user",
+          "f9b2341f-3ad3-5b7a-8285-5f693c15ca19:1:assistant"
+        ],
+        "overlap_keys": [
+          "f9b2341f-3ad3-5b7a-8285-5f693c15ca19:0:user",
+          "f9b2341f-3ad3-5b7a-8285-5f693c15ca19:1:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "a13b15548113d4b7dbbbcc979538a6d666616e1111b596118fd3648ee4c5f72e",
+  "size_bytes": 4030,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-18T10-33-29\\reply.txt",
+  "reply_readback_sha256": "a13b15548113d4b7dbbbcc979538a6d666616e1111b596118fd3648ee4c5f72e",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-18T10-33-29\\raw-units.json",
+  "raw_units_sha256": "c287d795d84611f1c7e2d78ebfe96aa37bb4d08ff7dbc5d7ce87919ef8963081",
+  "raw_units_size_bytes": 7237,
+  "raw_units_readback_sha256": "c287d795d84611f1c7e2d78ebfe96aa37bb4d08ff7dbc5d7ce87919ef8963081",
+  "session_id": "6afd7f2c-8d40-83ee-9114-93d56d2d9950",
+  "conversation_url": "https://chatgpt.com/c/6afd7f2c-8d40-83ee-9114-93d56d2d9950",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}

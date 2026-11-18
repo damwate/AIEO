@@ -1,0 +1,14 @@
+[T05实现验收|1118]
+只回JSON。commit 5576213。附t05_code_r1.diff(SHA b31ca079)。对你的G1-G5逐条。
+
+G1)result_invalid独立local_invalid；supplier_failed=failed-local_invalid剔除我方失败；旧failed/success_rate不变。
+G2)http/delivery_success_rate分列，各带num/den/excluded/sample_size/insufficient；unknown/result_invalid/transport异常/未达阶段不进分母。
+G3)supplier_process_ms：native(request_started_at→response_body_completed_at)与legacy_fallback分列+sample/avg/native_share；倒置/缺失/负数排除计excluded_count，倒置不fallback。
+G4)window_hours/vendor_id可选(默认24h/全量兼容)，UTC半开[start,end)，参数校验，过滤作用于全指标。
+G5)min_sample_rule固定阈值仅提示；各率带insufficient+sample_size不隐藏值。
+
+conditions：unknown独立；各率可判定集分离；窗口一致；低样本不阻断；补10边界测试(含倒置/零样本/窗口/单vendor)；不重建平台不改jobs_timeline。
+
+测试：T05聚焦10+监控20通过；全量536 passed/14 failed=原基线。
+
+请评(JSON,result,issues[],conditions[])：全关闭？可final PASS？

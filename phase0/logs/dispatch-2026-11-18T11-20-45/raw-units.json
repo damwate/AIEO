@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-18T11:23:41.750Z",
+  "user_unit_key": "75e69a4c-9545-5a7a-a0b1-ad74f579c34c:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "75e69a4c-9545-5a7a-a0b1-ad74f579c34c:1:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "0fe818f9-36ec-4f79-88c3-ed8c596dc769",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "75e69a4c-9545-5a7a-a0b1-ad74f579c34c:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "75e69a4c-9545-5a7a-a0b1-ad74f579c34c:0:user",
+          "75e69a4c-9545-5a7a-a0b1-ad74f579c34c:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "39bf7a0fb43d32acc46d18ac967561e506909562945c07a3a7be7cdcdc366767",
+          "34a6b42fcf37cf5bf3b8890d24704bbe100e02da96f187d415c5a1e8a8437640"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "75e69a4c-9545-5a7a-a0b1-ad74f579c34c:0:user",
+          "75e69a4c-9545-5a7a-a0b1-ad74f579c34c:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "39bf7a0fb43d32acc46d18ac967561e506909562945c07a3a7be7cdcdc366767",
+          "34a6b42fcf37cf5bf3b8890d24704bbe100e02da96f187d415c5a1e8a8437640"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "75e69a4c-9545-5a7a-a0b1-ad74f579c34c:0:user",
+          "75e69a4c-9545-5a7a-a0b1-ad74f579c34c:1:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "75e69a4c-9545-5a7a-a0b1-ad74f579c34c:0:user",
+      "75e69a4c-9545-5a7a-a0b1-ad74f579c34c:1:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "75e69a4c-9545-5a7a-a0b1-ad74f579c34c:0:user",
+          "75e69a4c-9545-5a7a-a0b1-ad74f579c34c:1:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "75e69a4c-9545-5a7a-a0b1-ad74f579c34c:0:user",
+          "75e69a4c-9545-5a7a-a0b1-ad74f579c34c:1:assistant"
+        ],
+        "overlap_keys": [
+          "75e69a4c-9545-5a7a-a0b1-ad74f579c34c:0:user",
+          "75e69a4c-9545-5a7a-a0b1-ad74f579c34c:1:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "75e69a4c-9545-5a7a-a0b1-ad74f579c34c:1:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n{\n\"decision\": \"B\",\n\"conditions\": [\n\"该测试属于accepted-unknown：POST已返回task_id并被接受，随后GET poll返回401，不能据此证明上游任务未执行或未产生结果。\",\n\"needs_human阻断的是同一accepted任务的不安全自动重试、同vendor重新提交，以及可能造成重复计费或重复生图的再次提交。\",\n\"允许跨vendor首次failover，但必须满足：不向原vendor重投、不复用原task_id、不隐瞒原任务结果未知状态，并保留原attempt的完整失败证据。\",\n\"跨vendor failover必须创建独立attempt，明确记录其与原accepted-unknown attempt的关联。\",\n\"保留既有测试test_accepted_async_poll_failure_switches_without_resubmitting_same_vendor的原始断言，包括job=succeeded、attempt[0].action=failover、calls=['POST','GET']及备用供应商成功。\",\n\"401属于poll认证失败，但不能仅凭HTTP状态码认定上游任务确定失败；仍须保留accepted-unknown语义。\"\n],\n\"needs_human_semantics\": {\n\"meaning\": \"阻断不安全的自动重试和重新提交，不等同于阻断所有自动路由。\",\n\"routed_path_action\": \"允许action='failover'，但必须明确这是跨vendor新attempt，不是原accepted任务重试。\",\n\"same_vendor_resubmit\": \"BLOCKED\",\n\"cross_vendor_first_failover\": \"ALLOWED_WITH_AUDIT\",\n\"same_task_id_repoll\": \"不得自动无限重试；仅允许受控的只读状态查询策略。\",\n\"original_attempt_evidence\": \"MUST_PRESERVE\",\n\"human_intervention\": \"原accepted-unknown结果仍需人工跟进和最终对账，不得因备用供应商成功而清除needs_human标记。\"\n},\n\"test_authorization\": {\n\"modify_existing_assertions\": false,\n\"preserve_existing_test\": true,\n\"add_required_tests\": [\n\"accepted-unknown不得触发同vendor POST重投\",\n\"accepted-unknown允许跨vendor首次failover\",\n\"跨vendor failover后原attempt仍保留needs_human及unknown证据\",\n\"备用供应商成功不得覆盖原attempt结果未知状态\",\n\"不得将原task_id传递给备用供应商\",\n\"人工处理完成前不得自动清除原attempt的needs_human标记\"\n]\n},\n\"rationale\": \"区分任务结果不确定性与路由决策。accepted-unknown意味着原供应商的任务结果未知，而不是禁止使用其他供应商完成用户请求。通过禁止同vendor重新提交、保留原任务审计证据及独立创建备用attempt，可以兼顾防止重复执行和服务可用性。\",\n\"scope\": \"本裁定明确needs_human的阻断边界，不授权放宽其他fail-closed安全条件。\"\n}",
+      "text_sha256": "34a6b42fcf37cf5bf3b8890d24704bbe100e02da96f187d415c5a1e8a8437640",
+      "size_bytes": 2551,
+      "assistant_uuid": "0fe818f9-36ec-4f79-88c3-ed8c596dc769"
+    }
+  ]
+}

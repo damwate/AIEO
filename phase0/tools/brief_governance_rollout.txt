@@ -1,0 +1,9 @@
+[规范落实讨论|AI-Image-Service|20261118]
+新会话接棒，独立复核者。HEAD abd7116e30e17d9669a8551c0985bd09aa8a601a。无历史上下文，基于本简报判断，只回JSON。
+
+任务：已定稿长期规范v1.0-draft(docs/AI生图服务可靠性与供应商治理规范.md，十章)。请讨论如何落实成分阶段可验收任务。
+
+前序共识：①Yuanqiao HTTP200后本地解析失败被误判unknown_outcome，定性=我方程序问题非供应商；②"先日志、后分类"：日志方案已PASS(阶段数组phase_events+扁平摘要/adapter记录+worker兜底/脱敏error_detail_safe/DB+execution_json+前端三层/故障注入取证)；③分类修复为第二阶段独立提交，本阶段不改acceptance/failure_decision/路由。
+
+请给(JSON)：1)十章拆成可验收任务、优先级与依赖？2)第一步做什么、范围？3)哪些先落、哪些需运行数据后再落？4)如何避免大重构、每步验收标准？5)与现有能力(路由/健康/租约/字节预算)对齐、哪些属重复建设应禁止？
+输出{result,rollout_tasks,first_step,dependencies,conditions}。边界：只给方案，不改码不部署。

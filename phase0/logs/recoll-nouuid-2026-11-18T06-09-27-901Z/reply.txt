@@ -1,0 +1,19 @@
+ChatGPT 说：
+
+{
+"result": "REWORK",
+"points": [
+{"n":"A","v":"REWORK","note":"low_speed/stream/10s连接预算方向正确；但body阶段异常虽日志保留actual/status，抛出的URLError未携带response_request_id、headers_received_at及HTTP metadata，_post_raw上层无法完整回填attempt，未满足“body错误保留actual/status/request_id/code28”。"},
+{"n":"B","v":"PASS","note":"20MiB单图默认、160MiB硬顶，配置归一→快照→ROUTE_CONFIG_FIELDS，提交门先于幂等/存储，413三类错误码及能力不匹配422均符合设计。"},
+{"n":"兼容性","v":"PASS_WITH_CONSTRAINTS","note":"默认供应商保持旧timeout；B未改变已接受输入路径。但A必须修正body异常元数据传播后才能收口。"},
+{"n":"测试","v":"PASS_WITH_CONSTRAINTS","note":"438 passed且新增A17/B5有价值；14个既存失败不构成新增回归，但发布前需确认失败基线与本次SHA无关。"},
+{"n":"发布221","v":"BLOCKED","note":"A尚未满足验收；且未部署、未跑Playground，因此当前不能发布221。"}
+],
+"conditions": [
+"A补齐body异常对象：至少传播actual_http_version、http_status、request_id、headers_received_at、transport_code=28，使上层attempt最终可见。",
+"补1个真实body读取超时测试，断言日志与attempt两侧均完整保留上述字段且不重发。",
+"确认14项既存失败在a9c485e及新增两SHA上的失败集合未扩大。",
+"修复后生成新A提交SHA，再做AB终验；B可保持6adf0062a1bcff093f443b6fc9e6a9886fc7bc5b不变。",
+"221发布仍需Playground真实回归及部署前检查；连接故障按check-push.mjs纪律处理。"
+]
+}

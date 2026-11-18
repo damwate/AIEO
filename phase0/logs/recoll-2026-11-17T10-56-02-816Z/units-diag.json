@@ -1,0 +1,62 @@
+[
+  {
+    "key": "a32f68f0-541b-530d-97e1-d5996c9ba964:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[TRIAL-B-BATCH3|20261117] 会话迁移接棒+批三开工登记会商。承DEC-102：批二T3/T4均PASS，阶段复盘 ChatGPT 再裁A"
+  },
+  {
+    "key": "a32f68f0-541b-530d-97e1-d5996c9ba964:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\n方向拍板：A — 继续批三，实行有限扩围。\n\n理由：批二 T3/T4 均 PASS，说明前两批的受控流程已有可靠性证据；但 GPT-05"
+  },
+  {
+    "key": "17152aba-ecaf-59cb-80f9-9d855463a5ea:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[TRIAL-B-T5|20261117] 受控试运行(等级B)批三 T5——以 GPT-02 架构审核角色对 GPT-05 工程审计腿只读复核给结论(PASS"
+  },
+  {
+    "key": "17152aba-ecaf-59cb-80f9-9d855463a5ea:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\n{\n\"result\": \"REWORK\",\n\"summary\": \"113/113测试、零mock实战及问题17整改链有证据支持。但当前"
+  },
+  {
+    "key": "6795f6dc-3135-510c-99f3-fed955767193:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[TRIAL-B-T5-RECHECK|20261117] 承接你上轮 REWORK 的 P1——属实，R4\"9c3c3a19无后代\"仅绑定生成时成立，终态29"
+  },
+  {
+    "key": "6795f6dc-3135-510c-99f3-fed955767193:1:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\n{\n\"result\": \"PASS\",\n\"summary\": \"P1已澄清：R4是binding-report生成时的HEAD快照，不是"
+  },
+  {
+    "key": "cdaa3700-70cd-54e2-b296-886f47ffa84c:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[TRIAL-B-FINAL|20261117] 受控试运行(等级B)最终复盘——三批5任务全完成，请按批三会商\"T5后停止扩围、最终复盘决定是否结束\"给最终裁"
+  },
+  {
+    "key": "cdaa3700-70cd-54e2-b296-886f47ffa84c:1:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\n{\n\"result\": \"A\",\n\"summary\": \"正式结束等级B受控试运行。按所提供的三批五任务结果，五件套齐备、最终全PASS"
+  },
+  {
+    "key": "f2bfa592-ae6f-52ff-bdff-155e33e57604:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[远桥HTTP1复审|AI-Image-Service|20261117]\n请独立复核分支 fix/yuanqiao-http1-20261117，commit"
+  },
+  {
+    "key": "f2bfa592-ae6f-52ff-bdff-155e33e57604:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\n目前已直读指定 commit a9c485e97659586e2ea3c2d2b9c415b818d78006 的 GitHub 提交差"
+  }
+]

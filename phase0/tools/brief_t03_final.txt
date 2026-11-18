@@ -1,0 +1,10 @@
+[T03终验|AI-Image-Service|20261119]
+只回JSON。commit 24ac5f0e681cee468331a280d8e062bd7d27dd1e，父ab9864e5链。附t03_full_r3.diff(SHA 14064f0f)。逐条回上轮R01-R03(全P2)。
+
+-R01：R01测试改用uuid.UUID(str(attempt_id))解析，真实routing路径每条attempt_id验证合法UUID格式。
+-R02：重试测试补job.status=='succeeded'终态断言；首轮+重跑全部attempt_id均uuid.UUID解析验证。
+-R03：失败记录补worker_id=='routed-w'、vendor_id∈{vendor-a,vendor-b}断言，与成功记录上下文一致、未被覆盖。
+
+测试：T03聚焦11 passed；全量517 passed/14 failed=原14基线无新增回归。仍仅改测试，未碰实现/DB/路由/重试/计费(10项CLOSED保留)。
+
+请评(JSON,result,issues[],conditions[])：R01-R03关闭？C02/C03/C10/C11转CLOSED？可否final PASS并authorize_T04？必补项？

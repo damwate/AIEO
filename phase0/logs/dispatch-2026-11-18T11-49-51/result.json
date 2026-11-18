@@ -1,0 +1,181 @@
+{
+  "at": "2026-11-18T11:52:50.244Z",
+  "message_bytes": 949,
+  "reply": "ChatGPT 说：\n\n{\n\"result\": \"PASS\",\n\"issues\": [],\n\"closed_findings\": {\n\"R01\": {\n\"status\": \"CLOSED\",\n\"reason\": \"新增规范正文§6.4，完整覆盖task_id持久化、崩溃窗口边界、单供应商resume条件、原attempt复用、fail-closed、routed恢复边界及needs_human分类。明确保留跨供应商首次failover，不与既有522及unknown outcome决策冲突。\"\n},\n\"R02\": {\n\"status\": \"CLOSED\",\n\"reason\": \"execution_json白名单已包含retry_round，新增API测试断言item['retry_round']==0，确认该字段能够投影至API响应。\"\n}\n},\n\"scope\": {\n\"previous_G1_G6\": \"PASS\",\n\"R01_R02\": \"CLOSED\",\n\"implementation_changes\": \"无\",\n\"documentation_changes\": \"已完成\",\n\"targeted_tests\": \"9 passed\",\n\"full_tests\": \"526 passed, 14 failed（既有基线）\"\n},\n\"final_decision\": {\n\"T04\": \"FINAL_PASS\",\n\"authorization\": \"允许进入下一阶段\",\n\"conditions\": []\n},\n\"review_boundary\": \"本次依据提交信息及逐条整改说明裁定，未取得附件diff进行独立字节级复核。\"\n}",
+  "user_unit_key": "a9747b96-38a4-5b4b-90a9-cd170ebf488c:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "a9747b96-38a4-5b4b-90a9-cd170ebf488c:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "0524b03d-6295-4324-b829-28852d028669",
+  "stability": {
+    "stable": true,
+    "interval_ms": 3274,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-18T11:52:46.306Z",
+      "read_finished_at": "2026-11-18T11:52:46.571Z",
+      "unit_keys": [
+        "a9747b96-38a4-5b4b-90a9-cd170ebf488c:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "a9747b96-38a4-5b4b-90a9-cd170ebf488c:2:assistant",
+          "sha256": "9272ead7d6aeb3b7f790ff97f4c7f00d6b1dfb6d01bd01d7911de351e38b36b7",
+          "size_bytes": 1015
+        }
+      ],
+      "assistant_uuid": "0524b03d-6295-4324-b829-28852d028669",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-18T11:52:49.579Z",
+      "read_finished_at": "2026-11-18T11:52:50.108Z",
+      "unit_keys": [
+        "a9747b96-38a4-5b4b-90a9-cd170ebf488c:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "a9747b96-38a4-5b4b-90a9-cd170ebf488c:2:assistant",
+          "sha256": "9272ead7d6aeb3b7f790ff97f4c7f00d6b1dfb6d01bd01d7911de351e38b36b7",
+          "size_bytes": 1015
+        }
+      ],
+      "assistant_uuid": "0524b03d-6295-4324-b829-28852d028669",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "a9747b96-38a4-5b4b-90a9-cd170ebf488c:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "a9747b96-38a4-5b4b-90a9-cd170ebf488c:0:user",
+          "a9747b96-38a4-5b4b-90a9-cd170ebf488c:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "94320f8b11f906fcb48dbf15372b485ecf70cde132ba8fe8db236c3fd29b68be",
+          "9272ead7d6aeb3b7f790ff97f4c7f00d6b1dfb6d01bd01d7911de351e38b36b7"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "a9747b96-38a4-5b4b-90a9-cd170ebf488c:0:user",
+          "a9747b96-38a4-5b4b-90a9-cd170ebf488c:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "94320f8b11f906fcb48dbf15372b485ecf70cde132ba8fe8db236c3fd29b68be",
+          "9272ead7d6aeb3b7f790ff97f4c7f00d6b1dfb6d01bd01d7911de351e38b36b7"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "a9747b96-38a4-5b4b-90a9-cd170ebf488c:0:user",
+          "a9747b96-38a4-5b4b-90a9-cd170ebf488c:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "a9747b96-38a4-5b4b-90a9-cd170ebf488c:0:user",
+      "a9747b96-38a4-5b4b-90a9-cd170ebf488c:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "a9747b96-38a4-5b4b-90a9-cd170ebf488c:0:user",
+          "a9747b96-38a4-5b4b-90a9-cd170ebf488c:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "a9747b96-38a4-5b4b-90a9-cd170ebf488c:0:user",
+          "a9747b96-38a4-5b4b-90a9-cd170ebf488c:2:assistant"
+        ],
+        "overlap_keys": [
+          "a9747b96-38a4-5b4b-90a9-cd170ebf488c:0:user",
+          "a9747b96-38a4-5b4b-90a9-cd170ebf488c:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "9272ead7d6aeb3b7f790ff97f4c7f00d6b1dfb6d01bd01d7911de351e38b36b7",
+  "size_bytes": 1015,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-18T11-49-51\\reply.txt",
+  "reply_readback_sha256": "9272ead7d6aeb3b7f790ff97f4c7f00d6b1dfb6d01bd01d7911de351e38b36b7",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-18T11-49-51\\raw-units.json",
+  "raw_units_sha256": "7f5598e210dd86ad18c41a6a12b4b3c78e7bda31951472e0ae2acc215d776674",
+  "raw_units_size_bytes": 4120,
+  "raw_units_readback_sha256": "7f5598e210dd86ad18c41a6a12b4b3c78e7bda31951472e0ae2acc215d776674",
+  "session_id": "6afd9115-a0cc-83e8-8fe9-a3abdb3fe827",
+  "conversation_url": "https://chatgpt.com/c/6afd9115-a0cc-83e8-8fe9-a3abdb3fe827",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}

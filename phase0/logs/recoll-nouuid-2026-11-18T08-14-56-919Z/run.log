@@ -1,0 +1,6 @@
+[2026-11-18T08:14:57.382Z] 会话锁已获取（nouuid 专用补采）
+[2026-11-18T08:15:20.630Z] checks={"marked_user_unique":true,"last_user_assertion":true,"adjacent_assistant_tail":true,"stable_static_dom_read":true,"final_stop_button_not_visible":true,"not_prev_reply_sha":true,"response_length_plausible":true,"uuid_based_locator":false}
+[2026-11-18T08:15:20.634Z] reply 已落盘（16305 字节，SHA=0aafb1b4cafbb0ab…）
+[2026-11-18T08:15:20.635Z] RECOLL COMPLETED
+[2026-11-18T08:15:20.646Z] 视口覆盖已清除
+[2026-11-18T08:15:21.090Z] 会话锁已释放（nouuid 专用补采）

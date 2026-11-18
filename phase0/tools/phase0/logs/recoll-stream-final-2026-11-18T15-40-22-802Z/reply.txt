@@ -1,0 +1,104 @@
+ChatGPT 说：
+
+{
+"result": "REWORK",
+"file_access": {
+"核查文档": "OK",
+"http_transport": "OK",
+"测试": "OK"
+},
+"findings": [
+{
+"id": "G-A",
+"severity": "P1",
+"verdict": "CONFIRMED",
+"evidence": "http_transport.py 实际 timeout=180、stream=True，但 curl_options 只有 CONNECTTIMEOUT_MS=10000，没有显式 LOW_SPEED_LIMIT/TIME。依赖 curl_cffi 0.17.0 set_curl_options 对标量 timeout + stream=True 的内部副作用设置 LOW_SPEED_LIMIT=1、LOW_SPEED_TIME=180。测试 test_low_speed_mode_uses_stream_and_independent_connect_timeout 只检查传入参数字典，没有执行真实 libcurl。",
+"conclusion": "隐式依赖确实存在。即使当前版本净效果正确，升级后内部 trick 改变可能导致保护静默失效。方向1仍然成立。",
+"additional_finding": "G-D 同样成立：CONNECTTIMEOUT_MS 覆盖依赖 curl_options 在默认选项之后应用。应通过版本锁定和真实传输测试控制该风险。"
+},
+{
+"id": "G-C",
+"severity": "P1",
+"verdict": "CONFIRMED",
+"evidence": "http_transport.py 在 stream=True 后仍执行 content = response.content，随后将完整 content 包装为 io.BytesIO。没有读取字节上限，没有增量消费，也没有超限中止机制。",
+"conclusion": "这是实际的内存边界缺陷，不只是命名或代码风格问题。stream=True 并不意味着应用层不会完整缓冲响应体。大图、异常供应商响应及异常膨胀的 JSON 都可能造成内存压力。",
+"qualification": "当前代码的低速超时仍可能在完整下载过程中生效，因此 G-C 不等于 G-A，也不意味着低速保护失效。"
+},
+{
+"id": "G-B",
+"severity": "P1",
+"verdict": "CONFIRMED",
+"evidence": "backend/tests/test_supplier_http_version.py 的 _install_curl_stub、_FakeResponse 和 test_low_speed_mode_uses_stream_and_independent_connect_timeout 均使用 mock。没有真实 curl_cffi + 本地 HTTP server 的慢速传输测试。",
+"conclusion": "现有测试只能证明调用参数传递和异常处理分支，不能证明 libcurl 的实际低速保护、连接超时及分块读取行为。"
+},
+{
+"id": "G-D",
+"severity": "P1",
+"verdict": "CONFIRMED",
+"evidence": "当前 curl_options 只设置 CONNECTTIMEOUT_MS=10000，LOW_SPEED 参数依赖库内部设置；核查文档所引用的 curl_cffi 0.17.0 源码将 curl_options 放在默认选项之后应用。",
+"conclusion": "连接超时覆盖当前语义正确，但仍存在对库内部选项应用顺序的依赖。"
+}
+],
+"final_fix_plan": [
+{
+"id": "F1",
+"priority": "P1",
+"action": "显式设置低速保护参数",
+"details": [
+"在 curl_transport low_speed 分支显式设置 CurlOpt.LOW_SPEED_LIMIT=1。",
+"显式设置 CurlOpt.LOW_SPEED_TIME=180。",
+"保留 CurlOpt.CONNECTTIMEOUT_MS=connect_timeout*1000，默认10秒。",
+"保留 timeout=180、stream=True，不使用 tuple timeout 替代。",
+"不设置 CURLOPT_TIMEOUT_MS，避免重新引入180秒总传输时限。",
+"固定 curl_cffi 版本，并验证当前版本 CurlOpt 常量及实际 setopt 行为。",
+"明确低速保护的真实语义：低于1 byte/s持续180秒触发，而不是简单的无数据180秒计时器。"
+]
+},
+{
+"id": "F2",
+"priority": "P1",
+"action": "将无界 response.content 改为有界分块读取",
+"details": [
+"使用 curl_cffi 支持的 iter_content(chunk_size=...) 或经验证的等效接口。",
+"逐块累计响应体，并在累计字节数达到上限时立即终止读取。",
+"成功响应设置明确的最大响应体字节数，具体数值结合实际图片输出规格确定。",
+"错误响应单独设置较小上限，例如最多保留16KiB诊断内容，不再先完整下载再截取。",
+"超限立即关闭响应并抛出明确的本地响应体超限异常，不得伪装成供应商网络故障。",
+"保持现有 HTTPError、request_id、协议审计和 body 阶段错误元数据契约。",
+"JSON仍需完整解析时，可以在上限内缓冲后解析，不要求额外引入复杂流式JSON解析器。"
+]
+},
+{
+"id": "F3",
+"priority": "P1",
+"action": "增加真实本地网络测试",
+"details": [
+"测试必须使用真实安装版本 curl_cffi，不使用 _install_curl_stub。",
+"使用本地可控 HTTP server，不依赖公网或真实供应商。",
+"正常分块：验证客户端在响应结束前已经消费前面的数据块。",
+"持续低速：验证低于配置阈值的传输能够触发低速保护。",
+"完全停滞：先发送部分响应，再停止发送，验证最终超时和部分响应不得被当作成功。",
+"连接超时：单独验证连接阶段的10秒预算。",
+"总时限：验证正常持续传输超过180秒但速率高于阈值时，不会因180秒总时限而被错误终止；该项可通过缩短测试专用参数实现。",
+"超大响应：验证达到字节上限后停止读取并释放连接。",
+"所有测试验证错误分类、响应关闭和资源释放。"
+]
+},
+{
+"id": "F4",
+"priority": "P1",
+"action": "补齐0009数据库迁移",
+"details": [
+"新增 Alembic 0009，down_revision 指向当前0008。",
+"创建 governance_records 表。",
+"创建 priority_demotions 表。",
+"字段类型、nullable、default、主键及索引与 db.py ORM 定义一致。",
+"按 ORM 实际约束建立唯一约束和必要外键，不凭空增加约束。",
+"downgrade 只删除0009创建的结构。",
+"测试从0008真实升级到0009，并验证完整数据库 schema。",
+"测试 downgrade，不得误删0008已有业务数据。"
+]
+}
+],
+"notes": "本次三个指定文件均成功读取，均对应完整提交 d1d920c849f2945e34eb0e3c8ab6db8bbcb912a6。独立复核确认：上次推荐的方向1、有界分块读取、真实网络测试及0009迁移方案仍然成立，没有发现推翻原方案的新证据。特别补充两点：第一，LOW_SPEED_TIME 是低速持续窗口，不是严格的无数据空闲计时器；第二，JSON有界缓冲可以接受，但必须有最大字节数。方向2 tuple timeout 不推荐，因为它可能改变连接预算与低速窗口的组合语义。当前代码尚未完成这些修复，因此不能 PASS。"
+}

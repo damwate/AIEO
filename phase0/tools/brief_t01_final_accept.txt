@@ -1,0 +1,9 @@
+[T01终验|AI-Image-Service|20261119]
+独立复验T01，只回JSON。仓库YotinGarden/AI-Image-Service，HEAD c031e0411f29bb183b35a2ff9c39faad5de96725。三提交未push(DEC-010)，附t01_full_v3.diff(合并12文件)+t01_verification_notes_v3.txt离线核验。
+
+上轮P1-01已修：output_commit改单事务原子提交——乐观succeeded写入j.provider_attempts快照后与任务成功同一次db.commit落库；commit失败则rollback+reset_phase_for_rollback撤销succeeded+改记failed，三提交合并diff可见。新增注入测试断言快照/终态/摘要/execution_json投影一致。reset为显式事务级撤销，不破坏终态不可覆盖纪律。
+
+历轮REWORK(终态不可覆盖/storage边界/image_validate接线/completed_at/白名单/HTTPError语义/端到端用例)均已修复并保留。
+测试：聚焦14 passed/相邻39 passed/全量453 passed，14失败为基线既有(stash对照)。前端无node_modules未tsc(未验收项)。未改任何判定/路由/重试。
+
+请终验(JSON,result=PASS/REWORK,issues,conditions)：P1-01是否真修复？全链路只观测不改判定是否成立？脱敏是否充分？还有无必须修问题？

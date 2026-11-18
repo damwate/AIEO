@@ -1,0 +1,9 @@
+[日志节点方案|AI-Image-Service|20261118]
+承接上轮REWORK(db15074b…，HEAD abd7116…)。用户：节点已定义，先建日志——出错要看到停在哪步，别再笼统"未知错误"、查日志不知哪步错。评方案，回JSON。
+
+缺口：①解析/JSON/SSE/base64/图片提取/校验(本次失败处)无字段；②节点只记成功不记失败，失败处空洞；③error被safe_error_message重建，异常类型丢失；④execution_json白名单无解析字段，前端看不到。
+
+提议(纯可观测性，本轮不改acceptance/failure_decision/路由)：每节点记name/status/at/exception_type/脱敏摘要；新增failed_phase+failed_at指向最后失败节点；解析/提取/解码/校验各加阶段标记且失败也落；新增error_detail_safe进DB+execution_json+前端(原error保留)。
+
+请评审：1)"先日志后分类"两步切分认可吗？满足上轮"阶段一先拿失败证据"吗？2)扁平字段vs阶段数组，哪个能表达未到达/失败/不适用？3)失败节点在哪落库(worker except+adapter checkpoint)？4)脱敏边界与其他必须项？
+输出{result,points,conditions,reviewed_commit}。只读，不改码不部署。

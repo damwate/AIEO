@@ -1,0 +1,18 @@
+[T04设计评审|AI-Image-Service|1121]
+只回JSON。T01/T02/T03全PASS。据简报+审计判断。
+
+T04审计：验收#1扣费识别、#2 HTTP200不盲重试、#3解析失败不认定未执行、#4多尝试独立记录、#6测试证据——全由T01-T03覆盖，无需重做。
+
+真实缺口：
+G1)async/rightapi支持task_id查询(resume已实现+测)，但checkpoint只存布尔has_task_id不存task_id；reclaim末条in_flight直接终态失败不调resume——有而不用。
+G2)billing_status恒unknown不参与决策。
+G3)failover对unknown也切下一家(或新增扣费)，无needs_human。
+G4)单供应商attempt缺retry_round；cap未写清。
+
+提案(复用优先、不加补偿系统)：
+1)G1：checkpoint存task_id(非签名URL)到resume_task_id；reclaim遇in_flight且有此字段且适配器支持时调resume续查，不支持者保持unknown→stop。
+2)G3加needs_human布尔(可能已扣费)，仅审计不改action。
+3)G4补retry_round，文档写清cap=任务级2次；G2文档标billing恒unknown。
+4)测试：resume接线、needs_human、retry_round一致。
+
+请评(JSON,result,issues,conditions)：G1算"复杂补偿系统"吗？边界可否？必补项/裁剪？

@@ -1,0 +1,1353 @@
+﻿diff --git a/backend/app/ai/ai_provider_async.py b/backend/app/ai/ai_provider_async.py
+index da955a8..5a0b398 100644
+--- a/backend/app/ai/ai_provider_async.py
++++ b/backend/app/ai/ai_provider_async.py
+@@ -15,6 +15,14 @@ from .ai_provider import GenerationRequest, ImageProvider, ProviderError, Provid
+ from .ai_provider_seedream import SeedreamImageProvider
+ 
+ 
++def _phase(attempt, name, status, exc=None):
++    """T01：attempt=None 时为 no-op。"""
++    if attempt is None:
++        return
++    from .provider_outcome import record_phase
++    record_phase(attempt, name, status, exc=exc)
++
++
+ class AsyncImageProvider(ImageProvider):
+     name = 'image_async'
+     billable = True
+@@ -34,15 +42,30 @@ class AsyncImageProvider(ImageProvider):
+         from ..db import now
+         if attempt is not None:
+             attempt.setdefault('request_started_at', now())
++        _phase(attempt, 'request_send', 'running')
+         try:
+             with urlopen(req, timeout=timeout) as resp:
++                _phase(attempt, 'request_send', 'succeeded')
++                _phase(attempt, 'response_received', 'running')
+                 if attempt is not None:
+                     attempt['response_received_at'] = now()
+                     attempt['http_status'] = resp.status
+-                raw = resp.read(4 * 1024 * 1024)
++                try:
++                    raw = resp.read(4 * 1024 * 1024)
++                except Exception as read_err:
++                    _phase(attempt, 'response_received', 'failed', exc=read_err)
++                    raise
+                 if attempt is not None:
+                     attempt['response_completed_at'] = now()
+-                return json.loads(raw)
++                _phase(attempt, 'response_received', 'succeeded')
++                _phase(attempt, 'response_parse', 'running')
++                try:
++                    payload = json.loads(raw)
++                except ValueError as ve:
++                    _phase(attempt, 'response_parse', 'failed', exc=ve)
++                    raise
++                _phase(attempt, 'response_parse', 'succeeded')
++                return payload
+         except urllib.error.HTTPError as e:
+             if attempt is not None:
+                 attempt['response_received_at'] = now()
+@@ -80,6 +103,7 @@ class AsyncImageProvider(ImageProvider):
+             payload = self._json(endpoint, cfg, min(30, timeout), body, attempt=request.attempt)
+             task_id = payload.get('task_id') or payload.get('id')
+             if not isinstance(task_id, str) or not task_id or len(task_id) > 120:
++                _phase(request.attempt, 'result_extract', 'failed')
+                 raise ProviderError('provider_unknown_outcome', '异步提交未返回有效任务 ID，禁止重发')
+             # Do not follow a supplier-provided polling URL with our bearer key.
+             state = {'task_id': task_id, 'phase': 'accepted'}
+@@ -105,12 +129,19 @@ class AsyncImageProvider(ImageProvider):
+                 if isinstance(url, list):
+                     url = url[0] if len(url) == 1 else None
+                 if not url:
++                    _phase(request.attempt, 'result_extract', 'failed')
+                     raise ProviderError('provider_unknown_outcome', '原任务完成但缺少成品地址，未重新生成')
++                _phase(request.attempt, 'result_extract', 'succeeded')
+                 state = {**state, 'url': url, 'phase': 'download'}
+                 checkpoint(state)
+                 break
+             time.sleep(min(float(cfg.get('poll_seconds') or 2), max(0, remaining)))
+-        image = SeedreamImageProvider()._download(state['url'], max(1, min(30, deadline-time.monotonic())))
++        try:
++            image = SeedreamImageProvider()._download(
++                state['url'], max(1, min(30, deadline-time.monotonic())), attempt=request.attempt)
++        except Exception as e:
++            _phase(request.attempt, 'download', 'failed', exc=e)
++            raise
+         if request.attempt is not None:
+             from ..db import now
+             request.attempt['download_completed_at'] = now()
+diff --git a/backend/app/ai/ai_provider_openai.py b/backend/app/ai/ai_provider_openai.py
+index f7dd0f8..0afafbf 100644
+--- a/backend/app/ai/ai_provider_openai.py
++++ b/backend/app/ai/ai_provider_openai.py
+@@ -54,6 +54,14 @@ from .http_transport import http_version_label, normalize_http_version, urlopen
+ from .ai_provider import (GenerationRequest, ImageProvider, ProviderError,
+                           ProviderResult, load_ai_config, resolve_vendor_input_limit)
+ 
++def _phase(attempt, name, status, exc=None):
++    """T01：阶段事件记录统一入口；attempt=None 时为 no-op（保持 helper 直接调用的旧行为）。"""
++    if attempt is None:
++        return
++    from .provider_outcome import record_phase
++    record_phase(attempt, name, status, exc=exc)
++
++
+ PROVIDER_NAME = 'openai_compat'
+ DEFAULT_TIMEOUT_SECONDS = 300
+ # 中转站前置 Cloudflare 按 User-Agent 签名封 bot（实测 2026-09-30：urllib 默认 UA 被 403
+@@ -130,10 +138,13 @@ class OpenAICompatImageProvider(ImageProvider):
+             url, data=body, method='POST',
+             headers={'Authorization': f'Bearer {bearer}', 'Content-Type': content_type,
+                      'User-Agent': USER_AGENT})
++        _phase(attempt, 'request_send', 'running')
+         try:
+             with urlopen(req, timeout=timeout, http_version=configured,
+                          log_context=log_context, timeout_mode=timeout_mode,
+                          connect_timeout_seconds=connect_timeout_seconds) as resp:
++                _phase(attempt, 'request_send', 'succeeded')
++                _phase(attempt, 'response_received', 'running')
+                 if attempt is not None:
+                     from ..db import now
+                     attempt['response_received_at'] = now()
+@@ -150,13 +161,23 @@ class OpenAICompatImageProvider(ImageProvider):
+                         attempt['request_id'] = str(rid)[:128]
+                     if getattr(resp, 'http_version', None) is not None:
+                         attempt['actual_http_version'] = http_version_label(resp.http_version)
+-                body = resp.read()
++                try:
++                    body = resp.read()
++                except Exception as read_err:
++                    # 响应头已到但响应体读取失败：接收阶段失败，request_send 保持 succeeded。
++                    _phase(attempt, 'response_received', 'failed', exc=read_err)
++                    raise
+                 if attempt is not None:
+                     attempt['response_completed_at'] = now()
++                _phase(attempt, 'response_received', 'succeeded')
+                 return resp.headers.get('Content-Type', ''), body
+         except urllib.error.HTTPError as e:
+             from .provider_outcome import record_http_reason
+             record_http_reason(attempt, e)
++            # HTTPError 表示已收到 HTTP 响应：接收阶段本身成功，状态码由 http_status 表达，
++            # 不把“收到非 2xx”误记为“接收失败”（否则与 stage/error_code 语义冲突）。
++            _phase(attempt, 'request_send', 'succeeded')
++            _phase(attempt, 'response_received', 'succeeded')
+             if attempt is not None:
+                 from ..db import now
+                 attempt['response_received_at'] = now()
+@@ -198,6 +219,7 @@ class OpenAICompatImageProvider(ImageProvider):
+                                 status=int(e.code)) from e
+         except urllib.error.URLError as e:
+             # 只有 DNS/建连失败可证明未发送；发送后断连/HTTP2流错误仍可能已受理。
++            _phase(attempt, 'request_send', 'failed', exc=e)
+             if attempt is not None:
+                 code = getattr(e, 'transport_code', None)
+                 if isinstance(code, int):
+@@ -228,6 +250,7 @@ class OpenAICompatImageProvider(ImageProvider):
+         except (TimeoutError, OSError) as e:
+             # 发送后等响应超时/断连=请求可能已抵达上游（可能已计费）——stage 如实标记，
+             # 剩余重复计费风险由文档明示，不假装可消除（评审 A RQ1 残余风险口径）
++            _phase(attempt, 'request_send', 'failed', exc=e)
+             if attempt is not None:
+                 attempt['reason'] = 'request_timeout' if isinstance(e, TimeoutError) else 'connection_closed'
+                 attempt['stage'] = 'sent_no_response'
+@@ -240,18 +263,22 @@ class OpenAICompatImageProvider(ImageProvider):
+                                 http_version=http_version, log_context=log_context,
+                                 timeout_mode=timeout_mode,
+                                 connect_timeout_seconds=connect_timeout_seconds)
+-        return self._decode_json(raw)
++        return self._decode_json(raw, attempt)
+ 
+     @staticmethod
+-    def _decode_json(raw: bytes) -> dict:
++    def _decode_json(raw: bytes, attempt: dict | None = None) -> dict:
++        _phase(attempt, 'response_parse', 'running')
+         try:
+-            return json.loads(raw.decode('utf-8'))
++            payload = json.loads(raw.decode('utf-8'))
+         except ValueError as e:
++            _phase(attempt, 'response_parse', 'failed', exc=e)
+             raise ProviderError('provider_error', f'AI 通道响应不是合法 JSON：{e}') from e
++        _phase(attempt, 'response_parse', 'succeeded')
++        return payload
+ 
+-    def _download(self, url: str, timeout: int) -> bytes:
++    def _download(self, url: str, timeout: int, attempt: dict | None = None) -> bytes:
+         from .image_download import download_image
+-        return download_image(url, timeout)
++        return download_image(url, timeout, attempt=attempt)
+ 
+     # ============================ 输入图收集（硬门 A：截图 + 唯一参考资产，sha256 防御去重）============================
+     @staticmethod
+@@ -414,7 +441,8 @@ class OpenAICompatImageProvider(ImageProvider):
+         return base64.b64decode(stripped)
+ 
+     def _edits_stream_result(self, raw: bytes,
+-                             timeout: int = DEFAULT_TIMEOUT_SECONDS, checkpoint=None) -> tuple[bytes, dict | None]:
++                             timeout: int = DEFAULT_TIMEOUT_SECONDS, checkpoint=None,
++                             attempt: dict | None = None) -> tuple[bytes, dict | None]:
+         """SSE 形态：解析规则对齐官方 skill read_streamed_images——partial 事件跳过、
+         error/failed 事件携带原文报错、成品从「事件类型为空或含 complete」的事件递归提取
+         b64 字段（取最后一个）；usage 取任一事件携带的最新值。缺最终图=明确报错并携带
+@@ -428,6 +456,7 @@ class OpenAICompatImageProvider(ImageProvider):
+         image: bytes | None = None
+         usage: dict | None = None
+         seen_types: list[str] = []
++        _phase(attempt, 'response_parse', 'running')
+         for etype, data in self._sse_events(raw):
+             if not data or data == '[DONE]':
+                 continue
+@@ -446,10 +475,12 @@ class OpenAICompatImageProvider(ImageProvider):
+             if status and status not in seen_types:
+                 seen_types.append(status)   # 私有词表 status 也入清单（报错可定位）
+             if 'failed' in event_type.lower() or 'error' in event_type.lower():
++                _phase(attempt, 'response_parse', 'failed')
+                 raise ProviderError('provider_error', f'AI 通道 edits 流式事件报错：{data[:300]}')
+             if status:
+                 # 私有词表错误状态：与 type 词表错误事件同语义上抛（带原文前 300 字）。
+                 if 'failed' in status.lower() or 'error' in status.lower():
++                    _phase(attempt, 'response_parse', 'failed')
+                     raise ProviderError('provider_error',
+                                         f'AI 通道 edits 流式事件报错：{data[:300]}')
+                 # 进度/终态 status 事件（无 data 列表，不携带成品）：跳过。
+@@ -461,42 +492,63 @@ class OpenAICompatImageProvider(ImageProvider):
+                 # 私有词表最终事件=标准 edits JSON 信封（无 type/status，含 data 列表）：
+                 # 复用 JSON 信封解析提取成品（b64_json 内联 / url 下载双接纳）。官方词表
+                 # 事件恒有 type（obj['type'] 或 event: 行），不会进入本分支。
+-                image = self._edits_image_from_json(obj, timeout, checkpoint)
++                image = self._edits_image_from_json(obj, timeout, checkpoint, attempt)
++                _phase(attempt, 'response_parse', 'succeeded')
+                 continue
+             if event_type and 'complete' not in event_type.lower():
+                 continue
+             for v in self._extract_b64_values(obj):
++                _phase(attempt, 'image_decode', 'running')
+                 try:
+                     image = self._decode_b64_image(v)
+                 except (ValueError, TypeError) as e:
++                    _phase(attempt, 'image_decode', 'failed', exc=e)
+                     raise ProviderError(
+                         'provider_error',
+                         f'AI 通道 edits 流式事件 {event_type} 携带的 b64 不是合法图片：{e}') from e
++                _phase(attempt, 'image_decode', 'succeeded')
++                _phase(attempt, 'download', 'not_applicable')
+         if image is None:
++            _phase(attempt, 'response_parse', 'failed')
+             raise ProviderError(
+                 'provider_error',
+                 f'AI 通道 edits 流式响应缺少最终图片（已见事件类型：{seen_types or "无"}）')
+         return image, usage
+ 
+-    def _edits_image_from_json(self, payload: dict, timeout: int, checkpoint=None) -> bytes:
++    def _edits_image_from_json(self, payload: dict, timeout: int, checkpoint=None,
++                               attempt: dict | None = None) -> bytes:
+         """JSON 信封形态（2026-10-12 实测现行）：data[0].url=公开 R2 地址需再下载；
+         data[0].b64_json 内联形态同样接纳。缺两者=明确报错。"""
++        _phase(attempt, 'result_extract', 'running')
+         data = payload.get('data')
+         first = data[0] if isinstance(data, list) and data and isinstance(data[0], dict) else None
+         if not first:
++            _phase(attempt, 'result_extract', 'failed')
+             raise ProviderError('provider_error', 'AI 通道 edits 响应缺少 data[0]（无成品图）')
+         if first.get('b64_json'):
++            _phase(attempt, 'result_extract', 'succeeded')
++            _phase(attempt, 'image_decode', 'running')
+             try:
+-                return self._decode_b64_image(str(first['b64_json']))
++                image = self._decode_b64_image(str(first['b64_json']))
+             except (ValueError, TypeError) as e:
++                _phase(attempt, 'image_decode', 'failed', exc=e)
+                 raise ProviderError('provider_error',
+                                     f'AI 通道 edits data[0].b64_json 不是合法 base64：{e}') from e
++            _phase(attempt, 'image_decode', 'succeeded')
++            _phase(attempt, 'download', 'not_applicable')
++            return image
+         url = first.get('url')
+         if not url:
++            _phase(attempt, 'result_extract', 'failed')
+             raise ProviderError('provider_error', 'AI 通道 edits 响应 data[0] 缺少 url/b64_json')
++        _phase(attempt, 'result_extract', 'succeeded')
+         if checkpoint:
+             checkpoint({'url': str(url), 'phase': 'download'})
+-        image = self._download(str(url), timeout)
++        try:
++            image = self._download(str(url), timeout, attempt=attempt)
++        except Exception as e:
++            _phase(attempt, 'download', 'failed', exc=e)
++            raise
+         if checkpoint:
+             checkpoint({'url': str(url), 'phase': 'download_completed'})
+         return image
+@@ -515,14 +567,19 @@ class OpenAICompatImageProvider(ImageProvider):
+                 attempt['usage_output_tokens'] = usage.get('output_tokens')
+             attempt['guard'] = 'on' if guard_on else 'off'
+         if guard_on:
++            _phase(attempt, 'image_guard', 'running')
+             try:
+                 self._guard_image_arrival(usage, image_count)
+-            except ProviderError:
++            except ProviderError as e:
+                 if attempt is not None:
+                     attempt['guard'] = 'rejected'
++                _phase(attempt, 'image_guard', 'failed', exc=e)
+                 raise
+             if attempt is not None:
+                 attempt['guard'] = 'pass'
++            _phase(attempt, 'image_guard', 'succeeded')
++        else:
++            _phase(attempt, 'image_guard', 'not_applicable')
+ 
+     @staticmethod
+     def _guard_image_arrival(usage: dict | None, image_count: int) -> None:
+@@ -543,14 +600,22 @@ class OpenAICompatImageProvider(ImageProvider):
+                                 '已拒绝出图（防静默丢图）')
+ 
+     @staticmethod
+-    def _extract_image(payload: dict) -> bytes:
++    def _extract_image(payload: dict, attempt: dict | None = None) -> bytes:
++        _phase(attempt, 'result_extract', 'running')
+         for item in payload.get('output') or []:
+             if isinstance(item, dict) and item.get('type') == 'image_generation_call' and item.get('result'):
++                _phase(attempt, 'result_extract', 'succeeded')
++                _phase(attempt, 'image_decode', 'running')
+                 try:
+-                    return base64.b64decode(item['result'])   # 裸 base64（无 data: 前缀）
++                    image = base64.b64decode(item['result'])   # 裸 base64（无 data: 前缀）
+                 except (ValueError, TypeError) as e:
++                    _phase(attempt, 'image_decode', 'failed', exc=e)
+                     raise ProviderError('provider_error',
+                                         f'AI 通道 image_generation_call.result 不是合法 base64：{e}') from e
++                _phase(attempt, 'image_decode', 'succeeded')
++                _phase(attempt, 'download', 'not_applicable')
++                return image
++        _phase(attempt, 'result_extract', 'failed')
+         raise ProviderError('provider_error', 'AI 通道响应缺少 image_generation_call.result')
+ 
+     # ============================ 主入口（D6 冻结窄接口）============================
+@@ -610,7 +675,8 @@ class OpenAICompatImageProvider(ImageProvider):
+                 att['usage_input_tokens'] = usage.get('input_tokens')
+                 att['usage_output_tokens'] = usage.get('output_tokens')
+             att['guard'] = 'not_applicable'
+-        return ProviderResult(image_bytes=self._edits_image_from_json(result, timeout, request.checkpoint))
++        return ProviderResult(image_bytes=self._edits_image_from_json(
++            result, timeout, request.checkpoint, request.attempt))
+ 
+     def _generate_via_edits(self, cfg: dict, base: str, model: str, timeout: int,
+                             request: GenerationRequest,
+@@ -646,11 +712,11 @@ class OpenAICompatImageProvider(ImageProvider):
+             raise
+         head = raw.lstrip()[:8].decode('utf-8', 'replace').lower()
+         if ('text/event-stream' in ctype.lower() or head.startswith(('event', 'data:'))):
+-            image, usage = self._edits_stream_result(raw, timeout, request.checkpoint)
++            image, usage = self._edits_stream_result(raw, timeout, request.checkpoint, request.attempt)
+         else:
+-            result = self._decode_json(raw)
++            result = self._decode_json(raw, request.attempt)
+             usage = result.get('usage') if isinstance(result.get('usage'), dict) else None
+-            image = self._edits_image_from_json(result, timeout, request.checkpoint)
++            image = self._edits_image_from_json(result, timeout, request.checkpoint, request.attempt)
+         # 2026-10-16 PO 拍板：守卫按 vendor 配置开关（image_arrival_guard=False 跳过，直接收图）
+         # ——IntelAlloc 实录：其 edits 回包（SSE/JSON 两形态）均不含 usage，图已生成扣费但守卫
+         # 永远拿不到到达证据被永远拒收。关闭=信任该中转自担静默丢图风险；缺省 True 行为不变。
+@@ -707,10 +773,11 @@ class OpenAICompatImageProvider(ImageProvider):
+             raise
+         head = raw.lstrip()[:8].decode('utf-8', 'replace').lower()
+         if 'text/event-stream' in ctype.lower() or head.startswith(('event', 'data:')):
++            _phase(request.attempt, 'response_parse', 'failed')
+             raise ProviderError('provider_error', 'edits JSON 通道未约定流式响应（收到 SSE）')
+-        result = self._decode_json(raw)
++        result = self._decode_json(raw, request.attempt)
+         usage = result.get('usage') if isinstance(result.get('usage'), dict) else None
+-        image = self._edits_image_from_json(result, timeout, request.checkpoint)
++        image = self._edits_image_from_json(result, timeout, request.checkpoint, request.attempt)
+         self._record_usage_and_guard(request.attempt, usage, cfg, len(images))
+         return ProviderResult(image_bytes=image)
+ 
+@@ -739,7 +806,7 @@ class OpenAICompatImageProvider(ImageProvider):
+         self._record_usage_and_guard(request.attempt,
+                                      result.get('usage') if isinstance(result.get('usage'), dict) else None,
+                                      cfg, len(images))
+-        image = self._extract_image(result)
++        image = self._extract_image(result, request.attempt)
+         gen_id = None
+         for item in result.get('output') or []:
+             if isinstance(item, dict) and item.get('type') == 'image_generation_call':
+diff --git a/backend/app/ai/ai_provider_rightapi.py b/backend/app/ai/ai_provider_rightapi.py
+index c7d7b7e..94cfab3 100644
+--- a/backend/app/ai/ai_provider_rightapi.py
++++ b/backend/app/ai/ai_provider_rightapi.py
+@@ -35,6 +35,15 @@ from .ai_provider import (GenerationRequest, ImageProvider, ProviderError,
+                           ProviderResult, load_ai_config)
+ from .ai_provider_seedream import SeedreamImageProvider
+ 
++
++def _phase(attempt, name, status, exc=None):
++    """T01：attempt=None 时为 no-op。"""
++    if attempt is None:
++        return
++    from .provider_outcome import record_phase
++    record_phase(attempt, name, status, exc=exc)
++
++
+ PROVIDER_NAME = 'rightapi_async'
+ DEFAULT_TIMEOUT_SECONDS = 300
+ DEFAULT_POLL_SECONDS = 3
+@@ -89,15 +98,26 @@ class RightAPIImageProvider(ImageProvider):
+         from ..db import now
+         if attempt is not None:
+             attempt.setdefault('request_started_at', now())
++        _phase(attempt, 'request_send', 'running')
+         try:
+             with urlopen(req, timeout=timeout) as resp:
++                _phase(attempt, 'request_send', 'succeeded')
++                _phase(attempt, 'response_received', 'running')
+                 if attempt is not None:
+                     attempt['response_received_at'] = now()
+                     attempt['http_status'] = resp.status
+-                raw = resp.read(4 * 1024 * 1024)
++                try:
++                    raw = resp.read(4 * 1024 * 1024)
++                except Exception as read_err:
++                    _phase(attempt, 'response_received', 'failed', exc=read_err)
++                    raise
+                 if attempt is not None:
+                     attempt['response_completed_at'] = now()
++                _phase(attempt, 'response_received', 'succeeded')
+         except urllib.error.HTTPError as e:
++            # 已收到 HTTP 响应：接收成功，状态码由 http_status 表达。
++            _phase(attempt, 'request_send', 'succeeded')
++            _phase(attempt, 'response_received', 'succeeded')
+             if attempt is not None:
+                 attempt['response_received_at'] = now()
+                 attempt['http_status'] = int(e.code)
+@@ -107,16 +127,20 @@ class RightAPIImageProvider(ImageProvider):
+             # 不回读响应体：不复制 error 原文/签名 URL/任何供应商回包内容进审计与错误。
+             raise ProviderError(code, f'RightAPI 接口 HTTP {e.code}', status=int(e.code)) from e
+         except (urllib.error.URLError, TimeoutError, OSError) as e:
++            _phase(attempt, 'request_send', 'failed', exc=e)
+             raise ProviderError('provider_unknown_outcome',
+                                 'RightAPI 调用结果未知（可能已受理/已计费），禁止重新提交生成') from e
++        _phase(attempt, 'response_parse', 'running')
+         try:
+             payload = json.loads(raw.decode('utf-8'))
+             if not isinstance(payload, dict):
+                 raise ValueError('expected object')
+-            return payload
+         except ValueError as e:
++            _phase(attempt, 'response_parse', 'failed', exc=e)
+             raise ProviderError('provider_unknown_outcome',
+                                 'RightAPI 响应不是合法 JSON（结果未知，禁止重新提交生成）') from e
++        _phase(attempt, 'response_parse', 'succeeded')
++        return payload
+ 
+     @staticmethod
+     def _submit_body(cfg: dict, request: GenerationRequest) -> dict:
+@@ -203,8 +227,10 @@ class RightAPIImageProvider(ImageProvider):
+                 if isinstance(url, list):
+                     url = url[0] if len(url) == 1 else None
+                 if not isinstance(url, str) or not url.strip():
++                    _phase(request.attempt, 'result_extract', 'failed')
+                     raise ProviderError('provider_unknown_outcome',
+                                         'RightAPI 提交响应既无 task_id 也无成品地址，禁止重发')
++                _phase(request.attempt, 'result_extract', 'succeeded')
+                 state = {'url': str(url), 'phase': 'download'}
+                 checkpoint(state)
+         while not state.get('url'):
+@@ -229,15 +255,21 @@ class RightAPIImageProvider(ImageProvider):
+                 if isinstance(url, list):
+                     url = url[0] if len(url) == 1 else None
+                 if not isinstance(url, str) or not url.strip():
++                    _phase(request.attempt, 'result_extract', 'failed')
+                     raise ProviderError('provider_unknown_outcome',
+                                         'RightAPI 原任务完成但缺少成品地址，未重新生成')
++                _phase(request.attempt, 'result_extract', 'succeeded')
+                 state = {**state, 'url': str(url), 'phase': 'download'}
+                 checkpoint(state)
+                 break
+             time.sleep(min(float(cfg.get('poll_seconds') or DEFAULT_POLL_SECONDS),
+                            max(0, deadline - time.monotonic())))
+-        image = SeedreamImageProvider()._download(
+-            state['url'], max(1, min(30, deadline - time.monotonic())))
++        try:
++            image = SeedreamImageProvider()._download(
++                state['url'], max(1, min(30, deadline - time.monotonic())), attempt=request.attempt)
++        except Exception as e:
++            _phase(request.attempt, 'download', 'failed', exc=e)
++            raise
+         if request.attempt is not None:
+             from ..db import now
+             request.attempt['download_completed_at'] = now()
+diff --git a/backend/app/ai/ai_provider_seedream.py b/backend/app/ai/ai_provider_seedream.py
+index ee012ea..9537869 100644
+--- a/backend/app/ai/ai_provider_seedream.py
++++ b/backend/app/ai/ai_provider_seedream.py
+@@ -31,6 +31,14 @@ from .http_transport import urlopen
+ from .ai_provider import (GenerationRequest, ImageProvider, ProviderError,
+                           ProviderResult, load_ai_config)
+ 
++def _phase(attempt, name, status, exc=None):
++    """T01：attempt=None 时为 no-op。"""
++    if attempt is None:
++        return
++    from .provider_outcome import record_phase
++    record_phase(attempt, name, status, exc=exc)
++
++
+ PROVIDER_NAME = 'seedream'
+ DEFAULT_TIMEOUT_SECONDS = 300
+ GENERATIONS_SUFFIX = '/images/generations'
+@@ -115,8 +123,11 @@ class SeedreamImageProvider(ImageProvider):
+         from ..db import now
+         if attempt is not None:
+             attempt.setdefault('request_started_at', now())
++        _phase(attempt, 'request_send', 'running')
+         try:
+             with urlopen(req, timeout=timeout) as resp:
++                _phase(attempt, 'request_send', 'succeeded')
++                _phase(attempt, 'response_received', 'running')
+                 if attempt is not None:
+                     attempt['response_received_at'] = now()
+                     attempt['http_status'] = resp.status
+@@ -124,10 +135,18 @@ class SeedreamImageProvider(ImageProvider):
+                     rid = resp.headers.get('X-Request-Id') or resp.headers.get('x-request-id')
+                     if rid:
+                         attempt['request_id'] = str(rid)
+-                raw = resp.read()
++                try:
++                    raw = resp.read()
++                except Exception as read_err:
++                    _phase(attempt, 'response_received', 'failed', exc=read_err)
++                    raise
+                 if attempt is not None:
+                     attempt['response_completed_at'] = now()
++                _phase(attempt, 'response_received', 'succeeded')
+         except urllib.error.HTTPError as e:
++            # 已收到 HTTP 响应：接收成功，状态码由 http_status 表达。
++            _phase(attempt, 'request_send', 'succeeded')
++            _phase(attempt, 'response_received', 'succeeded')
+             if attempt is not None:
+                 attempt['response_received_at'] = now()
+                 attempt['http_status'] = int(e.code)
+@@ -145,23 +164,29 @@ class SeedreamImageProvider(ImageProvider):
+                                 status=int(e.code)) from e
+         except urllib.error.URLError as e:
+             # 连接级失败（DNS/建连/被重置）=请求未送达上游，重试安全（通常也不计费）
++            _phase(attempt, 'request_send', 'failed', exc=e)
+             if attempt is not None:
+                 attempt['stage'] = ('not_sent' if isinstance(getattr(e, 'reason', None),
+                     (__import__('socket').gaierror, ConnectionRefusedError)) else 'sent_no_response')
+             raise ProviderError('provider_unreachable', f'Seedream 通道不可达：{e}') from e
+         except (TimeoutError, OSError) as e:
+             # 发送后等响应超时/断连=请求可能已抵达上游（可能已计费）——stage 如实标记
++            _phase(attempt, 'request_send', 'failed', exc=e)
+             if attempt is not None:
+                 attempt['stage'] = 'sent_no_response'
+             raise ProviderError('provider_unreachable', f'Seedream 通道不可达：{e}') from e
++        _phase(attempt, 'response_parse', 'running')
+         try:
+-            return json.loads(raw.decode('utf-8'))
++            payload = json.loads(raw.decode('utf-8'))
+         except ValueError as e:
++            _phase(attempt, 'response_parse', 'failed', exc=e)
+             raise ProviderError('provider_error', f'Seedream 通道响应不是合法 JSON：{e}') from e
++        _phase(attempt, 'response_parse', 'succeeded')
++        return payload
+ 
+-    def _download(self, url: str, timeout: int) -> bytes:
++    def _download(self, url: str, timeout: int, attempt: dict | None = None) -> bytes:
+         from .image_download import download_image
+-        return download_image(url, timeout)
++        return download_image(url, timeout, attempt=attempt)
+ 
+     @staticmethod
+     def _body(cfg: dict, request: GenerationRequest,
+@@ -193,24 +218,38 @@ class SeedreamImageProvider(ImageProvider):
+         # 与 openai_compat generations 通道同一口径）。
+         if request.attempt is not None:
+             request.attempt['guard'] = 'not_applicable'
++        att = request.attempt
++        _phase(att, 'result_extract', 'running')
+         data = payload.get('data')
+         first = data[0] if isinstance(data, list) and data and isinstance(data[0], dict) else None
+         if not first:
++            _phase(att, 'result_extract', 'failed')
+             raise ProviderError('provider_error', 'Seedream 响应缺少 data[0]（无成品图）')
+         if first.get('b64_json'):
++            _phase(att, 'result_extract', 'succeeded')
++            _phase(att, 'image_decode', 'running')
+             try:
+                 image = base64.b64decode(str(first['b64_json']))
+             except (ValueError, TypeError) as e:
++                _phase(att, 'image_decode', 'failed', exc=e)
+                 raise ProviderError('provider_error',
+                                     f'Seedream data[0].b64_json 不是合法 base64：{e}') from e
++            _phase(att, 'image_decode', 'succeeded')
++            _phase(att, 'download', 'not_applicable')
+         elif first.get('url'):
++            _phase(att, 'result_extract', 'succeeded')
+             if request.checkpoint:
+                 request.checkpoint({'url': str(first['url']), 'phase': 'download'})
+-            image = self._download(str(first['url']), timeout)
++            try:
++                image = self._download(str(first['url']), timeout, attempt=att)
++            except Exception as e:
++                _phase(att, 'download', 'failed', exc=e)
++                raise
+             if request.attempt is not None:
+                 from ..db import now
+                 request.attempt['download_completed_at'] = now()
+         else:
++            _phase(att, 'result_extract', 'failed')
+             raise ProviderError('provider_error', 'Seedream 响应 data[0] 缺少 url/b64_json')
+         gen_id = payload.get('id') or first.get('id')
+         return ProviderResult(image_bytes=image, provider_job_id=str(gen_id) if gen_id else None)
+diff --git a/backend/app/ai/ai_worker.py b/backend/app/ai/ai_worker.py
+index ba42eaa..831a901 100644
+--- a/backend/app/ai/ai_worker.py
++++ b/backend/app/ai/ai_worker.py
+@@ -14,7 +14,8 @@ from sqlalchemy import and_, func, or_, select, update
+ 
+ from . import ai_quota
+ from .provider_outcome import (checkpoint_attempt, finish_failure, finish_timing,
+-                               unknown_error_code, UNKNOWN_MESSAGE)
++                               unknown_error_code, UNKNOWN_MESSAGE, new_phase_events,
++                               derive_phase_summary)
+ from .ai_provider import (DEFAULT_PROVIDER_NAME, ImageProvider, ProviderError,
+                           get_provider, resolve_job_provider_config)
+ from ..db import GenericImageJob
+@@ -448,6 +449,7 @@ def process_job(db, job, *, worker_id: str, provider: ImageProvider | None = Non
+         attempt = {'n': len(attempts) + 1, 'adapter': prov.name,
+                    'started_at': p_started, 'stage': 'in_flight',
+                    'start_reason': '按冻结单供应商配置调用' if not job.retry_count else '单供应商安全重试，仅补未完成图片',
++                   'phase_events': new_phase_events(),
+                    **spec.attempt_extra(idx)}
+         attempts.append(attempt)
+         request.attempt = attempt
+@@ -510,6 +512,8 @@ def process_job(db, job, *, worker_id: str, provider: ImageProvider | None = Non
+             if keeper is not None:
+                 keeper.stop()
+             j.provider_attempts = [dict(a) for a in attempts]
++            if attempts:
++                derive_phase_summary(attempts[-1], e)  # 存储/输出失败阶段扁平摘要（只加字段）
+             if e.type_name == 'output_storage_finalize_failed':
+                 return _finalize_failed(db, j, ts, 'output_storage_failed',
+                                         '供应商已生成，图片存储落位失败；未重新生成或切换供应商')
+diff --git a/backend/app/ai/image_download.py b/backend/app/ai/image_download.py
+index befa583..f8992a0 100644
+--- a/backend/app/ai/image_download.py
++++ b/backend/app/ai/image_download.py
+@@ -66,7 +66,9 @@ def _open(url, timeout):
+         connection.close()
+ 
+ 
+-def download_image(url: str, timeout: float) -> bytes:
++def download_image(url: str, timeout: float, attempt: dict | None = None) -> bytes:
++    """T01：attempt 可选；传入时记录 download/image_validate 阶段（不影响下载/校验语义）。"""
++    from .provider_outcome import record_phase
+     deadline = time.monotonic() + timeout
+     try:
+         for _ in range(4):
+@@ -89,10 +91,16 @@ def download_image(url: str, timeout: float) -> bytes:
+                 data = response.read(MEDIA_MAX_BYTES + 1)
+                 if not data or len(data) > MEDIA_MAX_BYTES:
+                     raise ProviderError('provider_error', '成品图为空或超过大小上限，未重新生成')
+-                with Image.open(BytesIO(data)) as image:
+-                    if image.format not in ('PNG', 'JPEG', 'WEBP') or max(image.size) > MEDIA_MAX_EDGE_PX:
+-                        raise ValueError()
+-                    image.verify()
++                record_phase(attempt, 'image_validate', 'running')
++                try:
++                    with Image.open(BytesIO(data)) as image:
++                        if image.format not in ('PNG', 'JPEG', 'WEBP') or max(image.size) > MEDIA_MAX_EDGE_PX:
++                            raise ValueError()
++                        image.verify()
++                except Exception as e:
++                    record_phase(attempt, 'image_validate', 'failed', exc=e)
++                    raise
++                record_phase(attempt, 'image_validate', 'succeeded')
+                 return data
+         raise ProviderError('provider_error', '成品图重定向次数超限，未重新生成')
+     except ProviderError:
+diff --git a/backend/app/ai/job_spec.py b/backend/app/ai/job_spec.py
+index 6cf94bf..413975f 100644
+--- a/backend/app/ai/job_spec.py
++++ b/backend/app/ai/job_spec.py
+@@ -155,16 +155,21 @@ class _GenericSpec(JobSpec):
+             return datetime.fromtimestamp(ts, timezone.utc).isoformat()
+ 
+         from ..db import now
++        from .provider_outcome import record_phase, reset_phase_for_rollback
+         attempt = attempts[-1]
+         attempt['storage_started_at'] = now()
+-        pending = write_job_output(result.image_bytes,
+-                                   key_stem=f'ai-output/generic/{j.job_id}_{idx}')
++        record_phase(attempt, 'storage', 'running')
+         try:
++            # 存储准备与落位均为 storage 阶段边界：任一失败都要记录，不能只靠 worker 兜底。
++            pending = write_job_output(result.image_bytes,
++                                       key_stem=f'ai-output/generic/{j.job_id}_{idx}')
+             pending.finalize()
+-        except Exception:
++        except Exception as e:
+             # Generation has succeeded and may be charged; never retry generation.
++            record_phase(attempt, 'storage', 'failed', exc=e)
+             raise OutputFrameError('output_storage_finalize_failed') from None
+         attempt['storage_completed_at'] = now()
++        record_phase(attempt, 'storage', 'succeeded')
+         entries = [e for e in (j.result_assets_json or []) if isinstance(e, dict)]
+         entries.append({'index': idx, 'storage_key': pending.storage_key, 'sha256': pending.sha256,
+                         'mime': pending.mime_type, 'width': pending.width, 'height': pending.height,
+@@ -184,9 +189,21 @@ class _GenericSpec(JobSpec):
+                 vendor_admin.record_cost(db, project_id=j.project_id, job_id=j.job_id,
+                                          vendor_id=j.provider_vendor_id, model=j.provider_model,
+                                          images=len(entries))
++        # 单一事务原子提交：output_commit 终态与任务成功快照在同一次 commit 落库。
++        # 乐观写 succeeded 到 attempt 与 job 快照——commit 成功即真实成功；失败则整体回滚，
++        # 撤销未持久化的 succeeded 并改记 failed，保证 DB/execution_json 与内存结论一致。
+         attempt['output_commit_started_at'] = now()
++        record_phase(attempt, 'output_commit', 'running')
++        record_phase(attempt, 'output_commit', 'succeeded')
+         j.provider_attempts = [dict(a) for a in attempts]
+-        db.commit()
++        try:
++            db.commit()
++        except Exception as e:
++            db.rollback()
++            reset_phase_for_rollback(attempt, 'output_commit')
++            record_phase(attempt, 'output_commit', 'failed', exc=e)
++            j.provider_attempts = [dict(a) for a in attempts]
++            raise
+         from .job_timeline import log_attempt
+         log_attempt(j, attempt)
+         return all_done
+diff --git a/backend/app/ai/provider_outcome.py b/backend/app/ai/provider_outcome.py
+index 48522f5..4e67d94 100644
+--- a/backend/app/ai/provider_outcome.py
++++ b/backend/app/ai/provider_outcome.py
+@@ -8,6 +8,143 @@ UNKNOWN_STATUSES = frozenset({522, 523, 524})
+ STOP_CODES = frozenset({'provider_rejected', 'image_input_dropped',
+                         'image_input_unsupported', 'input_budget_exceeded', 'unsupported_params'})
+ 
++# ============ T01 全链路阶段事件（纯可观测性；不改变任何判定/路由/计费语义）============
++# 权威记录 = attempt['phase_events']（按固定阶段顺序，就地更新状态）；扁平字段只做查询/展示摘要。
++# 纪律：① error_detail_safe 只按 (阶段, 异常类别) 取白名单固定文案，绝不写入原始异常消息/响应原文/
++#       凭证/URL；② 记录失败本身不得抛错、不得覆盖原始业务异常；③ 适配器在具体边界记录，
++#       worker/routing 的 except 只做 worker_unclassified 兜底，不伪装成具体解析失败。
++PHASES = (
++    'request_send', 'response_received', 'response_parse', 'result_extract',
++    'image_decode', 'download', 'image_validate', 'image_guard',
++    'storage', 'output_commit',
++)
++PHASE_FALLBACK = 'worker_unclassified'
++PHASE_STATUSES = frozenset({'not_reached', 'running', 'succeeded', 'failed', 'not_applicable'})
++_PHASE_TERMINAL_STATUSES = frozenset({'succeeded', 'failed', 'not_applicable'})
++# error_detail_safe 允许拼接的 ProviderError.code 显式白名单（只含受控内部 token）。
++_SAFE_DETAIL_CODES = frozenset(
++    set(UNKNOWN_CODES) | set(STOP_CODES) |
++    {'provider_error', 'provider_unreachable', 'provider_http_unknown_outcome',
++     'response_invalid', 'provider_result_invalid', 'provider_result_missing',
++     'provider_busy', 'provider_rate_limited', 'provider_quota_exceeded'}
++)
++
++_PHASE_SAFE_DETAIL = {
++    'request_send': '供应商请求发送阶段异常',
++    'response_received': '供应商响应接收阶段异常',
++    'response_parse': '供应商响应解析失败（内容不符合约定）',
++    'result_extract': '未能从供应商响应中提取有效图片结果',
++    'image_decode': '图片数据解码失败（内容不是合法图片编码）',
++    'download': '图片结果下载失败',
++    'image_validate': '图片内容校验失败（格式/尺寸不符合要求）',
++    'image_guard': '图片输入到达校验未通过',
++    'storage': '图片存储阶段异常',
++    'output_commit': '输出事务提交阶段异常',
++    PHASE_FALLBACK: '适配器未标记具体失败阶段的未分类异常',
++}
++
++
++def new_phase_events():
++    """初始化一次尝试的全部阶段为 not_reached（写入 attempt['phase_events']）。"""
++    return [{'name': name, 'status': 'not_reached', 'at': None} for name in PHASES]
++
++
++def _safe_exception_type(exc):
++    if exc is None:
++        return None
++    name = type(exc).__name__
++    return name if isinstance(name, str) and len(name) <= 64 else 'Exception'
++
++
++def _safe_detail(name, exc):
++    template = _PHASE_SAFE_DETAIL.get(name, '处理阶段异常')
++    # 只有显式白名单内的受控 code 才拼接；其余异常一律不带任何动态信息，杜绝原始 message 泄漏。
++    code = getattr(exc, 'code', None)
++    if isinstance(code, str) and code in _SAFE_DETAIL_CODES:
++        return f'{template}({code})'
++    return template
++
++
++def record_phase(attempt, name, status, *, exc=None, at=None):
++    """幂等记录阶段状态：同名 not_reached/running 就地更新；终态只写一次、不回退。
++    任何失败都吞掉（日志失败不得覆盖业务异常），name/status 非法时 no-op。"""
++    if not isinstance(attempt, dict) or (name not in PHASES and name != PHASE_FALLBACK):
++        return
++    if status not in PHASE_STATUSES:
++        return
++    try:
++        from datetime import datetime, timezone
++        def now():
++            return datetime.now(timezone.utc).isoformat()
++        events = attempt.get('phase_events')
++        if not isinstance(events, list):
++            events = new_phase_events()
++            attempt['phase_events'] = events
++        target = next((e for e in events if isinstance(e, dict) and e.get('name') == name), None)
++        if target is None:
++            if name != PHASE_FALLBACK:
++                return
++            target = {'name': name, 'status': 'not_reached', 'at': None}
++            events.append(target)
++        # 终态（succeeded/failed/not_applicable）一旦写入即不可被任何后续状态覆盖。
++        if target.get('status') in _PHASE_TERMINAL_STATUSES:
++            return
++        target['status'] = status
++        if at is not None or target.get('at') in (None, ''):
++            target['at'] = at or now()
++        if status in _PHASE_TERMINAL_STATUSES:
++            target['completed_at'] = now()
++        if status == 'running':
++            target.pop('exception_type', None)
++            target.pop('error_detail_safe', None)
++            target.pop('completed_at', None)
++        elif status == 'failed':
++            target['exception_type'] = _safe_exception_type(exc)
++            target['error_detail_safe'] = _safe_detail(name, exc)
++        elif status == 'not_applicable':
++            target.pop('exception_type', None)
++            target.pop('error_detail_safe', None)
++    except Exception:
++        return
++
++
++def reset_phase_for_rollback(attempt, name):
++    """显式回滚撤销：仅用于「乐观写入的终态随事务失败而未持久化」场景（如 output_commit）。
++    与 record_phase 的终态不可覆盖纪律不冲突：这里是事务级撤销后重新判定，必须显式调用。"""
++    if not isinstance(attempt, dict):
++        return
++    events = attempt.get('phase_events')
++    if not isinstance(events, list):
++        return
++    for e in events:
++        if isinstance(e, dict) and e.get('name') == name:
++            e['status'] = 'running'
++            for k in ('completed_at', 'exception_type', 'error_detail_safe'):
++                e.pop(k, None)
++            return
++
++
++def derive_phase_summary(attempt, error=None):
++    """从 phase_events 派生扁平摘要；适配器未记录失败节点时落 worker_unclassified 兜底。"""
++    if not isinstance(attempt, dict):
++        return
++    events = [e for e in (attempt.get('phase_events') or []) if isinstance(e, dict)]
++    failed = [e for e in events if e.get('status') == 'failed']
++    if failed:
++        f = failed[-1]
++        attempt['failed_phase'] = f.get('name')
++        attempt['failed_at'] = f.get('at')
++        attempt['exception_type'] = f.get('exception_type')
++        attempt['error_detail_safe'] = f.get('error_detail_safe')
++    elif error is not None:
++        record_phase(attempt, PHASE_FALLBACK, 'failed', exc=error)
++        fb = next((e for e in (attempt.get('phase_events') or [])
++                   if isinstance(e, dict) and e.get('name') == PHASE_FALLBACK), {})
++        attempt['failed_phase'] = PHASE_FALLBACK
++        attempt['failed_at'] = fb.get('at')
++        attempt['exception_type'] = _safe_exception_type(error)
++        attempt['error_detail_safe'] = _safe_detail(PHASE_FALLBACK, error)
++
+ 
+ def checkpoint_attempt(attempt):
+     # Recovery URLs remain adapter-private. This callback records acceptance evidence only;
+@@ -20,6 +157,14 @@ def checkpoint_attempt(attempt):
+                 key = 'download_started_at' if state['phase'] == 'download' else 'download_completed_at'
+                 attempt[key] = now()
+             attempt['has_task_id'] = bool(state.get('task_id'))
++        # T01：把 checkpoint 携带的私有阶段翻译成阶段事件（只记状态与时间，不记 URL/原文）。
++        phase = state.get('phase')
++        if phase == 'download':
++            record_phase(attempt, 'download', 'running')
++        elif phase == 'download_completed':
++            record_phase(attempt, 'download', 'succeeded')
++        elif phase == 'accepted' and state.get('task_id'):
++            record_phase(attempt, 'result_extract', 'succeeded')
+     return checkpoint
+ 
+ 
+@@ -114,6 +259,9 @@ def finish_failure(attempt, error, provider, *, failover_on_any_error=False):
+     if attempt.get('provider_task_status'):
+         attempt['error'] = ('供应商已受理任务后报告失败或取消'
+                             + ('，按序切换下一家' if failover_on_any_error else '，已停止重新生成'))
++    # T01：派生失败阶段扁平摘要。适配器已在具体边界记 failed 时取最后一个；未记时落
++    # worker_unclassified 兜底（绝不伪装成具体解析失败）。纯新增字段，不改变任何判定。
++    derive_phase_summary(attempt, error)
+     finish_timing(attempt)
+     attempt['decision_at'] = attempt['completed_at']
+     return action, retryable
+@@ -200,7 +348,8 @@ def execution_json(job):
+             'request_started_at', 'response_received_at', 'response_completed_at',
+             'download_started_at', 'download_completed_at', 'provider_completed_at',
+             'storage_started_at', 'storage_completed_at', 'output_commit_started_at',
+-            'decision_at', 'next_vendor_id', 'priority_order_before', 'priority_order_after')
++            'decision_at', 'next_vendor_id', 'priority_order_before', 'priority_order_after',
++            'phase_events', 'failed_phase', 'failed_at', 'exception_type', 'error_detail_safe')
+     attempts = []
+     for raw in job.provider_attempts or []:
+         if not isinstance(raw, dict):
+diff --git a/backend/app/ai/routing.py b/backend/app/ai/routing.py
+index b8f38e2..76836ca 100644
+--- a/backend/app/ai/routing.py
++++ b/backend/app/ai/routing.py
+@@ -17,7 +17,8 @@ from .ai_provider import ProviderError, get_provider
+ from .job_spec import OutputFrameError
+ from ..db import Provider, now as db_now
+ from .provider_outcome import (checkpoint_attempt, finish_failure, finish_timing,
+-                               safe_error_message, unknown_error_code, UNKNOWN_MESSAGE)
++                               safe_error_message, unknown_error_code, UNKNOWN_MESSAGE,
++                               new_phase_events)
+ 
+ 
+ # 逐次尝试审计的 vendor 标记键（provider_attempts JSON 条目内）
+@@ -221,7 +222,8 @@ def process_routed(db, job, worker_id: str, spec, *, now=None, ts: float,
+                        _ROUTE_VENDOR_KEY: vendor_id, 'started_at': p_started,
+                        'retry_round': job.retry_count or 0,
+                        'start_reason': attempt_start_reason(plan, attempts, vendor_id, idx, job.retry_count),
+-                       'stage': 'in_flight', **spec.attempt_extra(idx)}
++                       'stage': 'in_flight', 'phase_events': new_phase_events(),
++                       **spec.attempt_extra(idx)}
+             attempts.append(attempt)
+             j = _owned_running(db, job, worker_id)
+             # The file's active vendor may differ from this frozen route. Keep the
+diff --git a/backend/tests/test_phase_events.py b/backend/tests/test_phase_events.py
+new file mode 100644
+index 0000000..3e5a2cf
+--- /dev/null
++++ b/backend/tests/test_phase_events.py
+@@ -0,0 +1,336 @@
++"""T01 全链路阶段事件（phase_events）回归：故障注入验证「出错可定位」。
++
++纪律：纯本地 fake，不触真实供应商；阶段事件只记状态/异常类别/白名单摘要，
++断言不泄漏原始异常消息、URL、Base64 或凭据。不改变任何失败判定语义。"""
++import json
++
++import pytest
++
++import urllib.request
++
++from app.ai.provider_outcome import (
++    PHASES, PHASE_FALLBACK, derive_phase_summary, execution_json, finish_failure,
++    new_phase_events, record_phase, reset_phase_for_rollback,
++)
++from app.ai.ai_provider_openai import OpenAICompatImageProvider, ProviderError
++from app.ai.ai_provider import GenerationRequest
++
++
++class _Provider:
++    name = 'openai_compat'
++    billable = True
++
++
++# ---------------- 阶段记录基础语义 ----------------
++def test_phase_events_init_all_not_reached():
++    ev = new_phase_events()
++    assert [e['name'] for e in ev] == list(PHASES)
++    assert all(e['status'] == 'not_reached' and e['at'] is None for e in ev)
++
++
++def test_phase_terminal_state_is_immutable_in_both_directions():
++    attempt = {'phase_events': new_phase_events()}
++    record_phase(attempt, 'response_parse', 'running')
++    record_phase(attempt, 'response_parse', 'succeeded')
++    for bad in ('running', 'failed', 'not_applicable', 'not_reached'):
++        record_phase(attempt, 'response_parse', bad, exc=ValueError('x'))
++    ev = [e for e in attempt['phase_events'] if e['name'] == 'response_parse']
++    assert len(ev) == 1 and ev[0]['status'] == 'succeeded'
++
++    attempt2 = {'phase_events': new_phase_events()}
++    record_phase(attempt2, 'image_decode', 'failed', exc=ValueError('x'))
++    for bad in ('running', 'succeeded', 'not_applicable', 'not_reached'):
++        record_phase(attempt2, 'image_decode', bad)
++    ev2 = [e for e in attempt2['phase_events'] if e['name'] == 'image_decode']
++    assert len(ev2) == 1 and ev2[0]['status'] == 'failed'
++    assert 'error_detail_safe' in ev2[0]  # 终态摘要未被后续覆盖清空
++
++
++def test_phase_terminal_has_start_and_end_time():
++    attempt = {'phase_events': new_phase_events()}
++    record_phase(attempt, 'download', 'running', at='2026-01-01T00:00:00+00:00')
++    record_phase(attempt, 'download', 'succeeded')
++    ev = next(e for e in attempt['phase_events'] if e['name'] == 'download')
++    assert ev['at'] == '2026-01-01T00:00:00+00:00'  # 开始时间保留
++    assert ev['completed_at']  # 结束时间存在，可据两者算耗时
++
++
++def test_record_phase_unknown_name_is_noop():
++    attempt = {'phase_events': new_phase_events()}
++    record_phase(attempt, 'not_a_phase', 'failed')
++    assert all(e['name'] in PHASES for e in attempt['phase_events'])
++
++
++# ---------------- HTTP 200 后解析失败可定位（Yuanqiao 事故同型）----------------
++def test_http200_invalid_json_locates_response_parse():
++    att = {'phase_events': new_phase_events(), 'stage': 'in_flight'}
++    payload = b'{not json'
++    with pytest.raises(ProviderError):
++        OpenAICompatImageProvider._decode_json(payload, att)
++    finish_failure(att, ProviderError('provider_error', 'x'), _Provider())
++    fail = [e for e in att['phase_events'] if e['status'] == 'failed']
++    assert fail and fail[-1]['name'] == 'response_parse'
++    assert att['failed_phase'] == 'response_parse'
++    assert att['exception_type'] == 'JSONDecodeError'
++
++
++def test_http200_missing_data0_locates_result_extract():
++    att = {'phase_events': new_phase_events()}
++    prov = OpenAICompatImageProvider()
++    with pytest.raises(ProviderError):
++        prov._edits_image_from_json({'created': 1}, 30, None, att)
++    derive_phase_summary(att, ProviderError('provider_error', 'x'))
++    fail = [e for e in att['phase_events'] if e['status'] == 'failed']
++    assert fail and fail[-1]['name'] == 'result_extract'
++    assert att['failed_phase'] == 'result_extract'
++
++
++def test_http200_invalid_b64_locates_image_decode():
++    att = {'phase_events': new_phase_events()}
++    prov = OpenAICompatImageProvider()
++    with pytest.raises(ProviderError):
++        prov._edits_image_from_json({'data': [{'b64_json': '!!!not-base64!!!'}]}, 30, None, att)
++    derive_phase_summary(att, ProviderError('provider_error', 'x'))
++    assert att['failed_phase'] == 'image_decode'
++
++
++# ---------------- 脱敏：原始异常消息绝不进入安全摘要 ----------------
++def test_error_detail_safe_never_leaks_raw_message():
++    att = {'phase_events': new_phase_events()}
++    secret = 'sk-SECRET-API-KEY-https://cdn.example/signed?token=LEAKME'
++    err = ValueError(secret)
++    record_phase(att, 'response_parse', 'failed', exc=err)
++    derive_phase_summary(att, err)
++    assert secret not in json.dumps(att, ensure_ascii=False)
++    assert att['error_detail_safe'].startswith('供应商响应解析失败')
++    assert att['exception_type'] == 'ValueError'
++
++
++# ---------------- worker 兜底：适配器未记失败节点 → worker_unclassified ----------------
++def test_worker_fallback_when_adapter_did_not_record_failed_phase():
++    att = {'phase_events': new_phase_events(), 'stage': 'in_flight'}
++    err = RuntimeError('unexpected adapter crash')
++    finish_failure(att, err, _Provider())
++    assert att['failed_phase'] == PHASE_FALLBACK
++    fb = next(e for e in att['phase_events'] if e['name'] == PHASE_FALLBACK)
++    assert fb['status'] == 'failed' and fb['exception_type'] == 'RuntimeError'
++    assert 'unexpected adapter crash' not in json.dumps(att, ensure_ascii=False)
++
++
++# ---------------- 投影：新字段进 execution_json，且经 allowlist ----------------
++def test_execution_json_projects_phase_fields():
++    class J:
++        status = 'failed'
++        error_code = 'provider_unknown_outcome'
++        route_plan_json = None
++        provider_vendor_id = None
++        provider_attempts = [{
++            'n': 1, 'stage': 'unknown_outcome', 'http_status': 200,
++            'phase_events': new_phase_events(), 'failed_phase': 'response_parse',
++            'failed_at': '2026-01-01T00:00:00+00:00', 'exception_type': 'JSONDecodeError',
++            'error_detail_safe': '供应商响应解析失败（内容不符合约定）',
++            'secret_should_not_appear': 'LEAK',
++        }]
++
++    out = execution_json(J())
++    a = out['attempts'][0]
++    assert a['failed_phase'] == 'response_parse'
++    assert a['exception_type'] == 'JSONDecodeError'
++    assert a['error_detail_safe'].startswith('供应商响应解析失败')
++    assert 'phase_events' in a
++    assert 'secret_should_not_appear' not in a
++
++
++# ---------------- 端到端：HTTP 200 → 响应接收 → 解析失败 → worker 收口 → 投影 ----------------
++def _fake_urlopen(payload: bytes):
++    class _R:
++        status = 200
++        headers = {'Content-Type': 'application/json'}
++
++        def __enter__(self):
++            return self
++
++        def __exit__(self, *a):
++            return False
++
++        def read(self):
++            return payload
++    return lambda req, *a, **k: _R()
++
++
++def test_e2e_http200_parse_failure_located_through_full_chain(monkeypatch):
++    """完整链路：generate_image 收到非法 JSON 的 HTTP200 → 阶段定位 response_parse →
++    worker finish_failure 收口 → execution_json 投影。不触真实供应商。"""
++    monkeypatch.setattr(urllib.request, 'urlopen', _fake_urlopen(b'{not json'))
++    attempt = {'n': 1, 'stage': 'in_flight', 'phase_events': new_phase_events(),
++               'http_status': 200}
++    req = GenerationRequest(job_id='e2e', preset_key='noon', prompt='x',
++                            references=[], camera_snapshot={},
++                            input_image=None, input_mime=None, attempt=attempt,
++                            provider_config={'base_url': 'https://provider.example',
++                                             'api_key': 'test', 'channel': 'responses'})
++    prov = OpenAICompatImageProvider()
++    err = None
++    try:
++        prov.generate_image(req)
++    except ProviderError as e:
++        err = e
++    assert err is not None
++    finish_failure(attempt, err, _Provider())
++
++    # 响应接收成功、解析失败：事实分层正确
++    rx = next(e for e in attempt['phase_events'] if e['name'] == 'response_received')
++    parse = next(e for e in attempt['phase_events'] if e['name'] == 'response_parse')
++    assert rx['status'] == 'succeeded'
++    assert parse['status'] == 'failed'
++    assert attempt['failed_phase'] == 'response_parse'
++    assert attempt['http_status'] == 200  # HTTP 状态仍由既有字段表达
++
++    class J:
++        status = 'failed'
++        error_code = 'provider_unknown_outcome'
++        route_plan_json = None
++        provider_vendor_id = None
++        provider_attempts = [attempt]
++    out = execution_json(J())
++    assert out['attempts'][0]['failed_phase'] == 'response_parse'
++
++
++def test_http_error_receive_phase_succeeded_not_failed(monkeypatch):
++    """HTTPError：已收到响应 → response_received=succeeded，非 2xx 由 http_status 表达。"""
++    import io
++    import urllib.error
++
++    def raise_404(req, *a, **k):
++        raise urllib.error.HTTPError(req.full_url, 400, 'Bad Request', {}, io.BytesIO(b'{}'))
++
++    monkeypatch.setattr(urllib.request, 'urlopen', raise_404)
++    attempt = {'n': 1, 'stage': 'in_flight', 'phase_events': new_phase_events()}
++    prov = OpenAICompatImageProvider()
++    with pytest.raises(ProviderError):
++        prov._post_raw('https://provider.example/v1/responses', b'{}',
++                       'application/json', 30, 'test', attempt)
++    rx = next(e for e in attempt['phase_events'] if e['name'] == 'response_received')
++    assert rx['status'] == 'succeeded'
++    assert attempt.get('http_status') == 400
++
++
++def test_image_validate_phase_wired_in_download(monkeypatch):
++    """download_image 内图片校验成功 → image_validate=succeeded（不再停留 not_reached）。"""
++    from app.ai import image_download
++    tiny_png = (b'\x89PNG\r\n\x1a\n\x00\x00\x00\rIHDR\x00\x00\x00\x04\x00\x00\x00\x03'
++                b'\x08\x02\x00\x00\x00;\x969\x91\x00\x00\x00\x12IDATx\x9ccdh`\x80\x03&\x06'
++                b'\x06\x1c\x1c\x00\x13\x1c\x00\x86\xcb\xdb0X\x00\x00\x00\x00IEND\xaeB`\x82')
++
++    class _Resp:
++        status = 200
++
++        def getheader(self, k):
++            return None
++
++        def read(self, n):
++            return tiny_png
++
++        def __enter__(self):
++            return self
++
++        def __exit__(self, *a):
++            return False
++
++    monkeypatch.setattr(image_download, '_open', lambda url, timeout: _Resp())
++    attempt = {'phase_events': new_phase_events()}
++    data = image_download.download_image('https://example.test/a.png', 5, attempt=attempt)
++    assert data == tiny_png
++    v = next(e for e in attempt['phase_events'] if e['name'] == 'image_validate')
++    assert v['status'] == 'succeeded'
++
++
++def test_response_body_read_failure_locates_response_received(monkeypatch):
++    """P1-02：响应头已到、resp.read() 抛 OSError → response_received=failed，
++    request_send 保持 succeeded（终态不可覆盖让外层 request_send=failed 无效）。"""
++    class _ReadFailResp:
++        status = 200
++        headers = {'Content-Type': 'application/json'}
++
++        def __enter__(self):
++            return self
++
++        def __exit__(self, *a):
++            return False
++
++        def read(self):
++            raise OSError('connection reset during body read')
++
++    monkeypatch.setattr(urllib.request, 'urlopen', lambda req, *a, **k: _ReadFailResp())
++    attempt = {'n': 1, 'stage': 'in_flight', 'phase_events': new_phase_events()}
++    prov = OpenAICompatImageProvider()
++    with pytest.raises(ProviderError):
++        prov._post_raw('https://provider.example/v1/responses', b'{}',
++                       'application/json', 30, 'test', attempt)
++    rx = next(e for e in attempt['phase_events'] if e['name'] == 'response_received')
++    snd = next(e for e in attempt['phase_events'] if e['name'] == 'request_send')
++    assert rx['status'] == 'failed'
++    assert snd['status'] == 'succeeded'
++    derive_phase_summary(attempt, ProviderError('provider_error', 'x'))
++    assert attempt['failed_phase'] == 'response_received'
++
++
++def test_seedream_response_body_read_failure_locates_response_received(monkeypatch):
++    """P1-02（Seedream）：resp.read() 失败 → response_received=failed。"""
++    from app.ai.ai_provider_seedream import SeedreamImageProvider
++
++    class _ReadFailResp:
++        status = 200
++        headers = {'Content-Type': 'application/json'}
++
++        def __enter__(self):
++            return self
++
++        def __exit__(self, *a):
++            return False
++
++        def read(self):
++            raise OSError('connection reset during body read')
++
++    monkeypatch.setattr('urllib.request.urlopen', lambda req, *a, **k: _ReadFailResp())
++    attempt = {'n': 1, 'stage': 'in_flight', 'phase_events': new_phase_events()}
++    prov = SeedreamImageProvider()
++    with pytest.raises(ProviderError):
++        prov._post('https://provider.example/v1/images/generations',
++                   b'{}', 30, 'test', attempt=attempt)
++    rx = next(e for e in attempt['phase_events'] if e['name'] == 'response_received')
++    assert rx['status'] == 'failed'
++
++
++def test_output_commit_optimistic_terminal_rollback_is_consistent():
++    """提交失败注入：乐观 succeeded 经事务撤销后落 failed，扁平摘要与投影一致，
++    不会留下「DB running / 内存 immutable succeeded」的不可恢复态（评审 P1-01）。"""
++    attempt = {'n': 1, 'stage': 'in_flight', 'phase_events': new_phase_events(),
++               'http_status': 200}
++    # 模拟 write_success：乐观写 succeeded 进快照
++    record_phase(attempt, 'output_commit', 'running')
++    record_phase(attempt, 'output_commit', 'succeeded')
++    snapshot_committed = [dict(a) for a in [attempt]]  # 假如本次 commit 成功将落库的快照
++
++    # 注入：commit 失败 → 回滚 + 撤销乐观终态 + 改记 failed
++    commit_error = RuntimeError('db commit failed')
++    reset_phase_for_rollback(attempt, 'output_commit')
++    record_phase(attempt, 'output_commit', 'failed', exc=commit_error)
++    final_snapshot = [dict(a) for a in [attempt]]
++
++    oc = next(e for e in final_snapshot[0]['phase_events'] if e['name'] == 'output_commit')
++    assert oc['status'] == 'failed'  # 不再是不可回退的 succeeded
++    assert snapshot_committed[0]['phase_events'][-1]['name'] == 'output_commit'  # 快照结构正常
++    derive_phase_summary(attempt, commit_error)
++    assert attempt['failed_phase'] == 'output_commit'
++
++    class J:
++        status = 'failed'
++        error_code = 'output_storage_failed'
++        route_plan_json = None
++        provider_vendor_id = None
++        provider_attempts = final_snapshot
++    out = execution_json(J())
++    proj = next(e for e in out['attempts'][0]['phase_events'] if e['name'] == 'output_commit')
++    assert proj['status'] == 'failed'  # 投影与内存/摘要三方一致
++
+diff --git a/frontend/src/types.ts b/frontend/src/types.ts
+index f955d66..0d2e09a 100644
+--- a/frontend/src/types.ts
++++ b/frontend/src/types.ts
+@@ -128,6 +128,19 @@ export interface Attempt {
+   priority_order_after?: string[]
+   request_id?: string
+   provider_task_status?: string
++  phase_events?: PhaseEvent[]
++  failed_phase?: string
++  failed_at?: string | null
++  exception_type?: string | null
++  error_detail_safe?: string | null
++}
++
++export interface PhaseEvent {
++  name: string
++  status: 'not_reached' | 'running' | 'succeeded' | 'failed' | 'not_applicable' | string
++  at?: string | null
++  exception_type?: string | null
++  error_detail_safe?: string | null
+ }
+ 
+ export interface VendorState { vendor_id: string; state: string }
+diff --git a/frontend/src/views/JobDetail.vue b/frontend/src/views/JobDetail.vue
+index 82315fa..b12f75e 100644
+--- a/frontend/src/views/JobDetail.vue
++++ b/frontend/src/views/JobDetail.vue
+@@ -61,6 +61,27 @@ const stageMap: Record<string, { label: string; cls: string }> = {
+   not_sent: { label: '未发送', cls: 'b-mute' },
+ }
+ 
++const phaseMap: Record<string, { label: string; cls: string }> = {
++  request_send: { label: '发送请求', cls: 'b-mute' },
++  response_received: { label: '接收响应', cls: 'b-mute' },
++  response_parse: { label: '解析响应', cls: 'b-mute' },
++  result_extract: { label: '提取结果', cls: 'b-mute' },
++  image_decode: { label: '图片解码', cls: 'b-mute' },
++  download: { label: '下载图片', cls: 'b-mute' },
++  image_validate: { label: '图片校验', cls: 'b-mute' },
++  image_guard: { label: '输入到达守卫', cls: 'b-mute' },
++  storage: { label: '图片存储', cls: 'b-mute' },
++  output_commit: { label: '输出提交', cls: 'b-mute' },
++  worker_unclassified: { label: '未归类异常', cls: 'b-unknown' },
++}
++const phaseStatusMap: Record<string, { label: string; cls: string }> = {
++  not_reached: { label: '未到达', cls: 'b-mute' },
++  running: { label: '执行中', cls: 'b-run' },
++  succeeded: { label: '完成', cls: 'b-ok' },
++  failed: { label: '失败', cls: 'b-fail' },
++  not_applicable: { label: '不适用', cls: 'b-mute' },
++}
++
+ const actionMap: Record<string, string> = {
+   failover: '切换下一家',
+   skip: '跳过',
+@@ -162,6 +183,14 @@ const strategyLabel = computed(() => {
+             供应商调用结束 {{ fmtTime(a.provider_completed_at) }}；下载耗时 {{ fmtDuration(a.download_started_at, a.download_completed_at) }}</div>
+           <div class="muted">存储 {{ fmtTime(a.storage_started_at) }} → {{ fmtTime(a.storage_completed_at) }}；
+             输出事务提交开始 {{ fmtTime(a.output_commit_started_at) }}；存储耗时 {{ fmtDuration(a.storage_started_at, a.storage_completed_at) }}</div>
++          <div v-if="a.phase_events && a.phase_events.length" class="phase-events">
++            <div class="muted">处理阶段（失败阶段：{{ a.failed_phase ? (phaseMap[a.failed_phase]?.label ?? a.failed_phase) : '无' }}）</div>
++            <span v-for="(p, pi) in a.phase_events" :key="pi" class="phase-chip"
++                  :class="phaseStatusMap[p.status]?.cls ?? 'b-mute'">
++              {{ phaseMap[p.name]?.label ?? p.name }}:{{ phaseStatusMap[p.status]?.label ?? p.status }}
++            </span>
++            <div v-if="a.error_detail_safe" class="muted">失败详情：{{ a.error_detail_safe }}</div>
++          </div>
+           <div v-if="a.decision_at" class="muted">切换/停止决定 {{ fmtTime(a.decision_at) }}；
+             下一候选 {{ a.next_vendor_id ?? '无' }}</div>
+           <div v-if="a.request_id" class="muted">供应商请求 ID {{ a.request_id }}</div>
+@@ -195,3 +224,8 @@ const strategyLabel = computed(() => {
+     <p v-if="poll.stale.value" class="stale-text">显示的是上次成功读取的数据({{ poll.error.value }})。</p>
+   </div>
+ </template>
++
++<style scoped>
++.phase-events { margin: 4px 0; }
++.phase-chip { display: inline-block; margin: 2px 6px 2px 0; padding: 0 6px; border-radius: 8px; font-size: 12px; }
++</style>

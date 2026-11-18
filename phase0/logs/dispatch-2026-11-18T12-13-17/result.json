@@ -1,0 +1,181 @@
+{
+  "at": "2026-11-18T12:16:00.200Z",
+  "message_bytes": 1103,
+  "reply": "ChatGPT 说：\n\n{\n\"result\": \"PASS_WITH_CONSTRAINTS\",\n\"issues\": [\n{\n\"id\": \"T06-01\",\n\"severity\": \"P2\",\n\"description\": \"只读admin端点有合理价值，但不是数据治理本身的必要条件。若现有metrics_snapshot内部函数已支持window_hours/vendor_id，且其他可信调用方可以直接使用，则新增HTTP端点属于管理查询能力补齐，而非指标体系缺口。\"\n},\n{\n\"id\": \"T06-02\",\n\"severity\": \"P1\",\n\"description\": \"delivery_success_rate必须明确标记为交付成功代理指标，不得解释为图像质量合格率或用户满意度。离线evaluation.py是独立质量证据来源，不能将离线评测结果冒充真实运行质量数据。\"\n},\n{\n\"id\": \"T08-01\",\n\"severity\": \"P2\",\n\"description\": \"统一限制清单存在维护漂移风险。file:line可能随代码变更失效，必须同时记录限制标识、实际配置或常量来源、测试证据及变更依据。\"\n}\n],\n\"conditions\": [\n{\n\"id\": \"T06-C1\",\n\"requirement\": \"保留window_hours和vendor_id两个查询维度，但先确认是否已有其他管理查询入口。若没有，则新增一个只读admin端点；若已有等效入口，直接复用，不重复建设。\",\n\"acceptance\": \"参数透传准确；require_admin保护有效；不允许普通用户访问；默认行为与原metrics_snapshot一致；非法参数有明确校验；不改变统计口径。\"\n},\n{\n\"id\": \"T06-C2\",\n\"requirement\": \"明确区分供应商交付表现、我方故障和未知结果。delivery_success_rate标记为交付代理指标，不新增评分、排名、权重或自动路由决策。\",\n\"acceptance\": \"指标文档明确分子、分母、排除项、样本窗口和局限性；不得将代理指标命名或展示为质量合格率。\"\n},\n{\n\"id\": \"T06-C3\",\n\"requirement\": \"真实运行质量暂不建设新数据链路。明确指出真实运行尚无独立质量判定来源，离线evaluation.py仅作为离线评测证据，并保留judged_by等评测来源信息。\",\n\"acceptance\": \"不混合离线评测与真实运行统计；不虚构质量数据；后续真实质量数据接入须另行设计评审。\"\n},\n{\n\"id\": \"T08-C1\",\n\"requirement\": \"治理规范新增统一limits表，覆盖20MiB单图、160MiB总量、413相关限制、阶段耗时字段及其他已确认限制。\",\n\"acceptance\": \"每项记录限制名称、当前值、代码位置、测试文件、变更依据；代码位置尽可能精确到符号或配置项，行号仅作为辅助定位。\"\n},\n{\n\"id\": \"T08-C2\",\n\"requirement\": \"明确supplier_process_ms不包含排队和上传耗时；不得将我方排队、上传、处理瓶颈归因于供应商。\",\n\"acceptance\": \"文档与现有字段定义、代码实现、测试一致；不修改现有限制值及运行逻辑。\"\n},\n{\n\"id\": \"T08-C3\",\n\"requirement\": \"T08仅允许文档修改，不调整代码、配置、限制值和测试行为。清单发现实际实现与规范不一致时，记录问题并单独提交评审，不在本任务顺手修复。\"\n},\n{\n\"id\": \"GLOBAL-C1\",\n\"requirement\": \"两个任务分别实施、分别提交、分别验收，保持改动范围最小；不新增评分体系，不建设供应商自动决策机制。\",\n\"acceptance\": \"提供完整commit SHA、变更文件清单、测试结果及逐项证据；不得仅凭实现说明判定通过。\"\n}\n]\n}",
+  "user_unit_key": "daa1b223-d91f-544a-a354-ac66e6147b19:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "daa1b223-d91f-544a-a354-ac66e6147b19:1:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "013d0f2e-e9eb-431b-acbc-ed36c6cb531f",
+  "stability": {
+    "stable": true,
+    "interval_ms": 3795,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-18T12:15:55.728Z",
+      "read_finished_at": "2026-11-18T12:15:56.519Z",
+      "unit_keys": [
+        "daa1b223-d91f-544a-a354-ac66e6147b19:1:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "daa1b223-d91f-544a-a354-ac66e6147b19:1:assistant",
+          "sha256": "795f342123f746a697651ab89f4dc70e38d1f74f30b567f0a23a2a41ba2d731a",
+          "size_bytes": 3316
+        }
+      ],
+      "assistant_uuid": "013d0f2e-e9eb-431b-acbc-ed36c6cb531f",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-18T12:15:59.523Z",
+      "read_finished_at": "2026-11-18T12:16:00.051Z",
+      "unit_keys": [
+        "daa1b223-d91f-544a-a354-ac66e6147b19:1:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "daa1b223-d91f-544a-a354-ac66e6147b19:1:assistant",
+          "sha256": "795f342123f746a697651ab89f4dc70e38d1f74f30b567f0a23a2a41ba2d731a",
+          "size_bytes": 3316
+        }
+      ],
+      "assistant_uuid": "013d0f2e-e9eb-431b-acbc-ed36c6cb531f",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "daa1b223-d91f-544a-a354-ac66e6147b19:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "daa1b223-d91f-544a-a354-ac66e6147b19:0:user",
+          "daa1b223-d91f-544a-a354-ac66e6147b19:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "c81abc01aa90b0ce083f4c38e8ebfd78c9217cb5dc712a64e6345e7fd48eb391",
+          "795f342123f746a697651ab89f4dc70e38d1f74f30b567f0a23a2a41ba2d731a"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "daa1b223-d91f-544a-a354-ac66e6147b19:0:user",
+          "daa1b223-d91f-544a-a354-ac66e6147b19:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "c81abc01aa90b0ce083f4c38e8ebfd78c9217cb5dc712a64e6345e7fd48eb391",
+          "795f342123f746a697651ab89f4dc70e38d1f74f30b567f0a23a2a41ba2d731a"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "daa1b223-d91f-544a-a354-ac66e6147b19:0:user",
+          "daa1b223-d91f-544a-a354-ac66e6147b19:1:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "daa1b223-d91f-544a-a354-ac66e6147b19:0:user",
+      "daa1b223-d91f-544a-a354-ac66e6147b19:1:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "daa1b223-d91f-544a-a354-ac66e6147b19:0:user",
+          "daa1b223-d91f-544a-a354-ac66e6147b19:1:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "daa1b223-d91f-544a-a354-ac66e6147b19:0:user",
+          "daa1b223-d91f-544a-a354-ac66e6147b19:1:assistant"
+        ],
+        "overlap_keys": [
+          "daa1b223-d91f-544a-a354-ac66e6147b19:0:user",
+          "daa1b223-d91f-544a-a354-ac66e6147b19:1:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "795f342123f746a697651ab89f4dc70e38d1f74f30b567f0a23a2a41ba2d731a",
+  "size_bytes": 3316,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-18T12-13-17\\reply.txt",
+  "reply_readback_sha256": "795f342123f746a697651ab89f4dc70e38d1f74f30b567f0a23a2a41ba2d731a",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-18T12-13-17\\raw-units.json",
+  "raw_units_sha256": "de8d01bb4a1e4f5d896f050183fd5f1930ca25815f57b077890985398ce5764e",
+  "raw_units_size_bytes": 6503,
+  "raw_units_readback_sha256": "de8d01bb4a1e4f5d896f050183fd5f1930ca25815f57b077890985398ce5764e",
+  "session_id": "6afd969a-cde0-83e8-bce7-ba377319da42",
+  "conversation_url": "https://chatgpt.com/c/6afd969a-cde0-83e8-bce7-ba377319da42",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}

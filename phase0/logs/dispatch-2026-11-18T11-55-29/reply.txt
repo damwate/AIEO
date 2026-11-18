@@ -1,0 +1,64 @@
+ChatGPT 说：
+
+{
+"result": "PASS_WITH_CONSTRAINTS",
+"issues": [
+{
+"id": "T05-G1",
+"severity": "P1",
+"finding": "result_invalid属于我方结果校验失败，不应计入供应商known_failed或供应商失败率分母。新增local_invalid计数正确。",
+"requirement": "local_invalid独立统计；不得进入供应商失败分子、分母，也不得改变既有failed/success_rate的既定兼容语义。需明确区分供应商执行失败与我方处理失败。"
+},
+{
+"id": "T05-G2",
+"severity": "P1",
+"finding": "HTTP成功与交付成功是两个不同阶段，必须独立统计，不能用job最终成功状态替代。",
+"requirement": "http_success_rate以HTTP响应成功的有效供应商请求为分子，已获得可判定HTTP结果的请求为分母；delivery_success_rate以交付成功为分子，已获得可判定交付结果的请求为分母。unknown和result_invalid排除。明确transport异常、交付失败及未到达阶段的处理规则，避免跨阶段混入分母。"
+},
+{
+"id": "T05-G3",
+"severity": "P1",
+"finding": "supplier_process_ms使用request_started_at至response_body_completed_at更符合供应商处理耗时，started_at至completed_at混入前置处理和下载时间。",
+"requirement": "优先使用两个新时间字段计算；缺字段时允许fallback旧口径，但必须增加耗时口径标识，区分native与legacy_fallback。不得将fallback数据与原生口径无标识混合后宣称为纯供应商耗时。负数、缺失及时间顺序异常应排除并单独计数。"
+},
+{
+"id": "T05-G4",
+"severity": "P1",
+"finding": "支持window_hours和vendor_id是必要的查询能力，不需要新建平台。",
+"requirement": "默认值保持现有24小时及全部供应商行为；参数必须校验，明确窗口边界采用统一时区和半开区间；vendor_id过滤必须作用于所有指标及样本数。"
+},
+{
+"id": "T05-G5",
+"severity": "P2",
+"finding": "sample_size和insufficient可以解决低样本统计透明度问题。",
+"requirement": "sample_size必须明确统计对象和口径，建议按指标分别提供有效分母样本数，不能仅提供一个含义模糊的总样本数。insufficient应由固定、可配置或明确记录的最小样本规则产生，不得伪装成性能阈值，也不得因此隐藏统计值。"
+}
+],
+"conditions": [
+"G1-G5均按上述要求实现，保持旧字段、旧查询和默认24小时行为兼容。",
+"新增指标必须提供分子、分母、窗口及排除数量，避免仅展示百分比而无法审计。",
+"unknown继续独立保留，不得强行归入成功或失败；result_invalid不得与unknown混为一类。",
+"HTTP成功率和交付成功率必须分别定义可判定结果集合，未到达相应阶段的任务不进入对应分母。",
+"supplier_process_ms必须报告native与legacy_fallback样本数及其占比；建议分别展示两类统计值，至少不得无标识混合。",
+"时间窗口、供应商过滤和各指标样本集合必须保持一致，避免过滤只作用于部分指标。",
+"低样本标记仅用于提示统计可信度，不得阻断任务执行、供应商路由或自动故障转移。",
+"补充边界测试：result_invalid排除、HTTP成功但交付失败、transport异常、unknown、未进入交付阶段、时间字段缺失、时间倒置、零样本、低样本、窗口边界及单供应商过滤。",
+"不要求重建metrics_snapshot，不要求新建统计平台，不要求改变现有jobs_timeline职责。"
+],
+"decision": {
+"metrics_design": "ACCEPT_WITH_CONSTRAINTS",
+"G1": "PASS",
+"G2": "PASS_WITH_CONSTRAINTS",
+"G3": "PASS_WITH_CONSTRAINTS",
+"G4": "PASS_WITH_CONSTRAINTS",
+"G5": "PASS_WITH_CONSTRAINTS",
+"fallback": "允许，但必须显式标记legacy_fallback，最好与native分开展示。",
+"additional_required": [
+"各指标独立分子、分母和有效样本数",
+"耗时异常数据排除及计数",
+"窗口边界与时区定义",
+"低样本阈值的明确来源"
+],
+"scope": "仅扩展现有统计能力，兼容优先，不扩展为供应商治理决策平台。"
+}
+}

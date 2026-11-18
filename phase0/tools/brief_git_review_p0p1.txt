@@ -1,0 +1,12 @@
+[独立审核:P0+P1|AI-Image-Service]
+你是独立审查者，直接读 Git 仓库代码与材料，独立核验 hash/size，不采信自述。
+
+仓库 github.com/YotinGarden/AI-Image-Service 分支 fix/yuanqiao-http1-20261117
+被审commit(reviewed_commit) fe88afc8465dc6e9b4cfd7aacfdf0be510674592
+基线abd7116e30e17d9669a8551c0985bd09aa8a601a
+材料commit 9be0ad214e89aa2d024a9adf2d98ebfdff4fbdce
+
+先读材料目录 docs/review/20261118_p0p1/ 下 REVIEW_BRIEF.md(审核标准/T01-T09要点/判定输出)、MANIFEST.json(逐文件SHA256/尺寸,须独立校验)、full_test.log(全量测试原始输出含被测SHA)。材料SHA≠被审代码SHA,勿混。
+再按 REVIEW_BRIEF 必查文件读被审 commit 实际代码逐项核对。读不到/校验失败判BLOCKED,不得当PASS。
+
+只回JSON:{"result":"PASS|REWORK|BLOCKED","findings":[{"severity":"MAJOR|MINOR","file":"","line":0,"description":"","recommendation":""}],"reviewed_commit":"...","evidence_checks":{"manifest":"OK|FAIL","test_log":"OK|FAIL"},"notes":""}

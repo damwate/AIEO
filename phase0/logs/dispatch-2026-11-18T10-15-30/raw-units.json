@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-18T10:18:42.717Z",
+  "user_unit_key": "9ee9a5ba-4ee3-5a19-8cdb-16a4d5e3ef3c:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "9ee9a5ba-4ee3-5a19-8cdb-16a4d5e3ef3c:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "19da68e7-1264-4584-8a99-d45ae69c5f26",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "9ee9a5ba-4ee3-5a19-8cdb-16a4d5e3ef3c:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "9ee9a5ba-4ee3-5a19-8cdb-16a4d5e3ef3c:0:user",
+          "9ee9a5ba-4ee3-5a19-8cdb-16a4d5e3ef3c:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "5bdb01c09d20bcea8928066cd370892fe5db204a4c7c6d2350636dd6ef0388a8",
+          "4d8729491fd115ac6b12af4475ffe9abb31dae46c292df42adc288b9c4cd2213"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "9ee9a5ba-4ee3-5a19-8cdb-16a4d5e3ef3c:0:user",
+          "9ee9a5ba-4ee3-5a19-8cdb-16a4d5e3ef3c:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "5bdb01c09d20bcea8928066cd370892fe5db204a4c7c6d2350636dd6ef0388a8",
+          "4d8729491fd115ac6b12af4475ffe9abb31dae46c292df42adc288b9c4cd2213"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "9ee9a5ba-4ee3-5a19-8cdb-16a4d5e3ef3c:0:user",
+          "9ee9a5ba-4ee3-5a19-8cdb-16a4d5e3ef3c:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "9ee9a5ba-4ee3-5a19-8cdb-16a4d5e3ef3c:0:user",
+      "9ee9a5ba-4ee3-5a19-8cdb-16a4d5e3ef3c:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "9ee9a5ba-4ee3-5a19-8cdb-16a4d5e3ef3c:0:user",
+          "9ee9a5ba-4ee3-5a19-8cdb-16a4d5e3ef3c:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "9ee9a5ba-4ee3-5a19-8cdb-16a4d5e3ef3c:0:user",
+          "9ee9a5ba-4ee3-5a19-8cdb-16a4d5e3ef3c:2:assistant"
+        ],
+        "overlap_keys": [
+          "9ee9a5ba-4ee3-5a19-8cdb-16a4d5e3ef3c:0:user",
+          "9ee9a5ba-4ee3-5a19-8cdb-16a4d5e3ef3c:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "9ee9a5ba-4ee3-5a19-8cdb-16a4d5e3ef3c:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n{\n\"result\": \"REWORK_SMALL\",\n\"issues\": [\n{\n\"id\": \"R01\",\n\"severity\": \"P1\",\n\"finding\": \"attempt_id、job_id、worker_id、vendor_id 的实际构造路径缺少直接回归验证。当前测试主要验证 execution_json 投影，测试中手工构造 failed/success attempts，不能证明 ai_worker 和 routing 的真实执行路径正确生成这些字段。\",\n\"required\": \"增加实际构造路径测试，至少覆盖直发和路由两条路径，验证 job_id、worker_id、vendor_id 与实际执行上下文一致。\"\n},\n{\n\"id\": \"R02\",\n\"severity\": \"P1\",\n\"finding\": \"尚未固化 attempt_id 的生命周期保证。当前测试没有验证同一 job 的不同 attempt 获得不同 UUID，也没有验证重试产生新 attempt_id、原 attempt_id 不被覆盖。\",\n\"required\": \"增加重试及多 attempt 测试，验证 attempt_id 唯一性、每次尝试重新生成，以及历史 attempt 保留。\"\n},\n{\n\"id\": \"R03\",\n\"severity\": \"P2\",\n\"finding\": \"成功不覆盖失败的测试目前直接向 execution_json 输入两个手工构造的记录，证明了投影保留能力，但没有验证真实执行收尾及持久化更新过程不会覆盖历史失败记录。\",\n\"required\": \"至少补充一次真实 attempts 累积更新路径测试，验证先失败、后成功后两条记录仍然存在。\"\n}\n],\n\"conditions\": [\n{\n\"id\": \"C01\",\n\"status\": \"CLOSED\",\n\"reason\": \"复用 job_id，没有新增 trace_id、correlation_id 或独立追踪列。\"\n},\n{\n\"id\": \"C02\",\n\"status\": \"PARTIAL\",\n\"reason\": \"两条执行路径均增加 attempt_id，但缺少实际构造路径及唯一性测试。\"\n},\n{\n\"id\": \"C03\",\n\"status\": \"PARTIAL\",\n\"reason\": \"worker_id 从执行参数传入，但缺少实际执行上下文验证。\"\n},\n{\n\"id\": \"C04\",\n\"status\": \"PASS\",\n\"reason\": \"关联字段在 attempt 构造时写入，不依赖事后推算。\"\n},\n{\n\"id\": \"C05\",\n\"status\": \"PASS\",\n\"reason\": \"直发路径使用 provider_vendor_id，路由路径使用既有 vendor_id。\"\n},\n{\n\"id\": \"C06\",\n\"status\": \"PASS\",\n\"reason\": \"rightapi、async 增加 X-Request-Id 采集，非空才写入，长度限制128；未发现伪造 request_id 的实现。\"\n},\n{\n\"id\": \"C07\",\n\"status\": \"PASS\",\n\"reason\": \"采集范围限于明确的请求关联头，没有扩大敏感信息采集范围。\"\n},\n{\n\"id\": \"C08\",\n\"status\": \"PASS\",\n\"reason\": \"没有增加数据库表、字段迁移或独立追踪平台；沿用既有 attempts 存储结构。\"\n},\n{\n\"id\": \"C09\",\n\"status\": \"PASS\",\n\"reason\": \"execution_json allowlist 已加入 attempt_id、job_id、worker_id，保留既有 vendor_id、request_id 等字段。\"\n},\n{\n\"id\": \"C10\",\n\"status\": \"PARTIAL\",\n\"reason\": \"投影测试证明可以按 attempt_id 定位并通过 request_id 反查，但尚未验证真实执行路径的记录累积。\"\n},\n{\n\"id\": \"C11\",\n\"status\": \"PARTIAL\",\n\"reason\": \"手工构造数据证明失败记录没有被成功记录覆盖，但尚缺真实执行收尾路径的回归证据。\"\n}\n],\n\"summary\": {\n\"closed\": 7,\n\"partial\": 4,\n\"blocked\": 0,\n\"must_fix\": [\n\"R01：直发、路由实际 attempt 构造路径测试。\",\n\"R02：attempt_id 唯一性及重试生命周期测试。\",\n\"R03：真实 attempts 累积更新路径测试。\"\n],\n\"scope_assessment\": \"当前 diff 未发现路由选择、重试策略、计费逻辑或数据库结构变更。\"\n},\n\"decision\": {\n\"final_pass\": false,\n\"enter_T04\": false,\n\"next_step\": \"REWORK_SMALL\",\n\"rework_scope\": \"仅补充上述三项针对性测试，不要求改变当前实现架构，不增加数据库迁移，不扩大 T03 范围。\",\n\"reassessment\": \"补齐测试并提供新 commit、完整 diff SHA 和聚焦测试结果后，进行最终验收。\"\n},\n\"limitations\": [\n\"本次依据提供的 t03_full_r1.diff（SHA 51443458）进行代码审查，未独立获取 GitHub commit 完整对象及父提交验证。\",\n\"514 passed/14 failed 属于提交方提供的测试报告，本次未独立执行全量测试。\"\n]\n}",
+      "text_sha256": "4d8729491fd115ac6b12af4475ffe9abb31dae46c292df42adc288b9c4cd2213",
+      "size_bytes": 3916,
+      "assistant_uuid": "19da68e7-1264-4584-8a99-d45ae69c5f26"
+    }
+  ]
+}

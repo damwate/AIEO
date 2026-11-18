@@ -1,0 +1,20 @@
+T01 P1-02 复验证据（HEAD dcf5df942b1b3c1e951981d31e1b90627aa613fe）
+
+== GitHub 422 说明 ==
+四提交均在本地分支 fix/yuanqiao-http1-20261117，未 push（DEC-010）。附 t01_full_v4.diff（四提交合并，12 文件）离线核验。
+
+== 上轮终验结果回顾 ==
+assessment 中 9 项历轮 REWORK：01_terminal_immutability/03_storage/04_image_validate/05_completed_at/06_safe_detail/07_HTTPError/08_end_to_end/09_file_count PASS；02_output_commit=P1-01=PASS_WITH_CONDITIONS（设计已修，仅建议补真实 DB 注入测试）；sanitization=PASS_WITH_CONDITIONS；observation_only=PASS_WITH_CONDITIONS。唯一 FAIL = P1-02。
+
+== 本轮 P1-02 修复 ==
+问题：resp.read() 抛 OSError/Timeout 时，request_send 已 succeeded、response_received 停在 running；外层 except 再标 request_send=failed 因终态不可覆盖而无效，response_received 未转 failed。
+修复：openai/seedream/rightapi/async 四个适配器在 resp.read() 边界单独 try/except，读失败即 record_phase(response_received, failed, exc)，然后原样重抛给既有外层错误处理（错误分类/重试/计费语义不变）；request_send 保持 succeeded。
+测试：新增 test_response_body_read_failure_locates_response_received（openai）与 test_seedream_response_body_read_failure_locates_response_received，注入 read() 抛 OSError，断言 response_received=failed、request_send=succeeded、failed_phase=response_received。
+
+== 测试结果 ==
+聚焦 test_phase_events.py：16 passed（含 P1-02 两个注入）。
+全量 tests/：455 passed, 14 failed；14 项为基线既有（Windows 路径/GBK/secure cookie，前轮 stash 对照确认），与 T01 无关。
+前端无 node_modules，未运行 vue-tsc/vite build，记为未验收项。
+
+== 判定/脱敏语义 ==
+本轮仅新增读取失败的阶段记录边界，未改任何路由/重试/failure_decision/acceptance/STOP_CODES/错误分类；error_detail_safe 仍为白名单模板，无原始 message 泄漏。

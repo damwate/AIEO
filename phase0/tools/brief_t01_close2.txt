@@ -1,0 +1,8 @@
+[T01收口2|AI-Image-Service|20261119]
+独立复核，只回JSON。HEAD c68764f5d508c15787bfb396866a4fc3347e4c25。六提交未push(DEC-010)，附t01_full_v6.diff离线核验。
+
+上轮你收口复验判REWORK，唯一代码问题=T01-P1-01：download阶段成功状态缺失， Seedream/RightAPI等URL下载成功时download停留not_reached/running。
+已修：image_download.download_image 在下载开始记download=running、响应体读完记download=succeeded、下载异常(ProviderError/OSError/HTTPException)记download=failed；四适配器均透传attempt，终态不可覆盖保证不重复写。image_validate仍在download成功后独立记录。
+测试：新增成功路径断言download=succeeded、读取失败断言download=failed；聚焦19用例/全量458 passed，14失败基线既有(stash对照)。前端无node_modules未tsc(非阻断ENV)。未改任何判定/路由/重试。
+
+请确认(JSON,result=PASS/REWORK,issues,conditions)：download阶段修复是否关闭？T01整体是否可收口进入T02？还有无必须改的代码问题？ENV项(远端HEAD/node_modules)标注非阻断。

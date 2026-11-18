@@ -1,0 +1,6 @@
+[T01验收R2|AI-Image-Service|20261119]
+你上轮BLOCKED因GitHub 422——该commit在本地分支未push（DEC-010纪律不擅自push）。现附t01_full.diff(完整11文件改动)与t01_verification_notes.txt(测试命令/输出/基线对照/故障注入摘录)，请基于附件离线核验，给PASS/REWORK。commit 285851233ae3a056cb2f9a4d71851ad393ff4b1a。
+
+重点核对：1)record_phase吞异常+终态不回退是否影响原异常传播/任务状态/路由重试？2)error_detail_safe全路径是否无原始message/URL/base64旁路泄漏(含前端/execution_json)？3)十阶段+worker_unclassified兜底、storage/output_commit边界是否一致？4)9故障注入用例是否真定位到response_parse/result_extract/image_decode？5)前端未tsc是否接受为明确未验收项？
+
+回JSON{result,issues,conditions,reviewed_commit}。只读，不改码不push不部署。

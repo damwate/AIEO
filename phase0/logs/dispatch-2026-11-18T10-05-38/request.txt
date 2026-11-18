@@ -1,0 +1,15 @@
+[T03设计评审|AI-Image-Service|20261119]
+只回JSON。T02已PASS(26f4e4ae)，据简报+只读审计判断。
+
+目标(§2.3)：按job_id看全所有尝试、按request_id定位、切换/成功不覆盖失败证据。审计：后两项已满足且测试固化；缺口——attempt仅整数n，无job_id/attempt_id/worker_id；直发无vendor_id(路由有)；request_id仅openai/seedream采集，rightapi/async缺。
+
+提案(P0独立提交，复用现有ID、不加表/列)：
+1)attempt构造(ai_worker.py:449/routing.py:224)补job_id=job.job_id、attempt_id=uid()、worker_id=参数；attempts本就JSON无需迁移。
+2)直发attempt补vendor_id=job.provider_vendor_id与路由统一(仅审计不改路由)。
+3)rightapi/async的_json补X-Request-Id→request_id，对齐另两家；只记ID不记URL。
+4)execution_json allowlist纳入新键。
+5)不新增trace_id/correlation_id列(规范：先复用现有ID)。
+
+测试：job_id串联、attempt_id唯一、worker_id、两路径vendor_id、rightapi/async request_id、成功保留失败证据。
+
+请评(JSON,result,issues,conditions)：满足§2.3？复用ID取舍对否？必补项？边界：只补关联字段，不改路由/重试/计费。

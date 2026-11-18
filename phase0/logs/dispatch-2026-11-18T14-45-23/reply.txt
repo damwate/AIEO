@@ -1,0 +1,168 @@
+ChatGPT 说：
+
+{
+"result": "BLOCKED",
+"release_plan_steps": [
+"S0：冻结本次发布基线。以完整 commit SHA 02c9d7a20f4c9b94c50d779ec0acb6383926e005 作为待发布代码基线，确认它与材料 commit 1dd39805932f6025e31cd365b6ed9d3e9eb7e2e0 的关系。核实分支 HEAD、工作区干净、31 个提交范围及测试基线。不得仅凭分支名称或材料中的自述确定发布版本。",
+"S1：补充 0009 数据库迁移。创建 governance_records、priority_demotions 两张表，包含全部字段、主键、默认值、nullable、索引，并提供 downgrade。不得使用 create_all 替代正式迁移。",
+"S2：独立迁移审核。逐项对照 backend/app/db.py ORM 定义、0009 upgrade/downgrade、PostgreSQL 实际 DDL。至少验证空数据库从 0001 升级到 0009，以及已有 0008 数据库升级到 0009。验证降级行为，但不得在生产库实际执行破坏性 downgrade。",
+"S3：代码与迁移重新审核。重新审查受迁移影响的 T07-B 实现、事务边界、索引、恢复快照及审计写入。原先代码审核 PASS 不自动覆盖新增迁移及其影响。",
+"S4：选择发布路径 A。0009 完成并审核后，将完整候选提交合并 main，确认 main 快进关系和最终 SHA，创建不可变版本 tag。发布必须使用该 tag 对应的准确代码，不接受仅修改 AI_SERVICE_TAG 但实际构建其他 HEAD 的情况。",
+"S5：221 发布前备份。备份数据库、源码、Compose、service.env、deploy-config、供应商配置及相关存储。确认备份可恢复、旧镜像仍可用、旧版配置可恢复。记录数据库当前 Alembic revision。",
+"S6：221 staging 发布。先构建并固定镜像，再执行 alembic upgrade head。确认迁移成功、数据库 revision=0009、两张新表及索引存在，然后启动 API 和 Worker。先不修改 Garden/Playground 真实流量入口。",
+"S7：执行 T01-T09 真栈验证矩阵。区分自动测试、隔离故障注入、真实供应商调用和人工日志检查。所有测试保存请求、响应、job_id、attempt_id、数据库状态及日志证据。",
+"S8：最小真栈验收。完成 ready、数据库迁移、管理面、真实供应商生图、任务追踪、Worker 心跳、告警 FIRING/RESOLVED、回滚演练。验收结果形成独立报告。",
+"S9：发布评审。独立审核验证证据，确认没有未解决 P0/P1，核实剩余风险及回滚方案。提交 PO 书面审批。",
+"S10：PO 批准后逐个调用方灰度。先测试 Key，再正式 Key；每个调用方单独观察成功率、交付率、unknown_outcome、供应商失败率、成本和告警。保留客户端配置级回退及服务端镜像回退能力。",
+"S11：灰度稳定后由 PO 决定是否扩大切流。保留完整发布记录、监控窗口、调用方变更记录和验收回执。"
+],
+"validation_matrix": [
+{
+"item": "T00",
+"how": "核实部署 SHA、tag、镜像版本、工作区状态、main 合并结果和数据库初始 revision。发布镜像必须与经过审核的 SHA 一致。检查 release.sh 是否存在未提交改动绕过、错误 tag 对应错误工作区的问题。",
+"auto_or_manual": "自动检查 Git 状态、SHA、镜像标签；人工审核发布清单。"
+},
+{
+"item": "T01",
+"how": "通过受控供应商响应触发 HTTP 200 后的本地结果处理失败。查询任务 timeline、phase_events 和 execution 日志，检查各阶段状态是否准确，能否识别失败发生在响应接收、解析、验证还是交付阶段。正常成功路径也必须检查。",
+"auto_or_manual": "自动回归测试 + staging 故障注入 + 人工日志核查。"
+},
+{
+"item": "T02",
+"how": "使用模拟供应商返回 HTTP 200，但响应体无法解析或图片无效。确认结果为 result_invalid/local_invalid，而不是 unknown_outcome；确认不错误计入供应商失败、不发生不符合策略的自动 failover。另行模拟真正的未知结果，检查 unknown_outcome 与 result_invalid 的区分。",
+"auto_or_manual": "自动测试 + staging 模拟供应商故障注入。"
+},
+{
+"item": "T03",
+"how": "提交一笔正常任务及一笔发生供应商切换的任务。通过任务详情和 timeline 检查 job_id、attempt_id、worker_id、request_id 是否完整关联。检查首次失败证据不会被后续成功覆盖，能够从任务追溯所有尝试。",
+"auto_or_manual": "自动 API 测试 + staging 任务验证 + 人工核对关联记录。"
+},
+{
+"item": "T04",
+"how": "构造同一 global/policy scope 的连续多次临时降级，检查 scope_key、scope_original、snapshot、expires_at 和状态变化。分别验证到期恢复、叠加恢复、人工修改后跳过恢复、不同 scope 相互隔离，以及重复扫描不会重复恢复或覆盖人工操作。",
+"auto_or_manual": "自动测试 + staging 数据库/API 集成测试；到期过程可通过受控时间条件或短有效期验证。"
+},
+{
+"item": "T05",
+"how": "通过真实成功、供应商失败、本地结果无效、未知结果等受控样本检查 /admin/metrics。核对供应商失败率、交付成功率、分子分母、excluded、sample_size、insufficient、p95、时间窗口及 vendor 过滤。确认本地失败不会错误归责供应商。",
+"auto_or_manual": "自动统计测试 + staging API 验证 + 人工对照底层流水。"
+},
+{
+"item": "T06",
+"how": "调用评估相关管理接口，检查只读评估结果、窗口、供应商过滤及证据引用。确认 evaluation 数据与真实运行指标隔离，不会写回供应商优先级、路由或启停状态。",
+"auto_or_manual": "自动测试 + staging API 验证；必要时人工检查数据库前后状态。"
+},
+{
+"item": "T07-A",
+"how": "调用 /admin/governance/suggestions，检查 normal、observe、suggest_downgrade、suggest_pause、suggest_resume、suggest_test 六态及证据。覆盖低样本、冷却、连续失败、恢复成功等场景。重复调用前后核对数据库，证明建议接口只读，不自动执行治理操作。",
+"auto_or_manual": "自动测试 + staging API 验证 + 人工检查建议与原始证据的一致性。"
+},
+{
+"item": "T07-B",
+"how": "先确认 0009 迁移成功及两张表结构完整。执行供应商修改、路由修改、临时降级、到期恢复，检查 /admin/governance/records 是否包含 actor、object_type、object_id、action、before、after、reason、evidence、created_at。通过事务失败测试确认治理变更与审计记录同时提交或同时回滚。检查审计记录不可被普通管理操作修改或删除。",
+"auto_or_manual": "自动事务测试 + PostgreSQL 真栈迁移测试 + staging API 验证 + 人工数据库核对。"
+},
+{
+"item": "T08",
+"how": "检查部署文档、迁移说明、API 契约、告警说明、回滚说明与实际代码一致。重点更新 0009、迁移版本、部署顺序和回滚兼容性。当前 Runbook 中仍有 0001-0007、current=0007 的旧表述，需要同步修订。",
+"auto_or_manual": "文档静态检查 + 人工审查，不要求单独运行时验证。"
+},
+{
+"item": "T09",
+"how": "使用受控测试条件制造 needs_human 堆积、交付率异常、Worker 心跳丢失等告警。验证 watchdog 扫描、告警去重、FIRING 通知、条件恢复后的 RESOLVED 通知。检查重复扫描不会重复发送不必要的告警。使用测试 webhook，不直接污染正式通知群。",
+"auto_or_manual": "自动监控测试 + staging 人工触发 + 人工检查真实通知渠道。"
+},
+{
+"item": "T10",
+"how": "在 221 验证 /api/ai-service/ready、API 容器健康、Worker 心跳、数据库连接、Alembic current=0009。检查 8300 端口和目标服务绑定，确保外部访问路径与预期一致。",
+"auto_or_manual": "自动探活、Compose healthcheck、数据库查询 + 人工确认。"
+},
+{
+"item": "T11",
+"how": "使用已经授权的小额测试供应商额度，提交一笔真实生图任务，检查从提交、队列领取、供应商请求、结果下载、私有存储写入到结果交付的完整链路。检查图片实际可读取、格式正确、任务状态 succeeded、成本及供应商记录正确。",
+"auto_or_manual": "自动 API/状态检查 + 必须人工确认真实图片质量和供应商实际交付。"
+},
+{
+"item": "T12",
+"how": "执行完整发布失败演练和回滚演练。先在隔离环境模拟迁移失败，确认 API/Worker 不升级。再验证升级到 0009 后旧镜像能否使用新数据库继续运行，管理面认证和旧版 API 不受影响。检查回滚不会误执行旧 Alembic downgrade。",
+"auto_or_manual": "自动部署门禁测试 + PostgreSQL staging 回滚演练 + 人工审查数据库和镜像状态。"
+}
+],
+"blockers": [
+{
+"id": "B01",
+"severity": "P0",
+"description": "0009 迁移缺失。已直接读取指定 commit 的 backend/migrations/versions，只有 0001 至 0008，没有治理审计和临时降级两张表的建表迁移。db.py 已定义 GovernanceRecord 和 PriorityDemotion，release.sh 仅执行 alembic upgrade head，不会自动 create_all。直接部署会导致 T07-B 数据库操作失败。",
+"resolution": "新增并审核 0009，包含 governance_records、priority_demotions 的全部 ORM 字段、索引及 downgrade。"
+},
+{
+"id": "B02",
+"severity": "P1",
+"description": "材料 commit 1dd39805932f6025e31cd365b6ed9d3e9eb7e2e0 中，讨论材料记录的被审代码 SHA 为 02c9d7a20f4c9b94c50d779ec0acb6383926e005，而用户要求审核的材料 commit 是 1dd398...。两者用途不同，不能将材料 commit 当成被审代码版本。必须确认 02c9d7a 是否就是分支实际候选 HEAD，以及后续 31 提交关系是否仍然成立。",
+"resolution": "发布前固定代码完整 SHA，并以该 SHA 作为审核、合并、打 tag、构建镜像和验收的唯一身份。"
+},
+{
+"id": "B03",
+"severity": "P1",
+"description": "release.sh 接受任意 TAG 参数，但实际 build 使用当前工作区，不会 checkout 或验证该 tag 对应的 commit；也没有明确的 git clean、分支、tag 不可变和镜像 SHA 门禁。仅设置 AI_SERVICE_TAG 不能证明镜像就是该 tag 对应代码。",
+"resolution": "增加发布前 Git 状态和 SHA 校验，要求干净工作区、明确发布 SHA、tag 与 SHA 对应，并将 SHA 写入镜像元数据及发布回执。"
+},
+{
+"id": "B04",
+"severity": "P1",
+"description": "release.sh 的自动回滚只切换镜像 tag，不回退数据库。迁移成功后 API 启动失败，可能形成数据库已升级但旧镜像仍运行的状态。必须先证明扩展迁移的向前兼容性，且回滚后旧代码可正常工作。",
+"resolution": "采用 expand-contract 迁移纪律。0009 只新增独立表和索引，不修改旧表或删除旧列。数据库保留新表，旧代码不使用新表。禁止自动 downgrade。"
+},
+{
+"id": "B05",
+"severity": "P1",
+"description": "Runbook 与当前迁移状态不一致。第 4 节仍要求 current=0007，实际指定 commit 已存在 0008_admin_sessions。文档也需要明确升级到 0009 后的状态，避免运维按过期清单验收。",
+"resolution": "0009 审核通过后同步更新部署 Runbook、迁移检查命令和验收标准。"
+},
+{
+"id": "B06",
+"severity": "P1",
+"description": "release.sh verify 目前只检查 ready HTTP 响应，不能证明 Worker 正常消费任务、数据库 revision 正确、管理面可用、供应商调用成功及告警正常。",
+"resolution": "保留 ready 作为基础门禁，增加独立的发布后验收回执，不能把 ready=200 等同于系统验收通过。"
+}
+],
+"open_questions": [
+{
+"id": "Q1",
+"answer": "必须逐项核对，而且必须单独进行迁移审查后才能进入发布流程。对照 db.py 的 GovernanceRecord 和 PriorityDemotion，检查字段名、类型、长度、nullable、primary key、默认值、索引及数据库方言。尤其检查 created_at、vendor_id、scope_key、scope_original、snapshot、expires_at、status。downgrade 必须与 upgrade 对称，但只在隔离数据库测试。还必须执行 PostgreSQL 真栈升级，不能仅依赖 SQLite 测试。迁移审核应是独立的验收关卡，不由原代码审核 PASS 自动替代。"
+},
+{
+"id": "Q2",
+"answer": "选择 A：补迁移→重新审核→合并 main→打 tag→221 staging→验证→PO 审批→切流。A 的优势是 main、tag、镜像、生产部署具有统一可追溯基线，避免功能分支直接成为生产长期运行版本。B 虽然可以缩短 staging 验证时间，但会产生未合并代码先部署的状态，后续 main 合并可能出现代码差异、漏合并或部署版本不可复现等问题。B 只适合明确隔离的临时测试环境，不建议用于本次 221 正式候选验证。这里的 221 staging 应明确与真实生产流量隔离。"
+},
+{
+"id": "Q3",
+"answer": "T01、T03、T05、T06、T07-A、T07-B 以自动测试和 staging API 验证为主；T02 必须额外进行 HTTP200 无效响应和 unknown_outcome 故障注入；T04 必须验证叠加降级、过期恢复及人工修改冲突；T09 必须实际触发告警并收到 FIRING/RESOLVED；T08 采用静态文档检查。T01 的阶段日志、T03 的追踪关联、T07-B 的事务一致性均必须检查数据库或原始日志，不能只看 API 返回成功。T11 真实生图必须人工确认实际图片交付。"
+},
+{
+"id": "Q4",
+"answer": "新增两张独立表后，旧代码通常可以继续运行，因为旧代码不会主动访问自己不认识的表。数据库保留额外表不构成旧代码兼容性问题。前提是 0009 不修改旧代码依赖的现有表、字段、索引和约束。迁移与代码不必在数据库层面同一瞬间回滚，但必须作为同一个发布候选管理。推荐先执行向前兼容的 additive migration，再启动新代码。回滚时切回旧镜像并使用旧版 Compose，不重跑旧版 migrate，不自动 downgrade，不删除两张新表。必须在 PostgreSQL staging 真实演练旧代码+新 schema。另需注意 Runbook 明确要求旧版 Compose 和旧认证 UI 配套恢复。"
+},
+{
+"id": "Q5",
+"answer": "最小真栈验收集应包含：①ready 返回成功；②alembic current=0009 且两张新表和索引存在；③API、Worker、数据库健康及心跳正常；④管理认证正常，metrics、governance suggestions、governance records 三个管理端点可用；⑤提交一次真实供应商生图，图片完整交付并能读取；⑥T02 至少完成一次隔离故障注入，证明结果状态和 failover 边界正确；⑦告警通道完成 FIRING 和 RESOLVED 闭环；⑧旧镜像回滚演练成功；⑨备份与恢复材料完整。以上项目必须全部满足，才能申请 PO 切流批准。"
+},
+{
+"id": "Q6",
+"answer": "release.sh 的 TAG 参数只是镜像标签输入，不等于实际源码版本选择。必须增加 SHA 与 tag 绑定门禁。另外，release.sh 的 ready 检查只验证 API，不能代替 Worker 和管理面验收。Runbook 的 0007 描述需要更新为当前实际的 0008，并在迁移补齐后更新为 0009。"
+},
+{
+"id": "Q7",
+"answer": "需要明确 221 的部署身份：当前目标是 192.168.0.221:8300，但 Runbook 的宿主机端口缺省绑定 127.0.0.1。如果 221 通过同机 Nginx 反向代理访问，这种绑定合理；如果需要直接从其他机器访问 8300，则必须确认 AI_API_BIND 和防火墙策略。不能默认端口对外开放。"
+}
+],
+"po_approval_points": [
+"PO-1：批准 0009 迁移方案及其生产数据库变更范围。该批准不等于允许执行生产迁移。",
+"PO-2：批准将已完成代码审核及迁移审核的完整 SHA 合并 main，并创建正式 tag。",
+"PO-3：批准在 221 执行 staging 部署、数据库迁移和隔离验证。确认该阶段不会接入真实 Garden/Playground 流量。",
+"PO-4：收到完整 staging 验收报告后，书面批准是否进入真实流量灰度。必须明确调用方、供应商、测试额度、灰度比例、观察时间和回退条件。",
+"PO-5：每个调用方正式切流前单独书面确认。Garden 与 Playground 不得因其中一个验收通过而自动获得另一个的切流授权。",
+"PO-6：正式扩大流量或结束灰度前再次书面确认，确认监控指标、成本、告警和回滚条件均满足要求。"
+],
+"notes": "独立审核结论：当前不能进入发版执行阶段，result=BLOCKED。指定材料 commit 中确实存在 0009 迁移缺失这一实质性阻断。已直接读取 GitHub 指定 SHA 的讨论材料、db.py、0008_admin_sessions.py、release.sh、docker-compose.yml、04_DEPLOYMENT_RUNBOOK.md、governance.py、watchdog.sh，并核实迁移目录实际只有 0001-0008。\n\n特别补充的风险：\n1. release.sh 的 build 使用当前 checkout，而不是 TAG 对应的源码。即使传入正确 tag，也可能构建错误版本，这是发布身份控制风险。\n2. release.sh 的自动回滚不是数据库回滚。迁移成功而新 API 启动失败时，数据库可能已经前进，必须证明旧代码兼容新 schema。\n3. release.sh 的 verify 只有 ready 检查，不能证明 Worker、管理接口、供应商调用及告警正常。\n4. watchdog.sh 的定时扫描和 webhook 是独立于 Compose healthcheck 的运维环节。必须确认 cron 实际运行环境、工作目录、Python 虚拟环境、AI_ALERT_WEBHOOK 和端口配置正确。尤其 watchdog 直接调用 python -m app.cli，不能假定 cron 会自动使用容器环境。\n5. docker-compose.yml 默认 API 绑定 127.0.0.1:8300。必须明确 221 的访问架构是同机反向代理还是直接端口访问，避免验证地址与实际监听地址不一致。\n6. release.sh 依赖 .env/service.env、.env/ai-provider.json 和 deploy-config。发布前必须确认这些文件的权限、版本、备份及与旧镜像的兼容关系。供应商密钥不得进入镜像或发布日志。\n7. 应检查首次发布和重复发布时 migrate service 的容器执行行为，确保每次 release 都真正执行预期 revision 检查，而不是错误复用之前已成功退出的迁移容器状态。\n8. 测试基线的 14 项既有失败可以接受为已知基线，但前提是逐项失败清单、失败原因、基线 SHA 和当前 SHA 的对比证据一致。不能仅凭失败数量相同就判定没有新增回归。\n9. 真实生图必须验证图片内容、尺寸、格式、私有存储读取、交付成功及成本记录，HTTP 200 或任务 succeeded 不足以证明完整交付。\n10. 发布后应保存 migration receipt、image SHA、代码 SHA、smoke receipt、数据库备份标识、告警回执和回滚记录，形成可追溯证据链。\n\n当前建议：先完成 0009 和发布脚本发布身份门禁，再进行独立复审。不要因为此前 P0/P1 代码审核 PASS，就跳过数据库迁移审核和真栈验收。本次讨论没有执行合并、发版、迁移或生产切流。"
+}

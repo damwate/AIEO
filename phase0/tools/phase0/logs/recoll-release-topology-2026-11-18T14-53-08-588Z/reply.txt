@@ -1,0 +1,197 @@
+ChatGPT 说：
+
+{
+"result": "BLOCKED",
+"issues": [
+{
+"id": "I01",
+"severity": "P0",
+"description": "AI侧与217/221侧的职责边界已经明确，但这不意味着可以跳过发布门禁。AI侧负责交付可复现的候选版本，217负责实际部署。当前材料第8.1节仍将B01-B06列为发版前阻断项，尚不能据此认定全部清零。",
+"impact": "目前不能正式向217交付可部署候选，也不能启动221正式发布。"
+},
+{
+"id": "I02",
+"severity": "P0",
+"description": "B01：0009迁移是AI侧必须完成的工作。必须提供两张治理表的正式迁移，不能让217自行补数据库结构。",
+"impact": "否则T07-B管理功能部署后可能因缺表而失败。"
+},
+{
+"id": "I03",
+"severity": "P1",
+"description": "B02：发布身份必须由AI侧固定。材料commit 6de57a43f9771ddd65707fb8ec7e03473a7626c8与被审代码SHA 02c9d7a20f4c9b94c50d779ec0acb6383926e005不是同一个概念。必须明确候选代码完整SHA、审核覆盖范围、main合并结果及tag对应关系。",
+"impact": "217不能自行猜测应该部署哪个提交。"
+},
+{
+"id": "I04",
+"severity": "P1",
+"description": "B03：release.sh目前的TAG参数不能保证构建源码就是该tag对应源码。脚本使用当前工作区执行docker compose build --pull。必须由AI侧修复发布身份门禁，或者提供经过验证的严格部署入口，确保217按完整SHA checkout并验证工作区干净后构建。",
+"impact": "否则可能出现审核通过的代码与实际部署代码不一致。"
+},
+{
+"id": "I05",
+"severity": "P1",
+"description": "B04：必须由AI侧保证0009采用向前兼容的additive migration，并通过旧代码兼容新schema的测试。217负责实际备份、迁移、旧镜像回滚演练。不能要求217通过数据库downgrade完成普通应用回滚。",
+"impact": "避免迁移成功但新代码启动失败时，旧版本也无法正常运行。"
+},
+{
+"id": "I06",
+"severity": "P1",
+"description": "B05：Runbook仍存在迁移版本过期问题。AI侧必须更新部署说明，将0007、0008、0009的关系和最终目标revision说明清楚。",
+"impact": "217不能依赖过期部署文档操作生产环境。"
+},
+{
+"id": "I07",
+"severity": "P1",
+"description": "B06：release.sh只检查ready，不代表完整系统验收。AI侧必须交付可执行的验收清单和回执模板；更广泛的真实栈验证由217执行。",
+"impact": "不能将ready返回200作为发版成功的唯一依据。"
+},
+{
+"id": "I08",
+"severity": "P1",
+"description": "部署拓扑新增一个关键控制点：217拉取GitHub代码时必须验证目标SHA与tag，而不能简单git pull获取最新main。必须防止拉取期间分支继续前进造成版本漂移。",
+"impact": "交接包必须支持固定版本、可重复部署和事后追溯。"
+}
+],
+"conditions": {
+"ai_side_must_clear_before_handoff": [
+"B01：完成0009正式迁移，覆盖governance_records、priority_demotions全部ORM字段、主键、默认值、nullable及索引，提供upgrade/downgrade。",
+"B02：固定被审代码完整SHA，确认审核覆盖范围；完成main合并和正式tag准备，保证tag指向明确的完整SHA。",
+"B03：修复release.sh发布身份问题，或提供经过审核的固定SHA部署入口。不能依赖TAG参数自动保证源码正确。",
+"B04：保证0009为additive migration，完成新schema与旧代码兼容性测试，明确禁止自动downgrade。",
+"B05：更新Runbook，迁移目标revision统一为0009，修正旧版本描述。",
+"B06：提供完整发布后验收清单、命令、预期结果和证据回执模板。",
+"完成迁移独立复审及受影响代码复审。",
+"提供14项既有测试失败的逐项基线清单，证明没有新增回归。",
+"提供217可直接拉取的候选SHA、tag、部署说明及配置要求。",
+"完成候选代码推送GitHub，并确认远端可读取。"
+],
+"can_be_left_to_217": [
+"从GitHub拉取指定tag并核对完整SHA、工作区状态。",
+"核对221服务器Docker、Compose、磁盘空间、端口8300、网络及数据库连接。",
+"备份数据库、源码、Compose、service.env、供应商配置、deploy-config及媒体存储。",
+"检查AI_DB_PASSWORD、AI_ADMIN_TOKEN、供应商凭证和管理员配置是否存在、权限是否正确。密钥不得回传AI侧或写入日志。",
+"实际执行release.sh、docker build、alembic upgrade head和容器启动。",
+"确认PostgreSQL实际revision=0009及两张表、索引存在。",
+"验证API、Worker、心跳、管理认证及三个管理端点。",
+"执行真实供应商小额生图、图片读取和成本记录检查。",
+"执行T02/T04故障注入、T09 FIRING/RESOLVED告警验证。",
+"检查watchdog cron环境、工作目录、Python环境、webhook和网络。",
+"执行旧镜像回滚演练，确认旧代码兼容新增schema。",
+"形成221真实部署日志、smoke receipt、备份标识和回滚证据。",
+"将221验收结果交PO审批。"
+],
+"handoff_package_minimum": [
+{
+"item": "01_版本身份",
+"contents": [
+"仓库完整地址及分支",
+"完整40位候选commit SHA",
+"正式tag及tag指向的完整SHA",
+"审核报告对应的完整SHA",
+"main合并commit SHA",
+"镜像构建使用的源码SHA"
+]
+},
+{
+"item": "02_数据库迁移",
+"contents": [
+"0009迁移文件",
+"迁移父revision及目标revision",
+"两张表的字段和索引清单",
+"upgrade/downgrade说明",
+"PostgreSQL迁移测试证据",
+"旧代码兼容新schema的验证证据",
+"禁止自动downgrade的说明"
+]
+},
+{
+"item": "03_部署前置",
+"contents": [
+"Linux、Docker及Docker Compose版本要求",
+"221部署目录及配置文件要求",
+"环境变量和必需secrets清单，不包含实际密钥",
+"8300端口及反向代理拓扑说明",
+"数据库连接和备份前置条件",
+"供应商测试额度和测试凭证准备要求",
+"旧镜像及旧Compose保留要求"
+]
+},
+{
+"item": "04_部署步骤",
+"contents": [
+"217固定SHA checkout命令",
+"tag与SHA核对方法",
+"工作区干净检查",
+"备份步骤",
+"release.sh执行步骤",
+"迁移结果核对命令",
+"API/Worker启动及健康检查步骤",
+"异常中止条件"
+]
+},
+{
+"item": "05_验收清单",
+"contents": [
+"ready检查",
+"alembic current=0009",
+"两张表及索引检查",
+"API/Worker/心跳检查",
+"管理认证及metrics、governance suggestions、governance records检查",
+"真实供应商生图及图片交付检查",
+"T02故障注入",
+"T04降级恢复检查",
+"T09告警闭环",
+"旧镜像回滚演练"
+]
+},
+{
+"item": "06_回滚方案",
+"contents": [
+"上一稳定镜像tag",
+"旧版Compose及配置备份",
+"release.sh rollback执行方法",
+"数据库保留0009新schema，不自动downgrade",
+"API/Worker回滚后健康检查",
+"回滚失败时的人工升级路径",
+"PO及运维联系人确认机制"
+]
+},
+{
+"item": "07_交接回执",
+"contents": [
+"实际部署SHA和tag",
+"镜像SHA或digest",
+"数据库迁移结果",
+"备份标识",
+"验收项目逐项PASS/FAIL",
+"测试任务ID及图片证据",
+"告警回执",
+"回滚演练结果",
+"未解决问题及风险"
+]
+}
+],
+"po_approval_points": [
+"批准候选代码合并main和创建正式tag。",
+"批准217在221执行staging部署、备份和数据库迁移。",
+"确认staging与真实Garden/Playground流量隔离。",
+"收到217完整验收回执后，书面批准是否开始真实流量灰度。",
+"Garden和Playground分别批准切流，不得相互继承授权。",
+"扩大流量和结束灰度必须再次获得书面批准。"
+]
+},
+"release_plan": [
+"AI侧完成B01-B06中必须由AI侧负责的代码、迁移、文档和发布身份整改。",
+"独立复审迁移、发布脚本及兼容性，固定最终候选SHA。",
+"按既定审批纪律合并main并创建不可变正式tag。",
+"AI侧推送GitHub，生成完整可部署候选交接包。",
+"217拉取指定tag，核对SHA和工作区，检查部署前置条件。",
+"217备份221现有运行环境和数据库。",
+"217执行release.sh，完成0009迁移和API/Worker部署。",
+"217执行全部真栈验收和回滚演练，形成证据回执。",
+"PO审核验收报告，书面批准后才允许真实流量灰度。",
+"按调用方逐一灰度，出现异常立即按既定回滚方案处理。"
+],
+"work_instruction_217": "请暂不执行生产切流；待AI侧交付并推送正式tag及完整SHA的可部署候选包后，按交接包固定版本拉取，在221先完成备份、迁移、部署、逐项真栈验收和旧镜像回滚演练，提交完整验收回执，等待PO书面批准后再进行任何真实流量切换。",
+"notes": "本次拓扑补充改变的是职责分工和发版判断口径，不是降低技术门槛。① AI侧不能访问221，因此不能宣称已经完成221发布或真栈验收；② 217是实际部署执行方，不负责替AI侧补代码、补迁移或猜测版本；③ PO仍是生产切流的唯一批准方。\n\n判断分两层：当前不能发版，也不能将当前材料直接视为可部署候选交给217开工；但可以继续AI侧候选准备工作。B01-B05及B06的交付物准备必须在AI侧完成。B04、B06的实际生产验证和运行回执由217完成。完成交接后，217可以开始隔离的221 staging部署和验证，但不能自行切流。\n\n本次直接读取了指定材料commit 6de57a43f9771ddd65707fb8ec7e03473a7626c8中的第8.1及第9节，并读取当前release.sh和部署Runbook。release.sh仍然以当前工作区构建，Runbook仍存在0007旧迁移目标描述。因此B03、B05不能视为已解决。对0009文件的两个常见文件名查询未找到，不能据此单独断言迁移目录完整状态；但第8.1节仍将B01列为未清零阻断，交接前必须核实并提供实际迁移文件及测试证据。\n\n最终结论：当前 BLOCKED；目标不是让AI远程操作221，而是让AI交付一个217无需猜测、可以固定SHA复现、能够验证并安全回滚的候选版本。"
+}

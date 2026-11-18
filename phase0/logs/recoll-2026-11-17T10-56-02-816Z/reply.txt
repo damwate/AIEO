@@ -1,0 +1,225 @@
+ChatGPT 说：
+
+目前已直读指定 commit a9c485e97659586e2ea3c2d2b9c415b818d78006 的 GitHub 提交差异。初步确认：改动不只是传输层加参数，已涉及供应商归一化、扁平配置、路由冻结字段、OpenAI 兼容适配器及传输层；新增测试也包含双供应商冻结路由和 failover 场景。
+
+但“代码路径已接通”不等于“真实远桥请求已验证”。我会把静态链路、测试证据和真实调用证据分开裁定。
+
+远桥 HTTP/1.1 独立复审
+PASS WITH CONDITIONS
+
+允许进入 221 受控测试
+
+复核对象： YotinGarden/AI-Image-Service
+分支： fix/yuanqiao-http1-20261117
+被审 SHA： a9c485e97659586e2ea3c2d2b9c415b818d78006
+父提交： 5c7ec3e73321a76c53e9d91a128d73bbe38b485c
+
+已确认分支指向指定 SHA。提交修改 6 个文件，新增 434 行、删除 15 行。以下结论绑定该 SHA，不代表后续提交或生产版本。
+
+① 配置链是否真正到达 Worker？
+PASS
+
+静态代码链完整：
+
+ai_provider.py::_norm_vendor：归一 http_version。
+
+_vendor_flat：把合法值传入适配器配置。
+
+build_generation_snapshot：通过扁平配置保存供应商快照。
+
+routing.py::ROUTE_CONFIG_FIELDS：允许该字段进入任务冻结路由。
+
+freeze_route：将供应商配置写入 route_plan_json.vendor_configs。
+
+process_routed：读取历史凭证配置，再用冻结配置覆盖相应字段。
+
+ai_provider_openai.py：将配置传给 urlopen。
+
+http_transport.py：在 curl_cffi 请求参数中追加 http_version='v1'。
+
+因此，不是只在配置文件里增加了一个字段，代码确实存在从供应商配置到 Worker 实际传输层的通路。
+
+证据：
+
+ai_provider.py
+
+routing.py
+
+ai_provider_openai.py
+
+配置操作有一个实际限制： 当前管理 API 的供应商编辑模型没有 http_version 字段，/config 也是只读展示。因此，当前不能假设在管理后台就能设置该字段，需要通过受控方式更新供应商 secrets JSON，并确保新任务冻结到正确配置。建议同时检查 vendors 和对应 generations 快照的一致性。
+
+② 悟空、请求体和认证是否受影响？
+PASS
+
+悟空没有配置该字段时，归一结果为 None，不会追加 http_version 参数。
+
+该实现不是硬编码“只有远桥才能设置”，而是供应商级通用配置；悟空保持不变的前提是其配置不写入该字段。
+
+原有 data、请求方法、headers、Authorization: Bearer ...、impersonate='chrome'、allow_redirects=False 均保留。
+
+新测试检查了 generations、multipart edits、JSON edits、responses 等通道的请求体和认证头。
+
+没有发现这次改动主动改变请求体结构或认证方式。
+
+证据：test_supplier_http_version.py
+
+③ 日志和错误分类是否安全正确？
+基本通过，有观测缺口
+
+安全方面通过：
+
+日志字段包含供应商、任务标识、配置协议、实际协议、HTTP 状态、耗时、错误类型和数值 transport code。没有直接记录 API Key、Authorization、URL、请求体、响应原文或原始 curl 错误文本。
+
+HTTP/2 传输错误的分类链也有依据：
+
+curl code 92 保留为数值 transport_code；
+
+适配器将 92 映射为 http2_error；
+
+没有收到响应时不伪造 actual_http_version。
+
+有两处需要注意：
+
+HTTP 非 2xx 响应目前在 _log_protocol 中先按 INFO 记录状态，日志没有补充 error_type，不够利于区分成功响应和 HTTP 失败。
+
+AI_HTTP_TRANSPORT 走标准库 urllib 时，配置的协议会被忽略，只记录一条 ignored warning，不会产生同等完整的协议、状态、耗时日志。
+
+另外，logger 自己添加 StreamHandler 又设置 propagate=True，在已有 root handler 的运行环境可能出现重复日志；不是凭证泄露问题，但建议后续检查日志重复。
+
+证据：http_transport.py
+
+④ 测试覆盖是否充分？
+部分覆盖，不能称为全部验证
+
+新测试文件静态核对共 19 个测试用例（含参数化展开），覆盖情况如下：
+
+项目
+
+	
+
+复核结果
+
+
+
+
+配置归一、扁平化、快照
+
+	
+
+PASS
+
+
+
+
+冻结路由字段
+
+	
+
+PASS
+
+
+
+
+Worker 取得冻结配置
+
+	
+
+PASS
+
+
+
+
+悟空无协议覆盖
+
+	
+
+PASS
+
+
+
+
+mock failover 到备用供应商
+
+	
+
+PASS
+
+
+
+
+HTTP/2 code 92 单次传输调用
+
+	
+
+PASS
+
+
+
+
+真正的 Worker 进程重启恢复
+
+	
+
+未覆盖
+
+
+
+
+真实远桥请求
+
+	
+
+未覆盖
+
+
+
+
+真实网关协商协议
+
+	
+
+未覆盖
+
+这里有两个重要区别：
+
+第一，重启测试不完整。 测试将 route_plan_json 做了 JSON 序列化/反序列化，但没有真正终止 Worker 进程、重启进程，再恢复同一任务。因此证明了冻结字段的 JSON 形态和 Worker 读取路径，不足以证明完整的进程重启恢复场景。
+
+第二，“HTTP2不重发”需要准确限定。 传输层测试证明一次 urlopen 调用只执行一次 requests.request，不会自动重复发送同一请求。但生产路由的 finish_failure(..., failover_on_any_error=True) 会把包括未知受理结果在内的错误改为 failover。因此：
+
+不会自动重试同一个远桥请求；
+
+如果路由里还有悟空，HTTP/2 错误后仍可能向悟空发起一次新的生成请求；
+
+新测试没有验证这一整套路由行为。
+
+这不是说实现一定错误，而是必须区分“同一供应商不重发”和“整个任务绝不再次生成”。
+
+416 通过、14 项既存失败： 我没有在本轮执行测试，也没有找到该 SHA 对应的 GitHub CI 状态记录。因此这两个数字目前按你提供的执行结果记录，不能冒称为我独立复跑确认。
+
+⑤ 能否进入 221 测试？
+可以，但限定为受控真实测试
+
+建议进入 221，前置条件如下：
+
+运行环境确认： AI_HTTP_TRANSPORT=curl_cffi，运行依赖确认 curl_cffi==0.17.0。当前 Compose 默认值是 curl_cffi，但仍须确认实际测试容器没有被环境变量覆盖。
+
+配置确认： 远桥供应商配置确实为 http_version: "v1"，新建测试任务后检查冻结路由中的字段，不要只看配置文件。
+
+隔离测试： 首轮只启用远桥单供应商，避免 HTTP/2 未知结果触发备用供应商生成，混淆协议验证结果。
+
+真实 Playground 调用： 使用原来失败的调用通道、请求体和认证方式，至少完成一次真实请求，检查响应成功、实际协议为 V1_1、HTTP 状态、耗时及请求关联 ID。
+
+失败场景验证： 单独验证传输失败不会对远桥自动重复发送；如果还要验证备用切换，应另设双供应商场景，并明确记录备用供应商是否收到请求。
+
+证据收口： 保存测试任务 ID、配置快照、执行日志、实际协议和最终结果，全部绑定本次 SHA；不要把“请求成功”直接等同于“根因已证实”。
+
+官方 curl_cffi 文档确认 http_version 是请求参数，v1 可用于限制 HTTP/1.1；实际协商协议可通过响应的 http_version 与 CurlHttpVersion.V1_1 比较。
+curl_cffi documentation
++2
+
+最终结论
+
+代码配置链：通过。请求兼容性：通过。日志安全：基本通过。测试覆盖：尚有边界缺口。真实根因：未验证。
+
+我支持进入 221 受控真实测试，但不支持仅凭这次 19 项 mock 测试就合并部署到生产。最终是否解决远桥 HTTP/2 故障，应以 Playground 真实请求成功且实际协商协议确认为 V1_1 为准；Garden 只能作为旁证。

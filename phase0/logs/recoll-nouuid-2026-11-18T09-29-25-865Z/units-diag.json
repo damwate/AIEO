@@ -1,0 +1,44 @@
+[
+  {
+    "key": "c48d89d5-594d-5ebf-b921-46338df155bb:0:user",
+    "role": "user",
+    "visible": true,
+    "assistantUuid": null,
+    "text_head": "[T01收口复验|AI-Image-Service|20261119]\n新会话接棒，独立复核者，只回JSON。无历史上下文，据本简报+附件判断。HEAD ecc7485057b337207993378"
+  },
+  {
+    "key": "c48d89d5-594d-5ebf-b921-46338df155bb:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "assistantUuid": "3226860d-17d5-434e-b695-c45ebe947532",
+    "text_head": "ChatGPT 说：\n\n{\n\"result\": \"REWORK\",\n\"issues\": [\n{\n\"id\": \"T01-P1-01\",\n\"severity\": \"P1\",\n\"location\": \"ba"
+  },
+  {
+    "key": "10b4f5c7-2f67-5e52-9de9-e6002bffd56c:0:user",
+    "role": "user",
+    "visible": true,
+    "assistantUuid": null,
+    "text_head": "[T01收口2|AI-Image-Service|20261119]\n独立复核，只回JSON。HEAD c68764f5d508c15787bfb396866a4fc3347e4c25。六提交未pus"
+  },
+  {
+    "key": "10b4f5c7-2f67-5e52-9de9-e6002bffd56c:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "assistantUuid": "82d5af3e-2b91-4379-b044-79397d06f98d",
+    "text_head": "ChatGPT 说：\n\n{\n\"result\": \"REWORK\",\n\"issues\": [\n{\n\"id\": \"T01-P1-01-R2\",\n\"severity\": \"P1\",\n\"location\": "
+  },
+  {
+    "key": "8f9118fb-6da2-59ad-a69c-1a58f6491420:0:user",
+    "role": "user",
+    "visible": true,
+    "assistantUuid": null,
+    "text_head": "[T01收口3|AI-Image-Service|20261119]\n独立复核，只回JSON。HEAD 93f22b3c3a38b16b25123a022e4313f1ae113353。七提交未pus"
+  },
+  {
+    "key": "8f9118fb-6da2-59ad-a69c-1a58f6491420:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "assistantUuid": "b0a22920-837e-445b-a168-2948310a6f13",
+    "text_head": "ChatGPT 说：\n{\n\"result\": \"PASS\",\n\"issues\": [],\n\"conditions\": [\n{\n\"id\": \"T01-P1-01-R2\",\n\"result\": \"CLOS"
+  }
+]

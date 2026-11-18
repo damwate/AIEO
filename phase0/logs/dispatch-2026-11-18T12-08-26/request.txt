@@ -1,0 +1,12 @@
+[T05实现验收|1118]
+只回JSON。附件UI故障改文字。commit 5576213。对你的G1-G5。
+
+G1)result_invalid独立local_invalid；supplier_failed=known_failed-local_invalid剔除我方失败；旧字段兼容不变。
+G2)http/delivery_success_rate分列，各含num/den/excluded/sample_size/rate/insufficient；HTTP可判定=2xx/4xx/5xx且非local_invalid；交付可判定=succeeded/known_failed；unknown/未达不进分母。
+G3)supplier_process_ms含native(request_started_at→response_body_completed_at)与legacy_fallback各sample_size/avg+native_share/excluded_count/insufficient；倒置/缺失排除计数，native齐全时倒置不fallback。
+G4)metrics_snapshot加可选window_hours/vendor_id(默认24h/全量兼容)，UTC半开[start,end)，参数校验，过滤作用全指标。
+G5)min_sample_rule阈值5仅提示；insufficient=分母<5不隐藏值。
+
+测试：T05聚焦10通过(含result_invalid/HTTP成功交付失败/transport/unknown/未达/时间缺失/倒置/零样本/低样本/窗口/单vendor)；监控20通过；全量536 passed/14 failed=原基线。未改jobs_timeline/路由/告警。
+
+请评(JSON,result,issues[],conditions[])：全关？可final PASS？

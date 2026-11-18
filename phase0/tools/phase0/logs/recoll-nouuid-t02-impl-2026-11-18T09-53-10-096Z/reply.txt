@@ -1,0 +1,136 @@
+ChatGPT 说：
+
+{
+"result": "PASS_WITH_CONDITIONS",
+"issues": [
+{
+"id": "I01",
+"severity": "P1",
+"finding": "核心修复成立。两个适配器均删除 HTTP 2xx 直接写 acceptance=accepted 的行为；受理状态改由 checkpoint 根据 task_id/URL 证据建立。"
+},
+{
+"id": "I02",
+"severity": "P1",
+"finding": "local_result_failure 实现了双证据判定：response_received=succeeded 且最后一个 failed 阶段属于五个本地处理阶段。不会仅凭 HTTP 200 将失败认定为 result_invalid。"
+},
+{
+"id": "I03",
+"severity": "P1",
+"finding": "failure_decision 将本地确定失败放在 accepted 保护之前，同时保留 provider_task_status 终态失败保护，判定顺序符合上轮要求。"
+},
+{
+"id": "I04",
+"severity": "P1",
+"finding": "finish_failure 对 result_invalid 强制 stop、retryable=False，且排除 failover_on_any_error 覆盖。细分 error_code 也能正确覆盖原始 ProviderError.code。"
+},
+{
+"id": "I05",
+"severity": "P2",
+"finding": "billing_status 默认 unknown，没有根据本地解析或交付失败推导未计费；三层状态分别投影，符合计费独立原则。"
+},
+{
+"id": "I06",
+"severity": "P2",
+"finding": "execution_json 已纳入新增审计字段，safe_error_message 增加五种阶段细分文案及通用 result_invalid 文案，保留固定文案机制。"
+},
+{
+"id": "I07",
+"severity": "P1",
+"finding": "当前测试证明了核心分类函数、HTTP 200 解析失败端到端路径及 failover_on_any_error=True 的保护，但尚不能仅凭新增测试文件证明五种真实适配器故障路径均完成端到端注入，也不能证明数据库持久化、重载和所有前端投影均无遗漏。"
+}
+],
+"conditions": [
+
+{
+"id": "C01",
+"status": "PASS_WITH_CONDITION",
+"finding": "2xx 不再直接 accepted。补充 checkpoint URL 合法性验证，不能仅凭非空字符串认定有效结果 URL。"
+},
+{
+"id": "C02",
+"status": "PASS",
+"finding": "五种本地失败均有独立 error_code，分类逻辑正确。"
+},
+{
+"id": "C03",
+"status": "PASS",
+"finding": "双证据门和 accepted 保护顺序正确。"
+},
+{
+"id": "C04",
+"status": "PASS_WITH_CONDITION",
+"finding": "三层字段相互独立，但当前 diff 展示的 layer_status 落库调用位于 finish_failure。必须确认成功路径也记录 delivered、accepted 和 http_2xx 等对应状态，不能只覆盖失败路径。"
+},
+{
+"id": "C05",
+"status": "PASS",
+"finding": "result_invalid 不受 failover_on_any_error 覆盖。"
+},
+{
+"id": "C06",
+"status": "PASS",
+"finding": "HTTP 200 本地确定失败时强制 stop，不切供应商、不自动重试，符合计费风险控制决策。"
+},
+{
+"id": "C07",
+"status": "PASS",
+"finding": "billing_status 默认 unknown，不反推 not_charged。"
+},
+{
+"id": "C08",
+"status": "PASS_WITH_CONDITION",
+"finding": "522/523/524 和供应商任务终态失败保护有测试支持；本次测试文件未看到 403、auth、STOP_CODES 的完整反向回归用例，建议补齐。"
+},
+{
+"id": "C09",
+"status": "PASS_WITH_CONDITION",
+"finding": "五种阶段分类均有参数化测试，但目前可见的端到端 HTTP 200 故障注入主要验证 JSON 解析失败。提取、解码、下载、图片校验仍需至少各一条真实适配器处理链路注入。"
+},
+{
+"id": "C10",
+"status": "PASS_WITH_CONDITION",
+"finding": "未知结果、已受理、body read failure、worker_unclassified 已覆盖；403/auth/STOP_CODES 仍需补充针对性保护测试。"
+},
+{
+"id": "C11",
+"status": "PASS_WITH_CONDITION",
+"finding": "新增字段进入 execution_json allowlist，文案采用固定内容。还需验证成功路径、管理端和用户端实际读取及数据库持久化后的字段一致性。"
+},
+{
+"id": "C12",
+"status": "PASS_WITH_CONDITION",
+"finding": "提供的 diff 显示改动集中在两个适配器、provider_outcome.py 和新增测试文件，没有看到路由、重试、熔断或优先级修改。但仅凭 diff 不能独立验证完整提交 SHA 和基线祖先关系。"
+},
+{
+"id": "B01",
+"severity": "P1",
+"finding": "checkpoint_attempt 当前使用 state.get('task_id') or state.get('url') 判断受理。URL 只有非空判断，没有可见的合法性验证。建议补充协议允许的 URL 格式、来源及有效性约束，防止错误 URL 形成虚假 accepted。"
+},
+{
+"id": "B02",
+"severity": "P1",
+"finding": "layer_status 在 finish_failure 中调用，但提供的 diff 没有展示成功路径调用。若成功尝试没有独立写入三层字段，将造成同一审计模型中成功记录与失败记录不完整。"
+},
+{
+"id": "B03",
+"severity": "P2",
+"finding": "result_invalid 的 known_failed 是我方交付结果分类，不代表供应商未受理、未完成或未收费。当前设计正确，但管理统计和供应商成功率报表必须避免把它解释成供应商未执行任务。"
+}
+],
+"required_conditions_before_final_acceptance": [
+"补充 checkpoint URL 有效性约束测试。",
+"确认成功路径三层状态均有记录和持久化。",
+"补充 403、auth、STOP_CODES 反向保护测试。",
+"补充四种非解析阶段的适配器端到端故障注入，或者提供已有等价测试的原始证据。",
+"提供完整提交 SHA、父提交关系及实际测试报告，确认 480 passed/14 failed 与基线完全一致。"
+],
+"final_judgment": {
+"architecture": "PASS",
+"core_classification": "PASS",
+"billing_independence": "PASS",
+"failover_protection": "PASS",
+"C01_C12": "部分条件待证实，不宜宣告全部关闭",
+"next_action": "REWORK_SMALL",
+"scope": "仅补上述证据及必要的小范围修正，不重新设计 T02，不扩大到路由、重试、熔断和供应商优先级。"
+}
+}

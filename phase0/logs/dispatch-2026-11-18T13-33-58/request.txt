@@ -1,0 +1,14 @@
+[二轮REWORK终审|AI-Image-Service]
+上轮你判REWORK:仅RW-04的global_policy遗漏(1 MAJOR)。已修复。
+
+仓库 github.com/YotinGarden/AI-Image-Service 分支 fix/yuanqiao-http1-20261117
+新被审commit 80fbb23c1dc1a2294051b27beb368daef0fc270e
+上版被审 1a5a0a1e0a7004ccd615862f5c1a28888ece1fb4
+基线 abd7116e30e17d9669a8551c0985bd09aa8a601a
+新材料commit 8b5fa86e9e508227814db48b32be21a53392d364
+
+修复:demote区分三模式(project/global policy/无);global_policy的snapshot同时存vendor_plan前后+所有priority前后,到期分别查人工改动并恢复两者;新增test_global_policy_demote_restores_both_plan_and_priorities。
+
+先读docs/review/20261118_p0p1/的MANIFEST(独立校验)+REVIEW_BRIEF(RW-04二轮记录)+full_test(14 failed 567 passed/platfrom=3.12.10)+baseline_test(基线14项既存)。再读80fbb23实际代码复核RW-04二轮是否真修复、有无新问题。校验失败判BLOCKED。
+
+只回JSON:{"result":"PASS|REWORK|BLOCKED","findings":[{"severity":"MAJOR|MINOR","file":"","line":0,"description":"","recommendation":""}],"reviewed_commit":"80fbb23","evidence_checks":{"manifest":"OK|FAIL","test_log":"OK|FAIL","baseline":"OK|FAIL"},"notes":""}

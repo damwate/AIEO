@@ -1,0 +1,12 @@
+[三轮终审|AI-Image-Service]
+独立审查,直接读Git代码+材料,不采信自述。修复记录详见材料。
+
+仓库 github.com/YotinGarden/AI-Image-Service 分支 fix/yuanqiao-http1-20261117
+被审commit 02c9d7a20f4c9b94c50d779ec0acb6383926e005
+基线 abd7116e30e17d9669a8551c0985bd09aa8a601a
+材料commit 3aacd6ffafe4b2382bdd296bc5f57acc8e1f9914
+
+先读docs/review/20261118_p0p1/: MANIFEST(3文件独立校验hash/size)、REVIEW_BRIEF(T01-T09验收要点+RW-01~05及RW-04二/三轮修复记录+必查文件)、full_test(14 failed 568 passed/platfrom=3.12.10)、baseline_test(基线14项既存)。
+三轮重点:RW-04叠加降级恢复链——PriorityDemotion加scope_key/scope_original,同一policy/global作用域多次降级共享原始态,仅最后一条降级到期才统一恢复(先到期的consumed),人工改动skipped。读02c9d7a实际代码复核全部RW是否真修复、有无新问题。校验失败判BLOCKED。
+
+只回JSON:{"result":"PASS|REWORK|BLOCKED","findings":[{"severity":"MAJOR|MINOR","file":"","line":0,"description":"","recommendation":""}],"reviewed_commit":"02c9d7a","evidence_checks":{"manifest":"OK|FAIL","test_log":"OK|FAIL","baseline":"OK|FAIL"},"notes":""}

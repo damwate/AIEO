@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-18T08:55:24.644Z",
+  "user_unit_key": "715ad727-9dff-5393-ac85-76a2c189fa8c:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "715ad727-9dff-5393-ac85-76a2c189fa8c:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "cb5019be-954c-4677-acbe-0bea4827782b",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "715ad727-9dff-5393-ac85-76a2c189fa8c:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "715ad727-9dff-5393-ac85-76a2c189fa8c:0:user",
+          "715ad727-9dff-5393-ac85-76a2c189fa8c:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "09d454c0360eac7582e562ba15c9a8d52aeb447bdb1c7daf270edcdf7ae86d63",
+          "cfe73fedc2629bc02d7d01a7619b1a42f32ced854cf1893aabc41e00ce8fa643"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "715ad727-9dff-5393-ac85-76a2c189fa8c:0:user",
+          "715ad727-9dff-5393-ac85-76a2c189fa8c:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "09d454c0360eac7582e562ba15c9a8d52aeb447bdb1c7daf270edcdf7ae86d63",
+          "cfe73fedc2629bc02d7d01a7619b1a42f32ced854cf1893aabc41e00ce8fa643"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "715ad727-9dff-5393-ac85-76a2c189fa8c:0:user",
+          "715ad727-9dff-5393-ac85-76a2c189fa8c:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "715ad727-9dff-5393-ac85-76a2c189fa8c:0:user",
+      "715ad727-9dff-5393-ac85-76a2c189fa8c:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "715ad727-9dff-5393-ac85-76a2c189fa8c:0:user",
+          "715ad727-9dff-5393-ac85-76a2c189fa8c:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "715ad727-9dff-5393-ac85-76a2c189fa8c:0:user",
+          "715ad727-9dff-5393-ac85-76a2c189fa8c:2:assistant"
+        ],
+        "overlap_keys": [
+          "715ad727-9dff-5393-ac85-76a2c189fa8c:0:user",
+          "715ad727-9dff-5393-ac85-76a2c189fa8c:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "715ad727-9dff-5393-ac85-76a2c189fa8c:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n{\n\"result\": \"REWORK\",\n\"issues\": [\n{\n\"id\": \"P1-01\",\n\"location\": \"backend/app/ai/job_spec.py::_GenericSpec.persist_output\",\n\"problem\": \"output_commit 的二次提交失败路径仍存在状态不一致风险。第一次 commit 持久化 running，随后内存记录 succeeded，再执行第二次 commit。若第二次 commit 失败，数据库可能仍保存 running，而内存已是不可回退的 succeeded。worker 后续异常收口也无法将其改为 failed。\",\n\"required_fix\": \"明确区分输出数据提交成功与阶段终态提交成功。第二次 commit 失败时，不得保留 succeeded 作为最终审计结论；设计可恢复的持久化收口机制，并增加第二次 commit 故障注入测试，验证数据库最终状态与 execution_json 一致。\"\n}\n],\n\"conditions\": [\n\"本次审查依据为上传的 t01_full_v2.diff；未取得简报提及的 t01_verification_notes_v2.txt，因此测试报告及基线对照数字暂按用户提供的信息引用，未独立验证。\",\n\"前端未执行 tsc，前端类型及模板编译仍属于未验收范围。\"\n]\n}\n\n],\n\"assessment\":",
+      "text_sha256": "cfe73fedc2629bc02d7d01a7619b1a42f32ced854cf1893aabc41e00ce8fa643",
+      "size_bytes": 1119,
+      "assistant_uuid": "cb5019be-954c-4677-acbe-0bea4827782b"
+    }
+  ]
+}

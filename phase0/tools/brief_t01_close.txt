@@ -1,0 +1,7 @@
+[T01收口复验|AI-Image-Service|20261119]
+新会话接棒，独立复核者，只回JSON。无历史上下文，据本简报+附件判断。HEAD ecc7485057b337207993378b4862def98d42be5b。五提交未push(DEC-010)，附t01_full_v5.diff离线核验。
+
+上轮P1-02你判PASS_WITH_CONDITIONS，唯一代码condition=测试覆盖：RightAPI/Async缺read失败注入、Seedream缺request_send断言。本轮已补齐：新增rightapi/async两个read失败注入测试(断言response_received=failed、request_send=succeeded、failed_phase=response_received)，Seedream补request_send=succeeded断言。四适配器注入测试现已齐全。
+测试：聚焦18 passed/全量457 passed，14失败为基线既有(stash对照)。前端无node_modules未tsc(未验收项)。未改任何判定/路由/重试，error_detail_safe仍白名单模板。
+
+请确认(JSON,result=PASS/REWORK,issues,conditions)：测试覆盖condition是否关闭？T01整体是否可收口进入T02？还有无必须修改的代码问题？纯环境项(远端HEAD/node_modules)请标注为非阻断。

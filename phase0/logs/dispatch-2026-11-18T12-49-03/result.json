@@ -1,0 +1,181 @@
+{
+  "at": "2026-11-18T12:53:16.446Z",
+  "message_bytes": 1020,
+  "reply": "ChatGPT 说：\n\n{\n\"result\": \"BLOCKED\",\n\"findings\": [\n{\n\"severity\": \"MAJOR\",\n\"file\": \"docs/review/20261118_p0p1/full_test.log\",\n\"line\": 0,\n\"description\": \"独立校验发现材料完整性不一致。MANIFEST.json 声明 full_test.log 的 SHA256 为 5fbee277578e608fd5458211281327088863f81cad0bf23df610f7706e01a131，文件大小 15895 bytes；实际从材料 commit 9be0ad214e89aa2d024a9adf2d98ebfdff4fbdce 读取后计算，SHA256 为 a2bf5c0fe145be9514a737691cd26500ebbb1accc5d50b1b7dbcf8820e1410fa，大小 15602 bytes。SHA256 和尺寸均不匹配。\",\n\"recommendation\": \"核对 full_test.log 的实际提交内容，重新生成 MANIFEST.json，确保 SHA256 和字节数对应同一版本的原始测试日志，然后重新提交材料并进行独立复核。\"\n}\n],\n\"reviewed_commit\": \"fe88afc8465dc6e9b4cfd7aacfdf0be510674592\",\n\"evidence_checks\": {\n\"manifest\": \"FAIL\",\n\"test_log\": \"FAIL\"\n},\n\"notes\": \"已确认 REVIEW_BRIEF.md 来自指定材料 commit，独立计算 SHA256=514b3ab891bdd756b6ec6a695c9c7ae7920a3c826b7ed6b446b3e6178fba1927，大小 4461 bytes，与 MANIFEST 声明一致。已读取 reviewed_commit 对应的 GitHub commit 信息及部分实际代码差异，确认被审代码 SHA 与材料 commit 分开绑定。测试日志声明被测 commit 为 fe88afc8465dc6e9b4cfd7aacfdf0be510674592，记录 558 passed、14 failed。由于测试日志完整性校验失败，不能将其作为可信的全量测试证据，也不能据此出具 P0+P1 PASS。按照审核标准，证据校验失败必须 BLOCKED，而非推定通过。\"\n}",
+  "user_unit_key": "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "aa299b3a-57cc-493d-92a7-f04e08ff2d15",
+  "stability": {
+    "stable": true,
+    "interval_ms": 3274,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-18T12:53:12.507Z",
+      "read_finished_at": "2026-11-18T12:53:12.773Z",
+      "unit_keys": [
+        "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:2:assistant",
+          "sha256": "d7de4985c6635becebab376f2ee1af5b31a985996ce5e0ccf6b728944d882210",
+          "size_bytes": 1556
+        }
+      ],
+      "assistant_uuid": "aa299b3a-57cc-493d-92a7-f04e08ff2d15",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-18T12:53:15.781Z",
+      "read_finished_at": "2026-11-18T12:53:16.314Z",
+      "unit_keys": [
+        "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:2:assistant",
+          "sha256": "d7de4985c6635becebab376f2ee1af5b31a985996ce5e0ccf6b728944d882210",
+          "size_bytes": 1556
+        }
+      ],
+      "assistant_uuid": "aa299b3a-57cc-493d-92a7-f04e08ff2d15",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:0:user",
+          "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "377b875eef385470949146025e2d41d8e57b367d18a7be7401c8730c1de0540c",
+          "d7de4985c6635becebab376f2ee1af5b31a985996ce5e0ccf6b728944d882210"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:0:user",
+          "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "377b875eef385470949146025e2d41d8e57b367d18a7be7401c8730c1de0540c",
+          "d7de4985c6635becebab376f2ee1af5b31a985996ce5e0ccf6b728944d882210"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:0:user",
+          "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:0:user",
+      "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:0:user",
+          "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:0:user",
+          "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:2:assistant"
+        ],
+        "overlap_keys": [
+          "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:0:user",
+          "e9b5b1b6-7f1c-592c-9ace-c5e712f0e632:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "d7de4985c6635becebab376f2ee1af5b31a985996ce5e0ccf6b728944d882210",
+  "size_bytes": 1556,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-18T12-49-03\\reply.txt",
+  "reply_readback_sha256": "d7de4985c6635becebab376f2ee1af5b31a985996ce5e0ccf6b728944d882210",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-18T12-49-03\\raw-units.json",
+  "raw_units_sha256": "f37701ec6fec719fdaca4cab901df68a3eeff6f421bbec77077c6c478df22e88",
+  "raw_units_size_bytes": 4623,
+  "raw_units_readback_sha256": "f37701ec6fec719fdaca4cab901df68a3eeff6f421bbec77077c6c478df22e88",
+  "session_id": "6afd9f0c-ff44-83ee-973f-55c1b302d0c0",
+  "conversation_url": "https://chatgpt.com/c/6afd9f0c-ff44-83ee-973f-55c1b302d0c0",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}

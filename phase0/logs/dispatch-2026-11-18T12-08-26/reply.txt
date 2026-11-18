@@ -1,0 +1,17 @@
+ChatGPT 说：
+
+{
+"result": "PASS_WITH_CONSTRAINTS",
+"issues": [],
+"conditions": [
+"基于本次提供的实现说明及测试结果，G1-G5全部满足原设计要求，未发现遗留阻断项。",
+"G1：result_invalid独立归类为local_invalid，供应商失败率剔除我方失败，旧字段兼容保留，统计口径正确。",
+"G2：HTTP成功率与交付成功率独立统计，分子、分母、排除数、样本量及不足样本标记齐全，unknown及未达阶段不污染分母。",
+"G3：native与legacy_fallback耗时分开统计，异常时间戳排除且计数透明；native数据齐全时不因倒置时间戳错误降级fallback，符合证据优先原则。",
+"G4：window_hours及vendor_id过滤覆盖全部指标，UTC半开区间及参数校验满足时间窗口统计要求。",
+"G5：阈值5仅用于insufficient提示，不隐藏低样本实际值，满足统计透明性要求。",
+"T05聚焦测试10项全部通过，监控测试20项通过；全量536 passed、14 failed，按所述原基线处理，不将既有失败归因于本次改动。",
+"本次未修改jobs_timeline、路由及告警，符合T05统计模块的职责边界。",
+"验收范围限制：本结论依据提交说明和测试汇总，不代表已独立读取commit 5576213的完整代码及diff。"
+]
+}

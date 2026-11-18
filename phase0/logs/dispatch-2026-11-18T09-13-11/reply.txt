@@ -1,0 +1,51 @@
+ChatGPT 说：
+
+{
+"result": "REWORK",
+"issues": [
+{
+"id": "T01-P1-01",
+"severity": "P1",
+"location": "backend/app/ai/image_download.py:download_image",
+"issue": "download 阶段缺少完整的成功状态记录。当前代码记录了 image_validate 的 running/failed/succeeded，但没有在实际下载开始和完成时记录 download 阶段。对于 Seedream、RightAPI 等直接 URL 下载路径，即使下载成功，download 仍可能停留在 not_reached 或 running。",
+"required_fix": "在实际下载开始时记录 download=running，响应数据完整读取后记录 download=succeeded；下载异常时记录 download=failed。确保不会覆盖终态，并补充成功、读取失败测试。"
+}
+],
+"conditions": [
+{
+"id": "P1-02",
+"result": "CLOSED",
+"reason": "四适配器的响应体读取失败注入测试已补齐。RightAPI、Async、Seedream 和 OpenAI 相关覆盖能够验证 response_received=failed、request_send=succeeded，并验证失败阶段定位。此前唯一测试覆盖条件关闭。"
+},
+{
+"id": "ENV-01",
+"result": "NON_BLOCKING",
+"reason": "远端 HEAD 尚未验证。五个提交未 push，属于 DEC-010 既定约束，不构成当前离线代码复核阻断。"
+},
+{
+"id": "ENV-02",
+"result": "NON_BLOCKING",
+"reason": "前端缺少 node_modules，未执行 tsc。前端类型检查尚未验收，但属于环境验证缺口，不要求因此修改业务代码。"
+},
+{
+"id": "TEST-01",
+"result": "PASS_WITH_EVIDENCE",
+"reason": "聚焦测试18 passed，全量457 passed。14项失败据简报为基线既有，stash对照结果支持该判断。本次未独立执行测试，接受所提供的测试证据。"
+}
+],
+"t01_closure": {
+"result": "NOT_YET",
+"reason": "P1-02已关闭，但download阶段成功状态缺失，仍存在可观测性不完整的问题。",
+"next_step": "仅修复download阶段状态记录并补充针对性测试，然后进行一次收口复验。"
+},
+"additional_code_issues": [],
+"review_scope": {
+"basis": "HEAD ecc7485057b337207993378b4862def98d42be5b 对应的离线补丁 t01_full_v5.diff",
+"verification": "已检查阶段事件核心实现、四适配器接入、失败摘要、安全白名单、存储提交回滚处理及新增测试。",
+"limitations": [
+"未连接远端验证提交 SHA。",
+"未在完整项目环境重新执行测试。",
+"未执行前端 TypeScript 编译。"
+]
+}
+}

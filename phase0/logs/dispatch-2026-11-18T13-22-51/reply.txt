@@ -1,0 +1,21 @@
+ChatGPT 说：
+
+{
+"result": "REWORK",
+"findings": [
+{
+"severity": "MAJOR",
+"file": "backend/app/ai/vendor_admin.py",
+"line": 261,
+"description": "RW-04仍有未覆盖的降级恢复分支：当priority_policy_id指向全局RoutingPolicy（policy.project_id为None）时，代码将snapshot标记为mode=policy，仅保存vendor_plan_before/vendor_plan_after；但第274-277行仍会同时重写所有供应商的Provider.priority。到期恢复在第317-347行的policy分支只恢复vendor_plan，不恢复这些priority，也没有检查priority是否被人工修改。结果是全局策略模式下临时降级造成的priority变更会永久残留，违反完整快照恢复要求。当前test_policy_demote_restores_vendor_plan只覆盖project_id非空的项目策略；test_global_demote_restores_all_vendors_priorities则删除全局策略后测试纯global模式，均未覆盖全局RoutingPolicy这一分支。",
+"recommendation": "明确区分项目级policy、全局policy和无policy三种模式。全局policy模式既然会修改vendor_plan也会修改Provider.priority，就必须在snapshot中同时保存两类对象的before/after，并在到期时分别检查人工改动、恢复未被人工修改的对象；或者调整实现，使全局policy模式不再额外改写Provider.priority。新增全局RoutingPolicy存在时的降级、到期恢复及人工修改保护测试。"
+}
+],
+"reviewed_commit": "1a5a0a1e0a7004ccd615862f5c1a28888ece1fb4",
+"evidence_checks": {
+"manifest": "OK",
+"test_log": "OK",
+"baseline": "OK"
+},
+"notes": "材料完整性：从材料commit 9446d571fffd78093f5fc3d32a1ee7d6c9880170读取MANIFEST.json及其列出的3份材料，独立按UTF-8字节计算SHA256和字节数。REVIEW_BRIEF.md：5856 bytes，SHA256=b97542661da263e718a3e6e4aa1bd58e6c86d53c57722b7711c845e85b5bc4e2；full_test.log：15743 bytes，SHA256=72204d64e6db6bd84fd3899a97dc7c0a6c38969a70d3b4afac428beb47ac91d9；baseline_test.log：1887 bytes，SHA256=2caa43ef8612ce27631ac4bf179117ad9d2646b3f9407579db396992423c5a97。三项均与manifest一致。被审commit、基线commit和材料commit分别核对；被审commit相对基线为22个提交。测试证据：full_test.log明确绑定reviewed_commit=1a5a0a1e0a7004ccd615862f5c1a28888ece1fb4，平台为win32/Python3.12.10，结果566 passed、14 failed。baseline_test.log绑定abd7116e30e17d9669a8551c0985bd09aa8a601a，声明同一venv及Python3.12.10，结果439 passed、14 failed；14项失败测试名称与本轮full_test.log逐项一致，因此将其视为基线既存失败。RW-01：RightAPI和async适配器的完整响应JSON解析失败现在转为provider_error，配合response_received/response_parse阶段证据可进入result_invalid；首次提交回归验证failover_on_any_error下stop。RW-02：local_result_failure已增加resume_task_id/has_task_id保护。RW-03：供应商尝试样本不再按最终provider_vendor_id筛选，并将任务耗时样本独立处理；新增跨供应商failover查询测试。RW-05：set_routing的enabled_vendors变更前后状态已进入同事务审计证据。以上修复未发现本轮范围内的其他确定性阻断缺陷。RW-04项目级策略和无全局策略模式的恢复路径已有测试，但全局RoutingPolicy模式存在实际遗漏，故不能PASS。"
+}

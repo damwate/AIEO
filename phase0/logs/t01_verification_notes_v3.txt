@@ -1,0 +1,22 @@
+T01 最终复验证据（HEAD c031e0411f29bb183b35a2ff9c39faad5de96725）
+
+== GitHub 422 说明 ==
+三提交均在本地分支 fix/yuanqiao-http1-20261117，未 push（DEC-010 不擅自 push/部署）。附 t01_full_v3.diff（三提交合并，12 文件）离线核验。
+
+== 上轮复验 P1-01 修复 ==
+问题：output_commit 二次提交，若第二次 commit 失败，DB 停留 running 而内存为不可回退 succeeded，worker 无法改 failed。
+修复：改为单一事务原子提交——在写 j.provider_attempts 快照前乐观写 output_commit=succeeded，与任务成功状态同一次 db.commit() 落库；commit 失败则 db.rollback() + reset_phase_for_rollback() 撤销未持久化的 succeeded + 改记 output_commit=failed，再重抛。reset_phase_for_rollback 是显式事务级撤销 helper，不破坏 record_phase 的终态不可覆盖纪律（仅 commit 失败路径调用）。
+测试：test_output_commit_optimistic_terminal_rollback_is_consistent 注入 commit 失败，断言快照/终态 failed/扁平摘要 failed_phase=output_commit/execution_json 投影三方一致。
+
+== 历轮 REWORK 全部修复项（仍在 v3） ==
+终态不可被任何状态覆盖(双向测试)；output_commit 由双提交改单提交原子落库；storage 准备纳入 try；image_validate 在 PIL 校验边界接线并 4 adapter 透传；终态加 completed_at；_safe_detail 显式 code 白名单；HTTPError 记 response_received=succeeded（状态由 http_status 表达）；端到端 HTTP200 非法 JSON 全链用例。
+
+== 测试结果 ==
+聚焦 test_phase_events.py：14 passed（含 P1-01 注入）。
+相邻 4 文件：39 passed。
+全量 tests/：453 passed, 14 failed；14 项为基线既有（Windows 路径/GBK/secure cookie，前轮已 stash 对照确认），与 T01 无关。
+前端无 node_modules，未运行 vue-tsc/vite build，明确记为未验收项。
+
+== 脱敏与判定语义 ==
+error_detail_safe 仅「阶段固定模板 + 显式白名单 code」，原始 message/URL/base64/凭据不落 phase_events/execution_json/前端，有测试断言。
+本轮未改路由/重试/failure_decision/acceptance/STOP_CODES/既有失败判定；新增均为观测字段与记录调用。

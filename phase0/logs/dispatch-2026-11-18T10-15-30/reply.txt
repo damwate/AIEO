@@ -1,0 +1,104 @@
+ChatGPT 说：
+
+{
+"result": "REWORK_SMALL",
+"issues": [
+{
+"id": "R01",
+"severity": "P1",
+"finding": "attempt_id、job_id、worker_id、vendor_id 的实际构造路径缺少直接回归验证。当前测试主要验证 execution_json 投影，测试中手工构造 failed/success attempts，不能证明 ai_worker 和 routing 的真实执行路径正确生成这些字段。",
+"required": "增加实际构造路径测试，至少覆盖直发和路由两条路径，验证 job_id、worker_id、vendor_id 与实际执行上下文一致。"
+},
+{
+"id": "R02",
+"severity": "P1",
+"finding": "尚未固化 attempt_id 的生命周期保证。当前测试没有验证同一 job 的不同 attempt 获得不同 UUID，也没有验证重试产生新 attempt_id、原 attempt_id 不被覆盖。",
+"required": "增加重试及多 attempt 测试，验证 attempt_id 唯一性、每次尝试重新生成，以及历史 attempt 保留。"
+},
+{
+"id": "R03",
+"severity": "P2",
+"finding": "成功不覆盖失败的测试目前直接向 execution_json 输入两个手工构造的记录，证明了投影保留能力，但没有验证真实执行收尾及持久化更新过程不会覆盖历史失败记录。",
+"required": "至少补充一次真实 attempts 累积更新路径测试，验证先失败、后成功后两条记录仍然存在。"
+}
+],
+"conditions": [
+{
+"id": "C01",
+"status": "CLOSED",
+"reason": "复用 job_id，没有新增 trace_id、correlation_id 或独立追踪列。"
+},
+{
+"id": "C02",
+"status": "PARTIAL",
+"reason": "两条执行路径均增加 attempt_id，但缺少实际构造路径及唯一性测试。"
+},
+{
+"id": "C03",
+"status": "PARTIAL",
+"reason": "worker_id 从执行参数传入，但缺少实际执行上下文验证。"
+},
+{
+"id": "C04",
+"status": "PASS",
+"reason": "关联字段在 attempt 构造时写入，不依赖事后推算。"
+},
+{
+"id": "C05",
+"status": "PASS",
+"reason": "直发路径使用 provider_vendor_id，路由路径使用既有 vendor_id。"
+},
+{
+"id": "C06",
+"status": "PASS",
+"reason": "rightapi、async 增加 X-Request-Id 采集，非空才写入，长度限制128；未发现伪造 request_id 的实现。"
+},
+{
+"id": "C07",
+"status": "PASS",
+"reason": "采集范围限于明确的请求关联头，没有扩大敏感信息采集范围。"
+},
+{
+"id": "C08",
+"status": "PASS",
+"reason": "没有增加数据库表、字段迁移或独立追踪平台；沿用既有 attempts 存储结构。"
+},
+{
+"id": "C09",
+"status": "PASS",
+"reason": "execution_json allowlist 已加入 attempt_id、job_id、worker_id，保留既有 vendor_id、request_id 等字段。"
+},
+{
+"id": "C10",
+"status": "PARTIAL",
+"reason": "投影测试证明可以按 attempt_id 定位并通过 request_id 反查，但尚未验证真实执行路径的记录累积。"
+},
+{
+"id": "C11",
+"status": "PARTIAL",
+"reason": "手工构造数据证明失败记录没有被成功记录覆盖，但尚缺真实执行收尾路径的回归证据。"
+}
+],
+"summary": {
+"closed": 7,
+"partial": 4,
+"blocked": 0,
+"must_fix": [
+"R01：直发、路由实际 attempt 构造路径测试。",
+"R02：attempt_id 唯一性及重试生命周期测试。",
+"R03：真实 attempts 累积更新路径测试。"
+],
+"scope_assessment": "当前 diff 未发现路由选择、重试策略、计费逻辑或数据库结构变更。"
+},
+"decision": {
+"final_pass": false,
+"enter_T04": false,
+"next_step": "REWORK_SMALL",
+"rework_scope": "仅补充上述三项针对性测试，不要求改变当前实现架构，不增加数据库迁移，不扩大 T03 范围。",
+"reassessment": "补齐测试并提供新 commit、完整 diff SHA 和聚焦测试结果后，进行最终验收。"
+},
+"limitations": [
+"本次依据提供的 t03_full_r1.diff（SHA 51443458）进行代码审查，未独立获取 GitHub commit 完整对象及父提交验证。",
+"514 passed/14 failed 属于提交方提供的测试报告，本次未独立执行全量测试。"
+]
+}

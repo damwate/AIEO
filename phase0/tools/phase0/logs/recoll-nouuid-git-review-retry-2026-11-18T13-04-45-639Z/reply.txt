@@ -1,0 +1,55 @@
+ChatGPT 说：
+
+{
+"result": "REWORK",
+"findings": [
+{
+"severity": "MAJOR",
+"file": "backend/app/ai/ai_provider_rightapi.py",
+"line": 146,
+"description": "T02 P0缺陷。RightAPI收到完整HTTP响应后，JSON解析失败被转换为provider_unknown_outcome，而不是本地response_parse_failed。failure_decision优先处理UNKNOWN_CODES，因此local_result_failure无法识别该本地确定失败。结合routing.py的failover_on_any_error，可能将HTTP 200后的解析失败自动切换备用供应商，造成重复计费风险。",
+"recommendation": "区分首次提交POST与已有task_id后的GET轮询。首次提交响应完整接收但JSON解析失败，应进入result_invalid分类并阻断自动failover；已有task_id的轮询失败继续保留unknown语义。增加真实适配器端到端回归测试。"
+},
+{
+"severity": "MAJOR",
+"file": "backend/app/ai/ai_provider_async.py",
+"line": 83,
+"description": "与RightAPI存在相同问题。_json将完整响应后的json.loads ValueError捕获并包装为provider_unknown_outcome，导致HTTP 200本地解析失败不能进入result_invalid判定。路由模式下可能自动切换供应商。现有测试没有覆盖该适配器的HTTP 200非法JSON分类。",
+"recommendation": "将提交响应解析失败与轮询响应解析失败分开分类；首次提交的完整响应解析失败应进入本地确定失败分类，已有task_id的续查失败保持unknown。增加POST和GET两种场景的测试。"
+},
+{
+"severity": "MAJOR",
+"file": "backend/app/ai/provider_outcome.py",
+"line": 174,
+"description": "local_result_failure没有检查has_task_id或resume_task_id。已有task_id的受理任务如果后续下载或本地处理失败，仍可能被识别为result_invalid。违反T02明确要求的已有task_id受理保护优先原则，造成供应商业务状态分类失真，并影响供应商统计。",
+"recommendation": "在本地确定失败分类中增加task_id受理保护，明确区分首次同步结果处理失败与已受理异步任务的续查/下载失败。增加has_task_id=True且response_received和本地失败阶段均成立的反向测试。"
+},
+{
+"severity": "MAJOR",
+"file": "backend/app/ai/monitoring.py",
+"line": 312,
+"description": "T05供应商维度查询存在漏数。_created_window使用GenericImageJob.provider_vendor_id过滤任务，该字段代表任务最终供应商，而不是所有实际尝试供应商。比如Yuanqiao失败、Wukong接管成功的任务，查询Yuanqiao时整条任务会被排除，导致Yuanqiao失败次数、交付率及供应商评估数据不完整。现有test_vendor_filter_applies_to_all_metrics只覆盖最终供应商与attempt供应商一致的情况。",
+"recommendation": "供应商尝试统计应按provider_attempts中的vendor_id筛选候选任务及尝试，不能依赖最终provider_vendor_id。任务级汇总指标与attempt级供应商指标应分别定义过滤语义。增加跨供应商failover后按失败供应商查询的测试。"
+},
+{
+"severity": "MAJOR",
+"file": "backend/app/ai/vendor_admin.py",
+"line": 260,
+"description": "T07-B临时降级恢复不完整。demote_failed_vendor在全局排序模式下会重写所有供应商priority，但PriorityDemotion只保存被降级供应商的original_priority；restore_expired_demotions只恢复该供应商，其他供应商原priority无法恢复。项目级RoutingPolicy模式下，实际修改的是policy.vendor_plan，而恢复函数完全没有恢复该策略顺序，可能导致临时降级永久生效。",
+"recommendation": "PriorityDemotion应保存完整变更快照。全局模式保存所有受影响供应商priority及原排序；项目策略模式保存原vendor_plan。到期时根据policy_id恢复实际被修改的对象，并保留人工修改检测和skipped保护。增加项目级策略及多供应商全局排序恢复测试。"
+},
+{
+"severity": "MINOR",
+"file": "backend/app/ai/admin_api.py",
+"line": 348,
+"description": "T07-B治理审计覆盖不完整。set_routing在enabled_vendors不为空时会直接修改多个Provider.enabled及priority，但审计记录只保存RoutingPolicy的before/after。审计流水无法还原实际发生的供应商启停及优先级变化。现有T07-B测试没有覆盖该分支。",
+"recommendation": "在同一事务审计中纳入受影响供应商enabled和priority的前后值，或者拆分为独立vendor变更审计记录。增加set_routing带enabled_vendors的审计测试。"
+}
+],
+"reviewed_commit": "fe88afc8465dc6e9b4cfd7aacfdf0be510674592",
+"evidence_checks": {
+"manifest": "OK",
+"test_log": "OK"
+},
+"notes": "一、材料完整性：从新材料commit 9ebb68697d0e0e5ab0c5d603ccd98aaa96f52733重新读取MANIFEST.json及两份材料，独立按UTF-8实际字节计算。REVIEW_BRIEF.md为4461 bytes，SHA256=514b3ab891bdd756b6ec6a695c9c7ae7920a3c826b7ed6b446b3e6178fba1927；full_test.log为15602 bytes，SHA256=a2bf5c0fe145be9514a737691cd26500ebbb1accc5d50b1b7dbcf8820e1410fa。两项均与manifest一致。材料commit与reviewed_commit分开核验。二、代码审查：确认被审commit与基线的比较为19个提交，实际读取了核心适配器、worker、routing、统计、治理、数据库模型、前端和对应测试。上述问题均来自被审commit实际代码，不是开发方自述。三、测试证据：full_test.log记录558 passed、14 failed。14项失败集中在admin_auth、deploy_artifacts及development_tasks；简报称其为既有基线失败，但材料没有提供基线commit的对应测试运行记录，因此不能独立确认全部14项均为历史失败。另外日志声明Python3.11，但堆栈出现Python312路径，运行环境元数据需要澄清。四、最终裁定：材料完整性问题已经修复，BLOCKED原因解除；但P0/T02存在两个适配器的关键分类缺陷，T05供应商筛选和T07临时降级恢复也存在实际问题，因此不能PASS。建议先修复全部MAJOR，再进行针对性回归和独立复审。"
+}

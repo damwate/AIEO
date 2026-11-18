@@ -1,0 +1,87 @@
+ChatGPT 说：
+
+{
+"result": "PASS_WITH_CONDITIONS",
+"issues": [
+{
+"id": "I01",
+"severity": "P2",
+"finding": "URL 校验仍有一个小边界：urlsplit 可以解析出 hostname，但不一定代表整个 URL 语法有效，例如非法端口。当前满足本次明确规定的五项基本约束，不构成阻断 T03 的问题。"
+},
+{
+"id": "I02",
+"severity": "P2",
+"finding": "成功路径测试验证了 finish_timing 后 attempt 字段存在，但没有直接执行数据库写入、重新读取及管理端/用户端完整投影的往返测试。因此测试所称落库，严格来说目前证明的是终态字段生成，不是数据库持久化全链路。"
+},
+{
+"id": "I03",
+"severity": "P2",
+"finding": "commit SHA 和父提交关系由提交简报提供，本次基于完整 diff 进行代码审查，未独立读取 Git 对象验证提交祖先关系及远端推送状态。"
+}
+],
+"conditions": [
+{
+"id": "B01",
+"status": "PASS",
+"finding": "_valid_result_url 增加 HTTPS、主机名、无凭证、长度和控制字符检查。11 种非法 URL 与合法 URL 测试覆盖符合要求。"
+},
+{
+"id": "B02",
+"status": "PASS",
+"finding": "layer_status 移至 finish_timing，成功和失败路径均可生成三层状态及 billing_status。成功路径测试确认四个字段均已写入 attempt。数据库往返验证建议纳入 T03 集成测试。"
+},
+{
+"id": "C08",
+"status": "PASS",
+"finding": "provider_task_status 保护先于 result_invalid；522/523/524 未知结果保护保留。已受理任务失败不会误判为本地确定失败。"
+},
+{
+"id": "C09",
+"status": "PASS",
+"finding": "五种失败阶段均有细分分类测试。parse、extract、decode、download、validate 五种处理链路均有故障注入，其中后四种通过真实 OpenAI 兼容适配器调用链验证。"
+},
+{
+"id": "C10",
+"status": "PASS",
+"finding": "403→stop、auth 类→failover、五种 STOP_CODES→stop 均有反向保护测试，未被 result_invalid 分类污染。"
+},
+{
+"id": "C12",
+"status": "PASS_WITH_CONDITION",
+"finding": "修改范围符合 P0 独立提交要求，没有涉及路由、重试、熔断及供应商优先级。提交 SHA、父提交及测试结果尚未独立从 Git 远端核实。"
+},
+{
+"id": "B03",
+"status": "PASS",
+"finding": "billing_status 保持 unknown，不将我方交付失败错误解释为供应商未计费。"
+}
+],
+"five_rework_items": {
+"B01_URL_validation": "CLOSED",
+"B02_success_path_layer_status": "CLOSED",
+"C08_C10_reverse_protection": "CLOSED",
+"C09_five_phase_fault_injection": "CLOSED",
+"C12_independent_commit": "CODE_REVIEW_PASS_COMMIT_METADATA_NOT_INDEPENDENTLY_VERIFIED"
+},
+"regression_assessment": {
+"focused_tests": "47+74 passed",
+"full_tests": "506 passed / 14 failed",
+"regression": "按提供的基线对比结果，无新增回归；未独立执行测试",
+"scope": "符合要求"
+},
+"final_judgment": {
+"T02_core": "PASS",
+"T02_classification": "PASS",
+"T02_billing_independence": "PASS",
+"T02_failover_protection": "PASS",
+"T02_five_rework_items": "CLOSED",
+"T03_authorization": "APPROVED",
+"mandatory_code_changes_before_T03": [],
+"T03_follow_up": [
+"补充数据库持久化及重新读取的集成验证。",
+"验证管理端、用户端三层状态投影一致性。",
+"保留供应商计费状态 unknown 的审计纪律。",
+"持续验证五种本地失败不会触发备用供应商重复生成。"
+]
+}
+}

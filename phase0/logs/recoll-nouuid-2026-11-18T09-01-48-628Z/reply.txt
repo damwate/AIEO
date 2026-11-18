@@ -1,0 +1,70 @@
+ChatGPT 说：
+
+{
+"result": "REWORK",
+"issues": [
+{
+"id": "P1-01",
+"location": "backend/app/ai/job_spec.py::_GenericSpec.persist_output",
+"status": "PASS_WITH_CONDITIONS",
+"problem": "原先二次 commit 导致的不可恢复状态不一致问题，已改为单事务提交。",
+"verification": "先将 output_commit 写入 succeeded，再将 provider_attempts 快照与任务成功状态通过同一次 db.commit() 持久化；提交异常时 rollback、reset_phase_for_rollback、重新记录 failed，并更新内存快照。设计方向正确，消除了原先两个独立 commit 之间的状态分裂窗口。",
+"remaining": "新增测试 test_output_commit_optimistic_terminal_rollback_is_consistent 主要是对内存对象的模拟，没有实际调用 persist_output、SQLAlchemy rollback 或真实事务提交。尚未证明数据库快照与 execution_json 在真实 commit 故障下保持一致。建议补充真实数据库事务故障注入测试，但不再将原来的双提交设计问题视为未修复。"
+},
+{
+"id": "P1-02",
+"location": "backend/app/ai/ai_provider_openai.py::_post_raw；backend/app/ai/ai_provider_seedream.py::_json",
+"problem": "响应体读取失败仍存在阶段记录错误。响应对象建立后 request_send 已标记 succeeded，response_received 标记 running；如果 resp.read() 抛出 OSError/TimeoutError，异常分支仍尝试把 request_send 标记 failed。终态不可覆盖使该操作无效，response_received 也没有转为 failed。",
+"required_fix": "在响应体读取边界单独捕获异常，将 response_received 标记 failed，保留 request_send=succeeded。增加 OpenAI 和 Seedream 的 read() 故障注入测试。"
+}
+],
+"conditions": [
+"本次已直接检查 t01_full_v3.diff；没有取得简报提及的 t01_verification_notes_v3.txt，因此测试数字和 stash 基线对照尚未独立核验。"
+]
+}
+
+{
+"assessment": {
+"previous_rework": {
+"01_terminal_immutability": "PASS",
+"02_output_commit": "PASS_WITH_CONDITIONS",
+"03_storage_try_boundary": "PASS",
+"04_image_validate": "PASS",
+"05_completed_at": "PASS",
+"06_safe_detail_whitelist": "PASS",
+"07_HTTPError_semantics": "PASS",
+"08_end_to_end_parse_failure": "PASS",
+"09_diff_file_count": "PASS",
+"10_sanitization": "PASS_WITH_CONDITIONS",
+"P1-02_response_body_read_failure": "FAIL：OpenAI、Seedream、RightAPI 三个适配器均有同类问题。"
+},
+"observation_only": {
+"result": "PASS_WITH_CONDITIONS",
+"details": [
+"没有发现新增阶段记录直接改变供应商选择、路由顺序、重试条件、切换条件、失败分类或计费规则。",
+"finish_failure 新增 derive_phase_summary，仅派生审计字段。",
+"image_download 新增校验阶段记录，没有改变原有图片校验规则。",
+"output_commit 调整为单事务原子提交，改变的是持久化事务组织，不是供应商业务判定。"
+]
+},
+"sanitization": {
+"result": "PASS_WITH_CONDITIONS",
+"details": [
+"error_detail_safe 使用固定阶段文案和显式 code 白名单，不直接拼接异常 message。",
+"exception_type 仅保留长度受限的异常类型名称。",
+"execution_json 使用字段白名单投影。",
+"未发现新增 phase_events 字段直接保存 API Key、原始 URL、Base64 或响应正文。",
+"本次没有完整验证既有日志、attempt.error、供应商异常链及所有外部展示出口，不能宣称整个系统绝对无敏感信息泄漏。"
+]
+},
+"other_must_fix": []
+},
+"conditions": [
+"修复 P1-02：三个适配器的响应体读取异常均应记录 response_received=failed，request_send 保持 succeeded。",
+"增加三个适配器各自的 resp.read() 故障注入测试，验证 failed_phase=response_received。",
+"建议补充真实数据库事务故障注入测试，验证 P1-01 的 DB 快照、内存快照、execution_json 一致性。",
+"前端未执行 tsc，仍不属于已验收范围；安装依赖后补充类型检查及生产构建。",
+"未取得 t01_verification_notes_v3.txt，本次未独立核验测试统计及14项基线失败对照。",
+"本次依据离线 v3 diff 进行审查，未直接读取 GitHub HEAD c031e0411f29bb183b35a2ff9c39faad5de96725，不能确认远端提交字节与附件完全一致。"
+]
+}

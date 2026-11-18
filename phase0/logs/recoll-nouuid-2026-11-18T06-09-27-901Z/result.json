@@ -1,0 +1,24 @@
+{
+  "recollection": true,
+  "driver": "recoll_final_ab_nouuid.mjs",
+  "conversation_url": "https://chatgpt.com/c/6afca03d-31bc-83ec-b32e-512f6bbb93b7",
+  "reference_failed_dispatch_dir": "phase0/logs/dispatch-2026-11-18T06-05-07",
+  "failure_code": "INBOUND_ASSISTANT_UUID_MISSING",
+  "uuid_anomaly": "本轮 assistant unit 缺少 data-dil-message-id；已用稳定静态DOM+完成按钮消失+长度/SHA校验替代归属证明",
+  "marked_user_unit_key": "9761c651-8548-58b0-8f29-8ebc329d17df:0:user",
+  "assistant_unit_key": "9761c651-8548-58b0-8f29-8ebc329d17df:2:assistant",
+  "assistant_uuid": null,
+  "reply_bytes": 1670,
+  "reply_sha256": "c061d776dd70206421067ebb2f2fc4444c6236549dd884c4ff2af05eed5f2275",
+  "checks": {
+    "marked_user_unique": true,
+    "last_user_assertion": true,
+    "adjacent_assistant_tail": true,
+    "stable_static_dom_read": true,
+    "final_stop_button_not_visible": true,
+    "not_prev_reply_sha": true,
+    "response_length_plausible": true,
+    "dil_uuid_present": false
+  },
+  "extracted_at": "2026-11-18T06:09:51.971Z"
+}

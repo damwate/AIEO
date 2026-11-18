@@ -1,0 +1,142 @@
+ChatGPT 说：
+
+{
+"result": "REWORK",
+"root_cause": "当前环境无法成功读取指定仓库 a8a5977 的 GitHub 原文（GitHub 文件接口返回404，网页读取也失败），因此不能声称已完成对技术核查文档及两个源码文件的独立审计。以下为基于用户提供的核查摘要形成的条件性技术裁定，不能替代源码终审。核心风险有两个：G-A，LOW_SPEED_LIMIT/LOW_SPEED_TIME 的生效依赖 curl_cffi 内部实现，而非我方显式配置；G-C，若使用 response.content 一次性消费响应体，则缺少真正的流式读取和响应体内存边界。现有 mock 参数测试不能证明真实网络传输行为。",
+"fix_plan": [
+{
+"id": "G-A",
+"priority": "P1",
+"decision": "推荐方向1：显式配置 LOW_SPEED_LIMIT 和 LOW_SPEED_TIME，不推荐仅依赖标量 timeout 的内部副作用。",
+"details": [
+"在 http_transport.py 集中定义流式传输策略：LOW_SPEED_LIMIT=1 byte/s，LOW_SPEED_TIME=180 seconds。",
+"通过 curl_options 显式传递 CURLOPT_LOW_SPEED_LIMIT 和 CURLOPT_LOW_SPEED_TIME，确认当前 curl_cffi 版本确实支持这些选项。",
+"保留 connect timeout=10s，不能因为显式配置低速检测而丢失连接超时保护。",
+"明确区分连接超时、低速超时和总请求超时，避免将三个概念混为一谈。",
+"锁定 curl_cffi 版本，并记录所使用的 CURL option 和对应库版本。",
+"如果当前版本无法可靠显式设置，应升级或固定到经过验证的版本，而不是继续依赖 issue #156 所涉及的内部 trick。"
+]
+},
+{
+"id": "G-B",
+"priority": "P1",
+"decision": "真实网络流式读取必须建立独立测试，不得以 mock 调用参数作为验收。",
+"details": [
+"使用本地 HTTP server 提供可控响应，不依赖公网和真实供应商。",
+"测试正常分块响应、持续低速响应、响应中途停止发送三种情况。",
+"验证客户端确实逐块读取，而不是等待整个响应体下载完成。",
+"验证低速超时能够终止读取，并且能够正确记录 timeout 类别。",
+"验证 connect timeout 与 read/low-speed timeout 的错误分类不混淆。"
+]
+},
+{
+"id": "G-C",
+"priority": "P1",
+"decision": "response.content 是否为真实缺陷，需要结合调用位置确认；如果用于供应商生成结果或大响应体读取，应整改。",
+"details": [
+"避免对不受信任或尺寸不确定的响应直接调用 response.content。",
+"改用 iter_content 或当前 curl_cffi 版本支持的流式读取接口。",
+"设置单响应体最大字节数，超限立即停止读取并关闭响应。",
+"对 JSON 响应采用有界分块读取，最终只对已限制大小的内容进行解析。",
+"对图片结果、错误响应和普通 JSON 分别明确读取策略。",
+"不要为了形式上的 streaming 而引入不必要的复杂度；小型、有明确上限的错误 JSON 可以保留简单读取，但必须有字节上限。"
+]
+},
+{
+"id": "G-D",
+"priority": "P1",
+"decision": "迁移测试必须从仅验证任务表字段升级为验证完整数据库结构。",
+"details": [
+"保留现有任务表字段迁移断言。",
+"增加迁移执行后的表结构检查。",
+"检查新增表及其字段的类型、nullable、default。",
+"检查主键、唯一约束、索引和外键。",
+"检查迁移 revision 链及 downgrade 行为。",
+"避免仅凭 ORM model 存在就判定数据库迁移完整。"
+]
+}
+],
+"tests_to_add": [
+{
+"name": "test_stream_reads_incrementally",
+"scenario": "本地 server 分多次发送响应块，客户端应在响应结束前收到并处理前面的数据块。",
+"assertions": [
+"客户端使用真实 stream=True。",
+"读取行为确实分块。",
+"不要求完整响应体到达后才开始处理。",
+"最终结果与预期内容一致。"
+]
+},
+{
+"name": "test_stream_low_speed_timeout",
+"scenario": "本地 server 建立连接后，以低于 1 byte/s 的速度持续发送数据，超过低速检测窗口。",
+"assertions": [
+"请求最终因低速条件终止。",
+"不无限等待。",
+"错误分类正确。",
+"响应连接得到释放。"
+],
+"notes": "使用可控时钟或缩短测试专用 LOW_SPEED_TIME，避免每次 CI 等待180秒；另保留一次使用生产配置的集成验证。"
+},
+{
+"name": "test_stream_stall_timeout",
+"scenario": "本地 server 先发送部分响应，然后停止发送。",
+"assertions": [
+"客户端能够检测持续无数据。",
+"最终超时退出。",
+"已经收到的部分数据不会被误判为完整成功。"
+]
+},
+{
+"name": "test_stream_body_size_limit",
+"scenario": "server 返回超过配置上限的响应体。",
+"assertions": [
+"读取达到上限后终止。",
+"不继续无界缓冲。",
+"返回明确的响应体超限错误。",
+"资源正确释放。"
+]
+},
+{
+"name": "test_connect_timeout_separate_from_low_speed",
+"scenario": "模拟连接阶段无法完成，与连接成功后读取阶段低速分别测试。",
+"assertions": [
+"连接超时配置为10秒。",
+"低速检测配置独立生效。",
+"两类错误可区分。"
+]
+},
+{
+"name": "test_migration_0009_schema_complete",
+"scenario": "从0008数据库升级至0009。",
+"assertions": [
+"新增表完整。",
+"字段类型、nullable、default正确。",
+"索引和唯一约束完整。",
+"外键及删除行为符合设计。",
+"迁移链正确。"
+]
+},
+{
+"name": "test_migration_0009_downgrade",
+"scenario": "0009升级后执行降级。",
+"assertions": [
+"新增结构能够正确回滚。",
+"不会误删0008已有业务数据。",
+"重复执行升级和降级不存在结构残留。"
+]
+}
+],
+"migration_0009_notes": "建议只承担本次新增持久化结构的迁移，不借机重构历史迁移。最小内容：1. 创建本次确实需要的新表；2. 定义必要字段及正确的数据库类型、nullable、default；3. 建立主键、唯一约束、必要索引和外键；4. down_revision准确指向0008；5. downgrade只删除本次新增对象，不破坏既有业务数据；6. 测试必须真实创建0008数据库、执行0009并检查完整数据库结构。不能用任务表列名比较代替迁移完整性验证。具体表名、字段和约束必须以技术核查文档及实际模型为依据，不应凭空新增。",
+"conditions": [
+"C1：取得 a8a5977 完整 SHA，确认审核材料和分支对应同一提交。",
+"C2：核实 http_transport.py 当前 curl_options、timeout 和 stream=True 的实际组合。",
+"C3：显式 LOW_SPEED 配置必须经过真实 curl_cffi 请求验证，不能仅检查配置字典。",
+"C4：真实慢速测试应区分低速持续传输与完全停止传输，不能用同一个测试代替。",
+"C5：响应体上限必须覆盖成功响应、错误响应及异常供应商响应。",
+"C6：迁移0009必须验证完整 schema，而不是只比较任务表列。",
+"C7：新增测试必须在 CI 中可重复执行，不依赖公网、真实供应商或不可控网络。",
+"C8：完成后提供完整 commit SHA、diff 和测试结果，重新进行独立终审。"
+],
+"notes": "技术选择上明确推荐方向1，而不是方向2。tuple timeout 只有在当前 curl_cffi 版本明确支持并且实际语义经过验证时才考虑；不能假定它等价于 requests/httpx 的 connect/read timeout。G-C 不应简单认定所有 .content 都是错误：关键在于响应体是否有界，以及是否需要边接收边处理。整体建议按最小修复拆分：先解决 G-A 和 G-C，再补真实网络测试，最后补齐0009迁移验证。当前结论为 REWORK，原因首先是源码证据未能独立取得，不能签发 PASS。"
+}

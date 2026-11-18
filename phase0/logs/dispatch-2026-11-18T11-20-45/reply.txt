@@ -1,0 +1,36 @@
+ChatGPT 说：
+
+{
+"decision": "B",
+"conditions": [
+"该测试属于accepted-unknown：POST已返回task_id并被接受，随后GET poll返回401，不能据此证明上游任务未执行或未产生结果。",
+"needs_human阻断的是同一accepted任务的不安全自动重试、同vendor重新提交，以及可能造成重复计费或重复生图的再次提交。",
+"允许跨vendor首次failover，但必须满足：不向原vendor重投、不复用原task_id、不隐瞒原任务结果未知状态，并保留原attempt的完整失败证据。",
+"跨vendor failover必须创建独立attempt，明确记录其与原accepted-unknown attempt的关联。",
+"保留既有测试test_accepted_async_poll_failure_switches_without_resubmitting_same_vendor的原始断言，包括job=succeeded、attempt[0].action=failover、calls=['POST','GET']及备用供应商成功。",
+"401属于poll认证失败，但不能仅凭HTTP状态码认定上游任务确定失败；仍须保留accepted-unknown语义。"
+],
+"needs_human_semantics": {
+"meaning": "阻断不安全的自动重试和重新提交，不等同于阻断所有自动路由。",
+"routed_path_action": "允许action='failover'，但必须明确这是跨vendor新attempt，不是原accepted任务重试。",
+"same_vendor_resubmit": "BLOCKED",
+"cross_vendor_first_failover": "ALLOWED_WITH_AUDIT",
+"same_task_id_repoll": "不得自动无限重试；仅允许受控的只读状态查询策略。",
+"original_attempt_evidence": "MUST_PRESERVE",
+"human_intervention": "原accepted-unknown结果仍需人工跟进和最终对账，不得因备用供应商成功而清除needs_human标记。"
+},
+"test_authorization": {
+"modify_existing_assertions": false,
+"preserve_existing_test": true,
+"add_required_tests": [
+"accepted-unknown不得触发同vendor POST重投",
+"accepted-unknown允许跨vendor首次failover",
+"跨vendor failover后原attempt仍保留needs_human及unknown证据",
+"备用供应商成功不得覆盖原attempt结果未知状态",
+"不得将原task_id传递给备用供应商",
+"人工处理完成前不得自动清除原attempt的needs_human标记"
+]
+},
+"rationale": "区分任务结果不确定性与路由决策。accepted-unknown意味着原供应商的任务结果未知，而不是禁止使用其他供应商完成用户请求。通过禁止同vendor重新提交、保留原任务审计证据及独立创建备用attempt，可以兼顾防止重复执行和服务可用性。",
+"scope": "本裁定明确needs_human的阻断边界，不授权放宽其他fail-closed安全条件。"
+}

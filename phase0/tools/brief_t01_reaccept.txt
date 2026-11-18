@@ -1,0 +1,8 @@
+[T01复验|AI-Image-Service|20261119]
+新会话接棒，独立复核者，只回JSON。无历史上下文，据本简报+附件判断。仓库YotinGarden/AI-Image-Service，HEAD a5300151ca47de428cab2b5d45827252e575468c（基线285851233ae3a056cb2f9a4d71851ad393ff4b1a）。两提交未push(DEC-010)，附t01_full_v2.diff(12文件)+t01_verification_notes_v2.txt离线核验。
+
+上轮你REWORK的10项已逐项修复：①终态不可被任何状态覆盖(双向测试)②output_commit成功二次commit落库+失败路径③storage准备纳入try④image_validate接线(PIL校验边界,4 adapter透传)⑤终态加completed_at可算耗时⑥_safe_detail改显式白名单⑦HTTPError记response_received=succeeded(状态由http_status表达)⑧端到端用例(HTTP200非法JSON走generate_image→finish_failure→execution_json)⑨文件数核对12⑩脱敏/判定语义复核。
+
+测试：13 passed / 相邻137 passed / 全量452 passed，14失败为基线既有(前轮stash对照)。前端无node_modules未tsc(未验收项)。
+
+请复验(JSON,result=PASS/REWORK,issues,conditions)：REWORK项是否真修复？是否仍"只观测不改判定"？脱敏是否充分？还有无必须修问题？

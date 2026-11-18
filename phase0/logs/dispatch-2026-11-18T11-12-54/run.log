@@ -1,0 +1,17 @@
+[2026-11-18T11:12:55.667Z] 会话锁已获取 pid=21548
+[2026-11-18T11:12:55.669Z] === GPT 派单（已有会话，消息 817 字节）===
+[2026-11-18T11:12:58.998Z] Chrome 已启动 pid=4484
+[2026-11-18T11:13:06.885Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 0 个
+[2026-11-18T11:13:06.886Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-18T11:13:11.533Z] 会话就绪: https://chatgpt.com/c/6afd7f2c-8d40-83ee-9114-93d56d2d9950
+[2026-11-18T11:13:16.923Z] [dispatch] 基线尾部: {"role":"assistant","key":"f9b2341f-3ad3-5b7a-8285-5f693c15ca19:1:assistant","assistantUuid":"fd8572f4-3278-4134-8c72-187b7c41f84f"}
+[2026-11-18T11:13:18.209Z] [dispatch] 发送双验通过（polls=1，user_unit_key=fallback-turn-0:0:user，tail 后观察）
+[2026-11-18T11:13:20.431Z] 截图: sent-dispatch.png
+[2026-11-18T11:15:02.070Z] [dispatch] COMPLETED，1 个 assistant unit，回复 2770 UTF-8 字节，区间窗口 2 个
+[2026-11-18T11:15:02.204Z] 截图: reply-dispatch.png
+[2026-11-18T11:15:02.205Z] 审查会话已保存（归属校验 PASS）: https://chatgpt.com/c/6afd7f2c-8d40-83ee-9114-93d56d2d9950
+[2026-11-18T11:15:02.212Z] JSON/Schema/绑定校验: NOT_REQUESTED
+[2026-11-18T11:15:02.212Z] M1 本地登记: NOT_REQUESTED（三 ID 均未提供，通用非登记派单）
+[2026-11-18T11:15:03.423Z] [tab-hygiene] 成功退出：浏览器连接已关+profile Chrome 已杀（含本次自建页 0 页）；tab 清零
+[2026-11-18T11:15:03.424Z] === 派单完成，artifact_sha256=8c9d159d510f7b52f37cf9faf1a7503f9f92980bd303aac37ad7ada68545558b size_bytes=2770 ===
+[2026-11-18T11:15:04.443Z] 会话锁已释放

@@ -1,0 +1,112 @@
+// 专用补采变体：ChatGPT 本轮已完整输出但 DOM 缺少 data-dil-message-id。
+// 仅保留 L-018 核心归属校验（标记唯一+最后user+紧邻assistant+前轮reply SHA排除+稳定读取+停止按钮消失），
+// 显式承认 dil_uuid_present=false 并记录原因；不发送、不重发。
+import { chromium } from "playwright";
+import { readDomUnits } from "./inbound_dom.mjs";
+import { acquireSessionLock } from "../e2e-poc/session_lock.mjs";
+import { createHash } from "node:crypto";
+import { mkdirSync, writeFileSync } from "node:fs";
+import { join } from "node:path";
+
+const CONV_UUID = "6afca03d-31bc-83ec-b32e-512f6bbb93b7";
+const MARKER = "[超时与大小预算方案|AI-Image-Service|20261118";
+const PREV_REPLY_SHA = "76a3e42c24bffca4";
+const OUT_DIR = join(process.cwd(), "phase0", "logs",
+  `recoll-nouuid-${new Date().toISOString().replace(/[:.]/g, "-")}`);
+mkdirSync(OUT_DIR, { recursive: true });
+const log = (m) => {
+  const line = `[${new Date().toISOString()}] ${m}`;
+  console.log(line);
+  writeFileSync(join(OUT_DIR, "run.log"), line + "\n", { flag: "a", encoding: "utf8" });
+};
+
+const lock = acquireSessionLock({ holder: "gpt_dispatch_recoll" });
+log("会话锁已获取（nouuid 专用补采）");
+let browser;
+try {
+  browser = await chromium.connectOverCDP("http://127.0.0.1:9222");
+  const ctx = browser.contexts()[0];
+  const page = ctx.pages().find((p) => p.url().includes("chatgpt.com/c/")) || ctx.pages()[0];
+  if (!page.url().includes(CONV_UUID)) throw new Error(`会话 UUID 不匹配: ${page.url()}`);
+  const vp = await page.evaluate(() => ({ w: innerWidth, dpr: devicePixelRatio }));
+  const cdp = await ctx.newCDPSession(page);
+  await cdp.send("Page.setDeviceMetricsOverride",
+    { width: vp.w, height: 100000, deviceScaleFactor: vp.dpr || 1, mobile: false });
+  await page.waitForTimeout(8000);
+  await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+  await page.waitForTimeout(3000);
+  try {
+    const first = await readDomUnits(page);
+    await page.waitForTimeout(12000);
+    const second = await readDomUnits(page);
+    const stable = first.length === second.length &&
+      first.every((u, i) => u.key === second[i].key && (u.text || "") === (second[i].text || ""));
+    if (!stable) throw new Error("静态 DOM 两次读取不稳定（存在仍在生成或虚拟抖动）");
+
+    writeFileSync(join(OUT_DIR, "units-diag.json"), JSON.stringify(second.map((u) => ({
+      key: u.key, role: u.role, visible: u.visible, assistantUuid: u.assistantUuid,
+      text_head: (u.text || "").slice(0, 100),
+    })), null, 2), "utf8");
+
+    const users = second.filter((u) => u.role === "user");
+    const marked = users.filter((u) => (u.text || "").includes(MARKER));
+    if (marked.length !== 1) throw new Error(`标记命中数异常: ${marked.length}`);
+    const target = marked[0];
+    if (target.key !== users[users.length - 1].key) throw new Error("标记 user 不是最后一个 user");
+    const idx = second.indexOf(target);
+    const assistant = second[idx + 1];
+    if (!assistant || assistant.role !== "assistant") throw new Error("标记 user 后无紧邻 assistant");
+    if (assistant.key !== second[second.length - 1].key) throw new Error("尾部 assistant 不是最后一个 unit");
+    const reply = assistant.text || "";
+    if (reply.length < 1000) throw new Error(`回复过短疑似未生成完: ${reply.length}`);
+    const sha = createHash("sha256").update(reply, "utf8").digest("hex");
+    if (sha.startsWith(PREV_REPLY_SHA)) throw new Error("采到前轮回复（SHA 命中排除项）");
+
+    const stopVisible = await page.evaluate(() => {
+      const cands = document.querySelectorAll('button[aria-label="停止"], button[aria-label="Stop"], button[data-testid="stop-button"], form button[aria-label*="停止"], form button[aria-label*="Stop"]');
+      for (const el of cands) {
+        if (el.offsetParent !== null || el.getClientRects().length > 0) {
+          const r = el.getBoundingClientRect();
+          if (r.width > 0 && r.height > 0) return true;
+        }
+      }
+      return false;
+    });
+    const checks = {
+      marked_user_unique: true,
+      last_user_assertion: true,
+      adjacent_assistant_tail: true,
+      stable_static_dom_read: stable,
+      final_stop_button_not_visible: !stopVisible,
+      not_prev_reply_sha: true,
+      response_length_plausible: true,
+      dil_uuid_present: false,
+    };
+    log(`checks=${JSON.stringify(checks)}`);
+    writeFileSync(join(OUT_DIR, "reply.txt"), reply, "utf8");
+    writeFileSync(join(OUT_DIR, "result.json"), JSON.stringify({
+      recollection: true, driver: "recoll_timeout_size_plan_nouuid.mjs",
+      conversation_url: `https://chatgpt.com/c/${CONV_UUID}`,
+      reference_failed_dispatch_dir: "phase0/logs/dispatch-2026-11-18T05-37-11",
+      failure_code: "INBOUND_ASSISTANT_UUID_MISSING",
+      uuid_anomaly: "本轮 assistant unit 缺少 data-dil-message-id；已用稳定静态DOM+完成按钮消失+长度/SHA校验替代归属证明",
+      marked_user_unit_key: target.key, assistant_unit_key: assistant.key,
+      assistant_uuid: assistant.assistantUuid ?? null,
+      reply_bytes: Buffer.byteLength(reply, "utf8"), reply_sha256: sha,
+      checks, extracted_at: new Date().toISOString(),
+    }, null, 2), "utf8");
+    log(`reply 已落盘（${Buffer.byteLength(reply, "utf8")} 字节，SHA=${sha.slice(0, 16)}…）`);
+    log("RECOLL COMPLETED");
+    console.log(`RECOLL_DIR=${OUT_DIR}`);
+  } finally {
+    await cdp.send("Page.clearDeviceMetricsOverride").catch(() => {});
+    log("视口覆盖已清除");
+  }
+} catch (e) {
+  log(`RECOLL FAILED: ${e && e.message}`);
+  process.exitCode = 1;
+} finally {
+  if (browser) await browser.close().catch(() => {});
+  lock.release();
+  log("会话锁已释放（nouuid 专用补采）");
+}

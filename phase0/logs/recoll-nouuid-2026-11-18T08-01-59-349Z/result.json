@@ -1,0 +1,24 @@
+{
+  "recollection": true,
+  "driver": "recoll_log_nodes_plan_nouuid.mjs",
+  "conversation_url": "https://chatgpt.com/c/6afd420b-a254-83ee-813b-92d3066fd287",
+  "reference_failed_dispatch_dir": "phase0/logs/dispatch-2026-11-18T07-59-30",
+  "failure_code": "INBOUND_WINDOW_COMPLETENESS_UNPROVEN",
+  "recovery": "视口拉高静态DOM全量物化+归属校验型定位（禁重发）",
+  "marked_user_unit_key": "dfebe914-0975-53d1-98dd-691ef2ece17c:0:user",
+  "assistant_unit_key": "dfebe914-0975-53d1-98dd-691ef2ece17c:2:assistant",
+  "assistant_uuid": "28dcc964-1a77-43f8-afaa-9d736a1734da",
+  "reply_bytes": 7149,
+  "reply_sha256": "05e00a674ef1c95c798538dde632ec920b75b9a4430c80c607a6bf3b52bbc7a0",
+  "checks": {
+    "marked_user_unique": true,
+    "last_user_assertion": true,
+    "adjacent_assistant_tail": true,
+    "stable_static_dom_read": true,
+    "final_stop_button_not_visible": true,
+    "not_prev_reply_sha": true,
+    "response_length_plausible": true,
+    "uuid_based_locator": false
+  },
+  "extracted_at": "2026-11-18T08:02:23.102Z"
+}

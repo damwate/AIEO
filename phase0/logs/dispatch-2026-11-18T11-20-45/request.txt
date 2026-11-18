@@ -1,0 +1,13 @@
+[T04 accepted-unknown冲突|1121]
+只回JSON。按Q1分类阻断/Q2分阶段实现前，发现一处测试契约冲突请裁定。
+
+既有测试test_accepted_async_poll_failure_switches_without_resubmitting_same_vendor(参数auth_failure/task_failed)：POST返回task_id→acceptance=accepted；随后GET poll抛401，期望job=succeeded、attempt[0]['action']=='failover'、calls==['POST','GET'](不重投同家)、备用成功。这是accepted-unknown。
+
+Q1要求accepted-unknown设needs_human并阻断自动failover；Q2条件7要求保留原unknown测试不放宽断言。二者冲突。
+
+请裁(JSON,decision,conditions)：
+A)该测试属accepted-unknown，按Q1应改为fail-closed(需你授权更新测试断言，视为PO决策变更)；
+B)needs_human仅阻断"同vendor重发/再提交"(本测试已满足calls==['POST','GET'])，跨vendor首次failover保留，该测试不动；
+C)按401=poll凭证失败=确定性失败(非结果未知)，仅task_id存在且poll超时/结果不明才accepted-unknown阻断。
+
+并明确：needs_human是否应改变routed路径action='failover'？若B请确认"阻断"的精确定义。

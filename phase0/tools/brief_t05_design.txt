@@ -1,0 +1,15 @@
+[T05设计评审|1118]
+只回JSON。P0全PASS。据审计评T05(供应商分层统计)。
+
+现状：metrics_snapshot已有分子分母/窗口、unknown不进分母、p95、抽样透明；vendor+时间查询已在jobs_timeline。不建平台。
+
+缺口：G1)result_invalid被判known_failed计入供应商失败(违反"我方失败不计供应商")。G2)transport/delivery_status已落库但统计未读，HTTP/交付成功率未分列。G3)耗时用started_at→completed_at含前置+下载，应用request_started_at→response_body_completed_at。G4)窗口固定24h无vendor过滤。G5)低样本无结构化标记。
+
+提案(兼容，只加字段不改语义)：
+1)vendor桶加local_invalid计数，不计供应商失败分母；既有failed/success_rate不变。
+2)加http_success_rate/delivery_success_rate，分母排除unknown/result_invalid。
+3)加supplier_process_ms均值(request_started_at→response_body_completed_at)，缺字段fallback旧口径+标注。
+4)metrics_snapshot加可选window_hours/vendor_id(默认保旧)。
+5)每vendor加sample_size+insufficient布尔(无性能阈值)。
+
+请评(JSON,result,issues,conditions)：口径对吗？G3 fallback可否？必补项？

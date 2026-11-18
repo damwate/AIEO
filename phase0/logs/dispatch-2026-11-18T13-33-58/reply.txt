@@ -1,0 +1,21 @@
+ChatGPT 说：
+
+{
+"result": "REWORK",
+"findings": [
+{
+"severity": "MAJOR",
+"file": "backend/app/ai/vendor_admin.py",
+"line": 345,
+"description": "RW-04二轮修复解决了单次global_policy降级同时恢复vendor_plan和priority的问题，但仍存在多个同一策略的临时降级叠加时无法完整恢复的缺陷。示例：原顺序[A,B,C]，先降级A得到[B,C,A]，随后基于新顺序再降级B得到[C,A,B]。第一条降级记录到期时，当前顺序不等于其vendor_plan_after，因而被标记skipped；第二条记录到期后只能恢复到[B,C,A]，第一条记录已经不会再次恢复，原始顺序[A,B,C]永久丢失。restore_expired_demotions按active记录逐条比较快照，未处理同一policy/global排序范围内多个活动降级之间的依赖关系。global_policy的priority快照也存在相同的叠加恢复风险。",
+"recommendation": "按同一恢复作用域（policy_id或global排序）协调多个活动降级，不能把前一条临时降级造成的后续合法降级简单视为人工修改。可采用作用域级原始快照加活动降级集合，在最后一条相关降级到期后统一恢复；或建立可验证的快照链/栈，按正确顺序恢复并保留人工修改保护。增加同一global_policy连续降级两个不同供应商、不同到期顺序，以及中途人工修改的回归测试；同时覆盖无policy全局priority模式。"
+}
+],
+"reviewed_commit": "80fbb23c1dc1a2294051b27beb368daef0fc270e",
+"evidence_checks": {
+"manifest": "OK",
+"test_log": "OK",
+"baseline": "OK"
+},
+"notes": "材料完整性：从材料commit 8b5fa86e9e508227814db48b32be21a53392d364重新读取MANIFEST.json及其列出的3份材料，并独立计算UTF-8字节数和SHA256。REVIEW_BRIEF.md为6502 bytes，SHA256=ecd3d629db41be5af58535ee58b82d48a994f2dd514573ba384ebf0436984bd8；full_test.log为15743 bytes，SHA256=437f8b2a85235aa20fbce4d3ee4f5c82869e8f9b4eab436397894fcf64352b47；baseline_test.log为1887 bytes，SHA256=2caa43ef8612ce27631ac4bf179117ad9d2646b3f9407579db396992423c5a97。三项均与manifest的SHA256、bytes及Git blob SHA1一致。版本核验：被审commit为80fbb23c1dc1a2294051b27beb368daef0fc270e，基线为abd7116e30e17d9669a8551c0985bd09aa8a601a；被审commit相对基线24个提交。本轮修复commit实际修改vendor_admin.py及test_t07b_governance_audit.py。测试证据：full_test.log绑定正确被审SHA，平台win32/Python3.12.10，14 failed、567 passed；baseline_test.log绑定正确基线SHA，同一venv/Python3.12.10，14 failed、439 passed。两份日志的14项失败测试名称逐项一致，baseline证据成立。简报中baseline对照段写有566 passed，与full_test.log实际567 passed相差1，属于材料说明数字笔误，不影响失败集合核验。RW-04单次global_policy路径现已正确保存和恢复vendor_plan及priority，并在检测到人工改动时跳过；本轮发现的是多个活动降级相互叠加时的恢复顺序缺陷，新增测试目前只验证单次降级成功恢复，未覆盖该场景。因此仍需修复后复审。"
+}

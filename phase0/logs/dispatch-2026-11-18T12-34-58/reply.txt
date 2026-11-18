@@ -1,0 +1,48 @@
+ChatGPT 说：
+
+{
+"result": "PASS_WITH_CONSTRAINTS",
+"issues": [
+{
+"id": "T07-B-01",
+"severity": "P2",
+"status": "建议补充，非阻断",
+"description": "GovernanceRecord采用append-only、同事务写入，基本满足管理操作可追溯要求。建议确认actor身份不可由普通请求参数伪造，system操作与admin操作具有明确身份来源。"
+},
+{
+"id": "T07-B-02",
+"severity": "P2",
+"status": "建议补充，非阻断",
+"description": "PriorityDemotion的惰性恢复策略合理。建议确认expires_at使用统一时区，并覆盖恢复任务重复执行、进程中断后再次执行的幂等性。"
+},
+{
+"id": "T07-B-03",
+"severity": "P2",
+"status": "建议补充，非阻断",
+"description": "人工修改priority后跳过自动恢复，避免覆盖人工决策，处理正确。建议确认skipped和failed状态可通过管理端查询，且失败记录不会被后续恢复逻辑静默忽略。"
+},
+{
+"id": "T07-B-04",
+"severity": "P2",
+"status": "建议补充，非阻断",
+"description": "cooldown进入和到期恢复均有system审计，且明确不代表供应商恢复证明，符合治理边界。建议确认状态转换与审计写入具备原子性。"
+},
+{
+"id": "T07-B-05",
+"severity": "P2",
+"status": "建议补充，非阻断",
+"description": "当前提供的测试覆盖7项治理行为及关联41项测试，全量558 passed、14 failed且声明属于原基线。建议保留原基线对照证据，确保新增改动没有引入回归。"
+}
+],
+"required_fixes": [],
+"acceptance_conditions": [
+"02：管理操作与审计记录同事务提交，失败时不得留下半完成的业务修改或审计记录。",
+"03：优先级降级记录必须能够明确追溯原值、降级值、到期时间及恢复结果。",
+"03：人工修改后的priority不得被自动恢复覆盖。",
+"04：cooldown自动恢复不得被解释为供应商健康状态已经得到验证。",
+"管理端审计记录接口必须保持只读，普通管理员不能修改或删除审计记录。",
+"全量14项失败必须能够与改动前基线逐项对应。"
+],
+"final_pass": false,
+"decision": "当前建议PASS_WITH_CONSTRAINTS，不要求阻断后续任务，也不要求为上述P2建议单独返工。fe88afc可以作为T07-B阶段验收通过提交。若后续只读复核确认actor来源、事务原子性、恢复幂等性及14项基线证据，则可升级FINAL_PASS。"
+}

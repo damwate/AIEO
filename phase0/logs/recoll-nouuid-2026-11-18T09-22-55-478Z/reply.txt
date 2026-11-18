@@ -1,0 +1,57 @@
+ChatGPT 说：
+
+{
+"result": "REWORK",
+"issues": [
+{
+"id": "T01-P1-01-R2",
+"severity": "P1",
+"location": "backend/app/ai/image_download.py:download_image",
+"issue": "download阶段仍存在异常路径未记录failed的问题。当前except仅覆盖ProviderError、OSError和HTTPException；ValueError、TypeError及Image.DecompressionBombError分支直接转换为ProviderError，却没有记录download失败。特别是下载前的_validate_url发生异常时，download会停留在running。",
+"required_fix": "补齐ValueError、TypeError、Image.DecompressionBombError分支的阶段状态处理。注意图片内容校验失败应保留image_validate=failed，不应覆盖已经成功的download=succeeded；下载前URL校验失败则应记录download=failed。"
+}
+],
+"conditions": [
+{
+"id": "P1-02",
+"result": "CLOSED",
+"reason": "四适配器响应体读取失败注入覆盖已齐全，相关阶段状态断言符合预期。"
+},
+{
+"id": "T01-P1-01",
+"result": "PARTIALLY_CLOSED",
+"reason": "正常下载成功、响应体读取失败及图片校验成功均已有阶段测试，但异常分类分支仍有状态遗漏。"
+},
+{
+"id": "ENV-01",
+"result": "NON_BLOCKING",
+"reason": "六个提交未push，远端HEAD未验证。按照DEC-010，本轮离线补丁复核不以远端验证作为阻断条件。"
+},
+{
+"id": "ENV-02",
+"result": "NON_BLOCKING",
+"reason": "前端缺少node_modules，未执行tsc，属于环境验证缺口。"
+},
+{
+"id": "TEST-01",
+"result": "PASS_WITH_EVIDENCE",
+"reason": "简报提供聚焦19用例、全量458 passed及14项基线失败的stash对照结果；本轮未独立执行测试。"
+}
+],
+"t01_closure": {
+"result": "NOT_YET",
+"can_enter_T02": false,
+"reason": "download阶段仍有异常路径无法形成完整终态，暂不建议收口。"
+},
+"additional_code_issues": [],
+"review_scope": {
+"basis": "HEAD c68764f5d508c15787bfb396866a4fc3347e4c25",
+"artifact": "t01_full_v6.diff",
+"method": "离线补丁逐项检查",
+"limitations": [
+"未验证远端HEAD。",
+"未独立执行后端测试。",
+"未执行前端TypeScript编译。"
+]
+}
+}

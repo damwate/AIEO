@@ -1,0 +1,22 @@
+ChatGPT 说：
+
+{
+"result": "BLOCKED",
+"findings": [
+{
+"severity": "MAJOR",
+"file": "docs/review/20261118_p0p1/MANIFEST.json",
+"line": 1,
+"description": "无法完成 MANIFEST 要求的三份材料 SHA-256 与字节尺寸独立校验。已读取三份材料，Git blob SHA-1 均与 MANIFEST 一致，但当前校验环境无法执行 SHA-256 计算及完整字节尺寸复核。按照证据校验失败即 BLOCKED 的要求，不得据此签发 PASS。"
+,
+"recommendation": "提供可独立计算 SHA-256 和文件字节尺寸的校验结果，或提供可直接读取的材料原始文件。"
+}
+],
+"reviewed_commit": "02c9d7a",
+"evidence_checks": {
+"manifest": "FAIL",
+"test_log": "OK",
+"baseline": "OK"
+},
+"notes": "已确认被审 commit 的完整 SHA 与指定版本一致，并直接读取 vendor_admin.py、db.py、REVIEW_BRIEF.md、full_test.log、baseline_test.log 及实际提交 diff。测试日志显示 14 failed、568 passed；基线显示相同 14 项失败、439 passed，失败清单一致。RW-04 三轮实现已检查：scope_key 区分作用域，scope_original 保存初始状态，先到期记录转 consumed，最后一条到期才统一恢复，并保留人工修改保护。新增叠加降级测试覆盖 global 场景。但尚未完成全部必查文件及全部 RW-01~05 的独立逐项终审，也未完成 MANIFEST 的 SHA-256/字节尺寸校验。因此本次不能给出最终 PASS 或 REWORK 裁定。"
+}

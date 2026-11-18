@@ -1,0 +1,31 @@
+ChatGPT 说：
+
+{"result":"REWORK","reviewed_commit":"285851233ae3a056cb2f9a4d71851ad393ff4b1a","issues":["已读取附件 t01_full.diff；当前会话中未发现用户提到的 t01_verification_notes.txt，因此测试命令、448 passed、14项基线失败及实际故障注入运行摘录暂不能作为已核验证据。Diff 实际包含10个文件，非简报所称11个。","源码发现一项明确状态机缺陷：record_phase 只阻止终态回退到 running/not_reached/not_applicable，却允许 succeeded→failed、failed→succeeded，和“终态不回退/只写一次”承诺不一致。","源码发现 output_commit 的 succeeded 在 db.commit() 之后才写入 attempt；提交前已将 attempt 写入 j.provider_attempts，故该成功终态可能没有持久化，数据库保留 running。"]}
+
+{
+"result": "REWORK",
+"reviewed_commit": "285851233ae3a056cb2f9a4d71851ad393ff4b1a",
+"issues": [
+"record_phase终态保护不完整：只禁止终态回退到running/not_reached/not_applicable，却允许succeeded→failed、failed→succeeded。必须改为终态一旦写入便不可被任何后续状态覆盖，并补充双向终态测试。",
+"output_commit成功状态持久化存在问题：当前顺序是先将attempt写入j.provider_attempts并执行db.commit()，再记录output_commit=succeeded。提交后的内存变更不能证明已持久化，数据库可能长期保留running。需调整提交时序或增加可靠的后续持久化，并验证数据库最终记录。",
+"storage阶段覆盖不完整：storage=running之后，write_job_output()在try之外；该调用失败时不会记录storage=failed，只会落入worker_unclassified。应将存储准备与finalize的实际失败边界纳入阶段记录。",
+"output_commit缺少失败记录路径：db.commit()异常时没有显式记录output_commit=failed；需确认Worker兜底能可靠保留该阶段，并避免把事务提交故障误记为其他阶段。",
+"阶段时间信息不足：每个事件只有一个at字段，running时写入后，succeeded不会更新该时间，因此无法从phase_events得到阶段结束时间和耗时，与规范要求的开始时间、结束时间、耗时不完全一致。",
+"image_validate只出现在阶段定义和前端映射中，diff中没有实际记录调用点；真实图片校验发生时仍可能显示not_reached。需补齐实际校验边界，或明确该阶段当前不在T01覆盖范围并给出后续任务归属。",
+"_safe_detail虽注释称ProviderError.code为白名单，但实现只是检查字符格式和长度，并非显式白名单。应使用明确枚举白名单，或不拼接动态code，避免未来非受控异常code进入error_detail_safe。",
+"HTTP错误分支把response_received标记为failed，但HTTPError本身表示已收到HTTP响应；响应接收成功与HTTP状态失败是不同事实。建议response_received记录实际接收结果，HTTP状态继续由既有http_status表达。",
+"9个测试中的三个定位用例主要直接调用_openai_compat解析/提取辅助函数，并未模拟完整HTTP 200响应接收、Worker失败收口及最终execution_json持久化链路。因此能证明辅助函数可标记response_parse/result_extract/image_decode，尚不能证明真实端到端故障路径均正确。",
+"测试只覆盖OpenAICompat的部分解析路径；RightAPI、Seedream、SSE、下载失败、存储失败、输出提交失败及多供应商切换后的阶段记录未见对应故障注入。另，当前附件只有t01_full.diff，未收到t01_verification_notes.txt，故无法独立核验448 passed、14项基线失败对照及测试实际运行摘录。",
+"diff实际显示10个变更文件，与简报所称完整11文件不一致；需确认是否漏附一个文件或简报文件数有误。"
+],
+"conditions": [
+"修复终态不可覆盖问题，并补充succeeded→failed及failed→succeeded测试。",
+"修复storage/output_commit记录边界及持久化时序，提供数据库落库后的实际记录证据。",
+"补齐image_validate实际调用点，并明确阶段事件时间字段是否提供开始、结束及耗时；若本阶段暂不实现，必须记录为明确未覆盖项。",
+"将ProviderError.code改为真正的显式白名单，并验证异常message、URL、Base64、凭据不会进入phase_events、error_detail_safe、execution_json或前端展示。",
+"补充真实HTTP 200解析失败的集成故障注入，至少覆盖响应接收、解析失败、Worker收口、execution_json输出；对其他Adapter及存储/提交失败补充相应测试，或明确列入后续验收范围。",
+"提供缺失的t01_verification_notes.txt及测试原始输出、基线对照；核对完整变更文件数。",
+"前端未运行tsc可以接受为明确的未验收项，但不能标记前端构建通过；后续应在依赖可用环境完成类型检查和页面验证。",
+"本次未发现直接修改路由选择、重试决策或既有任务失败判定的代码；新增阶段记录本身属于观测性改动。但由于上述问题，当前不能确认全链路只观测不改判定已通过。"
+]
+}

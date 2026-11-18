@@ -1,0 +1,66 @@
+ChatGPT 说：
+
+{
+"result": "REWORK_SMALL",
+"commit": "6b4a8fb",
+"parent": "24ac5f0e",
+"diff_sha256": "2c677481",
+"issues": [
+{
+"id": "T04-R01",
+"severity": "P2",
+"item": "规范文档§5",
+"finding": "本次diff仅包含7个代码及测试文件，没有规范文档修改。代码注释和测试docstring不能替代正式规范。",
+"required": "在原规范文档§5明确写入task_id持久化边界、单供应商resume条件、routed不自动resume、resume不确定时fail-closed，以及崩溃窗口限制。"
+},
+{
+"id": "T04-R02",
+"severity": "P2",
+"item": "retry_round执行投影",
+"finding": "单供应商attempt创建时已增加retry_round，但provider_outcome.py的execution_json字段白名单没有加入retry_round。测试仅验证attempt原始数据包含retry_round，没有验证API投影。",
+"required": "将retry_round加入execution_json投影白名单，并增加投影断言，确保调用方能够实际读取该字段。"
+}
+],
+"conditions": [
+{
+"id": "G1",
+"result": "PASS_WITH_CONSTRAINTS",
+"finding": "checkpoint持久化task_id、长度限制、重复ID不重复提交、持久化失败显式冒泡均已实现。单供应商和routed均接入持久化。未发现URL或凭证进入resume_task_id的实现路径。保留task_id获取与数据库提交之间的崩溃窗口，不宣称完整崩溃恢复。"
+},
+{
+"id": "G2",
+"result": "PASS",
+"finding": "needs_human分类已实现，result_invalid、accepted_unknown、resume_uncertain均有reason；522/523/524保留原有PO failover规则。普通失败不强制人工介入。"
+},
+{
+"id": "G3",
+"result": "PASS_WITH_CONSTRAINTS",
+"finding": "单供应商reclaim已按能力和task_id分流。支持resume且有合法task_id时复用原attempt执行resume_image；成功走write_success；异常走fail-closed，不新建attempt、不重新POST。routed及不支持resume的情况保留原有fail-closed行为。"
+},
+{
+"id": "G4",
+"result": "PASS_WITH_CONSTRAINTS",
+"finding": "routed没有接入自动resume，checkpoint仍然持久化。原有跨供应商failover路径未见主动改写。522跨vendor测试保持原有测试契约，但本次提供的diff不能单独证明全部既有测试实际运行结果。"
+},
+{
+"id": "G5",
+"result": "PASS_WITH_CONSTRAINTS",
+"finding": "单供应商attempt已增加retry_round，execution_json投影其他新增字段已接入；retry_round投影仍需补齐。"
+},
+{
+"id": "G6",
+"result": "PASS_WITH_CONSTRAINTS",
+"finding": "所提供diff没有修改路由策略、计费逻辑或数据库表结构。"
+}
+],
+"test_assessment": {
+"reported_focused_tests": "9 passed",
+"reported_full_suite": "526 passed / 14 failed",
+"baseline_regression": "用户声明14个失败属于原基线",
+"independently_verified": false,
+"finding": "新增测试覆盖checkpoint、needs_human、单供应商resume成功与不确定、无resume能力、无task_id及投影。但不能仅凭测试数量和汇报结果认定完整验收。"
+},
+"final_pass": false,
+"next_action": "仅需REWORK_SMALL：关闭T04-R01、T04-R02，提交新commit及完整diff。随后进行一次针对性复核，不要求重做已经通过的G1-G6实现，也不要求修改原有14个基线失败测试。",
+"decision": "当前实现主体符合此前裁定方向，未发现需要推翻架构或重新设计的阻断性问题。但规范§5缺失和retry_round投影缺失尚未关闭，因此暂不授予FINAL PASS。"
+}

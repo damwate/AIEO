@@ -1,0 +1,16 @@
+[F1-F4修复终审|AI-Image-Service]
+独立终审,直接读GitHub源码核对,不采信自述。代码已推送。
+
+仓库 github.com/YotinGarden/AI-Image-Service 分支 fix/yuanqiao-http1-20261117
+被审SHA 6c89ce4656ac58646232b08ee124b103aa3b3dd3(远端HEAD已确认)
+读: backend/app/ai/http_transport.py、provider_outcome.py、migrations/versions/0009_governance_audit.py、tests/test_real_stream_transport.py、tests/test_migrations_baseline.py
+
+逐条核对你上轮F1-F4+C1-C8:
+F1:curl_options显式LOW_SPEED_LIMIT=1/LOW_SPEED_TIME=timeout,留connect/timeout/stream,无TIMEOUT_MS?
+F2:iter_content有界分块读+成功25MiB/错误16KiB截断+超限本地异常不伪装网络故障?
+F3:真实curl_cffi+本地server测分块/低速/停滞/超大/连接超时/超限分类?
+F4:0009建两表+索引+downgrade+完整schema+不误删0008?
+特核C3(显式低速经真实请求验证)-test_real_stream_transport.py用真实curl_cffi非stub。
+
+只回JSON:{"result":"PASS|REWORK","file_access":{},"findings":[],"conditions_check":{},"notes":""}
+全量14 failed(基线)/576 passed。读不到报哪份404。
