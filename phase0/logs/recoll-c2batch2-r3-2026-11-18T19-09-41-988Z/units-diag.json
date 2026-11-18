@@ -1,0 +1,44 @@
+[
+  {
+    "key": "5d8cb688-0be1-5552-8a24-003f13cefca7:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 585,
+    "text_head": "[C2-BATCH2-PLAN-R1|20261119] 会话迁移+规划协商\n接棒:旧审查会话6afde23c(F3)已归档只读,本会话承接后续轮次。\n任务:906/C2第二批受控用例方案复审(DEC"
+  },
+  {
+    "key": "5d8cb688-0be1-5552-8a24-003f13cefca7:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 5026,
+    "text_head": "ChatGPT 说：\n906/C2 第二批受控用例方案复审 R1\n\nADJUST — 暂不冻结 零代码写入\n\n审查基线： damwate/AIEO，main，完整 SHA：\n\n7998c3519eb1"
+  },
+  {
+    "key": "203f3d69-9b7a-548a-a70b-db2ba9205bde:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 640,
+    "text_head": "[C2-BATCH2-PLAN-R2|20261119] 方案修订复审\n承R1 ADJUST(reply baef39e5…),三件套已按裁定修订。\n读:github.com/damwate/AIEO"
+  },
+  {
+    "key": "203f3d69-9b7a-548a-a70b-db2ba9205bde:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 3636,
+    "text_head": "ChatGPT 说：\n906/C2 第二批受控用例方案 R2\n\n总体方向：PASS ④-D：附条件纳入\n\n审查基线：damwate/AIEO，main，完整 SHA：\n\nf5c6c8cc3d4a946"
+  },
+  {
+    "key": "acb6c259-75f5-58ec-b835-09ec44336b4a:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 690,
+    "text_head": "[C2-BATCH2-FREEZE-R3|20261119] 终局拍板+冻结请求\n承R2 PASS(reply 820ca44b…),五项文字性补充已全部落进v0.3。\n读:github.com/da"
+  },
+  {
+    "key": "acb6c259-75f5-58ec-b835-09ec44336b4a:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 2389,
+    "text_head": "ChatGPT 说：\n906/C2 第二批受控用例 R3 终局裁定\n\nPASS — 批准冻结 S3 执行授权 GO\n\n终局决定：批准 v0.3 冻结为正式执行方案，并授权进入 S3 受控场景执行。\n\n"
+  }
+]

@@ -1,0 +1,6 @@
+[2026-11-18T19:09:42.560Z] 会话锁已获取（C2-BATCH2 R3 补采）
+[2026-11-18T19:10:06.105Z] checks={"marked_user_unique":true,"last_user_assertion":true,"adjacent_assistant_tail":true,"stable_static_dom_read":true,"final_stop_button_not_visible":true,"not_prev_reply_sha":true,"response_length_plausible":true,"uuid_based_locator":false}
+[2026-11-18T19:10:06.106Z] reply 已落盘（4981 字节，SHA=552a463afc5137ad…）
+[2026-11-18T19:10:06.106Z] RECOLL COMPLETED
+[2026-11-18T19:10:06.129Z] 视口覆盖已清除
+[2026-11-18T19:10:06.249Z] 会话锁已释放（C2-BATCH2 R3 补采）
