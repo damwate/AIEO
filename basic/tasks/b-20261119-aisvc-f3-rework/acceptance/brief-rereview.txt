@@ -1,0 +1,14 @@
+[F3整改复审|AI-Image-Service]
+独立复审,直读GitHub源码,不采信自述。上轮(另会话)REWORK:F3 FAIL(增量循环等待/连接超时实为拒绝/总时限无触发测试/分类断言可选),F2约束(粒度超读),F4约束(PK/索引未全比对)。
+仓库 github.com/YotinGarden/AI-Image-Service 分支 fix/yuanqiao-http1-20261117
+被审SHA 59319e6c9f47906f6d151898c0adf802fe3fb2c0(远端HEAD;基线47f2ecc)
+读 tests/test_real_stream_transport.py、tests/test_migrations_baseline.py、app/ai/http_transport.py
+核对:
+F3a 增量:服务端先发≥limit再停8s才发余量,全量缓冲必等满8s,实测<5s抛超限=中途消费?
+F3b 真实stall:10.255.255.1连不上才测,无法构造则skip,断言28?
+F3c 总时限:2B/s滴流超2s失败断言28+0.83B/s慢流7.2s<10s成功?
+F3d 低速/停滞transport_code==28强断言?
+F2 teardown:超限/截断早退武装quit_now(下一块即中止perform,剩余体不入队)+close后台化(同步close会扣异常到传输完)?
+F4:PK字段名逐一比ORM+索引名/列/唯一性全集合等价?
+全量582 passed/11 failed(基线已复现)。
+只回JSON:{"result":"PASS|REWORK","file_access":{},"findings":[],"conditions_check":{},"notes":""}
