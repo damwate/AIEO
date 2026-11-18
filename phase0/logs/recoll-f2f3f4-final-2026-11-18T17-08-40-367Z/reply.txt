@@ -1,0 +1,51 @@
+ChatGPT 说：
+
+{
+"result": "REWORK",
+"file_access": {
+"backend/app/ai/http_transport.py": "OK",
+"backend/app/ai/provider_outcome.py": "OK",
+"backend/tests/test_real_stream_transport.py": "OK",
+"backend/tests/test_migrations_baseline.py": "OK",
+"backend/tests/test_supplier_http_version.py": "OK",
+"backend/migrations/versions/0009_governance_audit.py（额外核对）": "OK",
+"backend/app/db.py（额外核对ORM）": "OK"
+},
+"findings": [
+{
+"id": "F2",
+"severity": "PASS_WITH_CONSTRAINTS",
+"finding": "核心修复成立。curl_cffi 请求统一 stream=True；响应读取统一 prefer_stream=True，使用 iter_content 分块累计。非 low_speed 显式设置 TIMEOUT_MS=timeout*1000、LOW_SPEED_LIMIT=0，保留总传输超时语义；low_speed 显式设置连接超时及低速参数，不设置 TIMEOUT_MS。超限抛 ResponseBodyTooLargeError，且 finally 关闭响应。finish_failure 仅对 result_invalid 和 response_body_too_large 豁免 failover_on_any_error，没有泛化豁免整个 STOP_CODES。",
+"remaining": "错误响应保留内容截断为16KiB，但 iter_content 的块大小为64KiB，单次读取可能多消费一个块后才截断；成功响应也可能在25MiB上限之外多读取一个块。若16KiB/25MiB要求是严格网络读取上限，而不只是保留/累计上限，需要进一步控制读取粒度。"
+},
+{
+"id": "F3",
+"severity": "P1",
+"finding": "真实 curl_cffi + 本地 HTTP server 测试覆盖面增加，但关键断言仍不能证明所声称的行为。test_stream_reads_incrementally 中 urlopen() 本身会在返回前完整读取响应体，而服务端 gate 又等待客户端拿到首块后才继续；客户端实际上无法在 urlopen 返回前读取首块，测试只能等 gate.wait(8) 超时后继续，不能证明增量读取。test_connect_timeout_separate_from_low_speed 使用关闭监听端口，通常验证的是 connection refused，不是连接超时；并使用宽泛 Exception。test_non_low_speed_total_timeout_not_misapplied 只验证快速响应成功，没有验证慢响应确实受 TIMEOUT_MS 总时限约束。低速测试的 transport_code 断言也是可选的，未提供代码时仍通过。",
+"required_fix": [
+"重构增量测试：在 urlopen 内部消费响应期间设置可观测钩子/事件，或用可验证的传输层观测证明首块已消费且服务端尚未发送剩余块；避免当前客户端等待 urlopen 返回、服务端等待客户端读取的循环依赖。",
+"连接超时测试必须制造真实 connect stall，而不是连接拒绝，并断言明确的连接超时分类及时间预算。",
+"新增非 low_speed 慢响应测试：响应总耗时超过 timeout 时必须失败，并断言总超时分类；另验证未超时的慢速但完整响应可成功，以证明 LOW_SPEED_LIMIT=0 未误杀。",
+"低速与停滞测试应断言明确的 transport_code/错误分类，不应允许缺少分类信息时仅凭宽泛异常通过。"
+]
+},
+{
+"id": "F4",
+"severity": "PASS_WITH_CONSTRAINTS",
+"finding": "0009 迁移仍以0008_admin_sessions为父版本，创建两张治理表及ORM对应索引；downgrade 只删除本次新增索引和表。新测试逐列比较两表的列集合、nullable、类型族，并检查预期索引存在；另有从0008升级及downgrade后保留admin_sessions数据的测试。迁移定义与本次读取的ORM字段、索引基本一致。",
+"remaining": "测试对主键只检查恰有一个字段，没有断言主键字段名与ORM一致；索引只检查名称存在，没有比较索引列、唯一性及完整索引集合。因此schema验证已明显补强，但仍不是完整约束等价验证。"
+},
+{
+"id": "C3",
+"severity": "PARTIAL",
+"finding": "测试确实导入真实 curl_cffi，使用本地 HTTP server，不是 stub；但增量、连接超时和总时限测试存在上述验证缺口，不能据此判定真实低速/超时语义已完整通过。"
+}
+],
+"conditions_check": {
+"F2": "PASS_WITH_CONSTRAINTS：统一流式读取、双模式超时配置和超限failover豁免均已落实；注意64KiB读取粒度造成的单块超读。",
+"F3": "FAIL：增量测试存在循环等待，连接超时测试实际是拒绝连接，未测试非low_speed总时限触发，部分错误分类断言仍可缺失。",
+"F4": "PASS_WITH_CONSTRAINTS：列集合、nullable、类型族、预期索引和downgrade保留0008数据均有测试；主键字段及索引定义未完整比对。",
+"C3": "PARTIAL：真实curl_cffi集成测试存在，但关键时限行为证据不足。"
+},
+"notes": "指定的5个文件均在完整SHA 47f2ecc1f17f51cc1cbb2e326602f9447ed3407e读取成功，无404。额外读取0009迁移和db.py ORM定义。F2核心代码修复成立；本轮不能PASS的主要原因是F3测试没有真正证明增量读取、连接超时和非low_speed总时限行为。用户提供的14 failed（基线）/577 passed未在本轮独立执行，故不作为本次源码终审的测试通过证据。"
+}

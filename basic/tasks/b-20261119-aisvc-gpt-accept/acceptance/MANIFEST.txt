@@ -1,0 +1,7 @@
+ST-12 证据清单（SHA256 对象=文件原始字节，2026-11-19）
+b786a75e2987a2ff02b63548677783d1152c6d15e1567b15eeb0d4462aec2fee  reply-raw.txt
+1a97a88690d6ea478510ece4eb0321e6802a427d2d813c5cff26b8c55c490069  reply-parsed.json
+c50bda43b498cac803ee4ad2551ad8233c4f6b1b5833c4ed3bd467e29a785a18  recoll-result.json
+cc6263656e6989f7795a5088aef24b7205bf68455f83799e3d536e99ff797283  brief-frozen-1139B.txt
+recoll reply_sha256(from result.json)=b786a75e2987a2ff02b63548677783d1152c6d15e1567b15eeb0d4462aec2fee
+recoll reply_bytes(from result.json)=4975

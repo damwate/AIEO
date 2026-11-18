@@ -8,13 +8,16 @@
 
 ## S1 派单执行：补强终审派发+回复采集+归档登记
 
-| 要素 | 记录 |
-|---|---|
-| ① 本步骤目标 | [F2F3F4补强终审] 简报送达 ChatGPT 审查会话，采集其 JSON 验收回复并归档登记 |
-| ② 修改文件 | （无业务代码修改）新增本任务包文件；派单证据由 gpt_dispatch 写入 phase0/logs/dispatch-<ts>/ |
-| ③ 修改内容 | 派单消息=冻结简报原文 1139B（副本存本任务 acceptance/ 目录）；本次待验收 commit=（本任务无代码 commit；派单对象=AI-Image-Service@47f2ecc1f17f51cc1cbb2e326602f9447ed3407e，只读被审对象） |
-| ④ 执行结果 | （待派单后回填） |
-| ⑤ 测试结果 | 未测（S1 派单执行类任务，无代码测试；环境预检=系统代理 8514 实测 chatgpt.com HTTP 200/1.7s，Chrome gpt-poc profile CDP 9222 存活，2026-11-19 实查） |
-| ⑥ 验收证据引用 | （待派单后回填：dispatch 目录+reply SHA256） |
+①本步骤目标：[F2F3F4补强终审] 简报送达 ChatGPT 审查会话，采集其 JSON 验收回复并归档登记。
 
-**验收结论：** （待回填）
+②修改文件：（无业务代码修改）新增本任务包文件；新增派生补采驱动 phase0/tools/recoll_f2f3f4_final.mjs；派单证据由 gpt_dispatch 写入 phase0/logs/dispatch-2026-11-18T17-03-40/。
+
+③修改内容：派单消息=冻结简报原文 1139B（冻结commit 5c08c9c8b35c069960ef048b351e43bf4c64334a，与派单归档 request.txt 经 diff 实证 byte-identical）；本次待验收 commit=（本任务无代码 commit；被审对象=AI-Image-Service@47f2ecc1f17f51cc1cbb2e326602f9447ed3407e，只读）。
+
+④执行结果：发送——17:03Z 派单发送双验通过（polls=1，dispatch-2026-11-18T17-03-40）；采集 fail-closed——INBOUND_WINDOW_COMPLETENESS_UNPROVEN（虚拟列表滚动完整性不可证，与昨日三轮同型）；按 L-018 禁重发走静态 DOM 补采——派生驱动 recoll_f2f3f4_final.mjs（三常量核对 CONV_UUID+MARKER+FAILED_DIR；视口拉高 80000 全量物化，两次读取间隔 12s 稳定）；补采七查全过（marked_user_unique/last_user_assertion/adjacent_assistant_tail/stable_static_dom_read/final_stop_button_not_visible/not_prev_reply_sha/response_length_plausible），回复 4975B 落盘；证据目录位置更正——驱动 OUT_DIR 因 cwd=phase0/tools 嵌套生成于 phase0/tools/phase0/logs/，已整目录 mv 至规范位置 phase0/logs/recoll-f2f3f4-final-2026-11-18T17-08-40-367Z（文件未改，SHA 以 MANIFEST 为准）。
+
+⑤测试结果：未测（S1 派单执行类任务，无代码测试）。环境预检（2026-11-19 实查）：系统代理注册表 ProxyServer=127.0.0.1:8514，经代理 curl chatgpt.com 实测 HTTP 200/1.7s（直连超时）；Chrome gpt-poc profile CDP 9222 存活（无显式 proxy 参数，跟随系统代理）；ST-05 检查器自检=IN_PROGRESS 无 FAIL（冻结 commit 5c08c9c 时点）。
+
+⑥验收证据引用：验收结论：PASS（本步骤派单/采集/归档闭环达成任务验收目标）；派单回复裁定=REWORK（如实转达，返工对象=AI-Image-Service 开发侧，见 delivery.md）；dispatch 目录=phase0/logs/dispatch-2026-11-18T17-03-40；recoll 目录=phase0/logs/recoll-f2f3f4-final-2026-11-18T17-08-40-367Z；reply SHA256=b786a75e2987a2ff02b63548677783d1152c6d15e1567b15eeb0d4462aec2fee（4975B，与 recoll result.json 一致）；包内证据=acceptance/reply-raw.txt、acceptance/reply-parsed.json、acceptance/recoll-result.json、acceptance/brief-frozen-1139B.txt、acceptance/MANIFEST.txt（SHA256 清单见 acceptance/MANIFEST.txt）。
+
+**验收结论：PASS**（本步骤动作闭环；被审对象裁定 REWORK 已如实转达并单列于 delivery.md，不并入本步骤结论）
