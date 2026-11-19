@@ -1,0 +1,12 @@
+S1 规划协商派单证据摘要（b-20261119-wedrive-cleanup-plan）
+
+- 原始证据目录：phase0/logs/dispatch-2026-11-19T03-45-33/
+- 简报：request.txt（UTF-8 1133B），SHA256=1651d096fff6d5905a039553345e46f390ed34c2ceed31c7b43645391eeb111a
+- 回复：reply.txt（UTF-8 10224B），SHA256=37aeb2e8edf52bf3c8b4d274e745765c314c1fa91cc4ddd0f6360813dddeaa70
+- 工具 artifact_sha256=37aeb2e8edf52bf3c8b4d274e745765c314c1fa91cc4ddd0f6360813dddeaa70（与 reply.txt 实测一致）
+- 会话：https://chatgpt.com/c/6afe7111-1aa0-83ec-a311-13d6ed8c0574（--no-update-pointer，未覆盖审查指针）
+- 发送双验：polls=2，user_unit_key=d18a10e8-f9a1-5658-b112-6d5a8fdb0549:0:user；COMPLETED，1 assistant unit
+- JSON 校验：解析 OK；六键齐全 safe_clean / need_confirm / cloud_impact / steps / next_inventory / notes
+- 归属校验：简报标记 wedrive20261119 在 request.txt 唯一命中
+- 代理状态：ProxyEnable=1 / port=1130，一次派单成功（无首轮失败）
+- 红线：全程未删除任何文件、未触碰聊天记录；方案仅供用户拍板

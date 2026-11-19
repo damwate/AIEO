@@ -1,0 +1,29 @@
+{
+  "at": "2026-11-19T02:57:10.051Z",
+  "outcome": "failure_created_pages_closed",
+  "before": [
+    {
+      "id": "2B1BE8F01E499CC8F70011AE277391C8",
+      "url": "https://chatgpt.com/"
+    }
+  ],
+  "exit_before_disposal": [
+    {
+      "id": "4DC1E143E9ED61FA1B098D13A31E49EE",
+      "url": "https://chatgpt.com/"
+    },
+    {
+      "id": "2B1BE8F01E499CC8F70011AE277391C8",
+      "url": "https://chatgpt.com/"
+    }
+  ],
+  "exit_after_disposal": [
+    {
+      "id": "2B1BE8F01E499CC8F70011AE277391C8",
+      "url": "https://chatgpt.com/"
+    }
+  ],
+  "created_pages": 1,
+  "disposal": "发送前失败：仅关闭本次自建页；既有页零触碰（exit_before/exit_after 对照=值守页零关闭证明）",
+  "error": "page.goto: net::ERR_CONNECTION_TIMED_OUT at https://chatgpt.com/\nCall log:\n\u001b[2m  - navigating to \"https://chatgpt.com/\", waiting until \"domcontentloaded\"\u001b[22m\n"
+}

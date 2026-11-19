@@ -1,0 +1,12 @@
+S1 规划协商派单证据摘要（b-20261119-disk-cleanup-plan）
+
+- 原始证据目录：phase0/logs/dispatch-2026-11-19T02-58-56/
+- 简报：request.txt（UTF-8 1163B），SHA256=71cf8ec7b54c9c792fd28d5ece7565abf2811852ffd76baa8db4945f180efd2f
+- 回复：reply.txt（UTF-8 12006B），SHA256=2679768977d2061e09701e3bf63155faf9c06f57b35f1fb32a08387fb21b2068
+- 工具 artifact_sha256=2679768977d2061e09701e3bf63155faf9c06f57b35f1fb32a08387fb21b2068（与 reply.txt 实测一致）
+- 会话：https://chatgpt.com/c/6afe6625-a5d0-83ec-a2a4-342078c6187b（--no-update-pointer，未覆盖审查指针）
+- 发送双验：polls=2，user_unit_key=fallback-turn-0:0:user；COMPLETED，1 assistant unit
+- JSON 校验：解析 OK；六键齐全 safe_clean=6 / need_confirm=8 / forbid=5 / steps=9 / next_inventory=10
+- 归属校验：简报标记 cleanup20261119 在 request.txt 唯一命中
+- 首次派单失败（02:56）为 page.goto 发送前超时（代理瞬断），零重发；诊断一轮后第二次派单成功
+- 红线：全程未执行任何删除/移动；方案仅供用户拍板

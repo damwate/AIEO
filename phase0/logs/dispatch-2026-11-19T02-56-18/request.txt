@@ -1,0 +1,17 @@
+[磁盘清理方案|本机-cleanup20261119]
+
+全新会话，非代码审查。你是本机磁盘清理顾问，只给方案，不执行删除。
+
+Windows 本机两盘偏紧：C盘148.9GB用140.7剩8.2；D盘326.6GB用307.1剩19.5。用户目录C:\Users\youting约83GB。
+
+只读盘点(GB)：Downloads4.7、Temp3.0、npm-cache2.2、pip缓存0.5；Roaming\Tencent8.5、Local\wsl6.4、Roaming\Code4.3、kingsoft共5.8、ifonts2.1、Cursor1.8、miHoYo1.3、vscode扩展1.3；Chrome缓存0.23、Windows更新下载0.25。
+
+请讨论安全清理方案：
+1. 上述哪些属"可安全清理"(缓存/临时/下载)，哪些"需用户确认"(微信QQ数据/wsl/IDE配置/游戏)，哪些"禁止删除"(系统/源码/凭据)?
+2. 安全清理顺序与工具(系统磁盘清理/存储感知、npm/pip缓存命令)，每步风险与可释放空间量级。
+3. 还有哪些高价值目录值得我下一步只读盘点?
+4. 保留/备份建议，避免误删不可逆数据。
+
+边界：数据删除属高危红线，一切删除须用户本人拍板；你只输出方案。
+
+只回JSON：{"safe_clean":[],"need_confirm":[],"forbid":[],"steps":[],"next_inventory":[],"notes":""}

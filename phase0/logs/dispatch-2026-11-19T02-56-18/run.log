@@ -1,0 +1,11 @@
+[2026-11-19T02:56:19.485Z] 会话锁已获取 pid=1844
+[2026-11-19T02:56:19.487Z] === GPT 派单（新建会话，消息 1163 字节）===
+[2026-11-19T02:56:22.717Z] Chrome 已启动 pid=21068
+[2026-11-19T02:56:48.413Z] [tab-hygiene] 选页: 新建页（既有 1 页）；自建页注册 1 页；既有会话 UUID 0 个
+[2026-11-19T02:56:48.414Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-19T02:57:10.029Z] 会话锁已释放
+[2026-11-19T02:57:10.030Z] 致命错误: page.goto: net::ERR_CONNECTION_TIMED_OUT at https://chatgpt.com/
+Call log:
+[2m  - navigating to "https://chatgpt.com/", waiting until "domcontentloaded"[22m
+
+[2026-11-19T02:57:10.048Z] [tab-hygiene] 已关闭自建页（发送前失败清理）

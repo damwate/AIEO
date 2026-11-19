@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-19T04:15:15.793Z",
+  "user_unit_key": "bdbe3994-d908-54fa-9846-8127696a09c9:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "bdbe3994-d908-54fa-9846-8127696a09c9:1:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "dfd93568-e80c-4d07-ac84-85747da704cb",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "bdbe3994-d908-54fa-9846-8127696a09c9:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "bdbe3994-d908-54fa-9846-8127696a09c9:0:user",
+          "bdbe3994-d908-54fa-9846-8127696a09c9:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "94c901d7103cc93148c83b08d2e5508196b16eaa1ef3f3072482e76b205f3217",
+          "e349bfdfa67c811a687355a55d897b17812a4d5fbdf854ba7fab20040eb51c50"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "bdbe3994-d908-54fa-9846-8127696a09c9:0:user",
+          "bdbe3994-d908-54fa-9846-8127696a09c9:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "94c901d7103cc93148c83b08d2e5508196b16eaa1ef3f3072482e76b205f3217",
+          "e349bfdfa67c811a687355a55d897b17812a4d5fbdf854ba7fab20040eb51c50"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "bdbe3994-d908-54fa-9846-8127696a09c9:0:user",
+          "bdbe3994-d908-54fa-9846-8127696a09c9:1:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "bdbe3994-d908-54fa-9846-8127696a09c9:0:user",
+      "bdbe3994-d908-54fa-9846-8127696a09c9:1:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "bdbe3994-d908-54fa-9846-8127696a09c9:0:user",
+          "bdbe3994-d908-54fa-9846-8127696a09c9:1:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "bdbe3994-d908-54fa-9846-8127696a09c9:0:user",
+          "bdbe3994-d908-54fa-9846-8127696a09c9:1:assistant"
+        ],
+        "overlap_keys": [
+          "bdbe3994-d908-54fa-9846-8127696a09c9:0:user",
+          "bdbe3994-d908-54fa-9846-8127696a09c9:1:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "bdbe3994-d908-54fa-9846-8127696a09c9:1:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n{\n\"safe_clean\": [\n{\n\"item\": \"游戏官方卸载程序及Windows已安装应用卸载入口\",\n\"recommendation\": \"如果确认不再玩，优先通过Windows设置→应用→已安装的应用，或游戏官方启动器提供的卸载功能卸载。不要直接删除游戏目录。\",\n\"expected_space\": \"原神约144.4GB，异环约86.3GB。两款全部卸载，理论上最多释放约230.7GB，实际以卸载后的磁盘统计为准。\",\n\"risk\": \"低至中。可能保留截图、配置、日志、启动器和共享组件。\"\n},\n{\n\"item\": \"游戏卸载后的残留检查\",\n\"recommendation\": \"卸载完成后，只读检查原游戏目录、启动器目录、用户AppData中的游戏配置、缓存和日志。确认归属后再决定是否清理。\",\n\"expected_space\": \"未知，不能把整个残留目录都视为垃圾。\",\n\"risk\": \"中。可能包含存档、账号配置、截图、录像和用户自定义设置。\"\n},\n{\n\"item\": \"javacode中的SQL备份\",\n\"recommendation\": \"先分类备份文件，检查备份时间、数据库名称、文件大小、是否可恢复，以及是否已有异地副本。重复且已验证可恢复的旧备份可以列入候选清理。\",\n\"expected_space\": \"已知SQL备份约1.73GB。\",\n\"risk\": \"中至高。数据库备份可能是唯一恢复依据。\"\n},\n{\n\"item\": \"VideoHighlighter\",\n\"recommendation\": \"先检查6.1GB由安装文件、模型、项目素材、导出视频还是缓存组成。只考虑软件自身明确提供的缓存清理功能。\",\n\"expected_space\": \"最多6.1GB，但不代表全部可清理。\",\n\"risk\": \"中。可能包含用户视频和项目数据。\"\n},\n{\n\"item\": \"AI-Game-Clipper\",\n\"recommendation\": \"检查3.6GB中模型、录制素材、导出成品、临时文件的占比。优先使用软件自身的清理功能。\",\n\"expected_space\": \"最多3.6GB。\",\n\"risk\": \"中。录制素材和模型可能需要保留。\"\n}\n],\n\"need_confirm\": [\n{\n\"item\": \"原神\",\n\"size\": \"144.4GB\",\n\"condition\": \"确认不再游玩，且不需要保留本机截图、录像、配置和其他本地数据。\",\n\"action\": \"用户本人确认后再通过官方卸载程序卸载。\",\n\"expected_release\": \"约144.4GB，实际可能略有差异。\"\n},\n{\n\"item\": \"异环\",\n\"size\": \"86.3GB\",\n\"condition\": \"确认不再游玩，且不需要保留本地素材、配置及相关数据。\",\n\"action\": \"用户本人确认后再通过官方卸载程序卸载。\",\n\"expected_release\": \"约86.3GB，实际可能略有差异。\"\n},\n{\n\"item\": \"SQL备份\",\n\"size\": \"1.73GB\",\n\"condition\": \"确认备份归属、保留期限、恢复能力和其他副本。\",\n\"action\": \"逐个文件确认，不批量删除。\"\n},\n{\n\"item\": \"WSL ext4.vhdx\",\n\"size\": \"6.36GB\",\n\"condition\": \"确认Ubuntu和Podman是否还需要，检查发行版及容器数据归属。\",\n\"action\": \"如果决定停用WSL，先通过正常方式备份并注销对应发行版，再考虑释放虚拟磁盘空间。不得直接删除vhdx。\",\n\"expected_release\": \"理论上最多约6.36GB，但需考虑其他发行版和容器存储。\"\n},\n{\n\"item\": \"旧开发工具\",\n\"condition\": \"确认是否仍用于Java项目、数据库维护、Git操作、AI开发及日常工作。\",\n\"action\": \"逐个确认软件及其依赖后，再决定卸载。\"\n},\n{\n\"item\": \"微信\",\n\"size\": \"约6GB\",\n\"condition\": \"确认是否包含工作文件、接收文件及本地重要资料。\",\n\"action\": \"优先使用微信/企业微信自身的文件管理功能，不直接删除目录。\"\n}\n],\n\"forbid\": [\n{\n\"item\": \"异环pakchunk*.ucas/.pak\",\n\"reason\": \"属于游戏资源文件，不是独立垃圾文件。不得挑选大文件直接删除，否则可能导致游戏损坏。\"\n},\n{\n\"item\": \"原神游戏资源文件\",\n\"reason\": \"不得手动删除部分游戏资源，应使用官方卸载流程。\"\n},\n{\n\"item\": \"WSL ext4.vhdx\",\n\"reason\": \"虚拟磁盘内可能包含Ubuntu系统、开发环境、Podman镜像、容器、卷及项目数据。Stopped只代表当前停止运行，不代表无用。\"\n},\n{\n\"item\": \"Windows系统目录\",\n\"reason\": \"禁止手动清理C:\\\\Windows、WinSxS、Installer、System32等目录。\"\n},\n{\n\"item\": \"ProgramData及AppData整体目录\",\n\"reason\": \"包含软件配置、数据库、授权信息、缓存和运行数据，不能因目录较大就整体删除。\"\n},\n{\n\"item\": \"javacode整体目录\",\n\"reason\": \"可能包含Git项目、生产配置、代码、SQL备份及部署资料。不能整体删除。\"\n},\n{\n\"item\": \"Git仓库及其.git目录\",\n\"reason\": \"包含提交历史、分支、标签及尚未推送的工作成果。不能当作缓存清理。\"\n},\n{\n\"item\": \"Navicat连接配置及数据库文件\",\n\"reason\": \"可能包含数据库连接信息、查询脚本和工作资料。不得直接删除。\"\n},\n{\n\"item\": \"微信及企业微信主数据目录\",\n\"reason\": \"不能将聊天附件、微盘同步文件和聊天数据库混为一谈。此次只讨论大文件软件，不扩大到聊天记录清理。\"\n},\n{\n\"item\": \"Windows Installer缓存、驱动包和未知共享运行库\",\n\"reason\": \"可能影响软件修复、卸载、驱动运行和系统稳定性。\"\n}\n],\n\"steps\": [\n{\n\"order\": 1,\n\"name\": \"建立清理前基线\",\n\"action\": \"记录C、D盘可用空间，记录两款游戏、WSL虚拟磁盘和开发工具目录的当前大小。\",\n\"risk\": \"极低，只读。\",\n\"confirmation\": \"不需要。\"\n},\n{\n\"order\": 2,\n\"name\": \"确认两款游戏去留\",\n\"action\": \"分别确认原神和异环是否还玩。若两款均不玩，优先卸载这两项。\",\n\"risk\": \"中。游戏重新安装需要重新下载资源。\",\n\"confirmation\": \"必须逐款由用户确认。\"\n},\n{\n\"order\": 3,\n\"name\": \"使用官方方式卸载游戏\",\n\"action\": \"先正常退出游戏及启动器，通过官方卸载入口完成卸载。不要先手动清空游戏目录。\",\n\"risk\": \"中。可能残留配置和用户数据。\",\n\"confirmation\": \"每款游戏卸载前再次确认。\"\n},\n{\n\"order\": 4,\n\"name\": \"卸载后复查残留\",\n\"action\": \"检查原安装目录是否仍存在，区分游戏资源、用户存档、截图、启动器和共享组件。只记录，不自动清理。\",\n\"risk\": \"低，只读。\",\n\"confirmation\": \"任何残留删除均须用户逐项确认。\"\n},\n{\n\"order\": 5,\n\"name\": \"检查SQL备份\",\n\"action\": \"按数据库名称、备份时间、文件类型、大小和副本情况建立清单。优先确认是否存在唯一备份。\",\n\"risk\": \"低，只读。\",\n\"confirmation\": \"每个候选文件删除前必须确认。\"\n},\n{\n\"order\": 6,\n\"name\": \"检查WSL和Podman\",\n\"action\": \"通过wsl --list --verbose、wsl --status以及Podman只读信息检查发行版、磁盘路径、镜像、容器和卷。先判断是否还有开发用途。\",\n\"risk\": \"低，只读。\",\n\"confirmation\": \"注销发行版、清理卷、压缩虚拟磁盘均须另行确认。\"\n},\n{\n\"order\": 7,\n\"name\": \"开发工具逐项审查\",\n\"action\": \"检查VSCode、Java 8、Navicat、ZCode、Git等工具的使用情况、项目依赖和环境变量。先确定替代工具及依赖关系。\",\n\"risk\": \"低，只读；卸载可能影响开发环境。\",\n\"confirmation\": \"每个工具分别确认，不批量卸载。\"\n},\n{\n\"order\": 8,\n\"name\": \"检查视频工具数据\",\n\"action\": \"分别盘点VideoHighlighter和AI-Game-Clipper的项目、模型、缓存、导出内容。\",\n\"risk\": \"低，只读。\",\n\"confirmation\": \"项目文件和素材删除前必须确认。\"\n},\n{\n\"order\": 9,\n\"name\": \"逐项执行清理后的验证\",\n\"action\": \"每完成一个经确认的卸载或清理动作，重新统计磁盘空间，检查相关软件是否正常运行，再决定下一步。\",\n\"risk\": \"低至中。\",\n\"confirmation\": \"每项操作独立授权，不把一次授权扩展为后续批量删除授权。\"\n}\n],\n\"next_inventory\": [\n{\n\"priority\": 1,\n\"target\": \"D:\\\\javacode\",\n\"items\": [\n\"一级和二级目录大小\",\n\"1.73GB SQL备份的完整文件名、日期和数据库归属\",\n\"Git仓库清单\",\n\"是否有未推送代码或唯一项目资料\"\n],\n\"purpose\": \"判断哪些属于可迁移或可清理的备份，哪些是开发资产。\"\n},\n{\n\"priority\": 2,\n\"target\": \"WSL\",\n\"items\": [\n\"wsl --list --verbose\",\n\"wsl --status\",\n\"Ubuntu发行版安装路径\",\n\"ext4.vhdx的实际路径\",\n\"Podman镜像、容器、卷和存储目录占用\",\n\"WSL是否仍用于AI项目、Docker兼容工作或Linux开发\"\n],\n\"purpose\": \"确认6.36GB虚拟磁盘的真实归属，避免误删开发环境。\"\n},\n{\n\"priority\": 3,\n\"target\": \"两款游戏\",\n\"items\": [\n\"原神实际安装路径\",\n\"异环实际安装路径\",\n\"对应启动器名称及安装路径\",\n\"用户AppData中的游戏相关目录\",\n\"截图、录像和用户自定义配置位置\"\n],\n\"purpose\": \"建立完整卸载边界，防止误删其他游戏或共享组件。\"\n},\n{\n\"priority\": 4,\n\"target\": \"D:\\\\Program Files\",\n\"items\": [\n\"9.6GB占用的二级目录清单\",\n\"每个目录对应的软件名称\",\n\"软件安装位置和卸载入口\",\n\"是否存在多个版本或共享依赖\"\n],\n\"purpose\": \"识别旧软件及重复版本。\"\n},\n{\n\"priority\": 5,\n\"target\": \"VideoHighlighter和AI-Game-Clipper\",\n\"items\": [\n\"二级目录大小\",\n\"模型文件大小\",\n\"缓存目录大小\",\n\"导出视频和原始录制素材大小\",\n\"最近访问时间及项目归属\"\n],\n\"purpose\": \"分离可重建数据和不可替代的用户数据。\"\n},\n{\n\"priority\": 6,\n\"target\": \"已安装34项软件\",\n\"items\": [\n\"完整名称和版本\",\n\"安装路径\",\n\"安装时间\",\n\"是否仍在使用\",\n\"是否被其他项目依赖\",\n\"是否具有独立卸载程序\"\n],\n\"purpose\": \"建立软件级清理清单，避免仅根据软件名称判断是否可以卸载。\"\n},\n{\n\"priority\": 7,\n\"target\": \"D盘其他大目录\",\n\"items\": [\n\"WeChat约6GB的组成\",\n\"javacode约6.5GB的组成\",\n\"D盘一级目录完整清单\",\n\"超过1GB的文件完整路径及所属软件\"\n],\n\"purpose\": \"确认是否还有未识别的大型软件数据。\"\n}\n],\n\"notes\": \"当前C盘22.47GB、D盘44.39GB可用，已经缓解，不建议为了追求数字而冒险清理。最值得优先评估的是两款游戏：理论上全部卸载可释放约230.7GB，是目前最大的空间来源。建议采用游戏卸载→残留复查→SQL备份确认→WSL归属确认→开发工具审查的顺序。安全原则：Stopped不等于无用，体积大不等于垃圾，文件可重新下载也不代表可以未经确认删除。所有卸载、注销、压缩、删除操作均由用户本人逐项拍板；本方案不执行任何操作。\"\n}",
+      "text_sha256": "e349bfdfa67c811a687355a55d897b17812a4d5fbdf854ba7fab20040eb51c50",
+      "size_bytes": 10459,
+      "assistant_uuid": "dfd93568-e80c-4d07-ac84-85747da704cb"
+    }
+  ]
+}

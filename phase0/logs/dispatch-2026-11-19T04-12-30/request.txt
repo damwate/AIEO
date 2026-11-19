@@ -1,0 +1,20 @@
+[大文件软件清理|本机-bigfiles20261119]
+
+全新会话，非代码审查。你是本机磁盘清理顾问，只给方案，不执行删除/卸载。
+
+背景：Windows，上轮已清微盘缓存，现C盘可用22.47GB、D盘44.39GB，已缓解。
+
+只读盘点：
+D盘一级：原神144.4GB、异环86.3GB、Program Files 9.6G、javacode 6.5G(含sql备份1.73G)、VideoHighlighter 6.1G、WeChat 6G、AI-Game-Clipper 3.6G。
+>1GB大文件几乎全是异环pakchunk*.ucas/.pak(单1.8-13.4GB)；WSL ext4.vhdx 6.36GB。
+已装软件34项(D盘代表)：原神/异环/微信/VSCode/Java8/Navicat/ZCode/Git/必剪/雷神加速器。WSL:Ubuntu+podman均Stopped。
+
+请讨论：
+1. 大头是两款游戏(原神144G+异环86G)。若不玩，安全卸载方式(含残留)与可释放空间？
+2. sql备份、WSL vhdx、旧开发工具怎么处理？哪些绝不能碰？
+3. 安全清理顺序与每步风险；哪些须用户逐项确认？
+4. 还须只读盘点什么确认归属？
+
+边界：删除属高危红线，一切删除/卸载须用户本人拍板；你只输出方案。
+
+只回JSON：{"safe_clean":[],"need_confirm":[],"forbid":[],"steps":[],"next_inventory":[],"notes":""}

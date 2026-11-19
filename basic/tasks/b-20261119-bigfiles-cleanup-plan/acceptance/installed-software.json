@@ -1,0 +1,709 @@
+﻿[
+    {
+        "DisplayName":  "7-Zip 24.09 (x64)",
+        "DisplayVersion":  "24.09",
+        "InstallDate":  null,
+        "InstallLocation":  "C:\\Program Files\\7-Zip\\",
+        "Publisher":  "Igor Pavlov"
+    },
+    {
+        "DisplayName":  "CC Switch",
+        "DisplayVersion":  "3.20.3",
+        "InstallDate":  "20260915",
+        "InstallLocation":  "D:\\Program Files\\CC Switch\\",
+        "Publisher":  "ccswitch"
+    },
+    {
+        "DisplayName":  "Everything 1.4.1.1032 (x64)",
+        "DisplayVersion":  "1.4.1.1032",
+        "InstallDate":  null,
+        "InstallLocation":  "C:\\Program Files\\Everything",
+        "Publisher":  "voidtools"
+    },
+    {
+        "DisplayName":  "FFmpeg (Essentials Build)",
+        "DisplayVersion":  "9.0.1",
+        "InstallDate":  "20261027",
+        "InstallLocation":  "C:\\Users\\youting\\AppData\\Local\\Microsoft\\WinGet\\Packages\\Gyan.FFmpeg.Essentials_Microsoft.Winget.Source_8wekyb3d8bbwe",
+        "Publisher":  "Gyan"
+    },
+    {
+        "DisplayName":  "FileZilla 3.69.6",
+        "DisplayVersion":  "3.69.6",
+        "InstallDate":  null,
+        "InstallLocation":  "d:\\Program Files\\FileZilla FTP Client",
+        "Publisher":  "Tim Kosse"
+    },
+    {
+        "DisplayName":  "FireDaemon OpenSSL 3",
+        "DisplayVersion":  "3.5.0",
+        "InstallDate":  "20250610",
+        "InstallLocation":  "D:\\Program Files\\FireDaemon OpenSSL 3\\",
+        "Publisher":  "FireDaemon Technologies Limited"
+    },
+    {
+        "DisplayName":  "Git",
+        "DisplayVersion":  "2.47.1",
+        "InstallDate":  "20241223",
+        "InstallLocation":  "d:\\Program Files\\Git\\",
+        "Publisher":  "The Git Development Community"
+    },
+    {
+        "DisplayName":  "Google Chrome",
+        "DisplayVersion":  "157.0.8103.51",
+        "InstallDate":  "20261114",
+        "InstallLocation":  "C:\\Program Files\\Google\\Chrome\\Application",
+        "Publisher":  "Google LLC"
+    },
+    {
+        "DisplayName":  "InfoService.BOC.x86.Setup (仅用做移除)",
+        "DisplayVersion":  null,
+        "InstallDate":  null,
+        "InstallLocation":  null,
+        "Publisher":  "CFCA"
+    },
+    {
+        "DisplayName":  "Java 8 Update 152 (64-bit)",
+        "DisplayVersion":  "8.0.1520.16",
+        "InstallDate":  "20241223",
+        "InstallLocation":  "D:\\Program Files\\Java\\jre1.8.0_152\\",
+        "Publisher":  "Oracle Corporation"
+    },
+    {
+        "DisplayName":  "Java Auto Updater",
+        "DisplayVersion":  "2.8.152.16",
+        "InstallDate":  "20241223",
+        "InstallLocation":  "",
+        "Publisher":  "Oracle Corporation"
+    },
+    {
+        "DisplayName":  "Java SE Development Kit 8 Update 152 (64-bit)",
+        "DisplayVersion":  "8.0.1520.16",
+        "InstallDate":  "20241223",
+        "InstallLocation":  "D:\\Program Files\\Java\\jdk1.8.0_152\\",
+        "Publisher":  "Oracle Corporation"
+    },
+    {
+        "DisplayName":  "KeePass Password Safe 2.49",
+        "DisplayVersion":  "2.49",
+        "InstallDate":  "20250206",
+        "InstallLocation":  "d:\\Program Files\\KeePass Password Safe 2\\",
+        "Publisher":  "Dominik Reichl"
+    },
+    {
+        "DisplayName":  "Microsoft Edge",
+        "DisplayVersion":  "157.0.4341.60",
+        "InstallDate":  "20261115",
+        "InstallLocation":  "C:\\Program Files (x86)\\Microsoft\\Edge\\Application",
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft Edge WebView2 Runtime",
+        "DisplayVersion":  "157.0.4341.60",
+        "InstallDate":  "20261118",
+        "InstallLocation":  "C:\\Program Files (x86)\\Microsoft\\EdgeWebView\\Application",
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft Edge WebView2 Runtime",
+        "DisplayVersion":  "128.0.2739.42",
+        "InstallDate":  "20240828",
+        "InstallLocation":  "C:\\Users\\youting\\AppData\\Local\\Microsoft\\EdgeWebView\\Application",
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft GameInput",
+        "DisplayVersion":  "4.0.306.0",
+        "InstallDate":  "20261110",
+        "InstallLocation":  "",
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft Update Health Tools",
+        "DisplayVersion":  "5.72.0.0",
+        "InstallDate":  "20240925",
+        "InstallLocation":  "",
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft Visual C++ 2005 Redistributable",
+        "DisplayVersion":  "8.0.61187",
+        "InstallDate":  "20240830",
+        "InstallLocation":  "",
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft Visual C++ 2005 Redistributable (x64)",
+        "DisplayVersion":  "8.0.56336",
+        "InstallDate":  "20240411",
+        "InstallLocation":  "",
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft Visual C++ 2005 Redistributable (x64)",
+        "DisplayVersion":  "8.0.61000",
+        "InstallDate":  "20240402",
+        "InstallLocation":  "",
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft Visual C++ 2008 Redistributable - x64 9.0.30729.17",
+        "DisplayVersion":  "9.0.30729",
+        "InstallDate":  "20240411",
+        "InstallLocation":  "",
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft Visual C++ 2008 Redistributable - x64 9.0.30729.7523",
+        "DisplayVersion":  "9.0.30729.7523",
+        "InstallDate":  "20240830",
+        "InstallLocation":  "",
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft Visual C++ 2008 Redistributable - x86 9.0.30729.17",
+        "DisplayVersion":  "9.0.30729",
+        "InstallDate":  "20240411",
+        "InstallLocation":  "",
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft Visual C++ 2008 Redistributable - x86 9.0.30729.4148",
+        "DisplayVersion":  "9.0.30729.4148",
+        "InstallDate":  "20240402",
+        "InstallLocation":  "",
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft Visual C++ 2008 Redistributable - x86 9.0.30729.7523",
+        "DisplayVersion":  "9.0.30729.7523",
+        "InstallDate":  "20240830",
+        "InstallLocation":  "",
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft Visual C++ 2010  x64 Redistributable - 10.0.40219",
+        "DisplayVersion":  "10.0.40219",
+        "InstallDate":  "20240830",
+        "InstallLocation":  "",
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft Visual C++ 2010  x86 Redistributable - 10.0.40219",
+        "DisplayVersion":  "10.0.40219",
+        "InstallDate":  "20240830",
+        "InstallLocation":  "",
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft Visual C++ 2012 Redistributable (x64) - 11.0.61030",
+        "DisplayVersion":  "11.0.61030.0",
+        "InstallDate":  null,
+        "InstallLocation":  null,
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft Visual C++ 2012 Redistributable (x64) - 11.0.61030",
+        "DisplayVersion":  "11.0.61030.0",
+        "InstallDate":  null,
+        "InstallLocation":  null,
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft Visual C++ 2012 Redistributable (x86) - 11.0.61030",
+        "DisplayVersion":  "11.0.61030.0",
+        "InstallDate":  null,
+        "InstallLocation":  null,
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft Visual C++ 2012 Redistributable (x86) - 11.0.61030",
+        "DisplayVersion":  "11.0.61030.0",
+        "InstallDate":  null,
+        "InstallLocation":  null,
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft Visual C++ 2012 x64 Additional Runtime - 11.0.61030",
+        "DisplayVersion":  "11.0.61030",
+        "InstallDate":  "20240401",
+        "InstallLocation":  "",
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft Visual C++ 2012 x64 Minimum Runtime - 11.0.61030",
+        "DisplayVersion":  "11.0.61030",
+        "InstallDate":  "20240401",
+        "InstallLocation":  "",
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft Visual C++ 2012 x86 Additional Runtime - 11.0.61030",
+        "DisplayVersion":  "11.0.61030",
+        "InstallDate":  "20240401",
+        "InstallLocation":  "",
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft Visual C++ 2012 x86 Minimum Runtime - 11.0.61030",
+        "DisplayVersion":  "11.0.61030",
+        "InstallDate":  "20240401",
+        "InstallLocation":  "",
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft Visual C++ 2013 Redistributable (x64) - 12.0.30501",
+        "DisplayVersion":  "12.0.30501.0",
+        "InstallDate":  null,
+        "InstallLocation":  null,
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft Visual C++ 2013 Redistributable (x64) - 12.0.40664",
+        "DisplayVersion":  "12.0.40664.0",
+        "InstallDate":  null,
+        "InstallLocation":  null,
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft Visual C++ 2013 Redistributable (x86) - 12.0.40664",
+        "DisplayVersion":  "12.0.40664.0",
+        "InstallDate":  null,
+        "InstallLocation":  null,
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft Visual C++ 2013 x64 Additional Runtime - 12.0.40664",
+        "DisplayVersion":  "12.0.40664",
+        "InstallDate":  "20240830",
+        "InstallLocation":  "",
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft Visual C++ 2013 x64 Minimum Runtime - 12.0.40664",
+        "DisplayVersion":  "12.0.40664",
+        "InstallDate":  "20240830",
+        "InstallLocation":  "",
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft Visual C++ 2013 x86 Additional Runtime - 12.0.40664",
+        "DisplayVersion":  "12.0.40664",
+        "InstallDate":  "20240830",
+        "InstallLocation":  "",
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft Visual C++ 2013 x86 Minimum Runtime - 12.0.40664",
+        "DisplayVersion":  "12.0.40664",
+        "InstallDate":  "20240830",
+        "InstallLocation":  "",
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft Visual C++ 2022 X64 Additional Runtime - 14.50.35719",
+        "DisplayVersion":  "14.50.35719",
+        "InstallDate":  "20260304",
+        "InstallLocation":  "",
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft Visual C++ 2022 X64 Minimum Runtime - 14.50.35719",
+        "DisplayVersion":  "14.50.35719",
+        "InstallDate":  "20260304",
+        "InstallLocation":  "",
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft Visual C++ 2022 X86 Additional Runtime - 14.50.35719",
+        "DisplayVersion":  "14.50.35719",
+        "InstallDate":  "20260304",
+        "InstallLocation":  "",
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft Visual C++ 2022 X86 Minimum Runtime - 14.50.35719",
+        "DisplayVersion":  "14.50.35719",
+        "InstallDate":  "20260304",
+        "InstallLocation":  "",
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft Visual C++ v14 Redistributable (x64) - 14.50.35719",
+        "DisplayVersion":  "14.50.35719.0",
+        "InstallDate":  null,
+        "InstallLocation":  null,
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft Visual C++ v14 Redistributable (x86) - 14.50.35719",
+        "DisplayVersion":  "14.50.35719.0",
+        "InstallDate":  null,
+        "InstallLocation":  null,
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft Visual Studio Code (User) (当前用户)",
+        "DisplayVersion":  "1.147.0",
+        "InstallDate":  "20261119",
+        "InstallLocation":  "D:\\Program Files\\Microsoft VS Code\\",
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "Microsoft Windows Application Compatibility Fix Database",
+        "DisplayVersion":  null,
+        "InstallDate":  null,
+        "InstallLocation":  null,
+        "Publisher":  null
+    },
+    {
+        "DisplayName":  "Node.js",
+        "DisplayVersion":  "24.14.0",
+        "InstallDate":  "20260303",
+        "InstallLocation":  "",
+        "Publisher":  "Node.js Foundation"
+    },
+    {
+        "DisplayName":  "NVIDIA Install Application",
+        "DisplayVersion":  "2.1002.346.0",
+        "InstallDate":  "20250118",
+        "InstallLocation":  "C:\\Program Files\\NVIDIA Corporation\\Installer2\\InstallerCore",
+        "Publisher":  "NVIDIA Corporation"
+    },
+    {
+        "DisplayName":  "NVIDIA 图形驱动程序 457.07",
+        "DisplayVersion":  "457.07",
+        "InstallDate":  "20250118",
+        "InstallLocation":  "C:\\Program Files\\NVIDIA Corporation\\Installer2\\Display.Driver.{18D84A6F-3C6D-4267-B4DC-27733F4E4371}",
+        "Publisher":  "NVIDIA Corporation"
+    },
+    {
+        "DisplayName":  "OBS Studio",
+        "DisplayVersion":  "32.2.2",
+        "InstallDate":  null,
+        "InstallLocation":  null,
+        "Publisher":  "OBS Project"
+    },
+    {
+        "DisplayName":  "Obsidian",
+        "DisplayVersion":  "1.12.4",
+        "InstallDate":  null,
+        "InstallLocation":  null,
+        "Publisher":  "Obsidian"
+    },
+    {
+        "DisplayName":  "On Screen Display Utility",
+        "DisplayVersion":  "1.1.0.409",
+        "InstallDate":  null,
+        "InstallLocation":  null,
+        "Publisher":  "小米科技有限责任公司"
+    },
+    {
+        "DisplayName":  "OpenSSL 3.1.4 Light (64-bit)",
+        "DisplayVersion":  "3.1.4",
+        "InstallDate":  "20260304",
+        "InstallLocation":  "C:\\Program Files\\OpenSSL\\",
+        "Publisher":  "OpenSSL Win64 Installer Team"
+    },
+    {
+        "DisplayName":  "PixPin 版本 3.6.6.0",
+        "DisplayVersion":  "3.6.6.0",
+        "InstallDate":  "20261030",
+        "InstallLocation":  "D:\\Program Files (x86)\\PixPin\\",
+        "Publisher":  "Shenzhen Shendu Tujing Technology Co., Ltd."
+    },
+    {
+        "DisplayName":  "podman",
+        "DisplayVersion":  "5.8.3",
+        "InstallDate":  "20260715",
+        "InstallLocation":  "",
+        "Publisher":  "Red Hat Inc."
+    },
+    {
+        "DisplayName":  "Podman",
+        "DisplayVersion":  "5.8.3",
+        "InstallDate":  "20260715",
+        "InstallLocation":  null,
+        "Publisher":  "Red Hat"
+    },
+    {
+        "DisplayName":  "PotPlayer-64 bit",
+        "DisplayVersion":  "26.07.01.0",
+        "InstallDate":  null,
+        "InstallLocation":  null,
+        "Publisher":  "Kakao Corp."
+    },
+    {
+        "DisplayName":  "PremiumSoft Navicat Premium 16.1",
+        "DisplayVersion":  "16.1.6",
+        "InstallDate":  "20250403",
+        "InstallLocation":  "d:\\Program Files\\PremiumSoft\\Navicat Premium 16\\",
+        "Publisher":  "PremiumSoft CyberTech Ltd."
+    },
+    {
+        "DisplayName":  "Python 3.12.10 (64-bit)",
+        "DisplayVersion":  "3.12.10150.0",
+        "InstallDate":  null,
+        "InstallLocation":  null,
+        "Publisher":  "Python Software Foundation"
+    },
+    {
+        "DisplayName":  "Python 3.12.10 Add to Path (64-bit)",
+        "DisplayVersion":  "3.12.10150.0",
+        "InstallDate":  "20261027",
+        "InstallLocation":  "",
+        "Publisher":  "Python Software Foundation"
+    },
+    {
+        "DisplayName":  "Python 3.12.10 Core Interpreter (64-bit)",
+        "DisplayVersion":  "3.12.10150.0",
+        "InstallDate":  "20261027",
+        "InstallLocation":  "",
+        "Publisher":  "Python Software Foundation"
+    },
+    {
+        "DisplayName":  "Python 3.12.10 Development Libraries (64-bit)",
+        "DisplayVersion":  "3.12.10150.0",
+        "InstallDate":  "20261027",
+        "InstallLocation":  "",
+        "Publisher":  "Python Software Foundation"
+    },
+    {
+        "DisplayName":  "Python 3.12.10 Documentation (64-bit)",
+        "DisplayVersion":  "3.12.10150.0",
+        "InstallDate":  "20261027",
+        "InstallLocation":  "",
+        "Publisher":  "Python Software Foundation"
+    },
+    {
+        "DisplayName":  "Python 3.12.10 Executables (64-bit)",
+        "DisplayVersion":  "3.12.10150.0",
+        "InstallDate":  "20261027",
+        "InstallLocation":  "",
+        "Publisher":  "Python Software Foundation"
+    },
+    {
+        "DisplayName":  "Python 3.12.10 pip Bootstrap (64-bit)",
+        "DisplayVersion":  "3.12.10150.0",
+        "InstallDate":  "20261027",
+        "InstallLocation":  "",
+        "Publisher":  "Python Software Foundation"
+    },
+    {
+        "DisplayName":  "Python 3.12.10 Standard Library (64-bit)",
+        "DisplayVersion":  "3.12.10150.0",
+        "InstallDate":  "20261027",
+        "InstallLocation":  "",
+        "Publisher":  "Python Software Foundation"
+    },
+    {
+        "DisplayName":  "Python 3.12.10 Tcl/Tk Support (64-bit)",
+        "DisplayVersion":  "3.12.10150.0",
+        "InstallDate":  "20261027",
+        "InstallLocation":  "",
+        "Publisher":  "Python Software Foundation"
+    },
+    {
+        "DisplayName":  "Python 3.12.10 Test Suite (64-bit)",
+        "DisplayVersion":  "3.12.10150.0",
+        "InstallDate":  "20261027",
+        "InstallLocation":  "",
+        "Publisher":  "Python Software Foundation"
+    },
+    {
+        "DisplayName":  "Python 3.14.6",
+        "DisplayVersion":  "3.14-64",
+        "InstallDate":  "20260625",
+        "InstallLocation":  "C:\\Users\\youting\\AppData\\Local\\Python\\pythoncore-3.14-64",
+        "Publisher":  "Python Software Foundation"
+    },
+    {
+        "DisplayName":  "Python Launcher",
+        "DisplayVersion":  "3.12.10150.0",
+        "InstallDate":  "20261027",
+        "InstallLocation":  "",
+        "Publisher":  "Python Software Foundation"
+    },
+    {
+        "DisplayName":  "QQ",
+        "DisplayVersion":  "9.9.19.35469",
+        "InstallDate":  null,
+        "InstallLocation":  null,
+        "Publisher":  "腾讯科技(深圳)有限公司"
+    },
+    {
+        "DisplayName":  "SakuraCat VPN",
+        "DisplayVersion":  "1.5.2",
+        "InstallDate":  null,
+        "InstallLocation":  "C:\\Program Files\\SakuraCat VPN",
+        "Publisher":  "sakuracat"
+    },
+    {
+        "DisplayName":  "SakuraCat VPN",
+        "DisplayVersion":  "1.5.2",
+        "InstallDate":  "Tue Oct 27 14:54:22 2026",
+        "InstallLocation":  "C:\\Program Files\\SakuraCat VPN",
+        "Publisher":  "sakuracat"
+    },
+    {
+        "DisplayName":  "TreeSize Free V4.8.1",
+        "DisplayVersion":  "4.8.1",
+        "InstallDate":  "20260407",
+        "InstallLocation":  "d:\\Program Files\\JAM Software\\TreeSize Free\\",
+        "Publisher":  "JAM Software"
+    },
+    {
+        "DisplayName":  "Update for Windows 10 for x64-based Systems (KB5001716)",
+        "DisplayVersion":  "8.94.0.0",
+        "InstallDate":  "20240916",
+        "InstallLocation":  "",
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "WeGame",
+        "DisplayVersion":  null,
+        "InstallDate":  null,
+        "InstallLocation":  null,
+        "Publisher":  "WeGame"
+    },
+    {
+        "DisplayName":  "Windows Subsystem for Linux",
+        "DisplayVersion":  "2.6.3.0",
+        "InstallDate":  "20260228",
+        "InstallLocation":  "",
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "WPS Office (12.1.0.29690)",
+        "DisplayVersion":  "12.1.0.29690",
+        "InstallDate":  null,
+        "InstallLocation":  null,
+        "Publisher":  "Kingsoft Corp."
+    },
+    {
+        "DisplayName":  "Xbox Service",
+        "DisplayVersion":  "4.0.305.0",
+        "InstallDate":  "20261110",
+        "InstallLocation":  "",
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "ZCode 3.18.2",
+        "DisplayVersion":  "3.18.2",
+        "InstallDate":  null,
+        "InstallLocation":  "d:\\Program Files\\ZCode",
+        "Publisher":  "ZCode"
+    },
+    {
+        "DisplayName":  "必剪",
+        "DisplayVersion":  "3.11.25.100",
+        "InstallDate":  "20260824",
+        "InstallLocation":  "D:\\Program Files\\BcutBilibili\\",
+        "Publisher":  "上海哔哩哔哩动画有限公司"
+    },
+    {
+        "DisplayName":  "哔哩哔哩",
+        "DisplayVersion":  "1.20.0",
+        "InstallDate":  null,
+        "InstallLocation":  null,
+        "Publisher":  "哔哩哔哩"
+    },
+    {
+        "DisplayName":  "菜鸟打印组件 0.6.0.7",
+        "DisplayVersion":  "0.6.0.7",
+        "InstallDate":  null,
+        "InstallLocation":  null,
+        "Publisher":  "CAINIAO network"
+    },
+    {
+        "DisplayName":  "雷神加速器",
+        "DisplayVersion":  "11.2.0.4",
+        "InstallDate":  null,
+        "InstallLocation":  "d:\\Program Files (x86)\\LeiGod_Acc",
+        "Publisher":  "雷神（武汉）网络技术有限公司"
+    },
+    {
+        "DisplayName":  "米哈游启动器",
+        "DisplayVersion":  "1.19.0.382",
+        "InstallDate":  null,
+        "InstallLocation":  null,
+        "Publisher":  "miHoYo Co.,Ltd"
+    },
+    {
+        "DisplayName":  "企业微信",
+        "DisplayVersion":  "5.0.13.6012",
+        "InstallDate":  null,
+        "InstallLocation":  null,
+        "Publisher":  "腾讯科技(深圳)有限公司"
+    },
+    {
+        "DisplayName":  "鼠大侠",
+        "DisplayVersion":  "2.8.1.17",
+        "InstallDate":  null,
+        "InstallLocation":  null,
+        "Publisher":  "鼠大侠"
+    },
+    {
+        "DisplayName":  "腾讯会议",
+        "DisplayVersion":  "3.34.11.408",
+        "InstallDate":  null,
+        "InstallLocation":  "\"d:\\Program Files\\Tencent\\WeMeet\\3.34.11.408\"",
+        "Publisher":  "腾讯科技(深圳)有限公司"
+    },
+    {
+        "DisplayName":  "网易邮箱大师",
+        "DisplayVersion":  "5.3.5.1009",
+        "InstallDate":  "20250607",
+        "InstallLocation":  "d:\\Program Files (x86)\\Netease\\MailMaster\\Application",
+        "Publisher":  "NetEase(Hangzhou) Network Co. Ltd."
+    },
+    {
+        "DisplayName":  "微信",
+        "DisplayVersion":  "3.9.11.25",
+        "InstallDate":  null,
+        "InstallLocation":  "D:\\WeChat",
+        "Publisher":  "腾讯科技(深圳)有限公司"
+    },
+    {
+        "DisplayName":  "微信输入法",
+        "DisplayVersion":  "3.0.2.44",
+        "InstallDate":  null,
+        "InstallLocation":  "C:\\Program Files\\Tencent\\WeType",
+        "Publisher":  "腾讯科技(深圳)有限公司"
+    },
+    {
+        "DisplayName":  "向日葵远程控制",
+        "DisplayVersion":  "16.5.0.30905",
+        "InstallDate":  null,
+        "InstallLocation":  "C:\\Program Files\\Oray\\AweSun",
+        "Publisher":  "上海贝锐信息科技股份有限公司"
+    },
+    {
+        "DisplayName":  "异环",
+        "DisplayVersion":  "1.0.0",
+        "InstallDate":  null,
+        "InstallLocation":  "D:\\Neverness To Everness\\",
+        "Publisher":  "Perfect World"
+    },
+    {
+        "DisplayName":  "原神",
+        "DisplayVersion":  "7.2.0",
+        "InstallDate":  null,
+        "InstallLocation":  "D:\\Program Files\\miHoYo Launcher",
+        "Publisher":  "miHoYo Co.,Ltd"
+    },
+    {
+        "DisplayName":  "照片",
+        "DisplayVersion":  "26.204.1019.0007",
+        "InstallDate":  null,
+        "InstallLocation":  null,
+        "Publisher":  "Microsoft Corporation"
+    },
+    {
+        "DisplayName":  "支付宝开放平台密钥工具 2.0.3",
+        "DisplayVersion":  "2.0.3",
+        "InstallDate":  null,
+        "InstallLocation":  null,
+        "Publisher":  "Alipay"
+    }
+]

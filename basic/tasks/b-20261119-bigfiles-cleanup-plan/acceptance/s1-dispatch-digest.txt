@@ -1,0 +1,12 @@
+S1 规划协商派单证据摘要（b-20261119-bigfiles-cleanup-plan）
+
+- 原始证据目录：phase0/logs/dispatch-2026-11-19T04-12-30/
+- 简报：request.txt（UTF-8 1181B），SHA256=e2bf113ce58c6684ec0539050b7489c147b56f5608bae3d39675f904fcf48485
+- 回复：reply.txt（UTF-8 10459B），SHA256=e349bfdfa67c811a687355a55d897b17812a4d5fbdf854ba7fab20040eb51c50
+- 工具 artifact_sha256=e349bfdfa67c811a687355a55d897b17812a4d5fbdf854ba7fab20040eb51c50（与 reply.txt 实测一致）
+- 会话：https://chatgpt.com/c/6afe7763-a81c-83ec-9bcf-a8277a43b284（--no-update-pointer，未覆盖审查指针）
+- 发送双验：polls=2，user_unit_key=fallback-turn-0:0:user；COMPLETED，1 assistant unit
+- JSON 校验：解析 OK；六键齐全 safe_clean / need_confirm / forbid / steps / next_inventory / notes
+- 归属校验：简报标记 bigfiles20261119 在 request.txt 唯一命中
+- 代理状态：ProxyEnable=1 / port=1130，一次派单成功
+- 红线：全程未删除任何文件、未卸载任何软件；方案仅供用户拍板
