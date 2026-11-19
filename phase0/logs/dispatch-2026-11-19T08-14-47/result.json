@@ -1,0 +1,181 @@
+{
+  "at": "2026-11-19T08:18:50.961Z",
+  "message_bytes": 1032,
+  "reply": "ChatGPT 说：\nP1 独立审查结论\n5 项均已裁定\nP1 尚不能整体收口\n\n审查基线： damwate/AIEO@76353384e45343714518ead2c3bc2c86ee988494\n\n我已按指定的完整 40 位 SHA 读取 GitHub 仓库文件，没有使用 HEAD，也没有把 handoff 中的执行者陈述直接当成审查事实。\n\n特别说明：本次审查没有修改仓库，没有执行 P1 派单、M1 写操作、并发实测、合并或删除。\n\n一、读取与证据完整性\n\n文件\n\n\t\n\n读取结果\n\n\t\n\nGit Blob SHA\n\n\n\n\nhandoff/P1-BLOCKERS-REVIEW-20261119.md\n\n\t\n\n完整读取\n\n\t\n\nd7f0ba5f...\n\n\n\n\ndecision-log.md\n\n\t\n\n完整读取\n\n\t\n\na142a2da...\n\n\n\n\nmultitask-p1-execution/steps.md\n\n\t\n\n完整读取\n\n\t\n\n4c5d6f40...\n\n\n\n\np1-task-qualification/steps.md\n\n\t\n\n完整读取\n\n\t\n\n3b510e8a...\n\n\n\n\np1-906-06-concurrency/steps.md\n\n\t\n\n完整读取\n\n\t\n\n3bd764db...\n\n另读取了：\n\nscenario-design.md：Blob 4d9b6c895b4a2d0b3301c27b4714f7cb6fd2be83\n\nacceptance/dv1/DV1-REPORT.md：Blob 5e023509ff81df1dcb1e21fb00f8cc5e90832741\n\nacceptance/dv1/dv1-standalone.mjs：Blob 7df4f28920f72ca6bfcff49a96f0d26b26816d9a\n\ndocs/PHASE-STATUS.md：Blob 1286ab81bfc3197a20892481c0f0eaed90c9de3b\n\nphase1/tools/scheduler.py：Blob cdf5b9ae3f390363051de43f1433175d645c240a\n\n另外直接读取了 R6、止损会商、DV2 三份原始回复。\n\n发现一项重要事实：\n\n以下两个实际审计任务目录，在指定 commit 下均返回 GitHub 404：\n\nbasic/tasks/b-20261119-p1-dispatch-evidence-audit/steps.md\n\nbasic/tasks/b-20261119-p1-aisvc-postpass-lineage-audit/steps.md\n\n这与资格审查文件中「任务身份已经冻结，但执行任务包尚未创建」一致。\n\n404 只证明指定路径不存在，不据此推断其他目录或文件不存在。\n\n二、五项逐一裁定\n① P1 最小闭环顺序\nBLOCKED\n\n裁定：现有顺序不能直接进入实际派单，应先完成执行准备闭环。\n\n核对结果：\n\n前置事项\n\n\t\n\n当前状态\n\n\t\n\n我的判断\n\n\n\n\nP1-01/P1-02 身份冻结\n\n\t\n\n已完成\n\n\t\n\nPASS\n\n\n\n\n两个正式执行任务包\n\n\t\n\n未创建\n\n\t\n\nBLOCKED\n\n\n\n\n906⑥ 场景设计\n\n\t\n\nDV2 整体 BLOCKED\n\n\t\n\nBLOCKED\n\n\n\n\n七项开跑前核验\n\n\t\n\n未实测\n\n\t\n\nBLOCKED\n\n\n\n\n执行任务 S4/S5\n\n\t\n\n未收口\n\n\t\n\nBLOCKED\n\n\n\n\ndelivery.md\n\n\t\n\n三个现有任务包均未完成\n\n\t\n\nBLOCKED\n\n特别需要区分：\n\np1-task-qualification 是资格审查任务包，不是两个审计任务的执行包。\n\nmultitask-p1-execution 是执行形态规划任务包，不是实际执行任务。\n\np1-906-06-concurrency 是场景设计及验证任务包，不是并发实测。\n\n因此，不能把现有三个任务包的建立等同于两个审计任务已经具备执行条件。\n\n建议的最小闭环顺序：\n\n先解决 DV2 独立复跑问题\n\n取得独立执行证据，关闭 DV2 唯一剩余缺口。不得修改 R1-R6 历史裁定。\n\n建立 P1-01、P1-02 两个正式执行任务包\n\n分别冻结被测 SHA、复核问题、执行范围、worktree、证据目录和五件套。\n\n执行七项开跑前核验\n\n特别是强隔离、通道闸、五件套、人工熔断机制。\n\n任一必要条件 BLOCKED，不派单。\n\nP1-01 人工 FIFO 执行\n\n独立派单、采集原始证据、归档、独立 S4 验收、S5 收口、delivery。\n\n释放通道，再执行 P1-02\n\n完整重复独立证据链，不复用 P1-01 的验收结论。\n\n最后进行 P1 阶段复盘\n\n汇总两个审计任务结果、906⑥状态、遗留限制及授权边界。\n\n这里有一个关键边界：\n\n两个只读审计任务可以推进，不应把它们的 PASS 当成 906⑥ PASS。\n\n906⑥仍是 P1 内独立的并发验证门。它需要后续环境资格检查及另批实测授权。不能因为两个审计任务完成，就解除 M1 写路径限制。\n\n我的建议是：先完成独立证据和执行准备，再按 FIFO 推进两个只读任务；906⑥独立保持 BLOCKED，不能偷渡为已完成。\n\n证据：\n\nb-20261119-multitask-p1-execution/steps.md\n\nb-20261119-p1-task-qualification/steps.md\n\nb-20261119-p1-906-06-concurrency/steps.md\n\nDEC-112、DEC-113、DEC-114\n\n② DV2 独立复跑如何真正闭环\nBLOCKED\n\n裁定：可以由外部审查者克隆指定 commit，直接运行 dv1-standalone.mjs，这是一条合理且可行的独立取证路径。\n\n但必须明确：目前没有独立复跑证据。\n\n我核对了 DV2 原始回复：\n\nphase0/logs/recoll-906s1-dv2-2026-11-19T07-50-24-306Z/reply.txt\n\nBlob SHA：\n\nf99a30fdebd2ab9afe90dcc1cbca0552b0a912e4\n\n其中明确区分：\n\n项目\n\n\t\n\n原始裁定\n\n\n\n\nRJ-01 context 目标事件校验\n\n\t\n\nPASS\n\n\n\n\nN15 非法目标反例\n\n\t\n\nPASS\n\n\n\n\nRJ-02 标准 JSON Schema enum\n\n\t\n\nPASS\n\n\n\n\nSchema 自检强制 enum\n\n\t\n\nPASS\n\n\n\n\n执行者 24/24 报告\n\n\t\n\n报告核对 PASS\n\n\n\n\n独立运行\n\n\t\n\nBLOCKED\n\n\n\n\nDV2 整体\n\n\t\n\nBLOCKED\n\nDV2b 新增的文件确实值得采用。\n\n我直接读取了 dv1-standalone.mjs 全文：\n\n267 行；\n\n21,690 字符；\n\n没有 import 或 require 外部依赖；\n\nSchema、校验器、测试用例和 runner 均内嵌；\n\n可以直接通过 Node 执行。\n\n取证机制可行\n\n建议采用以下独立取证流程：\n\n独立审查者自行克隆仓库。\n\ncheckout 精确 commit：76353384e45343714518ead2c3bc2c86ee988494。\n\n核对文件 Git Blob SHA 为 7df4f28920f72ca6bfcff49a96f0d26b26816d9a。\n\n记录 Node 版本。\n\n执行：\n\nBash\nnode basic/tasks/b-20261119-p1-906-06-concurrency/acceptance/dv1/dv1-standalone.mjs\n\n保存完整 stdout、stderr、退出码。\n\n独立计算执行文件 SHA-256。\n\n核对结果：\n\nall_ok=true\n\ntotal=24\n\nmatched=24\n\nSchema 自检 consistent=true\n\n9 个正例全部通过\n\n15 个反例全部拒绝。\n\n建议再由审查者对照原六文件版本，确认内嵌 Schema、校验器及用例没有偏离 DV2 的实际整改内容。\n\n为什么这能构成独立证据？\n\n因为执行者自测与独立审查者在独立环境中的实际运行，是两种不同证据。\n\n不要求审查者必须通过原来失败的附件挂载机制取得文件。只要直接从指定 Git commit 取得文件，并自行运行、保存原始结果，就可以建立独立执行证据。\n\n但注意：独立执行不等于独立设计测试用例。测试用例正确性仍需要静态审查。\n\n本次我没有宣称自己已经执行了该文件。\n\n建议：不要再折腾附件挂载，直接采用 Git 克隆 + 精确 SHA + 本地 Node 执行。\n\n③ R6 口径滞后与止损依据\nPASS\n\n裁定：止损依据充分，问题属于文档状态滞后，不属于止损触发依据不足。\n\n这是本次我认为比较明确的一项。\n\n我直接读取了 R6 原始回复：\n\nphase0/logs/recoll-906s1-plan-r6-2026-11-19T07-33-14-189Z/reply.txt\n\nBlob SHA：\n\nf3c4819af977b0e0d8675aba29ce08cbb31ff944\n\nR6 实际裁定：\n\nREJECT\n\n唯一问题：\n\nn/a_reason 只有事件级单值，无法表达多个 N/A 字段各自不同的原因。\n\n例如：\n\ntask_id=N/A，原因 GLOBAL_SCOPE；\n\nrequest_id=N/A，原因 GLOBAL_SCOPE；\n\ndb_transaction_id=N/A，原因 TARGET_EVENT_FIELD_NOT_APPLICABLE；\n\nack_id=N/A，原因 TARGET_EVENT_FIELD_NOT_APPLICABLE。\n\n原有单值结构无法无歧义地表达这四项。\n\n这说明 v0.6 的 RECOVER 三种复制情形虽然已经补齐，但数据结构仍然无法完整承载契约。\n\nR6 不是无理由拒绝。\n\n止损依据也充分。\n\n我读取了 L-019 会商原始回复：\n\nphase0/logs/recoll-906s1-stop-2026-11-19T07-37-27-842Z/reply.txt\n\nBlob SHA：\n\nf606a3c0b5c0d99e549dabd485d279ac9b6dc652\n\n会商明确记录：\n\n轮次\n\n\t\n\n结果\n\n\n\n\nR1\n\n\t\n\nADJUST\n\n\n\n\nR2\n\n\t\n\nREJECT\n\n\n\n\nR3\n\n\t\n\nREJECT\n\n\n\n\nR4\n\n\t\n\nREJECT\n\n\n\n\nR5\n\n\t\n\nREJECT\n\n\n\n\nR6\n\n\t\n\nREJECT\n\n连续五轮 REJECT，问题集中在同一个事件契约域，而且每次都暴露新的结构性缺陷。\n\nL-019 的四项会商结论均有明确依据：\n\n根因定性：交付缺陷为主因，验证机制缺陷为重要次因。\n\n停止常规 R 轮，转 DV1 机器可校验契约。\n\n冻结 DV1 一次性验收门槛。\n\n保留 R1-R6 原始历史裁定，不改写。\n\n因此，止损方向正确。\n\n但是文档确实滞后。\n\n目前存在三处明显问题：\n\nscenario-design.md 文件标题仍然写着 R5 整改后待 R6。\n\nsteps.md 开头仍然写着待 R6 复审。\n\nsteps.md 的 S4 主要记录到 R5，没有完整补入 R6 唯一 REJECT 项的独立记录。\n\n而 DEC-114 已经记录 R6、会商、DV1 REJECT、DV2 BLOCKED 和 DV2b STOP。\n\n建议修订时：\n\n保留原 R1-R6 的历史内容。\n\n新增 R6 独立裁定记录。\n\n修改当前状态摘要。\n\n将 v0.6 标记为未通过冻结验收。\n\n补充 L-019、DV1、DV2、DV2b 的状态链。\n\n不得把 R6 REJECT 改成 PASS，也不得把会商 PASS 解释成 DV1 PASS。\n\n这属于状态同步和历史补录，不是重写历史。\n\n④ 权威状态源唯一口径\nBLOCKED\n\n裁定：当前仓库没有完成统一状态同步，不能把 PHASE-STATUS 当成当前 P1 的真实状态。\n\n我读取了 docs/PHASE-STATUS.md。\n\n目前版本：\n\nv0.13\n\n状态时间：\n\n2026-11-18\n\n它没有覆盖 2026-11-19 的 P1 开跑、两任务冻结、906⑥止损和 DV2 阻塞。\n\n因此它不能作为当前 P1 状态依据。\n\n另一方面：\n\ndocs/phase1/decision-log.md\n\n采用只追加不覆盖的维护规则。\n\nDEC-113、DEC-114 已经在文件末尾，DEC-041、DEC-042 的原有内容也已恢复。\n\n这里不应该为了让编号与物理顺序一致而重新排列历史决策。\n\n我建议采用以下唯一口径规则：\n\n文件\n\n\t\n\n权威职责\n\n\n\n\ndecision-log.md\n\n\t\n\n权威决策、授权、历史裁定\n\n\n\n\n各任务 steps.md\n\n\t\n\n权威任务执行状态、证据和验收结果\n\n\n\n\nPHASE-STATUS.md\n\n\t\n\n当前阶段状态的唯一汇总入口\n\n\n\n\nhandoff 文件\n\n\t\n\n交接材料，不具有裁定权\n\n这不是让多个文件争夺同一个权威，而是按信息类型确定唯一事实来源。\n\n尤其需要强调：\n\n不能用 PHASE-STATUS 的旧状态覆盖 DEC-114。\n\n不能用 handoff 的摘要替代任务原始证据。\n\n不能用 DEC-113 的 P1 授权推导 P2/P3 授权。\n\n不能用任务包 S3 PASS 推导整个任务 COMPLETED。\n\n建议修订顺序：\n\n先修订 906⑥ steps 和 scenario-design 的实际状态。\n\n补齐两个审计任务包建立后的执行状态。\n\n补齐各任务 S4/S5 和 delivery。\n\n最后更新 PHASE-STATUS，形成新的状态快照。\n\nDEC-113/114 保持原样，不重排、不覆盖。\n\n⑤ fixture 分支终局处置\nPASS\n\n裁定：选择方案①，继续保留 fixture 分支。暂不删除，也不合并 main。\n\n这一项我额外进行了 Git 分支核验，没有仅凭 handoff 判断。\n\n当前 main：\n\n76353384e45343714518ead2c3bc2c86ee988494\n\nfixture 分支：\n\n0807064e193ef566987d1cfe29fea11d919ed85c\n\nGitHub 分支比较结果：\n\n2\n\nfixture 独有提交\n\nahead_by\n\n2\n\nbehind_by\n\n508\n\n实际差异文件\n\n1 个\n\n比较基线为当前 main 与 fixture 分支完整 SHA。\n\n两个独有提交：\n\nfda9183dafb77ca15578abb244b3b2d15999fafb\n\n0807064e193ef566987d1cfe29fea11d919ed85c\n\n比较结果显示实际差异：\n\nphase1/tools/bundle_gate.mjs\n\n有 8 行新增。\n\n第二个提交明确修复 --version 与 --help 的执行优先级问题。\n\n更重要的是，我读取了 main 当前版本的：\n\nphase1/tools/scheduler.py\n\n构造函数仍然有：\n\nPython\n运行\nself.fixture_branch = \"feature/T-P1-908-fixture\"\n\n\nself.fixture_repo = (\n    REPO_ROOT / \"runtime\" / \"t-p1-908\" / \"wt-fixture\"\n)\n\n这意味着分支名称和 worktree 路径仍然被生产调度代码直接引用。\n\n所以现在删除 fixture 会造成两个问题：\n\n未并入的整改失去现成分支载体。\n\nscheduler 仍然引用该分支及工作区路径，导致后续复核和运行环境不一致。\n\n我的建议：\n\n当前保持：\n\nfixture 分支保留。\n\nfixture worktree 保留。\n\n不合并 main。\n\n不删除分支。\n\n不删除相关文件。\n\n将来如果决定彻底清理，应先：\n\n归档两个独有提交的完整 patch。\n\n保存相关测试证据。\n\n处理 scheduler 的硬编码引用。\n\n验证替代方案可复现。\n\n再依据 DEC-010 和明确授权处置分支。\n\n这比现在直接删除风险低得多。\n\n三、最终裁定汇总\n\n编号\n\n\t\n\n问题\n\n\t\n\n裁定\n\n\t\n\n核心结论\n\n\n\n\n①\n\n\t\n\nP1 最小闭环顺序\n\n\t\n\nBLOCKED\n\n\t\n\n先独立证据、任务包、七项核验，再 FIFO\n\n\n\n\n②\n\n\t\n\nDV2 独立复跑\n\n\t\n\nBLOCKED\n\n\t\n\nGit 精确 SHA + Node 独立执行可解决\n\n\n\n\n③\n\n\t\n\nR6 与止损依据\n\n\t\n\nPASS\n\n\t\n\n止损充分，文档状态需要补齐\n\n\n\n\n④\n\n\t\n\n权威状态源\n\n\t\n\nBLOCKED\n\n\t\n\n当前汇总滞后，需要统一状态口径\n\n\n\n\n⑤\n\n\t\n\nfixture 分支\n\n\t\n\nPASS\n\n\t\n\n保留，暂不删除、不合并\n\n四、我认为最重要的三个后续事项\n\n按风险和依赖关系排序：\n\n第一：关闭 DV2 独立复跑。\n\n这是目前最容易解决、边界最清晰的 BLOCKED。没有必要继续折腾附件挂载。\n\n第二：把 R6 到 DV2b 的历史状态补完整。\n\n现在 DEC-114 已经有终局决策，但任务包本身仍存在滞后口径。应当先消除这种不一致，防止后续审查错误引用旧状态。\n\n第三：建立两个正式审计任务包并完成七项开跑前核验。\n\n不要因为 P1 已授权就把准备阶段误认为实际执行已经开始。\n\n最后重申授权：\n\nP1：已授权。\n\nP2/P3：未授权。\n\nM1 写路径：未解除。\n\n906⑥实测：未授权。\n\nmain 合并：未授权。\n\n生产发布：未授权。\n\n数据删除：未授权。\n\n最终意见：P1 的方向没有问题，但目前处于「准备工作尚未闭环」阶段，而不是「两个审计任务已经可以直接开跑」阶段。\n\n我建议先完成 DV2 独立复跑和文档状态校正，再进入两个只读任务的正式执行准备。不要为了赶进度跳过七项核验。",
+  "user_unit_key": "bc35dd1c-ecf6-56dd-b325-5ec2ff98fbd2:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "bc35dd1c-ecf6-56dd-b325-5ec2ff98fbd2:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "9976e2d5-0c03-4d85-b917-2f84a6a740f7",
+  "stability": {
+    "stable": true,
+    "interval_ms": 7902,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-19T08:18:42.045Z",
+      "read_finished_at": "2026-11-19T08:18:46.933Z",
+      "unit_keys": [
+        "bc35dd1c-ecf6-56dd-b325-5ec2ff98fbd2:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "bc35dd1c-ecf6-56dd-b325-5ec2ff98fbd2:2:assistant",
+          "sha256": "7fab28acf62e294353e793b311490e01abae84b76f0136f82b9d3de57923109d",
+          "size_bytes": 13686
+        }
+      ],
+      "assistant_uuid": "9976e2d5-0c03-4d85-b917-2f84a6a740f7",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-19T08:18:49.947Z",
+      "read_finished_at": "2026-11-19T08:18:50.811Z",
+      "unit_keys": [
+        "bc35dd1c-ecf6-56dd-b325-5ec2ff98fbd2:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "bc35dd1c-ecf6-56dd-b325-5ec2ff98fbd2:2:assistant",
+          "sha256": "7fab28acf62e294353e793b311490e01abae84b76f0136f82b9d3de57923109d",
+          "size_bytes": 13686
+        }
+      ],
+      "assistant_uuid": "9976e2d5-0c03-4d85-b917-2f84a6a740f7",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "bc35dd1c-ecf6-56dd-b325-5ec2ff98fbd2:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "bc35dd1c-ecf6-56dd-b325-5ec2ff98fbd2:0:user",
+          "bc35dd1c-ecf6-56dd-b325-5ec2ff98fbd2:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "d8d0697732efe0c319d470a1070ee624886f262dfe4024d676421bd326fedbb7",
+          "7fab28acf62e294353e793b311490e01abae84b76f0136f82b9d3de57923109d"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "bc35dd1c-ecf6-56dd-b325-5ec2ff98fbd2:0:user",
+          "bc35dd1c-ecf6-56dd-b325-5ec2ff98fbd2:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "d8d0697732efe0c319d470a1070ee624886f262dfe4024d676421bd326fedbb7",
+          "7fab28acf62e294353e793b311490e01abae84b76f0136f82b9d3de57923109d"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "bc35dd1c-ecf6-56dd-b325-5ec2ff98fbd2:0:user",
+          "bc35dd1c-ecf6-56dd-b325-5ec2ff98fbd2:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "bc35dd1c-ecf6-56dd-b325-5ec2ff98fbd2:0:user",
+      "bc35dd1c-ecf6-56dd-b325-5ec2ff98fbd2:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "bc35dd1c-ecf6-56dd-b325-5ec2ff98fbd2:0:user",
+          "bc35dd1c-ecf6-56dd-b325-5ec2ff98fbd2:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "bc35dd1c-ecf6-56dd-b325-5ec2ff98fbd2:0:user",
+          "bc35dd1c-ecf6-56dd-b325-5ec2ff98fbd2:2:assistant"
+        ],
+        "overlap_keys": [
+          "bc35dd1c-ecf6-56dd-b325-5ec2ff98fbd2:0:user",
+          "bc35dd1c-ecf6-56dd-b325-5ec2ff98fbd2:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "7fab28acf62e294353e793b311490e01abae84b76f0136f82b9d3de57923109d",
+  "size_bytes": 13686,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-19T08-14-47\\reply.txt",
+  "reply_readback_sha256": "7fab28acf62e294353e793b311490e01abae84b76f0136f82b9d3de57923109d",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-19T08-14-47\\raw-units.json",
+  "raw_units_sha256": "9ae4d4009c346430680002504838f119a02694ff6bf17c08e8043a696e0f4fd5",
+  "raw_units_size_bytes": 17665,
+  "raw_units_readback_sha256": "9ae4d4009c346430680002504838f119a02694ff6bf17c08e8043a696e0f4fd5",
+  "session_id": "6afeb028-7308-83ec-aa35-fefb399a1d53",
+  "conversation_url": "https://chatgpt.com/c/6afeb028-7308-83ec-aa35-fefb399a1d53",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}

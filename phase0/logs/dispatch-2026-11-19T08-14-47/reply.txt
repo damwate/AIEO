@@ -1,0 +1,901 @@
+ChatGPT 说：
+P1 独立审查结论
+5 项均已裁定
+P1 尚不能整体收口
+
+审查基线： damwate/AIEO@76353384e45343714518ead2c3bc2c86ee988494
+
+我已按指定的完整 40 位 SHA 读取 GitHub 仓库文件，没有使用 HEAD，也没有把 handoff 中的执行者陈述直接当成审查事实。
+
+特别说明：本次审查没有修改仓库，没有执行 P1 派单、M1 写操作、并发实测、合并或删除。
+
+一、读取与证据完整性
+
+文件
+
+	
+
+读取结果
+
+	
+
+Git Blob SHA
+
+
+
+
+handoff/P1-BLOCKERS-REVIEW-20261119.md
+
+	
+
+完整读取
+
+	
+
+d7f0ba5f...
+
+
+
+
+decision-log.md
+
+	
+
+完整读取
+
+	
+
+a142a2da...
+
+
+
+
+multitask-p1-execution/steps.md
+
+	
+
+完整读取
+
+	
+
+4c5d6f40...
+
+
+
+
+p1-task-qualification/steps.md
+
+	
+
+完整读取
+
+	
+
+3b510e8a...
+
+
+
+
+p1-906-06-concurrency/steps.md
+
+	
+
+完整读取
+
+	
+
+3bd764db...
+
+另读取了：
+
+scenario-design.md：Blob 4d9b6c895b4a2d0b3301c27b4714f7cb6fd2be83
+
+acceptance/dv1/DV1-REPORT.md：Blob 5e023509ff81df1dcb1e21fb00f8cc5e90832741
+
+acceptance/dv1/dv1-standalone.mjs：Blob 7df4f28920f72ca6bfcff49a96f0d26b26816d9a
+
+docs/PHASE-STATUS.md：Blob 1286ab81bfc3197a20892481c0f0eaed90c9de3b
+
+phase1/tools/scheduler.py：Blob cdf5b9ae3f390363051de43f1433175d645c240a
+
+另外直接读取了 R6、止损会商、DV2 三份原始回复。
+
+发现一项重要事实：
+
+以下两个实际审计任务目录，在指定 commit 下均返回 GitHub 404：
+
+basic/tasks/b-20261119-p1-dispatch-evidence-audit/steps.md
+
+basic/tasks/b-20261119-p1-aisvc-postpass-lineage-audit/steps.md
+
+这与资格审查文件中「任务身份已经冻结，但执行任务包尚未创建」一致。
+
+404 只证明指定路径不存在，不据此推断其他目录或文件不存在。
+
+二、五项逐一裁定
+① P1 最小闭环顺序
+BLOCKED
+
+裁定：现有顺序不能直接进入实际派单，应先完成执行准备闭环。
+
+核对结果：
+
+前置事项
+
+	
+
+当前状态
+
+	
+
+我的判断
+
+
+
+
+P1-01/P1-02 身份冻结
+
+	
+
+已完成
+
+	
+
+PASS
+
+
+
+
+两个正式执行任务包
+
+	
+
+未创建
+
+	
+
+BLOCKED
+
+
+
+
+906⑥ 场景设计
+
+	
+
+DV2 整体 BLOCKED
+
+	
+
+BLOCKED
+
+
+
+
+七项开跑前核验
+
+	
+
+未实测
+
+	
+
+BLOCKED
+
+
+
+
+执行任务 S4/S5
+
+	
+
+未收口
+
+	
+
+BLOCKED
+
+
+
+
+delivery.md
+
+	
+
+三个现有任务包均未完成
+
+	
+
+BLOCKED
+
+特别需要区分：
+
+p1-task-qualification 是资格审查任务包，不是两个审计任务的执行包。
+
+multitask-p1-execution 是执行形态规划任务包，不是实际执行任务。
+
+p1-906-06-concurrency 是场景设计及验证任务包，不是并发实测。
+
+因此，不能把现有三个任务包的建立等同于两个审计任务已经具备执行条件。
+
+建议的最小闭环顺序：
+
+先解决 DV2 独立复跑问题
+
+取得独立执行证据，关闭 DV2 唯一剩余缺口。不得修改 R1-R6 历史裁定。
+
+建立 P1-01、P1-02 两个正式执行任务包
+
+分别冻结被测 SHA、复核问题、执行范围、worktree、证据目录和五件套。
+
+执行七项开跑前核验
+
+特别是强隔离、通道闸、五件套、人工熔断机制。
+
+任一必要条件 BLOCKED，不派单。
+
+P1-01 人工 FIFO 执行
+
+独立派单、采集原始证据、归档、独立 S4 验收、S5 收口、delivery。
+
+释放通道，再执行 P1-02
+
+完整重复独立证据链，不复用 P1-01 的验收结论。
+
+最后进行 P1 阶段复盘
+
+汇总两个审计任务结果、906⑥状态、遗留限制及授权边界。
+
+这里有一个关键边界：
+
+两个只读审计任务可以推进，不应把它们的 PASS 当成 906⑥ PASS。
+
+906⑥仍是 P1 内独立的并发验证门。它需要后续环境资格检查及另批实测授权。不能因为两个审计任务完成，就解除 M1 写路径限制。
+
+我的建议是：先完成独立证据和执行准备，再按 FIFO 推进两个只读任务；906⑥独立保持 BLOCKED，不能偷渡为已完成。
+
+证据：
+
+b-20261119-multitask-p1-execution/steps.md
+
+b-20261119-p1-task-qualification/steps.md
+
+b-20261119-p1-906-06-concurrency/steps.md
+
+DEC-112、DEC-113、DEC-114
+
+② DV2 独立复跑如何真正闭环
+BLOCKED
+
+裁定：可以由外部审查者克隆指定 commit，直接运行 dv1-standalone.mjs，这是一条合理且可行的独立取证路径。
+
+但必须明确：目前没有独立复跑证据。
+
+我核对了 DV2 原始回复：
+
+phase0/logs/recoll-906s1-dv2-2026-11-19T07-50-24-306Z/reply.txt
+
+Blob SHA：
+
+f99a30fdebd2ab9afe90dcc1cbca0552b0a912e4
+
+其中明确区分：
+
+项目
+
+	
+
+原始裁定
+
+
+
+
+RJ-01 context 目标事件校验
+
+	
+
+PASS
+
+
+
+
+N15 非法目标反例
+
+	
+
+PASS
+
+
+
+
+RJ-02 标准 JSON Schema enum
+
+	
+
+PASS
+
+
+
+
+Schema 自检强制 enum
+
+	
+
+PASS
+
+
+
+
+执行者 24/24 报告
+
+	
+
+报告核对 PASS
+
+
+
+
+独立运行
+
+	
+
+BLOCKED
+
+
+
+
+DV2 整体
+
+	
+
+BLOCKED
+
+DV2b 新增的文件确实值得采用。
+
+我直接读取了 dv1-standalone.mjs 全文：
+
+267 行；
+
+21,690 字符；
+
+没有 import 或 require 外部依赖；
+
+Schema、校验器、测试用例和 runner 均内嵌；
+
+可以直接通过 Node 执行。
+
+取证机制可行
+
+建议采用以下独立取证流程：
+
+独立审查者自行克隆仓库。
+
+checkout 精确 commit：76353384e45343714518ead2c3bc2c86ee988494。
+
+核对文件 Git Blob SHA 为 7df4f28920f72ca6bfcff49a96f0d26b26816d9a。
+
+记录 Node 版本。
+
+执行：
+
+Bash
+node basic/tasks/b-20261119-p1-906-06-concurrency/acceptance/dv1/dv1-standalone.mjs
+
+保存完整 stdout、stderr、退出码。
+
+独立计算执行文件 SHA-256。
+
+核对结果：
+
+all_ok=true
+
+total=24
+
+matched=24
+
+Schema 自检 consistent=true
+
+9 个正例全部通过
+
+15 个反例全部拒绝。
+
+建议再由审查者对照原六文件版本，确认内嵌 Schema、校验器及用例没有偏离 DV2 的实际整改内容。
+
+为什么这能构成独立证据？
+
+因为执行者自测与独立审查者在独立环境中的实际运行，是两种不同证据。
+
+不要求审查者必须通过原来失败的附件挂载机制取得文件。只要直接从指定 Git commit 取得文件，并自行运行、保存原始结果，就可以建立独立执行证据。
+
+但注意：独立执行不等于独立设计测试用例。测试用例正确性仍需要静态审查。
+
+本次我没有宣称自己已经执行了该文件。
+
+建议：不要再折腾附件挂载，直接采用 Git 克隆 + 精确 SHA + 本地 Node 执行。
+
+③ R6 口径滞后与止损依据
+PASS
+
+裁定：止损依据充分，问题属于文档状态滞后，不属于止损触发依据不足。
+
+这是本次我认为比较明确的一项。
+
+我直接读取了 R6 原始回复：
+
+phase0/logs/recoll-906s1-plan-r6-2026-11-19T07-33-14-189Z/reply.txt
+
+Blob SHA：
+
+f3c4819af977b0e0d8675aba29ce08cbb31ff944
+
+R6 实际裁定：
+
+REJECT
+
+唯一问题：
+
+n/a_reason 只有事件级单值，无法表达多个 N/A 字段各自不同的原因。
+
+例如：
+
+task_id=N/A，原因 GLOBAL_SCOPE；
+
+request_id=N/A，原因 GLOBAL_SCOPE；
+
+db_transaction_id=N/A，原因 TARGET_EVENT_FIELD_NOT_APPLICABLE；
+
+ack_id=N/A，原因 TARGET_EVENT_FIELD_NOT_APPLICABLE。
+
+原有单值结构无法无歧义地表达这四项。
+
+这说明 v0.6 的 RECOVER 三种复制情形虽然已经补齐，但数据结构仍然无法完整承载契约。
+
+R6 不是无理由拒绝。
+
+止损依据也充分。
+
+我读取了 L-019 会商原始回复：
+
+phase0/logs/recoll-906s1-stop-2026-11-19T07-37-27-842Z/reply.txt
+
+Blob SHA：
+
+f606a3c0b5c0d99e549dabd485d279ac9b6dc652
+
+会商明确记录：
+
+轮次
+
+	
+
+结果
+
+
+
+
+R1
+
+	
+
+ADJUST
+
+
+
+
+R2
+
+	
+
+REJECT
+
+
+
+
+R3
+
+	
+
+REJECT
+
+
+
+
+R4
+
+	
+
+REJECT
+
+
+
+
+R5
+
+	
+
+REJECT
+
+
+
+
+R6
+
+	
+
+REJECT
+
+连续五轮 REJECT，问题集中在同一个事件契约域，而且每次都暴露新的结构性缺陷。
+
+L-019 的四项会商结论均有明确依据：
+
+根因定性：交付缺陷为主因，验证机制缺陷为重要次因。
+
+停止常规 R 轮，转 DV1 机器可校验契约。
+
+冻结 DV1 一次性验收门槛。
+
+保留 R1-R6 原始历史裁定，不改写。
+
+因此，止损方向正确。
+
+但是文档确实滞后。
+
+目前存在三处明显问题：
+
+scenario-design.md 文件标题仍然写着 R5 整改后待 R6。
+
+steps.md 开头仍然写着待 R6 复审。
+
+steps.md 的 S4 主要记录到 R5，没有完整补入 R6 唯一 REJECT 项的独立记录。
+
+而 DEC-114 已经记录 R6、会商、DV1 REJECT、DV2 BLOCKED 和 DV2b STOP。
+
+建议修订时：
+
+保留原 R1-R6 的历史内容。
+
+新增 R6 独立裁定记录。
+
+修改当前状态摘要。
+
+将 v0.6 标记为未通过冻结验收。
+
+补充 L-019、DV1、DV2、DV2b 的状态链。
+
+不得把 R6 REJECT 改成 PASS，也不得把会商 PASS 解释成 DV1 PASS。
+
+这属于状态同步和历史补录，不是重写历史。
+
+④ 权威状态源唯一口径
+BLOCKED
+
+裁定：当前仓库没有完成统一状态同步，不能把 PHASE-STATUS 当成当前 P1 的真实状态。
+
+我读取了 docs/PHASE-STATUS.md。
+
+目前版本：
+
+v0.13
+
+状态时间：
+
+2026-11-18
+
+它没有覆盖 2026-11-19 的 P1 开跑、两任务冻结、906⑥止损和 DV2 阻塞。
+
+因此它不能作为当前 P1 状态依据。
+
+另一方面：
+
+docs/phase1/decision-log.md
+
+采用只追加不覆盖的维护规则。
+
+DEC-113、DEC-114 已经在文件末尾，DEC-041、DEC-042 的原有内容也已恢复。
+
+这里不应该为了让编号与物理顺序一致而重新排列历史决策。
+
+我建议采用以下唯一口径规则：
+
+文件
+
+	
+
+权威职责
+
+
+
+
+decision-log.md
+
+	
+
+权威决策、授权、历史裁定
+
+
+
+
+各任务 steps.md
+
+	
+
+权威任务执行状态、证据和验收结果
+
+
+
+
+PHASE-STATUS.md
+
+	
+
+当前阶段状态的唯一汇总入口
+
+
+
+
+handoff 文件
+
+	
+
+交接材料，不具有裁定权
+
+这不是让多个文件争夺同一个权威，而是按信息类型确定唯一事实来源。
+
+尤其需要强调：
+
+不能用 PHASE-STATUS 的旧状态覆盖 DEC-114。
+
+不能用 handoff 的摘要替代任务原始证据。
+
+不能用 DEC-113 的 P1 授权推导 P2/P3 授权。
+
+不能用任务包 S3 PASS 推导整个任务 COMPLETED。
+
+建议修订顺序：
+
+先修订 906⑥ steps 和 scenario-design 的实际状态。
+
+补齐两个审计任务包建立后的执行状态。
+
+补齐各任务 S4/S5 和 delivery。
+
+最后更新 PHASE-STATUS，形成新的状态快照。
+
+DEC-113/114 保持原样，不重排、不覆盖。
+
+⑤ fixture 分支终局处置
+PASS
+
+裁定：选择方案①，继续保留 fixture 分支。暂不删除，也不合并 main。
+
+这一项我额外进行了 Git 分支核验，没有仅凭 handoff 判断。
+
+当前 main：
+
+76353384e45343714518ead2c3bc2c86ee988494
+
+fixture 分支：
+
+0807064e193ef566987d1cfe29fea11d919ed85c
+
+GitHub 分支比较结果：
+
+2
+
+fixture 独有提交
+
+ahead_by
+
+2
+
+behind_by
+
+508
+
+实际差异文件
+
+1 个
+
+比较基线为当前 main 与 fixture 分支完整 SHA。
+
+两个独有提交：
+
+fda9183dafb77ca15578abb244b3b2d15999fafb
+
+0807064e193ef566987d1cfe29fea11d919ed85c
+
+比较结果显示实际差异：
+
+phase1/tools/bundle_gate.mjs
+
+有 8 行新增。
+
+第二个提交明确修复 --version 与 --help 的执行优先级问题。
+
+更重要的是，我读取了 main 当前版本的：
+
+phase1/tools/scheduler.py
+
+构造函数仍然有：
+
+Python
+运行
+self.fixture_branch = "feature/T-P1-908-fixture"
+
+
+self.fixture_repo = (
+    REPO_ROOT / "runtime" / "t-p1-908" / "wt-fixture"
+)
+
+这意味着分支名称和 worktree 路径仍然被生产调度代码直接引用。
+
+所以现在删除 fixture 会造成两个问题：
+
+未并入的整改失去现成分支载体。
+
+scheduler 仍然引用该分支及工作区路径，导致后续复核和运行环境不一致。
+
+我的建议：
+
+当前保持：
+
+fixture 分支保留。
+
+fixture worktree 保留。
+
+不合并 main。
+
+不删除分支。
+
+不删除相关文件。
+
+将来如果决定彻底清理，应先：
+
+归档两个独有提交的完整 patch。
+
+保存相关测试证据。
+
+处理 scheduler 的硬编码引用。
+
+验证替代方案可复现。
+
+再依据 DEC-010 和明确授权处置分支。
+
+这比现在直接删除风险低得多。
+
+三、最终裁定汇总
+
+编号
+
+	
+
+问题
+
+	
+
+裁定
+
+	
+
+核心结论
+
+
+
+
+①
+
+	
+
+P1 最小闭环顺序
+
+	
+
+BLOCKED
+
+	
+
+先独立证据、任务包、七项核验，再 FIFO
+
+
+
+
+②
+
+	
+
+DV2 独立复跑
+
+	
+
+BLOCKED
+
+	
+
+Git 精确 SHA + Node 独立执行可解决
+
+
+
+
+③
+
+	
+
+R6 与止损依据
+
+	
+
+PASS
+
+	
+
+止损充分，文档状态需要补齐
+
+
+
+
+④
+
+	
+
+权威状态源
+
+	
+
+BLOCKED
+
+	
+
+当前汇总滞后，需要统一状态口径
+
+
+
+
+⑤
+
+	
+
+fixture 分支
+
+	
+
+PASS
+
+	
+
+保留，暂不删除、不合并
+
+四、我认为最重要的三个后续事项
+
+按风险和依赖关系排序：
+
+第一：关闭 DV2 独立复跑。
+
+这是目前最容易解决、边界最清晰的 BLOCKED。没有必要继续折腾附件挂载。
+
+第二：把 R6 到 DV2b 的历史状态补完整。
+
+现在 DEC-114 已经有终局决策，但任务包本身仍存在滞后口径。应当先消除这种不一致，防止后续审查错误引用旧状态。
+
+第三：建立两个正式审计任务包并完成七项开跑前核验。
+
+不要因为 P1 已授权就把准备阶段误认为实际执行已经开始。
+
+最后重申授权：
+
+P1：已授权。
+
+P2/P3：未授权。
+
+M1 写路径：未解除。
+
+906⑥实测：未授权。
+
+main 合并：未授权。
+
+生产发布：未授权。
+
+数据删除：未授权。
+
+最终意见：P1 的方向没有问题，但目前处于「准备工作尚未闭环」阶段，而不是「两个审计任务已经可以直接开跑」阶段。
+
+我建议先完成 DV2 独立复跑和文档状态校正，再进入两个只读任务的正式执行准备。不要为了赶进度跳过七项核验。

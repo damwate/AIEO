@@ -1,0 +1,249 @@
+{
+  "artifact": "dv1-standalone",
+  "contract": "906-06-event-contract-dv1",
+  "all_ok": true,
+  "schema_self_consistency": {
+    "consistent": true,
+    "errors": []
+  },
+  "total": 24,
+  "matched": 24,
+  "rows": [
+    {
+      "id": "P01",
+      "event_type": "REST_REQ",
+      "expect": "pass",
+      "actual": "pass",
+      "ok": true,
+      "errors": []
+    },
+    {
+      "id": "P02",
+      "event_type": "REST_RESP",
+      "expect": "pass",
+      "actual": "pass",
+      "ok": true,
+      "errors": []
+    },
+    {
+      "id": "P03",
+      "event_type": "DB_TXN_BEGIN",
+      "expect": "pass",
+      "actual": "pass",
+      "ok": true,
+      "errors": []
+    },
+    {
+      "id": "P04",
+      "event_type": "DB_TXN_COMMIT",
+      "expect": "pass",
+      "actual": "pass",
+      "ok": true,
+      "errors": []
+    },
+    {
+      "id": "P05",
+      "event_type": "ACK_SEND",
+      "expect": "pass",
+      "actual": "pass",
+      "ok": true,
+      "errors": []
+    },
+    {
+      "id": "P06",
+      "event_type": "ACK_CONFIRM",
+      "expect": "pass",
+      "actual": "pass",
+      "ok": true,
+      "errors": []
+    },
+    {
+      "id": "P07",
+      "event_type": "FAULT_INJECT",
+      "expect": "pass",
+      "actual": "pass",
+      "ok": true,
+      "errors": []
+    },
+    {
+      "id": "P08",
+      "event_type": "FAULT_INJECT",
+      "expect": "pass",
+      "actual": "pass",
+      "ok": true,
+      "errors": []
+    },
+    {
+      "id": "P09",
+      "event_type": "RECOVER",
+      "expect": "pass",
+      "actual": "pass",
+      "ok": true,
+      "errors": []
+    },
+    {
+      "id": "N01",
+      "event_type": "REST_REQ",
+      "expect": "reject",
+      "actual": "reject",
+      "ok": true,
+      "errors": [
+        "未登记字段: unregistered"
+      ]
+    },
+    {
+      "id": "N02",
+      "event_type": "REST_REQ",
+      "expect": "reject",
+      "actual": "reject",
+      "ok": true,
+      "errors": [
+        "缺基线必填: clock_domain"
+      ]
+    },
+    {
+      "id": "N03",
+      "event_type": "REST_REQ",
+      "expect": "reject",
+      "actual": "reject",
+      "ok": true,
+      "errors": [
+        "缺类型必填: REST_REQ.idempotency_key"
+      ]
+    },
+    {
+      "id": "N04",
+      "event_type": "REST_REQ",
+      "expect": "reject",
+      "actual": "reject",
+      "ok": true,
+      "errors": [
+        "字段类型错误: monotonic_timestamp"
+      ]
+    },
+    {
+      "id": "N05",
+      "event_type": "FAULT_INJECT",
+      "expect": "reject",
+      "actual": "reject",
+      "ok": true,
+      "errors": [
+        "FAULT_INJECT GLOBAL 须 task_id 原因 GLOBAL_SCOPE",
+        "FAULT_INJECT GLOBAL 须 request_id 原因 GLOBAL_SCOPE",
+        "N/A 字段缺原因: task_id",
+        "N/A 字段缺原因: request_id"
+      ]
+    },
+    {
+      "id": "N06",
+      "event_type": "REST_REQ",
+      "expect": "reject",
+      "actual": "reject",
+      "ok": true,
+      "errors": [
+        "非 N/A 字段附带原因: trace_id"
+      ]
+    },
+    {
+      "id": "N07",
+      "event_type": "FAULT_INJECT",
+      "expect": "reject",
+      "actual": "reject",
+      "ok": true,
+      "errors": [
+        "FAULT_INJECT GLOBAL 须 task_id 原因 GLOBAL_SCOPE",
+        "未知原因代码: UNKNOWN_CODE"
+      ]
+    },
+    {
+      "id": "N08",
+      "event_type": "RECOVER",
+      "expect": "reject",
+      "actual": "reject",
+      "ok": true,
+      "errors": [
+        "RECOVER 目标不存在"
+      ]
+    },
+    {
+      "id": "N09",
+      "event_type": "RECOVER",
+      "expect": "reject",
+      "actual": "reject",
+      "ok": true,
+      "errors": [
+        "RECOVER 目标重复"
+      ]
+    },
+    {
+      "id": "N10",
+      "event_type": "RECOVER",
+      "expect": "reject",
+      "actual": "reject",
+      "ok": true,
+      "errors": [
+        "RECOVER 目标类型非法: RECOVER",
+        "RECOVER 目标无字段 task_id，须填 N/A",
+        "RECOVER 目标无字段 task_id，原因须为 TARGET_EVENT_FIELD_NOT_APPLICABLE",
+        "RECOVER 目标无字段 request_id，须填 N/A",
+        "RECOVER 目标无字段 request_id，原因须为 TARGET_EVENT_FIELD_NOT_APPLICABLE",
+        "RECOVER 目标字段 trace_id 须原值复制",
+        "RECOVER 目标无字段 db_transaction_id，须填 N/A",
+        "RECOVER 目标无字段 db_transaction_id，原因须为 TARGET_EVENT_FIELD_NOT_APPLICABLE",
+        "RECOVER 目标无字段 ack_id，须填 N/A",
+        "RECOVER 目标无字段 ack_id，原因须为 TARGET_EVENT_FIELD_NOT_APPLICABLE"
+      ]
+    },
+    {
+      "id": "N11",
+      "event_type": "RECOVER",
+      "expect": "reject",
+      "actual": "reject",
+      "ok": true,
+      "errors": [
+        "RECOVER 目标字段 task_id 须原值复制"
+      ]
+    },
+    {
+      "id": "N12",
+      "event_type": "RECOVER",
+      "expect": "reject",
+      "actual": "reject",
+      "ok": true,
+      "errors": [
+        "RECOVER 目标无字段 db_transaction_id，原因须为 TARGET_EVENT_FIELD_NOT_APPLICABLE"
+      ]
+    },
+    {
+      "id": "N13",
+      "event_type": "FAULT_INJECT",
+      "expect": "reject",
+      "actual": "reject",
+      "ok": true,
+      "errors": [
+        "FAULT_INJECT ACK 注入点须 ack_id"
+      ]
+    },
+    {
+      "id": "N14",
+      "event_type": "UNKNOWN_EVENT",
+      "expect": "reject",
+      "actual": "reject",
+      "ok": true,
+      "errors": [
+        "未定义 event_type: UNKNOWN_EVENT"
+      ]
+    },
+    {
+      "id": "N15",
+      "event_type": "RECOVER",
+      "expect": "reject",
+      "actual": "reject",
+      "ok": true,
+      "errors": [
+        "context[0] badTarget: 缺基线必填: clock_domain",
+        "context[0] badTarget: 缺类型必填: REST_REQ.idempotency_key"
+      ]
+    }
+  ]
+}

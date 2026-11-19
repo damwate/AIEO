@@ -1,0 +1,13 @@
+{
+  "claim": "DV2 independent re-run in detached worktree",
+  "repo": "damwate/AIEO",
+  "checked_out_commit": "76353384e45343714518ead2c3bc2c86ee988494",
+  "worktree": "D:/AIEO/runtime/dv2-independent-20261119",
+  "node_version": "v24.14.0",
+  "command": "node basic/tasks/b-20261119-p1-906-06-concurrency/acceptance/dv1/dv1-standalone.mjs",
+  "executed_at": "2026-11-19T08:38:21.153Z",
+  "exit_code": 0,
+  "file_git_blob_sha": "7df4f28920f72ca6bfcff49a96f0d26b26816d9a",
+  "file_sha256": "964d149cf150cf720ac47cd270295d6bd6bb063e377d64ad9c7717d470209b75",
+  "stdout_sha256": "759d515e46f8e20460830e6e905416bd0ff70b3316e7d493630ddb947daba047"
+}

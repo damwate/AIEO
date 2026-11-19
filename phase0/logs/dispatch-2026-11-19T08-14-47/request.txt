@@ -1,0 +1,4 @@
+[P1-REVIEW-20261119] 全新会话独立过目：P1现状与5问题
+你无历史上下文。请读 damwate/AIEO@76353384e45343714518ead2c3bc2c86ee988494 的 handoff/P1-BLOCKERS-REVIEW-20261119.md（现状清单）+ docs/phase1/decision-log.md DEC-106/107/111-114 + basic/tasks/b-20261119-{multitask-p1-execution,p1-task-qualification,p1-906-06-concurrency}/steps.md。按完整commit实读，不采信执行者自述；读不到如实报。
+请逐项裁定清单§三5问：①P1最小闭环顺序（两审计任务包未建/阻塞③未实测/S4S5未收口）②DV2独立复跑如何取证（单文件dv1-standalone.mjs在acceptance/dv1/，执行者自测24/24不算独立）③R6口径滞后与止损依据是否充分④权威状态源唯一口径⑤fixture分支处置（2独有提交未并入main+scheduler.py硬编码,本次未删）。
+每项PASS/REJECT/BLOCKED+理由+证据路径，禁虚构读取/SHA。边界:P1已授权;P2/P3/M1写路径/906实测/main合并/生产发布/数据删除未授权;本轮只读不改仓库。
