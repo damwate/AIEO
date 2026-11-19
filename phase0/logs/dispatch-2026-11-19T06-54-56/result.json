@@ -1,0 +1,181 @@
+{
+  "at": "2026-11-19T06:57:57.883Z",
+  "message_bytes": 1198,
+  "reply": "ChatGPT 说：\n906⑥ 独立场景设计裁定 R1\n有条件通过\nS1 登记 PASS\n⑥ 仍为 BLOCKED\n\n审查基线： damwate/AIEO@e16722f\n\n已直接读取该 commit 下的三件套：\n\n文件\n\n\t\n\nGit Blob SHA\n\n\n\n\nrequirement.md\n\n\t\n\n4a8424ef4af12d0cbc7d2a4b1b3410591fc74358\n\n\n\n\nsteps.md\n\n\t\n\n7fc58a29747d4e8a91bce2d96c944ddb471d9093\n\n\n\n\ntask-brief.md\n\n\t\n\n207a7420e02f4b3482cad251227aa019ff784767\n\n总裁定：任务登记合格，但 v0.1 尚不能冻结为可执行场景。\n\n原因不是七维度方向错误，而是目前三件套主要记录了验收目标，没有把真实并发的构造、故障注入、观测证据和通过阈值落实为可执行步骤。\n\n特别明确：\n\nbatch1 的局部 PASS 不能推导出平台级并发 PASS。\n\nbatch2 的⑥没有执行，不能作为已有证据。\n\n两只读任务的 PASS 不构成⑥的替代证据。\n\n本次不解除 M1 写路径限制。\n\n一、七维度与八判据裁定\n\n审查项\n\n\t\n\nR1 裁定\n\n\t\n\n必须补齐的设计\n\n\n\n\n并发登记\n\n\t\n\n补充\n\n\t\n\n两个独立 task_id、request_id、幂等键；禁止共享可变任务上下文\n\n\n\n\nREST 归属\n\n\t\n\n补充\n\n\t\n\n请求、响应、任务 ID 三方关联，检查响应不串单\n\n\n\n\nDB 无覆盖\n\n\t\n\n补充\n\n\t\n\n并发提交后逐任务核对最终状态、版本、记录数及事务结果\n\n\n\n\nACK 不交叉\n\n\t\n\n补充\n\n\t\n\nACK 必须携带任务标识及对应状态版本，逐任务核对\n\n\n\n\n幂等\n\n\t\n\n补充\n\n\t\n\n同一请求重复提交不得重复创建、推进或 ACK\n\n\n\n\n故障 fail-closed\n\n\t\n\n补充\n\n\t\n\n覆盖提交前失败、提交后响应丢失、ACK 失败等情况\n\n\n\n\n证据关联\n\n\t\n\n补充\n\n\t\n\n全链路关联 ID、统一时间线、原始证据及 SHA256 清单\n\n八项关键判据进一步裁定：\n\n判据\n\n\t\n\nR1\n\n\n\n\n至少两个真正独立任务实例\n\n\t\n\n设计要求正确，需明确独立性证明\n\n\n\n\n真实 M1 REST+DB 路径\n\n\t\n\n未证明环境具备\n\n\n\n\n实际并发而非顺序\n\n\t\n\n必须增加时间重叠证明\n\n\n\n\n每任务独立追溯\n\n\t\n\n必须增加完整关联字段\n\n\n\n\n故障无错误成功、串单、丢失\n\n\t\n\n必须分故障场景逐项判定\n\n\n\n\n原始证据 SHA256\n\n\t\n\n必须生成完整 MANIFEST\n\n\n\n\n独立审查\n\n\t\n\n必须与执行者分离\n\n\n\n\n全部判据通过\n\n\t\n\n任一未通过，⑥不得 PASS\n\n二、建议冻结的独立场景\n\n建议设计为一个正常并发主场景，加四类故障验证。\n\n场景 A：双任务真实并发\n两个独立任务的完整生命周期\n\n实例 A\n\ntask-A\n\nrequest-A\n\nidempotency-A\n\n实例 B\n\ntask-B\n\nrequest-B\n\nidempotency-B\n\n同一并发屏障释放\n\n记录服务端接收、处理开始和处理结束时间\n\n真实 M1 REST → DB 事务 → ACK\n\n两个任务分别完成登记、状态推进、持久化和确认。\n\nA 独立核验\n\nREST / DB / ACK\n\nB 独立核验\n\nREST / DB / ACK\n\n关键要求：\n\n两个实例必须具有独立任务 ID、请求 ID、幂等键及执行上下文。\n\n使用同步屏障使两个请求同时进入真实 M1 REST 处理路径。\n\n记录服务端单调时钟的处理区间，证明两个请求的处理时间确实重叠。\n\n两个实例分别核对 REST 响应、数据库记录和 ACK。\n\n最终数据库状态必须与各自请求的预期状态一致。\n\n重复提交 A 的原始请求，验证幂等；不得影响 B。\n\n特别注意： 两个客户端同时发请求不等于服务端实际并发。必须证明 M1 处理区间重叠，否则只能判定为顺序执行，不能通过⑥。\n\n场景 B：四类故障验证\n\n编号\n\n\t\n\n注入位置\n\n\t\n\n预期结果\n\n\n\n\nF1\n\n\t\n\nDB 提交前失败\n\n\t\n\n不产生错误成功 ACK，不留半完成状态\n\n\n\n\nF2\n\n\t\n\nDB 已提交、REST 响应丢失\n\n\t\n\n重试识别原请求，不重复推进\n\n\n\n\nF3\n\n\t\n\nACK 发送失败或超时\n\n\t\n\n不把未确认任务伪装为已确认\n\n\n\n\nF4\n\n\t\n\n单任务执行中断、另一任务继续\n\n\t\n\n故障任务状态可追溯，另一任务不被错误覆盖\n\nF1～F4 必须分别记录注入时间、故障位置、实际结果、恢复结果和两个任务的最终状态。\n\n特别是 F2：必须区分数据库已提交与客户端是否收到响应，不能仅凭 HTTP 超时认定数据库事务失败。\n\n场景 C：完整性复核\n\n核对两个任务的全部生命周期事件。\n\n检查是否有重复登记、重复状态推进。\n\n检查是否有丢失记录、错误 ACK、交叉 ACK。\n\n检查失败任务是否出现静默成功。\n\n检查数据库实际记录与 REST、ACK 证据是否一致。\n\n三、真实 M1 REST+DB 环境前置\n当前未证实具备\n\n目前读取的三件套没有提供以下环境证据：\n\nM1 实际服务启动方式及地址。\n\n可调用的真实 REST 接口及契约。\n\n实际连接的数据库实例和数据库隔离方式。\n\nACK 的实际实现入口。\n\n本机是否具有可安全使用的隔离测试环境。\n\n因此不能裁定本机已经具备真实 M1 REST+DB 测试条件。\n\n建议在后续实测批次前增加独立的只读环境资格检查：\n\n前置项\n\n\t\n\n通过条件\n\n\n\n\nM1 服务\n\n\t\n\n能确认实际运行实例及版本\n\n\n\n\nREST\n\n\t\n\n从源码和契约确认真实接口，不使用模拟接口代替\n\n\n\n\nDB\n\n\t\n\n能确认真实连接目标、事务边界和测试数据隔离\n\n\n\n\nACK\n\n\t\n\n能定位真实 ACK 产生及消费路径\n\n\n\n\n隔离\n\n\t\n\n有专用测试数据空间，不触碰生产数据\n\n\n\n\n双实例\n\n\t\n\n两个独立实例可以同时运行\n\n\n\n\n故障注入\n\n\t\n\n能在本机受控环境实施，并能安全恢复\n\n如果不具备：\n\n⑥维持 BLOCKED。\n\n不以 Mock、内存数据库、顺序测试替代平台级并发证明。\n\n不为了凑齐测试条件擅自启用 M1 写路径。\n\n另行提交环境准备方案及授权，待环境合格后再进入独立实测批次。\n\n四、五类即停条件\n\n建议冻结为以下五类，任何一类触发均立即停止当前实测，不得为了完成用例继续推进。\n\n停止类别\n\n\t\n\n触发条件\n\n\t\n\n后续处置\n\n\n\n\n① 安全边界\n\n\t\n\n意外连接生产库、触碰非测试数据、越权写入\n\n\t\n\n立即停止，保留现场\n\n\n\n\n② 身份隔离\n\n\t\n\ntask_id、request_id、实例身份发生混淆\n\n\t\n\n停止全部并发请求，检查串单\n\n\n\n\n③ 数据完整性\n\n\t\n\nDB 覆盖、丢失、重复推进、事务状态不明\n\n\t\n\n停止写入，保留数据库证据\n\n\n\n\n④ 故障失控\n\n\t\n\n超时后状态不明、恢复失控、出现错误成功或交叉 ACK\n\n\t\n\n停止后续注入，记录故障现场\n\n\n\n\n⑤ 证据失效\n\n\t\n\n原始响应缺失、时间线无法关联、SHA256 不一致、采集不完整\n\n\t\n\n停止判定，不允许补造证据\n\n补充两项执行规则：\n\n停止不等于清理现场，必须先保留原始日志、数据库快照或可追溯记录。\n\n任何恢复、重试、清理操作必须另行记录，不得覆盖首次失败证据。\n\n五、证据清单与 SHA256\n\n建议实测另批采用以下证据目录：\n\n纯文本\n906-06-acceptance/\n├── environment/\n│   ├── m1-version.txt\n│   ├── rest-contract.txt\n│   ├── db-target.txt\n│   └── isolation-check.txt\n├── scenario-a/\n│   ├── instance-a.json\n│   ├── instance-b.json\n│   ├── rest-requests/\n│   ├── rest-responses/\n│   ├── db-before/\n│   ├── db-after/\n│   ├── ack-events/\n│   └── concurrency-timeline.json\n├── scenario-b/\n│   ├── F1/\n│   ├── F2/\n│   ├── F3/\n│   └── F4/\n├── analysis/\n│   ├── task-a-trace.json\n│   ├── task-b-trace.json\n│   └── cross-check.md\n└── MANIFEST.sha256\n\n证据管理要求：\n\n保留原始响应、原始日志，不只保留整理后的截图。\n\n所有时间使用统一时区，另保留单调时钟测量值。\n\n每条事件必须可关联到 task_id、request_id 和实例身份。\n\nMANIFEST 覆盖全部原始证据及最终报告。\n\n生成后复验 SHA256，任何不一致均不得通过。\n\n独立审查者直接读取原始材料，不采信执行者自述。\n\n时间线关联\n\n至少形成如下事件链：\n\n时间点\n\n\t\n\n事件\n\n\n\n\nT0\n\n\t\n\nA、B 实例身份和测试数据初始化\n\n\n\n\nT1\n\n\t\n\n两请求进入并发屏障\n\n\n\n\nT2\n\n\t\n\n屏障释放，服务端分别接收\n\n\n\n\nT3\n\n\t\n\n两请求实际处理区间重叠\n\n\n\n\nT4\n\n\t\n\n各自 DB 事务提交\n\n\n\n\nT5\n\n\t\n\n各自 ACK 产生及确认\n\n\n\n\nT6\n\n\t\n\n幂等重复请求\n\n\n\n\nT7\n\n\t\n\n故障注入及恢复\n\n\n\n\nT8\n\n\t\n\nDB、REST、ACK 最终交叉核验\n\n\n\n\nT9\n\n\t\n\n证据 SHA256 固化\n\n所有事件必须能还原实际顺序，不能只依赖客户端打印时间。\n\n六、最终验收标准\n\n验收维度\n\n\t\n\nPASS 标准\n\n\n\n\n双实例\n\n\t\n\n两个真正独立任务\n\n\n\n\n真实路径\n\n\t\n\nM1 REST+真实 DB\n\n\n\n\n并发证明\n\n\t\n\n服务端处理时间区间有实际重叠\n\n\n\n\n登记与状态\n\n\t\n\n两任务无串单、无覆盖、无丢失\n\n\n\n\nACK\n\n\t\n\n两任务分别正确确认\n\n\n\n\n幂等\n\n\t\n\n重复请求不重复推进\n\n\n\n\n故障\n\n\t\n\nF1～F4 均符合预期，失败可追溯\n\n\n\n\n证据\n\n\t\n\n原始材料完整、SHA256 一致\n\n\n\n\n独立审查\n\n\t\n\n所有判据逐项 PASS\n\n总门槛：全部满足才允许⑥ PASS。\n\n不能用总体验收通过掩盖单项失败；任何关键项 BLOCKED 或 REWORK，⑥都不能 PASS。\n\n七、执行时间线与授权边界\n\n建议后续按以下阶段推进：\n\n当前：S2 规划协商\n\n本轮完成场景设计裁定，不执行任何实测。\n\nS3：场景设计修订与冻结\n\n将上述场景、故障注入、五类即停、证据规范及判定阈值写入任务包，重新独立审查。\n\n后续另批：环境资格检查\n\n先确认真实 M1 REST+DB 环境和隔离条件，环境不合格则 BLOCKED。\n\n后续另批：⑥实测\n\n必须获得独立实测授权后执行，不继承本次规划授权。\n\nS4：独立验收\n\n独立审查原始证据，逐项裁定 PASS、REWORK 或 BLOCKED。\n\nS5：收口\n\n完成证据归档和决策记录。⑥独立 PASS 后才讨论是否解除 M1 写路径限制。\n\n八、R1 结论表\n\n裁定问题\n\n\t\n\n结论\n\n\n\n\n1. 七维度、八判据覆盖\n\n\t\n\nPASS_WITH_CONSTRAINTS，需操作化补齐\n\n\n\n\n2. 本机真实 M1 REST+DB\n\n\t\n\nBLOCKED，尚无环境证据\n\n\n\n\n3. 五类即停及实测另批边界\n\n\t\n\nPASS_WITH_CONSTRAINTS，按本裁定冻结\n\n\n\n\n4. 证据清单、判据、时间线\n\n\t\n\nPASS_WITH_CONSTRAINTS，须补齐具体字段及 MANIFEST 规范\n\n\n\n\n场景设计能否立即冻结\n\n\t\n\n不能，先修订 v0.1\n\n\n\n\n能否开始真实实测\n\n\t\n\n不能\n\n\n\n\n能否解除 M1 写路径限制\n\n\t\n\n不能\n\n最终签核\nPASS_WITH_CONSTRAINTS / ADJUST\n\n要求执行者按本裁定修订场景设计，形成 v0.2，再提交独立 R2 复审。\n\n本次没有修改仓库、没有执行代码、没有进行实测，也没有启用 M1 写路径。\n\n基线绑定：\n\nRepository：damwate/AIEO\n\nCommit：e16722f\n\n三件套 Git Blob SHA 已在上文逐项列明。\n\n注意：Git Blob SHA 是 Git 对象标识，不等同于文件 SHA256；本次没有生成或冒称生成证据文件 SHA256。\n\n最终红线：906⑥仍为 BLOCKED。两任务 PASS 不替代⑥，M1 写路径限制继续有效。\n\n下一步应由执行者只修改该任务包的场景设计文档，提交 v0.2 和新 commit，交我进行 R2 独立复审；不要启动实测。",
+  "user_unit_key": "208f7078-c807-5a11-8452-3766a1b3fb7b:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "208f7078-c807-5a11-8452-3766a1b3fb7b:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "c19fe95f-550e-43b2-9c27-af01e79b29c9",
+  "stability": {
+    "stable": true,
+    "interval_ms": 6343,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-19T06:57:50.822Z",
+      "read_finished_at": "2026-11-19T06:57:54.148Z",
+      "unit_keys": [
+        "208f7078-c807-5a11-8452-3766a1b3fb7b:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "208f7078-c807-5a11-8452-3766a1b3fb7b:2:assistant",
+          "sha256": "2d84f6bd658acd00d3cd2ada56e29c2e3b91458983cf21d0573b4991fb90d4d0",
+          "size_bytes": 11158
+        }
+      ],
+      "assistant_uuid": "c19fe95f-550e-43b2-9c27-af01e79b29c9",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-19T06:57:57.164Z",
+      "read_finished_at": "2026-11-19T06:57:57.724Z",
+      "unit_keys": [
+        "208f7078-c807-5a11-8452-3766a1b3fb7b:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "208f7078-c807-5a11-8452-3766a1b3fb7b:2:assistant",
+          "sha256": "2d84f6bd658acd00d3cd2ada56e29c2e3b91458983cf21d0573b4991fb90d4d0",
+          "size_bytes": 11158
+        }
+      ],
+      "assistant_uuid": "c19fe95f-550e-43b2-9c27-af01e79b29c9",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "208f7078-c807-5a11-8452-3766a1b3fb7b:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "208f7078-c807-5a11-8452-3766a1b3fb7b:0:user",
+          "208f7078-c807-5a11-8452-3766a1b3fb7b:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "46201a5b290b7e71b0b4fbdadfd1a665409304d8a744baf7978d738966fb9370",
+          "2d84f6bd658acd00d3cd2ada56e29c2e3b91458983cf21d0573b4991fb90d4d0"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "208f7078-c807-5a11-8452-3766a1b3fb7b:0:user",
+          "208f7078-c807-5a11-8452-3766a1b3fb7b:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "46201a5b290b7e71b0b4fbdadfd1a665409304d8a744baf7978d738966fb9370",
+          "2d84f6bd658acd00d3cd2ada56e29c2e3b91458983cf21d0573b4991fb90d4d0"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "208f7078-c807-5a11-8452-3766a1b3fb7b:0:user",
+          "208f7078-c807-5a11-8452-3766a1b3fb7b:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "208f7078-c807-5a11-8452-3766a1b3fb7b:0:user",
+      "208f7078-c807-5a11-8452-3766a1b3fb7b:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "208f7078-c807-5a11-8452-3766a1b3fb7b:0:user",
+          "208f7078-c807-5a11-8452-3766a1b3fb7b:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "208f7078-c807-5a11-8452-3766a1b3fb7b:0:user",
+          "208f7078-c807-5a11-8452-3766a1b3fb7b:2:assistant"
+        ],
+        "overlap_keys": [
+          "208f7078-c807-5a11-8452-3766a1b3fb7b:0:user",
+          "208f7078-c807-5a11-8452-3766a1b3fb7b:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "2d84f6bd658acd00d3cd2ada56e29c2e3b91458983cf21d0573b4991fb90d4d0",
+  "size_bytes": 11158,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-19T06-54-56\\reply.txt",
+  "reply_readback_sha256": "2d84f6bd658acd00d3cd2ada56e29c2e3b91458983cf21d0573b4991fb90d4d0",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-19T06-54-56\\raw-units.json",
+  "raw_units_sha256": "4462e57cce2e49b9bc15b3f81da58e5d5fd89baca2805ffeadb2c3546a4dfd1e",
+  "raw_units_size_bytes": 15169,
+  "raw_units_readback_sha256": "4462e57cce2e49b9bc15b3f81da58e5d5fd89baca2805ffeadb2c3546a4dfd1e",
+  "session_id": "6afe9d76-5af0-83ec-bb84-77e7c54f409e",
+  "conversation_url": "https://chatgpt.com/c/6afe9d76-5af0-83ec-bb84-77e7c54f409e",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}
