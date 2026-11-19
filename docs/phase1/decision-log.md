@@ -323,6 +323,18 @@
 - **复核执行：** 修正提交 `5efb537cd3af945a50386fbc7beb0896e384d54b` 推 origin/main 后，同一 ChatGPT 会话（`6af858e4-7f74-83ec-860e-f360ab9484e2`）回执对账复核。派单 `phase0/logs/dispatch-2026-11-14T12-54-58/`，request 1101B，reply 862B sha256=`b56f65b14adce7f853935045b67588c47f847f15c224c1cba4f2824ce6afa937`。
 - **判定：PASS**——S2 映射闭合（DEC-040 取代笔误行）；30 分钟预授权实质闭合（开工方案拍板限定+高危豁免+DEC-010 保留，**正式生效待用户确认 DEC-040 第 2 条**）；升级通道闭合（默认不换轨/用户批准换轨/第 3 轮失败必须升级不得加 AI 延长）；交接模板 v0.3 五项可填写字段闭合。"原 ISSUES 三项均已修正，无新增实质性阻断。"
 - **复审方建议（原话）：** "用户确认 DEC-040 第 2 条后，启动 Basic MVP。"启动路径按其前轮建议：六模块最小实现方案 → 真实 Java/Python 小需求全闭环验证 → 另一台电脑部署复用验证。
+
+---
+
+### DEC-113 P1 执行启动：人工 FIFO 串行受控形态冻结 + 三个开跑阻塞登记（2026-11-19，用户"OK，P1开始吧"）
+- **决策内容：** 用户明确授权 P1 开跑（DEC-107 的 P0 PASS 不自动推导 P1）。P1 执行形态=人工 FIFO 串行、零新执行器代码；既有 `session_lock`/`workspace_lock`/`gpt_dispatch.mjs`/单任务 `scheduler.py` 仅作受控流程设施，不冒充调度实现。开工自检发现三阻塞：①两只读任务 task_id 未冻结；②906⑥ 无独立可执行场景；③七项开跑前核验未实测。
+- **依据：** `basic/tasks/b-20261119-multitask-p1-execution/`（R1 reply `9a79f7cf…`）；`basic/tasks/b-20261119-p1-task-qualification/`（R1 reply `04410b05…`，两 task_id 冻结：P1-01 `b-20261119-p1-dispatch-evidence-audit`/被测 `7f7830b8…`，P1-02 `b-20261119-p1-aisvc-postpass-lineage-audit`/被测 `0c53c963…`）；用户消息原文"OK，P1开始吧"。
+- **边界：** P2/P3 未授权；M4 写路径/906⑥ 实测/环境检查未授权；DEC-010 红线（main 合并/生产发布/数据删除）保持用户本人拍板。
+
+### DEC-114 906⑥ 独立场景设计触发 L-019 止损并转 DV1 机器可校验契约降档链（2026-11-19，ChatGPT 会商裁定）
+- **决策内容：** 906⑥ 场景设计 R1 ADJUST、R2–R6 五次 REJECT（每次暴露同一事件契约域新缺口），达到 WORKFLOW 模块五三轮止损阈值。停止常规 R 轮，召开三方会商；会商四项全 PASS：根因=交付缺陷为主、验证机制缺陷为次；同意 DV1（JSON Schema + 字段级 N/A 原因映射 + 正反例矩阵 + 语义校验器）；单次验收门槛冻结；R1–R6 历史裁定不改写、会商不占返工计数。DV1 首次验收 REJECT（RJ-01 目标未先校验/RJ-02 标准 enum 缺失）→ DV2 调整验证静态全 PASS 但整体 BLOCKED（审查端无法本地复跑）→ DV2b 附单文件自包含验证器，附件挂载两次 STOP（未发送、无重发风险）。
+- **依据：** 会商 reply SHA256 `afb0bd2006b4da8924d0d91a2bde18ad9bfda3c694aa05cd17de550527801223`；DV1 REJECT reply `d555d4d787c8866ef6b44bc6d98e358788abcbea32d7e8e73d629feeec1060fe`；DV2 BLOCKED reply `ed0539b8fcee526975d0c5049d124e8ccccd46c7def4f4559976debe79c24252`；产物 `basic/tasks/b-20261119-p1-906-06-concurrency/acceptance/dv1/`（自检 24/24 all_ok=true）；`steps.md` S4-DV1 链。
+- **当前状态与边界：** DV2=**BLOCKED**（唯一缺口=独立复跑），不冒充 PASS、不改判 REJECT、不启 R7；906⑥ 仍 BLOCKED；M1 写路径不解除；环境资格检查与并发实测另批授权；P1 阻塞③与两只读审计任务尚未执行。
 - **状态：** 治理文档复审全链闭合（DEC-037 归档→DEC-040 ISSUES 修正→本条 PASS）；Basic MVP 启动待用户两步确认：①确认 DEC-040 第 2 条（30 分钟条款边界）；②批准开工会议启动（DEC-038 协议第一步=主会话出六模块方案发 ChatGPT 共识讨论）。
 - **关联：** DEC-040（被复核）、DEC-038（启动协议）、DEC-037（Basic MVP 战略）。
 

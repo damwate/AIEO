@@ -1,0 +1,25 @@
+{
+  "at": "2026-11-19T07:53:32.688Z",
+  "outcome": "failure_created_pages_closed",
+  "before": [
+    {
+      "id": "44BB47607C838C668840D090AB1ED358",
+      "url": "https://chatgpt.com/c/6afe9d76-5af0-83ec-bb84-77e7c54f409e"
+    }
+  ],
+  "exit_before_disposal": [
+    {
+      "id": "44BB47607C838C668840D090AB1ED358",
+      "url": "https://chatgpt.com/c/6afe9d76-5af0-83ec-bb84-77e7c54f409e"
+    }
+  ],
+  "exit_after_disposal": [
+    {
+      "id": "44BB47607C838C668840D090AB1ED358",
+      "url": "https://chatgpt.com/c/6afe9d76-5af0-83ec-bb84-77e7c54f409e"
+    }
+  ],
+  "created_pages": 0,
+  "disposal": "发送前失败：仅关闭本次自建页；既有页零触碰（exit_before/exit_after 对照=值守页零关闭证明）",
+  "error": "附件挂载未验证（form 内未见文件名 chip），STOP"
+}

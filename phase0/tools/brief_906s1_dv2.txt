@@ -1,0 +1,6 @@
+[906S1-DV2-20261119] 906⑥ DV2调整验证(第三级)
+依据:DV1 REJECT reply d555d4d787c8866ef6b44bc6d98e358788abcbea32d7e8e73d629feeec1060fe 两项:RJ-01 RECOVER目标未先校验;RJ-02标准Schema缺enum。按会商不启R7,本轮仅核两项整改+重跑,不重审已PASS门槛。
+读:damwate/AIEO@24f542ed3a2c1e466f1f1b059d52bb00103a829f basic/tasks/b-20261119-p1-906-06-concurrency/acceptance/dv1/{event-contract.schema.json,semantic-validator.mjs,test-cases.json,test-results.json,MANIFEST.sha256,DV1-REPORT.md}。
+核1:validateEvent须先校验context全部目标事件(结构/类型/必填/原因映射);N15目标类型允许但结构非法须反例拒绝。
+核2:标准Schema的event_type与n/a_reason值enum须存在且自检强制;未知类型/原因标准层即拒。
+自检24/24 all_ok=true(9正/15反);请直读产物+复跑node run-tests.mjs。三态PASS/REJECT(列项)/BLOCKED+结论表+SHA256,绑定被测commit 24f542e;⑥BLOCKED/M1写路径不解除/实测另批。

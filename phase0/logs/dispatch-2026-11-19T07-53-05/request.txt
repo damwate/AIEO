@@ -1,0 +1,5 @@
+[906S1-DV2B-20261119] DV2b独立复跑证据
+依据:DV2 reply ed0539b8fcee526975d0c5049d124e8ccccd46c7def4f4559976debe79c24252=BLOCKED,仅因审查端无六文件本地复跑;静态整改全PASS,不启R7。
+附件:dv1-standalone.mjs(单文件内联schema+校验器+24用例+runner,无外部依赖)。请在你的执行环境运行 node dv1-standalone.mjs,核对实际stdout的all_ok/total/matched/schema_self_consistency,不要采信执行者自述。
+并读 damwate/AIEO@2eaefc266114c82c7006a59c490e3e528e7cb6c1 acceptance/dv1/{DV1-REPORT.md,MANIFEST.sha256,dv1-standalone.mjs} + commit diff 确认内联内容与六文件一致。
+三态PASS/REJECT/BLOCKED+结论表+附件SHA256,绑定被测commit 2eaefc2;成功则DV2整体PASS=契约降档链关闭确认(原R1-R6不改写);⑥仍BLOCKED/M1写路径不解除/实测另批。

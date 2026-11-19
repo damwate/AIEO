@@ -1,0 +1,388 @@
+ChatGPT 说：
+906⑥ DV2 独立调整验证
+
+BLOCKED 两项整改的静态复核均 PASS；但要求的 node run-tests.mjs 独立复跑未完成，因此本轮整体不能签发 PASS。
+
+被测仓库：damwate/AIEO
+
+被测 commit：24f542ed3a2c1e466f1f1b059d52bb00103a829f
+
+已按完整 commit SHA 读取指定目录的六个文件，并核对了 commit diff。没有使用 HEAD，也没有把执行者自检报告当成独立运行证据。
+
+一、两项整改复核
+
+检查项
+
+	
+
+结果
+
+	
+
+核查依据
+
+
+
+
+RJ-01：RECOVER context 目标先校验
+
+	
+
+PASS
+
+	
+
+validateEvent() 遍历全部 context，逐条执行 validateStructure() 和 validateReasonMapping()，再验证当前事件及 RECOVER 复制语义
+
+
+
+
+N15：允许类型但目标结构非法
+
+	
+
+PASS
+
+	
+
+N15 的目标是 REST_REQ，但缺少 clock_domain 和 idempotency_key；结果记录为拒绝，并给出两条对应错误
+
+
+
+
+RJ-02：标准 JSON Schema 枚举
+
+	
+
+PASS
+
+	
+
+event_type 增加标准 enum；n/a_reason.additionalProperties 增加标准值 enum
+
+
+
+
+Schema 自检强制 enum 存在
+
+	
+
+PASS
+
+	
+
+checkSchemaSelfConsistency() 对两个 enum 缺失分别报错，并检查其与 x-* 元数据一致
+
+
+
+
+未知 event_type / 原因值标准层拒绝
+
+	
+
+PASS
+
+	
+
+标准 Schema 中的 enum 已具备相应约束；不是只依赖自定义 x-* 校验逻辑
+
+RJ-01 具体判断
+
+这次修复补上了 DV1 的关键绕过路径：
+
+JavaScript
+(context || []).forEach((ctxEvent, i) => {
+  const ctxErrors = [];
+  validateStructure(ctxEvent, ctxErrors);
+  validateReasonMapping(ctxEvent, ctxErrors);
+  ctxErrors.forEach((m) => errors.push(...));
+});
+
+N15 的目标事件虽然属于允许的 REST_REQ 类型，但缺少两个必要字段。结果记录明确拒绝：
+
+context[0] badTarget: 缺基线必填: clock_domain
+
+context[0] badTarget: 缺类型必填: REST_REQ.idempotency_key
+
+RJ-01 的整改方向正确，N15 对应缺陷得到覆盖。
+
+边界说明：本次按要求核对 context 事件的结构、类型、必填和原因映射，没有把要求扩大为对 context 内 RECOVER 事件进行递归语义校验。
+
+RJ-02 具体判断
+
+Schema 已包含：
+
+event_type.enum：8 个允许的事件类型。
+
+n/a_reason.additionalProperties.enum：GLOBAL_SCOPE、TARGET_EVENT_FIELD_NOT_APPLICABLE。
+
+自检逻辑也从 DV1 的“有 enum 才比较”改为“没有 enum 直接报错”。这解决了 DV1 自检漏掉标准枚举缺失的问题。
+
+RJ-02 静态整改通过。
+
+二、24/24 结果与独立复跑
+产物报告内部一致
+
+test-results.json 报告：
+
+项目
+
+	
+
+报告值
+
+
+
+
+总用例
+
+	
+
+24
+
+
+
+
+正例
+
+	
+
+9
+
+
+
+
+反例
+
+	
+
+15
+
+
+
+
+预期匹配
+
+	
+
+24
+
+
+
+
+all_ok
+
+	
+
+true
+
+
+
+
+N15
+
+	
+
+reject，符合预期
+
+但是，我没有成功在本轮环境中独立执行 node run-tests.mjs。
+
+当前可读取 GitHub 指定 commit 的源码，但尚未将完整文件集放入 Node 执行目录。本地 Node 可用不等于测试已运行；test-results.json 中的 24/24 仍然只是提交产物中的执行结果。
+
+因此：
+
+执行者报告：24/24，内部记录一致。
+
+独立复跑：BLOCKED
+
+不将执行者报告冒充为本轮独立复跑。
+
+三、结论表
+
+检查范围
+
+	
+
+结论
+
+
+
+
+RJ-01 context 目标事件校验
+
+	
+
+PASS
+
+
+
+
+N15 非法目标反例
+
+	
+
+PASS
+
+
+
+
+RJ-02 标准 JSON Schema enum
+
+	
+
+PASS
+
+
+
+
+enum 缺失自检
+
+	
+
+PASS
+
+
+
+
+24/24 执行者结果报告
+
+	
+
+PASS（仅报告核对）
+
+
+
+
+独立执行 node run-tests.mjs
+
+	
+
+BLOCKED
+
+
+
+
+DV2 整体验收
+
+	
+
+BLOCKED
+
+四、文件指纹
+
+以下 Git Blob SHA 是本轮从指定 commit 读取到的对象指纹；内容 SHA256 列为 MANIFEST 中的声明值。由于未在本轮执行独立 SHA256 重算，不能把声明值表述为已独立验证的哈希。
+
+文件
+
+	
+
+Git Blob SHA
+
+	
+
+MANIFEST 声明 SHA256
+
+
+
+
+event-contract.schema.json
+
+	
+
+abc925cc8bc3ba8335ffdafacd0a291831db5703
+
+	
+
+e9247bbeccaab6eed1750053545faec649e06b68bba5ab91d5f99b2b01713ed4
+
+
+
+
+semantic-validator.mjs
+
+	
+
+572080c5179584fee603039e56f0dae0ad439111
+
+	
+
+046d623338ec89de831e73f4b355fc5acfde65c382c651223fb53b11b61287df
+
+
+
+
+test-cases.json
+
+	
+
+3477e356550b7e7611b27ff5052082b476d1f650
+
+	
+
+dcb89145231ed209bd598bd6295794b0e6f73eb5e4cb8365e0b64698a1cf5a4c
+
+
+
+
+run-tests.mjs
+
+	
+
+a84d30d009add1c102ff765ac710df2ad6354035
+
+	
+
+d637cb5130b219ba1707bc68950c50e9f89d6fd7e3089ff098b1dc8f721ffabe
+
+
+
+
+test-results.json
+
+	
+
+adc6d586c148140d8101a36e1ae79baaa14efbfb
+
+	
+
+a8cd492815851f43e79b4ae8c4d78cf8da344e54630bb2039558946c18d3ef37
+
+
+
+
+MANIFEST.sha256
+
+	
+
+92dc38619941041dfa23715d925434e58d6028fd
+
+	
+
+本轮未独立重算
+
+
+
+
+DV1-REPORT.md
+
+	
+
+8dfbbfcdba6fb0bc6a4e23c9d4f681c0f2f1284f
+
+	
+
+c92f247786a1de068a7805d198f40c619cfa155d13f5fd17eaa1398c09e27935
+
+五、边界与后续
+
+DV1 的两项 REJECT 已有对应整改，静态复核通过。
+
+DV2 整体仍为 BLOCKED，原因仅为独立复跑未完成；不把它改判为 REJECT。
+
+不启 R7，不恢复原 R 轮整改循环。
+
+⑥继续 BLOCKED；M1 写路径限制不解除。
+
+不进行环境资格检查或⑥并发实测；两者仍须另批授权。
+
+下一步只需补齐独立执行证据：在取得这六个文件的本地副本后运行 node run-tests.mjs，并核对实际生成的结果和 SHA256。该步骤完成前，不建议签发 DV2 整体 PASS。
