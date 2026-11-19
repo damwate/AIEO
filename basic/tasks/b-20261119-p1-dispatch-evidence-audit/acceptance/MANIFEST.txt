@@ -1,0 +1,9 @@
+# P1-01 acceptance/MANIFEST.txt（2026-11-20）
+
+审计 R1 现场：phase0/logs/dispatch-2026-11-19T18-43-43/（reply.txt 6459B，SHA256=0c3200480a0f80426682e64a657879d2b7824bd7ca0bddbe45217ac427897c1c）
+
+SHA256 清单（工作区字节基准）：
+0c3200480a0f80426682e64a657879d2b7824bd7ca0bddbe45217ac427897c1c *phase0/logs/dispatch-2026-11-19T18-43-43/reply.txt
+3abed48b3e2caabb9ea42c8d1d63a3204a691590cd720d99e650d9fc366fb7a7 *phase0/logs/dispatch-2026-11-19T18-43-43/result.json
+14e786e175dcbea6c3572e4efe30da38dfc736b93649ff5f168dd1baa879bc1c *phase0/logs/dispatch-2026-11-19T18-43-43/request.txt
+d8ce8069052aea6aee60065a29c4f55e5b63e7661f4341c8b8c32c34416f1865 *basic/tasks/b-20261119-p1-dispatch-evidence-audit/acceptance/sha256-reconciliation-f05.md
