@@ -1,15 +1,18 @@
-# P1-02 acceptance/MANIFEST.txt（2026-11-20）
+# P1-02 acceptance/MANIFEST.txt（2026-11-20 终版）
 
-审计会话：6aff4668-21dc-83ec-997e-06a1794dd50f
+审计会话：6aff4668-21dc-83ec-997e-06a1794dd50f（R1+R2 同会话）
 R1 现场：phase0/logs/dispatch-2026-11-19T18-55-47/（reply.txt 2981B，SHA256=128f9e0398dd6fbd0d3b11bf532f43a5d0de8f1d3f55d67ef1a1609443e948f4）
-供证：acceptance/branch-cleanup-evidence.md（reflog+delivery §8+现况核验，提交审查方 R2 复核 #4）
+R2 现场：phase0/logs/dispatch-2026-11-19T19-01-35/（reply.txt 1153B，SHA256=37b967cf304d0dab5f1b66342735c3e1e503d54d35981580aae8baa7eb140062）
+供证：acceptance/branch-cleanup-evidence.md（reflog+delivery §8+现况核验，R2 采纳解除 #4 BLOCKED）
 
 SHA256 清单（工作区字节基准；MANIFEST.txt 自身除外）：
 
 7ba98687d7f462c50dcd685812ca3bcff768ad52a9200ecb52fe0f2df42f1690 *basic/tasks/b-20261119-p1-aisvc-postpass-lineage-audit/requirement.md
-c9aa2683c0eabb2143ecb0df86eee7bd2061e2a0fb9b0ec8a713bed0f30bfb8c *basic/tasks/b-20261119-p1-aisvc-postpass-lineage-audit/task-brief.md
-5c4237d736f7af02507a7ad03dbc453e40f7b89392eacdc60fd7b4b03f13c341 *basic/tasks/b-20261119-p1-aisvc-postpass-lineage-audit/steps.md
-d32275abe2e9f1544d0ec73e200b272e65fbf9cfc07e6094fc01a83e427e312f *basic/tasks/b-20261119-p1-aisvc-postpass-lineage-audit/delivery.md
+54a5b0024297b73ad8bda8735e3668f0c1266b4686275d02fa9b07ab8f0b2b83 *basic/tasks/b-20261119-p1-aisvc-postpass-lineage-audit/task-brief.md
+9456779a71f950a0e7f58d8ecc750acd892e1b456808b4f2055304e94688a3d1 *basic/tasks/b-20261119-p1-aisvc-postpass-lineage-audit/steps.md
+8b066ee7745709f574cc0667ccedf9eb680476a8fb5675bb67553e443d56be58 *basic/tasks/b-20261119-p1-aisvc-postpass-lineage-audit/delivery.md
 2f23e043470ae04b9a69190292dfde973fd65ffaa1e44bae8289d2daec84b985 *basic/tasks/b-20261119-p1-aisvc-postpass-lineage-audit/acceptance/branch-cleanup-evidence.md
 128f9e0398dd6fbd0d3b11bf532f43a5d0de8f1d3f55d67ef1a1609443e948f4 *phase0/logs/dispatch-2026-11-19T18-55-47/reply.txt
 84b7e2cccf9117ebafd5bc49d7dadecea7bf45f1ae2e4b66d3ffc47f06229383 *phase0/logs/dispatch-2026-11-19T18-55-47/result.json
+37b967cf304d0dab5f1b66342735c3e1e503d54d35981580aae8baa7eb140062 *phase0/logs/dispatch-2026-11-19T19-01-35/reply.txt
+16b4099cd3b61971a694dc737a67fe884b8d1e2a7616e9d3cce741b635f953d1 *phase0/logs/dispatch-2026-11-19T19-01-35/result.json
