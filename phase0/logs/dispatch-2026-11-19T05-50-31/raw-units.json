@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-19T05:53:28.187Z",
+  "user_unit_key": "a2c52b0e-e567-542d-817f-b6507ad79b44:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "a2c52b0e-e567-542d-817f-b6507ad79b44:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "99400f26-e6cc-450a-9c6a-2719d1079e4f",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "a2c52b0e-e567-542d-817f-b6507ad79b44:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "a2c52b0e-e567-542d-817f-b6507ad79b44:0:user",
+          "a2c52b0e-e567-542d-817f-b6507ad79b44:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "a9bd7ee9247afc65086b5fc415c7c7c1bb23e801969c305e87ef0a8e3a2b270f",
+          "beb4b2b866ccf69135abbc3dffa572f4f63b9d40c90e832631c53c42afca9880"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "a2c52b0e-e567-542d-817f-b6507ad79b44:0:user",
+          "a2c52b0e-e567-542d-817f-b6507ad79b44:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "a9bd7ee9247afc65086b5fc415c7c7c1bb23e801969c305e87ef0a8e3a2b270f",
+          "beb4b2b866ccf69135abbc3dffa572f4f63b9d40c90e832631c53c42afca9880"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "a2c52b0e-e567-542d-817f-b6507ad79b44:0:user",
+          "a2c52b0e-e567-542d-817f-b6507ad79b44:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "a2c52b0e-e567-542d-817f-b6507ad79b44:0:user",
+      "a2c52b0e-e567-542d-817f-b6507ad79b44:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "a2c52b0e-e567-542d-817f-b6507ad79b44:0:user",
+          "a2c52b0e-e567-542d-817f-b6507ad79b44:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "a2c52b0e-e567-542d-817f-b6507ad79b44:0:user",
+          "a2c52b0e-e567-542d-817f-b6507ad79b44:2:assistant"
+        ],
+        "overlap_keys": [
+          "a2c52b0e-e567-542d-817f-b6507ad79b44:0:user",
+          "a2c52b0e-e567-542d-817f-b6507ad79b44:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "a2c52b0e-e567-542d-817f-b6507ad79b44:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nMTP1-PLAN-R1 规划协商裁定\n总体 PASS（附约束）\n仅规划\n\n被测仓库： damwate/AIEO\n\n被测 commit（完整 SHA）：\n\nf9ee1cde007098630219e83b4fb5f3f226874ea8\n\n审查范围：\n\nP1 规划任务包三件套及 steps.md\n\nstandard/MULTITASK-IMPLEMENTATION-PLAN.md v0.4\n\nDEC-106、DEC-107、DEC-108\n\n依据均按指定 commit 直读，不以任务书中的执行者自述代替仓库事实。\n\n一、三项缺口裁定\n\n编号\n\n\t\n\n审查事项\n\n\t\n\n结论\n\n\n\n\n①\n\n\t\n\nP0 PASS 后冻结 v1.0\n\n\t\n\nPASS\n\n\n\n\n②\n\n\t\n\n906⑥验证门唯一归属\n\n\t\n\nPASS\n\n\n\n\n③\n\n\t\n\nP1 开跑前置清单\n\n\t\n\nPASS\n\n① 状态漂移：允许冻结 v1.0\n\n裁定：PASS。\n\n理由：\n\nDEC-107 已明确记录 P0 R4 PASS。\n\nR4 的审查结论是方案设计通过，而不是实施授权。\n\nv0.4 §六原本就约定 P0 复审通过后进入 v1.0 冻结流程。\n\n目前没有必要因为 P1 尚未获准实施，就继续将已经通过 P0 的设计标记为待 P0 复审。\n\n批准的状态转换：\n\nv0.4\n\n设计稿\n\nv1.0\n\n设计冻结\n\n依据 DEC-107 P0 R4 PASS\n\n冻结只表示设计定稿，不代表实施启动。\n\nP1：仍须独立批准\n\nP2：仍须独立批准\n\nP3：仍须独立批准\n\nDEC-010：原有红线不变\n\n文头建议改为：\n\nStandard 多任务模式实施方案 v1.0（设计已冻结，P0 R4 PASS；不构成实施授权）\n\n同时明确保留四项条件：\n\n实施时 fsync 降级失败必须 STOP。\n\nSHA256SUMS 全覆盖。\n\nRELEASE-RECORD 映射独立复核。\n\nP1-P3 逐级独立批准。\n\n不允许把 v1.0 冻结解释成 P1 自动获批。\n\n② 906⑥门归属：唯一归入 P1\nPASS\n\n这里以时间更晚、针对性更强的 DEC-108 为准。\n\n依据：\n\n多任务方案 §六原先将 906⑥放在 P2。\n\nDEC-108 明确登记：⑥并入 DEC-106④ 多任务 P1 验证门，随 P1 授权推进。\n\nDEC-109 又明确记载⑥关联多任务 P1 门。\n\n因此裁定：\n\n906⑥唯一归属：P1 验证门。\n\n需要做以下文档口径统一：\n\n文件\n\n\t\n\n修正要求\n\n\n\n\nMULTITASK-IMPLEMENTATION-PLAN.md §六\n\n\t\n\n906⑥从 P2 行移出，归入 P1 验证门\n\n\n\n\nC2 batch2 delivery.md\n\n\t\n\n保留 P1 门表述\n\n\n\n\nDEC-108\n\n\t\n\n保留原决策，不另造第二道⑥门\n\n\n\n\n后续 P2\n\n\t\n\n不再重复执行或重新定义906⑥\n\n还有一个必须写清楚的边界：\n\nP1 的两任务只读复审试验与 906⑥平台级验证是不同的验证内容。不能因为两者都归属 P1，就把只读复审通过当作 906⑥通过。\n\n906⑥未独立 PASS 前，M1 写路径并行限制不解除。\n\n这项裁定不允许通过改名、拆分阶段或调整执行顺序绕过⑥。\n\n③ P1 开跑前置清单\nPASS\n\n原建议七项方向正确，但需要补充可核验标准。\n\n以下作为 P1 开跑前的冻结检查清单：\n\n序号\n\n\t\n\n前置条件\n\n\t\n\n必须具备的证据\n\n\n\n\n1\n\n\t\n\n逐级批准登记\n\n\t\n\n用户对 P1 的明确独立批准；不得引用 P0 PASS 代替\n\n\n\n\n2\n\n\t\n\n基线 SHA\n\n\t\n\n完整40位 commit SHA，任务登记、证据和验收一致\n\n\n\n\n3\n\n\t\n\n两任务隔离\n\n\t\n\n两个独立 task_id、会话 UUID、证据目录，无交叉绑定\n\n\n\n\n4\n\n\t\n\n通道闸空闲\n\n\t\n\nsession_lock、reviewer 指针写入通道状态核验，无活跃持有者\n\n\n\n\n5\n\n\t\n\n五件套清单\n\n\t\n\n每个任务明确必需文件、非空检查及逐文件 SHA256\n\n\n\n\n6\n\n\t\n\n熔断就绪\n\n\t\n\n五类即停条件、单任务/全局熔断边界、人工恢复条件明确\n\n\n\n\n7\n\n\t\n\n批次复盘模板\n\n\t\n\n任务结果、证据、失败、偏差、未解决问题及后续建议\n\n补充三个关键要求：\n\n第一，授权登记不能继承。\n\nP0 PASS 不等于 P1 批准；P1 批准不等于 P2 批准；P2 批准不等于 P3 批准。\n\n第二，任务隔离必须强隔离。\n\n两任务不能仅靠简报标记区分，必须具备独立任务身份、会话绑定和证据命名空间。\n\n第三，熔断必须可实际执行。\n\n不能只在文档中列出熔断矩阵，还必须确认暂停标志、派单前检查、在途处置和人工恢复机制均有明确责任主体。\n\n以上七项现在只登记，不执行核验操作。\n\n二、建议形成的 v1.0 §六\n\n建议最终采用以下版本，避免后续再次发生 P1/P2 口径漂移：\n\n阶段\n\n\t\n\n内容\n\n\t\n\n授权要求\n\n\n\n\nP0\n\n\t\n\n多任务设计评审\n\n\t\n\n已 PASS\n\n\n\n\nP1\n\n\t\n\n两任务只读复审并行 + 906⑥独立验证门\n\n\t\n\n用户独立批准\n\n\n\n\nP2\n\n\t\n\n后续平台能力受控放量，不重复906⑥\n\n\t\n\n用户独立批准\n\n\n\n\nP3\n\n\t\n\n并行度放开（≤3）\n\n\t\n\nP2通过、复盘后另批\n\n这里有一个重要限定：P1 内部的两任务只读试验与 906⑥仍须分别留证、分别判定，不能用一个总体 PASS 覆盖两项。\n\nM4 始终封闭，DEC-010 不变。\n\n三、审查结论汇总\n\n项目\n\n\t\n\n结论\n\n\t\n\n约束\n\n\n\n\n缺口① v1.0冻结\n\n\t\n\nPASS\n\n\t\n\n设计冻结≠实施授权\n\n\n\n\n缺口② ⑥门归属\n\n\t\n\nPASS\n\n\t\n\n唯一归P1，不得绕过\n\n\n\n\n缺口③ 七项前置清单\n\n\t\n\nPASS\n\n\t\n\n补充核验标准\n\n\n\n\n总体规划方案\n\n\t\n\nPASS\n\n\t\n\n按以上裁定修订后冻结\n\n四、SHA256 回执\n\n审查绑定\n\n被测 commit\n\nf9ee1cde007098630219e83b4fb5f3f226874ea8\n\n审查回执摘要 SHA256\n\n5ad9369e6fbd7df39ea39be5e57bf880ac108340b7bb239ad7d3ccae2e517f06\n\n对应本轮规范化裁定摘要，不是仓库文件 SHA，也不是 Git commit SHA。\n\n本轮核对的原始文件 Blob SHA：\n\n文件\n\n\t\n\nBlob SHA\n\n\n\n\nrequirement.md\n\n\t\n\ncd54309158a5a2722d2405c2d1b2674f616eafe5\n\n\n\n\ntask-brief.md\n\n\t\n\n08f2b901046687f2b4d1a096b560e518e1028061\n\n\n\n\nsteps.md\n\n\t\n\n20bbde81e4a5f81e06183403f907107fc160b973\n\n\n\n\n原方案 v0.4\n\n\t\n\na1ba4ee2e8e6517b14ac578d70aae1718cdd678a\n\n五、执行边界与下一步\n本轮规划裁定通过\n\n本轮没有执行任何仓库写入。\n\n禁止事项\n\n\t\n\n本轮状态\n\n\n\n\nP1 实际开跑\n\n\t\n\n未执行\n\n\n\n\nDEC-010\n\n\t\n\n未触及\n\n\n\n\n代码修改\n\n\t\n\n零\n\n\n\n\nM1 状态推进\n\n\t\n\n零\n\n\n\n\nmain 合并\n\n\t\n\n未执行\n\n\n\n\n部署\n\n\t\n\n未执行\n\n\n\n\n数据删除\n\n\t\n\n未执行\n\n下一步建议： 由开发方根据本轮裁定准备 v1.0 文档和任务包修订稿，再进行独立 R2 复审。\n\nR2 应重点核查：\n\nv1.0 文头及冻结状态是否一致。\n\n§六的 P1/P2/906⑥唯一归属是否统一。\n\n七项 P1 前置条件是否完整且可检查。\n\nDEC-107 的全部约束是否保留。\n\n是否出现任何隐含的 P1 开跑授权。\n\n最终状态：P1 规划准备可以继续；P1 实施尚未获准。",
+      "text_sha256": "beb4b2b866ccf69135abbc3dffa572f4f63b9d40c90e832631c53c42afca9880",
+      "size_bytes": 6385,
+      "assistant_uuid": "99400f26-e6cc-450a-9c6a-2719d1079e4f"
+    }
+  ]
+}
