@@ -1,0 +1,367 @@
+ChatGPT 说：
+一、R2 四项整改核验
+
+R2 整改项
+
+	
+
+结论
+
+	
+
+核验结果
+
+
+
+
+① 清理 S4 预写 PASS 矛盾
+
+	
+
+PASS
+
+	
+
+steps.md 已改为逐轮记录：R1 REJECT → R2 REJECT → R3；S4 结论明确为待 R3 终局裁定，没有再预写 R2 PASS。
+
+
+
+
+② 返工表绑定修复 SHA
+
+	
+
+PASS
+
+	
+
+返工表已写入完整 SHA：9e32d020fcad34c6c37335f44dfa1e148374b816。
+
+
+
+
+③ S5 六要素收口
+
+	
+
+PASS
+
+	
+
+S5 已有目标、修改文件、修改内容、执行结果、测试结果、验收证据引用六部分；delivery.md 也已提供七要素交付记录。
+
+
+
+
+④ ST-05 实际运行输出归档
+
+	
+
+BLOCKED
+
+	
+
+归档文件存在，六项检查均显示 PASS，但缺少可独立核验的运行命令、运行时间、任务包被测 commit 等元数据。
+
+二、ST-05 证据复核
+
+归档文件存在，内容检查通过。
+
+文件：phase0/logs/mtp1-st05-check.txt
+
+Git Blob SHA：
+
+b00beb46f91bce94a51023f60cb1fe4bbfb48259
+
+实际内容包含：
+
+Taskpack：b-20261119-multitask-p1-planning
+
+Phase：COMPLETED
+
+①需求记录：PASS
+
+②步骤清单：PASS
+
+③步骤验收记录：PASS
+
+④REJECT 返工记录：PASS
+
+⑤返工次数：PASS
+
+⑥交付记录：PASS
+
+Overall：PASS
+
+但这份文件实际上只有上述九行结果回显。它没有包含 python -I basic/tool/check_taskpack.py ... 的命令行、运行时间、执行环境或检查时对应的完整任务包 commit。
+
+steps.md S5 第⑤项声称归档的是“命令+回显+commit 绑定”，与实际文件内容不一致。
+
+因此我可以确认归档文件存在且回显为 6/6 PASS，但不能确认这份回显确实由指定命令在当前 d2e0f948... 对应的任务包状态上产生。不能把这项证据签成独立可复核 PASS。
+
+三、其他约束核验
+
+检查项
+
+	
+
+结论
+
+	
+
+核验结果
+
+
+
+
+⑥验证门唯一归属 P1
+
+	
+
+PASS
+
+	
+
+v1.0 §六仍明确 906⑥ 唯一归 P1，P2 不重复⑥。
+
+
+
+
+无隐含 P1 开跑授权
+
+	
+
+PASS
+
+	
+
+requirement、task-brief、delivery、DEC-112 均保留 P1 须用户独立批准；本任务未授予开跑权限。
+
+
+
+
+四项冻结条件
+
+	
+
+PASS
+
+	
+
+fsync 降级 STOP、SHA256SUMS 全覆盖、RELEASE-RECORD 独立复核、P1—P3 逐级独立批准均保留。
+
+
+
+
+方案正文未改
+
+	
+
+PASS
+
+	
+
+GitHub compare 显示本次整改没有修改 standard/MULTITASK-IMPLEMENTATION-PLAN.md。
+
+
+
+
+DEC-112 登记
+
+	
+
+PASS
+
+	
+
+docs/phase1/decision-log.md 已有 DEC-112，包含裁定、冻结依据、返工记录和授权边界。
+
+
+
+
+S5 收口记录
+
+	
+
+PASS
+
+	
+
+S5 六要素均已填写，delivery.md 已落盘，任务状态为 COMPLETED（规划层）。
+
+四、Commit 与文件绑定
+
+被测方案 commit：6b865429e66679349368cbe62b61620864183c37
+
+R1 整改 commit：9e32d020fcad34c6c37335f44dfa1e148374b816
+
+R2 整改 commit：d2e0f94868dba078c48e6bdfd86ea45130551337
+
+本次核验文件 Blob SHA：
+
+文件
+
+	
+
+Git Blob SHA
+
+
+
+
+steps.md
+
+	
+
+3fba1680eb0e1646f8edfb034a13c74a444def54
+
+
+
+
+delivery.md
+
+	
+
+3e7b3863179cfc032bb8510e74bc4cff01b038e4
+
+
+
+
+task-brief.md
+
+	
+
+b73e9cfbb2fcf1f9438d763b9fc11c80418fbc36
+
+
+
+
+decision-log.md
+
+	
+
+e177237ba36d6d97c758d34696e12517620f4a53
+
+
+
+
+MULTITASK-IMPLEMENTATION-PLAN.md
+
+	
+
+4762ca4faf42e827946869397192a070d6ed6fa1
+
+
+
+
+mtp1-st05-check.txt
+
+	
+
+b00beb46f91bce94a51023f60cb1fe4bbfb48259
+
+R2 reply SHA 与任务记录一致：
+
+c1ffb9e6189749dcc00d7b0cd73761b43c636bc9ecc9fbc4b7e3d85921135a6e
+
+五、R3 终局裁定
+BLOCKED（仅 ST-05 执行证据）
+
+项目
+
+	
+
+结论
+
+
+
+
+R2 四项整改
+
+	
+
+3 PASS / 1 BLOCKED
+
+
+
+
+返工表 SHA 绑定
+
+	
+
+PASS
+
+
+
+
+S5 六要素收口
+
+	
+
+PASS
+
+
+
+
+ST-05 归档输出
+
+	
+
+BLOCKED
+
+
+
+
+⑥归属 P1
+
+	
+
+PASS
+
+
+
+
+无隐含 P1 开跑授权
+
+	
+
+PASS
+
+
+
+
+四项冻结条件
+
+	
+
+PASS
+
+
+
+
+方案正文未改
+
+	
+
+PASS
+
+本轮规范化回执摘要 SHA256：
+
+3fee32761f6cc9ad2deb8b935e310512c4c97197bdaeb661b1ef1c3404d45dcf
+
+该摘要不是 Git commit SHA，也不是文件 Blob SHA。
+
+唯一剩余整改
+
+补齐 phase0/logs/mtp1-st05-check.txt 的可复核运行证据，至少包含：
+
+实际执行命令；
+
+运行时间及执行环境；
+
+被测任务包完整 commit SHA；
+
+完整命令输出（保留 6/6 PASS）。
+
+然后提交新完整 SHA，针对 ST-05 证据单项复核即可，不需要重审方案或重新跑前三项整改。
+
+最终边界： 方案设计继续保持 PASS；P1 仍未获批、未开跑；906⑥仍是 P1 独立验证门；M1 写路径限制不解除；DEC-010 未触及。

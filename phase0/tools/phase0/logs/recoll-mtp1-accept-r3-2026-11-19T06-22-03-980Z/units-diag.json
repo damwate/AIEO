@@ -1,0 +1,58 @@
+[
+  {
+    "key": "a2c52b0e-e567-542d-817f-b6507ad79b44:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 662,
+    "text_head": "[MTP1-PLAN-R1|20261119] 会话迁移+P1规划协商\n接棒:旧审查会话6afe7ccb归档只读。\n任务:多任务方案P1规划协商+方案准备(仅规划,不开跑/不触DEC-010)。\n读:"
+  },
+  {
+    "key": "a2c52b0e-e567-542d-817f-b6507ad79b44:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 3368,
+    "text_head": "ChatGPT 说：\nMTP1-PLAN-R1 规划协商裁定\n总体 PASS（附约束）\n仅规划\n\n被测仓库： damwate/AIEO\n\n被测 commit（完整 SHA）：\n\nf9ee1cde007"
+  },
+  {
+    "key": "8295c383-1804-55f4-801b-6730c618ce67:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 675,
+    "text_head": "[MTP1-ACCEPT-R1|20261119] S4独立验收六查\n任务:多任务方案P1规划协商+方案冻结(仅规划,零代码/零M1/不开跑/不触DEC-010)。\n读:github.com/damw"
+  },
+  {
+    "key": "8295c383-1804-55f4-801b-6730c618ce67:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 3476,
+    "text_head": "ChatGPT 说：\nMTP1-ACCEPT-R1｜S4 独立验收\n\nREJECT（文档一致性整改） 核心方案内容通过\n\n被测仓库： damwate/AIEO\n\n被测 commit：\n\n6b86542"
+  },
+  {
+    "key": "df7c1b9c-7b92-506c-a1b2-aacd2a5e0058:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 688,
+    "text_head": "[MTP1-ACCEPT-R2|20261119] S4 R2针对性复审\n任务:多任务方案P1规划协商+方案冻结。S4-R1六查①②④⑤PASS+四项特核PASS,仅④文档一致REJECT/⑥BLOC"
+  },
+  {
+    "key": "df7c1b9c-7b92-506c-a1b2-aacd2a5e0058:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 3178,
+    "text_head": "ChatGPT 说：\nMTP1-ACCEPT-R2｜S4 针对性复审\nREJECT（D3/D4 未完全闭环）\n\n被测方案 commit： 6b865429e66679349368cbe62b61620"
+  },
+  {
+    "key": "c5512f82-fe77-5bdd-a391-43541fc9f238:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 722,
+    "text_head": "[MTP1-ACCEPT-R3|20261119] S4 R3终局复审\n任务:多任务方案P1规划协商+方案冻结。R1/R2两轮REJECT均为文档/收口缺口(方案设计全程PASS),本轮只复审R2四项"
+  },
+  {
+    "key": "c5512f82-fe77-5bdd-a391-43541fc9f238:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 2812,
+    "text_head": "ChatGPT 说：\n一、R2 四项整改核验\n\nR2 整改项\n\n\t\n\n结论\n\n\t\n\n核验结果\n\n\n\n\n① 清理 S4 预写 PASS 矛盾\n\n\t\n\nPASS\n\n\t\n\nsteps.md 已改为逐轮记录："
+  }
+]

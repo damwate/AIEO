@@ -1,4 +1,11 @@
-﻿Taskpack: b-20261119-multitask-p1-planning
+﻿# ST-05 终检运行证据（可复核）——b-20261119-multitask-p1-planning
+- 执行命令: python -I basic/tool/check_taskpack.py basic/tasks/b-20261119-multitask-p1-planning
+- 运行时间(UTC): 2026-11-19T06:22:45Z
+- 执行环境: OS=Windows/PowerShell, Python 3.12.10, node=v24.14.0, 工作目录=D:/AIEO
+- 被测任务包 commit(完整40位): d2e0f94868dba078c48e6bdfd86ea45130551337
+- 说明: 本文件含命令回显原文(6/6 PASS)；检查脚本=basic/tool/check_taskpack.py(仓库内,可独立重跑)
+---COMMAND OUTPUT BEGIN---
+Taskpack: b-20261119-multitask-p1-planning
 Phase: COMPLETED
 [PASS] ① 需求记录
 [PASS] ② 步骤清单
@@ -7,3 +14,4 @@ Phase: COMPLETED
 [PASS] ⑤ 返工次数
 [PASS] ⑥ 交付记录
 Overall: PASS
+---COMMAND OUTPUT END---

@@ -1,0 +1,8 @@
+[2026-11-19T06:22:04.429Z] 会话锁已获取（MTP1 S4 R3 补采）
+[2026-11-19T06:22:04.642Z] 页面归属命中 CONV_UUID=6afe8e59-9da0-83ec-bfef-d5fa04b6002a
+[2026-11-19T06:22:27.785Z] 归属校验=标记唯一(1)+最后user断言（target=c5512f82-fe77-5bdd-a391-43541fc9f238:0:user）
+[2026-11-19T06:22:27.789Z] checks={"marked_user_unique":true,"last_user_assertion":true,"adjacent_assistant_tail":true,"stable_static_dom_read":true,"final_stop_button_not_visible":true,"not_prev_reply_sha":true,"response_length_plausible":true}
+[2026-11-19T06:22:27.793Z] reply 已落盘（4445 字节，SHA=90c461338852f59e…）
+[2026-11-19T06:22:27.793Z] RECOLL COMPLETED
+[2026-11-19T06:22:27.818Z] 视口覆盖已清除
+[2026-11-19T06:22:28.332Z] 会话锁已释放（MTP1 S4 R3 补采）

@@ -60,9 +60,9 @@
 
 ④执行结果：D1-D4 文档状态已与裁定一致；R2 四项缺口已整改；被测方案设计 commit 仍 `6b865429e66679349368cbe62b61620864183c37`（方案正文全程未改）；S5 收口完成（见下）。
 
-⑤测试结果：S4-R1 reply 补采 6198B SHA=`df2830cda4069f84646db182994d43ef9309763b51a0eda767ea4725383b8af6`（回执 `08d8d73e…`）；S4-R2 reply 补采 5553B SHA=`c1ffb9e6189749dcc00d7b0cd73761b43c636bc9ecc9fbc4b7e3d85921135a6e`（回执 `2487301a…`）；两轮 recoll checks 全 true。ST-05 实际运行输出归档 phase0/logs/mtp1-st05-check.txt（命令+回显+commit 绑定）。
+⑤测试结果：S4-R1 reply 补采 6198B SHA=`df2830cda4069f84646db182994d43ef9309763b51a0eda767ea4725383b8af6`（回执 `08d8d73e…`）；S4-R2 reply 补采 5553B SHA=`c1ffb9e6189749dcc00d7b0cd73761b43c636bc9ecc9fbc4b7e3d85921135a6e`（回执 `2487301a…`）；S4-R3 reply 补采 4445B SHA=`90c461338852f59e11e9efea21d6918db8679b47abe358e1d4f6687d289e9f71`（回执 `3fee3276…`，R2 四项整改 3 PASS/ST-05 证据 1 BLOCKED，仅此单项）；三轮 recoll checks 全 true。ST-05 实际运行输出归档 phase0/logs/mtp1-st05-check.txt（命令+时间+环境+commit+回显，SHA 92881952…）。
 
-⑥验收证据引用：dispatch-2026-11-19T05-55-22（R1 派单）、dispatch-2026-11-19T06-01-21（R2 派单，GENERATION_TIMEOUT 现场）；补采 phase0/tools/phase0/logs/recoll-mtp1-accept-r1-2026-11-19T05-58-37-304Z / recoll-mtp1-accept-r2-2026-11-19T06-16-28-033Z；reply SHA256=`df2830cda4069f84646db182994d43ef9309763b51a0eda767ea4725383b8af6`（R1）与 `c1ffb9e6189749dcc00d7b0cd73761b43c636bc9ecc9fbc4b7e3d85921135a6e`（R2）；问题1 修复 commit `9e32d020fcad34c6c37335f44dfa1e148374b816`。
+⑥验收证据引用：dispatch-2026-11-19T05-55-22（R1 派单）、dispatch-2026-11-19T06-01-21（R2 派单）、dispatch-2026-11-19T06-19-31（R3 派单）；补采 phase0/tools/phase0/logs/recoll-mtp1-accept-r1-2026-11-19T05-58-37-304Z / r2-2026-11-19T06-16-28-033Z / r3-2026-11-19T06-22-03-980Z；reply SHA256=`df2830cda4069f84646db182994d43ef9309763b51a0eda767ea4725383b8af6`（R1）/`c1ffb9e6189749dcc00d7b0cd73761b43c636bc9ecc9fbc4b7e3d85921135a6e`（R2）/`90c461338852f59e11e9efea21d6918db8679b47abe358e1d4f6687d289e9f71`（R3）；问题1 修复 commit `9e32d020fcad34c6c37335f44dfa1e148374b816`。
 
 **验收结论：PASS**（S4-R1/R2 REJECT 的问题均已整改；方案设计全程 PASS，待 R3 终局裁定）
 
@@ -81,7 +81,7 @@
 
 ④执行结果：完工六查满足；工作区净、ahead=0。
 
-⑤测试结果：python -I basic/tool/check_taskpack.py basic/tasks/b-20261119-multitask-p1-planning —— COMPLETED 态全项 PASS（见 phase0/logs/mtp1-st05-check.txt）。
+⑤测试结果：python -I basic/tool/check_taskpack.py basic/tasks/b-20261119-multitask-p1-planning —— COMPLETED 态全项 PASS（6/6，Overall PASS）。归档 phase0/logs/mtp1-st05-check.txt 含执行命令/UTC时间/环境(Python3.12.10+node v24.14)/被测任务包commit `d2e0f94868dba078c48e6bdfd86ea45130551337`/完整回显，SHA256=`928819528b8681e3858515904dc36c508af50d23e8dec8318129183817f733b5`（R3 指出初版缺元数据，已补全）。
 
 ⑥验收证据引用：dispatch-2026-11-19T05-50-31（R1 规划，reply SHA256=`beb4b2b866ccf69135abbc3dffa572f4f63b9d40c90e832631c53c42afca9880`）；delivery.md + DEC-112 + ST-05 归档输出；被测方案 commit `6b86542…`，收口提交不属验收 diff。
 

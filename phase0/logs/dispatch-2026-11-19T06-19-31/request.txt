@@ -1,0 +1,6 @@
+[MTP1-ACCEPT-R3|20261119] S4 R3终局复审
+任务:多任务方案P1规划协商+方案冻结。R1/R2两轮REJECT均为文档/收口缺口(方案设计全程PASS),本轮只复审R2四项整改,不重审方案。
+被测方案commit=6b865429e66679349368cbe62b61620864183c37(正文未改);R2整改commit=d2e0f94868dba078c48e6bdfd86ea45130551337。
+R2回执SHA=2487301a38363c23d5a49fd495a0a8171bb2158a3324898b97d9d6f7153f8056;R2 reply SHA=c1ffb9e6189749dcc00d7b0cd73761b43c636bc9ecc9fbc4b7e3d85921135a6e。
+R2四项整改:①清理S4预写"R2 PASS"矛盾→改真实逐轮记录(R1 REJECT/R2 REJECT/R3)②返工表修复commit已绑完整SHA 9e32d020fcad34c6c37335f44dfa1e148374b816③S5六要素收口完成(不再"待回填")④ST-05实际运行输出归档phase0/logs/mtp1-st05-check.txt(COMPLETED态6/6 PASS);另DEC-112登记。
+请核:R2四项是否全关闭;ST-05归档输出可复核;返工表SHA绑定;S5收口完整;无隐含P1开跑授权;⑥仍归P1四条件保留;方案正文未改。三态PASS/REJECT(列项)/BLOCKED,回执结论表+SHA256,绑定被测commit 6b86542。
