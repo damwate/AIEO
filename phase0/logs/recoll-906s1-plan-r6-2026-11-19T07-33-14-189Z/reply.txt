@@ -1,0 +1,294 @@
+ChatGPT 说：
+906⑥ v0.6 RECOVER 定向复审 R6
+
+REJECT v0.6 尚不能通过。
+
+被测版本：damwate/AIEO@ca1f4d877e06a9832934eb86657f1ecbd0e077ca
+
+已重新读取该 commit 下三份文件。本轮只复核 R5 唯一返工项，不实测，不扩大到此前已通过的审查范围。
+
+一、RECOVER 复制契约核对
+
+R6 要求
+
+	
+
+结果
+
+	
+
+复核意见
+
+
+
+
+目标字段存在 → 原值复制
+
+	
+
+PASS
+
+	
+
+已明确
+
+
+
+
+目标字段显式 N/A → 复制 N/A 并继承原因
+
+	
+
+PASS
+
+	
+
+已明确
+
+
+
+
+目标字段不存在 → N/A + 固定原因
+
+	
+
+PASS
+
+	
+
+已明确 TARGET_EVENT_FIELD_NOT_APPLICABLE
+
+
+
+
+目标事件不存在、重复、类型不允许
+
+	
+
+PASS
+
+	
+
+已规定证据失效、触发即停⑤、不得补造或改写
+
+
+
+
+多个 N/A 字段的原因表达
+
+	
+
+REJECT
+
+	
+
+当前 n/a_reason 无法表达不同字段各自的原因
+
+二、唯一剩余问题：n/a_reason 粒度不足
+
+v0.6 的 RECOVER 契约逐字段处理五个字段：
+
+task_id / request_id / trace_id / db_transaction_id / ack_id
+
+但扩展字段表只定义了一个事件级的 n/a_reason，没有定义字段级原因映射。
+
+这会产生实际冲突：
+
+假设 RECOVER 指向一个 fault_scope=GLOBAL 的 FAULT_INJECT 事件：
+
+task_id=N/A，原因是全局故障范围；
+
+request_id=N/A，原因也是全局故障范围；
+
+目标事件没有 db_transaction_id，RECOVER 应填 N/A，原因固定为 TARGET_EVENT_FIELD_NOT_APPLICABLE；
+
+目标事件没有 ack_id，同样应填 N/A，原因也是 TARGET_EVENT_FIELD_NOT_APPLICABLE。
+
+RECOVER 此时至少需要表达两类不同原因：
+
+继承自目标事件的 GLOBAL 作用域原因；
+
+当前目标事件缺少字段的固定原因。
+
+但现有规范只有一个 n/a_reason，既没有规定多个原因如何共存，也没有定义原因与字段之间的对应关系。
+
+如果只保留一个原因，就可能丢失部分字段的原始 N/A 语义；如果由采集者自行选择或拼接，又违反禁止临时决定的要求。
+
+这不是三情形复制规则本身的问题，而是原因字段的数据结构没有支持逐字段复制。
+
+三、最小整改建议
+
+只补充 n/a_reason 的字段级表达规则，不改动已经通过的三情形契约。
+
+建议采用字段到原因的映射，例如：
+
+JSON
+{
+  "n/a_reason": {
+    "task_id": "GLOBAL_SCOPE",
+    "request_id": "GLOBAL_SCOPE",
+    "db_transaction_id": "TARGET_EVENT_FIELD_NOT_APPLICABLE",
+    "ack_id": "TARGET_EVENT_FIELD_NOT_APPLICABLE"
+  }
+}
+
+同时冻结以下约束：
+
+每个值为 N/A 的字段必须且只能有一个对应原因。
+
+目标字段显式为 N/A 时，按字段继承目标事件对应原因。
+
+目标字段不存在时，按字段写入固定原因 TARGET_EVENT_FIELD_NOT_APPLICABLE。
+
+不存在 N/A 的字段不得附带 N/A 原因。
+
+缺少原因、原因映射与 N/A 字段不一致、出现无法识别的原因时，判证据失效并触发即停⑤。
+
+RECOVER 自身的 n/a_reason 必须与上述规则一致，不能再用一个事件级字符串覆盖多个字段原因。
+
+四、R6 结论表
+
+范围
+
+	
+
+结论
+
+
+
+
+RECOVER 三情形穷尽
+
+	
+
+PASS
+
+
+
+
+非法目标处置
+
+	
+
+PASS
+
+
+
+
+N/A 原因字段级表达
+
+	
+
+REJECT
+
+
+
+
+R5 条件谓词、扩展字段
+
+	
+
+沿用 PASS，不重审
+
+
+
+
+R4 核1、核3
+
+	
+
+沿用 PASS，不重审
+
+
+
+
+R2-03
+
+	
+
+沿用 PASS，不重审
+
+
+
+
+⑥环境资格
+
+	
+
+BLOCKED
+
+
+
+
+⑥实际并发验证
+
+	
+
+BLOCKED，未执行
+
+五、文件指纹
+
+被测 commit 均为 ca1f4d877e06a9832934eb86657f1ecbd0e077ca。
+
+文件
+
+	
+
+Git Blob SHA
+
+	
+
+UTF-8 内容 SHA256
+
+
+
+
+scenario-design.md
+
+	
+
+4d9b6c895b4a2d0b3301c27b4714f7cb6fd2be83
+
+	
+
+752b519f2cfe0d1b10972bed34ffb86658bd4f69f90e618dbdb1ccde1f512364
+
+
+
+
+steps.md
+
+	
+
+2adf463dbbfc6b6e8b16d5b3c47c138ae520def3
+
+	
+
+8a8beb88e29b5a6b646d6db0bd3662f8682ad59e954093b9258cee51056b426c
+
+
+
+
+task-brief.md
+
+	
+
+a120e855a186059c784cbbc969fb938c2cea5611
+
+	
+
+c0226d6025ed34e53f6606de9b304caa42524c03803f04119a738595abfe603c
+
+六、边界与下一步
+
+⑥继续 BLOCKED。
+
+M1 写路径限制不解除。
+
+未执行环境资格检查、并发实测或任何写操作。
+
+后续环境资格检查和⑥实测仍须另批授权。
+
+R6 唯一返工项：将 n/a_reason 从事件级单值语义补齐为字段级确定性映射，再提交新 commit 定向复审。
+
+最终裁定：REJECT。 v0.6 已解决 R5 指出的字段缺失和非法目标问题，但原因继承的表达能力仍不足，不能冻结。

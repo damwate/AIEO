@@ -1,0 +1,5 @@
+[906S1-PLAN-R6|20261119] 906⑥场景设计v0.6 RECOVER定向复审
+任务:仅复核R5唯一返工项RECOVER字段复制契约;R5条件谓词/扩展字段、R4核1核3、R2-03均PASS不重审,不开实测。会话第6条user已重评暂不迁移,第8条重评。
+读:damwate/AIEO@ca1f4d877e06a9832934eb86657f1ecbd0e077ca basic/tasks/b-20261119-p1-906-06-concurrency/{scenario-design.md,steps.md,task-brief.md};R5 reply c0ce863fc3694d63643ef4a2f647311d39122c50a7117f21159912281284401c。
+核:二·补RECOVER复制契约须三情形穷尽:目标字段存在→原值;显式N/A→复制N/A并继承n/a_reason;字段不存在→N/A+固定reason TARGET_EVENT_FIELD_NOT_APPLICABLE。recover_target_event_id目标不存在/重复/类型不允许(允许REST_REQ/REST_RESP/DB_TXN_BEGIN/DB_TXN_COMMIT/ACK_SEND/ACK_CONFIRM/FAULT_INJECT)→证据失效触发即停⑤,不得补值。禁止省略字段或临时决定。
+三态PASS/REJECT(列项)/BLOCKED,结论表+文件SHA256,绑定被测commit ca1f4d8;⑥BLOCKED/M1写路径不解除/不实测/实测另批。
