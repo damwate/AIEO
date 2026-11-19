@@ -1,0 +1,6 @@
+[MTP1-ACCEPT-R2|20261119] S4 R2针对性复审
+任务:多任务方案P1规划协商+方案冻结。S4-R1六查①②④⑤PASS+四项特核PASS,仅④文档一致REJECT/⑥BLOCKED(文档状态漂移),本轮只复审D1-D4,方案设计不改。
+被测commit=6b865429e66679349368cbe62b61620864183c37(方案正文未改);问题1整改commit=9e32d020fcad34c6c37335f44dfa1e148374b816(仅文档/任务包)。
+R1回执SHA=08d8d73e0e7060432cd384c5fc07165a45db06bd408a9e9e333e50f42a66f5a9;R1补采reply SHA=df2830cda4069f84646db182994d43ef9309763b51a0eda767ea4725383b8af6。
+D1-D4整改:①requirement旧v0.4背景标"历史已关闭,以R1裁定/v1.0为准"②task-brief三缺口改"历史缺口已裁定关闭(⑥归P1)"③steps头v0.2冻结+S1自检回填+S4六查记录④S5收口记录;返工表问题1绑定修复commit 9e32d02,ST-05④/⑤PASS。
+请核:D1-D4是否消除过期状态且与已裁定一致;⑥归属仍P1未被改;无隐含P1开跑授权;四条件全保留;ST-05返工记录可复核。三态PASS/REJECT(列项)/BLOCKED,回执结论表+SHA256,绑定被测commit 6b86542。

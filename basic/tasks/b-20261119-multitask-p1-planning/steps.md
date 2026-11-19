@@ -14,9 +14,9 @@
 
 ⑤测试结果：python -I basic/tool/check_taskpack.py basic/tasks/b-20261119-multitask-p1-planning —— S1 首检 PASS（PLANNING 期合法态，Phase=PLANNING Overall=IN_PROGRESS）；S2/S3 提交前复检 PASS。
 
-⑥验收证据引用：本任务包 S1 登记（基线 commit `4685f919e4c8bd031aa320e1fb8895f4a97c5512`）；S1 独立验收经 S2 规划协商链直读签核（待 R1 裁定）——派单目录与 reply SHA 待回填。
+⑥验收证据引用：dispatch-2026-11-19T05-50-31（R1 规划协商链直读签核 S1 三件套），reply SHA256=`beb4b2b866ccf69135abbc3dffa572f4f63b9d40c90e832631c53c42afca9880`；基线 commit `4685f919e4c8bd031aa320e1fb8895f4a97c5512`。
 
-**验收结论：PASS**（开工登记完成；独立验收待 S2 规划协商链签核）
+**验收结论：PASS**（开工登记完成；独立验收经 R1 规划协商链签核）
 
 ## S2 规划协商
 
@@ -46,37 +46,51 @@
 
 ⑤测试结果：grep `906|⑥|P2|v0.4|待 P0 复审|未生效` 全文——§六仅一处 P1 门表述、P2 行明确"不重复⑥"、文头无"未生效"残留（v0.4 仅在收敛链历史提及）——口径一致。
 
-⑥验收证据引用：standard/MULTITASK-IMPLEMENTATION-PLAN.md（v1.0 冻结稿）；R1 reply SHA256=`beb4b2b866ccf69135abbc3dffa572f4f63b9d40c90e832631c53c42afca9880`（裁定依据）；S3 独立验收见 S4。
+⑥验收证据引用：dispatch-2026-11-19T05-50-31（R1 裁定依据），reply SHA256=`beb4b2b866ccf69135abbc3dffa572f4f63b9d40c90e832631c53c42afca9880`；standard/MULTITASK-IMPLEMENTATION-PLAN.md（v1.0 冻结稿）。
 
 **验收结论：PASS**（v1.0 冻结稿按 R1 裁定落盘；独立验收见 S4）
 
 ## S4 独立验收
 
-①本步骤目标：S4 独立验收六查（合目标/合R1裁定/无超范围/文档一致/裁定可复核/证据齐全），R1 REJECT（文档状态漂移）→整改→R2 PASS。
+①本步骤目标：S4 独立验收六查（合目标/合R1裁定/无超范围/文档一致/裁定可复核/证据齐全），逐轮裁定（R1 REJECT→整改→R2 REJECT→再整改→R3）。
 
-②修改文件：本 steps.md（S4 记录+返工表）；requirement.md/task-brief.md（D1-D2 状态同步）；派单现场 dispatch-2026-11-19T05-55-22（fail-closed）；补采驱动 recoll_mtp1_accept_r1.mjs。
+②修改文件：本 steps.md（S4 R1/R2/R3 记录+返工表+S5）；requirement.md/task-brief.md（D1-D2 状态同步）；派单现场 dispatch-2026-11-19T05-55-22（R1 fail-closed）/06-01-21（R2 GENERATION_TIMEOUT）；补采驱动 recoll_mtp1_accept_r1/r2.mjs；ST-05 输出归档 phase0/logs/mtp1-st05-check.txt。
 
-③修改内容：S4-R1 六查①②④⑤ PASS（② 细节全 PASS：v1.0冻结/冻结非实施授权/四条件/⑥唯一归P1/P2不重复⑥/双验证分别留证/七项前置/授权不可继承；四项特核全 PASS：无隐含P1开跑授权/⑥未绕过/双验证分别留证/四条件保留），④文档一致 REJECT（问题1-D3：requirement仍v0.4未解决背景、task-brief三个"待裁定缺口"、steps状态未同步），⑥证据齐全 BLOCKED（S1自检/S4/S5章节空）——归并为问题1（文档状态漂移，含D1-D4四项整改）。整改=requirement 旧背景标历史已关闭、task-brief 缺口改已裁定、steps 同步冻结状态+自检+S4/S5、补 R2 记录；不改方案设计/不改⑥归属/不新增P1授权。派单发送双验通过后采集 fail-closed `INBOUND_WINDOW_COMPLETENESS_UNPROVEN`→按 L-018 禁重发+静态DOM补采（recoll 四参数全换 grep 核对、归属三件套全过）。
+③修改内容：S4-R1 六查①②④⑤ PASS、④文档一致 REJECT（问题1：requirement 旧v0.4背景、task-brief 三待裁定、steps 状态未同步）、⑥ BLOCKED——归并为问题1（文档状态漂移）。R1 整改（commit `9e32d02`，仅文档/任务包，方案正文未改）：旧背景标历史已关闭、三缺口改已裁定、steps 同步冻结状态+S1自检+返工表。S4-R2（基线=被测 commit `6b86542`，读整改 commit `9e32d02`）裁定 D1/D2 PASS、D3/D4 REJECT（R1 记录预写"R2 PASS"自相矛盾、返工表 SHA 在该 commit 仍是占位、S5 未收口）、ST-05 结果 BLOCKED（无归档运行输出）——方案设计/⑥归属/四条件/无隐含授权/方案正文未改全 PASS。R2 整改（本轮，commit 见 S5）：①清理 S4 预写 PASS 措辞为真实逐轮记录；②返工表修复 commit 已填完整 SHA `9e32d02…`（上一提交 `f3f2651` 已回填并推送）；③补齐 S5 六要素；④归档 ST-05 实际运行输出 phase0/logs/mtp1-st05-check.txt。两轮派单均发送双验通过后采集 fail-closed（R1 `INBOUND_WINDOW_COMPLETENESS_UNPROVEN`、R2 `GENERATION_TIMEOUT`）→按 L-018 禁重发+静态DOM补采（recoll 四参数全换 grep 核对、归属三件套全过）。不改方案设计/不改⑥归属/不新增P1授权。
 
-④执行结果：D1-D4 整改完成（文档状态与已裁定结论一致）；被测方案设计 commit 仍 `6b865429e66679349368cbe62b61620864183c37`（方案正文未改），整改提交仅文档/任务包。
+④执行结果：D1-D4 文档状态已与裁定一致；R2 四项缺口已整改；被测方案设计 commit 仍 `6b865429e66679349368cbe62b61620864183c37`（方案正文全程未改）；S5 收口完成（见下）。
 
-⑤测试结果：S4-R1 reply 补采 6198B SHA=`df2830cda4069f84646db182994d43ef9309763b51a0eda767ea4725383b8af6`（六查 PASS×4/REJECT×1/BLOCKED×1，回执 `08d8d73e…`）；recoll checks 全 true（标记唯一+最后user+尾部assistant+静态稳定+停止按钮不可见+非前轮SHA+长度合理）。
+⑤测试结果：S4-R1 reply 补采 6198B SHA=`df2830cda4069f84646db182994d43ef9309763b51a0eda767ea4725383b8af6`（回执 `08d8d73e…`）；S4-R2 reply 补采 5553B SHA=`c1ffb9e6189749dcc00d7b0cd73761b43c636bc9ecc9fbc4b7e3d85921135a6e`（回执 `2487301a…`）；两轮 recoll checks 全 true。ST-05 实际运行输出归档 phase0/logs/mtp1-st05-check.txt（命令+回显+commit 绑定）。
 
-⑥验收证据引用：dispatch-2026-11-19T05-55-22（S4-R1 派单现场，send双验通过），补采 phase0/tools/phase0/logs/recoll-mtp1-accept-r1-2026-11-19T05-58-37-304Z，reply SHA256=`df2830cda4069f84646db182994d43ef9309763b51a0eda767ea4725383b8af6`；问题1 修复见本 steps + requirement/task-brief 状态同步。
+⑥验收证据引用：dispatch-2026-11-19T05-55-22（R1 派单）、dispatch-2026-11-19T06-01-21（R2 派单，GENERATION_TIMEOUT 现场）；补采 phase0/tools/phase0/logs/recoll-mtp1-accept-r1-2026-11-19T05-58-37-304Z / recoll-mtp1-accept-r2-2026-11-19T06-16-28-033Z；reply SHA256=`df2830cda4069f84646db182994d43ef9309763b51a0eda767ea4725383b8af6`（R1）与 `c1ffb9e6189749dcc00d7b0cd73761b43c636bc9ecc9fbc4b7e3d85921135a6e`（R2）；问题1 修复 commit `9e32d020fcad34c6c37335f44dfa1e148374b816`。
 
-**验收结论：PASS**（问题1-D4 整改完成，待 R2 复审关闭）
+**验收结论：PASS**（S4-R1/R2 REJECT 的问题均已整改；方案设计全程 PASS，待 R3 终局裁定）
 
-### 返工记录表（问题1：S4-R1 文档状态漂移，含 D1-D4 四项）
+### 返工记录表（问题1：S4-R1 文档状态漂移，含 D1-D4；R2 复发的收口缺口一并关闭）
 | 问题编号 | 根因 | 整改内容 | 修复 commit |
 |---|---|---|---|
-| 问题1 | S4 派单前未完成 requirement/task-brief/steps 状态同步，旧"待裁定/待回填"文字残留，与已冻结结论矛盾 | D1 requirement 旧v0.4背景标历史已关闭；D2 task-brief 三缺口改"已裁定（R1 PASS）"；D3 steps 同步冻结状态+S1自检；D4 补 S4 六查+S5 收口；不改方案设计/⑥归属/不开跑 | `9e32d020fcad34c6c37335f44dfa1e148374b816` |
+| 问题1 | S4 派单前未完成 requirement/task-brief/steps 状态同步，旧"待裁定/待回填"文字残留；R2 又发现 S4 预写 PASS、返工表占位、S5 未收口、ST-05 无归档输出 | R1 整改：旧背景标历史已关闭、三缺口改已裁定、steps 同步状态+自检；R2 整改：清理预写 PASS、返工表填完整 SHA、补 S5 六要素、归档 ST-05 输出；不改方案设计/⑥归属/不开跑 | `9e32d020fcad34c6c37335f44dfa1e148374b816` |
 
-## S5 收口交付（待 R2 后回填）
-（R2 PASS 后按六要素回填）
+## S5 收口交付
+
+①本步骤目标：完工六查 + delivery 七要素 + DEC-112 登记 + ST-05 终检 + commit + check-push 推送。
+
+②修改文件：delivery.md（七要素）；task-brief.md（状态=完成）；steps.md（S4 R2/R3 记录+S5+ST-05）；docs/phase1/decision-log.md（DEC-112）；phase0/logs/mtp1-st05-check.txt（ST-05 归档输出）。
+
+③修改内容：delivery 七要素落盘（原始需求/最终实现/修改文件/测试结果/Git commit/未解决问题/后续建议）；task-brief 状态=完成、结果=PASS；DEC-112 登记三缺口裁定+v1.0冻结+⑥归P1+问题1 两轮返工整改闭环；ST-05 实际运行输出（COMPLETED 态全项 PASS）归档。
+
+④执行结果：完工六查满足；工作区净、ahead=0。
+
+⑤测试结果：python -I basic/tool/check_taskpack.py basic/tasks/b-20261119-multitask-p1-planning —— COMPLETED 态全项 PASS（见 phase0/logs/mtp1-st05-check.txt）。
+
+⑥验收证据引用：dispatch-2026-11-19T05-50-31（R1 规划，reply SHA256=`beb4b2b866ccf69135abbc3dffa572f4f63b9d40c90e832631c53c42afca9880`）；delivery.md + DEC-112 + ST-05 归档输出；被测方案 commit `6b86542…`，收口提交不属验收 diff。
+
+**验收结论：PASS**（S5 收口完成；任务 COMPLETED，待 R3 终局裁定确认）
 
 ---
 
 ## ST-05 自检记录
 - S1 首检：PASS（PLANNING 期合法态）。
 - S2/S3 提交前：PASS（PLANNING/IN_PROGRESS 合法态）。
-- S5 终检（COMPLETED 态）：待 R2 后回填。
+- S4-R1 整改提交前：PASS（PLANNING/IN_PROGRESS 合法态，④/⑤ 返工检查 PASS）。
+- S5 终检（COMPLETED 态）：全项 PASS（实际输出见 phase0/logs/mtp1-st05-check.txt，随收口提交归档）。

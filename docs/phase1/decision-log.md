@@ -966,3 +966,15 @@
 - **关键经验（L-017/L-018 再证）：** ①"空心 PASS"反向=验收方要求独立归档负面对照证据，口头声称不作已验证事实；②虚拟化 fail-closed 连续两次靠静态 DOM 补采闭环，禁重发机制有效；③ad-hoc `node -e` 复现不落盘=证据链缺口，文件化脚本+JSON 归档才是可复核证据。
 - **边界重申：** 生产代码仅一行、零 DEC-010（无 main 合并/生产发布/真实数据删除）、不部署、不改 app 版、不连真实 GitHub；被测 diff 为 204901f 单 commit，整改/收口提交不属验收 diff 范围。
 - **关联：** DEC-109（缺陷来源）、DEC-108/107/106（授权链）、DEC-110（前置归档）、platform-contract §2.6.6-2.6.7（GitPointer 读取契约）、L-014/017/018（推送/一致性/补采实战）、ST-01/02/05（绑定/轮次/自检）。
+
+### DEC-112 多任务实施方案 P1 规划协商+方案冻结：三缺口裁定、v1.0 冻结、906⑥门唯一归 P1（2026-11-19，用户"先把能做的做了"授权，不开跑 P1）
+
+- **节点依据：** 用户 2026-11-19"可以，不用等我拍板先把能做的做了"（针对 P1-P3 逐级批准/生产部署/会话迁移三项待拍板）+历史委托"要拍板的按 AIEO Basic 派单 ChatGPT 决定"（DEC-010 红线归用户本人）；授权链=节点自主推进（规划协商照常执行）+用户本指令；**P1 开跑授权仍归用户本人（DEC-107 逐级独立批准），本节点未授予**。
+- **范围（严格规划层）：** 仅 P1 规划协商（ChatGPT 复审）+方案准备；零代码写入、零 M1 推进、不开跑 P1、不触 DEC-010、不改运行时、不合并/不部署/不删数据。
+- **立项 S1：** `f9ee1cd`（ST-05 PLANNING 合法态）；三待裁定缺口=①DEC-107 已记 P0 R4 PASS 但方案仍 v0.4"未生效待复审"、v1.0 冻结文本未落库（状态漂移）；②906⑥门 P1/P2 口径冲突（batch2/DEC-108 称 P1 门、方案 §六称 P2 门）；③P1 开跑前置清单待补。
+- **规划协商 R1（PASS 附约束）：** 审查会话 6afe7ccb（3 条 user 换题先例）备份 pre-mtp1.json 后迁新会话 **6afe8e59**（--new-session 首派即活）；R1=PASS 首轮（reply `beb4b2b866ccf69135abbc3dffa572f4f63b9d40c90e832631c53c42afca9880` 6385B，dispatch-2026-11-19T05-50-31，回执 `5ad9369e…`），绑定被测 commit f9ee1cd；三裁定——①据 DEC-107 P0 R4 PASS 冻结 v1.0，明示"设计冻结≠实施授权"，保留四条件（fsync 降级 STOP / SHA256SUMS 全覆盖 / RELEASE-RECORD 映射独立复核 / P1-P3 逐级独立批准）；②**906⑥门唯一归 P1**（推翻执行者草案的 P2 建议，据 DEC-108/109 时间更晚、针对性更强），P2 不重复⑥；③七项开跑前置清单（逐级批准登记/基线 SHA/两任务强隔离/通道闸空闲/五件套清单/熔断就绪/批次复盘模板，补可核验标准）。硬边界：两任务只读复审 PASS ≠ ⑥ PASS，分别留证分别判定；⑥未独立 PASS 前 M1 写路径并行限制不解除；不得改名/拆分/调序绕门；授权不可继承 P0≠P1≠P2≠P3。
+- **S3 冻结（被测方案 commit `6b865429e66679349368cbe62b61620864183c37`）：** standard/MULTITASK-IMPLEMENTATION-PLAN.md v0.4→v1.0（文头+§六表+硬边界+七清单），§一~§五、§七设计未改；task-brief 冻结 v0.2；grep 确认无残留 ⑥=P2；batch2 delivery 与 DEC-108 的 P1 门表述按裁定保留不改。
+- **S4 独立验收（两轮 REJECT 均为文档/收口缺口，方案设计全程 PASS）：** 两轮派单均发送双验通过后采集 fail-closed（R1 `INBOUND_WINDOW_COMPLETENESS_UNPROVEN`、R2 `GENERATION_TIMEOUT:300000ms`），按 L-018 禁重发+静态DOM补采（recoll 四参数全换 grep 核对、归属三件套全过、零重发零误投）。R1 REJECT（reply 补采 `df2830cd…` 6198B，回执 `08d8d73e…`）=文档状态漂移（requirement 旧v0.4背景/task-brief 三待裁定/steps 未同步），整改 commit `9e32d020fcad34c6c37335f44dfa1e148374b816`（仅文档/任务包，方案正文未改）；R2 REJECT（reply 补采 `c1ffb9e6…` 5553B，回执 `2487301a…`）=S4 预写"R2 PASS"矛盾、返工表 SHA 占位、S5 未收口、ST-05 无归档输出——方案设计/⑥归P1/四条件/无隐含授权/方案正文未改全 PASS（审查方 GitHub compare 确认）。R2 整改：清理预写措辞、返工表绑定完整 SHA（commit f3f2651）、补 S5 六要素、归档 ST-05 实际输出。
+- **关键经验：** ①派单独立验收前须先完成 taskpack 的 S4/S5 状态同步与 ST-05 输出归档，否则审查方按 commit 实况判文档状态漂移/收口缺口（本任务两轮 REJECT 皆因此）；②执行者草案的⑥归P2建议被审查方据 DEC-108/109 推翻——时间更晚、针对性更强的决策优先于旧方案措辞；③L-018 静态DOM补采对 `INBOUND_WINDOW_COMPLETENESS_UNPROVEN` 与 `GENERATION_TIMEOUT` 两类 fail-closed 均有效（后者在 300s 窗口后生成已完成，补采捕获全量）。
+- **授权边界重申：** **P1 未开跑、M4 写操作封闭、906⑥未独立 PASS、DEC-010 未触**；v1.0 冻结不构成 P1 自动获批；P2 不重复执行⑥；打版≠部署（生产部署待用户本人拍板）。
+- **关联：** DEC-106④/107/108/109/111、standard/MULTITASK-IMPLEMENTATION-PLAN.md v1.0、b-20261119-c2-batch2-scenarios delivery、L-018（补采）、ST-01/02/05、WORKFLOW 模块二/五。
