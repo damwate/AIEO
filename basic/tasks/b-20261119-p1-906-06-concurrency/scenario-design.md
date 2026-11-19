@@ -1,6 +1,6 @@
-# 906⑥ M1 平台级并发独立验证场景设计 v0.4（R1 ADJUST→R2 REJECT→R3 REJECT 两项技术整改落位，待 R4 复审）
+# 906⑥ M1 平台级并发独立验证场景设计 v0.5（R1 ADJUST→R2/R3/R4 REJECT 逐轮整改；R4 剩余事件字段矩阵项整改落位，待 R5 复审）
 
-> 来源：R1 裁定 reply `2d84f6bd658acd00d3cd2ada56e29c2e3b91458983cf21d0573b4991fb90d4d0`（11158B，会话 6afe9d76，commit e16722f）→ R2 裁定 reply `cf078bc249319e66d79e1414756c12e8074290c001110a6e2ace137f83518ecb`（6358B，补采）→ R3 裁定 reply `947f41ee8154e8e378661c011a6dfcfbe370241dbdda2adbf0ad887cfb88cc51`（5618B，补采，commit f4d0e1e）。v0.4 针对 R2 三项整改后 R3 剩余两项技术 REJECT（跨主机误差公式/事件类型字段矩阵）+文档状态同步整改；R2-03 DB/ACK 判定 R3 已 PASS，不重复改写；场景 A/B/C 结构不变。**本轮只设计不实测；⑥ 仍 BLOCKED**。
+> 来源：R1 裁定 reply `2d84f6bd658acd00d3cd2ada56e29c2e3b91458983cf21d0573b4991fb90d4d0`（11158B，会话 6afe9d76，commit e16722f）→ R2 裁定 reply `cf078bc249319e66d79e1414756c12e8074290c001110a6e2ace137f83518ecb`（6358B，补采）→ R3 裁定 reply `947f41ee8154e8e378661c011a6dfcfbe370241dbdda2adbf0ad887cfb88cc51`（5618B，补采，commit f4d0e1e）→ R4 裁定 reply `6e10731e8de118dc8ccfb5456e758124d22a04a7cfaf3b660dfb379c8a728784`（4656B，补采，commit f4d6daa）。v0.5 仅针对 R4 核2 事件字段矩阵剩余三项（条件可判定化/全局关联一致性/扩展字段词汇表）；核1 跨主机时钟、核3 文档状态、R2-03 DB/ACK 已 PASS 不回退不改写；场景 A/B/C 结构不变。**本轮只设计不实测；⑥ 仍 BLOCKED**。
 >
 > 红线：batch1 局部 PASS 不推导平台级并发 PASS；batch2 ⑥未执行不作证据；两只读任务 PASS 不替代⑥；⑥未独立 PASS 前 M1 写路径限制不解除；不以 Mock/内存DB/顺序测试替代并发证明。
 
@@ -40,16 +40,16 @@
 | 故障 fail-closed | 覆盖提交前失败/响应丢失/ACK失败三类 |
 | 证据关联 | 全链路关联ID+统一时间线+原始证据+SHA256清单 |
 
-### 二·补 事件关联字段规范（v0.4 / R2 REJECT-02 + R3 REJECT-02 整改：冻结 event_type 字段矩阵）
-每条进入 MANIFEST 的原始事件（REST_REQ/REST_RESP/DB_TXN_*/ACK_*/FAULT_INJECT/RECOVER 等）**基线必填** `event_id`、`event_type`、`monotonic_timestamp`、`clock_domain`；其余字段按下列矩阵冻结为必填/条件必填/可选，条件必填在条件成立时等同必填，**禁止采集时临时决定**。12 字段词汇表：
+### 二·补 事件关联字段规范（v0.5 / R4 核2 整改：条件可判定化 + 全局关联一致性 + 扩展字段词汇表）
+每条进入 MANIFEST 的原始事件**基线必填** `event_id`、`event_type`、`monotonic_timestamp`、`clock_domain`；其余字段按下列矩阵冻结，条件必填的条件均为**可机械判定的枚举/谓词**，禁止"可关联时/可定位时"等需执行者判断的措辞，禁止采集时临时决定。12 个基础字段词汇表：
 | 字段 | 用途 |
 |---|---|
 | event_id | 唯一事件身份 |
-| task_id | 任务归属 |
-| request_id | 请求归属 |
-| instance_id | 实例归属（A/B） |
+| task_id | 任务归属（TASK 作用域为真实 ID；GLOBAL 作用域为显式 `N/A` + n/a_reason） |
+| request_id | 请求归属（同上） |
+| instance_id | 实例归属（A/B；GLOBAL 作用域取 `ALL` 或具体实例） |
 | idempotency_key | 幂等核验 |
-| trace_id | 全链路追踪 |
+| trace_id | 全链路追踪（含 GLOBAL 作用域的根 trace） |
 | event_type | 事件类型（见矩阵） |
 | monotonic_timestamp | 单调时钟时间（带 clock_domain） |
 | clock_domain | 时钟所属域（对应一·补选定的时钟域方案） |
@@ -57,19 +57,33 @@
 | ack_id | ACK 唯一身份 |
 | state_version | 状态版本 |
 
-事件类型字段矩阵（冻结；"基线"=上述四字段）：
-| event_type | 必填 | 条件必填 | 可选 |
+事件类型字段矩阵（冻结；"基线"=上述四字段；条件列给出判定谓词）：
+| event_type | 必填 | 条件必填（判定谓词） | 可选 |
 |---|---|---|---|
 | REST_REQ | 基线 + task_id / request_id / instance_id / idempotency_key / trace_id | — | — |
-| REST_RESP | 基线 + task_id / request_id / instance_id / trace_id / http_status | idempotency_key（重试响应必填） | db_transaction_id |
-| DB_TXN_BEGIN | 基线 + task_id / request_id / instance_id / trace_id / db_transaction_id / state_version | idempotency_key（可关联时必填） | ack_id |
+| REST_RESP | 基线 + task_id / request_id / instance_id / trace_id / http_status | idempotency_key：当 `count(REST_REQ where request_id = 本事件.request_id) > 1`（重试响应）时必填，否则可省略 | db_transaction_id |
+| DB_TXN_BEGIN | 基线 + task_id / request_id / instance_id / trace_id / db_transaction_id / state_version / idempotency_key（无条件必填） | — | — |
 | DB_TXN_COMMIT | 同 DB_TXN_BEGIN + commit_result | — | — |
-| ACK_SEND | 基线 + task_id / request_id / instance_id / trace_id / ack_id / state_version | db_transaction_id（可关联时必填） | http_status |
+| ACK_SEND | 基线 + task_id / request_id / instance_id / trace_id / ack_id / state_version / db_transaction_id（无条件必填） | — | http_status |
 | ACK_CONFIRM | 同 ACK_SEND + confirm_result | — | — |
-| FAULT_INJECT | 基线 + instance_id | task_id / request_id / trace_id（注入点可定位任务时必填）；db_transaction_id / ack_id（注入点为 DB/ACK 时必填） | — |
-| RECOVER | 基线 + instance_id + recover_result | task_id / request_id / trace_id / db_transaction_id / ack_id（按被恢复事件必填） | — |
+| FAULT_INJECT | 基线 + instance_id + fault_scope（枚举 `TASK`/`GLOBAL`）+ injection_point（枚举 `DB_BEFORE_COMMIT`/`DB_AFTER_COMMIT`/`ACK_SEND`/`ACK_CONFIRM`/`INSTANCE_ABORT`） | `fault_scope=TASK` → task_id/request_id/trace_id 必填；且 injection_point∈{DB_BEFORE_COMMIT,DB_AFTER_COMMIT} → db_transaction_id 必填，∈{ACK_SEND,ACK_CONFIRM} → ack_id 必填。`fault_scope=GLOBAL` → task_id/request_id 显式 `N/A` 且 n/a_reason 必填，trace_id 必填 | — |
+| RECOVER | 基线 + instance_id + recover_result + recover_target_event_id | 从 `recover_target_event_id` 指向事件复制 task_id/request_id/trace_id/db_transaction_id/ack_id；目标字段为 `N/A` 时复制 `N/A` 并继承 n/a_reason | — |
 
-每条事件须可关联到 task_id + request_id + instance_id；条件必填的条件不成立时须在事件中显式记录不适用理由，不得留空。矩阵在场景冻结后不得变更，变更须重新复审。
+全局关联一致性规则（消除"每条事件可关联三项身份"与 GLOBAL 缺省的矛盾）：**"可关联"定义为该字段取真实 ID，或取显式 `N/A` 并同时填写 n/a_reason；空值/缺字段一律判证据失效（五类即停⑤）。** `fault_scope=TASK` 事件三项身份必须真实 ID；`fault_scope=GLOBAL` 事件允许 task_id/request_id=`N/A`，但必须以 `trace_id` 根标识 + `instance_id`（`ALL` 或具体实例）建立作用域关联，并在 n/a_reason 写明全局故障范围。RECOVER 按目标事件复制，不另设判断。
+
+12 基础字段之外的**扩展字段**（明确不属于基础词汇表，须在 MANIFEST schema 中登记含义与适用事件）：
+| 扩展字段 | 含义 | 适用 event_type |
+|---|---|---|
+| http_status | REST/ACK 通道 HTTP 状态码 | REST_RESP、ACK_SEND（可选） |
+| commit_result | DB 事务提交结果 | DB_TXN_COMMIT |
+| confirm_result | ACK 确认结果 | ACK_CONFIRM |
+| recover_result | 恢复动作结果 | RECOVER |
+| fault_scope | 故障作用域枚举 `TASK`/`GLOBAL` | FAULT_INJECT |
+| injection_point | 注入点枚举（见矩阵） | FAULT_INJECT |
+| recover_target_event_id | 被恢复事件的 event_id | RECOVER |
+| n/a_reason | 字段显式 `N/A` 的原因 | 任一出现 `N/A` 的事件 |
+
+矩阵与扩展字段在场景冻结后不得变更，变更须重新复审。
 
 ## 三、八项关键判据（全部满足才允许⑥ PASS）
 1. 至少两真正独立任务实例（明确独立性证明）；2. 真实 M1 REST+DB 路径；3. 证明实际并发非顺序（时间重叠）；4. 每任务登记/状态/ACK 独立追溯（完整关联字段）；5. 故障无错误成功/串单/丢失（逐故障判定）；6. 原始证据+SHA256 完整 MANIFEST；7. 独立审查与执行者分离；8. 任一判据未过则⑥不得 PASS。

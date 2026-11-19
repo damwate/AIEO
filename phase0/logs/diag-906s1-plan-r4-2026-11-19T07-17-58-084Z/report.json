@@ -1,0 +1,78 @@
+{
+  "conv_uuid": "6afe9d76-5af0-83ec-bb84-77e7c54f409e",
+  "marker": "[906S1-PLAN-R4|20261119]",
+  "failed_dir": "phase0/logs/dispatch-2026-11-19T07-15-26",
+  "steps": [
+    {
+      "step": 1,
+      "name": "current_window",
+      "keys": [
+        "2a4756f9-60eb-5885-ad63-513a35d51fcb:0:user",
+        "2a4756f9-60eb-5885-ad63-513a35d51fcb:2:assistant"
+      ],
+      "roles": [
+        "user",
+        "assistant"
+      ],
+      "at_top": false,
+      "at_bottom": true,
+      "scrollable": true,
+      "marker_hits": 1
+    },
+    {
+      "step": 2,
+      "name": "scroll_up",
+      "keys": [
+        "2a4756f9-60eb-5885-ad63-513a35d51fcb:0:user",
+        "2a4756f9-60eb-5885-ad63-513a35d51fcb:2:assistant"
+      ],
+      "roles": [
+        "user",
+        "assistant"
+      ],
+      "at_top": false,
+      "at_bottom": true,
+      "scrollable": true,
+      "marker_hits": 1,
+      "changed_vs_initial": false
+    },
+    {
+      "step": 2,
+      "name": "scroll_down",
+      "keys": [
+        "2a4756f9-60eb-5885-ad63-513a35d51fcb:0:user",
+        "2a4756f9-60eb-5885-ad63-513a35d51fcb:2:assistant"
+      ],
+      "roles": [
+        "user",
+        "assistant"
+      ],
+      "at_top": false,
+      "at_bottom": true,
+      "scrollable": true,
+      "marker_hits": 1,
+      "changed_vs_up": false
+    },
+    {
+      "step": 3,
+      "name": "after_reload",
+      "keys": [
+        "2a4756f9-60eb-5885-ad63-513a35d51fcb:0:user",
+        "2a4756f9-60eb-5885-ad63-513a35d51fcb:2:assistant"
+      ],
+      "roles": [
+        "user",
+        "assistant"
+      ],
+      "at_top": false,
+      "at_bottom": false,
+      "scrollable": true,
+      "marker_hits": 1,
+      "changed_vs_initial": false
+    }
+  ],
+  "virtualization_inferred": false,
+  "failed_code": "INBOUND_WINDOW_COMPLETENESS_UNPROVEN",
+  "remediation": "CDP 视口拉高静态 DOM 全量物化补采（禁重发）",
+  "captured_at": "2026-11-19T07:18:19.089Z"
+}

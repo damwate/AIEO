@@ -1,0 +1,7 @@
+[906S1-PLAN-R4|20261119] 906⑥场景设计v0.4整改定向复审
+任务:仅复核R3三项REJECT整改;R2-03 DB/ACK已PASS及此前PASS项不重审,不开实测。会话已3轮user,本轮第4轮按L-018评估后不迁移(终局定向复审+简报自包含),第6轮重评。
+读:damwate/AIEO@f4d6daa04382e95ca2b678085de6430242d726e5 basic/tasks/b-20261119-p1-906-06-concurrency/{scenario-design.md,steps.md,task-brief.md};R3 reply 947f41ee8154e8e378661c011a6dfcfbe370241dbdda2adbf0ad887cfb88cc51。
+核1:一·补跨主机须用保守边界max(A_start+ε,B_start+ε)<min(A_end−ε,B_end−ε),ε定义为单端点上界或换算,集中采集冻结观测点(handler进入/退出)+δ,ε_eff=ε+δ;禁四值同减ε。
+核2:二·补须有8类event_type必填/条件必填/可选矩阵,每条基线必填event_id/event_type/monotonic_timestamp/clock_domain,不留采集时临时决定。
+核3:task-brief当前状态=返工/步骤=S4,steps S4结论=REWORK且R2/R3历史裁定保留;S5未完成。
+三态PASS/REJECT(列项)/BLOCKED,结论表+文件SHA256,绑定被测commit f4d6daa;⑥BLOCKED/M1写路径不解除/不实测/实测另批。

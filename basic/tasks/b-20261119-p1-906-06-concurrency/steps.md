@@ -1,6 +1,6 @@
 # 步骤清单（b-20261119-p1-906-06-concurrency）
 
-**方案状态：** v0.4（R1 ADJUST→R2 REJECT 三项→R3 REJECT 两项技术+文档状态整改落位；⑥仍BLOCKED，待R4复审）。
+**方案状态：** v0.5（R1 ADJUST→R2/R3/R4 REJECT 逐轮整改；R4 核1/核3 PASS、核2 剩余事件字段矩阵整改落位；⑥仍BLOCKED，待R5复审）。
 
 ## S1 登记
 
@@ -52,21 +52,21 @@
 
 ## S4 独立验收
 
-①本步骤目标：R2 独立复审 v0.2 场景设计（R1 ADJUST 后）三项技术 REJECT→v0.3 整改→R3 定向复审→两项技术+文档状态 REJECT→v0.4 整改→R4。
+①本步骤目标：R2 独立复审 v0.2（R1 ADJUST 后）三项技术 REJECT→v0.3；R3 两项技术+文档状态 REJECT→v0.4；R4 核2 事件字段矩阵 REJECT→v0.5→R5。
 
-②修改文件：scenario-design.md（v0.2→v0.3→v0.4）；task-brief.md（状态同步为返工）；steps.md（S4 记录+返工表）；派单现场 dispatch-2026-11-19T06-59-27（R2 fail-closed）/dispatch-2026-11-19T07-07-30（R3 fail-closed）；诊断 diag_906s1_plan_r3.mjs；补采驱动 recoll_906s1_plan_r2.mjs/recoll_906s1_plan_r3.mjs。
+②修改文件：scenario-design.md（v0.2→v0.3→v0.4→v0.5）；task-brief.md（状态同步为返工）；steps.md（S4 记录+返工表）；派单现场 dispatch-2026-11-19T06-59-27（R2）/dispatch-2026-11-19T07-07-30（R3）/dispatch-2026-11-19T07-15-25（R4，均 fail-closed）；诊断 diag_906s1_plan_r3.mjs/diag_906s1_plan_r4.mjs；补采驱动 recoll_906s1_plan_r2/r3/r4.mjs。
 
-③修改内容：S4-R2=**REJECT**，reply 补采 `cf078bc249319e66d79e1414756c12e8074290c001110a6e2ace137f83518ecb`（6358B）。场景 A/B/C、八判据、环境资格(BLOCKED)、五类即停、实测另批边界、T0-T9 均 PASS；三项技术 REJECT=问题1（跨实例单调时钟可比性：未定义两实例是否同一时钟域，各自 CLOCK_MONOTONIC 数值不可直接比较，需重叠公式 max(A_start,B_start)<min(A_end,B_end)）；问题2（事件关联字段不完整：MANIFEST 原始事件缺 event_id/request_id/instance_id/idempotency_key/trace_id/event_type/monotonic_timestamp/clock_domain/db_transaction_id/ack_id/state_version 规范及适用规则）；问题3（DB/ACK 失败判定不精确：F1 半完成事务定义、F3 DB已提交ACK失败中间状态、重试ACK同一逻辑身份未明确）；附文档状态未同步。整改=scenario-design.md v0.3 落三补段（一·补时钟域+重叠公式、二·补事件字段规范、六·补DB/ACK状态转换系列），场景结构不变；⑥仍BLOCKED/M1写路径不解除。派单发送双验通过后采集 fail-closed `INBOUND_WINDOW_COMPLETENESS_UNPROVEN`→按 L-018 禁重发+静态DOM补采（recoll 四参数全换 grep 核对、归属三件套全过）。S4-R3=**REJECT**（reply 补采 `947f41ee8154e8e378661c011a6dfcfbe370241dbdda2adbf0ad887cfb88cc51`，5618B，被测 commit `f4d0e1ed64b77334f3bb831c74cedf4f0493ded5`）：R2-03 DB/ACK 判定 PASS 不重复改写；剩余 REJECT=问题4（跨主机误差公式无效：四个时间值同减 ε 属纯平移，须改为 max(A_start+ε,B_start+ε)<min(A_end−ε,B_end−ε)，ε 须定义为单端点上界或换算，集中采集须冻结观测点+δ）；问题5（event_type 字段矩阵未闭合：每类事件缺必填/条件必填/可选规则，基线须含 event_id/event_type/monotonic_timestamp/clock_domain）；问题6（文档状态语义冲突：当前状态滞留待规划、S4 结论把 R2 REJECT 记为 PASS）。v0.4 定向整改三项，场景结构不变；⑥仍BLOCKED/M1写路径不解除。R3 派单发送双验通过后采集 fail-closed→diag_906s1_plan_r3.mjs 三步诊断 virtualization_inferred=true→静态DOM补采（四参数 grep 核对+七查全过，禁重发）。
+③修改内容：S4-R2=**REJECT**，reply 补采 `cf078bc249319e66d79e1414756c12e8074290c001110a6e2ace137f83518ecb`（6358B）。场景 A/B/C、八判据、环境资格(BLOCKED)、五类即停、实测另批边界、T0-T9 均 PASS；三项技术 REJECT=问题1（跨实例单调时钟可比性：未定义两实例是否同一时钟域，各自 CLOCK_MONOTONIC 数值不可直接比较，需重叠公式 max(A_start,B_start)<min(A_end,B_end)）；问题2（事件关联字段不完整：MANIFEST 原始事件缺 event_id/request_id/instance_id/idempotency_key/trace_id/event_type/monotonic_timestamp/clock_domain/db_transaction_id/ack_id/state_version 规范及适用规则）；问题3（DB/ACK 失败判定不精确：F1 半完成事务定义、F3 DB已提交ACK失败中间状态、重试ACK同一逻辑身份未明确）；附文档状态未同步。整改=scenario-design.md v0.3 落三补段（一·补时钟域+重叠公式、二·补事件字段规范、六·补DB/ACK状态转换系列），场景结构不变；⑥仍BLOCKED/M1写路径不解除。派单发送双验通过后采集 fail-closed `INBOUND_WINDOW_COMPLETENESS_UNPROVEN`→按 L-018 禁重发+静态DOM补采（recoll 四参数全换 grep 核对、归属三件套全过）。S4-R3=**REJECT**（reply 补采 `947f41ee8154e8e378661c011a6dfcfbe370241dbdda2adbf0ad887cfb88cc51`，5618B，被测 commit `f4d0e1ed64b77334f3bb831c74cedf4f0493ded5`）：R2-03 DB/ACK 判定 PASS 不重复改写；剩余 REJECT=问题4（跨主机误差公式无效：四个时间值同减 ε 属纯平移，须改为 max(A_start+ε,B_start+ε)<min(A_end−ε,B_end−ε)，ε 须定义为单端点上界或换算，集中采集须冻结观测点+δ）；问题5（event_type 字段矩阵未闭合：每类事件缺必填/条件必填/可选规则，基线须含 event_id/event_type/monotonic_timestamp/clock_domain）；问题6（文档状态语义冲突：当前状态滞留待规划、S4 结论把 R2 REJECT 记为 PASS）。v0.4 定向整改三项，场景结构不变；⑥仍BLOCKED/M1写路径不解除。R3 派单发送双验通过后采集 fail-closed→diag_906s1_plan_r3.mjs 三步诊断 virtualization_inferred=true→静态DOM补采（四参数 grep 核对+七查全过，禁重发）。S4-R4=**REJECT**（reply 补采 `6e10731e8de118dc8ccfb5456e758124d22a04a7cfaf3b660dfb379c8a728784`，4656B，被测 commit `f4d6daa04382e95ca2b678085de6430242d726e5`）：核1 跨主机时钟 PASS（保守边界+ε单端点定义+δ）、核3 文档状态 PASS（返工/S4 REWORK/历史保留）、R2-03 不回退；仅核2 事件字段矩阵 REJECT=问题7（①"可关联时/可定位时"条件未冻结为可判定规则；②"每条事件关联 task/request/instance"与 FAULT_INJECT/RECOVER 条件缺省矛盾；③http_status/commit_result/confirm_result/recover_result 扩展字段未纳入词汇表）。v0.5 仅整改问题7，把条件改为枚举/谓词、GLOBAL 作用域用显式 N/A+n/a_reason+trace 根标识、扩展字段单列；场景结构不变；⑥仍BLOCKED/M1写路径不解除。R4 派单发送双验通过后采集 fail-closed→diag_906s1_plan_r4.mjs 三步诊断（virtualization_inferred=false，marker_hits=1）→静态DOM补采（四参数 grep 核对+七查全过，禁重发）；会话第4条 user 按 L-018 评估暂不迁移（终局定向复审+简报自包含），第6条重评。
 
-④执行结果：v0.3 三项整改→R3 REJECT→v0.4 两项技术+文档状态整改落盘；待 R4 复审。被测 commit `e16722f`（R1）/`a598dcd`（R2）/`f4d0e1ed64b77334f3bb831c74cedf4f0493ded5`（R3）；R2 整改提交 `5114356a9c982d45104f57903747e7c3203acd36`，R3 整改提交 `24ce25f5f3487e6ee03b3d684fcdaad3562ff7b7`（返工表问题4/5/6）。
+④执行结果：v0.3→R3 REJECT→v0.4→R4 REJECT（仅核2）→v0.5 问题7整改落盘；待 R5 复审。被测 commit `e16722f`（R1）/`a598dcd`（R2）/`f4d0e1ed64b77334f3bb831c74cedf4f0493ded5`（R3）/`f4d6daa04382e95ca2b678085de6430242d726e5`（R4）；R2 整改 `5114356a9c982d45104f57903747e7c3203acd36`，R3 整改 `24ce25f5f3487e6ee03b3d684fcdaad3562ff7b7`，R4 整改见返工表问题7。
 
-⑤测试结果：S4-R2 reply 补采 6358B SHA=`cf078bc249319e66d79e1414756c12e8074290c001110a6e2ace137f83518ecb`；S4-R3 reply 补采 5618B SHA=`947f41ee8154e8e378661c011a6dfcfbe370241dbdda2adbf0ad887cfb88cc51`；两次 recoll checks 均全 true（标记唯一+最后user+尾部assistant+静态稳定+停止按钮不可见+非前轮SHA+长度合理）；R2 三 REJECT 与 R3 三 REJECT 逐项核对整改段存在；ST-05 当前状态改返工后零 FAIL。
+⑤测试结果：S4-R2 reply 补采 6358B SHA=`cf078bc249319e66d79e1414756c12e8074290c001110a6e2ace137f83518ecb`；S4-R3 reply 补采 5618B SHA=`947f41ee8154e8e378661c011a6dfcfbe370241dbdda2adbf0ad887cfb88cc51`；S4-R4 reply 补采 4656B SHA=`6e10731e8de118dc8ccfb5456e758124d22a04a7cfaf3b660dfb379c8a728784`；三次 recoll checks 均全 true（标记唯一+最后user+尾部assistant+静态稳定+停止按钮不可见+非前轮SHA+长度合理）；R2/R3/R4 REJECT 逐项核对整改段存在；ST-05 当前状态改返工后零 FAIL。
 
-⑥验收证据引用：dispatch-2026-11-19T06-59-27（S4-R2 派单现场），补采 phase0/tools/phase0/logs/recoll-906s1-plan-r2-2026-11-19T07-02-10-460Z，reply SHA256=`cf078bc249319e66d79e1414756c12e8074290c001110a6e2ace137f83518ecb`；dispatch-2026-11-19T07-07-30（S4-R3 派单现场），诊断 phase0/logs/diag-906s1-plan-r3-2026-11-19T07-11-02-816Z/report.json，补采 phase0/logs/recoll-906s1-plan-r3-2026-11-19T07-11-43-950Z，reply SHA256=`947f41ee8154e8e378661c011a6dfcfbe370241dbdda2adbf0ad887cfb88cc51`；问题1/4 修复见「一·补」，问题2/5 见「二·补」，问题3 见「六·补」，问题6 见 task-brief.md 状态表与本 S4 结论。
+⑥验收证据引用：dispatch-2026-11-19T06-59-27（S4-R2 派单现场），补采 phase0/tools/phase0/logs/recoll-906s1-plan-r2-2026-11-19T07-02-10-460Z，reply SHA256=`cf078bc249319e66d79e1414756c12e8074290c001110a6e2ace137f83518ecb`；dispatch-2026-11-19T07-07-30（S4-R3 派单现场），诊断 phase0/logs/diag-906s1-plan-r3-2026-11-19T07-11-02-816Z/report.json，补采 phase0/logs/recoll-906s1-plan-r3-2026-11-19T07-11-43-950Z，reply SHA256=`947f41ee8154e8e378661c011a6dfcfbe370241dbdda2adbf0ad887cfb88cc51`；dispatch-2026-11-19T07-15-25（S4-R4 派单现场），诊断 phase0/logs/diag-906s1-plan-r4-2026-11-19T07-21-31-239Z/report.json，补采 phase0/logs/recoll-906s1-plan-r4-2026-11-19T07-22-00-843Z，reply SHA256=`6e10731e8de118dc8ccfb5456e758124d22a04a7cfaf3b660dfb379c8a728784`（首轮诊断/补采的 FAILED_DIR 元数据误记为 07-15-26，已按实际目录 07-15-25 重跑只读诊断与补采；reply 字节数/SHA 不变，旧目录保留不删）；问题1/4 修复见「一·补」，问题2/5/7 见「二·补」，问题3 见「六·补」，问题6 见 task-brief.md 状态表与本 S4 结论。
 
-**验收结论：REWORK**（R2 三项→v0.3；R3 两项技术+文档状态→v0.4；独立验收待 R4，S5 未到期）
+**验收结论：REWORK**（R2 三项→v0.3；R3 三项→v0.4；R4 核2 一项→v0.5；独立验收待 R5，S5 未到期）
 
-### 返工记录表（问题1-3=R2 REJECT；问题4-6=R3 REJECT）
+### 返工记录表（问题1-3=R2 REJECT；问题4-6=R3 REJECT；问题7=R4 REJECT）
 | 问题编号 | 根因 | 整改内容 | 修复 commit |
 |---|---|---|---|
 | 问题1 | v0.2 未定义两实例单调时钟是否同一域，数值不可直接比较 | scenario-design.md「一·补」明确二选一时钟域方案+重叠公式 max(A_start,B_start)<min(A_end,B_end)，跨主机须扣误差 ε | 5114356a9c982d45104f57903747e7c3203acd36 |
@@ -75,8 +75,9 @@
 | 问题4 | v0.3 跨主机公式四值同减 ε 属纯平移，未真正扣误差 | 「一·补」改为 max(A_start+ε,B_start+ε)<min(A_end−ε,B_end−ε)，定义单端点 ε 与集中采集观测点+δ | 24ce25f5f3487e6ee03b3d684fcdaad3562ff7b7 |
 | 问题5 | v0.3 事件字段缺逐 event_type 必填/条件必填/可选矩阵 | 「二·补」冻结 8 类 event_type 矩阵，基线必填 event_id/event_type/monotonic_timestamp/clock_domain | 24ce25f5f3487e6ee03b3d684fcdaad3562ff7b7 |
 | 问题6 | 任务书当前状态滞留待规划、S4 结论把 R2 REJECT 记为 PASS | task-brief.md 当前状态=返工/当前步骤=S4；S4 结论=REWORK，保留 R2/R3 历史裁定不覆盖 | 24ce25f5f3487e6ee03b3d684fcdaad3562ff7b7 |
+| 问题7 | R4 核2：条件必填谓词不可机械判定、全局关联规则与 FAULT_INJECT/RECOVER 缺省矛盾、扩展字段未入词汇表 | 「二·补」改为枚举/谓词（fault_scope/injection_point/recover_target_event_id）、GLOBAL 用显式 N/A+n/a_reason+trace 根、扩展字段单列表 | （v0.5 整改提交，SHA 于 R5 前回填） |
 
-## S5 收口交付（待 R4 后回填）
+## S5 收口交付（待 R5 后回填）
 （待回填）
 
 ---
@@ -85,4 +86,5 @@
 - S1：PASS（PLANNING 合法态；R3 返工态到期后证据已补 dispatch-2026-11-19T06-39-20+SHA）。
 - S3 提交前：PASS。
 - R4 派单前（返工态）：PASS①/②/④/⑤，③三步到期记录完整 PASS、S4/S5 未到期 N/A、⑥未到期 N/A；Overall=IN_PROGRESS（N/A 项非 FAIL），零 FAIL。
-- S5 终检（COMPLETED 态）：待 R4 后回填。
+- R5 派单前（返工态）：待 v0.5 整改提交 SHA 回填后复跑。
+- S5 终检（COMPLETED 态）：待 R5 后回填。
