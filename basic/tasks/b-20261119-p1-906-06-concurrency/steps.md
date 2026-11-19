@@ -58,7 +58,7 @@
 
 ③修改内容：S4-R2=**REJECT**，reply 补采 `cf078bc249319e66d79e1414756c12e8074290c001110a6e2ace137f83518ecb`（6358B）。场景 A/B/C、八判据、环境资格(BLOCKED)、五类即停、实测另批边界、T0-T9 均 PASS；三项技术 REJECT=问题1（跨实例单调时钟可比性：未定义两实例是否同一时钟域，各自 CLOCK_MONOTONIC 数值不可直接比较，需重叠公式 max(A_start,B_start)<min(A_end,B_end)）；问题2（事件关联字段不完整：MANIFEST 原始事件缺 event_id/request_id/instance_id/idempotency_key/trace_id/event_type/monotonic_timestamp/clock_domain/db_transaction_id/ack_id/state_version 规范及适用规则）；问题3（DB/ACK 失败判定不精确：F1 半完成事务定义、F3 DB已提交ACK失败中间状态、重试ACK同一逻辑身份未明确）；附文档状态未同步。整改=scenario-design.md v0.3 落三补段（一·补时钟域+重叠公式、二·补事件字段规范、六·补DB/ACK状态转换系列），场景结构不变；⑥仍BLOCKED/M1写路径不解除。派单发送双验通过后采集 fail-closed `INBOUND_WINDOW_COMPLETENESS_UNPROVEN`→按 L-018 禁重发+静态DOM补采（recoll 四参数全换 grep 核对、归属三件套全过）。S4-R3=**REJECT**（reply 补采 `947f41ee8154e8e378661c011a6dfcfbe370241dbdda2adbf0ad887cfb88cc51`，5618B，被测 commit `f4d0e1ed64b77334f3bb831c74cedf4f0493ded5`）：R2-03 DB/ACK 判定 PASS 不重复改写；剩余 REJECT=问题4（跨主机误差公式无效：四个时间值同减 ε 属纯平移，须改为 max(A_start+ε,B_start+ε)<min(A_end−ε,B_end−ε)，ε 须定义为单端点上界或换算，集中采集须冻结观测点+δ）；问题5（event_type 字段矩阵未闭合：每类事件缺必填/条件必填/可选规则，基线须含 event_id/event_type/monotonic_timestamp/clock_domain）；问题6（文档状态语义冲突：当前状态滞留待规划、S4 结论把 R2 REJECT 记为 PASS）。v0.4 定向整改三项，场景结构不变；⑥仍BLOCKED/M1写路径不解除。R3 派单发送双验通过后采集 fail-closed→diag_906s1_plan_r3.mjs 三步诊断 virtualization_inferred=true→静态DOM补采（四参数 grep 核对+七查全过，禁重发）。S4-R4=**REJECT**（reply 补采 `6e10731e8de118dc8ccfb5456e758124d22a04a7cfaf3b660dfb379c8a728784`，4656B，被测 commit `f4d6daa04382e95ca2b678085de6430242d726e5`）：核1 跨主机时钟 PASS（保守边界+ε单端点定义+δ）、核3 文档状态 PASS（返工/S4 REWORK/历史保留）、R2-03 不回退；仅核2 事件字段矩阵 REJECT=问题7（①"可关联时/可定位时"条件未冻结为可判定规则；②"每条事件关联 task/request/instance"与 FAULT_INJECT/RECOVER 条件缺省矛盾；③http_status/commit_result/confirm_result/recover_result 扩展字段未纳入词汇表）。v0.5 仅整改问题7，把条件改为枚举/谓词、GLOBAL 作用域用显式 N/A+n/a_reason+trace 根标识、扩展字段单列；场景结构不变；⑥仍BLOCKED/M1写路径不解除。R4 派单发送双验通过后采集 fail-closed→diag_906s1_plan_r4.mjs 三步诊断（virtualization_inferred=false，marker_hits=1）→静态DOM补采（四参数 grep 核对+七查全过，禁重发）；会话第4条 user 按 L-018 评估暂不迁移（终局定向复审+简报自包含），第6条重评。
 
-④执行结果：v0.3→R3 REJECT→v0.4→R4 REJECT（仅核2）→v0.5 问题7整改落盘；待 R5 复审。被测 commit `e16722f`（R1）/`a598dcd`（R2）/`f4d0e1ed64b77334f3bb831c74cedf4f0493ded5`（R3）/`f4d6daa04382e95ca2b678085de6430242d726e5`（R4）；R2 整改 `5114356a9c982d45104f57903747e7c3203acd36`，R3 整改 `24ce25f5f3487e6ee03b3d684fcdaad3562ff7b7`，R4 整改见返工表问题7。
+④执行结果：v0.3→R3 REJECT→v0.4→R4 REJECT（仅核2）→v0.5 问题7整改落盘；待 R5 复审。被测 commit `e16722f`（R1）/`a598dcd`（R2）/`f4d0e1ed64b77334f3bb831c74cedf4f0493ded5`（R3）/`f4d6daa04382e95ca2b678085de6430242d726e5`（R4）；R2 整改 `5114356a9c982d45104f57903747e7c3203acd36`，R3 整改 `24ce25f5f3487e6ee03b3d684fcdaad3562ff7b7`，R4 整改 `a0f994e5b8610c47a41feb213837fbb4bec30a45`（返工表问题7）。
 
 ⑤测试结果：S4-R2 reply 补采 6358B SHA=`cf078bc249319e66d79e1414756c12e8074290c001110a6e2ace137f83518ecb`；S4-R3 reply 补采 5618B SHA=`947f41ee8154e8e378661c011a6dfcfbe370241dbdda2adbf0ad887cfb88cc51`；S4-R4 reply 补采 4656B SHA=`6e10731e8de118dc8ccfb5456e758124d22a04a7cfaf3b660dfb379c8a728784`；三次 recoll checks 均全 true（标记唯一+最后user+尾部assistant+静态稳定+停止按钮不可见+非前轮SHA+长度合理）；R2/R3/R4 REJECT 逐项核对整改段存在；ST-05 当前状态改返工后零 FAIL。
 
@@ -75,7 +75,7 @@
 | 问题4 | v0.3 跨主机公式四值同减 ε 属纯平移，未真正扣误差 | 「一·补」改为 max(A_start+ε,B_start+ε)<min(A_end−ε,B_end−ε)，定义单端点 ε 与集中采集观测点+δ | 24ce25f5f3487e6ee03b3d684fcdaad3562ff7b7 |
 | 问题5 | v0.3 事件字段缺逐 event_type 必填/条件必填/可选矩阵 | 「二·补」冻结 8 类 event_type 矩阵，基线必填 event_id/event_type/monotonic_timestamp/clock_domain | 24ce25f5f3487e6ee03b3d684fcdaad3562ff7b7 |
 | 问题6 | 任务书当前状态滞留待规划、S4 结论把 R2 REJECT 记为 PASS | task-brief.md 当前状态=返工/当前步骤=S4；S4 结论=REWORK，保留 R2/R3 历史裁定不覆盖 | 24ce25f5f3487e6ee03b3d684fcdaad3562ff7b7 |
-| 问题7 | R4 核2：条件必填谓词不可机械判定、全局关联规则与 FAULT_INJECT/RECOVER 缺省矛盾、扩展字段未入词汇表 | 「二·补」改为枚举/谓词（fault_scope/injection_point/recover_target_event_id）、GLOBAL 用显式 N/A+n/a_reason+trace 根、扩展字段单列表 | （v0.5 整改提交，SHA 于 R5 前回填） |
+| 问题7 | R4 核2：条件必填谓词不可机械判定、全局关联规则与 FAULT_INJECT/RECOVER 缺省矛盾、扩展字段未入词汇表 | 「二·补」改为枚举/谓词（fault_scope/injection_point/recover_target_event_id）、GLOBAL 用显式 N/A+n/a_reason+trace 根、扩展字段单列表 | a0f994e5b8610c47a41feb213837fbb4bec30a45 |
 
 ## S5 收口交付（待 R5 后回填）
 （待回填）
@@ -86,5 +86,5 @@
 - S1：PASS（PLANNING 合法态；R3 返工态到期后证据已补 dispatch-2026-11-19T06-39-20+SHA）。
 - S3 提交前：PASS。
 - R4 派单前（返工态）：PASS①/②/④/⑤，③三步到期记录完整 PASS、S4/S5 未到期 N/A、⑥未到期 N/A；Overall=IN_PROGRESS（N/A 项非 FAIL），零 FAIL。
-- R5 派单前（返工态）：待 v0.5 整改提交 SHA 回填后复跑。
+- R5 派单前（返工态）：PASS①/②/④/⑤，③三步到期记录完整 PASS、S4/S5 未到期 N/A、⑥未到期 N/A；Overall=IN_PROGRESS（N/A 项非 FAIL），零 FAIL。
 - S5 终检（COMPLETED 态）：待 R5 后回填。
