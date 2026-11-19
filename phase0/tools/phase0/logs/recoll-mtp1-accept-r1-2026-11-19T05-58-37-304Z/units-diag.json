@@ -1,0 +1,30 @@
+[
+  {
+    "key": "a2c52b0e-e567-542d-817f-b6507ad79b44:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 662,
+    "text_head": "[MTP1-PLAN-R1|20261119] 会话迁移+P1规划协商\n接棒:旧审查会话6afe7ccb归档只读。\n任务:多任务方案P1规划协商+方案准备(仅规划,不开跑/不触DEC-010)。\n读:"
+  },
+  {
+    "key": "a2c52b0e-e567-542d-817f-b6507ad79b44:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 3368,
+    "text_head": "ChatGPT 说：\nMTP1-PLAN-R1 规划协商裁定\n总体 PASS（附约束）\n仅规划\n\n被测仓库： damwate/AIEO\n\n被测 commit（完整 SHA）：\n\nf9ee1cde007"
+  },
+  {
+    "key": "8295c383-1804-55f4-801b-6730c618ce67:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 675,
+    "text_head": "[MTP1-ACCEPT-R1|20261119] S4独立验收六查\n任务:多任务方案P1规划协商+方案冻结(仅规划,零代码/零M1/不开跑/不触DEC-010)。\n读:github.com/damw"
+  },
+  {
+    "key": "8295c383-1804-55f4-801b-6730c618ce67:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 3476,
+    "text_head": "ChatGPT 说：\nMTP1-ACCEPT-R1｜S4 独立验收\n\nREJECT（文档一致性整改） 核心方案内容通过\n\n被测仓库： damwate/AIEO\n\n被测 commit：\n\n6b86542"
+  }
+]

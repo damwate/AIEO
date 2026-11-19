@@ -1,0 +1,31 @@
+{
+  "recollection": true,
+  "driver": "recoll_mtp1_accept_r1.mjs",
+  "conversation_url": "https://chatgpt.com/c/6afe8e59-9da0-83ec-bfef-d5fa04b6002a",
+  "failed_dispatch_dir": "phase0/logs/dispatch-2026-11-19T05-55-22",
+  "failure_code": "INBOUND_WINDOW_COMPLETENESS_UNPROVEN",
+  "recovery": "视口拉高静态DOM全量物化+归属校验三件套（禁重发）",
+  "marked_user_unit_key": "8295c383-1804-55f4-801b-6730c618ce67:0:user",
+  "assistant_unit_key": "8295c383-1804-55f4-801b-6730c618ce67:2:assistant",
+  "assistant_unit_count": 1,
+  "after_units": [
+    {
+      "key": "8295c383-1804-55f4-801b-6730c618ce67:2:assistant",
+      "role": "assistant",
+      "text_len": 3476,
+      "text_head": "ChatGPT 说：\nMTP1-ACCEPT-R1｜S4 独立验收\n\nREJECT（文档一致性整改） 核心方案内容通过\n"
+    }
+  ],
+  "reply_bytes": 6198,
+  "reply_sha256": "df2830cda4069f84646db182994d43ef9309763b51a0eda767ea4725383b8af6",
+  "checks": {
+    "marked_user_unique": true,
+    "last_user_assertion": true,
+    "adjacent_assistant_tail": true,
+    "stable_static_dom_read": true,
+    "final_stop_button_not_visible": true,
+    "not_prev_reply_sha": true,
+    "response_length_plausible": true
+  },
+  "extracted_at": "2026-11-19T05:59:01.168Z"
+}
