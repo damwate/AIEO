@@ -1,0 +1,108 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-19T19:12:28.474Z",
+  "user_unit_key": "ff5c761e-abbb-533d-9e6e-d027aa42e9cc:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "ff5c761e-abbb-533d-9e6e-d027aa42e9cc:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "5abee7c8-0228-4eb4-af62-3139f70cdd95",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "ff5c761e-abbb-533d-9e6e-d027aa42e9cc:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "0a3abe7a-f21d-5c68-860e-708a72424bb0:0:user",
+          "0a3abe7a-f21d-5c68-860e-708a72424bb0:2:assistant",
+          "ff5c761e-abbb-533d-9e6e-d027aa42e9cc:0:user",
+          "ff5c761e-abbb-533d-9e6e-d027aa42e9cc:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "047780f014c652bb7a1da26e735de84caadd2255b511229bb1512294811a405c",
+          "fedb72e25bac2dd46e56a00b261d8634a9ae23de2b79720ebb311c00a36ee2dc",
+          "b8788889bec01c9b284560a045b64d509b1077902108bca824a94d688d5b53cf",
+          "491a34895a6bf05ac4ced62507e73f71a1f4da3876c8cabf9116732cee16e376"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "0a3abe7a-f21d-5c68-860e-708a72424bb0:0:user",
+          "0a3abe7a-f21d-5c68-860e-708a72424bb0:2:assistant",
+          "ff5c761e-abbb-533d-9e6e-d027aa42e9cc:0:user",
+          "ff5c761e-abbb-533d-9e6e-d027aa42e9cc:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "047780f014c652bb7a1da26e735de84caadd2255b511229bb1512294811a405c",
+          "fedb72e25bac2dd46e56a00b261d8634a9ae23de2b79720ebb311c00a36ee2dc",
+          "b8788889bec01c9b284560a045b64d509b1077902108bca824a94d688d5b53cf",
+          "491a34895a6bf05ac4ced62507e73f71a1f4da3876c8cabf9116732cee16e376"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "0a3abe7a-f21d-5c68-860e-708a72424bb0:0:user",
+          "0a3abe7a-f21d-5c68-860e-708a72424bb0:2:assistant",
+          "ff5c761e-abbb-533d-9e6e-d027aa42e9cc:0:user",
+          "ff5c761e-abbb-533d-9e6e-d027aa42e9cc:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "ff5c761e-abbb-533d-9e6e-d027aa42e9cc:0:user",
+      "ff5c761e-abbb-533d-9e6e-d027aa42e9cc:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "0a3abe7a-f21d-5c68-860e-708a72424bb0:0:user",
+          "0a3abe7a-f21d-5c68-860e-708a72424bb0:2:assistant",
+          "ff5c761e-abbb-533d-9e6e-d027aa42e9cc:0:user",
+          "ff5c761e-abbb-533d-9e6e-d027aa42e9cc:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "0a3abe7a-f21d-5c68-860e-708a72424bb0:0:user",
+          "0a3abe7a-f21d-5c68-860e-708a72424bb0:2:assistant",
+          "ff5c761e-abbb-533d-9e6e-d027aa42e9cc:0:user",
+          "ff5c761e-abbb-533d-9e6e-d027aa42e9cc:2:assistant"
+        ],
+        "overlap_keys": [
+          "0a3abe7a-f21d-5c68-860e-708a72424bb0:0:user",
+          "0a3abe7a-f21d-5c68-860e-708a72424bb0:2:assistant",
+          "ff5c761e-abbb-533d-9e6e-d027aa42e9cc:0:user",
+          "ff5c761e-abbb-533d-9e6e-d027aa42e9cc:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "ff5c761e-abbb-533d-9e6e-d027aa42e9cc:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n有一项异议，暂缓S7\n\n两项独立审计的收口结论无异议：\n\nP1-01： 终版 #1F/#2B/#3B/#4P/#5F，F05 撤销，F01-F04/F06 移交复盘。认可。\n\nP1-02： 五问 5 PASS，R2 将 #4 改判 PASS。认可。\n\n隔离纪律： 两审计结果不等于 906⑥ PASS。认可。\n\n七项核验： 全 PASS，认可。\n\nDEC-115： 原审查链身份纠错及留痕，不影响历史裁定。\n\n唯一异议：批次复盘交付证据尚未在当前 main 得到确认。\n\n我核对到：\n\n当前 main tip 是 a5bcf987。\n\nbasic/tasks/b-20261119-multitask-p1-execution/ 目录目前没有 delivery.md。\n\n提供的 a97f203 无法在当前 GitHub main 提交链中解析。\n\nPHASE-STATUS.md 仍是 v0.13，DEC-117 尚未登记。\n\n因此建议：\n\n先确认 a97f203 是否已推送到 main，以及批次 delivery.md 是否实际存在。\n\n确认 B 表完整记录 F01-F06 的处置归属及 906⑥另批状态。\n\n再更新 PHASE-STATUS v0.14、handoff 总结和 DEC-117。\n\n不要求重跑两项审计，不推翻任何已完成结果。\n\n其余无异议。M1 写路径、906⑥实测、P2/P3及 DEC-010 红线继续保持原限制。",
+      "text_sha256": "491a34895a6bf05ac4ced62507e73f71a1f4da3876c8cabf9116732cee16e376",
+      "size_bytes": 1155,
+      "assistant_uuid": "5abee7c8-0228-4eb4-af62-3139f70cdd95"
+    }
+  ]
+}

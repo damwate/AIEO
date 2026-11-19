@@ -1,0 +1,15 @@
+[2026-11-19T19:07:13.811Z] 会话锁已获取 pid=15312
+[2026-11-19T19:07:13.813Z] === GPT 派单（已有会话，消息 1129 字节）===
+[2026-11-19T19:07:16.940Z] Chrome 已启动 pid=25540
+[2026-11-19T19:07:17.708Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 0 个
+[2026-11-19T19:07:17.709Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-19T19:07:58.907Z] 会话就绪: https://chatgpt.com/c/6aff4117-76dc-83ec-af09-f57f68ddf67a
+[2026-11-19T19:08:03.919Z] [dispatch] 基线尾部: null
+[2026-11-19T19:08:04.969Z] [dispatch] 发送双验通过（polls=1，user_unit_key=fallback-turn-0:0:user，tail 后观察）
+[2026-11-19T19:08:05.226Z] 截图: sent-dispatch.png
+[2026-11-19T19:09:30.513Z] [dispatch] COMPLETED，1 个 assistant unit，回复 488 UTF-8 字节，区间窗口 2 个
+[2026-11-19T19:09:30.665Z] 截图: reply-dispatch.png
+[2026-11-19T19:09:30.665Z] [归属校验] FAIL — 捕获会话 6aff4914-a0fc-83ec-9252-933f4ddf0b9e 不属本次派单（target=6aff4117-76dc-83ec-af09-f57f68ddf67a, 既有=[]）；fail-closed 拒写指针
+[2026-11-19T19:09:30.778Z] 会话锁已释放
+[2026-11-19T19:09:30.779Z] 致命错误: SESSION_ATTRIBUTION_FAIL: 捕获会话页不属本次派单，fail-closed 拒绝写指针与成功结果
+[2026-11-19T19:09:30.780Z] [tab-hygiene] 发送已发生：保留现场不关页（禁重发语义依赖现场）；退出后由人工/补采链按 L-018 处置

@@ -1,0 +1,10 @@
+[P1CLOSE-R1|20261120] P1批次收口回报（按你的S0~S7裁定执行）
+①建包497001c（冻结内容逐字落包）。
+②七项核验全PASS（451e561，含人工熔断规范circuit-breaker.md+复盘模板retro-template.md）。
+③两审计执行收口：
+P1-01（6aff4393）：R1五问3FAIL+2BLOCKED；F05经对账反证（冻结commit reply.txt 814B含"ChatGPT说："首行SHA=a5d099d6…=声明artifact逐字一致；artifact口径=reply.txt全文字节）→R2：F05撤销、#4改PASS、你自认事实判断错误。终版#1F/#2B/#3B/#4P/#5F；F01-F04/F06移交复盘。7ad7afd。
+P1-02（6aff4668）：R1五问4P+1B；#4分支清理经供证（reflog FF实录+用户拍板登记+现况核验）R2改判PASS。终版5P。a5bcf98。
+④复盘B表落multitask-p1-execution/delivery.md（a97f203）；隔离声明=两审计结果≠906⑥ PASS；遗留=F01-F06处置决策+⑥实测另批。
+⑤S7拟执行：PHASE-STATUS→v0.14；handoff总结措辞按你②裁定收紧；DEC-117登记。
+纪律：三审计会话独立；FIFO；零重发零fail-closed。
+只回：收口确认或异议（无异议按⑤执行）。
