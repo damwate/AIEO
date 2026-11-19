@@ -14,7 +14,7 @@
 
 ⑤测试结果：python -I basic/tool/check_taskpack.py basic/tasks/b-20261119-multitask-p1-execution —— 待提交后回填。
 
-⑥验收证据引用：本任务包 S1 提交；R1 规划协商直读签核（派单目录与 reply SHA 待回填）。
+⑥验收证据引用：本任务包 S1 提交；R1 规划协商直读签核=dispatch-2026-11-19T06-39-20（reply SHA256 `9a79f7cfc04e481ac0a0f25b3cc33aca0aa04249f2bdb588fccc1e63eaf9ed64`，回填自 S2 证据，原"待回填"占位按实际证据补齐）。
 
 **验收结论：PASS**（P1 开跑授权登记 + 阻塞如实申报；独立验收见 S2 规划协商链）
 
@@ -50,11 +50,37 @@
 
 **验收结论：PASS**（执行形态冻结；独立验收见 S4）
 
-## S4 独立验收（待执行）
-（按六要素回填）
+## S4 独立验收（2026-11-20 完成）
 
-## S5 收口交付（待执行）
-（按六要素回填）
+①本步骤目标：核对两审计任务收口与七项核验记录一致性，编制批次总复盘。
+
+②修改文件：delivery.md（B 表复盘）；本 steps.md；两审计包引用核对。
+
+③修改内容：P1-01/P1-02 终版裁定与 reply SHA256 逐项核对（0c320048…/b6882d01…/128f9e03…/37b967cf…）；retro B 表七节编制。
+
+④执行结果：复盘登记 delivery.md；隔离声明（两审计结果≠⑥ PASS）与遗留移交清单落盘。
+
+⑤测试结果：两审计包 ST-05 均 COMPLETED PASS（7ad7afd/a5bcf98）；五轮派单 reply SHA256 与 artifact 声明逐字一致。
+
+⑥验收证据引用：dispatch-2026-11-19T18-43-43、dispatch-2026-11-19T18-50-32、dispatch-2026-11-19T18-55-47、dispatch-2026-11-19T19-01-35；reply SHA256 `0c3200480a0f80426682e64a657879d2b7824bd7ca0bddbe45217ac427897c1c`、`b6882d01259341cdde88188801a0bbc78c6fe7c78edcb5bfe0ddb9a04fa4aa48`、`128f9e0398dd6fbd0d3b11bf532f43a5d0de8f1d3f55d67ef1a1609443e948f4`、`37b967cf304d0dab5f1b66342735c3e1e503d54d35981580aae8baa7eb140062`。
+
+**验收结论：PASS**（批次执行核对一致；复盘编制完成）
+
+## S5 收口交付（2026-11-20 完成）
+
+①本步骤目标：P1 批次收口（S6 复盘完成）+权威状态源更新（S7）。
+
+②修改文件：delivery.md、task-brief.md（状态完成）、本 steps.md；docs/PHASE-STATUS.md；handoff/P1-TRUTHFUL-STATUS-SUMMARY-20261119.md（措辞收紧，P1HANDOFF-R1 ②裁定）；decision-log（DEC-117）。
+
+③修改内容：批次结论=P1 准备+两审计按 S0~S6 完成收口；遗留=F01–F06 处置决策+⑥实测另批；授权边界重申。
+
+④执行结果：批次收口；收口摘要回报审查会话 6aff4117（见 DEC-117）。
+
+⑤测试结果：ST-05 本包 COMPLETED 态自检（见记录）；零代码/零 M1/零 DEC-010。
+
+⑥验收证据引用：dispatch-2026-11-19T18-33-05（处置裁定）+两审计四派单现场；七项核验记录；P1HANDOFF-R1 reply SHA256 `fedb72e25bac2dd46e56a00b261d8634a9ae23de2b79720ebb311c00a36ee2dc`。
+
+**验收结论：PASS**（P1 批次收口完成）
 
 ## 七项开跑前置核验记录（2026-11-20，P1HANDOFF-R1 S2 执行，门槛=全 PASS 才可派单）
 
