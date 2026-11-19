@@ -78,7 +78,7 @@
 
 ⑤测试结果：ST-05 本包 COMPLETED 态自检（见记录）；零代码/零 M1/零 DEC-010。
 
-⑥验收证据引用：dispatch-2026-11-19T18-33-05（处置裁定）+两审计四派单现场；七项核验记录；P1HANDOFF-R1 reply SHA256 `fedb72e25bac2dd46e56a00b261d8634a9ae23de2b79720ebb311c00a36ee2dc`。
+⑥验收证据引用：dispatch-2026-11-19T18-33-05（处置裁定）+两审计四派单现场+收口回报 dispatch-2026-11-19T19-10-06（reply SHA256 `491a34895a6bf05ac4ced62507e73f71a1f4da3876c8cabf9116732cee16e376`）与 dispatch-2026-11-19T19-13-27（reply SHA256 `b091736cc3ded1ede5d47141b50c85109df0f2e317421b0a01fa1376891b31e1`）；七项核验记录；P1HANDOFF-R1 reply SHA256 `fedb72e25bac2dd46e56a00b261d8634a9ae23de2b79720ebb311c00a36ee2dc`。
 
 **验收结论：PASS**（P1 批次收口完成）
 
