@@ -1,0 +1,10 @@
+[P1QUAL-PLAN-R1|20261119] 会话迁移+P1两任务资格审查
+接棒:旧审查会话6afe99cd归档只读。
+授权:用户"OK,P1开始吧"=P1开跑本人拍板;本任务关阻塞①(两任务ID冻结),零代码不实跑。
+读:damwate/AIEO@2794352ac basic/tasks/b-20261119-p1-task-qualification/三件套;前序裁定reply 9a79f7cf。
+你上轮给四候选(非选定):b-20261117-dispatch-reliability-fix、b-20261118-c2-batch1-review(优先)、b-20261119-aisvc-f3-rework(异仓+推送史不宜)、b-20261119-c2-batch2-scenarios(⑥未执行不可冒充)。五资格审查标准:①证据完整可读②无未关REWORK/BLOCKED③可定义非重复只读复核问题④可独立task_id/会话/证据目录⑤不与既有验收重复计数。
+请裁定:
+1)四候选按五标准逐项PASS/FAIL(给证据)。
+2)正式冻结两个P1任务:task_id/名称/只读复核问题(非重复)/被测commit完整SHA/五件套清单。
+3)确认两任务不重跑⑥、不重复既有验收计数;历史PASS不代表本轮复核PASS。
+边界:零代码/不启M1写/不实跑/不合并/不部署/不删数据/不触DEC-010其余红线。回执结论表+SHA256,绑定commit 2794352。
