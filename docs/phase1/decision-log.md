@@ -955,3 +955,14 @@
 - **依据：** 用户消息原文"同意清理"（2026-11-19）；任务包 basic/tasks/b-20261119-disk-cleanup-plan/{task-brief,steps,delivery}.md；派单证据 phase0/logs/dispatch-2026-11-19T02-58-56/；ST-05 自检 6/6 PASS。
 - **关联：** DEC-010（数据删除红线）、L-014/L-016（代理瞬断处置）、CAP-20261113-001（ChatGPT 无执行能力）、DEC-094 #4（--no-update-pointer 不覆盖审查指针）。
 - **S3 补充（同日）：** 用户追加要求清理“公司A企微微盘下载到 Downloads 的那批文件”。只读盘点发现 Downloads 由上轮 4.72GB 变为 0.52GB（本任务未碰 Downloads），经结构化确认：用户裁定 4.2GB 差异系其本人手动清除，且识别依据选“先不删、自行整理清单后再执行”。据此**未删除 Downloads 任何文件**；DEC-010 红线在范围不明时坚持零删除、用户本人裁定。
+
+### DEC-111 GitPointer dispatcher:null 生产路径缺陷修复闭环：R1 PASS 冻结+S3一行修复+S4 R1 REJECT→R2 PASS（2026-11-19，用户拍板委托 ChatGPT 渠道）
+
+- **节点依据：** 用户 2026-11-19 接棒指令（"你继续接棒"+"请按照AIEO开发经验来"）+交接「遗留与下一步」建议下一节点（dispatcher:null 缺陷修复，经规划协商后实施）+c2-batch2 delivery §6/§7 + DEC-109 SEPARATE_DEFECT_CONFIRMED 另立必办；授权链=用户本人指令+DEC-109/108/107。
+- **接棒前置（工作区清理）：** 交接声称"工作区净"实为未净——DEC-110 磁盘清理残留（4 任务包 + 5 派单现场 + DEC-110 S3 补记，62 文件）在两次 git status 快照稳定后全量归档提交 `93f2119`、check-push 推送 ahead=0；期间 10+ ZCode 进程并发写入经用户确认已停（不做并发提交）。
+- **立项与规划协商 R1：** `9395a97`（ST-05 自检 FAIL→PASS 补「优先级」）；审查会话 6afdffa2（7 条 user 消息超 L-018 §6 阈值）备份 `pre-gpfix.json` 后迁新会话 **6afe7ccb**（--new-session 首派即活）；R1=PASS 首轮（reply `d6e3d0ac4c2388f28cad01d72c0f623ea935e8fdf246f98dbea8e5361ba1828d` 4473B，dispatch-2026-11-19T04-35-35），方案冻结 v0.2——修复落 fetch 边界 `dispatcher ?? undefined`（?? 非 ||）、保留工厂返回 null 契约、回归三件套、Node 原生 fetch 本地实读、不改 app 版/API/错误码、不触 DEC-010。
+- **S3 修复（被测 commit `204901f276ae656254258266ba9955ee83dcfe0c`）：** 生产代码仅一行 `phase0/tools/git_pointer.mjs:397` `dispatcher`→`dispatcher: dispatcher ?? undefined`（diff index 992b34a..524e9dc）；+3 回归（无代理完整链 fetch init.dispatcher===undefined 非 null / Node v24 原生 fetch 本地 HTTP 实读非 mock 自证 / 有代理 EnvHttpProxyAgent 注入且读后 closed=true）；24/24 单测全过（原 21 契约不删不改），报告 SHA `288c490eb738f78f6bd3212f378db464e13dbc921c82fc55c240afe96e520de2`；ST-01 绑定 count=1/parent=ef99cb8/5 文件 diff（审查方独立复核确认）。
+- **S4 独立验收（R1 REJECT→整改→R2 PASS）：** 两次派单均发送双验通过后采集 fail-closed `INBOUND_WINDOW_COMPLETENESS_UNPROVEN`，按 L-018 禁重发+静态 DOM 补采（recoll_gpfix_accept_r1/r2 四参数全换 grep 核对、归属三件套全过、零重发零误投）。R1 六查①-⑤ PASS、⑥证据可查 REJECT（S3 口述负面对照未归档机器证据，裁定载荷 `31361e64…`，reply 补采 `f311df1b…`）；整改提交 `f80433fe380bf62ec675209bb374a78e5881e486`（文件化负面对照脚本+归档 `gpfix-negative-control.json` SHA `1b862f01…` + 勘误 + 返工表，生产代码不变）；R2 仅复审⑥=PASS（reply 补采 `216db18b…` 3709B，回执 `6b680d56…`，审查方独立重算证据 SHA 一致、确认 f80433f 无生产代码改动），六查全 PASS，被测 commit 仍 204901f。
+- **关键经验（L-017/L-018 再证）：** ①"空心 PASS"反向=验收方要求独立归档负面对照证据，口头声称不作已验证事实；②虚拟化 fail-closed 连续两次靠静态 DOM 补采闭环，禁重发机制有效；③ad-hoc `node -e` 复现不落盘=证据链缺口，文件化脚本+JSON 归档才是可复核证据。
+- **边界重申：** 生产代码仅一行、零 DEC-010（无 main 合并/生产发布/真实数据删除）、不部署、不改 app 版、不连真实 GitHub；被测 diff 为 204901f 单 commit，整改/收口提交不属验收 diff 范围。
+- **关联：** DEC-109（缺陷来源）、DEC-108/107/106（授权链）、DEC-110（前置归档）、platform-contract §2.6.6-2.6.7（GitPointer 读取契约）、L-014/017/018（推送/一致性/补采实战）、ST-01/02/05（绑定/轮次/自检）。

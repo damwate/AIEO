@@ -1,0 +1,31 @@
+{
+  "recollection": true,
+  "driver": "recoll_gpfix_accept_r2.mjs",
+  "conversation_url": "https://chatgpt.com/c/6afe7ccb-f2a8-83ec-83d2-b9910cc323f9",
+  "failed_dispatch_dir": "phase0/logs/dispatch-2026-11-19T05-19-04",
+  "failure_code": "INBOUND_WINDOW_COMPLETENESS_UNPROVEN",
+  "recovery": "视口拉高静态DOM全量物化+归属校验三件套（禁重发）",
+  "marked_user_unit_key": "09b8ea83-c305-5ddc-9937-50b76ee0b704:0:user",
+  "assistant_unit_key": "09b8ea83-c305-5ddc-9937-50b76ee0b704:2:assistant",
+  "assistant_unit_count": 1,
+  "after_units": [
+    {
+      "key": "09b8ea83-c305-5ddc-9937-50b76ee0b704:2:assistant",
+      "role": "assistant",
+      "text_len": 2095,
+      "text_head": "ChatGPT 说：\nGP-FIX-ACCEPT-R2｜S4 第⑥项针对性复审\n\nPASS R1 唯一整改项已补齐，允许"
+    }
+  ],
+  "reply_bytes": 3709,
+  "reply_sha256": "216db18bc8b2b2df322212c8746b0e47f2b1f76f47e43ac0b423cbb85c674168",
+  "checks": {
+    "marked_user_unique": true,
+    "last_user_assertion": true,
+    "adjacent_assistant_tail": true,
+    "stable_static_dom_read": true,
+    "final_stop_button_not_visible": true,
+    "not_prev_reply_sha": true,
+    "response_length_plausible": true
+  },
+  "extracted_at": "2026-11-19T05:22:24.951Z"
+}
