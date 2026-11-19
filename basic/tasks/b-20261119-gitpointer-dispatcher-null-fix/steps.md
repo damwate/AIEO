@@ -31,11 +31,24 @@
   - 回归② Node v24 原生 `globalThis.fetch` 对本地 HTTP 服务实读成功（createServer 按 req.url 路由 manifest+材料），证明 undici 原生语义兼容，非 mock 自证；捕获 init.dispatcher===undefined。
   - 回归③有代理 env 注入 HTTPS_PROXY→有效 EnvHttpProxyAgent（constructor.name 断言），读取结束后 `dispatcher.closed===true`（自有 dispatcher 正常关闭）。
 - ④执行结果：完成。
-- ⑤测试结果：`node phase0/tools/test_git_pointer.mjs` → **total=24 passed=24 failed=0**（原 21 项全 PASS 含"无代理返回 null"契约不删不改 + 新增 3 项回归），node=v24.14.0，network_scope=INJECTED_LOCAL_HTTP_RESPONSES_ONLY_NO_REAL_GITHUB，EXIT=0。负面对照（L-017 防空心）：隔离复现 `fetch(url,{dispatcher:null})` 在 Node v24 抛 `ERR_ASSERTION`；FIX_PRESENT=true、旧 null 形态在 fetch 处已无残留——证明回归②非"改前改后都 PASS"的无效测试。
-- ⑥证据：测试报告 `phase0/logs/git-pointer-tests.json`（SHA256=`288c490eb738f78f6bd3212f378db464e13dbc921c82fc55c240afe96e520de2`，24/24）+ `.log`；生产 diff 如上；被测 commit=S3 提交完整 SHA（S4 绑定时登记）。
+- ⑤测试结果：`node phase0/tools/test_git_pointer.mjs` → **total=24 passed=24 failed=0**（原 21 项全 PASS 含"无代理返回 null"契约不删不改 + 新增 3 项回归），node=v24.14.0，network_scope=INJECTED_LOCAL_HTTP_RESPONSES_ONLY_NO_REAL_GITHUB，EXIT=0。
+- ⑥证据：测试报告 `phase0/logs/git-pointer-tests.json`（SHA256=`288c490eb738f78f6bd3212f378db464e13dbc921c82fc55c240afe96e520de2`，24/24）+ `.log`；生产 diff 如上；被测 commit=`204901f276ae656254258266ba9955ee83dcfe0c`（S4 绑定已核）。
+- 勘误（S4 R1 揭出，如实登记）：S3 初稿⑤曾口头声称"负面对照已复现 ERR_ASSERTION"，但当时仅 ad-hoc `node -e` 执行、未归档机器证据——该表述不实，已在 S4 ⑥ 整改项补正式证据（见下）。
 
-## S4 独立验收（待执行）
-- 逐轮派单验收，PASS/REJECT 结论 + reply SHA 登记，绑定被测 commit（ST-01）。
+## S4 独立验收
+### S4-R1：REJECT（仅第⑥项证据可查，其余五项 PASS）
+- 被测 commit=`204901f276ae656254258266ba9955ee83dcfe0c`，基线=`ef99cb82315a1839d3fcca3a3d20ac7681a43199`（ST-01：count=1、parent=基线、5 文件 diff 与申报一致，审查方独立复核确认）。
+- 派单 `dispatch-2026-11-19T04-44-09` 发送双验通过（polls=1）后采集 fail-closed `INBOUND_WINDOW_COMPLETENESS_UNPROVEN`；按 L-018 禁重发→静态 DOM 补采驱动 `recoll_gpfix_accept_r1.mjs`（四参数全换：CONV_UUID=6afe7ccb/MARKER=[GP-FIX-ACCEPT-R1|20261119]/PREV_REPLY_SHA=d6e3d0ac/FAILED_DIR=04-44-09，grep 核对）→补采目录 `phase0/tools/phase0/logs/recoll-gpfix-accept-r1-2026-11-19T05-17-22-034Z`（cwd 相对路径误落点，按 a1d14ad 惯例原位入库），reply 3198B SHA256=`f311df1bca23a54d72d7f47744696b5fd7958bb572a95b936bc3d931067203fa`，归属三件套 PASS（标记唯一1+最后user断言+前轮SHA排除），checks 中 `index_continuity:false` 如实记录（该断言属场景①口径，非本验收项，审查方未据此扣项）。
+- 六查裁定：①目标PASS ②方案PASS（?? 非 ||、工厂null契约保留、三项回归齐） ③无超范围PASS（app版未改/DEC-010未触） ④代码质量PASS（仅一行） ⑤测试真实性PASS（24/24、原生fetch非mock、21项未删） ⑥证据可查=**REJECT（ADJUST）**——S3 声称的负面对照未归档机器证据。
+- 规范化裁定载荷 SHA256=`31361e64558b8e71f6f7018ce5d94ae51d94f6a77a7803a769b6fb220dcd8148`。
+- 唯一整改项：补可复核负面对照（Node v24 + 本地 HTTP + fetch(url,{dispatcher:null}) → ERR_ASSERTION，原始输出/命令/版本/SHA256 归档 + 更新 steps.md）；不改生产代码/不重新设计测试；R2 仅复审第⑥项。
+
+### 返工记录（首次 REJECT 建表，WORKFLOW 模块五）
+| 轮次 | 问题 | 根因 | 整改 | 状态 |
+|---|---|---|---|---|
+| R1 REJECT | 问题1（六查⑥证据可查）：负面对照仅口头声称、无归档机器证据 | S3 用 ad-hoc `node -e` 复现未落盘（亦违 skill 禁 ad-hoc -e 纪律） | 新增文件化脚本 `phase0/tools/gpfix_neg_control.mjs`，归档 `phase0/logs/gpfix-negative-control.json`（ERR_ASSERTION 原文+node v24.14+命令+SHA256=`1b862f01f5815bdcc132722943480e390b1fefc2d4e195a77fb82a581b973627`），勘误 S3⑤ | 整改完成，待 R2 复审 |
+
+### S4-R2：待派单（仅复审第⑥项）
 
 ## S5 收口交付（待执行）
 - 完工六查 + delivery 七要素 + commit + check-push 推送。

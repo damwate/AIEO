@@ -1,0 +1,8 @@
+[2026-11-19T05:17:22.494Z] 会话锁已获取（GP-FIX S4 R1 补采）
+[2026-11-19T05:17:22.563Z] 页面归属命中 CONV_UUID=6afe7ccb-f2a8-83ec-83d2-b9910cc323f9
+[2026-11-19T05:17:45.849Z] 归属校验=标记唯一(1)+最后user断言（target=ae192620-8acf-5274-ae5b-e95f0ac8a06b:0:user）
+[2026-11-19T05:17:45.854Z] checks={"marked_user_unique":true,"last_user_assertion":true,"adjacent_assistant_tail":true,"stable_static_dom_read":true,"index_continuity":false,"final_stop_button_not_visible":true,"not_prev_reply_sha":true,"response_length_plausible":true,"uuid_based_locator":false}
+[2026-11-19T05:17:45.858Z] reply 已落盘（3198 字节，SHA=f311df1bca23a54d…）
+[2026-11-19T05:17:45.858Z] RECOLL COMPLETED
+[2026-11-19T05:17:45.877Z] 视口覆盖已清除
+[2026-11-19T05:17:46.353Z] 会话锁已释放（GP-FIX S4 R1 补采）

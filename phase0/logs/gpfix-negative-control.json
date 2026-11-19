@@ -1,0 +1,18 @@
+{
+  "task": "b-20261119-gitpointer-dispatcher-null-fix",
+  "purpose": "negative-control: prove dispatcher:null triggers ERR_ASSERTION on Node v24 (fix is non-vacuous)",
+  "node": "v24.14.0",
+  "command": "node phase0/tools/gpfix_neg_control.mjs",
+  "target": "local HTTP server (createServer listen 0 on 127.0.0.1, no real GitHub)",
+  "injected_fetch_init": {
+    "dispatcher": null
+  },
+  "observed": {
+    "threw": true,
+    "code": "ERR_ASSERTION",
+    "name": "AssertionError",
+    "message": "The expression evaluated to a falsy value:\n\n  assert(dispatcher)\n"
+  },
+  "assertion": true,
+  "extracted_at": "2026-11-19T05:18:13.243Z"
+}

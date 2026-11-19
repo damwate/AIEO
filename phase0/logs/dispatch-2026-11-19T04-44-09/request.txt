@@ -1,0 +1,7 @@
+[GP-FIX-ACCEPT-R1|20261119] S4独立验收六查
+任务:GitPointer dispatcher:null缺陷修复,按R1冻结v0.2实施。
+读:github.com/damwate/AIEO @ 204901f276ae656254258266ba9955ee83dcfe0c(基线ef99cb8,单commit count=1,parent=ef99cb8)。包basic/tasks/b-20261119-gitpointer-dispatcher-null-fix/。
+变更(diff ef99cb8..204901f,5文件):①git_pointer.mjs仅一行fetch init dispatcher→dispatcher??undefined(:397)②test+3回归③tests.json/.log④steps.md。
+自报:node test_git_pointer.mjs=24/24PASS(原21含"无代理返回null"契约不删不改+回归3),node v24.14,报告SHA256=288c490eb738f78f6bd3212f378db464e13dbc921c82fc55c240afe96e520de2。
+逐项核:a)落fetch边界用??非||,工厂null契约不变 b)无代理完整链init.dispatcher===undefined非null c)Node原生fetch对本地HTTP实读成功(非mock自证) d)有代理EnvHttpProxyAgent读后closed=true e)不改app版/API/错误码/重试/超时/审计,不触DEC-010/部署/合并/真GitHub f)复现null在Node24抛ERR_ASSERTION(证非空心)。
+六查:①合目标②合方案③无超范围④代码质量⑤测试真实⑥证据可查。三态PASS/REJECT(列项)/BLOCKED,回执结论表+SHA256,绑定被测commit。
