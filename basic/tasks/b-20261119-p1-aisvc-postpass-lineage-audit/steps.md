@@ -18,29 +18,37 @@
 
 **验收结论：PASS**（建包登记完成，冻结内容逐字落包）
 
-## S2 审计派单（待执行，门槛：P1-01 验收释放通道后 FIFO）
+## S2 审计派单（2026-11-20 执行）
 
 ①本步骤目标：以**全新独立审查会话**（--new-session，不复用 6aff4117 规划会话与 P1-01 审计会话）派发跨仓血缘审计简报。
 
-②修改文件：phase0/tools/brief_p1audit02_r1_<date>.txt；phase0/logs/dispatch-<ts>/；本 steps.md。
+②修改文件：phase0/tools/brief_p1audit02_r1_20261120.txt；phase0/logs/dispatch-2026-11-19T18-55-47/；本 steps.md。
 
-③修改内容：简报（≤1200B，标记 `[P1AUDIT02-R1|<date>]`）含：task_id、两对照完整 SHA、仓库地址、五问、排除项、证据路径、回执要求（逐项裁定+发现清单）；发送双验+reply SHA256 核验。
+③修改内容：简报 1188B≤1200B，标记 `[P1AUDIT02-R1|20261120]`，含 task_id、两对照完整 SHA、被审计仓库、五问、排除项、R3 artifact SHA、回执要求；门槛=P1-01 已验收收口释放通道（FIFO，见 P1-01 包 S5）。
 
-④执行结果：待回填。
+④执行结果：发送双验通过；P1-02 审计会话 `6aff4668-21dc-83ec-997e-06a1794dd50f`（指针已接棒）；会话账本=6aff4117 处置裁定/6aff4393 P1-01/6aff4668 本审计。
 
-⑤测试结果：待回填（发送双验 polls、reply SHA256、归属校验）。
+⑤测试结果：reply.txt 2981B，SHA256=`128f9e0398dd6fbd0d3b11bf532f43a5d0de8f1d3f55d67ef1a1609443e948f4` 与 result.json.artifact_sha256 一致；stability 两读一致；completion checks 全过。
 
-⑥验收证据引用：待回填。
+⑥验收证据引用：dispatch-2026-11-19T18-55-47（request/reply/raw-units/result/截图/run.log/tab-audit，reply SHA256=`128f9e0398dd6fbd0d3b11bf532f43a5d0de8f1d3f55d67ef1a1609443e948f4`）；简报 brief_p1audit02_r1_20261120.txt。
 
-## S3 审计采集与登记（待执行）
+**验收结论：PASS**（审计派单成、独立会话、采集完整）
 
-①本步骤目标：采集审计 reply，归档 acceptance/（reply 原文+commit diff+合并/分支证据+SHA256 对账），登记 delivery.md。
+## S3 审计采集与登记（2026-11-20 执行，R1 已登记、#4 供证 R2 进行中）
 
-②修改文件：acceptance/、delivery.md、本 steps.md。
+①本步骤目标：采集审计 reply，归档 acceptance/，登记 delivery.md；对 BLOCKED 项按 L-017 配供证回审。
 
-③修改内容：reply 原文字节与 SHA256、五问逐项裁定、发现清单（非说明性变更/血缘断点/清理遗漏）、排除项遵守声明。
+②修改文件：acceptance/branch-cleanup-evidence.md、acceptance/MANIFEST.txt、delivery.md、本 steps.md。
 
-④⑤⑥：待回填。
+③修改内容：R1 裁定=五问 **4 PASS + 1 BLOCKED + 0 FAIL**（#1/#2 PASS 纯说明性修改、#3 PASS FF 保留、#5 PASS 衔接正确；#4 分支清理 BLOCKED=证据缺口非发现误删）；发现 F-01/F-02/F-03 如实登记；排除遵守声明全遵守。执行会对 #4 供证：reflog（FF 合并 origin/fix→main，分支 tip=0c53c963 即合并产物）+delivery §8 用户本人拍板登记+现况 main=origin/main=0c53c963、仅存 main、父提交线性，落 acceptance/branch-cleanup-evidence.md，待 R2 同会话复核定裁。
+
+④执行结果：R1 全文按原样登记；供证文件落包；无改写、无自我改判。
+
+⑤测试结果：reply SHA256 复算一致；供证命令可复现（git rev-parse/log/branch 实测记录于供证文件）。
+
+⑥验收证据引用：dispatch-2026-11-19T18-55-47/reply.txt；acceptance/branch-cleanup-evidence.md；acceptance/MANIFEST.txt。
+
+**验收结论：PASS**（R1 采集登记完成；#4 待审查方 R2 复核）
 
 ## S4 独立验收（待执行）/ S5 收口交付（待执行）
 

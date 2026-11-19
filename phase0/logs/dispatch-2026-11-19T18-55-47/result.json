@@ -1,0 +1,181 @@
+{
+  "at": "2026-11-19T18:58:43.294Z",
+  "message_bytes": 1187,
+  "reply": "ChatGPT 说：\nP1AUDIT02-R1｜审计裁定\n\n审计对象：YotinGarden/AI-Image-Service\n\n基准：d50ce915cb047537640a8393e08882e922443d47\n\n被测：0c53c963d93e33c15ebd4498742828fcf9ffc57d\n\n已确认：说明性修改\n一、五问裁定\n\n#\n\n\t\n\n审计问题\n\n\t\n\n裁定\n\n\t\n\n证据与理由\n\n\n\n\n1\n\n\t\n\n是否严格属于说明性修改\n\n\t\n\nPASS\n\n\t\n\n两提交比较仅涉及 backend/tests/test_real_stream_transport.py，3 additions、2 deletions。\n\n\n\n\n2\n\n\t\n\n是否存在生产行为、测试逻辑或其他代码变化\n\n\t\n\nPASS\n\n\t\n\n差异仅修改测试函数 docstring，明确 TIMEOUT_MS=5000 与 CONNECTTIMEOUT=5s 的关系；没有修改可执行语句、断言、参数或测试流程。\n\n\n\n\n3\n\n\t\n\nFF 合并是否完整保留已验收代码\n\n\t\n\nPASS（当前状态）\n\n\t\n\n比较结果为 ahead_by=1, behind_by=0，唯一新增提交是 0c，基准为 d50。仓库当前可见分支为 main，最新提交为 0c。\n\n\n\n\n4\n\n\t\n\n分支清理是否无遗漏、误删或意外变更\n\n\t\n\nBLOCKED\n\n\t\n\n当前分支检索只能确认可见分支状态，不能单独证明清理前后的完整分支及提交删除历史。\n\n\n\n\n5\n\n\t\n\nR3 历史验收 SHA 与最终 main SHA 是否正确衔接\n\n\t\n\nPASS（提交衔接）\n\n\t\n\nd50 是 R3 验收绑定提交；0c 是其后唯一新增提交。当前 main 最新提交为 0c。R3 的验收绑定没有被错误改写为 0c。\n\n二、发现清单\n\nF-01｜说明文字修正，不构成验收代码变更\n\n0c 的实际修改：\n\n原描述：库映射 CONNECTTIMEOUT_MS=5s。\n\n新描述：显式 TIMEOUT_MS=5000，同时存在库内部 CONNECTTIMEOUT=5s 映射。\n\n修改位置：test_connect_stall_control_fires_near_five_seconds() 的 docstring。\n\n可执行测试逻辑完全未变。\n\n比较结果：\n\nPASS d50ce91 → 0c53c96 只有一个提交、一个文件、5 行差异。\n\nF-02｜分支清理证据不足\n\n目前只能确认仓库可见分支为 main，不能据此证明：\n\n所有预期删除的分支均已正确清理；\n\n删除前不存在未合并的有效提交；\n\n清理过程中没有误删其他内容。\n\n这是证据缺口，不是已经发现误删。\n\nF-03｜验收与最终提交的边界保持正确\n\nR3 PASS 仍绑定 d50。\n\n0c 是后续说明性修正。\n\n不把 R3 的历史 PASS 自动扩展为对 0c 的重新验收。\n\nR3 artifact 的 SHA256 本轮未独立重新计算；本项 PASS 仅针对 Git 提交衔接。\n\n三、排除遵守声明\n遵守\n\n排除事项\n\n\t\n\n本轮执行情况\n\n\n\n\nF3a–F3d 重新验收\n\n\t\n\n未执行\n\n\n\n\npytest 重跑\n\n\t\n\n未执行\n\n\n\n\n历史 R3 重新评审\n\n\t\n\n未执行\n\n\n\n\n分支清理操作\n\n\t\n\n未执行\n\n\n\n\n扩大审计范围\n\n\t\n\n未执行\n\n最终结论：4 项 PASS，1 项 BLOCKED，0 项 FAIL。\n\n当前可以确认：0c 是 d50 之后的纯说明性修改，没有发现生产行为或测试逻辑变化，main 保留了已验收提交及其后续说明修正。\n\n但在取得分支清理前后完整证据之前，不能签署整个分支清理过程无遗漏的最终结论。",
+  "user_unit_key": "04610d31-1ebd-501c-ae55-b442f023acea:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "04610d31-1ebd-501c-ae55-b442f023acea:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "2d158889-df47-4791-b6dd-bae5e5800cab",
+  "stability": {
+    "stable": true,
+    "interval_ms": 3834,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-19T18:58:38.760Z",
+      "read_finished_at": "2026-11-19T18:58:39.583Z",
+      "unit_keys": [
+        "04610d31-1ebd-501c-ae55-b442f023acea:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "04610d31-1ebd-501c-ae55-b442f023acea:2:assistant",
+          "sha256": "128f9e0398dd6fbd0d3b11bf532f43a5d0de8f1d3f55d67ef1a1609443e948f4",
+          "size_bytes": 2981
+        }
+      ],
+      "assistant_uuid": "2d158889-df47-4791-b6dd-bae5e5800cab",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-19T18:58:42.593Z",
+      "read_finished_at": "2026-11-19T18:58:43.143Z",
+      "unit_keys": [
+        "04610d31-1ebd-501c-ae55-b442f023acea:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "04610d31-1ebd-501c-ae55-b442f023acea:2:assistant",
+          "sha256": "128f9e0398dd6fbd0d3b11bf532f43a5d0de8f1d3f55d67ef1a1609443e948f4",
+          "size_bytes": 2981
+        }
+      ],
+      "assistant_uuid": "2d158889-df47-4791-b6dd-bae5e5800cab",
+      "next_user_unit_key": null,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "04610d31-1ebd-501c-ae55-b442f023acea:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "04610d31-1ebd-501c-ae55-b442f023acea:0:user",
+          "04610d31-1ebd-501c-ae55-b442f023acea:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "4a5bef57333d4a714ae688227d28b19da9e362ffcc695585b963064329906f4c",
+          "128f9e0398dd6fbd0d3b11bf532f43a5d0de8f1d3f55d67ef1a1609443e948f4"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "04610d31-1ebd-501c-ae55-b442f023acea:0:user",
+          "04610d31-1ebd-501c-ae55-b442f023acea:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "4a5bef57333d4a714ae688227d28b19da9e362ffcc695585b963064329906f4c",
+          "128f9e0398dd6fbd0d3b11bf532f43a5d0de8f1d3f55d67ef1a1609443e948f4"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "04610d31-1ebd-501c-ae55-b442f023acea:0:user",
+          "04610d31-1ebd-501c-ae55-b442f023acea:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "04610d31-1ebd-501c-ae55-b442f023acea:0:user",
+      "04610d31-1ebd-501c-ae55-b442f023acea:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "04610d31-1ebd-501c-ae55-b442f023acea:0:user",
+          "04610d31-1ebd-501c-ae55-b442f023acea:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "04610d31-1ebd-501c-ae55-b442f023acea:0:user",
+          "04610d31-1ebd-501c-ae55-b442f023acea:2:assistant"
+        ],
+        "overlap_keys": [
+          "04610d31-1ebd-501c-ae55-b442f023acea:0:user",
+          "04610d31-1ebd-501c-ae55-b442f023acea:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "128f9e0398dd6fbd0d3b11bf532f43a5d0de8f1d3f55d67ef1a1609443e948f4",
+  "size_bytes": 2981,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-19T18-55-47\\reply.txt",
+  "reply_readback_sha256": "128f9e0398dd6fbd0d3b11bf532f43a5d0de8f1d3f55d67ef1a1609443e948f4",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-19T18-55-47\\raw-units.json",
+  "raw_units_sha256": "f7bac12ec97e1d148809e63c81bdbeeec39740818b05184df41222a94b099462",
+  "raw_units_size_bytes": 6220,
+  "raw_units_readback_sha256": "f7bac12ec97e1d148809e63c81bdbeeec39740818b05184df41222a94b099462",
+  "session_id": "6aff4668-21dc-83ec-997e-06a1794dd50f",
+  "conversation_url": "https://chatgpt.com/c/6aff4668-21dc-83ec-997e-06a1794dd50f",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}
