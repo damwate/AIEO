@@ -394,7 +394,7 @@ export async function fetchGitPointerBytes(url, {
       response = await fetchImpl(url, {
         method: "GET",
         redirect: "manual",
-        dispatcher,
+        dispatcher: dispatcher ?? undefined,
         signal: AbortSignal.timeout(config.httpTimeoutMs),
         headers: { "user-agent": "aieo-git-pointer-poc/1.0", accept: "*/*" },
       });

@@ -22,8 +22,17 @@
 - ⑥证据：派单目录 `phase0/logs/dispatch-2026-11-19T04-35-35/`（request/reply/raw-units/result/截图/run.log/tab-audit）；指针备份+新指针；R1 回执全文见该目录 reply.txt。
 - 备注：方案冻结为 v0.2（吸收 R1 全部测试补充要求）；R1 PASS 仅代表方案通过，不代表代码已修复/缺陷已解除。
 
-## S3 缺陷修复与双环境验证（待执行）
-- 六要素逐步记录：目标/文件/内容/结果/测试/证据。
+## S3 缺陷修复与双环境验证（完成）
+- ①目标：按 R1 冻结方案修复 dispatcher:null 生产路径缺陷，双环境验证 + 回归断言，保持对外契约/边界不变。
+- ②修改文件：`phase0/tools/git_pointer.mjs`（唯一权威源码）；`phase0/tools/test_git_pointer.mjs`（3 项回归）；`phase0/logs/git-pointer-tests.json`/`.log`（测试报告重生成）。
+- ③内容：
+  - 生产代码**仅一行**：`:397` fetch init `dispatcher` → `dispatcher: dispatcher ?? undefined`（git diff 核验一行变更，index 992b34a..524e9dc）；工厂 `createGitPointerProxyDispatcher` 无代理返回 null 的契约未动；dispatcher 自动创建/所有权/关闭、显式注入、重试/超时/状态/错误码/审计全不变；未改 app 版。
+  - 回归①无代理完整读取链捕获 fetch init：`opts.dispatcher===undefined` 且 `!==null`（3 次请求 manifest+2 files 全覆盖）。
+  - 回归② Node v24 原生 `globalThis.fetch` 对本地 HTTP 服务实读成功（createServer 按 req.url 路由 manifest+材料），证明 undici 原生语义兼容，非 mock 自证；捕获 init.dispatcher===undefined。
+  - 回归③有代理 env 注入 HTTPS_PROXY→有效 EnvHttpProxyAgent（constructor.name 断言），读取结束后 `dispatcher.closed===true`（自有 dispatcher 正常关闭）。
+- ④执行结果：完成。
+- ⑤测试结果：`node phase0/tools/test_git_pointer.mjs` → **total=24 passed=24 failed=0**（原 21 项全 PASS 含"无代理返回 null"契约不删不改 + 新增 3 项回归），node=v24.14.0，network_scope=INJECTED_LOCAL_HTTP_RESPONSES_ONLY_NO_REAL_GITHUB，EXIT=0。负面对照（L-017 防空心）：隔离复现 `fetch(url,{dispatcher:null})` 在 Node v24 抛 `ERR_ASSERTION`；FIX_PRESENT=true、旧 null 形态在 fetch 处已无残留——证明回归②非"改前改后都 PASS"的无效测试。
+- ⑥证据：测试报告 `phase0/logs/git-pointer-tests.json`（SHA256=`288c490eb738f78f6bd3212f378db464e13dbc921c82fc55c240afe96e520de2`，24/24）+ `.log`；生产 diff 如上；被测 commit=S3 提交完整 SHA（S4 绑定时登记）。
 
 ## S4 独立验收（待执行）
 - 逐轮派单验收，PASS/REJECT 结论 + reply SHA 登记，绑定被测 commit（ST-01）。

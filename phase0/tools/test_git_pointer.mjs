@@ -2,6 +2,7 @@
 import assert from "node:assert/strict";
 import { spawnSync } from "node:child_process";
 import { mkdirSync, readFileSync, rmSync, writeFileSync } from "node:fs";
+import { createServer } from "node:http";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
@@ -335,6 +336,84 @@ test("本地 CLI build+pointer 正例，不执行 git 写操作", async () => {
   const generated = JSON.parse(readFileSync(pointerOutput, "utf8"));
   assert.equal(generated.artifact_sha256, sha256Hex(readFileSync(manifestPath)));
   assert.equal(generated.commit_sha, commitSha);
+});
+
+// ---- dispatcher:null 生产路径缺陷回归（b-20261119-gitpointer-dispatcher-null-fix, R1 冻结要求）----
+
+test("回归①：无代理 env 完整读取链中 fetch init.dispatcher 为 undefined 非 null", async () => {
+  const seenInits = [];
+  const remote = remoteFetch();
+  const captureFetch = async (url, init) => {
+    seenInits.push(init);
+    return remote.fetchImpl(url);
+  };
+  const result = await readWith(captureFetch);
+  assert.equal(result.complete, true);
+  // manifest + 2 files = 3 次请求；readWith 传 env:{}（无代理），实际走完整读取链
+  assert.equal(seenInits.length, 3);
+  for (const init of seenInits) {
+    assert.equal(init.dispatcher, undefined, "无代理 env 下 fetch init.dispatcher 必须为 undefined（非 null）");
+    assert.notEqual(init.dispatcher, null);
+  }
+});
+
+test("回归②：无代理 env 使用 Node v24 原生 fetch 对本地 HTTP 服务实读成功（非 mock 自证）", async () => {
+  // 以 req.url（路径部分）为键，避免依赖端口/主机拼接
+  const routes = new Map();
+  routes.set(`/${pointer.owner}/${pointer.repo}/${commitSha}/${pointer.path}`, built.manifestBytes);
+  for (const file of baseFiles) {
+    routes.set(`/${pointer.owner}/${pointer.repo}/${commitSha}/${file.path}`, file.content);
+  }
+  const server = createServer((req, res) => {
+    const body = routes.get(req.url || "");
+    if (!body) { res.writeHead(404); res.end("not found"); return; }
+    res.writeHead(200, { "content-type": "application/octet-stream" });
+    res.end(body);
+  });
+  await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+  const localBase = `http://127.0.0.1:${server.address().port}`;
+  let nativeInitCaptured;
+  try {
+    const result = await readGitPointer({
+      pointer,
+      baseUrl: localBase,
+      // 真实 Node 原生 fetch：dispatcher:null 会在 undici 内部抛 ERR_ASSERTION（缺陷形态）
+      fetchImpl: async (url, init) => {
+        nativeInitCaptured = init;
+        return globalThis.fetch(url, init);
+      },
+      env: {},
+      configOverrides: { httpMaxRetries: 0 },
+    });
+    assert.equal(result.complete, true);
+    assert.equal(result.files.length, 2);
+    assert.deepEqual(result.files.map((f) => f.content.toString("utf8")), baseFiles.map((f) => f.content.toString("utf8")));
+    assert.equal(nativeInitCaptured.dispatcher, undefined);
+  } finally {
+    await new Promise((resolve) => server.close(resolve));
+  }
+});
+
+test("回归③：有代理 env 注入有效 EnvHttpProxyAgent 且读取后关闭自有 dispatcher", async () => {
+  let capturedDispatcher;
+  const remote = remoteFetch();
+  const captureFetch = async (url, init) => {
+    capturedDispatcher = init.dispatcher;
+    return remote.fetchImpl(url);
+  };
+  const result = await readGitPointer({
+    pointer,
+    baseUrl,
+    fetchImpl: captureFetch,
+    env: { HTTPS_PROXY: "http://127.0.0.1:7890" },
+    configOverrides: { httpMaxRetries: 2, httpRetryBaseSeconds: 0 },
+    sleep: async () => {},
+    random: () => 0.5,
+  });
+  assert.equal(result.complete, true);
+  assert.ok(capturedDispatcher, "有代理 env 应注入有效 dispatcher");
+  assert.equal(capturedDispatcher.constructor.name, "EnvHttpProxyAgent");
+  assert.equal(capturedDispatcher.closed, true, "读取结束后自有 dispatcher 应已关闭");
 });
 
 for (const { name, fn } of tests) {

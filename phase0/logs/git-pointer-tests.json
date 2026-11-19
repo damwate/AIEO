@@ -1,12 +1,12 @@
 {
-  "started_at": "2026-11-12T05:33:23.724Z",
-  "finished_at": "2026-11-12T05:33:24.719Z",
+  "started_at": "2026-11-19T04:41:36.294Z",
+  "finished_at": "2026-11-19T04:41:37.229Z",
   "node": "v24.14.0",
   "network_scope": "INJECTED_LOCAL_HTTP_RESPONSES_ONLY_NO_REAL_GITHUB",
   "real_remote_git_pointer_verified": false,
   "git_commit_or_push_performed": false,
-  "total": 21,
-  "passed": 21,
+  "total": 24,
+  "passed": 24,
   "failed": 0,
   "tests": [
     {
@@ -91,6 +91,18 @@
     },
     {
       "name": "本地 CLI build+pointer 正例，不执行 git 写操作",
+      "result": "PASS"
+    },
+    {
+      "name": "回归①：无代理 env 完整读取链中 fetch init.dispatcher 为 undefined 非 null",
+      "result": "PASS"
+    },
+    {
+      "name": "回归②：无代理 env 使用 Node v24 原生 fetch 对本地 HTTP 服务实读成功（非 mock 自证）",
+      "result": "PASS"
+    },
+    {
+      "name": "回归③：有代理 env 注入有效 EnvHttpProxyAgent 且读取后关闭自有 dispatcher",
       "result": "PASS"
     }
   ]
