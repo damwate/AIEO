@@ -39,3 +39,9 @@
 - 证据：`phase0/logs/recoll-906s1-plan-r6-2026-11-19T07-33-14-189Z/reply.txt`（R6 REJECT）、`recoll-906s1-stop-2026-11-19T07-37-27-842Z/reply.txt`（会商 PASS）、`recoll-906s1-dv1-2026-11-19T07-45-00-998Z/reply.txt`（DV1 REJECT）、`recoll-906s1-dv2-2026-11-19T07-50-24-306Z/reply.txt`（DV2 BLOCKED）
 - DV 产物：`basic/tasks/b-20261119-p1-906-06-concurrency/acceptance/dv1/`（含 `dv1-standalone.mjs`）
 - fixture 证据：`docs/phase1/decision-log.md` DEC-063（main 未并入）、DEC-104（保留待并入）、`phase1/tools/scheduler.py:368,372`
+
+## 五、独立审查裁定（2026-11-19 全新会话，补录）
+
+- **派单：** `--new-session` 首派 1032B，被测 commit `76353384e45343714518ead2c3bc2c86ee988494`；归档 `phase0/logs/dispatch-2026-11-19T08-14-47/`；reply 13686B artifact_sha256=`7fab28acf62e294353e793b311490e01abae84b76f0136f82b9d3de57923109d`；新会话 UUID `6afeb028-7308-83ec-aa35-fefb399a1d53`（已同步 `gpt-reviewer-session.json`）。审查方按完整 SHA 实读 9 个文件与 R6/会商/DV2 三份原始 reply，确认两审计任务包路径 404 属实。
+- **五项裁定：** ①P1 闭环顺序=BLOCKED（先补准备：DV2 独立证据→建两任务包→七项核验→FIFO→P1 复盘，任一 BLOCKED 不派单）；②DV2 独立复跑=BLOCKED（**不通过附件**，改为精确 commit + Git Blob SHA `7df4f289...` + Node 实跑 `dv1-standalone.mjs` + 原始 stdout/stderr/退出码 + 文件 SHA256；审查方本轮未自跑，不冒充独立证据）；③R6 止损依据=PASS（止损充分，仅任务包文档状态滞后，不重排 DEC）；④权威状态源=BLOCKED（按信息类型分源：decision-log 管授权/裁定、steps 管执行状态、PHASE-STATUS 管汇总、handoff 无裁定权；最后才更新 PHASE-STATUS）；⑤fixture 分支=PASS（**保留、不删不合并**；审查方独立核验 ahead=2/behind=508、差异 1 文件 8 行、`scheduler.py` 硬编码）。
+- **审查方底线重申：** 两个只读审计任务 PASS ≠ 906⑥ PASS；M1 写路径、906 实测、P2/P3、main 合并/生产发布/数据删除均未授权。
