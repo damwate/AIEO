@@ -1,0 +1,7 @@
+[MTP1-ACCEPT-R1|20261119] S4独立验收六查
+任务:多任务方案P1规划协商+方案冻结(仅规划,零代码/零M1/不开跑/不触DEC-010)。
+读:github.com/damwate/AIEO @ 6b865429e66679349368cbe62b61620864183c37(基线f9ee1cd,单commit)。包basic/tasks/b-20261119-multitask-p1-planning/ + standard/MULTITASK-IMPLEMENTATION-PLAN.md(v1.0冻结稿)。
+变更:①文头v0.4→v1.0(设计冻结非实施授权+四条件)②§六改表:P0已PASS/P1=两任务只读复审+906⑥独立门/P2=不重复⑥/P3=≤3,加双验证分别留证+⑥硬边界+七项前置清单+授权不可继承③task-brief v0.2。
+R1回执SHA=5ad9369e6fbd7df39ea39be5e57bf880ac108340b7bb239ad7d3ccae2e517f06。
+六查:①合目标(仅规划)②合R1裁定(⑥唯一归P1/四条件/七清单/授权不继承)③无超范围(零代码/零M1/不开跑/不合并/不部署/不删数据)④文档一致(无残留⑥=P2、文头无"未生效")⑤R1裁定可复核⑥证据齐全。
+特核:有无隐含P1开跑授权;⑥门是否未被绕过;P1双验证分别留证;四条件全保留。三态PASS/REJECT(列项)/BLOCKED,回执结论表+SHA256,绑定被测commit 6b86542。
