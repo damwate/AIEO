@@ -1,0 +1,32 @@
+{
+  "recollection": true,
+  "driver": "recoll_p1rev_r2.mjs",
+  "conversation_url": "https://chatgpt.com/c/6afeb028-7308-83ec-aa35-fefb399a1d53",
+  "failed_dispatch_dir": "phase0/logs/dispatch-2026-11-19T08-39-33",
+  "failure_code": "INBOUND_WINDOW_COMPLETENESS_UNPROVEN",
+  "diagnosis": "diag_p1rev_r2.mjs 三步诊断；报告见 phase0/logs/diag-p1rev-r2-*/report.json",
+  "recovery": "视口拉高静态DOM全量物化+归属校验三件套（禁重发）",
+  "marked_user_unit_key": "69f0f7a6-37b2-5777-b4e3-617feb1e0cf7:0:user",
+  "assistant_unit_key": "69f0f7a6-37b2-5777-b4e3-617feb1e0cf7:2:assistant",
+  "assistant_unit_count": 1,
+  "after_units": [
+    {
+      "key": "69f0f7a6-37b2-5777-b4e3-617feb1e0cf7:2:assistant",
+      "role": "assistant",
+      "text_len": 2610,
+      "text_head": "ChatGPT 说：\nP1-REVIEW-R2｜DV2 取证与最小闭环复核\n\n本轮只审查三个问题，不重新打开上一轮五项裁"
+    }
+  ],
+  "reply_bytes": 4726,
+  "reply_sha256": "d1d96e1d4ccf50835a28dfb0f9eb020dad6d6764d7005f4d1fc32d61e08ad96b",
+  "checks": {
+    "marked_user_unique": true,
+    "last_user_assertion": true,
+    "adjacent_assistant_tail": true,
+    "stable_static_dom_read": true,
+    "final_stop_button_not_visible": true,
+    "not_prev_reply_sha": true,
+    "response_length_plausible": true
+  },
+  "extracted_at": "2026-11-19T08:44:08.644Z"
+}

@@ -1,0 +1,30 @@
+[
+  {
+    "key": "bc35dd1c-ecf6-56dd-b325-5ec2ff98fbd2:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 615,
+    "text_head": "[P1-REVIEW-20261119] 全新会话独立过目：P1现状与5问题\n你无历史上下文。请读 damwate/AIEO@76353384e45343714518ead2c3bc2c86ee988"
+  },
+  {
+    "key": "bc35dd1c-ecf6-56dd-b325-5ec2ff98fbd2:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 7634,
+    "text_head": "ChatGPT 说：\nP1 独立审查结论\n5 项均已裁定\nP1 尚不能整体收口\n\n审查基线： damwate/AIEO@76353384e45343714518ead2c3bc2c86ee988494"
+  },
+  {
+    "key": "69f0f7a6-37b2-5777-b4e3-617feb1e0cf7:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 781,
+    "text_head": "[P1-REVIEW-R2|20261119] 追派：确认DV2取证与最小闭环\n承接你上一轮五项裁定（reply sha256=7fab28acf62e294353e793b311490e01abae"
+  },
+  {
+    "key": "69f0f7a6-37b2-5777-b4e3-617feb1e0cf7:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 2610,
+    "text_head": "ChatGPT 说：\nP1-REVIEW-R2｜DV2 取证与最小闭环复核\n\n本轮只审查三个问题，不重新打开上一轮五项裁定。\n\n审查基线：76353384e45343714518ead2c3bc2c8"
+  }
+]

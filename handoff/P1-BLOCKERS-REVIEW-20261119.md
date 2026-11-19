@@ -45,3 +45,10 @@
 - **派单：** `--new-session` 首派 1032B，被测 commit `76353384e45343714518ead2c3bc2c86ee988494`；归档 `phase0/logs/dispatch-2026-11-19T08-14-47/`；reply 13686B artifact_sha256=`7fab28acf62e294353e793b311490e01abae84b76f0136f82b9d3de57923109d`；新会话 UUID `6afeb028-7308-83ec-aa35-fefb399a1d53`（已同步 `gpt-reviewer-session.json`）。审查方按完整 SHA 实读 9 个文件与 R6/会商/DV2 三份原始 reply，确认两审计任务包路径 404 属实。
 - **五项裁定：** ①P1 闭环顺序=BLOCKED（先补准备：DV2 独立证据→建两任务包→七项核验→FIFO→P1 复盘，任一 BLOCKED 不派单）；②DV2 独立复跑=BLOCKED（**不通过附件**，改为精确 commit + Git Blob SHA `7df4f289...` + Node 实跑 `dv1-standalone.mjs` + 原始 stdout/stderr/退出码 + 文件 SHA256；审查方本轮未自跑，不冒充独立证据）；③R6 止损依据=PASS（止损充分，仅任务包文档状态滞后，不重排 DEC）；④权威状态源=BLOCKED（按信息类型分源：decision-log 管授权/裁定、steps 管执行状态、PHASE-STATUS 管汇总、handoff 无裁定权；最后才更新 PHASE-STATUS）；⑤fixture 分支=PASS（**保留、不删不合并**；审查方独立核验 ahead=2/behind=508、差异 1 文件 8 行、`scheduler.py` 硬编码）。
 - **审查方底线重申：** 两个只读审计任务 PASS ≠ 906⑥ PASS；M1 写路径、906 实测、P2/P3、main 合并/生产发布/数据删除均未授权。
+
+## 六、DV2 独立复跑闭环（2026-11-19 追派 R2）
+
+- **独立执行证据：** 精确 checkout `76353384e45343714518ead2c3bc2c86ee988494` 的 detached worktree，Node `v24.14.0` 实跑 `dv1-standalone.mjs`，exit=0、stdout 5709B、24/24、`schema consistent=true`；原始输出 `phase0/logs/dv2-independent-20261119/{result.json,stdout.json,stderr.txt}`，临时 worktree 已移除。
+- **追派裁定：** `phase0/logs/dispatch-2026-11-19T08-39-33/`（采集 fail-closed）+ `recoll-p1rev-r2-2026-11-19T08-43-44-654Z/`（静态 DOM 补采七查全过），reply SHA256 `d1d96e1d4ccf50835a28dfb0f9eb020dad6d6764d7005f4d1fc32d61e08ad96b`；三项全 PASS——①**DV2=PASS（独立复跑证据闭环）**，正式状态用"DV2 独立复跑 PASS"，但 906⑥ 仍 BLOCKED；②允许建 P1-01/P1-02 任务包+七项核验；③边界无异议。
+- **审计完善建议（不改本轮结论）：** 后续复跑 result.json 增加执行者身份/审查会话标识字段。
+- **状态隔离：** DV2 PASS 仅关闭契约降档链的独立复跑缺口；不授予 906⑥ 实测、M1 写路径、P2/P3 或 DEC-010 红线操作权限。
