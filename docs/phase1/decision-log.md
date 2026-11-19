@@ -80,9 +80,9 @@
 
 - **决策内容：** 在 `docs/phase1/platform-contract-v1.0.md` §2.6 修订 C1：出站长材料统一采用 GitPointer，单文件与多文件均经 manifest；Schema 固定 `transport/owner/repo/branch/commit_sha/path/artifact_sha256/size_bytes/media_type/contract_version/task_id/execution_id`，完整 40 位 commit 是唯一读取依据，branch 不作 HEAD 回退。明确任务包/输入材料 commit 与 `reviewed_commit` 分离，审查结果同时绑定输入材料 commit、manifest 哈希、`task_package_hash`、被审查代码 SHA 与执行/correlation 身份。补齐公开/私有仓库真实会话权限、只读边界、发布/回读/派发顺序、路径范围、全量读取、不可信材料、秘密禁入、永久保留、大小/文件数配置和 GitHub 失败语义；GPT 不默认获得仓库写权限。
 - **双向与失败边界：** 1200 UTF-8 字节只约束最终传给网页 `insertText` 的完整出站字符串，包含信封、指针、验收与输出格式要求，发送前本地测量，超限不发送、不截断、不拆分。入站 DOM 回复不受 1200 字节限制，必须按结构化 unit 完整读取，经生成结束、确认窗、assistant UUID 和全文稳定检查后，先持久化原始 artifact、计算 SHA-256/size，再做 JSON/Schema/绑定校验与 M1 幂等登记。暂时网络错误仅做有限退避；权限、不存在、SHA、路径、范围、媒体类型、hash/size 与版本绑定错误不得自动降级，统一按契约返回 BLOCKED；超时不等于任务失败，报告补登记不得重跑 GPT。
-- **真实 POC 与状态：** 当前继承 GPT 审查会话已实际完成公开 GitHub 指定 commit 文件阅读、短指令投递和 4023 字符完整网页回复提取；原始回复为 8854 UTF-8 字节、SHA-256 `ce1ca55c5d6397995043b42a5a327fef7879a80306301fa9b61f170e0c7a5c71`，内容是可解析的完整 JSON，证明入站可超过 1200 字节。未宣称新 Schema、多文件、私有权限、故障注入、超限或写回测试已经执行。**BLOCKED-1 保持“修订中，待复审”，本条目不构成 PASS。**
+- **真实 POC 与状态：** 当前继承 GPT 审查会话已实际完成公开 GitHub 指定 commit 文件阅读、短指令投递和 4023 字符完整网页回复提取；原始回复为 8854 UTF-8 字节、SHA-256 `ce1ca55c5d6397995043b42a5a327fef7879a80306301fa9b61f170e0c7a5c71`，内容是可解析的完整 JSON，证明入站可超过 1200 字节。未宣称新 Schema、多文件、私有权限、故障注入、超限或写回测试已经执行。**BLOCKED-1 保持"修订中，待复审"，本条目不构成 PASS。**
 - **依据：** `phase0/logs/payload-choice-inherited-reply.txt`（真实 GPT 审查：`result=BLOCKED`，15 项 `required_boundaries`、16 项 `failure_paths`，本修订逐条响应）；`docs/phase1/platform-contract-v1.0.md` §2.2/§2.6/§10/§12/§13 本修订；原审查对象 commit `81d63f71ef0c5efa65766c9da0331d4f449d06f2`（仅为修订前基线，不冒充本修订 SHA）。**本修订 commit 由主会话统一验收提交生成，与 DEC-012 同批；当前不预填或虚构 SHA，复审时必须以该实际提交的完整 40 位 SHA 为审查基线。**
-- **关联与约束衍生：** 本条目细化 DEC-007 的 Git 指针方向并关闭其“分块或 Git 指针待选型”的开放口径，承接 DEC-011 的 BLOCKED-1，但不覆盖或改写历史条目。复审须按本修订 commit 逐项核对 GPT 全部要求及 POC 真实范围；复审 PASS 后由主会话另行记录结果并推进 §10 机器 Schema/契约测试落地，子 Agent 不得自行解除阻塞。
+- **关联与约束衍生：** 本条目细化 DEC-007 的 Git 指针方向并关闭其"分块或 Git 指针待选型"的开放口径，承接 DEC-011 的 BLOCKED-1，但不覆盖或改写历史条目。复审须按本修订 commit 逐项核对 GPT 全部要求及 POC 真实范围；复审 PASS 后由主会话另行记录结果并推进 §10 机器 Schema/契约测试落地，子 Agent 不得自行解除阻塞。
 
 ### DEC-013 入站完整性与机器 Schema 实现证据（BLOCKED-1 待复审）
 
@@ -323,20 +323,10 @@
 - **复核执行：** 修正提交 `5efb537cd3af945a50386fbc7beb0896e384d54b` 推 origin/main 后，同一 ChatGPT 会话（`6af858e4-7f74-83ec-860e-f360ab9484e2`）回执对账复核。派单 `phase0/logs/dispatch-2026-11-14T12-54-58/`，request 1101B，reply 862B sha256=`b56f65b14adce7f853935045b67588c47f847f15c224c1cba4f2824ce6afa937`。
 - **判定：PASS**——S2 映射闭合（DEC-040 取代笔误行）；30 分钟预授权实质闭合（开工方案拍板限定+高危豁免+DEC-010 保留，**正式生效待用户确认 DEC-040 第 2 条**）；升级通道闭合（默认不换轨/用户批准换轨/第 3 轮失败必须升级不得加 AI 延长）；交接模板 v0.3 五项可填写字段闭合。"原 ISSUES 三项均已修正，无新增实质性阻断。"
 - **复审方建议（原话）：** "用户确认 DEC-040 第 2 条后，启动 Basic MVP。"启动路径按其前轮建议：六模块最小实现方案 → 真实 Java/Python 小需求全闭环验证 → 另一台电脑部署复用验证。
-
----
-
-### DEC-113 P1 执行启动：人工 FIFO 串行受控形态冻结 + 三个开跑阻塞登记（2026-11-19，用户"OK，P1开始吧"）
-- **决策内容：** 用户明确授权 P1 开跑（DEC-107 的 P0 PASS 不自动推导 P1）。P1 执行形态=人工 FIFO 串行、零新执行器代码；既有 `session_lock`/`workspace_lock`/`gpt_dispatch.mjs`/单任务 `scheduler.py` 仅作受控流程设施，不冒充调度实现。开工自检发现三阻塞：①两只读任务 task_id 未冻结；②906⑥ 无独立可执行场景；③七项开跑前核验未实测。
-- **依据：** `basic/tasks/b-20261119-multitask-p1-execution/`（R1 reply `9a79f7cf…`）；`basic/tasks/b-20261119-p1-task-qualification/`（R1 reply `04410b05…`，两 task_id 冻结：P1-01 `b-20261119-p1-dispatch-evidence-audit`/被测 `7f7830b8…`，P1-02 `b-20261119-p1-aisvc-postpass-lineage-audit`/被测 `0c53c963…`）；用户消息原文"OK，P1开始吧"。
-- **边界：** P2/P3 未授权；M4 写路径/906⑥ 实测/环境检查未授权；DEC-010 红线（main 合并/生产发布/数据删除）保持用户本人拍板。
-
-### DEC-114 906⑥ 独立场景设计触发 L-019 止损并转 DV1 机器可校验契约降档链（2026-11-19，ChatGPT 会商裁定）
-- **决策内容：** 906⑥ 场景设计 R1 ADJUST、R2–R6 五次 REJECT（每次暴露同一事件契约域新缺口），达到 WORKFLOW 模块五三轮止损阈值。停止常规 R 轮，召开三方会商；会商四项全 PASS：根因=交付缺陷为主、验证机制缺陷为次；同意 DV1（JSON Schema + 字段级 N/A 原因映射 + 正反例矩阵 + 语义校验器）；单次验收门槛冻结；R1–R6 历史裁定不改写、会商不占返工计数。DV1 首次验收 REJECT（RJ-01 目标未先校验/RJ-02 标准 enum 缺失）→ DV2 调整验证静态全 PASS 但整体 BLOCKED（审查端无法本地复跑）→ DV2b 附单文件自包含验证器，附件挂载两次 STOP（未发送、无重发风险）。
-- **依据：** 会商 reply SHA256 `afb0bd2006b4da8924d0d91a2bde18ad9bfda3c694aa05cd17de550527801223`；DV1 REJECT reply `d555d4d787c8866ef6b44bc6d98e358788abcbea32d7e8e73d629feeec1060fe`；DV2 BLOCKED reply `ed0539b8fcee526975d0c5049d124e8ccccd46c7def4f4559976debe79c24252`；产物 `basic/tasks/b-20261119-p1-906-06-concurrency/acceptance/dv1/`（自检 24/24 all_ok=true）；`steps.md` S4-DV1 链。
-- **当前状态与边界：** DV2=**BLOCKED**（唯一缺口=独立复跑），不冒充 PASS、不改判 REJECT、不启 R7；906⑥ 仍 BLOCKED；M1 写路径不解除；环境资格检查与并发实测另批授权；P1 阻塞③与两只读审计任务尚未执行。
 - **状态：** 治理文档复审全链闭合（DEC-037 归档→DEC-040 ISSUES 修正→本条 PASS）；Basic MVP 启动待用户两步确认：①确认 DEC-040 第 2 条（30 分钟条款边界）；②批准开工会议启动（DEC-038 协议第一步=主会话出六模块方案发 ChatGPT 共识讨论）。
 - **关联：** DEC-040（被复核）、DEC-038（启动协议）、DEC-037（Basic MVP 战略）。
+
+---
 
 ### DEC-042 用户确认 30 分钟条款边界生效 + 新前置任务：版本目录与工具包落位（2026-11-14，用户拍板）
 
@@ -966,7 +956,7 @@
 - **执行结果：** pip 缓存 purge 253.7MB（exit 0）；Temp 7 天前文件 1069 个删除/2 个占用跳过、释放 688.7MB；合计确认约 0.94GB。npm 缓存清理被 VS Code 扩展注入的 `[safe-delete] SAFE_DELETE_BULK_CONFIRM_REQUIRED`（genie-trash.exe ETIMEDOUT）拦截，**未绕过护栏**、2.205GB 未变；Chrome 因运行中（17 进程）按方案规则未清；Windows 更新缓存仅走系统工具说明、未手动删。C 盘可用 10.62GB→11.28GB。
 - **依据：** 用户消息原文"同意清理"（2026-11-19）；任务包 basic/tasks/b-20261119-disk-cleanup-plan/{task-brief,steps,delivery}.md；派单证据 phase0/logs/dispatch-2026-11-19T02-58-56/；ST-05 自检 6/6 PASS。
 - **关联：** DEC-010（数据删除红线）、L-014/L-016（代理瞬断处置）、CAP-20261113-001（ChatGPT 无执行能力）、DEC-094 #4（--no-update-pointer 不覆盖审查指针）。
-- **S3 补充（同日）：** 用户追加要求清理“公司A企微微盘下载到 Downloads 的那批文件”。只读盘点发现 Downloads 由上轮 4.72GB 变为 0.52GB（本任务未碰 Downloads），经结构化确认：用户裁定 4.2GB 差异系其本人手动清除，且识别依据选“先不删、自行整理清单后再执行”。据此**未删除 Downloads 任何文件**；DEC-010 红线在范围不明时坚持零删除、用户本人裁定。
+- **S3 补充（同日）：** 用户追加要求清理"公司A企微微盘下载到 Downloads 的那批文件"。只读盘点发现 Downloads 由上轮 4.72GB 变为 0.52GB（本任务未碰 Downloads），经结构化确认：用户裁定 4.2GB 差异系其本人手动清除，且识别依据选"先不删、自行整理清单后再执行"。据此**未删除 Downloads 任何文件**；DEC-010 红线在范围不明时坚持零删除、用户本人裁定。
 
 ### DEC-111 GitPointer dispatcher:null 生产路径缺陷修复闭环：R1 PASS 冻结+S3一行修复+S4 R1 REJECT→R2 PASS（2026-11-19，用户拍板委托 ChatGPT 渠道）
 
@@ -990,3 +980,15 @@
 - **关键经验：** ①派单独立验收前须先完成 taskpack 的 S4/S5 状态同步与 ST-05 输出归档，否则审查方按 commit 实况判文档状态漂移/收口缺口（本任务两轮 REJECT 皆因此）；②执行者草案的⑥归P2建议被审查方据 DEC-108/109 推翻——时间更晚、针对性更强的决策优先于旧方案措辞；③L-018 静态DOM补采对 `INBOUND_WINDOW_COMPLETENESS_UNPROVEN` 与 `GENERATION_TIMEOUT` 两类 fail-closed 均有效（后者在 300s 窗口后生成已完成，补采捕获全量）。
 - **授权边界重申：** **P1 未开跑、M4 写操作封闭、906⑥未独立 PASS、DEC-010 未触**；v1.0 冻结不构成 P1 自动获批；P2 不重复执行⑥；打版≠部署（生产部署待用户本人拍板）。
 - **关联：** DEC-106④/107/108/109/111、standard/MULTITASK-IMPLEMENTATION-PLAN.md v1.0、b-20261119-c2-batch2-scenarios delivery、L-018（补采）、ST-01/02/05、WORKFLOW 模块二/五。
+
+---
+
+### DEC-113 P1 执行启动：人工 FIFO 串行受控形态冻结 + 三个开跑阻塞登记（2026-11-19，用户"OK，P1开始吧"）
+- **决策内容：** 用户明确授权 P1 开跑（DEC-107 的 P0 PASS 不自动推导 P1）。P1 执行形态=人工 FIFO 串行、零新执行器代码；既有 `session_lock`/`workspace_lock`/`gpt_dispatch.mjs`/单任务 `scheduler.py` 仅作受控流程设施，不冒充调度实现。开工自检发现三阻塞：①两只读任务 task_id 未冻结；②906⑥ 无独立可执行场景；③七项开跑前核验未实测。
+- **依据：** `basic/tasks/b-20261119-multitask-p1-execution/`（R1 reply `9a79f7cf…`）；`basic/tasks/b-20261119-p1-task-qualification/`（R1 reply `04410b05…`，两 task_id 冻结：P1-01 `b-20261119-p1-dispatch-evidence-audit`/被测 `7f7830b8…`，P1-02 `b-20261119-p1-aisvc-postpass-lineage-audit`/被测 `0c53c963…`）；用户消息原文"OK，P1开始吧"。
+- **边界：** P2/P3 未授权；M4 写路径/906⑥ 实测/环境检查未授权；DEC-010 红线（main 合并/生产发布/数据删除）保持用户本人拍板。
+
+### DEC-114 906⑥ 独立场景设计触发 L-019 止损并转 DV1 机器可校验契约降档链（2026-11-19，ChatGPT 会商裁定）
+- **决策内容：** 906⑥ 场景设计 R1 ADJUST、R2–R6 五次 REJECT（每次暴露同一事件契约域新缺口），达到 WORKFLOW 模块五三轮止损阈值。停止常规 R 轮，召开三方会商；会商四项全 PASS：根因=交付缺陷为主、验证机制缺陷为次；同意 DV1（JSON Schema + 字段级 N/A 原因映射 + 正反例矩阵 + 语义校验器）；单次验收门槛冻结；R1–R6 历史裁定不改写、会商不占返工计数。DV1 首次验收 REJECT（RJ-01 目标未先校验/RJ-02 标准 enum 缺失）→ DV2 调整验证静态全 PASS 但整体 BLOCKED（审查端无法本地复跑）→ DV2b 附单文件自包含验证器，附件挂载两次 STOP（未发送、无重发风险）。
+- **依据：** 会商 reply SHA256 `afb0bd2006b4da8924d0d91a2bde18ad9bfda3c694aa05cd17de550527801223`；DV1 REJECT reply `d555d4d787c8866ef6b44bc6d98e358788abcbea32d7e8e73d629feeec1060fe`；DV2 BLOCKED reply `ed0539b8fcee526975d0c5049d124e8ccccd46c7def4f4559976debe79c24252`；产物 `basic/tasks/b-20261119-p1-906-06-concurrency/acceptance/dv1/`（自检 24/24 all_ok=true）；`steps.md` S4-DV1 链。
+- **当前状态与边界：** DV2=**BLOCKED**（唯一缺口=独立复跑），不冒充 PASS、不改判 REJECT、不启 R7；906⑥ 仍 BLOCKED；M1 写路径不解除；环境资格检查与并发实测另批授权；P1 阻塞③与两只读审计任务尚未执行。
