@@ -1,8 +1,8 @@
-# 任务书：b-20261119-gitpointer-dispatcher-null-fix（GitPointer dispatcher:null 生产路径缺陷修复）
+# 任务书：b-20261119-gitpointer-dispatcher-null-fix（GitPointer dispatcher:null 生产路径缺陷修复，冻结候选 v0.2——R1 PASS 全部测试补充已吸收）
 
 - 任务ID：b-20261119-gitpointer-dispatcher-null-fix
 - 日期：2026-11-19
-- 状态：草案 v0.1（待规划协商 R1 复审后冻结）
+- 状态：v0.2 冻结（R1 PASS，reply SHA256=`d6e3d0ac4c2388f28cad01d72c0f623ea935e8fdf246f98dbea8e5361ba1828d`，审查会话 6afe7ccb）
 
 ## 版本选型
 - 选定版本：Basic 工作流 v0.3
@@ -28,11 +28,13 @@
 - 被测/修改文件：`phase0/tools/git_pointer.mjs`（唯一权威源码）；回归测试 `phase0/tools/test_git_pointer.mjs`
 - 证据落点：`phase0/logs/`（派单/验证现场独立目录，跟踪惯例入库）
 
-## 修复方案（草案，待冻结）
-1. 最小归一：在 `fetchGitPointerBytes` 的 fetch init 构造处 `dispatcher: dispatcher ?? undefined`（落点二选一由 R1 裁定）。
-2. 保持 `createGitPointerProxyDispatcher` 返回 null 的既有契约不变（单测"无代理 env 返回 null"不动）。
-3. 新增回归断言：无代理 env 下 `readGitPointer` 走 fetch 时 opts.dispatcher 为 undefined（非 null）；注入 fetchImpl 捕获 opts 断言。
-4. 双环境实测：无代理（清 env 中六个代理键）与有代理（注入 HTTPS_PROXY）分别跑注入式读取+真实 Node fetch 语义（不连真实 GitHub）。
+## 修复方案（v0.2 冻结，R1 PASS 裁定）
+1. 最小归一：在 `fetchGitPointerBytes` 的 **fetch 调用边界** 用 `dispatcher: dispatcher ?? undefined`（R1 裁定：用 ?? 不用 ||；不改工厂返回契约；显式注入的有效 dispatcher 原样保留）。
+2. 保持 `createGitPointerProxyDispatcher` 返回 null 的既有契约不变（原单测"无代理 env 返回 null"不得删除或改成 undefined）。
+3. 新增回归断言（捕获 fetchImpl 的 init 严格断言）：`opts.dispatcher === undefined` 且 `opts.dispatcher !== null`；无代理 env 必须覆盖**完整 readGitPointer 读取链**（不只测工厂）。
+4. 双环境实测：无代理（清 env 六个代理键）+有代理（注入 HTTPS_PROXY，验证有效 EnvHttpProxyAgent、读取结束后自有 dispatcher 正常关闭）；本地注入响应覆盖 manifest+材料的字节数/SHA256 校验；不连真实 GitHub。
+5. 原生 fetch 验证（R1 强调）：至少保留一条 **Node v24 原生 fetch 对本地 HTTP 服务实读成功** 的验证，避免只用 mock 证明 mock 自身正确（mock 捕获 undefined 与原生兼容是两种独立证据）。
+6. 边界保持：`readGitPointer` 的 dispatcher 自动创建/所有权/关闭逻辑、显式注入行为、重试/超时/HTTP 状态/错误码/审计结构全部不变；不改 app 版；不触 DEC-010/不部署/不合并/不改对外 API 与错误码。
 
 ## 边界（红线）
 - 不触 DEC-010（无 main 合并/生产发布/真实数据删除）；不部署、不发布。

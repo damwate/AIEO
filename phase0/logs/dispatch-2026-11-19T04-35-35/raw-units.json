@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-19T04:38:55.009Z",
+  "user_unit_key": "4cc09ca5-2b89-5b9f-a825-226e8526a754:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "4cc09ca5-2b89-5b9f-a825-226e8526a754:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "49fe3199-7a8c-4050-b406-50bdde5c7bd3",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "4cc09ca5-2b89-5b9f-a825-226e8526a754:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "4cc09ca5-2b89-5b9f-a825-226e8526a754:0:user",
+          "4cc09ca5-2b89-5b9f-a825-226e8526a754:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "ddac29fdc15641455ae5162cc87cbb75db659f1f123ac0c639a44a48cf888771",
+          "d6e3d0ac4c2388f28cad01d72c0f623ea935e8fdf246f98dbea8e5361ba1828d"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "4cc09ca5-2b89-5b9f-a825-226e8526a754:0:user",
+          "4cc09ca5-2b89-5b9f-a825-226e8526a754:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "ddac29fdc15641455ae5162cc87cbb75db659f1f123ac0c639a44a48cf888771",
+          "d6e3d0ac4c2388f28cad01d72c0f623ea935e8fdf246f98dbea8e5361ba1828d"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "4cc09ca5-2b89-5b9f-a825-226e8526a754:0:user",
+          "4cc09ca5-2b89-5b9f-a825-226e8526a754:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "4cc09ca5-2b89-5b9f-a825-226e8526a754:0:user",
+      "4cc09ca5-2b89-5b9f-a825-226e8526a754:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "4cc09ca5-2b89-5b9f-a825-226e8526a754:0:user",
+          "4cc09ca5-2b89-5b9f-a825-226e8526a754:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "4cc09ca5-2b89-5b9f-a825-226e8526a754:0:user",
+          "4cc09ca5-2b89-5b9f-a825-226e8526a754:2:assistant"
+        ],
+        "overlap_keys": [
+          "4cc09ca5-2b89-5b9f-a825-226e8526a754:0:user",
+          "4cc09ca5-2b89-5b9f-a825-226e8526a754:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "4cc09ca5-2b89-5b9f-a825-226e8526a754:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nGP-FIX-PLAN-R1｜规划方案复审\n\nPASS 结论：方案通过，可以冻结后进入 S3 实施。\n\n审查基线：damwate/AIEO @ 9395a97，按指定 commit 读取任务三件套及权威源码、测试源码，不以任务书自述代替代码核对。\n\n一、逐项裁定\n\n审查项\n\n\t\n\n裁定\n\n\t\n\n依据与意见\n\n\n\n\n1. 根因成立\n\n\t\n\nPASS\n\n\t\n\ncreateGitPointerProxyDispatcher() 无代理返回 null；fetchGitPointerBytes() 将其直接放入 fetch init 的 dispatcher。与 Node v24 的 ERR_ASSERTION 实证一致。\n\n\n\n\n1. 影响面\n\n\t\n\nPASS\n\n\t\n\n缺陷位于 phase0/tools/git_pointer.mjs。app 版明确不引入 undici dispatcher，当前无需修改。\n\n\n\n\n2. 修复落点\n\n\t\n\nPASS\n\n\t\n\n推荐在 fetch 调用处使用 dispatcher: dispatcher ?? undefined。\n\n\n\n\n3. 回归断言\n\n\t\n\nPASS\n\n\t\n\n保留原有无代理返回 null 的契约，新增 fetch 入参非 null 断言。\n\n\n\n\n3. 双环境验证\n\n\t\n\nPASS\n\n\t\n\n无代理、有代理分别验证，使用本地注入响应，不访问真实 GitHub。\n\n\n\n\n4. 修改边界\n\n\t\n\nPASS\n\n\t\n\n只修改 phase0 权威源码及对应测试，不改 API、错误码，不触及 DEC-010。\n\n二、关键技术裁定\n\n① 修复必须落在 fetch 边界，而不是代理工厂。\n\n推荐：\n\nJavaScript\nresponse = await fetchImpl(url, {\n  method: \"GET\",\n  redirect: \"manual\",\n  dispatcher: dispatcher ?? undefined,\n  signal: AbortSignal.timeout(config.httpTimeoutMs),\n  headers: {\n    \"user-agent\": \"aieo-git-pointer-poc/1.0\",\n    accept: \"*/*\",\n  },\n});\n\n理由：\n\ncreateGitPointerProxyDispatcher() 继续保持无代理返回 null 的既有契约。\n\nfetch 调用边界统一消除 null。\n\n显式注入的有效 dispatcher 原样保留。\n\n使用 ?? 而不是 ||，语义更精确，不把其他 falsy 值一并归一。\n\n即使未来其他调用者显式传入 null，也不会再次触发相同问题。\n\n不推荐修改工厂返回值为 undefined，因为那会改变已有公共函数契约并迫使旧单测改变。\n\n② 测试设计补充要求\n\n为避免测试 PASS 但实际缺陷仍存在，建议 S3 固化以下要求：\n\n原有 21 项测试全部保持 PASS；原有 null 契约测试不得删除或改成 undefined。\n\n新增回归测试，捕获 fetchImpl 的 init，严格断言：\n\nopts.dispatcher === undefined\n\nopts.dispatcher !== null\n\n无代理环境必须覆盖完整 readGitPointer 读取链，而不只是测试代理工厂。\n\n有代理环境注入 HTTPS_PROXY，验证传入有效 EnvHttpProxyAgent，并验证读取结束后正常关闭自有 dispatcher。\n\n本地注入响应覆盖 manifest 和材料读取，字节数、SHA256 校验均通过。\n\n特别区分两种证据：\n\nMock fetchImpl 捕获 undefined：证明参数归一正确。\n\nNode v24 原生 fetch 对本地 HTTP(S) 服务实际读取成功：证明 undici 原生语义兼容。\n\n建议至少保留一条原生 fetch 验证，避免只用 mock 证明 mock 自身正确。\n\n③ 边界补充\n\n不需要新增架构性修改，但实施时必须保持：\n\nreadGitPointer 的 dispatcher 自动创建、所有权和关闭逻辑不变。\n\n显式 dispatcher 注入行为不变。\n\n重试策略、超时、HTTP 状态处理、错误码和审计结构不变。\n\n不改 app 版。\n\n不触 DEC-010、不部署、不合并、不访问真实 GitHub。\n\nS4 绑定实际完整 commit SHA，记录 Node 版本、测试命令和原始验证证据。\n\n三、最终裁定\n\nPASS 允许冻结方案，进入 S3。\n\n以上测试补充是实施和验收要求，不构成当前规划阻断项。\n\n注意：本次 PASS 仅代表修复方案通过，不代表代码已经修复或生产缺陷已经解除。\n\n四、回执摘要\n\n项目\n\n\t\n\n结果\n\n\n\n\n根因与影响面\n\n\t\n\nPASS\n\n\n\n\n修复落点\n\n\t\n\nfetch 边界归一\n\n\n\n\n回归测试\n\n\t\n\nPASS（按上述要求实施）\n\n\n\n\n双环境验证\n\n\t\n\nPASS（按上述要求实施）\n\n\n\n\nDEC-010 边界\n\n\t\n\nPASS\n\n\n\n\n下一步\n\n\t\n\nS2 冻结 → S3 实施\n\nSHA256（规范化审查结论载荷）：\n\n纯文本\nGP-FIX-PLAN-R1|20261119|damwate/AIEO@9395a97|PASS|root-cause=confirmed|scope=phase0-only;app-no-dispatcher|fix=fetch-boundary-dispatcher-nullish-to-undefined|tests=preserve-null-contract+capture-undefined+proxy-and-no-proxy-local-injected+native-node-fetch-local-server|boundaries=no-DEC-010,no-deploy,no-merge,no-real-GitHub,no-API-or-error-code-change\n\n1389df3a23498ae06a8397f2bcee06d50085eba837bf3ca36ef0536df976399b\n\n可将本回执归档到任务 S2，作为 R1 规划复审结果。",
+      "text_sha256": "d6e3d0ac4c2388f28cad01d72c0f623ea935e8fdf246f98dbea8e5361ba1828d",
+      "size_bytes": 4473,
+      "assistant_uuid": "49fe3199-7a8c-4050-b406-50bdde5c7bd3"
+    }
+  ]
+}

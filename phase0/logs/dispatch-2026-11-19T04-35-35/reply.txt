@@ -1,0 +1,249 @@
+ChatGPT 说：
+GP-FIX-PLAN-R1｜规划方案复审
+
+PASS 结论：方案通过，可以冻结后进入 S3 实施。
+
+审查基线：damwate/AIEO @ 9395a97，按指定 commit 读取任务三件套及权威源码、测试源码，不以任务书自述代替代码核对。
+
+一、逐项裁定
+
+审查项
+
+	
+
+裁定
+
+	
+
+依据与意见
+
+
+
+
+1. 根因成立
+
+	
+
+PASS
+
+	
+
+createGitPointerProxyDispatcher() 无代理返回 null；fetchGitPointerBytes() 将其直接放入 fetch init 的 dispatcher。与 Node v24 的 ERR_ASSERTION 实证一致。
+
+
+
+
+1. 影响面
+
+	
+
+PASS
+
+	
+
+缺陷位于 phase0/tools/git_pointer.mjs。app 版明确不引入 undici dispatcher，当前无需修改。
+
+
+
+
+2. 修复落点
+
+	
+
+PASS
+
+	
+
+推荐在 fetch 调用处使用 dispatcher: dispatcher ?? undefined。
+
+
+
+
+3. 回归断言
+
+	
+
+PASS
+
+	
+
+保留原有无代理返回 null 的契约，新增 fetch 入参非 null 断言。
+
+
+
+
+3. 双环境验证
+
+	
+
+PASS
+
+	
+
+无代理、有代理分别验证，使用本地注入响应，不访问真实 GitHub。
+
+
+
+
+4. 修改边界
+
+	
+
+PASS
+
+	
+
+只修改 phase0 权威源码及对应测试，不改 API、错误码，不触及 DEC-010。
+
+二、关键技术裁定
+
+① 修复必须落在 fetch 边界，而不是代理工厂。
+
+推荐：
+
+JavaScript
+response = await fetchImpl(url, {
+  method: "GET",
+  redirect: "manual",
+  dispatcher: dispatcher ?? undefined,
+  signal: AbortSignal.timeout(config.httpTimeoutMs),
+  headers: {
+    "user-agent": "aieo-git-pointer-poc/1.0",
+    accept: "*/*",
+  },
+});
+
+理由：
+
+createGitPointerProxyDispatcher() 继续保持无代理返回 null 的既有契约。
+
+fetch 调用边界统一消除 null。
+
+显式注入的有效 dispatcher 原样保留。
+
+使用 ?? 而不是 ||，语义更精确，不把其他 falsy 值一并归一。
+
+即使未来其他调用者显式传入 null，也不会再次触发相同问题。
+
+不推荐修改工厂返回值为 undefined，因为那会改变已有公共函数契约并迫使旧单测改变。
+
+② 测试设计补充要求
+
+为避免测试 PASS 但实际缺陷仍存在，建议 S3 固化以下要求：
+
+原有 21 项测试全部保持 PASS；原有 null 契约测试不得删除或改成 undefined。
+
+新增回归测试，捕获 fetchImpl 的 init，严格断言：
+
+opts.dispatcher === undefined
+
+opts.dispatcher !== null
+
+无代理环境必须覆盖完整 readGitPointer 读取链，而不只是测试代理工厂。
+
+有代理环境注入 HTTPS_PROXY，验证传入有效 EnvHttpProxyAgent，并验证读取结束后正常关闭自有 dispatcher。
+
+本地注入响应覆盖 manifest 和材料读取，字节数、SHA256 校验均通过。
+
+特别区分两种证据：
+
+Mock fetchImpl 捕获 undefined：证明参数归一正确。
+
+Node v24 原生 fetch 对本地 HTTP(S) 服务实际读取成功：证明 undici 原生语义兼容。
+
+建议至少保留一条原生 fetch 验证，避免只用 mock 证明 mock 自身正确。
+
+③ 边界补充
+
+不需要新增架构性修改，但实施时必须保持：
+
+readGitPointer 的 dispatcher 自动创建、所有权和关闭逻辑不变。
+
+显式 dispatcher 注入行为不变。
+
+重试策略、超时、HTTP 状态处理、错误码和审计结构不变。
+
+不改 app 版。
+
+不触 DEC-010、不部署、不合并、不访问真实 GitHub。
+
+S4 绑定实际完整 commit SHA，记录 Node 版本、测试命令和原始验证证据。
+
+三、最终裁定
+
+PASS 允许冻结方案，进入 S3。
+
+以上测试补充是实施和验收要求，不构成当前规划阻断项。
+
+注意：本次 PASS 仅代表修复方案通过，不代表代码已经修复或生产缺陷已经解除。
+
+四、回执摘要
+
+项目
+
+	
+
+结果
+
+
+
+
+根因与影响面
+
+	
+
+PASS
+
+
+
+
+修复落点
+
+	
+
+fetch 边界归一
+
+
+
+
+回归测试
+
+	
+
+PASS（按上述要求实施）
+
+
+
+
+双环境验证
+
+	
+
+PASS（按上述要求实施）
+
+
+
+
+DEC-010 边界
+
+	
+
+PASS
+
+
+
+
+下一步
+
+	
+
+S2 冻结 → S3 实施
+
+SHA256（规范化审查结论载荷）：
+
+纯文本
+GP-FIX-PLAN-R1|20261119|damwate/AIEO@9395a97|PASS|root-cause=confirmed|scope=phase0-only;app-no-dispatcher|fix=fetch-boundary-dispatcher-nullish-to-undefined|tests=preserve-null-contract+capture-undefined+proxy-and-no-proxy-local-injected+native-node-fetch-local-server|boundaries=no-DEC-010,no-deploy,no-merge,no-real-GitHub,no-API-or-error-code-change
+
+1389df3a23498ae06a8397f2bcee06d50085eba837bf3ca36ef0536df976399b
+
+可将本回执归档到任务 S2，作为 R1 规划复审结果。

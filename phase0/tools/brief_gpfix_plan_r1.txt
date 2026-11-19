@@ -1,0 +1,12 @@
+[GP-FIX-PLAN-R1|20261119] 会话迁移+缺陷修复方案复审
+接棒:旧审查会话6afdffa2归档只读。
+任务:GitPointer dispatcher:null生产缺陷修复(DEC-109另立必办)。
+读:github.com/damwate/AIEO@main 9395a97 basic/tasks/b-20261119-gitpointer-dispatcher-null-fix/三件套。
+缺陷:phase0/tools/git_pointer.mjs:344无代理env返回null→:397作fetch(url,{dispatcher})字段;Node v24 undici对null抛ERR_ASSERTION→材料读取必失败(④-D首轮实证)。既有单测含"无代理返回null"契约。
+草案:①fetch处dispatcher:dispatcher??undefined归一,不改返回契约;②回归断言:无代理env下fetch收undefined非null;③双环境验证(无代理/有代理注入HTTPS_PROXY)注入式本地响应,不连真GitHub;④只改phase0权威源码(app版不引入dispatcher无需改)。
+裁定(逐项):
+1)根因与影响面成立否(app版无缺陷)
+2)修复落点:fetch处??undefined vs 传参处归一,哪个守住契约
+3)双环境验证+回归断言是否充分
+4)边界:不触DEC-010/不部署/不改API与错误码,需否补项
+三态:PASS/REJECT(列项)/BLOCKED,回执结论表+SHA256。
