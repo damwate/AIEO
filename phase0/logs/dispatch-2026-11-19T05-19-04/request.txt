@@ -1,0 +1,5 @@
+[GP-FIX-ACCEPT-R2|20261119] S4 R2针对性复审
+任务:GitPointer dispatcher:null缺陷修复。R1六查中①-⑤全PASS,仅⑥证据可查REJECT,本轮只复审⑥,不重复已过五项。
+被测commit不变=204901f276ae656254258266ba9955ee83dcfe0c(生产代码未改,基线ef99cb8,count=1)。整改提交f80433f(仅证据/文档,不含生产代码)。
+R1唯一整改项=补负面对照机器证据。已补:①文件化脚本phase0/tools/gpfix_neg_control.mjs(替ad-hoc -e)②归档phase0/logs/gpfix-negative-control.json:node=v24.14.0,命令=node phase0/tools/gpfix_neg_control.mjs,本地HTTP服务(127.0.0.1:0,无真GitHub),注入fetch(url,{dispatcher:null}),observed={threw:true,code:ERR_ASSERTION,name:AssertionError,message:"assert(dispatcher)"},assertion=true,EXIT=0③证据SHA256=1b862f01f5815bdcc132722943480e390b1fefc2d4e195a77fb82a581b973627④steps.md勘误S3⑤口头声称+返工表已建。
+请核⑥:负面对照是否可复核(原文/命令/版本/SHA齐全)、是否证明回归②非空心、S3勘误与返工表是否如实。三态PASS/REJECT(列项)/BLOCKED,回执结论表+SHA256,绑定被测commit 204901f。
