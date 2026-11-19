@@ -1,6 +1,6 @@
-# 906⑥ M1 平台级并发独立验证场景设计 v0.2（R1 ADJUST 修订落位，待 R2 复审）
+# 906⑥ M1 平台级并发独立验证场景设计 v0.3（R1 ADJUST→R2 REJECT 三项技术整改落位，待 R3 复审）
 
-> 来源：R1 裁定 reply `2d84f6bd658acd00d3cd2ada56e29c2e3b91458983cf21d0573b4991fb90d4d0`（11158B，会话 6afe9d76，commit e16722f）。本文件把 R1 的场景建议逐条落为可执行设计。**本轮只设计不实测；⑥ 仍 BLOCKED**。
+> 来源：R1 裁定 reply `2d84f6bd658acd00d3cd2ada56e29c2e3b91458983cf21d0573b4991fb90d4d0`（11158B，会话 6afe9d76，commit e16722f）→ R2 裁定 reply `cf078bc249319e66d79e1414756c12e8074290c001110a6e2ace137f83518ecb`（6358B，补采）。v0.3 针对 R2 三项技术 REJECT（跨实例单调时钟可比性/事件关联字段/DB-ACK失败判定）整改，场景 A/B/C 结构不变。**本轮只设计不实测；⑥ 仍 BLOCKED**。
 >
 > 红线：batch1 局部 PASS 不推导平台级并发 PASS；batch2 ⑥未执行不作证据；两只读任务 PASS 不替代⑥；⑥未独立 PASS 前 M1 写路径限制不解除；不以 Mock/内存DB/顺序测试替代并发证明。
 
@@ -9,6 +9,7 @@
 ### 场景 A：双任务真实并发
 - 实例 A = `task-A`/`request-A`/`idempotency-A`；实例 B = `task-B`/`request-B`/`idempotency-B`；各有独立执行上下文（禁共享可变任务上下文）。
 - 同步屏障同时释放两请求进入真实 M1 REST 处理路径；记录服务端单调时钟的接收/处理开始/处理结束时间，**证明两请求处理区间实际重叠**（否则判顺序执行，⑥不通过）。
+- **跨实例时钟域可比性（v0.3 / R2 REJECT-01 整改）：** 采用以下二选一，须在 environment/clock-domain.txt 记录选定方式：①两实例在**同一主机、同一单调时钟域**（同一 CLOCK_MONOTONIC），处理区间数值可直接比较；②若跨主机，采用有明确误差上界 ε 的统一时间基准或集中事件采集（所有事件由单一采集进程打戳），**只有扣除 ε 后仍满足重叠条件才判并发**。判定公式：`max(A_start, B_start) < min(A_end, B_end)`（跨主机时以 `max(A_start−ε, B_start−ε) < min(A_end−ε, B_end−ε)` 或集中采集校正后值判定）。不满足则判顺序执行、⑥不通过。禁止用两台机器各自 CLOCK_MONOTONIC 的原始数值直接比较。
 - 真实路径：M1 REST → DB 事务 → ACK；A、B 分别完成登记/状态推进/持久化/确认，分别核对 REST 响应、DB 记录、ACK。
 - 最终 DB 状态须与各请求预期一致；重复提交 A 原始请求验幂等且不影响 B。
 
@@ -36,6 +37,24 @@
 | 故障 fail-closed | 覆盖提交前失败/响应丢失/ACK失败三类 |
 | 证据关联 | 全链路关联ID+统一时间线+原始证据+SHA256清单 |
 
+### 二·补 事件关联字段规范（v0.3 / R2 REJECT-02 整改）
+每条原始事件记录（进入 MANIFEST 的 rest/request、rest/response、db、ack、timeline 记录）至少包含下列字段；不要求每种事件填满全部字段，但**必须在 scenario-design 冻结时定义各 event_type 的必填/可选规则**，不得在采集时临时决定。字段：
+| 字段 | 用途 |
+|---|---|
+| event_id | 唯一事件身份 |
+| task_id | 任务归属 |
+| request_id | 请求归属 |
+| instance_id | 实例归属（A/B） |
+| idempotency_key | 幂等核验 |
+| trace_id | 全链路追踪 |
+| event_type | 事件类型（REST_REQ/REST_RESP/DB_TXN_BEGIN/DB_TXN_COMMIT/ACK_SEND/ACK_CONFIRM/FAULT_INJECT/RECOVER…） |
+| monotonic_timestamp | 单调时钟时间（带 clock_domain） |
+| clock_domain | 时钟所属域（对应一·补选定的时钟域方案） |
+| db_transaction_id | DB 事务关联 |
+| ack_id | ACK 唯一身份 |
+| state_version | 状态版本 |
+适用规则：REST_REQ/RESP 必填 event_id/task_id/request_id/instance_id/trace_id/monotonic_timestamp/clock_domain；DB_TXN_* 必填 db_transaction_id/task_id/state_version；ACK_* 必填 ack_id/task_id/state_version；FAULT_INJECT/RECOVER 必填 event_id/instance_id/monotonic_timestamp/clock_domain。每事件可关联到 task_id+request_id+实例身份。
+
 ## 三、八项关键判据（全部满足才允许⑥ PASS）
 1. 至少两真正独立任务实例（明确独立性证明）；2. 真实 M1 REST+DB 路径；3. 证明实际并发非顺序（时间重叠）；4. 每任务登记/状态/ACK 独立追溯（完整关联字段）；5. 故障无错误成功/串单/丢失（逐故障判定）；6. 原始证据+SHA256 完整 MANIFEST；7. 独立审查与执行者分离；8. 任一判据未过则⑥不得 PASS。
 
@@ -58,6 +77,13 @@
 
 ## 七、时间线关联（T0-T9）
 T0 身份+测试数据初始化 → T1 两请求进屏障 → T2 屏障释放服务端分别接收 → T3 处理区间重叠 → T4 各自DB事务提交 → T5 各自ACK产生确认 → T6 幂等重复请求 → T7 故障注入恢复 → T8 DB/REST/ACK 最终交叉核验 → T9 证据 SHA256 固化。所有事件可还原实际顺序，不依赖客户端打印时间。
+
+### 六·补 DB/ACK 失败判定精确化（v0.3 / R2 REJECT-03 整改）
+- **预期状态转换序列（每任务）：** `DRAFT → RECEIVED → PROCESSING → DB_COMMITTED → ACKED`。DB 提交前状态=DRAFT/RECEIVED/PROCESSING（无 DB_COMMITTED）；提交后=DB_COMMITTED；ACK 确认后=ACKED。DB_TXN_COMMIT 事件存在→状态至少 DB_COMMITTED；无 COMMIT→不得标记 DB_COMMITTED。
+- **F1（DB 提交前失败）：** 无 DB_TXN_COMMIT 事件、状态停留 PROCESSING 或明确 FAIL，无 ACK_SEND/ACKED；"无半完成事务"=不存在 DB_COMMITTED 却无对应 REST 响应/无 ACK 的孤儿状态，且 DB 记录数与事务结果一致（场景 C 核对）。
+- **F3（DB 已提交但 ACK 失败）：** 明确中间状态=`DB_COMMITTED_UNACKED`（已提交未确认），**不得等同回滚、也不得标记为 ACKED**。DB_TXN_COMMIT 存在但无 ACK_CONFIRM。重试 ACK 必须复用同一 `ack_id`（同一逻辑确认身份），判"同一 ACK 重发"而非"重复确认"；不得生成新 ack_id 制造错误成功或交叉确认。
+- **F2（DB 已提交响应丢失）：** 以 DB_TXN_COMMIT 事件判定事务已提交，不以 HTTP 超时推断回滚；重试命中同一 idempotency_key 不得重复创建/推进。
+- 场景 C 按上述预期状态序列逐任务对照实际 DB 记录；任何"ACK 发送失败=事务回滚"的推断均判设计错误。
 
 ## 八、最终验收标准（总门槛：全部满足）
 双实例/真实路径/并发证明(服务端处理时间重叠)/无串单覆盖丢失/ACK分别正确/幂等不重复/F1-F4符合预期且失败可追溯/证据完整SHA一致/独立审查逐项PASS。任一关键项 BLOCKED 或 REWORK → ⑥不得 PASS。

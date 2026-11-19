@@ -1,0 +1,12 @@
+[2026-11-19T06:59:27.365Z] 会话锁已获取 pid=4852
+[2026-11-19T06:59:27.366Z] === GPT 派单（已有会话，消息 1008 字节）===
+[2026-11-19T06:59:30.406Z] Chrome 已启动 pid=12588
+[2026-11-19T06:59:31.769Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 0 个
+[2026-11-19T06:59:31.770Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-19T06:59:36.005Z] 会话就绪: https://chatgpt.com/c/6afe9d76-5af0-83ec-bb84-77e7c54f409e
+[2026-11-19T06:59:42.025Z] [dispatch] 基线尾部: {"role":"assistant","key":"208f7078-c807-5a11-8452-3766a1b3fb7b:2:assistant","assistantUuid":"c19fe95f-550e-43b2-9c27-af01e79b29c9"}
+[2026-11-19T06:59:43.850Z] [dispatch] 发送双验通过（polls=1，user_unit_key=fallback-turn-0:0:user，tail 后观察）
+[2026-11-19T06:59:44.245Z] 截图: sent-dispatch.png
+[2026-11-19T07:01:48.428Z] 会话锁已释放
+[2026-11-19T07:01:48.429Z] 致命错误: INBOUND_WINDOW_COMPLETENESS_UNPROVEN: BLOCKED: 滚动中实际观察到渲染 unit 集合变化，且缺少独立逻辑序列，不能排除持续遗漏中间 unit details={"materialized_unit_keys":["42636ca9-148b-510e-9f52-f09e666947ba:0:user","42636ca9-148b-510e-9f52-f09e666947ba:2:assistant"],"remediation":"提供可信的完整逻辑 unit 序列，或在非虚拟化静态 DOM 上重新读取"}
+[2026-11-19T07:01:48.431Z] [tab-hygiene] 发送已发生：保留现场不关页（禁重发语义依赖现场）；退出后由人工/补采链按 L-018 处置

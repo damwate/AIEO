@@ -1,0 +1,31 @@
+{
+  "recollection": true,
+  "driver": "recoll_906s1_plan_r2.mjs",
+  "conversation_url": "https://chatgpt.com/c/6afe9d76-5af0-83ec-bb84-77e7c54f409e",
+  "failed_dispatch_dir": "phase0/logs/dispatch-2026-11-19T06-59-27",
+  "failure_code": "INBOUND_WINDOW_COMPLETENESS_UNPROVEN",
+  "recovery": "视口拉高静态DOM全量物化+归属校验三件套（禁重发）",
+  "marked_user_unit_key": "42636ca9-148b-510e-9f52-f09e666947ba:0:user",
+  "assistant_unit_key": "42636ca9-148b-510e-9f52-f09e666947ba:2:assistant",
+  "assistant_unit_count": 1,
+  "after_units": [
+    {
+      "key": "42636ca9-148b-510e-9f52-f09e666947ba:2:assistant",
+      "role": "assistant",
+      "text_len": 3424,
+      "text_head": "ChatGPT 说：\n906⑥ 场景设计 v0.2 独立复审 R2\nREJECT\n环境资格 BLOCKED\n\n审查基线："
+    }
+  ],
+  "reply_bytes": 6358,
+  "reply_sha256": "cf078bc249319e66d79e1414756c12e8074290c001110a6e2ace137f83518ecb",
+  "checks": {
+    "marked_user_unique": true,
+    "last_user_assertion": true,
+    "adjacent_assistant_tail": true,
+    "stable_static_dom_read": true,
+    "final_stop_button_not_visible": true,
+    "not_prev_reply_sha": true,
+    "response_length_plausible": true
+  },
+  "extracted_at": "2026-11-19T07:02:34.302Z"
+}

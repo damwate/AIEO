@@ -1,0 +1,5 @@
+[906S1-PLAN-R2|20261119] 906⑥场景设计v0.2复审
+任务:906⑥独立场景设计R1 ADJUST修订后复审,只审v0.2场景设计,不重审登记/不开实测。
+读:damwate/AIEO@a598dcd basic/tasks/b-20261119-p1-906-06-concurrency/{scenario-design.md,steps.md,task-brief.md};R1 reply 2d84f6bd658acd00d3cd2ada56e29c2e3b91458983cf21d0573b4991fb90d4d0。
+R1 ADJUST要求:v0.2须落场景A双任务真实并发(同步屏障+服务端单调时钟证明处理区间重叠,否则判顺序)+场景B四故障F1-F4(F2区分DB已提交与客户端未收响应)+场景C完整性+七维度操作化+八判据(全过才⑥PASS)+环境资格检查(BLOCKED维持,不以Mock/内存DB/顺序替代)+五类即停(先保全现场)+证据目录MANIFEST+T0-T9时间线+实测另批授权不继承。
+请核:v0.2是否逐项落位R1要求;有无遗漏/失真;环境BLOCKED与M1写路径不解除是否守住;实测另批边界是否清晰。三态PASS/REJECT(列项)/BLOCKED,回执结论表+SHA256,绑定被测commit a598dcd。
