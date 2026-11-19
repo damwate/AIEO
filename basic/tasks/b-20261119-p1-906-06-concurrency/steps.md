@@ -58,7 +58,7 @@
 
 ③修改内容：S4-R2=**REJECT**，reply 补采 `cf078bc249319e66d79e1414756c12e8074290c001110a6e2ace137f83518ecb`（6358B）。场景 A/B/C、八判据、环境资格(BLOCKED)、五类即停、实测另批边界、T0-T9 均 PASS；三项技术 REJECT=问题1（跨实例单调时钟可比性：未定义两实例是否同一时钟域，各自 CLOCK_MONOTONIC 数值不可直接比较，需重叠公式 max(A_start,B_start)<min(A_end,B_end)）；问题2（事件关联字段不完整：MANIFEST 原始事件缺 event_id/request_id/instance_id/idempotency_key/trace_id/event_type/monotonic_timestamp/clock_domain/db_transaction_id/ack_id/state_version 规范及适用规则）；问题3（DB/ACK 失败判定不精确：F1 半完成事务定义、F3 DB已提交ACK失败中间状态、重试ACK同一逻辑身份未明确）；附文档状态未同步。整改=scenario-design.md v0.3 落三补段（一·补时钟域+重叠公式、二·补事件字段规范、六·补DB/ACK状态转换系列），场景结构不变；⑥仍BLOCKED/M1写路径不解除。派单发送双验通过后采集 fail-closed `INBOUND_WINDOW_COMPLETENESS_UNPROVEN`→按 L-018 禁重发+静态DOM补采（recoll 四参数全换 grep 核对、归属三件套全过）。
 
-④执行结果：v0.3 三项技术整改落盘；文档状态同步；待 R3 复审。被测 commit `e16722f`（R1 基线），设计整改 commit 见返工表。
+④执行结果：v0.3 三项技术整改落盘；文档状态同步；待 R3 复审。被测 commit `e16722f`（R1 基线）/ `a598dcd`（R2 基线）；三项整改提交 `5114356a9c982d45104f57903747e7c3203acd36`（返工表逐项绑定）。
 
 ⑤测试结果：S4-R2 reply 补采 6358B SHA=`cf078bc249319e66d79e1414756c12e8074290c001110a6e2ace137f83518ecb`；recoll checks 全 true（标记唯一+最后user+尾部assistant+静态稳定+停止按钮不可见+非前轮SHA+长度合理）；三 REJECT 逐项核对整改段存在。
 
@@ -69,9 +69,9 @@
 ### 返工记录表（问题1 跨实例时钟 / 问题2 事件字段 / 问题3 DB-ACK 判定——R2 REJECT）
 | 问题编号 | 根因 | 整改内容 | 修复 commit |
 |---|---|---|---|
-| 问题1 | v0.2 未定义两实例单调时钟是否同一域，数值不可直接比较 | scenario-design.md「一·补」明确二选一时钟域方案+重叠公式 max(A_start,B_start)<min(A_end,B_end)，跨主机须扣误差 ε | （整改提交，SHA 于 R3 前回填） |
-| 问题2 | MANIFEST 原始事件缺完整关联字段规范 | 「二·补」定义 12 字段+各 event_type 必填规则 | （整改提交，SHA 于 R3 前回填） |
-| 问题3 | F1/F3 半完成事务与 ACK 中间状态判定不精确 | 「六·补」定义状态转换序列+F3=DB_COMMITTED_UNACKED+重试复用同一 ack_id | （整改提交，SHA 于 R3 前回填） |
+| 问题1 | v0.2 未定义两实例单调时钟是否同一域，数值不可直接比较 | scenario-design.md「一·补」明确二选一时钟域方案+重叠公式 max(A_start,B_start)<min(A_end,B_end)，跨主机须扣误差 ε | 5114356a9c982d45104f57903747e7c3203acd36 |
+| 问题2 | MANIFEST 原始事件缺完整关联字段规范 | 「二·补」定义 12 字段+各 event_type 必填规则 | 5114356a9c982d45104f57903747e7c3203acd36 |
+| 问题3 | F1/F3 半完成事务与 ACK 中间状态判定不精确 | 「六·补」定义状态转换序列+F3=DB_COMMITTED_UNACKED+重试复用同一 ack_id | 5114356a9c982d45104f57903747e7c3203acd36 |
 
 ## S5 收口交付（待 R3 后回填）
 （待回填）
