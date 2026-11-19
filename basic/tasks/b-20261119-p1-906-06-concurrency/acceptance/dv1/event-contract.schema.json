@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aieo.local/schema/906-06-event-contract-dv1.json",
+  "title": "906⑥ M1 平台级并发事件契约 DV1",
+  "description": "R2-R6 事件契约的机器可校验版本；DV1 降档验证产物，不替代⑥实测。",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "event_id": { "type": "string" },
+    "task_id": { "type": "string" },
+    "request_id": { "type": "string" },
+    "instance_id": { "type": "string" },
+    "idempotency_key": { "type": "string" },
+    "trace_id": { "type": "string" },
+    "event_type": { "type": "string" },
+    "monotonic_timestamp": { "type": "number" },
+    "clock_domain": { "type": "string" },
+    "db_transaction_id": { "type": "string" },
+    "ack_id": { "type": "string" },
+    "state_version": { "type": "integer" },
+    "http_status": { "type": "integer" },
+    "commit_result": { "type": "string" },
+    "confirm_result": { "type": "string" },
+    "recover_result": { "type": "string" },
+    "fault_scope": { "type": "string", "enum": ["TASK", "GLOBAL"] },
+    "injection_point": { "type": "string", "enum": ["DB_BEFORE_COMMIT", "DB_AFTER_COMMIT", "ACK_SEND", "ACK_CONFIRM", "INSTANCE_ABORT"] },
+    "recover_target_event_id": { "type": "string" },
+    "n/a_reason": {
+      "type": "object",
+      "additionalProperties": { "type": "string" },
+      "propertyNames": { "enum": ["task_id", "request_id", "instance_id", "idempotency_key", "trace_id", "db_transaction_id", "ack_id", "state_version", "http_status", "commit_result", "confirm_result", "recover_result", "fault_scope", "injection_point", "recover_target_event_id"] }
+    }
+  },
+  "required": ["event_id", "event_type", "monotonic_timestamp", "clock_domain"],
+  "allOf": [
+    { "if": { "properties": { "event_type": { "const": "REST_REQ" } }, "required": ["event_type"] }, "then": { "required": ["task_id", "request_id", "instance_id", "idempotency_key", "trace_id"] } },
+    { "if": { "properties": { "event_type": { "const": "REST_RESP" } }, "required": ["event_type"] }, "then": { "required": ["task_id", "request_id", "instance_id", "trace_id", "http_status"] } },
+    { "if": { "properties": { "event_type": { "const": "DB_TXN_BEGIN" } }, "required": ["event_type"] }, "then": { "required": ["task_id", "request_id", "instance_id", "trace_id", "db_transaction_id", "state_version", "idempotency_key"] } },
+    { "if": { "properties": { "event_type": { "const": "DB_TXN_COMMIT" } }, "required": ["event_type"] }, "then": { "required": ["task_id", "request_id", "instance_id", "trace_id", "db_transaction_id", "state_version", "idempotency_key", "commit_result"] } },
+    { "if": { "properties": { "event_type": { "const": "ACK_SEND" } }, "required": ["event_type"] }, "then": { "required": ["task_id", "request_id", "instance_id", "trace_id", "ack_id", "state_version", "db_transaction_id"] } },
+    { "if": { "properties": { "event_type": { "const": "ACK_CONFIRM" } }, "required": ["event_type"] }, "then": { "required": ["task_id", "request_id", "instance_id", "trace_id", "ack_id", "state_version", "db_transaction_id", "confirm_result"] } },
+    { "if": { "properties": { "event_type": { "const": "FAULT_INJECT" } }, "required": ["event_type"] }, "then": { "required": ["instance_id", "fault_scope", "injection_point", "trace_id"] } },
+    { "if": { "properties": { "event_type": { "const": "RECOVER" } }, "required": ["event_type"] }, "then": { "required": ["instance_id", "recover_result", "recover_target_event_id", "trace_id"] } }
+  ],
+  "x-event-types": ["REST_REQ", "REST_RESP", "DB_TXN_BEGIN", "DB_TXN_COMMIT", "ACK_SEND", "ACK_CONFIRM", "FAULT_INJECT", "RECOVER"],
+  "x-field-types": {
+    "event_id": "string", "task_id": "string", "request_id": "string", "instance_id": "string",
+    "idempotency_key": "string", "trace_id": "string", "event_type": "string",
+    "monotonic_timestamp": "number", "clock_domain": "string", "db_transaction_id": "string",
+    "ack_id": "string", "state_version": "integer", "http_status": "integer",
+    "commit_result": "string", "confirm_result": "string", "recover_result": "string",
+    "fault_scope": "string", "injection_point": "string", "recover_target_event_id": "string"
+  },
+  "x-required-by-event-type": {
+    "REST_REQ": ["task_id", "request_id", "instance_id", "idempotency_key", "trace_id"],
+    "REST_RESP": ["task_id", "request_id", "instance_id", "trace_id", "http_status"],
+    "DB_TXN_BEGIN": ["task_id", "request_id", "instance_id", "trace_id", "db_transaction_id", "state_version", "idempotency_key"],
+    "DB_TXN_COMMIT": ["task_id", "request_id", "instance_id", "trace_id", "db_transaction_id", "state_version", "idempotency_key", "commit_result"],
+    "ACK_SEND": ["task_id", "request_id", "instance_id", "trace_id", "ack_id", "state_version", "db_transaction_id"],
+    "ACK_CONFIRM": ["task_id", "request_id", "instance_id", "trace_id", "ack_id", "state_version", "db_transaction_id", "confirm_result"],
+    "FAULT_INJECT": ["instance_id", "fault_scope", "injection_point", "trace_id"],
+    "RECOVER": ["instance_id", "recover_result", "recover_target_event_id", "trace_id"]
+  },
+  "x-reason-enum": ["GLOBAL_SCOPE", "TARGET_EVENT_FIELD_NOT_APPLICABLE"],
+  "x-recover-copy-fields": ["task_id", "request_id", "trace_id", "db_transaction_id", "ack_id"],
+  "x-recover-target-allowed-types": ["REST_REQ", "REST_RESP", "DB_TXN_BEGIN", "DB_TXN_COMMIT", "ACK_SEND", "ACK_CONFIRM", "FAULT_INJECT"],
+  "x-extension-fields": ["http_status", "commit_result", "confirm_result", "recover_result", "fault_scope", "injection_point", "recover_target_event_id", "n/a_reason"]
+}
