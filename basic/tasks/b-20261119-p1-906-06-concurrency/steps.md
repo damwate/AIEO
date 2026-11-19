@@ -85,7 +85,13 @@
 ④边界：⑥仍 BLOCKED；M1 写路径不解除；不实测；环境检查与⑥实测另批授权；DV1 若 REJECT 则不恢复无上限 R 轮，直接下一级止损。
 ⑤验收结论：会商 PASS（非返工轮）；DV1 产物 BLOCKED（尚未实施）。
 
-## S5 收口交付（待 DV1 单次验收后回填）
+### S4-DV1 降档验证（第三级调整验证链；非 R 轮，不占返工计数）
+①目标：按会商门槛对机器可校验事件契约做一次性验收；产物落 `acceptance/dv1/`（schema/语义校验器/正反例/执行器/结果/MANIFEST/报告）。
+②DV1 首次验收=**REJECT**，reply SHA256=`d555d4d787c8866ef6b44bc6d98e358788abcbea32d7e8e73d629feeec1060fe`（派单 dispatch-2026-11-19T07-41-19，诊断 diag-906s1-dv1-2026-11-19T07-44-39-597Z，补采 recoll-906s1-dv1-2026-11-19T07-45-00-998Z，七查全过）。两项实质缺陷：RJ-01=RECOVER 上下文目标事件未先做自身结构校验（存在绕过路径）；RJ-02=标准 JSON Schema 缺 event_type/n/a_reason 值 enum，自检未强制其存在。独立复跑 BLOCKED（审查环境无法本地执行），不伪装为通过。
+③DV2 调整验证：`validateEvent()` 先校验全部 context 事件；新增 N15「目标类型允许但结构非法」反例；Schema 补标准 enum 且自检强制存在；重跑 24/24 all_ok=true（9 正例/15 反例）。按会商约定不启 R7，原 R1–R6 与 DV1 记录不改写。
+④落点：`acceptance/dv1/DV1-REPORT.md` + MANIFEST.sha256；⑤验收结论：DV2 待独立验收，⑥仍 BLOCKED/M1 写路径不解除/不实测。
+
+## S5 收口交付（待 DV2 独立验收后回填）
 （待回填）
 
 ---

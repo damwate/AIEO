@@ -1,0 +1,5 @@
+[906S1-DV1-20261119] 906⑥ DV1降档一次性验收
+依据:L-019止损会商 reply afb0bd2006b4da8924d0d91a2bde18ad9bfda3c694aa05cd17de550527801223(停R轮,同意DV1,门槛冻结,会商不占返工)。本轮为DV1单次验收,不启R7,不实测。会话第8条user重评:产物路径+SHA自包含,暂不迁移,第10条重评。
+读:damwate/AIEO@aef634c962873dc08de06d9ba26ec1af9a918e39 basic/tasks/b-20261119-p1-906-06-concurrency/acceptance/dv1/{event-contract.schema.json,semantic-validator.mjs,test-cases.json,run-tests.mjs,test-results.json,MANIFEST.sha256,DV1-REPORT.md}。
+门槛:8类event_type全覆盖;字段约束/条件必填可机器校验;字段级n/a_reason唯一原因+封闭枚举;未知字段/类型/原因不放行;RECOVER三情形+非法目标即停⑤;正例全过反例全拒;可重跑+文件SHA绑定。执行者自检23/23 all_ok=true,独立复跑node run-tests.mjs。
+三态PASS/REJECT(列项)/BLOCKED+结论表+文件SHA256,绑定被测commit aef634c;⑥BLOCKED/M1写路径不解除/实测另批。

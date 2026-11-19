@@ -1,0 +1,365 @@
+ChatGPT 说：
+DV1 独立验收结论
+REJECT
+
+不是因为执行者报告的 23/23 结果不成立，而是因为当前验证器存在未覆盖的契约绕过路径，尚不能证明“目标事件本身有效”这一前置条件。 另外，独立复跑尚未完成，不能把执行者自检结果当作独立复跑证据。
+
+已按完整 SHA aef634c962873dc08de06d9ba26ec1af9a918e39 读取了指定的七个文件。检查范围是 DV1 产物，不是⑥并发实测。
+
+发现的实质缺口
+
+DV1-RJ-01：RECOVER 上下文目标没有经过事件自身校验。
+
+semantic-validator.mjs 的 validateRecover() 只检查目标 ID 是否唯一、类型是否在允许列表，以及五个复制字段是否匹配；它没有先验证目标事件是否满足自己的基线字段、类型必填和条件约束。
+
+run-tests.mjs 对每个用例调用的是：
+
+- validateEvent(c.event, c.context || [])
+
+并没有对 context 中的目标事件执行 validateEvent() 或 validateAll()。
+
+因此，存在这样的绕过可能：上下文中放入一条 event_type=REST_REQ、具有目标 ID 和可复制字段、但缺少 clock_domain、monotonic_timestamp 或 idempotency_key 的非法目标事件；RECOVER 仍可能只按目标类型及复制字段检查而通过。
+
+这与“目标事件必须是有效事件，RECOVER 才能引用”的契约要求不一致。现有 N10 只覆盖目标类型非法，没有覆盖“类型允许但目标本身结构非法”。
+
+DV1-RJ-02：标准 JSON Schema 本身没有封闭 event_type 和原因值枚举。
+
+event-contract.schema.json 中：
+
+event_type 只有 "type": "string"，没有标准 enum；
+
+n/a_reason.additionalProperties 只有 "type": "string"，没有标准原因值 enum。
+
+执行者的语义校验器通过 x-event-types 和 x-reason-enum 自行补充检查，因此当前组合校验器能拒绝部分非法输入；但标准 JSON Schema 单独使用时不会拒绝未知事件类型或未知原因代码。checkSchemaSelfConsistency() 也没有强制要求这两个标准枚举存在。
+
+这意味着报告所称“标准 JSON Schema + x-* 语义约束”并非完全错误，但 Schema 自身并未达到本次冻结门槛要求的封闭定义。应将标准结构约束与扩展语义约束的职责明确分开，不能让使用标准 Schema 的下游误以为未知枚举已经被拒绝。
+
+门槛逐项裁定
+
+验收项
+
+	
+
+结论
+
+	
+
+依据
+
+
+
+
+8 类 event_type 全覆盖
+
+	
+
+PASS
+
+	
+
+Schema、类型映射和测试样例均列出 8 类；P01–P09 覆盖全部类型
+
+
+
+
+字段类型、必填及条件必填
+
+	
+
+PASS
+
+	
+
+自定义语义校验器实现字段类型、类型必填、FAULT_INJECT 条件约束；P07/P08/N03/N13 有对应样例
+
+
+
+
+字段级 N/A 原因唯一映射
+
+	
+
+PASS
+
+	
+
+校验器比较 N/A 字段集合与原因键集合；P09/N05/N06 覆盖映射规则
+
+
+
+
+原因枚举封闭
+
+	
+
+REJECT
+
+	
+
+自定义校验器有拒绝逻辑，但标准 Schema 缺少原因值 enum，且自检未验证这一缺口
+
+
+
+
+未知字段、未知事件类型拒绝
+
+	
+
+PASS
+
+	
+
+自定义校验器拒绝未知字段和未知 event_type；N01/N14 覆盖
+
+
+
+
+RECOVER 三种复制情形
+
+	
+
+PASS
+
+	
+
+复制逻辑已实现，P09/N11/N12 覆盖混合原因、原值复制和缺字段规则
+
+
+
+
+RECOVER 非法目标即停⑤
+
+	
+
+REJECT
+
+	
+
+不存在、重复、类型非法已有检查，但允许类型的目标事件自身未先通过契约校验
+
+
+
+
+正例全过、反例全拒
+
+	
+
+PASS（报告证据）
+
+	
+
+提交的结果文件记录 9/9 正例、14/14 反例与预期一致
+
+
+
+
+独立复跑 node run-tests.mjs
+
+	
+
+BLOCKED
+
+	
+
+已读取脚本及输入，但当前执行环境无法从 GitHub 拉取文件到本地运行；不能把报告结果冒充独立复跑
+
+
+
+
+可重跑及文件 SHA 绑定
+
+	
+
+PASS（静态检查）
+
+	
+
+执行器可重复运行，结果记录四个输入文件 SHA，MANIFEST 列出产物指纹；独立复算未完成
+
+文件指纹
+
+被测版本固定为 aef634c962873dc08de06d9ba26ec1af9a918e39。以下 Git Blob SHA 来自该 commit 的文件读取结果；UTF-8 SHA256 来自该版本 MANIFEST.sha256 声明。除 MANIFEST 自身外，未在本地独立重算这些内容 SHA，因此不把它们表述为独立复验值。
+
+文件
+
+	
+
+Git Blob SHA
+
+	
+
+UTF-8 内容 SHA256
+
+
+
+
+event-contract.schema.json
+
+	
+
+b1344d0d3d77a3f38ff3747e4bcfd747208574b3
+
+	
+
+d4bc8af534c21b646c4e9b5f80c871413b404fb083460e0446ce5b629e43aebb
+
+
+
+
+semantic-validator.mjs
+
+	
+
+8f9c7863a5b386726d4f7320dac30dd04b5b4463
+
+	
+
+53be714a0fc925b81a0bc69d12b5b98406cf10c2514394549950e61cec0018b6
+
+
+
+
+test-cases.json
+
+	
+
+26ab96e62d3a50b9c15196eb7ac5a63ebc3c2734
+
+	
+
+2af1be761f75ea09afe0950a00d83dae579081986dcb37485cbbfbaaff3245b0
+
+
+
+
+run-tests.mjs
+
+	
+
+a84d30d009add1c102ff765ac710df2ad6354035
+
+	
+
+d637cb5130b219ba1707bc68950c50e9f89d6fd7e3089ff098b1dc8f721ffabe
+
+
+
+
+test-results.json
+
+	
+
+ad39f3dadca2fc04b42cde040f1049e91b63e5ae
+
+	
+
+521603d89c6a5b4b8f6ad4fd67baf736326c54d70a1dddee48cf57dcf4b1501a
+
+
+
+
+MANIFEST.sha256
+
+	
+
+ef63a3dc1f040c63e70a143d55bf1e8d2a3f7d98
+
+	
+
+02bf928da2b37cc6a526bb3f8d62807f7a5cecd35427f17da242d19096757946
+
+
+
+
+DV1-REPORT.md
+
+	
+
+44ab9d3549c88cf3e37bd55956e8ff2a46317a61
+
+	
+
+e24b6e0e4b7e6af5bb8ee6a3188a6cd3d3ac6a1deff88f56aa0a75e4a3a7c877
+
+终局结论表
+
+项目
+
+	
+
+结论
+
+	
+
+说明
+
+
+
+
+DV1 事件契约机器化重构
+
+	
+
+REJECT
+
+	
+
+RJ-01、RJ-02 两项实质缺陷
+
+
+
+
+执行者 23/23 自检结果
+
+	
+
+PASS
+
+	
+
+提交结果文件内部记录一致，但不是独立复跑
+
+
+
+
+独立复跑
+
+	
+
+BLOCKED
+
+	
+
+当前环境未能完成本地 Node 执行
+
+
+
+
+906⑥ 并发验证
+
+	
+
+BLOCKED
+
+	
+
+DV1 不替代⑥实测
+
+
+
+
+M1 写路径限制
+
+	
+
+BLOCKED
+
+	
+
+不解除
+
+最终裁定：DV1 REJECT。
+
+按 L-019 会商规则，本次不启动 R7，不恢复常规 R 轮整改循环。R1–R6 的历史 REJECT 原样保留；DV1 本次结果单独记录。RJ-01、RJ-02 是本次拒绝的明确依据，不把独立复跑受阻伪装成通过，也不把它误写成代码失败。
+
+边界继续有效：⑥ BLOCKED；M1 写路径不解除；本轮不实测、不启写路径；环境资格检查与实际并发验证均须另批授权。

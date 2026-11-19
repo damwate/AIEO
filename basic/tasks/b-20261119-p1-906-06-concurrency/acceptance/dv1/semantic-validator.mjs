@@ -34,9 +34,11 @@ export function checkSchemaSelfConsistency() {
     }
   }
   const enumVals = props.event_type?.enum;
-  if (enumVals && enumVals.join("|") !== types.join("|")) errors.push("event_type enum 与 x-event-types 不一致");
+  if (!enumVals) errors.push("标准 event_type enum 缺失（未知类型不会被标准 Schema 拒绝）");
+  else if (enumVals.join("|") !== types.join("|")) errors.push("event_type enum 与 x-event-types 不一致");
   const reasonVals = props["n/a_reason"]?.additionalProperties?.enum;
-  if (reasonVals && reasonVals.join("|") !== (schema["x-reason-enum"] || []).join("|")) {
+  if (!reasonVals) errors.push("标准 n/a_reason 值 enum 缺失（未知原因不会被标准 Schema 拒绝）");
+  else if (reasonVals.join("|") !== (schema["x-reason-enum"] || []).join("|")) {
     errors.push("n/a_reason 值枚举与 x-reason-enum 不一致");
   }
   return { consistent: errors.length === 0, errors };
@@ -138,6 +140,12 @@ function validateRecover(event, context, errors) {
 
 export function validateEvent(event, context = []) {
   const errors = [];
+  (context || []).forEach((ctxEvent, i) => {
+    const ctxErrors = [];
+    validateStructure(ctxEvent, ctxErrors);
+    validateReasonMapping(ctxEvent, ctxErrors);
+    ctxErrors.forEach((m) => errors.push(`context[${i}] ${ctxEvent?.event_id}: ${m}`));
+  });
   validateStructure(event, errors);
   validateReasonMapping(event, errors);
   validateRecover(event, context, errors);

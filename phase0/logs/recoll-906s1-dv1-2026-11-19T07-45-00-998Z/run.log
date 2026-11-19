@@ -1,0 +1,8 @@
+[2026-11-19T07:45:01.449Z] 会话锁已获取（906 S1 止损会商补采）
+[2026-11-19T07:45:01.520Z] 页面归属命中 CONV_UUID=6afe9d76-5af0-83ec-bb84-77e7c54f409e
+[2026-11-19T07:45:24.802Z] 归属校验=标记唯一(1)+最后user断言（target=df410918-eaca-5229-bb6d-3df6ed50c4b8:0:user）
+[2026-11-19T07:45:24.809Z] checks={"marked_user_unique":true,"last_user_assertion":true,"adjacent_assistant_tail":true,"stable_static_dom_read":true,"final_stop_button_not_visible":true,"not_prev_reply_sha":true,"response_length_plausible":true}
+[2026-11-19T07:45:24.811Z] reply 已落盘（6115 字节，SHA=d555d4d787c8866e…）
+[2026-11-19T07:45:24.812Z] RECOLL COMPLETED
+[2026-11-19T07:45:24.852Z] 视口覆盖已清除
+[2026-11-19T07:45:25.645Z] 会话锁已释放（906 S1 止损会商补采）

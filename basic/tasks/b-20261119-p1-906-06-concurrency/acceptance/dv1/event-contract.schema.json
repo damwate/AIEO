@@ -12,7 +12,7 @@
     "instance_id": { "type": "string" },
     "idempotency_key": { "type": "string" },
     "trace_id": { "type": "string" },
-    "event_type": { "type": "string" },
+    "event_type": { "type": "string", "enum": ["REST_REQ", "REST_RESP", "DB_TXN_BEGIN", "DB_TXN_COMMIT", "ACK_SEND", "ACK_CONFIRM", "FAULT_INJECT", "RECOVER"] },
     "monotonic_timestamp": { "type": "number" },
     "clock_domain": { "type": "string" },
     "db_transaction_id": { "type": "string" },
@@ -27,7 +27,7 @@
     "recover_target_event_id": { "type": "string" },
     "n/a_reason": {
       "type": "object",
-      "additionalProperties": { "type": "string" },
+      "additionalProperties": { "type": "string", "enum": ["GLOBAL_SCOPE", "TARGET_EVENT_FIELD_NOT_APPLICABLE"] },
       "propertyNames": { "enum": ["task_id", "request_id", "instance_id", "idempotency_key", "trace_id", "db_transaction_id", "ack_id", "state_version", "http_status", "commit_result", "confirm_result", "recover_result", "fault_scope", "injection_point", "recover_target_event_id"] }
     }
   },

@@ -5,16 +5,16 @@
     "errors": []
   },
   "summary": {
-    "total": 23,
+    "total": 24,
     "pass_expected": 9,
-    "reject_expected": 14,
-    "matched": 23,
+    "reject_expected": 15,
+    "matched": 24,
     "all_ok": true
   },
   "input_sha256": {
-    "event-contract.schema.json": "d4bc8af534c21b646c4e9b5f80c871413b404fb083460e0446ce5b629e43aebb",
-    "semantic-validator.mjs": "53be714a0fc925b81a0bc69d12b5b98406cf10c2514394549950e61cec0018b6",
-    "test-cases.json": "2af1be761f75ea09afe0950a00d83dae579081986dcb37485cbbfbaaff3245b0",
+    "event-contract.schema.json": "e9247bbeccaab6eed1750053545faec649e06b68bba5ab91d5f99b2b01713ed4",
+    "semantic-validator.mjs": "046d623338ec89de831e73f4b355fc5acfde65c382c651223fb53b11b61287df",
+    "test-cases.json": "dcb89145231ed209bd598bd6295794b0e6f73eb5e4cb8365e0b64698a1cf5a4c",
     "run-tests.mjs": "d637cb5130b219ba1707bc68950c50e9f89d6fd7e3089ff098b1dc8f721ffabe"
   },
   "results": [
@@ -242,7 +242,18 @@
       "errors": [
         "未定义 event_type: UNKNOWN_EVENT"
       ]
+    },
+    {
+      "id": "N15",
+      "event_type": "RECOVER",
+      "expect": "reject",
+      "actual": "reject",
+      "ok": true,
+      "errors": [
+        "context[0] badTarget: 缺基线必填: clock_domain",
+        "context[0] badTarget: 缺类型必填: REST_REQ.idempotency_key"
+      ]
     }
   ],
-  "generated_at": "2026-11-19T07:40:01.073Z"
+  "generated_at": "2026-11-19T07:46:09.393Z"
 }
