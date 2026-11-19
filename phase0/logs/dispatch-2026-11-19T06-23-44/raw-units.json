@@ -1,0 +1,108 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-19T06:26:06.776Z",
+  "user_unit_key": "ed504d44-8e0d-514e-9dc8-beb053823bb0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "ed504d44-8e0d-514e-9dc8-beb053823bb0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "2f553606-2809-400e-af83-bab49245562c",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "ed504d44-8e0d-514e-9dc8-beb053823bb0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "c5512f82-fe77-5bdd-a391-43541fc9f238:0:user",
+          "c5512f82-fe77-5bdd-a391-43541fc9f238:2:assistant",
+          "ed504d44-8e0d-514e-9dc8-beb053823bb0:0:user",
+          "ed504d44-8e0d-514e-9dc8-beb053823bb0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "a95d8179f17a7b62a84682bb14d7d3ef4c4079a18e92e0c117d0dba2b4d6cb86",
+          "90c461338852f59e11e9efea21d6918db8679b47abe358e1d4f6687d289e9f71",
+          "ce0f15bd664baeb709906851f2ea6d11f88882798a2751e1ba40c73d8e0f0333",
+          "a00122f1870d38788fc6516015b61f26387c3fd60462ed80ec7a9e0d32278793"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "c5512f82-fe77-5bdd-a391-43541fc9f238:0:user",
+          "c5512f82-fe77-5bdd-a391-43541fc9f238:2:assistant",
+          "ed504d44-8e0d-514e-9dc8-beb053823bb0:0:user",
+          "ed504d44-8e0d-514e-9dc8-beb053823bb0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "a95d8179f17a7b62a84682bb14d7d3ef4c4079a18e92e0c117d0dba2b4d6cb86",
+          "90c461338852f59e11e9efea21d6918db8679b47abe358e1d4f6687d289e9f71",
+          "ce0f15bd664baeb709906851f2ea6d11f88882798a2751e1ba40c73d8e0f0333",
+          "a00122f1870d38788fc6516015b61f26387c3fd60462ed80ec7a9e0d32278793"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "c5512f82-fe77-5bdd-a391-43541fc9f238:0:user",
+          "c5512f82-fe77-5bdd-a391-43541fc9f238:2:assistant",
+          "ed504d44-8e0d-514e-9dc8-beb053823bb0:0:user",
+          "ed504d44-8e0d-514e-9dc8-beb053823bb0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "ed504d44-8e0d-514e-9dc8-beb053823bb0:0:user",
+      "ed504d44-8e0d-514e-9dc8-beb053823bb0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "c5512f82-fe77-5bdd-a391-43541fc9f238:0:user",
+          "c5512f82-fe77-5bdd-a391-43541fc9f238:2:assistant",
+          "ed504d44-8e0d-514e-9dc8-beb053823bb0:0:user",
+          "ed504d44-8e0d-514e-9dc8-beb053823bb0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "c5512f82-fe77-5bdd-a391-43541fc9f238:0:user",
+          "c5512f82-fe77-5bdd-a391-43541fc9f238:2:assistant",
+          "ed504d44-8e0d-514e-9dc8-beb053823bb0:0:user",
+          "ed504d44-8e0d-514e-9dc8-beb053823bb0:2:assistant"
+        ],
+        "overlap_keys": [
+          "c5512f82-fe77-5bdd-a391-43541fc9f238:0:user",
+          "c5512f82-fe77-5bdd-a391-43541fc9f238:2:assistant",
+          "ed504d44-8e0d-514e-9dc8-beb053823bb0:0:user",
+          "ed504d44-8e0d-514e-9dc8-beb053823bb0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "ed504d44-8e0d-514e-9dc8-beb053823bb0:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nMTP1-ACCEPT-R4｜S4 R4单项复核\n\nPASS ST-05 证据单项通过\n\n本轮只复核 ST-05，不重审方案设计及 R3 已通过的其他项目。已直接读取 damwate/AIEO 在整改 commit 3f1c71a5d8e05eb8bf9737ba3387c87e9bfda5b2 的归档文件与 steps.md。\n\nST-05 五项证据齐全：\n\n核验项\n\n\t\n\n结果\n\n\n\n\n实际执行命令\n\n\t\n\nPASS\n\n\n\n\nUTC运行时间\n\n\t\n\nPASS（2026-11-19T06:22:45Z）\n\n\n\n\n执行环境\n\n\t\n\nPASS（Windows/PowerShell、Python 3.12.10、Node v24.14.0、工作目录）\n\n\n\n\n被测任务包完整 commit\n\n\t\n\nPASS（d2e0f94868dba078c48e6bdfd86ea45130551337）\n\n\n\n\n命令回显\n\n\t\n\nPASS（6/6 项通过，Overall: PASS）\n\n我按归档文本的 UTF-8 字节、BOM 和 CRLF 内容独立计算 SHA256，结果与提交记录一致：\n\n928819528b8681e3858515904dc36c508af50d23e8dec8318129183817f733b5\n\n归档文件 Git Blob SHA 为 884ee5cb06dee84ab5918a2ba3c7615749fd1306。两者是不同口径：前者是文件内容 SHA256，后者是 Git Blob SHA。\n\n授权边界及方案绑定复核：\n\nsteps.md 的 S5⑤ 已同步补齐同一命令、时间、环境、任务包 commit、6/6 回显及 SHA256。PASS\n\nP1 未获用户独立开跑批准；任务书仍明确“不开跑 P1”，方案正文也明确 v1.0 冻结不构成实施授权。PASS\n\n906⑥仍唯一归 P1；未独立 PASS 前 M1 写路径并行限制不解除。PASS\n\n比较被测方案 commit 6b865429e66679349368cbe62b61620864183c37 与整改 commit：方案正文 standard/MULTITASK-IMPLEMENTATION-PLAN.md 未出现在整改文件列表中，未被修改。PASS\n\nR4 终局结论\n\n复核项\n\n\t\n\n结论\n\n\n\n\nST-05 归档可独立复核\n\n\t\n\nPASS\n\n\n\n\n归档 SHA256 一致\n\n\t\n\nPASS\n\n\n\n\nS5⑤同步\n\n\t\n\nPASS\n\n\n\n\n无隐含 P1 开跑授权\n\n\t\n\nPASS\n\n\n\n\n906⑥唯一归 P1\n\n\t\n\nPASS\n\n\n\n\n方案正文未改\n\n\t\n\nPASS\n\n\n\n\n本轮总裁定\n\n\t\n\nPASS\n\nPASS R3 遗留的 ST-05 单项 BLOCKED 已关闭。 本轮无 REJECT、无 BLOCKED。\n\nR4 回执绑定\n\n被测方案 commit：6b865429e66679349368cbe62b61620864183c37\n\nST-05 整改证据 commit：3f1c71a5d8e05eb8bf9737ba3387c87e9bfda5b2\n\nST-05 文件 Git Blob SHA：884ee5cb06dee84ab5918a2ba3c7615749fd1306\n\nST-05 文件内容 SHA256：928819528b8681e3858515904dc36c508af50d23e8dec8318129183817f733b5\n\nR4 回执摘要 SHA256： d1c90a1dc47c4a03a42c23dda176dd4427f8f14e0352ac1afbdff4d1641349e8\n\n最终边界不变： 本次 PASS 仅关闭 ST-05 证据缺口，不构成 P1 实施授权；P1 仍须用户独立批准，906⑥仍是 P1 独立验证门，M1 写路径并行限制不解除。",
+      "text_sha256": "a00122f1870d38788fc6516015b61f26387c3fd60462ed80ec7a9e0d32278793",
+      "size_bytes": 2528,
+      "assistant_uuid": "2f553606-2809-400e-af83-bab49245562c"
+    }
+  ]
+}

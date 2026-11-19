@@ -1,0 +1,6 @@
+[MTP1-ACCEPT-R4|20261119] S4 R4单项复核(仅ST-05证据)
+任务:多任务方案P1规划协商+方案冻结。R3终局仅ST-05执行证据BLOCKED,其余全PASS(方案/⑥归P1/无隐含开跑授权/四条件/方案正文未改/DEC-112/S5收口)。本轮只复核ST-05证据单项,不重审方案与前三项整改。
+被测方案commit=6b865429e66679349368cbe62b61620864183c37(正文未改);ST-05证据整改commit=3f1c71a5d8e05eb8bf9737ba3387c87e9bfda5b2。
+R3回执SHA=3fee32761f6cc9ad2deb8b935e310512c4c97197bdaeb661b1ef1c3404d45dcf;reply SHA=90c461338852f59e11e9efea21d6918db8679b47abe358e1d4f6687d289e9f71。
+整改:phase0/logs/mtp1-st05-check.txt重建,含命令(python -I basic/tool/check_taskpack.py ...)+UTC时间06:22:45Z+环境(Python3.12.10/node v24.14)+被测任务包完整commit d2e0f94868dba078c48e6bdfd86ea45130551337+回显6/6PASS,SHA256=928819528b8681e3858515904dc36c508af50d23e8dec8318129183817f733b5;steps S5⑤同步。
+请核:ST-05归档可独立复核(命令/时间/环境/被测commit/6/6回显齐全);SHA一致;无隐含P1开跑授权;⑥仍归P1。三态PASS/REJECT(列项)/BLOCKED,回执结论表+SHA256,绑定被测commit 6b86542。

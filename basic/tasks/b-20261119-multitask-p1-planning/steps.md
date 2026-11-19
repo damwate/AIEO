@@ -64,7 +64,7 @@
 
 ⑥验收证据引用：dispatch-2026-11-19T05-55-22（R1 派单）、dispatch-2026-11-19T06-01-21（R2 派单）、dispatch-2026-11-19T06-19-31（R3 派单）；补采 phase0/tools/phase0/logs/recoll-mtp1-accept-r1-2026-11-19T05-58-37-304Z / r2-2026-11-19T06-16-28-033Z / r3-2026-11-19T06-22-03-980Z；reply SHA256=`df2830cda4069f84646db182994d43ef9309763b51a0eda767ea4725383b8af6`（R1）/`c1ffb9e6189749dcc00d7b0cd73761b43c636bc9ecc9fbc4b7e3d85921135a6e`（R2）/`90c461338852f59e11e9efea21d6918db8679b47abe358e1d4f6687d289e9f71`（R3）；问题1 修复 commit `9e32d020fcad34c6c37335f44dfa1e148374b816`。
 
-**验收结论：PASS**（S4-R1/R2 REJECT 的问题均已整改；方案设计全程 PASS，待 R3 终局裁定）
+**验收结论：PASS**（S4 终态：R1/R2 REJECT + R3 BLOCKED 全部整改关闭，R4 单项复核 PASS；reply SHA256=`a00122f1870d38788fc6516015b61f26387c3fd60462ed80ec7a9e0d32278793`，回执 `d1c90a1d…`；方案设计全程 PASS，被测 commit `6b86542…`）
 
 ### 返工记录表（问题1：S4-R1 文档状态漂移，含 D1-D4；R2 复发的收口缺口一并关闭）
 | 问题编号 | 根因 | 整改内容 | 修复 commit |
