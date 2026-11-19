@@ -1,0 +1,12 @@
+[P1AUDIT01-R1|20261120] P1-01派单可靠性证据独立审计
+仓 github.com/damwate/AIEO main@451e561d6eb520c72af60b4eb55c807b25acf9ae。
+对象=b-20261117-dispatch-reliability-fix（三项缺陷修复，历史验收PASS，验收artifact SHA256=a5d099d62e6881c3d625c3bf1c08454f49fe62c098a0eb9bf25fa18cb036a631）。
+读法：原始证据 acceptance/（local-test-runs、dispatch-blocked、request类）在被测冻结commit 7f7830b80bdaa6a5c48510c74a621319bf32e419下读（自冻结未变）；历史结论steps.md、delivery.md在当前main读（delivery系验收后补录）。
+五问逐项裁定（PASS/FAIL/BLOCKED+证据路径）：
+1 #7 mtime容差/brief_bytes/RunKeyLock测试证据是否完整
+2 #4 指针保护/会话归属校验有无对应测试与现场证据
+3 #3 标记定位/歧义fail-closed有无对应测试与现场证据
+4 run.log、result.json、reply artifact SHA256、测试日志相互吻合否
+5 有无交付未披露/证据缺失/测试数量不一致
+排除：不重跑测试、不重验收历史功能、不重算历史PASS；历史PASS≠本轮结论。授权链DEC-113/116。
+只回：五问裁定+发现清单+排除遵守声明。本会话仅承载本审计。

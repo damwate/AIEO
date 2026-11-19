@@ -30,7 +30,7 @@
 
 ⑤测试结果：reply.txt 6459B，SHA256=`0c3200480a0f80426682e64a657879d2b7824bd7ca0bddbe45217ac427897c1c` 与 result.json.artifact_sha256 一致；stability 两读一致；completion checks 全过。
 
-⑥验收证据引用：dispatch-2026-11-19T18-43-43（request/reply/raw-units/result/截图/run.log/tab-audit）；简报 brief_p1audit01_r1_20261120.txt。
+⑥验收证据引用：dispatch-2026-11-19T18-43-43（request/reply/raw-units/result/截图/run.log/tab-audit，reply SHA256=`0c3200480a0f80426682e64a657879d2b7824bd7ca0bddbe45217ac427897c1c`）；简报 brief_p1audit01_r1_20261120.txt。
 
 **验收结论：PASS**（审计派单成、独立会话、采集完整）
 
@@ -50,9 +50,53 @@
 
 **验收结论：PASS**（采集登记完成；审计实体结论按原样登记，F05 待审查方 R2 复核）
 
-## S4 独立验收（待执行）/ S5 收口交付（待执行）
+### S3-R2 F05 定点复核（2026-11-20，同会话 6aff4393）
 
-（按六要素回填；COMPLETED 前置=五件套逐文件存在+非空+全量 SHA256 核验）
+①本步骤目标：按 L-017 以对账反证回审查会话，仅复核 F05 一项及对 #4/#5 的影响。
+
+②修改文件：phase0/tools/brief_p1audit01_r2_20261120.txt（976B）；phase0/logs/dispatch-2026-11-19T18-50-32/；delivery.md；本 steps.md。
+
+③修改内容：简报标记 `[P1AUDIT01-R2|20261120]`，附反证（冻结 commit reply.txt 814B SHA=声明 artifact 逐字一致+工具链口径旁证）；R2 裁定=**F05 撤销（不保留为有效缺陷）、#4 修订为 PASS、#5 维持 FAIL**，F01–F04/F06 全部不变；审查方自认"R1 关于 reply 字段不带前缀的陈述属于审计事实判断错误，应予纠正"。
+
+④执行结果：P1-01 审计终态=五问 **#1 FAIL / #2 BLOCKED / #3 BLOCKED / #4 PASS（修订）/ #5 FAIL**；总体仍不签署 PASS（F01–F04/F06 证据缺口维持）；历史三项 PASS 保持历史属性。
+
+⑤测试结果：R2 reply.txt 1837B，SHA256=`b6882d01259341cdde88188801a0bbc78c6fe7c78edcb5bfe0ddb9a04fa4aa48` 与 result.json.artifact_sha256 一致；发送双验通过；无重发。
+
+⑥验收证据引用：dispatch-2026-11-19T18-50-32（request/reply/raw-units/result）；brief_p1audit01_r2_20261120.txt。
+
+**验收结论：PASS**（定点复核闭环：F05 撤销、#4 修订、其余维持；审计内容终版）
+
+## S4 独立验收（2026-11-20 完成）
+
+①本步骤目标：确认审计内容终版与登记一致，五件套齐备。
+
+②修改文件：delivery.md（终版）；acceptance/MANIFEST.txt（补 R2）。
+
+③修改内容：R2 终版裁定（F05 撤销/#4 修订 PASS/其余维持）登记 delivery §一/§二/§三；MANIFEST 补 R2 reply/result/request SHA256。
+
+④执行结果：审计内容终版=R1 原文保留+R2 修订留痕，无改写；发现 F01–F04/F06 如实移交批次复盘。
+
+⑤测试结果：五件套逐文件存在+非空核验通过（见 MANIFEST.txt）；ST-05 见下方记录。
+
+⑥验收证据引用：dispatch-2026-11-19T18-43-43/（R1，reply SHA256=`0c3200480a0f80426682e64a657879d2b7824bd7ca0bddbe45217ac427897c1c`）+dispatch-2026-11-19T18-50-32/（R2，reply SHA256=`b6882d01259341cdde88188801a0bbc78c6fe7c78edcb5bfe0ddb9a04fa4aa48`）。
+
+**验收结论：PASS**（审计任务交付=独立审计报告及终版裁定，由审查会话 6aff4393 两轮产出并自认事实错误纠正；执行会话完成登记核对，审计内容不签署 PASS 属如实结论非验收缺口）
+
+## S5 收口交付（2026-11-20 完成）
+
+①本步骤目标：任务包收口（状态完成、七要素交付记录、遗留移交清单）。
+
+②修改文件：task-brief.md（状态）、delivery.md（§五遗留归属）、本 steps.md。
+
+③修改内容：状态→完成；遗留 F01–F04/F06 归属批次总复盘；声明审计任务无未结项。
+
+④执行结果：P1-01 收口；通道释放（FIFO 让位 P1-02）。
+
+⑤测试结果：ST-05 自检 COMPLETED 态全过（见记录）；零代码/零 M1/零 DEC-010。
+
+⑥验收证据引用：本包全部文件+派单现场 dispatch-2026-11-19T18-43-43（R1 reply SHA256 `0c3200480a0f80426682e64a657879d2b7824bd7ca0bddbe45217ac427897c1c`）+dispatch-2026-11-19T18-50-32（R2 reply SHA256 `b6882d01259341cdde88188801a0bbc78c6fe7c78edcb5bfe0ddb9a04fa4aa48`）+七项核验记录（b-20261119-multitask-p1-execution）。
+
+**验收结论：PASS**（P1-01 完成收口，通道已释放）
 
 ---
 

@@ -1,0 +1,5 @@
+[P1AUDIT01-R2|20261120] F05定点复核（仅此一项）
+读 github.com/damwate/AIEO main@9ae17f1e7a324be692610b0455416ae72c3c8a63 basic/tasks/b-20261119-p1-dispatch-evidence-audit/acceptance/sha256-reconciliation-f05.md。
+执行会对你的F05做了对账反证：冻结commit 7f7830b8下 phase0/logs/dispatch-2026-11-17T06-11-17/reply.txt 全文814B（含"ChatGPT 说："首行）SHA256=a5d099d62e6881c3d625c3bf1c08454f49fe62c098a0eb9bf25fa18cb036a631，与run.log/result.json/raw-units四处声明逐字一致；工具链口径=artifact即reply.txt全文字节（旁证dispatch-2026-11-19T18-33-05同口径：reply.txt 5843B SHA=fedb72e25bac2dd4…=其artifact_sha256）。你上轮"reply字段为不带前缀原始回复"的判断与实测不符——reply字段本就含前缀且814B。
+请仅复核F05：重验后给终裁（维持/撤销/修订）及对#4、#5裁定的影响；F01-F04/F06不动。排除约束照旧。
+只回：F05终裁+#4/#5是否修订+理由。

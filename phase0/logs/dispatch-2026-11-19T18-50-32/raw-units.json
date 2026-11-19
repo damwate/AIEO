@@ -1,0 +1,108 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-19T18:52:33.082Z",
+  "user_unit_key": "a12bfdcd-090c-52af-9a48-5e951b1415e3:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "a12bfdcd-090c-52af-9a48-5e951b1415e3:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "4512a672-1953-42e7-8952-49d22b5f6802",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "a12bfdcd-090c-52af-9a48-5e951b1415e3:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "70e80c26-b317-55c1-8014-adf664b7d134:0:user",
+          "70e80c26-b317-55c1-8014-adf664b7d134:2:assistant",
+          "a12bfdcd-090c-52af-9a48-5e951b1415e3:0:user",
+          "a12bfdcd-090c-52af-9a48-5e951b1415e3:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "8fe65c5b6bef65799423688c2db1ad62648dbf566719ea6bfaa47e3b1a95d43a",
+          "0c3200480a0f80426682e64a657879d2b7824bd7ca0bddbe45217ac427897c1c",
+          "de7aeb2aeee8622bb18a2032592ebed58d69ec99dfe288f6b897b754a4e1a781",
+          "b6882d01259341cdde88188801a0bbc78c6fe7c78edcb5bfe0ddb9a04fa4aa48"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "70e80c26-b317-55c1-8014-adf664b7d134:0:user",
+          "70e80c26-b317-55c1-8014-adf664b7d134:2:assistant",
+          "a12bfdcd-090c-52af-9a48-5e951b1415e3:0:user",
+          "a12bfdcd-090c-52af-9a48-5e951b1415e3:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "8fe65c5b6bef65799423688c2db1ad62648dbf566719ea6bfaa47e3b1a95d43a",
+          "0c3200480a0f80426682e64a657879d2b7824bd7ca0bddbe45217ac427897c1c",
+          "de7aeb2aeee8622bb18a2032592ebed58d69ec99dfe288f6b897b754a4e1a781",
+          "b6882d01259341cdde88188801a0bbc78c6fe7c78edcb5bfe0ddb9a04fa4aa48"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "70e80c26-b317-55c1-8014-adf664b7d134:0:user",
+          "70e80c26-b317-55c1-8014-adf664b7d134:2:assistant",
+          "a12bfdcd-090c-52af-9a48-5e951b1415e3:0:user",
+          "a12bfdcd-090c-52af-9a48-5e951b1415e3:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "a12bfdcd-090c-52af-9a48-5e951b1415e3:0:user",
+      "a12bfdcd-090c-52af-9a48-5e951b1415e3:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "70e80c26-b317-55c1-8014-adf664b7d134:0:user",
+          "70e80c26-b317-55c1-8014-adf664b7d134:2:assistant",
+          "a12bfdcd-090c-52af-9a48-5e951b1415e3:0:user",
+          "a12bfdcd-090c-52af-9a48-5e951b1415e3:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "70e80c26-b317-55c1-8014-adf664b7d134:0:user",
+          "70e80c26-b317-55c1-8014-adf664b7d134:2:assistant",
+          "a12bfdcd-090c-52af-9a48-5e951b1415e3:0:user",
+          "a12bfdcd-090c-52af-9a48-5e951b1415e3:2:assistant"
+        ],
+        "overlap_keys": [
+          "70e80c26-b317-55c1-8014-adf664b7d134:0:user",
+          "70e80c26-b317-55c1-8014-adf664b7d134:2:assistant",
+          "a12bfdcd-090c-52af-9a48-5e951b1415e3:0:user",
+          "a12bfdcd-090c-52af-9a48-5e951b1415e3:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "a12bfdcd-090c-52af-9a48-5e951b1415e3:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nP1AUDIT01-R2｜F05 定点复核终裁\nF05：撤销\n\n终裁：撤销 R1 的 F05。原判断错误。\n\n复核证据\n\n重新读取冻结 commit 7f7830b80bdaa6a5c48510c74a621319bf32e419 下四份原始文件：\n\n对象\n\n\t\n\n复核结果\n\n\n\n\nreply.txt\n\n\t\n\n814 字节，含「ChatGPT 说：」\n\n\n\n\nresult.json.reply\n\n\t\n\n814 字节，含相同前缀\n\n\n\n\nresult.json.artifact_sha256\n\n\t\n\na5d099d6...36a631\n\n\n\n\nresult.json.reply_readback_sha256\n\n\t\n\na5d099d6...36a631\n\n\n\n\nraw-units.json\n\n\t\n\ntext_sha256 一致\n\n\n\n\nrun.log\n\n\t\n\nartifact_sha256 一致，size_bytes=814\n\n逐字节内容核对后，reply.txt 与 result.json.reply 内容一致。\n\n另有执行方提供的对账记录：\n\nsha256-reconciliation-f05.md，当前 main@9ae17f1e7a324be692610b0455416ae72c3c8a63。\n\n其中给出的 Git 原始文件哈希结果与上述四处声明吻合。\n\n错误根源： R1 将「ChatGPT 说：」误判为额外追加的包装内容，错误地把哈希对象理解成不带前缀的原始回复。实际上，artifact 的定义就是 reply.txt 全文字节。\n\n对 #4、#5 的影响\n\n审计项\n\n\t\n\nR1\n\n\t\n\nR2 终裁\n\n\t\n\n是否修订\n\n\n\n\n#4 SHA256 相互吻合\n\n\t\n\nFAIL\n\n\t\n\nPASS\n\n\t\n\n是\n\n\n\n\n#5 交付披露、证据完整性、测试数量\n\n\t\n\nFAIL\n\n\t\n\nFAIL\n\n\t\n\n否\n\n理由：\n\n#4： F05 完全撤销，SHA256 一致性缺陷不存在。\n\n#5： F05 不再作为失败依据，但 F01–F04、F06 均保持原裁定。测试数量算术一致，不代表其余证据缺口已经关闭，因此总体仍不能 PASS。\n\n最终边界\n\nF05：撤销，不保留为有效缺陷。\n\n#4：修订为 PASS。\n\n#5：维持 FAIL。\n\nF01、F02、F03、F04、F06：全部不变。\n\n不重跑测试、不重新验收历史功能、不修改仓库。\n\n同时确认：R1 关于 reply 字段不带前缀的陈述属于审计事实判断错误，应予纠正。",
+      "text_sha256": "b6882d01259341cdde88188801a0bbc78c6fe7c78edcb5bfe0ddb9a04fa4aa48",
+      "size_bytes": 1837,
+      "assistant_uuid": "4512a672-1953-42e7-8952-49d22b5f6802"
+    }
+  ]
+}

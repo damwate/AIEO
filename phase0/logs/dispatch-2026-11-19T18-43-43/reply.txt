@@ -1,0 +1,488 @@
+ChatGPT 说：
+P1AUDIT01-R1｜独立审计裁定
+本轮审计未通过
+
+审计对象：b-20261117-dispatch-reliability-fix
+
+被测仓库：damwate/AIEO
+
+当前主线：451e561d6eb520c72af60b4eb55c807b25acf9ae
+
+被测冻结 commit：7f7830b80bdaa6a5c48510c74a621319bf32e419
+
+验收 artifact 声称 SHA256：a5d099d62e6881c3d625c3bf1c08454f49fe62c098a0eb9bf25fa18cb036a631
+
+一、五问逐项裁定
+
+#
+
+	
+
+审计问题
+
+	
+
+裁定
+
+
+
+
+1
+
+	
+
+#7 mtime 容差、brief_bytes、RunKeyLock 测试证据完整性
+
+	
+
+FAIL
+
+
+
+
+2
+
+	
+
+#4 指针保护、会话归属校验的测试与现场证据
+
+	
+
+BLOCKED
+
+
+
+
+3
+
+	
+
+#3 标记定位、歧义 fail-closed 的测试与现场证据
+
+	
+
+BLOCKED
+
+
+
+
+4
+
+	
+
+run.log、result.json、reply artifact SHA256、测试日志相互吻合
+
+	
+
+FAIL
+
+
+
+
+5
+
+	
+
+交付披露、证据完整性、测试数量一致性
+
+	
+
+FAIL
+
+1. #7 mtime / brief_bytes / RunKeyLock
+
+FAIL
+
+已确认：
+
+test_review_leg.py 存在 test_32_mtime_tolerance_deterministic。
+
+回拨 1 秒，在 2 秒容差内通过。
+
+回拨 3 秒，超出容差后拒绝。
+
+测试使用 brief_bytes 进行派单目录定位。
+
+存在 test_33_run_key_lock_rejects_concurrent。
+
+但有两个证据缺口：
+
+test_32 没有明确验证错误 brief_bytes 必须被拒绝的反例。
+
+test_33 是同进程锁竞争；真正跨进程竞争测试 test_18b_cross_process_lock_competition 位于 test_arch_review_leg.py，不能直接替代 review_leg.py 自身的跨进程验证。
+
+任务步骤要求的是 review_leg 的跨进程锁竞争负例，现有证据没有完整满足这一要求。
+
+参考：
+
+test_review_leg.py
+
+test_arch_review_leg.py
+
+2. #4 指针保护与会话归属
+
+BLOCKED
+
+已确认：
+
+sessionIdIsAttributable() 存在。
+
+覆盖新会话误捕获既有 UUID、既有会话错页、非法 UUID、缺失 UUID。
+
+--no-update-pointer 默认关闭，显式传入才跳过指针写盘。
+
+test_dispatch_options.mjs 有相应纯函数测试。
+
+但现场证据不足：
+
+06-08-30 现场记录证明使用 --no-update-pointer 后跳过指针写盘。
+
+该记录属于已有会话，不是新会话误捕获既有页面的现场复现。
+
+06-11-17 独立验收派单同样是已有会话。
+
+delivery.md 声称现场指针前后 SHA 一致，但本轮读取的对应 run.log 没有提供完整的前后 SHA 对照记录。
+
+因此，代码和纯函数测试存在，不等于错误页面现场保护已经得到独立证明。
+
+参考：
+
+test_dispatch_options.mjs
+
+06-08-30 run.log
+
+3. #3 标记定位与歧义 fail-closed
+
+BLOCKED
+
+已确认：
+
+唯一 user unit 标记命中可以重新绑定 key。
+
+零命中拒绝。
+
+多个 user unit 命中拒绝。
+
+仅 assistant unit 含标记也拒绝。
+
+test_inbound_reply.mjs 对上述情况有明确测试。
+
+24/24 测试日志存在。
+
+现场方面：
+
+06-08-30 的真实派单确实完成采集，未出现原来的 INBOUND_START_UNIT_MISSING。
+
+但现场 result.json 没有记录：
+
+start_key_resolved
+
+start_resolved_by_marker
+
+虽然采集起点 key 与发送时固定 key 不同，但不能据此直接证明标记定位分支实际执行。
+
+因此：
+
+测试覆盖 PASS；标记定位实际触发的现场证据 BLOCKED。
+
+参考：
+
+inbound_dom.mjs
+
+test_inbound_reply.mjs
+
+06-08-30 result.json
+
+4. SHA256 与证据一致性
+
+FAIL
+
+这是本轮发现的明确证据矛盾。
+
+06-11-17：
+
+对象
+
+	
+
+SHA256 / 内容
+
+
+
+
+run.log 声明 artifact SHA
+
+	
+
+a5d099...36a631
+
+
+
+
+result.json artifact_sha256
+
+	
+
+a5d099...36a631
+
+
+
+
+result.json reply_readback_sha256
+
+	
+
+a5d099...36a631
+
+
+
+
+raw-units.json 中 assistant text_sha256
+
+	
+
+a5d099...36a631
+
+
+
+
+实际提交的 reply.txt
+
+	
+
+包含额外的 ChatGPT 说： 前缀
+
+关键问题：
+
+result.json 的 reply 字段保存的是不带前缀的 814 字节原始回复。
+
+但冻结 commit 中实际读取到的：
+
+phase0/logs/dispatch-2026-11-17T06-11-17/reply.txt
+
+内容包含：
+
+纯文本
+ChatGPT 说：
+
+按你提供的验收记录，三项均有对应测试及现场证据……
+
+这与 result.json 中参与 SHA256 计算的原始回复不是相同字节序列。
+
+因此，虽然 run.log、result.json 内部声明的 SHA256 一致，但不能证明实际提交的 reply.txt 就是该 SHA256 对应的 artifact。
+
+这是证据文件与其哈希声明之间的绑定问题，不应按一致处理。
+
+参考：
+
+run.log
+
+result.json
+
+reply.txt
+
+5. 交付披露、证据缺失与测试数量
+
+FAIL
+
+已确认测试数量没有明显算术矛盾：
+
+测试组
+
+	
+
+数量
+
+
+
+
+review_leg
+
+	
+
+31
+
+
+
+
+arch_review_leg
+
+	
+
+30
+
+
+
+
+test_acceptance_leg
+
+	
+
+31
+
+
+
+
+engineering_audit_leg
+
+	
+
+24
+
+
+
+
+四腿合计
+
+	
+
+116
+
+
+
+
+dispatch-options
+
+	
+
+15
+
+
+
+
+inbound-reply
+
+	
+
+24
+
+leg-suite-full.log 实际记录：
+
+116 passed in 180.48s
+
+没有发现 116/116 与四腿分项数量之间的不一致。
+
+但存在：
+
+#7 交付宣称的跨进程测试覆盖，与实际 review_leg 测试内容不完全对应。
+
+#4 现场指针前后 SHA 对照缺乏本轮可直接核实的原始记录。
+
+#3 现场未提供标记定位实际触发的明确结果字段。
+
+#4 独立验收 artifact 的 SHA 与实际提交 reply.txt 字节内容不一致。
+
+另外，delivery.md 已经披露历史验收时没有直接读取 acceptance 原始文件，这是正确披露；但不能因此免除本轮独立审计发现的证据问题。
+
+二、发现清单
+
+编号
+
+	
+
+发现
+
+	
+
+影响
+
+
+
+
+F01
+
+	
+
+review_leg 缺少明确跨进程锁竞争负例
+
+	
+
+#7 证据不完整
+
+
+
+
+F02
+
+	
+
+brief_bytes 缺少错误字节拒绝测试
+
+	
+
+#7 证据不完整
+
+
+
+
+F03
+
+	
+
+#4 缺少新会话错页现场验证闭环
+
+	
+
+#4 BLOCKED
+
+
+
+
+F04
+
+	
+
+#3 现场缺少 marker 实际触发证明
+
+	
+
+#3 BLOCKED
+
+
+
+
+F05
+
+	
+
+reply.txt 与声明的 artifact SHA 对应内容不一致
+
+	
+
+#4、#5 FAIL
+
+
+
+
+F06
+
+	
+
+多处交付结论强于本轮能够直接核实的证据
+
+	
+
+交付可信度受影响
+
+三、排除遵守声明
+遵守
+
+本轮严格遵守用户限定：
+
+没有重跑测试。
+
+没有重新验收历史功能。
+
+没有重新计算或推翻历史 PASS。
+
+没有把历史 PASS 直接作为本轮结论。
+
+原始证据按冻结 commit 7f7830b80bdaa6a5c48510c74a621319bf32e419 读取。
+
+steps.md、delivery.md 按当前 main 读取。
+
+没有修改仓库、代码、证据或任务状态。
+
+没有扩大到等级 B 试运行或其他任务。
+
+最终裁定：本轮五问中 3 项 FAIL、2 项 BLOCKED。历史三项 PASS 保持其历史属性，但本轮独立证据审计不能签署 PASS。

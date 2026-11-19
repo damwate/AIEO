@@ -1,9 +1,18 @@
-# P1-01 acceptance/MANIFEST.txt（2026-11-20）
+# P1-01 acceptance/MANIFEST.txt（2026-11-20 终版）
 
-审计 R1 现场：phase0/logs/dispatch-2026-11-19T18-43-43/（reply.txt 6459B，SHA256=0c3200480a0f80426682e64a657879d2b7824bd7ca0bddbe45217ac427897c1c）
+审计会话：6aff4393-8e90-83ec-97cb-5c2eaa1d40a6（R1+R2 同会话）
+R1 现场：phase0/logs/dispatch-2026-11-19T18-43-43/（reply.txt 6459B）
+R2 现场：phase0/logs/dispatch-2026-11-19T18-50-32/（reply.txt 1837B）
+F05 反证：acceptance/sha256-reconciliation-f05.md（冻结 commit reply.txt 对账，R2 采纳撤销 F05）
 
-SHA256 清单（工作区字节基准）：
+SHA256 清单（工作区字节基准；MANIFEST.txt 自身行在其写入后重算，以仓库 HEAD 版本为准）：
+
+ad3f8d93fc92535bdf761a710cfff4c4699b312d0a1e166d971ce2be376feb98 *basic/tasks/b-20261119-p1-dispatch-evidence-audit/requirement.md
+d900be49733ad4ea3ce7d69905fee9bae653e46d5676a342981fe6ef5dc3324d *basic/tasks/b-20261119-p1-dispatch-evidence-audit/task-brief.md
+0858f6ae221572e08e7182adae6001b1c37ffb1e2621e95a05a970787b21bc92 *basic/tasks/b-20261119-p1-dispatch-evidence-audit/steps.md
+76c3d30910dc051ec6ba3d3017ffc327d596256bf64f6ef73b269cf47a9a2fc8 *basic/tasks/b-20261119-p1-dispatch-evidence-audit/delivery.md
+d8ce8069052aea6aee60065a29c4f55e5b63e7661f4341c8b8c32c34416f1865 *basic/tasks/b-20261119-p1-dispatch-evidence-audit/acceptance/sha256-reconciliation-f05.md
 0c3200480a0f80426682e64a657879d2b7824bd7ca0bddbe45217ac427897c1c *phase0/logs/dispatch-2026-11-19T18-43-43/reply.txt
 3abed48b3e2caabb9ea42c8d1d63a3204a691590cd720d99e650d9fc366fb7a7 *phase0/logs/dispatch-2026-11-19T18-43-43/result.json
-14e786e175dcbea6c3572e4efe30da38dfc736b93649ff5f168dd1baa879bc1c *phase0/logs/dispatch-2026-11-19T18-43-43/request.txt
-d8ce8069052aea6aee60065a29c4f55e5b63e7661f4341c8b8c32c34416f1865 *basic/tasks/b-20261119-p1-dispatch-evidence-audit/acceptance/sha256-reconciliation-f05.md
+b6882d01259341cdde88188801a0bbc78c6fe7c78edcb5bfe0ddb9a04fa4aa48 *phase0/logs/dispatch-2026-11-19T18-50-32/reply.txt
+eb7c367753b663ce77a48827193c42e47690917515ad81062fc3291507c8e605 *phase0/logs/dispatch-2026-11-19T18-50-32/result.json

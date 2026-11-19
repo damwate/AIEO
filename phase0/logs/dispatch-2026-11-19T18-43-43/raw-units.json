@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-19T18:47:24.416Z",
+  "user_unit_key": "70e80c26-b317-55c1-8014-adf664b7d134:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "70e80c26-b317-55c1-8014-adf664b7d134:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "ed460f90-f800-4159-bd92-5afa75350ce1",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "70e80c26-b317-55c1-8014-adf664b7d134:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "70e80c26-b317-55c1-8014-adf664b7d134:0:user",
+          "70e80c26-b317-55c1-8014-adf664b7d134:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "8fe65c5b6bef65799423688c2db1ad62648dbf566719ea6bfaa47e3b1a95d43a",
+          "0c3200480a0f80426682e64a657879d2b7824bd7ca0bddbe45217ac427897c1c"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "70e80c26-b317-55c1-8014-adf664b7d134:0:user",
+          "70e80c26-b317-55c1-8014-adf664b7d134:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "8fe65c5b6bef65799423688c2db1ad62648dbf566719ea6bfaa47e3b1a95d43a",
+          "0c3200480a0f80426682e64a657879d2b7824bd7ca0bddbe45217ac427897c1c"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "70e80c26-b317-55c1-8014-adf664b7d134:0:user",
+          "70e80c26-b317-55c1-8014-adf664b7d134:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "70e80c26-b317-55c1-8014-adf664b7d134:0:user",
+      "70e80c26-b317-55c1-8014-adf664b7d134:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "70e80c26-b317-55c1-8014-adf664b7d134:0:user",
+          "70e80c26-b317-55c1-8014-adf664b7d134:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "70e80c26-b317-55c1-8014-adf664b7d134:0:user",
+          "70e80c26-b317-55c1-8014-adf664b7d134:2:assistant"
+        ],
+        "overlap_keys": [
+          "70e80c26-b317-55c1-8014-adf664b7d134:0:user",
+          "70e80c26-b317-55c1-8014-adf664b7d134:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "70e80c26-b317-55c1-8014-adf664b7d134:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nP1AUDIT01-R1｜独立审计裁定\n本轮审计未通过\n\n审计对象：b-20261117-dispatch-reliability-fix\n\n被测仓库：damwate/AIEO\n\n当前主线：451e561d6eb520c72af60b4eb55c807b25acf9ae\n\n被测冻结 commit：7f7830b80bdaa6a5c48510c74a621319bf32e419\n\n验收 artifact 声称 SHA256：a5d099d62e6881c3d625c3bf1c08454f49fe62c098a0eb9bf25fa18cb036a631\n\n一、五问逐项裁定\n\n#\n\n\t\n\n审计问题\n\n\t\n\n裁定\n\n\n\n\n1\n\n\t\n\n#7 mtime 容差、brief_bytes、RunKeyLock 测试证据完整性\n\n\t\n\nFAIL\n\n\n\n\n2\n\n\t\n\n#4 指针保护、会话归属校验的测试与现场证据\n\n\t\n\nBLOCKED\n\n\n\n\n3\n\n\t\n\n#3 标记定位、歧义 fail-closed 的测试与现场证据\n\n\t\n\nBLOCKED\n\n\n\n\n4\n\n\t\n\nrun.log、result.json、reply artifact SHA256、测试日志相互吻合\n\n\t\n\nFAIL\n\n\n\n\n5\n\n\t\n\n交付披露、证据完整性、测试数量一致性\n\n\t\n\nFAIL\n\n1. #7 mtime / brief_bytes / RunKeyLock\n\nFAIL\n\n已确认：\n\ntest_review_leg.py 存在 test_32_mtime_tolerance_deterministic。\n\n回拨 1 秒，在 2 秒容差内通过。\n\n回拨 3 秒，超出容差后拒绝。\n\n测试使用 brief_bytes 进行派单目录定位。\n\n存在 test_33_run_key_lock_rejects_concurrent。\n\n但有两个证据缺口：\n\ntest_32 没有明确验证错误 brief_bytes 必须被拒绝的反例。\n\ntest_33 是同进程锁竞争；真正跨进程竞争测试 test_18b_cross_process_lock_competition 位于 test_arch_review_leg.py，不能直接替代 review_leg.py 自身的跨进程验证。\n\n任务步骤要求的是 review_leg 的跨进程锁竞争负例，现有证据没有完整满足这一要求。\n\n参考：\n\ntest_review_leg.py\n\ntest_arch_review_leg.py\n\n2. #4 指针保护与会话归属\n\nBLOCKED\n\n已确认：\n\nsessionIdIsAttributable() 存在。\n\n覆盖新会话误捕获既有 UUID、既有会话错页、非法 UUID、缺失 UUID。\n\n--no-update-pointer 默认关闭，显式传入才跳过指针写盘。\n\ntest_dispatch_options.mjs 有相应纯函数测试。\n\n但现场证据不足：\n\n06-08-30 现场记录证明使用 --no-update-pointer 后跳过指针写盘。\n\n该记录属于已有会话，不是新会话误捕获既有页面的现场复现。\n\n06-11-17 独立验收派单同样是已有会话。\n\ndelivery.md 声称现场指针前后 SHA 一致，但本轮读取的对应 run.log 没有提供完整的前后 SHA 对照记录。\n\n因此，代码和纯函数测试存在，不等于错误页面现场保护已经得到独立证明。\n\n参考：\n\ntest_dispatch_options.mjs\n\n06-08-30 run.log\n\n3. #3 标记定位与歧义 fail-closed\n\nBLOCKED\n\n已确认：\n\n唯一 user unit 标记命中可以重新绑定 key。\n\n零命中拒绝。\n\n多个 user unit 命中拒绝。\n\n仅 assistant unit 含标记也拒绝。\n\ntest_inbound_reply.mjs 对上述情况有明确测试。\n\n24/24 测试日志存在。\n\n现场方面：\n\n06-08-30 的真实派单确实完成采集，未出现原来的 INBOUND_START_UNIT_MISSING。\n\n但现场 result.json 没有记录：\n\nstart_key_resolved\n\nstart_resolved_by_marker\n\n虽然采集起点 key 与发送时固定 key 不同，但不能据此直接证明标记定位分支实际执行。\n\n因此：\n\n测试覆盖 PASS；标记定位实际触发的现场证据 BLOCKED。\n\n参考：\n\ninbound_dom.mjs\n\ntest_inbound_reply.mjs\n\n06-08-30 result.json\n\n4. SHA256 与证据一致性\n\nFAIL\n\n这是本轮发现的明确证据矛盾。\n\n06-11-17：\n\n对象\n\n\t\n\nSHA256 / 内容\n\n\n\n\nrun.log 声明 artifact SHA\n\n\t\n\na5d099...36a631\n\n\n\n\nresult.json artifact_sha256\n\n\t\n\na5d099...36a631\n\n\n\n\nresult.json reply_readback_sha256\n\n\t\n\na5d099...36a631\n\n\n\n\nraw-units.json 中 assistant text_sha256\n\n\t\n\na5d099...36a631\n\n\n\n\n实际提交的 reply.txt\n\n\t\n\n包含额外的 ChatGPT 说： 前缀\n\n关键问题：\n\nresult.json 的 reply 字段保存的是不带前缀的 814 字节原始回复。\n\n但冻结 commit 中实际读取到的：\n\nphase0/logs/dispatch-2026-11-17T06-11-17/reply.txt\n\n内容包含：\n\n纯文本\nChatGPT 说：\n\n按你提供的验收记录，三项均有对应测试及现场证据……\n\n这与 result.json 中参与 SHA256 计算的原始回复不是相同字节序列。\n\n因此，虽然 run.log、result.json 内部声明的 SHA256 一致，但不能证明实际提交的 reply.txt 就是该 SHA256 对应的 artifact。\n\n这是证据文件与其哈希声明之间的绑定问题，不应按一致处理。\n\n参考：\n\nrun.log\n\nresult.json\n\nreply.txt\n\n5. 交付披露、证据缺失与测试数量\n\nFAIL\n\n已确认测试数量没有明显算术矛盾：\n\n测试组\n\n\t\n\n数量\n\n\n\n\nreview_leg\n\n\t\n\n31\n\n\n\n\narch_review_leg\n\n\t\n\n30\n\n\n\n\ntest_acceptance_leg\n\n\t\n\n31\n\n\n\n\nengineering_audit_leg\n\n\t\n\n24\n\n\n\n\n四腿合计\n\n\t\n\n116\n\n\n\n\ndispatch-options\n\n\t\n\n15\n\n\n\n\ninbound-reply\n\n\t\n\n24\n\nleg-suite-full.log 实际记录：\n\n116 passed in 180.48s\n\n没有发现 116/116 与四腿分项数量之间的不一致。\n\n但存在：\n\n#7 交付宣称的跨进程测试覆盖，与实际 review_leg 测试内容不完全对应。\n\n#4 现场指针前后 SHA 对照缺乏本轮可直接核实的原始记录。\n\n#3 现场未提供标记定位实际触发的明确结果字段。\n\n#4 独立验收 artifact 的 SHA 与实际提交 reply.txt 字节内容不一致。\n\n另外，delivery.md 已经披露历史验收时没有直接读取 acceptance 原始文件，这是正确披露；但不能因此免除本轮独立审计发现的证据问题。\n\n二、发现清单\n\n编号\n\n\t\n\n发现\n\n\t\n\n影响\n\n\n\n\nF01\n\n\t\n\nreview_leg 缺少明确跨进程锁竞争负例\n\n\t\n\n#7 证据不完整\n\n\n\n\nF02\n\n\t\n\nbrief_bytes 缺少错误字节拒绝测试\n\n\t\n\n#7 证据不完整\n\n\n\n\nF03\n\n\t\n\n#4 缺少新会话错页现场验证闭环\n\n\t\n\n#4 BLOCKED\n\n\n\n\nF04\n\n\t\n\n#3 现场缺少 marker 实际触发证明\n\n\t\n\n#3 BLOCKED\n\n\n\n\nF05\n\n\t\n\nreply.txt 与声明的 artifact SHA 对应内容不一致\n\n\t\n\n#4、#5 FAIL\n\n\n\n\nF06\n\n\t\n\n多处交付结论强于本轮能够直接核实的证据\n\n\t\n\n交付可信度受影响\n\n三、排除遵守声明\n遵守\n\n本轮严格遵守用户限定：\n\n没有重跑测试。\n\n没有重新验收历史功能。\n\n没有重新计算或推翻历史 PASS。\n\n没有把历史 PASS 直接作为本轮结论。\n\n原始证据按冻结 commit 7f7830b80bdaa6a5c48510c74a621319bf32e419 读取。\n\nsteps.md、delivery.md 按当前 main 读取。\n\n没有修改仓库、代码、证据或任务状态。\n\n没有扩大到等级 B 试运行或其他任务。\n\n最终裁定：本轮五问中 3 项 FAIL、2 项 BLOCKED。历史三项 PASS 保持其历史属性，但本轮独立证据审计不能签署 PASS。",
+      "text_sha256": "0c3200480a0f80426682e64a657879d2b7824bd7ca0bddbe45217ac427897c1c",
+      "size_bytes": 6459,
+      "assistant_uuid": "ed460f90-f800-4159-bd92-5afa75350ce1"
+    }
+  ]
+}
