@@ -1,0 +1,32 @@
+{
+  "recollection": true,
+  "driver": "recoll_906s1_stop.mjs",
+  "conversation_url": "https://chatgpt.com/c/6afe9d76-5af0-83ec-bb84-77e7c54f409e",
+  "failed_dispatch_dir": "phase0/logs/dispatch-2026-11-19T07-34-22",
+  "failure_code": "INBOUND_WINDOW_COMPLETENESS_UNPROVEN",
+  "diagnosis": "diag_906s1_stop.mjs 三步诊断；报告见 phase0/logs/diag-906s1-stop-*/report.json",
+  "recovery": "视口拉高静态DOM全量物化+归属校验三件套（禁重发）",
+  "marked_user_unit_key": "f325b695-e49b-5eca-acf1-e24c52280db7:0:user",
+  "assistant_unit_key": "f325b695-e49b-5eca-acf1-e24c52280db7:2:assistant",
+  "assistant_unit_count": 1,
+  "after_units": [
+    {
+      "key": "f325b695-e49b-5eca-acf1-e24c52280db7:2:assistant",
+      "role": "assistant",
+      "text_len": 4137,
+      "text_head": "ChatGPT 说：\n\n初步裁定：同意停止常规 R 轮循环，转入一次性会商方案。 连续五轮都在同一事件契约域发现新的定义"
+    }
+  ],
+  "reply_bytes": 8329,
+  "reply_sha256": "afb0bd2006b4da8924d0d91a2bde18ad9bfda3c694aa05cd17de550527801223",
+  "checks": {
+    "marked_user_unique": true,
+    "last_user_assertion": true,
+    "adjacent_assistant_tail": true,
+    "stable_static_dom_read": true,
+    "final_stop_button_not_visible": true,
+    "not_prev_reply_sha": true,
+    "response_length_plausible": true
+  },
+  "extracted_at": "2026-11-19T07:37:51.629Z"
+}

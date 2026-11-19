@@ -78,7 +78,14 @@
 | 问题7 | R4 核2：条件必填谓词不可机械判定、全局关联规则与 FAULT_INJECT/RECOVER 缺省矛盾、扩展字段未入词汇表 | 「二·补」改为枚举/谓词（fault_scope/injection_point/recover_target_event_id）、GLOBAL 用显式 N/A+n/a_reason+trace 根、扩展字段单列表 | a0f994e5b8610c47a41feb213837fbb4bec30a45 |
 | 问题8 | R5：RECOVER 目标字段"不存在"与"N/A"未区分，非法目标无处置 | 「二·补」新增 RECOVER 字段复制契约三情形（存在→原值/N-A→继承 reason/不存在→N/A+TARGET_EVENT_FIELD_NOT_APPLICABLE）+目标不存在/重复/类型不允许判证据失效触发即停⑤ | d4ce634851e741be274a278b877c3d2b59358c58 |
 
-## S5 收口交付（待 R6 后回填）
+### S4-止损会商（L-019；非 R 轮，不占返工计数）
+①目标：R2–R6 连续五次 REJECT 且每次暴露同一事件契约域新缺口，触发 WORKFLOW 模块五三轮止损；停止叙述式逐轮补洞，三方会商定性根因并裁定降档路径。
+②落点：`phase0/tools/brief_906s1_stop_20261119.txt`；派单现场 `dispatch-2026-11-19T07-34-22`；诊断 `phase0/logs/diag-906s1-stop-2026-11-19T07-37-06-239Z/report.json`（virtualization_inferred=true）；补采 `phase0/logs/recoll-906s1-stop-2026-11-19T07-37-27-842Z`，reply 8329B SHA256=`afb0bd2006b4da8924d0d91a2bde18ad9bfda3c694aa05cd17de550527801223`（七查全过，禁重发）；被测 commit `ca1f4d877e06a9832934eb86657f1ecbd0e077ca`。
+③裁定：四项全 PASS——①根因定性=交付缺陷为主因（叙述式事件契约未一次冻结字段/条件/异常语义）、验证机制缺陷为重要次因（无机器校验与正反例）；②停止 R 轮、同意 DV1=机器可校验字段级契约（JSON Schema + 字段到 N/A 原因映射 + 正反例矩阵 + 语义校验器）；③DV1 单次验收门槛冻结（8 类 event_type 全覆盖/字段约束可机器校验/每个 N/A 字段唯一原因且封闭枚举/未知字段类型原因不放行/RECOVER 三情形与非法目标即停⑤/正例全过反例全拒/结果可重复+文件 SHA256）；④R1–R6 历史裁定保留不改写，会商不占返工计数，DV1 未预置 PASS。
+④边界：⑥仍 BLOCKED；M1 写路径不解除；不实测；环境检查与⑥实测另批授权；DV1 若 REJECT 则不恢复无上限 R 轮，直接下一级止损。
+⑤验收结论：会商 PASS（非返工轮）；DV1 产物 BLOCKED（尚未实施）。
+
+## S5 收口交付（待 DV1 单次验收后回填）
 （待回填）
 
 ---
