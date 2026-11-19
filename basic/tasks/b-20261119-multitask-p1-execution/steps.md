@@ -56,6 +56,21 @@
 ## S5 收口交付（待执行）
 （按六要素回填）
 
+## 七项开跑前置核验记录（2026-11-20，P1HANDOFF-R1 S2 执行，门槛=全 PASS 才可派单）
+
+| # | 核验项 | 结论 | 证据（可查） |
+|---|---|---|---|
+| ① | 逐级批准登记 | **PASS**（核对完成） | DEC-107（P0 逐级批准，decision-log:909）→用户"OK，P1开始吧"（DEC-113）→用户"按照你们讨论的建议来"+P1HANDOFF-R1（DEC-116）；授权链完整登记 |
+| ② | 基线 SHA 三方一致 | **PASS**（核对完成） | P1-01 被测 `7f7830b80bdaa6a5c48510c74a621319bf32e419`=资格审查 R1 reply 冻结值=包登记值=git cat-file commit 实存（AIEO）；P1-02 被测 `0c53c963d93e33c15ebd4498742828fcf9ffc57d`/对照 `d50ce915cb047537640a8393e08882e922443d47`=reply 冻结值=包登记值=git cat-file commit 实存（YotinGarden/AI-Image-Service，且 0c53c963 已在其 main） |
+| ③ | 两任务强隔离 | **PASS**（机制就位） | 独立 task_id=两包目录；独立证据目录=各包 acceptance/；会话隔离=各自 --new-session 全新会话（禁用规划会话 6aff4117 与彼此复用，P1HANDOFF-R1 ③裁定），实际 UUID 派单时登记各包 steps |
+| ④ | 通道闸空闲 | **PASS**（实查通过） | `runtime/locks/gpt-session.lockfile` 残留属本轮已完成派单（holder pid=26428 进程已死=未持有）；指针 `gpt-reviewer-session.json`=6aff4117 与登记一致；无在途未收口轮次；无并行派单 |
+| ⑤ | 五件套清单 | **PASS**（每任务独立定义） | 两包 task-brief.md 五件套表（requirement/task-brief/steps/delivery/acceptance+逐文件 SHA256 于 COMPLETED 前置核验）；check_taskpack.py 强制（两包 IN_PROGRESS 合法态） |
+| ⑥ | 熔断就绪 | **PASS**（人工熔断规范落地） | 本包 `circuit-breaker.md`：五类触发矩阵（权限越界/数据污染=全局；证据缺失/状态不一致/重复失败=单任务）、暂停标志 `runtime/locks/p1-batch-pause.flag`、派单前六项检查、在途处置（L-018 禁重发序）、恢复条件、责任主体；明示人工熔断非自动实现 |
+| ⑦ | 复盘模板 | **PASS**（模板就绪） | 本包 `retro-template.md`：单任务复盘 A 表七节+批次总复盘 B 表七节 |
+
+- **总体状态：七项全部 PASS，具备 P1-01 派单条件**（P1HANDOFF-R1 S3 允许执行）。本记录为准备阶段核验，不构成 906⑥ 任何状态变化（⑥仍 BLOCKED、M1 写路径不解除）。
+- 核验执行人：ZCode 执行会话；依据：P1HANDOFF-R1 reply SHA256 `fedb72e25bac2dd46e56a00b261d8634a9ae23de2b79720ebb311c00a36ee2dc`（七项要求表）。
+
 ---
 
 ## ST-05 自检记录
