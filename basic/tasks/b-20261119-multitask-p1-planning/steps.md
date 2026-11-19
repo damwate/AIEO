@@ -69,7 +69,7 @@
 ### 返工记录表（问题1：S4-R1 文档状态漂移，含 D1-D4 四项）
 | 问题编号 | 根因 | 整改内容 | 修复 commit |
 |---|---|---|---|
-| 问题1 | S4 派单前未完成 requirement/task-brief/steps 状态同步，旧"待裁定/待回填"文字残留，与已冻结结论矛盾 | D1 requirement 旧v0.4背景标历史已关闭；D2 task-brief 三缺口改"已裁定（R1 PASS）"；D3 steps 同步冻结状态+S1自检；D4 补 S4 六查+S5 收口；不改方案设计/⑥归属/不开跑 | （整改提交，SHA 于 R2 前回填） |
+| 问题1 | S4 派单前未完成 requirement/task-brief/steps 状态同步，旧"待裁定/待回填"文字残留，与已冻结结论矛盾 | D1 requirement 旧v0.4背景标历史已关闭；D2 task-brief 三缺口改"已裁定（R1 PASS）"；D3 steps 同步冻结状态+S1自检；D4 补 S4 六查+S5 收口；不改方案设计/⑥归属/不开跑 | `9e32d020fcad34c6c37335f44dfa1e148374b816` |
 
 ## S5 收口交付（待 R2 后回填）
 （R2 PASS 后按六要素回填）
