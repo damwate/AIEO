@@ -1,6 +1,6 @@
-# 906⑥ M1 平台级并发独立验证场景设计 v0.5（R1 ADJUST→R2/R3/R4 REJECT 逐轮整改；R4 剩余事件字段矩阵项整改落位，待 R5 复审）
+# 906⑥ M1 平台级并发独立验证场景设计 v0.6（R1 ADJUST→R2/R3/R4/R5 REJECT 逐轮整改；R5 剩余 RECOVER 复制规则整改落位，待 R6 复审）
 
-> 来源：R1 裁定 reply `2d84f6bd658acd00d3cd2ada56e29c2e3b91458983cf21d0573b4991fb90d4d0`（11158B，会话 6afe9d76，commit e16722f）→ R2 裁定 reply `cf078bc249319e66d79e1414756c12e8074290c001110a6e2ace137f83518ecb`（6358B，补采）→ R3 裁定 reply `947f41ee8154e8e378661c011a6dfcfbe370241dbdda2adbf0ad887cfb88cc51`（5618B，补采，commit f4d0e1e）→ R4 裁定 reply `6e10731e8de118dc8ccfb5456e758124d22a04a7cfaf3b660dfb379c8a728784`（4656B，补采，commit f4d6daa）。v0.5 仅针对 R4 核2 事件字段矩阵剩余三项（条件可判定化/全局关联一致性/扩展字段词汇表）；核1 跨主机时钟、核3 文档状态、R2-03 DB/ACK 已 PASS 不回退不改写；场景 A/B/C 结构不变。**本轮只设计不实测；⑥ 仍 BLOCKED**。
+> 来源：R1 裁定 reply `2d84f6bd658acd00d3cd2ada56e29c2e3b91458983cf21d0573b4991fb90d4d0`（11158B，会话 6afe9d76，commit e16722f）→ R2 裁定 reply `cf078bc249319e66d79e1414756c12e8074290c001110a6e2ace137f83518ecb`（6358B，补采）→ R3 裁定 reply `947f41ee8154e8e378661c011a6dfcfbe370241dbdda2adbf0ad887cfb88cc51`（5618B，补采，commit f4d0e1e）→ R4 裁定 reply `6e10731e8de118dc8ccfb5456e758124d22a04a7cfaf3b660dfb379c8a728784`（4656B，补采，commit f4d6daa）→ R5 裁定 reply `c0ce863fc3694d63643ef4a2f647311d39122c50a7117f21159912281284401c`（3910B，补采，commit d22a444）。v0.6 仅补 R5 唯一返工项：RECOVER 对目标事件字段存在/N/A/缺失三种情形的确定性复制契约及非法目标处置；R5 已 PASS 的条件谓词、扩展字段词汇表，以及 R4 核1/核3、R2-03 均不回退不改写；场景 A/B/C 结构不变。**本轮只设计不实测；⑥ 仍 BLOCKED**。
 >
 > 红线：batch1 局部 PASS 不推导平台级并发 PASS；batch2 ⑥未执行不作证据；两只读任务 PASS 不替代⑥；⑥未独立 PASS 前 M1 写路径限制不解除；不以 Mock/内存DB/顺序测试替代并发证明。
 
@@ -67,9 +67,11 @@
 | ACK_SEND | 基线 + task_id / request_id / instance_id / trace_id / ack_id / state_version / db_transaction_id（无条件必填） | — | http_status |
 | ACK_CONFIRM | 同 ACK_SEND + confirm_result | — | — |
 | FAULT_INJECT | 基线 + instance_id + fault_scope（枚举 `TASK`/`GLOBAL`）+ injection_point（枚举 `DB_BEFORE_COMMIT`/`DB_AFTER_COMMIT`/`ACK_SEND`/`ACK_CONFIRM`/`INSTANCE_ABORT`） | `fault_scope=TASK` → task_id/request_id/trace_id 必填；且 injection_point∈{DB_BEFORE_COMMIT,DB_AFTER_COMMIT} → db_transaction_id 必填，∈{ACK_SEND,ACK_CONFIRM} → ack_id 必填。`fault_scope=GLOBAL` → task_id/request_id 显式 `N/A` 且 n/a_reason 必填，trace_id 必填 | — |
-| RECOVER | 基线 + instance_id + recover_result + recover_target_event_id | 从 `recover_target_event_id` 指向事件复制 task_id/request_id/trace_id/db_transaction_id/ack_id；目标字段为 `N/A` 时复制 `N/A` 并继承 n/a_reason | — |
+| RECOVER | 基线 + instance_id + recover_result + recover_target_event_id | 从 `recover_target_event_id` 指向事件复制 task_id/request_id/trace_id/db_transaction_id/ack_id，三情形规则见下方「RECOVER 字段复制契约」，不得临时决定 | — |
 
-全局关联一致性规则（消除"每条事件可关联三项身份"与 GLOBAL 缺省的矛盾）：**"可关联"定义为该字段取真实 ID，或取显式 `N/A` 并同时填写 n/a_reason；空值/缺字段一律判证据失效（五类即停⑤）。** `fault_scope=TASK` 事件三项身份必须真实 ID；`fault_scope=GLOBAL` 事件允许 task_id/request_id=`N/A`，但必须以 `trace_id` 根标识 + `instance_id`（`ALL` 或具体实例）建立作用域关联，并在 n/a_reason 写明全局故障范围。RECOVER 按目标事件复制，不另设判断。
+全局关联一致性规则（消除"每条事件可关联三项身份"与 GLOBAL 缺省的矛盾）：**"可关联"定义为该字段取真实 ID，或取显式 `N/A` 并同时填写 n/a_reason；空值/缺字段一律判证据失效（五类即停⑤）。** `fault_scope=TASK` 事件三项身份必须真实 ID；`fault_scope=GLOBAL` 事件允许 task_id/request_id=`N/A`，但必须以 `trace_id` 根标识 + `instance_id`（`ALL` 或具体实例）建立作用域关联，并在 n/a_reason 写明全局故障范围。RECOVER 按下方契约复制，不另设判断。
+
+**RECOVER 字段复制契约（v0.6 / R5 REJECT 整改）：** 对 `task_id`/`request_id`/`trace_id`/`db_transaction_id`/`ack_id` 五个字段逐一按目标事件情形处理：①目标事件**存在该字段且为真实 ID** → 按原值复制；②目标事件该字段**显式为 `N/A`** → 复制 `N/A` 并继承其 `n/a_reason`；③目标事件**根本不包含该字段**（如 REST_REQ 无 db_transaction_id/ack_id、DB_TXN_BEGIN 无 ack_id）→ 统一填 `N/A`，`n/a_reason` 固定为 `TARGET_EVENT_FIELD_NOT_APPLICABLE`。三种情形穷尽，禁止省略字段或由执行者自行补值。`recover_target_event_id` 指向的目标若**不存在、重复（同 event_id 多条）或 event_type 不属于可恢复类型**（允许类型冻结为 REST_REQ/REST_RESP/DB_TXN_BEGIN/DB_TXN_COMMIT/ACK_SEND/ACK_CONFIRM/FAULT_INJECT）→ 判证据失效（五类即停⑤）、保留现场、停止判定，不得补造目标或改写 RECOVER 记录。
 
 12 基础字段之外的**扩展字段**（明确不属于基础词汇表，须在 MANIFEST schema 中登记含义与适用事件）：
 | 扩展字段 | 含义 | 适用 event_type |

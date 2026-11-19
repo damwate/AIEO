@@ -1,0 +1,222 @@
+ChatGPT 说：
+906⑥ v0.5 核2定向复审 R5
+
+REJECT v0.5 暂不通过，不能冻结。
+
+被测版本严格绑定：damwate/AIEO@d22a444f300165b6907a207b73c7e343849fa467。已重新读取该 commit 下三份文件。本轮仅审查 R4 核2的三项整改，不重审核1、核3、R2-03，也未实测。
+
+一、三项整改裁定
+
+R4 核2整改项
+
+	
+
+结果
+
+	
+
+复核依据
+
+
+
+
+条件必填可判定化
+
+	
+
+PASS
+
+	
+
+fault_scope、injection_point 使用枚举；REST_RESP 重试条件使用同一 request_id 的 REST_REQ 数量谓词；RECOVER 指定目标事件
+
+
+
+
+全局关联一致性
+
+	
+
+PASS_WITH_CONSTRAINTS
+
+	
+
+TASK/GLOBAL 分支明确；GLOBAL 的 task/request 使用 N/A+n/a_reason，并要求 trace 根标识和 instance 范围；但 RECOVER 复制规则仍有缺口，见下方 REJECT
+
+
+
+
+扩展字段登记
+
+	
+
+PASS
+
+	
+
+8个扩展字段已单独列出含义和适用事件，且明确不属于12个基础字段
+
+唯一剩余 REJECT：RECOVER 对目标事件中缺失字段没有定义处理规则
+
+v0.5 写明 RECOVER 从 recover_target_event_id 指向的事件复制：
+
+task_id / request_id / trace_id / db_transaction_id / ack_id
+
+并规定目标字段为 N/A 时复制 N/A、继承 n/a_reason。
+
+问题在于：目标事件可能根本没有某个字段，而不是字段值为 N/A。
+
+例如：
+
+REST_REQ 必填字段中没有 db_transaction_id 或 ack_id；
+
+DB_TXN_BEGIN 有 db_transaction_id，但没有 ack_id；
+
+ACK_SEND 才要求两者都有。
+
+因此，RECOVER 指向 REST_REQ 或 DB_TXN_BEGIN 时，当前规则无法确定缺失字段究竟应该省略、填 N/A，还是判为证据无效。“目标字段为 N/A”并没有覆盖“目标字段不存在”的情况。
+
+这会导致同一份原始事件，在不同采集实现下生成不同的 RECOVER 记录，违反本方案禁止临时决定的要求。
+
+二、最小整改要求
+
+建议只补 RECOVER 的字段复制规则，不推翻现有矩阵：
+
+对目标事件存在的字段：按原值复制。
+
+对目标事件明确为 N/A 的字段：复制 N/A，并继承对应 n/a_reason。
+
+对目标事件不包含的字段：明确统一处理方式。建议定义为 N/A，填写固定原因，例如 TARGET_EVENT_FIELD_NOT_APPLICABLE。
+
+明确 recover_target_event_id 指向不存在、重复或类型不允许的目标事件时的处理规则，至少规定为证据无效并触发即停，不允许执行者自行补值。
+
+其余两项本轮已通过，不需要回退或重新设计。
+
+三、结论表
+
+审查范围
+
+	
+
+R5 结论
+
+
+
+
+条件必填谓词
+
+	
+
+PASS
+
+
+
+
+GLOBAL 关联规则
+
+	
+
+REJECT（RECOVER复制规则未闭合）
+
+
+
+
+扩展字段词汇表
+
+	
+
+PASS
+
+
+
+
+R4 核1、核3、R2-03
+
+	
+
+本轮不重审，沿用既有 PASS
+
+
+
+
+⑥环境资格
+
+	
+
+BLOCKED
+
+
+
+
+⑥实际并发验证
+
+	
+
+BLOCKED，未执行
+
+四、文件指纹
+
+以下 Git Blob SHA 与 UTF-8 文件内容 SHA256 分别列出，不混用。
+
+文件
+
+	
+
+Git Blob SHA
+
+	
+
+UTF-8 内容 SHA256
+
+
+
+
+scenario-design.md
+
+	
+
+250424911e51e82294f8cd72b06f9a300b1979f3
+
+	
+
+7cd3518faef1891182a7e76c37da13cf3eb1a007cb0a9424115f08afc9d5ed81
+
+
+
+
+steps.md
+
+	
+
+29acfcc28d78fdb00dcc7ea7cbca23b631e24e32
+
+	
+
+a9cf88c823fbf4b408bec2a525753a076531917e7158f4a7abb5c20d819ff7cd
+
+
+
+
+task-brief.md
+
+	
+
+9c3bb9a99f9b3867efb2fa16c1499961b43478d0
+
+	
+
+b088580bbb7764a913a5bbb3be90343893e7fe830aa01cacc6e47c1287506b7d
+
+五、授权与边界
+
+⑥继续 BLOCKED，本次 REJECT 不改变环境资格状态。
+
+M1 写路径限制不解除。
+
+本轮没有执行并发测试、环境资格检查或任何写操作。
+
+后续环境资格检查和⑥实测仍须分别取得另批授权。
+
+R5 唯一返工项是 RECOVER 对目标字段缺失情形的确定性处理规则。
+
+终局意见： v0.5 的三项整改已基本落位，但 RECOVER 字段复制规则尚未形成完整、机械可判定的契约。补齐后提交新 commit，再做一次核2定向复审即可。

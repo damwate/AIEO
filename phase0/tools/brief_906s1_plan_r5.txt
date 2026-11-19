@@ -1,0 +1,7 @@
+[906S1-PLAN-R5|20261119] 906⑥场景设计v0.5核2定向复审
+任务:仅复核R4核2三项整改(条件可判定/全局关联一致/扩展字段);核1跨主机时钟、核3文档状态、R2-03均PASS不重审,不开实测。会话第5条user,第4条已评估不迁移,第6条重评。
+读:damwate/AIEO@d22a444f300165b6907a207b73c7e343849fa467 basic/tasks/b-20261119-p1-906-06-concurrency/{scenario-design.md,steps.md,task-brief.md};R4 reply 6e10731e8de118dc8ccfb5456e758124d22a04a7cfaf3b660dfb379c8a728784。
+核1:二·补条件必填须为枚举/谓词(fault_scope=TASK/GLOBAL,injection_point枚举,REST_RESP重试=同request_id的REST_REQ数>1,RECOVER复制recover_target_event_id目标字段),禁"可关联时/可定位时"。
+核2:"可关联"须定义为真实ID或显式N/A+n/a_reason;GLOBAL任务/请求N/A时以trace根+instance_id(ALL/具体)关联;禁空值。
+核3:http_status/commit_result/confirm_result/recover_result/fault_scope/injection_point/recover_target_event_id/n/a_reason须单列扩展字段表并登记含义与适用事件。
+三态PASS/REJECT(列项)/BLOCKED,结论表+文件SHA256,绑定被测commit d22a444;⑥BLOCKED/M1写路径不解除/不实测/实测另批。
