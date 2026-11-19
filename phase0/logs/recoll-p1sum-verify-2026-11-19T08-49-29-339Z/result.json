@@ -1,0 +1,32 @@
+{
+  "recollection": true,
+  "driver": "recoll_p1sum_verify.mjs",
+  "conversation_url": "https://chatgpt.com/c/6afeb028-7308-83ec-aa35-fefb399a1d53",
+  "failed_dispatch_dir": "phase0/logs/dispatch-2026-11-19T08-47-18",
+  "failure_code": "INBOUND_START_UNIT_MISSING",
+  "diagnosis": "diag_p1sum_verify.mjs 三步诊断；报告见 phase0/logs/diag-p1sum-verify-*/report.json",
+  "recovery": "视口拉高静态DOM全量物化+归属校验三件套（禁重发）",
+  "marked_user_unit_key": "a5ba31ef-699e-5d85-bc44-d7fbcc234c86:0:user",
+  "assistant_unit_key": "a5ba31ef-699e-5d85-bc44-d7fbcc234c86:2:assistant",
+  "assistant_unit_count": 1,
+  "after_units": [
+    {
+      "key": "a5ba31ef-699e-5d85-bc44-d7fbcc234c86:2:assistant",
+      "role": "assistant",
+      "text_len": 2270,
+      "text_head": "ChatGPT 说：\n\n我会以指定的 b548009d7d7157151f2c2cfa0583193649cd94c5 "
+    }
+  ],
+  "reply_bytes": 5614,
+  "reply_sha256": "1765dbd68a58dc425151e76204c95997afe443cd17a176b21b3daa6ff4c9f1e7",
+  "checks": {
+    "marked_user_unique": true,
+    "last_user_assertion": true,
+    "adjacent_assistant_tail": true,
+    "stable_static_dom_read": true,
+    "final_stop_button_not_visible": true,
+    "not_prev_reply_sha": true,
+    "response_length_plausible": true
+  },
+  "extracted_at": "2026-11-19T08:49:53.220Z"
+}
