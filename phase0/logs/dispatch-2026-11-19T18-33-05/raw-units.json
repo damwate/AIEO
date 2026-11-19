@@ -1,0 +1,92 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-19T18:35:46.730Z",
+  "user_unit_key": "0a3abe7a-f21d-5c68-860e-708a72424bb0:0:user",
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "0a3abe7a-f21d-5c68-860e-708a72424bb0:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "53b71bc1-2170-4971-849d-bb27a5707f55",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "0a3abe7a-f21d-5c68-860e-708a72424bb0:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "0a3abe7a-f21d-5c68-860e-708a72424bb0:0:user",
+          "0a3abe7a-f21d-5c68-860e-708a72424bb0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "047780f014c652bb7a1da26e735de84caadd2255b511229bb1512294811a405c",
+          "fedb72e25bac2dd46e56a00b261d8634a9ae23de2b79720ebb311c00a36ee2dc"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "0a3abe7a-f21d-5c68-860e-708a72424bb0:0:user",
+          "0a3abe7a-f21d-5c68-860e-708a72424bb0:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "047780f014c652bb7a1da26e735de84caadd2255b511229bb1512294811a405c",
+          "fedb72e25bac2dd46e56a00b261d8634a9ae23de2b79720ebb311c00a36ee2dc"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "0a3abe7a-f21d-5c68-860e-708a72424bb0:0:user",
+          "0a3abe7a-f21d-5c68-860e-708a72424bb0:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "0a3abe7a-f21d-5c68-860e-708a72424bb0:0:user",
+      "0a3abe7a-f21d-5c68-860e-708a72424bb0:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "0a3abe7a-f21d-5c68-860e-708a72424bb0:0:user",
+          "0a3abe7a-f21d-5c68-860e-708a72424bb0:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "0a3abe7a-f21d-5c68-860e-708a72424bb0:0:user",
+          "0a3abe7a-f21d-5c68-860e-708a72424bb0:2:assistant"
+        ],
+        "overlap_keys": [
+          "0a3abe7a-f21d-5c68-860e-708a72424bb0:0:user",
+          "0a3abe7a-f21d-5c68-860e-708a72424bb0:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "0a3abe7a-f21d-5c68-860e-708a72424bb0:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nP1HANDOFF-R1｜P1接手处置裁定\n\n有条件批准推进 906⑥继续 BLOCKED\n\n依据：AIEO main@766df302e0aa843ad238034163e8ef0725d0669f，已读取指定两份交接文档。两文档 SHA 与本次读取结果一致。\n\n① 执行序裁定\n\n同意你的建议顺序，但增加一个明确的派单门槛：七项前置核验必须全部 PASS，才能开始 P1-01。\n\nDV2 独立复跑已经 PASS，不再重复执行，也不重新开启附件取证问题。\n\n具体裁定：\n\n阶段\n\n\t\n\n动作\n\n\t\n\n裁定\n\n\n\n\nS0\n\n\t\n\n确认 DV2 独立复跑 PASS，固定证据引用\n\n\t\n\n已通过\n\n\n\n\nS1\n\n\t\n\n建立 P1-01、P1-02 两个独立审计任务包\n\n\t\n\n允许执行\n\n\n\n\nS2\n\n\t\n\n补齐七项开跑前置核验\n\n\t\n\n允许执行\n\n\n\n\nS3\n\n\t\n\n七项全部 PASS 后，FIFO 派发 P1-01\n\n\t\n\n允许执行\n\n\n\n\nS4\n\n\t\n\nP1-01 完成验收、释放通道锁\n\n\t\n\n必须完成\n\n\n\n\nS5\n\n\t\n\nFIFO 派发 P1-02\n\n\t\n\n允许执行\n\n\n\n\nS6\n\n\t\n\nP1-02 完成验收，进行 P1 总复盘\n\n\t\n\n必须完成\n\n\n\n\nS7\n\n\t\n\n更新权威状态源，形成 P1 阶段收口记录\n\n\t\n\n必须完成\n\n七项核验的具体要求\n\n编号\n\n\t\n\n核验项目\n\n\t\n\n本轮要求\n\n\n\n\n①\n\n\t\n\n逐级批准登记\n\n\t\n\n核对 DEC-107 授权记录\n\n\n\n\n②\n\n\t\n\n基线 SHA\n\n\t\n\n核对完整 40 位 SHA 三方一致\n\n\n\n\n③\n\n\t\n\n两任务强隔离\n\n\t\n\n独立 task_id、会话 UUID、证据目录\n\n\n\n\n④\n\n\t\n\n通道闸\n\n\t\n\n核对 session_lock、reviewer 指针及通道空闲状态\n\n\n\n\n⑤\n\n\t\n\n五件套\n\n\t\n\n明确必需文件、非空检查、逐文件 SHA256\n\n\n\n\n⑥\n\n\t\n\n熔断就绪\n\n\t\n\n触发矩阵、暂停标志、派单前检查、在途处置、恢复条件\n\n\n\n\n⑦\n\n\t\n\n复盘模板\n\n\t\n\n提前准备单任务复盘和批次总复盘模板\n\n注意：\n\n①②已有历史登记或冻结依据，但仍须核对实际证据。\n\n③④⑤⑥⑦必须补齐并形成可查证据。\n\n任何一项 BLOCKED 或 FAIL，不得派单。\n\nP1-01 与 P1-02 不允许同时占用 GPT 审查通道。\n\nP1-01 的失败、阻塞及遗留问题必须如实记录，不得为了推进 P1-02 而降低验收标准。\n\nP1-01、P1-02 都是只读审计，不得将两个任务的 PASS 解释为 906⑥ PASS。\n\n② 文档措辞收紧\n\n同意收紧。主要解决两个问题：\n\n把阶段授权误写成实际开跑。\n\n把前置条件已登记误写成前置条件已完成。\n\nA. 修改「P1已获开跑授权」\n\n建议统一替换为：\n\n写作\n\nP1阶段授权状态：已获用户本人启动授权（DEC-107）。\n\n该授权允许在既定范围内开展P1准备工作及两项只读审计任务，但不代表开跑前置条件已经完成，也不代表任何审计任务已经派发或验收。\n\n实际派单必须以七项开跑前置核验全部PASS为前提，采用人工FIFO串行方式执行。\n\n授权范围不包含906⑥真实并发实测、M1写路径开放、P2/P3、main合并、生产发布及数据删除。DEC-010规定的高危操作仍须用户本人独立批准。\n\nB. 修改七项核验状态描述\n\n建议不要再使用笼统的「七项未实测」或者「七项已准备」。\n\n替换为：\n\n写作\n\n七项开跑前置核验状态（2026-11-20）：\n\n① 逐级批准：已有DEC-107授权记录，待核对登记证据。\n\n② 基线SHA：任务及被测版本已有冻结记录，待核验完整SHA三方一致。\n\n③ 两任务强隔离：尚未闭环，须建立独立任务身份、会话绑定及证据目录。\n\n④ 通道闸：待补充并核验锁状态、审查指针及通道空闲证据。\n\n⑤ 五件套：待建立任务级文件清单并完成逐文件存在性、非空及SHA256核验。\n\n⑥ 熔断就绪：待补齐触发矩阵、暂停机制、派单前检查及在途处置证据。\n\n⑦ 复盘模板：待建立单任务和批次复盘模板。\n\n当前总体状态：准备工作进行中，七项尚未全部核验PASS，不具备派单条件。\n\nDV2独立复跑已PASS，但该结果仅关闭906⑥场景设计契约验证链的独立复跑缺口，不代表906⑥真实并发验证通过。\n\n③ DEC-115及会话迁移裁定\n接受留痕及迁移方案\n\n我的裁定：\n\nDEC-115记录的审查指针误修正属于执行过程中的登记错误，应保留历史记录。\n\n已回退并归档，不再使用错误指向的 Garden 会话 6aff11d3 作为 AIEO 审查证据。\n\nAIEO 原独立审查链以 6afeb028 为有效历史证据，原有裁定及证据不因指针错误而自动失效。\n\n从本会话起继续 P1 工作，不再沿用错误指针，也不把 Garden 项目派单现场混入 AIEO 审查链。\n\n后续两项审计任务分别建立自己的会话身份和证据归属，不能复用同一审查会话冒充独立审查。\n\n这属于审查链身份与证据归属修正，不需要重跑已经 PASS 的 DV2。\n\n最终执行顺序清单\nP1 后续工作路线\n\n固定历史裁定\n\nDV2 PASS；906⑥ BLOCKED；DEC-115 留痕；确认当前会话接棒。\n\n建立两个审计任务包\n\nP1-01：b-20261119-p1-dispatch-evidence-audit\n\nP1-02：b-20261119-p1-aisvc-postpass-lineage-audit\n\n完成七项前置核验\n\n逐项提供证据，全部 PASS 才进入派单。\n\nP1-01 首先执行\n\n独立只读审计，完整五件套，验收并释放通道。\n\nP1-02 随后执行\n\n独立只读审计，不重复 P1-01 的审查结论。\n\nP1 总复盘及状态收口\n\n核对两项结果、遗留问题、证据完整性及权威状态源。\n\n始终保持的禁止事项\n\n906⑥真实并发实测\n\nM1 写路径开放\n\nP2/P3 启动\n\nmain 合并及生产发布\n\n数据删除\n\n任何 DEC-010 红线操作\n\n最终意见：批准进入 P1 准备执行阶段。 不再为已经解决的 DV2 问题反复消耗轮次，也不再逐项向用户申请普通节点批准。接手 AI 可以按上述顺序自主推进；遇到 DEC-010 红线必须停下请求用户本人批准。\n\n本轮只作处置裁定，不代表已创建任务包或已完成七项核验。",
+      "text_sha256": "fedb72e25bac2dd46e56a00b261d8634a9ae23de2b79720ebb311c00a36ee2dc",
+      "size_bytes": 5843,
+      "assistant_uuid": "53b71bc1-2170-4971-849d-bb27a5707f55"
+    }
+  ]
+}
