@@ -1,0 +1,82 @@
+{
+  "conv_uuid": "6afe9d76-5af0-83ec-bb84-77e7c54f409e",
+  "marker": "[906S1-PLAN-R3|20261119]",
+  "failed_dir": "phase0/logs/dispatch-2026-11-19T07-07-30",
+  "steps": [
+    {
+      "step": 1,
+      "name": "current_window",
+      "keys": [
+        "4e91e237-0c8f-5d29-bde6-c7078dd84ff2:0:user",
+        "4e91e237-0c8f-5d29-bde6-c7078dd84ff2:2:assistant"
+      ],
+      "roles": [
+        "user",
+        "assistant"
+      ],
+      "at_top": false,
+      "at_bottom": true,
+      "scrollable": true,
+      "marker_hits": 1
+    },
+    {
+      "step": 2,
+      "name": "scroll_up",
+      "keys": [
+        "4e91e237-0c8f-5d29-bde6-c7078dd84ff2:0:user",
+        "4e91e237-0c8f-5d29-bde6-c7078dd84ff2:2:assistant"
+      ],
+      "roles": [
+        "user",
+        "assistant"
+      ],
+      "at_top": false,
+      "at_bottom": true,
+      "scrollable": true,
+      "marker_hits": 1,
+      "changed_vs_initial": false
+    },
+    {
+      "step": 2,
+      "name": "scroll_down",
+      "keys": [
+        "4e91e237-0c8f-5d29-bde6-c7078dd84ff2:0:user",
+        "4e91e237-0c8f-5d29-bde6-c7078dd84ff2:2:assistant"
+      ],
+      "roles": [
+        "user",
+        "assistant"
+      ],
+      "at_top": false,
+      "at_bottom": true,
+      "scrollable": true,
+      "marker_hits": 1,
+      "changed_vs_up": false
+    },
+    {
+      "step": 3,
+      "name": "after_reload",
+      "keys": [
+        "42636ca9-148b-510e-9f52-f09e666947ba:0:user",
+        "42636ca9-148b-510e-9f52-f09e666947ba:2:assistant",
+        "4e91e237-0c8f-5d29-bde6-c7078dd84ff2:0:user",
+        "4e91e237-0c8f-5d29-bde6-c7078dd84ff2:2:assistant"
+      ],
+      "roles": [
+        "user",
+        "assistant",
+        "user",
+        "assistant"
+      ],
+      "at_top": false,
+      "at_bottom": false,
+      "scrollable": true,
+      "marker_hits": 1,
+      "changed_vs_initial": true
+    }
+  ],
+  "virtualization_inferred": true,
+  "failed_code": "INBOUND_WINDOW_COMPLETENESS_UNPROVEN",
+  "remediation": "CDP 视口拉高静态 DOM 全量物化补采（禁重发）",
+  "captured_at": "2026-11-19T07:11:23.724Z"
+}

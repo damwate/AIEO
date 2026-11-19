@@ -1,0 +1,7 @@
+[906S1-PLAN-R3|20261119] 906⑥场景设计v0.3整改定向复审
+任务:仅复核R2三项技术REJECT整改与文档状态同步;已PASS的场景A/B/C/八判据/环境BLOCKED/五类即停/实测另批边界不重审,不开实测。
+读:damwate/AIEO@f4d0e1ed64b77334f3bb831c74cedf4f0493ded5 basic/tasks/b-20261119-p1-906-06-concurrency/{scenario-design.md,steps.md,task-brief.md};R2 reply cf078bc249319e66d79e1414756c12e8074290c001110a6e2ace137f83518ecb。
+核1时钟:一·补须定二选一时钟域(同主机同域直接比/跨主机扣ε或集中采集),公式max(A_start,B_start)<min(A_end,B_end),不满足判顺序⑥不过。
+核2字段:二·补须有12字段(event_id/task_id/request_id/instance_id/idempotency_key/trace_id/event_type/monotonic_timestamp/clock_domain/db_transaction_id/ack_id/state_version)及各event_type必填规则,不得采集时临时定。
+核3状态:六·补须有DRAFT→RECEIVED→PROCESSING→DB_COMMITTED→ACKED序列,F1无COMMIT无ACK,F3=DB_COMMITTED_UNACKED且重试复用同一ack_id,不得把ACK失败等同回滚。
+三态PASS/REJECT(列项)/BLOCKED,结论表+文件SHA256,绑定被测commit f4d0e1e;⑥仍BLOCKED/M1写路径不解除/不实测。

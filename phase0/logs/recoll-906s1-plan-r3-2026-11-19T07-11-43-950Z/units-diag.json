@@ -1,0 +1,44 @@
+[
+  {
+    "key": "208f7078-c807-5a11-8452-3766a1b3fb7b:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 620,
+    "text_head": "[906S1-PLAN-R1|20261119] 会话迁移+906⑥场景设计裁定\n接棒:旧审查会话6afe9bd3归档只读。\n授权:用户\"OK,P1开始吧\"=P1本人拍板;本任务关阻塞②(906⑥独立"
+  },
+  {
+    "key": "208f7078-c807-5a11-8452-3766a1b3fb7b:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 5440,
+    "text_head": "ChatGPT 说：\n906⑥ 独立场景设计裁定 R1\n有条件通过\nS1 登记 PASS\n⑥ 仍为 BLOCKED\n\n审查基线： damwate/AIEO@e16722f\n\n已直接读取该 commit"
+  },
+  {
+    "key": "42636ca9-148b-510e-9f52-f09e666947ba:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 592,
+    "text_head": "[906S1-PLAN-R2|20261119] 906⑥场景设计v0.2复审\n任务:906⑥独立场景设计R1 ADJUST修订后复审,只审v0.2场景设计,不重审登记/不开实测。\n读:damwate"
+  },
+  {
+    "key": "42636ca9-148b-510e-9f52-f09e666947ba:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 3424,
+    "text_head": "ChatGPT 说：\n906⑥ 场景设计 v0.2 独立复审 R2\nREJECT\n环境资格 BLOCKED\n\n审查基线： damwate/AIEO@a598dcd\n\n本轮直接读取三个文件原文，不采信 "
+  },
+  {
+    "key": "4e91e237-0c8f-5d29-bde6-c7078dd84ff2:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 830,
+    "text_head": "[906S1-PLAN-R3|20261119] 906⑥场景设计v0.3整改定向复审\n任务:仅复核R2三项技术REJECT整改与文档状态同步;已PASS的场景A/B/C/八判据/环境BLOCKED/"
+  },
+  {
+    "key": "4e91e237-0c8f-5d29-bde6-c7078dd84ff2:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 2939,
+    "text_head": "ChatGPT 说：\n906⑥ 场景设计 v0.3 — R3 定向复审\n\nREJECT 被测 commit： f4d0e1ed64b77334f3bb831c74cedf4f0493ded5\n\n本轮仅"
+  }
+]

@@ -1,0 +1,32 @@
+{
+  "recollection": true,
+  "driver": "recoll_906s1_plan_r3.mjs",
+  "conversation_url": "https://chatgpt.com/c/6afe9d76-5af0-83ec-bb84-77e7c54f409e",
+  "failed_dispatch_dir": "phase0/logs/dispatch-2026-11-19T07-07-30",
+  "failure_code": "INBOUND_WINDOW_COMPLETENESS_UNPROVEN",
+  "diagnosis": "phase0/logs/diag-906s1-plan-r3-2026-11-19T07-11-02-816Z/report.json (virtualization_inferred=true)",
+  "recovery": "视口拉高静态DOM全量物化+归属校验三件套（禁重发）",
+  "marked_user_unit_key": "4e91e237-0c8f-5d29-bde6-c7078dd84ff2:0:user",
+  "assistant_unit_key": "4e91e237-0c8f-5d29-bde6-c7078dd84ff2:2:assistant",
+  "assistant_unit_count": 1,
+  "after_units": [
+    {
+      "key": "4e91e237-0c8f-5d29-bde6-c7078dd84ff2:2:assistant",
+      "role": "assistant",
+      "text_len": 2939,
+      "text_head": "ChatGPT 说：\n906⑥ 场景设计 v0.3 — R3 定向复审\n\nREJECT 被测 commit： f4d0e"
+    }
+  ],
+  "reply_bytes": 5618,
+  "reply_sha256": "947f41ee8154e8e378661c011a6dfcfbe370241dbdda2adbf0ad887cfb88cc51",
+  "checks": {
+    "marked_user_unique": true,
+    "last_user_assertion": true,
+    "adjacent_assistant_tail": true,
+    "stable_static_dom_read": true,
+    "final_stop_button_not_visible": true,
+    "not_prev_reply_sha": true,
+    "response_length_plausible": true
+  },
+  "extracted_at": "2026-11-19T07:12:07.706Z"
+}

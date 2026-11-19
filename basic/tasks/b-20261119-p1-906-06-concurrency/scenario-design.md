@@ -1,6 +1,6 @@
-# 906⑥ M1 平台级并发独立验证场景设计 v0.3（R1 ADJUST→R2 REJECT 三项技术整改落位，待 R3 复审）
+# 906⑥ M1 平台级并发独立验证场景设计 v0.4（R1 ADJUST→R2 REJECT→R3 REJECT 两项技术整改落位，待 R4 复审）
 
-> 来源：R1 裁定 reply `2d84f6bd658acd00d3cd2ada56e29c2e3b91458983cf21d0573b4991fb90d4d0`（11158B，会话 6afe9d76，commit e16722f）→ R2 裁定 reply `cf078bc249319e66d79e1414756c12e8074290c001110a6e2ace137f83518ecb`（6358B，补采）。v0.3 针对 R2 三项技术 REJECT（跨实例单调时钟可比性/事件关联字段/DB-ACK失败判定）整改，场景 A/B/C 结构不变。**本轮只设计不实测；⑥ 仍 BLOCKED**。
+> 来源：R1 裁定 reply `2d84f6bd658acd00d3cd2ada56e29c2e3b91458983cf21d0573b4991fb90d4d0`（11158B，会话 6afe9d76，commit e16722f）→ R2 裁定 reply `cf078bc249319e66d79e1414756c12e8074290c001110a6e2ace137f83518ecb`（6358B，补采）→ R3 裁定 reply `947f41ee8154e8e378661c011a6dfcfbe370241dbdda2adbf0ad887cfb88cc51`（5618B，补采，commit f4d0e1e）。v0.4 针对 R2 三项整改后 R3 剩余两项技术 REJECT（跨主机误差公式/事件类型字段矩阵）+文档状态同步整改；R2-03 DB/ACK 判定 R3 已 PASS，不重复改写；场景 A/B/C 结构不变。**本轮只设计不实测；⑥ 仍 BLOCKED**。
 >
 > 红线：batch1 局部 PASS 不推导平台级并发 PASS；batch2 ⑥未执行不作证据；两只读任务 PASS 不替代⑥；⑥未独立 PASS 前 M1 写路径限制不解除；不以 Mock/内存DB/顺序测试替代并发证明。
 
@@ -9,7 +9,10 @@
 ### 场景 A：双任务真实并发
 - 实例 A = `task-A`/`request-A`/`idempotency-A`；实例 B = `task-B`/`request-B`/`idempotency-B`；各有独立执行上下文（禁共享可变任务上下文）。
 - 同步屏障同时释放两请求进入真实 M1 REST 处理路径；记录服务端单调时钟的接收/处理开始/处理结束时间，**证明两请求处理区间实际重叠**（否则判顺序执行，⑥不通过）。
-- **跨实例时钟域可比性（v0.3 / R2 REJECT-01 整改）：** 采用以下二选一，须在 environment/clock-domain.txt 记录选定方式：①两实例在**同一主机、同一单调时钟域**（同一 CLOCK_MONOTONIC），处理区间数值可直接比较；②若跨主机，采用有明确误差上界 ε 的统一时间基准或集中事件采集（所有事件由单一采集进程打戳），**只有扣除 ε 后仍满足重叠条件才判并发**。判定公式：`max(A_start, B_start) < min(A_end, B_end)`（跨主机时以 `max(A_start−ε, B_start−ε) < min(A_end−ε, B_end−ε)` 或集中采集校正后值判定）。不满足则判顺序执行、⑥不通过。禁止用两台机器各自 CLOCK_MONOTONIC 的原始数值直接比较。
+- **跨实例时钟域可比性（v0.4 / R2 REJECT-01 + R3 REJECT-01 整改）：** 采用以下二选一，须在 environment/clock-domain.txt 记录选定方式：①两实例在**同一主机、同一单调时钟域**（同一 CLOCK_MONOTONIC），处理区间数值可直接比较，判据 `max(A_start, B_start) < min(A_end, B_end)`；②跨主机时**禁止直接比较两机各自 CLOCK_MONOTONIC 原始数值**，须采用有明确误差上界的统一时间基准或单一采集进程集中打戳，并冻结误差定义与保守边界：
+  - 若每个端点时间戳相对统一基准的误差均不超过 ε（单端点上界），起点取最晚可能值、终点取最早可能值，保守判据为 `max(A_start+ε, B_start+ε) < min(A_end−ε, B_end−ε)`；若 ε 定义为两时钟相对误差上界，须先换算为单端点上界再套用该式。**禁止四个时间值同减 ε**（纯平移，不构成误差扣除，R3 REJECT-01 已判定该写法无效）。
+  - 集中采集方案冻结观测点：处理起点=服务端 handler 进入事件、处理终点=handler 退出事件，均由单一采集进程在观测点即时打戳；采集延迟/调度抖动上界 δ 须给出（实测或保守取值），以 `ε_eff = ε + δ` 代入上式。仅"同一采集进程"不构成测量准确性证明。
+  - 扣除误差后仍不满足严格小于关系 → 判不能证明并发、⑥不通过。
 - 真实路径：M1 REST → DB 事务 → ACK；A、B 分别完成登记/状态推进/持久化/确认，分别核对 REST 响应、DB 记录、ACK。
 - 最终 DB 状态须与各请求预期一致；重复提交 A 原始请求验幂等且不影响 B。
 
@@ -37,8 +40,8 @@
 | 故障 fail-closed | 覆盖提交前失败/响应丢失/ACK失败三类 |
 | 证据关联 | 全链路关联ID+统一时间线+原始证据+SHA256清单 |
 
-### 二·补 事件关联字段规范（v0.3 / R2 REJECT-02 整改）
-每条原始事件记录（进入 MANIFEST 的 rest/request、rest/response、db、ack、timeline 记录）至少包含下列字段；不要求每种事件填满全部字段，但**必须在 scenario-design 冻结时定义各 event_type 的必填/可选规则**，不得在采集时临时决定。字段：
+### 二·补 事件关联字段规范（v0.4 / R2 REJECT-02 + R3 REJECT-02 整改：冻结 event_type 字段矩阵）
+每条进入 MANIFEST 的原始事件（REST_REQ/REST_RESP/DB_TXN_*/ACK_*/FAULT_INJECT/RECOVER 等）**基线必填** `event_id`、`event_type`、`monotonic_timestamp`、`clock_domain`；其余字段按下列矩阵冻结为必填/条件必填/可选，条件必填在条件成立时等同必填，**禁止采集时临时决定**。12 字段词汇表：
 | 字段 | 用途 |
 |---|---|
 | event_id | 唯一事件身份 |
@@ -47,13 +50,26 @@
 | instance_id | 实例归属（A/B） |
 | idempotency_key | 幂等核验 |
 | trace_id | 全链路追踪 |
-| event_type | 事件类型（REST_REQ/REST_RESP/DB_TXN_BEGIN/DB_TXN_COMMIT/ACK_SEND/ACK_CONFIRM/FAULT_INJECT/RECOVER…） |
+| event_type | 事件类型（见矩阵） |
 | monotonic_timestamp | 单调时钟时间（带 clock_domain） |
 | clock_domain | 时钟所属域（对应一·补选定的时钟域方案） |
 | db_transaction_id | DB 事务关联 |
 | ack_id | ACK 唯一身份 |
 | state_version | 状态版本 |
-适用规则：REST_REQ/RESP 必填 event_id/task_id/request_id/instance_id/trace_id/monotonic_timestamp/clock_domain；DB_TXN_* 必填 db_transaction_id/task_id/state_version；ACK_* 必填 ack_id/task_id/state_version；FAULT_INJECT/RECOVER 必填 event_id/instance_id/monotonic_timestamp/clock_domain。每事件可关联到 task_id+request_id+实例身份。
+
+事件类型字段矩阵（冻结；"基线"=上述四字段）：
+| event_type | 必填 | 条件必填 | 可选 |
+|---|---|---|---|
+| REST_REQ | 基线 + task_id / request_id / instance_id / idempotency_key / trace_id | — | — |
+| REST_RESP | 基线 + task_id / request_id / instance_id / trace_id / http_status | idempotency_key（重试响应必填） | db_transaction_id |
+| DB_TXN_BEGIN | 基线 + task_id / request_id / instance_id / trace_id / db_transaction_id / state_version | idempotency_key（可关联时必填） | ack_id |
+| DB_TXN_COMMIT | 同 DB_TXN_BEGIN + commit_result | — | — |
+| ACK_SEND | 基线 + task_id / request_id / instance_id / trace_id / ack_id / state_version | db_transaction_id（可关联时必填） | http_status |
+| ACK_CONFIRM | 同 ACK_SEND + confirm_result | — | — |
+| FAULT_INJECT | 基线 + instance_id | task_id / request_id / trace_id（注入点可定位任务时必填）；db_transaction_id / ack_id（注入点为 DB/ACK 时必填） | — |
+| RECOVER | 基线 + instance_id + recover_result | task_id / request_id / trace_id / db_transaction_id / ack_id（按被恢复事件必填） | — |
+
+每条事件须可关联到 task_id + request_id + instance_id；条件必填的条件不成立时须在事件中显式记录不适用理由，不得留空。矩阵在场景冻结后不得变更，变更须重新复审。
 
 ## 三、八项关键判据（全部满足才允许⑥ PASS）
 1. 至少两真正独立任务实例（明确独立性证明）；2. 真实 M1 REST+DB 路径；3. 证明实际并发非顺序（时间重叠）；4. 每任务登记/状态/ACK 独立追溯（完整关联字段）；5. 故障无错误成功/串单/丢失（逐故障判定）；6. 原始证据+SHA256 完整 MANIFEST；7. 独立审查与执行者分离；8. 任一判据未过则⑥不得 PASS。
