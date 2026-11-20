@@ -1045,3 +1045,10 @@
 - **main 合并裁定：** **可提请用户拍板**——进入 DEC-010 人工审批准备阶段，非合并许可；审批前四收尾（S7 补录、材料如实列 4 PASS+1 BLOCKED、libuv 列独立遗留、最终完整 SHA 核对合并范围）已在 b-20261121-dispatch-reliability-trial S7 落实；**未获用户明确批准不执行合并（DEC-010 红线）**。
 - **依据：** dispatch-2026-11-20T17-42-01；recoll-trial-verify-r1 现场；提交链 …→a51b8fa9→76ec29d→87be63a→e8ff3d37→本提交。
 - **边界：** 生产代码零修改、零 M1 推进、零 DEC-010 执行（合并仅提请未执行）；试跑会话 6b0083e0/6b008445 留档；任务包 b-20261121-dispatch-reliability-trial 状态=完成（ST-05 终检随本提交）。
+
+### DEC-122 用户批准 main 合并（DEC-010 拍板，本提交后 FF 合入）（2026-11-21）
+
+- **拍板依据：** 用户 2026-11-21 指令"合并"（逐字），即批准 fix/dispatch-reliability 合入 main——DEC-122 前置=DEC-121 独立复核通过+审查方四收尾已落实（S7 补录/4 PASS+1 BLOCKED 如实表述/libuv 独立遗留/合并范围终核）。
+- **合并范围终核（审查方收尾④）：** main(fecdfc0)..分支 7 提交；c8b3d04 为唯一生产代码提交（审查复核过）；其后 6 提交仅任务包/现场日志/决策文档/PHASE-STATUS+4 个独立试跑工具新文件（recoll_trial_plan_r1/recoll_trial_t3/recoll_trial_verify_r1/trial_t1a_dom_audit，均为补采与审计脚本，零生产代码修改）——`git diff --name-only main..fix/dispatch-reliability` 生产文件=review_leg 等 8 个腿/测试文件（全部属 c8b3d04 被审范围），无混入。
+- **合并方式：** fast-forward（origin/main=fecdfc0 未动，分支严格领先）；合并后 main 即含本条登记；不动历史、不强推。
+- **边界：** 本次合并仅落 main 分支引用更新，无发布动作、无数据删除；M1 写路径限制/906⑥ BLOCKED/P2/P3 状态不变。
