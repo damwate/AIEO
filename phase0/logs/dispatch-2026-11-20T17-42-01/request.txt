@@ -1,0 +1,9 @@
+[TRIAL-VERIFY-R1|派单整改真实试跑独立复核（DEC-118 F06尾项）]
+仓库 damwate/AIEO 分支 fix/dispatch-reliability 完整SHA=e8ff3d37c8e197aa2fcaf4104877f5608e16b7db：请按SHA读 decision-log.md §DEC-120 与 b-20261121-dispatch-reliability-trial/{delivery.md,steps.md}。按你DEC-119冻结序T1b→T1a→T2甲→T2乙→T3已执行完：
+T1b PASS（预飞SESSION_TARGET_INVALID零导航/NOT_SENT/指针不变）
+T1a PASS四判据（发送前拦截；落点DOM零新增user单元pre/post机器对照；无副作用会话）
+T2甲 PASS五判据（SEND_CONFIRMED回执后1s kill；result.json缺失；会话仅1 user单元）
+T2乙 BLOCKED=未能构造（回复在300s窗口内完成；单次尝试；机制可控性另有代码+T0活体旁证）
+T3 PASS九查（原会话只读补采；回执键形绑定成立；reply SHA=7d2cafbe…215d；会话user1+assistant1）
+被测c8b3d04未漂移、生产代码零修改、指针SHA七验不变。异常如实登记于DEC-120。
+请逐项给终判与整链路结论；若认可请明示"独立复核通过"，并裁定main合并是否可提请用户拍板。

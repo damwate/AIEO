@@ -1,0 +1,8 @@
+[2026-11-20T17:47:55.699Z] 会话锁已获取（trial-verify-r1 试跑独立复核补采）
+[2026-11-20T17:47:55.937Z] 页面归属命中 CONV_UUID=6aff4117-76dc-83ec-b743-10b00ce73195
+[2026-11-20T17:48:19.055Z] 归属校验=标记命中1条(取最后)+最后user断言（target=27e9ef00-3d09-5d98-bffd-204df42d94c8:0:user）
+[2026-11-20T17:48:19.059Z] checks={"marked_user_unique":true,"last_user_assertion":true,"duplicate_send_confirmed":false,"adjacent_assistant_tail":true,"stable_static_dom_read":true,"final_stop_button_not_visible":true,"response_length_plausible":true,"not_prev_reply_sha":true}
+[2026-11-20T17:48:19.062Z] reply 已落盘（5548 字节，SHA=285b96bc61853333…）
+[2026-11-20T17:48:19.062Z] RECOLL COMPLETED
+[2026-11-20T17:48:19.080Z] 视口覆盖已清除
+[2026-11-20T17:48:19.202Z] 会话锁已释放（trial-verify-r1 试跑独立复核补采）

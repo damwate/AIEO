@@ -1036,3 +1036,12 @@
 - **过程异常（如实）：** ①T1a r1 代理漂移传输失败（上记另档）；②T1b/T1a 退出阶段 libuv 断言工件（Assertion failed UV_HANDLE_CLOSING，不影响 fail-closed 判定，移交后续）；③T2乙 成功路径按既有语义 killProfileChrome 整浏览器关闭致 T3 首跑 CDP 拒连——重启即恢复，非缺陷。
 - **依据：** dispatch-2026-11-20T17-25-01/17-25-49/17-28-21/17-30-24/17-32-03 五现场+trial-t1a-audit-pre/post+trial-t2a/t2b-receipt+recoll-trial-t3 现场；reply SHA 7d2cafbe…；提交链 451e561→…→85401f5→fecdfc0→c8b3d04→b193989→a51b8fa9→本提交。
 - **边界：** 生产代码零修改、零 M1 推进、零 DEC-010（无 main 合并/发布/删除）；T2甲/T2乙 一次性试跑会话（6b0083e0/6b008445）属试验构造留档；试跑结论与开发自测（DEC-118 四组数字）分开登记；下一步=交 ChatGPT 独立复核（DEC-118 F06 尾项），main 合并待复核通过后用户拍板。
+
+### DEC-121 试跑独立复核通过（DEC-118 F06 尾项关闭；main 合并提请用户拍板）（2026-11-21）
+
+- **启动依据：** DEC-118 F06 尾项（试跑后独立复核）+ DEC-119 裁定④；复核派单 dispatch-2026-11-20T17-42-01（--session-result 绑定 6aff4117，简报 1119B 指向复核基线 e8ff3d37c8e197aa2fcaf4104877f5608e16b7db）→ 采集 fail-closed（长会话虚拟化，同 T0 形态，禁重发）→ L-018 补采 recoll-trial-verify-r1-2026-11-20T17-47-55-116Z 八查全过（三参数 CONV_UUID=6aff4117/MARKER=TRIAL-VERIFY-R1/FAILED_DIR=17-42-01/前轮 SHA=555f8fe5… 排除；派生驱动 phase0/tools/recoll_trial_verify_r1.mjs grep 核对）。
+- **复核结论（reply 5548B SHA-256=285b96bc61853333dc400a2539bab51b508c29bca641ad3a9bd9e08c1c7c231a）：独立复核通过。** 五项终判 T1b/T1a/T2甲/T3 PASS + T2乙 BLOCKED，与 DEC-120 试跑判定一致；审查方自行抽查原始日志/回执/DOM 对照/补采结果/被测代码，并独立比对被测 c8b3d04 与复核基线 e8ff3d37（领先 5 提交，仅任务包/现场日志/审计/文档，无生产代码修改——"没有出现测试期间偷偷修改被测逻辑、再用修改后的逻辑证明自己的情况"）。**DEC-118 F06 真实试跑复核尾项可以关闭。**
+- **表述口径裁定（已遵守）：** 准确表述="4 项 PASS、1 项 BLOCKED（未能构造）；核心发送前拦截、发送确认留证和原会话补采链路通过；自然超时场景仍未获得真实触发证据"；禁止"五项全部通过"；T2乙 保留 BLOCKED（覆盖范围限制非缺陷，不得改写）；libuv 退出断言保留独立异常登记（不得删除/包装为已修复）。
+- **main 合并裁定：** **可提请用户拍板**——进入 DEC-010 人工审批准备阶段，非合并许可；审批前四收尾（S7 补录、材料如实列 4 PASS+1 BLOCKED、libuv 列独立遗留、最终完整 SHA 核对合并范围）已在 b-20261121-dispatch-reliability-trial S7 落实；**未获用户明确批准不执行合并（DEC-010 红线）**。
+- **依据：** dispatch-2026-11-20T17-42-01；recoll-trial-verify-r1 现场；提交链 …→a51b8fa9→76ec29d→87be63a→e8ff3d37→本提交。
+- **边界：** 生产代码零修改、零 M1 推进、零 DEC-010 执行（合并仅提请未执行）；试跑会话 6b0083e0/6b008445 留档；任务包 b-20261121-dispatch-reliability-trial 状态=完成（ST-05 终检随本提交）。
