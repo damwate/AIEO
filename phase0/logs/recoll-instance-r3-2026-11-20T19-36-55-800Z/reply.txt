@@ -1,0 +1,71 @@
+ChatGPT 说：
+
+[TAG|INSTANCE-R3|阶段1定点终验]
+
+审查基线锁定：damwate/AIEO，分支 fix/parallel-dispatch-instance，完整 SHA c8377bce3bad1a67bee1e568f3ac924f88933e7a。
+
+本轮严格限定为：P1-2 注册表映射结构及数组拒绝、recoll 三态真实运行；另确认 P1-1 未回归。不把测试汇总数字本身当作实现通过证据。
+
+已核对该 SHA 的实现源码：
+
+P1-2：代码整改成立。 validatePortRegistry 现在在遍历前拒绝 null、数组及非对象类型；并明确拒绝 default 登记，同时保留 ID 格式、端口范围、整数性、重复端口和 default 端口占用校验。readPortRegistry 外层也同步拒绝数组，再调用逐项校验。数组 [9301] 不再可能被 Object.entries 转成合法的 "0": 9301。
+
+P1-1：未见回归。 countChromeProcessesForProfile 解析失败仍返回 null；decidePortReuse 对 null、非整数和未知值停止；启动流程只有明确得到 REUSE 才复用端口。
+
+recoll：关键运行路径已补齐。 模板已导入 readFileSync；命名实例从注册表读取端口，缺失时抛出 INSTANCE_REGISTRY_MISSING；default 仍解析为 9222；锁通过 INSTANCE.lockPath 获取。新增 test_21 确实派生并启动 Node 子进程验证三态，而不再只是检查模板字符串。
+
+不过，P1-2 仍有一个未封闭的结构边界，因此不能签 PASS：
+
+validatePortRegistry 当前只判断 typeof ports === "object" 且不是数组。它仍会接受非映射对象，例如：
+
+JavaScript
+validatePortRegistry(new Map([["agent-a", 9301]]), opts); // 返回 true
+validatePortRegistry(new Date(), opts);                   // 返回 true
+
+原因是 Object.entries(new Map(...)) 和 Object.entries(new Date()) 都是空数组。虽然 JSON.parse 读文件时不会直接生成 Map 或 Date，但 validatePortRegistry 是导出的校验入口，当前实现并未兑现“非映射结构一律拒绝”的约束。建议限制为普通对象（Object.prototype 或 null 原型），并补 Map、Date 负例。
+
+还有一处交付证据问题：当前 SHA 的 steps.md 已更新为 23/23、11/11、122 项，但 delivery.md 仍保留旧版 16/16、120 项，尚未同步。
+
+验收项
+
+	
+
+裁定
+
+
+
+
+P1-2 数组拒绝、default 禁止登记
+
+	
+
+指定反例通过
+
+
+
+
+P1-2 非映射对象拒绝
+
+	
+
+FAIL
+
+
+
+
+recoll 三态真实运行与同锁路径
+
+	
+
+PASS
+
+
+
+
+P1-1 回归确认
+
+	
+
+PASS
+
+最终裁定：阶段1最终 PASS 暂不签署。 当前只需补齐 P1-2 普通对象结构约束及其负例，并同步 delivery.md。新 SHA 到位后，我只复验这两个收口点，不扩大审查范围；阶段2仍未获授权。

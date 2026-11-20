@@ -1,0 +1,5 @@
+[INSTANCE-R3|阶段1定点终验（仅P1-2数组拒绝+recoll真跑两项；P1-1回归确认）]
+分支 fix/parallel-dispatch-instance 新完整SHA=c8377bce3bad1a67bee1e568f3ac924f88933e7a。你R2两项FAIL已整改：
+①P1-2=validatePortRegistry 入口拒绝数组/非映射/null（数组反例[9301]封死）；另自抓同族缺口同批封死=default实例名可登记（现禁）。readPortRegistry 外层校验同步加 Array.isArray。负例补齐（test_instance_config 现23项）。
+②recoll=补 readFileSync 导入；实例域日志行改打印实际解析端口（cdp=URL）；新增 test_21 真跑三态：注册表存在(agent-a:9301)→真跑解析出9301+同锁路径行；注册表缺失→INSTANCE_REGISTRY_MISSING fail-closed；default→运行时9222（C7）；注册表备份/恢复防污染；subprocess 显式 encoding=utf-8（手册§8.1）。P1-1 未动（请顺手确认无回归）。
+回归终态：instance-config 23/23+phase0 11/11+四腿 36+30+25+31=122 全 OK；steps/delivery 证据数字已同步（你R2要求）。请只验这两项给 PASS/FAIL；PASS 即阶段1最终 PASS。

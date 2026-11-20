@@ -1,6 +1,6 @@
 {
   "worker": "w4",
-  "pid": 18132,
+  "pid": 28784,
   "result": "SUCCESS",
   "registration": {
     "status": "DUPLICATE",
@@ -12,7 +12,7 @@
     "record_count": 1,
     "record": {
       "artifact_id": "ART-M1-000001",
-      "registered_at": "2026-11-20T19:25:33.363Z",
+      "registered_at": "2026-11-20T19:39:18.557Z",
       "task_id": "T-P1-940",
       "execution_id": "EXEC-940",
       "correlation_id": "CORR-940",
@@ -25,7 +25,7 @@
       "schema_validation": "NOT_REQUESTED",
       "content": "四个进程共享同一原始字节\n",
       "unit_metadata": {
-        "worker": "w2",
+        "worker": "w1",
         "source": "REAL_MULTIPROCESS_TEST"
       }
     },

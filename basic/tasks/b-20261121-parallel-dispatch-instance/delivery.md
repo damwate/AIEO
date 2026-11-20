@@ -25,7 +25,7 @@
 
 ## 4. 测试结果
 
-- **test_instance_config 16/16 PASS**；**phase0 统一回归 11/11 PASS**（含 m1-registry+m1-concurrency 多进程）；**四腿 34+30+25+31=120 项全 OK**（canonical：python -I -m unittest discover 逐模块）。
+- **test_instance_config 终态 24/24 PASS**（初版 16→验收 R1 整改 22→R2 整改 23→R3 整改 24）；**phase0 统一回归 11/11 PASS**（含 m1-registry+m1-concurrency 多进程）；**四腿 36+30+25+31=122 项全 OK**（canonical：python -I -m unittest discover 逐模块；test_20 模板文本断言+test_21 派生驱动真跑三态验证为整改新增）。
 - **组合跑环境伪影如实登记：** shell 含 PYTHONUTF8=1 时非隔离跑按 UTF-8 解码 tasklist 的 GBK 输出→UnicodeDecodeError→test_19 TypeError（1F+7E 波动）；`-I` 忽略环境变量→cp936→全过（实测对照两模式 utf8_mode/preferred）。属手册 §8.1 Windows 编码坑家族，非代码回归（Python 零改动）；canonical 跑法以 -I 为准，测试卫生备忘移交。
 
 ## 5. Git commit

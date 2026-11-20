@@ -1,0 +1,13 @@
+[2026-11-20T19:39:06.725Z] 第三轮统一回归开始 node=v24.14.0
+[2026-11-20T19:39:07.205Z] PASS schemas exit=0 signal=null timed_out=false log=D:\AIEO\phase0\logs\third-round-regression-2026-11-20T19-39-06\schemas.log
+[2026-11-20T19:39:07.516Z] PASS inbound-reply exit=0 signal=null timed_out=false log=D:\AIEO\phase0\logs\third-round-regression-2026-11-20T19-39-06\inbound-reply.log
+[2026-11-20T19:39:08.054Z] PASS dispatch-binding exit=0 signal=null timed_out=false log=D:\AIEO\phase0\logs\third-round-regression-2026-11-20T19-39-06\dispatch-binding.log
+[2026-11-20T19:39:09.892Z] PASS instance-config exit=0 signal=null timed_out=false log=D:\AIEO\phase0\logs\third-round-regression-2026-11-20T19-39-06\instance-config.log
+[2026-11-20T19:39:15.307Z] PASS m1-registry exit=0 signal=null timed_out=false log=D:\AIEO\phase0\logs\third-round-regression-2026-11-20T19-39-06\m1-registry.log
+[2026-11-20T19:39:22.767Z] PASS m1-concurrency exit=0 signal=null timed_out=false log=D:\AIEO\phase0\logs\third-round-regression-2026-11-20T19-39-06\m1-concurrency.log
+[2026-11-20T19:39:27.648Z] PASS browser-virtual-list-simulation exit=0 signal=null timed_out=false log=D:\AIEO\phase0\logs\third-round-regression-2026-11-20T19-39-06\browser-virtual-list-simulation.log
+[2026-11-20T19:39:29.011Z] PASS git-pointer-local exit=0 signal=null timed_out=false log=D:\AIEO\phase0\logs\third-round-regression-2026-11-20T19-39-06\git-pointer-local.log
+[2026-11-20T19:39:29.085Z] PASS baseline-completion-judge exit=0 signal=null timed_out=false log=D:\AIEO\phase0\logs\third-round-regression-2026-11-20T19-39-06\baseline-completion-judge.log
+[2026-11-20T19:39:29.151Z] PASS baseline-greet exit=0 signal=null timed_out=false log=D:\AIEO\phase0\logs\third-round-regression-2026-11-20T19-39-06\baseline-greet.log
+[2026-11-20T19:39:39.167Z] PASS baseline-current-os-session-lock exit=0 signal=null timed_out=false log=D:\AIEO\phase0\logs\third-round-regression-2026-11-20T19-39-06\baseline-current-os-session-lock.log
+[2026-11-20T19:39:39.168Z] SUMMARY total=11 passed=11 failed=0

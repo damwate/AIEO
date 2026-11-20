@@ -1,0 +1,14 @@
+[2026-11-20T19:33:39.115Z] 证据目录: D:\AIEO\phase0\logs\dispatch-2026-11-20T19-33-39
+[2026-11-20T19:33:39.479Z] 会话锁已获取 pid=16712 instance=default lock=gpt-session.lockfile
+[2026-11-20T19:33:39.480Z] === GPT 派单（已有会话，消息 1115 字节）===
+[2026-11-20T19:33:39.481Z] [instance] 实例域就绪: instance=default port=9222 profile=gpt-poc lock=gpt-session.lockfile
+[2026-11-20T19:33:39.989Z] 复用本实例调试端口 9222（归属核验 own=10）
+[2026-11-20T19:33:40.033Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 1 个
+[2026-11-20T19:33:40.034Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-20T19:33:45.490Z] 会话就绪: https://chatgpt.com/c/6b009b70-1458-83ec-adf8-d4d5e52f0fca
+[2026-11-20T19:33:50.503Z] [dispatch] 基线尾部: {"role":"assistant","key":"cb6f85fc-f0e5-5d35-a8e7-a747b1375b7f:2:assistant","assistantUuid":"c0bedcdb-c2b1-417f-8afd-530a9b9b1125"}
+[2026-11-20T19:33:51.742Z] [dispatch] 发送双验通过（polls=1，user_unit_key=fallback-turn-0:0:user，tail 后观察）
+[2026-11-20T19:33:52.199Z] 截图: sent-dispatch.png
+[2026-11-20T19:36:29.470Z] 会话锁已释放
+[2026-11-20T19:36:29.471Z] 致命错误: INBOUND_START_UNIT_MISSING: 连续向上搜索到顶部仍未找到可分段读取的 fallback-turn-0:0:user (marker=[INSTANCE-R3|阶段1定点终验（仅P1-2数组拒绝+recoll真跑两项；P1-1回归确认）])
+[2026-11-20T19:36:29.473Z] [tab-hygiene] 发送已发生：保留现场不关页（禁重发语义依赖现场）；退出后由人工/补采链按 L-018 处置

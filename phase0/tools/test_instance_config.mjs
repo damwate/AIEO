@@ -164,6 +164,14 @@ const tests = [
     assert.throws(() => validatePortRegistry(null, opts), (e) => e.code === "INSTANCE_REGISTRY_INVALID");
     assert.throws(() => validatePortRegistry("x", opts), (e) => e.code === "INSTANCE_REGISTRY_INVALID");
   }],
+  ["P1-2 R3整改：非普通对象（Map/Date/类实例）一律拒绝——Object.entries 空转不得通过", () => {
+    const opts = { candidates: { min: 9300, max: 9399 }, defaultPort: 9222 };
+    assert.throws(() => validatePortRegistry(new Map([["agent-a", 9301]]), opts), (e) => e.code === "INSTANCE_REGISTRY_INVALID");
+    assert.throws(() => validatePortRegistry(new Date(), opts), (e) => e.code === "INSTANCE_REGISTRY_INVALID");
+    class FakeRegistry { }
+    assert.throws(() => validatePortRegistry(new FakeRegistry(), opts), (e) => e.code === "INSTANCE_REGISTRY_INVALID");
+    assert.equal(validatePortRegistry(Object.create(null, { "agent-a": { value: 9301, enumerable: true } }), opts), true); // null 原型合法
+  }],
   ["P1-2 注册表逐项校验：占用 default 固定端口/default 实例登记/非法 ID 拒绝", () => {
     const opts = { candidates: { min: 9300, max: 9399 }, defaultPort: 9222 };
     assert.throws(() => validatePortRegistry({ a: 9222 }, opts), (e) => e.code === "INSTANCE_REGISTRY_INVALID");

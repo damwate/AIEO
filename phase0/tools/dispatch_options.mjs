@@ -232,10 +232,15 @@ export function decidePortReuse({ ownProcs }) {
  * 候选域内、跨实例唯一、不得占用 default 固定端口。任一违反→INSTANCE_REGISTRY_INVALID。
  */
 export function validatePortRegistry(ports, { candidates, defaultPort }) {
+  // R3 复验整改：仅接受普通对象（原型=Object.prototype 或 null）——Map/Date 等异型
+  // 对象经 Object.entries 得空数组会"空转通过"，必须显式拒绝（R2 的数组拒绝在此加严）。
+  // 注意顺序：Object.getPrototypeOf(null/undefined) 本身抛 TypeError，须先判空再取原型。
   if (ports === null || ports === undefined || typeof ports !== "object" || Array.isArray(ports)) {
-    // R2 复验整改：数组形 ports（Object.entries([9301])→["0",9301]，"0" 恰好溜过 ID 正则）
-    // 与一切非映射结构一律拒绝——注册表损坏必须 fail-closed。
-    throw optionError("INSTANCE_REGISTRY_INVALID", `注册表 ports 必须是实例→端口的映射对象（禁数组/标量/null）: ${Array.isArray(ports) ? "array" : typeof ports}`);
+    throw optionError("INSTANCE_REGISTRY_INVALID", `注册表 ports 必须是普通对象映射（禁数组/标量/null）: ${Array.isArray(ports) ? "array" : typeof ports}`);
+  }
+  const proto = Object.getPrototypeOf(ports);
+  if (proto !== Object.prototype && proto !== null) {
+    throw optionError("INSTANCE_REGISTRY_INVALID", `注册表 ports 必须是普通对象映射（禁 Map/Date/类实例等异型对象）: ${proto?.constructor?.name ?? "unknown"}`);
   }
   const seen = new Map();
   for (const [id, port] of Object.entries(ports)) {
