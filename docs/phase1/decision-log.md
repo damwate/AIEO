@@ -1087,3 +1087,10 @@
 - **审查方明示边界（照登）：** 本轮文档定点复核未重跑代码/四腿/真实并发；阶段2（N=2 真实并发）未获授权不得因阶段1 PASS 自动启动；main 合并仍按 DEC-010 留待用户拍板；"阶段1到此收口"。
 - **采集纪律注记：** R2/R3/R4/R5 采集 fail-closed 均按 L-018 禁重发→补采闭环（标记唯一+最后 user 断言+前轮 SHA 排除，八查全过）；R3 暴露新教训=简报首行标记超 80 字符致 extractBriefMarker 返 null 回退固定键（INBOUND_START_UNIT_MISSING）——简报标记须短，已入实践；recoll 派生三参数 grep 核对两次当场抓出手写 SHA 笔误（L-018 第 3 条再证）。
 - **边界：** 阶段1 收口=实现+本地回归+独立验收闭环；阶段2 授权申请另行提交；main 合并攒单待用户 11 点统一拍板（DEC-010）；906⑥ 仍 BLOCKED。
+
+### DEC-127 用户批准并行阶段1分支合并 main（DEC-010 拍板）（2026-11-21）
+
+- **拍板依据：** 用户 2026-11-21 指令"合并到main，然后继续开发吧"——批准 fix/parallel-dispatch-instance 合入 main。
+- **前置条件核验：** DEC-126 R7 阶段1终签 PASS（被测 ed2be7e…）；合并范围终核=git diff main..分支 生产文件仅 dispatch_options.mjs/gpt_dispatch.mjs/run_phase0_regression.mjs/review_leg.py/review_leg_recoll_template.mjs/test_review_leg.py/test_instance_config.mjs（全部属 R7 终签范围）；如实登记=分支含早期会话遗留惰性工作脚本（s1-s11 探针/rank_schemes/brief_* 等，不入生产派单路径）随 add -A 入库，审查方 R7 已在该分支整体内容上终签。
+- **合并方式：** fast-forward（main 与分支无分叉）；合并后阶段1 代码进入 main；阶段2（N=2 真实并发）未获授权不随合并启动。
+- **边界：** 无发布动作、无数据删除；906⑥ 仍 BLOCKED；下一步=C9 账号级风控协调实现方案+阶段2 授权申请交 ChatGPT 评审。
