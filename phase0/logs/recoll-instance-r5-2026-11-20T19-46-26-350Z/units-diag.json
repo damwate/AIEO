@@ -1,0 +1,72 @@
+[
+  {
+    "key": "cb6f85fc-f0e5-5d35-a8e7-a747b1375b7f:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 679,
+    "text_head": "[REVIEWER-MIGRATE-R1|审查会话接棒（L-018§6）]\n你是 damwate/AIEO 项目新审查会话，接棒旧会话 6aff4117（转只读归档）。仓库 github damwat"
+  },
+  {
+    "key": "cb6f85fc-f0e5-5d35-a8e7-a747b1375b7f:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 1213,
+    "text_head": "ChatGPT 说：\n\n[TAG|REVIEWER-MIGRATE-R1|接棒确认]\n\n接棒完成 等待整改 SHA\n\n已开始接棒旧审查会话 6aff4117。已按 GitHub 完整 SHA 定位并读"
+  },
+  {
+    "key": "4f12854f-e697-5702-8130-0685cf8d6c18:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 763,
+    "text_head": "[INSTANCE-R2|阶段1整改定点复验（仅P1-1/P1-2/recoll三项）]\n分支 fix/parallel-dispatch-instance 新完整SHA=b14e713ed42046"
+  },
+  {
+    "key": "4f12854f-e697-5702-8130-0685cf8d6c18:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 2192,
+    "text_head": "ChatGPT 说：\n\n[TAG|INSTANCE-R2|阶段1整改定点复验]\n\n审查对象已锁定：fix/parallel-dispatch-instance@b14e713ed4204691467e"
+  },
+  {
+    "key": "6750114b-23d5-5081-9e18-4f705d1e45c5:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 672,
+    "text_head": "[INSTANCE-R3|阶段1定点终验（仅P1-2数组拒绝+recoll真跑两项；P1-1回归确认）]\n分支 fix/parallel-dispatch-instance 新完整SHA=c8377b"
+  },
+  {
+    "key": "6750114b-23d5-5081-9e18-4f705d1e45c5:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 1514,
+    "text_head": "ChatGPT 说：\n\n[TAG|INSTANCE-R3|阶段1定点终验]\n\n审查基线锁定：damwate/AIEO，分支 fix/parallel-dispatch-instance，完整 SHA "
+  },
+  {
+    "key": "ebfb7eb9-9571-5d0a-8def-20fef892070d:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 548,
+    "text_head": "[INSTANCE-R4|阶段1定点终验]\n分支 fix/parallel-dispatch-instance 新完整SHA=7d058915f77430db338fe4135b22a461bbdbe"
+  },
+  {
+    "key": "ebfb7eb9-9571-5d0a-8def-20fef892070d:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 840,
+    "text_head": "ChatGPT 说：\n\n[TAG|INSTANCE-R4|阶段1定点终验]\n\n审查基线锁定：damwate/AIEO，分支 fix/parallel-dispatch-instance，完整 SHA "
+  },
+  {
+    "key": "ebed3abb-7061-519c-977b-6e917c072106:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 265,
+    "text_head": "[INSTANCE-R5|阶段1终签确认]\n分支 fix/parallel-dispatch-instance 新完整SHA=b4b0c1ecb28a669cbf65512dbe04129b4d382"
+  },
+  {
+    "key": "ebed3abb-7061-519c-977b-6e917c072106:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 781,
+    "text_head": "ChatGPT 说：\n\n[TAG|INSTANCE-R5|阶段1终签复核]\n\nFAIL｜暂不终签\n\n已按完整 SHA b4b0c1ecb28a669cbf65512dbe04129b4d382909 "
+  }
+]

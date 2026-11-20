@@ -9,7 +9,7 @@
 - **S2 纯函数层（dispatch_options.mjs）：** `--instance` 解析+`normalizeInstanceId`（[a-z0-9][a-z0-9-]{0,31}+小写规范化，防路径穿越/特殊字符/大小写歧义——DEC-123①边界1）；`deriveInstancePaths`（default=既有常量逐字节 C7：锁 gpt-session.lockfile/profile gpt-poc/端口 9222；命名实例锁 gpt-session-<ID>.lockfile/profile gpt-poc-<ID>/端口走注册表）；`allocateInstancePort`（候选 9300-9399+真实探测碰撞检查+已登记稳定返回+耗尽 fail-closed——DEC-123③"哈希仅候选非唯一性证明"）；`assertPointerWriterAllowed`（非 default 实例写共享 reviewer 指针→POINTER_SINGLE_WRITER_VIOLATION fail-closed——单写者不变量）；`matchesProfileOwnership`+`buildKillProfileScript`（进程归属按 --user-data-dir 完整启动参数精确 token 匹配、大小写不敏感、禁子串通配、归属不明不杀只计数、清理后 remaining 核对——DEC-123③加严）。
 - **S3 gpt_dispatch.mjs 接线：** 锁路径实例化（acquireSessionLock 传 lockPath——session_lock.mjs 零改动，复用既有 opts.lockPath 能力）；命名实例端口在 mainLocked 内注册表锁临界区分配（读→并发探测→分配→原子写；注册表损坏 fail-closed INSTANCE_REGISTRY_INVALID）；复用调试端口前归属核验（CDP 活但无本实例 profile 进程→INSTANCE_PORT_FOREIGN fail-closed）；killProfileChrome 换精确归属脚本（own/foreign/remaining 留证）；result.json/run.log 实例域四件套留证（instance_id/lock/port/profile=可核验映射）。
 - **S4 M1 并发核查（硬门槛）：** 五查全过（见 steps.md §S4 行号证据）；结论=登记簿共享路径+按登记簿路径 OS 锁串行+幂等键精确匹配+原子写双回读+故障注入重试零重发——跨实例并发登记安全，未知状态消除，N=2 前硬门槛满足。
-- **测试：** test_instance_config.mjs 新建 16 项（含实例锁域隔离与同锁互斥两条 OS 级负例）16/16 PASS；phase0 统一回归 11/11 PASS（新增 instance-config 挂入跑器）；四腿 120 项 canonical 跑法（-I 逐模块）全 OK。
+- **测试：** test_instance_config.mjs 终态 24 项（含实例锁域隔离/同锁互斥两条 OS 级负例+R1/R2/R3 整改负例）24/24 PASS；phase0 统一回归 11/11 PASS（新增 instance-config 挂入跑器）；四腿 122 项 canonical 跑法（-I 逐模块）全 OK（详见 §4 验收整改轨迹）。
 
 ## 3. 修改文件
 

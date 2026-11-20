@@ -1,0 +1,2 @@
+[INSTANCE-R5|阶段1终签确认]
+分支 fix/parallel-dispatch-instance 新完整SHA=b4b0c1ecb28a669cbf65512dbe04129b4d382909。你R4唯一遗留已订正：steps.md §S2/§S7 的 23/23 旧数字改为 24/24（含 R3 整改溯源），新增 §S8 验收轨迹节（R3/R4 裁定与 reply SHA 登记）。代码零改动（你R4确认不要求重跑四腿）。请核 steps.md 文档一致性并给阶段1最终 PASS 终签；阶段2授权申请随后另提。
