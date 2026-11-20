@@ -49,31 +49,32 @@
 - ⑤测试结果：canonical 跑法（-I 逐模块）120/120；组合跑伪影如实登记不隐瞒；本任务 JS 改动与 Python 零交集，回归与改动无因果。
 - ⑥验收证据引用：phase0/logs/leg-rerun-instance/{test_review_leg,test_arch_review_leg,test_engineering_audit_leg,test_test_acceptance_leg,combined}.log（S5 时点记录=120 项，终态 122 项见 §S7⑤/§S8——历史阶段含义保留）；本步无独立派单（本地回归步），任务关联派单现场 dispatch-2026-11-20T18-19-39（S1 方案评审，reply SHA-256=`513e4d68746be70e167486f004d1988268d96082ee014c474a890cf6ff09ad11`）；**验收结论：PASS（120/120；组合跑伪影=环境编码，移交测试卫生备忘）**。
 
-## S6 交付登记与独立验收（进行中）
+## S6 交付登记与独立验收（完成）
 
 - ①本步骤目标：delivery 成文、DEC-124 登记、ST-05 终检、推送、交 ChatGPT 独立验收（阶段1 完成判定）。
 - ②修改文件：delivery.md、docs/phase1/decision-log.md、docs/PHASE-STATUS.md、本 steps.md。
 - ③修改内容：阶段1 完成判定表+遗留移交（阶段2 授权/N=3/测试卫生备忘）。
 - ④执行结果：delivery.md 成文；DEC-124 登记；ST-05 终检 6/6 PASS；分支 fix/parallel-dispatch-instance 推送；独立验收派单至审查会话（--session-result 绑定，采集 fail-closed 即 L-018 补采）。用户补充授权（2026-11-21）："做完整个DEC-123之前都给chatgpt拍板，要我拍板的留到11点一起处理"——main 合并属 DEC-010 已入攒单队列。
 - ⑤测试结果：汇总=16/16 新负例+11/11 phase0 统一回归+120/120 四腿（canonical -I 逐模块）；组合跑编码伪影如实登记（PYTHONUTF8=1 机制，非代码回归）。
-- ⑥验收证据引用：独立验收派单现场+reply SHA（验收后回填至 DEC-124）；**验收结论：PASS（阶段1 实现+本地回归完成，独立验收见 DEC-124）**。
+- ⑥验收证据引用：独立验收派单现场 dispatch-2026-11-20T18-53-31（reply SHA-256=`9ef11dfa9c69c65f0012ef0d45fe84684b43353a625582716edbcc9f241a1849`）；**验收结论：PASS（交付动作完成；R1 判 FAIL 已如转入 S7 整改闭环，历史 FAIL 不改写，终态见 S8）**。
 
 ## S7 验收整改轮（R1 FAIL→R2 复验→R3 复验→R4 终验轨迹；终签见 S8）
 
 - ①本步骤目标：消化验收 R1 三项（P1-1/P1-2/recoll 同锁）与 R2 复验两项遗留（P1-2 数组绕过/recoll readFileSync 缺失），达成阶段1 最终 PASS。
 - ②修改文件：dispatch_options.mjs（decidePortReuse/validatePortRegistry+数组拒绝）、gpt_dispatch.mjs（决策函数接线+注册表外层校验加严）、review_leg_recoll_template.mjs（INSTANCE_ID 派生+注册表端口解析+lockPath+readFileSync 补导）、review_leg.py（--dispatch-instance 贯通 ctor/derive/头断言）、test_instance_config.mjs（终态 24 项）、test_review_leg.py（test_20 文本断言+test_21 真跑验证）。
-- ③验收 R1（dispatch-2026-11-20T18-53-31→recoll-instance-r1-…，reply SHA-256=9ef11dfa9c69c65f0012ef0d45fe84684b43353a625582716edbcc9f241a1849）：FAIL——P1-1 归属查询 null 放行（fail-open）、P1-2 注册表未逐项校验、recoll 同锁未闭合；审查方认可其余 8 项 PASS（ID 校验/C7 兼容/端口哈希仅候选/进程精确归属/映射留证/M1 五查/C8 本地/绑定）。R2（dispatch-2026-11-20T19-17-44→recoll-instance-r2-…，reply SHA-256=1db00a651569fe1c…全值见 result.json）：P1-1 PASS；P1-2 FAIL（数组形 ports 绕过——Object.entries([9301])→["0",9301] 溜过正则）；recoll FAIL（readFileSync 缺失=真跑必 ReferenceError，test_20 仅文本断言的盲区）；另要求交付证据数字同步（本节即同步）。
-- ④R2 整改执行：P1-2=validatePortRegistry 入口拒绝数组/非映射+default 实例禁登记（我方测试还抓出 R2 建议外的同族缺口——default 实例名匹配正则漏过，已同批修复）；recoll=补 readFileSync 导入+日志行打印实际解析端口（cdp=URL）供真跑断言；test_21=命名实例真跑三态（注册表存在→解析 9301+同锁路径行；缺失→INSTANCE_REGISTRY_MISSING；default→9222），注册表备份/恢复防污染。
+- ③修改内容：R1 整改三件+R2 整改两件（见④）；验收轨迹：R1（dispatch-2026-11-20T18-53-31→recoll-instance-r1-…，reply SHA-256=9ef11dfa9c69c65f0012ef0d45fe84684b43353a625582716edbcc9f241a1849）：FAIL——P1-1 归属查询 null 放行（fail-open）、P1-2 注册表未逐项校验、recoll 同锁未闭合；审查方认可其余 8 项 PASS（ID 校验/C7 兼容/端口哈希仅候选/进程精确归属/映射留证/M1 五查/C8 本地/绑定）。R2（dispatch-2026-11-20T19-17-44→recoll-instance-r2-…，reply SHA-256=`1db00a651569fe1c36b4ad9b6406c4e1ddd4683a2fe0ac58559ccbeb88dac651`）：P1-1 PASS；P1-2 FAIL（数组形 ports 绕过——Object.entries([9301])→["0",9301] 溜过正则）；recoll FAIL（readFileSync 缺失=真跑必 ReferenceError，test_20 仅文本断言的盲区）；另要求交付证据数字同步（终态 24/24+122 项见 S8）。
+- ④执行结果：R2 整改执行：P1-2=validatePortRegistry 入口拒绝数组/非映射+default 实例禁登记（我方测试还抓出 R2 建议外的同族缺口——default 实例名匹配正则漏过，已同批修复）；recoll=补 readFileSync 导入+日志行打印实际解析端口（cdp=URL）供真跑断言；test_21=命名实例真跑三态（注册表存在→解析 9301+同锁路径行；缺失→INSTANCE_REGISTRY_MISSING；default→9222），注册表备份/恢复防污染。
 - ⑤测试结果：instance-config **24/24**（R3 整改后 19-38-48）；phase0 统一回归 **11/11**（19-39-06）；四腿 **36+30+25+31=122 项全 OK**（canonical -I 逐模块；test_21 的 subprocess 显式 encoding=utf-8+errors=replace——手册 §8.1 纪律，环境无关）。
-- ⑥验收证据引用：本步无独立派单（整改步），任务关联派单现场 dispatch-2026-11-20T18-53-31（R1）/19-17-44（R2），reply SHA 见③；**验收结论：R3 已完成（数组拒绝 PASS/recoll 真跑 PASS，余非普通对象边界移交 S8）**。
+- ⑥验收证据引用：本步无独立派单（整改步），任务关联派单现场 dispatch-2026-11-20T18-53-31（R1）/19-17-44（R2），reply SHA 见③（R2 全值=`1db00a651569fe1c36b4ad9b6406c4e1ddd4683a2fe0ac58559ccbeb88dac651`，R3 全值=`1b068a621caf79865ed2e3eaedd4b206742c42defd793bbec545b7b8eaf7861e`）；**验收结论：PASS（整改执行完成：R2 指出两项已修，R3 起逐轮收敛，终签见 S8）**。
 
-## S8 验收 R3~R6 定点终验轮（R6 完成，终签待 R7 确认）
+## S8 验收 R3~R7 定点终验轮（R7 终签 PASS，阶段1 收口）
 
 - ①本步骤目标：消化 R3 唯一遗留（非普通对象边界）与 R4/R5 唯一遗留（文档一致性），达成阶段1 最终 PASS。
 - ②修改文件：dispatch_options.mjs（validatePortRegistry 普通对象原型约束+getPrototypeOf null 顺序守卫）、test_instance_config.mjs（+4 负例）、delivery.md（证据同步 assert 化）、本文件（数字订正即本条）。
-- ③验收轨迹（如实）：R3（dispatch-2026-11-20T19-33-39→recoll-instance-r3-…，reply SHA-256=1b068a621caf79865ed2e3eaedd4b206742c42defd793bbec545b7b8eaf7861e）=P1-2 数组拒绝 PASS/P1-1 无回归 PASS/recoll 真跑 PASS，仅余 Map/Date 边界；R4（dispatch-2026-11-20T19-40-00→recoll-instance-r4-…，reply SHA-256=8b9f6922623d5a978634b755e04eb8a49f0a3a97d486db33568117dcab67b996）=原型约束 PASS/负例 PASS/delivery 同步 PASS，仅余本文件旧数字（本条订正）。
+- ③修改内容：R3 后两轮定点整改（validatePortRegistry 普通对象原型约束+getPrototypeOf null 顺序守卫+4 负例；文档一致性订正），代码主路径未动。验收轨迹（如实）：R3（dispatch-2026-11-20T19-33-39→recoll-instance-r3-…，reply SHA-256=1b068a621caf79865ed2e3eaedd4b206742c42defd793bbec545b7b8eaf7861e）=P1-2 数组拒绝 PASS/P1-1 无回归 PASS/recoll 真跑 PASS，仅余 Map/Date 边界；R4（dispatch-2026-11-20T19-40-00→recoll-instance-r4-…，reply SHA-256=8b9f6922623d5a978634b755e04eb8a49f0a3a97d486db33568117dcab67b996）=原型约束 PASS/负例 PASS/delivery 同步 PASS，仅余本文件旧数字（本条订正）。
 - ④执行结果：24/24+11/11+122 项维持；代码仅校验函数与测试改动，四腿路径未动（R4 审查方确认不要求重跑）。
 - ⑤测试结果：instance-config 24/24；phase0 11/11（19-39-06）。
-- ⑥验收证据引用：R4 现场 dispatch-2026-11-20T19-40-00、recoll-instance-r4-2026-11-20T19-42-23-594Z；本步无独立派单；**验收结论：R6 定点复核已完成——§S2/§S7/§S8/delivery 四点全 PASS（R6 现场 dispatch-2026-11-20T19-47-59，reply SHA-256=8e1678792634a0d2e59984b7dab227593797060612f88c6deb49429116821e2d），终签待 R7 确认（审查方明示"修正这一个状态点后，我只复核该处即可"）**。
+- ⑥验收证据引用：R4 现场 dispatch-2026-11-20T19-40-00、recoll-instance-r4-2026-11-20T19-42-23-594Z；本步无独立派单；**验收结论：PASS——R7 终签阶段1最终验收通过（R7 现场 dispatch-2026-11-20T19-51-51，reply SHA-256=`de0a355df02987f9f33af4df4d40ad24cb38595e78b63416ac48209a477f72c5`；R6 现场 dispatch-2026-11-20T19-47-59，reply SHA-256=`8e1678792634a0d2e59984b7dab227593797060612f88c6deb49429116821e2d`）；历史 FAIL 均不改写**。R6 定点复核记录保留如上。
 - ⑥R6 补记：R6（dispatch-2026-11-20T19-47-59，reply SHA-256=8e167879…21e2d）=§S2"现24项"PASS/§S7 标题与⑥状态 PASS/§S8 R4 全 SHA PASS/delivery §2 终态数字 PASS，唯一遗留=本节标题/⑥状态自洽（本条已订正）。
+- ⑦R7 终签：R7（dispatch-2026-11-20T19-51-51，reply SHA-256=de0a355df02987f9f33af4df4d40ad24cb38595e78b63416ac48209a477f72c5）=**PASS 阶段1最终验收通过**（被测 SHA=ed2be7e1461c98a75610bf28ad708fd889e08679；六核验项全 PASS；审查方明示边界：本轮文档定点复核未重跑代码/四腿/真实并发；阶段2未获授权不得自动启动；main 合并仍按 DEC-010 留待用户拍板；"阶段1到此收口"）。
 - ⑤R5 补记：R5（dispatch-2026-11-20T19-43-30→recoll-instance-r5-…，reply SHA-256 全值见 result.json）指出本文档残留旧口径（本条所在轮次已逐项订正：§S2 现 24 项/§S7 标题与⑥状态/§S8 R4 全 SHA）与 delivery §2 旧数字（已同步）；R5 后仅余本文档一致性，R6 定点复核。
