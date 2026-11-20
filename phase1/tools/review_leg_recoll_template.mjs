@@ -121,7 +121,15 @@ mkdirSync(OUT_DIR, { recursive: true });
 // C9 账号级风控启动门（DEC-128）：只读判定——缺失=NORMAL 初始化；损坏=fail-closed；
 // 活动 BACKOFF=补采同样暂停（退避期不密集刷页，账号级不分实例）。
 const ACCOUNT_STATE_PATH = join(__dirname, "..", "..", "runtime", "locks", "account-risk-state.json");
-const acctRaw = existsSync(ACCOUNT_STATE_PATH) ? JSON.parse(readFileSync(ACCOUNT_STATE_PATH, "utf8")) : null;
+// C9 验收 R1 B项整改：损坏 JSON 统一为 ACCOUNT_STATE_INVALID（原生 SyntaxError 不放行）
+let acctRaw = null;
+if (existsSync(ACCOUNT_STATE_PATH)) {
+  try {
+    acctRaw = JSON.parse(readFileSync(ACCOUNT_STATE_PATH, "utf8"));
+  } catch (e) {
+    throw new Error(`ACCOUNT_STATE_INVALID: 账号风控状态读取/解析失败，禁静默当作 NORMAL: ${e.message}`);
+  }
+}
 const acctState = normalizeAccountState(acctRaw, Date.now());
 const acctGate = evaluateAccountGate(acctState);
 if (!acctGate.allowed) {

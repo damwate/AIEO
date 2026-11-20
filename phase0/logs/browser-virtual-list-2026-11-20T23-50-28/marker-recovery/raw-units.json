@@ -1,0 +1,66 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-20T23:50:32.518Z",
+  "user_unit_key": "drifted:0:user",
+  "start_key_resolved": "drifted:0:user",
+  "start_resolved_by_marker": true,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "reply:0:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "assistant-fixture",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "drifted:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "drifted:0:user",
+          "reply:0:assistant"
+        ],
+        "unit_text_sha256": [
+          "5539568f131b64ebbc70c0deed6e9099f96f4084c92a0fe46bc442804f9fa8f7",
+          "5782b18687e6cf8a482fc32d2db5b196d8821c458a0c069c6acf3953446e7bb5"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": []
+      }
+    ],
+    "materialized_unit_keys": [
+      "drifted:0:user",
+      "reply:0:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STATIC_NON_SCROLLABLE_DOM",
+      "scrollable_window_observed": false,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "drifted:0:user",
+          "reply:0:assistant"
+        ],
+        "overlap_keys": []
+      }
+    ],
+    "window_transitions": 0
+  },
+  "units": [
+    {
+      "key": "reply:0:assistant",
+      "role": "assistant",
+      "text": "reply",
+      "text_sha256": "5782b18687e6cf8a482fc32d2db5b196d8821c458a0c069c6acf3953446e7bb5",
+      "size_bytes": 5,
+      "assistant_uuid": "assistant-fixture"
+    }
+  ]
+}

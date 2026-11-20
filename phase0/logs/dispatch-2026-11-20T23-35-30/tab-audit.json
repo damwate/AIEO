@@ -1,0 +1,25 @@
+{
+  "at": "2026-11-20T23:35:37.163Z",
+  "outcome": "failure_created_pages_closed",
+  "before": [
+    {
+      "id": "4A091BBF3194B9E5B252BD92D4E4FD41",
+      "url": "https://chatgpt.com/c/6b009b70-1458-83ec-adf8-d4d5e52f0fca"
+    }
+  ],
+  "exit_before_disposal": [
+    {
+      "id": "4A091BBF3194B9E5B252BD92D4E4FD41",
+      "url": "https://chatgpt.com/c/6b009b70-1458-83ec-adf8-d4d5e52f0fca"
+    }
+  ],
+  "exit_after_disposal": [
+    {
+      "id": "4A091BBF3194B9E5B252BD92D4E4FD41",
+      "url": "https://chatgpt.com/c/6b009b70-1458-83ec-adf8-d4d5e52f0fca"
+    }
+  ],
+  "created_pages": 0,
+  "disposal": "发送前失败：仅关闭本次自建页；既有页零触碰（exit_before/exit_after 对照=值守页零关闭证明）",
+  "error": "ACCOUNT_BACKOFF_TRIGGERED: 观察到 429/账号级限制（checkpoint=goto-existing-session），已写入全实例退避 9min（C9）"
+}

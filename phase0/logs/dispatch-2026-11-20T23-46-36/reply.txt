@@ -1,0 +1,132 @@
+ChatGPT 说：
+
+[TAG|C9-ACCEPT-R1|DEC-128①独立验收]
+
+FAIL 暂不签署C9 PASS，阶段2真实N=2暂不启动。
+
+已按完整 SHA 3361c1b1903e1159ee577330d7a743068afbaeff 读取四个指定文件。注意：recoll 模板实际路径为 phase1/tools/review_leg_recoll_template.mjs，已按该路径读取。
+
+五约束逐项裁定
+
+约束
+
+	
+
+结果
+
+	
+
+核验
+
+
+
+
+A 退避只延不缩
+
+	
+
+PASS
+
+	
+
+applyAccountBackoff 使用新旧期限较大值，较短退避不会覆盖较长退避；原原因也保留
+
+
+
+
+B 缺失与损坏分治
+
+	
+
+部分PASS
+
+	
+
+dispatch 读取路径能将损坏 JSON 转为 ACCOUNT_STATE_INVALID；recoll 模板直接 JSON.parse，损坏 JSON 会抛原生解析异常，未统一为指定错误码
+
+
+
+
+C 过期归一化
+
+	
+
+PASS
+
+	
+
+normalizeAccountState 将过期BACKOFF归一化为NORMAL；dispatch可写侧持状态锁原子写回；recoll只读，不写回符合边界
+
+
+
+
+D 双检查点及竞态登记
+
+	
+
+PASS（有边界）
+
+	
+
+startup、pre-spawn、pre-reuse检查均存在；方案承认已通过检查但尚未操作的残余竞态窗口。不能将此表述为绝对零竞态
+
+
+
+
+E 被动观察与时长钳位
+
+	
+
+FAIL
+
+	
+
+被动观察及9～60分钟钳位逻辑基本具备，但手动退避触发后当前进程仍会继续启动浏览器
+
+阻断项
+
+P1：maybeApplyManualBackoff() 写入退避后没有阻止当前派单继续执行。
+
+gpt_dispatch.mjs 的 mainLocked() 顺序是：
+
+accountGateCheck("startup")；
+
+maybeApplyManualBackoff()；
+
+继续执行实例端口解析；
+
+调用 startChromeWithDebugPort()。
+
+也就是说，当运维设置 AIEO_ACCOUNT_BACKOFF_TRIGGER_MINUTES 时，当前进程先通过NORMAL启动门，再写入全局BACKOFF状态，却没有退出或重新检查启动门。它仍可能启动/复用浏览器并继续派单。
+
+这直接违背C9的核心要求：退避期所有实例均应停止浏览器操作。 不能以其他实例会在下一次启动时读取共享状态来替代当前进程的拦截。
+
+建议最小修订：手动退避写入成功后，当前派单立即以明确的 ACCOUNT_BACKOFF_TRIGGERED 状态退出；或者写入后重新执行启动门并确保退出。不能继续浏览器流程。
+
+另有一项小型一致性修订：recoll 模板对损坏JSON也应统一映射为 ACCOUNT_STATE_INVALID，不要只依赖原生 JSON.parse 异常。
+
+测试证据评价
+
+test_account_gate.mjs：8/8，覆盖纯函数、结构校验、期限钳位及文件IO。
+
+phase0回归：12/12。
+
+四腿：122项。
+
+这些数字可以作为本地回归证据，但8项C9测试没有覆盖“手动触发退避后当前派单必须停止”的集成行为，因此不能抵消上述P1。
+
+最终裁定
+
+A：PASS。
+
+B：部分PASS，recoll错误码一致性待修。
+
+C：PASS。
+
+D：PASS，保留已登记的残余竞态边界。
+
+E：FAIL，手动退避后当前进程仍可能继续操作浏览器。
+
+C9总验收：FAIL。DEC-128②阶段2真实N=2暂不放行。
+
+最小整改后提交新完整SHA，我只复核手动退避停止路径、recoll错误码一致性及相关测试，不要求无关代码重审或四腿无差别重跑。

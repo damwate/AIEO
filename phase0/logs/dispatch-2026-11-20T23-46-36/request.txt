@@ -1,0 +1,4 @@
+[C9-ACCEPT-R1|账号级风控协调实现独立验收（DEC-128①五约束）]
+分支 fix/parallel-stage2 完整SHA=3361c1b1903e1159ee577330d7a743068afbaeff：请按SHA读 dispatch_options.mjs（C9纯函数段）+gpt_dispatch.mjs（accountGateCheck/observeAccountRisk/maybeApplyManualBackoff+调用点）+review_leg_recoll_template.mjs（C9门）+test_account_gate.mjs。五约束落实：
+A退避只延不缩（until=max(旧,新)）；B缺失=NORMAL初始化/损坏异型=ACCOUNT_STATE_INVALID fail-closed；C过期归一化+可写侧原子写回；D双检查点（startup+pre-spawn/pre-reuse）+残余竞态窗口如实登记（方案§一.4）；E观察被动（body含429标记才触发，9min默认钳位[9,60]，运维缝AIEO_ACCOUNT_BACKOFF_TRIGGER_MINUTES）。recoll模板同门。C7=NORMAL时gate零操作零回归。
+测试：account-gate 8/8+phase0回归12/12+四腿122项OK。请逐约束验收给PASS/FAIL/BLOCKED终判；PASS后按DEC-128②进入阶段2真实N=2试跑。

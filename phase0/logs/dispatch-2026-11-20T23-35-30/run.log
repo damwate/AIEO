@@ -1,0 +1,9 @@
+[2026-11-20T23:35:30.505Z] 证据目录: D:\AIEO\phase0\logs\dispatch-2026-11-20T23-35-30
+[2026-11-20T23:35:30.962Z] 会话锁已获取 pid=13216 instance=default lock=gpt-session.lockfile
+[2026-11-20T23:35:30.962Z] === GPT 派单（已有会话，消息 988 字节）===
+[2026-11-20T23:35:30.964Z] [instance] 实例域就绪: instance=default port=9222 profile=gpt-poc lock=gpt-session.lockfile
+[2026-11-20T23:35:31.477Z] 复用本实例调试端口 9222（归属核验 own=10）
+[2026-11-20T23:35:31.699Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 1 个
+[2026-11-20T23:35:31.701Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-20T23:35:37.153Z] 会话锁已释放
+[2026-11-20T23:35:37.154Z] 致命错误: ACCOUNT_BACKOFF_TRIGGERED: 观察到 429/账号级限制（checkpoint=goto-existing-session），已写入全实例退避 9min（C9）

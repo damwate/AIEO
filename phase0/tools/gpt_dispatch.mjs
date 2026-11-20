@@ -489,10 +489,18 @@ function accountGateCheck(checkpoint) {
   }
   return state;
 }
-// 429 被动观察点（约束E：只识别实际返回的信号，不制造限流）：命中即写全实例退避并 fail-closed。
+// 429 被动观察点（约束E：只识别实际返回的信号，不制造限流）。
+// 结构化判定（手册纪律：禁正文文本匹配）：仅当页面呈异常形态（无 composer 且无
+// 会话单元=非正常会话页）且正文含 429/Too many requests 标记时才判账号级限制——
+// 首跑实测教训：既有会话正文本身含 "429" 字样（此前回复内容），纯文本匹配必假阳性。
 async function observeAccountRisk(page, checkpoint) {
-  const body = (await page.evaluate(() => (document.body?.innerText || "").slice(0, 4000)).catch(() => "")) || "";
-  if (!/too many requests|\b429\b/i.test(body)) return;
+  const probe = await page.evaluate(() => ({
+    composer: !!document.querySelector('[aria-label="询问 ChatGPT"], [aria-label="Ask ChatGPT"], #prompt-textarea'),
+    units: document.querySelectorAll("[data-content-search-unit-key]").length,
+    text: (document.body?.innerText || "").slice(0, 4000),
+  })).catch(() => null);
+  if (!probe || probe.composer || probe.units > 0) return; // 正常会话页形态 → 非限流
+  if (!/too many requests|\b429\b/i.test(probe.text)) return;
   const path = accountStatePath(AIEO_ROOT);
   const minutes = Number(process.env.AIEO_ACCOUNT_BACKOFF_MINUTES || 9);
   const lock = acquireSessionLock({ holder: `account-risk-write:${INSTANCE.instanceId}`, lockPath: `${path}.lockfile` });
@@ -503,21 +511,26 @@ async function observeAccountRisk(page, checkpoint) {
   } finally {
     lock.release();
   }
-  throw new Error(`ACCOUNT_BACKOFF_TRIGGERED: 观察到 429/账号级限制（checkpoint=${checkpoint}），已写入全实例退避 ${minutes}min（C9）`);
+  throw new Error(`ACCOUNT_BACKOFF_TRIGGERED: 观察到 429/账号级限制（checkpoint=${checkpoint}，页面呈异常形态），已写入全实例退避 ${minutes}min（C9）`);
 }
 // 手动/运维触发缝（DEC-128 ③"手动设置可延长"）：设置环境变量即写退避（仅测试与运维使用）。
+// C9 验收 R1 P1 整改：写入成功后当前派单立即 fail-closed 退出——退避期所有实例（含
+// 触发者自己）都不得继续浏览器操作，不能以"其他实例下轮会读到"替代当前进程拦截。
 function maybeApplyManualBackoff() {
   const minutes = process.env.AIEO_ACCOUNT_BACKOFF_TRIGGER_MINUTES;
   if (!minutes) return;
   const path = accountStatePath(AIEO_ROOT);
+  let next;
   const lock = acquireSessionLock({ holder: `account-risk-manual:${INSTANCE.instanceId}`, lockPath: `${path}.lockfile` });
   try {
     const cur = readAccountStateFile(path, Date.now());
-    writeAccountStateFileAtomic(path, applyAccountBackoff(cur, Date.now(), Number(minutes), "manual", INSTANCE.instanceId));
-    log(`[account] 手动退避已写入: ${minutes}min`);
+    next = applyAccountBackoff(cur, Date.now(), Number(minutes), "manual", INSTANCE.instanceId);
+    writeAccountStateFileAtomic(path, next);
+    log(`[account] 手动退避已写入: until=${next.backoff_until}`);
   } finally {
     lock.release();
   }
+  throw new Error(`ACCOUNT_BACKOFF_TRIGGERED: 手动退避已写入（until=${next.backoff_until}），本派单立即停止（C9 约束D）`);
 }
 
 // ---------- 主流程 ----------
