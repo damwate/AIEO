@@ -47,7 +47,7 @@
 - ③修改内容：不适用。
 - ④执行结果：四腿逐模块 `python -I -m unittest discover` **34+30+25+31=120 项全 OK**（exit=0，phase0/logs/leg-rerun-instance/）。组合单进程跑曾出现 1F+7E/1E 波动——**根因定位=环境伪影非代码回归**：当前 shell 含 PYTHONUTF8=1（UTF-8 模式），非隔离跑下 subprocess text=True 按 UTF-8 解码 tasklist 的 GBK 输出（0xd0 起始字节）→UnicodeDecodeError→stdout=None→test_19 TypeError；`-I` 忽略环境变量→cp936→全过（实测对照：python -c utf8_mode=1 preferred=utf-8 vs python -I utf8_mode=0 preferred=cp936）。与手册 §8.1 Windows 编码坑同族；EGO-LITE 手册纪律"Python open 默认 GBK 加 encoding"的进程级变体。
 - ⑤测试结果：canonical 跑法（-I 逐模块）120/120；组合跑伪影如实登记不隐瞒；本任务 JS 改动与 Python 零交集，回归与改动无因果。
-- ⑥验收证据引用：phase0/logs/leg-rerun-instance/{test_review_leg,test_arch_review_leg,test_engineering_audit_leg,test_test_acceptance_leg,combined}.log；本步无独立派单（本地回归步），任务关联派单现场 dispatch-2026-11-20T18-19-39（S1 方案评审，reply SHA-256=`513e4d68746be70e167486f004d1988268d96082ee014c474a890cf6ff09ad11`）；**验收结论：PASS（120/120；组合跑伪影=环境编码，移交测试卫生备忘）**。
+- ⑥验收证据引用：phase0/logs/leg-rerun-instance/{test_review_leg,test_arch_review_leg,test_engineering_audit_leg,test_test_acceptance_leg,combined}.log（S5 时点记录=120 项，终态 122 项见 §S7⑤/§S8——历史阶段含义保留）；本步无独立派单（本地回归步），任务关联派单现场 dispatch-2026-11-20T18-19-39（S1 方案评审，reply SHA-256=`513e4d68746be70e167486f004d1988268d96082ee014c474a890cf6ff09ad11`）；**验收结论：PASS（120/120；组合跑伪影=环境编码，移交测试卫生备忘）**。
 
 ## S6 交付登记与独立验收（进行中）
 
@@ -67,12 +67,13 @@
 - ⑤测试结果：instance-config **24/24**（R3 整改后 19-38-48）；phase0 统一回归 **11/11**（19-39-06）；四腿 **36+30+25+31=122 项全 OK**（canonical -I 逐模块；test_21 的 subprocess 显式 encoding=utf-8+errors=replace——手册 §8.1 纪律，环境无关）。
 - ⑥验收证据引用：本步无独立派单（整改步），任务关联派单现场 dispatch-2026-11-20T18-53-31（R1）/19-17-44（R2），reply SHA 见③；**验收结论：R3 已完成（数组拒绝 PASS/recoll 真跑 PASS，余非普通对象边界移交 S8）**。
 
-## S8 验收 R3/R4 终验轮（进行中）
+## S8 验收 R3~R6 定点终验轮（R6 完成，终签待 R7 确认）
 
 - ①本步骤目标：消化 R3 唯一遗留（非普通对象边界）与 R4/R5 唯一遗留（文档一致性），达成阶段1 最终 PASS。
 - ②修改文件：dispatch_options.mjs（validatePortRegistry 普通对象原型约束+getPrototypeOf null 顺序守卫）、test_instance_config.mjs（+4 负例）、delivery.md（证据同步 assert 化）、本文件（数字订正即本条）。
 - ③验收轨迹（如实）：R3（dispatch-2026-11-20T19-33-39→recoll-instance-r3-…，reply SHA-256=1b068a621caf79865ed2e3eaedd4b206742c42defd793bbec545b7b8eaf7861e）=P1-2 数组拒绝 PASS/P1-1 无回归 PASS/recoll 真跑 PASS，仅余 Map/Date 边界；R4（dispatch-2026-11-20T19-40-00→recoll-instance-r4-…，reply SHA-256=8b9f6922623d5a978634b755e04eb8a49f0a3a97d486db33568117dcab67b996）=原型约束 PASS/负例 PASS/delivery 同步 PASS，仅余本文件旧数字（本条订正）。
 - ④执行结果：24/24+11/11+122 项维持；代码仅校验函数与测试改动，四腿路径未动（R4 审查方确认不要求重跑）。
 - ⑤测试结果：instance-config 24/24；phase0 11/11（19-39-06）。
-- ⑥验收证据引用：R4 现场 dispatch-2026-11-20T19-40-00、recoll-instance-r4-2026-11-20T19-42-23-594Z；本步无独立派单；**验收结论：待 R5 终签（审查方明示"收口后即可签署阶段1最终 PASS"）**。
+- ⑥验收证据引用：R4 现场 dispatch-2026-11-20T19-40-00、recoll-instance-r4-2026-11-20T19-42-23-594Z；本步无独立派单；**验收结论：R6 定点复核已完成——§S2/§S7/§S8/delivery 四点全 PASS（R6 现场 dispatch-2026-11-20T19-47-59，reply SHA-256=8e1678792634a0d2e59984b7dab227593797060612f88c6deb49429116821e2d），终签待 R7 确认（审查方明示"修正这一个状态点后，我只复核该处即可"）**。
+- ⑥R6 补记：R6（dispatch-2026-11-20T19-47-59，reply SHA-256=8e167879…21e2d）=§S2"现24项"PASS/§S7 标题与⑥状态 PASS/§S8 R4 全 SHA PASS/delivery §2 终态数字 PASS，唯一遗留=本节标题/⑥状态自洽（本条已订正）。
 - ⑤R5 补记：R5（dispatch-2026-11-20T19-43-30→recoll-instance-r5-…，reply SHA-256 全值见 result.json）指出本文档残留旧口径（本条所在轮次已逐项订正：§S2 现 24 项/§S7 标题与⑥状态/§S8 R4 全 SHA）与 delivery §2 旧数字（已同步）；R5 后仅余本文档一致性，R6 定点复核。
