@@ -1094,3 +1094,9 @@
 - **前置条件核验：** DEC-126 R7 阶段1终签 PASS（被测 ed2be7e…）；合并范围终核=git diff main..分支 生产文件仅 dispatch_options.mjs/gpt_dispatch.mjs/run_phase0_regression.mjs/review_leg.py/review_leg_recoll_template.mjs/test_review_leg.py/test_instance_config.mjs（全部属 R7 终签范围）；如实登记=分支含早期会话遗留惰性工作脚本（s1-s11 探针/rank_schemes/brief_* 等，不入生产派单路径）随 add -A 入库，审查方 R7 已在该分支整体内容上终签。
 - **合并方式：** fast-forward（main 与分支无分叉）；合并后阶段1 代码进入 main；阶段2（N=2 真实并发）未获授权不随合并启动。
 - **边界：** 无发布动作、无数据删除；906⑥ 仍 BLOCKED；下一步=C9 账号级风控协调实现方案+阶段2 授权申请交 ChatGPT 评审。
+
+### DEC-128 阶段2 有条件批准 + C9 方案有条件认可（五约束）（2026-11-21）
+
+- **申请：** phase0/tools/parallel_stage2_apply_r1.md @ f9c9e6ce936691203e5f3a8e45ccc68ee9f2e807（阶段1 已合入 main=4a961e4，DEC-127）；派单 dispatch-2026-11-20T23-22-34→补采 recoll-stage2-r1-…（reply 4518B SHA-256=`0d1ac8b6…` 全值见 result.json；过程注记=派生 PREV_REPLY_SHA256 取了 R5 轮旧值而非 R7 最新值——排除效力不受影响（marker+最后 user 断言为主证），如实登记为派生参数取值口径待改进）。
+- **四问裁定：** ①C9 有条件认可（五约束：A 退避期限不得被缩短——已有 BACKOFF 只能延长或维持；B 缺失状态=明确 NORMAL 初始化路径、损坏/读取失败=fail-closed 禁静默 NORMAL；C EXPIRED_ALLOW 须原子归一化 NORMAL 防残留歧义；D 检查点须覆盖实际浏览器操作边界——启动门+操作前复查，"已过检查未始操作"实例的竞态窗口须如实说明处置，不得宣称启动读一次即绝对零操作；E 观察点保持被动，C5 无真实 429=登记 NOT_OBSERVED 不得记 PASS）；②阶段2 有条件批准——C9 实现+本地回归+独立验收全 PASS 后方可执行真实 N=2，范围严格限定 C1-C5/C7/C8，fix/parallel-stage2 分支，--new-session --no-update-pointer，失败即停，逐项 PASS/FAIL/BLOCKED/NOT_OBSERVED 登记；③退避 9-60min 认可（真实 429 默认≥9min，上限 60min，活动退避不得缩短）；④阶段3 原则认可（C6 观察轮数/指标/异常判据须先明确，资源数据支撑 N=3 判断，满足条件=可提交评估非自动放行）。
+- **授权边界：** 不含阶段3、不含 N=3、不含 main 后续代码合并授权。
