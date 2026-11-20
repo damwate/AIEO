@@ -1,0 +1,9 @@
+[PARA-R1|多agent并行派单架构讨论：只讨论拍板，本轮不改码]
+仓库 damwate/AIEO main 完整SHA=6376628b005009d8131c93571e0413d569a92282：phase0/tools/parallel_dispatch_arch_r1.md。背景：多agent各自派单（标准版多任务并行）现三硬阻塞=全局单锁/单浏览器(killProfileChrome按*gpt-poc*子串全杀会误杀他实例)/单写指针；利好=acquireSessionLock已支持lockPath参数(:59)。方案P1实例域四件套+P2-P5、实测矩阵C1-C6，请按SHA读后拍板六问：
+①锁粒度=实例域（每agent一把锁，实例内串行跨实例并行）认可否？
+②真实并发起步N=2还是3？
+③killProfileChrome收敛=按本实例profile精确匹配认可否？
+④decision-log并发登记：FIFO合并期人工对齐 vs 预分配编号区间？
+⑤C1-C6矩阵（429只观察不诱发）充分否？
+⑥M1登记(registerArtifactWithRetry)并发核查纳入实现步骤？
+分阶段：实现+本地回归→N=2真实并发→N=3评估。此件能落地则标准版多任务并行成型（906⑥解锁路径）。

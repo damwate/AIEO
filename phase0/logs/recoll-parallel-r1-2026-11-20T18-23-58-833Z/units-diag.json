@@ -1,0 +1,86 @@
+[
+  {
+    "key": "0a3abe7a-f21d-5c68-860e-708a72424bb0:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 596,
+    "text_head": "[P1HANDOFF-R1|20261120] P1接手处置裁定\n读 github.com/damwate/AIEO main@766df302e0aa843ad238034163e8ef0725d0"
+  },
+  {
+    "key": "0a3abe7a-f21d-5c68-860e-708a72424bb0:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 2683,
+    "text_head": "ChatGPT 说：\nP1HANDOFF-R1｜P1接手处置裁定\n\n有条件批准推进 906⑥继续 BLOCKED\n\n依据：AIEO main@766df302e0aa843ad238034163e8e"
+  },
+  {
+    "key": "ff5c761e-abbb-533d-9e6e-d027aa42e9cc:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 641,
+    "text_head": "[P1CLOSE-R1|20261120] P1批次收口回报（按你的S0~S7裁定执行）\n①建包497001c（冻结内容逐字落包）。\n②七项核验全PASS（451e561，含人工熔断规范circuit"
+  },
+  {
+    "key": "ff5c761e-abbb-533d-9e6e-d027aa42e9cc:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 633,
+    "text_head": "ChatGPT 说：\n有一项异议，暂缓S7\n\n两项独立审计的收口结论无异议：\n\nP1-01： 终版 #1F/#2B/#3B/#4P/#5F，F05 撤销，F01-F04/F06 移交复盘。认可。\n\nP"
+  },
+  {
+    "key": "8213c606-fcc5-53d0-a887-e8ff57664f3d:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 509,
+    "text_head": "[P1CLOSE-R2|20261120] 收口条件已满足确认\nmain@85401f55346f98c7b36604892ef5b38af48909e3：\n①a97f203（S6复盘delivery"
+  },
+  {
+    "key": "8213c606-fcc5-53d0-a887-e8ff57664f3d:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 438,
+    "text_head": "ChatGPT 说：\n确认，无异议\n\n已核实 main@85401f55346f98c7b36604892ef5b38af48909e3：\n\na97f203 已成为该提交的父提交，批次 deliver"
+  },
+  {
+    "key": "2c7bd885-5c39-5c9d-b998-78c8bfedf8ef:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 609,
+    "text_head": "[TRIAL-R1|派单整改试跑方案讨论：只拍板不改码]\n仓库 damwate/AIEO 分支 fix/dispatch-reliability 完整SHA=a51b8fa9c230b2ac32d7b"
+  },
+  {
+    "key": "2c7bd885-5c39-5c9d-b998-78c8bfedf8ef:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 1416,
+    "text_head": "ChatGPT 说：\n方案 R1：有条件通过\n\n已按指定完整 SHA a51b8fa9c230b2ac32d7b63359b46b98762da5a7 读取方案，并对照 DEC-118 的 F06 边"
+  },
+  {
+    "key": "27e9ef00-3d09-5d98-bffd-204df42d94c8:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 655,
+    "text_head": "[TRIAL-VERIFY-R1|派单整改真实试跑独立复核（DEC-118 F06尾项）]\n仓库 damwate/AIEO 分支 fix/dispatch-reliability 完整SHA=e8ff"
+  },
+  {
+    "key": "27e9ef00-3d09-5d98-bffd-204df42d94c8:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 2684,
+    "text_head": "ChatGPT 说：\n\n独立复核通过 整体试跑：4 PASS + 1 BLOCKED\n\n我按指定完整 SHA e8ff3d37c8e197aa2fcaf4104877f5608e16b7db 检查了 "
+  },
+  {
+    "key": "c0efd9ee-beae-532a-a913-1ed707654f74:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 564,
+    "text_head": "[PARA-R1|多agent并行派单架构讨论：只讨论拍板，本轮不改码]\n仓库 damwate/AIEO main 完整SHA=6376628b005009d8131c93571e0413d569a9"
+  },
+  {
+    "key": "c0efd9ee-beae-532a-a913-1ed707654f74:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 4281,
+    "text_head": "ChatGPT 说：\n\n我的总体裁定：R1 架构方向认可，有条件通过规划评审。六问中五项直接拍板，一项选择人工 FIFO；但在进入实现前，必须补强实例身份、浏览器进程归属、全局账号风控协调和共享登记并"
+  }
+]

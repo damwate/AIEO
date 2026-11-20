@@ -1,0 +1,8 @@
+[2026-11-20T18:23:59.400Z] 会话锁已获取（parallel-r1 并行架构讨论补采）
+[2026-11-20T18:23:59.667Z] 页面归属命中 CONV_UUID=6aff4117-76dc-83ec-b743-10b00ce73195
+[2026-11-20T18:24:22.731Z] 归属校验=标记命中1条(取最后)+最后user断言（target=c0efd9ee-beae-532a-a913-1ed707654f74:0:user）
+[2026-11-20T18:24:22.736Z] checks={"marked_user_unique":true,"last_user_assertion":true,"duplicate_send_confirmed":false,"adjacent_assistant_tail":true,"stable_static_dom_read":true,"final_stop_button_not_visible":true,"response_length_plausible":true,"not_prev_reply_sha":true}
+[2026-11-20T18:24:22.738Z] reply 已落盘（9933 字节，SHA=513e4d68746be70e…）
+[2026-11-20T18:24:22.738Z] RECOLL COMPLETED
+[2026-11-20T18:24:22.758Z] 视口覆盖已清除
+[2026-11-20T18:24:22.878Z] 会话锁已释放（parallel-r1 并行架构讨论补采）
