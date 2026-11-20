@@ -20,7 +20,7 @@
 - ③修改内容：instance ID 校验正则 [a-z0-9][a-z0-9-]{0,31}+小写规范化；default 锁=gpt-session.lockfile/profile=gpt-poc/端口=9222（C7 逐字节）；命名实例锁=gpt-session-<ID>.lockfile/profile=gpt-poc-<ID>/端口走注册表（候选 9300-9399，探测碰撞检查，已登记稳定返回，耗尽 INSTANCE_PORT_EXHAUSTED）；非 default 实例写共享 reviewer 指针→POINTER_SINGLE_WRITER_VIOLATION fail-closed；进程归属=--user-data-dir 精确 token 匹配（大小写不敏感，禁子串通配——gpt-poc-a vs gpt-poc-a2 前缀碰撞负例）。
 - ④执行结果：实现完成；测试 test_instance_config.mjs 新建 16 项（ID 校验/C7 兼容/派生映射/parse 正负例/端口分配 5 型/指针守卫 3 态/进程归属正负例/清理脚本生成断言/实例锁域隔离+同锁互斥两条 OS 级负例）**16/16 PASS**（phase0/logs/instance-config-tests.json）。
 - ⑤测试结果：node --check 双文件语法 OK；冒烟全过。
-- ⑥验收证据引用：phase0/tools/test_instance_config.mjs；phase0/logs/instance-config-tests.log；**验收结论：PASS**。
+- ⑥验收证据引用：phase0/tools/test_instance_config.mjs；phase0/logs/instance-config-tests.log；本步无独立派单（实现步），任务关联派单现场 dispatch-2026-11-20T18-19-39（S1 方案评审，reply SHA-256=`513e4d68746be70e167486f004d1988268d96082ee014c474a890cf6ff09ad11`）；**验收结论：PASS**。
 
 ## S3 gpt_dispatch 接线（PASS）
 
@@ -29,7 +29,7 @@
 - ③修改内容：INSTANCE 派生+PROFILE_DIR/DEBUG_PORT/CDP_URL 实例域化（default 逐字节=C7）；acquireSessionLock 传 lockPath+holder 带 instance 后缀；mainLocked 内命名实例端口分配（注册表锁内 读→并发探测→分配→原子写，instance-ports.json 损坏 fail-closed INSTANCE_REGISTRY_INVALID）；startChromeWithDebugPort 复用前归属核验（CDP 活但无本实例 profile 进程→INSTANCE_PORT_FOREIGN fail-closed）；killProfileChrome 换 buildKillProfileScript（own/foreign/remaining 三计数留证，归属不明不杀）；result.json 增 instance_id/instance_lock_path/instance_debug_port/instance_profile_dir；run.log 实例域行留证；指针守卫置于浏览器操作前。
 - ④执行结果：实现完成；recoll 驱动同锁路径纪律登记于任务书（派单与补采同实例 ID 同锁路径——DEC-123 ①边界3；现有 recoll 驱动均 default 域）。
 - ⑤测试结果：phase0 统一回归 **11/11 PASS**（schemas/inbound-reply/dispatch-binding/instance-config/m1-registry/m1-concurrency/browser-virtual-list/git-pointer/completion-judge/greet/session-lock-v6；evidence third-round-regression-2026-11-20T18-34-42）；C7 证明=不传 --instance 时全部既有测试零回归。
-- ⑥验收证据引用：phase0/logs/third-round-regression-2026-11-20T18-34-42/result.json；**验收结论：PASS**。
+- ⑥验收证据引用：phase0/logs/third-round-regression-2026-11-20T18-34-42/result.json；本步无独立派单（实现步），任务关联派单现场 dispatch-2026-11-20T18-19-39（S1 方案评审，reply SHA-256=`513e4d68746be70e167486f004d1988268d96082ee014c474a890cf6ff09ad11`）；**验收结论：PASS**。
 
 ## S4 M1 登记并发核查（DEC-123 ⑥ 硬门槛；PASS）
 
@@ -38,7 +38,7 @@
 - ③修改内容：代码级审计 m1_artifact_registry.mjs（331 行全读）。
 - ④执行结果（五查结论）：①同 artifact 并发登记→`acquireRegistryLock`（按登记簿路径 OS 句柄锁+60s 有界重试，:110-127）串行化临界区（读→幂等检查→序号→写），并发同 artifact=精确幂等键命中→DUPLICATE 不新增记录；②共享文件竞争→OS 句柄锁+`writeRegistryAtomic`（临时文件 pid+ts→回读验证→rename→提交后二次回读，:52-72）；③重试重复登记→幂等键精确匹配返回 DUPLICATE，身份三 ID 同 hash 不同→M1_ARTIFACT_HASH_CONFLICT 拒复用旧记录（:157-167）；④部分写入/覆盖/丢失→原子写双回读；登记簿损坏→M1_REGISTRY_READ_FAILED fail-closed 拒按空簿继续（:33-40）；⑤失败恢复→M1_INJECTED_FIRST 故障注入在读取前触发，重试同 artifact→RECOVERED/DUPLICATE，gpt_resend_count 恒 0（不重触发 GPT），CLI 还验证发送双验计数前后不变。登记簿路径=共享全局（phase0/logs/m1-artifact-registry.json），跨实例并发登记由登记簿锁串行——共享账本语义正确。
 - ⑤测试结果：既有 test_m1_artifact_registry.mjs+test_m1_concurrency.mjs（多真实进程：OS 锁/序号唯一/幂等/hash 冲突）随统一回归 **PASS**；未发现需整改项，未知状态已消除（硬门槛满足）。
-- ⑥验收证据引用：phase0/tools/m1_artifact_registry.mjs（行号见④）；phase0/logs/third-round-regression-2026-11-20T18-34-42/；**验收结论：PASS**。
+- ⑥验收证据引用：phase0/tools/m1_artifact_registry.mjs（行号见④）；phase0/logs/third-round-regression-2026-11-20T18-34-42/；本步无独立派单（核查步），任务关联派单现场 dispatch-2026-11-20T18-19-39（S1 方案评审，reply SHA-256=`513e4d68746be70e167486f004d1988268d96082ee014c474a890cf6ff09ad11`）；**验收结论：PASS**。
 
 ## S5 四腿回归与环境伪影诊断（PASS）
 
