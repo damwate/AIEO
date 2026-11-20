@@ -47,7 +47,7 @@
 - ③修改内容：不适用。
 - ④执行结果：四腿逐模块 `python -I -m unittest discover` **34+30+25+31=120 项全 OK**（exit=0，phase0/logs/leg-rerun-instance/）。组合单进程跑曾出现 1F+7E/1E 波动——**根因定位=环境伪影非代码回归**：当前 shell 含 PYTHONUTF8=1（UTF-8 模式），非隔离跑下 subprocess text=True 按 UTF-8 解码 tasklist 的 GBK 输出（0xd0 起始字节）→UnicodeDecodeError→stdout=None→test_19 TypeError；`-I` 忽略环境变量→cp936→全过（实测对照：python -c utf8_mode=1 preferred=utf-8 vs python -I utf8_mode=0 preferred=cp936）。与手册 §8.1 Windows 编码坑同族；EGO-LITE 手册纪律"Python open 默认 GBK 加 encoding"的进程级变体。
 - ⑤测试结果：canonical 跑法（-I 逐模块）120/120；组合跑伪影如实登记不隐瞒；本任务 JS 改动与 Python 零交集，回归与改动无因果。
-- ⑥验收证据引用：phase0/logs/leg-rerun-instance/{test_review_leg,test_arch_review_leg,test_engineering_audit_leg,test_test_acceptance_leg,combined}.log；**验收结论：PASS（120/120；组合跑伪影=环境编码，移交测试卫生备忘）**。
+- ⑥验收证据引用：phase0/logs/leg-rerun-instance/{test_review_leg,test_arch_review_leg,test_engineering_audit_leg,test_test_acceptance_leg,combined}.log；本步无独立派单（本地回归步），任务关联派单现场 dispatch-2026-11-20T18-19-39（S1 方案评审，reply SHA-256=`513e4d68746be70e167486f004d1988268d96082ee014c474a890cf6ff09ad11`）；**验收结论：PASS（120/120；组合跑伪影=环境编码，移交测试卫生备忘）**。
 
 ## S6 交付登记与独立验收（进行中）
 
