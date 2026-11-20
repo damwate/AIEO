@@ -1,0 +1,23 @@
+[2026-11-20T17:25:49.439Z] 证据目录: D:\AIEO\phase0\logs\dispatch-2026-11-20T17-25-49
+[2026-11-20T17:25:50.012Z] 会话锁已获取 pid=27896
+[2026-11-20T17:25:50.013Z] === GPT 派单（已有会话，消息 169 字节）===
+[2026-11-20T17:25:50.034Z] 复用已运行调试端口 9222
+[2026-11-20T17:25:50.116Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 1 个
+[2026-11-20T17:25:50.116Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-20T17:26:09.703Z] 会话锁已释放
+[2026-11-20T17:26:09.710Z] 致命错误: page.goto: net::ERR_CONNECTION_TIMED_OUT at https://chatgpt.com/c/00000000-0000-0000-0000-000000000000
+Call log:
+[2m  - navigating to "https://chatgpt.com/c/00000000-0000-0000-0000-000000000000", waiting until "domcontentloaded"[22m
+
+page.goto: net::ERR_CONNECTION_TIMED_OUT at https://chatgpt.com/c/00000000-0000-0000-0000-000000000000
+Call log:
+[2m  - navigating to "https://chatgpt.com/c/00000000-0000-0000-0000-000000000000", waiting until "domcontentloaded"[22m
+
+    at mainLocked (D:\AIEO\phase0\tools\gpt_dispatch.mjs:396:16)
+    at async main (D:\AIEO\phase0\tools\gpt_dispatch.mjs:355:5) {
+  log: [
+    '  - navigating to "https://chatgpt.com/c/00000000-0000-0000-0000-000000000000", waiting until "domcontentloaded"'
+  ],
+  name: 'Error'
+}
+Assertion failed: !(handle->flags & UV_HANDLE_CLOSING), file src\win\async.c, line 76

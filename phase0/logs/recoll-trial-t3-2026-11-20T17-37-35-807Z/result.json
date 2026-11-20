@@ -1,0 +1,38 @@
+{
+  "recollection": true,
+  "driver": "recoll_trial_t3.mjs",
+  "conversation_url": "https://chatgpt.com/c/6b0083e0-bc24-83ec-a9c2-7bcc4d9c0fb8",
+  "failed_dispatch_dir": "phase0/logs/dispatch-2026-11-20T17-30-24",
+  "failure_code": "PROCESS_KILLED_AFTER_SEND_CONFIRMED",
+  "recovery": "导航原会话+视口拉高静态DOM全量物化+归属三件套+回执键形绑定（禁重发，只读补采）",
+  "prev_reply_sha_note": "新会话无前轮 reply，PREV_REPLY_SHA256=零哨兵仅保持七查结构",
+  "receipt_user_unit_key": "fallback-turn-0:0:user",
+  "materialized_user_unit_key": "bd5e3ccf-d915-5e8b-967c-a0b5b4e189e7:0:user",
+  "key_form_binding": {
+    "receipt_tail": "0:user",
+    "materialized_tail": "0:user",
+    "bound": true
+  },
+  "assistant_unit_key": "bd5e3ccf-d915-5e8b-967c-a0b5b4e189e7:1:assistant",
+  "assistant_unit_count": 1,
+  "after_units": [
+    {
+      "key": "bd5e3ccf-d915-5e8b-967c-a0b5b4e189e7:1:assistant",
+      "role": "assistant",
+      "text_len": 2326
+    }
+  ],
+  "reply_bytes": 6786,
+  "reply_sha256": "7d2cafbed6ffb76b29eb6b0458cd012b0a9dce0f81a5d3422ed7acc00082215d",
+  "checks": {
+    "marked_user_unique": true,
+    "last_user_assertion": true,
+    "receipt_key_form_binding": true,
+    "adjacent_assistant_tail": true,
+    "stable_static_dom_read": true,
+    "final_stop_button_not_visible": true,
+    "response_length_plausible": true,
+    "not_prev_reply_sha": true
+  },
+  "extracted_at": "2026-11-20T17:38:05.898Z"
+}

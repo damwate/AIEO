@@ -1,0 +1,25 @@
+{
+  "at": "2026-11-20T17:25:03.866Z",
+  "outcome": "failure_created_pages_closed",
+  "before": [
+    {
+      "id": "7E2DE6FA7528AD6616737182B0B551E7",
+      "url": "https://chatgpt.com/c/6aff4117-76dc-83ec-b743-10b00ce73195"
+    }
+  ],
+  "exit_before_disposal": [
+    {
+      "id": "7E2DE6FA7528AD6616737182B0B551E7",
+      "url": "https://chatgpt.com/c/6aff4117-76dc-83ec-b743-10b00ce73195"
+    }
+  ],
+  "exit_after_disposal": [
+    {
+      "id": "7E2DE6FA7528AD6616737182B0B551E7",
+      "url": "https://chatgpt.com/c/6aff4117-76dc-83ec-b743-10b00ce73195"
+    }
+  ],
+  "created_pages": 0,
+  "disposal": "发送前失败：仅关闭本次自建页；既有页零触碰（exit_before/exit_after 对照=值守页零关闭证明）",
+  "error": "SESSION_TARGET_INVALID: 会话 URL 与归档身份无效，发送前停止"
+}

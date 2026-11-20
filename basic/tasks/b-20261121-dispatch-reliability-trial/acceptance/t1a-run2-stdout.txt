@@ -1,0 +1,15 @@
+[2026-11-20T17:28:21.833Z] 证据目录: D:\AIEO\phase0\logs\dispatch-2026-11-20T17-28-21
+[2026-11-20T17:28:22.658Z] 会话锁已获取 pid=29364
+[2026-11-20T17:28:22.659Z] === GPT 派单（已有会话，消息 169 字节）===
+[2026-11-20T17:28:22.689Z] 复用已运行调试端口 9222
+[2026-11-20T17:28:22.821Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 0 个
+[2026-11-20T17:28:22.822Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-20T17:29:04.041Z] 会话就绪: https://chatgpt.com/c/00000000-0000-0000-0000-000000000000
+[2026-11-20T17:29:04.151Z] 会话锁已释放
+[2026-11-20T17:29:04.153Z] 致命错误: SESSION_TARGET_MISMATCH: 页面与派单目标不符，发送前停止
+Error: SESSION_TARGET_MISMATCH: 页面与派单目标不符，发送前停止
+    at assertDispatchTarget (file:///D:/AIEO/phase0/tools/dispatch_options.mjs:75:23)
+    at assertDispatchPage (file:///D:/AIEO/phase0/tools/dispatch_options.mjs:80:3)
+    at mainLocked (file:///D:/AIEO/phase0/tools/gpt_dispatch.mjs:410:9)
+    at async main (file:///D:/AIEO/phase0/tools/gpt_dispatch.mjs:355:5)
+Assertion failed: !(handle->flags & UV_HANDLE_CLOSING), file src\win\async.c, line 76

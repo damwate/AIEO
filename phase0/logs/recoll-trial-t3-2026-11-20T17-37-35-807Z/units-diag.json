@@ -1,0 +1,16 @@
+[
+  {
+    "key": "bd5e3ccf-d915-5e8b-967c-a0b5b4e189e7:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 98,
+    "text_head": "[TRIAL-T2A|发送确认后进程中断测试，一次性非敏感简报]\n请只回复一段约1500字的测试占位说明文本（主题：派单可靠性试跑占位，分三小节：目的/边界/登记），不要做任何其他操作，不要提问。"
+  },
+  {
+    "key": "bd5e3ccf-d915-5e8b-967c-a0b5b4e189e7:1:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 2326,
+    "text_head": "ChatGPT 说：\n派单可靠性试跑占位说明\n一、目的\n\n本次测试占位主题为「派单可靠性试跑」，对应 TRIAL-T2A 测试场景，重点关注任务派发过程中，在发送确认后发生进程中断时，系统能否准确识别"
+  }
+]
