@@ -1,0 +1,30 @@
+[
+  {
+    "key": "cb6f85fc-f0e5-5d35-a8e7-a747b1375b7f:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 679,
+    "text_head": "[REVIEWER-MIGRATE-R1|审查会话接棒（L-018§6）]\n你是 damwate/AIEO 项目新审查会话，接棒旧会话 6aff4117（转只读归档）。仓库 github damwat"
+  },
+  {
+    "key": "cb6f85fc-f0e5-5d35-a8e7-a747b1375b7f:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 1213,
+    "text_head": "ChatGPT 说：\n\n[TAG|REVIEWER-MIGRATE-R1|接棒确认]\n\n接棒完成 等待整改 SHA\n\n已开始接棒旧审查会话 6aff4117。已按 GitHub 完整 SHA 定位并读"
+  },
+  {
+    "key": "4f12854f-e697-5702-8130-0685cf8d6c18:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 763,
+    "text_head": "[INSTANCE-R2|阶段1整改定点复验（仅P1-1/P1-2/recoll三项）]\n分支 fix/parallel-dispatch-instance 新完整SHA=b14e713ed42046"
+  },
+  {
+    "key": "4f12854f-e697-5702-8130-0685cf8d6c18:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 2192,
+    "text_head": "ChatGPT 说：\n\n[TAG|INSTANCE-R2|阶段1整改定点复验]\n\n审查对象已锁定：fix/parallel-dispatch-instance@b14e713ed4204691467e"
+  }
+]

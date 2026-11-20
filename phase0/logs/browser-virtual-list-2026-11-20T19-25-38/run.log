@@ -1,0 +1,8 @@
+[2026-11-20T19:25:38.030Z] 真实浏览器仿真 DOM 测试开始；不是 ChatGPT 真实多 unit
+[2026-11-20T19:25:39.459Z] PASS 01-multi-assistant-positive
+[2026-11-20T19:25:40.344Z] PASS 02-persistent-middle-crop-negative outcome=BLOCKED
+[2026-11-20T19:25:41.200Z] PASS 03-restored-middle-positive
+[2026-11-20T19:25:42.041Z] PASS 04-no-independent-sequence-conservative-blocked outcome=BLOCKED
+[2026-11-20T19:25:42.107Z] PASS 05-marker-recovery-evidence
+[2026-11-20T19:25:42.213Z] PASS 06-new-session-redirect-stops-before-enter
+[2026-11-20T19:25:42.472Z] SUMMARY total=6 passed=6 failed=0

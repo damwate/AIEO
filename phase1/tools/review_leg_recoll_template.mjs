@@ -15,7 +15,7 @@
 // （标记文本恰 1 条+最后 user 断言）→双读稳定+七查（六查+not_prev_reply_sha）→
 // 不稳定/窗口不完整时按 L-021 第 3 条升级视口拉高 1920×20000 重物化后复测。
 import { chromium } from "playwright";
-import { existsSync, mkdirSync, writeFileSync, copyFileSync } from "node:fs";
+import { existsSync, mkdirSync, writeFileSync, copyFileSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
@@ -119,7 +119,7 @@ async function snapshotPair(page, targetKey) {
 
 mkdirSync(OUT_DIR, { recursive: true });
 const lock = acquireSessionLock({ holder: "review_leg_recoll", lockPath: INSTANCE.lockPath });
-log(`补采实例域: instance=${INSTANCE.instanceId} lock=${INSTANCE.lockPath} port=${INSTANCE.isDefault ? 9222 : "registry"}`);
+log(`补采实例域: instance=${INSTANCE.instanceId} lock=${INSTANCE.lockPath} cdp=${CDP_URL}`);
 log("会话锁已获取（review-leg 补采；仅采集不发送）");
 let browser;
 let cdp;

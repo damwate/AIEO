@@ -5,20 +5,20 @@
   "records": [
     {
       "artifact_id": "ART-M1-000001",
-      "registered_at": "2026-11-20T19:05:51.366Z",
+      "registered_at": "2026-11-20T19:25:35.847Z",
       "task_id": "T-P1-941",
       "execution_id": "EXEC-941",
       "correlation_id": "CORR-941",
-      "artifact_sha256": "3028714d14327ffaeb9d192a320df2be7fa287648cd1065d3c38db4ee518d43a",
-      "idempotency_key": "{\"task_id\":\"T-P1-941\",\"execution_id\":\"EXEC-941\",\"correlation_id\":\"CORR-941\",\"artifact_sha256\":\"3028714d14327ffaeb9d192a320df2be7fa287648cd1065d3c38db4ee518d43a\"}",
-      "content_sha256": "3028714d14327ffaeb9d192a320df2be7fa287648cd1065d3c38db4ee518d43a",
+      "artifact_sha256": "178ac8f3f5a68575836729e5f17c9f9a5ebd83741f6b27aba5976613563365b4",
+      "idempotency_key": "{\"task_id\":\"T-P1-941\",\"execution_id\":\"EXEC-941\",\"correlation_id\":\"CORR-941\",\"artifact_sha256\":\"178ac8f3f5a68575836729e5f17c9f9a5ebd83741f6b27aba5976613563365b4\"}",
+      "content_sha256": "178ac8f3f5a68575836729e5f17c9f9a5ebd83741f6b27aba5976613563365b4",
       "size_bytes": 27,
-      "artifact_path": "D:\\AIEO\\phase0\\logs\\m1-concurrency-evidence\\conflict-4.txt",
+      "artifact_path": "D:\\AIEO\\phase0\\logs\\m1-concurrency-evidence\\conflict-3.txt",
       "artifact_kind": "GPT_REPLY_TEXT",
       "schema_validation": "NOT_REQUESTED",
-      "content": "互斥 hash 冲突内容 4\n",
+      "content": "互斥 hash 冲突内容 3\n",
       "unit_metadata": {
-        "worker": "w4",
+        "worker": "w3",
         "source": "REAL_MULTIPROCESS_TEST"
       }
     }

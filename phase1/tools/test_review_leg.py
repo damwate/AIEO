@@ -1130,6 +1130,61 @@ __BODY__
         self.assertIn('instanceId: "default"', dtext)
         self.assertNotIn('const CDP_URL = "http://127.0.0.1:9222"', dtext)
 
+    def test_21_recoll_derived_driver_instance_runtime_verified(self):
+        """验收R2整改（recoll FAIL）：命名实例派生驱动必须真实运行可解析端口——
+        注册表存在→解析出登记端口并打出实例域行（同锁路径）；注册表缺失→
+        INSTANCE_REGISTRY_MISSING 拒绝猜测；default→运行时解析回 9222（C7）。
+        只读驱动，无发送面；连接失败/找不到会话页均为预期退出路径。"""
+        import json as _json
+        template = Path(__file__).resolve().parent / "review_leg_recoll_template.mjs"
+        tools = rl.PHASE0_TOOLS
+        base = {
+            "CONV_UUID": "22222222-3333-4444-8555-666666666666",
+            "SENT_USER_UNIT_KEY": "fallback-turn-1:0:user",
+            "FAILED_DIR": str(self.tmp / "dispatch-logs" / "dispatch-t21").replace("\\", "/"),
+            "OUT_DIR": str(self.tmp / "runtime" / "rvl-t21").replace("\\", "/"),
+            "MARKER_TEXT": "[GPT03-R1|t21|T-P1-920]",
+            "PREV_REPLY_SHA": "",
+        }
+        registry_path = tools.parent.parent / "runtime" / "locks" / "instance-ports.json"  # AIEO_ROOT/runtime/locks（与 gpt_dispatch deriveInstancePaths 同源）
+        registry_backup = registry_path.read_bytes() if registry_path.exists() else None
+        drivers = []
+        try:
+            registry_path.parent.mkdir(parents=True, exist_ok=True)
+            registry_path.write_text(_json.dumps({"version": 1, "ports": {"agent-a": 9301}}), encoding="utf-8")
+            named = tools / "review_leg_recoll_driver-t21-named.mjs"
+            rl.derive_recoll_driver(template, named, {**base, "INSTANCE_ID": "agent-a"})
+            drivers.append(named)
+            proc = subprocess.run(["node", str(named)], cwd=str(tools), capture_output=True, text=True, encoding="utf-8", errors="replace",
+                                  timeout=120)
+            combined = (proc.stdout or "") + (proc.stderr or "")
+            self.assertIn("instance=agent-a", combined, f"实例域行缺失: {combined[-400:]}")
+            self.assertIn("9301", combined, f"注册表端口解析未生效: {combined[-400:]}")
+            self.assertIn("gpt-session-agent-a.lockfile", combined, f"同锁路径未生效: {combined[-400:]}")
+            # 注册表缺失：命名实例拒绝猜测
+            registry_path.unlink()
+            proc_missing = subprocess.run(["node", str(named)], cwd=str(tools), capture_output=True,
+                                          text=True, encoding="utf-8", errors="replace", timeout=120)
+            combined_missing = (proc_missing.stdout or "") + (proc_missing.stderr or "")
+            self.assertIn("INSTANCE_REGISTRY_MISSING", combined_missing,
+                          f"未登记应 fail-closed: {combined_missing[-400:]}")
+            # default：运行时解析回 9222（C7，无需注册表）
+            default_driver = tools / "review_leg_recoll_driver-t21-default.mjs"
+            rl.derive_recoll_driver(template, default_driver, {**base, "INSTANCE_ID": "default"})
+            drivers.append(default_driver)
+            proc_default = subprocess.run(["node", str(default_driver)], cwd=str(tools), capture_output=True,
+                                          text=True, encoding="utf-8", errors="replace", timeout=120)
+            combined_default = (proc_default.stdout or "") + (proc_default.stderr or "")
+            self.assertIn("instance=default", combined_default, f"default 实例行缺失: {combined_default[-400:]}")
+            self.assertIn("127.0.0.1:9222", combined_default, f"C7 端口未生效: {combined_default[-400:]}")
+        finally:
+            if registry_backup is not None:
+                registry_path.write_bytes(registry_backup)
+            elif registry_path.exists():
+                registry_path.unlink()
+            for d in drivers:
+                d.unlink(missing_ok=True)
+
     def test_19_a5_combination_evidence_process_death_verified(self):
         """A5① 组合证据（会商乙方案裁定）：runner 独立进程于"发送确认后、reply 采集前"
         （账本状态事件=CONFIRMED 落账、R4_REPLY_CAPTURED 未落账）os._exit；父测试双重

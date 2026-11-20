@@ -1,0 +1,6 @@
+[INSTANCE-R2|阶段1整改定点复验（仅P1-1/P1-2/recoll三项）]
+分支 fix/parallel-dispatch-instance 新完整SHA=b14e713ed4204691467e46f95468a2d8d0f5ff72。请按SHA读 basic/tasks/b-20261121-parallel-dispatch-instance/steps.md 验收R1整改节+源码。要点：
+①P1-1=新纯函数 decidePortReuse（null/未知/非整数=UNVERIFIED_STOP；0=FOREIGN_STOP；>0=REUSE）替换原 ownProcs===0 判断，null 不再放行；负例5项。
+②P1-2=新纯函数 validatePortRegistry（ID合法+禁default登记+端口整数且在9300-9399+跨实例唯一+不占9222）入 readPortRegistry 读取即校验，损坏=INSTANCE_REGISTRY_INVALID；已登记端口复用仍必过归属核验；负例7项。
+③recoll同锁=模板增 INSTANCE_ID 参数+deriveInstancePaths（锁同源；命名实例端口读注册表，未登记=INSTANCE_REGISTRY_MISSING 拒绝猜测；default=9222）+lockPath 实例化；review_leg.py 增 --dispatch-instance 贯通；新 test_20 双派生断言。
+回归：instance-config 22/22+phase0 11/11+四腿 35+30+25+31=121 全 OK。请只复验三项给 PASS/FAIL；PASS 即阶段1最终 PASS（阶段2授权另提）。

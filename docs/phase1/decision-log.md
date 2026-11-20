@@ -1069,3 +1069,14 @@
 - **测试结果：** 16/16+phase0 统一回归 11/11（新增 instance-config 挂入跑器）+四腿 34+30+25+31=120 项 canonical（-I 逐模块）全 OK；**组合跑异常如实登记并定位=环境伪影**（shell PYTHONUTF8=1→非隔离跑 UTF-8 解 tasklist GBK 输出→UnicodeDecodeError→TypeError；-I 忽略环境变量→cp936→全过；实测两模式对照）——非代码回归（Python 零改动），测试卫生备忘移交。
 - **依据：** 提交链 81812dd→本提交；测试证据 phase0/logs/instance-config-tests.json+third-round-regression-2026-11-20T18-34-42/+leg-rerun-instance/。
 - **边界：** 不碰真实 ChatGPT 并发（阶段2 另授权）；C9 账号级风控协调未实现（阶段2 前置，如实登记）；Python/契约/M1 运行时/session_lock 零修改；独立验收交 ChatGPT（用户授权拍板通道），main 合并攒单待用户 11 点统一拍板（DEC-010）。
+
+### DEC-125 审查会话主动迁移（L-018§6）+ 验收 R1/R2 裁定与两轮定点整改（2026-11-21）
+
+- **主动迁移（用户批评驱动）：** 旧审查会话 6aff4117 当日已累计 4 条新 user 消息（TRIAL-PLAN/TRIAL-VERIFY/PARA-R1/INSTANCE-R1）+4 次采集 fail-closed，达 L-018§6 评估阈值未主动迁移——用户批评"派单窗口积累的对话太多了，没有按照规则来"，如实登记为纪律违规。已按§6 执行迁移：自包含简报 1194B（phase0/tools/brief_reviewer_migrate_r1.txt）--new-session 首派即活（dispatch-2026-11-20T19-10-51，采集内联成功）→**新审查会话 6b009b70-1458-83ec-adf8-d4d5e52f0fca 接棒**，指针自动更新，旧会话转只读归档，后续轮次全部在新会话。接棒确认 reply 2380B SHA-256=666b681c85753800971bfa388eb7a4ca9dd6aeb339ef3503e5efa1dbe4e176ef。
+- **验收 R1（dispatch-2026-11-20T18-53-31，旧会话末轮，reply SHA-256=9ef11dfa9c69c65f0012ef0d45fe84684b43353a625582716edbcc9f241a1849）：FAIL**——审查方认可 8 项 PASS（绑定/ID 校验/C7/端口哈希仅候选/进程精确归属/映射留证/M1 五查/C8 本地），判 P1-1（countChromeProcessesForProfile 返回 null 时调用方 ownProcs===0 判断放行= fail-open）、P1-2（注册表仅校验外层结构未逐项校验映射合法性）、recoll 同锁未闭合（BLOCKED→纳入整改）。
+- **R1 整改：** decidePortReuse 纯函数（null/未知/非整数=UNVERIFIED_STOP；0=FOREIGN_STOP；>0=REUSE）+startChromeWithDebugPort 只放行 REUSE；validatePortRegistry 逐项校验+readPortRegistry 读取即校验；recoll 模板 INSTANCE_ID 参数化（deriveInstancePaths 同源锁路径+命名实例端口读注册表 MISSING 拒绝猜测）+review_leg.py --dispatch-instance 贯通+test_20。
+- **验收 R2（dispatch-2026-11-20T19-17-44→新会话补采 recoll-instance-r2-…，reply SHA-256=1db00a651569fe1c…全值见 result.json）：P1-1 PASS；P1-2 FAIL（数组形 ports 绕过：Object.entries([9301])→["0",9301]，"0" 恰过 ID 正则）；recoll FAIL（模板漏导 readFileSync=命名实例真跑必 ReferenceError；test_20 仅文本断言未真跑的盲区）；并要求交付证据数字同步（steps/delivery 已同步 23/23+122 项）。
+- **R2 整改：** validatePortRegistry 入口拒绝数组/非映射（含我方自抓同族缺口=default 实例名匹配正则可登记，同批封死）；模板补 readFileSync+实例域日志打印实际解析端口；test_21 派生驱动真跑三态验证（注册表存在→9301+同锁路径；缺失→INSTANCE_REGISTRY_MISSING；default→9222），注册表备份/恢复防污染；test_21 subprocess 显式 encoding=utf-8+errors=replace（手册 §8.1 纪律，消环境依赖）。
+- **测试终态：** instance-config 23/23；phase0 统一回归 11/11；四腿 36+30+25+31=122 项 canonical 全 OK。
+- **依据：** 提交链 81812dd→…→b14e713e→本提交；现场 dispatch-2026-11-20T18-53-31/19-10-51/19-17-44+recoll-instance-r1/r2。
+- **边界：** 不授权阶段2；不执行 N=2；main 合并攒单待用户 11 点统一拍板（DEC-010）；906⑥ 状态不变。R3=新会话定点终验（仅 P1-2 数组拒绝+recoll 真跑两项，并确认 P1-1 无回归）。

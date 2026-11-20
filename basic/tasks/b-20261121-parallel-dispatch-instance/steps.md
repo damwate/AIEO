@@ -18,7 +18,7 @@
 - ①本步骤目标：--instance 解析+严格校验（防路径穿越/大小写歧义）+default 逐字节兼容+端口分配纯函数+指针单写者守卫+进程精确归属判定/脚本生成。
 - ②修改文件：phase0/tools/dispatch_options.mjs（+INSTANCE_ID_PATTERN/normalizeInstanceId/deriveInstancePaths/allocateInstancePort/assertPointerWriterAllowed/matchesProfileOwnership/buildKillProfileScript；parseDispatchOptions 增 --instance）。
 - ③修改内容：instance ID 校验正则 [a-z0-9][a-z0-9-]{0,31}+小写规范化；default 锁=gpt-session.lockfile/profile=gpt-poc/端口=9222（C7 逐字节）；命名实例锁=gpt-session-<ID>.lockfile/profile=gpt-poc-<ID>/端口走注册表（候选 9300-9399，探测碰撞检查，已登记稳定返回，耗尽 INSTANCE_PORT_EXHAUSTED）；非 default 实例写共享 reviewer 指针→POINTER_SINGLE_WRITER_VIOLATION fail-closed；进程归属=--user-data-dir 精确 token 匹配（大小写不敏感，禁子串通配——gpt-poc-a vs gpt-poc-a2 前缀碰撞负例）。
-- ④执行结果：实现完成；测试 test_instance_config.mjs 新建 16 项（ID 校验/C7 兼容/派生映射/parse 正负例/端口分配 5 型/指针守卫 3 态/进程归属正负例/清理脚本生成断言/实例锁域隔离+同锁互斥两条 OS 级负例）**16/16 PASS**（phase0/logs/instance-config-tests.json）。
+- ④执行结果：实现完成；测试 test_instance_config.mjs（现 23 项，R1/R2 整改扩容）（ID 校验/C7 兼容/派生映射/parse 正负例/端口分配 5 型/指针守卫 3 态/进程归属正负例/清理脚本生成断言/实例锁域隔离+同锁互斥两条 OS 级负例）终态 **23/23 PASS**（初版 16→R1 整改 22→R2 整改 23；phase0/logs/instance-config-tests.json）。
 - ⑤测试结果：node --check 双文件语法 OK；冒烟全过。
 - ⑥验收证据引用：phase0/tools/test_instance_config.mjs；phase0/logs/instance-config-tests.log；本步无独立派单（实现步），任务关联派单现场 dispatch-2026-11-20T18-19-39（S1 方案评审，reply SHA-256=`513e4d68746be70e167486f004d1988268d96082ee014c474a890cf6ff09ad11`）；**验收结论：PASS**。
 
@@ -57,3 +57,12 @@
 - ④执行结果：delivery.md 成文；DEC-124 登记；ST-05 终检 6/6 PASS；分支 fix/parallel-dispatch-instance 推送；独立验收派单至审查会话（--session-result 绑定，采集 fail-closed 即 L-018 补采）。用户补充授权（2026-11-21）："做完整个DEC-123之前都给chatgpt拍板，要我拍板的留到11点一起处理"——main 合并属 DEC-010 已入攒单队列。
 - ⑤测试结果：汇总=16/16 新负例+11/11 phase0 统一回归+120/120 四腿（canonical -I 逐模块）；组合跑编码伪影如实登记（PYTHONUTF8=1 机制，非代码回归）。
 - ⑥验收证据引用：独立验收派单现场+reply SHA（验收后回填至 DEC-124）；**验收结论：PASS（阶段1 实现+本地回归完成，独立验收见 DEC-124）**。
+
+## S7 验收整改轮（R1 FAIL→R2 定点复验→R3 待终验）
+
+- ①本步骤目标：消化验收 R1 三项（P1-1/P1-2/recoll 同锁）与 R2 复验两项遗留（P1-2 数组绕过/recoll readFileSync 缺失），达成阶段1 最终 PASS。
+- ②修改文件：dispatch_options.mjs（decidePortReuse/validatePortRegistry+数组拒绝）、gpt_dispatch.mjs（决策函数接线+注册表外层校验加严）、review_leg_recoll_template.mjs（INSTANCE_ID 派生+注册表端口解析+lockPath+readFileSync 补导）、review_leg.py（--dispatch-instance 贯通 ctor/derive/头断言）、test_instance_config.mjs（23 项）、test_review_leg.py（test_20 文本断言+test_21 真跑验证）。
+- ③验收 R1（dispatch-2026-11-20T18-53-31→recoll-instance-r1-…，reply SHA-256=9ef11dfa9c69c65f0012ef0d45fe84684b43353a625582716edbcc9f241a1849）：FAIL——P1-1 归属查询 null 放行（fail-open）、P1-2 注册表未逐项校验、recoll 同锁未闭合；审查方认可其余 8 项 PASS（ID 校验/C7 兼容/端口哈希仅候选/进程精确归属/映射留证/M1 五查/C8 本地/绑定）。R2（dispatch-2026-11-20T19-17-44→recoll-instance-r2-…，reply SHA-256=1db00a651569fe1c…全值见 result.json）：P1-1 PASS；P1-2 FAIL（数组形 ports 绕过——Object.entries([9301])→["0",9301] 溜过正则）；recoll FAIL（readFileSync 缺失=真跑必 ReferenceError，test_20 仅文本断言的盲区）；另要求交付证据数字同步（本节即同步）。
+- ④R2 整改执行：P1-2=validatePortRegistry 入口拒绝数组/非映射+default 实例禁登记（我方测试还抓出 R2 建议外的同族缺口——default 实例名匹配正则漏过，已同批修复）；recoll=补 readFileSync 导入+日志行打印实际解析端口（cdp=URL）供真跑断言；test_21=命名实例真跑三态（注册表存在→解析 9301+同锁路径行；缺失→INSTANCE_REGISTRY_MISSING；default→9222），注册表备份/恢复防污染。
+- ⑤测试结果：instance-config **23/23**；phase0 统一回归 **11/11**（19-25-21）；四腿 **36+30+25+31=122 项全 OK**（canonical -I 逐模块；test_21 的 subprocess 显式 encoding=utf-8+errors=replace——手册 §8.1 纪律，环境无关）。
+- ⑥验收证据引用：本步无独立派单（整改步），任务关联派单现场 dispatch-2026-11-20T18-53-31（R1）/19-17-44（R2），reply SHA 见③；**验收结论：待 R3 定点终验（P1-2 数组拒绝+recoll 真跑两项）**。

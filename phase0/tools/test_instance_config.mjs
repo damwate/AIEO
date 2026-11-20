@@ -158,6 +158,12 @@ const tests = [
     assert.throws(() => validatePortRegistry({ a: 9400 }, opts), (e) => e.code === "INSTANCE_REGISTRY_INVALID");
     assert.throws(() => validatePortRegistry({ a: "9301" }, opts), (e) => e.code === "INSTANCE_REGISTRY_INVALID");
   }],
+  ["P1-2 R2整改：数组形 ports 一律拒绝（Object.entries 数组恰溜过 ID 正则的反例）", () => {
+    const opts = { candidates: { min: 9300, max: 9399 }, defaultPort: 9222 };
+    assert.throws(() => validatePortRegistry([9301], opts), (e) => e.code === "INSTANCE_REGISTRY_INVALID");
+    assert.throws(() => validatePortRegistry(null, opts), (e) => e.code === "INSTANCE_REGISTRY_INVALID");
+    assert.throws(() => validatePortRegistry("x", opts), (e) => e.code === "INSTANCE_REGISTRY_INVALID");
+  }],
   ["P1-2 注册表逐项校验：占用 default 固定端口/default 实例登记/非法 ID 拒绝", () => {
     const opts = { candidates: { min: 9300, max: 9399 }, defaultPort: 9222 };
     assert.throws(() => validatePortRegistry({ a: 9222 }, opts), (e) => e.code === "INSTANCE_REGISTRY_INVALID");

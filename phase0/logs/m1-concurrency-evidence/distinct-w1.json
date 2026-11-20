@@ -1,6 +1,6 @@
 {
   "worker": "w1",
-  "pid": 19428,
+  "pid": 2328,
   "result": "SUCCESS",
   "registration": {
     "status": "REGISTERED",
@@ -12,7 +12,7 @@
     "record_count": 1,
     "record": {
       "artifact_id": "ART-M1-000001",
-      "registered_at": "2026-11-20T19:05:41.153Z",
+      "registered_at": "2026-11-20T19:25:30.980Z",
       "task_id": "T-P1-930",
       "execution_id": "EXEC-930",
       "correlation_id": "CORR-930",

@@ -1,0 +1,191 @@
+ChatGPT 说：
+
+[TAG|INSTANCE-R2|阶段1整改定点复验]
+
+审查对象已锁定：fix/parallel-dispatch-instance@b14e713ed4204691467e46f95468a2d8d0f5ff72。
+
+已读取该 SHA 的 steps.md、delivery.md、dispatch_options.mjs、gpt_dispatch.mjs、recoll 模板、review_leg.py 及相关测试源码。
+
+初步发现：P1-1 的核心 fail-closed 修复成立；P1-2 和 recoll 还需要检查实际边界，不能仅凭负例数量签收。
+
+二、三项最终裁定
+
+P1-1：端口归属查询 fail-open
+
+PASS
+
+已确认：
+
+decidePortReuse 将 null、undefined、非整数、负数全部归入 UNVERIFIED_STOP。
+
+明确 0 返回 FOREIGN_STOP。
+
+只有正整数返回 REUSE。
+
+countChromeProcessesForProfile 查询失败或输出无法解析时返回 null。
+
+startChromeWithDebugPort 只允许 REUSE 继续。
+
+原先 ownProcs === 0 导致 null 放行的问题已关闭。
+
+P1-2：注册表逐项校验
+
+FAIL
+
+已确认：
+
+实例 ID 正则校验。
+
+禁止 default 登记。
+
+端口整数及 9300～9399 范围校验。
+
+跨实例端口唯一性校验。
+
+禁止占用 9222。
+
+readPortRegistry 读取后调用 validatePortRegistry。
+
+仍存在一个结构性缺口：没有拒绝数组形式的 ports。
+
+反例：
+
+JSON
+{
+  "version": 1,
+  "ports": [9301]
+}
+
+原因：
+
+typeof registry.ports === "object" 对数组成立。
+
+Object.entries([9301]) 得到 [["0",9301]]。
+
+"0" 符合实例 ID 正则。
+
+9301 符合端口范围。
+
+最终错误格式的注册表被接受。
+
+这违反注册表损坏必须 fail-closed 的要求。
+
+建议在读取结构校验和纯函数入口均拒绝 Array.isArray(ports)，并增加负例。
+
+recoll：实例锁闭合
+
+FAIL
+
+已确认：
+
+模板增加 INSTANCE_ID。
+
+使用 deriveInstancePaths 派生实例路径。
+
+acquireSessionLock 使用 INSTANCE.lockPath。
+
+命名实例通过注册表读取端口。
+
+未登记时拒绝猜测。
+
+review_leg.py 的 --dispatch-instance 已贯通。
+
+test_20 有命名实例和 default 双派生断言。
+
+发现一个实际运行缺陷：模板漏导入 readFileSync。
+
+模板当前：
+
+JavaScript
+import { existsSync, mkdirSync, writeFileSync, copyFileSync } from "node:fs";
+
+但命名实例注册表读取执行：
+
+JavaScript
+const reg = JSON.parse(readFileSync(regPath, "utf8"));
+
+因此：
+
+注册表不存在：能正确返回 INSTANCE_REGISTRY_MISSING。
+
+注册表存在：执行到 readFileSync 时触发 ReferenceError。
+
+正常命名实例 recoll 无法完成端口解析，更无法进入后续同锁补采流程。
+
+test_20 只检查派生文本是否包含相关代码，没有实际执行命名实例模板，因此漏掉了这个问题。
+
+修复：导入 readFileSync，并增加命名实例注册表存在时的实际运行测试。
+
+三、总裁定
+阶段1最终 PASS：不通过
+
+项目
+
+	
+
+裁定
+
+	
+
+原因
+
+
+
+
+P1-1
+
+	
+
+PASS
+
+	
+
+fail-closed 已闭合
+
+
+
+
+P1-2
+
+	
+
+FAIL
+
+	
+
+数组形式注册表可绕过校验
+
+
+
+
+recoll
+
+	
+
+FAIL
+
+	
+
+缺少 readFileSync 导入
+
+四、整改要求
+
+只需针对两个明确缺陷整改：
+
+P1-2：注册表必须拒绝数组及非预期映射结构，增加数组负例。
+
+recoll：补充 readFileSync 导入，增加真实命名实例模板运行验证，覆盖注册表存在、端口正确解析、同锁路径及 default 9222。
+
+另有一项证据登记问题：当前 SHA 的 steps.md 和 delivery.md 仍保留旧版 16/16、120/120 统计，未看到本轮 R1 整改节及 22/22、121 项的新结果。后续交付时应同步更新，避免验收依据与源码不一致。
+
+边界保持不变：
+
+不扩大复验范围。
+
+不授权阶段2。
+
+不执行 N=2 真实并发。
+
+不执行 main 合并（DEC-010 留待用户统一拍板）。
+
+下一轮提交新完整 SHA 后，我只复验上述两个 FAIL，并重新确认 P1-1 不发生回归。

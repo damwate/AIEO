@@ -398,8 +398,8 @@ function readPortRegistry() {
   } catch (error) {
     throw new Error(`INSTANCE_REGISTRY_INVALID: 实例端口注册表读取失败，拒绝按空注册表继续: ${error.message}`);
   }
-  if (registry?.version !== 1 || typeof registry?.ports !== "object" || registry?.ports === null) {
-    throw new Error("INSTANCE_REGISTRY_INVALID: 实例端口注册表结构无效");
+  if (registry?.version !== 1 || typeof registry?.ports !== "object" || registry?.ports === null || Array.isArray(registry.ports)) {
+    throw new Error("INSTANCE_REGISTRY_INVALID: 实例端口注册表结构无效（ports 必须为映射对象，禁数组）");
   }
   // P1-2 整改（DEC-123 验收 R1）：锁只防并发分配竞态，不证明已有内容合法——
   // 逐项校验 ID/端口类型/候选域/跨实例唯一/default 占用，任一违反即拒。

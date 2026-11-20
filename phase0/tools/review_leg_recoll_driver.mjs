@@ -5,8 +5,8 @@
 // 派生参数（L-018 第 3/4 条三参数+归属校验五件套）：
 //   CONV_UUID=33333333-4444-4555-8666-777777777777            （原会话 ID；来自账本 R3_SEND_CONFIRMED）
 //   SENT_USER_UNIT_KEY=fallback-turn-0:0:user（发送双验报告键；定位以标记文本为准，键仅参考）
-//   FAILED_DIR=C:/Users/youting/AppData/Local/Temp/rvl-test-ob378j7b/dispatch-logs/dispatch-runner-3          （发送失败现场 dispatch 目录；request.txt 证据源）
-//   OUT_DIR=C:/Users/youting/AppData/Local/Temp/rvl-test-ob378j7b/runtime/rvl-997019                （补采产物落盘目录=审查腿 run 目录）
+//   FAILED_DIR=C:/Users/youting/AppData/Local/Temp/rvl-test-zwrfl1f4/dispatch-logs/dispatch-runner-3          （发送失败现场 dispatch 目录；request.txt 证据源）
+//   OUT_DIR=C:/Users/youting/AppData/Local/Temp/rvl-test-zwrfl1f4/runtime/rvl-997019                （补采产物落盘目录=审查腿 run 目录）
 //   MARKER_TEXT=[GPT03-R1|997019|T-P1-028]        （简报标记文本；归属校验唯一锚点）
 //   INSTANCE_ID=default        （实例域：锁路径/端口与派单侧同源——DEC-123①边界3：派单与 recoll 同实例 ID 同锁路径）
 //   PREV_REPLY_SHA256=（前轮 reply SHA 前缀排除；not_prev_reply_sha）
@@ -15,7 +15,7 @@
 // （标记文本恰 1 条+最后 user 断言）→双读稳定+七查（六查+not_prev_reply_sha）→
 // 不稳定/窗口不完整时按 L-021 第 3 条升级视口拉高 1920×20000 重物化后复测。
 import { chromium } from "playwright";
-import { existsSync, mkdirSync, writeFileSync, copyFileSync } from "node:fs";
+import { existsSync, mkdirSync, writeFileSync, copyFileSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
@@ -49,8 +49,8 @@ const CONV_UUID = "33333333-4444-4555-8666-777777777777";
 const MARKER = "[GPT03-R1|997019|T-P1-028]";
 const PREV_REPLY_SHA256 = ""; // 空串=无前轮可比（首轮），not_prev_reply_sha 恒真
 const SENT_KEY_REPORTED = "fallback-turn-0:0:user";
-const FAILED_DIR = "C:/Users/youting/AppData/Local/Temp/rvl-test-ob378j7b/dispatch-logs/dispatch-runner-3"; // 派生为绝对路径（驱动在 phase0/tools cwd 下运行）
-const OUT_DIR = "C:/Users/youting/AppData/Local/Temp/rvl-test-ob378j7b/runtime/rvl-997019";       // 派生为绝对路径（审查腿 run 目录）
+const FAILED_DIR = "C:/Users/youting/AppData/Local/Temp/rvl-test-zwrfl1f4/dispatch-logs/dispatch-runner-3"; // 派生为绝对路径（驱动在 phase0/tools cwd 下运行）
+const OUT_DIR = "C:/Users/youting/AppData/Local/Temp/rvl-test-zwrfl1f4/runtime/rvl-997019";       // 派生为绝对路径（审查腿 run 目录）
 const IDLE_WAIT_MS = Number(process.env.AIEO_RECOLL_IDLE_WAIT_MS || 30000);
 
 function log(msg) {
@@ -119,7 +119,7 @@ async function snapshotPair(page, targetKey) {
 
 mkdirSync(OUT_DIR, { recursive: true });
 const lock = acquireSessionLock({ holder: "review_leg_recoll", lockPath: INSTANCE.lockPath });
-log(`补采实例域: instance=${INSTANCE.instanceId} lock=${INSTANCE.lockPath} port=${INSTANCE.isDefault ? 9222 : "registry"}`);
+log(`补采实例域: instance=${INSTANCE.instanceId} lock=${INSTANCE.lockPath} cdp=${CDP_URL}`);
 log("会话锁已获取（review-leg 补采；仅采集不发送）");
 let browser;
 let cdp;

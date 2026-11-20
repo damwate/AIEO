@@ -232,8 +232,13 @@ export function decidePortReuse({ ownProcs }) {
  * 候选域内、跨实例唯一、不得占用 default 固定端口。任一违反→INSTANCE_REGISTRY_INVALID。
  */
 export function validatePortRegistry(ports, { candidates, defaultPort }) {
+  if (ports === null || ports === undefined || typeof ports !== "object" || Array.isArray(ports)) {
+    // R2 复验整改：数组形 ports（Object.entries([9301])→["0",9301]，"0" 恰好溜过 ID 正则）
+    // 与一切非映射结构一律拒绝——注册表损坏必须 fail-closed。
+    throw optionError("INSTANCE_REGISTRY_INVALID", `注册表 ports 必须是实例→端口的映射对象（禁数组/标量/null）: ${Array.isArray(ports) ? "array" : typeof ports}`);
+  }
   const seen = new Map();
-  for (const [id, port] of Object.entries(ports ?? {})) {
+  for (const [id, port] of Object.entries(ports)) {
     if (!INSTANCE_ID_PATTERN.test(String(id))) {
       throw optionError("INSTANCE_REGISTRY_INVALID", `注册表实例 ID 不合法: ${id}`, { instance: id });
     }

@@ -1,6 +1,6 @@
 {
-  "started_at": "2026-11-20T19:05:39.372Z",
-  "finished_at": "2026-11-20T19:05:55.089Z",
+  "started_at": "2026-11-20T19:25:30.317Z",
+  "finished_at": "2026-11-20T19:25:37.569Z",
   "node": "v24.14.0",
   "process_count_per_scenario": 4,
   "mutex": "OS_FILE_HANDLE_FILESHARE_NONE_WITH_STDIN_LIFECYCLE",
@@ -33,7 +33,7 @@
         "records": [
           {
             "artifact_id": "ART-M1-000001",
-            "registered_at": "2026-11-20T19:05:41.153Z",
+            "registered_at": "2026-11-20T19:25:30.980Z",
             "task_id": "T-P1-930",
             "execution_id": "EXEC-930",
             "correlation_id": "CORR-930",
@@ -52,7 +52,7 @@
           },
           {
             "artifact_id": "ART-M1-000002",
-            "registered_at": "2026-11-20T19:05:42.296Z",
+            "registered_at": "2026-11-20T19:25:31.534Z",
             "task_id": "T-P1-932",
             "execution_id": "EXEC-932",
             "correlation_id": "CORR-932",
@@ -71,26 +71,7 @@
           },
           {
             "artifact_id": "ART-M1-000003",
-            "registered_at": "2026-11-20T19:05:43.400Z",
-            "task_id": "T-P1-933",
-            "execution_id": "EXEC-933",
-            "correlation_id": "CORR-933",
-            "artifact_sha256": "66eb63f70e9b7496613d6a41623d8ee49b0008254c2a80495cb262a167043ec8",
-            "idempotency_key": "{\"task_id\":\"T-P1-933\",\"execution_id\":\"EXEC-933\",\"correlation_id\":\"CORR-933\",\"artifact_sha256\":\"66eb63f70e9b7496613d6a41623d8ee49b0008254c2a80495cb262a167043ec8\"}",
-            "content_sha256": "66eb63f70e9b7496613d6a41623d8ee49b0008254c2a80495cb262a167043ec8",
-            "size_bytes": 18,
-            "artifact_path": "D:\\AIEO\\phase0\\logs\\m1-concurrency-evidence\\distinct-4.txt",
-            "artifact_kind": "GPT_REPLY_TEXT",
-            "schema_validation": "NOT_REQUESTED",
-            "content": "独立 artifact 4\n",
-            "unit_metadata": {
-              "worker": "w4",
-              "source": "REAL_MULTIPROCESS_TEST"
-            }
-          },
-          {
-            "artifact_id": "ART-M1-000004",
-            "registered_at": "2026-11-20T19:05:44.291Z",
+            "registered_at": "2026-11-20T19:25:32.092Z",
             "task_id": "T-P1-931",
             "execution_id": "EXEC-931",
             "correlation_id": "CORR-931",
@@ -106,13 +87,32 @@
               "worker": "w2",
               "source": "REAL_MULTIPROCESS_TEST"
             }
+          },
+          {
+            "artifact_id": "ART-M1-000004",
+            "registered_at": "2026-11-20T19:25:32.548Z",
+            "task_id": "T-P1-933",
+            "execution_id": "EXEC-933",
+            "correlation_id": "CORR-933",
+            "artifact_sha256": "66eb63f70e9b7496613d6a41623d8ee49b0008254c2a80495cb262a167043ec8",
+            "idempotency_key": "{\"task_id\":\"T-P1-933\",\"execution_id\":\"EXEC-933\",\"correlation_id\":\"CORR-933\",\"artifact_sha256\":\"66eb63f70e9b7496613d6a41623d8ee49b0008254c2a80495cb262a167043ec8\"}",
+            "content_sha256": "66eb63f70e9b7496613d6a41623d8ee49b0008254c2a80495cb262a167043ec8",
+            "size_bytes": 18,
+            "artifact_path": "D:\\AIEO\\phase0\\logs\\m1-concurrency-evidence\\distinct-4.txt",
+            "artifact_kind": "GPT_REPLY_TEXT",
+            "schema_validation": "NOT_REQUESTED",
+            "content": "独立 artifact 4\n",
+            "unit_metadata": {
+              "worker": "w4",
+              "source": "REAL_MULTIPROCESS_TEST"
+            }
           }
         ]
       },
       "workers": [
         {
           "worker": "w1",
-          "pid": 19428,
+          "pid": 2328,
           "exit_code": 0,
           "signal": null,
           "stdout": "{\"worker\":\"w1\",\"status\":\"REGISTERED\",\"artifact_id\":\"ART-M1-000001\"}\n",
@@ -120,7 +120,7 @@
           "output_path": "D:\\AIEO\\phase0\\logs\\m1-concurrency-evidence\\distinct-w1.json",
           "result": {
             "worker": "w1",
-            "pid": 19428,
+            "pid": 2328,
             "result": "SUCCESS",
             "registration": {
               "status": "REGISTERED",
@@ -132,7 +132,7 @@
               "record_count": 1,
               "record": {
                 "artifact_id": "ART-M1-000001",
-                "registered_at": "2026-11-20T19:05:41.153Z",
+                "registered_at": "2026-11-20T19:25:30.980Z",
                 "task_id": "T-P1-930",
                 "execution_id": "EXEC-930",
                 "correlation_id": "CORR-930",
@@ -155,27 +155,27 @@
         },
         {
           "worker": "w2",
-          "pid": 26432,
+          "pid": 29644,
           "exit_code": 0,
           "signal": null,
-          "stdout": "{\"worker\":\"w2\",\"status\":\"REGISTERED\",\"artifact_id\":\"ART-M1-000004\"}\n",
+          "stdout": "{\"worker\":\"w2\",\"status\":\"REGISTERED\",\"artifact_id\":\"ART-M1-000003\"}\n",
           "stderr": "",
           "output_path": "D:\\AIEO\\phase0\\logs\\m1-concurrency-evidence\\distinct-w2.json",
           "result": {
             "worker": "w2",
-            "pid": 26432,
+            "pid": 29644,
             "result": "SUCCESS",
             "registration": {
               "status": "REGISTERED",
-              "artifact_id": "ART-M1-000004",
+              "artifact_id": "ART-M1-000003",
               "duplicate": false,
               "retry_count": 0,
               "idempotency_key": "{\"task_id\":\"T-P1-931\",\"execution_id\":\"EXEC-931\",\"correlation_id\":\"CORR-931\",\"artifact_sha256\":\"94357b3ad556593037718b26a2e25e77df776e7db29709ffa466261178f9ee61\"}",
               "registry_path": "D:\\AIEO\\phase0\\logs\\m1-concurrency-evidence\\distinct-registry.json",
-              "record_count": 4,
+              "record_count": 3,
               "record": {
-                "artifact_id": "ART-M1-000004",
-                "registered_at": "2026-11-20T19:05:44.291Z",
+                "artifact_id": "ART-M1-000003",
+                "registered_at": "2026-11-20T19:25:32.092Z",
                 "task_id": "T-P1-931",
                 "execution_id": "EXEC-931",
                 "correlation_id": "CORR-931",
@@ -198,7 +198,7 @@
         },
         {
           "worker": "w3",
-          "pid": 16736,
+          "pid": 4072,
           "exit_code": 0,
           "signal": null,
           "stdout": "{\"worker\":\"w3\",\"status\":\"REGISTERED\",\"artifact_id\":\"ART-M1-000002\"}\n",
@@ -206,7 +206,7 @@
           "output_path": "D:\\AIEO\\phase0\\logs\\m1-concurrency-evidence\\distinct-w3.json",
           "result": {
             "worker": "w3",
-            "pid": 16736,
+            "pid": 4072,
             "result": "SUCCESS",
             "registration": {
               "status": "REGISTERED",
@@ -218,7 +218,7 @@
               "record_count": 2,
               "record": {
                 "artifact_id": "ART-M1-000002",
-                "registered_at": "2026-11-20T19:05:42.296Z",
+                "registered_at": "2026-11-20T19:25:31.534Z",
                 "task_id": "T-P1-932",
                 "execution_id": "EXEC-932",
                 "correlation_id": "CORR-932",
@@ -241,27 +241,27 @@
         },
         {
           "worker": "w4",
-          "pid": 3952,
+          "pid": 30124,
           "exit_code": 0,
           "signal": null,
-          "stdout": "{\"worker\":\"w4\",\"status\":\"REGISTERED\",\"artifact_id\":\"ART-M1-000003\"}\n",
+          "stdout": "{\"worker\":\"w4\",\"status\":\"REGISTERED\",\"artifact_id\":\"ART-M1-000004\"}\n",
           "stderr": "",
           "output_path": "D:\\AIEO\\phase0\\logs\\m1-concurrency-evidence\\distinct-w4.json",
           "result": {
             "worker": "w4",
-            "pid": 3952,
+            "pid": 30124,
             "result": "SUCCESS",
             "registration": {
               "status": "REGISTERED",
-              "artifact_id": "ART-M1-000003",
+              "artifact_id": "ART-M1-000004",
               "duplicate": false,
               "retry_count": 0,
               "idempotency_key": "{\"task_id\":\"T-P1-933\",\"execution_id\":\"EXEC-933\",\"correlation_id\":\"CORR-933\",\"artifact_sha256\":\"66eb63f70e9b7496613d6a41623d8ee49b0008254c2a80495cb262a167043ec8\"}",
               "registry_path": "D:\\AIEO\\phase0\\logs\\m1-concurrency-evidence\\distinct-registry.json",
-              "record_count": 3,
+              "record_count": 4,
               "record": {
-                "artifact_id": "ART-M1-000003",
-                "registered_at": "2026-11-20T19:05:43.400Z",
+                "artifact_id": "ART-M1-000004",
+                "registered_at": "2026-11-20T19:25:32.548Z",
                 "task_id": "T-P1-933",
                 "execution_id": "EXEC-933",
                 "correlation_id": "CORR-933",
@@ -294,7 +294,7 @@
         "records": [
           {
             "artifact_id": "ART-M1-000001",
-            "registered_at": "2026-11-20T19:05:46.022Z",
+            "registered_at": "2026-11-20T19:25:33.363Z",
             "task_id": "T-P1-940",
             "execution_id": "EXEC-940",
             "correlation_id": "CORR-940",
@@ -316,7 +316,7 @@
       "workers": [
         {
           "worker": "w1",
-          "pid": 26540,
+          "pid": 22808,
           "exit_code": 0,
           "signal": null,
           "stdout": "{\"worker\":\"w1\",\"status\":\"DUPLICATE\",\"artifact_id\":\"ART-M1-000001\"}\n",
@@ -324,7 +324,7 @@
           "output_path": "D:\\AIEO\\phase0\\logs\\m1-concurrency-evidence\\duplicate-w1.json",
           "result": {
             "worker": "w1",
-            "pid": 26540,
+            "pid": 22808,
             "result": "SUCCESS",
             "registration": {
               "status": "DUPLICATE",
@@ -336,7 +336,7 @@
               "record_count": 1,
               "record": {
                 "artifact_id": "ART-M1-000001",
-                "registered_at": "2026-11-20T19:05:46.022Z",
+                "registered_at": "2026-11-20T19:25:33.363Z",
                 "task_id": "T-P1-940",
                 "execution_id": "EXEC-940",
                 "correlation_id": "CORR-940",
@@ -359,7 +359,7 @@
         },
         {
           "worker": "w2",
-          "pid": 14068,
+          "pid": 20440,
           "exit_code": 0,
           "signal": null,
           "stdout": "{\"worker\":\"w2\",\"status\":\"REGISTERED\",\"artifact_id\":\"ART-M1-000001\"}\n",
@@ -367,7 +367,7 @@
           "output_path": "D:\\AIEO\\phase0\\logs\\m1-concurrency-evidence\\duplicate-w2.json",
           "result": {
             "worker": "w2",
-            "pid": 14068,
+            "pid": 20440,
             "result": "SUCCESS",
             "registration": {
               "status": "REGISTERED",
@@ -379,7 +379,7 @@
               "record_count": 1,
               "record": {
                 "artifact_id": "ART-M1-000001",
-                "registered_at": "2026-11-20T19:05:46.022Z",
+                "registered_at": "2026-11-20T19:25:33.363Z",
                 "task_id": "T-P1-940",
                 "execution_id": "EXEC-940",
                 "correlation_id": "CORR-940",
@@ -402,7 +402,7 @@
         },
         {
           "worker": "w3",
-          "pid": 17360,
+          "pid": 2016,
           "exit_code": 0,
           "signal": null,
           "stdout": "{\"worker\":\"w3\",\"status\":\"DUPLICATE\",\"artifact_id\":\"ART-M1-000001\"}\n",
@@ -410,7 +410,7 @@
           "output_path": "D:\\AIEO\\phase0\\logs\\m1-concurrency-evidence\\duplicate-w3.json",
           "result": {
             "worker": "w3",
-            "pid": 17360,
+            "pid": 2016,
             "result": "SUCCESS",
             "registration": {
               "status": "DUPLICATE",
@@ -422,7 +422,7 @@
               "record_count": 1,
               "record": {
                 "artifact_id": "ART-M1-000001",
-                "registered_at": "2026-11-20T19:05:46.022Z",
+                "registered_at": "2026-11-20T19:25:33.363Z",
                 "task_id": "T-P1-940",
                 "execution_id": "EXEC-940",
                 "correlation_id": "CORR-940",
@@ -445,7 +445,7 @@
         },
         {
           "worker": "w4",
-          "pid": 31264,
+          "pid": 18132,
           "exit_code": 0,
           "signal": null,
           "stdout": "{\"worker\":\"w4\",\"status\":\"DUPLICATE\",\"artifact_id\":\"ART-M1-000001\"}\n",
@@ -453,7 +453,7 @@
           "output_path": "D:\\AIEO\\phase0\\logs\\m1-concurrency-evidence\\duplicate-w4.json",
           "result": {
             "worker": "w4",
-            "pid": 31264,
+            "pid": 18132,
             "result": "SUCCESS",
             "registration": {
               "status": "DUPLICATE",
@@ -465,7 +465,7 @@
               "record_count": 1,
               "record": {
                 "artifact_id": "ART-M1-000001",
-                "registered_at": "2026-11-20T19:05:46.022Z",
+                "registered_at": "2026-11-20T19:25:33.363Z",
                 "task_id": "T-P1-940",
                 "execution_id": "EXEC-940",
                 "correlation_id": "CORR-940",
@@ -498,20 +498,20 @@
         "records": [
           {
             "artifact_id": "ART-M1-000001",
-            "registered_at": "2026-11-20T19:05:51.366Z",
+            "registered_at": "2026-11-20T19:25:35.847Z",
             "task_id": "T-P1-941",
             "execution_id": "EXEC-941",
             "correlation_id": "CORR-941",
-            "artifact_sha256": "3028714d14327ffaeb9d192a320df2be7fa287648cd1065d3c38db4ee518d43a",
-            "idempotency_key": "{\"task_id\":\"T-P1-941\",\"execution_id\":\"EXEC-941\",\"correlation_id\":\"CORR-941\",\"artifact_sha256\":\"3028714d14327ffaeb9d192a320df2be7fa287648cd1065d3c38db4ee518d43a\"}",
-            "content_sha256": "3028714d14327ffaeb9d192a320df2be7fa287648cd1065d3c38db4ee518d43a",
+            "artifact_sha256": "178ac8f3f5a68575836729e5f17c9f9a5ebd83741f6b27aba5976613563365b4",
+            "idempotency_key": "{\"task_id\":\"T-P1-941\",\"execution_id\":\"EXEC-941\",\"correlation_id\":\"CORR-941\",\"artifact_sha256\":\"178ac8f3f5a68575836729e5f17c9f9a5ebd83741f6b27aba5976613563365b4\"}",
+            "content_sha256": "178ac8f3f5a68575836729e5f17c9f9a5ebd83741f6b27aba5976613563365b4",
             "size_bytes": 27,
-            "artifact_path": "D:\\AIEO\\phase0\\logs\\m1-concurrency-evidence\\conflict-4.txt",
+            "artifact_path": "D:\\AIEO\\phase0\\logs\\m1-concurrency-evidence\\conflict-3.txt",
             "artifact_kind": "GPT_REPLY_TEXT",
             "schema_validation": "NOT_REQUESTED",
-            "content": "互斥 hash 冲突内容 4\n",
+            "content": "互斥 hash 冲突内容 3\n",
             "unit_metadata": {
-              "worker": "w4",
+              "worker": "w3",
               "source": "REAL_MULTIPROCESS_TEST"
             }
           }
@@ -520,15 +520,15 @@
       "workers": [
         {
           "worker": "w1",
-          "pid": 31248,
+          "pid": 21672,
           "exit_code": 1,
           "signal": null,
           "stdout": "",
-          "stderr": "{\"worker\":\"w1\",\"pid\":31248,\"result\":\"FAILURE\",\"error_code\":\"M1_ARTIFACT_HASH_CONFLICT\",\"message\":\"M1_ARTIFACT_HASH_CONFLICT: 同一 task/execution/correlation 的原始 hash 已变化，拒绝复用旧 artifact 记录\"}\n",
+          "stderr": "{\"worker\":\"w1\",\"pid\":21672,\"result\":\"FAILURE\",\"error_code\":\"M1_ARTIFACT_HASH_CONFLICT\",\"message\":\"M1_ARTIFACT_HASH_CONFLICT: 同一 task/execution/correlation 的原始 hash 已变化，拒绝复用旧 artifact 记录\"}\n",
           "output_path": "D:\\AIEO\\phase0\\logs\\m1-concurrency-evidence\\conflict-w1.json",
           "result": {
             "worker": "w1",
-            "pid": 31248,
+            "pid": 21672,
             "result": "FAILURE",
             "error_code": "M1_ARTIFACT_HASH_CONFLICT",
             "message": "M1_ARTIFACT_HASH_CONFLICT: 同一 task/execution/correlation 的原始 hash 已变化，拒绝复用旧 artifact 记录"
@@ -536,15 +536,15 @@
         },
         {
           "worker": "w2",
-          "pid": 19072,
+          "pid": 26864,
           "exit_code": 1,
           "signal": null,
           "stdout": "",
-          "stderr": "{\"worker\":\"w2\",\"pid\":19072,\"result\":\"FAILURE\",\"error_code\":\"M1_ARTIFACT_HASH_CONFLICT\",\"message\":\"M1_ARTIFACT_HASH_CONFLICT: 同一 task/execution/correlation 的原始 hash 已变化，拒绝复用旧 artifact 记录\"}\n",
+          "stderr": "{\"worker\":\"w2\",\"pid\":26864,\"result\":\"FAILURE\",\"error_code\":\"M1_ARTIFACT_HASH_CONFLICT\",\"message\":\"M1_ARTIFACT_HASH_CONFLICT: 同一 task/execution/correlation 的原始 hash 已变化，拒绝复用旧 artifact 记录\"}\n",
           "output_path": "D:\\AIEO\\phase0\\logs\\m1-concurrency-evidence\\conflict-w2.json",
           "result": {
             "worker": "w2",
-            "pid": 19072,
+            "pid": 26864,
             "result": "FAILURE",
             "error_code": "M1_ARTIFACT_HASH_CONFLICT",
             "message": "M1_ARTIFACT_HASH_CONFLICT: 同一 task/execution/correlation 的原始 hash 已变化，拒绝复用旧 artifact 记录"
@@ -552,61 +552,61 @@
         },
         {
           "worker": "w3",
-          "pid": 12152,
-          "exit_code": 1,
+          "pid": 30016,
+          "exit_code": 0,
           "signal": null,
-          "stdout": "",
-          "stderr": "{\"worker\":\"w3\",\"pid\":12152,\"result\":\"FAILURE\",\"error_code\":\"M1_ARTIFACT_HASH_CONFLICT\",\"message\":\"M1_ARTIFACT_HASH_CONFLICT: 同一 task/execution/correlation 的原始 hash 已变化，拒绝复用旧 artifact 记录\"}\n",
+          "stdout": "{\"worker\":\"w3\",\"status\":\"REGISTERED\",\"artifact_id\":\"ART-M1-000001\"}\n",
+          "stderr": "",
           "output_path": "D:\\AIEO\\phase0\\logs\\m1-concurrency-evidence\\conflict-w3.json",
           "result": {
             "worker": "w3",
-            "pid": 12152,
-            "result": "FAILURE",
-            "error_code": "M1_ARTIFACT_HASH_CONFLICT",
-            "message": "M1_ARTIFACT_HASH_CONFLICT: 同一 task/execution/correlation 的原始 hash 已变化，拒绝复用旧 artifact 记录"
-          }
-        },
-        {
-          "worker": "w4",
-          "pid": 10044,
-          "exit_code": 0,
-          "signal": null,
-          "stdout": "{\"worker\":\"w4\",\"status\":\"REGISTERED\",\"artifact_id\":\"ART-M1-000001\"}\n",
-          "stderr": "",
-          "output_path": "D:\\AIEO\\phase0\\logs\\m1-concurrency-evidence\\conflict-w4.json",
-          "result": {
-            "worker": "w4",
-            "pid": 10044,
+            "pid": 30016,
             "result": "SUCCESS",
             "registration": {
               "status": "REGISTERED",
               "artifact_id": "ART-M1-000001",
               "duplicate": false,
               "retry_count": 0,
-              "idempotency_key": "{\"task_id\":\"T-P1-941\",\"execution_id\":\"EXEC-941\",\"correlation_id\":\"CORR-941\",\"artifact_sha256\":\"3028714d14327ffaeb9d192a320df2be7fa287648cd1065d3c38db4ee518d43a\"}",
+              "idempotency_key": "{\"task_id\":\"T-P1-941\",\"execution_id\":\"EXEC-941\",\"correlation_id\":\"CORR-941\",\"artifact_sha256\":\"178ac8f3f5a68575836729e5f17c9f9a5ebd83741f6b27aba5976613563365b4\"}",
               "registry_path": "D:\\AIEO\\phase0\\logs\\m1-concurrency-evidence\\conflict-registry.json",
               "record_count": 1,
               "record": {
                 "artifact_id": "ART-M1-000001",
-                "registered_at": "2026-11-20T19:05:51.366Z",
+                "registered_at": "2026-11-20T19:25:35.847Z",
                 "task_id": "T-P1-941",
                 "execution_id": "EXEC-941",
                 "correlation_id": "CORR-941",
-                "artifact_sha256": "3028714d14327ffaeb9d192a320df2be7fa287648cd1065d3c38db4ee518d43a",
-                "idempotency_key": "{\"task_id\":\"T-P1-941\",\"execution_id\":\"EXEC-941\",\"correlation_id\":\"CORR-941\",\"artifact_sha256\":\"3028714d14327ffaeb9d192a320df2be7fa287648cd1065d3c38db4ee518d43a\"}",
-                "content_sha256": "3028714d14327ffaeb9d192a320df2be7fa287648cd1065d3c38db4ee518d43a",
+                "artifact_sha256": "178ac8f3f5a68575836729e5f17c9f9a5ebd83741f6b27aba5976613563365b4",
+                "idempotency_key": "{\"task_id\":\"T-P1-941\",\"execution_id\":\"EXEC-941\",\"correlation_id\":\"CORR-941\",\"artifact_sha256\":\"178ac8f3f5a68575836729e5f17c9f9a5ebd83741f6b27aba5976613563365b4\"}",
+                "content_sha256": "178ac8f3f5a68575836729e5f17c9f9a5ebd83741f6b27aba5976613563365b4",
                 "size_bytes": 27,
-                "artifact_path": "D:\\AIEO\\phase0\\logs\\m1-concurrency-evidence\\conflict-4.txt",
+                "artifact_path": "D:\\AIEO\\phase0\\logs\\m1-concurrency-evidence\\conflict-3.txt",
                 "artifact_kind": "GPT_REPLY_TEXT",
                 "schema_validation": "NOT_REQUESTED",
-                "content": "互斥 hash 冲突内容 4\n",
+                "content": "互斥 hash 冲突内容 3\n",
                 "unit_metadata": {
-                  "worker": "w4",
+                  "worker": "w3",
                   "source": "REAL_MULTIPROCESS_TEST"
                 }
               },
               "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
             }
+          }
+        },
+        {
+          "worker": "w4",
+          "pid": 30196,
+          "exit_code": 1,
+          "signal": null,
+          "stdout": "",
+          "stderr": "{\"worker\":\"w4\",\"pid\":30196,\"result\":\"FAILURE\",\"error_code\":\"M1_ARTIFACT_HASH_CONFLICT\",\"message\":\"M1_ARTIFACT_HASH_CONFLICT: 同一 task/execution/correlation 的原始 hash 已变化，拒绝复用旧 artifact 记录\"}\n",
+          "output_path": "D:\\AIEO\\phase0\\logs\\m1-concurrency-evidence\\conflict-w4.json",
+          "result": {
+            "worker": "w4",
+            "pid": 30196,
+            "result": "FAILURE",
+            "error_code": "M1_ARTIFACT_HASH_CONFLICT",
+            "message": "M1_ARTIFACT_HASH_CONFLICT: 同一 task/execution/correlation 的原始 hash 已变化，拒绝复用旧 artifact 记录"
           }
         }
       ]
