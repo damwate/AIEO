@@ -1,0 +1,7 @@
+[TRIAL-R1|派单整改试跑方案讨论：只拍板不改码]
+仓库 damwate/AIEO 分支 fix/dispatch-reliability 完整SHA=a51b8fa9c230b2ac32d7b63359b46b98762da5a7：phase0/tools/trial_dispatch_reliability_plan_r1.md（含T0-T3试跑项/验收判据/安全红线）。依据=decision-log.md §DEC-118 F06边界+delivery §7。请按SHA读方案后拍板四问：
+①T2采集失败触发：甲=SEND_CONFIRMED后进程中断（确定性强）vs 乙=长回复自然超窗（贴近L-018事故形态），采何者或都跑？
+②T1错页变体：T1a不存在UUID重定向（DEC-117重放）与T1b归档自不一致预飞，都跑还是只跑T1a？
+③T1a零Enter证据：回执NOT_SENT+指针SHA不变之外，是否强制重定向落点DOM零新增user单元对照？
+④试跑结论登记新DEC+建b-20261121-dispatch-reliability-trial任务包：是否同意？
+约束：全程一次性非敏感简报+--no-update-pointer；副作用会话登记留置不删（删除属DEC-010另批）。本轮派单本身即走分支新链路（--session-result绑定+回执留证），可作方案T0正向观察。
