@@ -38,6 +38,7 @@ import {
   parseDispatchOptions, shouldUpdateReviewerPointer, sessionIdIsAttributable, extractSessionId,
   extractBriefMarker, assertDispatchPage, submitDispatchMessage,
   deriveInstancePaths, allocateInstancePort, assertPointerWriterAllowed, buildKillProfileScript,
+  decidePortReuse, validatePortRegistry,
 } from "./dispatch_options.mjs";
 import { readReplySnapshot, readTailUnit } from "./inbound_dom.mjs";
 
@@ -169,9 +170,12 @@ Write-Output "count=$c"
 async function cdpReady() { try { return (await fetch(`${CDP_URL}/json/version`)).ok; } catch { return false; } }
 async function startChromeWithDebugPort() {
   if (await cdpReady()) {
+    // P1-1 整改（DEC-123 验收 R1）：查询失败/解析失败（null）一律 fail-closed 停止，
+    // 不再落入复用分支——只有明确核验到本实例进程（own>0）才允许复用。
     const ownProcs = await countChromeProcessesForProfile(PROFILE_DIR);
-    if (ownProcs === 0) {
-      throw new Error(`INSTANCE_PORT_FOREIGN: 端口 ${DEBUG_PORT} 有 CDP 端点但无本实例 profile 进程（归属不明，fail-closed 不复用）`);
+    const decision = decidePortReuse({ ownProcs });
+    if (decision !== "REUSE") {
+      throw new Error(`INSTANCE_PORT_${decision === "FOREIGN_STOP" ? "FOREIGN" : "OWNERSHIP_UNVERIFIED"}: 端口 ${DEBUG_PORT} 归属核验未通过（decision=${decision}, ownProcs=${ownProcs ?? "null"}），fail-closed 不复用`);
     }
     log(`复用本实例调试端口 ${DEBUG_PORT}（归属核验 own=${ownProcs}）`);
     return;
@@ -396,6 +400,13 @@ function readPortRegistry() {
   }
   if (registry?.version !== 1 || typeof registry?.ports !== "object" || registry?.ports === null) {
     throw new Error("INSTANCE_REGISTRY_INVALID: 实例端口注册表结构无效");
+  }
+  // P1-2 整改（DEC-123 验收 R1）：锁只防并发分配竞态，不证明已有内容合法——
+  // 逐项校验 ID/端口类型/候选域/跨实例唯一/default 占用，任一违反即拒。
+  try {
+    validatePortRegistry(registry.ports, { candidates: INSTANCE.portCandidates, defaultPort: INSTANCE.defaultPort });
+  } catch (error) {
+    throw new Error(`INSTANCE_REGISTRY_INVALID: ${error.message}`);
   }
   return registry;
 }

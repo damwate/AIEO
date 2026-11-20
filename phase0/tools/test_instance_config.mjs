@@ -6,6 +6,7 @@ import { fileURLToPath } from "node:url";
 import {
   normalizeInstanceId, deriveInstancePaths, allocateInstancePort, assertPointerWriterAllowed,
   matchesProfileOwnership, buildKillProfileScript, parseDispatchOptions,
+  decidePortReuse, validatePortRegistry,
 } from "./dispatch_options.mjs";
 import { acquireSessionLock } from "../e2e-poc/session_lock.mjs";
 
@@ -127,6 +128,41 @@ const tests = [
     assert.equal(b.release instanceof Function, true);
     a.release();
     b.release();
+  }],
+  ["P1-1 端口复用决策：查询失败/未知（null）一律 fail-closed 停止", () => {
+    assert.equal(decidePortReuse({ ownProcs: null }), "UNVERIFIED_STOP");
+    assert.equal(decidePortReuse({ ownProcs: undefined }), "UNVERIFIED_STOP");
+    assert.equal(decidePortReuse({}), "UNVERIFIED_STOP");
+    assert.equal(decidePortReuse({ ownProcs: "3" }), "UNVERIFIED_STOP"); // 非整数类型=未知
+    assert.equal(decidePortReuse({ ownProcs: -1 }), "UNVERIFIED_STOP");
+  }],
+  ["P1-1 端口复用决策：0=foreign 停止；>0 才可复用", () => {
+    assert.equal(decidePortReuse({ ownProcs: 0 }), "FOREIGN_STOP");
+    assert.equal(decidePortReuse({ ownProcs: 1 }), "REUSE");
+    assert.equal(decidePortReuse({ ownProcs: 5 }), "REUSE");
+  }],
+  ["P1-2 注册表逐项校验：合法映射通过（空表亦通过）", () => {
+    const opts = { candidates: { min: 9300, max: 9399 }, defaultPort: 9222 };
+    assert.equal(validatePortRegistry({}, opts), true);
+    assert.equal(validatePortRegistry({ "agent-a": 9301, "b-2": 9302 }, opts), true);
+  }],
+  ["P1-2 注册表逐项校验：跨实例重复端口拒绝", () => {
+    assert.throws(
+      () => validatePortRegistry({ "agent-a": 9301, "b-2": 9301 }, { candidates: { min: 9300, max: 9399 }, defaultPort: 9222 }),
+      (error) => error.code === "INSTANCE_REGISTRY_INVALID",
+    );
+  }],
+  ["P1-2 注册表逐项校验：越界/非整数端口拒绝", () => {
+    const opts = { candidates: { min: 9300, max: 9399 }, defaultPort: 9222 };
+    assert.throws(() => validatePortRegistry({ a: 9299 }, opts), (e) => e.code === "INSTANCE_REGISTRY_INVALID");
+    assert.throws(() => validatePortRegistry({ a: 9400 }, opts), (e) => e.code === "INSTANCE_REGISTRY_INVALID");
+    assert.throws(() => validatePortRegistry({ a: "9301" }, opts), (e) => e.code === "INSTANCE_REGISTRY_INVALID");
+  }],
+  ["P1-2 注册表逐项校验：占用 default 固定端口/default 实例登记/非法 ID 拒绝", () => {
+    const opts = { candidates: { min: 9300, max: 9399 }, defaultPort: 9222 };
+    assert.throws(() => validatePortRegistry({ a: 9222 }, opts), (e) => e.code === "INSTANCE_REGISTRY_INVALID");
+    assert.throws(() => validatePortRegistry({ default: 9301 }, opts), (e) => e.code === "INSTANCE_REGISTRY_INVALID");
+    assert.throws(() => validatePortRegistry({ "../x": 9301 }, opts), (e) => e.code === "INSTANCE_REGISTRY_INVALID");
   }],
   ["实例锁互斥保持：同 lockPath 二次获取 fail-closed（互斥语义不因实例化松动）", () => {
     const lockC = join(LOCKS, "test-instance-c.lockfile");

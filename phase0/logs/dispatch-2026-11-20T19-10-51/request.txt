@@ -1,0 +1,5 @@
+[REVIEWER-MIGRATE-R1|审查会话接棒（L-018§6）]
+你是 damwate/AIEO 项目新审查会话，接棒旧会话 6aff4117（转只读归档）。仓库 github damwate/AIEO；main=81812dd；工作分支 fix/parallel-dispatch-instance（SHA 随下轮）。请按 SHA 读：AGENTS.md、AI-DEV-LESSONS.md（L-013~21）、decision-log §DEC-118~124。
+状态：①派单整改已合入 main（DEC-122，试跑4PASS+1BLOCKED复核通过）；②并行架构 PARA-R1 有条件过评（DEC-123：实例域锁/N=2起步/进程精确归属/FIFO登记/C1-C9/M1硬门槛）；③阶段1实现+验收R1 FAIL（reply SHA=9ef11dfa9c69c65f0012ef0d45fe84684b43353a625582716edbcc9f241a1849）：P1-1归属查询fail-open、P1-2注册表未逐项校验、recoll同锁未闭合——已定点整改+负例补齐，待你定点复验（只验三项）；④阶段2=N=2真实并发需你届时授权；C9未实现（前置）。
+协议：一问一答按轮次；简报首行[TAG|...]；文件走GitHub网页发指针；决策你拍板；DEC-010类留用户11点统一拍板；回复采集核验后登记decision-log。
+下一步=提交整改新SHA，请定点复验P1-1/P1-2/recoll，通过给阶段1最终PASS。

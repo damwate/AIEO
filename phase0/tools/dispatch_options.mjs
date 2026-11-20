@@ -214,6 +214,46 @@ export function extractBriefMarker(text) {
   return m ? `[${m[1]}]` : null;
 }
 
+/**
+ * 端口复用决策（纯函数，DEC-123 验收 R1 P1-1 整改）：归属查询失败/未知（null）一律
+ * fail-closed 停止；明确查到 0 个本实例进程=foreign；>0 才可复用。
+ * 禁止 null 落入放行分支（原实现 `ownProcs === 0` 判断使 null 放行——fail-open，已修）。
+ */
+export function decidePortReuse({ ownProcs }) {
+  if (ownProcs === null || ownProcs === undefined || !Number.isInteger(ownProcs)) return "UNVERIFIED_STOP";
+  if (ownProcs === 0) return "FOREIGN_STOP";
+  if (ownProcs > 0) return "REUSE";
+  return "UNVERIFIED_STOP";
+}
+
+/**
+ * 端口注册表逐项校验（纯函数，DEC-123 验收 R1 P1-2 整改）：锁只能防并发分配竞态，
+ * 不能证明已有内容合法——读取时逐项验证：实例 ID 合法且非 default、端口整数且在
+ * 候选域内、跨实例唯一、不得占用 default 固定端口。任一违反→INSTANCE_REGISTRY_INVALID。
+ */
+export function validatePortRegistry(ports, { candidates, defaultPort }) {
+  const seen = new Map();
+  for (const [id, port] of Object.entries(ports ?? {})) {
+    if (!INSTANCE_ID_PATTERN.test(String(id))) {
+      throw optionError("INSTANCE_REGISTRY_INVALID", `注册表实例 ID 不合法: ${id}`, { instance: id });
+    }
+    if (String(id) === "default") {
+      throw optionError("INSTANCE_REGISTRY_INVALID", "注册表不得登记 default 实例（default 端口固定 9222，不走注册表）", { instance: id });
+    }
+    if (!Number.isInteger(port) || port < candidates.min || port > candidates.max) {
+      throw optionError("INSTANCE_REGISTRY_INVALID", `注册表端口非整数或越界 ${candidates.min}-${candidates.max}: ${id}=${port}`, { instance: id });
+    }
+    if (port === defaultPort) {
+      throw optionError("INSTANCE_REGISTRY_INVALID", `注册表不得占用 default 固定端口 ${defaultPort}: ${id}`, { instance: id });
+    }
+    if (seen.has(port)) {
+      throw optionError("INSTANCE_REGISTRY_INVALID", `注册表端口跨实例重复: ${seen.get(port)} 与 ${id} 同为 ${port}`, { instance: id });
+    }
+    seen.set(port, id);
+  }
+  return true;
+}
+
 export function parseDispatchOptions(argv, { readMessageFile = (path) => readFileSync(path, "utf8") } = {}) {
   if (!Array.isArray(argv)) throw new TypeError("argv 必须是数组");
   const newSession = argv.includes("--new-session");

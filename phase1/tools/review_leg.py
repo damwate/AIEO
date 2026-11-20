@@ -317,7 +317,7 @@ def derive_recoll_driver(template_path: Path, out_path: Path, params: dict[str, 
         text = text.replace(token, val)
     out_path.write_text(text, encoding="utf-8")
     head = "\n".join(out_path.read_text(encoding="utf-8").splitlines()[:40])
-    for key in ("CONV_UUID", "SENT_USER_UNIT_KEY", "FAILED_DIR", "MARKER_TEXT"):
+    for key in ("INSTANCE_ID", "CONV_UUID", "SENT_USER_UNIT_KEY", "FAILED_DIR", "MARKER_TEXT"):
         if params.get(key) and params[key] not in head:
             raise OrchestrationError(-1, f"derived driver param not asserted in header: {key}")
 
@@ -329,9 +329,16 @@ class ReviewLeg:
                  diff_artifact_id: str, diff_file: Path, fixture_repo: Path,
                  m1_url: str, token: str, marker_text: str | None = None,
                  brief_mode: str = "inline", material_repo_path: str | None = None,
-                 material_base_commit: str | None = None) -> None:
+                 material_base_commit: str | None = None,
+                 dispatch_instance: str = "default") -> None:
         if not re.fullmatch(r"\d{3,}", run_key):
             raise OrchestrationError(-1, "--run-key must be digits (CORR-<run_key> pattern)")
+        # DEC-123①边界3：派单与 recoll 同实例 ID 同锁路径。实例 ID 与 gpt_dispatch
+        # --instance 同规范（[a-z0-9-]，小写规范化）；default=既有行为。
+        dispatch_instance = str(dispatch_instance).strip().lower()
+        if not re.fullmatch(r"[a-z0-9][a-z0-9-]{0,31}", dispatch_instance):
+            raise OrchestrationError(-1, "--dispatch-instance must match [a-z0-9][a-z0-9-]{0,31}")
+        self.dispatch_instance = dispatch_instance
         if not re.fullmatch(r"[0-9a-f]{40}", reviewed_commit):
             raise OrchestrationError(-1, "--reviewed-commit must be full 40-hex SHA")
         self.run_key = run_key
@@ -1248,6 +1255,7 @@ class ReviewLeg:
             raise OrchestrationError(-1, f"failed dispatch dir not resolvable: {failed_dir} "
                                          "(fail-closed; manual check required)")
         derive_recoll_driver(template, driver, {
+            "INSTANCE_ID": self.dispatch_instance,
             "CONV_UUID": conv_uuid,
             "SENT_USER_UNIT_KEY": sent_key,
             "FAILED_DIR": str(failed_dir).replace("\\", "/"),   # JS 字面量安全化（Windows 反斜杠=转义符）
@@ -1422,6 +1430,8 @@ def main(argv=None) -> int:
                                                           "http://127.0.0.1:8000"))
         p.add_argument("--token-file", type=Path, default=RUNTIME_DIR / "service-tokens.json")
         p.add_argument("--marker-text", default=None)
+        p.add_argument("--dispatch-instance", default="default",
+                       help="实例域 ID（[a-z0-9-]，default=既有单实例行为）；recoll 锁/端口与派单侧同源（DEC-123）")
         p.add_argument("--brief-mode", choices=["inline", "pointer"], default="inline")
         p.add_argument("--material-repo-path", default=None,
                        help="pointer mode: material file repo-relative path (must be pushed)")
@@ -1445,7 +1455,8 @@ def main(argv=None) -> int:
                     diff_file=args.diff_file, fixture_repo=args.fixture_repo,
                     m1_url=args.m1_url, token=token, marker_text=args.marker_text,
                     brief_mode=args.brief_mode, material_repo_path=args.material_repo_path,
-                    material_base_commit=args.material_base_commit)
+                    material_base_commit=args.material_base_commit,
+                    dispatch_instance=args.dispatch_instance)
     if args.cmd == "run":
         return leg.run()
     if args.cmd == "resume":

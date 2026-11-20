@@ -8,6 +8,7 @@
 //   FAILED_DIR=__FAILED_DIR__          （发送失败现场 dispatch 目录；request.txt 证据源）
 //   OUT_DIR=__OUT_DIR__                （补采产物落盘目录=审查腿 run 目录）
 //   MARKER_TEXT=__MARKER_TEXT__        （简报标记文本；归属校验唯一锚点）
+//   INSTANCE_ID=__INSTANCE_ID__        （实例域：锁路径/端口与派单侧同源——DEC-123①边界3：派单与 recoll 同实例 ID 同锁路径）
 //   PREV_REPLY_SHA256=__PREV_REPLY_SHA__（前轮 reply SHA 前缀排除；not_prev_reply_sha）
 //
 // 流程=recoll_kickoff_gate2r3.mjs 先例同型：会话锁→静置门→滚动+静置物化→归属校验型定位
@@ -15,16 +16,35 @@
 // 不稳定/窗口不完整时按 L-021 第 3 条升级视口拉高 1920×20000 重物化后复测。
 import { chromium } from "playwright";
 import { existsSync, mkdirSync, writeFileSync, copyFileSync } from "node:fs";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
 import { acquireSessionLock } from "../e2e-poc/session_lock.mjs";
+import { deriveInstancePaths } from "./dispatch_options.mjs";
 import { describePages } from "./tab_hygiene.mjs";
 import { readDomUnits, readReplySnapshot } from "./inbound_dom.mjs";
 import {
   MIN_STABLE_READ_INTERVAL_MS, compareInboundSnapshots, persistInboundArtifacts,
 } from "./inbound_reply.mjs";
 
-const CDP_URL = "http://127.0.0.1:9222";
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const INSTANCE = deriveInstancePaths({ instanceId: "__INSTANCE_ID__", aieoRoot: join(__dirname, "..", "..") });
+// 实例域端口解析（DEC-123①边界3）：default=9222（C7）；命名实例必须已在端口注册表登记
+// （派单侧分配落盘），未登记/不合法=recoll 拒绝猜测 fail-closed。
+function resolveRecollCdpPort() {
+  if (INSTANCE.isDefault) return INSTANCE.defaultPort;
+  const regPath = INSTANCE.portRegistryPath;
+  if (!existsSync(regPath)) {
+    throw new Error(`INSTANCE_REGISTRY_MISSING: 实例 ${INSTANCE.instanceId} 端口未登记，recoll 拒绝猜测（fail-closed）`);
+  }
+  const reg = JSON.parse(readFileSync(regPath, "utf8"));
+  const port = reg?.ports?.[INSTANCE.instanceId];
+  if (!Number.isInteger(port) || port < INSTANCE.portCandidates.min || port > INSTANCE.portCandidates.max) {
+    throw new Error(`INSTANCE_REGISTRY_INVALID: 实例 ${INSTANCE.instanceId} 端口未登记或不合法: ${port}`);
+  }
+  return port;
+}
+const CDP_URL = `http://127.0.0.1:${resolveRecollCdpPort()}`;
 const CONV_UUID = "__CONV_UUID__";
 const MARKER = "__MARKER_TEXT__";
 const PREV_REPLY_SHA256 = "__PREV_REPLY_SHA__"; // 空串=无前轮可比（首轮），not_prev_reply_sha 恒真
@@ -98,7 +118,8 @@ async function snapshotPair(page, targetKey) {
 }
 
 mkdirSync(OUT_DIR, { recursive: true });
-const lock = acquireSessionLock({ holder: "review_leg_recoll" });
+const lock = acquireSessionLock({ holder: "review_leg_recoll", lockPath: INSTANCE.lockPath });
+log(`补采实例域: instance=${INSTANCE.instanceId} lock=${INSTANCE.lockPath} port=${INSTANCE.isDefault ? 9222 : "registry"}`);
 log("会话锁已获取（review-leg 补采；仅采集不发送）");
 let browser;
 let cdp;

@@ -1,9 +1,9 @@
 {
-  "started_at": "2026-11-20T18:34:45.457Z",
-  "finished_at": "2026-11-20T18:34:48.504Z",
+  "started_at": "2026-11-20T19:05:24.179Z",
+  "finished_at": "2026-11-20T19:05:27.985Z",
   "node": "v24.14.0",
-  "total": 16,
-  "passed": 16,
+  "total": 22,
+  "passed": 22,
   "failed": 0,
   "tests": [
     {
@@ -64,6 +64,30 @@
     },
     {
       "name": "实例锁域隔离：不同 lockPath 各自获取互不干扰（C8 负例补强）",
+      "result": "PASS"
+    },
+    {
+      "name": "P1-1 端口复用决策：查询失败/未知（null）一律 fail-closed 停止",
+      "result": "PASS"
+    },
+    {
+      "name": "P1-1 端口复用决策：0=foreign 停止；>0 才可复用",
+      "result": "PASS"
+    },
+    {
+      "name": "P1-2 注册表逐项校验：合法映射通过（空表亦通过）",
+      "result": "PASS"
+    },
+    {
+      "name": "P1-2 注册表逐项校验：跨实例重复端口拒绝",
+      "result": "PASS"
+    },
+    {
+      "name": "P1-2 注册表逐项校验：越界/非整数端口拒绝",
+      "result": "PASS"
+    },
+    {
+      "name": "P1-2 注册表逐项校验：占用 default 固定端口/default 实例登记/非法 ID 拒绝",
       "result": "PASS"
     },
     {

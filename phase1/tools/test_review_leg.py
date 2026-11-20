@@ -1103,6 +1103,33 @@ __BODY__
                         "failed-send-only attach must be explicitly not_applicable")
         self.assertIsNotNone(captured2)
 
+    def test_20_recoll_template_instance_lock_domain(self):
+        """DEC-123①边界3 + 验收R1整改③：recoll 派生与派单同实例 ID 同锁路径。
+        命名实例派生：模板含该实例 ID+注册表端口解析（未登记→INSTANCE_REGISTRY_MISSING
+        拒绝猜测）；default 派生：运行时解析回 9222（C7）。模板不再硬编码端口字面量。"""
+        template = Path(__file__).resolve().parent / "review_leg_recoll_template.mjs"
+        base = {
+            "CONV_UUID": "22222222-3333-4444-8555-666666666666",
+            "SENT_USER_UNIT_KEY": "fallback-turn-1:0:user",
+            "FAILED_DIR": str(self.tmp / "dispatch-logs" / "dispatch-t20").replace("\\", "/"),
+            "OUT_DIR": str(self.tmp / "runtime" / "rvl-t20").replace("\\", "/"),
+            "MARKER_TEXT": "[GPT03-R1|t20|T-P1-920]",
+            "PREV_REPLY_SHA": "",
+        }
+        named = self.tmp / "driver-named.mjs"
+        rl.derive_recoll_driver(template, named, {**base, "INSTANCE_ID": "agent-a"})
+        text = named.read_text(encoding="utf-8")
+        self.assertIn('instanceId: "agent-a"', text)
+        self.assertIn("INSTANCE_ID=agent-a", text)  # 头部派生参数行（derive 后断言已含）
+        self.assertNotIn('const CDP_URL = "http://127.0.0.1:9222"', text)  # 硬编码已移除
+        self.assertIn("INSTANCE_REGISTRY_MISSING", text)   # 命名实例未登记→拒绝猜测 fail-closed
+        self.assertIn("lockPath: INSTANCE.lockPath", text)  # 同实例同锁路径（DEC-123①边界3）
+        default = self.tmp / "driver-default.mjs"
+        rl.derive_recoll_driver(template, default, {**base, "INSTANCE_ID": "default"})
+        dtext = default.read_text(encoding="utf-8")
+        self.assertIn('instanceId: "default"', dtext)
+        self.assertNotIn('const CDP_URL = "http://127.0.0.1:9222"', dtext)
+
     def test_19_a5_combination_evidence_process_death_verified(self):
         """A5① 组合证据（会商乙方案裁定）：runner 独立进程于"发送确认后、reply 采集前"
         （账本状态事件=CONFIRMED 落账、R4_REPLY_CAPTURED 未落账）os._exit；父测试双重

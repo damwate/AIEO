@@ -3,11 +3,12 @@
 // （不发送、不重发、不改 M2 工具代码；复用 inbound_dom/inbound_reply 共享采集算法）。
 //
 // 派生参数（L-018 第 3/4 条三参数+归属校验五件套）：
-//   CONV_UUID=22222222-3333-4444-8555-666666666666            （原会话 ID；来自账本 R3_SEND_CONFIRMED）
-//   SENT_USER_UNIT_KEY=fallback-turn-1:0:user（发送双验报告键；定位以标记文本为准，键仅参考）
-//   FAILED_DIR=C:/Users/youting/AppData/Local/Temp/rvl-test-qx5fv9vu/dispatch-logs/dispatch-08c-1          （发送失败现场 dispatch 目录；request.txt 证据源）
-//   OUT_DIR=C:/Users/youting/AppData/Local/Temp/rvl-test-qx5fv9vu/runtime/rvl-902010                （补采产物落盘目录=审查腿 run 目录）
-//   MARKER_TEXT=[GPT03-R1|f06c]        （简报标记文本；归属校验唯一锚点）
+//   CONV_UUID=33333333-4444-4555-8666-777777777777            （原会话 ID；来自账本 R3_SEND_CONFIRMED）
+//   SENT_USER_UNIT_KEY=fallback-turn-0:0:user（发送双验报告键；定位以标记文本为准，键仅参考）
+//   FAILED_DIR=C:/Users/youting/AppData/Local/Temp/rvl-test-ob378j7b/dispatch-logs/dispatch-runner-3          （发送失败现场 dispatch 目录；request.txt 证据源）
+//   OUT_DIR=C:/Users/youting/AppData/Local/Temp/rvl-test-ob378j7b/runtime/rvl-997019                （补采产物落盘目录=审查腿 run 目录）
+//   MARKER_TEXT=[GPT03-R1|997019|T-P1-028]        （简报标记文本；归属校验唯一锚点）
+//   INSTANCE_ID=default        （实例域：锁路径/端口与派单侧同源——DEC-123①边界3：派单与 recoll 同实例 ID 同锁路径）
 //   PREV_REPLY_SHA256=（前轮 reply SHA 前缀排除；not_prev_reply_sha）
 //
 // 流程=recoll_kickoff_gate2r3.mjs 先例同型：会话锁→静置门→滚动+静置物化→归属校验型定位
@@ -15,22 +16,41 @@
 // 不稳定/窗口不完整时按 L-021 第 3 条升级视口拉高 1920×20000 重物化后复测。
 import { chromium } from "playwright";
 import { existsSync, mkdirSync, writeFileSync, copyFileSync } from "node:fs";
-import { join } from "node:path";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
 import { acquireSessionLock } from "../e2e-poc/session_lock.mjs";
+import { deriveInstancePaths } from "./dispatch_options.mjs";
 import { describePages } from "./tab_hygiene.mjs";
 import { readDomUnits, readReplySnapshot } from "./inbound_dom.mjs";
 import {
   MIN_STABLE_READ_INTERVAL_MS, compareInboundSnapshots, persistInboundArtifacts,
 } from "./inbound_reply.mjs";
 
-const CDP_URL = "http://127.0.0.1:9222";
-const CONV_UUID = "22222222-3333-4444-8555-666666666666";
-const MARKER = "[GPT03-R1|f06c]";
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const INSTANCE = deriveInstancePaths({ instanceId: "default", aieoRoot: join(__dirname, "..", "..") });
+// 实例域端口解析（DEC-123①边界3）：default=9222（C7）；命名实例必须已在端口注册表登记
+// （派单侧分配落盘），未登记/不合法=recoll 拒绝猜测 fail-closed。
+function resolveRecollCdpPort() {
+  if (INSTANCE.isDefault) return INSTANCE.defaultPort;
+  const regPath = INSTANCE.portRegistryPath;
+  if (!existsSync(regPath)) {
+    throw new Error(`INSTANCE_REGISTRY_MISSING: 实例 ${INSTANCE.instanceId} 端口未登记，recoll 拒绝猜测（fail-closed）`);
+  }
+  const reg = JSON.parse(readFileSync(regPath, "utf8"));
+  const port = reg?.ports?.[INSTANCE.instanceId];
+  if (!Number.isInteger(port) || port < INSTANCE.portCandidates.min || port > INSTANCE.portCandidates.max) {
+    throw new Error(`INSTANCE_REGISTRY_INVALID: 实例 ${INSTANCE.instanceId} 端口未登记或不合法: ${port}`);
+  }
+  return port;
+}
+const CDP_URL = `http://127.0.0.1:${resolveRecollCdpPort()}`;
+const CONV_UUID = "33333333-4444-4555-8666-777777777777";
+const MARKER = "[GPT03-R1|997019|T-P1-028]";
 const PREV_REPLY_SHA256 = ""; // 空串=无前轮可比（首轮），not_prev_reply_sha 恒真
-const SENT_KEY_REPORTED = "fallback-turn-1:0:user";
-const FAILED_DIR = "C:/Users/youting/AppData/Local/Temp/rvl-test-qx5fv9vu/dispatch-logs/dispatch-08c-1"; // 派生为绝对路径（驱动在 phase0/tools cwd 下运行）
-const OUT_DIR = "C:/Users/youting/AppData/Local/Temp/rvl-test-qx5fv9vu/runtime/rvl-902010";       // 派生为绝对路径（审查腿 run 目录）
+const SENT_KEY_REPORTED = "fallback-turn-0:0:user";
+const FAILED_DIR = "C:/Users/youting/AppData/Local/Temp/rvl-test-ob378j7b/dispatch-logs/dispatch-runner-3"; // 派生为绝对路径（驱动在 phase0/tools cwd 下运行）
+const OUT_DIR = "C:/Users/youting/AppData/Local/Temp/rvl-test-ob378j7b/runtime/rvl-997019";       // 派生为绝对路径（审查腿 run 目录）
 const IDLE_WAIT_MS = Number(process.env.AIEO_RECOLL_IDLE_WAIT_MS || 30000);
 
 function log(msg) {
@@ -98,7 +118,8 @@ async function snapshotPair(page, targetKey) {
 }
 
 mkdirSync(OUT_DIR, { recursive: true });
-const lock = acquireSessionLock({ holder: "review_leg_recoll" });
+const lock = acquireSessionLock({ holder: "review_leg_recoll", lockPath: INSTANCE.lockPath });
+log(`补采实例域: instance=${INSTANCE.instanceId} lock=${INSTANCE.lockPath} port=${INSTANCE.isDefault ? 9222 : "registry"}`);
 log("会话锁已获取（review-leg 补采；仅采集不发送）");
 let browser;
 let cdp;
