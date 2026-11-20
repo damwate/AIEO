@@ -1,0 +1,27 @@
+..RESULT=REVIEW_LEG_PASS status=TEST_ACCEPTANCE
+.RESULT=REVIEW_LEG_PASS status=REWORK
+RESULT=REVIEW_LEG_DONE status=REWORK
+.RESULT=LEG_LEVEL_BLOCKED step=4 reason=no review JSON found in GPT-03 reply
+.RESULT=LEG_LEVEL_BLOCKED step=4 reason=reply result 'BLOCKED' outside ['PASS', 'REWORK'] (BLOCKED is not a content verdict; engine must not set task-level BLOCKED)
+..RESULT=REVIEW_LEG_PASS status=TEST_ACCEPTANCE
+.RESULT=REVIEW_LEG_PASS status=TEST_ACCEPTANCE
+.RESULT=LEG_LEVEL_BLOCKED step=-1 reason=ledger has send intent without confirmation (appendix D row5 vs A8: cannot prove send state -> fail-closed BLOCKED; manual dispatch-dir check required; resend forbidden)
+RESULT=REVIEW_LEG_PASS (resumed) status=TEST_ACCEPTANCE
+.RESULT=LEG_LEVEL_BLOCKED step=-1 reason=ledger has dispatch records but M1 status=DEV_REPORTED (contradiction; fail-closed BLOCKED, no speculative recovery)
+.RESULT=LEG_LEVEL_BLOCKED step=3 reason=send confirmed; collection failed (½ûÖØ·¢; use resume): gpt_dispatch exit 3: injected collection failure after send double-verify
+RESULT=REVIEW_LEG_PASS (resumed) status=TEST_ACCEPTANCE
+.RESULT=LEG_LEVEL_BLOCKED step=5 reason=message register HTTP 500: {"code": "SYS-0001", "message": "INTERNAL_ERROR: platform request failed", "retryable": false, "correlation_id": "994ba34a-0c34-4afc-a06c-9f47c7f63cad"}
+RESULT=REVIEW_LEG_PASS (resumed) status=TEST_ACCEPTANCE
+.RESULT=LEG_LEVEL_BLOCKED step=5 reason=review report register HTTP 500: {"code": "SYS-0001", "message": "INTERNAL_ERROR: platform request failed", "retryable": false, "correlation_id": "4cdf9592-3e2a-40c9-b828-77ab05bb6aed"}
+RESULT=REVIEW_LEG_PASS (resumed) status=TEST_ACCEPTANCE
+.....RESULT=REVIEW_LEG_PASS status=TEST_ACCEPTANCE
+RESULT=REVIEW_LEG_DONE status=TEST_ACCEPTANCE
+.RESULT=LEG_LEVEL_BLOCKED step=-1 reason=M1 task status=BLOCKED: engine must not touch (appendix D row12; OWNER only)
+.SETUP_OK agents=[{"agent_id": "GPT-03", "reused_existing": true}, {"agent_id": "ENGINE-01", "reused_existing": true}] tokens=runtime/review-leg/service-tokens.json (gitignored)
+SETUP_OK agents=[{"agent_id": "GPT-03", "reused_existing": true}, {"agent_id": "ENGINE-01", "reused_existing": true}] tokens=runtime/review-leg/service-tokens.json (gitignored)
+.RESULT=REVIEW_LEG_PASS status=TEST_ACCEPTANCE
+.............
+----------------------------------------------------------------------
+Ran 34 tests in 53.976s
+
+OK

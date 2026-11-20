@@ -1,0 +1,7 @@
+webcache20261119final 最终总验收
+仓库 Garden-Design-Calculator 分支 feat/web-demo-asset-cache-20261119 tip 7cc1455f（源码最终 cd564280，其余为文档）
+请求：对整条分支做最终总审核并签署可否发布，非逐条定点。
+历史裁定：r1 三处P1+两缺口；r4 P1-1/P1-3 PASS、P1-2与跨方案E2E FAIL；r5 跨方案E2E PASS、P1-2 FAIL；r6 P1-2 PASS。
+本轮只做整体判断：①三处P1与两缺口是否全部最终关闭 ②有无范围蔓延或新增回归（私有媒体/2D预载/catalog.json字节均未动）③能否签完整PASS进入发布验收。
+证据：test_asset_cache.py 12/12；前端3238过/7既有几何基线失败；build通过；跨方案E2E真浏览器通过(CDP requestServedFromCache)；GOAL逐条登记。
+只回 PASS/FAIL+理由+可否发布；FAIL 给精确点。勿改代码。

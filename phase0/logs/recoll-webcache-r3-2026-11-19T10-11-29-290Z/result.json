@@ -1,0 +1,29 @@
+{
+  "recollection": true,
+  "driver": "recoll_webcache_r3.mjs",
+  "conversation_url": "https://chatgpt.com/c/6afecae7-9ccc-83ec-b089-15f6a26e8163",
+  "failed_dispatch_dir": "phase0/logs/dispatch-2026-11-19T10-08-55",
+  "failure_code": "INBOUND_START_UNIT_MISSING",
+  "recovery": "视口拉高静态DOM全量物化+归属校验三件套（禁重发）",
+  "marked_user_unit_key": "688f33c1-e927-58c8-b958-8ad46278e6f6:0:user",
+  "assistant_unit_key": "688f33c1-e927-58c8-b958-8ad46278e6f6:2:assistant",
+  "assistant_unit_count": 1,
+  "after_units": [
+    {
+      "key": "688f33c1-e927-58c8-b958-8ad46278e6f6:2:assistant",
+      "role": "assistant",
+      "text_len": 207
+    }
+  ],
+  "reply_bytes": 367,
+  "reply_sha256": "5bbfcd7d4be9c5502afae348d93c686de412c2cfebce165344e50b7abd7226c4",
+  "checks": {
+    "marked_user_unique": true,
+    "last_user_assertion": true,
+    "adjacent_assistant_tail": true,
+    "stable_static_dom_read": true,
+    "final_stop_button_not_visible": true,
+    "response_length_plausible": true
+  },
+  "extracted_at": "2026-11-19T10:11:52.951Z"
+}

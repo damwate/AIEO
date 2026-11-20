@@ -1,0 +1,30 @@
+[
+  {
+    "key": "029d0da3-056b-5f74-b784-041a5974e313:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 551,
+    "text_head": "webcache20261119bd3fixr2 定点复验KTX2断言\nGarden-Design-Calculator feat/web-demo-asset-cache-20261119 tip "
+  },
+  {
+    "key": "029d0da3-056b-5f74-b784-041a5974e313:1:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 260,
+    "text_head": "ChatGPT 说：\n\nMUST-FIX 已关闭 完整 PASS\n\n唯一 MUST-FIX：PASS。新增 KTX2 数量断言，明确要求实际加载数量大于 0，消除空循环假通过。\n\nimmutable "
+  },
+  {
+    "key": "54e7d2fc-fb15-526d-b5dc-dd0aac31025d:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 470,
+    "text_head": "webcachenext20261119a 下一步咨询\n仓库 Garden-Design-Calculator 分支 feat/web-demo-asset-cache-20261119 tip 41"
+  },
+  {
+    "key": "54e7d2fc-fb15-526d-b5dc-dd0aac31025d:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 2083,
+    "text_head": "ChatGPT 说：\n独立建议：推荐 B → A → C\n\n实现审查已完整 PASS 设备验收待完成\n\n我已读取 HANDOFF_WEB_DEMO_ASSET_CACHE_20261119.md 的 "
+  }
+]

@@ -1,0 +1,24 @@
+.......RESULT=ENGINEERING_AUDIT_LEG_PASS status=AUDIT_REGISTERED verdict=ACCEPTED
+.RESULT=ENGINEERING_AUDIT_LEG_PASS status=AUDIT_REGISTERED verdict=ACCEPTED_WITH_RISKS
+RESULT=ENGINEERING_AUDIT_LEG_PASS status=AUDIT_REGISTERED verdict=BLOCKED
+.RESULT=LEG_LEVEL_BLOCKED step=4 reason=matrix has BLOCKED but total result=ACCEPTED (C1 矩阵汇总映射矛盾; fail-closed)
+.RESULT=LEG_LEVEL_BLOCKED step=4 reason=result=BLOCKED 与 release_recommendation=SUBMIT_FOR_APPROVAL 矛盾（charter C3 一一映射，预期 DO_NOT_SUBMIT；fail-closed, no registration)
+.RESULT=LEG_LEVEL_BLOCKED step=4 reason=standards_matrix applicable=false without findings 理由 (适用性不等于免检; fail-closed)
+.RESULT=LEG_LEVEL_BLOCKED step=4 reason=contract validation failed (raw reply kept; no registration): {"report": {"valid": false, "errors": [{"instancePath": "/standards_matrix/0/findings", "schemaPath": "#/properties/standards_matrix/items/properties/findings/type", "keyword": "type", "params": {"type": "string"}, "message": "must be string"}]}}
+.RESULT=ENGINEERING_AUDIT_LEG_PASS status=AUDIT_REGISTERED verdict=ACCEPTED
+.RESULT=LEG_LEVEL_BLOCKED step=5 reason=message 409 five-condition AND failed (c1=True,c2=True,c3=False,c4=False,c5=False; fail-closed, no DUP_OK): {"code": "RES-0003", "message": "DUPLICATE (injected)", "details": {"message_id": "MSG-30499213-802827"}}
+.RESULT=ENGINEERING_AUDIT_LEG_PASS (resumed) verdict=ACCEPTED
+..RESULT=ENGINEERING_AUDIT_LEG_PASS status=AUDIT_REGISTERED verdict=ACCEPTED
+.RESULT=LEG_LEVEL_BLOCKED step=3 reason=send confirmed; collection failed (禁重发; use resume): gpt_dispatch exit 3: injected collection failure after send double-verify
+RESULT=ENGINEERING_AUDIT_LEG_PASS (manual attach) verdict=ACCEPTED
+.RESULT=LEG_LEVEL_BLOCKED step=4 reason=reply ownership mismatch: located=fallback-turn-1:0:user sent=fallback-turn-9:0:user (strict equality; fail-closed)
+.RESULT=LEG_LEVEL_BLOCKED step=-1 reason=ledger has send intent without confirmation (A-3 fail-closed: cannot prove send state -> leg-level BLOCKED; resend forbidden)
+..SETUP_OK agents=[{"agent_id": "GPT-05", "reused_existing": true}, {"agent_id": "ENGINE-04", "reused_existing": true}] tokens=runtime/engineering-audit-leg/service-tokens.json (gitignored)
+SETUP_OK agents=[{"agent_id": "GPT-05", "reused_existing": true}, {"agent_id": "ENGINE-04", "reused_existing": true}] tokens=runtime/engineering-audit-leg/service-tokens.json (gitignored)
+.RESULT=LEG_LEVEL_BLOCKED step=4 reason=matrix ISSUE-only but total result=BLOCKED (C1 frozen mapping: ISSUE→ACCEPTED_WITH_RISKS; batch-level BLOCKER semantics require formal contract evolution; fail-closed)
+.RESULT=ENGINEERING_AUDIT_LEG_PASS status=AUDIT_REGISTERED verdict=BLOCKED
+.
+----------------------------------------------------------------------
+Ran 25 tests in 44.600s
+
+OK

@@ -1,0 +1,16 @@
+[
+  {
+    "key": "688f33c1-e927-58c8-b958-8ad46278e6f6:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 378,
+    "text_head": "webcache20261119r3 边界复验\n仓库 Garden-Design-Calculator 分支 feat/web-demo-asset-cache-20261119 commit 271"
+  },
+  {
+    "key": "688f33c1-e927-58c8-b958-8ad46278e6f6:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 207,
+    "text_head": "ChatGPT 说：\nPASS\n\n#3 缺 kv 回退边界已关闭。\n\n.ktx2 无条件读取 kv，缺失时 requested=None，不再回退使用 v。\n\n新增反例：v 恰好等于 KTX2 自身哈"
+  }
+]

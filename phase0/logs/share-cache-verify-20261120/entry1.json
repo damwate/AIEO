@@ -1,0 +1,259 @@
+{
+ "phase": "entry1",
+ "scheme_url": "http://share.yotin.com.cn:8870/projects/b60402ed-fc4a-45f5-b47a-b95831b8d565/schemes/c8bbcd17-ba0e-4d7d-aa9c-74036be4b9c6",
+ "agg": {
+  "glb": {
+   "server200": 7,
+   "server304": 0,
+   "serverBytes": 3176962,
+   "cacheServed": 0
+  },
+  "ktx2": {
+   "server200": 11,
+   "server304": 0,
+   "serverBytes": 15388890,
+   "cacheServed": 1
+  },
+  "img": {
+   "server200": 22,
+   "server304": 0,
+   "serverBytes": 2092820,
+   "cacheServed": 4
+  },
+  "other_asset": {
+   "server200": 4,
+   "server304": 0,
+   "serverBytes": 529313,
+   "cacheServed": 2
+  }
+ },
+ "totals": {
+  "server200": 44,
+  "server304": 0,
+  "serverBytes": 21187985,
+  "cacheServed": 7
+ },
+ "server_list": [
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/images/sand_marble__planview__202609191500186637.jpg?v=adfc7e95c54d0e4a38a375c96c90b3022090ae07a2e2da592ed5dd3ae2421f79",
+   "status": 200,
+   "bytes": 60927
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/images/sand_grey__planview__2026091915003172f4.jpg?v=58e9b720acbccfda2f6ac9b1a2069d2d0131b160cae0cb04707541270871ab71",
+   "status": 200,
+   "bytes": 265550
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/images/sand_jute__planview__20260919150139e999.jpg?v=d86d136bd1c3b719468ee5eee0177af138243fbd8861782c5d114fce94ee5778",
+   "status": 200,
+   "bytes": 17536
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/images/bench_small_square_planter__planview__20260923115615d22e.webp?v=c56a3bad101411617a2bcb94dd270261d73042e4edee2716c661b94bd4631368",
+   "status": 200,
+   "bytes": 191905
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/images/free_planter_9090__planview__20260920000000b11c.webp?v=ac85d5adbd50d4d63f0e9497f7496e9c64cad4d09e9fc97928953ad2d055ad47",
+   "status": 200,
+   "bytes": 236045
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/lottie-n1ZsUob0.js",
+   "status": 200,
+   "bytes": 308209
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/images/bench_small_long_planter__planview__202609231332496e48.webp?v=7d1006e18f0fd533c67a9203ee659a9a801121c88e52578c5bff05684a4c7c7d",
+   "status": 200,
+   "bytes": 73298
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/images/bench_small_seat__planview__20260923152524b3da.webp?v=52cb20cd90a82fff69eda4800d14dfd5b1690cbddb64d3238d427f70b6354e9c",
+   "status": 200,
+   "bytes": 63906
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/images/deck_3030__planview__202609241418490b6e.webp?v=88aa2296b630d3446fdcf5da22b2b47dbb599c51c170c1dc8d396d4c2c7b4b42",
+   "status": 200,
+   "bytes": 6191
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/images/bench_small_seat__planview__2026092315252437d6.webp?v=3599d0b1a51e79182a878be27a41c5a225c55093ca75e152beb16606f50e31cd",
+   "status": 200,
+   "bytes": 62682
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/images/deck_3060__planview__20260924141856eb26.webp?v=73f0273114e3cec91290158fa106587be1c56e0137b1c475d7c41764475627e8",
+   "status": 200,
+   "bytes": 9183
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/images/furniture_table_double__planview__20260928142848f0aa.png?v=decdab186ea62b24960615647a7ee1ca03686db33614f1f3d244300d536314dd",
+   "status": 200,
+   "bytes": 180971
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/images/deck_3090__planview__202609241419015ce8.webp?v=d267439deb7535e2612e78243ac1a2465af4c783973e28a00dfb21bc322cdcb2",
+   "status": 200,
+   "bytes": 9881
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/images/furniture_chair_double__planview__2026092814290825e2.png?v=7f05c971b8ce9aa5a4bad335871aa721049dfb79bcecb8d20e13016706a9a450",
+   "status": 200,
+   "bytes": 130373
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/images/furniture_bench_long__planview__2026092814285955f6.png?v=dfce840f0569faf6faf248bc363cc2d8b787ebf52a244015f98f36bebc35c85e",
+   "status": 200,
+   "bytes": 71580
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/images/furniture_chair_single__planview__20260928142916d470.png?v=02e7b4f1b846ea950cae53dcc51228a658bad8a0dbbd93825d5ad0c7da9a84e2",
+   "status": 200,
+   "bytes": 66061
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/images/tree_table_large__planview__202609241154467743.webp?v=5680b6fa5a1334cb293ab2cc6fc0182f10ba4292f0dad4dcd344e11ed82ee1ea",
+   "status": 200,
+   "bytes": 343531
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/images/tree_table_small__planview__20260924142700d7b3.webp?v=156438625ca69f74b1deb1d1f417ed40d66f4a58243e553de74e6c424b0a8e79",
+   "status": 200,
+   "bytes": 216525
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/scene_props/person_g03_coffee_top.webp?v=72a27eb260c08f3d6de06adfc64a6b70924155a31fdceb5a601cf8b7966e4167&kv=65ca3e993aea57c7ee313db4ebfb244f8",
+   "status": 200,
+   "bytes": 17298
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/scene_props/person_g09_garden_top.webp?v=9791ff90b9829831c4996280dbb6b4c4b1de32257f86df4594b3765c4c939bf0&kv=e6b1312e6a47f7de883ac4fe0db8c3d4b",
+   "status": 200,
+   "bytes": 16248
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/scene_props/person_g02_book_top.webp?v=4c3118426dbfe425a70c14ac6027a097c3152fed3dec6caf015a432c9fa0c108&kv=2b1fde4b70f5a289aef59d05618a4091df3",
+   "status": 200,
+   "bytes": 16416
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/scene_props/person_g10_welcome_top.webp?v=cba4127cef2249939cc1d4f59dc9ba18a79e3ac72cb47b90f9491bd294c27aff&kv=af960d2a2a53340fe84fbdc8704383e7",
+   "status": 200,
+   "bytes": 18668
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/ThreeView-CCPDlGyo.css",
+   "status": 200,
+   "bytes": 9752
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/ThreeView-CRRW9MP0.js",
+   "status": 200,
+   "bytes": 80997
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/billboard-DOCdCJpm.js",
+   "status": 200,
+   "bytes": 130355
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/textures/noise_normal.ktx2?v=6f651680ffe392796be8bb012aade4f2c415718d472dab058e287fea63daa82a&kv=2c498c0522c3f26e3e9f628c151a2fbd12a38379fde8f",
+   "status": 200,
+   "bytes": 1398990
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/textures/%E4%BB%BF%E7%9C%9F%E8%8D%89%E5%9D%AA.ktx2?v=2c78df3ebfc69f637fb7f1d89c7b15f646da4bd34d957a20b8ed18efd490ee91&kv=8410c32fd845877e65364",
+   "status": 200,
+   "bytes": 1398990
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/models/bench_large_long_planter.glb?v=382d0eaed478a852a4dba4ca43f5a27df1d59ac08e2214e77017f5f49567c1a3",
+   "status": 200,
+   "bytes": 68224
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/models/deck_3090.glb?v=2c16c0b092ecb2b5db51fbf342f083c70563e5631ce323bf84c51843a294be62",
+   "status": 200,
+   "bytes": 83100
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/models/deck_3060.glb?v=0f3b37def0caefde5686504a7c9c2467298e5082530170f5500f91a3fa7300f9",
+   "status": 200,
+   "bytes": 66536
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/models/bench_large_seat.glb?v=7d442482d8d95da8ba4544d7beb50d69eb4c115f7b9360bc2bc78b0a1b626f58",
+   "status": 200,
+   "bytes": 74468
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/models/free_planter_9090__20260924122434268f.glb?v=bd33346874ac09fa708d786f58d5b2e07d0b77ba0d26c74a41610ae44b2c3294",
+   "status": 200,
+   "bytes": 2843934
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/models/furniture_table_double__20260923194928f263.glb?v=d02e748c1221ff1845851fe3c2b6bf0b7679e3ad18f30bbe061248544923f79d",
+   "status": 200,
+   "bytes": 23688
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/planting/ChatGPT%20%E5%9B%BE%E5%83%8F%202026%E5%B9%B410%E6%9C%882%E6%97%A5%2000_53_49-1.ktx2?v=d6a73fc885715c0a139271c0841a7814a9acd8da81d7b59",
+   "status": 200,
+   "bytes": 1398990
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/planting/ChatGPT%20%E5%9B%BE%E5%83%8F%202026%E5%B9%B410%E6%9C%882%E6%97%A5%2000_51_09-1.ktx2?v=296ff3cf3ea708b45643b9e7409ee889e9e9c2a077b9048",
+   "status": 200,
+   "bytes": 1398990
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/planting/%E5%B0%8F%E5%9E%8B%E8%A7%82%E8%B5%8F%E8%8D%89.ktx2?v=e9156db62e4201d9a64df577f1dc0cc00fed2b2c6c09d8163c2396b1cb3f3430&kv=14bfc6b3195f",
+   "status": 200,
+   "bytes": 1398990
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/planting/%E7%BB%A3%E7%90%83_%E7%BA%A2_%E9%AB%98_01.ktx2?v=e6ffe3dfa0734a55203cdd5a0c5e135daba189a6b9aab9575b7af4838c19703e&kv=151a4c617410c6f4",
+   "status": 200,
+   "bytes": 1398990
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/models/furniture_bench_long.glb?v=b0023aaa068e9f4f6d55d339e16451733522bac1c7d903db5033362170fec207",
+   "status": 200,
+   "bytes": 17012
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/planting/%E9%BA%A6%E5%86%AC.ktx2?v=cc8920d9f6b3ef0e5e40f75081d02086b80060f6afebecbe78a0b4eefed7a512&kv=cf870c16bf9584ebee170863b7c19a08a9e5cba",
+   "status": 200,
+   "bytes": 1398990
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/planting/%E5%A7%AC%E5%B0%8F%E8%8F%8A.ktx2?v=e1f32d32cfa99208133f85166f306b87a0485ae722794586b7535fcee2f0c241&kv=d38924da10fe8f67e4e21204cb64f8",
+   "status": 200,
+   "bytes": 1398990
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/planting/%E7%8E%89%E7%B0%AA.ktx2?v=f3e683f42fe53e571c75966bda28cf28169858c7eea3cdf8826e719885feef1c&kv=bdfb1bd3161d540f457a0cfcc33b6aedb68229a",
+   "status": 200,
+   "bytes": 1398990
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/textures/%E5%9C%9F%E5%A3%A4.ktx2?v=ac5ae3ee5ae249c78cf54882e0a446a91cc888f2a35387bcb2dc7053b24b5e14&kv=02614ba2324132552190e62d648de03fd1a8c78",
+   "status": 200,
+   "bytes": 1398990
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/textures/wood_oak_light_normal.ktx2?v=65cd0084127d9ad34a9dd4d0393febfeb76dc6ef825e2e5e87a44fbb60ee6980&kv=7349d36b54698f9d6fab09cc4d703a8ef1d1",
+   "status": 200,
+   "bytes": 1398990
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/images/furniture_table_double.webp",
+   "status": 200,
+   "bytes": 18045
+  }
+ ],
+ "extracted_at": "2026-11-19T16:54:08.612Z"
+}

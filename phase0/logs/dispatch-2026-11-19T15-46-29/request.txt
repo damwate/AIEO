@@ -1,0 +1,7 @@
+webcachenext20261119a 下一步咨询
+仓库 Garden-Design-Calculator 分支 feat/web-demo-asset-cache-20261119 tip 410a5f3a（=422d89a0+交接包提交）
+你上轮已签完整PASS。功能线现处暂停点，PO 征询下一步顺序，请独立建议（只建议，PO 拍板；勿改代码）：
+候选A 合并dev：先更新 src/docs/FEATURE_STATUS.md、src/STATUS.md、src/CHANGELOG.md 三份治理文档，再开 PR→dev，不直接push。
+候选B 固定设备按 src/docs/WEB_DEMO_CACHE_FINAL.md 验收三项边界（GLB/KTX2跨方案直读、硬重启缓存保留、植物换图3D更新）。
+候选C 私有媒体双账户实测（独立风险）。
+请先读 src/tasks/HANDOFF_WEB_DEMO_ASSET_CACHE_20261119.md §6§7 再回答：推荐顺序+理由+每步前置条件与风险+有无遗漏步骤。

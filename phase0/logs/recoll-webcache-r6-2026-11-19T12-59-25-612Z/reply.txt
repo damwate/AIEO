@@ -1,0 +1,16 @@
+ChatGPT 说：
+
+PASS P1-2 最终定点复验通过。
+
+依据 commit cd564280aad60f730b90084c82bae096b8c4cfee：
+
+异常覆盖 PASS：invalidate_webp、invalidate_ktx2、unlink_ktx2 统一纳入 try/except Exception，任一普通异常均转换为 RuntimeError，保留原始异常链（raise from e），中止换图。
+
+执行顺序 PASS：测试完整断言五步顺序：
+invalidate_webp → invalidate_ktx2 → unlink_ktx2 → write_webp → update_webp。
+
+测试 PASS：删除失败边界测试同步适配错误文案；报告 test_asset_cache.py 12/12。
+
+r5 指出的 P1-2 两项剩余问题均已关闭。无新增 FAIL，无需继续整改。
+
+范围仅限 P1-2，不重新裁定其他项目。

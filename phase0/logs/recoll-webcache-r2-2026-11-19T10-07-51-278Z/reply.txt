@@ -1,0 +1,196 @@
+ChatGPT 说：
+
+复验结论：#2 PASS，#3 FAIL。 尚不能认定两个 MUST-FIX 全部关闭。复核范围严格限定在指定 commit。
+
+被测仓库：Hulkhao/Garden-Design-Calculator
+
+分支：feat/web-demo-asset-cache-20261119
+
+Commit：a86c3d19c1ed4239c32cd9be472aa6b9b0300422
+
+#2：同名替换期间缓存安全
+PASS
+
+核对文件：
+
+src/backend/app/plant_asset_admin.py
+
+src/backend/app/asset_cache.py
+
+src/backend/app/main.py
+
+src/backend/tests/test_asset_cache.py
+
+通过理由：
+
+replace_plant_asset 实际执行顺序已经变成：
+
+invalidate_asset_version
+
+_atomic_write_bytes
+
+update_asset_version
+
+版本失效发生在文件写入之前，避免旧版本号继续为新字节背书。
+
+FastAPI 中间件先执行 response = await call_next(request)，再根据响应状态及当前版本表决定 Cache-Control。
+
+替换窗口内版本表没有对应条目，因此返回 no-cache。
+
+新增两项针对性测试：
+
+test_invalidate_before_write_never_immutable_during_replacement
+
+test_plant_replacement_order_is_invalidate_write_update
+
+顺序断言明确检查：
+
+Python
+运行
+assert calls == ['invalidate', 'write', 'update']
+
+裁定：上轮 #2 的核心缺陷已关闭。
+
+#3：KTX2 独立版本校验
+FAIL
+
+核对文件：
+
+src/backend/app/asset_cache.py
+
+src/backend/tests/test_asset_cache.py
+
+src/scripts/ktx2_convert.py
+
+src/scripts/check_release.ps1
+
+通过的部分：
+
+.ktx2 有 kv 时，确实使用 kv 与自身版本表哈希比较。
+
+源图 v 不再直接给 KTX2 派生资源背书。
+
+测试覆盖了：
+
+正确 kv → immutable
+
+缺少 kv、只有源图 v → no-cache
+
+错误 kv → no-cache
+
+非 KTX2 忽略 kv
+
+ktx2_convert.py --check 确实进入 check_release.ps1 第 6 节，属于发布硬门禁。
+
+任务材料记录本轮实跑 48 个引用、0 个问题、退出码 0。
+
+但发现一个仍未关闭的边界缺陷。
+
+当前代码：
+
+Python
+运行
+if path.lower().endswith('.ktx2') and params.get('kv'):
+    requested = params['kv'][0]
+
+问题在于：
+
+当 .ktx2 请求完全没有 kv 参数时，requested 不会被覆盖，仍然保留原来的 v。
+
+因此，如果请求中的 v 恰好等于 KTX2 自身哈希，就会错误获得：
+
+HTTP
+Cache-Control: public, max-age=31536000, immutable
+
+这违反了本轮明确要求：KTX2 必须由自己的 kv 参数证明版本，源图 v 不得替代。
+
+可执行整改建议：
+
+将逻辑改为：
+
+Python
+运行
+if path.lower().endswith('.ktx2'):
+    requested = params.get('kv', [None])[0]
+
+并增加一个回归断言：
+
+Python
+运行
+assert asset_cache_control(
+    ktx, f'v={kv}', versions
+) == NO_CACHE
+
+这样即使 v 恰好等于 KTX2 自身哈希，没有 kv 仍然不能获得长期缓存。
+
+注意：现有 48 引用检查通过，只能证明 KTX2 产物与源文件、manifest 等检查条件一致，不能替代上述 HTTP 缓存参数边界测试。
+
+最终裁定
+
+项目
+
+	
+
+结果
+
+	
+
+说明
+
+
+
+
+#2 替换窗口安全
+
+	
+
+PASS
+
+	
+
+顺序、失效机制、回归测试均成立
+
+
+
+
+#3 KTX2 独立版本
+
+	
+
+FAIL
+
+	
+
+缺少 kv 时仍允许 v 参与判定
+
+
+
+
+48 引用 KTX2 检查
+
+	
+
+PASS（材料记录）
+
+	
+
+0 问题、退出 0
+
+
+
+
+本轮整改整体
+
+	
+
+未通过
+
+	
+
+仍有一项 MUST-FIX
+
+建议下一轮只修 #3 的缺失 kv 回退问题，并增加上述反例测试。
+
+不需要重做 #2，不需要扩大架构审查，也不需要重复已经通过的 48 引用转换检查。
+
+本轮没有修改任何代码。

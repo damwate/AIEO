@@ -1,0 +1,14 @@
+{
+  "at": "2026-11-19T12:54:51.375Z",
+  "outcome": "failure_scene_preserved",
+  "before": [
+    {
+      "id": "30E96E016BFD9082BEC64A9C6E02C8C2",
+      "url": "https://chatgpt.com/c/6afeee2d-f9f0-83ec-9544-7e5f977e5645"
+    }
+  ],
+  "exit_after_disposal": "not_applicable（现场保留，无处置动作）",
+  "created_pages": 0,
+  "disposal": "已发送后失败：现场保留不关页（L-018 禁重发语义依赖现场），退出后人工/补采链处置",
+  "error": "INBOUND_START_UNIT_MISSING: 连续向上搜索到顶部仍未找到可分段读取的 fallback-turn-0:0:user"
+}

@@ -1,0 +1,5 @@
+webcache20261119r3 边界复验
+仓库 Garden-Design-Calculator 分支 feat/web-demo-asset-cache-20261119 commit 27153990777746701a64b85334acaeb1969c9b57
+仅复核上轮 #3 指名的缺 kv 回退边界是否关闭，不重复 #2/48引用检查/其它范围。
+已改：asset_cache_control 中 .ktx2 无条件 requested=params.get('kv',[None])[0]；缺 kv 则为 None。新增反例断言 asset_cache_control(ktx, f'v={kv}', versions)==NO_CACHE。专项 8/8 通过。
+只回 PASS 或 FAIL+理由；FAIL 给精确整改点。勿改代码。

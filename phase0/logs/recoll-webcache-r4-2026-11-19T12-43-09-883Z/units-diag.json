@@ -1,0 +1,16 @@
+[
+  {
+    "key": "dec0a171-521b-5c56-8f91-039b53f1b786:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 690,
+    "text_head": "webcache20261119r4 GPT-P1整改复验\n仓库 Garden-Design-Calculator 分支 feat/... commit e0de5052684f44ebcac940b"
+  },
+  {
+    "key": "dec0a171-521b-5c56-8f91-039b53f1b786:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 3341,
+    "text_head": "ChatGPT 说：\nwebcache20261119r4 — GPT-P1 整改复验\n有条件通过，尚未达到完整验收\n\n复核基准：Hulkhao/Garden-Design-Calculator\n\n分"
+  }
+]

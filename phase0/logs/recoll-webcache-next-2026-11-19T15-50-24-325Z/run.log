@@ -1,0 +1,8 @@
+[2026-11-19T15:50:25.253Z] 会话锁已获取（webcachenext 咨询补采）
+[2026-11-19T15:50:25.397Z] 页面归属命中 CONV_UUID=6aff11d3-7cc8-83ec-af09-f57f68ddf67a
+[2026-11-19T15:50:48.868Z] 归属校验=标记唯一(1)+最后user断言（target=54e7d2fc-fb15-526d-b5dc-dd0aac31025d:0:user）
+[2026-11-19T15:50:48.876Z] checks={"marked_user_unique":true,"last_user_assertion":true,"adjacent_assistant_tail":true,"stable_static_dom_read":true,"final_stop_button_not_visible":true,"response_length_plausible":true,"not_prev_reply_sha":true}
+[2026-11-19T15:50:48.878Z] reply 已落盘（4815 字节，SHA=53b91111e1a33bd3…）
+[2026-11-19T15:50:48.879Z] RECOLL COMPLETED
+[2026-11-19T15:50:48.908Z] 视口覆盖已清除
+[2026-11-19T15:50:49.050Z] 会话锁已释放（webcachenext 咨询补采）

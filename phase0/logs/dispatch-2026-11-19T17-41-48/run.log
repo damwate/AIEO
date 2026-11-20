@@ -1,0 +1,9 @@
+[2026-11-19T17:41:50.406Z] 会话锁已获取 pid=27248
+[2026-11-19T17:41:50.410Z] === GPT 派单（已有会话，消息 1079 字节）===
+[2026-11-19T17:41:55.167Z] Chrome 已启动 pid=20264
+[2026-11-19T17:41:56.687Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 0 个
+[2026-11-19T17:41:56.687Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-19T17:42:05.320Z] 会话就绪: https://chatgpt.com/c/6aff11d3-7cc8-83ec-af09-f57f68ddf67a
+[2026-11-19T17:42:12.166Z] [dispatch] 基线尾部: {"role":"assistant","key":"54e7d2fc-fb15-526d-b5dc-dd0aac31025d:2:assistant","assistantUuid":"513092da-719d-4a0e-92f1-a72bceb0333d"}
+[2026-11-19T17:42:15.780Z] [dispatch] 发送双验通过（polls=1，user_unit_key=fallback-turn-0:0:user，tail 后观察）
+[2026-11-19T17:42:16.195Z] 截图: sent-dispatch.png

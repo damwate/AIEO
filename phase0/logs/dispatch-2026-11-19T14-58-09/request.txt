@@ -1,0 +1,8 @@
+webcache20261119bd3fix 复验bd3fc1f8两缺口+一验收
+Garden-Design-Calculator feat/web-demo-asset-cache-20261119 tip 47616244（已推远端）
+只复核你上轮对bd3fc1f8的两处实现缺口+一验收缺口是否关闭，不扩大范围、不动已生效HTTP缓存。
+1 植物KTX2 no-cache：新增assetVersionUrl.ts统一v/kv规则，catalog与裸名解析共用，运行时同时注入源v与.ktx2派生kv。
+2 升级漏补新增版本：_copy_bundled_assets两阶段合并，卷上优先、镜像新条目仅卷上确有该文件才补，原子写。
+3 跨方案E2E进3D：同项目API建第二方案，openFull3D进真实3D，断言GLB加载+GLB/KTX2首次头immutable+共用图片CDP本机直读；GLB/KTX2跨方案直读/硬重启/换图浏览器复验列设备验收，不假称。
+验证：vitest21/21、后端13/13、build/typecheck通过、跨方案3D E2E1 passed、lint0错；前端7处ProductLibrary吸附基线失败为既有无关。
+逐条PASS/FAIL+理由，FAIL给精确整改点。勿改代码。

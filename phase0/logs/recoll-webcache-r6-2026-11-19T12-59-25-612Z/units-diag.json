@@ -1,0 +1,16 @@
+[
+  {
+    "key": "d2904f1f-aea3-54fa-a4e3-7d2d36096de9:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 490,
+    "text_head": "webcache20261119r6 P1-2最终定点复验\n仓库 Garden-Design-Calculator 分支 feat/... commit cd564280aad60f730b90084"
+  },
+  {
+    "key": "d2904f1f-aea3-54fa-a4e3-7d2d36096de9:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 435,
+    "text_head": "ChatGPT 说：\n\nPASS P1-2 最终定点复验通过。\n\n依据 commit cd564280aad60f730b90084c82bae096b8c4cfee：\n\n异常覆盖 PASS：inva"
+  }
+]

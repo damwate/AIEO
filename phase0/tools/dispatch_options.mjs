@@ -2,6 +2,7 @@
 // 三 ID 要么全部缺省（通用非登记派单），要么与 --schema 同时完整提供。
 
 import { readFileSync } from "node:fs";
+import { join } from "node:path";
 
 export const DISPATCH_ID_RULES = Object.freeze({
   task_id: /^T-(P[0-9]+-)?[0-9]{3,}$/,
@@ -86,6 +87,123 @@ export async function submitDispatchMessage(page, target, beforeEnter) {
   await page.keyboard.press("Enter");
 }
 
+// ── 实例域（DEC-123 PARA-R1 有条件通过：每 agent 一把锁+独立浏览器+可核验映射）──
+// 约束（审查方裁定）：instance ID 严格校验防路径穿越/大小写歧义；default 实例逐字节
+// =既有常量（C7 默认兼容）；实例身份/锁/端口/profile 构成可核验映射；非 default 实例
+// 禁止写共享 reviewer 指针（单写者不变量）。
+
+export const INSTANCE_ID_PATTERN = /^[a-z0-9][a-z0-9-]{0,31}$/;
+
+export function normalizeInstanceId(raw) {
+  if (raw === null || raw === undefined) return "default";
+  const id = String(raw).trim().toLowerCase();
+  if (!INSTANCE_ID_PATTERN.test(id)) {
+    throw optionError(
+      "DISPATCH_INSTANCE_INVALID",
+      `--instance 格式不合法（限 [a-z0-9-]，1-32 位，字母数字开头）: ${raw}`,
+      { instance: String(raw) },
+    );
+  }
+  return id;
+}
+
+/**
+ * 实例域路径派生（纯函数，零 IO）。
+ * default 实例=既有常量逐字节（C7）：锁 gpt-session.lockfile、profile gpt-poc、端口 9222。
+ * 命名实例：锁 gpt-session-<ID>.lockfile、profile gpt-poc-<ID>、端口走注册表分配。
+ * 端口注册表为跨实例共享协调点（runtime/locks/instance-ports.json），所有实例同路径。
+ */
+export function deriveInstancePaths({ instanceId = "default", aieoRoot }) {
+  const id = normalizeInstanceId(instanceId);
+  const isDefault = id === "default";
+  return {
+    instanceId: id,
+    isDefault,
+    lockPath: join(aieoRoot, "runtime", "locks", isDefault ? "gpt-session.lockfile" : `gpt-session-${id}.lockfile`),
+    profileDir: join(aieoRoot, "runtime", "chrome_profiles", isDefault ? "gpt-poc" : `gpt-poc-${id}`),
+    portRegistryPath: join(aieoRoot, "runtime", "locks", "instance-ports.json"),
+    defaultPort: 9222,
+    portCandidates: { min: 9300, max: 9399 },
+  };
+}
+
+/**
+ * 端口分配（纯函数）。registry 形如 { "agent-a": 9301 }（已登记实例的稳定映射）；
+ * isPortBusy(port) 返回该端口当前是否可探测到 CDP 端点（真实探测判定占用，
+ * 哈希/猜测不作为唯一性证明——DEC-123 ③边界）。
+ * 规则：已登记→原端口稳定返回；未登记→第一个「未被他实例登记且探测空闲」的候选；
+ * 候选耗尽→INSTANCE_PORT_EXHAUSTED。
+ */
+export function allocateInstancePort({ instanceId, registry = {}, isPortBusy = () => false, candidates }) {
+  if (Number.isInteger(registry[instanceId])) return { port: registry[instanceId], allocated: false };
+  const taken = new Set(Object.values(registry));
+  for (let port = candidates.min; port <= candidates.max; port += 1) {
+    if (taken.has(port)) continue;
+    if (isPortBusy(port)) continue;
+    return { port, allocated: true };
+  }
+  throw optionError("INSTANCE_PORT_EXHAUSTED", `实例端口候选 ${candidates.min}-${candidates.max} 全部占用`, {
+    instance: instanceId,
+  });
+}
+
+/**
+ * reviewer 指针单写者守卫：共享指针 phase0/logs/gpt-reviewer-session.json 只归
+ * default 实例写；命名实例（任务腿）必须绑定会话或显式不写，否则 fail-closed。
+ */
+export function assertPointerWriterAllowed({ instanceId, options }) {
+  if (instanceId === "default") return;
+  if (shouldUpdateReviewerPointer(options)) {
+    throw optionError(
+      "POINTER_SINGLE_WRITER_VIOLATION",
+      `实例 ${instanceId} 非共享 reviewer 指针写者：任务派单必须 --session-result 绑定或 --no-update-pointer`,
+      { instance: instanceId },
+    );
+  }
+}
+
+/**
+ * 进程归属判定（纯函数，PowerShell 侧同语义实现）：解析完整启动参数中的
+ * --user-data-dir=<token>（支持引号包裹），与实例 profile 目录做大小写不敏感的
+ * 精确 token 比对（Windows 路径语义）。禁子串通配——前缀碰撞负例
+ * （gpt-poc-a vs gpt-poc-a2）不得误判（DEC-123 ③加严）。
+ */
+export function matchesProfileOwnership(commandLine, profileDir) {
+  if (typeof commandLine !== "string" || commandLine.length === 0) return false;
+  const m = commandLine.match(/--user-data-dir=(?:"([^"]*)"|(\S+))/);
+  if (!m) return false;
+  const dir = (m[1] ?? m[2] ?? "").trim();
+  if (!dir) return false;
+  return dir.toLowerCase() === String(profileDir).toLowerCase();
+}
+
+/**
+ * 生成实例精确归属的进程清理脚本（PowerShell）。语义与 matchesProfileOwnership
+ * 同构：仅终止 --user-data-dir 精确等于本实例 profile 的进程；无 user-data-dir 或
+ * 归属不明的进程一律不杀只计数（DEC-123 ③：无法确认归属→记录并停止清理）；
+ * 输出 own/foreign/remaining 供清理后核对证据。
+ */
+export function buildKillProfileScript(profileDir) {
+  const psSingleQuoted = String(profileDir).replace(/'/g, "''");
+  return `
+$candidates = Get-CimInstance Win32_Process -Filter "Name='chrome.exe'"
+$own = @(); $foreign = @()
+foreach ($p in $candidates) {
+  $m = [regex]::Match($p.CommandLine, '--user-data-dir=(?:"([^"]*)"|(\\S+))')
+  if (-not $m.Success) { $foreign += $p.ProcessId; continue }
+  $dir = ($m.Groups[1].Value + $m.Groups[2].Value).Trim('"')
+  if ($dir -ieq '${psSingleQuoted}') { $own += $p.ProcessId } else { $foreign += $p.ProcessId }
+}
+$own | ForEach-Object { Stop-Process -Id $_ -Force -ErrorAction SilentlyContinue }
+Start-Sleep -Milliseconds 300
+$remaining = @(Get-CimInstance Win32_Process -Filter "Name='chrome.exe'" | Where-Object {
+  $m = [regex]::Match($_.CommandLine, '--user-data-dir=(?:"([^"]*)"|(\\S+))')
+  $m.Success -and (($m.Groups[1].Value + $m.Groups[2].Value).Trim('"') -ieq '${psSingleQuoted}')
+})
+Write-Output "own=$($own.Count) foreign=$($foreign.Count) remaining=$($remaining.Count)"
+`.trim();
+}
+
 /**
  * 从简报首行提取 [TAG|...] 标记，供 #3 键漂移时唯一定位起点 user unit。
  * 无标记返回 null（回退既有固定 key 路径，负例强度不降）。
@@ -99,6 +217,8 @@ export function extractBriefMarker(text) {
 export function parseDispatchOptions(argv, { readMessageFile = (path) => readFileSync(path, "utf8") } = {}) {
   if (!Array.isArray(argv)) throw new TypeError("argv 必须是数组");
   const newSession = argv.includes("--new-session");
+  // DEC-123：--instance 派生实例域（锁/端口/profile/清理归属）；缺省=default（原行为）。
+  const instanceId = normalizeInstanceId(optionalArg(argv, "--instance"));
   const sessionResult = optionalArg(argv, "--session-result");
   if (newSession && sessionResult !== null) {
     throw optionError("DISPATCH_SESSION_AMBIGUOUS", "--new-session 与 --session-result 只能提供一项");
@@ -153,6 +273,7 @@ export function parseDispatchOptions(argv, { readMessageFile = (path) => readFil
     newSession,
     sessionResult,
     noUpdatePointer,
+    instanceId,
     ids,
     schemaPath,
     m1RegistrationRequested,

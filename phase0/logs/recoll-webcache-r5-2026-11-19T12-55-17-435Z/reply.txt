@@ -1,0 +1,146 @@
+ChatGPT 说：
+
+复验结论：1 PASS，1 FAIL。 本轮仅检查 r4 指定的两处问题，没有扩大审查范围，也未修改代码。
+
+被测仓库：Hulkhao/Garden-Design-Calculator
+
+被测 Commit：c29b0e075f37e75eefbc08afdce95e58a4b1819c
+
+父 Commit：e0de5052684f44ebcac940b371a26d81a31afee6
+
+逐项裁定
+1. P1-2：植物换图时 KTX2 失效顺序
+FAIL
+
+检查文件：src/backend/app/plant_asset_admin.py
+
+已通过的部分：
+
+当前代码顺序确实调整为：
+
+invalidate webp 版本。
+
+invalidate 旧 KTX2 版本。
+
+删除旧 KTX2。
+
+原子写入新 webp。
+
+update webp 新版本。
+
+这一顺序关闭了新 webp 已经恢复 immutable、旧 KTX2 仍然有效的时间窗口。
+
+删除失败时也会抛出 RuntimeError，不会继续写入新 webp。
+
+剩余问题：
+
+异常转换范围仍然过窄：
+
+Python
+运行
+except OSError as e:
+    raise RuntimeError(...)
+
+目前只覆盖 OSError。
+
+但整改要求是旧 KTX2 的失效或删除失败，都必须转换成 RuntimeError 中止换图。当前实现没有覆盖其他异常类型。
+
+另外，新增顺序测试只断言：
+
+Python
+运行
+invalidate_ktx2 < webp_write
+
+没有直接断言 unlink < webp_write，也没有完整验证五个操作的先后顺序。
+
+精确整改点：
+
+将 webp 版本失效、KTX2 版本失效及 KTX2 删除纳入明确的异常中止保护。
+
+对这些操作的普通异常统一转换为 RuntimeError，保留原始异常作为 cause。
+
+顺序测试完整记录并断言：
+
+纯文本
+invalidate_webp
+    <
+invalidate_ktx2
+    <
+unlink_ktx2
+    <
+write_webp
+    <
+update_webp
+
+不需要调整缓存架构，也不需要改变正常 HTTP 缓存行为。
+
+2. 跨方案 E2E：同项目共用素材本机缓存
+PASS
+
+检查文件：src/frontend/e2e/web-demo-cache-cross-scheme.spec.ts
+
+通过理由：
+
+setupProject 只调用一次。
+
+第二方案通过 API 在同一项目下创建。
+
+两个方案使用同一个浏览器 context，保留浏览器缓存。
+
+不再通过归档、重建项目模拟跨方案。
+
+改用 CDP Network.requestServedFromCache，不再使用容易误判的 Playwright request 事件。
+
+第二方案只针对两个方案实际共有的素材检查缓存命中。
+
+要求所有共有素材均由本机缓存提供，而不是仅要求部分命中。
+
+判据与实际业务场景相符，修复了 r4 指出的两个核心问题：测试场景不真实、缓存判据不可靠。
+
+任务文档记录了真浏览器实跑通过，同项目两方案共用素材第二次全部本机直读。
+
+说明：我独立检查了测试代码和提交记录；实际浏览器运行过程没有随本次 Commit 提供独立 trace，因此不把运行日志视为已独立取证。
+
+最终结果
+
+审查项
+
+	
+
+r4 原裁定
+
+	
+
+本轮裁定
+
+
+
+
+P1-2 KTX2 失效顺序
+
+	
+
+FAIL
+
+	
+
+FAIL
+
+
+
+
+跨方案 E2E
+
+	
+
+FAIL
+
+	
+
+PASS
+
+剩余只有 P1-2 一处。
+
+不要求重做 E2E，不要求重跑 P1-1/P1-3，不要求修改已经生效的普通 HTTP 缓存。
+
+建议只针对 P1-2 做一次小修复，提交新 SHA 后进行最后一次定点复验。

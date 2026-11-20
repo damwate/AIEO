@@ -1,0 +1,322 @@
+ChatGPT 说：
+webcache20261119r4 — GPT-P1 整改复验
+有条件通过，尚未达到完整验收
+
+复核基准：Hulkhao/Garden-Design-Calculator
+
+分支：feat/web-demo-asset-cache-20261119
+
+Commit：e0de5052684f44ebcac940b371a26d81a31afee6
+
+复核方式：直接检查指定 SHA 的 Git 源码及测试，不以整改说明代替代码证据。
+
+范围：仅 P1-1、P1-2、P1-3 和验收补齐，不涉及普通 HTTP 缓存策略。
+
+一、三项 P1
+P1-1 KTX2 的 kv 保留
+PASS
+
+核对文件：
+
+src/frontend/src/three/ktx2.ts
+
+src/frontend/src/three/ktx2.test.ts
+
+src/backend/app/asset_cache.py
+
+确认：
+
+ktx2MapUrl() 不再将 kv 改写成 v。
+
+查询串及锚点整体保留。
+
+后端 .ktx2 仍然只读取 kv。
+
+缺少 kv 时不会拿 v 冒充派生文件版本。
+
+测试增加了 v=V&kv=K 保留契约及反例。
+
+前后端参数语义已经一致，原先 KTX2 长期缓存无法命中的问题已关闭。
+
+P1-2 植物换图及裸 URL 版本解析
+FAIL
+
+核对文件：
+
+src/backend/app/plant_asset_admin.py
+
+src/backend/tests/test_asset_cache.py
+
+src/frontend/src/assetVersionResolver.ts
+
+src/frontend/src/assetVersionResolver.test.ts
+
+src/frontend/src/planting/billboard.ts
+
+src/frontend/src/threeEnv.ts
+
+src/frontend/src/App.tsx
+
+已经通过的部分：
+
+新增 assetVersionResolver，支持完整路径版本查询。
+
+plantImageUrl() 接入版本表。
+
+hdrEnvUrl() 接入版本表。
+
+未注册版本时保持原 URL。
+
+App 在 catalog 装载时注入版本表。
+
+新增解析器 5 项测试，覆盖植物、HDR、查询参数和精确路径匹配。
+
+植物替换测试覆盖旧 KTX2 文件删除及版本条目摘除。
+
+仍有一处必须整改：植物换图时旧 KTX2 的失效顺序不正确。
+
+当前 replace_plant_asset() 的执行顺序是：
+
+纯文本
+invalidate webp version
+写入新 webp
+update webp version
+invalidate ktx2 version
+删除旧 ktx2
+
+问题在于：新 webp 的版本已经重新生效，旧 KTX2 才开始失效。
+
+两者之间存在一个窗口，旧 KTX2 仍然存在且其旧 kv 仍然有效，3D 请求可能继续取得旧贴图，并获得长期 immutable 缓存。
+
+精确整改点：
+
+将旧 KTX2 的处理提前到新 webp 写入之前：
+
+纯文本
+invalidate webp version
+invalidate ktx2 version
+删除旧 ktx2
+写入新 webp
+update webp version
+
+还应保证删除旧 KTX2 失败时不能继续宣告换图成功，否则仍可能留下旧派生文件。
+
+现有 test_plant_replacement_disables_stale_ktx2 只覆盖正常删除成功路径，需要补充删除失败边界测试。
+
+因此，本项不能签 PASS。
+
+P1-3 seed 版本表冲突
+PASS
+
+核对文件：
+
+src/backend/app/cli.py
+
+src/backend/tests/test_asset_cache.py
+
+确认 _copy_bundled_assets() 对 asset-versions.json 已采用：
+
+文件不存在：从 bundled assets 补齐。
+
+文件已经存在：保留卷上内容。
+
+不再比较镜像与运行时版本表内容。
+
+其他资产仍保留原来的冲突检查。
+
+一致性检查仍由 build_catalog --check 承担。
+
+新增测试确实构造了镜像版本与运行时版本不一致的情况，并验证运行时内容不被覆盖。
+
+这解决了持久卷运行时状态与镜像资产之间的冲突。
+
+二、跨方案验收补齐
+FAIL — 用例未形成有效的跨方案验收
+
+核对文件：
+
+src/frontend/e2e/web-demo-cache-cross-scheme.spec.ts
+
+认可的设计：
+
+使用浏览器 performance.getEntriesByType('resource')。
+
+使用 transferSize === 0 判断本机缓存命中。
+
+没有采用 Playwright request 事件作为缓存命中依据。
+
+同一 Page 进行导航，意图保留浏览器缓存。
+
+但是，发现一个实质性问题：
+
+两次调用 openSchemeLibrary()，并没有打开同一项目下的两个方案。
+
+原因是 openSchemeLibrary() 每次都会调用：
+
+TypeScript
+setupProject(
+  base,
+  USER,
+  'E2E 跨方案缓存',
+  {withScene:false, schemeName}
+);
+
+而 setupProject() 内部明确会：
+
+查找同名项目。
+
+归档已有同名项目。
+
+创建新的 Site。
+
+创建新的 Project。
+
+创建新的 Scheme。
+
+因此，方案 A 和方案 B 实际上属于两个不同项目。
+
+这意味着用例测试的是：
+
+两个独立项目之间是否复用浏览器缓存。
+
+而不是要求的：
+
+关闭同一项目的方案 A，再打开方案 B，验证共用素材本机直读。
+
+此外，VERSIONED 正则目前声明后没有使用。
+
+精确整改点：
+
+setupProject() 只调用一次，取得同一个 projectId。
+
+在这个项目下通过现有 API 创建第二个 Scheme。
+
+第一次打开 Scheme A，记录实际加载的版本化素材 URL。
+
+离开 A，再打开同一项目的 Scheme B。
+
+只统计两方案共同使用的素材。
+
+对共同素材逐项检查 transferSize === 0。
+
+不以第一套方案的全部请求数量直接作为第二套方案的预期命中数量。
+
+另外，本轮 E2E 没有实际运行成功，不能认定浏览器缓存验收通过。
+
+三、验证结果认定
+
+验证项目
+
+	
+
+认定
+
+
+
+
+前端全量 3238 通过
+
+	
+
+PASS（按提供的执行记录）
+
+
+
+
+7 项既有几何基线失败
+
+	
+
+非本轮新增，但仍保留
+
+
+
+
+后端 asset_cache 全过
+
+	
+
+PASS（按提供的执行记录）
+
+
+
+
+build
+
+	
+
+PASS（按提供的执行记录）
+
+
+
+
+解析器 5/5
+
+	
+
+PASS（按提供的执行记录）
+
+
+
+
+P1-1 KTX2
+
+	
+
+PASS
+
+
+
+
+P1-2 植物换图
+
+	
+
+FAIL
+
+
+
+
+P1-3 seed
+
+	
+
+PASS
+
+
+
+
+跨方案 E2E
+
+	
+
+FAIL
+
+四、最终裁定
+暂不签署完整 PASS
+
+P1-1 KTX2
+
+PASS
+
+P1-2 植物换图
+
+FAIL
+
+P1-3 seed
+
+PASS
+
+跨方案 E2E
+
+FAIL
+
+剩余整改：两处
+
+P1-2：调整旧 KTX2 失效、删除与新 webp 写入顺序，并补失败边界测试。
+
+跨方案 E2E：改成同一项目的两个方案，并在安全护栏允许的环境中实际运行。
+
+范围纪律： 不要求重做缓存架构，不要求修改已生效的普通 HTTP 缓存，不要求扩大其他资产范围，不要求部署。
+
+以上是针对指定 SHA 的复验结果，不修改任何代码。

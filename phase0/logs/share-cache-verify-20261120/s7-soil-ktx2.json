@@ -1,0 +1,24 @@
+[
+ {
+  "phase": "entry1",
+  "url": "http://share.yotin.com.cn:8870/assets/textures/%E5%9C%9F%E5%A3%A4.ktx2?v=ac5ae3ee5ae249c78cf54882e0a446a91cc888f2a35387bcb2dc7053b24b5e14&kv=02614ba2324132552190e62d648de03fd1a8c78054388f424ae9c9e020d4f634",
+  "initiator": "script:\"http://share.yotin.com.cn:8870/assets/index-iQ8YBe2G.js\"",
+  "ts": 59654.59938,
+  "bytes": 258,
+  "status": 200,
+  "fromDiskCache": true,
+  "fromMemoryCache": false,
+  "cacheControl": "public, max-age=31536000, immutable"
+ },
+ {
+  "phase": "entry2",
+  "url": "http://share.yotin.com.cn:8870/assets/textures/%E5%9C%9F%E5%A3%A4.ktx2?v=ac5ae3ee5ae249c78cf54882e0a446a91cc888f2a35387bcb2dc7053b24b5e14&kv=02614ba2324132552190e62d648de03fd1a8c78054388f424ae9c9e020d4f634",
+  "initiator": "script:\"http://share.yotin.com.cn:8870/assets/index-iQ8YBe2G.js\"",
+  "ts": 59817.657692,
+  "bytes": 258,
+  "status": 200,
+  "fromDiskCache": true,
+  "fromMemoryCache": false,
+  "cacheControl": "public, max-age=31536000, immutable"
+ }
+]

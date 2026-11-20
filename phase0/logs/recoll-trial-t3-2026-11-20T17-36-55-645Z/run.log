@@ -1,0 +1,6 @@
+[2026-11-20T17:36:56.450Z] 会话锁已获取（trial-t3 T2甲原会话补采）
+[2026-11-20T17:36:56.481Z] RECOLL FAILED: browserType.connectOverCDP: connect ECONNREFUSED 127.0.0.1:9222
+Call log:
+[2m  - <ws preparing> retrieving websocket url from http://127.0.0.1:9222[22m
+
+[2026-11-20T17:36:56.591Z] 会话锁已释放（trial-t3 T2甲原会话补采；临时页已清理）

@@ -1,0 +1,6 @@
+webcache20261119bd3fixr2 定点复验KTX2断言
+Garden-Design-Calculator feat/web-demo-asset-cache-20261119 tip c2539d90（基准47616244）
+你上轮裁定2 PASS/1 FAIL，唯一MUST-FIX是跨方案3D E2E对KTX2无数量断言、空循环可假通过。本轮只复验这一项，其余两处已PASS实现勿重审。
+整改：新增 const ktx2=[...firstSeen].filter(u=>/\.ktx2(\?|$)/.test(u)) 与 expect(ktx2.length,'3D 应实际加载 KTX2 贴图').toBeGreaterThan(0)；immutable 循环改遍历 [...glb,...ktx2]。
+已核实场景确定性加载真实KTX2：土壤.ktx2 + spring_01 五株planting/*.ktx2，均有实体与版本条目，KTX2能力门在threeViewProbeReady之前已过，断言非伪造。重跑跨方案3D E2E 1 passed；typecheck:e2e通过、lint 0错。
+只回：该MUST-FIX是否关闭、能否签完整PASS。勿改代码，勿扩大范围。

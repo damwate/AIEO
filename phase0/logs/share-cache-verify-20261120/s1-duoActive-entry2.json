@@ -1,0 +1,54 @@
+{
+ "tag": "s1-duoActive",
+ "phase": "entry2",
+ "agg": {
+  "glb": {
+   "server200": 0,
+   "server304": 0,
+   "serverBytes": 0,
+   "cacheServed": 0
+  },
+  "ktx2": {
+   "server200": 0,
+   "server304": 0,
+   "serverBytes": 0,
+   "cacheServed": 0
+  },
+  "img": {
+   "server200": 3,
+   "server304": 0,
+   "serverBytes": 696,
+   "cacheServed": 0
+  },
+  "other_asset": {
+   "server200": 0,
+   "server304": 0,
+   "serverBytes": 0,
+   "cacheServed": 0
+  }
+ },
+ "totals": {
+  "server200": 3,
+  "server304": 0,
+  "serverBytes": 696,
+  "cacheServed": 0
+ },
+ "server_list": [
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/images/shadow_stone_panel_%E6%9F%94%E7%BA%B9%E7%99%BD__airef__20260722000000ddim.jpg",
+   "status": 200,
+   "bytes": 232
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/images/bench_small_seat_%E6%98%9F%E8%8A%92%E7%81%B0.webp",
+   "status": 200,
+   "bytes": 232
+  },
+  {
+   "url": "http://share.yotin.com.cn:8870/assets/images/bench_small_long_planter_%E6%98%9F%E8%8A%92%E7%81%B0.webp",
+   "status": 200,
+   "bytes": 232
+  }
+ ],
+ "extracted_at": "2026-11-19T17:02:24.456Z"
+}

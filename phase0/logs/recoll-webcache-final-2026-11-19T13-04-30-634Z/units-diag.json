@@ -1,0 +1,16 @@
+[
+  {
+    "key": "2036ce1b-42f6-5224-af2d-33e17f1102e5:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 476,
+    "text_head": "webcache20261119final 最终总验收\n仓库 Garden-Design-Calculator 分支 feat/web-demo-asset-cache-20261119 tip 7c"
+  },
+  {
+    "key": "2036ce1b-42f6-5224-af2d-33e17f1102e5:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 1422,
+    "text_head": "ChatGPT 说：\n最终总验收裁定\n\nPASS 完整审核通过，可以进入发布验收。\n\n审核对象：\n\n仓库：Hulkhao/Garden-Design-Calculator\n\n分支：feat/web-d"
+  }
+]

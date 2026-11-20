@@ -1,0 +1,9 @@
+webcache20261119r4 GPT-P1整改复验
+仓库 Garden-Design-Calculator 分支 feat/... commit e0de5052684f44ebcac940b371a26d81a31afee6
+仅复核你上轮提的三处P1是否关闭+验收补齐，不扩大范围、不改已生效的普通HTTP缓存。
+P1-1 KTX2：ktx2MapUrl 不再把 kv 改写成 v，保留 kv 原样；后端 .ktx2 仍只读 kv。ktx2.test.ts 加契约与反例。
+P1-2 植物换图：replace_plant_asset 换 webp 时删除同名旧 .ktx2 并摘版本（走既有失败回退原图）；新增 assetVersionResolver，plantImageUrl/HDR URL 接入版本表，未注册时原样。
+P1-3 seed：_copy_bundled_assets 对 asset-versions.json 改为只补缺、不比对覆盖（卷上事实优先），build_catalog --check 仍管一致性。
+验收：补 web-demo-cache-cross-scheme.spec.ts，用 performance.transferSize===0 判共用素材本机直读。注：该 E2E 本轮因环境 safe-delete 护栏累计删除阈值未实跑通过，用例已写。
+验证：前端全量3238过/7既有几何基线失败；后端 asset_cache 全过；build 通过；解析器5/5。
+逐条给 PASS/FAIL+理由；FAIL 给精确整改点。勿改代码。

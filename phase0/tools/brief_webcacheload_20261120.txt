@@ -1,0 +1,10 @@
+webcacheload20261120 加载优化讨论（只讨论不改码）
+仓库 Garden-Design-Calculator 分支 feat/web-demo-asset-cache-20261119 tip 3dec6bcb15c7a7cb7f096ba55333941c2aef05d5
+背景：素材缓存已上线实测：冷载方案进3D=44请求/20.7MB（KTX2占15MB），重进/跨方案/跨项目≈0回源，详见 src/reports/WEB_DEMO_CACHE_VERIFY_SHARE_20261120.md。
+议题：页面与素材加载本身如何优化，只出讨论与优先级，PO 留作下轮调整：
+①2D 首屏与首图（目录级预载是否与首屏竞争）
+②3D 就绪时长（下载/转码占比、就绪判定与进度反馈）
+③加载页 UX（占位、骨架、渐进显示）
+④与缓存的配合（哪些值得预载、哪些交给 HTTP 缓存）
+硬约束：任何建议不得破坏内容加载完整性；请先读 src/reports/WEB_DEMO_CACHE_VERIFY_SHARE_20261120.md，代码入口 src/frontend/src/ThreeView.tsx、src/frontend/src/plan/sceneImageSrcs.ts、src/frontend/src/three/ktx2.ts。
+只回：方向清单+每项收益/风险/工作量档位+优先级建议；勿改代码。

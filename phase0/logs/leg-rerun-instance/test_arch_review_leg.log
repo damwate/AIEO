@@ -1,0 +1,39 @@
+...RESULT=ARCH_REVIEW_LEG_PASS status=READY
+.RESULT=ARCH_REVIEW_LEG_PASS status=REWORK
+.RESULT=ARCH_REVIEW_BLOCKED_REGISTERED status=ARCH_REVIEW (no event; OWNER decides)
+.RESULT=LEG_LEVEL_BLOCKED step=4 reason=reply result 'PENDING' outside ['BLOCKED', 'PASS', 'REWORK'] (charter §4 结论域)
+..RESULT=ARCH_REVIEW_LEG_PASS status=READY
+RESULT=ARCH_REVIEW_LEG_DONE status=READY
+.RESULT=ARCH_REVIEW_LEG_PASS status=REWORK
+.RESULT=ARCH_REVIEW_LEG_PASS status=READY
+.RESULT=LEG_LEVEL_BLOCKED step=3 reason=dispatch exhausted: gpt_dispatch exit 3: injected send failure (test double)
+.RESULT=LEG_LEVEL_BLOCKED step=3 reason=send confirmed; collection failed (禁重发; use resume): gpt_dispatch exit 3: injected collection failure after send double-verify
+RESULT=ARCH_REVIEW_LEG_PASS (manual attach) status=READY
+.RESULT=ARCH_REVIEW_LEG_PASS (resumed) status=READY
+.RESULT=ARCH_REVIEW_LEG_PASS status=READY
+RESULT=ARCH_REVIEW_LEG_DONE status=READY
+RESULT=LEG_LEVEL_BLOCKED step=-1 reason=M1 task status=BLOCKED: engine must not touch (A-3 行9; OWNER only)
+.RESULT=ARCH_REVIEW_LEG_PASS (manual attach) status=REWORK
+.RESULT=ARCH_REVIEW_BLOCKED_REGISTERED status=ARCH_REVIEW (no event; OWNER decides)
+.RESULT=ARCH_REVIEW_LEG_PASS status=READY
+RESULT=LEG_LEVEL_BLOCKED step=-1 reason=attach-reply requires ARCH_REVIEW (task=READY)
+.RESULT=LEG_LEVEL_BLOCKED step=4 reason=send intent without confirmation (send state uncertain; fail-closed even for manual attach; manual forensics + append-only supersede first)
+.RESULT=LEG_LEVEL_BLOCKED step=4 reason=confirmed send exists but sent_user_unit_key missing (ownership cannot be proven; fail-closed even for manual attach)
+.SETUP_OK agents=[{"agent_id": "GPT-02", "reused_existing": true}, {"agent_id": "ENGINE-02", "reused_existing": true}] tokens=runtime/arch-review-leg/service-tokens.json (gitignored)
+SETUP_OK agents=[{"agent_id": "GPT-02", "reused_existing": true}, {"agent_id": "ENGINE-02", "reused_existing": true}] tokens=runtime/arch-review-leg/service-tokens.json (gitignored)
+.RESULT=LEG_LEVEL_BLOCKED step=4 reason=reply ownership mismatch: located=fallback-turn-1:0:user sent=fallback-turn-9:0:user (P1-01 mandatory strict equality; fail-closed, no registration)
+.RESULT=LEG_LEVEL_BLOCKED step=4 reason=located user unit key invalid (type=str, value='') while send anchor exists (ownership cannot be proven; fail-closed, no registration)
+RESULT=LEG_LEVEL_BLOCKED step=4 reason=capture evidence lacks located user unit key while send anchor exists (cannot prove reply ownership; fail-closed)
+RESULT=LEG_LEVEL_BLOCKED step=4 reason=capture evidence lacks located user unit key while send anchor exists (cannot prove reply ownership; fail-closed)
+..C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\unittest\case.py:589: ResourceWarning: unclosed file <_io.TextIOWrapper name=3 encoding='utf-8'>
+  if method() is not None:
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\unittest\case.py:589: ResourceWarning: unclosed file <_io.TextIOWrapper name=4 encoding='utf-8'>
+  if method() is not None:
+ResourceWarning: Enable tracemalloc to get the object allocation traceback
+....RESULT=ARCH_REVIEW_LEG_PASS (resumed) status=REWORK
+..
+----------------------------------------------------------------------
+Ran 30 tests in 49.252s
+
+OK

@@ -1,0 +1,38 @@
+{
+ "tag": "s2b-10w-origtab",
+ "phase": "entry2",
+ "agg": {
+  "glb": {
+   "server200": 0,
+   "server304": 0,
+   "serverBytes": 0,
+   "cacheServed": 0
+  },
+  "ktx2": {
+   "server200": 0,
+   "server304": 0,
+   "serverBytes": 0,
+   "cacheServed": 0
+  },
+  "img": {
+   "server200": 0,
+   "server304": 0,
+   "serverBytes": 0,
+   "cacheServed": 0
+  },
+  "other_asset": {
+   "server200": 0,
+   "server304": 0,
+   "serverBytes": 0,
+   "cacheServed": 0
+  }
+ },
+ "totals": {
+  "server200": 0,
+  "server304": 0,
+  "serverBytes": 0,
+  "cacheServed": 0
+ },
+ "server_list": [],
+ "extracted_at": "2026-11-19T17:06:46.203Z"
+}

@@ -1,0 +1,7 @@
+webcache20261119r5 GPT-r4两FAIL整改复验
+仓库 Garden-Design-Calculator 分支 feat/... commit c29b0e075f37e75eefbc08afdce95e58a4b1819c
+仅复核你 r4 裁定的两处 FAIL 是否关闭，不扩大范围。
+P1-2：replace_plant_asset 顺序改为 invalidate webp → invalidate ktx2 + 删旧 ktx2 → 写新 webp → update webp；删除/失效失败抛 RuntimeError 中止换图。新增顺序断言与删除失败边界测试，test_asset_cache.py 12/12。
+跨方案E2E：setupProject 只调一次、同项目下用 API 建第二方案；判据改 CDP Network.requestServedFromCache。真浏览器实跑通过（同项目两方案共用素材第二次全部本机直读）。
+P1-1/P1-3 维持原样 PASS。build 通过、后端缓存专项12/12。
+逐条给 PASS/FAIL+理由；FAIL 给精确整改点。勿改代码。

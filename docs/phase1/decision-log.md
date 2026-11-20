@@ -1061,3 +1061,11 @@
 - **906⑥ 关系：** 架构通过≠解锁；各资源域（浏览器/账号风控/M1 登记/仓库决策记录）分别证明、全部闭合后才重评 906⑥ BLOCKED 状态。
 - **授权边界：** 允许独立任务包规划+方案复审；本轮不授权改码、不授权真实并发、不授权 N=3、不授权 main 合并。
 - **边界：** 本轮零改码（仅方案/简报/驱动三文件+登记）；零 M1；零 DEC-010。
+
+### DEC-124 并行派单阶段1实现收口：实例域落地+M1 硬门槛核查+回归全绿（2026-11-21）
+
+- **启动依据：** DEC-123 阶段1 授权+用户"开工"指令；任务包 b-20261121-parallel-dispatch-instance，分支 fix/parallel-dispatch-instance（基线 main 81812dd）。用户补充授权（2026-11-21）："做完整个DEC-123之前都给chatgpt拍板，要我拍板的留到11点一起处理"——用户拍板项（main 合并等 DEC-010 类）入攒单队列统一处理。
+- **交付：** ①dispatch_options.mjs 实例域 7 纯函数（ID 严格校验/default 逐字节 C7/端口注册表分配+探测碰撞/指针单写者守卫/进程精确归属+清理脚本——DEC-123①③加严全落实）；②gpt_dispatch.mjs 四件套接线（session_lock 零改动复用 lockPath；注册表锁临界区+原子写+损坏 fail-closed；复用端口前归属核验 INSTANCE_PORT_FOREIGN；killProfileChrome own/foreign/remaining 留证；result.json+run.log 可核验映射留证）；③M1 五查全过（OS 锁串行+幂等键+原子写双回读+故障注入重试零重发；未知状态消除，N=2 前硬门槛满足）；④test_instance_config.mjs 16 项负例（含 OS 级锁域隔离/同锁互斥）。
+- **测试结果：** 16/16+phase0 统一回归 11/11（新增 instance-config 挂入跑器）+四腿 34+30+25+31=120 项 canonical（-I 逐模块）全 OK；**组合跑异常如实登记并定位=环境伪影**（shell PYTHONUTF8=1→非隔离跑 UTF-8 解 tasklist GBK 输出→UnicodeDecodeError→TypeError；-I 忽略环境变量→cp936→全过；实测两模式对照）——非代码回归（Python 零改动），测试卫生备忘移交。
+- **依据：** 提交链 81812dd→本提交；测试证据 phase0/logs/instance-config-tests.json+third-round-regression-2026-11-20T18-34-42/+leg-rerun-instance/。
+- **边界：** 不碰真实 ChatGPT 并发（阶段2 另授权）；C9 账号级风控协调未实现（阶段2 前置，如实登记）；Python/契约/M1 运行时/session_lock 零修改；独立验收交 ChatGPT（用户授权拍板通道），main 合并攒单待用户 11 点统一拍板（DEC-010）。

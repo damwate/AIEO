@@ -1,0 +1,16 @@
+[
+  {
+    "key": "029d0da3-056b-5f74-b784-041a5974e313:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 551,
+    "text_head": "webcache20261119bd3fixr2 定点复验KTX2断言\nGarden-Design-Calculator feat/web-demo-asset-cache-20261119 tip "
+  },
+  {
+    "key": "029d0da3-056b-5f74-b784-041a5974e313:1:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 260,
+    "text_head": "ChatGPT 说：\n\nMUST-FIX 已关闭 完整 PASS\n\n唯一 MUST-FIX：PASS。新增 KTX2 数量断言，明确要求实际加载数量大于 0，消除空循环假通过。\n\nimmutable "
+  }
+]

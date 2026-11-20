@@ -1,0 +1,74 @@
+{
+  "started_at": "2026-11-20T18:34:45.457Z",
+  "finished_at": "2026-11-20T18:34:48.504Z",
+  "node": "v24.14.0",
+  "total": 16,
+  "passed": 16,
+  "failed": 0,
+  "tests": [
+    {
+      "name": "C7 默认实例=既有常量逐字节",
+      "result": "PASS"
+    },
+    {
+      "name": "C7 不传 --instance 时 parseDispatchOptions 仍为 default",
+      "result": "PASS"
+    },
+    {
+      "name": "命名实例派生独立锁与 profile",
+      "result": "PASS"
+    },
+    {
+      "name": "instance ID 严格校验：路径穿越/特殊字符/空段拒绝",
+      "result": "PASS"
+    },
+    {
+      "name": "parseDispatchOptions --instance 解析与负例",
+      "result": "PASS"
+    },
+    {
+      "name": "端口分配：新实例从候选下界开始",
+      "result": "PASS"
+    },
+    {
+      "name": "端口分配：跳过他实例已登记端口",
+      "result": "PASS"
+    },
+    {
+      "name": "端口分配：探测占用跳过且不落入登记端口",
+      "result": "PASS"
+    },
+    {
+      "name": "端口分配：已登记实例稳定返回原端口（不重分配）",
+      "result": "PASS"
+    },
+    {
+      "name": "端口分配：候选耗尽 fail-closed",
+      "result": "PASS"
+    },
+    {
+      "name": "指针单写者守卫：default 可写；命名实例未绑定 fail-closed",
+      "result": "PASS"
+    },
+    {
+      "name": "进程归属：完整启动参数精确 token 匹配",
+      "result": "PASS"
+    },
+    {
+      "name": "进程归属负例：前缀碰撞/他 profile/无 user-data-dir/空串",
+      "result": "PASS"
+    },
+    {
+      "name": "清理脚本生成：精确归属+禁子串通配+归属不明计数",
+      "result": "PASS"
+    },
+    {
+      "name": "实例锁域隔离：不同 lockPath 各自获取互不干扰（C8 负例补强）",
+      "result": "PASS"
+    },
+    {
+      "name": "实例锁互斥保持：同 lockPath 二次获取 fail-closed（互斥语义不因实例化松动）",
+      "result": "PASS"
+    }
+  ]
+}

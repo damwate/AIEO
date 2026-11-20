@@ -1,0 +1,363 @@
+ChatGPT 说：
+webcache20261119bd3fix 复验裁定
+
+被测仓库： Hulkhao/Garden-Design-Calculator
+
+分支：feat/web-demo-asset-cache-20261119
+
+被测 tip：47616244b1d403800869fe17a20ef99c792035c7
+
+整改基准：bd3fc1f83932e2a97643da0e5fdc1eeeb4052973
+
+GitHub 已确认：tip 相对基准恰好前进 1 个 commit，8 个文件变更。
+
+审查方式：直接读取远端 commit diff 和最终文件，不修改代码。
+
+两处实现缺口 PASS 验收缺口仍有一项 FAIL
+
+1. 植物 KTX2 no-cache
+PASS
+
+核查文件：
+
+assetVersionUrl.ts
+
+assetVersions.ts
+
+assetVersionResolver.ts
+
+assetVersionResolver.test.ts
+
+理由：
+
+新增统一的 ktx2PathOf()、ktxVersionFor()、appendVersionWithKtx()。
+
+catalog 注入和运行时裸名解析共用同一套规则。
+
+versionedAssetUrl() 和 versionedAssetName() 均能注入源图 v 与派生 KTX2 kv。
+
+KTX2 仅在 textures/、planting/、scene_props/ 支持目录派生。
+
+不会把无关 kv 注入 HDR、GLB 或普通 images URL。
+
+已有 query 参数和 hash 保留，已有 v/kv 替换而不是重复叠加。
+
+测试也覆盖了植物裸名同时注入派生版本的情况。
+
+裁定：原植物 KTX2 派生版本缺失问题已关闭。
+
+2. 升级时漏补新增版本
+PASS
+
+核查文件：
+
+src/backend/app/cli.py
+
+src/backend/tests/test_asset_cache.py
+
+理由：
+
+_copy_bundled_assets() 已改成先复制普通素材，再处理版本表。
+
+已存在的卷上版本优先，镜像旧版本不会覆盖运行时换图版本。
+
+镜像新增素材先复制到卷上，再补入对应版本条目。
+
+镜像版本表中存在、但卷上素材不存在的新增条目会被剔除。
+
+合并结果使用临时文件加 os.replace() 原子替换。
+
+测试覆盖卷上版本保留、新素材补入、已删除素材不复活三个关键场景。
+
+另确认 cli.py 顶部已经导入 os，原子替换不存在遗漏导入问题。
+
+裁定：已有运行时版本表时，升级漏补镜像新增素材版本的问题已关闭。
+
+3. 跨方案真实 3D E2E 验收
+FAIL — 尚缺 KTX2 必须加载的断言
+
+核查文件：src/frontend/e2e/web-demo-cache-cross-scheme.spec.ts
+
+已经关闭的部分：
+
+验收项
+
+	
+
+裁定
+
+	
+
+理由
+
+
+
+
+同项目创建第二方案
+
+	
+
+PASS
+
+	
+
+API 创建第二方案
+
+
+
+
+第二方案保存场景
+
+	
+
+PASS
+
+	
+
+提交 scenePayload()
+
+
+
+
+进入真实 3D
+
+	
+
+PASS
+
+	
+
+openFull3D() + threeViewProbeReady()
+
+
+
+
+GLB 实际加载
+
+	
+
+PASS
+
+	
+
+glb.length > 0
+
+
+
+
+GLB 首次响应头 immutable
+
+	
+
+PASS
+
+	
+
+对已加载 GLB 检查完整 Cache-Control
+
+
+
+
+KTX2 首次响应头 immutable
+
+	
+
+FAIL
+
+	
+
+只检查实际出现的 KTX2，没有强制 KTX2 出现
+
+
+
+
+共用图片跨方案本机直读
+
+	
+
+PASS
+
+	
+
+CDP requestServedFromCache 判据
+
+
+
+
+GLB/KTX2 跨方案本机直读
+
+	
+
+不在本次自动验收范围
+
+	
+
+已明确列入设备验收
+
+
+
+
+浏览器硬重启缓存保留
+
+	
+
+不在本次自动验收范围
+
+	
+
+已明确列入设备验收
+
+
+
+
+植物换图后 3D 贴图更新
+
+	
+
+不在本次自动验收范围
+
+	
+
+已明确列入设备验收
+
+精确问题
+
+当前代码：
+
+TypeScript
+for (const u of [...firstSeen].filter(u => /\.(glb|ktx2)(\?|$)/.test(u)))
+  expect(firstHeaders.get(u)).toBe(IMMUTABLE);
+
+这里存在一个测试漏洞：
+
+GLB 有单独的 glb.length > 0 断言。
+
+KTX2 没有对应的 ktx2.length > 0 断言。
+
+如果真实 3D 场景根本没有加载 KTX2，循环仍然可以通过。
+
+因而不能证明 KTX2 首次响应头确实为 immutable。
+
+精确整改：
+
+TypeScript
+const ktx2 = [...firstSeen].filter(u => /\.ktx2(\?|$)/.test(u));
+
+expect(ktx2.length, '3D 应实际加载 KTX2').toBeGreaterThan(0);
+
+for (const u of [...glb, ...ktx2]) {
+  expect(
+    firstHeaders.get(u),
+    `3D 二进制应长期缓存: ${u}`
+  ).toBe(IMMUTABLE);
+}
+
+前提是测试场景确实能稳定触发 KTX2 加载，不能通过伪造请求满足断言。
+
+4. 验证记录与边界
+
+以下是本轮提供的执行记录，我已核查对应测试代码，但没有独立重新运行这些命令：
+
+验证
+
+	
+
+提供结果
+
+
+
+
+Vitest
+
+	
+
+21/21
+
+
+
+
+后端测试
+
+	
+
+13/13
+
+
+
+
+Build
+
+	
+
+PASS
+
+
+
+
+Typecheck
+
+	
+
+PASS
+
+
+
+
+跨方案 3D E2E
+
+	
+
+1 passed
+
+
+
+
+修改文件 lint
+
+	
+
+0 错
+
+
+
+
+ProductLibrary 基线
+
+	
+
+7 处既有失败
+
+ProductLibrary 的既有失败不作为本轮新增 FAIL。
+
+另外，以下设备验收边界登记是合理的，没有冒充已经通过：
+
+GLB/KTX2 跨方案本机直读。
+
+浏览器硬重启后缓存保留。
+
+植物换图后 3D 贴图更新。
+
+这些不要求本轮扩大 Playwright 覆盖范围。
+
+5. 最终裁定
+2 PASS / 1 FAIL
+
+植物 KTX2 版本注入
+
+PASS
+
+升级版本表两阶段合并
+
+PASS
+
+跨方案 3D E2E 验收
+
+FAIL
+
+唯一 MUST-FIX： 增加 KTX2 实际加载数量断言，并对实际加载的 KTX2 首次响应头进行 immutable 检查。
+
+本轮不签完整 PASS。
+
+不需要重做两处已经通过的实现，不需要重新审查 HTTP 缓存策略，也不需要扩大到生产部署。
+
+只补上述一项测试缺口，提交后针对该项复验即可。

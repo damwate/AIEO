@@ -1,0 +1,6 @@
+webcache20261119r2 整改复验
+仓库 Garden-Design-Calculator 分支 feat/web-demo-asset-cache-20261119 commit a86c3d19c1ed4239c32cd9be472aa6b9b0300422
+仅复核上轮 MUST-FIX #2/#3 是否关闭，不扩大范围。
+#2：replace_plant_asset 顺序改为 invalidate_asset_version→写文件→update_asset_version；中间件在响应生成后裁决，替换窗口内无版本→no-cache。新增窗口回归与顺序断言测试。
+#3：asset_cache_control 对 .ktx2 用 kv 对照自身哈希，源图 v 不再给派生背书。ktx2_convert.py --check 已是 check_release.ps1 §6 发布硬门禁，本轮实跑 48 引用/0 问题退出0。
+逐条给 PASS/FAIL+理由；FAIL 给可执行建议。勿改代码。

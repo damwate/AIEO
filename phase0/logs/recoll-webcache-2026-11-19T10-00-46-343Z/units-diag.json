@@ -1,0 +1,16 @@
+[
+  {
+    "key": "f62f500f-978f-5315-84a7-0ff8e22aa1b4:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 494,
+    "text_head": "webcache20261119 方案复核\n仓库 Garden-Design-Calculator 分支 feat/web-demo-asset-cache-20261119 commit 3ffcb"
+  },
+  {
+    "key": "f62f500f-978f-5315-84a7-0ff8e22aa1b4:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 3201,
+    "text_head": "ChatGPT 说：\nwebcache20261119 方案独立复核\n\n审查基准：Hulkhao/Garden-Design-Calculator，分支 feat/web-demo-asset-cac"
+  }
+]

@@ -3,11 +3,11 @@
 // （不发送、不重发、不改 M2 工具代码；复用 inbound_dom/inbound_reply 共享采集算法）。
 //
 // 派生参数（L-018 第 3/4 条三参数+归属校验五件套）：
-//   CONV_UUID=33333333-4444-4555-8666-777777777777            （原会话 ID；来自账本 R3_SEND_CONFIRMED）
-//   SENT_USER_UNIT_KEY=fallback-turn-0:0:user（发送双验报告键；定位以标记文本为准，键仅参考）
-//   FAILED_DIR=C:/Users/youting/AppData/Local/Temp/rvl-test-oddbv0vs/dispatch-logs/dispatch-runner-3          （发送失败现场 dispatch 目录；request.txt 证据源）
-//   OUT_DIR=C:/Users/youting/AppData/Local/Temp/rvl-test-oddbv0vs/runtime/rvl-997019                （补采产物落盘目录=审查腿 run 目录）
-//   MARKER_TEXT=[GPT03-R1|997019|T-P1-027]        （简报标记文本；归属校验唯一锚点）
+//   CONV_UUID=22222222-3333-4444-8555-666666666666            （原会话 ID；来自账本 R3_SEND_CONFIRMED）
+//   SENT_USER_UNIT_KEY=fallback-turn-1:0:user（发送双验报告键；定位以标记文本为准，键仅参考）
+//   FAILED_DIR=C:/Users/youting/AppData/Local/Temp/rvl-test-qx5fv9vu/dispatch-logs/dispatch-08c-1          （发送失败现场 dispatch 目录；request.txt 证据源）
+//   OUT_DIR=C:/Users/youting/AppData/Local/Temp/rvl-test-qx5fv9vu/runtime/rvl-902010                （补采产物落盘目录=审查腿 run 目录）
+//   MARKER_TEXT=[GPT03-R1|f06c]        （简报标记文本；归属校验唯一锚点）
 //   PREV_REPLY_SHA256=（前轮 reply SHA 前缀排除；not_prev_reply_sha）
 //
 // 流程=recoll_kickoff_gate2r3.mjs 先例同型：会话锁→静置门→滚动+静置物化→归属校验型定位
@@ -25,12 +25,12 @@ import {
 } from "./inbound_reply.mjs";
 
 const CDP_URL = "http://127.0.0.1:9222";
-const CONV_UUID = "33333333-4444-4555-8666-777777777777";
-const MARKER = "[GPT03-R1|997019|T-P1-027]";
+const CONV_UUID = "22222222-3333-4444-8555-666666666666";
+const MARKER = "[GPT03-R1|f06c]";
 const PREV_REPLY_SHA256 = ""; // 空串=无前轮可比（首轮），not_prev_reply_sha 恒真
-const SENT_KEY_REPORTED = "fallback-turn-0:0:user";
-const FAILED_DIR = "C:/Users/youting/AppData/Local/Temp/rvl-test-oddbv0vs/dispatch-logs/dispatch-runner-3"; // 派生为绝对路径（驱动在 phase0/tools cwd 下运行）
-const OUT_DIR = "C:/Users/youting/AppData/Local/Temp/rvl-test-oddbv0vs/runtime/rvl-997019";       // 派生为绝对路径（审查腿 run 目录）
+const SENT_KEY_REPORTED = "fallback-turn-1:0:user";
+const FAILED_DIR = "C:/Users/youting/AppData/Local/Temp/rvl-test-qx5fv9vu/dispatch-logs/dispatch-08c-1"; // 派生为绝对路径（驱动在 phase0/tools cwd 下运行）
+const OUT_DIR = "C:/Users/youting/AppData/Local/Temp/rvl-test-qx5fv9vu/runtime/rvl-902010";       // 派生为绝对路径（审查腿 run 目录）
 const IDLE_WAIT_MS = Number(process.env.AIEO_RECOLL_IDLE_WAIT_MS || 30000);
 
 function log(msg) {

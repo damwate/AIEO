@@ -1,0 +1,6 @@
+webcache20261119r6 P1-2最终定点复验
+仓库 Garden-Design-Calculator 分支 feat/... commit cd564280aad60f730b90084c82bae096b8c4cfee
+仅复核 r5 指出的 P1-2 剩余点是否关闭，不重跑其它项、不扩大范围。
+已改 plant_asset_admin.py：把 invalidate_webp / invalidate_ktx2 / unlink_ktx2 三者纳入统一 try/except Exception，任一普通异常转 RuntimeError(raise from e)中止换图；之后才 write_webp + update_webp。
+已改顺序测试：完整断言 invalidate_webp < invalidate_ktx2 < unlink_ktx2 < write_webp < update_webp；删除失败边界测试适配新错误文案。test_asset_cache.py 12/12。
+只回 PASS/FAIL+理由；FAIL 给精确整改点。勿改代码。

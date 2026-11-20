@@ -1,0 +1,8 @@
+[2026-11-19T15:01:24.535Z] 会话锁已获取（webcache bd3fix 复审补采）
+[2026-11-19T15:01:24.710Z] 页面归属命中 CONV_UUID=6aff0eb5-b6b4-83ec-8278-92c6c3bf5e59
+[2026-11-19T15:01:47.879Z] 归属校验=标记唯一(1)+最后user断言（target=34455789-a3ea-5179-83f8-ba10cf9fa861:0:user）
+[2026-11-19T15:01:47.886Z] checks={"marked_user_unique":true,"last_user_assertion":true,"adjacent_assistant_tail":true,"stable_static_dom_read":true,"final_stop_button_not_visible":true,"response_length_plausible":true}
+[2026-11-19T15:01:47.890Z] reply 已落盘（5032 字节，SHA=4912581f5908fee4…）
+[2026-11-19T15:01:47.890Z] RECOLL COMPLETED
+[2026-11-19T15:01:47.904Z] 视口覆盖已清除
+[2026-11-19T15:01:48.362Z] 会话锁已释放（webcache bd3fix 复审补采）

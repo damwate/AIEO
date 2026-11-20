@@ -1,0 +1,947 @@
+[
+ {
+  "pname": "调试",
+  "name": "多活动区",
+  "sid": "0c7869a6-8518-494f-84fc-e70b302d41ed",
+  "sceneKB": 19,
+  "glb": 0,
+  "ktx": 0,
+  "products": 31
+ },
+ {
+  "pname": "10w",
+  "name": "生成方案1",
+  "sid": "84685ddf-75d3-4390-8e9f-c053992095ce",
+  "sceneKB": 15,
+  "glb": 0,
+  "ktx": 0,
+  "products": 27
+ },
+ {
+  "pname": "10w",
+  "name": "生成方案1",
+  "sid": "aaaf0d6a-ff36-4d11-b377-3522e9917c8a",
+  "sceneKB": 15,
+  "glb": 0,
+  "ktx": 0,
+  "products": 27
+ },
+ {
+  "pname": "PO1103",
+  "name": "生成方案2",
+  "sid": "2e0ce453-2687-475f-ad9e-df7558ad525f",
+  "sceneKB": 15,
+  "glb": 0,
+  "ktx": 0,
+  "products": 27
+ },
+ {
+  "pname": "PO1103",
+  "name": "生成方案3",
+  "sid": "74b14dcb-dd07-4920-9463-38a297db4b4e",
+  "sceneKB": 15,
+  "glb": 0,
+  "ktx": 0,
+  "products": 27
+ },
+ {
+  "pname": "PO1103",
+  "name": "生成方案3",
+  "sid": "59b66c50-46e1-4e1d-8aef-fd25324c4d19",
+  "sceneKB": 15,
+  "glb": 0,
+  "ktx": 0,
+  "products": 27
+ },
+ {
+  "pname": "调试",
+  "name": "备选",
+  "sid": "790ac381-8043-404d-a20b-04a78a03d1dc",
+  "sceneKB": 11,
+  "glb": 0,
+  "ktx": 0,
+  "products": 23
+ },
+ {
+  "pname": "10w",
+  "name": "生成方案2",
+  "sid": "945729b1-b5ee-42de-853a-ac08f80f3570",
+  "sceneKB": 9,
+  "glb": 0,
+  "ktx": 0,
+  "products": 13
+ },
+ {
+  "pname": "10w",
+  "name": "生成方案2",
+  "sid": "f6006ca0-7877-40d6-9210-097a6dada574",
+  "sceneKB": 9,
+  "glb": 0,
+  "ktx": 0,
+  "products": 13
+ },
+ {
+  "pname": "2w",
+  "name": "生成方案2",
+  "sid": "4b397e60-8410-4ff3-8579-268b7681a15c",
+  "sceneKB": 9,
+  "glb": 0,
+  "ktx": 0,
+  "products": 10
+ },
+ {
+  "pname": "2w",
+  "name": "生成方案5",
+  "sid": "b6173287-06f2-4a90-8c93-d7e293abea4f",
+  "sceneKB": 9,
+  "glb": 0,
+  "ktx": 0,
+  "products": 10
+ },
+ {
+  "pname": "PO1103",
+  "name": "生成方案4",
+  "sid": "e959c126-bec4-47fc-be7a-78ee8d641e92",
+  "sceneKB": 9,
+  "glb": 0,
+  "ktx": 0,
+  "products": 11
+ },
+ {
+  "pname": "PO1103",
+  "name": "生成方案5",
+  "sid": "16837fd7-154a-46bb-8d9d-c7b09950df4a",
+  "sceneKB": 9,
+  "glb": 0,
+  "ktx": 0,
+  "products": 11
+ },
+ {
+  "pname": "PO1103",
+  "name": "生成方案5",
+  "sid": "7e064aaa-0733-43f6-b2a1-24ac0a3d2860",
+  "sceneKB": 9,
+  "glb": 0,
+  "ktx": 0,
+  "products": 11
+ },
+ {
+  "pname": "10w",
+  "name": "生成方案6",
+  "sid": "50117404-6009-4ef2-8d28-f30eef056161",
+  "sceneKB": 8,
+  "glb": 0,
+  "ktx": 0,
+  "products": 8
+ },
+ {
+  "pname": "10w",
+  "name": "生成方案3",
+  "sid": "36da51f3-af58-4772-be5e-3422865cff5d",
+  "sceneKB": 8,
+  "glb": 0,
+  "ktx": 0,
+  "products": 8
+ },
+ {
+  "pname": "2w",
+  "name": "生成方案10",
+  "sid": "dc87bcc5-70ad-430b-9ed5-790c34f52d00",
+  "sceneKB": 8,
+  "glb": 0,
+  "ktx": 0,
+  "products": 8
+ },
+ {
+  "pname": "2w",
+  "name": "生成方案9",
+  "sid": "05870f92-dc77-4299-bf84-812b63ccee43",
+  "sceneKB": 8,
+  "glb": 0,
+  "ktx": 0,
+  "products": 6
+ },
+ {
+  "pname": "2w",
+  "name": "生成方案8",
+  "sid": "1eb4a290-bf2d-4e6c-bde6-d60d7593ce1c",
+  "sceneKB": 8,
+  "glb": 0,
+  "ktx": 0,
+  "products": 8
+ },
+ {
+  "pname": "2w",
+  "name": "生成方案4",
+  "sid": "bf6db8f5-8d9a-4313-b61e-c12dfd438458",
+  "sceneKB": 8,
+  "glb": 0,
+  "ktx": 0,
+  "products": 8
+ },
+ {
+  "pname": "2w",
+  "name": "生成方案3",
+  "sid": "8947f397-e32b-4d2c-942a-b5e53c1ffce7",
+  "sceneKB": 8,
+  "glb": 0,
+  "ktx": 0,
+  "products": 6
+ },
+ {
+  "pname": "2w",
+  "name": "生成方案2",
+  "sid": "06071227-29a6-4eb0-95cc-342b0a92dc60",
+  "sceneKB": 8,
+  "glb": 0,
+  "ktx": 0,
+  "products": 8
+ },
+ {
+  "pname": "1.2w",
+  "name": "生成方案5",
+  "sid": "85adf95c-55a3-45cb-a902-f33787ec069f",
+  "sceneKB": 8,
+  "glb": 0,
+  "ktx": 0,
+  "products": 8
+ },
+ {
+  "pname": "PO1103",
+  "name": "生成方案5",
+  "sid": "50eb2c40-760e-4fbb-bd38-cee5d56c082a",
+  "sceneKB": 8,
+  "glb": 0,
+  "ktx": 0,
+  "products": 9
+ },
+ {
+  "pname": "PO1103",
+  "name": "生成方案1",
+  "sid": "495b1f18-20a2-4fd1-a6a7-b4cf4888b0b6",
+  "sceneKB": 8,
+  "glb": 0,
+  "ktx": 0,
+  "products": 11
+ },
+ {
+  "pname": "PO1103",
+  "name": "生成方案6",
+  "sid": "fbabba69-041e-48cd-b8a6-bf1d7a57e1c1",
+  "sceneKB": 8,
+  "glb": 0,
+  "ktx": 0,
+  "products": 9
+ },
+ {
+  "pname": "PO1103",
+  "name": "生成方案1",
+  "sid": "b36e5c36-c6da-4f8f-974f-77e196b8f5b5",
+  "sceneKB": 8,
+  "glb": 0,
+  "ktx": 0,
+  "products": 11
+ },
+ {
+  "pname": "PO1103",
+  "name": "生成方案6",
+  "sid": "18fb7149-096e-4b3c-8eb2-a5f5a4e1d526",
+  "sceneKB": 8,
+  "glb": 0,
+  "ktx": 0,
+  "products": 9
+ },
+ {
+  "pname": "PO1103",
+  "name": "生成方案1",
+  "sid": "2d21bdf9-4e1d-46ba-b4c0-5c0e45b75b07",
+  "sceneKB": 8,
+  "glb": 0,
+  "ktx": 0,
+  "products": 11
+ },
+ {
+  "pname": "调试",
+  "name": "生成方案6",
+  "sid": "2ae6d0d2-d99e-4f14-9865-09d842319008",
+  "sceneKB": 8,
+  "glb": 0,
+  "ktx": 0,
+  "products": 16
+ },
+ {
+  "pname": "10w",
+  "name": "生成方案4",
+  "sid": "391684ca-86c1-4904-b111-f48bee235bcd",
+  "sceneKB": 7,
+  "glb": 0,
+  "ktx": 0,
+  "products": 9
+ },
+ {
+  "pname": "10w",
+  "name": "生成方案3",
+  "sid": "c9fa8bcd-279c-447d-ab0e-5ddfd5342a52",
+  "sceneKB": 7,
+  "glb": 0,
+  "ktx": 0,
+  "products": 6
+ },
+ {
+  "pname": "10w",
+  "name": "生成方案5",
+  "sid": "8383902c-9591-4956-befe-782f7dee10ab",
+  "sceneKB": 7,
+  "glb": 0,
+  "ktx": 0,
+  "products": 9
+ },
+ {
+  "pname": "10w",
+  "name": "生成方案4",
+  "sid": "5d97d870-6b9f-41a3-bea9-6bc3c8de53b8",
+  "sceneKB": 7,
+  "glb": 0,
+  "ktx": 0,
+  "products": 6
+ },
+ {
+  "pname": "2w",
+  "name": "生成方案7",
+  "sid": "2e759c29-9781-4cc6-9a95-204e92780d3e",
+  "sceneKB": 7,
+  "glb": 0,
+  "ktx": 0,
+  "products": 6
+ },
+ {
+  "pname": "2w",
+  "name": "生成方案1",
+  "sid": "19de26b1-5ca5-417c-9ba7-ecc8378e1814",
+  "sceneKB": 7,
+  "glb": 0,
+  "ktx": 0,
+  "products": 6
+ },
+ {
+  "pname": "1.2w",
+  "name": "生成方案3",
+  "sid": "ca443165-b0b9-412b-b50d-82c5dda80bc5",
+  "sceneKB": 7,
+  "glb": 0,
+  "ktx": 0,
+  "products": 6
+ },
+ {
+  "pname": "PO1103",
+  "name": "生成方案3",
+  "sid": "e7590e14-4835-4b2a-9f61-3e77cb004f9e",
+  "sceneKB": 7,
+  "glb": 0,
+  "ktx": 0,
+  "products": 9
+ },
+ {
+  "pname": "PO1103",
+  "name": "生成方案4",
+  "sid": "8d77a0e4-d881-4bbf-a02e-2a0226caada6",
+  "sceneKB": 7,
+  "glb": 0,
+  "ktx": 0,
+  "products": 9
+ },
+ {
+  "pname": "PO1103",
+  "name": "生成方案4",
+  "sid": "4e46a180-7a1b-454b-b2a0-043d501cc76a",
+  "sceneKB": 7,
+  "glb": 0,
+  "ktx": 0,
+  "products": 9
+ },
+ {
+  "pname": "调试",
+  "name": "生成方案5",
+  "sid": "273badb1-b805-48d8-96bc-f5d769a4dedc",
+  "sceneKB": 7,
+  "glb": 0,
+  "ktx": 0,
+  "products": 14
+ },
+ {
+  "pname": "调试",
+  "name": "生成方案4",
+  "sid": "117593b5-a04c-48fc-8766-c85757000a1f",
+  "sceneKB": 7,
+  "glb": 0,
+  "ktx": 0,
+  "products": 13
+ },
+ {
+  "pname": "调试",
+  "name": "生成方案3",
+  "sid": "cb4ce85d-b82c-4eef-904f-f23ad5174e5a",
+  "sceneKB": 7,
+  "glb": 0,
+  "ktx": 0,
+  "products": 14
+ },
+ {
+  "pname": "调试",
+  "name": "生成方案1",
+  "sid": "6c3bd274-81ce-4244-9eeb-05b1230713e5",
+  "sceneKB": 7,
+  "glb": 0,
+  "ktx": 0,
+  "products": 15
+ },
+ {
+  "pname": "东海岸",
+  "name": "生成方案7",
+  "sid": "c8bbcd17-ba0e-4d7d-aa9c-74036be4b9c6",
+  "sceneKB": 7,
+  "glb": 0,
+  "ktx": 0,
+  "products": 5
+ },
+ {
+  "pname": "东海岸",
+  "name": "生成方案1",
+  "sid": "5f2593a0-6416-4a92-a04f-bd48663f6c1f",
+  "sceneKB": 7,
+  "glb": 0,
+  "ktx": 0,
+  "products": 7
+ },
+ {
+  "pname": "东海岸",
+  "name": "生成方案2",
+  "sid": "21ee522c-405a-49ba-8397-ab1de68369aa",
+  "sceneKB": 7,
+  "glb": 0,
+  "ktx": 0,
+  "products": 7
+ },
+ {
+  "pname": "10w",
+  "name": "生成方案5",
+  "sid": "eb72335a-24b5-458a-afae-3daa2d1791c9",
+  "sceneKB": 6,
+  "glb": 0,
+  "ktx": 0,
+  "products": 6
+ },
+ {
+  "pname": "10w",
+  "name": "生成方案6",
+  "sid": "fd1c3758-c0e8-4b4e-8b81-ce48c5e2800b",
+  "sceneKB": 6,
+  "glb": 0,
+  "ktx": 0,
+  "products": 7
+ },
+ {
+  "pname": "2w",
+  "name": "生成方案2（未充分使用预算）",
+  "sid": "beeb7939-80b4-4c95-987d-4f53610cc7e9",
+  "sceneKB": 6,
+  "glb": 0,
+  "ktx": 0,
+  "products": 10
+ },
+ {
+  "pname": "2w",
+  "name": "生成方案1",
+  "sid": "567dd831-62d9-4f79-a3e6-afd7ac4e05b1",
+  "sceneKB": 6,
+  "glb": 0,
+  "ktx": 0,
+  "products": 10
+ },
+ {
+  "pname": "1.2w",
+  "name": "生成方案6",
+  "sid": "15f418c8-ebbf-4b47-9c16-5c5ecf9fa34d",
+  "sceneKB": 6,
+  "glb": 0,
+  "ktx": 0,
+  "products": 13
+ },
+ {
+  "pname": "1.2w",
+  "name": "生成方案5",
+  "sid": "4bff2b4b-ce05-402f-8f60-25f0ac8d27cf",
+  "sceneKB": 6,
+  "glb": 0,
+  "ktx": 0,
+  "products": 13
+ },
+ {
+  "pname": "1.2w",
+  "name": "生成方案3",
+  "sid": "9f5945ba-ebbb-4650-a26d-4731e614d784",
+  "sceneKB": 6,
+  "glb": 0,
+  "ktx": 0,
+  "products": 13
+ },
+ {
+  "pname": "1.2w",
+  "name": "生成方案6",
+  "sid": "cb2b0fcf-f4a5-46af-9ef3-47c0bf8fc2fc",
+  "sceneKB": 6,
+  "glb": 0,
+  "ktx": 0,
+  "products": 6
+ },
+ {
+  "pname": "1.2w",
+  "name": "生成方案6",
+  "sid": "c5e34ec2-e799-42ed-9022-e532fa22f6e1",
+  "sceneKB": 6,
+  "glb": 0,
+  "ktx": 0,
+  "products": 12
+ },
+ {
+  "pname": "1.2w",
+  "name": "生成方案5",
+  "sid": "bb3baaef-8c68-4b02-b573-43a78988b258",
+  "sceneKB": 6,
+  "glb": 0,
+  "ktx": 0,
+  "products": 12
+ },
+ {
+  "pname": "东海岸",
+  "name": "生成方案3",
+  "sid": "73fd5f32-f0f7-4232-ac36-064e3653b33a",
+  "sceneKB": 6,
+  "glb": 0,
+  "ktx": 0,
+  "products": 7
+ },
+ {
+  "pname": "东海岸",
+  "name": "生成方案3",
+  "sid": "2b549135-e4fd-4e92-8f3d-96eaa0821aab",
+  "sceneKB": 6,
+  "glb": 0,
+  "ktx": 0,
+  "products": 7
+ },
+ {
+  "pname": "东海岸",
+  "name": "生成方案1",
+  "sid": "54952fc7-38e2-41ed-8eeb-643f5d35b8c0",
+  "sceneKB": 6,
+  "glb": 0,
+  "ktx": 0,
+  "products": 5
+ },
+ {
+  "pname": "2w",
+  "name": "生成方案6（未充分使用预算）",
+  "sid": "a6e4b907-88c4-4722-8a3c-f7ff504d71cc",
+  "sceneKB": 5,
+  "glb": 0,
+  "ktx": 0,
+  "products": 9
+ },
+ {
+  "pname": "2w",
+  "name": "生成方案5（未充分使用预算）",
+  "sid": "157ed561-4ed0-4d32-a775-8e36311a055a",
+  "sceneKB": 5,
+  "glb": 0,
+  "ktx": 0,
+  "products": 9
+ },
+ {
+  "pname": "2w",
+  "name": "生成方案4（未充分使用预算）",
+  "sid": "063d594c-d4ff-45a9-8c35-64d298f26178",
+  "sceneKB": 5,
+  "glb": 0,
+  "ktx": 0,
+  "products": 7
+ },
+ {
+  "pname": "2w",
+  "name": "生成方案3（未充分使用预算）",
+  "sid": "314c1f2a-fd78-4a95-91f5-9fe44b65d820",
+  "sceneKB": 5,
+  "glb": 0,
+  "ktx": 0,
+  "products": 7
+ },
+ {
+  "pname": "2w",
+  "name": "生成方案1",
+  "sid": "e16d29f9-3f0e-4cb7-80c9-b53b9c8132cb",
+  "sceneKB": 5,
+  "glb": 0,
+  "ktx": 0,
+  "products": 9
+ },
+ {
+  "pname": "2w",
+  "name": "生成方案6（未充分使用预算）",
+  "sid": "a0943dcd-cb2a-4f19-b827-091d1a36a686",
+  "sceneKB": 5,
+  "glb": 0,
+  "ktx": 0,
+  "products": 8
+ },
+ {
+  "pname": "2w",
+  "name": "生成方案5（未充分使用预算）",
+  "sid": "c6d0d6f1-fdac-4246-906c-437ae1115f0c",
+  "sceneKB": 5,
+  "glb": 0,
+  "ktx": 0,
+  "products": 8
+ },
+ {
+  "pname": "2w",
+  "name": "生成方案4（未充分使用预算）",
+  "sid": "80d77198-273b-49d5-a54a-2a027238c655",
+  "sceneKB": 5,
+  "glb": 0,
+  "ktx": 0,
+  "products": 8
+ },
+ {
+  "pname": "2w",
+  "name": "生成方案3（未充分使用预算）",
+  "sid": "9bd2de55-d8d9-4c3b-8ebf-1632209e5691",
+  "sceneKB": 5,
+  "glb": 0,
+  "ktx": 0,
+  "products": 8
+ },
+ {
+  "pname": "2w",
+  "name": "生成方案7",
+  "sid": "2759bcac-c455-4ff2-b5cb-9eb15dd403e7",
+  "sceneKB": 5,
+  "glb": 0,
+  "ktx": 0,
+  "products": 8
+ },
+ {
+  "pname": "2w",
+  "name": "生成方案6（未充分使用预算）",
+  "sid": "17e2881f-a56f-4853-a7f2-47924e427215",
+  "sceneKB": 5,
+  "glb": 0,
+  "ktx": 0,
+  "products": 8
+ },
+ {
+  "pname": "1.2w",
+  "name": "生成方案4",
+  "sid": "85ed9527-6f5d-4b07-a00b-5b4af6d61343",
+  "sceneKB": 5,
+  "glb": 0,
+  "ktx": 0,
+  "products": 10
+ },
+ {
+  "pname": "1.2w",
+  "name": "生成方案2",
+  "sid": "9cef879a-796a-44d1-914d-a39e00c2de76",
+  "sceneKB": 5,
+  "glb": 0,
+  "ktx": 0,
+  "products": 10
+ },
+ {
+  "pname": "1.2w",
+  "name": "生成方案1",
+  "sid": "6f72070b-bf33-4573-9718-3e5ac6c06396",
+  "sceneKB": 5,
+  "glb": 0,
+  "ktx": 0,
+  "products": 8
+ },
+ {
+  "pname": "1.2w",
+  "name": "生成方案4",
+  "sid": "2f5020e4-7fc7-4f00-a1d5-156905943fd7",
+  "sceneKB": 5,
+  "glb": 0,
+  "ktx": 0,
+  "products": 6
+ },
+ {
+  "pname": "1.2w",
+  "name": "生成方案1",
+  "sid": "d83d27dd-dbca-4fff-8b75-2c58990e5306",
+  "sceneKB": 5,
+  "glb": 0,
+  "ktx": 0,
+  "products": 9
+ },
+ {
+  "pname": "PO1103",
+  "name": "生成方案2",
+  "sid": "1ffaeabf-824b-4645-9313-195efb6f63b5",
+  "sceneKB": 5,
+  "glb": 0,
+  "ktx": 0,
+  "products": 5
+ },
+ {
+  "pname": "PO1103",
+  "name": "生成方案2",
+  "sid": "e52d694b-9ede-46e0-9783-74f05a96c105",
+  "sceneKB": 5,
+  "glb": 0,
+  "ktx": 0,
+  "products": 5
+ },
+ {
+  "pname": "东海岸",
+  "name": "生成方案4",
+  "sid": "64071903-c906-4d57-bde7-2a1aa81699f5",
+  "sceneKB": 5,
+  "glb": 0,
+  "ktx": 0,
+  "products": 5
+ },
+ {
+  "pname": "东海岸",
+  "name": "生成方案4",
+  "sid": "6c15b603-0d06-413e-b752-0d7bdf81fa27",
+  "sceneKB": 5,
+  "glb": 0,
+  "ktx": 0,
+  "products": 5
+ },
+ {
+  "pname": "1.2w",
+  "name": "生成方案7",
+  "sid": "85bdd4f1-4068-4f1d-b2ab-ba9cf382cc4b",
+  "sceneKB": 4,
+  "glb": 0,
+  "ktx": 0,
+  "products": 4
+ },
+ {
+  "pname": "1.2w",
+  "name": "生成方案6（未充分使用预算）",
+  "sid": "a5826b56-c782-4de7-ba96-f360175d3d2d",
+  "sceneKB": 4,
+  "glb": 0,
+  "ktx": 0,
+  "products": 4
+ },
+ {
+  "pname": "1.2w",
+  "name": "生成方案5（未充分使用预算）",
+  "sid": "6864f7db-2743-48ab-8c2c-a73288a48e95",
+  "sceneKB": 4,
+  "glb": 0,
+  "ktx": 0,
+  "products": 5
+ },
+ {
+  "pname": "1.2w",
+  "name": "生成方案4（未充分使用预算）",
+  "sid": "5b0a0a3f-15aa-487b-b49e-63893be84e7f",
+  "sceneKB": 4,
+  "glb": 0,
+  "ktx": 0,
+  "products": 5
+ },
+ {
+  "pname": "1.2w",
+  "name": "生成方案3",
+  "sid": "ded41cc9-4a2d-4b13-815d-708915b9c9d8",
+  "sceneKB": 4,
+  "glb": 0,
+  "ktx": 0,
+  "products": 6
+ },
+ {
+  "pname": "1.2w",
+  "name": "生成方案1",
+  "sid": "82823d49-8b81-4d9c-bc19-27a7675a2bcb",
+  "sceneKB": 4,
+  "glb": 0,
+  "ktx": 0,
+  "products": 5
+ },
+ {
+  "pname": "1.2w",
+  "name": "生成方案7",
+  "sid": "bb5933dd-73fd-4944-8e57-f980da1ecf43",
+  "sceneKB": 4,
+  "glb": 0,
+  "ktx": 0,
+  "products": 4
+ },
+ {
+  "pname": "1.2w",
+  "name": "生成方案6（未充分使用预算）",
+  "sid": "469ad6ca-001a-4a9c-acb0-5f1dd7fe9456",
+  "sceneKB": 4,
+  "glb": 0,
+  "ktx": 0,
+  "products": 4
+ },
+ {
+  "pname": "1.2w",
+  "name": "生成方案5（未充分使用预算）",
+  "sid": "f4142032-029b-4349-96b7-293c8985dec6",
+  "sceneKB": 4,
+  "glb": 0,
+  "ktx": 0,
+  "products": 4
+ },
+ {
+  "pname": "1.2w",
+  "name": "生成方案4（未充分使用预算）",
+  "sid": "b36f9b4f-c51d-4707-8801-3ab6a0f80d7e",
+  "sceneKB": 4,
+  "glb": 0,
+  "ktx": 0,
+  "products": 5
+ },
+ {
+  "pname": "1.2w",
+  "name": "生成方案3（未充分使用预算）",
+  "sid": "b726bb0d-9efc-47f7-98df-69d287a06438",
+  "sceneKB": 4,
+  "glb": 0,
+  "ktx": 0,
+  "products": 5
+ },
+ {
+  "pname": "1.2w",
+  "name": "生成方案1",
+  "sid": "714d8998-96e7-4a56-8085-5eae4695cc02",
+  "sceneKB": 4,
+  "glb": 0,
+  "ktx": 0,
+  "products": 5
+ },
+ {
+  "pname": "1.2w",
+  "name": "生成方案1",
+  "sid": "63098088-a89b-4024-9373-d5b03e09e9cf",
+  "sceneKB": 4,
+  "glb": 0,
+  "ktx": 0,
+  "products": 5
+ },
+ {
+  "pname": "1.2w",
+  "name": "生成方案2",
+  "sid": "5295253f-1f1b-4c5d-96db-97d4ea333cd3",
+  "sceneKB": 4,
+  "glb": 0,
+  "ktx": 0,
+  "products": 6
+ },
+ {
+  "pname": "PO1103",
+  "name": "探索参考6（低于推荐价）",
+  "sid": "7d319148-d312-4f6a-afdf-57682dd4474f",
+  "sceneKB": 4,
+  "glb": 0,
+  "ktx": 0,
+  "products": 4
+ },
+ {
+  "pname": "1.2w",
+  "name": "生成方案2（未充分使用预算）",
+  "sid": "e24c09ca-ad41-431a-b7a5-7681520f2299",
+  "sceneKB": 3,
+  "glb": 0,
+  "ktx": 0,
+  "products": 3
+ },
+ {
+  "pname": "1.2w",
+  "name": "生成方案2（未充分使用预算）",
+  "sid": "3babf580-d271-4bac-9f8a-29189ca1e7d6",
+  "sceneKB": 3,
+  "glb": 0,
+  "ktx": 0,
+  "products": 3
+ },
+ {
+  "pname": "1.2w",
+  "name": "生成方案4",
+  "sid": "a1998742-c945-4555-8610-326e51738883",
+  "sceneKB": 3,
+  "glb": 0,
+  "ktx": 0,
+  "products": 3
+ },
+ {
+  "pname": "1.2w",
+  "name": "生成方案2",
+  "sid": "161548a5-219f-4d48-82e8-2592cc1f76b9",
+  "sceneKB": 3,
+  "glb": 0,
+  "ktx": 0,
+  "products": 3
+ },
+ {
+  "pname": "1.2w",
+  "name": "生成方案3",
+  "sid": "2e097323-3889-4fb4-8252-1e59c1d124ea",
+  "sceneKB": 3,
+  "glb": 0,
+  "ktx": 0,
+  "products": 4
+ },
+ {
+  "pname": "东海岸",
+  "name": "生成方案6（未充分使用预算）",
+  "sid": "61e384c6-af02-487e-aa15-1d325c09f589",
+  "sceneKB": 3,
+  "glb": 0,
+  "ktx": 0,
+  "products": 2
+ },
+ {
+  "pname": "东海岸",
+  "name": "生成方案5（未充分使用预算）",
+  "sid": "de3759da-4391-4146-926a-9263a0e50f2b",
+  "sceneKB": 3,
+  "glb": 0,
+  "ktx": 0,
+  "products": 2
+ },
+ {
+  "pname": "东海岸",
+  "name": "生成方案2（未充分使用预算）",
+  "sid": "18dea547-40c8-4a39-98f6-ebe6791c1823",
+  "sceneKB": 3,
+  "glb": 0,
+  "ktx": 0,
+  "products": 2
+ },
+ {
+  "pname": "东海岸",
+  "name": "生成方案6（未充分使用预算）",
+  "sid": "a7ee29a2-7154-4184-a675-4336280febd0",
+  "sceneKB": 3,
+  "glb": 0,
+  "ktx": 0,
+  "products": 2
+ },
+ {
+  "pname": "东海岸",
+  "name": "生成方案5（未充分使用预算）",
+  "sid": "d5f6884b-f0ca-4c40-bf8d-d4793b81b857",
+  "sceneKB": 3,
+  "glb": 0,
+  "ktx": 0,
+  "products": 2
+ }
+]

@@ -1,0 +1,5 @@
+webcache20261119 方案复核
+仓库 Garden-Design-Calculator 分支 feat/web-demo-asset-cache-20261119 commit 3ffcb65ef01059fcb82f49f58a4582ed5b19edc5
+文件 src/tasks/GOAL_WEB_DEMO_ASSET_CACHE_20261119.md
+事实：固定设备Web缓存首期已推送。独立asset-versions.json(路径→sha256)由build_catalog生成，catalog.json不改字节；/api/catalog下发，前端注入?v；服务端按?v校验：相符immutable其余no-cache；KTX2用kv，纹理键含mapUrl，植物替换回写版本。
+复核5点：1 独立表不改catalog是否可接受；2 ?v校验是否覆盖换图/回滚红线；3 KTX2陈旧是否同轮修；4 私有媒体跨账户旧图复用保持独立风险；5 2D全目录预载先实测。逐条给 BLOCKER/MUST-FIX/FOLLOW-UP+理由+建议，无问题写PASS。勿改代码。

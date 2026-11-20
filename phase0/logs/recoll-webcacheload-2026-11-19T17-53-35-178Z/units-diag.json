@@ -1,0 +1,58 @@
+[
+  {
+    "key": "029d0da3-056b-5f74-b784-041a5974e313:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 551,
+    "text_head": "webcache20261119bd3fixr2 定点复验KTX2断言\nGarden-Design-Calculator feat/web-demo-asset-cache-20261119 tip "
+  },
+  {
+    "key": "029d0da3-056b-5f74-b784-041a5974e313:1:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 260,
+    "text_head": "ChatGPT 说：\n\nMUST-FIX 已关闭 完整 PASS\n\n唯一 MUST-FIX：PASS。新增 KTX2 数量断言，明确要求实际加载数量大于 0，消除空循环假通过。\n\nimmutable "
+  },
+  {
+    "key": "54e7d2fc-fb15-526d-b5dc-dd0aac31025d:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 470,
+    "text_head": "webcachenext20261119a 下一步咨询\n仓库 Garden-Design-Calculator 分支 feat/web-demo-asset-cache-20261119 tip 41"
+  },
+  {
+    "key": "54e7d2fc-fb15-526d-b5dc-dd0aac31025d:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 2083,
+    "text_head": "ChatGPT 说：\n独立建议：推荐 B → A → C\n\n实现审查已完整 PASS 设备验收待完成\n\n我已读取 HANDOFF_WEB_DEMO_ASSET_CACHE_20261119.md 的 "
+  },
+  {
+    "key": "8cbf2c50-7ee5-5933-9eb4-974c8e670c81:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 617,
+    "text_head": "webcacheload20261120 加载优化讨论（只讨论不改码）\n仓库 Garden-Design-Calculator 分支 feat/web-demo-asset-cache-2026111"
+  },
+  {
+    "key": "8cbf2c50-7ee5-5933-9eb4-974c8e670c81:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 4142,
+    "text_head": "ChatGPT 说：\n页面与素材加载优化：方向清单\n\n先明确一个判断：当前缓存已经解决了重复访问的网络成本，下一轮优化重点应该转向首次访问的加载竞争、3D 解码与场景就绪体验，而不是继续扩大缓存机制。"
+  },
+  {
+    "key": "ecd1f38c-0a86-5e2d-b920-d1d3b4c1070f:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 617,
+    "text_head": "webcacheload20261120 加载优化讨论（只讨论不改码）\n仓库 Garden-Design-Calculator 分支 feat/web-demo-asset-cache-2026111"
+  },
+  {
+    "key": "ecd1f38c-0a86-5e2d-b920-d1d3b4c1070f:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 3323,
+    "text_head": "ChatGPT 说：\n加载优化方向清单\n\n本轮按指定 commit 3dec6bcb15c7a7cb7f096ba55333941c2aef05d5 只读。已核对实测报告及三个指定入口文件。\n\n先明确"
+  }
+]

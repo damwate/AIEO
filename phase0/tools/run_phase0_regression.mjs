@@ -15,6 +15,7 @@ const tests = [
   { name: "schemas", script: join(__dirname, "test_schemas.mjs"), timeout_ms: 120000 },
   { name: "inbound-reply", script: join(__dirname, "test_inbound_reply.mjs"), timeout_ms: 120000 },
   { name: "dispatch-binding", script: join(__dirname, "test_dispatch_options.mjs"), timeout_ms: 120000 },
+  { name: "instance-config", script: join(__dirname, "test_instance_config.mjs"), timeout_ms: 180000 },
   { name: "m1-registry", script: join(__dirname, "test_m1_artifact_registry.mjs"), timeout_ms: 180000 },
   { name: "m1-concurrency", script: join(__dirname, "test_m1_concurrency.mjs"), timeout_ms: 300000 },
   { name: "browser-virtual-list-simulation", script: join(__dirname, "test_browser_virtual_list.mjs"), timeout_ms: 180000 },

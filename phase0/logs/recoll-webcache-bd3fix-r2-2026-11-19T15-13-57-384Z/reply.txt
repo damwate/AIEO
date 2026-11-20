@@ -1,0 +1,13 @@
+ChatGPT 说：
+
+MUST-FIX 已关闭 完整 PASS
+
+唯一 MUST-FIX：PASS。新增 KTX2 数量断言，明确要求实际加载数量大于 0，消除空循环假通过。
+
+immutable 检查：PASS。改为遍历 [...glb, ...ktx2]，覆盖 GLB 与 KTX2。
+
+验收证据：PASS。跨方案 3D E2E 1 passed，typecheck:e2e 通过，lint 0 错。
+
+最终裁定：完整 PASS，可以签署验收。
+
+本轮仅针对指定 MUST-FIX 复验，不扩大审查范围，不改代码。

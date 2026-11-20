@@ -37,19 +37,17 @@ import { registerArtifactWithRetry } from "./m1_artifact_registry.mjs";
 import {
   parseDispatchOptions, shouldUpdateReviewerPointer, sessionIdIsAttributable, extractSessionId,
   extractBriefMarker, assertDispatchPage, submitDispatchMessage,
+  deriveInstancePaths, allocateInstancePort, assertPointerWriterAllowed, buildKillProfileScript,
 } from "./dispatch_options.mjs";
 import { readReplySnapshot, readTailUnit } from "./inbound_dom.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const AIEO_ROOT = join(__dirname, "..", "..");
-const PROFILE_DIR = join(AIEO_ROOT, "runtime", "chrome_profiles", "gpt-poc");
 const LOG_DIR = join(__dirname, "..", "logs");
 const REVIEWER_SESSION = join(LOG_DIR, "gpt-reviewer-session.json");
 const SESSION_JSON = join(LOG_DIR, "gpt-poc-session.json");
 
 const CHROME = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
-const DEBUG_PORT = 9222;
-const CDP_URL = `http://127.0.0.1:${DEBUG_PORT}`;
 const CHATGPT_HOME = "https://chatgpt.com/";
 const CONFIRM_WINDOW_MS = Number(
   process.env.AIEO_GPT_CONTROLLER_CONFIRM_WINDOW_MS || process.env.AIEO_CONFIRM_WINDOW_MS || 75000,
@@ -83,7 +81,15 @@ const {
   ids: optionalIds,
   schemaPath,
   m1RegistrationRequested,
+  instanceId: rawInstanceId,
 } = dispatchOptions;
+
+// ── 实例域（DEC-123 PARA-R1）：default 实例逐字节=既有常量（C7 默认兼容）；
+// 命名实例派生独立锁/profile，端口在 mainLocked 内经注册表分配（探测碰撞检查）。
+const INSTANCE = deriveInstancePaths({ instanceId: rawInstanceId, aieoRoot: AIEO_ROOT });
+const PROFILE_DIR = INSTANCE.profileDir;
+let DEBUG_PORT = INSTANCE.defaultPort; // default=9222（C7）；命名实例在 mainLocked 内分配后重绑
+let CDP_URL = `http://127.0.0.1:${DEBUG_PORT}`;
 
 // 附件支持（--attach <file>，EGO-LITE 手册 §3.2 附件通道：先挂全部文件→发送键 enabled→填文本→Enter 一次发送）
 const attachIdx = process.argv.indexOf("--attach");
@@ -127,15 +133,49 @@ async function shot(page, name) {
 }
 
 // ---------- Chrome 生命周期（与 POC-03 相同模式） ----------
+// DEC-123 ③加严：进程归属按完整启动参数 --user-data-dir 精确 token 匹配（大小写不敏感），
+// 禁子串通配（*gpt-poc* 会误杀 gpt-poc-a2 等前缀相关实例）；归属不明进程一律不杀只计数。
 function killProfileChrome() {
   return new Promise((resolve) => {
-    const ps = `Get-CimInstance Win32_Process -Filter "Name='chrome.exe'" | Where-Object { $_.CommandLine -like '*gpt-poc*' } | ForEach-Object { Stop-Process -Id $_.ProcessId -Force -ErrorAction SilentlyContinue }`;
-    execFile("powershell", ["-NoProfile", "-Command", ps], () => resolve());
+    const ps = buildKillProfileScript(PROFILE_DIR);
+    execFile("powershell", ["-NoProfile", "-Command", ps], (error, stdout) => {
+      const m = String(stdout || "").match(/own=(\d+) foreign=(\d+) remaining=(\d+)/);
+      const counts = m ? { own: Number(m[1]), foreign: Number(m[2]), remaining: Number(m[3]) } : null;
+      if (counts) log(`[instance] 清理本实例 Chrome：own=${counts.own} foreign(不动)=${counts.foreign} remaining=${counts.remaining}`);
+      resolve(counts);
+    });
+  });
+}
+// 启动归属核验（C8）：端口有 CDP 端点但全机无本实例 profile 的进程 → 端口属于他者，fail-closed。
+function countChromeProcessesForProfile(profileDir) {
+  return new Promise((resolve) => {
+    const ps = `
+$c = 0
+foreach ($p in (Get-CimInstance Win32_Process -Filter "Name='chrome.exe'")) {
+  $m = [regex]::Match($p.CommandLine, '--user-data-dir=(?:"([^"]*)"|(\\S+))')
+  if ($m.Success) {
+    $dir = ($m.Groups[1].Value + $m.Groups[2].Value).Trim('"')
+    if ($dir -ieq '${String(profileDir).replace(/'/g, "''")}') { $c++ }
+  }
+}
+Write-Output "count=$c"
+`.trim();
+    execFile("powershell", ["-NoProfile", "-Command", ps], (error, stdout) => {
+      const m = String(stdout || "").match(/count=(\d+)/);
+      resolve(m ? Number(m[1]) : null);
+    });
   });
 }
 async function cdpReady() { try { return (await fetch(`${CDP_URL}/json/version`)).ok; } catch { return false; } }
 async function startChromeWithDebugPort() {
-  if (await cdpReady()) { log("复用已运行调试端口 9222"); return; }
+  if (await cdpReady()) {
+    const ownProcs = await countChromeProcessesForProfile(PROFILE_DIR);
+    if (ownProcs === 0) {
+      throw new Error(`INSTANCE_PORT_FOREIGN: 端口 ${DEBUG_PORT} 有 CDP 端点但无本实例 profile 进程（归属不明，fail-closed 不复用）`);
+    }
+    log(`复用本实例调试端口 ${DEBUG_PORT}（归属核验 own=${ownProcs}）`);
+    return;
+  }
   await killProfileChrome();
   await new Promise((r) => setTimeout(r, 1500));
   const child = spawn(CHROME, [
@@ -146,7 +186,7 @@ async function startChromeWithDebugPort() {
   child.unref();
   for (let i = 0; i < 45; i++) {
     await new Promise((r) => setTimeout(r, 1000));
-    if (await cdpReady()) { log(`Chrome 已启动 pid=${child.pid}`); return; }
+    if (await cdpReady()) { log(`Chrome 已启动 pid=${child.pid} port=${DEBUG_PORT}`); return; }
   }
   throw new Error("Chrome 调试端口未就绪");
 }
@@ -344,13 +384,81 @@ async function sendAndCollect(page, text, label, attachPath, target, confirmSend
   };
 }
 
+// ---------- 实例端口注册表（DEC-123 ③：实例身份/锁/端口/profile 可核验映射） ----------
+function readPortRegistry() {
+  const path = INSTANCE.portRegistryPath;
+  if (!existsSync(path)) return { version: 1, ports: {} };
+  let registry;
+  try {
+    registry = JSON.parse(readFileSync(path, "utf8"));
+  } catch (error) {
+    throw new Error(`INSTANCE_REGISTRY_INVALID: 实例端口注册表读取失败，拒绝按空注册表继续: ${error.message}`);
+  }
+  if (registry?.version !== 1 || typeof registry?.ports !== "object" || registry?.ports === null) {
+    throw new Error("INSTANCE_REGISTRY_INVALID: 实例端口注册表结构无效");
+  }
+  return registry;
+}
+
+function writePortRegistryAtomic(registry) {
+  const path = INSTANCE.portRegistryPath;
+  mkdirSync(dirname(path), { recursive: true });
+  const temp = `${path}.${process.pid}.${Date.now()}.tmp`;
+  try {
+    writeFileSync(temp, `${JSON.stringify(registry, null, 2)}\n`, "utf8");
+    renameSync(temp, path);
+  } catch (error) {
+    try { renameSync(temp, `${temp}.orphan`); } catch {}
+    throw new Error(`INSTANCE_REGISTRY_WRITE_FAILED: 实例端口注册表原子写入失败: ${error.message}`);
+  }
+}
+
+// 命名实例端口分配：注册表锁内 读→探测→分配→写（防双实例同刻分配同端口）。
+async function resolveInstancePort() {
+  if (INSTANCE.isDefault) return INSTANCE.defaultPort;
+  const regLock = acquireSessionLock({
+    holder: `instance-port-alloc:${INSTANCE.instanceId}`,
+    lockPath: `${INSTANCE.portRegistryPath}.lockfile`,
+  });
+  try {
+    const registry = readPortRegistry();
+    const candidates = [];
+    for (let port = INSTANCE.portCandidates.min; port <= INSTANCE.portCandidates.max; port += 1) {
+      candidates.push(port);
+    }
+    const busy = new Set(
+      await Promise.all(candidates.map(async (port) => {
+        try {
+          const r = await fetch(`http://127.0.0.1:${port}/json/version`, { signal: AbortSignal.timeout(1200) });
+          return r.ok ? port : null;
+        } catch { return null; }
+      })).then((results) => results.filter((port) => port !== null)),
+    );
+    const { port } = allocateInstancePort({
+      instanceId: INSTANCE.instanceId,
+      registry: registry.ports,
+      isPortBusy: (p) => busy.has(p),
+      candidates: INSTANCE.portCandidates,
+    });
+    if (port !== registry.ports[INSTANCE.instanceId]) {
+      writePortRegistryAtomic({ version: 1, ports: { ...registry.ports, [INSTANCE.instanceId]: port } });
+      log(`[instance] 端口分配: instance=${INSTANCE.instanceId} port=${port}（注册表已原子落盘，探测占用=${busy.size}）`);
+    } else {
+      log(`[instance] 端口沿用注册表登记: instance=${INSTANCE.instanceId} port=${port}`);
+    }
+    return port;
+  } finally {
+    regLock.release();
+  }
+}
+
 // ---------- 主流程 ----------
 async function main() {
   log(`证据目录: ${EV_DIR}`);
   recordSend("NOT_SENT");
-  // R5：会话级跨进程独占锁（与 e2e_orchestrate 同一把锁，互斥自动化实例）
-  const lock = acquireSessionLock({ holder: "gpt_dispatch" });
-  log(`会话锁已获取 pid=${process.pid}`);
+  // R5+DEC-123：实例域锁——default 用既有全局锁文件（C7 逐字节不变）；命名实例独立锁文件。
+  const lock = acquireSessionLock({ holder: `gpt_dispatch:${INSTANCE.instanceId}`, lockPath: INSTANCE.lockPath });
+  log(`会话锁已获取 pid=${process.pid} instance=${INSTANCE.instanceId} lock=${basename(INSTANCE.lockPath)}`);
   try {
     await mainLocked();
   } finally {
@@ -362,6 +470,13 @@ async function main() {
 async function mainLocked() {
   log(`=== GPT 派单（${newSession ? "新建会话" : "已有会话"}，消息 ${msgBytes} 字节）===`);
   writeFileSync(join(EV_DIR, "request.txt"), dispatchOptions.requestText, "utf8");
+  // 共享 reviewer 指针单写者守卫（DEC-123）：非 default 实例必须绑定会话或显式不写指针。
+  assertPointerWriterAllowed({ instanceId: INSTANCE.instanceId, options: dispatchOptions });
+
+
+  DEBUG_PORT = await resolveInstancePort();
+  CDP_URL = `http://127.0.0.1:${DEBUG_PORT}`;
+  log(`[instance] 实例域就绪: instance=${INSTANCE.instanceId} port=${DEBUG_PORT} profile=${basename(PROFILE_DIR)} lock=${basename(INSTANCE.lockPath)}`);
 
   await startChromeWithDebugPort();
   const tabAuditBefore = await cdpTargetList();
@@ -516,6 +631,10 @@ async function mainLocked() {
 
   const result = {
     at: extractedAt,
+    instance_id: INSTANCE.instanceId,
+    instance_lock_path: INSTANCE.lockPath,
+    instance_debug_port: DEBUG_PORT,
+    instance_profile_dir: PROFILE_DIR,
     message_bytes: msgBytes,
     reply: snapshot.reply,
     user_unit_key: snapshot.user_unit_key,
@@ -557,8 +676,8 @@ async function mainLocked() {
   writeTabAudit({ outcome: "success", before: tabAuditBefore, exit_before_disposal: tabAuditExitBefore,
                   exit_after_disposal: tabAuditExitAfter,
                   created_pages: ownedCreatedPages.length,
-                  disposal: "browser.close+killProfileChrome（profile 级整浏览器关闭=既有成功语义，含既有页与自建页）；exit_after_disposal CDP_UNREACHABLE=tab 清零证明" });
-  log(`[tab-hygiene] 成功退出：浏览器连接已关+profile Chrome 已杀（含本次自建页 ${ownedCreatedPages.length} 页）；tab 清零`);
+                  disposal: `browser.close+killProfileChrome（实例 ${INSTANCE.instanceId} profile 精确归属清理=既有成功语义的实例域版，含既有页与自建页）；exit_after_disposal CDP_UNREACHABLE=tab 清零证明` });
+  log(`[tab-hygiene] 成功退出：浏览器连接已关+实例 ${INSTANCE.instanceId} Chrome 已清理（精确归属，他实例不动；含本次自建页 ${ownedCreatedPages.length} 页）；本实例 tab 清零`);
   log(`=== 派单完成，artifact_sha256=${result.artifact_sha256} size_bytes=${result.size_bytes} ===`);
   console.log("\n=====REPLY_BEGIN=====");
   console.log(snapshot.reply);
