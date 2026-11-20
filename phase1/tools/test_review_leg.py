@@ -114,6 +114,11 @@ _DISPATCH_DIR_SEQ = [0]  # 全局递增序号（b-20261117-gpt04 S3b：秒级时
                          # 跨实例碰撞，mkdir(exist_ok=True) 复用同目录致现场互覆——真执行暴露）
 
 
+def write_send_receipt(kwargs, directory, state, **details):
+    path = Path(kwargs["env"]["AIEO_DISPATCH_SEND_RECEIPT"])
+    path.write_text(json.dumps({"state": state, "dispatch_dir": directory, **details}), encoding="utf-8")
+
+
 def make_dispatch_double(review_reply: str, dispatch_root: Path, fail_first: bool = False):
     """ChatGPT 边界唯一测试替身：拦截 gpt_dispatch 调用，落盘真实形状派单目录。
     其余 subprocess（git/ajv）原样透传真实执行。fail_first=首次调用返回非零（发送失败注入）。
@@ -126,6 +131,7 @@ def make_dispatch_double(review_reply: str, dispatch_root: Path, fail_first: boo
             return REAL_SUBPROCESS_RUN(cmd, **kw)
         calls["n"] += 1
         if fail_first and calls["n"] == 1:
+            write_send_receipt(kw, "dispatch-before-send", "NOT_SENT")
             return FakeProc(3, b"", b"injected send failure (test double)")
         # 解析 --message-file 参数（request.txt 证据复制）
         msg_file = None
@@ -137,6 +143,9 @@ def make_dispatch_double(review_reply: str, dispatch_root: Path, fail_first: boo
         ddir.mkdir(parents=True, exist_ok=True)
         if msg_file and msg_file.is_file():
             (ddir / "request.txt").write_bytes(msg_file.read_bytes())
+        write_send_receipt(kw, ddir.name, "SEND_CONFIRMED",
+                           session_id="11111111-2222-4333-8444-555555555555",
+                           user_unit_key="fallback-turn-1:0:user")
         (ddir / "reply.txt").write_text(review_reply, encoding="utf-8")
         (ddir / "result.json").write_text(json.dumps({
             "user_unit_key": "fallback-turn-1:0:user",
@@ -617,6 +626,7 @@ __BODY__
         recs = leg.ledger.load()
         cut = next(i for i, r in enumerate(recs) if r["kind"] == "R3_SEND_INTENT_RECORDED")
         kept = recs[:cut + 1]
+        Path(kept[-1]["send_receipt"]).unlink()
         leg.ledger.path.write_text(
             "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in kept), encoding="utf-8")
         wrapper2, calls2 = make_dispatch_double("should-not-be-sent", rl.DISPATCH_LOG_DIR)
@@ -658,13 +668,10 @@ __BODY__
                     msg_file = Path(cl[cl.index("--message-file") + 1])
                 if msg_file and msg_file.is_file():
                     (ddir / "request.txt").write_bytes(msg_file.read_bytes())
-                # 发送双验证据先落盘（result.json），随后进程非零退出=采集失败（§5 行2 形态）
-                (ddir / "result.json").write_text(json.dumps({
-                    "user_unit_key": "fallback-turn-1:0:user",
-                    "unit_count": 1,
-                    "conversation_url": "https://chatgpt.com/c/22222222-3333-4444-8555-666666666666",
-                    "completion_checks": {"send_double_verify": True},
-                }, ensure_ascii=False), encoding="utf-8")
+                # 采集失败只有发送回执，没有成功结果。
+                write_send_receipt(kw, ddir.name, "SEND_CONFIRMED",
+                                   session_id="22222222-3333-4444-8555-666666666666",
+                                   user_unit_key="fallback-turn-1:0:user")
                 return FakeProc(3, b"", b"injected collection failure after send double-verify")
             if "recoll_driver.mjs" in joined:
                 # 补采替身（ChatGPT 采集边界）：落盘 recoll 产物到 run_dir（=驱动模板 OUT_DIR）
@@ -697,7 +704,9 @@ __BODY__
         self.assertEqual(cf["conversation_uuid"], "22222222-3333-4444-8555-666666666666",
                          "COLLECT_FAILED must carry conversation evidence (P1-03)")
         self.assertEqual(cf["sent_user_unit_key"], "fallback-turn-1:0:user")
-        # resume：COLLECT_FAILED 锚点 → 原会话补采 → 登记 → 推进（NEW-P1-01 修复前此处 TypeError 逸出）
+        # 模拟发送回执落盘后、父进程记录确认前中断。resume 必须从回执恢复账本。
+        records = [row for row in leg.ledger.load() if row["kind"] != "R3_SEND_CONFIRMED_COLLECT_FAILED"]
+        leg.ledger.path.write_text("".join(json.dumps(row) + "\n" for row in records), encoding="utf-8")
         with self.dispatch_double(wrapper):
             rc2 = leg.resume()
         self.assertEqual(rc2, 0, "full recovery completes (NEW-P1-01 fixed)")
@@ -706,6 +715,7 @@ __BODY__
             "SELECT status FROM tasks WHERE task_id=?", (task_id,))[0]["status"], "TEST_ACCEPTANCE")
         kinds = [r["kind"] for r in leg.ledger.load()]
         self.assertIn("RESUME_COLLECT_OK", kinds)
+        self.assertIn("R3_SEND_CONFIRMED_COLLECT_FAILED", kinds)
         r4 = leg.ledger.latest("R4_REPLY_CAPTURED")
         self.assertEqual(r4["user_unit_counts"]["at_capture_materialized"], 1,
                          "capture-time user unit count recorded from units-diag")
@@ -984,7 +994,7 @@ __BODY__
         )
         r1 = self._write_runner("runner-a7-run.py", body1, task_id, commit, patch_path, run_key)
         proc1 = self._run_runner(r1, token, task_id, commit, patch_path, run_key, artifact_id)
-        self.assertEqual(proc1.returncode, -9 if os.name != 'nt' else 9,
+        self.assertEqual(proc1.returncode, 9,
                          "runner1 dies at A7 injection (os._exit(9)); stdout=" + proc1.stdout[-600:]
                          + " stderr=" + proc1.stderr[-600:])
         body2 = (
@@ -1130,17 +1140,22 @@ __BODY__
         self.assertIn("BREAKPOINT_STATE_OK", proc1.stdout,
                       "breakpoint state must be confirmed before exit; stdout=" + proc1.stdout[-400:]
                       + " stderr=" + proc1.stderr[-600:])
-        self.assertEqual(proc1.returncode, -9 if os.name != "nt" else 9,
+        self.assertEqual(proc1.returncode, 9,
                          "runner1 dies after send confirmation, before capture")
         # 双重验证：独立存活检查（tasklist 全量）——进程树死亡证据（会商要求；
         # runner 自报 PID=唯一可靠来源，父进程无法可靠枚举子进程 PID）
         dirs_after_r1 = len(list(rl.DISPATCH_LOG_DIR.glob("dispatch-runner-*")))  # runner1 派单合法
         pid_rec = json.loads((Path(self.tmp) / "runtime" / ("rvl-" + run_key) / "runner-pid.json").read_text(encoding="utf-8"))
-        r = subprocess.run(["tasklist", "/FO", "CSV", "/NH"], capture_output=True, text=True, timeout=30)
-        self.assertNotIn(str(pid_rec["pid"]), r.stdout,
-                         "process tree death independently verified via tasklist (runner-reported pid)")
+        pid = pid_rec["pid"]
+        if os.name == "nt":
+            command = ["tasklist", "/FI", f"PID eq {pid}", "/FO", "CSV", "/NH"]
+            listing = subprocess.run(command, capture_output=True, text=True, timeout=30, check=True)
+            self.assertNotIn(f'"{pid}"', listing.stdout)
+        else:
+            with self.assertRaises(ProcessLookupError):
+                os.kill(pid, 0)
         snap = {"runner_pid": pid_rec["pid"], "exit_code": proc1.returncode,
-                "tasklist_verify": "pid absent (independent alive-check)",
+                "process_verify": "pid absent (independent alive-check)",
                 "breakpoint": "R3_SEND_CONFIRMED present / R4_REPLY_CAPTURED absent",
                 "combination_evidence_note": "组合证据（会商乙方案）：本测试+918012真实链+test_18恢复语义，"
                                              "不得表述为一次真实派单现场完整捕获",
@@ -1255,6 +1270,16 @@ __BODY__
         (ddir / "request.txt").write_bytes(brief_bytes)
         os.utime(ddir, (base - 1.0, base - 1.0))
         self.assertEqual(leg._find_dispatch_dir(must=True, since=base, brief_bytes=brief_bytes), ddir)
+        (ddir / "request.txt").write_bytes(b"other brief")
+        os.utime(ddir, (base - 1.0, base - 1.0))
+        with self.assertRaisesRegex(OrchestrationError, "no dispatch evidence"):
+            leg._find_dispatch_dir(must=True, since=base, brief_bytes=brief_bytes)
+        receipt_path = rl.dispatch_receipt_path(leg.run_dir)
+        receipt_path.write_text(json.dumps({"dispatch_dir": ddir.name, "state": "SEND_CONFIRMED"}),
+                                encoding="utf-8")
+        self.assertEqual(rl.read_dispatch_receipt(receipt_path, rl.DISPATCH_LOG_DIR, brief_bytes),
+                         ("UNKNOWN", None, {}))
+        (ddir / "request.txt").write_bytes(brief_bytes)
         os.utime(ddir, (base - 3.0, base - 3.0))
         with self.assertRaises(OrchestrationError) as cm:
             leg._find_dispatch_dir(must=True, since=base, brief_bytes=brief_bytes)
@@ -1273,6 +1298,47 @@ __BODY__
             lock.__exit__()
         with rl.RunKeyLock(leg.run_dir, holder="d094-after-release"):
             pass
+
+    def test_34_lock_conflict_in_another_process(self):
+        run_dir = self.tmp / "review-cross-process-lock"
+        script = """
+import sys
+from pathlib import Path
+from review_leg import OrchestrationError, RunKeyLock
+try:
+    with RunKeyLock(Path(sys.argv[1]), holder="child"):
+        pass
+except OrchestrationError as error:
+    print(error)
+    sys.exit(3)
+"""
+        command = [sys.executable, "-c", script, str(run_dir)]
+        options = {"cwd": Path(rl.__file__).parent, "capture_output": True, "text": True, "timeout": 10}
+        with rl.RunKeyLock(run_dir, holder="parent"):
+            rejected = subprocess.run(command, **options)
+            self.assertEqual(rejected.returncode, 3, rejected.stderr)
+            self.assertIn("held by another live process", rejected.stdout)
+        acquired = subprocess.run(command, **options)
+        self.assertEqual(acquired.returncode, 0, acquired.stderr)
+
+    def test_35_missing_receipt_blocks_automatic_redispatch(self):
+        leg, _, _, _, _ = self.make_leg("uncertain")
+        brief = leg.run_dir / "brief.txt"
+        brief.parent.mkdir(parents=True, exist_ok=True)
+        brief.write_text("retry regression", encoding="utf-8")
+        calls = []
+
+        def wrapper(cmd, **kw):
+            calls.append(cmd)
+            return FakeProc(1, b"", b"browser disappeared without receipt")
+
+        with self.dispatch_double(wrapper):
+            with self.assertRaisesRegex(OrchestrationError, "send state unknown"):
+                leg.r3_dispatch("retry regression")
+            with self.assertRaisesRegex(OrchestrationError, "already recorded"):
+                leg.r3_dispatch("retry regression")
+        self.assertEqual(len(calls), 1)
+        self.assertIsNotNone(leg.ledger.latest("R3_SEND_UNCERTAIN"))
 
 
 if __name__ == "__main__":

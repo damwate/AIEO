@@ -61,6 +61,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 from scheduler import M1Client, OrchestrationError, sha256_bytes, sha256_file  # noqa: E402
 from review_leg import (  # noqa: E402
     EngineM1Client, ReviewLedger, derive_recoll_driver, utc_now_iso,
+    dispatch_receipt_path, read_dispatch_receipt, recover_dispatch_anchor,
     OUTBOUND_LIMIT, REST_TIMEOUT, ORCHESTRATOR_AGENT, PHASE0_TOOLS,
     CONTRACT_DIR, DISPATCH_LOG_DIR,
 )
@@ -407,48 +408,50 @@ class TestAcceptanceLeg:
         # 现场精确匹配的权威字节=磁盘 brief.txt 原始内容（Windows 文本模式换行翻译
         # 会使字符串往返编码与落盘字节不一致——GPT-02 P1-02 整改随附修正同构）
         brief_bytes = (self.run_dir / "brief.txt").read_bytes()
+        if any(kind.startswith("A2_") for kind in self.ledger.state_flags()):
+            raise OrchestrationError(3, "dispatch already recorded for this run; use resume")
         for attempt in range(1, attempts + 1):
+            receipt_path = dispatch_receipt_path(self.run_dir)
             self.ledger.append({"kind": "A2_SEND_INTENT_RECORDED" if attempt == 1
                                 else "A2_REDISPATCH_INTENT",
                                 "attempt": attempt, "mode": "--new-session",
+                                "send_receipt": str(receipt_path),
                                 "note": "send attempt; double-verify evidence decides failure class",
                                 "outcome": "INTENT"})
             env = dict(os.environ)
             env["AIEO_GPT_CONTROLLER_GENERATION_TIMEOUT_MS"] = "600000"
+            env["AIEO_DISPATCH_SEND_RECEIPT"] = str(receipt_path)
             attempt_started = time.time()   # 现场目录新鲜度=本次发送尝试起点
-            proc = subprocess.run(
-                ["node", "gpt_dispatch.mjs", "--new-session", "--no-update-pointer", "--message-file",
-                 str(self.run_dir / "brief.txt")],
-                cwd=str(PHASE0_TOOLS), env=env, capture_output=True, timeout=900)
+            try:
+                proc = subprocess.run(
+                    ["node", "gpt_dispatch.mjs", "--new-session", "--no-update-pointer", "--message-file",
+                     str(self.run_dir / "brief.txt")],
+                    cwd=str(PHASE0_TOOLS), env=env, capture_output=True, timeout=900)
+            except subprocess.TimeoutExpired as error:
+                proc = subprocess.CompletedProcess(error.cmd, 1, error.stdout or b"",
+                                                   b"dispatch subprocess timed out")
             (self.run_dir / f"dispatch-stdout-{attempt}.txt").write_bytes(proc.stdout)
             (self.run_dir / f"dispatch-stderr-{attempt}.txt").write_bytes(proc.stderr)
+            send_state, fresh, receipt = read_dispatch_receipt(receipt_path, DISPATCH_LOG_DIR, brief_bytes)
             if proc.returncode != 0:
                 last_err = f"gpt_dispatch exit {proc.returncode}: {proc.stderr.decode('utf-8', 'replace')[:300]}"
-                fresh = self._find_dispatch_dir(must=False, since=attempt_started,
-                                                brief_bytes=brief_bytes)
-                if fresh is not None and (fresh / "result.json").is_file():
-                    # 发送双验已过而后续采集失败：采集 fail-closed 家族——禁重发（§5/L-018）。
-                    try:
-                        fres = json.loads((fresh / "result.json").read_text(encoding="utf-8"))
-                    except ValueError:
-                        fres = {}
+                if send_state == "SEND_CONFIRMED":
                     self.ledger.append({"kind": "A2_SEND_CONFIRMED_COLLECT_FAILED",
                                         "attempt": attempt, "dispatch_dir": fresh.name,
-                                        "conversation_uuid": (fres.get("conversation_url") or "").rsplit("/", 1)[-1] or None,
-                                        "sent_user_unit_key": fres.get("user_unit_key"),
-                                        "error": last_err,
-                                        "note": "resume as sent-not-collected; resend forbidden",
-                                        "outcome": "CONFIRMED_COLLECT_FAILED"})
-                    raise OrchestrationError(3, f"send double-verified but collection failed "
-                                                f"(禁重发; run resume for recovery): {last_err}")
-                if attempt < attempts:
-                    continue   # 无现场证据=发送未成立→§5 行1 允许一次换会话重派
+                                        "conversation_uuid": receipt.get("session_id"),
+                                        "sent_user_unit_key": receipt.get("user_unit_key"),
+                                        "error": last_err, "outcome": "CONFIRMED_COLLECT_FAILED"})
+                    raise OrchestrationError(3, f"send confirmed; collection failed (禁重发; use resume): {last_err}")
+                if send_state != "NOT_SENT":
+                    self.ledger.append({"kind": "A2_SEND_UNCERTAIN", "attempt": attempt,
+                                        "error": last_err, "outcome": "BLOCKED"})
+                    raise OrchestrationError(3, f"dispatch send state unknown (禁重发): {last_err}")
                 self.ledger.append({"kind": "A2_SEND_FAILED", "attempt": attempt,
                                     "error": last_err, "outcome": "FAILED"})
-                raise OrchestrationError(3, f"dispatch failed (no send evidence): {last_err}")
-            # exit==0：发送+采集双成——现场目录含 result.json 与 reply.txt
-            fresh = self._find_dispatch_dir(must=True, since=attempt_started,
-                                            brief_bytes=brief_bytes)
+                continue
+            if receipt_path.exists() and send_state != "SEND_CONFIRMED":
+                raise OrchestrationError(3, "dispatch completed with invalid send receipt (禁重发)")
+            fresh = fresh or self._find_dispatch_dir(must=True, since=attempt_started, brief_bytes=brief_bytes)
             fres = json.loads((fresh / "result.json").read_text(encoding="utf-8"))
             self.ledger.append({"kind": "A2_SEND_CONFIRMED", "attempt": attempt,
                                 "dispatch_dir": fresh.name,
@@ -1141,7 +1144,7 @@ class TestAcceptanceLeg:
                                          "账本与 M1 矛盾/未定义态 fail-closed)")
 
         # 行 1-9：TEST_ACCEPTANCE 态断点
-        sent_anchor = flags.get("A2_SEND_CONFIRMED") or flags.get("A2_SEND_CONFIRMED_COLLECT_FAILED")
+        sent_anchor = recover_dispatch_anchor(flags, "A2", self.ledger, self.run_dir, DISPATCH_LOG_DIR)
         if sent_anchor is None:
             if any(k.startswith("A2_") for k in flags):
                 raise OrchestrationError(-1, "ledger has send intent without confirmation (A-3 行3 fail-closed: "

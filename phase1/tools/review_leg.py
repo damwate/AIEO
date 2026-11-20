@@ -47,9 +47,54 @@ import time
 import urllib.error
 import urllib.request
 from pathlib import Path
+from uuid import uuid4
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from scheduler import M1Client, OrchestrationError, sha256_bytes, sha256_file  # noqa: E402
+
+
+def dispatch_receipt_path(run_dir: Path) -> Path:
+    return run_dir / f"dispatch-send-{uuid4().hex}.json"
+
+
+def read_dispatch_receipt(path: Path, log_root: Path, brief_bytes: bytes) -> tuple[str, Path | None, dict]:
+    """Only a receipt for this attempt can authorize retry or bind a recovery."""
+    try:
+        receipt = json.loads(path.read_text(encoding="utf-8"))
+        state = receipt["state"]
+        directory = receipt["dispatch_dir"]
+        if not isinstance(directory, str) or not re.fullmatch(r"dispatch-[\w-]+", directory):
+            return "UNKNOWN", None, {}
+        if state == "NOT_SENT":
+            return state, None, {}
+        if state == "SEND_CONFIRMED":
+            dispatch_dir = log_root / directory
+            if (dispatch_dir / "request.txt").read_bytes() == brief_bytes:
+                return state, dispatch_dir, receipt
+    except (OSError, ValueError, KeyError, TypeError):
+        pass
+    return "UNKNOWN", None, {}
+
+
+def recover_dispatch_anchor(flags: dict, prefix: str, ledger: ReviewLedger,
+                            run_dir: Path, log_root: Path) -> dict | None:
+    confirmed = flags.get(f"{prefix}_SEND_CONFIRMED") or flags.get(f"{prefix}_SEND_CONFIRMED_COLLECT_FAILED")
+    if confirmed is not None:
+        return confirmed
+    intent = flags.get(f"{prefix}_REDISPATCH_INTENT") or flags.get(f"{prefix}_SEND_INTENT_RECORDED") or {}
+    receipt_path = intent.get("send_receipt")
+    brief = run_dir / "brief.txt"
+    if not receipt_path or not brief.is_file():
+        return None
+    _, dispatch_dir, receipt = read_dispatch_receipt(Path(receipt_path), log_root, brief.read_bytes())
+    if dispatch_dir is None:
+        return None
+    anchor = {"kind": f"{prefix}_SEND_CONFIRMED_COLLECT_FAILED",
+              "dispatch_dir": dispatch_dir.name, "conversation_uuid": receipt.get("session_id"),
+              "sent_user_unit_key": receipt.get("user_unit_key"),
+              "send_receipt": receipt_path, "outcome": "CONFIRMED_COLLECT_FAILED"}
+    ledger.append(anchor)
+    return anchor
 
 REPO_ROOT = Path(os.environ.get("AIEO_REVIEW_LEG_REPO_ROOT", "D:/AIEO")).resolve()
 PHASE0_TOOLS = REPO_ROOT / "phase0" / "tools"
@@ -472,8 +517,7 @@ class ReviewLeg:
 
     # ------------------------------------------------------------------
     # R3 真实派单（M2 零修改复用；账本三态：INTENT→CONFIRMED→（R4）REPLY_CAPTURED）
-    # 发送失败 vs 采集失败区分：exit!=0 且现场目录已有发送双验证据（result.json）→
-    # 按采集 fail-closed 禁重发处置（§5 行2）；无现场证据才允许换新会话重派一次（§5 行1）。
+    # 独立发送回执先于采集落盘。只有明确未发送才允许自动重试。
     # ------------------------------------------------------------------
     def r3_dispatch(self, brief: str, allow_one_redispatch: bool = True) -> Path:
         attempts = 2 if allow_one_redispatch else 1
@@ -481,49 +525,50 @@ class ReviewLeg:
         # 现场精确匹配的权威字节=磁盘 brief.txt 原始内容（DEC-094 #7 同构对齐另两腿：
         # Windows 文本模式换行翻译会使字符串往返编码与落盘字节不一致，以磁盘字节为准）
         brief_bytes = (self.run_dir / "brief.txt").read_bytes()
+        if any(kind.startswith("R3_") for kind in self.ledger.state_flags()):
+            raise OrchestrationError(3, "dispatch already recorded for this run; use resume")
         for attempt in range(1, attempts + 1):
+            receipt_path = dispatch_receipt_path(self.run_dir)
             self.ledger.append({"kind": "R3_SEND_INTENT_RECORDED" if attempt == 1
                                 else "R3_REDISPATCH_INTENT",
                                 "attempt": attempt, "mode": "--new-session",
+                                "send_receipt": str(receipt_path),
                                 "note": "send attempt; double-verify evidence decides failure class",
                                 "outcome": "INTENT"})
             env = dict(os.environ)
             env["AIEO_GPT_CONTROLLER_GENERATION_TIMEOUT_MS"] = "600000"
+            env["AIEO_DISPATCH_SEND_RECEIPT"] = str(receipt_path)
             attempt_started = time.time()   # 现场目录新鲜度=本次发送尝试起点（防陈旧目录误判已发送）
-            proc = subprocess.run(
-                ["node", "gpt_dispatch.mjs", "--new-session", "--no-update-pointer", "--message-file",
-                 str(self.run_dir / "brief.txt")],
-                cwd=str(PHASE0_TOOLS), env=env, capture_output=True, timeout=900)
+            try:
+                proc = subprocess.run(
+                    ["node", "gpt_dispatch.mjs", "--new-session", "--no-update-pointer", "--message-file",
+                     str(self.run_dir / "brief.txt")],
+                    cwd=str(PHASE0_TOOLS), env=env, capture_output=True, timeout=900)
+            except subprocess.TimeoutExpired as error:
+                proc = subprocess.CompletedProcess(error.cmd, 1, error.stdout or b"",
+                                                   b"dispatch subprocess timed out")
             (self.run_dir / f"dispatch-stdout-{attempt}.txt").write_bytes(proc.stdout)
             (self.run_dir / f"dispatch-stderr-{attempt}.txt").write_bytes(proc.stderr)
+            send_state, fresh, receipt = read_dispatch_receipt(receipt_path, DISPATCH_LOG_DIR, brief_bytes)
             if proc.returncode != 0:
                 last_err = f"gpt_dispatch exit {proc.returncode}: {proc.stderr.decode('utf-8', 'replace')[:300]}"
-                fresh = self._find_dispatch_dir(must=False, since=attempt_started,
-                                                brief_bytes=brief_bytes)
-                if fresh is not None and (fresh / "result.json").is_file():
-                    # 发送双验已过而后续采集失败：采集 fail-closed 家族——禁重发（§5 行2/L-018）。
-                    # P1-03：落账必含原会话与发送证据（conversation_uuid/sent_user_unit_key），
-                    # resume 将本记录视为"已发送未采集"断点接原会话补采。
-                    try:
-                        fres = json.loads((fresh / "result.json").read_text(encoding="utf-8"))
-                    except ValueError:
-                        fres = {}
+                if send_state == "SEND_CONFIRMED":
                     self.ledger.append({"kind": "R3_SEND_CONFIRMED_COLLECT_FAILED",
                                         "attempt": attempt, "dispatch_dir": fresh.name,
-                                        "conversation_uuid": (fres.get("conversation_url") or "").rsplit("/", 1)[-1] or None,
-                                        "sent_user_unit_key": fres.get("user_unit_key"),
-                                        "next_user_unit_key": fres.get("next_user_unit_key"),
-                                        "unit_count": fres.get("unit_count"),
-                                        "result_json_sha256": sha256_file(fresh / "result.json"),
-                                        "error": last_err,
-                                        "note": "resend forbidden; resume treats as sent-not-captured breakpoint",
-                                        "outcome": "CONFIRMED"})
-                    raise OrchestrationError(3, f"send double-verified but collection failed "
-                                                f"(禁重发; run resume for recovery): {last_err}")
+                                        "conversation_uuid": receipt.get("session_id"),
+                                        "sent_user_unit_key": receipt.get("user_unit_key"),
+                                        "error": last_err, "outcome": "CONFIRMED_COLLECT_FAILED"})
+                    raise OrchestrationError(3, f"send confirmed; collection failed (禁重发; use resume): {last_err}")
+                if send_state != "NOT_SENT":
+                    self.ledger.append({"kind": "R3_SEND_UNCERTAIN", "attempt": attempt,
+                                        "error": last_err, "outcome": "BLOCKED"})
+                    raise OrchestrationError(3, f"dispatch send state unknown (禁重发): {last_err}")
                 self.ledger.append({"kind": "R3_SEND_FAILED", "attempt": attempt,
-                                    "error": last_err, "outcome": "FAIL"})
+                                    "error": last_err, "outcome": "FAILED"})
                 continue
-            ddir = self._find_dispatch_dir(since=attempt_started, brief_bytes=brief_bytes)
+            if receipt_path.exists() and send_state != "SEND_CONFIRMED":
+                raise OrchestrationError(3, "dispatch completed with invalid send receipt (禁重发)")
+            ddir = fresh or self._find_dispatch_dir(since=attempt_started, brief_bytes=brief_bytes)
             result = json.loads((ddir / "result.json").read_text(encoding="utf-8"))
             self.ledger.append({
                 "kind": "R3_SEND_CONFIRMED", "attempt": attempt, "dispatch_dir": ddir.name,
@@ -1164,7 +1209,7 @@ class ReviewLeg:
         if status == "CODE_REVIEW":
             # 行5-9：按账本断点分派。发送锚点=SEND_CONFIRMED 或 SEND_CONFIRMED_COLLECT_FAILED
             #（P1-03：采集失败但发送双验已过的记录同样进入原会话补采路径）
-            sent_anchor = flags.get("R3_SEND_CONFIRMED") or flags.get("R3_SEND_CONFIRMED_COLLECT_FAILED")
+            sent_anchor = recover_dispatch_anchor(flags, "R3", self.ledger, self.run_dir, DISPATCH_LOG_DIR)
             if sent_anchor is None:
                 if any(k.startswith("R3_") for k in flags):
                     # A8：发送可能已成立而账本断裂——无法证明发送状态→停止并腿级 BLOCKED

@@ -4,7 +4,7 @@ import { spawnSync } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { parseDispatchOptions, shouldUpdateReviewerPointer, sessionIdIsAttributable, extractSessionId, extractBriefMarker } from "./dispatch_options.mjs";
+import { parseDispatchOptions, shouldUpdateReviewerPointer, sessionIdIsAttributable, extractSessionId, extractBriefMarker, assertDispatchTarget } from "./dispatch_options.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const logDir = join(__dirname, "..", "logs");
@@ -68,6 +68,25 @@ const tests = [
     // URL 提取
     assert.equal(extractSessionId(`https://chatgpt.com/c/${A}`), A);
     assert.equal(extractSessionId("https://chatgpt.com/"), null);
+  }],
+  ["发送前拒绝现有会话错页、重定向和伪造主机", () => {
+    const targetSessionId = "6afbc6a9-b26c-83ee-9c27-b6c6e6f75664";
+    const existing = { newSession: false, targetSessionId };
+    const target = `https://chatgpt.com/c/${targetSessionId}`;
+    assert.doesNotThrow(() => assertDispatchTarget({ ...existing, url: target }));
+    for (const url of ["https://chatgpt.com/", target.replace("6afb", "6aff"),
+      target.replace("chatgpt.com", "example.com/path/chatgpt.com")]) {
+      assert.throws(() => assertDispatchTarget({ ...existing, url }), /SESSION_TARGET_MISMATCH/);
+    }
+    assert.throws(() => assertDispatchTarget({ ...existing, url: target, targetSessionId: null }), /SESSION_TARGET_MISMATCH/);
+    const draft = { newSession: true, hasMessages: false };
+    assert.doesNotThrow(() => assertDispatchTarget({ ...draft, url: "https://chatgpt.com/" }));
+    assert.throws(() => assertDispatchTarget({ ...draft, url: target }), /SESSION_TARGET_MISMATCH/);
+    assert.throws(() => assertDispatchTarget({ ...draft, url: "https://chatgpt.com/", hasMessages: true }), /SESSION_TARGET_MISMATCH/);
+    const bound = parseDispatchOptions([...base, "--session-result", "result.json"]);
+    assert.equal(bound.sessionResult, "result.json");
+    assert.equal(shouldUpdateReviewerPointer(bound), false);
+    expectCode("DISPATCH_SESSION_AMBIGUOUS", () => parseDispatchOptions([...base, "--new-session", "--session-result", "result.json"]));
   }],
   ["DEC-094 #3：简报标记提取（首行 [TAG|...]，无标记回退 null）", () => {
     assert.equal(extractBriefMarker("[PLAN-RELIABILITY|20261117] 承接...\n第二行"), "[PLAN-RELIABILITY|20261117]");

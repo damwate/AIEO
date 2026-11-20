@@ -387,6 +387,8 @@ function stabilitySummary(snapshot) {
     })),
     assistant_uuid: snapshot.assistant_uuid,
     next_user_unit_key: snapshot.next_user_unit_key ?? null,
+    start_key_resolved: snapshot.start_key_resolved ?? null,
+    start_resolved_by_marker: snapshot.start_resolved_by_marker ?? null,
     range_end_reason: snapshot.range_proof?.end_reason ?? null,
   };
 }
@@ -484,6 +486,8 @@ export function persistInboundArtifacts({ directory, snapshot, extractedAt }) {
     format_version: "1.1",
     extracted_at: extractedAt,
     user_unit_key: snapshot.user_unit_key,
+    start_key_resolved: snapshot.start_key_resolved ?? null,
+    start_resolved_by_marker: snapshot.start_resolved_by_marker ?? null,
     next_user_unit_key: snapshot.next_user_unit_key,
     unit_keys: snapshot.unit_keys,
     unit_count: snapshot.unit_count,

@@ -1,11 +1,13 @@
 // 真实 Chrome + Playwright 驱动本地虚拟列表仿真页。
 // 证据范围严格为“真实浏览器仿真 DOM”，绝非真实 ChatGPT 多 unit 证据。
 import assert from "node:assert/strict";
-import { copyFileSync, mkdirSync, writeFileSync } from "node:fs";
+import { copyFileSync, mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath, pathToFileURL } from "node:url";
 import { chromium } from "playwright";
 import { readReplySnapshot } from "./inbound_dom.mjs";
+import { persistInboundArtifacts } from "./inbound_reply.mjs";
+import { submitDispatchMessage } from "./dispatch_options.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const fixturePath = join(__dirname, "virtual-list-fixture.html");
@@ -130,6 +132,48 @@ try {
     record.outcome = "BLOCKED";
     record.observed_error = observed;
     record.boundary = "窗口重叠不能证明所有窗口均未持续遗漏同一中间 unit；无可信逻辑序列时拒绝完整判定";
+  });
+
+  await captureScenario("05-marker-recovery-evidence", async (record) => {
+    await browserPage.setContent(`
+      <div data-content-search-unit-key="drifted:0:user">[MARKER-RECOVERY] brief</div>
+      <div data-content-search-unit-key="reply:0:assistant">
+        <div data-dil-response data-dil-message-id="assistant-fixture">reply</div>
+      </div>`);
+    const snapshot = await readReplySnapshot(browserPage, "original:0:user", {
+      startMarker: "[MARKER-RECOVERY]",
+    });
+    assert.equal(snapshot.start_resolved_by_marker, true);
+    assert.equal(snapshot.start_key_resolved, "drifted:0:user");
+    const artifacts = persistInboundArtifacts({
+      directory: join(evidenceDir, "marker-recovery"),
+      snapshot, extractedAt: new Date().toISOString(),
+    });
+    const archived = JSON.parse(readFileSync(artifacts.raw_units.path, "utf8"));
+    assert.equal(archived.start_resolved_by_marker, true);
+    assert.equal(archived.start_key_resolved, "drifted:0:user");
+    record.raw_units = artifacts.raw_units;
+  });
+
+  await captureScenario("06-new-session-redirect-stops-before-enter", async (record) => {
+    const wrongConversation = "https://chatgpt.com/c/aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee";
+    await browserPage.route("https://chatgpt.com/**", (route) => route.fulfill({
+      contentType: "text/html",
+      body: `<textarea autofocus></textarea><script>
+               history.replaceState(null, "", ${JSON.stringify(wrongConversation)});
+               window.sendCount = 0;
+               document.addEventListener("keydown", (event) => {
+                 if (event.key === "Enter") window.sendCount++;
+               });</script>`,
+    }));
+    await browserPage.goto("https://chatgpt.com/");
+    assert.equal(browserPage.url(), wrongConversation);
+    let intentCount = 0;
+    await assert.rejects(submitDispatchMessage(browserPage, { newSession: true }, () => { intentCount++; }),
+      /SESSION_TARGET_MISMATCH/);
+    assert.equal(intentCount, 0);
+    assert.equal(await browserPage.evaluate(() => window.sendCount), 0);
+    record.redirect_target = browserPage.url();
   });
 } catch (error) {
   results.push({ name: "browser-harness", result: "FAIL", test_error: errorDetails(error) });

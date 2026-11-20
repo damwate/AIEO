@@ -33,7 +33,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import engineering_audit_leg as eal  # noqa: E402
 import review_leg as rl  # noqa: E402
 from scheduler import M1Client, OrchestrationError  # noqa: E402
-from test_review_leg import M1TestServer, FakeProc, make_dispatch_double  # noqa: E402
+from test_review_leg import M1TestServer, FakeProc, make_dispatch_double, write_send_receipt  # noqa: E402
 
 REAL_SUBPROCESS_RUN = subprocess.run
 ADMIN_PW = "eal-test-admin-pw-2026-1117x"
@@ -608,10 +608,9 @@ class EngineeringAuditLegTests(unittest.TestCase):
                             msg_file = Path(str(cmd[i + 1]))
                     if msg_file and msg_file.is_file():
                         (ddir / "request.txt").write_bytes(msg_file.read_bytes())
-                    (ddir / "result.json").write_text(json.dumps({
-                        "user_unit_key": "fallback-turn-0:0:user",
-                        "conversation_url": "https://chatgpt.com/c/11111111-2222-4333-8444-555555555555",
-                    }), encoding="utf-8")
+                    write_send_receipt(kw, ddir.name, "SEND_CONFIRMED",
+                                       session_id="11111111-2222-4333-8444-555555555555",
+                                       user_unit_key="fallback-turn-0:0:user")
                     return FakeProc(3, b"", b"injected collection failure after send double-verify")
             return real_wrapper(cmd, **kw)
 

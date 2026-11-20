@@ -3,6 +3,7 @@
 // 用法：
 //   node gpt_dispatch.mjs --new-session --message-file <txt>   # 新建审查会话并发送首条消息
 //   node gpt_dispatch.mjs --message-file <txt>                 # 向已保存会话发送
+//   node gpt_dispatch.mjs --session-result <result.json> --message-file <txt> # 使用指定派单结果绑定会话
 //   node gpt_dispatch.mjs --message "<文本>"                   # 直接传文本
 //   可选绑定/校验：--task-id <T-P1-001> --execution-id <EXEC-001> --correlation-id <CORR-001> --schema <path>
 //
@@ -20,7 +21,8 @@
 
 import { chromium } from "playwright";
 import { spawn, execFile } from "node:child_process";
-import { existsSync, mkdirSync, writeFileSync, readFileSync, appendFileSync } from "node:fs";
+import { existsSync, mkdirSync, writeFileSync, readFileSync, appendFileSync, renameSync } from "node:fs";
+import { randomUUID } from "node:crypto";
 import { basename, dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { acquireSessionLock } from "../e2e-poc/session_lock.mjs";
@@ -32,7 +34,10 @@ import {
   validateInboundJsonArtifact,
 } from "./inbound_reply.mjs";
 import { registerArtifactWithRetry } from "./m1_artifact_registry.mjs";
-import { parseDispatchOptions, shouldUpdateReviewerPointer, sessionIdIsAttributable, extractSessionId, extractBriefMarker } from "./dispatch_options.mjs";
+import {
+  parseDispatchOptions, shouldUpdateReviewerPointer, sessionIdIsAttributable, extractSessionId,
+  extractBriefMarker, assertDispatchPage, submitDispatchMessage,
+} from "./dispatch_options.mjs";
 import { readReplySnapshot, readTailUnit } from "./inbound_dom.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
@@ -67,7 +72,7 @@ try {
   process.exit(error.exitCode ?? 2);
 }
 // tab 生命周期卫生状态（b-20261116-tab-cleanup，P1-03/P1-05）：
-// sendAttempted=已进入 sendAndCollect（此后失败=发送/生成现场，禁关页）；
+// sendAttempted=发送意图已落盘、即将按 Enter（此后失败需保留现场）；
 // ownedCreatedPages=本次运行自建页注册表（关闭唯一对象；不依赖 browser.close 做清理）。
 let sendAttempted = false;
 let ownedCreatedPages = [];
@@ -91,8 +96,25 @@ if (msgBytes > MAX_MSG_BYTES) {
 }
 
 const stamp = new Date().toISOString().replace(/[:.]/g, "-").slice(0, 19);
-const EV_DIR = join(LOG_DIR, `dispatch-${stamp}`);
-mkdirSync(EV_DIR, { recursive: true });
+mkdirSync(LOG_DIR, { recursive: true });
+let EV_DIR = join(LOG_DIR, `dispatch-${stamp}`);
+try {
+  mkdirSync(EV_DIR);
+} catch (error) {
+  if (error.code !== "EEXIST") throw error;
+  EV_DIR = `${EV_DIR}-${randomUUID()}`;
+  mkdirSync(EV_DIR);
+}
+const callerReceipt = process.env.AIEO_DISPATCH_SEND_RECEIPT;
+
+function recordSend(state, details = {}) {
+  const receipt = JSON.stringify({ state, dispatch_dir: basename(EV_DIR), ...details }, null, 2);
+  for (const path of [callerReceipt, join(EV_DIR, "send-state.json")].filter(Boolean)) {
+    const temp = `${path}.tmp`;
+    writeFileSync(temp, receipt, { encoding: "utf8", flush: true });
+    renameSync(temp, path);
+  }
+}
 
 function log(msg) {
   const line = `[${new Date().toISOString()}] ${msg}`;
@@ -191,7 +213,7 @@ async function stopIfContextLimit(page) {
 }
 
 // ---------- 发送并收集 ----------
-async function sendAndCollect(page, text, label, attachPath = null) {
+async function sendAndCollect(page, text, label, attachPath, target, confirmSend) {
   const findComposer = async () => {
     const loc = page.locator('[aria-label="询问 ChatGPT"], [aria-label="Ask ChatGPT"], #prompt-textarea').filter({ visible: true }).first();
     await loc.waitFor({ state: "visible", timeout: 10000 });
@@ -238,8 +260,10 @@ async function sendAndCollect(page, text, label, attachPath = null) {
   // P1-01（S4-R1 整改）：发送旗标紧贴实际发送动作（Enter）——入口处置位会把基线读取/
   // composer 检查/附件上传等发送前失败误判为"已发送"而跳过自建页清理。此前的失败
   // =发送前失败（无发送证据），catch 按 close_created_pages 分叉；Enter 后=UNCERTAIN 保留现场。
-  sendAttempted = true;
-  await page.keyboard.press("Enter");
+  await submitDispatchMessage(page, target, () => {
+    recordSend("SEND_ATTEMPTED", { target_session_id: extractSessionId(page.url()) });
+    sendAttempted = true;
+  });
 
   // 发送双验：记录本次新 user unit key，并在 tail 确认后观察停止按钮。
   let tailOk = false;
@@ -261,6 +285,7 @@ async function sendAndCollect(page, text, label, attachPath = null) {
   if (!(tailOk && stopOkAfterTail && sentUserUnitKey)) {
     throw new Error(`发送双验未通过（tailOk=${tailOk} stopOkAfterTail=${stopOkAfterTail} userUnitKey=${sentUserUnitKey || "missing"}），UNCERTAIN，不重发`);
   }
+  await confirmSend(sentUserUnitKey);
   log(`[${label}] 发送双验通过（polls=${polls}，user_unit_key=${sentUserUnitKey}，tail 后观察）`);
   await shot(page, `sent-${label}.png`);
 
@@ -315,11 +340,14 @@ async function sendAndCollect(page, text, label, attachPath = null) {
     assistant_uuid: secondSnapshot.assistant_uuid,
     checks,
     stability,
+    sentUserUnitKey,
   };
 }
 
 // ---------- 主流程 ----------
 async function main() {
+  log(`证据目录: ${EV_DIR}`);
+  recordSend("NOT_SENT");
   // R5：会话级跨进程独占锁（与 e2e_orchestrate 同一把锁，互斥自动化实例）
   const lock = acquireSessionLock({ holder: "gpt_dispatch" });
   log(`会话锁已获取 pid=${process.pid}`);
@@ -333,7 +361,7 @@ async function main() {
 
 async function mainLocked() {
   log(`=== GPT 派单（${newSession ? "新建会话" : "已有会话"}，消息 ${msgBytes} 字节）===`);
-  writeFileSync(join(EV_DIR, "request.txt"), message, "utf8");
+  writeFileSync(join(EV_DIR, "request.txt"), dispatchOptions.requestText, "utf8");
 
   await startChromeWithDebugPort();
   const tabAuditBefore = await cdpTargetList();
@@ -357,9 +385,13 @@ async function mainLocked() {
     }
     log("新聊天页面就绪");
   } else {
-    const sessionFile = existsSync(REVIEWER_SESSION) ? REVIEWER_SESSION : SESSION_JSON;
-    const { conversation_url: targetUrl } = JSON.parse(readFileSync(sessionFile, "utf8"));
+    const sessionFile = dispatchOptions.sessionResult ?? (existsSync(REVIEWER_SESSION) ? REVIEWER_SESSION : SESSION_JSON);
+    const { conversation_url: targetUrl, session_id: recordedSessionId } = JSON.parse(readFileSync(sessionFile, "utf8"));
     targetSessionId = extractSessionId(targetUrl);
+    if (!targetSessionId || ((dispatchOptions.sessionResult || recordedSessionId !== undefined)
+        && recordedSessionId !== targetSessionId)) {
+      throw new Error("SESSION_TARGET_INVALID: 会话 URL 与归档身份无效，发送前停止");
+    }
     const t0 = Date.now();
     await page.goto(targetUrl, { waitUntil: "domcontentloaded", timeout: 60000 });
     while (Date.now() - t0 < READY_TIMEOUT_MS) {
@@ -374,9 +406,31 @@ async function mainLocked() {
     log(`会话就绪: ${targetUrl}`);
   }
 
+  const target = { newSession, targetSessionId };
+  await assertDispatchPage(page, target);
   await stopIfContextLimit(page);
 
-  const { snapshot, assistant_uuid, checks, stability } = await sendAndCollect(page, message, "dispatch", attachPath);
+  let confirmedSessionId = null;
+  const confirmSend = async (userUnitKey) => {
+    const isAttributable = (url) => sessionIdIsAttributable({
+      newSession, sessionId: extractSessionId(url), targetSessionId, preexistingSessionIds,
+    });
+    confirmedSessionId = isAttributable(page.url()) ? extractSessionId(page.url()) : null;
+    recordSend("SEND_CONFIRMED", {
+      session_id: confirmedSessionId,
+      user_unit_key: userUnitKey,
+    });
+    if (newSession && !confirmedSessionId) {
+      await page.waitForURL(isAttributable, { timeout: 5000 }).catch(() => {});
+      if (isAttributable(page.url())) {
+        confirmedSessionId = extractSessionId(page.url());
+        recordSend("SEND_CONFIRMED", { session_id: confirmedSessionId, user_unit_key: userUnitKey });
+      }
+    }
+  };
+  const { snapshot, assistant_uuid, checks, stability, sentUserUnitKey } = await sendAndCollect(
+    page, message, "dispatch", attachPath, target, confirmSend,
+  );
 
   // 保存当前真实会话 URL（local-chatgpt 草稿态跳过；上限已在发送前安全停止）
   let conversationUrl = null;
@@ -389,7 +443,7 @@ async function mainLocked() {
       conversationUrl = `https://chatgpt.com/c/${sessionId}`;
       // DEC-094 规划复审归属校验：确认捕获页确属本次会话（新会话≠既有 UUID；既有会话须=目标 UUID）。
       // 校验失败 fail-closed：不写 reviewer 指针、不写成功结果（下方抛错）。
-      const attributable = sessionIdIsAttributable({
+      const attributable = (!confirmedSessionId || sessionId === confirmedSessionId) && sessionIdIsAttributable({
         newSession, sessionId, targetSessionId, preexistingSessionIds,
       });
       pointerAttribution = attributable ? "PASS" : "FAIL";
@@ -397,10 +451,11 @@ async function mainLocked() {
         log(`[归属校验] FAIL — 捕获会话 ${sessionId} 不属本次派单（target=${targetSessionId}, 既有=${JSON.stringify(preexistingSessionIds)}）；fail-closed 拒写指针`);
         break;
       }
+      recordSend("SEND_CONFIRMED", { session_id: sessionId, user_unit_key: sentUserUnitKey });
       if (!shouldUpdateReviewerPointer(dispatchOptions)) {
         // DEC-094 #4：任务腿/一次性派单显式要求不覆盖 reviewer 指针（实战两次误覆盖
         // 致简报错发实战会话）。仍解析本会话 URL 供 result.json 绑定，仅跳过指针写盘。
-        log(`会话 URL 已取得且归属校验 PASS，但按 --no-update-pointer 跳过 reviewer 指针写盘: ${conversationUrl}`);
+        log(`会话 URL 已取得且归属校验 PASS，跳过 reviewer 指针写盘: ${conversationUrl}`);
       } else {
         const session = { conversation_url: conversationUrl, captured_at: new Date().toISOString(), role: "reviewer" };
         writeFileSync(REVIEWER_SESSION, JSON.stringify(session, null, 2), "utf8");
@@ -464,6 +519,8 @@ async function mainLocked() {
     message_bytes: msgBytes,
     reply: snapshot.reply,
     user_unit_key: snapshot.user_unit_key,
+    start_key_resolved: snapshot.start_key_resolved,
+    start_resolved_by_marker: snapshot.start_resolved_by_marker,
     next_user_unit_key: snapshot.next_user_unit_key,
     unit_keys: snapshot.unit_keys,
     unit_count: snapshot.unit_count,

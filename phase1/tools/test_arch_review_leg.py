@@ -30,7 +30,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent))
 import arch_review_leg as ar  # noqa: E402
 import review_leg as rl  # noqa: E402
 from scheduler import M1Client, OrchestrationError  # noqa: E402
-from test_review_leg import M1TestServer, FakeProc, make_dispatch_double  # noqa: E402
+from test_review_leg import M1TestServer, FakeProc, make_dispatch_double, write_send_receipt  # noqa: E402
 
 REAL_SUBPROCESS_RUN = subprocess.run
 ADMIN_PW = "rvl-test-admin-pw-2026-1116x"
@@ -402,9 +402,12 @@ class ArchReviewLegTests(unittest.TestCase):
     def test_10b_send_failure_twice_blocked(self):
         leg, task_id, ctx = self.make_leg("a7b", reply=self.reply_for("PASS"), fail_first=True)
         # 两次都失败：替身永远失败
-        always_fail = lambda cmd, **kw: (FakeProc(3, b"", b"injected send failure (test double)")
-                                         if "gpt_dispatch.mjs" in " ".join(map(str, cmd))
-                                         else REAL_SUBPROCESS_RUN(cmd, **kw))
+        def always_fail(cmd, **kw):
+            if "gpt_dispatch.mjs" in " ".join(map(str, cmd)):
+                write_send_receipt(kw, "dispatch-before-send", "NOT_SENT")
+                return FakeProc(3, b"", b"injected send failure (test double)")
+            return REAL_SUBPROCESS_RUN(cmd, **kw)
+
         ctx = (always_fail, {"n": 0})
         with self.dispatch_double(always_fail):
             rc = leg.run()
@@ -437,10 +440,9 @@ class ArchReviewLegTests(unittest.TestCase):
                             msg_file = Path(str(cmd[i + 1]))
                     if msg_file and msg_file.is_file():
                         (ddir / "request.txt").write_bytes(msg_file.read_bytes())
-                    (ddir / "result.json").write_text(json.dumps({
-                        "user_unit_key": "fallback-turn-1:0:user",
-                        "conversation_url": "https://chatgpt.com/c/11111111-2222-4333-8444-555555555555",
-                    }), encoding="utf-8")
+                    write_send_receipt(kw, ddir.name, "SEND_CONFIRMED",
+                                       session_id="11111111-2222-4333-8444-555555555555",
+                                       user_unit_key="fallback-turn-1:0:user")
                     return FakeProc(3, b"", b"injected collection failure after send double-verify")
             return real_wrapper(cmd, **kw)
 

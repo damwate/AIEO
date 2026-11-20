@@ -33,7 +33,7 @@ function optionalArg(argv, flag) {
  * 显式 --no-update-pointer 时跳过。中心化以便纯函数回归。
  */
 export function shouldUpdateReviewerPointer(options) {
-  return options?.noUpdatePointer !== true;
+  return options?.noUpdatePointer !== true && !options?.sessionResult;
 }
 
 /**
@@ -42,18 +42,48 @@ export function shouldUpdateReviewerPointer(options) {
  * 复用/误捕获了既有页（wrong-session 事故形态），必须拒写 reviewer 指针。
  * 既有会话派单：捕获到的 sessionId 必须等于目标会话 UUID，否则为错页。
  */
+const SESSION_ID = /^[0-9a-f]{8}-(?:[0-9a-f]{4}-){3}[0-9a-f]{12}$/i;
+
 export function sessionIdIsAttributable({ newSession, sessionId, targetSessionId, preexistingSessionIds = [] }) {
-  if (!sessionId || !/^[0-9a-f-]{36}$/i.test(sessionId)) return false;
+  if (typeof sessionId !== "string" || !SESSION_ID.test(sessionId)) return false;
   const pre = new Set(preexistingSessionIds.filter(Boolean).map((x) => String(x).toLowerCase()));
   if (newSession) {
     return !pre.has(sessionId.toLowerCase());
   }
-  return !targetSessionId || targetSessionId.toLowerCase() === sessionId.toLowerCase();
+  return typeof targetSessionId === "string" && targetSessionId.toLowerCase() === sessionId.toLowerCase();
 }
 
-export function extractSessionId(url) {
-  const m = String(url || "").match(/chatgpt\.com\/(?:.*\/)?c\/([0-9a-f-]{36})/i);
-  return m ? m[1] : null;
+function chatGptUrl(value) {
+  try {
+    const url = new URL(value);
+    return url.origin === "https://chatgpt.com" && !url.username && !url.password ? url : null;
+  } catch {
+    return null;
+  }
+}
+
+export function extractSessionId(value) {
+  const id = chatGptUrl(value)?.pathname.match(/^\/(?:g\/[^/]+\/)?c\/([^/]+)\/?$/)?.[1];
+  return id && SESSION_ID.test(id) ? id.toLowerCase() : null;
+}
+
+export function assertDispatchTarget({ url, newSession, targetSessionId, hasMessages }) {
+  const page = chatGptUrl(url);
+  const allowed = newSession
+    ? page?.pathname === "/" && hasMessages === false
+    : sessionIdIsAttributable({ newSession, sessionId: extractSessionId(url), targetSessionId });
+  if (!allowed) throw new Error("SESSION_TARGET_MISMATCH: 页面与派单目标不符，发送前停止");
+}
+
+export async function assertDispatchPage(page, { newSession, targetSessionId }) {
+  const hasMessages = newSession ? (await page.locator("[data-content-search-unit-key]").count()) > 0 : undefined;
+  assertDispatchTarget({ url: page.url(), newSession, targetSessionId, hasMessages });
+}
+
+export async function submitDispatchMessage(page, target, beforeEnter) {
+  await assertDispatchPage(page, target);
+  beforeEnter();
+  await page.keyboard.press("Enter");
 }
 
 /**
@@ -69,6 +99,10 @@ export function extractBriefMarker(text) {
 export function parseDispatchOptions(argv, { readMessageFile = (path) => readFileSync(path, "utf8") } = {}) {
   if (!Array.isArray(argv)) throw new TypeError("argv 必须是数组");
   const newSession = argv.includes("--new-session");
+  const sessionResult = optionalArg(argv, "--session-result");
+  if (newSession && sessionResult !== null) {
+    throw optionError("DISPATCH_SESSION_AMBIGUOUS", "--new-session 与 --session-result 只能提供一项");
+  }
   const registerM1Flag = argv.includes("--register-m1");
   // DEC-094 #4：任务腿/一次性 --new-session 派单不得覆盖 reviewer 指针（实战两次
   // 误覆盖→简报错发实战会话）。默认仍更新（保持审查会话迁移既有语义）；显式
@@ -79,7 +113,8 @@ export function parseDispatchOptions(argv, { readMessageFile = (path) => readFil
   if (messageValue !== null && messageFile !== null) {
     throw optionError("DISPATCH_MESSAGE_AMBIGUOUS", "--message 与 --message-file 只能提供一项");
   }
-  const message = messageFile !== null ? readMessageFile(messageFile).trim() : messageValue;
+  const requestText = messageFile !== null ? readMessageFile(messageFile) : messageValue;
+  const message = messageFile !== null ? requestText.trim() : requestText;
   if (!message) {
     throw optionError(
       "DISPATCH_MESSAGE_REQUIRED",
@@ -114,7 +149,9 @@ export function parseDispatchOptions(argv, { readMessageFile = (path) => readFil
 
   return {
     message,
+    requestText,
     newSession,
+    sessionResult,
     noUpdatePointer,
     ids,
     schemaPath,
