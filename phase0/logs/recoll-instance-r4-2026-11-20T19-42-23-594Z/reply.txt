@@ -1,0 +1,77 @@
+ChatGPT 说：
+
+[TAG|INSTANCE-R4|阶段1定点终验]
+
+审查基线锁定：damwate/AIEO，分支 fix/parallel-dispatch-instance，完整 SHA 7d058915f77430db338fe4135b22a461bbdbef22。
+
+本轮只核验 R3 遗留的两点：validatePortRegistry 普通对象原型约束及其负例；delivery.md 与 steps.md 的验收证据同步。不重跑四腿审查，也不据此授权阶段2。
+
+逐项裁定
+
+核验点
+
+	
+
+结果
+
+	
+
+依据
+
+
+
+
+普通对象原型约束
+
+	
+
+PASS
+
+	
+
+phase0/tools/dispatch_options.mjs 第234–244行：先排除 null、undefined、非对象、数组，再取原型；仅接受 Object.prototype 或 null 原型。
+
+
+
+
+新增结构负例
+
+	
+
+PASS
+
+	
+
+test_instance_config.mjs 第167–174行：Map、Date、类实例拒绝；Object.create(null) 合法。
+
+
+
+
+delivery.md 证据同步
+
+	
+
+PASS
+
+	
+
+明确记录 24/24、11/11、四腿 122 项及 R3 整改测试。
+
+
+
+
+steps.md 证据同步
+
+	
+
+FAIL
+
+	
+
+§S7 第67行仍记载 instance-config 23/23，没有更新为本轮 24/24；§S2 第21行也仍保留 23/23。
+
+最终裁定：阶段1最终 PASS 暂不签署。
+
+本轮代码整改本身通过；唯一遗留是 steps.md 与 delivery.md 的测试数字不一致。请只修正 steps.md 中过时的 23/23 记录为 24/24，并在新 SHA 上复核文档一致性。
+
+这不是要求重跑四腿，也不要求改代码。收口后即可签署阶段1最终 PASS。阶段2仍须另行授权。

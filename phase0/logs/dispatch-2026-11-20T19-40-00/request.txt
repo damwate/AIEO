@@ -1,0 +1,5 @@
+[INSTANCE-R4|阶段1定点终验]
+分支 fix/parallel-dispatch-instance 新完整SHA=7d058915f77430db338fe4135b22a461bbdbef22。你R3唯一遗留已整改：
+①P1-2 非普通对象=validatePortRegistry 加普通对象原型约束（Object.prototype 或 null 原型才放行），Map/Date/类实例一律 INSTANCE_REGISTRY_INVALID；并修 getPrototypeOf(null) 自身抛 TypeError 的守卫顺序（先判空再取原型）。负例+4：Map/Date/类实例拒绝+null 原型合法对象通过（test_instance_config 现 24 项）。
+②delivery.md 证据数字已同步（24/24+122 项+R3 裁定记录），steps.md 上轮已同步。
+回归：instance-config 24/24+phase0 11/11 全 OK；四腿 122 项上轮已验未动代码路径（本轮仅 dispatch_options.mjs 校验函数与测试）。请只验这两点给 PASS/FAIL；PASS 即阶段1最终 PASS（阶段2授权随后另提）。
