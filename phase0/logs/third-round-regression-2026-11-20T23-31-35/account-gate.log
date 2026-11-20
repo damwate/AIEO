@@ -1,0 +1,13 @@
+$ C:\Program Files\nodejs\node.exe D:\AIEO\phase0\tools\test_account_gate.mjs
+[2026-11-20T23:31:38.650Z] START
+PASS 约束B：缺失=null → NORMAL 初始化路径（明确字段）
+PASS 约束B：损坏 JSON/数组/Map/Date/坏结构 → ACCOUNT_STATE_INVALID
+PASS 约束C：BACKOFF 过期 → 归一化 NORMAL（expired-normalized）
+PASS BACKOFF 未过期 → 原样保留
+PASS 启动门：NORMAL 放行；BACKOFF 阻断（含 until/reason）
+PASS 约束A+③：退避写入钳位 [9,60]
+PASS 约束A：活动 BACKOFF 只能延长或维持（不得被更短退避覆盖）
+PASS 文件 IO：缺失=NORMAL 初始化；损坏=fail-closed；原子写回读
+SUMMARY total=8 passed=8 failed=0
+
+[2026-11-20T23:31:38.729Z] EXIT code=0 signal=null timed_out=false

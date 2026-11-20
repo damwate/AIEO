@@ -39,6 +39,8 @@ import {
   extractBriefMarker, assertDispatchPage, submitDispatchMessage,
   deriveInstancePaths, allocateInstancePort, assertPointerWriterAllowed, buildKillProfileScript,
   decidePortReuse, validatePortRegistry,
+  accountStatePath, readAccountStateFile, writeAccountStateFileAtomic,
+  evaluateAccountGate, applyAccountBackoff,
 } from "./dispatch_options.mjs";
 import { readReplySnapshot, readTailUnit } from "./inbound_dom.mjs";
 
@@ -178,8 +180,10 @@ async function startChromeWithDebugPort() {
       throw new Error(`INSTANCE_PORT_${decision === "FOREIGN_STOP" ? "FOREIGN" : "OWNERSHIP_UNVERIFIED"}: 端口 ${DEBUG_PORT} 归属核验未通过（decision=${decision}, ownProcs=${ownProcs ?? "null"}），fail-closed 不复用`);
     }
     log(`复用本实例调试端口 ${DEBUG_PORT}（归属核验 own=${ownProcs}）`);
+    accountGateCheck("pre-reuse"); // C9 约束D：浏览器操作前复查
     return;
   }
+  accountGateCheck("pre-spawn"); // C9 约束D：浏览器操作前复查
   await killProfileChrome();
   await new Promise((r) => setTimeout(r, 1500));
   const child = spawn(CHROME, [
@@ -463,6 +467,59 @@ async function resolveInstancePort() {
   }
 }
 
+// ---------- C9 账号级风控协调（DEC-128：独立于实例锁的账号级统一退避） ----------
+// 启动门：BLOCKED 即 fail-closed 退出（零浏览器操作）。约束D：本检查点在 mainLocked
+// 最前与浏览器 spawn 前各执行一次；"已过检查未始操作"的残余竞态窗口如实登记于
+// 方案文档（parallel_stage2_apply_r1.md §一.4），由观察点写回+下轮启动门兜底。
+function accountGateCheck(checkpoint) {
+  const path = accountStatePath(AIEO_ROOT);
+  const state = readAccountStateFile(path, Date.now());
+  const gate = evaluateAccountGate(state);
+  if (!gate.allowed) {
+    throw new Error(`ACCOUNT_BACKOFF_ACTIVE: 账号级退避生效至 ${gate.until}（reason=${gate.reason}，checkpoint=${checkpoint}），所有实例暂停派单（C9）`);
+  }
+  if (state.reason === "expired-normalized") {
+    // 约束C：过期归一化写回（临界区=状态文件 lockfile），防止残留歧义
+    const lock = acquireSessionLock({ holder: `account-gate:${INSTANCE.instanceId}`, lockPath: `${path}.lockfile` });
+    try {
+      writeAccountStateFileAtomic(path, state);
+    } finally {
+      lock.release();
+    }
+  }
+  return state;
+}
+// 429 被动观察点（约束E：只识别实际返回的信号，不制造限流）：命中即写全实例退避并 fail-closed。
+async function observeAccountRisk(page, checkpoint) {
+  const body = (await page.evaluate(() => (document.body?.innerText || "").slice(0, 4000)).catch(() => "")) || "";
+  if (!/too many requests|\b429\b/i.test(body)) return;
+  const path = accountStatePath(AIEO_ROOT);
+  const minutes = Number(process.env.AIEO_ACCOUNT_BACKOFF_MINUTES || 9);
+  const lock = acquireSessionLock({ holder: `account-risk-write:${INSTANCE.instanceId}`, lockPath: `${path}.lockfile` });
+  try {
+    const cur = readAccountStateFile(path, Date.now());
+    const next = applyAccountBackoff(cur, Date.now(), minutes, "429-observed", INSTANCE.instanceId);
+    writeAccountStateFileAtomic(path, next);
+  } finally {
+    lock.release();
+  }
+  throw new Error(`ACCOUNT_BACKOFF_TRIGGERED: 观察到 429/账号级限制（checkpoint=${checkpoint}），已写入全实例退避 ${minutes}min（C9）`);
+}
+// 手动/运维触发缝（DEC-128 ③"手动设置可延长"）：设置环境变量即写退避（仅测试与运维使用）。
+function maybeApplyManualBackoff() {
+  const minutes = process.env.AIEO_ACCOUNT_BACKOFF_TRIGGER_MINUTES;
+  if (!minutes) return;
+  const path = accountStatePath(AIEO_ROOT);
+  const lock = acquireSessionLock({ holder: `account-risk-manual:${INSTANCE.instanceId}`, lockPath: `${path}.lockfile` });
+  try {
+    const cur = readAccountStateFile(path, Date.now());
+    writeAccountStateFileAtomic(path, applyAccountBackoff(cur, Date.now(), Number(minutes), "manual", INSTANCE.instanceId));
+    log(`[account] 手动退避已写入: ${minutes}min`);
+  } finally {
+    lock.release();
+  }
+}
+
 // ---------- 主流程 ----------
 async function main() {
   log(`证据目录: ${EV_DIR}`);
@@ -481,6 +538,9 @@ async function main() {
 async function mainLocked() {
   log(`=== GPT 派单（${newSession ? "新建会话" : "已有会话"}，消息 ${msgBytes} 字节）===`);
   writeFileSync(join(EV_DIR, "request.txt"), dispatchOptions.requestText, "utf8");
+  // C9 启动门（检查点1：零浏览器操作前）+ 手动退避触发缝
+  accountGateCheck("startup");
+  maybeApplyManualBackoff();
   // 共享 reviewer 指针单写者守卫（DEC-123）：非 default 实例必须绑定会话或显式不写指针。
   assertPointerWriterAllowed({ instanceId: INSTANCE.instanceId, options: dispatchOptions });
 
@@ -500,6 +560,7 @@ async function mainLocked() {
   if (newSession) {
     // 新聊天落地页：无消息 unit，就绪 = composer + bodyLen>300（手册 NEW_CONV 口径）
     await page.goto(CHATGPT_HOME, { waitUntil: "domcontentloaded", timeout: 60000 });
+    await observeAccountRisk(page, "goto-new-session");
     const t0 = Date.now();
     while (Date.now() - t0 < READY_TIMEOUT_MS) {
       const ok = await page.evaluate(() => {
@@ -520,6 +581,7 @@ async function mainLocked() {
     }
     const t0 = Date.now();
     await page.goto(targetUrl, { waitUntil: "domcontentloaded", timeout: 60000 });
+    await observeAccountRisk(page, "goto-existing-session");
     while (Date.now() - t0 < READY_TIMEOUT_MS) {
       const probe = await page.evaluate(() => {
         const units = document.querySelectorAll("[data-content-search-unit-key]").length;

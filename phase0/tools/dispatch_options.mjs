@@ -1,8 +1,8 @@
 // GPT 派单参数与 M1 登记绑定的纯函数解析。
 // 三 ID 要么全部缺省（通用非登记派单），要么与 --schema 同时完整提供。
 
-import { readFileSync } from "node:fs";
-import { join } from "node:path";
+import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
+import { dirname, join } from "node:path";
 
 export const DISPATCH_ID_RULES = Object.freeze({
   task_id: /^T-(P[0-9]+-)?[0-9]{3,}$/,
@@ -262,6 +262,115 @@ export function validatePortRegistry(ports, { candidates, defaultPort }) {
     seen.set(port, id);
   }
   return true;
+}
+
+// ── C9 账号级风控协调（DEC-128 ①五约束：退避不缩短/缺失与损坏分治/过期归一化/
+//    浏览器边界复查/观察被动）——独立于实例锁的账号级统一退避状态 ──
+
+export const ACCOUNT_BACKOFF_MIN_MINUTES = 9;   // 手册风暴通道口径（DEC-128 ③下限）
+export const ACCOUNT_BACKOFF_MAX_MINUTES = 60;  // DEC-128 ③上限
+
+export function accountStatePath(aieoRoot) {
+  return join(aieoRoot, "runtime", "locks", "account-risk-state.json");
+}
+
+/**
+ * 状态归一化（纯函数）。
+ * 约束B：缺失（null/undefined）=明确的 NORMAL 初始化路径；损坏（结构/类型/字段无效）
+ * =ACCOUNT_STATE_INVALID fail-closed，禁静默当作 NORMAL。
+ * 约束C：BACKOFF 已过期（nowMs≥until）→归一化为 NORMAL（reason=expired-normalized），
+ * 调用方（可写侧）须原子写回；只读侧在内存中使用归一化结果即可。
+ */
+export function normalizeAccountState(raw, nowMs) {
+  if (raw === null || raw === undefined) {
+    return {
+      version: 1, state: "NORMAL", backoff_until: null, reason: null,
+      observed_by: null, observed_at: null, initialized_at: new Date(nowMs).toISOString(),
+    };
+  }
+  if (typeof raw !== "object" || Array.isArray(raw)) {
+    throw optionError("ACCOUNT_STATE_INVALID", `账号风控状态必须为普通对象映射（禁数组/标量）: ${Array.isArray(raw) ? "array" : typeof raw}`);
+  }
+  const proto = Object.getPrototypeOf(raw);
+  if (proto !== Object.prototype && proto !== null) {
+    throw optionError("ACCOUNT_STATE_INVALID", `账号风控状态须为普通对象（禁 Map/Date/类实例）: ${proto?.constructor?.name ?? "unknown"}`);
+  }
+  if (raw.version !== 1 || (raw.state !== "NORMAL" && raw.state !== "BACKOFF")) {
+    throw optionError("ACCOUNT_STATE_INVALID", `账号风控状态结构无效: version=${JSON.stringify(raw.version)} state=${JSON.stringify(raw.state)}`);
+  }
+  if (raw.state === "BACKOFF") {
+    if (typeof raw.backoff_until !== "string" || Number.isNaN(Date.parse(raw.backoff_until))) {
+      throw optionError("ACCOUNT_STATE_INVALID", "BACKOFF 状态缺 backoff_until 或不可解析");
+    }
+    if (Date.parse(raw.backoff_until) <= nowMs) {
+      // 约束C：过期收敛——返回归一化 NORMAL，由可写调用方原子写回
+      return {
+        version: 1, state: "NORMAL", backoff_until: null, reason: "expired-normalized",
+        observed_by: raw.observed_by ?? null, observed_at: raw.observed_at ?? null,
+        normalized_at: new Date(nowMs).toISOString(),
+      };
+    }
+  }
+  return raw;
+}
+
+/** 启动门判定（纯函数）：NORMAL→allowed；活动 BACKOFF→blocked（含 until/reason）。 */
+export function evaluateAccountGate(state) {
+  if (state?.state === "BACKOFF") {
+    return { allowed: false, until: state.backoff_until, reason: state.reason ?? "backoff" };
+  }
+  return { allowed: true };
+}
+
+/**
+ * 退避写入（纯函数）。
+ * 约束A：已有活动 BACKOFF 时只能延长或维持——新 until=max(旧 until, now+minutes)，
+ * 不得被更短的退避覆盖（DEC-128 ①A）。
+ * 约束③口径：minutes 钳位 [9,60]；低于下限拉到 9，高于上限拉到 60。
+ */
+export function applyAccountBackoff(state, nowMs, minutes, reason = "429-observed", observer = "unknown") {
+  if (typeof state !== "object" || state === null || state.state === undefined) {
+    throw optionError("ACCOUNT_STATE_INVALID", "applyAccountBackoff 需要 normalizeAccountState 产出的状态");
+  }
+  const clamped = Math.min(ACCOUNT_BACKOFF_MAX_MINUTES, Math.max(ACCOUNT_BACKOFF_MIN_MINUTES, Math.round(Number(minutes))));
+  if (!Number.isFinite(clamped)) throw optionError("ACCOUNT_STATE_INVALID", "退避时长不可解析");
+  const proposedUntil = new Date(nowMs + clamped * 60000).toISOString();
+  const existingUntil = state.state === "BACKOFF" && typeof state.backoff_until === "string"
+    && !Number.isNaN(Date.parse(state.backoff_until)) ? state.backoff_until : null;
+  const until = existingUntil && Date.parse(existingUntil) > Date.parse(proposedUntil) ? existingUntil : proposedUntil;
+  return {
+    version: 1, state: "BACKOFF", backoff_until: until,
+    reason: existingUntil && until === existingUntil ? (state.reason ?? reason) : reason,
+    observed_by: observer, observed_at: new Date(nowMs).toISOString(),
+  };
+}
+
+/** 状态读取（文件级）：缺失=NORMAL 初始化；损坏/异型=fail-closed（约束B）。 */
+export function readAccountStateFile(path, nowMs) {
+  if (!existsSync(path)) return normalizeAccountState(null, nowMs);
+  let raw;
+  try {
+    raw = JSON.parse(readFileSync(path, "utf8"));
+  } catch (error) {
+    throw optionError("ACCOUNT_STATE_INVALID", `账号风控状态读取/解析失败，禁静默当作 NORMAL: ${error.message}`);
+  }
+  return normalizeAccountState(raw, nowMs);
+}
+
+/** 状态原子写入（M1/端口注册表同模式：临时文件+回读+rename）。 */
+export function writeAccountStateFileAtomic(path, state) {
+  mkdirSync(dirname(path), { recursive: true });
+  const temp = `${path}.${process.pid}.${Date.now()}.tmp`;
+  try {
+    writeFileSync(temp, `${JSON.stringify(state, null, 2)}\n`, "utf8");
+    const readback = JSON.parse(readFileSync(temp, "utf8"));
+    if (JSON.stringify(readback) !== JSON.stringify(state)) throw new Error("state readback mismatch");
+    renameSync(temp, path);
+  } catch (error) {
+    try { renameSync(temp, `${temp}.orphan`); } catch {}
+    if (error.code === "ACCOUNT_STATE_INVALID") throw error;
+    throw optionError("ACCOUNT_STATE_WRITE_FAILED", `账号风控状态原子写入失败: ${error.message}`);
+  }
 }
 
 export function parseDispatchOptions(argv, { readMessageFile = (path) => readFileSync(path, "utf8") } = {}) {

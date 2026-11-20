@@ -5,8 +5,8 @@
 // 派生参数（L-018 第 3/4 条三参数+归属校验五件套）：
 //   CONV_UUID=33333333-4444-4555-8666-777777777777            （原会话 ID；来自账本 R3_SEND_CONFIRMED）
 //   SENT_USER_UNIT_KEY=fallback-turn-0:0:user（发送双验报告键；定位以标记文本为准，键仅参考）
-//   FAILED_DIR=C:/Users/youting/AppData/Local/Temp/rvl-test-zwrfl1f4/dispatch-logs/dispatch-runner-3          （发送失败现场 dispatch 目录；request.txt 证据源）
-//   OUT_DIR=C:/Users/youting/AppData/Local/Temp/rvl-test-zwrfl1f4/runtime/rvl-997019                （补采产物落盘目录=审查腿 run 目录）
+//   FAILED_DIR=C:/Users/youting/AppData/Local/Temp/rvl-test-b6z5zi_2/dispatch-logs/dispatch-runner-3          （发送失败现场 dispatch 目录；request.txt 证据源）
+//   OUT_DIR=C:/Users/youting/AppData/Local/Temp/rvl-test-b6z5zi_2/runtime/rvl-997019                （补采产物落盘目录=审查腿 run 目录）
 //   MARKER_TEXT=[GPT03-R1|997019|T-P1-028]        （简报标记文本；归属校验唯一锚点）
 //   INSTANCE_ID=default        （实例域：锁路径/端口与派单侧同源——DEC-123①边界3：派单与 recoll 同实例 ID 同锁路径）
 //   PREV_REPLY_SHA256=（前轮 reply SHA 前缀排除；not_prev_reply_sha）
@@ -20,7 +20,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
 import { acquireSessionLock } from "../e2e-poc/session_lock.mjs";
-import { deriveInstancePaths } from "./dispatch_options.mjs";
+import { deriveInstancePaths, normalizeAccountState, evaluateAccountGate } from "./dispatch_options.mjs";
 import { describePages } from "./tab_hygiene.mjs";
 import { readDomUnits, readReplySnapshot } from "./inbound_dom.mjs";
 import {
@@ -49,8 +49,8 @@ const CONV_UUID = "33333333-4444-4555-8666-777777777777";
 const MARKER = "[GPT03-R1|997019|T-P1-028]";
 const PREV_REPLY_SHA256 = ""; // 空串=无前轮可比（首轮），not_prev_reply_sha 恒真
 const SENT_KEY_REPORTED = "fallback-turn-0:0:user";
-const FAILED_DIR = "C:/Users/youting/AppData/Local/Temp/rvl-test-zwrfl1f4/dispatch-logs/dispatch-runner-3"; // 派生为绝对路径（驱动在 phase0/tools cwd 下运行）
-const OUT_DIR = "C:/Users/youting/AppData/Local/Temp/rvl-test-zwrfl1f4/runtime/rvl-997019";       // 派生为绝对路径（审查腿 run 目录）
+const FAILED_DIR = "C:/Users/youting/AppData/Local/Temp/rvl-test-b6z5zi_2/dispatch-logs/dispatch-runner-3"; // 派生为绝对路径（驱动在 phase0/tools cwd 下运行）
+const OUT_DIR = "C:/Users/youting/AppData/Local/Temp/rvl-test-b6z5zi_2/runtime/rvl-997019";       // 派生为绝对路径（审查腿 run 目录）
 const IDLE_WAIT_MS = Number(process.env.AIEO_RECOLL_IDLE_WAIT_MS || 30000);
 
 function log(msg) {
@@ -118,6 +118,15 @@ async function snapshotPair(page, targetKey) {
 }
 
 mkdirSync(OUT_DIR, { recursive: true });
+// C9 账号级风控启动门（DEC-128）：只读判定——缺失=NORMAL 初始化；损坏=fail-closed；
+// 活动 BACKOFF=补采同样暂停（退避期不密集刷页，账号级不分实例）。
+const ACCOUNT_STATE_PATH = join(__dirname, "..", "..", "runtime", "locks", "account-risk-state.json");
+const acctRaw = existsSync(ACCOUNT_STATE_PATH) ? JSON.parse(readFileSync(ACCOUNT_STATE_PATH, "utf8")) : null;
+const acctState = normalizeAccountState(acctRaw, Date.now());
+const acctGate = evaluateAccountGate(acctState);
+if (!acctGate.allowed) {
+  throw new Error(`ACCOUNT_BACKOFF_ACTIVE: 账号级退避生效至 ${acctGate.until}（reason=${acctGate.reason}），补采暂停（C9）`);
+}
 const lock = acquireSessionLock({ holder: "review_leg_recoll", lockPath: INSTANCE.lockPath });
 log(`补采实例域: instance=${INSTANCE.instanceId} lock=${INSTANCE.lockPath} cdp=${CDP_URL}`);
 log("会话锁已获取（review-leg 补采；仅采集不发送）");

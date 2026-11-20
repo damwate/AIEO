@@ -20,7 +20,7 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { createHash } from "node:crypto";
 import { acquireSessionLock } from "../e2e-poc/session_lock.mjs";
-import { deriveInstancePaths } from "./dispatch_options.mjs";
+import { deriveInstancePaths, normalizeAccountState, evaluateAccountGate } from "./dispatch_options.mjs";
 import { describePages } from "./tab_hygiene.mjs";
 import { readDomUnits, readReplySnapshot } from "./inbound_dom.mjs";
 import {
@@ -118,6 +118,15 @@ async function snapshotPair(page, targetKey) {
 }
 
 mkdirSync(OUT_DIR, { recursive: true });
+// C9 账号级风控启动门（DEC-128）：只读判定——缺失=NORMAL 初始化；损坏=fail-closed；
+// 活动 BACKOFF=补采同样暂停（退避期不密集刷页，账号级不分实例）。
+const ACCOUNT_STATE_PATH = join(__dirname, "..", "..", "runtime", "locks", "account-risk-state.json");
+const acctRaw = existsSync(ACCOUNT_STATE_PATH) ? JSON.parse(readFileSync(ACCOUNT_STATE_PATH, "utf8")) : null;
+const acctState = normalizeAccountState(acctRaw, Date.now());
+const acctGate = evaluateAccountGate(acctState);
+if (!acctGate.allowed) {
+  throw new Error(`ACCOUNT_BACKOFF_ACTIVE: 账号级退避生效至 ${acctGate.until}（reason=${acctGate.reason}），补采暂停（C9）`);
+}
 const lock = acquireSessionLock({ holder: "review_leg_recoll", lockPath: INSTANCE.lockPath });
 log(`补采实例域: instance=${INSTANCE.instanceId} lock=${INSTANCE.lockPath} cdp=${CDP_URL}`);
 log("会话锁已获取（review-leg 补采；仅采集不发送）");

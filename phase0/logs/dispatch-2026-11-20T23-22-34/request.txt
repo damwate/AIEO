@@ -1,0 +1,2 @@
+[STAGE2-R1|阶段2授权申请+C9方案评审]
+仓库 damwate/AIEO main 完整SHA=f9c9e6ce936691203e5f3a8e45ccc68ee9f2e807：请按SHA读 phase0/tools/parallel_stage2_apply_r1.md。背景：阶段1已终签PASS并合入main（4a961e4，DEC-127）。两项申请：①C9账号级风控协调实现方案=共享状态文件account-risk-state.json+evaluateAccountGate/applyAccountBackoff纯函数+gpt_dispatch启动门(退避期任何实例零浏览器操作)+429观察点(只观察不诱发)+recoll同门+C7零影响；②阶段2授权=N=2真实并发试跑(C1-C5/C7-C8真实部分,一次性非敏感简报,失败即停)。请拍板四问：①C9方案认可否？②阶段2授权批准否？③退避时长9-60min口径？④阶段3进入条件按"C6观察期无异常+资源数据提交"？
