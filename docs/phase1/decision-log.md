@@ -1164,3 +1164,12 @@
 - **查证结论（代码+磁盘+时间线三重证据）：自清理=仅终止 Chrome 进程，零删除 profile 目录**——①清理路径 grep 零删除代码（killProfileChrome=Stop-Process 唯一动作；成功路径顺序=browser.close() 优雅关（cookie 落盘）→killProfileChrome 兜底孤儿进程）；②三 profile 目录实况 756M/740M/745M 均在且 Login Data 存在；③时间线实证=default profile 历经数十次清理循环数日保持登录，agent-a/b 克隆后经多轮清理用户肉眼确认仍登录。
 - **"要我登录"真因澄清：** 非"清理了登录信息"，而是 C1 首跑时 agent-a/b/c profile 为**全新未克隆目录**（从未有过登录）——乙→甲方案转换前态；甲方案克隆后已解决。
 - **固化：** "profile 目录只增不删（删除=DEC-010 另批）"作为 Queue Service 设计硬不变量写入 requirement.md；设计交付时交审查方一并验收。
+
+### DEC-137 Queue设计R1审查 BLOCKED（②③④⑦⑧整改+P0×4/P1×4）（2026-11-21）
+
+- **审查：** QUEUE-DESIGN-R1（one-shot 会话 6b013022，reply SHA-256=ff343d2b30951efc7133d9756b01070bd4ec3eb580330f253e666558a148c5f3，被测 SHA=6f6aa786…270f）。方向认可（①PASS_WITH_CONSTRAINTS/⑤PASS_WITH_CONSTRAINTS/⑥PASS；四域/渐进迁移/profile 不变量/人机验证人工处置/C9C6 不重写全对）。**BLOCKED 项：②契约缺恢复幂等状态字段、③状态枚举与转换不一致+C9 时序矛盾+验收失败语义不清、④C6 字段不足两时间字段、⑦Phase B 缺跨进程原子认领+崩溃回滚方案、⑧验收标准不可核验。**
+- **P0 编码阻断：** Q-01 三类状态机归属分离（Task 生命周期/Execution 过程/Instance 健康/池级账号暂停独立）；Q-02 CLAIM 与 C9 时序统一（READY→CLAIMED 原子认领→C9_CHECKING→EXECUTING，C9 BLOCKED 零浏览器操作）；Q-03 SEND_ATTEMPTED 崩溃恢复+禁自动重发（ATTEMPTED 后崩溃=保留现场先核实，不得当未发送）；Q-04 Phase B 单一任务账本+双调度入口+原子唯一认领（账本写失败禁派发；归属不明→人工核对）。
+- **P1 编码前：** Q-05 契约字段补齐（execution_id/attempt_id/dispatch_id/idempotency_key/send_state/recovery_state/last_checkpoint/failure_code+Instance PAUSED+池级 PAUSED-HUMAN 独立）；Q-06 C6 六类结构化证据（禁塞两时间字段；NOT_OBSERVED≠PASS）；Q-07 人机验证 VERIFICATION_SUSPECTED 禁自动降级 NORMAL；Q-08 阶段验收机器化（Phase B 五测试：双入口并发认领/崩溃恢复四覆盖/C9 BLOCKED 零浏览器/C6 可追溯/回滚无重复派发孤儿丢任务；Phase C ≥20 任务+七条附加+N=3 独立审批）。
+- **需特别保护语义（照登）：** 多任务开发协议闭环；验收失败≠其他任务等待；worker 完成不永久占用实例；Queue 不替代 ChatGPT 验收；**执行失败（保留记录进整改）与验收失败（原任务不改写+独立整改 task_id）两分不得合并**。
+- **R2 指令：** 只改设计文档；新 SHA+R1→R2 对照+P0×4/P1×4 逐项关闭证据+八件完整+无代码/运行态变更声明→定点复审。
+- **不改清单：** C9 已验收实现/C6 采集语义/C1-R2 互斥/DEC-130 克隆/DEC-010 profile 审批/L-018 补采禁重发/L-022 非阻塞/L-023 三层决策。

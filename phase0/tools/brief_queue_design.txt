@@ -1,0 +1,2 @@
+[QUEUE-DESIGN-R1|Queue Service设计八件架构审查（DEC-134要求的定点审查）]
+分支 fix/parallel-stage2 完整SHA=6f6aa78650a29e8ae153d4ee34b648c5b647270f：请按SHA读 phase0/tools/parallel_queue_design_r1.md（八件全在一文档：①架构四域+三阶段 ②Task/Instance/Execution三契约 ③状态机与异常转换 ④C9/C6接口 ⑤人机验证四态判定与人工处置 ⑥池容量与克隆约束含profile只增不删不变量 ⑦Bash三段迁移与回滚 ⑧分阶段验收标准）。语义来源=用户多任务开发协议（ops§五：完成即回中控领下一任务）+L-022非阻塞+L-023三层决策。请架构审查给PASS/FAIL/BLOCKED与逐条意见；PASS后进入B骨架编码授权裁定。
