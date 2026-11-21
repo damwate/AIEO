@@ -1,0 +1,94 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-21T08:19:51.634Z",
+  "user_unit_key": "78dc9829-24b7-564e-98f0-51d9c0937cc5:0:user",
+  "start_key_resolved": "78dc9829-24b7-564e-98f0-51d9c0937cc5:0:user",
+  "start_resolved_by_marker": true,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "78dc9829-24b7-564e-98f0-51d9c0937cc5:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "3bd12990-dfe6-4f97-bc74-2c199cfffbe4",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "78dc9829-24b7-564e-98f0-51d9c0937cc5:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "78dc9829-24b7-564e-98f0-51d9c0937cc5:0:user",
+          "78dc9829-24b7-564e-98f0-51d9c0937cc5:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "05784c40d66d9271da532d6bb6fc87f268f27e6d249a963ba163417a52aa3252",
+          "79f7a1f615d85d1ac4f033a153bb03e96498e84907603aca9e1c74e60e290cb0"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "78dc9829-24b7-564e-98f0-51d9c0937cc5:0:user",
+          "78dc9829-24b7-564e-98f0-51d9c0937cc5:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "05784c40d66d9271da532d6bb6fc87f268f27e6d249a963ba163417a52aa3252",
+          "79f7a1f615d85d1ac4f033a153bb03e96498e84907603aca9e1c74e60e290cb0"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "78dc9829-24b7-564e-98f0-51d9c0937cc5:0:user",
+          "78dc9829-24b7-564e-98f0-51d9c0937cc5:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "78dc9829-24b7-564e-98f0-51d9c0937cc5:0:user",
+      "78dc9829-24b7-564e-98f0-51d9c0937cc5:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "78dc9829-24b7-564e-98f0-51d9c0937cc5:0:user",
+          "78dc9829-24b7-564e-98f0-51d9c0937cc5:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "78dc9829-24b7-564e-98f0-51d9c0937cc5:0:user",
+          "78dc9829-24b7-564e-98f0-51d9c0937cc5:2:assistant"
+        ],
+        "overlap_keys": [
+          "78dc9829-24b7-564e-98f0-51d9c0937cc5:0:user",
+          "78dc9829-24b7-564e-98f0-51d9c0937cc5:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "78dc9829-24b7-564e-98f0-51d9c0937cc5:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nQUEUE-DESIGN-R5 定点复验裁定\n\nBLOCKED R5 复验未通过，暂不授权编码。\n\n复验基准\n\n仓库：damwate/AIEO\n\n分支：fix/parallel-stage2\n\n完整 SHA：c4de5416ee54060784bbc4778ee9c76c51c3afdd\n\n文件：phase0/tools/parallel_queue_design_r1.md\n\n文件 Blob SHA：ee452e340f71f78def73229ee0881baa4a9bc787\n\n复验范围：仅设计文档，不涉及代码和运行态。\n\n已按指定完整 SHA 读取文件，没有使用 HEAD 或其他版本替代。\n\n一、DEC-140 三项阻断复验\n\n项目\n\n\t\n\n判定\n\n\t\n\n复验结果\n\n\n\n\n阻断1：Token 规则统一\n\n\t\n\nPASS\n\n\t\n\n执行权与验收结论分离，基本闭环\n\n\n\n\n阻断2：利用率、配额、经济性\n\n\t\n\nPASS\n\n\t\n\n两级公式及两个配额指标已分离\n\n\n\n\n阻断3：Profile 删除边界\n\n\t\n\nFAIL\n\n\t\n\n/MIR 语义描述存在实质错误\n\n1. Token 生命周期统一：PASS\n\n对应 §⑦。\n\n本次整改的核心原则正确：\n\nToken 绑定执行权，而不是绑定验收结论。\n\n逐项确认：\n\nREPORTED：执行和采集完成，核销 Token。\n\nBLOCKED：挂起保留 Token。\n\nDEFERRED：挂起保留 Token。\n\nVERIFICATION_HOLD：挂起保留 Token。\n\nWorker 死亡：进入恢复序，核实后作废。\n\n人工判定失效：允许作废。\n\n原 Token 有效：原 Worker 继续。\n\n原 Token 已作废：READY → 新 Worker → 新 Token → 新 attempt。\n\n旧 Token 写入拒绝，保留 fencing。\n\n无法证明旧执行者失效：禁止自动重派。\n\n这解决了 R4 最重要的 at-most-once 执行权归属问题。\n\n一项边界说明： §③ 中 C9 BLOCKED 回 READY 与 §⑦ 中 BLOCKED 挂起保留需要按原因区分。当前文档已有依赖/验收阻断与 C9 门禁阻断的区别，但建议后续编码契约明确对应转换，避免将所有 BLOCKED 统一处理。\n\n2. 利用率、配额和经济性：PASS\n\n对应 §④。\n\n利用率公式正确：\n\n𝑈\n𝑖\n=\n𝐵\n𝑈\n𝑆\n𝑌\n𝑖\n𝑇\nU\ni\n\t​\n\n=\nT\nBUSY\ni\n\t​\n\n\t​\n\n𝑈\n池\n=\n∑\n𝑖\n𝐵\n𝑈\n𝑆\n𝑌\n𝑖\n𝑁\n×\n𝑇\nU\n池\n\t​\n\n=\nN×T\n∑\ni\n\t​\n\nBUSY\ni\n\t​\n\n\t​\n\n\n其中：\n\n𝐵\n𝑈\n𝑆\n𝑌\n𝑖\nBUSY\ni\n\t​\n\n：实例 i 在统计周期内的 BUSY 时间。\n\n𝑇\nT：统计周期总时间。\n\n𝑁\nN：参与统计的实例数。\n\n分母修正正确，整机利用率不会再因实例数量增加而虚高。\n\n配额两个独立指标正确：\n\n指标\n\n\t\n\n口径\n\n\t\n\n判定\n\n\n\n\n实际配额消耗\n\n\t\n\n无官方精确数据时 NOT_OBSERVED，禁止估算\n\n\t\n\nPASS\n\n\n\n\n限制信号\n\n\t\n\n限流横幅、受限会话、信号频次\n\n\t\n\nPASS\n\n限制信号明确只是风控压力代理，不冒充实际配额消耗。\n\n经济性也已区分：\n\n单位成功任务资源消耗。\n\n单位成功任务风控压力代理。\n\n增加实例的成功吞吐增量。\n\n增加实例的边际资源成本。\n\n这项整改通过。\n\n3. Profile 生命周期与删除边界：FAIL\n\n对应 §⑥。\n\n整改方向正确：\n\n已注册实例 profile 删除一律 DEC-010 逐目录审批。\n\n不得以未通过验收推定不含凭据。\n\n已注册实例覆盖前人工确认并备份。\n\n不允许将失败验收作为删除豁免依据。\n\n但存在一个实质性错误：\n\nRobocopy /MIR 并不等于只覆盖、不删除。\n\n/MIR 是镜像模式，包含源目录与目标目录同步，并会删除目标目录中源目录不存在的文件和子目录（即 /E 加 /PURGE 的效果）。\n\n因此文档这句话：\n\n改用 robocopy /MIR 镜像覆盖（语义=覆盖非删除）\n\n技术上错误。\n\n这不是文字瑕疵，而是直接影响登录态凭据保护的操作风险。\n\n必须整改：\n\n不得将 /MIR 定义为非删除操作。\n\n必须明确目标目录中额外文件的处理策略。\n\n已注册实例目录不得因镜像操作绕过 DEC-010。\n\n镜像操作必须有明确的目标路径边界和破坏性检查。\n\n在这一点修正前，阻断3不能关闭。\n\n二、版本声明复验\nFAIL\n\nR5 标题和 R5 变更声明已经更新，但版本链仍有两个问题：\n\n附表一至四的完整链条不够严谨：第一份 R1→R2 对照表目前标题仍为「附：R1→R2 修改对照」，没有正式标注为「附表一」。\n\n文件末尾仍保留：\n\n本 R2 仅修改本文档\n\n与当前 R5 版本声明冲突。\n\n要求统一修正为 R5，明确四张附表的编号和对应版本关系，清除错误的当前版本声明。\n\n注意：历史版本对照内容可以保留，不要求删除历史记录。\n\n三、最终裁定\n\n复验项目\n\n\t\n\n结果\n\n\n\n\nDEC-140 Token 规则\n\n\t\n\nPASS\n\n\n\n\nDEC-140 利用率及配额\n\n\t\n\nPASS\n\n\n\n\nDEC-140 Profile 删除边界\n\n\t\n\nFAIL\n\n\n\n\nR5 版本声明\n\n\t\n\nFAIL\n\n\n\n\n仅修改设计文档\n\n\t\n\n已确认\n\n最终状态\n\nBLOCKED\n\n尚有两个整改项，不满足设计通过条件。\n\n编码授权：未授予。\n\n四、R6 整改要求\n\n建议只修改 phase0/tools/parallel_queue_design_r1.md，不扩大变更范围。\n\nP0：修正 /MIR 语义。 不能再声称镜像不删除；重新明确凭据保护、目标目录额外文件处理和 DEC-010 审批边界。\n\nP1：版本声明统一。 标题、声明、附表一至四编号、末尾变更声明全部统一为 R5→R6 的历史链条。\n\n保留本轮已经通过的 Token 和利用率、配额整改，不要反复改写已通过内容。\n\n授权边界继续维持 R4 裁定：\n\n不授权 Queue Service 编码。\n\n不授权 Phase A 实施。\n\n不授权 Phase B 骨架编码。\n\n不授权 Phase C 接管。\n\n不授权现役 Bash/C9/C6 修改。\n\n不授权 N=2 重启或 N=3 扩容。\n\n不授权任何运行态操作。\n\nR6 提交新的完整 SHA 后，我再进行定点复验。只有全部阻断关闭、版本声明通过，才进入下一步，单独出具编码授权裁定。设计通过不自动等于编码授权。",
+      "text_sha256": "79f7a1f615d85d1ac4f033a153bb03e96498e84907603aca9e1c74e60e290cb0",
+      "size_bytes": 5742,
+      "assistant_uuid": "3bd12990-dfe6-4f97-bc74-2c199cfffbe4"
+    }
+  ]
+}

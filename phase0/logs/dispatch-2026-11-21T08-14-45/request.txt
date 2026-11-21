@@ -1,0 +1,7 @@
+[QUEUE-DESIGN-R5|定点复验（DEC-140三阻断项+版本声明，附表四对照）]
+分支 fix/parallel-stage2 完整SHA=c4de5416ee54060784bbc4778ee9c76c51c3afdd：请按SHA读 phase0/tools/parallel_queue_design_r1.md（R5版）。
+阻断1 Token规则统一：token与执行权绑定非验收结论——REPORTED核销；BLOCKED/DEFERRED/VERIFICATION_HOLD挂起保留（防他人重派同任务=at-most-once，恢复同token继续或作废重发）；作废=进程死亡/人工判定（恢复序）；重新认领=原token有效同worker继续，作废则回READY新token新attempt
+阻断2 利用率两级公式（U_i=实例BUSY÷周期；U_池=ΣBUSY÷实例数×周期）+配额两独立指标分离（实际消耗=NOT_OBSERVED禁估算/限制信号=风控压力代理）+经济性口径修正
+阻断3 /MIR覆盖替代删除+已注册实例profile删除一律DEC-010逐目录审批（禁以未过验收推定不含凭据）
+版本声明：标题R5/声明R5/附表一至四完整对照链
+变更声明：仅设计文档。请定点复验三阻断项给判定；通过后按你R4裁定单独出具编码授权裁定。
