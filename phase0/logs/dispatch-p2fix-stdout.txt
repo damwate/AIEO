@@ -1,0 +1,39 @@
+[2026-11-21T03:47:01.952Z] 证据目录: D:\AIEO\phase0\logs\dispatch-2026-11-21T03-47-01
+[2026-11-21T03:47:02.429Z] 会话锁已获取 pid=4788 instance=default lock=gpt-session.lockfile
+[2026-11-21T03:47:02.431Z] === GPT 派单（已有会话，消息 1075 字节）===
+[2026-11-21T03:47:02.435Z] [instance] 实例域就绪: instance=default port=9222 profile=gpt-poc lock=gpt-session.lockfile
+[2026-11-21T03:47:03.428Z] [instance] 清理本实例 Chrome：own=0 foreign(不动)=18 remaining=0
+[2026-11-21T03:47:05.960Z] Chrome 已启动 pid=5604 port=9222
+[2026-11-21T03:47:07.978Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 0 个
+[2026-11-21T03:47:07.980Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-21T03:47:12.506Z] 会话就绪: https://chatgpt.com/c/6b00e02a-8270-83ec-a61b-b824978dd586
+[2026-11-21T03:47:18.333Z] [dispatch] 基线尾部: {"role":"assistant","key":"fd71c8f2-d238-5bc3-8248-90b3f5757b73:2:assistant","assistantUuid":"62109b73-0630-46fb-87c6-b51c6c043222"}
+[2026-11-21T03:47:19.964Z] [dispatch] 发送双验通过（polls=1，user_unit_key=fallback-turn-0:0:user，tail 后观察）
+[2026-11-21T03:47:20.259Z] 截图: sent-dispatch.png
+[2026-11-21T03:48:45.164Z] [dispatch] COMPLETED，1 个 assistant unit，回复 643 UTF-8 字节，区间窗口 2 个
+[2026-11-21T03:48:45.328Z] 截图: reply-dispatch.png
+[2026-11-21T03:48:45.330Z] 会话 URL 已取得且归属校验 PASS，跳过 reviewer 指针写盘: https://chatgpt.com/c/6b00e02a-8270-83ec-a61b-b824978dd586
+[2026-11-21T03:48:45.335Z] JSON/Schema/绑定校验: NOT_REQUESTED
+[2026-11-21T03:48:45.335Z] M1 本地登记: NOT_REQUESTED（三 ID 均未提供，通用非登记派单）
+[2026-11-21T03:48:46.521Z] [instance] 清理本实例 Chrome：own=9 foreign(不动)=18 remaining=0
+[2026-11-21T03:48:46.524Z] [tab-hygiene] 成功退出：浏览器连接已关+实例 default Chrome 已清理（精确归属，他实例不动；含本次自建页 0 页）；本实例 tab 清零
+[2026-11-21T03:48:46.524Z] === 派单完成，artifact_sha256=906eefeece050599af7aa50013e712d0a03703bdbd6f3d9d03b13752a4e9d348 size_bytes=643 ===
+
+=====REPLY_BEGIN=====
+ChatGPT 说：
+
+[P2-FIX-VERIFY|C1两修复定点复验]
+
+收到。本轮严格限定为 gpt_dispatch.mjs 两处整改，不扩大审查范围。
+
+但你给出的分支 SHA 仍是占位符 {sha}。请提供 fix/parallel-stage2 的完整 40 位 commit SHA。
+
+收到后我会按该 SHA 核查：
+
+accountGateCheck 归一化写回幂等门控及锁冲突/写失败降级。
+
+观察点写锁有界重试、writeOutcome 记录，以及命中限流后仍 fail-closed。
+
+只给这两项分别判定 PASS/FAIL。即使两项 PASS，也不代表授权重启；继续等待登录态人工确认及 B 限流页核实，再由你确认是否重启 N=2。
+=====REPLY_END=====
+[2026-11-21T03:48:46.640Z] 会话锁已释放

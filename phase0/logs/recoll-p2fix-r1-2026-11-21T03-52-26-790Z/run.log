@@ -1,0 +1,9 @@
+[2026-11-21T03:52:27.246Z] 会话锁已获取（p2fix-r1 C1修复定点复验补采）
+[2026-11-21T03:52:27.317Z] 页面归属命中 CONV_UUID=6b00e02a-8270-83ec-a61b-b824978dd586
+[2026-11-21T03:52:50.821Z] 归属校验=标记命中2条(取最后)+最后user断言（target=0fb1dee4-2165-559f-839d-fae0a152efb6:0:user）
+[2026-11-21T03:52:50.822Z] 归档 reply#1（第一份简报的回复，643 字节）
+[2026-11-21T03:52:50.826Z] checks={"marked_user_unique":false,"last_user_assertion":true,"duplicate_send_confirmed":true,"adjacent_assistant_tail":true,"stable_static_dom_read":true,"final_stop_button_not_visible":true,"response_length_plausible":true,"not_prev_reply_sha":true}
+[2026-11-21T03:52:50.828Z] reply 已落盘（1573 字节，SHA=e969c9e784659739…）
+[2026-11-21T03:52:50.828Z] RECOLL COMPLETED
+[2026-11-21T03:52:50.843Z] 视口覆盖已清除
+[2026-11-21T03:52:50.955Z] 会话锁已释放（p2fix-r1 C1修复定点复验补采）

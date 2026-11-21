@@ -1,0 +1,15 @@
+ChatGPT 说：
+
+[P2-FIX-VERIFY|C1两修复定点复验]
+
+收到。本轮严格限定为 gpt_dispatch.mjs 两处整改，不扩大审查范围。
+
+但你给出的分支 SHA 仍是占位符 {sha}。请提供 fix/parallel-stage2 的完整 40 位 commit SHA。
+
+收到后我会按该 SHA 核查：
+
+accountGateCheck 归一化写回幂等门控及锁冲突/写失败降级。
+
+观察点写锁有界重试、writeOutcome 记录，以及命中限流后仍 fail-closed。
+
+只给这两项分别判定 PASS/FAIL。即使两项 PASS，也不代表授权重启；继续等待登录态人工确认及 B 限流页核实，再由你确认是否重启 N=2。

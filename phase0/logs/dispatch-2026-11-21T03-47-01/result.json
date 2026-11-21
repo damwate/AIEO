@@ -1,0 +1,207 @@
+{
+  "at": "2026-11-21T03:48:45.330Z",
+  "instance_id": "default",
+  "instance_lock_path": "D:\\AIEO\\runtime\\locks\\gpt-session.lockfile",
+  "instance_debug_port": 9222,
+  "instance_profile_dir": "D:\\AIEO\\runtime\\chrome_profiles\\gpt-poc",
+  "message_bytes": 1075,
+  "reply": "ChatGPT 说：\n\n[P2-FIX-VERIFY|C1两修复定点复验]\n\n收到。本轮严格限定为 gpt_dispatch.mjs 两处整改，不扩大审查范围。\n\n但你给出的分支 SHA 仍是占位符 {sha}。请提供 fix/parallel-stage2 的完整 40 位 commit SHA。\n\n收到后我会按该 SHA 核查：\n\naccountGateCheck 归一化写回幂等门控及锁冲突/写失败降级。\n\n观察点写锁有界重试、writeOutcome 记录，以及命中限流后仍 fail-closed。\n\n只给这两项分别判定 PASS/FAIL。即使两项 PASS，也不代表授权重启；继续等待登录态人工确认及 B 限流页核实，再由你确认是否重启 N=2。",
+  "user_unit_key": "8bd8f8db-a45c-5cc1-8f41-1f8ceb7f933f:0:user",
+  "start_key_resolved": "8bd8f8db-a45c-5cc1-8f41-1f8ceb7f933f:0:user",
+  "start_resolved_by_marker": true,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "8bd8f8db-a45c-5cc1-8f41-1f8ceb7f933f:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "57f20e89-7c47-4396-b016-5001cf110664",
+  "stability": {
+    "stable": true,
+    "interval_ms": 3285,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-21T03:48:41.330Z",
+      "read_finished_at": "2026-11-21T03:48:41.602Z",
+      "unit_keys": [
+        "8bd8f8db-a45c-5cc1-8f41-1f8ceb7f933f:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "8bd8f8db-a45c-5cc1-8f41-1f8ceb7f933f:2:assistant",
+          "sha256": "906eefeece050599af7aa50013e712d0a03703bdbd6f3d9d03b13752a4e9d348",
+          "size_bytes": 643
+        }
+      ],
+      "assistant_uuid": "57f20e89-7c47-4396-b016-5001cf110664",
+      "next_user_unit_key": null,
+      "start_key_resolved": "8bd8f8db-a45c-5cc1-8f41-1f8ceb7f933f:0:user",
+      "start_resolved_by_marker": true,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-21T03:48:44.614Z",
+      "read_finished_at": "2026-11-21T03:48:45.155Z",
+      "unit_keys": [
+        "8bd8f8db-a45c-5cc1-8f41-1f8ceb7f933f:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "8bd8f8db-a45c-5cc1-8f41-1f8ceb7f933f:2:assistant",
+          "sha256": "906eefeece050599af7aa50013e712d0a03703bdbd6f3d9d03b13752a4e9d348",
+          "size_bytes": 643
+        }
+      ],
+      "assistant_uuid": "57f20e89-7c47-4396-b016-5001cf110664",
+      "next_user_unit_key": null,
+      "start_key_resolved": "8bd8f8db-a45c-5cc1-8f41-1f8ceb7f933f:0:user",
+      "start_resolved_by_marker": true,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "8bd8f8db-a45c-5cc1-8f41-1f8ceb7f933f:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "fd71c8f2-d238-5bc3-8248-90b3f5757b73:0:user",
+          "fd71c8f2-d238-5bc3-8248-90b3f5757b73:2:assistant",
+          "8bd8f8db-a45c-5cc1-8f41-1f8ceb7f933f:0:user",
+          "8bd8f8db-a45c-5cc1-8f41-1f8ceb7f933f:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "3ac1be7d5d90a67e8b8b4b814467c3e4537994e8ec669fd09162fe84912c4d91",
+          "d0c8b0474de16eeb6a669b0f74ac010f6886e9a8582e84dd8efe5b42e913d722",
+          "2c11c60a1e2a29e9f654cc17ad0b34e1e98d7be070a1a82ba07a6940b9ffcde0",
+          "906eefeece050599af7aa50013e712d0a03703bdbd6f3d9d03b13752a4e9d348"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "fd71c8f2-d238-5bc3-8248-90b3f5757b73:0:user",
+          "fd71c8f2-d238-5bc3-8248-90b3f5757b73:2:assistant",
+          "8bd8f8db-a45c-5cc1-8f41-1f8ceb7f933f:0:user",
+          "8bd8f8db-a45c-5cc1-8f41-1f8ceb7f933f:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "3ac1be7d5d90a67e8b8b4b814467c3e4537994e8ec669fd09162fe84912c4d91",
+          "d0c8b0474de16eeb6a669b0f74ac010f6886e9a8582e84dd8efe5b42e913d722",
+          "2c11c60a1e2a29e9f654cc17ad0b34e1e98d7be070a1a82ba07a6940b9ffcde0",
+          "906eefeece050599af7aa50013e712d0a03703bdbd6f3d9d03b13752a4e9d348"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "fd71c8f2-d238-5bc3-8248-90b3f5757b73:0:user",
+          "fd71c8f2-d238-5bc3-8248-90b3f5757b73:2:assistant",
+          "8bd8f8db-a45c-5cc1-8f41-1f8ceb7f933f:0:user",
+          "8bd8f8db-a45c-5cc1-8f41-1f8ceb7f933f:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "8bd8f8db-a45c-5cc1-8f41-1f8ceb7f933f:0:user",
+      "8bd8f8db-a45c-5cc1-8f41-1f8ceb7f933f:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "fd71c8f2-d238-5bc3-8248-90b3f5757b73:0:user",
+          "fd71c8f2-d238-5bc3-8248-90b3f5757b73:2:assistant",
+          "8bd8f8db-a45c-5cc1-8f41-1f8ceb7f933f:0:user",
+          "8bd8f8db-a45c-5cc1-8f41-1f8ceb7f933f:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "fd71c8f2-d238-5bc3-8248-90b3f5757b73:0:user",
+          "fd71c8f2-d238-5bc3-8248-90b3f5757b73:2:assistant",
+          "8bd8f8db-a45c-5cc1-8f41-1f8ceb7f933f:0:user",
+          "8bd8f8db-a45c-5cc1-8f41-1f8ceb7f933f:2:assistant"
+        ],
+        "overlap_keys": [
+          "fd71c8f2-d238-5bc3-8248-90b3f5757b73:0:user",
+          "fd71c8f2-d238-5bc3-8248-90b3f5757b73:2:assistant",
+          "8bd8f8db-a45c-5cc1-8f41-1f8ceb7f933f:0:user",
+          "8bd8f8db-a45c-5cc1-8f41-1f8ceb7f933f:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "906eefeece050599af7aa50013e712d0a03703bdbd6f3d9d03b13752a4e9d348",
+  "size_bytes": 643,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-21T03-47-01\\reply.txt",
+  "reply_readback_sha256": "906eefeece050599af7aa50013e712d0a03703bdbd6f3d9d03b13752a4e9d348",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-21T03-47-01\\raw-units.json",
+  "raw_units_sha256": "8cd6fb9a98719942e1d391be051448ec032f306555dc91006e5f52bc19e71bc3",
+  "raw_units_size_bytes": 4795,
+  "raw_units_readback_sha256": "8cd6fb9a98719942e1d391be051448ec032f306555dc91006e5f52bc19e71bc3",
+  "session_id": "6b00e02a-8270-83ec-a61b-b824978dd586",
+  "conversation_url": "https://chatgpt.com/c/6b00e02a-8270-83ec-a61b-b824978dd586",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}

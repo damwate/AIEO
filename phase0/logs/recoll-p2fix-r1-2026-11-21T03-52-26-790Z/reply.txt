@@ -1,0 +1,64 @@
+ChatGPT 说：
+
+[P2-FIX-VERIFY|C1两修复定点复验]
+
+审查基线：damwate/AIEO / fix/parallel-stage2
+完整 SHA：4731086a55eaa7338cb420e7bce3e9c16201f1de
+
+已按该 SHA 读取 phase0/tools/gpt_dispatch.mjs，并检查锁实现 phase0/e2e-poc/session_lock.mjs。
+
+整改项
+
+	
+
+判定
+
+	
+
+依据
+
+
+
+
+① 归一化写回幂等门控
+
+	
+
+PASS
+
+	
+
+仅 state.reason === "expired-normalized" 时写回；写入 { ...state, reason: null }；获取锁冲突直接非致命返回，原子写入失败也被捕获并记录，不阻断派单。
+
+
+
+
+② 观察点写锁有界重试及降级
+
+	
+
+FAIL
+
+	
+
+冲突非致命、writeOutcome 记录、命中后抛出 ACCOUNT_BACKOFF_TRIGGERED 均已实现；但没有实现有界重试。当前只调用一次 acquireSessionLock()，冲突后直接记录并进入 fail-closed 抛错。
+
+② 的具体缺口：
+
+observeAccountRisk() 第 519 行只获取一次锁。
+
+acquireSessionLock() 本身遇到 OS 锁冲突立即抛出 SESSION_LOCK_CONFLICT；其 30 秒等待只是等待锁获取结果，不是冲突后的重试机制。
+
+因此，“有界重试”这一明确验收要求尚未满足。
+
+代码定位：
+
+① 归一化写回门控
+
+② 观察点写锁与 fail-closed
+
+锁获取实现
+
+最终裁定：一项 PASS、一项 FAIL，C1 两修复整体暂不通过。
+
+本轮不授权重启 N=2。请只补齐②的有界重试与冲突降级，然后提供新的完整 SHA 定点复验。登录态人工核对和 B 限流页核实可以继续并行推进；已有的 8/8、12/12、122 项测试结果不替代本次代码缺口。

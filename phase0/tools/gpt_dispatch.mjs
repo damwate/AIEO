@@ -468,6 +468,23 @@ async function resolveInstancePort() {
 }
 
 // ---------- C9 账号级风控协调（DEC-128：独立于实例锁的账号级统一退避） ----------
+// 账号状态锁有界重试（C9 验收 R1 ②整改：M1 acquireRegistryLock 同模式——冲突后
+// 50-100ms 随机退避重试，60s 上限；最终冲突向上抛由调用方降级，不静默吞掉）。
+function acquireAccountLockWithRetry(holderSuffix) {
+  const path = accountStatePath(AIEO_ROOT);
+  const timeoutMs = Number(process.env.AIEO_ACCOUNT_LOCK_TIMEOUT_MS || 60000);
+  const startedAt = Date.now();
+  for (;;) {
+    try {
+      return acquireSessionLock({ holder: `${holderSuffix}:${INSTANCE.instanceId}`, lockPath: `${path}.lockfile` });
+    } catch (error) {
+      if (error.code !== "SESSION_LOCK_CONFLICT" || Date.now() - startedAt >= timeoutMs) {
+        throw error;
+      }
+      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 50 + Math.floor(Math.random() * 50));
+    }
+  }
+}
 // 启动门：BLOCKED 即 fail-closed 退出（零浏览器操作）。约束D：本检查点在 mainLocked
 // 最前与浏览器 spawn 前各执行一次；"已过检查未始操作"的残余竞态窗口如实登记于
 // 方案文档（parallel_stage2_apply_r1.md §一.4），由观察点写回+下轮启动门兜底。
@@ -484,7 +501,7 @@ function accountGateCheck(checkpoint) {
     // （内存态已正确，残留标记无害），下轮再写。
     let lock;
     try {
-      lock = acquireSessionLock({ holder: `account-gate:${INSTANCE.instanceId}`, lockPath: `${path}.lockfile` });
+      lock = acquireAccountLockWithRetry("account-gate");
     } catch (error) {
       log(`[account] 归一化写回锁冲突（非致命，跳过本轮写回）: ${error.message.split("\n")[0]}`);
       return state;
@@ -516,7 +533,7 @@ async function observeAccountRisk(page, checkpoint) {
   let writeOutcome = "write-failed(lock-conflict; other instances gated on next startup)";
   let lock;
   try {
-    lock = acquireSessionLock({ holder: `account-risk-write:${INSTANCE.instanceId}`, lockPath: `${path}.lockfile` });
+    lock = acquireAccountLockWithRetry("account-risk-write");
   } catch (error) {
     log(`[account] 退避写锁冲突（本派单仍停止；他实例下轮启动门兜底）: ${error.message.split("\n")[0]}`);
   }

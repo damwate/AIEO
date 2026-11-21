@@ -8,6 +8,7 @@ import {
   readAccountStateFile, writeAccountStateFileAtomic,
   ACCOUNT_BACKOFF_MIN_MINUTES, ACCOUNT_BACKOFF_MAX_MINUTES,
 } from "./dispatch_options.mjs";
+import { acquireSessionLock } from "../e2e-poc/session_lock.mjs";
 
 const tmp = mkdtempSync(join(tmpdir(), "acct-gate-test-"));
 const statePath = join(tmp, "account-risk-state.json");
@@ -74,6 +75,25 @@ const tests = [
     assert.equal(extended.backoff_until, "2026-11-21T13:30:00.000Z"); // 60min 提议 < 现有 until → 维持更长（不缩短）
     const longer = applyAccountBackoff({ ...active, backoff_until: "2026-11-21T12:10:00.000Z" }, NOW, 60, "manual-strong");
     assert.equal(longer.backoff_until, "2026-11-21T13:00:00.000Z"); // 60min > 现有 → 延长
+  }],
+  ["R1②整改：账号状态锁有界重试——持锁者释放后重试获取成功（真实 OS 锁并发）", () => {
+    const lockPath = join(tmp, "account-retry.lockfile");
+    const first = acquireSessionLock({ holder: "holder", lockPath: lockPath });
+    let acquired = null;
+    // 500ms 有界重试窗口内持有者不释放 → 最终冲突向上抛
+    process.env.AIEO_ACCOUNT_LOCK_TIMEOUT_MS = "500";
+    const t0 = Date.now();
+    assert.throws(
+      () => { for (;;) { try { acquireSessionLock({ holder: "waiter", lockPath: lockPath }); break; } catch (e) { if (e.code !== "SESSION_LOCK_CONFLICT" || Date.now() - t0 >= 500) throw e; Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 20); } } },
+      (e) => e.code === "SESSION_LOCK_CONFLICT",
+    );
+    assert.ok(Date.now() - t0 >= 400, "重试窗口应持续约 500ms");
+    first.release();
+    // 释放后重试获取成功
+    const second = acquireSessionLock({ holder: "waiter", lockPath: lockPath });
+    assert.ok(second.release instanceof Function);
+    second.release();
+    delete process.env.AIEO_ACCOUNT_LOCK_TIMEOUT_MS;
   }],
   ["文件 IO：缺失=NORMAL 初始化；损坏=fail-closed；原子写回读", () => {
     const missing = readAccountStateFile(join(tmp, "nonexistent.json"), NOW);
