@@ -1195,3 +1195,11 @@
 - **审查方强调：** Fencing 与 profile 删除边界属可能造成重复执行和登录态永久丢失的安全边界，必须先闭合规则；编码授权裁定将与设计验收分离单独出具。
 - **R5 要求：** 只针对三阻断项+版本声明整改，新完整 SHA 后定点复验。
 - **边界（照登）：** 不授权编码/修改现役 Bash/修改 C9C6 已验收实现/N=2 重启/N=3 扩容/运行态操作；DEC-010/DEC-130/L-018 既有约束不变。
+
+### DEC-141 Queue设计终验 PASS + Phase B 骨架编码授权签发（R4→R8 定点收敛闭环）（2026-11-21）
+
+- **迭代轨迹（每轮 one-shot 新会话，全部内联采集）：** R4（6b0151a9，reply SHA-256=fd60bb40…af6c9e）=八项中 3 PASS/2 BLOCKED/3 PASS_WITH_CONSTRAINTS，收敛至 3 阻断（Token 规则统一/利用率配额口径/删除判定收紧）；R5（6b0153b4，reply SHA-256=79f7a1f6…cb0）=Token PASS+利用率配额 PASS+删除边界 FAIL（/MIR 即删除——我方"覆盖≠删除"说法事实错误，如实修正）+版本链 FAIL；R6（6b0154ba，reply SHA-256=e06948e4…573ae）=§⑥残留冲突句+附表链命名排序两整改；R7（6b015605，reply SHA-256=e22ac2abc35f27bf590735e11be0fa11790a40b75a0f5841097c28ee4dcea6bd）=P0 PASS+附表链 PASS，唯一遗留=R2 历史声明加注位置；R8（6b01574f，reply SHA-256=c26743e73459e7586cf64747cd01dd134e9042ab5a51b35c9175590726777aa3）=**PASS 设计终验通过+Phase B 骨架编码授权签发**（授权基线 6e0a26a3646577f4a95421307ccd7ade21433a38；授权性质=独立有限非运行态；未授权=Phase C/Bash 替换/C9C6 修改/N=2 重启/N=3/main 合并）。
+- **过程失误（如实）：** R5 复验首跑 composer 超时（克隆操作后 default Chrome 冷启动瞬态，NOT_SENT 有界重试一次成功）；R8 修复首commit漏文档改动仅含简报文件（未推送前发现补正）。
+- **机制运转（L-023 实证）：** 设计迭代 R1→R8 全程中控+ChatGPT 子任务循环，用户未逐项拍板；每轮 FAIL 清单精确可执行，收敛轨迹 8→6→3→1→0。
+- **依据：** 提交链 …→dfb5921a→6e0a26a3→本提交；现场 dispatch-2026-11-21T04-15-39/04-23-56 等+recoll-rewr/arch/p2fix/p2count 系列驱动。
+- **边界：** Phase B 编码=下一任务（新任务包）；Phase C/Bash 替换/C9C6 修改/N=2 重启/N=3/main 合并均未授权；人机验证判定器实现随 Phase B 编码轮（DEC-134 P1 优先级）。

@@ -1,0 +1,361 @@
+[2026-11-21T08:32:24.002Z] 证据目录: D:\AIEO\phase0\logs\dispatch-2026-11-21T08-32-24
+[2026-11-21T08:32:25.046Z] 会话锁已获取 pid=8640 instance=default lock=gpt-session.lockfile
+[2026-11-21T08:32:25.048Z] === GPT 派单（新建会话，消息 565 字节）===
+[2026-11-21T08:32:25.053Z] [instance] 实例域就绪: instance=default port=9222 profile=gpt-poc lock=gpt-session.lockfile
+[2026-11-21T08:32:26.753Z] [instance] 清理本实例 Chrome：own=0 foreign(不动)=0 remaining=0
+[2026-11-21T08:32:29.342Z] Chrome 已启动 pid=16840 port=9222
+[2026-11-21T08:32:30.903Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 0 个
+[2026-11-21T08:32:30.904Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-21T08:33:13.140Z] 新聊天页面就绪
+[2026-11-21T08:33:18.215Z] [dispatch] 基线尾部: null
+[2026-11-21T08:33:21.441Z] [dispatch] 发送双验通过（polls=1，user_unit_key=fallback-turn-0:0:user，tail 后观察）
+[2026-11-21T08:33:22.314Z] 截图: sent-dispatch.png
+[2026-11-21T08:35:26.499Z] [dispatch] COMPLETED，1 个 assistant unit，回复 3304 UTF-8 字节，区间窗口 2 个
+[2026-11-21T08:35:26.640Z] 截图: reply-dispatch.png
+[2026-11-21T08:35:26.642Z] 会话 URL 已取得且归属校验 PASS，跳过 reviewer 指针写盘: https://chatgpt.com/c/6b01574f-5238-83ec-8084-a1c62913e3fa
+[2026-11-21T08:35:26.648Z] JSON/Schema/绑定校验: NOT_REQUESTED
+[2026-11-21T08:35:26.649Z] M1 本地登记: NOT_REQUESTED（三 ID 均未提供，通用非登记派单）
+[2026-11-21T08:35:28.165Z] [instance] 清理本实例 Chrome：own=9 foreign(不动)=0 remaining=0
+[2026-11-21T08:35:28.169Z] [tab-hygiene] 成功退出：浏览器连接已关+实例 default Chrome 已清理（精确归属，他实例不动；含本次自建页 0 页）；本实例 tab 清零
+[2026-11-21T08:35:28.170Z] === 派单完成，artifact_sha256=c26743e73459e7586cf64747cd01dd134e9042ab5a51b35c9175590726777aa3 size_bytes=3304 ===
+
+=====REPLY_BEGIN=====
+ChatGPT 说：
+QUEUE-DESIGN-R8｜终验裁定
+
+PASS 唯一遗留项关闭，设计终验通过。
+
+审查对象
+
+项目
+
+	
+
+核验结果
+
+
+
+
+仓库
+
+	
+
+damwate/AIEO
+
+
+
+
+分支
+
+	
+
+fix/parallel-stage2
+
+
+
+
+完整 SHA
+
+	
+
+6e0a26a3646577f4a95421307ccd7ade21433a38
+
+
+
+
+文件
+
+	
+
+phase0/tools/parallel_queue_design_r1.md
+
+
+
+
+文件读取
+
+	
+
+PASS，按完整 SHA 获取
+
+
+
+
+文件版本
+
+	
+
+R6
+
+一、唯一遗留项复验
+
+PASS 附表二 R2 历史声明加注符合要求。
+
+实际核对结果：
+
+原 R2 变更声明完整保留，没有删除、改写。
+
+前置新增历史声明注记，明确说明其历史属性。
+
+明确指定文首 R6 变更声明为现行权威声明。
+
+不会再将 R2 历史声明误认为当前版本声明。
+
+差异核验：
+
+以 R7 SHA 726d249b... 为基准，对比 R8：
+
+原文件：308 行。
+
+新文件：310 行。
+
+新增：仅两行，即历史声明注记及空行。
+
+原有 298 行前缀及后续 10 行后缀完全一致。
+
+其他已通过内容没有任何修改。
+
+因此，本次整改符合最小修改原则。
+
+二、最终设计验收
+
+审查项目
+
+	
+
+最终结论
+
+
+
+
+R1→R2 历史链
+
+	
+
+PASS
+
+
+
+
+R2→R3 历史链
+
+	
+
+PASS
+
+
+
+
+R3→R4 历史链
+
+	
+
+PASS
+
+
+
+
+R4→R5 历史链
+
+	
+
+PASS
+
+
+
+
+R5→R6 历史链
+
+	
+
+PASS
+
+
+
+
+P0 /MIR 语义
+
+	
+
+PASS
+
+
+
+
+DEC-010 凭据目录保护
+
+	
+
+PASS
+
+
+
+
+R2 历史声明边界
+
+	
+
+PASS
+
+
+
+
+已通过设计内容保护
+
+	
+
+PASS
+
+最终裁定：R8 设计终验 PASS，原 R7 唯一遗留项正式关闭。
+
+三、独立编码授权裁定
+有限授权
+
+裁定：批准 Queue Service Phase B 骨架编码。
+
+授权边界如下：
+
+工作内容
+
+	
+
+授权
+
+
+
+
+Queue Service 独立骨架编码
+
+	
+
+允许
+
+
+
+
+Task / Execution / Instance / Pool 数据契约实现
+
+	
+
+允许
+
+
+
+
+原子认领、claim_token、fencing 机制实现
+
+	
+
+允许
+
+
+
+
+崩溃恢复及幂等机制实现
+
+	
+
+允许
+
+
+
+
+Phase B 五项自动化测试
+
+	
+
+允许
+
+
+
+
+Phase C 接管实现
+
+	
+
+不允许
+
+
+
+
+现役 Bash 替换
+
+	
+
+不允许
+
+
+
+
+修改已验收 C9 / C6
+
+	
+
+不允许
+
+
+
+
+N=2 运行态重启或变更
+
+	
+
+不允许
+
+
+
+
+N=3 扩容
+
+	
+
+不允许
+
+
+
+
+main 合并
+
+	
+
+不允许
+
+四、执行纪律
+
+在独立开发分支实施，不直接修改现役 Bash。
+
+C9、C6 作为既有接口调用，不得借 Queue 开发之名修改其已验收语义。
+
+设计规定的五项 Phase B 测试必须逐项提供可复核证据。
+
+遇到旧执行者隔离、token fencing、崩溃恢复等问题，不能用跳过检查或放宽门禁的方式取得 PASS。
+
+测试通过不自动代表 Phase C 接管获批。
+
+所有提交使用完整 SHA 作为审查依据。
+
+五、最终授权记录
+
+QUEUE-DESIGN-R8 / CODING-AUTHORIZATION
+
+设计 PASS · Phase B 授权
+
+授权对象： AIEO Queue Service
+
+授权阶段： Phase B 骨架编码及其五项测试
+
+授权依据： R8 终验 PASS
+
+授权基线：
+
+6e0a26a3646577f4a95421307ccd7ade21433a38
+
+授权性质： 独立、有限、非运行态授权。
+
+未授权事项： Phase C、Bash 替换、C9/C6 修改、N=2 重启、N=3 扩容、main 合并。
+
+终局意见： QUEUE-DESIGN-R8 正式通过。设计阶段结束，允许进入 Phase B 骨架编码；后续阶段仍须独立验收和授权，不得自动递进。
+
+本裁定不改变 DEC-129、DEC-130、DEC-010 及既有运行态纪律。
+=====REPLY_END=====
+[2026-11-21T08:35:28.288Z] 会话锁已释放
