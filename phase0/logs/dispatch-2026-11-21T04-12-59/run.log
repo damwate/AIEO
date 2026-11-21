@@ -1,0 +1,11 @@
+[2026-11-21T04:12:59.490Z] 证据目录: D:\AIEO\phase0\logs\dispatch-2026-11-21T04-12-59
+[2026-11-21T04:12:59.950Z] 会话锁已获取 pid=28432 instance=default lock=gpt-session.lockfile
+[2026-11-21T04:12:59.951Z] === GPT 派单（已有会话，消息 722 字节）===
+[2026-11-21T04:12:59.953Z] [instance] 实例域就绪: instance=default port=9222 profile=gpt-poc lock=gpt-session.lockfile
+[2026-11-21T04:13:00.534Z] 复用本实例调试端口 9222（归属核验 own=9）
+[2026-11-21T04:13:00.788Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 1 个
+[2026-11-21T04:13:00.790Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-21T04:13:08.693Z] 会话就绪: https://chatgpt.com/c/6b00e02a-8270-83ec-a61b-b824978dd586
+[2026-11-21T04:13:13.708Z] [dispatch] 基线尾部: {"role":"assistant","key":"3a034cbe-ea1d-5e3a-ab0b-36390cd46345:2:assistant","assistantUuid":"4194ab03-1c2c-409d-8676-6eb334d53102"}
+[2026-11-21T04:13:15.168Z] [dispatch] 发送双验通过（polls=1，user_unit_key=fallback-turn-0:0:user，tail 后观察）
+[2026-11-21T04:13:15.471Z] 截图: sent-dispatch.png

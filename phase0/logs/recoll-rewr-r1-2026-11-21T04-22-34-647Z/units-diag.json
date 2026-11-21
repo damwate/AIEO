@@ -1,0 +1,128 @@
+[
+  {
+    "key": "1af32c27-20bc-5c01-bc16-ebe617545c05:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 615,
+    "text_head": "[REVIEWER-MIGRATE-R2|审查会话接棒（前会话上下文打满）]\n你是 damwate/AIEO 项目新审查会话，接棒 6b009b70（CONTEXT_LIMIT_STOP，只读归档）。"
+  },
+  {
+    "key": "1af32c27-20bc-5c01-bc16-ebe617545c05:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 2269,
+    "text_head": "ChatGPT 说：\n\n[TAG|REVIEWER-MIGRATE-R2|接棒确认与阶段2裁定准备]\n\n接棒确认。 新审查会话正式承接 AIEO 独立审查职责。\n\n仓库：damwate/AIEO\n\n本"
+  },
+  {
+    "key": "fd71c8f2-d238-5bc3-8248-90b3f5757b73:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 465,
+    "text_head": "[P2-COUNT-R1|登录态改甲申请+生产实例数讨论]\n分支 fix/parallel-stage2 SHA=5d9fc9ea2121d1b4b7177e2c346db266c901bb78（C1"
+  },
+  {
+    "key": "fd71c8f2-d238-5bc3-8248-90b3f5757b73:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 4094,
+    "text_head": "ChatGPT 说：\n\n[TAG|P2-COUNT-R1|登录态方案与生产实例数裁定]\n\n本轮审查基线：damwate/AIEO@5d9fc9ea2121d1b4b7177e2c346db266c90"
+  },
+  {
+    "key": "8bd8f8db-a45c-5cc1-8f41-1f8ceb7f933f:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 597,
+    "text_head": "[P2-FIX-VERIFY|C1两修复定点复验（DEC-129裁定①）]\n分支 fix/parallel-stage2 新完整SHA={sha}：请按SHA读 gpt_dispatch.mjs 两处"
+  },
+  {
+    "key": "8bd8f8db-a45c-5cc1-8f41-1f8ceb7f933f:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 331,
+    "text_head": "ChatGPT 说：\n\n[P2-FIX-VERIFY|C1两修复定点复验]\n\n收到。本轮严格限定为 gpt_dispatch.mjs 两处整改，不扩大审查范围。\n\n但你给出的分支 SHA 仍是占位符 "
+  },
+  {
+    "key": "0fb1dee4-2165-559f-839d-fae0a152efb6:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 632,
+    "text_head": "[P2-FIX-VERIFY|C1两修复定点复验（DEC-129裁定①）]\n分支 fix/parallel-stage2 新完整SHA=4731086a55eaa7338cb420e7bce3e9c1"
+  },
+  {
+    "key": "0fb1dee4-2165-559f-839d-fae0a152efb6:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 871,
+    "text_head": "ChatGPT 说：\n\n[P2-FIX-VERIFY|C1两修复定点复验]\n\n审查基线：damwate/AIEO / fix/parallel-stage2\n完整 SHA：4731086a55eaa7"
+  },
+  {
+    "key": "4c673478-4d17-5740-9fd3-0e71f0a024bc:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 442,
+    "text_head": "[P2-FIX-VERIFY-R2|②有界重试补齐定点复验]\n分支 fix/parallel-stage2 新完整SHA=f75919c97bbe4a3ea234c3e5e1a5076808184d5"
+  },
+  {
+    "key": "4c673478-4d17-5740-9fd3-0e71f0a024bc:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 876,
+    "text_head": "ChatGPT 说：\n\n[P2-FIX-VERIFY-R2|②有界重试定点复验]\n\n审查基线：damwate/AIEO\n完整 SHA：f75919c97bbe4a3ea234c3e5e1a507680"
+  },
+  {
+    "key": "37b9c3d1-a916-53d2-a89b-9bc6661c34b3:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 425,
+    "text_head": "[P2-FIX-VERIFY-R3|②超时配置校验定点复验]\n分支 fix/parallel-stage2 新完整SHA=074e206ae64c037608103d31a79fa96b46305e4"
+  },
+  {
+    "key": "37b9c3d1-a916-53d2-a89b-9bc6661c34b3:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 580,
+    "text_head": "ChatGPT 说：\n\n[P2-FIX-VERIFY-R3|②超时配置校验定点复验]\n\n审查基线：damwate/AIEO\n分支：fix/parallel-stage2\n完整 SHA：074e206a"
+  },
+  {
+    "key": "3a034cbe-ea1d-5e3a-ab0b-36390cd46345:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 468,
+    "text_head": "[SESSION-ARCH-R1|审查会话机制改造：一轮一会话+清理]\n用户提案（背景：今日两次迁移+多次采集fail-closed皆因长会话累积）：①每派单都--new-session新开聊天，一段"
+  },
+  {
+    "key": "3a034cbe-ea1d-5e3a-ab0b-36390cd46345:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 2983,
+    "text_head": "ChatGPT 说：\n\n[SESSION-ARCH-R1|审查会话机制改造裁定]\n\n总体裁定：认可“一轮一会话”，历史清理与会话创建机制分开处理；Temporary Chat 暂不作为默认替代方案。 "
+  },
+  {
+    "key": "0b637369-a196-5593-afcc-bd4056b405df:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 394,
+    "text_head": "[REWRITE-ACCEPT-R1|L-018§6改写稿与流程方案定点验收]\n分支 fix/parallel-stage2 完整SHA=9be1a33373664c9cf1c7a6731a365c1"
+  },
+  {
+    "key": "0b637369-a196-5593-afcc-bd4056b405df:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 1580,
+    "text_head": "ChatGPT 说：\n\n[REWRITE-ACCEPT-R1] 已按指定完整 SHA 9be1a33373664c9cf1c7a6731a365c1587a0be5b 读取目标改写稿。\n\n初步判断：稿"
+  },
+  {
+    "key": "ba814340-b79c-554c-8809-05ae0e121847:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 358,
+    "text_head": "[REWRITE-ACCEPT-R1|L-018§6改写稿与流程方案定点验收]\n分支 fix/parallel-stage2 完整SHA=$TIP：请按SHA读 phase0/tools/sessio"
+  },
+  {
+    "key": "ba814340-b79c-554c-8809-05ae0e121847:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 272,
+    "text_head": "ChatGPT 说：\n\n请提供 fix/parallel-stage2 当前的 40 位完整 commit SHA，$TIP 是占位符，我无法据此固定审查对象。\n\n收到后我会只读取该 SHA 下的 p"
+  }
+]

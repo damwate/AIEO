@@ -1,0 +1,11 @@
+ChatGPT 说：
+
+请提供 fix/parallel-stage2 当前的 40 位完整 commit SHA，$TIP 是占位符，我无法据此固定审查对象。
+
+收到后我会只读取该 SHA 下的 phase0/tools/session_arch_l018_rewrite_r1.md，重点复验上轮两项：
+
+F-01：会话身份绑定异常必须 fail-closed，不能回退共享指针猜测归属。
+
+F-02：采集成功率的表述必须有可核验证据，或收敛为待实测。
+
+通过后按原范围进入实施：仅流程落地，不含代码改动、历史清理执行或 N=2 重启授权。

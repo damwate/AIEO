@@ -1,0 +1,31 @@
+[2026-11-21T04:15:39.259Z] 证据目录: D:\AIEO\phase0\logs\dispatch-2026-11-21T04-15-39
+[2026-11-21T04:15:39.724Z] 会话锁已获取 pid=27040 instance=default lock=gpt-session.lockfile
+[2026-11-21T04:15:39.727Z] === GPT 派单（已有会话，消息 686 字节）===
+[2026-11-21T04:15:39.730Z] [instance] 实例域就绪: instance=default port=9222 profile=gpt-poc lock=gpt-session.lockfile
+[2026-11-21T04:15:40.324Z] 复用本实例调试端口 9222（归属核验 own=9）
+[2026-11-21T04:15:40.490Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 1 个
+[2026-11-21T04:15:40.490Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-21T04:15:46.617Z] 会话就绪: https://chatgpt.com/c/6b00e02a-8270-83ec-a61b-b824978dd586
+[2026-11-21T04:15:51.627Z] [dispatch] 基线尾部: {"role":"assistant","key":"0b637369-a196-5593-afcc-bd4056b405df:2:assistant","assistantUuid":"0a0c2caf-1065-43fc-943a-240ccd2ea5ec"}
+[2026-11-21T04:15:52.847Z] [dispatch] 发送双验通过（polls=1，user_unit_key=fallback-turn-0:0:user，tail 后观察）
+[2026-11-21T04:15:53.148Z] 截图: sent-dispatch.png
+[2026-11-21T04:17:15.386Z] 会话锁已释放
+[2026-11-21T04:17:15.386Z] 致命错误: INBOUND_WINDOW_COMPLETENESS_UNPROVEN: BLOCKED: 滚动中实际观察到渲染 unit 集合变化，且缺少独立逻辑序列，不能排除持续遗漏中间 unit details={"materialized_unit_keys":["0b637369-a196-5593-afcc-bd4056b405df:0:user","0b637369-a196-5593-afcc-bd4056b405df:2:assistant","ba814340-b79c-554c-8809-05ae0e121847:0:user"],"remediation":"提供可信的完整逻辑 unit 序列，或在非虚拟化静态 DOM 上重新读取"}
+[2026-11-21T04:17:15.387Z] [tab-hygiene] 发送已发生：保留现场不关页（禁重发语义依赖现场）；退出后由人工/补采链按 L-018 处置
+Error: INBOUND_WINDOW_COMPLETENESS_UNPROVEN: BLOCKED: 滚动中实际观察到渲染 unit 集合变化，且缺少独立逻辑序列，不能排除持续遗漏中间 unit
+    at inboundError (file:///D:/AIEO/phase0/tools/inbound_reply.mjs:14:17)
+    at Object.build (file:///D:/AIEO/phase0/tools/inbound_reply.mjs:263:13)
+    at readReplySnapshot (file:///D:/AIEO/phase0/tools/inbound_dom.mjs:166:34)
+    at async sendAndCollect (file:///D:/AIEO/phase0/tools/gpt_dispatch.mjs:358:25)
+    at async mainLocked (file:///D:/AIEO/phase0/tools/gpt_dispatch.mjs:675:76)
+    at async main (file:///D:/AIEO/phase0/tools/gpt_dispatch.mjs:587:5) {
+  code: 'INBOUND_WINDOW_COMPLETENESS_UNPROVEN',
+  details: {
+    materialized_unit_keys: [
+      '0b637369-a196-5593-afcc-bd4056b405df:0:user',
+      '0b637369-a196-5593-afcc-bd4056b405df:2:assistant',
+      'ba814340-b79c-554c-8809-05ae0e121847:0:user'
+    ],
+    remediation: '提供可信的完整逻辑 unit 序列，或在非虚拟化静态 DOM 上重新读取'
+  }
+}

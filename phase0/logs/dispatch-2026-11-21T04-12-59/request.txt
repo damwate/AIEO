@@ -1,0 +1,2 @@
+[REWRITE-ACCEPT-R1|L-018§6改写稿与流程方案定点验收]
+分支 fix/parallel-stage2 完整SHA=9be1a33373664c9cf1c7a6731a365c1587a0be5b：请按SHA读 phase0/tools/session_arch_l018_rewrite_r1.md（按你 DEC-132 要求提交的改写稿）。内容=§6改写稿（常规=一轮一会话+四硬约束；例外=长任务/在途恢复须用户批准+失败边界；清理=批次清单+用户批准）+派单流程改造（--new-session --no-update-pointer 常态+指针降级为参考记录+中段采集语义已实装 recoll_p2fix_r3+机制影响评估照你裁定+实施验收项）。请定点验收本稿给PASS/FAIL；PASS后按你范围声明进入实施（无代码改动、无清理执行、无N=2重启）。
