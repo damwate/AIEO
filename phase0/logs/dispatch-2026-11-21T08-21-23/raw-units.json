@@ -1,0 +1,94 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-21T08:24:09.043Z",
+  "user_unit_key": "f89bf512-588f-5742-88c0-41317bded92d:0:user",
+  "start_key_resolved": "f89bf512-588f-5742-88c0-41317bded92d:0:user",
+  "start_resolved_by_marker": true,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "f89bf512-588f-5742-88c0-41317bded92d:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "e10e31a0-f5a9-4ab8-9e8c-80cf55c3302b",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "f89bf512-588f-5742-88c0-41317bded92d:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "f89bf512-588f-5742-88c0-41317bded92d:0:user",
+          "f89bf512-588f-5742-88c0-41317bded92d:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "f57d157318f7bb6138fb2cbb73ff78bd9dc9172a911e031a288d6e7cca769e41",
+          "e06948e4d1a8a87c62e899232dd29348223266a50c488d9d7dc700304cf573ae"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "f89bf512-588f-5742-88c0-41317bded92d:0:user",
+          "f89bf512-588f-5742-88c0-41317bded92d:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "f57d157318f7bb6138fb2cbb73ff78bd9dc9172a911e031a288d6e7cca769e41",
+          "e06948e4d1a8a87c62e899232dd29348223266a50c488d9d7dc700304cf573ae"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "f89bf512-588f-5742-88c0-41317bded92d:0:user",
+          "f89bf512-588f-5742-88c0-41317bded92d:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "f89bf512-588f-5742-88c0-41317bded92d:0:user",
+      "f89bf512-588f-5742-88c0-41317bded92d:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "f89bf512-588f-5742-88c0-41317bded92d:0:user",
+          "f89bf512-588f-5742-88c0-41317bded92d:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "f89bf512-588f-5742-88c0-41317bded92d:0:user",
+          "f89bf512-588f-5742-88c0-41317bded92d:2:assistant"
+        ],
+        "overlap_keys": [
+          "f89bf512-588f-5742-88c0-41317bded92d:0:user",
+          "f89bf512-588f-5742-88c0-41317bded92d:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "f89bf512-588f-5742-88c0-41317bded92d:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nQUEUE-DESIGN-R6 定点复验裁定\n\n复验对象： damwate/AIEO\n分支： fix/parallel-stage2\n指定完整 SHA： 422ddfd9541a1e57407c0716283a7ba7cefb6356\n文件： phase0/tools/parallel_queue_design_r1.md\n\n已按指定完整 SHA 读取 R6 文档，没有使用 HEAD 或其他版本替代。\n\n本轮只审查 DEC-140 的两项整改，不重新审查已经通过的 Token 生命周期、利用率公式、配额口径、四态枚举及 §③④⑤⑥ 主体。\n\n一、P0：/MIR 与凭据保护语义\n\n未通过 存在一处实质性冲突。\n\nR6 §⑥ 第190—193行的整改方向正确：\n\n明确 robocopy /MIR 会删除目标目录中源目录没有的文件。\n\n克隆目标必须是不存在的新目录。\n\n目标已存在时禁止删除、禁止 /MIR 覆盖。\n\n已含凭据材料的目录删除或清空，必须 DEC-010 逐目录审批。\n\n登录态失效实例暂停，凭据材料保留待处置。\n\n但仍有一个未关闭的矛盾：\n\n§⑥ 第171行，DEC-130 黄金源克隆规程第3步仍写着：\n\n已有残留目录先删除再镜像。\n\n这与第191行的新规则直接冲突。\n\n不能仅靠后文补充说明，要求执行者自行判断哪条优先。尤其这涉及含凭据目录的删除风险。\n\n整改要求：\n\n将第171行改为：目标目录必须不存在；存在则换新目录名，禁止自动删除及 /MIR 覆盖。\n\n如需清理已有目录，必须先确认目录身份及凭据材料情况，并按 DEC-010 逐目录审批。\n\n保留第192行：验收失败不等于无凭据。\n\n保留第193行：登录态失效实例暂停，凭据保留待处置。\n\n二、P1：版本链统一\n\n未通过 版本链尚未完全收敛。\n\n检查项\n\n\t\n\nR6 实际情况\n\n\t\n\n判定\n\n\n\n\n文档标题\n\n\t\n\nR6\n\n\t\n\nPASS\n\n\n\n\n顶部变更声明\n\n\t\n\nR6\n\n\t\n\nPASS\n\n\n\n\n附表一\n\n\t\n\n标题仍为「附」，未正式命名附表一\n\n\t\n\n整改\n\n\n\n\n附表二\n\n\t\n\n存在，但排在附表四之后\n\n\t\n\n整改\n\n\n\n\n附表三\n\n\t\n\nR3→R4\n\n\t\n\nPASS\n\n\n\n\n附表四\n\n\t\n\nR4→R5\n\n\t\n\nPASS\n\n\n\n\n附表五\n\n\t\n\nR5→R6\n\n\t\n\nPASS\n\n\n\n\n历史变更声明\n\n\t\n\n仍有「本 R2 仅修改本文档」\n\n\t\n\n整改\n\n\n\n\n末尾声明\n\n\t\n\nR6\n\n\t\n\nPASS\n\n具体问题：\n\n附表二的位置应调整至附表一之后，恢复 R1→R2→R3→R4→R5→R6 的阅读顺序。\n\n附表一标题应明确标为「附表一」。\n\n第285行的 R2 变更声明应明确标注为历史声明，避免与当前 R6 版本声明混淆。\n\n统一检查历史声明、附表引用和版本说明，确保不存在将 R2 历史声明误认为当前声明的歧义。\n\n注意：历史版本记录本身不要求删除，要求的是历史版本与当前版本的边界清楚。\n\n三、复验汇总\n\n审查项\n\n\t\n\n判定\n\n\n\n\nP0 /MIR 事实修正\n\n\t\n\n部分通过，存在冲突\n\n\n\n\nP0 新目录约束\n\n\t\n\n主体正确，旧规程未同步\n\n\n\n\nP0 凭据目录保护\n\n\t\n\nPASS\n\n\n\n\nP0 登录态失效处置\n\n\t\n\nPASS\n\n\n\n\nP1 R6 标题与声明\n\n\t\n\nPASS\n\n\n\n\nP1 附表一至五完整链条\n\n\t\n\n部分通过\n\n\n\n\nP1 历史声明边界\n\n\t\n\n未通过\n\n最终裁定：BLOCKED\n\n本轮不批准编码授权。\n\n四、下一轮提交要求\n\n只允许修改设计文档：\n\nP0：消除 §⑥ 第171行与第190—193行的冲突。\n\nP1：调整附表一至五的命名、顺序和历史声明边界。\n\n已通过内容继续零修改保留，尤其 Token 生命周期、利用率两级公式、配额口径分离及 §③④⑤⑥ 已通过主体。\n\n不得借本轮整改修改代码或运行态。\n\n提交新的完整 SHA，不使用 $TIP 或 HEAD。\n\n下一轮我将按新 SHA 只复验上述两个问题。\n\n通过后，再单独出具编码授权裁定。 本次 BLOCKED 不代表整个 Queue Service 设计推倒重来，也不撤销此前已通过的设计结论。",
+      "text_sha256": "e06948e4d1a8a87c62e899232dd29348223266a50c488d9d7dc700304cf573ae",
+      "size_bytes": 3740,
+      "assistant_uuid": "e10e31a0-f5a9-4ab8-9e8c-80cf55c3302b"
+    }
+  ]
+}
