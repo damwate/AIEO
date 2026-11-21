@@ -2,6 +2,7 @@
 
 - **依据：** DEC-137（R1 BLOCKED）+ DEC-138（R2 复审 BLOCKED，收敛中；六组细化要求：Q-02 时序歧义/Q-03 崩溃窗口/Q-04 令牌生命周期/Q-05 字段规格/Q-06 六类完整语义/Q-07 枚举统一/Q-08 机器可核验/§⑥ 全文恢复——本稿逐项落实）。
 - **R3 变更声明：** 仅修改本文档（设计），**零代码变更、零运行态变更**；R1→R2 对照见附表一，R2→R3 对照见附表二。
+- **辅助文件处理（R3 P1-6）：** 过程性中间文件（如 _ops_section1_extract.txt 提取草稿）不入库——已从本次提交移除并登记；入库文件白名单=设计文档/任务包/测试证据/归档目录，临时提取件一律走系统临时目录。
 - **明确不修改的既有约束（照 DEC-137）：** C9 已验收门禁实现 / C6 已验收采集语义 / C1-R2 实例互斥语义 / DEC-130 黄金源克隆 / DEC-010 profile 删除审批 / L-018 补采禁重发 / L-022 非阻塞 / L-023 三层决策。
 
 ## ① 架构四域与三阶段（R1 PASS_WITH_CONSTRAINTS，补两点后定稿）
@@ -60,24 +61,24 @@
 }
 ```
 
-**字段规格表（Q-05：类型/必填/枚举/归档关联——Execution 与 dispatch 归档四方关联：execution.dispatch_id ↔ dispatch 目录 ↔ send-state.json（始终存在）↔ result.json（成功时））：**
+**字段规格表（Q-05/R3 P1-1 整改：共 14 行=Task 4+Execution 8+Instance 1+Pool 1；每字段含类型/必填条件/枚举/状态转换/主外键/权威源/镜像规则/崩溃恢复规则；核心字段逐行列出，其余实体字段见 §② JSON 契约全文）：**
 
-| 实体.字段 | 类型 | 必填 | 枚举/约束 | 归档关联 |
-|---|---|---|---|---|
-| Task.task_id | string `T-<seq>` | ✓ | 全局唯一 | — |
-| Task.status | enum | ✓ | §③ 九态；转换仅限 §③ 表 | 账本=权威源 |
-| Task.claim_token | uuid\|null | CLAIMED 起 ✓ | 唯一执行权 | — |
-| Task.rework_of | task_id\|null | 整改任务 ✓ | 指向 VERIFIED_FAIL 原任务 | — |
-| Execution.execution_id | uuid | ✓ | 每次执行唯一 | =账本主键 |
-| Execution.attempt_id | int ≥1 | ✓ | 递增 | — |
-| Execution.dispatch_id | string | ✓ | dispatch-<ts>[-uuid] | =归档目录名 |
-| Execution.idempotency_key | string | ✓ | task+attempt+instance 哈希 | 防重复派发 |
-| Execution.send_state | enum | ✓ | NOT_SENT/SEND_ATTEMPTED/SEND_CONFIRMED | **镜像 send-state.json（权威源，不一致以归档为准并登记）** |
-| Execution.recovery_state | enum | ✓ | NONE/PENDING_VERIFY/RECOVERED/MANUAL_REQUIRED | — |
-| Execution.last_checkpoint | enum | ✓ | CLAIMED/C9_PASS/SENT/COLLECTING | §③ 崩溃窗口表 |
-| Execution.failure_code | enum\|null | 失败时 ✓ | LOCK_CONFLICT/C9_BLOCKED/VERIFICATION_REQUIRED/COLLECT_FAIL/... | — |
-| Instance.status | enum | ✓ | IDLE/BUSY/ERROR/OFFLINE/PAUSED | — |
-| Pool.account_gate | enum | ✓ | ALLOWED/BACKOFF/VERIFICATION_HOLD | — |
+| # | 实体.字段 | 类型 | 必填条件 | 枚举/约束 | 状态转换 | 主/外键 | 权威源与镜像 | 崩溃恢复 |
+|---|---|---|---|---|---|---|---|---|
+| 1 | Task.task_id | string | ✓ | `T-<seq>` 全局唯一主键 | 不变 | 主键 | 账本=权威源 | 不变 |
+| 2 | Task.status | enum | ✓ | 九态见 §③，转换仅限 §③ 表 | 按 §③ | — | 账本=权威源 | 按 §③ W0-A/W0-B/W1/W2 |
+| 3 | Task.claim_token | uuid\|null | CLAIMED 起 ✓ | 唯一执行权；核销规则见 §⑦ fencing | 生成→持有→核销 | 外键→Execution | 账本=权威源 | 悬空检测→恢复序 |
+| 4 | Task.rework_of | task_id\|null | 整改任务 ✓ | 指向 VERIFIED_FAIL 原任务 | 不变 | 外键→Task | 账本=权威源 | 不变 |
+| 5 | Execution.execution_id | uuid | ✓ | 每次执行唯一 | 不变 | 主键 | 账本=权威源 | — |
+| 6 | Execution.attempt_id | int ≥1 | ✓ | 同 task 递增 | 递增 | 与 task_id 组成复合键 | 账本=权威源 | — |
+| 7 | Execution.dispatch_id | string | ✓ | `dispatch-<ts>[-uuid]` | 不变 | 外键→归档目录 | 归档目录=权威源 | — |
+| 8 | Execution.idempotency_key | string | ✓ | task+attempt+instance 哈希，全局唯一 | 不变 | 防重复派发断言键 | 账本=权威源 | — |
+| 9 | Execution.send_state | enum | ✓ | NOT_SENT/SEND_ATTEMPTED/SEND_CONFIRMED | 按 §③ 窗口表 | — | **镜像 send-state.json（权威源）**；不一致以归档为准并登记差异 | W1/W2 恢复 |
+| 10 | Execution.recovery_state | enum | ✓ | NONE/PENDING_VERIFY/RECOVERED/MANUAL_REQUIRED | 按 §③ 恢复序 | — | 账本=权威源 | W1 核实流程 |
+| 11 | Execution.last_checkpoint | enum | ✓ | CLAIMED/C9_PASS/SENT/**GENERATING**/COLLECTING（R3 P1-1：补齐 GENERATING，与 §② JSON 契约一致） | 按 §③ 窗口表前进 | — | 账本=权威源 | checkpoint 决定恢复窗口 |
+| 12 | Execution.failure_code | enum\|null | 失败时 ✓ | LOCK_CONFLICT/C9_BLOCKED/VERIFICATION_REQUIRED/COLLECT_FAIL/... | — | — | 账本=权威源 | — |
+| 13 | Instance.status | enum | ✓ | IDLE/BUSY/ERROR/OFFLINE/PAUSED | 按 §⑦ | — | 实例账本=权威源 | PAUSED 恢复=人工/门禁 |
+| 14 | Pool.account_gate | enum | ✓ | ALLOWED/BACKOFF/VERIFICATION_HOLD（R3 P1-3：与 VerificationState 映射见表 §⑤） | 按 §⑤ 映射表 | — | 池账本=权威源 | BACKOFF 归一化/C9 语义 |
 
 **幂等与恢复（Q-03/Q-05）：**
 - 派发前以 `idempotency_key` 查账本：存在有效 EXECUTING 记录→禁派发（任务唯一性）。
@@ -88,9 +89,9 @@
 
 | # | 动作 | 持久化动作 | last_checkpoint | 崩溃窗口 | 恢复语义 |
 |---|---|---|---|---|---|
-| 1 | 原子认领 | 账本写 CLAIMED+claim_token | CLAIMED | W0 | 任务回 READY（零浏览器操作） |
+| 1a | 原子认领 | 账本写 CLAIMED+claim_token | CLAIMED | **W0-A** | 已认领、尚未启动浏览器→可安全释放认领，任务回 READY |
 | 2 | C9_CHECKING ALLOWED | （无独立落盘，状态在账本） | C9_PASS | — | — |
-| 3 | 浏览器操作（spawn/goto/composer） | — | C9_PASS | W0 | 同上 |
+| 3 | 浏览器操作（spawn/goto/composer/附件上传/文本填充） | — | C9_PASS | **W0-B** | **浏览器已启动或已操作但尚未 SEND_ATTEMPTED→保留现场，核实浏览器及 composer 状态，禁按零操作处理**（R3 P0-1：SEND_ATTEMPTED 前已有真实浏览器操作，笼统"零操作"与实际执行序矛盾） |
 | 4 | recordSend("SEND_ATTEMPTED") 原子落盘（tmp+rename+flush，Enter 之前） | send-state.json=SEND_ATTEMPTED | SENT | **W1** | **recovery=PENDING_VERIFY：保留现场→核实 ChatGPT 侧实际状态→RECOVERED 或 MANUAL_REQUIRED；禁视为未发送、禁自动重发** |
 | 5 | Enter→发送双验 | — | SENT | W1 | 同上 |
 | 6 | recordSend("SEND_CONFIRMED") 原子落盘 | send-state.json=SEND_CONFIRMED（含 session_id） | COLLECTING | **W2** | 现场保留→L-018 补采（禁重发）→补采成功=REPORTED |
@@ -98,6 +99,8 @@
 | 8 | REPORTED（归档完成+result.json） | result.json | REPORTED | — | — |
 
 W1/W2 的恢复动作均已实装验证（T2甲=T2 现场=W1 实证；C4 双实例=W1 复现+补采闭环）。
+
+**recordSend 双写权威规则（R3 P0-1 附带要求）：** callerReceipt（AIEO_DISPATCH_SEND_RECEIPT 外置）与归档 send-state.json 双写——**权威源=归档 send-state.json**（审计依据），callerReceipt=调用方便利镜像；双写间崩溃的对账=以归档文件为准核对 callerReceipt，不一致以归档登记差异（两者写入均为 tmp+rename 原子，中断仅产生缺一侧，不产生半写）。
 
 ## ③ 状态机与异常转换（Q-02 整改：时序统一+验收失败两分+异常四分）
 
@@ -142,19 +145,23 @@ READY → CLAIMED（原子认领：任务+实例绑定写账本，§⑦）
 
 | 类 | 字段与单位 | 来源 | 时间戳 |
 |---|---|---|---|
-| 吞吐与任务效率 | 总派单量（日/每实例）、成功数、FAIL/BLOCKED 分列、每小时成功任务数（个/h）、响应时间 P50/P95（ms）、排队时间（ms，任务入队到实际启动）、并发利用率（并行任务数/空闲时间） | Execution 账本聚合 | 每条 execution started/finished_at |
-| 账号配额 | 观察期初始额度（可读时记录）、每日消耗、每任务平均消耗、额度恢复时间/量、消耗速度、剩余余量——**官方无精确余量数字时只记可观测信息（如限流横幅出现），禁自算虚假精确配额** | 可观测页面信号+人工登记 | 每次观测时间戳 |
+| 吞吐与任务效率 | 总派单量（日/每实例）、成功数、FAIL/BLOCKED 分列、每小时成功任务数（个/h）、响应时间 P50/P95（ms）、排队时间（ms）、**并发利用率 U=实例 BUSY 时间÷统计周期总时间（R3 P1-2：数量与时间之比不成立，改时间占比；分实例级与整机级两组）** | Execution 账本聚合 | 每条 execution started/finished_at |
+| 账号配额 | 观察期初始额度（可读时记录）、每日消耗（**可观测单位：限流横幅出现次数/受限会话数**）、每任务平均消耗（同口径）、额度恢复时间/恢复形态、消耗速度（受限信号频次）、剩余余量——**官方无精确余量数字的指标一律 NOT_OBSERVED，禁估算值冒充真实额度（R3 P1-2：补单位口径）** | 可观测页面信号+人工登记 | 每次观测时间戳 |
 | 429 与账号风控 | 429 真实出现次数、发生时实例数/并发量、发生时间、页面原始错误形态（截图+文本）、C9 是否成功写入退避、其他实例是否停止派单、退避期限是否被缩短、安全提醒/异常登录/会话失效 | observeAccountRisk+账本事件 | 事件时间戳 |
 | 实例稳定性与隔离 | Chrome 异常退出次数、CDP 断连次数、profile 登录态失效次数、端口冲突次数、实例锁冲突次数、清理 A 时 B 是否正常、补采是否回原会话、跨实例串档、不明副作用 | Instance 账本+dispatch run.log | 事件时间戳 |
 | 机器资源 | 每实例与整机 CPU 平均/P95（%）、内存平均/峰值（MB）、Chrome 进程数、异常进程残留、磁盘及日志增长（MB） | 资源采样器（另行接入，字段先行） | 采样时间戳 |
-| 扩容判断 | 串档/误杀/未知副作用→停止扩容；账号级风控异常→停止并复核 C9；配额余量不足→不增实例；N=3 吞吐明显提升且稳定→可考虑 N=3 生产；N=3 仍积压且 N=4 有实际收益→申请 N=4 验证；N=4 只增消耗无收益→保持 N=3。**经济性指标=N=3 相对 N=2 的成功吞吐提升、N=4 相对 N=3 的边际吞吐提升——增实例只看总请求数不算数** | 聚合判定 | 评估时点 |
+| 扩容判断 | 串档/误杀/未知副作用→停止扩容；账号级风控异常→停止并复核 C9；配额余量不足→不增实例；N=3 吞吐明显提升且稳定→可考虑 N=3 生产；N=3 仍积压且 N=4 有实际收益→申请 N=4 验证；N=4 只增消耗无收益→保持 N=3。**经济性指标（R3 P1-2 补齐四项）：①单位成功任务的资源消耗（资源÷成功数）②单位成功任务的实际配额消耗（受限信号频次÷成功数）③增加实例带来的成功吞吐增量 ④增加实例的边际资源成本——增实例只看总请求数不算数，须同时看收益与成本** | 聚合判定 | 评估时点 |
 
 C6 结构化载体（Execution.c6 字段，独立可扩展）：`rate_limit`/`verification`/`isolation` 三类逐执行记录；`throughput`/`quota`/`resource`/`扩容判断` 为聚合类（观察期聚合器按日汇总，非单 Execution 字段）。
 
 ## ⑤ 人机验证四态及人工处置（R1 PASS_WITH_CONSTRAINTS，补 Q-07）
 
 - 四态与红线不变（禁自动点击/破解/绕过/刷新/重克隆；人工恢复后才复派；全池 PAUSED-HUMAN）。
-- **Q-07 新增两点：** ①VERIFICATION_SUSPECTED 不得因超时或页面重新加载自动降级为 NORMAL——恢复只有两条路径：人工确认，或经明确授权的可靠恢复判定（结构化复检通过+记录）；判定器输出与恢复动作均入 c6.verification.events。②**四态正式枚举名统一为 `VerificationState = VERIFICATION_NORMAL | VERIFICATION_SUSPECTED | VERIFICATION_REQUIRED | VERIFICATION_UNKNOWN_BLOCK`**——判定器输出、Pool.account_gate（VERIFICATION_HOLD 对应 REQUIRED 态）、c6.verification.state 三处使用同一枚举，禁别名混用（R2 中 NORMAL/SUSPECTED/REQUIRED/UNKNOWN_BLOCK 与 VERIFICATION_* 两套命名并存，本稿统一）。
+- **Q-07 落实（R3 P1-3 整改：两枚举+显式映射，非单一枚举混用）：**
+  - `VerificationState`（人机验证识别状态，判定器/c6.verification.state 使用）= `VERIFICATION_NORMAL | VERIFICATION_SUSPECTED | VERIFICATION_REQUIRED | VERIFICATION_UNKNOWN_BLOCK`
+  - `AccountGateState`（账号级派单门禁状态，Pool.account_gate 使用）= `ALLOWED | BACKOFF | VERIFICATION_HOLD`
+  - **映射表：** VERIFICATION_NORMAL→ALLOWED（还须满足其他门禁条件如 BACKOFF）；VERIFICATION_SUSPECTED→VERIFICATION_HOLD；VERIFICATION_REQUIRED→VERIFICATION_HOLD；VERIFICATION_UNKNOWN_BLOCK→VERIFICATION_HOLD。
+  - 红线保留：SUSPECTED 不得因超时/页面重新加载自动降级；恢复仅人工确认或授权复检；判定器输出与恢复动作入 c6.verification.events。
 
 ## ⑥ 实例池容量、并发与克隆约束（R1 PASS；R3 恢复完整操作规范原文，不以摘要替代）
 
@@ -178,7 +185,9 @@ C6 结构化载体（Execution.c6 字段，独立可扩展）：`rate_limit`/`ve
 
 **两条硬约束（DEC-130 原文恢复）：** 黄金源 profile 只在全部 Chrome 关闭时更新，更新后再生成实例副本；不允许运行中热复制、多个实例共享目录或自动循环重新登录。**甲方案批准的是受控克隆机制，不是把一份活动中的 profile 当作共享文件使用。**
 
-**Profile 生命周期不变量（DEC-135 补记，用户追问查证固化）：** 自清理=仅终止 Chrome 进程（Stop-Process），永不删除/修改 profile 目录；浏览器关闭顺序=browser.close()（优雅，cookie 落盘）→killProfileChrome（兜底孤儿进程）；**profile 目录只增不删（删除=DEC-010 另批）**。实证=default 历经数十次清理循环数日保持登录；agent-a/b 克隆后经多轮清理用户确认仍登录。
+**Profile 生命周期不变量（DEC-135 补记，用户追问查证固化）+ 边界冲突澄清（R3 P1-5）：**
+- 自清理=仅终止 Chrome 进程（Stop-Process），永不删除/修改 profile 目录；浏览器关闭顺序=browser.close()（优雅，cookie 落盘）→killProfileChrome（兜底孤儿进程）；**含登录态的 profile 目录只增不删（删除=DEC-010 另批）**。实证=default 历经数十次清理循环数日保持登录；agent-a/b 克隆后经多轮清理用户确认仍登录。
+- **与 DEC-130"已有残留目录先删除再镜像"的边界澄清：** "先删除再镜像"仅适用于**克隆初始化期对未含登录态的失败克隆残留**（C1 首跑实证：从未登录的半初始化目录带入脏缓存）——此类目录不含登录凭据，删除重建不违反不变量；**不变量保护的对象=含登录态或已通过登录态验收的 profile**（default/agent-a/agent-b）。判定标准=该目录是否曾通过登录态验收。
 
 **容量与并发（保留）：** 容量=登录态已验收实例数（非配置声明数）；每实例互斥串行、跨实例并行=N；N=2 现行、N=3 为阶段3 目标不随 Queue 编码自动扩容；侧栏账号级共享→CONV_UUID 精确导航禁最新启发式（C4 实测）。
 
@@ -189,6 +198,13 @@ C6 结构化载体（Execution.c6 字段，独立可扩展）：`rate_limit`/`ve
 - **claim_token 生命周期（Q-04）**：认领成功时生成 uuid 写入 task.claim_token → EXECUTING 全程持有 → REPORTED/VERIFIED 后核销（置 null）→ **崩溃/死亡后 token 悬空**：账本扫描发现 EXECUTING 且 worker 注册表无该 token → 走 §② 崩溃恢复序（checkpoint 映射）→ 重派=作废旧 token+生成新 token（新 Execution attempt）。
 - **防双执行（Q-04）**：①同 task_id 唯一有效 claim_token；②双入口（人工中控/Queue）都必须经 `claimTask` 接口（禁绕过账本直接派发）；③派发前 idempotency_key 查账本（有效 EXECUTING 存在→禁派发）；④归属不能确认时→人工核对，禁自动重发。
 - 归属不能确认时→人工核对，禁自动重发。
+
+**防旧执行者复活机制（R3 P0-2 整改：worker 判死≠失去执行能力——浏览器可能仍在产生副作用）：**
+1. **token 持有者身份绑定：** claim_token 与 worker 进程标识（pid+启动时间戳）双写账本；账本写操作必须携带当前 token，**旧 token 不得继续提交结果**（关键账本写入逐条核对 token，不匹配拒绝写入并登记）。
+2. **token 失效条件（明确枚举）：** ①worker 进程死亡（心跳/注册表消失）；②任务终态到达（REPORTED/VERIFIED/VERIFIED_FAIL/BLOCKED/DEFERRED——各路径 token 释放规则：REPORTED/VERIFIED→核销；VERIFIED_FAIL→核销（整改走新 task）；BLOCKED/DEFERRED→token 挂起保留（恢复时续用或重领时作废重发）；③人工判定失效。
+3. **旧 worker 终止确认：** 重派前必须确认旧 worker 进程已不存在（进程枚举）且其浏览器副作用已处置（§⑥ 隔离检查）——**无法证明旧执行者已失效→保持人工接管，禁自动重派**。
+4. **Fencing：** 新 token 生效前，旧 token 写入全部拒绝（账本逐条核对）；新 worker 启动前确认旧实例浏览器已处置（存活则先隔离）。
+5. **释放规则汇总：** REPORTED/VERIFIED→核销；VERIFIED_FAIL→核销（rework 新任务新 token）；BLOCKED/DEFERRED→挂起保留；进程死亡→悬空检测触发恢复序。
 
 **回滚流程（R1 缺口补齐，不再"停进程即接管"）：**
 ```
@@ -202,21 +218,21 @@ C6 结构化载体（Execution.c6 字段，独立可扩展）：`rate_limit`/`ve
 
 **Phase A（观测）：** 采集器零侵入（现役行为零变化）；C6 字段有明确来源/单位/时间戳；采集缺失显式 observed:false 禁默认零值冒充；采集失败不得改变现役 Bash 行为。
 
-**Phase B（骨架）五项测试（Q-08：每项绑定机器可核验证据产物+断言；全 PASS 才进 C）：**
-1. 双入口并发认领——**证据=认领压测审计日志**（W 并发×M 任务经同一 claimTask 接口）；**断言=每 task_id 恰 1 条 CLAIM 记录+claim_token 全局唯一**（账本扫描脚本核验，exit 0）。
-2. 进程崩溃恢复四点——**证据=四个 kill 现场 dispatch 目录**（认领前/认领后/发送尝试后/发送确认后各一）+各自 recovery_state 记录；**断言=W1 现场 send-state.json=SEND_ATTEMPTED 且 recovery=PENDING_VERIFY；无自动重发（派单计数=1）**。
-3. C9 BLOCKED 零浏览器操作——**证据=门禁拒绝日志（ACCOUNT_BACKOFF_ACTIVE 时间戳）+CDP 目标清单**；**断言=拒绝时间戳早于任何 CDP 连接时间，浏览器进程数=0**。
-4. C6 证据完整性——**证据=四方关联表脚本输出**；**断言=execution.dispatch_id→目录存在→send-state.json 可读→result.json session_id 匹配（成功时），逐条 exit 0**。
-5. 回滚演练——**证据=演练前后账本 diff+进程枚举**；**断言=idempotency_key 无重复派发+无孤儿 chrome 进程（profile 匹配枚举=0）+无任务丢失（READY/EXECUTING 清单与演练前一致）**。
+**Phase B（骨架）五项测试（Q-08/R3 P1-4 整改：统一格式=测试输入→预期状态→证据文件→核验脚本→断言→exit code；W0-A/W0-B/W2 纳入崩溃恢复；全 PASS 才进 C）：**
+1. 双入口并发认领——输入=W 并发×M 任务经同一 claimTask 接口；预期=每 task_id 恰 1 执行权；证据=认领压测审计日志；核验=账本扫描脚本；断言=每 task_id 恰 1 条 CLAIM 记录+claim_token 全局唯一；exit 0。
+2. 进程崩溃恢复**五点**（R3 P1-4：W0 拆分后扩为 W0-A/W0-B/W1/W2+认领前共五点）——输入=各窗口时点 kill -9；预期=按 §③ 窗口表逐窗口恢复语义；证据=五个现场 dispatch 目录+recovery_state；核验=恢复序脚本；断言=W0-A 回 READY/W0-B 保留现场核实/W1=PENDING_VERIFY 禁自动重发（派单计数=1）/W2=L-018 补采/认领前=账本无痕；exit 0。
+3. C9 BLOCKED 零浏览器操作——输入=BACKOFF 态下派发；预期=零浏览器操作；证据=门禁拒绝日志（ACCOUNT_BACKOFF_ACTIVE 时间戳）+CDP 目标清单+进程枚举；核验=时间戳比对脚本；断言=拒绝时间戳早于任何 CDP 连接时间，且**新建浏览器进程=0（R3 P1-4：已有实例的存活进程不算"发生了浏览器操作"，区分新建与复用）**；exit 0。
+4. C6 证据完整性——输入=若干完成 Execution；预期=四方可追溯；证据=关联表脚本输出；核验=关联脚本；断言=execution.dispatch_id→目录存在→send-state.json 可读→result.json session_id 匹配（成功时），逐条 exit 0。
+5. 回滚演练——输入=执行中触发回滚流程（§⑦ 五步）；预期=无重复派发/无孤儿进程/无任务丢失；证据=演练前后账本 diff+进程枚举；核验=断言脚本；断言=idempotency_key 无重复+孤儿 chrome（profile 匹配）=0+**任务终态差集为空（终态集合=VERIFIED/VERIFIED_FAIL/BLOCKED/DEFERRED；排除项=DEFERRED 逐条附原因，R3 P1-4 定义）**；exit 0。
 
-**Phase C（接管）七附加条件（Q-08：逐条绑定核验方式）：**
-1. 连续 ≥20 任务队列自主运行零人工派发干预——证据=账本 20 条 REPORTED+中控操作日志零派发记录。
-2. 无重复派发——断言=idempotency_key 全局唯一扫描 exit 0。
-3. 无任务丢失——断言=入队清单与终态清单差集为空（DEFERRED/BLOCKED 除外且逐条有因）。
-4. 无未经门禁的浏览器操作——断言=每条 Execution 的 C9_PASS 时间戳早于其 CDP 连接时间戳。
-5. 人机验证暂停与恢复正确——证据=VERIFICATION_HOLD 事件+人工恢复记录+恢复后重新过门日志。
+**Phase C（接管）七附加条件（Q-08/R3 P1-4 整改：逐条绑定核验方式+日志/差集/审计格式定义）：**
+1. 连续 ≥20 任务队列自主运行零人工派发干预——**中控操作日志事件格式定义：`{ts, actor, event: CLAIM|DISPATCH|VERIFY|OTHER, task_id}`（JSONL）**；派发事件识别=event∈{CLAIM,DISPATCH}；核验=扫描脚本统计人工 actor 的派发事件数=0。
+2. 无重复派发——核验=idempotency_key 全局唯一扫描脚本，exit 0。
+3. 无任务丢失——**终态集合定义={VERIFIED, VERIFIED_FAIL, BLOCKED, DEFERRED}；排除项=DEFERRED/BLOCKED 逐条附原因登记**；核验=入队清单 vs 终态清单差集脚本，差集=空 exit 0。
+4. 无未经门禁的浏览器操作——核验=每条 Execution 的 C9_PASS 时间戳早于其 CDP 连接时间戳脚本，逐条 exit 0。
+5. 人机验证暂停与恢复正确——证据=VERIFICATION_HOLD 事件+人工恢复记录+恢复后重新过门日志，逐条时间戳有序。
 6. 中控验收失败不阻塞无依赖任务——证据=VERIFIED_FAIL 任务存在期间其他任务 REPORTED 记录。
-7. 失败现场可恢复可审计——证据=每 FAIL 对应 dispatch 目录完整（request/run.log/send-state/reply 缺失项逐条登记）。
+7. 失败现场可恢复可审计——**必备文件=request.txt/run.log/send-state.json（三缺一=FAIL）；允许缺失=result.json/reply.txt/截图（kill 类现场，缺失逐条登记即 PASS）**；核验=文件清单脚本逐 FAIL 检查，exit 0。
 **N=3 扩容独立审批，不属于 Phase C 自动验收结果。**
 
 ## 附：R1→R2 修改对照（P0/P1 逐项关闭声明）
@@ -236,6 +252,19 @@ C6 结构化载体（Execution.c6 字段，独立可扩展）：`rate_limit`/`ve
 | ⑤补 | SUSPECTED 降级 | §⑤ Q-07 条款 |
 | ⑦补 | 回滚流程 | §⑦ 回滚五步 |
 | ⑧补 | Phase B/C 标准不足 | §⑧ 五测试+七附加 |
+
+## 附表三：R3→R4 修改对照（DEC-139 P0×2/P1×6 逐项关闭）
+
+| 项 | R3 缺口 | R4 落实位置 |
+|---|---|---|
+| P0-1 | W0 恢复语义实质错误（笼统零操作） | §② 窗口表拆 W0-A（未启动浏览器→安全释放回 READY）/W0-B（已操作未 SEND_ATTEMPTED→保留现场核实）；recordSend 双写权威规则（权威源=归档 send-state.json，对账=不一致登记） |
+| P0-2 | claim_token 缺防旧执行者复活 | §⑦ fencing 五机制（token-进程绑定/失效条件枚举/终止确认/新 token 前隔离/旧 token 禁提交）+各终态释放规则 |
+| P1-1 | 字段表 13/14 行不符+last_checkpoint 缺 GENERATING+双写规则缺 | §② 14 行表修正+补 GENERATING+新增权威源/镜像/崩溃恢复三列 |
+| P1-2 | 利用率定义不成立+配额缺单位+经济性不足 | §④ U=BUSY 时间÷周期（分实例/整机）+可观测单位口径（NOT_OBSERVED 保留）+经济性四项补齐 |
+| P1-3 | Pool 枚举未统一 | §⑤ 两枚举（VerificationState/AccountGateState）+显式映射表+红线保留 |
+| P1-4 | 测试证据不可核验 | §⑧ 统一格式（输入→预期→证据→脚本→断言→exit code）+崩溃五点（W0-A/W0-B/W1/W2+认领前）+C9 区分新建/复用+Phase C 日志格式/差集定义/审计文件要求 |
+| P1-5 | §⑥ 删除与只增不删冲突 | §⑥ 边界澄清（残留=未含登录态的失败克隆残留；不变量保护=含登录态已验收 profile） |
+| P1-6 | 辅助文件处理 | 变更声明+入库白名单规则+过程文件移除 |
 
 **变更声明：** 本 R2 仅修改本文档；无代码变更、无运行态变更、无清理执行、无 N=2 重启授权变更。
 
