@@ -1,0 +1,94 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-21T04:33:51.960Z",
+  "user_unit_key": "5748f7fa-15e1-5b32-929a-fd389b1ec35f:0:user",
+  "start_key_resolved": "5748f7fa-15e1-5b32-929a-fd389b1ec35f:0:user",
+  "start_resolved_by_marker": true,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "5748f7fa-15e1-5b32-929a-fd389b1ec35f:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "1b13dc45-5942-4a91-b3d4-fbdc603079a3",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "5748f7fa-15e1-5b32-929a-fd389b1ec35f:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "5748f7fa-15e1-5b32-929a-fd389b1ec35f:0:user",
+          "5748f7fa-15e1-5b32-929a-fd389b1ec35f:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "da026d1935120840067bc42e2195d031782679c4453d9d9e10c98c019a92f2e2",
+          "84740406635d86cf114c9eade29806376dcd69c25d817e74bc65e4ef7cd6f00e"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "5748f7fa-15e1-5b32-929a-fd389b1ec35f:0:user",
+          "5748f7fa-15e1-5b32-929a-fd389b1ec35f:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "da026d1935120840067bc42e2195d031782679c4453d9d9e10c98c019a92f2e2",
+          "84740406635d86cf114c9eade29806376dcd69c25d817e74bc65e4ef7cd6f00e"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "5748f7fa-15e1-5b32-929a-fd389b1ec35f:0:user",
+          "5748f7fa-15e1-5b32-929a-fd389b1ec35f:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "5748f7fa-15e1-5b32-929a-fd389b1ec35f:0:user",
+      "5748f7fa-15e1-5b32-929a-fd389b1ec35f:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "5748f7fa-15e1-5b32-929a-fd389b1ec35f:0:user",
+          "5748f7fa-15e1-5b32-929a-fd389b1ec35f:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "5748f7fa-15e1-5b32-929a-fd389b1ec35f:0:user",
+          "5748f7fa-15e1-5b32-929a-fd389b1ec35f:2:assistant"
+        ],
+        "overlap_keys": [
+          "5748f7fa-15e1-5b32-929a-fd389b1ec35f:0:user",
+          "5748f7fa-15e1-5b32-929a-fd389b1ec35f:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "5748f7fa-15e1-5b32-929a-fd389b1ec35f:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nP2-CAPTCHA-QUEUE-R1｜架构提案裁定\n\n原则性立项 PASS 实施附条件\n\n我的裁定是：人机验证必须纳入可靠性体系；队列服务值得立项，但不应立即发展成一个大型调度平台。采用先补观测、再建轻量骨架、最后逐步替换现有 Bash 编排的路线。\n\n这两个议题实际上有较强的关联：人机验证、账号退避、实例异常都需要统一的任务暂停与恢复机制。继续依赖 Bash 加人工调度，后期会出现多处重复处理。\n\n一、① 人机验证三项纳管：全部认可\nPASS\n\n三项均纳入 P2 设计，具体裁定如下。\n\n1. 结构化人机验证判定：必须做，P1 优先级\n\n在观察点增加独立判定器，建议状态：\n\n状态\n\n\t\n\n处理\n\n\n\n\nNORMAL\n\n\t\n\n正常执行\n\n\n\n\nVERIFICATION_SUSPECTED\n\n\t\n\n疑似验证页面，暂停当前任务\n\n\n\n\nACCOUNT_VERIFICATION_REQUIRED\n\n\t\n\n确认需要人机验证，fail-closed\n\n\n\n\nUNKNOWN_BLOCK_PAGE\n\n\t\n\n无法识别的异常页面，暂停并人工检查\n\n判定依据：\n\nTurnstile、Cloudflare Challenge 等可识别元素。\n\n页面标题、DOM 特征及异常页面结构。\n\n页面内容与预期业务页面不符。\n\n页面跳转、响应状态和关键元素缺失。\n\n特别强调：\n\n不能只依赖单个 DOM 元素判断，也不能把普通加载失败直接认定为人机验证。\n\n处置原则：\n\n不自动点击、破解或绕过人机验证。\n\n不反复刷新验证页面。\n\n不重新克隆实例尝试规避限制。\n\n进入人工处理状态，等待人工完成平台要求的验证。\n\n人工确认恢复后，才允许重新派单。\n\n2. 新会话与克隆频次上限：认可，但暂不拍死具体数字\n\n我建议拆成三个指标：\n\n新会话创建频率。\n\n新浏览器实例创建频率。\n\n新设备身份 / Profile 初始化频率。\n\n这里有一个重要区别：\n\n新聊天会话不等于新浏览器设备身份。\n\n不能为了实现一轮一会话，就不断创建浏览器实例或克隆 Profile。\n\n初始策略：\n\n操作\n\n\t\n\n策略\n\n\n\n\n已登录 Profile 新建聊天\n\n\t\n\n允许，纳入频率统计\n\n\n\n\n已有实例恢复会话\n\n\t\n\n优先\n\n\n\n\n新建浏览器实例\n\n\t\n\n受实例池上限约束\n\n\n\n\n克隆 Profile\n\n\t\n\n默认禁止自动执行\n\n\n\n\n设备身份变更\n\n\t\n\n必须人工授权\n\n具体频次阈值由实际采集数据确定，不凭主观猜测。\n\n3. C6 指标增补：必须做\n\n增加以下观测字段：\n\n指标\n\n\t\n\n说明\n\n\n\n\nverification_count\n\n\t\n\n人机验证次数\n\n\n\n\nverification_type\n\n\t\n\n验证形态\n\n\n\n\nverification_detected_at\n\n\t\n\n首次发现时间\n\n\n\n\nverification_instance_id\n\n\t\n\n涉及的实例\n\n\n\n\nverification_task_id\n\n\t\n\n涉及的任务\n\n\n\n\nverification_disposition\n\n\t\n\n人工处理结果\n\n\n\n\nverification_recovery_time\n\n\t\n\n恢复耗时\n\n\n\n\nverification_false_positive\n\n\t\n\n误判记录\n\n另外增加两个统计维度：\n\n每百次任务的人机验证发生率。\n\n不同 Profile、实例创建方式对应的验证发生率。\n\n这样才能回答最初的问题：频繁开窗口究竟会不会增加人机验证风险。\n\n二、② 队列服务立项：批准\nPASS｜立项\n\n我支持建立独立的窗口与聊天队列服务。\n\n但需要明确：它是派单与实例生命周期管理服务，不是另一个 GPT 控制器，也不是审查系统。\n\n建议名称：\n\nInstance & Conversation Queue Service\n\n核心职责：\n\n任务入口\n\nGPT Controller / Scheduler\n\nQueue Service\n\nFIFO 任务队列\n\n任务排队与状态\n\n实例池管理\n\n生命周期与容量\n\nC9 前置门禁\n\n派单前置检查\n\n异常统一处置\n\n验证、退避、暂停\n\nInstance Workers\n\n每实例串行，不同实例受控并行\n\nC6 观测与证据采集\n\n任务结果、窗口状态、验证次数、恢复记录\n\n为什么不继续使用 Bash + 人工调度？\n\n现有方案适合早期试跑，但长期有四个问题：\n\n多个任务同时启动时，容易出现实例争用。\n\n人工调度无法保证跨实例任务顺序。\n\n人机验证、账号退避容易出现处理口径不一致。\n\n任务中断后的恢复与重复派单缺少统一状态管理。\n\n队列服务可以统一这些问题。\n\n但不意味着要废弃 Bash。初期 Bash 可以保留为 Worker 的启动器或运维入口。\n\n三、③ 范围边界：明确划分\n\n这是本次提案最重要的架构约束。\n\n3.1 编排不包含审查逻辑\n\n我明确裁定：\n\nQueue Service 只负责执行编排，不负责业务审查与代码审查。\n\n模块\n\n\t\n\n职责\n\n\n\n\nGPT Controller\n\n\t\n\n任务规划、角色分配、审查决策\n\n\n\n\nScheduler\n\n\t\n\n调度策略、任务触发、资源调度决策\n\n\n\n\nQueue Service\n\n\t\n\nFIFO、实例分配、派单、暂停与恢复\n\n\n\n\nWorker / Legs\n\n\t\n\n实际窗口和聊天操作\n\n\n\n\nC9\n\n\t\n\n派单前置安全门禁\n\n\n\n\nC6\n\n\t\n\n运行指标与证据采集\n\n队列服务可以检查 C9 是否通过，但不能自行修改 C9 的判定规则。\n\n也不能自行决定某份代码是否 PASS。\n\n3.2 与 Scheduler / Legs 的关系\n\n建议保持如下关系：\n\nScheduler：决定什么时候、按照什么策略提交任务。\n\nQueue：决定任务什么时候可以获得执行资源。\n\nInstance：提供实际执行环境。\n\nLegs：执行具体操作。\n\n不允许 Scheduler 和 Queue 各自维护一套互相冲突的任务状态。\n\n队列服务应成为运行任务状态的权威来源。\n\n建议状态机：\n\n纯文本\n\nQUEUED\n  |\n  v\nGATE_CHECK\n  |\n  +---- FAIL ----> REJECTED\n  |\n  v\nWAITING_INSTANCE\n  |\n  v\nRUNNING\n  |\n  +---- SUCCESS ----> COMPLETED\n  |\n  +---- VERIFICATION_REQUIRED\n  |                     |\n  |                     v\n  |                MANUAL_HOLD\n  |                     |\n  |                HUMAN_APPROVED\n  |                     |\n  |                     v\n  |                QUEUED / RESUME\n  |\n  +---- BACKOFF ----> WAITING_BACKOFF\n  |\n  +---- UNKNOWN ----> MANUAL_HOLD\n  |\n  +---- ERROR ------> FAILED\n\n\n特别要求：\n\n同一个任务不得被两个实例同时执行。\n\n实例正在处理任务时，不得接收第二个聊天任务。\n\n中断后必须先核对任务执行状态，再决定是否重派。\n\n未确认的执行结果不能直接当作失败后重试。\n\nC9 门禁失败不得通过队列绕行。\n\n3.3 实例池上限\n\n我建议采用两级限制：\n\n配置\n\n\t\n\n初始建议\n\n\n\n\n已注册实例池容量\n\n\t\n\n最多 2\n\n\n\n\n同时运行任务实例数\n\n\t\n\n1\n\n\n\n\n单实例并发任务数\n\n\t\n\n1\n\n\n\n\n单任务所属实例数\n\n\t\n\n1\n\n\n\n\n自动克隆实例\n\n\t\n\n0\n\n这里的 2 是初始工程容量，不代表允许两个实例同时对平台发起任务。\n\n先采用单实例串行运行。\n\n未来经过数据验证，可以将同时运行实例数提升至 2，但必须经过单独的风险评估和授权。\n\n四、④ 实施时机：先采集数据，同时立轻量骨架\n推荐路线\n\n我不建议两个极端：\n\n不是等几个月数据充分才开始设计。\n\n也不是马上投入完整队列服务开发。\n\n采用三个阶段。\n\nP2-A：现有系统观测增强\n\n优先执行\n\n增加人机验证识别。\n\n增加验证事件日志。\n\n统计窗口创建、聊天创建和实例复用频率。\n\n记录退避与人工处置。\n\n保持当前 Bash 编排方式不变。\n\n验收：指标能够反映真实运行情况，异常能够 fail-closed。\n\nP2-B：Queue Service 最小骨架\n\n定义任务、实例、执行记录的数据结构。\n\n定义唯一任务 ID 和实例 ID。\n\n实现 FIFO。\n\n实现每实例串行锁。\n\n实现 C9 前置门禁接口。\n\n实现人工暂停、恢复接口。\n\n接入 C6。\n\n验收：不扩大并发，不改变原有审查流程。\n\nP2-C：渐进接管 Bash 编排\n\n先让 Queue Service 管理一个实例。\n\n运行稳定后接管更多实例。\n\n比较接管前后的任务成功率、异常率、验证发生率。\n\n最后决定是否将 Bash 降级为启动和运维工具。\n\n验收：任务执行、异常恢复、证据采集全部可追溯。\n\n五、补充四项架构要求\n\n这些是我建议立项时直接写进设计约束的内容。\n\nA. 队列必须持久化\n\n不能只用内存 FIFO。\n\n否则进程崩溃后任务顺序和执行状态丢失。至少需要：\n\n持久化任务记录。\n\n任务状态变更记录。\n\n实例租约和过期恢复机制。\n\n防重复执行机制。\n\n崩溃恢复时的人工核对机制。\n\nB. 人机验证必须具有实例级隔离\n\n某个实例触发验证后：\n\n立即冻结该实例的新任务。\n\n保留其他实例的状态。\n\n不自动创建新设备身份接替。\n\n对涉及账号级限制的异常，升级为账号级暂停。\n\nC. 不能把人工批准等同于任务成功\n\n人工完成验证只是允许恢复执行，不代表原任务已经完成。\n\n恢复后必须核对当前聊天状态、任务执行进度和输出证据。\n\nD. 不增加 GPT 审查职责\n\n队列服务不得自行判断：\n\n代码质量。\n\n任务交付是否符合需求。\n\nGit Commit 是否合格。\n\n测试是否通过。\n\n是否可以发布。\n\n这些仍由现有 GPT 审查流程负责。\n\n六、最终决议表\n\n决策事项\n\n\t\n\n裁定\n\n\t\n\n优先级\n\n\n\n\n① 人机验证结构化识别\n\n\t\n\n批准\n\n\t\n\nP1\n\n\n\n\n② 会话及克隆频率控制\n\n\t\n\n批准，阈值待数据\n\n\t\n\nP2\n\n\n\n\n③ C6 增加验证指标\n\n\t\n\n批准\n\n\t\n\nP1\n\n\n\n\n④ Queue Service 立项\n\n\t\n\n批准\n\n\t\n\nP2\n\n\n\n\n⑤ 编排与审查职责分离\n\n\t\n\n强制约束\n\n\t\n\n架构约束\n\n\n\n\n⑥ 实例池初始容量 2\n\n\t\n\n批准\n\n\t\n\nP2\n\n\n\n\n⑦ 初始并发 1\n\n\t\n\n批准\n\n\t\n\nP2\n\n\n\n\n⑧ 立即全面替换 Bash\n\n\t\n\n不批准\n\n\t\n\n暂缓\n\n\n\n\n⑨ 先观测、再骨架、后接管\n\n\t\n\n批准\n\n\t\n\n实施路线\n\n七、交给智谱的下一步执行指令\n\n建议在 fix/parallel-stage2 分支上新增一个 P2 任务包，不直接修改现有 C9 已验收实现。\n\n任务包建议名称：\n\nb-20261121-instance-conversation-queue\n\n第一轮只要求智谱完成设计，不要求立即开发：\n\n编写 Queue Service 架构设计。\n\n编写 Instance / Task / Execution 三类核心数据契约。\n\n编写任务状态机与异常状态转换表。\n\n编写 C9、C6 接口关系。\n\n编写人机验证识别及人工处置方案。\n\n编写实例池容量、并发限制和克隆约束。\n\n编写 Bash 迁移方案及回滚方案。\n\n编写分阶段验收标准。\n\n第一轮交付后由我进行架构审查，通过后才允许进入编码。\n\n最终原则：\n\n一轮一会话是任务管理规则，不是无限创建窗口的理由。\n\n实例池负责管理窗口，队列负责管理任务，C9 负责前置安全门禁，C6 负责证据采集，GPT 负责审查和决策。\n\n人机验证不是需要自动绕过的障碍，而是必须能够识别、暂停、记录和人工恢复的系统状态。\n\n本轮拍板：人机验证纳管 PASS，Queue Service 立项 PASS，进入 P2 设计阶段；暂不授权直接编码和扩大并发。",
+      "text_sha256": "84740406635d86cf114c9eade29806376dcd69c25d817e74bc65e4ef7cd6f00e",
+      "size_bytes": 10784,
+      "assistant_uuid": "1b13dc45-5942-4a91-b3d4-fbdc603079a3"
+    }
+  ]
+}

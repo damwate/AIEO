@@ -1,0 +1,191 @@
+{
+  "at": "2026-11-21T04:29:57.825Z",
+  "instance_id": "default",
+  "instance_lock_path": "D:\\AIEO\\runtime\\locks\\gpt-session.lockfile",
+  "instance_debug_port": 9222,
+  "instance_profile_dir": "D:\\AIEO\\runtime\\chrome_profiles\\gpt-poc",
+  "message_bytes": 810,
+  "reply": "ChatGPT 说：\nREWRITE-ACCEPT-R3｜定点验收裁定\n\nPASS 改写稿及流程方案通过验收。\n\n验收基准：\n\n仓库：damwate/AIEO\n\n分支：fix/parallel-stage2\n\n完整 SHA：dfb5921aaa831f8a27cbbe7ac4b9f1fa4a9c985d\n\n文件：phase0/tools/session_arch_l018_rewrite_r1.md\n\n验收方式：指定 SHA 的文件内容定点审查，不以分支 HEAD 或工作区状态替代。\n\n已成功读取该 SHA 对应的原始文件。\n\n一、三项整改验收\n\n验收项\n\n\t\n\n核验结果\n\n\t\n\n裁定\n\n\n\n\nF-01 会话身份绑定\n\n\t\n\ndispatch 归档 result.json.session_id 为归属依据，共享指针仅作参考\n\n\t\n\nPASS\n\n\n\n\nF-02 采集成功率\n\n\t\n\n明确为预期提升，待阶段2实测核验，没有虚报实测结论\n\n\t\n\nPASS\n\n\n\n\n例外会话上限\n\n\t\n\n4 条 user 消息硬上限，并登记两次违反实录\n\n\t\n\nPASS\n\n二、方案完整性验收\n\n另外核验以下关键内容：\n\n常规机制：一轮一会话，使用 --new-session，采集和归档完成后不复用。\n\n四项硬约束：简报全自包含、每轮重读 decision-log、失败即弃不重发、会话与证据解耦。\n\n并行身份隔离：每轮使用独立 dispatch 归档身份，不依赖共享 reviewer 指针。\n\n例外机制：长任务和在途恢复必须说明原因、目标及上下文验证方式，并经用户批准。\n\n失败边界：迁移失败、归属不明、采集不确定均停止，不自动重发。\n\n清理机制：逐批清单、逐批用户批准，默认保护在途和证据未核验会话。\n\n机制边界：C9、实例域锁、实例内串行、跨实例并行、profile、端口均保持原样。\n\n实施验收：明确要求独立核验每轮归档身份。\n\n上述内容与本次改写目标一致。\nGitHub\n\n三、实施授权\n允许进入流程实施\n\n按照原定范围执行：\n\n项目\n\n\t\n\n授权\n\n\n\n\n一轮一会话流程落地\n\n\t\n\n允许\n\n\n\n\n派单模板及简报规范落地\n\n\t\n\n允许\n\n\n\n\n--no-update-pointer 常态化\n\n\t\n\n允许\n\n\n\n\ndispatch 身份独立核验\n\n\t\n\n允许\n\n\n\n\n采集成功率实测记录\n\n\t\n\n允许\n\n\n\n\n代码修改\n\n\t\n\n不授权\n\n\n\n\n历史会话清理执行\n\n\t\n\n不授权\n\n\n\n\nN=2 重启\n\n\t\n\n不授权\n\n\n\n\nC9及实例机制调整\n\n\t\n\n不授权\n\n最终裁定：PASS，进入原范围内的流程实施。\n\n后续实施必须保留以下原则：\n\n流程实施不等于机制重构。\n\n采集成功率提升仍是待验证假设。\n\n清理必须另行提交批次清单并取得批准。\n\nN=2 重启继续遵守 DEC-129 序列。\n\n不得将本次 PASS 扩大解释为代码或运行环境变更授权。\n\n本轮验收结束。",
+  "user_unit_key": "4f5ff89c-dcf8-534b-b692-e95c7e2d8bf8:0:user",
+  "start_key_resolved": "4f5ff89c-dcf8-534b-b692-e95c7e2d8bf8:0:user",
+  "start_resolved_by_marker": true,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "4f5ff89c-dcf8-534b-b692-e95c7e2d8bf8:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "24f0e99d-b8d2-48bf-a675-ef949151eb76",
+  "stability": {
+    "stable": true,
+    "interval_ms": 3544,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-21T04:29:53.606Z",
+      "read_finished_at": "2026-11-21T04:29:54.141Z",
+      "unit_keys": [
+        "4f5ff89c-dcf8-534b-b692-e95c7e2d8bf8:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "4f5ff89c-dcf8-534b-b692-e95c7e2d8bf8:2:assistant",
+          "sha256": "75c68d5da086f454dc4c028f314eda48765395264b2a4f6ad28a922db126aaf0",
+          "size_bytes": 2567
+        }
+      ],
+      "assistant_uuid": "24f0e99d-b8d2-48bf-a675-ef949151eb76",
+      "next_user_unit_key": null,
+      "start_key_resolved": "4f5ff89c-dcf8-534b-b692-e95c7e2d8bf8:0:user",
+      "start_resolved_by_marker": true,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-21T04:29:57.150Z",
+      "read_finished_at": "2026-11-21T04:29:57.686Z",
+      "unit_keys": [
+        "4f5ff89c-dcf8-534b-b692-e95c7e2d8bf8:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "4f5ff89c-dcf8-534b-b692-e95c7e2d8bf8:2:assistant",
+          "sha256": "75c68d5da086f454dc4c028f314eda48765395264b2a4f6ad28a922db126aaf0",
+          "size_bytes": 2567
+        }
+      ],
+      "assistant_uuid": "24f0e99d-b8d2-48bf-a675-ef949151eb76",
+      "next_user_unit_key": null,
+      "start_key_resolved": "4f5ff89c-dcf8-534b-b692-e95c7e2d8bf8:0:user",
+      "start_resolved_by_marker": true,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "4f5ff89c-dcf8-534b-b692-e95c7e2d8bf8:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "4f5ff89c-dcf8-534b-b692-e95c7e2d8bf8:0:user",
+          "4f5ff89c-dcf8-534b-b692-e95c7e2d8bf8:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "667df9583735098d10840a0a23a1648df072e0d74d4248d41e74ed16dbc280cd",
+          "75c68d5da086f454dc4c028f314eda48765395264b2a4f6ad28a922db126aaf0"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "4f5ff89c-dcf8-534b-b692-e95c7e2d8bf8:0:user",
+          "4f5ff89c-dcf8-534b-b692-e95c7e2d8bf8:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "667df9583735098d10840a0a23a1648df072e0d74d4248d41e74ed16dbc280cd",
+          "75c68d5da086f454dc4c028f314eda48765395264b2a4f6ad28a922db126aaf0"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "4f5ff89c-dcf8-534b-b692-e95c7e2d8bf8:0:user",
+          "4f5ff89c-dcf8-534b-b692-e95c7e2d8bf8:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "4f5ff89c-dcf8-534b-b692-e95c7e2d8bf8:0:user",
+      "4f5ff89c-dcf8-534b-b692-e95c7e2d8bf8:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "4f5ff89c-dcf8-534b-b692-e95c7e2d8bf8:0:user",
+          "4f5ff89c-dcf8-534b-b692-e95c7e2d8bf8:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "4f5ff89c-dcf8-534b-b692-e95c7e2d8bf8:0:user",
+          "4f5ff89c-dcf8-534b-b692-e95c7e2d8bf8:2:assistant"
+        ],
+        "overlap_keys": [
+          "4f5ff89c-dcf8-534b-b692-e95c7e2d8bf8:0:user",
+          "4f5ff89c-dcf8-534b-b692-e95c7e2d8bf8:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "75c68d5da086f454dc4c028f314eda48765395264b2a4f6ad28a922db126aaf0",
+  "size_bytes": 2567,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-21T04-27-32\\reply.txt",
+  "reply_readback_sha256": "75c68d5da086f454dc4c028f314eda48765395264b2a4f6ad28a922db126aaf0",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-21T04-27-32\\raw-units.json",
+  "raw_units_sha256": "e54139bafd6e7fc10530a64629195252174099aa4d898bcca0f3030acd1e0dc0",
+  "raw_units_size_bytes": 5897,
+  "raw_units_readback_sha256": "e54139bafd6e7fc10530a64629195252174099aa4d898bcca0f3030acd1e0dc0",
+  "session_id": "6b011dea-4298-83ec-9534-e5764c61bea8",
+  "conversation_url": "https://chatgpt.com/c/6b011dea-4298-83ec-9534-e5764c61bea8",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}

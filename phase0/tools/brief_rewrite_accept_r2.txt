@@ -1,0 +1,5 @@
+[REWRITE-ACCEPT-R2|改写稿定点验收（带真实SHA+F-01/F-02收敛）]
+分支 fix/parallel-stage2 完整SHA=dfb5921aaa831f8a27cbbe7ac4b9f1fa4a9c985d（前轮$TIP占位符系我方生成错误，如实登记）。请按SHA读 phase0/tools/session_arch_l018_rewrite_r1.md。你两点已处理：
+F-01 会话身份绑定：改写稿§二.2 明确归属以 dispatch 归档 result.json session_id 为准、共享指针降级为参考记录——绑定异常 fail-closed 语义保持（dispatch_options 既有 sessionIdIsAttributable 未动）。
+F-02 采集成功率表述：已收敛为"预期提升，待阶段2实测数据核验"，不作已证实表述。
+另按你裁定新增：例外会话 4 条 user 消息硬上限（两次违反实录 6aff4117/6b00e02a 已入稿）。请定点验收本稿给 PASS/FAIL；PASS 后按原范围进入实施。

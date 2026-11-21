@@ -1,0 +1,94 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-21T04:26:18.728Z",
+  "user_unit_key": "cc6eac0f-0809-5e4c-a888-4f04db18228c:0:user",
+  "start_key_resolved": "cc6eac0f-0809-5e4c-a888-4f04db18228c:0:user",
+  "start_resolved_by_marker": true,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "cc6eac0f-0809-5e4c-a888-4f04db18228c:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "450b7ad1-3667-4750-baba-b958790266d7",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "cc6eac0f-0809-5e4c-a888-4f04db18228c:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "cc6eac0f-0809-5e4c-a888-4f04db18228c:0:user",
+          "cc6eac0f-0809-5e4c-a888-4f04db18228c:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "0c3a7bccb0047aa6a188209fe11598963d6136fdd87f44c0cf58d847b28717eb",
+          "5f2198bc87b3d4e875938ba24b8e861e98f01cf437b180e2a83aa63be48fd9df"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "cc6eac0f-0809-5e4c-a888-4f04db18228c:0:user",
+          "cc6eac0f-0809-5e4c-a888-4f04db18228c:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "0c3a7bccb0047aa6a188209fe11598963d6136fdd87f44c0cf58d847b28717eb",
+          "5f2198bc87b3d4e875938ba24b8e861e98f01cf437b180e2a83aa63be48fd9df"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "cc6eac0f-0809-5e4c-a888-4f04db18228c:0:user",
+          "cc6eac0f-0809-5e4c-a888-4f04db18228c:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "cc6eac0f-0809-5e4c-a888-4f04db18228c:0:user",
+      "cc6eac0f-0809-5e4c-a888-4f04db18228c:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "cc6eac0f-0809-5e4c-a888-4f04db18228c:0:user",
+          "cc6eac0f-0809-5e4c-a888-4f04db18228c:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "cc6eac0f-0809-5e4c-a888-4f04db18228c:0:user",
+          "cc6eac0f-0809-5e4c-a888-4f04db18228c:2:assistant"
+        ],
+        "overlap_keys": [
+          "cc6eac0f-0809-5e4c-a888-4f04db18228c:0:user",
+          "cc6eac0f-0809-5e4c-a888-4f04db18228c:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "cc6eac0f-0809-5e4c-a888-4f04db18228c:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nREWRITE-ACCEPT-R2｜定点验收结论\n暂不通过｜证据读取阻断\n\n本轮指定完整 SHA：\n\ndfb5921aaa831f8a27cbbe7ac4b9f1fa4a9c985d\n\n我尝试按该 SHA 读取指定文件，并独立查询该提交的 GitHub commit 元数据，均返回：\n\n文件读取：404 No commit found for the ref\n\nCommit 查询：422 No commit found for SHA\n\n因此，目前不能确认该 SHA 对应的提交，也不能把你描述的 F-01、F-02 和四条消息上限视为已经验收通过。\n\n不会以需求说明代替源码证据，也不会在证据未读取的情况下签 PASS。\n\n另外，分支 fix/parallel-stage2 当前远端 HEAD 为：\n\n9be1a33373664c9cf1c7a6731a365c1587a0be5b\n\n与指定 SHA 不一致。按照你的完整 SHA 定点审查纪律，我不会擅自改审 HEAD。\n\n请重新提供可读取的完整提交 SHA，或确认是否应以当前 HEAD 为新的验收基准。\n\n本轮状态：\n\nF-01：待核验\n\nF-02：待核验\n\n例外会话 4 条消息硬上限：待核验\n\n最终裁定：FAIL（证据阻断，非实现缺陷判定）\n\n阶段2实施授权：尚未触发\n\n收到正确 SHA 后，只审指定改写稿，不扩大范围。",
+      "text_sha256": "5f2198bc87b3d4e875938ba24b8e861e98f01cf437b180e2a83aa63be48fd9df",
+      "size_bytes": 1168,
+      "assistant_uuid": "450b7ad1-3667-4750-baba-b958790266d7"
+    }
+  ]
+}

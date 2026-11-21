@@ -1,0 +1,6 @@
+[REWRITE-ACCEPT-R3|改写稿定点验收（SHA已推送可读）]
+分支 fix/parallel-stage2 完整SHA=dfb5921aaa831f8a27cbbe7ac4b9f1fa4a9c985d（上轮不可读系我方漏推送，已补推，如实登记）。请按SHA读 phase0/tools/session_arch_l018_rewrite_r1.md。你三点已处理：
+F-01 会话身份绑定：改写稿§二.2 归属以 dispatch 归档 result.json session_id 为准、共享指针降级为参考记录，绑定异常 fail-closed 语义保持。
+F-02 采集成功率：已收敛为"预期提升，待阶段2实测数据核验"，不作已证实表述。
+例外会话 4 条 user 消息硬上限（两次违反实录 6aff4117/6b00e02a 已入稿）。
+请定点验收本稿给 PASS/FAIL；PASS 后按原范围进入实施（仅流程落地，无代码改动/清理执行/N=2 重启）。
