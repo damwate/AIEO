@@ -1,0 +1,123 @@
+[2026-11-20T23:52:15.360Z] 证据目录: D:\AIEO\phase0\logs\dispatch-2026-11-20T23-52-15
+[2026-11-20T23:52:15.819Z] 会话锁已获取 pid=10900 instance=default lock=gpt-session.lockfile
+[2026-11-20T23:52:15.820Z] === GPT 派单（已有会话，消息 985 字节）===
+[2026-11-20T23:52:16.387Z] [instance] 实例域就绪: instance=default port=9222 profile=gpt-poc lock=gpt-session.lockfile
+[2026-11-20T23:52:17.868Z] [instance] 清理本实例 Chrome：own=0 foreign(不动)=0 remaining=0
+[2026-11-20T23:52:20.432Z] Chrome 已启动 pid=5836 port=9222
+[2026-11-20T23:52:21.129Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 0 个
+[2026-11-20T23:52:21.130Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-20T23:52:26.051Z] 会话就绪: https://chatgpt.com/c/6b009b70-1458-83ec-adf8-d4d5e52f0fca
+[2026-11-20T23:52:31.912Z] [dispatch] 基线尾部: {"role":"assistant","key":"37a1cd98-5985-5a58-87c0-90d772f17446:2:assistant","assistantUuid":"4f2886c4-cd90-40f9-9d78-a5af4860c0df"}
+[2026-11-20T23:52:33.230Z] [dispatch] 发送双验通过（polls=1，user_unit_key=fallback-turn-0:0:user，tail 后观察）
+[2026-11-20T23:52:33.508Z] 截图: sent-dispatch.png
+[2026-11-20T23:55:01.690Z] [dispatch] COMPLETED，1 个 assistant unit，回复 2283 UTF-8 字节，区间窗口 2 个
+[2026-11-20T23:55:01.823Z] 截图: reply-dispatch.png
+[2026-11-20T23:55:01.824Z] 会话 URL 已取得且归属校验 PASS，跳过 reviewer 指针写盘: https://chatgpt.com/c/6b009b70-1458-83ec-adf8-d4d5e52f0fca
+[2026-11-20T23:55:01.829Z] JSON/Schema/绑定校验: NOT_REQUESTED
+[2026-11-20T23:55:01.829Z] M1 本地登记: NOT_REQUESTED（三 ID 均未提供，通用非登记派单）
+[2026-11-20T23:55:02.794Z] [instance] 清理本实例 Chrome：own=9 foreign(不动)=0 remaining=0
+[2026-11-20T23:55:02.797Z] [tab-hygiene] 成功退出：浏览器连接已关+实例 default Chrome 已清理（精确归属，他实例不动；含本次自建页 0 页）；本实例 tab 清零
+[2026-11-20T23:55:02.798Z] === 派单完成，artifact_sha256=c572f3e425e4316aa661999c7c76ad322065e1e353c864bd0ceccb382ebd43f2 size_bytes=2283 ===
+
+=====REPLY_BEGIN=====
+ChatGPT 说：
+
+[TAG|C9-ACCEPT-R2|DEC-128①整改定点复验]
+
+PASS R1两项阻断整改均已关闭，C9独立验收正式通过。
+
+已按完整 SHA f70355f0aeed7c4aeb42d2e751066e3ed0d1fc3c 读取指定实现及关联记录。
+
+复验项
+
+	
+
+结果
+
+	
+
+核验结论
+
+
+
+
+① 手动退避后当前派单停止
+
+	
+
+PASS
+
+	
+
+maybeApplyManualBackoff() 在持锁写入成功、释放锁后立即抛出 ACCOUNT_BACKOFF_TRIGGERED。调用点位于启动门之后、浏览器启动之前；异常向上传播，不会继续执行后续浏览器流程
+
+
+
+
+② recoll损坏JSON统一错误码
+
+	
+
+PASS
+
+	
+
+review_leg_recoll_template.mjs 捕获 JSON.parse 异常并转换为 ACCOUNT_STATE_INVALID；不会把损坏状态当作NORMAL放行
+
+
+
+
+③ 429观察误触发整改
+
+	
+
+PASS
+
+	
+
+已从单纯正文匹配改为结构化组合判定：无composer、无会话单元，且存在429标记。正常会话页即使正文包含429也不触发
+
+
+
+
+④ 测试回归
+
+	
+
+PASS
+
+	
+
+关联日志记录 account-gate 8/8、phase0 12/12；四腿122项按提交说明保持OK
+
+补充审计说明：
+
+R1假阳性事件及根因已在 steps.md 如实登记，未掩盖误写退避。
+
+误写状态不手动删除、等待自然过期的处理符合C约束。当前提交的步骤记录仍保留“等待自然过期”的历史描述；你所述状态文件已回NORMAL及case实测，我将其作为你提供的现场补充，不把它冒充为本轮独立读取到的Git文件证据。
+
+本轮是R1两项整改定点复验，没有重新执行真实浏览器试跑，也没有重跑四腿。
+
+最终裁定
+
+C9：PASS，正式签署。
+
+DEC-128②：阶段2真实N=2试跑授权生效。
+
+执行边界再次明确：
+
+仅N=2，按已批准的C1～C5、C7～C8真实部分矩阵执行。
+
+使用一次性非敏感简报；不得触碰审查会话或用户会话。
+
+发现任何FAIL、不明副作用或账号级风控信号，立即停止，不自动重试、不升级并发数。
+
+429观察保持被动，绝不人为诱发限流。
+
+每项分别登记PASS、FAIL、BLOCKED、NOT_OBSERVED；不得将未观察到的真实429记为PASS。
+
+阶段2结束后提交完整SHA、两实例证据、资源数据和副作用清单，再申请下一阶段裁定。
+
+阶段2获批，不代表阶段3或N=3获批。
+=====REPLY_END=====
+[2026-11-20T23:55:02.901Z] 会话锁已释放

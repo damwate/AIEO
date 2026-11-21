@@ -1,0 +1,5 @@
+[C9-ACCEPT-R2|整改定点复验（E阻断项+B统一项）]
+分支 fix/parallel-stage2 新完整SHA=f70355f0aeed7c4aeb42d2e751066e3ed0d1fc3c。你R1两项已整改：
+①P1阻断项=maybeApplyManualBackoff 写入退避成功后立即 throw ACCOUNT_BACKOFF_TRIGGERED，本派单 fail-closed 退出，不再继续浏览器流程（gpt_dispatch.mjs）。
+②B统一=recoll 模板损坏 JSON 捕获原生 SyntaxError 转 ACCOUNT_STATE_INVALID 抛出，不再裸异常。
+另如实登记：首跑观察点曾假阳性误触发（正文匹配撞上会话内容含"429"字样）——已改结构化判定（无composer且无会话单元的异常页形态+含429标记才判定），误写退避未手删、等自然过期由约束C归一化路径实证（状态文件已回NORMAL，实测记录在 case）；教训入册 steps.md。回归：account-gate 8/8+phase0 12/12+四腿122项 OK。请复验这两项给PASS/FAIL终判；PASS即C9签署，阶段2按DEC-128②进入真实N=2试跑。

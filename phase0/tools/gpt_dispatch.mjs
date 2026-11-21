@@ -479,10 +479,20 @@ function accountGateCheck(checkpoint) {
     throw new Error(`ACCOUNT_BACKOFF_ACTIVE: 账号级退避生效至 ${gate.until}（reason=${gate.reason}，checkpoint=${checkpoint}），所有实例暂停派单（C9）`);
   }
   if (state.reason === "expired-normalized") {
-    // 约束C：过期归一化写回（临界区=状态文件 lockfile），防止残留歧义
-    const lock = acquireSessionLock({ holder: `account-gate:${INSTANCE.instanceId}`, lockPath: `${path}.lockfile` });
+    // 约束C：过期归一化写回（C1 首跑教训：写回必须清除 expired-normalized 标记并幂等——
+    // 否则标记常驻导致每次读取都抢锁，双实例并发时锁冲突致死）。写回冲突=非致命降级
+    // （内存态已正确，残留标记无害），下轮再写。
+    let lock;
     try {
-      writeAccountStateFileAtomic(path, state);
+      lock = acquireSessionLock({ holder: `account-gate:${INSTANCE.instanceId}`, lockPath: `${path}.lockfile` });
+    } catch (error) {
+      log(`[account] 归一化写回锁冲突（非致命，跳过本轮写回）: ${error.message.split("\n")[0]}`);
+      return state;
+    }
+    try {
+      writeAccountStateFileAtomic(path, { ...state, reason: null });
+    } catch (error) {
+      log(`[account] 归一化写回失败（非致命）: ${error.message}`);
     } finally {
       lock.release();
     }
@@ -503,15 +513,26 @@ async function observeAccountRisk(page, checkpoint) {
   if (!/too many requests|\b429\b/i.test(probe.text)) return;
   const path = accountStatePath(AIEO_ROOT);
   const minutes = Number(process.env.AIEO_ACCOUNT_BACKOFF_MINUTES || 9);
-  const lock = acquireSessionLock({ holder: `account-risk-write:${INSTANCE.instanceId}`, lockPath: `${path}.lockfile` });
+  let writeOutcome = "write-failed(lock-conflict; other instances gated on next startup)";
+  let lock;
   try {
-    const cur = readAccountStateFile(path, Date.now());
-    const next = applyAccountBackoff(cur, Date.now(), minutes, "429-observed", INSTANCE.instanceId);
-    writeAccountStateFileAtomic(path, next);
-  } finally {
-    lock.release();
+    lock = acquireSessionLock({ holder: `account-risk-write:${INSTANCE.instanceId}`, lockPath: `${path}.lockfile` });
+  } catch (error) {
+    log(`[account] 退避写锁冲突（本派单仍停止；他实例下轮启动门兜底）: ${error.message.split("\n")[0]}`);
   }
-  throw new Error(`ACCOUNT_BACKOFF_TRIGGERED: 观察到 429/账号级限制（checkpoint=${checkpoint}，页面呈异常形态），已写入全实例退避 ${minutes}min（C9）`);
+  if (lock) {
+    try {
+      const cur = readAccountStateFile(path, Date.now());
+      const next = applyAccountBackoff(cur, Date.now(), minutes, "429-observed", INSTANCE.instanceId);
+      writeAccountStateFileAtomic(path, next);
+      writeOutcome = `written until=${next.backoff_until}`;
+    } catch (error) {
+      writeOutcome = `write-failed: ${error.message.split("\n")[0]}`;
+    } finally {
+      lock.release();
+    }
+  }
+  throw new Error(`ACCOUNT_BACKOFF_TRIGGERED: 观察到 429/账号级限制（checkpoint=${checkpoint}，页面呈异常形态），退避状态${writeOutcome}；本派单停止（C9）`);
 }
 // 手动/运维触发缝（DEC-128 ③"手动设置可延长"）：设置环境变量即写退避（仅测试与运维使用）。
 // C9 验收 R1 P1 整改：写入成功后当前派单立即 fail-closed 退出——退避期所有实例（含

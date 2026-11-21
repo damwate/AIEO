@@ -1,0 +1,30 @@
+[2026-11-20T23:56:20.158Z] 证据目录: D:\AIEO\phase0\logs\dispatch-2026-11-20T23-56-20
+[2026-11-20T23:56:20.624Z] 会话锁已获取 pid=19140 instance=agent-a lock=gpt-session-agent-a.lockfile
+[2026-11-20T23:56:20.625Z] === GPT 派单（新建会话，消息 187 字节）===
+[2026-11-20T23:56:21.759Z] [instance] 端口分配: instance=agent-a port=9300（注册表已原子落盘，探测占用=0）
+[2026-11-20T23:56:21.863Z] [instance] 实例域就绪: instance=agent-a port=9300 profile=gpt-poc-agent-a lock=gpt-session-agent-a.lockfile
+[2026-11-20T23:56:23.350Z] [instance] 清理本实例 Chrome：own=0 foreign(不动)=0 remaining=0
+[2026-11-20T23:56:25.880Z] Chrome 已启动 pid=15436 port=9300
+[2026-11-20T23:56:26.904Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 0 个
+[2026-11-20T23:56:26.905Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-20T23:57:09.040Z] 新聊天页面就绪
+[2026-11-20T23:57:14.093Z] [dispatch] 基线尾部: null
+[2026-11-20T23:57:24.214Z] 会话锁已释放
+[2026-11-20T23:57:24.215Z] 致命错误: locator.waitFor: Timeout 10000ms exceeded.
+Call log:
+[2m  - waiting for locator('[aria-label="询问 ChatGPT"], [aria-label="Ask ChatGPT"], #prompt-textarea').visible().first() to be visible[22m
+
+locator.waitFor: Timeout 10000ms exceeded.
+Call log:
+[2m  - waiting for locator('[aria-label="询问 ChatGPT"], [aria-label="Ask ChatGPT"], #prompt-textarea').visible().first() to be visible[22m
+
+    at findComposer (D:\AIEO\phase0\tools\gpt_dispatch.mjs:267:15)
+    at sendAndCollect (D:\AIEO\phase0\tools\gpt_dispatch.mjs:272:19)
+    at async mainLocked (D:\AIEO\phase0\tools\gpt_dispatch.mjs:632:76)
+    at async main (D:\AIEO\phase0\tools\gpt_dispatch.mjs:544:5) {
+  log: [
+    `  - waiting for locator('[aria-label="询问 ChatGPT"], [aria-label="Ask ChatGPT"], #prompt-textarea').visible().first() to be visible`
+  ],
+  name: 'TimeoutError'
+}
+Assertion failed: !(handle->flags & UV_HANDLE_CLOSING), file src\win\async.c, line 76
