@@ -1,0 +1,191 @@
+{
+  "at": "2026-11-21T05:57:23.200Z",
+  "instance_id": "default",
+  "instance_lock_path": "D:\\AIEO\\runtime\\locks\\gpt-session.lockfile",
+  "instance_debug_port": 9222,
+  "instance_profile_dir": "D:\\AIEO\\runtime\\chrome_profiles\\gpt-poc",
+  "message_bytes": 956,
+  "reply": "ChatGPT 说：\nQUEUE-DESIGN-R2 定点复审\n暂不通过：BLOCKED\n\n审查对象：\n\n仓库：damwate/AIEO\n\n分支：fix/parallel-stage2\n\n完整 SHA：5541e49d439c2edd11109f64b01baf338753792a\n\n文件：phase0/tools/parallel_queue_design_r1.md\n\n文件 Blob SHA：4032990f5f9f03b35c29970d74db6561b2ee5066\n\n已按指定完整 SHA 读取文件及提交差异，不以 HEAD 或分支最新状态代替审查。\n\nR2 确实补齐了大量 R1 缺失的设计内容，但文档声明关闭不等于设计缺口已经关闭。目前尤其需要核实发送崩溃窗口、跨进程原子认领和契约状态一致性，不能直接授予编码授权。\n\n一、Q-01～Q-08 逐项裁定\n\n项目\n\n\t\n\n裁定\n\n\t\n\n复审意见\n\n\n\n\nQ-01 状态归属分离\n\n\t\n\nPASS\n\n\t\n\nTask、Execution、Instance、Pool 四个实体已独立建模，实例暂停和账号级暂停不再混入任务状态\n\n\n\n\nQ-02 主转换时序\n\n\t\n\nBLOCKED\n\n\t\n\n主路径已统一，但 C9 唯一调用点与执行期复查点的定义仍有歧义\n\n\n\n\nQ-03 发送崩溃恢复\n\n\t\n\nFAIL\n\n\t\n\n禁止自动重发的原则正确，但发送前持久化顺序和崩溃窗口尚未封闭\n\n\n\n\nQ-04 Phase B 原子认领\n\n\t\n\nFAIL\n\n\t\n\n单一账本和双入口方向正确，尚缺可验证的跨进程原子性及认领令牌生命周期\n\n\n\n\nQ-05 契约全字段\n\n\t\n\nBLOCKED\n\n\t\n\n四实体字段明显补充，但仍缺少完整字段约束及状态转换契约\n\n\n\n\nQ-06 C6 六类证据\n\n\t\n\nBLOCKED\n\n\t\n\n六类结构已建立，缺失采集的表达尚未覆盖全部指标\n\n\n\n\nQ-07 SUSPECTED 禁自动降级\n\n\t\n\nPASS_WITH_CONSTRAINTS\n\n\t\n\n已禁止超时、页面重新加载自动降级；需统一四态的规范枚举名称\n\n\n\n\nQ-08 分阶段验收\n\n\t\n\nPASS_WITH_CONSTRAINTS\n\n\t\n\nPhase B 五项、Phase C 七项附加条件和 N=3 独立审批均已写明\n\n二、关键阻断项\n\nQ-02：C9 调用语义\n\n§③ 明确保留 pre-spawn、pre-reuse 和观察点复查；§④ 又写明：\n\nCLAIMED → C9_CHECKING 是唯一调用点。\n\n执行期内继续复查。\n\n需要明确这是唯一的初始门禁调用点，还是所有 C9 调用的唯一入口。不能让实现者误认为执行期复查被取消。\n\nQ-03：SEND_ATTEMPTED 的崩溃窗口\n\n当前设计规定：\n\nSEND_ATTEMPTED → 崩溃 → PENDING_VERIFY → 人工核实\n\n这是正确的安全方向，但还缺少最重要的写入顺序：\n\n先持久化 SEND_ATTEMPTED。\n\n确认持久化成功。\n\n才允许执行浏览器发送操作。\n\n发送结果持久化为 SEND_CONFIRMED。\n\n任意不确定状态进入 PENDING_VERIFY，禁止自动重发。\n\n否则，浏览器发送动作与状态落盘之间仍然存在崩溃窗口。\n\n另外，last_checkpoint 的 SENT 与 send_state 的 SEND_CONFIRMED 不是同一个概念，需要明确两者映射。\n\nQ-04：跨进程原子认领\n\n当前 §⑦ 只有：\n\n账本文件。\n\nlockfile 临界区。\n\nCLAIM 写账本成功才获得执行权。\n\n写失败禁止派发。\n\nclaim_token 全部核销后才能恢复人工中控。\n\n仍缺少：\n\nlockfile 创建的原子性定义。\n\n进程崩溃后锁的安全恢复规则。\n\nclaim_token 的唯一性、校验和失效规则。\n\n认领、释放、回滚之间的状态一致性。\n\n旧执行者不能在执行权失效后继续操作的防护。\n\n特别是不能用简单的锁超时自动释放正在执行的任务，否则可能出现双执行者。\n\nQ-05：契约字段\n\n字段扩充是有效的，但目前仍有几处不够严谨：\n\nExecution 的 dispatch_id 与原 R1 dispatch_dir、receipt_path 的对应关系未定义。\n\nlast_checkpoint、send_state、recovery_state 缺少完整合法转换表。\n\n时间字段缺少统一格式和必填规则。\n\nverdict 的 FAIL 与 failure_code 的过程性失败缺少严格赋值约束。\n\n不能把示例 JSON 当成已经完成的接口契约。\n\nQ-06：C6 证据\n\n六类指标分别为 throughput、quota、rate_limit、verification、isolation、resource，分类成立。\n\n但 observed:false 目前没有完整落实到每个指标类别。尤其是 quota、verification、resource，需要区分：\n\n已观测且正常；\n\n已观测且异常；\n\n未观测；\n\n采集失败。\n\nNOT_OBSERVED 不能被汇总成 PASS，也不能用默认零值代替真实观测。\n\nQ-07：人机验证状态\n\n禁止自动降级的规则已经成立。不过 R1 的原始四态是：\n\nNORMAL\n\nVERIFICATION_SUSPECTED\n\nACCOUNT_VERIFICATION_REQUIRED\n\nUNKNOWN_BLOCK_PAGE\n\nR2 改成了 NORMAL、SUSPECTED、REQUIRED、UNKNOWN_BLOCK，缩短了枚举名称。建议恢复规范名称，避免与其他业务状态混淆。\n\nQ-08：验收标准\n\nPhase B 五项测试完整列出，Phase C 七项附加条件也有明确覆盖，N=3 独立审批保留。\n\n但测试结果还需要定义可审计的证据产物、判定条件和失败处理，不能仅凭测试执行过就算 PASS。\n\n三、验收失败两分语义\nPASS\n\n这部分整改有效：\n\n执行失败：过程性失败，由异常转换和恢复机制处理。\n\n验收失败：结论性失败，原任务保留 VERIFIED_FAIL，创建独立 task_id，通过 rework_of 建立整改谱系。\n\n重验：独立授权、独立 Execution。\n\nL-022 非阻塞原则保留，不因一个任务验收失败阻塞无依赖任务。\n\n没有发现将执行失败与 ChatGPT 验收失败重新合并的设计。\n\n四、既有约束逐条保留审查\nBLOCKED\n\nR2 明确声明保留以下约束：\n\n既有约束\n\n\t\n\n结论\n\n\n\n\nC9 已验收门禁实现\n\n\t\n\nPASS_WITH_CONSTRAINTS\n\n\n\n\nC6 已验收采集语义\n\n\t\n\nBLOCKED，六类语义需要对齐\n\n\n\n\nC1-R2 实例互斥\n\n\t\n\nPASS_WITH_CONSTRAINTS\n\n\n\n\nDEC-130 黄金源克隆\n\n\t\n\nBLOCKED，操作细节被压缩\n\n\n\n\nDEC-010 profile 删除审批\n\n\t\n\nPASS\n\n\n\n\nL-018 补采禁重发\n\n\t\n\nPASS_WITH_CONSTRAINTS\n\n\n\n\nL-022 非阻塞\n\n\t\n\nPASS\n\n\n\n\nL-023 三层决策\n\n\t\n\nPASS_WITH_CONSTRAINTS\n\n这里发现一个文档完整性问题：\n\nR1 §⑥ 原本明确写有：\n\n全部关闭后才能进行黄金源克隆。\n\n整目录镜像。\n\n每个克隆实例逐一人工登录态验收。\n\nN=2→观察→N=3→观察→审查裁定。\n\nR2 将这些压缩成一行原则性文字，并声称「全文保留零修改」。\n\n这不是逐条原文保留。不能仅凭原则摘要认定既有操作约束完整保留。\n\n五、最终裁定\n\n审查内容\n\n\t\n\n结果\n\n\n\n\nQ-01\n\n\t\n\nPASS\n\n\n\n\nQ-02\n\n\t\n\nBLOCKED\n\n\n\n\nQ-03\n\n\t\n\nFAIL\n\n\n\n\nQ-04\n\n\t\n\nFAIL\n\n\n\n\nQ-05\n\n\t\n\nBLOCKED\n\n\n\n\nQ-06\n\n\t\n\nFAIL\n\n\n\n\nQ-07\n\n\t\n\nPASS_WITH_CONSTRAINTS\n\n\n\n\nQ-08\n\n\t\n\nPASS_WITH_CONSTRAINTS\n\n\n\n\n验收失败两分语义\n\n\t\n\nPASS\n\n\n\n\n既有约束逐条未动\n\n\t\n\nBLOCKED\n\n最终：BLOCKED\n\nP0 尚有三个实质问题，P1 尚有契约和证据问题。\n\n本次 R2 不予整体通过，不进入编码授权。\n\n六、下一轮 R3 整改要求\n\n建议只做设计文档整改，不启动代码：\n\nQ-02：明确初始 C9 调用与执行期复查的关系。\n\nQ-03：补齐发送前写入顺序、崩溃窗口和 checkpoint 映射。\n\nQ-04：补齐跨进程认领、令牌生命周期、崩溃恢复和防双执行机制。\n\nQ-05：补齐字段类型、必填性、枚举转换、归档关联。\n\nQ-06：恢复原六类指标的语义，逐类明确观测状态、来源、单位、时间戳。\n\nQ-07：统一四态正式枚举名称。\n\nQ-08：为五项 Phase B 测试和七项 Phase C 条件补充机器可核验的验收证据。\n\n恢复 R1 §⑥ 的完整约束内容，不以摘要替代操作规范。\n\n编码授权边界：\n\nPhase A：本次不授权启动实施。\n\nPhase B：不授权骨架编码。\n\nPhase C：不授权接管。\n\nN=3：继续独立审批，不能随 Queue 设计通过自动扩容。\n\nN=2：不构成任何重启授权。\n\nC9、C6、C1-R2、DEC-130、DEC-010、L-018、L-022、L-023 既有约束不得因本轮整改而修改。\n\nR3 提交新的完整 SHA 后，再做一次定点复审。只有全部 P0/P1 关闭、既有约束复核通过，才进入你要求的下一步：编码授权裁定。",
+  "user_unit_key": "95067a77-bfbb-5001-a832-2d8a1c1378dd:0:user",
+  "start_key_resolved": "95067a77-bfbb-5001-a832-2d8a1c1378dd:0:user",
+  "start_resolved_by_marker": true,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "95067a77-bfbb-5001-a832-2d8a1c1378dd:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "6d01e1c4-683a-4340-ba14-97c7f7ae1059",
+  "stability": {
+    "stable": true,
+    "interval_ms": 5341,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-21T05:57:17.169Z",
+      "read_finished_at": "2026-11-21T05:57:19.495Z",
+      "unit_keys": [
+        "95067a77-bfbb-5001-a832-2d8a1c1378dd:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "95067a77-bfbb-5001-a832-2d8a1c1378dd:2:assistant",
+          "sha256": "249551120d85244f60744bbf9787592054875aeabb0d4c6956cf2d490e522ff3",
+          "size_bytes": 7883
+        }
+      ],
+      "assistant_uuid": "6d01e1c4-683a-4340-ba14-97c7f7ae1059",
+      "next_user_unit_key": null,
+      "start_key_resolved": "95067a77-bfbb-5001-a832-2d8a1c1378dd:0:user",
+      "start_resolved_by_marker": true,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-21T05:57:22.510Z",
+      "read_finished_at": "2026-11-21T05:57:23.049Z",
+      "unit_keys": [
+        "95067a77-bfbb-5001-a832-2d8a1c1378dd:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "95067a77-bfbb-5001-a832-2d8a1c1378dd:2:assistant",
+          "sha256": "249551120d85244f60744bbf9787592054875aeabb0d4c6956cf2d490e522ff3",
+          "size_bytes": 7883
+        }
+      ],
+      "assistant_uuid": "6d01e1c4-683a-4340-ba14-97c7f7ae1059",
+      "next_user_unit_key": null,
+      "start_key_resolved": "95067a77-bfbb-5001-a832-2d8a1c1378dd:0:user",
+      "start_resolved_by_marker": true,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "95067a77-bfbb-5001-a832-2d8a1c1378dd:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "95067a77-bfbb-5001-a832-2d8a1c1378dd:0:user",
+          "95067a77-bfbb-5001-a832-2d8a1c1378dd:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "f072cb635791fa43278009224b1f1624bef7ab82ca8aa6e67c5e1beed5a653f6",
+          "249551120d85244f60744bbf9787592054875aeabb0d4c6956cf2d490e522ff3"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "95067a77-bfbb-5001-a832-2d8a1c1378dd:0:user",
+          "95067a77-bfbb-5001-a832-2d8a1c1378dd:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "f072cb635791fa43278009224b1f1624bef7ab82ca8aa6e67c5e1beed5a653f6",
+          "249551120d85244f60744bbf9787592054875aeabb0d4c6956cf2d490e522ff3"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "95067a77-bfbb-5001-a832-2d8a1c1378dd:0:user",
+          "95067a77-bfbb-5001-a832-2d8a1c1378dd:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "95067a77-bfbb-5001-a832-2d8a1c1378dd:0:user",
+      "95067a77-bfbb-5001-a832-2d8a1c1378dd:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "95067a77-bfbb-5001-a832-2d8a1c1378dd:0:user",
+          "95067a77-bfbb-5001-a832-2d8a1c1378dd:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "95067a77-bfbb-5001-a832-2d8a1c1378dd:0:user",
+          "95067a77-bfbb-5001-a832-2d8a1c1378dd:2:assistant"
+        ],
+        "overlap_keys": [
+          "95067a77-bfbb-5001-a832-2d8a1c1378dd:0:user",
+          "95067a77-bfbb-5001-a832-2d8a1c1378dd:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "249551120d85244f60744bbf9787592054875aeabb0d4c6956cf2d490e522ff3",
+  "size_bytes": 7883,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-21T05-53-46\\reply.txt",
+  "reply_readback_sha256": "249551120d85244f60744bbf9787592054875aeabb0d4c6956cf2d490e522ff3",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-21T05-53-46\\raw-units.json",
+  "raw_units_sha256": "08cf20c609c40841b4536b518e5d59d278765c4fc7c172e5462b9fdf4b1598ac",
+  "raw_units_size_bytes": 11534,
+  "raw_units_readback_sha256": "08cf20c609c40841b4536b518e5d59d278765c4fc7c172e5462b9fdf4b1598ac",
+  "session_id": "6b013222-7890-83ec-9aca-031cfb0be688",
+  "conversation_url": "https://chatgpt.com/c/6b013222-7890-83ec-9aca-031cfb0be688",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}

@@ -1,0 +1,525 @@
+[2026-11-21T05:53:46.385Z] 证据目录: D:\AIEO\phase0\logs\dispatch-2026-11-21T05-53-46
+[2026-11-21T05:53:47.071Z] 会话锁已获取 pid=26596 instance=default lock=gpt-session.lockfile
+[2026-11-21T05:53:47.074Z] === GPT 派单（新建会话，消息 956 字节）===
+[2026-11-21T05:53:47.078Z] [instance] 实例域就绪: instance=default port=9222 profile=gpt-poc lock=gpt-session.lockfile
+[2026-11-21T05:53:48.391Z] [instance] 清理本实例 Chrome：own=0 foreign(不动)=0 remaining=0
+[2026-11-21T05:53:50.933Z] Chrome 已启动 pid=23780 port=9222
+[2026-11-21T05:53:54.185Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 0 个
+[2026-11-21T05:53:54.191Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-21T05:54:36.286Z] 新聊天页面就绪
+[2026-11-21T05:54:41.323Z] [dispatch] 基线尾部: null
+[2026-11-21T05:54:44.362Z] [dispatch] 发送双验通过（polls=2，user_unit_key=fallback-turn-0:0:user，tail 后观察）
+[2026-11-21T05:54:44.894Z] 截图: sent-dispatch.png
+[2026-11-21T05:57:23.061Z] [dispatch] COMPLETED，1 个 assistant unit，回复 7883 UTF-8 字节，区间窗口 2 个
+[2026-11-21T05:57:23.197Z] 截图: reply-dispatch.png
+[2026-11-21T05:57:23.199Z] 会话 URL 已取得且归属校验 PASS，跳过 reviewer 指针写盘: https://chatgpt.com/c/6b013222-7890-83ec-9aca-031cfb0be688
+[2026-11-21T05:57:23.207Z] JSON/Schema/绑定校验: NOT_REQUESTED
+[2026-11-21T05:57:23.208Z] M1 本地登记: NOT_REQUESTED（三 ID 均未提供，通用非登记派单）
+[2026-11-21T05:57:24.603Z] [instance] 清理本实例 Chrome：own=9 foreign(不动)=0 remaining=0
+[2026-11-21T05:57:24.606Z] [tab-hygiene] 成功退出：浏览器连接已关+实例 default Chrome 已清理（精确归属，他实例不动；含本次自建页 0 页）；本实例 tab 清零
+[2026-11-21T05:57:24.606Z] === 派单完成，artifact_sha256=249551120d85244f60744bbf9787592054875aeabb0d4c6956cf2d490e522ff3 size_bytes=7883 ===
+
+=====REPLY_BEGIN=====
+ChatGPT 说：
+QUEUE-DESIGN-R2 定点复审
+暂不通过：BLOCKED
+
+审查对象：
+
+仓库：damwate/AIEO
+
+分支：fix/parallel-stage2
+
+完整 SHA：5541e49d439c2edd11109f64b01baf338753792a
+
+文件：phase0/tools/parallel_queue_design_r1.md
+
+文件 Blob SHA：4032990f5f9f03b35c29970d74db6561b2ee5066
+
+已按指定完整 SHA 读取文件及提交差异，不以 HEAD 或分支最新状态代替审查。
+
+R2 确实补齐了大量 R1 缺失的设计内容，但文档声明关闭不等于设计缺口已经关闭。目前尤其需要核实发送崩溃窗口、跨进程原子认领和契约状态一致性，不能直接授予编码授权。
+
+一、Q-01～Q-08 逐项裁定
+
+项目
+
+	
+
+裁定
+
+	
+
+复审意见
+
+
+
+
+Q-01 状态归属分离
+
+	
+
+PASS
+
+	
+
+Task、Execution、Instance、Pool 四个实体已独立建模，实例暂停和账号级暂停不再混入任务状态
+
+
+
+
+Q-02 主转换时序
+
+	
+
+BLOCKED
+
+	
+
+主路径已统一，但 C9 唯一调用点与执行期复查点的定义仍有歧义
+
+
+
+
+Q-03 发送崩溃恢复
+
+	
+
+FAIL
+
+	
+
+禁止自动重发的原则正确，但发送前持久化顺序和崩溃窗口尚未封闭
+
+
+
+
+Q-04 Phase B 原子认领
+
+	
+
+FAIL
+
+	
+
+单一账本和双入口方向正确，尚缺可验证的跨进程原子性及认领令牌生命周期
+
+
+
+
+Q-05 契约全字段
+
+	
+
+BLOCKED
+
+	
+
+四实体字段明显补充，但仍缺少完整字段约束及状态转换契约
+
+
+
+
+Q-06 C6 六类证据
+
+	
+
+BLOCKED
+
+	
+
+六类结构已建立，缺失采集的表达尚未覆盖全部指标
+
+
+
+
+Q-07 SUSPECTED 禁自动降级
+
+	
+
+PASS_WITH_CONSTRAINTS
+
+	
+
+已禁止超时、页面重新加载自动降级；需统一四态的规范枚举名称
+
+
+
+
+Q-08 分阶段验收
+
+	
+
+PASS_WITH_CONSTRAINTS
+
+	
+
+Phase B 五项、Phase C 七项附加条件和 N=3 独立审批均已写明
+
+二、关键阻断项
+
+Q-02：C9 调用语义
+
+§③ 明确保留 pre-spawn、pre-reuse 和观察点复查；§④ 又写明：
+
+CLAIMED → C9_CHECKING 是唯一调用点。
+
+执行期内继续复查。
+
+需要明确这是唯一的初始门禁调用点，还是所有 C9 调用的唯一入口。不能让实现者误认为执行期复查被取消。
+
+Q-03：SEND_ATTEMPTED 的崩溃窗口
+
+当前设计规定：
+
+SEND_ATTEMPTED → 崩溃 → PENDING_VERIFY → 人工核实
+
+这是正确的安全方向，但还缺少最重要的写入顺序：
+
+先持久化 SEND_ATTEMPTED。
+
+确认持久化成功。
+
+才允许执行浏览器发送操作。
+
+发送结果持久化为 SEND_CONFIRMED。
+
+任意不确定状态进入 PENDING_VERIFY，禁止自动重发。
+
+否则，浏览器发送动作与状态落盘之间仍然存在崩溃窗口。
+
+另外，last_checkpoint 的 SENT 与 send_state 的 SEND_CONFIRMED 不是同一个概念，需要明确两者映射。
+
+Q-04：跨进程原子认领
+
+当前 §⑦ 只有：
+
+账本文件。
+
+lockfile 临界区。
+
+CLAIM 写账本成功才获得执行权。
+
+写失败禁止派发。
+
+claim_token 全部核销后才能恢复人工中控。
+
+仍缺少：
+
+lockfile 创建的原子性定义。
+
+进程崩溃后锁的安全恢复规则。
+
+claim_token 的唯一性、校验和失效规则。
+
+认领、释放、回滚之间的状态一致性。
+
+旧执行者不能在执行权失效后继续操作的防护。
+
+特别是不能用简单的锁超时自动释放正在执行的任务，否则可能出现双执行者。
+
+Q-05：契约字段
+
+字段扩充是有效的，但目前仍有几处不够严谨：
+
+Execution 的 dispatch_id 与原 R1 dispatch_dir、receipt_path 的对应关系未定义。
+
+last_checkpoint、send_state、recovery_state 缺少完整合法转换表。
+
+时间字段缺少统一格式和必填规则。
+
+verdict 的 FAIL 与 failure_code 的过程性失败缺少严格赋值约束。
+
+不能把示例 JSON 当成已经完成的接口契约。
+
+Q-06：C6 证据
+
+六类指标分别为 throughput、quota、rate_limit、verification、isolation、resource，分类成立。
+
+但 observed:false 目前没有完整落实到每个指标类别。尤其是 quota、verification、resource，需要区分：
+
+已观测且正常；
+
+已观测且异常；
+
+未观测；
+
+采集失败。
+
+NOT_OBSERVED 不能被汇总成 PASS，也不能用默认零值代替真实观测。
+
+Q-07：人机验证状态
+
+禁止自动降级的规则已经成立。不过 R1 的原始四态是：
+
+NORMAL
+
+VERIFICATION_SUSPECTED
+
+ACCOUNT_VERIFICATION_REQUIRED
+
+UNKNOWN_BLOCK_PAGE
+
+R2 改成了 NORMAL、SUSPECTED、REQUIRED、UNKNOWN_BLOCK，缩短了枚举名称。建议恢复规范名称，避免与其他业务状态混淆。
+
+Q-08：验收标准
+
+Phase B 五项测试完整列出，Phase C 七项附加条件也有明确覆盖，N=3 独立审批保留。
+
+但测试结果还需要定义可审计的证据产物、判定条件和失败处理，不能仅凭测试执行过就算 PASS。
+
+三、验收失败两分语义
+PASS
+
+这部分整改有效：
+
+执行失败：过程性失败，由异常转换和恢复机制处理。
+
+验收失败：结论性失败，原任务保留 VERIFIED_FAIL，创建独立 task_id，通过 rework_of 建立整改谱系。
+
+重验：独立授权、独立 Execution。
+
+L-022 非阻塞原则保留，不因一个任务验收失败阻塞无依赖任务。
+
+没有发现将执行失败与 ChatGPT 验收失败重新合并的设计。
+
+四、既有约束逐条保留审查
+BLOCKED
+
+R2 明确声明保留以下约束：
+
+既有约束
+
+	
+
+结论
+
+
+
+
+C9 已验收门禁实现
+
+	
+
+PASS_WITH_CONSTRAINTS
+
+
+
+
+C6 已验收采集语义
+
+	
+
+BLOCKED，六类语义需要对齐
+
+
+
+
+C1-R2 实例互斥
+
+	
+
+PASS_WITH_CONSTRAINTS
+
+
+
+
+DEC-130 黄金源克隆
+
+	
+
+BLOCKED，操作细节被压缩
+
+
+
+
+DEC-010 profile 删除审批
+
+	
+
+PASS
+
+
+
+
+L-018 补采禁重发
+
+	
+
+PASS_WITH_CONSTRAINTS
+
+
+
+
+L-022 非阻塞
+
+	
+
+PASS
+
+
+
+
+L-023 三层决策
+
+	
+
+PASS_WITH_CONSTRAINTS
+
+这里发现一个文档完整性问题：
+
+R1 §⑥ 原本明确写有：
+
+全部关闭后才能进行黄金源克隆。
+
+整目录镜像。
+
+每个克隆实例逐一人工登录态验收。
+
+N=2→观察→N=3→观察→审查裁定。
+
+R2 将这些压缩成一行原则性文字，并声称「全文保留零修改」。
+
+这不是逐条原文保留。不能仅凭原则摘要认定既有操作约束完整保留。
+
+五、最终裁定
+
+审查内容
+
+	
+
+结果
+
+
+
+
+Q-01
+
+	
+
+PASS
+
+
+
+
+Q-02
+
+	
+
+BLOCKED
+
+
+
+
+Q-03
+
+	
+
+FAIL
+
+
+
+
+Q-04
+
+	
+
+FAIL
+
+
+
+
+Q-05
+
+	
+
+BLOCKED
+
+
+
+
+Q-06
+
+	
+
+FAIL
+
+
+
+
+Q-07
+
+	
+
+PASS_WITH_CONSTRAINTS
+
+
+
+
+Q-08
+
+	
+
+PASS_WITH_CONSTRAINTS
+
+
+
+
+验收失败两分语义
+
+	
+
+PASS
+
+
+
+
+既有约束逐条未动
+
+	
+
+BLOCKED
+
+最终：BLOCKED
+
+P0 尚有三个实质问题，P1 尚有契约和证据问题。
+
+本次 R2 不予整体通过，不进入编码授权。
+
+六、下一轮 R3 整改要求
+
+建议只做设计文档整改，不启动代码：
+
+Q-02：明确初始 C9 调用与执行期复查的关系。
+
+Q-03：补齐发送前写入顺序、崩溃窗口和 checkpoint 映射。
+
+Q-04：补齐跨进程认领、令牌生命周期、崩溃恢复和防双执行机制。
+
+Q-05：补齐字段类型、必填性、枚举转换、归档关联。
+
+Q-06：恢复原六类指标的语义，逐类明确观测状态、来源、单位、时间戳。
+
+Q-07：统一四态正式枚举名称。
+
+Q-08：为五项 Phase B 测试和七项 Phase C 条件补充机器可核验的验收证据。
+
+恢复 R1 §⑥ 的完整约束内容，不以摘要替代操作规范。
+
+编码授权边界：
+
+Phase A：本次不授权启动实施。
+
+Phase B：不授权骨架编码。
+
+Phase C：不授权接管。
+
+N=3：继续独立审批，不能随 Queue 设计通过自动扩容。
+
+N=2：不构成任何重启授权。
+
+C9、C6、C1-R2、DEC-130、DEC-010、L-018、L-022、L-023 既有约束不得因本轮整改而修改。
+
+R3 提交新的完整 SHA 后，再做一次定点复审。只有全部 P0/P1 关闭、既有约束复核通过，才进入你要求的下一步：编码授权裁定。
+=====REPLY_END=====
+[2026-11-21T05:57:24.733Z] 会话锁已释放

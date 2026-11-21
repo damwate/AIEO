@@ -1,0 +1,11 @@
+[QUEUE-DESIGN-R2|设计整改定点复审（P0×4/P1×4关闭声明）]
+分支 fix/parallel-stage2 完整SHA=5541e49d439c2edd11109f64b01baf338753792a：请按SHA读 phase0/tools/parallel_queue_design_r1.md（R2版，对照表在文末）。逐项关闭：
+Q-01 状态归属分离（Task/Execution/Instance/Pool四实体独立枚举不再混用）
+Q-02 主转换单时序（CLAIMED原子认领→C9_CHECKING→EXECUTING；BLOCKED零浏览器操作；ALLOWED非永久授权）
+Q-03 send_state三态+recovery_state+last_checkpoint（ATTEMPTED后崩溃=PENDING_VERIFY禁自动重发）
+Q-04 Phase B单一账本+双入口+原子唯一认领+回滚五步
+Q-05 契约全字段补齐
+Q-06 C6六类结构化证据（NOT_OBSERVED≠PASS）
+Q-07 SUSPECTED禁自动降级
+Q-08 Phase B五测试+Phase C七附加+N=3独立审批
+另：验收失败两分语义+既有约束逐条未动。请定点复审给PASS/FAIL/BLOCKED；PASS后按R1裁定进入编码授权裁定。
