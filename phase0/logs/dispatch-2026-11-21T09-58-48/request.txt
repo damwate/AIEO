@@ -1,0 +1,6 @@
+[QUEUE-PHASEB-R3|Phase B R2整改定点复验]
+分支 fix/parallel-stage2 新完整SHA=d6fc55d80f676bfd41a96cf3cd484dbc1d799416：请按SHA读 queue_core.mjs+test_queue_service.mjs。R2整改三项全落实：
+①claimTask 单临界区三文件一致性写（含 Execution 创建=claim_token 执行权绑定；不同任务同实例→INSTANCE_NOT_IDLE；幂等查账本防在途重复派发）
+②c9CheckAndStart 复用认领创建的 Execution（推进 checkpoint 至 C9_PASS，不再重复创建）
+③completeExecution 统一锁顺序 ledger→pool→executions + Execution.claim_token 双重核验（fencing 双层）+实例对称释放
+测试：9/9（5 主测试+4 负例含 R1 处方全部四条+R2 增补执行权绑定一致性断言）+phase0 12/12+四腿 122 项 OK。请定点复验给 PASS/FAIL/BLOCKED；PASS=Phase B 验收通过。

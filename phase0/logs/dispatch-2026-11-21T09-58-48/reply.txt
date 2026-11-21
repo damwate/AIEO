@@ -1,0 +1,291 @@
+ChatGPT 说：
+QUEUE-PHASEB-R3｜定点复验裁定
+FAIL — Phase B 暂不通过
+
+复验对象
+
+仓库：damwate/AIEO
+
+分支：fix/parallel-stage2
+
+完整 SHA：d6fc55d80f676bfd41a96cf3cd484dbc1d799416
+
+文件：phase0/tools/queue_core.mjs
+
+文件：phase0/tools/test_queue_service.mjs
+
+已按指定 SHA 定位并读取两个文件，不使用 HEAD 替代。
+
+一、三项整改核验
+
+整改项
+
+	
+
+复验结果
+
+	
+
+裁定
+
+
+
+
+① claimTask 三文件认领写入
+
+	
+
+已实现
+
+	
+
+部分通过
+
+
+
+
+② C9 复用 Execution
+
+	
+
+已实现
+
+	
+
+通过
+
+
+
+
+③ completeExecution 双重 fencing
+
+	
+
+已实现
+
+	
+
+部分通过
+
+① claimTask：三文件一致性写
+代码修改已落实
+
+确认：
+
+同一账本锁临界区读取三个文件。
+
+Task 写入 CLAIMED 和 claim_token。
+
+Instance 写入 BUSY 和 current_task。
+
+Execution 在认领时创建，并绑定相同 claim_token。
+
+不同任务竞争同一实例，返回 INSTANCE_NOT_IDLE。
+
+但存在一个重要问题：
+
+单一锁保护下的三次文件写入，不等于跨文件事务原子提交。
+
+目前仍然是：
+
+JavaScript
+writeJsonFileAtomic(paths.ledger, ledger);
+writeJsonFileAtomic(paths.pool, pool);
+writeJsonFileAtomic(paths.executions, execs);
+
+每个文件自身通过临时文件和 rename 原子替换，但三个文件之间没有事务提交或崩溃回滚机制。
+
+如果第二、第三次写入失败，可能形成部分提交。
+
+此外，当前幂等检查主要检查：
+
+JavaScript
+["EXECUTING", "COLLECTING"].includes(e.last_checkpoint)
+
+但 Execution 实际使用的阶段包括 CLAIMED、C9_PASS、SENT、GENERATING。
+
+没有完整覆盖在途状态，不能据此认定幂等防重复派发已经充分闭环。
+
+② c9CheckAndStart：复用 Execution
+PASS
+
+确认：
+
+删除了 C9 阶段重复创建 Execution 的逻辑。
+
+从已有 Execution 中查找记录。
+
+将 checkpoint 推进到 C9_PASS。
+
+按需更新 dispatch_id。
+
+返回原 Execution ID。
+
+这一项整改符合 R2 要求。
+
+但建议后续将 Execution 查找条件进一步收紧为 task_id + claim_token，避免仅按 task_id 选择最后一条记录。
+
+③ completeExecution：双重 fencing 和锁顺序
+未完全通过
+
+确认已经实现：
+
+核验 Task.claim_token。
+
+核验 Execution.claim_token。
+
+旧 token 拒绝完成提交。
+
+REPORTED 状态补记。
+
+Instance 对称释放。
+
+三文件按 ledger、pool、executions 顺序写入。
+
+但是发现一个实质性问题：
+
+代码并没有真正取得三个文件对应的锁。
+
+当前 completeExecution() 实际只取得：
+
+JavaScript
+const lock = acquireLockWithRetry(
+  `${paths.ledger}.lockfile`,
+  `queue-complete:${taskId}`
+);
+
+之后直接读取、修改并写入 pool 和 executions。
+
+这与注释所声明的：
+
+ledger → pool → executions 统一锁顺序不是一回事。
+
+尤其是：
+
+mirrorSendState() 使用 executions 独立锁。
+
+seedInstance() 使用 pool 独立锁。
+
+recoverExecutions() 使用 ledger → executions 锁，但没有取得 pool 锁。
+
+因此，仍然存在跨操作并发修改不同文件的竞争窗口。
+
+不能认定 R2 已经解决跨文件锁一致性问题。
+
+二、测试证据核验
+
+测试文件确实包含：
+
+5 项主测试。
+
+4 项负例。
+
+同实例竞争。
+
+旧 token 禁止完成。
+
+镜像权威源。
+
+REPORTED 不降级。
+
+但发现两个测试覆盖不足：
+
+P0-1：旧 token 负例没有真正验证 Execution 层 fencing。
+
+负例2先将 Task.claim_token 清空，再使用旧 token 调用 completeExecution。
+
+因此程序在 Task 层就拒绝了请求，没有实际证明 Execution.claim_token 第二层核验能够独立阻断。
+
+P0-2：没有跨文件写入中断故障注入。
+
+没有证明 ledger 写成功、pool 或 executions 写失败时，系统能够恢复一致状态。
+
+另外，现有 9 项测试没有完整验证 claimTask 返回的 execution_id 与对应 Execution.claim_token 的一致性及后续全链路执行权绑定。
+
+用户提供的 9/9、12/12、122 项结果可以作为提交方测试报告，但我没有将其冒充为本轮独立重新执行的结果。
+
+三、整改处方
+
+只需要围绕现有三个问题继续整改，不建议重新设计 Queue Service。
+
+编号
+
+	
+
+整改要求
+
+	
+
+优先级
+
+
+
+
+P0-1
+
+	
+
+完成真正统一的多文件锁协议，所有涉及 ledger/pool/executions 的操作遵循一致顺序
+
+	
+
+P0
+
+
+
+
+P0-2
+
+	
+
+补充跨文件写入中断及恢复测试，确保不存在不可恢复的部分提交
+
+	
+
+P0
+
+
+
+
+P0-3
+
+	
+
+幂等检查覆盖全部有效在途 checkpoint，并验证 claim_token 与 Execution 的对应关系
+
+	
+
+P0
+
+
+
+
+P1-1
+
+	
+
+增加独立验证 Execution.claim_token 拒绝旧 token 的负例
+
+	
+
+P1
+
+四、最终裁定
+
+FAIL — Phase B 验收不通过
+
+R2 三项代码整改：主体已落实。
+
+C9 Execution 复用：通过。
+
+claimTask 三文件一致性：仍有事务与幂等缺口。
+
+completeExecution 锁协议：未真正落实。
+
+测试报告：不能覆盖上述阻断问题。
+
+当前不授予 Phase B 验收通过。
+
+下一轮只需针对上述 P0 项进行定点整改，提交新的完整 SHA，再进行 R4 复验。
+
+特别说明： 这次不是推翻 R2 的实现成果，而是区分了代码表面上的三文件顺序写入与真正的并发一致性保证。不要为了通过验收而扩大修改范围。

@@ -45,6 +45,8 @@ export function queuePaths(aieoRoot) {
   const dir = join(aieoRoot, "runtime", "queue");
   return {
     dir,
+    state: join(dir, "queue-state.json"),   // 单文件=跨文件事务原子性（R4 P0-1 整改）
+    // 旧三文件路径仅保留用于兼容旧测试引用（Phase B 影子期不再写入）
     ledger: join(dir, "task-ledger.json"),
     executions: join(dir, "executions.json"),
     pool: join(dir, "instance-pool.json"),
@@ -52,6 +54,18 @@ export function queuePaths(aieoRoot) {
 }
 
 // ---------- 原子读写（M1/端口注册表同模式：tmp+rename+回读） ----------
+function readQueueState(statePath) {
+  if (!existsSync(statePath)) {
+    return { version: 1, tasks: {}, executions: [], instances: {}, account_gate: { state: "ALLOWED" } };
+  }
+  const q = readJsonFile(statePath, { allowMissing: false });
+  validateQueueState(q);
+  return q;
+}
+function writeQueueStateAtomic(statePath, q) {
+  validateQueueState(q);
+  writeJsonFileAtomic(statePath, q);
+}
 function readJsonFile(path, { allowMissing = true, defaultValue = undefined } = {}) {
   if (!existsSync(path)) {
     if (allowMissing) return defaultValue;
@@ -97,6 +111,14 @@ function acquireLockWithRetry(lockPath, holder, timeoutRaw) {
 }
 
 // ---------- 账本结构校验（Q-01 状态归属分离：Task 生命周期/Execution 过程/Instance 健康/Pool 门禁分实体） ----------
+function validateQueueState(q) {
+  if (q?.version !== 1) throw queueError("QUEUE_FILE_INVALID", "queue-state 版本无效");
+  if (typeof q?.tasks !== "object" || q?.tasks === null || Array.isArray(q.tasks)) throw queueError("QUEUE_FILE_INVALID", "tasks 结构无效");
+  if (!Array.isArray(q?.executions)) throw queueError("QUEUE_FILE_INVALID", "executions 结构无效");
+  if (typeof q?.instances !== "object" || q?.instances === null || Array.isArray(q.instances)) throw queueError("QUEUE_FILE_INVALID", "instances 结构无效");
+  if (typeof q?.account_gate !== "object" || q?.account_gate === null) throw queueError("QUEUE_FILE_INVALID", "account_gate 缺失");
+}
+// 旧三文件模式兼容（Phase B 影子期测试引用）
 function validateLedgerShape(l) {
   if (l?.version !== 1 || typeof l?.tasks !== "object" || l?.tasks === null || Array.isArray(l.tasks)) {
     throw queueError("QUEUE_FILE_INVALID", "任务账本结构无效");

@@ -1203,3 +1203,11 @@
 - **机制运转（L-023 实证）：** 设计迭代 R1→R8 全程中控+ChatGPT 子任务循环，用户未逐项拍板；每轮 FAIL 清单精确可执行，收敛轨迹 8→6→3→1→0。
 - **依据：** 提交链 …→dfb5921a→6e0a26a3→本提交；现场 dispatch-2026-11-21T04-15-39/04-23-56 等+recoll-rewr/arch/p2fix/p2count 系列驱动。
 - **边界：** Phase B 编码=下一任务（新任务包）；Phase C/Bash 替换/C9C6 修改/N=2 重启/N=3/main 合并均未授权；人机验证判定器实现随 Phase B 编码轮（DEC-134 P1 优先级）。
+
+### DEC-142 Queue Phase B 验收 R1 FAIL（P0×3 均为分布式一致性真实缺陷）→ R2 整改→ R3 FAIL（收敛至架构级修法）（2026-11-21）
+
+- **R1 FAIL（one-shot 会话 6b01682e，reply SHA-256=056695e31e0cc78d2565ef08a4019ff9f71be78bccc1d73f31fef4c4895b5dc4）：** P0×3 均为真实缺陷——①claimTask 原子认领未原子占用实例（instance BUSY 未在认领临界区写入，同实例可先后认领两不同任务）；②C9 门禁未调用既有 accountGateCheck（复制了判断逻辑违反"不重写"约束）；③send_state 镜像方向反转（调用方声明值直接写入 Execution，未从归档权威源读取）。P1×2：fencing 缺 completeExecution token 校验；缺跨文件一致性故障注入测试。四条负例已按要求补齐。
+- **R2 整改：** ①claimTask 单临界区三文件写（含 instance BUSY 绑定）；②新增 gateCheckWithWriteBack 共享门禁函数（dispatch_options 内，与已验收 accountGateCheck 同语义单实现，gpt_dispatch 零修改）；③mirrorSendState 从 dispatch 归档读取 send-state.json 权威源→差异登记→更新镜像；④completeExecution 加 Execution.claim_token 双重核验（fencing 双层）。
+- **R3 FAIL（one-shot 会话 6b016b92，reply SHA-256=308851b08502093709dc783c42635594eb9208b871265bd34fbc6144ad4c5e20）：** 审查方精确指出——三文件顺序原子写≠跨文件事务原子提交（第二/三次写入失败可形成部分提交）；幂等检查漏 CLAIMED/C9_PASS/SENT/GENERATING 四个在途 checkpoint；completeExecution 未真正取得三文件锁（锁协议未落实）；缺 Execution.claim_token 独立负例。**P0×3+P1×1，全部为分布式一致性真实缺陷。**
+- **R4 修法（设计级决策，非快改）：** 合并三状态文件为单 `queue-state.json`（tasks+executions+instances+account_gate 四实体合一）——单文件原子写=跨文件事务原子性自然成立（同一 rename 不可分割）；`idempotency_key` 在途检查覆盖全部 `CHECKPOINTS` 枚举（CLAIMED/C9_CHECKING/C9_PASS/EXECUTING/SENT/GENERATING/COLLECTING）；`completeExecution` 统一锁顺序（单文件单锁）。
+- **边界：** R4 代码改造=实质性重构（三文件→单文件迁移），需独立任务包+回归+独立验收；当前不授权 N=2 重启/N=3/Phase C/清理/main 合并。
