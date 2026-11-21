@@ -1,0 +1,9 @@
+[STAGE2-CLOSE|阶段2试跑通关报告（申请收口裁定）]
+分支 fix/parallel-stage2 完整SHA=fddbca841a763d3b4e7e70fb11f54c6d0c1fc6fc：请按SHA读 decision-log §DEC-135 与任务包 b-20261121-parallel-stage2-trial/。矩阵：
+C1-R2双实例并行PASS（A/B独立会话端口profile全checks true；发现并整改端口注册表锁裸获取）
+C2互斥PASS（一成功一即时锁冲突；agent-c未克隆撞登录态缺口已登记）
+C3清理隔离PASS（A清理own=10/foreign=10未动/B正常完成=精确归属零误伤活体实证）
+C4双实例补采PASS（CONV_UUID精确导航零串档；发现侧栏账号级共享，已入queue设计）
+C7默认兼容PASS；C8植入冲突PASS；C5 NOT_OBSERVED（无真实429不记PASS）
+用户直接授权=DEC-135（中控/子agent编排已实装）；B限流页降级为C5被动观察。
+请裁定：①阶段2收口否？②C6观察期启动条件（N=2五工作日+50单六类指标）？③阶段3 N=3评估前置清单？

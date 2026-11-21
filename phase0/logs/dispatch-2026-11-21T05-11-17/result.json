@@ -1,0 +1,191 @@
+{
+  "at": "2026-11-21T05:15:17.518Z",
+  "instance_id": "default",
+  "instance_lock_path": "D:\\AIEO\\runtime\\locks\\gpt-session.lockfile",
+  "instance_debug_port": 9222,
+  "instance_profile_dir": "D:\\AIEO\\runtime\\chrome_profiles\\gpt-poc",
+  "message_bytes": 986,
+  "reply": "ChatGPT 说：\n阶段2收口裁定\n阶段2：有条件通过\nC5：未观测\n阶段3：暂不授权\n\n审查对象：damwate/AIEO\n\n分支：fix/parallel-stage2\n\n完整 SHA：fddbca841a763d3b4e7e70fb11f54c6d0c1fc6fc\n\n已读取该 SHA 的 DEC-135、任务需求及已提交的执行日志。\n\n我的总体判断是：N=2 的核心隔离、互斥和兼容能力已经取得足够积极的试跑结果，可以结束阶段2的主动测试；但不能把所有矩阵项解释成完整、无条件通过，更不能直接据此放行 N=3。\n\n有一个证据问题需要明确保留：提交的部分原始 stdout 与 DEC-135 的总结并不完全对应。例如，C1 初始日志记录了账号锁冲突和输入框超时，C4 的部分 stdout 在发送确认后就结束了。最终重跑结果及补采结论需要以对应的完整现场回执为准，不能用占位简报代替技术证据。\n\n① 阶段2是否收口？\n\n裁定：允许阶段2主动试跑收口，验收状态为 PASS_WITH_CONSTRAINTS。\n\n各项状态按以下口径冻结：\n\n测试项\n\n\t\n\n裁定\n\n\t\n\n说明\n\n\n\n\nC1 双实例并行\n\n\t\n\nPASS（待证据归档补齐）\n\n\t\n\nA 重跑成功；B 的 R2 独立回执需补绑定\n\n\n\n\nC2 同实例互斥\n\n\t\n\nPASS\n\n\t\n\n一成功、一锁冲突拒绝\n\n\n\n\nC3 清理隔离\n\n\t\n\nPASS\n\n\t\n\n外部实例存活，未误杀\n\n\n\n\nC4 双实例补采\n\n\t\n\nPASS（待证据归档补齐）\n\n\t\n\nUUID 精确导航原则成立\n\n\n\n\nC5 429\n\n\t\n\nNOT_OBSERVED\n\n\t\n\n不得转换成 PASS\n\n\n\n\nC7 默认兼容\n\n\t\n\nPASS\n\n\t\n\ndefault 实例真实派单成功\n\n\n\n\nC8 资源冲突\n\n\t\n\nPASS\n\n\t\n\n非法端口精确拒绝\n\n这里有两个归档要求：\n\n补齐 C1-B-R2 对应的完整 stdout、会话 UUID、回执 SHA-256。\n\n补齐 C4-A/B 完整补采回执及 recoll 结果，证明发送确认、恢复、归属校验和最终闭环。\n\n这两项是证据完整性要求，不要求重新执行已经通过的测试。\n\n另外，C2 中 agent-c 未克隆导致的登录态缺口，必须继续作为 N=3 前置条件，不能把它算成 C2 互斥机制失败。\n\n阶段2结束后冻结以下边界：\n\n不再主动扩大 N=2 试跑范围。\n\n不主动制造 429 或人机验证。\n\n不删除本轮遗留现场和审计记录。\n\n不改动已验收的 C9 实现。\n\n不自动合并 main。\n\n不因本次通过而自动授权 N=3。\n\n② C6 观察期启动条件\n批准启动准备\n\n我同意采用 DEC-130 已经确定的门槛：\n\nC6 双门槛\n\n5 天\n\n工作日\n\n至少连续观察五个工作日\n\n50 单\n\n有效派单\n\n至少累计五十次有效派单\n\n两个条件必须同时满足。\n\n哪个条件尚未满足，就继续观察，不允许降低门槛。\n\n我的补充裁定是：现在可以启动 C6 的准备工作，但正式计时应从 N=2 运行基线、采集器和数据口径全部确认之日开始。\n\n有效派单必须定义清楚：\n\n有独立任务标识。\n\n有真实发送确认。\n\n有明确的执行结果。\n\n重试不能重复计数。\n\n未发送、重复记录、纯占位测试不能计入有效派单。\n\n成功、失败、阻断分别统计，不能只统计成功任务。\n\nC6 六类必采指标\n\n依据 phase0/tools/parallel_stage2_ops_r1.md，维持原有六类，不随意删减。\n\n类别\n\n\t\n\n核心观测内容\n\n\n\n\nA 吞吐效率\n\n\t\n\n派单量、成功数、失败数、P50/P95、排队时间、每小时成功量\n\n\n\n\nB 账号配额\n\n\t\n\n初始额度、每日消耗、单任务消耗、恢复时间、剩余余量\n\n\n\n\nC 429 与风控\n\n\t\n\n真实429次数、C9退避、其他实例停止、安全提醒、人机验证、登录失效\n\n\n\n\nD 实例隔离\n\n\t\n\n锁冲突、端口冲突、CDP断连、清理误杀、补采串档、异常退出\n\n\n\n\nE 机器资源\n\n\t\n\nCPU平均/P95、内存平均/峰值、Chrome进程数、磁盘增长\n\n\n\n\nF 扩容经济性\n\n\t\n\nN=2吞吐基线、N=3预期增量、配额成本、资源成本、边际收益\n\n特别强调 C 类：\n\n没有真实429，就继续登记 NOT_OBSERVED。\n\n不能为了完成观察表而主动触发限流。\n\n人机验证也必须作为独立状态记录：发现、暂停、人工处理、恢复、重新派单，形成完整链路。不得自动点击、破解或绕过验证。\n\n③ 阶段3：N=3 评估前置清单\n当前不授权执行\n\n阶段3不是把 N=2 改成 N=3，而是一次独立的扩容验收。\n\n我确定以下八项为进入 N=3 评估的前置条件。\n\nN=3 评估前置门槛\n\n前置检查进度\n\n0/8\n\n01 C6观察完成\n\n至少5个工作日、50次有效派单，六类指标齐全\n\n02 N=2稳定性\n\n无跨实例串档、误杀、未知副作用及未解决的P1问题\n\n03 C9风控验证\n\n退避不缩短、账号级协调有效、异常时全实例受控\n\n04 第三实例准备\n\nagent-c完成克隆、人工登录态确认、账号身份核对\n\n05 实例资源隔离\n\n三个独立profile、端口、锁、实例ID和注册表映射\n\n06 补采机制可靠\n\nCONV_UUID精确导航，不依赖账号共享侧栏的最新消息\n\n07 人机验证处置\n\n识别、暂停、记录、人工恢复、恢复后重新派单\n\n08 扩容与回滚方案\n\n明确N=3试跑步骤、停止条件、回退N=2办法及资源预算\n\n此清单仅供人工跟踪，不代表仓库验收或自动授权。\n\nN=3 试跑规则\n\n八项全部通过后，重新提交独立申请，由我进行 N=3 评估裁定。\n\nN=3 试跑要求：\n\n从 N=2 基线出发，只增加一个实例。\n\n三个子 agent 各自独立执行任务，中控负责协调。\n\n每个实例独立锁、端口、profile、会话和任务归属。\n\n任一账号级风控异常，立即暂停全实例派单。\n\n发现串档、误杀或未知副作用，立即停止扩容。\n\n观察至少五个工作日，对比 N=2 和 N=3 的实际成功吞吐。\n\n只有证明增加实例带来实际有效吞吐提升，才考虑生产规模 N=3。\n\nN=4 暂时不讨论实施，只有 N=3 仍有真实积压且配额、风控、机器资源均有余量时，才另行申请。\n\n④ 最终决策与下一步执行顺序\n\n我建议将阶段切换明确冻结为：\n\n阶段2收口\n\nN=2 主动试跑结束，PASS_WITH_CONSTRAINTS，补齐两组证据归档。\n\n启动C6观察准备\n\n确认采集字段、有效派单定义、统计口径、异常处理规则。\n\nN=2持续运行\n\n满足五工作日和五十次有效派单双门槛，完成六类指标分析。\n\n提交N=3评估申请\n\n八项前置检查全部通过，单独申请扩容。\n\nN=3受控试跑\n\n新一轮独立验收，不能沿用N=2的通过结论。\n\n生产规模裁定\n\n根据N=2/N=3边际吞吐和资源成本，决定最终规模。\n\n对 Queue Service 的额外要求\n\nDEC-134 已经批准 Queue Service 立项，但明确要求先设计、后审查、再编码。\n\n这条路线继续有效：\n\n实例池管理窗口。\n\n队列管理任务。\n\nC9 管理账号级风控门禁。\n\nC6 管理运行证据。\n\nGPT 中控负责审查和决策。\n\n子 agent 独立执行各自任务。\n\n特别是本次 C4 发现的账号级共享侧栏，必须进入队列服务设计的会话归属契约。不能再使用最新消息、最新侧栏项目等启发式方式恢复任务。\n\n本轮最终裁定\n\n事项\n\n\t\n\n决定\n\n\n\n\n阶段2主动试跑\n\n\t\n\n收口批准\n\n\n\n\n阶段2证据归档\n\n\t\n\n补齐两组\n\n\n\n\nC6观察准备\n\n\t\n\n批准\n\n\n\n\nC6正式计时\n\n\t\n\n基线就绪后启动\n\n\n\n\nN=3扩容\n\n\t\n\n暂不批准\n\n\n\n\nQueue Service设计\n\n\t\n\n继续推进\n\n\n\n\nQueue Service编码\n\n\t\n\n设计审查后再批\n\n\n\n\nN=4\n\n\t\n\n暂不进入实施\n\n最后强调一个原则：N=2 证明的是两个实例可以协同工作，不代表三个实例一定能稳定工作。\n\n这次真正有价值的成果，不只是并行成功，而是已经实测识别出三个重要问题：端口注册表锁竞争、账号级侧栏共享、实例清理归属隔离。后续架构必须吸收这些经验，而不是单纯增加窗口数量。\n\n审查依据：\n\n阶段2最终提交 SHA\n\n阶段2运营规程 R1\n\nDEC-130、DEC-134、DEC-135\n\n本裁定不代表已经修改仓库或提交新的 DEC。下一步建议先做两组证据归档补齐和 C6 采集准备，不要急着开第三个实例。",
+  "user_unit_key": "62a957b4-05d4-556f-bbcf-8e3710e03535:0:user",
+  "start_key_resolved": "62a957b4-05d4-556f-bbcf-8e3710e03535:0:user",
+  "start_resolved_by_marker": true,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "62a957b4-05d4-556f-bbcf-8e3710e03535:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "8d570454-87b1-4f8a-a2c3-d5f4095da2d6",
+  "stability": {
+    "stable": true,
+    "interval_ms": 5518,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-21T05:15:11.124Z",
+      "read_finished_at": "2026-11-21T05:15:13.630Z",
+      "unit_keys": [
+        "62a957b4-05d4-556f-bbcf-8e3710e03535:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "62a957b4-05d4-556f-bbcf-8e3710e03535:2:assistant",
+          "sha256": "1f9e11f52487252b7ac70ed815683db4006dca6e61038b34e1245369c431dd3c",
+          "size_bytes": 8030
+        }
+      ],
+      "assistant_uuid": "8d570454-87b1-4f8a-a2c3-d5f4095da2d6",
+      "next_user_unit_key": null,
+      "start_key_resolved": "62a957b4-05d4-556f-bbcf-8e3710e03535:0:user",
+      "start_resolved_by_marker": true,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-21T05:15:16.642Z",
+      "read_finished_at": "2026-11-21T05:15:17.278Z",
+      "unit_keys": [
+        "62a957b4-05d4-556f-bbcf-8e3710e03535:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "62a957b4-05d4-556f-bbcf-8e3710e03535:2:assistant",
+          "sha256": "1f9e11f52487252b7ac70ed815683db4006dca6e61038b34e1245369c431dd3c",
+          "size_bytes": 8030
+        }
+      ],
+      "assistant_uuid": "8d570454-87b1-4f8a-a2c3-d5f4095da2d6",
+      "next_user_unit_key": null,
+      "start_key_resolved": "62a957b4-05d4-556f-bbcf-8e3710e03535:0:user",
+      "start_resolved_by_marker": true,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "62a957b4-05d4-556f-bbcf-8e3710e03535:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "62a957b4-05d4-556f-bbcf-8e3710e03535:0:user",
+          "62a957b4-05d4-556f-bbcf-8e3710e03535:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "31146e8f82560db21c382f44392d81f3d185a658e2406cab347d0d2964437e24",
+          "1f9e11f52487252b7ac70ed815683db4006dca6e61038b34e1245369c431dd3c"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "62a957b4-05d4-556f-bbcf-8e3710e03535:0:user",
+          "62a957b4-05d4-556f-bbcf-8e3710e03535:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "31146e8f82560db21c382f44392d81f3d185a658e2406cab347d0d2964437e24",
+          "1f9e11f52487252b7ac70ed815683db4006dca6e61038b34e1245369c431dd3c"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "62a957b4-05d4-556f-bbcf-8e3710e03535:0:user",
+          "62a957b4-05d4-556f-bbcf-8e3710e03535:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "62a957b4-05d4-556f-bbcf-8e3710e03535:0:user",
+      "62a957b4-05d4-556f-bbcf-8e3710e03535:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "62a957b4-05d4-556f-bbcf-8e3710e03535:0:user",
+          "62a957b4-05d4-556f-bbcf-8e3710e03535:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "62a957b4-05d4-556f-bbcf-8e3710e03535:0:user",
+          "62a957b4-05d4-556f-bbcf-8e3710e03535:2:assistant"
+        ],
+        "overlap_keys": [
+          "62a957b4-05d4-556f-bbcf-8e3710e03535:0:user",
+          "62a957b4-05d4-556f-bbcf-8e3710e03535:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "1f9e11f52487252b7ac70ed815683db4006dca6e61038b34e1245369c431dd3c",
+  "size_bytes": 8030,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-21T05-11-17\\reply.txt",
+  "reply_readback_sha256": "1f9e11f52487252b7ac70ed815683db4006dca6e61038b34e1245369c431dd3c",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-21T05-11-17\\raw-units.json",
+  "raw_units_sha256": "0c6a4cf69884e591751529cc7dc01779e5fff7ae38ffb62ae84d84d3e437aa6b",
+  "raw_units_size_bytes": 11644,
+  "raw_units_readback_sha256": "0c6a4cf69884e591751529cc7dc01779e5fff7ae38ffb62ae84d84d3e437aa6b",
+  "session_id": "6b01282e-0810-83ec-9b45-fa4196394ac2",
+  "conversation_url": "https://chatgpt.com/c/6b01282e-0810-83ec-9b45-fa4196394ac2",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}
