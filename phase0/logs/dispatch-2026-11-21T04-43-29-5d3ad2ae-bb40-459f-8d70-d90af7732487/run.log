@@ -1,0 +1,5 @@
+[2026-11-21T04:43:29.952Z] 证据目录: D:\AIEO\phase0\logs\dispatch-2026-11-21T04-43-29-5d3ad2ae-bb40-459f-8d70-d90af7732487
+[2026-11-21T04:43:30.558Z] 会话锁已获取 pid=7472 instance=agent-a lock=gpt-session-agent-a.lockfile
+[2026-11-21T04:43:30.559Z] === GPT 派单（新建会话，消息 197 字节）===
+[2026-11-21T04:43:31.127Z] 会话锁已释放
+[2026-11-21T04:43:31.127Z] 致命错误: SESSION_LOCK_CONFLICT: 锁文件句柄被其他进程持有（OS 级互斥）。同一 ChatGPT 会话同一时刻只允许一个在途任务，本次拒绝执行。 详情: 使用“4”个参数调用“Open”时发生异常:“文件“D:\AIEO\runtime\locks\instance-ports.json.lockfile”正由另一进程使用，因此该进程无法访问此文件。”

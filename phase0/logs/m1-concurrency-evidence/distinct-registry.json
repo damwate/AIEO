@@ -5,7 +5,7 @@
   "records": [
     {
       "artifact_id": "ART-M1-000001",
-      "registered_at": "2026-11-21T04:00:23.760Z",
+      "registered_at": "2026-11-21T04:47:27.452Z",
       "task_id": "T-P1-932",
       "execution_id": "EXEC-932",
       "correlation_id": "CORR-932",
@@ -24,26 +24,7 @@
     },
     {
       "artifact_id": "ART-M1-000002",
-      "registered_at": "2026-11-21T04:00:24.365Z",
-      "task_id": "T-P1-931",
-      "execution_id": "EXEC-931",
-      "correlation_id": "CORR-931",
-      "artifact_sha256": "94357b3ad556593037718b26a2e25e77df776e7db29709ffa466261178f9ee61",
-      "idempotency_key": "{\"task_id\":\"T-P1-931\",\"execution_id\":\"EXEC-931\",\"correlation_id\":\"CORR-931\",\"artifact_sha256\":\"94357b3ad556593037718b26a2e25e77df776e7db29709ffa466261178f9ee61\"}",
-      "content_sha256": "94357b3ad556593037718b26a2e25e77df776e7db29709ffa466261178f9ee61",
-      "size_bytes": 18,
-      "artifact_path": "D:\\AIEO\\phase0\\logs\\m1-concurrency-evidence\\distinct-2.txt",
-      "artifact_kind": "GPT_REPLY_TEXT",
-      "schema_validation": "NOT_REQUESTED",
-      "content": "独立 artifact 2\n",
-      "unit_metadata": {
-        "worker": "w2",
-        "source": "REAL_MULTIPROCESS_TEST"
-      }
-    },
-    {
-      "artifact_id": "ART-M1-000003",
-      "registered_at": "2026-11-21T04:00:25.030Z",
+      "registered_at": "2026-11-21T04:47:28.102Z",
       "task_id": "T-P1-930",
       "execution_id": "EXEC-930",
       "correlation_id": "CORR-930",
@@ -61,8 +42,27 @@
       }
     },
     {
+      "artifact_id": "ART-M1-000003",
+      "registered_at": "2026-11-21T04:47:28.676Z",
+      "task_id": "T-P1-931",
+      "execution_id": "EXEC-931",
+      "correlation_id": "CORR-931",
+      "artifact_sha256": "94357b3ad556593037718b26a2e25e77df776e7db29709ffa466261178f9ee61",
+      "idempotency_key": "{\"task_id\":\"T-P1-931\",\"execution_id\":\"EXEC-931\",\"correlation_id\":\"CORR-931\",\"artifact_sha256\":\"94357b3ad556593037718b26a2e25e77df776e7db29709ffa466261178f9ee61\"}",
+      "content_sha256": "94357b3ad556593037718b26a2e25e77df776e7db29709ffa466261178f9ee61",
+      "size_bytes": 18,
+      "artifact_path": "D:\\AIEO\\phase0\\logs\\m1-concurrency-evidence\\distinct-2.txt",
+      "artifact_kind": "GPT_REPLY_TEXT",
+      "schema_validation": "NOT_REQUESTED",
+      "content": "独立 artifact 2\n",
+      "unit_metadata": {
+        "worker": "w2",
+        "source": "REAL_MULTIPROCESS_TEST"
+      }
+    },
+    {
       "artifact_id": "ART-M1-000004",
-      "registered_at": "2026-11-21T04:00:25.596Z",
+      "registered_at": "2026-11-21T04:47:29.249Z",
       "task_id": "T-P1-933",
       "execution_id": "EXEC-933",
       "correlation_id": "CORR-933",

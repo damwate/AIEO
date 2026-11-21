@@ -431,10 +431,21 @@ function writePortRegistryAtomic(registry) {
 // 命名实例端口分配：注册表锁内 读→探测→分配→写（防双实例同刻分配同端口）。
 async function resolveInstancePort() {
   if (INSTANCE.isDefault) return INSTANCE.defaultPort;
-  const regLock = acquireSessionLock({
-    holder: `instance-port-alloc:${INSTANCE.instanceId}`,
-    lockPath: `${INSTANCE.portRegistryPath}.lockfile`,
-  });
+  // C1-R2 整改：注册表锁并发分配冲突致命——与账号锁同缺陷类，改有界重试（60s 上限+随机退避）
+  let regLock;
+  const regLockStarted = Date.now();
+  for (;;) {
+    try {
+      regLock = acquireSessionLock({
+        holder: `instance-port-alloc:${INSTANCE.instanceId}`,
+        lockPath: `${INSTANCE.portRegistryPath}.lockfile`,
+      });
+      break;
+    } catch (error) {
+      if (error.code !== "SESSION_LOCK_CONFLICT" || Date.now() - regLockStarted >= 60000) throw error;
+      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 50 + Math.floor(Math.random() * 50));
+    }
+  }
   try {
     const registry = readPortRegistry();
     const candidates = [];

@@ -1,0 +1,5 @@
+[P2-RESTART-CONFIRM|阶段2重启前置核验+重启确认申请]
+分支 fix/parallel-stage2 完整SHA=041c5e7a918dc8219a08072a9e4357ffeaa65ff3（C1两修复已过你R1①/R3②复验，DEC-131）。DEC-129 序列前置：
+①登录态：用户肉眼确认两克隆profile（agent-a:9300/agent-b:9301）均登录、无需重登——甲方案克隆实测成立。
+②B限流页HYPOTHESIS核实（证据包）：B现场 dispatch-2026-11-20T23-56-20-582ed3fa…/run.log 尾行=account-risk-state.json.lockfile 写锁冲突——该写仅在observeAccountRisk结构化判定命中后发生（代码f70355f0已含"无composer且无单元异常页形态+含429标记"守卫）；A对照同刻composer超时（匿名页另一形态）。局限如实：B页面未截图（死在截图前）。请裁定：证据链足以升"CONFIRMED（形态实测命中，页面留存缺失）"还是维持HYPOTHESIS待C5补证？
+③两项均PASS请确认重启N=2矩阵（C1重跑起，首跑FAIL保留；C2→C3→C4→C7→C8顺序，C5全程被动）。
