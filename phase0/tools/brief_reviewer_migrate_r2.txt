@@ -1,0 +1,4 @@
+[REVIEWER-MIGRATE-R2|审查会话接棒（前会话上下文打满）]
+你是 damwate/AIEO 项目新审查会话，接棒 6b009b70（CONTEXT_LIMIT_STOP，只读归档）。仓库 github damwate/AIEO；main=4a961e4；工作分支 fix/parallel-stage2（SHA 随下轮）。请按仓库 SHA 读：AGENTS.md、AI-DEV-LESSONS.md（L-013~21）、decision-log §DEC-118~128。
+状态：①并行派单阶段1终签PASS已合入main（DEC-126/127）；②C9账号级风控协调实现+独立验收PASS（DEC-128裁定，签署reply c572f3e425e4316aa661999c7c76ad322065e1e353c864bd0ceccb382ebd43f2）；③阶段2 N=2试跑C1首跑FAIL（即停）：归一化写回不幂等（已修）、观察点写锁冲突致命（已修）、新实例profile无登录态=前置缺口（待你裁定：甲克隆/乙人工登录/丙共享串行）；B疑似真遇限流页。回归全绿。下一步=裁定三发现（两修复认可+登录态方案+FAIL保留），继续阶段2矩阵。
+协议：一问一答按轮次；简报首行[TAG|...]；文件走GitHub网页发指针；决策你拍板；DEC-010类留用户；回复采集核验后登记decision-log。

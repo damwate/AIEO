@@ -1,0 +1,94 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-21T00:07:03.788Z",
+  "user_unit_key": "1af32c27-20bc-5c01-bc16-ebe617545c05:0:user",
+  "start_key_resolved": "1af32c27-20bc-5c01-bc16-ebe617545c05:0:user",
+  "start_resolved_by_marker": true,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "1af32c27-20bc-5c01-bc16-ebe617545c05:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "72fec39b-aa0b-4ad8-86b2-300b3a6c29b2",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "1af32c27-20bc-5c01-bc16-ebe617545c05:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "1af32c27-20bc-5c01-bc16-ebe617545c05:0:user",
+          "1af32c27-20bc-5c01-bc16-ebe617545c05:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "980ed43adc3a908001aeb492361a326cab8b923326279d7312d82287802fadb6",
+          "a6cb8999e9ecde7411c82cd732609243a166422338ebc4b4c84c38d9d2b9fda2"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "1af32c27-20bc-5c01-bc16-ebe617545c05:0:user",
+          "1af32c27-20bc-5c01-bc16-ebe617545c05:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "980ed43adc3a908001aeb492361a326cab8b923326279d7312d82287802fadb6",
+          "a6cb8999e9ecde7411c82cd732609243a166422338ebc4b4c84c38d9d2b9fda2"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "1af32c27-20bc-5c01-bc16-ebe617545c05:0:user",
+          "1af32c27-20bc-5c01-bc16-ebe617545c05:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "1af32c27-20bc-5c01-bc16-ebe617545c05:0:user",
+      "1af32c27-20bc-5c01-bc16-ebe617545c05:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "1af32c27-20bc-5c01-bc16-ebe617545c05:0:user",
+          "1af32c27-20bc-5c01-bc16-ebe617545c05:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "1af32c27-20bc-5c01-bc16-ebe617545c05:0:user",
+          "1af32c27-20bc-5c01-bc16-ebe617545c05:2:assistant"
+        ],
+        "overlap_keys": [
+          "1af32c27-20bc-5c01-bc16-ebe617545c05:0:user",
+          "1af32c27-20bc-5c01-bc16-ebe617545c05:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "1af32c27-20bc-5c01-bc16-ebe617545c05:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n[TAG|REVIEWER-MIGRATE-R2|接棒确认与阶段2裁定准备]\n\n接棒确认。 新审查会话正式承接 AIEO 独立审查职责。\n\n仓库：damwate/AIEO\n\n本轮基线：main@4a961e4\n\n待审分支：fix/parallel-stage2\n\n前会话：6b009b70，CONTEXT_LIMIT_STOP，只读归档。\n\n审查纪律：完整 SHA 绑定；不以分支名或 HEAD 代替被测对象；不把开发自测 PASS 等同于独立验收 PASS。\n\n本轮只作阶段2问题裁定，不修改代码、不合并 main、不擅自启动下一轮真实并发。\n\n已确认仓库 AGENTS.md 的关键要求：审查会话不会自动继承执行会话的仓库纪律，因此本轮以你提供的简报和实际 Git 文件为准。开发经验库的正式路径是 docs/AI-DEV-LESSONS.md，决策日志是 docs/phase1/decision-log.md。\n\n一、仓库规则接棒结果\n\n已读取并核对：\n\nAGENTS.md：SHA e5cc1d619ed05d9b9440923743ccf467341eab9f\n\ndocs/AI-DEV-LESSONS.md：SHA aba6ed7cbe8b84a769d4b523d88fe5116d447369\n\ndocs/phase1/decision-log.md：SHA 5fdbebea9ac4e3e630f507ff09f7572eb300a859\n\n本轮特别继承以下纪律：\n\nL-013：扩展能力默认 fail-closed，生产入口必须无条件复核。\n\nL-015/L-018：主动迁移、采集失败禁止重发、证据归属核验。\n\nL-019：止损后先会商，不无限返工。\n\nL-020：有明确方向的节点自主推进，但 DEC-010 红线不越权。\n\nL-021：申报数字从最终归档取值，长文本替换必须验证命中。\n\n版本差异提醒： 我实读的 main@4a961e4 决策日志截至 DEC-127，尚未看到 DEC-128 正文。因此 DEC-128 的 C9 PASS 目前作为你提供的交接事实接收，不冒充已独立核验其原始证据。\n\n二、阶段2三项发现裁定\n① 两项代码修复\n设计认可\n\n归一化写回不幂等：认可整改方向。\n\n观察点写锁冲突致命：认可整改方向。\n\n这两项属于实现缺陷修复，不改变原有阶段2验收标准。\n\n但最终关闭必须满足：\n\n新完整 SHA 上实读代码。\n\n幂等性有重复执行测试。\n\n写锁冲突有真实竞争或等价故障注入测试。\n\n不产生重复副作用、不丢失观察记录。\n\n回归全绿。\n\n目前不提前签署代码级 PASS。\n\n② 新实例 profile 无登录态\n裁定：乙\n\n选择乙：人工登录。\n\n具体要求：\n\n每个实例使用独立、规范化的 Chrome profile。\n\n新实例首次启动后暂停自动派单。\n\n用户人工完成登录及必要的安全验证。\n\n执行方只检查登录态是否有效，不读取、复制或导出 Cookie。\n\n登录成功后才允许进入真实并发试跑。\n\n登录失效、出现安全验证或账号异常，立即暂停该实例。\n\n不选择甲：克隆 profile 会引入凭据复制、会话冲突和账号安全问题。\n\n不选择丙：共享串行无法验证真正的跨实例并发能力，也违背阶段2的核心目标。\n\n这一选择与 L-002 的既有经验一致：普通 Chrome、独立 profile、人工登录、CDP 接管。\n\n③ B 疑似遇到限流页\n保留待核实\n\n当前定性：HYPOTHESIS，不能直接写成已确认的 HTTP 429。\n\n要求：\n\n保存原始页面证据、发生时间、实例身份和关联派单记录。\n\n区分真正的限流页面、登录失效、安全验证和普通错误页面。\n\n不自动刷新重试，不通过切换账号或实例规避平台风控。\n\n如果确认限流，遵守 C9 统一账号级退避机制。\n\n无法确认时，维持 BLOCKED，不将其解释为正常并发波动。\n\n三、阶段2首跑最终状态\n\nN=2 首跑\n\nFAIL 保留\n\n不因两项修复完成或 C9 已通过而改写首跑结果。\n\n项目\n\n\t\n\n当前裁定\n\n\n\n\n归一化幂等性\n\n\t\n\n发现缺陷，整改待新 SHA 验证\n\n\n\n\n观察点锁冲突\n\n\t\n\n发现缺陷，整改待新 SHA 验证\n\n\n\n\n新实例登录态\n\n\t\n\n乙：人工登录\n\n\n\n\nB 限流页\n\n\t\n\nHYPOTHESIS，待证据核实\n\n\n\n\nC9\n\n\t\n\n接受交接所述 PASS，待证据绑定核验\n\n\n\n\nN=2 首跑\n\n\t\n\nFAIL，历史不可覆盖\n\n四、下一步执行顺序\n\n我批准以下推进顺序：\n\n固化本轮三项裁定，登记 DEC-128 后续补充记录或新 DEC（由开发方按实际编号规则处理）。\n\n获取整改后的完整 SHA，先做代码级定点复验。\n\n确认两实例各自人工登录成功。\n\n独立核实 B 限流页证据及 C9 账号级退避行为。\n\n前置条件全部 PASS 后，继续阶段2 N=2 矩阵。\n\n每项独立记录 PASS/FAIL/BLOCKED，失败即停，不允许相互抵消。\n\n本轮授权边界： 允许准备、核验、整改复验及登录态准备；不自动授权重新启动真实 N=2 试跑，更不授权 N=3 或 main 合并。\n\n请下一轮提交： fix/parallel-stage2 的完整 40 位新 SHA，以及两项整改对应的测试证据路径。\n\n我会直接按新 SHA 接续，不重新审查阶段1，也不重复已经通过的 C9 审查。",
+      "text_sha256": "a6cb8999e9ecde7411c82cd732609243a166422338ebc4b4c84c38d9d2b9fda2",
+      "size_bytes": 4849,
+      "assistant_uuid": "72fec39b-aa0b-4ad8-86b2-300b3a6c29b2"
+    }
+  ]
+}
