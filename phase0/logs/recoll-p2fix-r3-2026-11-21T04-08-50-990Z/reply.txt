@@ -1,0 +1,21 @@
+ChatGPT 说：
+
+[P2-FIX-VERIFY-R3|②超时配置校验定点复验]
+
+审查基线：damwate/AIEO
+分支：fix/parallel-stage2
+完整 SHA：074e206ae64c037608103d31a79fa96b46305e4e
+
+② PASS
+
+复核结果：
+
+超时配置校验已补齐。 resolveAccountLockTimeoutMs 通过 Number 解析，并以 Number.isFinite(n) && n > 0 作为唯一放行条件；非法值统一回退 60000ms，不会再让 NaN 破坏超时判断。
+
+重试循环有界。 每轮锁获取前检查已耗时间；冲突后按剩余时间限制退避等待。退避结束后若已超时，会在下一轮检查处退出，不会再发起额外锁获取。
+
+调用点与降级语义保持正确。 accountGateCheck 最终锁冲突仍是非致命降级；observeAccountRisk 仍记录写入结果，并在检测到限流后抛出 ACCOUNT_BACKOFF_TRIGGERED，保持 fail-closed。
+
+最终裁定：② PASS；C1 两项修复整体 PASS。
+
+本次仅确认 C1 代码修复通过，不等同于授权重启 Phase2 N=2。此前的登录态双窗口人工核验、B 限流页核实仍须完成；之后仍需你明确确认，才能重启 N=2。

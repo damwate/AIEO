@@ -1,0 +1,5 @@
+[P2-FIX-VERIFY-R3|②超时配置校验定点复验]
+分支 fix/parallel-stage2 新完整SHA=074e206ae64c037608103d31a79fa96b46305e4e。你R2指出的边界已补齐：
+①新增纯函数 resolveAccountLockTimeoutMs（dispatch_options.mjs）：超时必须有限正数，非法（NaN/负/0/Infinity/非数字串）一律回退 60000，禁 NaN 无界循环；负例7条（undefined/abc/-5/0/Infinity+合法1500/30000直通）。
+②acquireAccountLockWithRetry 每轮尝试前先查截止时间（审查方建议采纳），退避睡眠不超窗（remain 上限），杜绝超时后多余锁获取。
+回归：account-gate 10/10+phase0 12/12。请只复验②给PASS/FAIL；PASS即C1两修复整体通过。

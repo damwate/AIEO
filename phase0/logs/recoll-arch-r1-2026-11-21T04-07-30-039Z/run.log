@@ -1,0 +1,8 @@
+[2026-11-21T04:07:30.499Z] 会话锁已获取（arch-r1 会话机制提案补采）
+[2026-11-21T04:07:30.758Z] 页面归属命中 CONV_UUID=6b00e02a-8270-83ec-a61b-b824978dd586
+[2026-11-21T04:07:54.071Z] 归属校验=标记命中1条(取最后)+最后user断言（target=3a034cbe-ea1d-5e3a-ab0b-36390cd46345:0:user）
+[2026-11-21T04:07:54.074Z] checks={"marked_user_unique":true,"last_user_assertion":true,"duplicate_send_confirmed":false,"adjacent_assistant_tail":true,"stable_static_dom_read":true,"final_stop_button_not_visible":true,"response_length_plausible":true,"not_prev_reply_sha":true}
+[2026-11-21T04:07:54.076Z] reply 已落盘（7069 字节，SHA=9c17f8a49b9ba443…）
+[2026-11-21T04:07:54.077Z] RECOLL COMPLETED
+[2026-11-21T04:07:54.093Z] 视口覆盖已清除
+[2026-11-21T04:07:54.219Z] 会话锁已释放（arch-r1 会话机制提案补采）

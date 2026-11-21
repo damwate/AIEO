@@ -1,0 +1,7 @@
+[2026-11-21T04:08:51.450Z] 会话锁已获取（p2fix-r3 ②复验补采）
+[2026-11-21T04:08:51.714Z] 页面归属命中 CONV_UUID=6b00e02a-8270-83ec-a61b-b824978dd586
+[2026-11-21T04:09:15.061Z] 归属校验=标记命中1条(取最后)+最后user断言（target=37b9c3d1-a916-53d2-a89b-9bc6661c34b3:0:user）
+[2026-11-21T04:09:15.062Z] checks={"marked_user_unique":true,"mid_history_boundary":true,"adjacent_assistant_tail":true,"stable_static_dom_read":true,"response_length_plausible":true,"not_prev_reply_sha":true}
+[2026-11-21T04:09:15.080Z] 视口覆盖已清除
+[2026-11-21T04:09:15.081Z] RECOLL FAILED: last is not defined
+[2026-11-21T04:09:15.206Z] 会话锁已释放（p2fix-r3 ②复验补采）
