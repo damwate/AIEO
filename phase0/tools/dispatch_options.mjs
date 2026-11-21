@@ -2,6 +2,7 @@
 // 三 ID 要么全部缺省（通用非登记派单），要么与 --schema 同时完整提供。
 
 import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
+import { acquireSessionLock } from "../e2e-poc/session_lock.mjs";
 import { dirname, join } from "node:path";
 
 export const DISPATCH_ID_RULES = Object.freeze({
@@ -349,6 +350,45 @@ export function applyAccountBackoff(state, nowMs, minutes, reason = "429-observe
 export function resolveAccountLockTimeoutMs(raw) {
   const n = Number(raw);
   return Number.isFinite(n) && n > 0 ? n : 60000;
+}
+
+/**
+ * 共享门禁检查（C9 验收 P0-2 整改：Queue 与 gpt_dispatch 同语义单实现）——
+ * 读状态→归一化→评估→过期归一化写回（状态文件 lockfile 临界区，与已验收
+ * gpt_dispatch accountGateCheck 行为逐字对齐：同读取/同归一化/同写回，仅异常
+ * 形态不同=本函数返回结果不抛 BLOCKED）。gpt_dispatch 已验收实现保持原样。
+ */
+export function gateCheckWithWriteBack({ aieoRoot, holder }) {
+  const path = accountStatePath(aieoRoot);
+  const lock = acquireGateLock(path, holder);
+  try {
+    const state = readAccountStateFile(path, Date.now());
+    const gate = evaluateAccountGate(state);
+    if (state.reason === "expired-normalized") {
+      writeAccountStateFileAtomic(path, { ...state, reason: null });
+    }
+    return { state, gate };
+  } finally {
+    lock.release();
+  }
+}
+function acquireGateLock(path, holder) {
+  const timeoutMs = resolveAccountLockTimeoutMs(process.env.AIEO_ACCOUNT_LOCK_TIMEOUT_MS);
+  const startedAt = Date.now();
+  for (;;) {
+    if (Date.now() - startedAt >= timeoutMs) {
+      const err = new Error(`SESSION_LOCK_CONFLICT: 账号状态锁重试窗口耗尽: ${path}`);
+      err.code = "SESSION_LOCK_CONFLICT";
+      throw err;
+    }
+    try {
+      return acquireSessionLock({ holder, lockPath: `${path}.lockfile` });
+    } catch (error) {
+      if (error.code !== "SESSION_LOCK_CONFLICT") throw error;
+      const remain = timeoutMs - (Date.now() - startedAt);
+      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, Math.min(remain, 50 + Math.floor(Math.random() * 50)));
+    }
+  }
 }
 
 /** 状态读取（文件级）：缺失=NORMAL 初始化；损坏/异型=fail-closed（约束B）。 */

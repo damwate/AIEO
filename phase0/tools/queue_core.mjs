@@ -7,7 +7,7 @@ import { existsSync, mkdirSync, readFileSync, renameSync, writeFileSync } from "
 import { dirname, join } from "node:path";
 import {
   accountStatePath, evaluateAccountGate, normalizeAccountState,
-  readAccountStateFile, resolveAccountLockTimeoutMs,
+  readAccountStateFile, resolveAccountLockTimeoutMs, gateCheckWithWriteBack,
 } from "./dispatch_options.mjs";
 import { acquireSessionLock } from "../e2e-poc/session_lock.mjs";
 
@@ -164,34 +164,42 @@ export function createTask({ aieoRoot, taskId, title = "", kind = "code", payloa
 export function claimTask({ aieoRoot, taskId, instanceId, token = null }) {
   const paths = queuePaths(aieoRoot);
   const claimToken = token ?? crypto.randomUUID();
+  // P0-1 整改（Phase B 验收 R1）：单一临界区（账本 lockfile）同时覆盖任务认领与实例
+  // 占用——旧实现只写任务、不写实例占用，同一实例可先后认领两个不同任务（双任务
+  // 各见 IDLE）。现账本+池+Execution 三文件在同一临界区读写。
   const lock = acquireLockWithRetry(`${paths.ledger}.lockfile`, `queue-claim:${taskId}:${instanceId}`);
   try {
     const ledger = readJsonFile(paths.ledger, { defaultValue: { version: 1, tasks: {} } });
     validateLedgerShape(ledger);
+    const pool = readJsonFile(paths.pool, { defaultValue: { version: 1, instances: {} } });
+    validatePoolShape(pool);
+    const execs = readJsonFile(paths.executions, { defaultValue: { version: 1, executions: [] } });
+    validateExecutionsShape(execs);
     const task = ledger.tasks[taskId];
     if (!task) throw queueError("TASK_NOT_FOUND", `任务不存在: ${taskId}`);
     if (task.status !== "READY") throw queueError("TASK_NOT_READY", `任务非 READY（${task.status}），禁认领: ${taskId}`);
     const unmet = (task.deps || []).filter((d) => ledger.tasks[d]?.status !== "VERIFIED");
     if (unmet.length > 0) throw queueError("TASK_DEPS_UNMET", `依赖未验收: ${unmet.join(",")}`);
-    const pool = readJsonFile(paths.pool, { defaultValue: { version: 1, instances: {} } });
-    validatePoolShape(pool);
     const inst = pool.instances[instanceId];
     if (!inst) throw queueError("INSTANCE_UNKNOWN", `实例未入池: ${instanceId}`);
-    if (inst.status !== "IDLE") throw queueError("INSTANCE_NOT_IDLE", `实例非空闲（${inst.status}）: ${instanceId}`);
+    if (inst.status !== "IDLE") throw queueError("INSTANCE_NOT_IDLE", `实例非空闲（${inst.status}，当前绑定=${inst.current_task ?? "无"}）: ${instanceId}`);
     if (inst.login_validated !== true) throw queueError("INSTANCE_LOGIN_UNVALIDATED", `实例登录态未验收: ${instanceId}`);
-    // 幂等：同 task 有效 EXECUTING 在途→禁重复派发（Q-04 防双执行）
-    const execs = readJsonFile(paths.executions, { defaultValue: { version: 1, executions: [] } });
-    validateExecutionsShape(execs);
     const idemKey = `${taskId}:${instanceId}`;
     if (execs.executions.some((e) => e.task_id === taskId && e.recovery_state !== "MANUAL_REQUIRED" && ["EXECUTING", "COLLECTING"].includes(e.last_checkpoint))) {
       throw queueError("TASK_IN_FLIGHT", `任务在途（Execution 未收口），禁重复派发: ${taskId}`);
     }
+    const now = new Date().toISOString();
+    // 原子占用：任务 CLAIMED + 实例 BUSY 绑定当前任务（同临界区双写）
     task.status = "CLAIMED";
     task.claimed_by = instanceId;
     task.claim_token = claimToken;
     task.attempts += 1;
-    task.updated_at = new Date().toISOString();
+    task.updated_at = now;
+    inst.status = "BUSY";
+    inst.current_task = taskId;
+    inst.updated_at = now;
     writeJsonFileAtomic(paths.ledger, ledger);
+    writeJsonFileAtomic(paths.pool, pool);
     return { task_id: taskId, instance_id: instanceId, claim_token: claimToken, idempotency_key: idemKey };
   } finally {
     lock.release();
@@ -215,20 +223,28 @@ export function c9CheckAndStart({ aieoRoot, taskId, instanceId, claimToken, disp
       throw queueError("CLAIM_TOKEN_INVALID", "claim_token 不匹配（fencing：旧 token 禁提交）");
     }
     if (task.status !== "CLAIMED") throw queueError("TASK_NOT_CLAIMED", `任务非 CLAIMED: ${taskId} (${task.status})`);
-    const gateState = readAccountStateFile(accountStatePath(aieoRoot), Date.now());
-    const gate = evaluateAccountGate(gateState);
+    // P0-2 整改（Phase B 验收 R1）：调用共享门禁 gateCheckWithWriteBack——与已验收
+    // gpt_dispatch accountGateCheck 同语义单实现（读+归一化+过期写回+锁临界区），
+    // 不复制判断逻辑、不修改已验收 C9。
+    const { state, gate } = gateCheckWithWriteBack({ aieoRoot, holder: `queue-c9:${taskId}` });
     const now = new Date().toISOString();
+    const pool = readJsonFile(paths.pool, { defaultValue: { version: 1, instances: {} } });
+    validatePoolShape(pool);
+    const inst = pool.instances[instanceId];
     if (!gate.allowed) {
-      // C9 BLOCKED：任务回 READY（零浏览器操作），实例 IDLE
+      // C9 BLOCKED：任务回 READY（零浏览器操作），实例 IDLE（同步释放占用）
       task.status = "READY";
       task.claimed_by = null;
       task.claim_token = null;
       task.updated_at = now;
+      if (inst) { inst.status = "IDLE"; inst.current_task = null; inst.updated_at = now; }
       writeJsonFileAtomic(paths.ledger, ledger);
+      writeJsonFileAtomic(paths.pool, pool);
       return { allowed: false, until: gate.until, reason: gate.reason };
     }
     task.status = "EXECUTING";
     task.updated_at = now;
+    if (inst) { inst.status = "BUSY"; inst.current_task = taskId; inst.updated_at = now; }
     const execs = readJsonFile(paths.executions, { defaultValue: { version: 1, executions: [] } });
     validateExecutionsShape(execs);
     const execution = {
@@ -253,6 +269,7 @@ export function c9CheckAndStart({ aieoRoot, taskId, instanceId, claimToken, disp
     execs.executions.push(execution);
     writeJsonFileAtomic(paths.executions, execs);
     writeJsonFileAtomic(paths.ledger, ledger);
+    writeJsonFileAtomic(paths.pool, pool);
     return { allowed: true, execution_id: execution.execution_id };
   } finally {
     lock.release();
@@ -260,8 +277,10 @@ export function c9CheckAndStart({ aieoRoot, taskId, instanceId, claimToken, disp
 }
 
 // ---------- send_state 镜像（权威源=dispatch 归档 send-state.json；不一致以归档为准并登记） ----------
-export function mirrorSendState({ aieoRoot, taskId, sendState, dispatchDir = null, checkpoint = "SENT" }) {
-  if (!SEND_STATES.includes(sendState)) throw queueError("QUEUE_FILE_INVALID", `send_state 非法: ${sendState}`);
+export function mirrorSendState({ aieoRoot, taskId, dispatchDir = null, checkpoint = "SENT", sendState = null }) {
+  // P0-3 整改（Phase B 验收 R1）：权威源=dispatch 归档 send-state.json——本函数从归档
+  // 读取权威状态、校验、登记差异后更新 Execution 镜像；调用方传入的 sendState 仅作
+  // 交叉核对（不一致=以归档为准并登记差异），禁直接写入调用方声明值。
   if (!CHECKPOINTS.includes(checkpoint)) throw queueError("QUEUE_FILE_INVALID", `checkpoint 非法: ${checkpoint}`);
   const paths = queuePaths(aieoRoot);
   const lock = acquireLockWithRetry(`${paths.executions}.lockfile`, `queue-mirror:${taskId}`);
@@ -271,12 +290,31 @@ export function mirrorSendState({ aieoRoot, taskId, sendState, dispatchDir = nul
     const list = execs.executions.filter((e) => e.task_id === taskId);
     const latest = list[list.length - 1];
     if (!latest) throw queueError("EXECUTION_NOT_FOUND", `任务无 Execution 记录: ${taskId}`);
-    latest.send_state = sendState;
+    const dir = dispatchDir ?? latest.dispatch_id;
+    if (!dir) throw queueError("MIRROR_SOURCE_MISSING", `无 dispatch 归档目录，权威 send-state.json 不可读: ${taskId}`);
+    const archivePath = aieoRoot.endsWith("/") ? `${aieoRoot}${dir}/send-state.json` : `${aieoRoot}/${dir}/send-state.json`;
+    let authoritative = null;
+    try {
+      authoritative = JSON.parse(readFileSync(join(aieoRoot, dir, "send-state.json"), "utf8"));
+    } catch (error) {
+      throw queueError("MIRROR_SOURCE_UNREADABLE", `权威 send-state.json 读取失败（禁凭调用方声明写入）: ${error.message}`);
+    }
+    if (!SEND_STATES.includes(authoritative.state)) {
+      throw queueError("MIRROR_SOURCE_INVALID", `权威 send-state.json 状态非法: ${authoritative.state}`);
+    }
+    const diffs = [];
+    if (sendState !== null && sendState !== authoritative.state) {
+      diffs.push(`caller_declared=${sendState} archive=${authoritative.state}`);
+    }
+    latest.send_state = authoritative.state;
     latest.last_checkpoint = checkpoint;
-    if (dispatchDir) latest.dispatch_id = dispatchDir;
-    if (sendState === "SEND_CONFIRMED" && !latest.c6.throughput.sent_at) latest.c6.throughput.sent_at = new Date().toISOString();
+    latest.dispatch_id = dir;
+    if (diffs.length > 0) latest.mirror_diff_registered = diffs;
+    if (authoritative.state === "SEND_CONFIRMED" && !latest.c6.throughput.sent_at) {
+      latest.c6.throughput.sent_at = new Date().toISOString();
+    }
     writeJsonFileAtomic(paths.executions, execs);
-    return latest;
+    return { execution: latest, authoritative_state: authoritative.state, diffs };
   } finally {
     lock.release();
   }
@@ -302,38 +340,62 @@ export function recoverExecutions({ aieoRoot }) {
       const execs = readJsonFile(paths.executions, { defaultValue: { version: 1, executions: [] } });
       validateExecutionsShape(execs);
       const now = new Date().toISOString();
-      // W0-A 账本直扫：CLAIMED 且无 Execution 记录（认领后 C9 前崩溃）→ 回 READY
+      const pool = readJsonFile(paths.pool, { defaultValue: { version: 1, instances: {} } });
+      validatePoolShape(pool);
+      // 单一连贯恢复流程：先标记（执行扫描+账本直扫）→ 再同步池状态 → 最后统一写盘。
+      // 顺序错误会导致池状态与恢复标记不同步（R4 迭代实测教训）。
+      // Pass 1（W0-A 账本直扫）：CLAIMED 且无 Execution 记录（认领后 C9 前崩溃）→ 回 READY + 实例释放
       for (const [tid, task] of Object.entries(ledger.tasks)) {
         if (task.status === "CLAIMED" && !execs.executions.some((e) => e.task_id === tid)) {
+          const prevOwner = task.claimed_by; // 先捕获再清空（顺序）
           task.status = "READY"; task.claimed_by = null; task.claim_token = null; task.updated_at = now;
+          const inst = pool.instances[prevOwner];
+          if (inst && inst.current_task === tid) { inst.status = "IDLE"; inst.current_task = null; inst.updated_at = now; }
           results.push({ task_id: tid, action: "W0-A→READY(ledger)", send_state: "NOT_SENT", checkpoint: "CLAIMED" });
         }
       }
+      // Pass 2（Execution 扫描）：跨文件一致性补记 + W0-B/W1/W2 标记恢复态
+      // 跨文件一致性（验收 R1 处方）：账本 REPORTED 而 Execution 未推进=completeExecution
+      // 双写间隙崩溃→以账本为准补记 Execution 到 REPORTED，恢复器禁降级。
+      const pausedInstances = [];
       for (const e of execs.executions) {
+        const taskPre = ledger.tasks[e.task_id];
+        if (taskPre?.status === "REPORTED" && e.last_checkpoint !== "REPORTED") {
+          e.last_checkpoint = "REPORTED";
+          e.finished_at = e.finished_at ?? now;
+          e.recovery_state = e.recovery_state === "NONE" ? "RECOVERED" : e.recovery_state;
+          e.c6.throughput.completed_at = e.c6.throughput.completed_at ?? now;
+          results.push({ task_id: e.task_id, action: "REPORTED-补记(跨文件一致)", checkpoint: "REPORTED" });
+          continue;
+        }
         if (e.recovery_state === "RECOVERED" || e.recovery_state === "MANUAL_REQUIRED") continue;
         if (e.last_checkpoint === "REPORTED") continue;
         const task = ledger.tasks[e.task_id];
         if (!task) continue;
         let action = null;
         if (e.last_checkpoint === "CLAIMED") {
-          // W0-A：安全释放认领
           task.status = "READY"; task.claimed_by = null; task.claim_token = null; task.updated_at = now;
           e.recovery_state = "RECOVERED";
           action = "W0-A→READY";
+          const inst = pool.instances[e.instance_id];
+          if (inst && inst.current_task === e.task_id) { inst.status = "IDLE"; inst.current_task = null; inst.updated_at = now; }
         } else if (e.last_checkpoint === "C9_PASS" && e.send_state !== "SEND_CONFIRMED") {
-          // W0-B：浏览器已操作未 SEND_ATTEMPTED → 保留现场核实
           e.recovery_state = "MANUAL_REQUIRED"; e.failure_code = "W0-B_UNVERIFIED_BROWSER_STATE";
           task.status = "BLOCKED"; task.updated_at = now;
+          const inst = pool.instances[e.instance_id];
+          if (inst && inst.current_task === e.task_id) { inst.status = "PAUSED"; inst.pause_reason = e.failure_code; inst.updated_at = now; pausedInstances.push(inst.instance_id); }
           action = "W0-B→MANUAL_REQUIRED";
         } else if (e.send_state === "SEND_ATTEMPTED") {
-          // W1：PENDING_VERIFY（禁视为未发送、禁自动重发）
           e.recovery_state = "PENDING_VERIFY"; e.failure_code = "W1_SEND_UNVERIFIED";
           task.status = "BLOCKED"; task.updated_at = now;
+          const inst = pool.instances[e.instance_id];
+          if (inst && inst.current_task === e.task_id) { inst.status = "PAUSED"; inst.pause_reason = e.failure_code; inst.updated_at = now; pausedInstances.push(inst.instance_id); }
           action = "W1→PENDING_VERIFY";
         } else if (e.send_state === "SEND_CONFIRMED" && e.last_checkpoint !== "REPORTED") {
-          // W2：L-018 补采标记
           e.recovery_state = "PENDING_VERIFY"; e.failure_code = "W2_COLLECT_INCOMPLETE";
           task.status = "BLOCKED"; task.updated_at = now;
+          const inst = pool.instances[e.instance_id];
+          if (inst && inst.current_task === e.task_id) { inst.status = "PAUSED"; inst.pause_reason = e.failure_code; inst.updated_at = now; pausedInstances.push(inst.instance_id); }
           action = "W2→PENDING_VERIFY(补采)";
         }
         if (action) {
@@ -344,6 +406,7 @@ export function recoverExecutions({ aieoRoot }) {
       if (results.length > 0) {
         writeJsonFileAtomic(paths.executions, execs);
         writeJsonFileAtomic(paths.ledger, ledger);
+        writeJsonFileAtomic(paths.pool, pool); // 池状态（IDLE 释放/PAUSED 保留）随恢复统一落盘
       }
     } finally {
       lockExec.release();
@@ -355,7 +418,8 @@ export function recoverExecutions({ aieoRoot }) {
 }
 
 // ---------- 汇总/验收 ----------
-export function completeExecution({ aieoRoot, taskId, replySha256 = null, verdict = null }) {
+export function completeExecution({ aieoRoot, taskId, claimToken, replySha256 = null, verdict = null }) {
+  // fencing（Phase B 验收 R1 P0 整改：执行权相关写入全部核对当前 token——旧 token 禁提交）
   const paths = queuePaths(aieoRoot);
   const lock = acquireLockWithRetry(`${paths.executions}.lockfile`, `queue-complete:${taskId}`);
   try {
@@ -364,24 +428,54 @@ export function completeExecution({ aieoRoot, taskId, replySha256 = null, verdic
     const list = execs.executions.filter((e) => e.task_id === taskId);
     const latest = list[list.length - 1];
     if (!latest) throw queueError("EXECUTION_NOT_FOUND", `任务无 Execution 记录: ${taskId}`);
+    const ledgerLock = acquireLockWithRetry(`${paths.ledger}.lockfile`, `queue-complete-ledger:${taskId}`);
+    let instanceId = null;
+    try {
+      const ledger = readJsonFile(paths.ledger, { defaultValue: { version: 1, tasks: {} } });
+      validateLedgerShape(ledger);
+      const task = ledger.tasks[taskId];
+      if (!task) throw queueError("TASK_NOT_FOUND", `任务不存在: ${taskId}`);
+      // fencing：当前 claim_token 必须匹配（旧 token 禁提交）
+      if (task.claim_token !== claimToken) {
+        throw queueError("CLAIM_TOKEN_INVALID", `claim_token 不匹配（fencing：旧 token 禁完成提交）`);
+      }
+      // 跨文件一致性（验收 R1 故障注入要求）：账本已 REPORTED 而 Execution 未推进→以账本为准补记，不降级
+      if (task.status === "REPORTED" && latest.last_checkpoint !== "REPORTED") {
+        latest.last_checkpoint = "REPORTED";
+        latest.finished_at = latest.finished_at ?? new Date().toISOString();
+      }
+      if (task.status !== "EXECUTING" && task.status !== "REPORTED") {
+        throw queueError("TASK_NOT_EXECUTING", `任务非 EXECUTING/REPORTED，禁完成提交: ${taskId} (${task.status})`);
+      }
+      task.status = "REPORTED";
+      instanceId = task.claimed_by;
+      task.claim_token = null; // 执行权核销（REPORTED=执行权交回；验收另走 ChatGPT）
+      task.updated_at = now();
+      writeJsonFileAtomic(paths.ledger, ledger);
+    } finally {
+      ledgerLock.release();
+    }
     latest.reply_sha256 = replySha256 ?? latest.reply_sha256;
     latest.finished_at = new Date().toISOString();
     latest.last_checkpoint = "REPORTED";
     latest.c6.throughput.completed_at = latest.finished_at;
     if (latest.started_at) latest.c6.throughput.exec_ms = Date.parse(latest.finished_at) - Date.parse(latest.started_at);
-    const ledgerLock = acquireLockWithRetry(`${paths.ledger}.lockfile`, `queue-complete-ledger:${taskId}`);
-    try {
-      const ledger = readJsonFile(paths.ledger, { defaultValue: { version: 1, tasks: {} } });
-      validateLedgerShape(ledger);
-      const task = ledger.tasks[taskId];
-      if (task) {
-        task.status = "REPORTED";
-        task.claim_token = null; // 执行权核销（REPORTED=执行权交回；验收另走 ChatGPT）
-        task.updated_at = now();
+    // 实例释放（占用原子化对称：完成=IDLE）
+    if (instanceId) {
+      const poolLock = acquireLockWithRetry(`${paths.pool}.lockfile`, `queue-complete-pool:${taskId}`);
+      try {
+        const pool = readJsonFile(paths.pool, { defaultValue: { version: 1, instances: {} } });
+        validatePoolShape(pool);
+        const inst = pool.instances[instanceId];
+        if (inst && inst.current_task === taskId) {
+          inst.status = "IDLE";
+          inst.current_task = null;
+          inst.updated_at = now();
+          writeJsonFileAtomic(paths.pool, pool);
+        }
+      } finally {
+        poolLock.release();
       }
-      writeJsonFileAtomic(paths.ledger, ledger);
-    } finally {
-      ledgerLock.release();
     }
     writeJsonFileAtomic(paths.executions, execs);
     return latest;

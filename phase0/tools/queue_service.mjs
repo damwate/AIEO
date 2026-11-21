@@ -45,15 +45,16 @@ async function main() {
       break;
     }
     case "mirror-send": {
-      const e = core.mirrorSendState({
-        aieoRoot: root, taskId: args["task-id"], sendState: args["send-state"],
-        dispatchDir: args["dispatch-dir"] || null, checkpoint: args.checkpoint || "SENT",
+      // 权威源=dispatch 归档 send-state.json（P0-3 整改）：从归档读取，调用方声明仅交叉核对
+      const r = core.mirrorSendState({
+        aieoRoot: root, taskId: args["task-id"], dispatchDir: args["dispatch-dir"] || null,
+        checkpoint: args.checkpoint || "SENT", sendState: args["declare-send-state"] || null,
       });
-      console.log(JSON.stringify({ mirrored: e.task_id, send_state: e.send_state, checkpoint: e.last_checkpoint }));
+      console.log(JSON.stringify({ mirrored: r.execution.task_id, send_state: r.authoritative_state, diffs: r.diffs, checkpoint: r.execution.last_checkpoint }));
       break;
     }
     case "complete": {
-      const e = core.completeExecution({ aieoRoot: root, taskId: args["task-id"], replySha256: args["reply-sha"] || null });
+      const e = core.completeExecution({ aieoRoot: root, taskId: args["task-id"], claimToken: args.token, replySha256: args["reply-sha"] || null });
       console.log(JSON.stringify({ completed: e.task_id, checkpoint: e.last_checkpoint, exec_ms: e.c6.throughput.exec_ms }));
       break;
     }

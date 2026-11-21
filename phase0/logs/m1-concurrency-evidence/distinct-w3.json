@@ -1,6 +1,6 @@
 {
   "worker": "w3",
-  "pid": 19684,
+  "pid": 7088,
   "result": "SUCCESS",
   "registration": {
     "status": "REGISTERED",
@@ -12,7 +12,7 @@
     "record_count": 4,
     "record": {
       "artifact_id": "ART-M1-000004",
-      "registered_at": "2026-11-21T08:54:44.556Z",
+      "registered_at": "2026-11-21T09:42:32.637Z",
       "task_id": "T-P1-932",
       "execution_id": "EXEC-932",
       "correlation_id": "CORR-932",

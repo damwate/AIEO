@@ -1,0 +1,314 @@
+ChatGPT 说：
+QUEUE-PHASEB-ACCEPT｜独立验收裁定
+FAIL — 暂不通过
+
+验收对象： damwate/AIEO
+分支： fix/parallel-stage2
+完整 SHA： b5eac3d94148b963d67a6292cdf2544cec9401e4
+验收范围： Phase B 骨架，不涉及 Phase C 授权。
+
+我已读取指定 SHA 的实际提交、核心实现、CLI、五项测试、任务包及测试报告。不是仅依据开发者的 PASS 声明作判断。
+
+五项测试报告确实记录了 5/5 PASS，第三轮回归记录了 12/12 PASS。但测试通过不等于架构契约全部成立。当前发现了影响队列安全性的实现问题，不能签发 Phase B 验收 PASS。
+
+一、阻断项
+P0-1：原子认领没有原子占用实例
+
+位置：phase0/tools/queue_core.mjs → claimTask()。
+
+当前实现：
+
+获取任务账本锁。
+
+读取 InstancePool。
+
+检查实例为 IDLE。
+
+写入任务 CLAIMED。
+
+释放账本锁。
+
+但没有将实例状态原子更新为 BUSY，也没有对实例占用进行持久化。
+
+后果： 同一个实例可以先后成功认领不同任务，因为每次读取到的实例仍然是 IDLE。这违反了设计中的实例串行、跨实例并行原则。
+
+现有四子进程测试只证明了同一个 task_id 不会被重复认领，不能证明同一实例不会认领两个不同任务。
+
+P0-2：C9 门禁没有调用既有 accountGateCheck
+
+位置：queue_core.mjs → c9CheckAndStart()。
+
+实际代码直接调用：
+
+readAccountStateFile()
+
+evaluateAccountGate()
+
+而设计明确要求调用既有 accountGateCheck，不得重写门禁。
+
+这不是接口名称的小差异：当前实现没有证明沿用了既有门禁的完整行为，包括账号级全池暂停、验证状态及执行期复查语义。
+
+测试3只通过 BACKOFF 状态文件验证了一个阻断场景，不能证明 C9 契约完整。
+
+P0-3：send-state 镜像方向反了
+
+位置：queue_core.mjs → mirrorSendState()。
+
+设计规定：
+
+dispatch 归档的 send-state.json 是权威源。
+
+Execution 中的 send_state 是镜像。
+
+两者不一致时，以归档为准并登记差异。
+
+实际代码却直接接受调用者传入的 sendState，写入 Execution；没有读取归档文件，也没有核对权威源。
+
+测试4虽然创建了归档 send-state.json，但并未证明 Queue 实际读取过该文件。
+
+后果： 调用者可以把错误的发送状态写进 Execution，破坏 W1/W2 崩溃恢复判断。
+
+这三项均涉及架构安全不变量，不能作为普通 P1 文档问题放行。
+
+P0-4：completeExecution 没有执行权 token 校验
+
+位置：queue_core.mjs → completeExecution()。
+
+设计要求是：所有关键账本写操作均须携带当前 claim_token，旧 token 不得继续提交结果。
+
+实际接口只有：
+
+completeExecution({ aieoRoot, taskId, replySha256, verdict })
+
+没有 claimToken 参数，也没有校验当前任务 token。
+
+因此，旧执行者或其他调用者只要知道 taskId，就可能将任务写成 REPORTED，并核销当前执行权。
+
+这直接破坏 R8 设计中的 fencing 不变量。
+
+二、其他需要整改的事项
+
+编号
+
+	
+
+问题
+
+	
+
+影响
+
+
+
+
+P1-1
+
+	
+
+C9_CHECKING 没有真正落入任务状态转换
+
+	
+
+状态机与实现不完全一致
+
+
+
+
+P1-2
+
+	
+
+completeExecution 两份账本分开写入，缺乏跨文件崩溃一致性
+
+	
+
+可能出现 Task 与 Execution 状态不一致
+
+
+
+
+P1-3
+
+	
+
+C6 测试只验证部分字段存在，没有验证六类指标的完整契约
+
+	
+
+证据完整性尚未证明
+
+
+
+
+P1-4
+
+	
+
+回滚测试没有覆盖旧 token 复活及同实例双任务认领
+
+	
+
+关键安全负例缺失
+
+三、测试证据核对
+报告记录 PASS
+
+验收项目
+
+	
+
+报告结果
+
+	
+
+独立评价
+
+
+
+
+四进程同任务并发认领
+
+	
+
+PASS
+
+	
+
+仅证明同任务互斥
+
+
+
+
+崩溃恢复五点
+
+	
+
+PASS
+
+	
+
+W0-A 缺陷已修复，但覆盖仍不完整
+
+
+
+
+C9 BLOCKED
+
+	
+
+PASS
+
+	
+
+未证明既有门禁完整复用
+
+
+
+
+C6 四方追溯
+
+	
+
+PASS
+
+	
+
+未证明权威源读取
+
+
+
+
+回滚幂等
+
+	
+
+PASS
+
+	
+
+未证明 fencing
+
+
+
+
+Phase 0 回归
+
+	
+
+12/12
+
+	
+
+报告记录通过
+
+
+
+
+四腿 122 项
+
+	
+
+声明通过
+
+	
+
+本轮未取得完整独立证据
+
+测试报告位置：
+
+phase0/logs/queue-phaseb-tests.json
+
+phase0/logs/third-round-regression-2026-11-21T08-54-24/result.json
+
+注意：上述是提交内的测试报告记录，不是我在本轮重新执行的测试结果。
+
+四、整改处方
+
+建议将本轮整改限定为以下工作，不要扩大范围：
+
+实例占用原子化： 任务认领必须同时保证 task 唯一执行权与 instance 唯一占用权；不同任务不能同时占用同一实例。
+
+C9 接口复用： 调用既有 accountGateCheck，不复制其判断逻辑，不修改已验收 C9。
+
+镜像方向纠正： 从 dispatch 归档读取权威 send-state.json，校验、登记差异，再更新 Execution 镜像。
+
+fencing 补齐： 所有执行权相关写入验证当前 token，包括完成、状态推进及恢复后的提交。
+
+跨文件一致性： 增加写入中断故障注入，保证恢复器不会把已完成任务错误降级，也不会遗留错误执行权。
+
+补充四项必须增加的负例：
+
+同一实例同时竞争两个不同任务。
+
+旧 token 尝试完成新执行者的任务。
+
+镜像输入与归档权威源不一致。
+
+Task 已 REPORTED、Execution 尚未写入 REPORTED 时进程崩溃。
+
+五、最终授权裁定
+FAIL
+
+Phase B 骨架独立验收不通过。
+
+Phase B：允许进入定点整改，不得标记验收完成。
+
+Phase C：不授权。
+
+Bash 替换：不授权。
+
+C9/C6 已验收实现：禁止借本次整改修改。
+
+N=2 重启、N=3 扩容：不授权。
+
+main 合并：不授权。
+
+下一轮复验要求：
+
+请执行方针对上述四个 P0/P1 关键问题提交整改，提供新的完整 SHA、修改对照表、负例测试结果及回归证据。
+
+我会按新 SHA 独立复验，不以旧测试的 5/5 PASS 代替新测试。
+
+特别强调： 这次不是推翻 Queue Service 架构，也不是要求重新设计。队列骨架的方向可以保留，整改集中在执行权、实例占用、C9 复用和权威证据四条安全边界。
+
+Phase C 必须等 Phase B 独立验收 PASS 后另行申请。
