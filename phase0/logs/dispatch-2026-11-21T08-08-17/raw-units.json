@@ -1,0 +1,94 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-21T08:11:18.809Z",
+  "user_unit_key": "77e7e839-7657-5f5a-ba0e-e5eb4ad55621:0:user",
+  "start_key_resolved": "77e7e839-7657-5f5a-ba0e-e5eb4ad55621:0:user",
+  "start_resolved_by_marker": true,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "77e7e839-7657-5f5a-ba0e-e5eb4ad55621:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "94186685-413e-4b7e-9be6-d01c7689e938",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "77e7e839-7657-5f5a-ba0e-e5eb4ad55621:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "77e7e839-7657-5f5a-ba0e-e5eb4ad55621:0:user",
+          "77e7e839-7657-5f5a-ba0e-e5eb4ad55621:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "10858c77daaca39e885d78ddcfaf77a993d8f5f6b0b50453206cfc42be107432",
+          "fd60bb4015aa316e03ab789a0e9f566d3f2e5a6c9aa31bfc2247e85daaff6c9e"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "77e7e839-7657-5f5a-ba0e-e5eb4ad55621:0:user",
+          "77e7e839-7657-5f5a-ba0e-e5eb4ad55621:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "10858c77daaca39e885d78ddcfaf77a993d8f5f6b0b50453206cfc42be107432",
+          "fd60bb4015aa316e03ab789a0e9f566d3f2e5a6c9aa31bfc2247e85daaff6c9e"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "77e7e839-7657-5f5a-ba0e-e5eb4ad55621:0:user",
+          "77e7e839-7657-5f5a-ba0e-e5eb4ad55621:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "77e7e839-7657-5f5a-ba0e-e5eb4ad55621:0:user",
+      "77e7e839-7657-5f5a-ba0e-e5eb4ad55621:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "77e7e839-7657-5f5a-ba0e-e5eb4ad55621:0:user",
+          "77e7e839-7657-5f5a-ba0e-e5eb4ad55621:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "77e7e839-7657-5f5a-ba0e-e5eb4ad55621:0:user",
+          "77e7e839-7657-5f5a-ba0e-e5eb4ad55621:2:assistant"
+        ],
+        "overlap_keys": [
+          "77e7e839-7657-5f5a-ba0e-e5eb4ad55621:0:user",
+          "77e7e839-7657-5f5a-ba0e-e5eb4ad55621:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "77e7e839-7657-5f5a-ba0e-e5eb4ad55621:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nQUEUE-DESIGN-R4｜定点复验裁定\nBLOCKED｜暂不授权编码\n\n复审对象\n\n仓库：damwate/AIEO\n\n分支：fix/parallel-stage2\n\n完整 SHA：75d4f1f935e01288245e983b400b6ac615484407\n\n文件：phase0/tools/parallel_queue_design_r1.md\n\n文件 Blob SHA：50a8063abaf92877cc95d8b2deff62deebbe3ed5\n\n复审方式：按指定完整 SHA 读取，不使用 HEAD。\n\n本次已读取目标文件全文及附表三。八项逐项复审如下。\n\n一、八项复审结果\n\n项目\n\n\t\n\n结果\n\n\t\n\n裁定\n\n\n\n\nP0-1 W0 拆分及双写权威源\n\n\t\n\nPASS\n\n\t\n\n两个恢复窗口区分正确，权威源明确\n\n\n\n\nP0-2 Fencing 五机制\n\n\t\n\nBLOCKED\n\n\t\n\n终态释放与令牌失效规则存在冲突\n\n\n\n\nP1-1 字段表 14 行\n\n\t\n\nPASS\n\n\t\n\n数量、GENERATING、三列均落实\n\n\n\n\nP1-2 利用率及经济性\n\n\t\n\nBLOCKED\n\n\t\n\n整机利用率公式及配额经济性口径不严谨\n\n\n\n\nP1-3 两枚举映射\n\n\t\n\nPASS\n\n\t\n\n两套枚举及映射明确\n\n\n\n\nP1-4 测试统一格式\n\n\t\n\nPASS_WITH_CONSTRAINTS\n\n\t\n\n主体落实，少量核验口径需要收紧\n\n\n\n\nP1-5 §⑥ 删除边界\n\n\t\n\nBLOCKED\n\n\t\n\n登录态判定标准不足以证明目录不含登录态\n\n\n\n\nP1-6 辅助文件白名单\n\n\t\n\nPASS_WITH_CONSTRAINTS\n\n\t\n\n原则落实，具体准入规则还可加强\n\n二、具体问题\nP0-1：W0 拆分与双写权威源\nPASS\n\n确认三个关键点：\n\nW0-A：未启动浏览器，允许释放认领并回 READY。\n\nW0-B：浏览器已启动或已操作，但尚未 SEND_ATTEMPTED，必须保留现场并核实。\n\nSEND_ATTEMPTED 后进入 W1，禁止按未发送处理，禁止自动重发。\n\n双写规则也已明确：\n\nsend-state.json：唯一权威源。\n\ncallerReceipt：调用便利镜像。\n\n双写不一致：以归档文件为准，登记差异。\n\n这一项消除了 R3 最重要的恢复语义错误，予以通过。\n\nP0-2：Fencing 五机制\nBLOCKED\n\n五项机制基本齐全，但发现一个实质性矛盾。\n\n§⑦ 第2点：\n\ntoken 失效条件包括任务终态到达（REPORTED/VERIFIED/VERIFIED_FAIL/BLOCKED/DEFERRED）。\n\n后文却规定：\n\nBLOCKED/DEFERRED→token 挂起保留。\n\n这两个规则不能同时成立。\n\n需要明确区分：\n\n令牌失效：旧执行者不再拥有提交权限。\n\n令牌挂起：任务暂停，尚未完成正常执行权交接。\n\n令牌核销：彻底撤销当前执行权。\n\n建议形成唯一规则：\n\n状态\n\n\t\n\nToken 处理\n\n\n\n\nREPORTED\n\n\t\n\n核销\n\n\n\n\nVERIFIED\n\n\t\n\n核销\n\n\n\n\nVERIFIED_FAIL\n\n\t\n\n核销，整改任务使用新 token\n\n\n\n\nBLOCKED\n\n\t\n\n先撤销旧执行权，恢复时重新认领\n\n\n\n\nDEFERRED\n\n\t\n\n先撤销旧执行权，恢复时重新认领\n\n\n\n\nworker 死亡\n\n\t\n\n进入悬空核实，不直接授权重派\n\n另一个必须保留的约束：\n\nworker 进程死亡不等于浏览器副作用已经终止。\n\n新 token 生效之前，必须完成旧执行者终止确认、浏览器隔离和旧 token 写入拒绝。\n\n目前五机制方向正确，但需要统一令牌生命周期定义。\n\nP1-1：字段规格表\nPASS\n\n逐项确认：\n\n14 行：Task 4、Execution 8、Instance 1、Pool 1。\n\nGENERATING 已补入。\n\n权威源、镜像、崩溃恢复三列存在。\n\nExecution.send_state 与 send-state.json 的权威关系明确。\n\nclaim_token、rework_of、idempotency_key 等关键字段有定义。\n\n这一项通过。\n\nP1-2：利用率与经济性\nBLOCKED\n\n有两处需要修正。\n\n问题一：整机利用率公式不完整。\n\n目前定义：\n\nU = BUSY 时间 ÷ 统计周期总时间\n\n实例级可以成立。\n\n但整机级如果将所有实例的 BUSY 时间累加，分母不能仍然只有一个统计周期。\n\n建议：\n\n𝑈\ninstance\n=\n𝑇\nBUSY\n𝑇\nperiod\nU\ninstance\n\t​\n\n=\nT\nperiod\n\t​\n\nT\nBUSY\n\t​\n\n\t​\n\n𝑈\nmachine\n=\n∑\n𝑇\nBUSY\n,\n𝑖\n𝑁\n×\n𝑇\nperiod\nU\nmachine\n\t​\n\n=\nN×T\nperiod\n\t​\n\n∑T\nBUSY,i\n\t​\n\n\t​\n\n\n其中 N 为统计周期内纳入统计的实例数，实例上下线需要明确统计口径。\n\n问题二：配额消耗与限制信号混淆。\n\n目前将限流横幅次数、受限会话数作为可观测单位，又将其用于实际配额消耗。\n\n这只能代表风控或受限信号，不能直接代表真实额度消耗。\n\n需要区分：\n\n实际配额消耗：有真实额度数据才记录。\n\n限流信号：次数、受限会话数。\n\n单位成功任务的实际配额消耗：无真实数据时必须 NOT_OBSERVED。\n\n单位成功任务的受限信号频次：作为独立代理指标。\n\n经济性四项保留，但不能将代理指标冒充实际配额消耗。\n\nP1-3：两枚举映射\nPASS\n\n确认：\n\nVerificationState：四态。\n\nAccountGateState：三态。\n\nSUSPECTED、REQUIRED、UNKNOWN_BLOCK 均映射到 VERIFICATION_HOLD。\n\nNORMAL 映射 ALLOWED，但仍需满足其他门禁条件。\n\nSUSPECTED 不得自动降级。\n\n满足要求。\n\nP1-4：测试统一格式\nPASS_WITH_CONSTRAINTS\n\n确认五项测试已具备统一结构：\n\n输入 → 预期状态 → 证据文件 → 核验脚本 → 断言 → exit code。\n\n特别确认：\n\n崩溃恢复五点已列全。\n\nW0-A 与 W0-B 已分别测试。\n\nW1 禁止自动重发。\n\nW2 使用 L-018 补采。\n\nC9 测试区分新建浏览器进程与已有实例复用。\n\nPhase C 增加日志格式、差集定义及审计文件要求。\n\n附加约束：\n\nC9 的零操作测试不能仅依赖新建进程数为零，还必须证明没有发生未经门禁的 CDP 操作。现有时间戳断言可以承担这一职责，但核验脚本必须实际检查。\n\n另外，Phase C 的 actor 应有明确分类规则，能够区分人工中控和 Queue 自动操作。\n\n不阻断本项整体通过，但应进入编码测试规格。\n\nP1-5：§⑥ 删除边界\nBLOCKED\n\n这里存在一个重要的逻辑缺口。\n\n文档规定：\n\n判定标准=该目录是否曾通过登录态验收。\n\n但：\n\n未通过登录态验收，不等于目录不含登录态。\n\n例如：\n\n黄金源复制已经完成，登录态可能已经复制进目录，但验收尚未执行。此时如果因为验收记录不存在就判定为无登录态，仍可能误删含登录态的 profile。\n\n建议修改为：\n\n只有能够证明未包含登录态的失败克隆残留，才允许自动删除。\n\n无法证明是否含登录态，一律视为受保护目录。\n\n已登录、曾通过登录态验收、来源不明的 profile，一律禁止自动删除。\n\n删除含登录态 profile，仍严格遵循 DEC-010 审批。\n\n这项必须修正，不能用验收记录缺失作为删除许可。\n\nP1-6：辅助文件白名单\nPASS_WITH_CONSTRAINTS\n\n已经明确：\n\n设计文档。\n\n任务包。\n\n测试证据。\n\n归档目录。\n\n临时提取文件进入系统临时目录，不入库。\n\n建议进一步明确：白名单之外默认禁止提交，新增类别必须经过明确审批。\n\n三、额外发现：版本声明不一致\n\n文件顶部标题仍为：\n\nInstance/Conversation Queue Service 设计八件 R3\n\n而本次提交声明为 R4。\n\n文末还有：\n\n本 R2 仅修改本文档。\n\n这与 R3→R4 对照表不一致。\n\n建议统一：\n\n文件标题：R4。\n\n变更声明：R4。\n\n对照表：R3→R4。\n\n删除或修正残留的 R2 声明。\n\n这属于文档版本完整性问题，整改时一并处理。\n\n四、最终裁定\nBLOCKED\n\nR4 尚未达到编码授权条件。\n\n分类\n\n\t\n\n结果\n\n\n\n\nPASS\n\n\t\n\n3\n\n\n\n\nPASS_WITH_CONSTRAINTS\n\n\t\n\n2\n\n\n\n\nBLOCKED\n\n\t\n\n3\n\n\n\n\nP0 阻断项\n\n\t\n\n1\n\n\n\n\nP1 阻断项\n\n\t\n\n2\n\n必须关闭的三个问题：\n\nP0-2：统一 Token 失效、挂起、核销及重新认领规则。\n\nP1-2：修正整机利用率分母，分离实际配额消耗与限制信号。\n\nP1-5：收紧 profile 删除判定，不能以未通过登录态验收推定不含登录态。\n\n后续执行边界：\n\n本次只完成设计复审。\n\n不授权 Queue Service 编码。\n\n不授权修改现役 Bash。\n\n不授权修改 C9、C6 已验收实现。\n\n不授权 N=2 重启、N=3 扩容或任何运行态操作。\n\n不改变 DEC-010、DEC-130、L-018 等既有约束。\n\n下一步： 请智谱只针对三个阻断项及版本声明进行 R5 文档整改，提交新的完整 SHA，再进行定点复验。通过后，我将另行出具独立的编码授权裁定，不与设计验收混为一项。\n\n这次不提前放行。尤其是 Fencing 和 profile 删除边界，属于可能造成重复执行和登录态永久丢失的安全边界，必须先把规则闭合。",
+      "text_sha256": "fd60bb4015aa316e03ab789a0e9f566d3f2e5a6c9aa31bfc2247e85daaff6c9e",
+      "size_bytes": 8338,
+      "assistant_uuid": "94186685-413e-4b7e-9be6-d01c7689e938"
+    }
+  ]
+}

@@ -1,0 +1,11 @@
+[QUEUE-DESIGN-R4|定点复验（DEC-139八项，附表三对照）]
+分支 fix/parallel-stage2 完整SHA=75d4f1f935e01288245e983b400b6ac615484407：请按SHA读 phase0/tools/parallel_queue_design_r1.md（R4版）。逐项：
+P0-1 W0拆分（A=未启动浏览器回READY；B=已操作未ATTEMPTED保留现场核实）+双写权威源规则
+P0-2 fencing五机制（token-pid绑定/失效枚举/终止确认/新token前隔离/旧token禁提交）+终态释放规则
+P1-1 字段表14行+GENERATING补齐+权威源/镜像/崩溃恢复三列
+P1-2 利用率U=BUSY÷周期+配额可观测单位+经济性四项
+P1-3 两枚举映射表
+P1-4 测试统一格式+崩溃五点+C9区分新建复用+Phase C日志/差集/审计格式
+P1-5 §⑥边界澄清（残留删除仅限未含登录态失败克隆）
+P1-6 辅助文件白名单规则
+变更声明：仅设计文档。请逐项复审；通过后单独作编码授权裁定。
