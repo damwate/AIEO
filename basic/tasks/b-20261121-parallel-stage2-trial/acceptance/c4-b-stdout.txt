@@ -1,0 +1,11 @@
+[2026-11-21T05:00:47.461Z] 证据目录: D:\AIEO\phase0\logs\dispatch-2026-11-21T05-00-47
+[2026-11-21T05:00:47.917Z] 会话锁已获取 pid=31044 instance=agent-b lock=gpt-session-agent-b.lockfile
+[2026-11-21T05:00:47.918Z] === GPT 派单（新建会话，消息 171 字节）===
+[2026-11-21T05:00:48.439Z] [instance] 端口沿用注册表登记: instance=agent-b port=9301
+[2026-11-21T05:00:48.555Z] [instance] 实例域就绪: instance=agent-b port=9301 profile=gpt-poc-agent-b lock=gpt-session-agent-b.lockfile
+[2026-11-21T05:00:49.621Z] [instance] 清理本实例 Chrome：own=0 foreign(不动)=19 remaining=0
+[2026-11-21T05:00:52.151Z] Chrome 已启动 pid=21740 port=9301
+[2026-11-21T05:00:54.626Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 0 个
+[2026-11-21T05:00:54.628Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-21T05:01:37.532Z] 新聊天页面就绪
+[2026-11-21T05:01:42.581Z] [dispatch] 基线尾部: null

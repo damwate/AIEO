@@ -1,0 +1,14 @@
+{
+  "at": "2026-11-21T05:09:53.458Z",
+  "outcome": "failure_created_pages_closed",
+  "before": null,
+  "exit_before_disposal": {
+    "error": "CDP_UNREACHABLE"
+  },
+  "exit_after_disposal": {
+    "error": "CDP_UNREACHABLE"
+  },
+  "created_pages": 0,
+  "disposal": "发送前失败：仅关闭本次自建页；既有页零触碰（exit_before/exit_after 对照=值守页零关闭证明）",
+  "error": "INSTANCE_REGISTRY_INVALID: INSTANCE_REGISTRY_INVALID: 注册表端口非整数或越界 9300-9399: trial-c8=9222"
+}

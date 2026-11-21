@@ -1,0 +1,25 @@
+{
+  "at": "2026-11-21T04:52:07.826Z",
+  "outcome": "failure_created_pages_closed",
+  "before": [
+    {
+      "id": "30E00028DE56589C28067E104E4E96F8",
+      "url": "https://chatgpt.com/"
+    }
+  ],
+  "exit_before_disposal": [
+    {
+      "id": "30E00028DE56589C28067E104E4E96F8",
+      "url": "https://chatgpt.com/"
+    }
+  ],
+  "exit_after_disposal": [
+    {
+      "id": "30E00028DE56589C28067E104E4E96F8",
+      "url": "https://chatgpt.com/"
+    }
+  ],
+  "created_pages": 0,
+  "disposal": "发送前失败：仅关闭本次自建页；既有页零触碰（exit_before/exit_after 对照=值守页零关闭证明）",
+  "error": "page.evaluate: Execution context was destroyed, most likely because of a navigation"
+}

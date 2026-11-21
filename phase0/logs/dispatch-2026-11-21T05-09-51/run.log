@@ -1,0 +1,5 @@
+[2026-11-21T05:09:51.821Z] 证据目录: D:\AIEO\phase0\logs\dispatch-2026-11-21T05-09-51
+[2026-11-21T05:09:52.531Z] 会话锁已获取 pid=20684 instance=trial-c8 lock=gpt-session-trial-c8.lockfile
+[2026-11-21T05:09:52.534Z] === GPT 派单（新建会话，消息 197 字节）===
+[2026-11-21T05:09:53.436Z] 会话锁已释放
+[2026-11-21T05:09:53.437Z] 致命错误: INSTANCE_REGISTRY_INVALID: INSTANCE_REGISTRY_INVALID: 注册表端口非整数或越界 9300-9399: trial-c8=9222

@@ -1,0 +1,16 @@
+[
+  {
+    "key": "b13ac390-a4c7-5e73-8f41-21e94cefae98:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 71,
+    "text_head": "[TRIAL-P2-C4A|补采闭环A，一次性非敏感简报]\n请只回复一段约500字的测试占位文本（主题：补采闭环A），不要使用工具，不要提问。"
+  },
+  {
+    "key": "b13ac390-a4c7-5e73-8f41-21e94cefae98:1:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 717,
+    "text_head": "ChatGPT 说：\n\n补采闭环A｜测试占位简报\n\n本次测试围绕补采闭环A展开，主要用于验证任务执行过程中出现信息缺失、证据不足或关键记录未完整采集时，系统能否通过补充采集机制完成信息恢复，并形成可追"
+  }
+]

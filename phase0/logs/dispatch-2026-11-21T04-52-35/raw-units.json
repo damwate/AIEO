@@ -1,0 +1,66 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-21T04:54:53.582Z",
+  "user_unit_key": "8ac67b59-9933-5166-8dd4-723995619c94:0:user",
+  "start_key_resolved": "8ac67b59-9933-5166-8dd4-723995619c94:0:user",
+  "start_resolved_by_marker": true,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "8ac67b59-9933-5166-8dd4-723995619c94:1:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "7fa22eaf-fe32-44f9-bcfa-1d36c11ae445",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "8ac67b59-9933-5166-8dd4-723995619c94:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "8ac67b59-9933-5166-8dd4-723995619c94:0:user",
+          "8ac67b59-9933-5166-8dd4-723995619c94:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "8f81a44e7aab0a6b4fc2cd37465b8c629179fd3f6d7a8f093b11c24af9f17571",
+          "d114094c79279041ab2c3854c08a07626df56a365069e0fa875a4320cbead838"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": []
+      }
+    ],
+    "materialized_unit_keys": [
+      "8ac67b59-9933-5166-8dd4-723995619c94:0:user",
+      "8ac67b59-9933-5166-8dd4-723995619c94:1:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STATIC_NON_SCROLLABLE_DOM",
+      "scrollable_window_observed": false,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "8ac67b59-9933-5166-8dd4-723995619c94:0:user",
+          "8ac67b59-9933-5166-8dd4-723995619c94:1:assistant"
+        ],
+        "overlap_keys": []
+      }
+    ],
+    "window_transitions": 0
+  },
+  "units": [
+    {
+      "key": "8ac67b59-9933-5166-8dd4-723995619c94:1:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n互斥测试X——测试占位简报\n\n本次测试围绕同一实例的互斥执行机制展开，重点验证任务占用期间的并发请求是否能够被正确识别和拦截。测试场景设定为实例X已经进入执行状态，随后收到第二个互斥任务请求。系统应检查实例当前状态，识别资源占用冲突，并按照既定互斥规则处理后续请求。预期结果是同一实例不会同时执行两个互斥任务，不发生状态覆盖、重复派单或执行上下文串扰。测试记录应保留请求顺序、实例标识、执行状态及最终处理结果。本段仅作为一次性非敏感测试占位文本，不代表实际执行结果或系统验收结论。",
+      "text_sha256": "d114094c79279041ab2c3854c08a07626df56a365069e0fa875a4320cbead838",
+      "size_bytes": 728,
+      "assistant_uuid": "7fa22eaf-fe32-44f9-bcfa-1d36c11ae445"
+    }
+  ]
+}

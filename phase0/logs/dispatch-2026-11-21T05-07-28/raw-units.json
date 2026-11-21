@@ -1,0 +1,94 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-21T05:09:48.076Z",
+  "user_unit_key": "83ac9092-acbf-5cb8-b787-606b9c590f96:0:user",
+  "start_key_resolved": "83ac9092-acbf-5cb8-b787-606b9c590f96:0:user",
+  "start_resolved_by_marker": true,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "83ac9092-acbf-5cb8-b787-606b9c590f96:1:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "526a970a-36e1-46c1-9a43-646aed44c0b3",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "83ac9092-acbf-5cb8-b787-606b9c590f96:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "83ac9092-acbf-5cb8-b787-606b9c590f96:0:user",
+          "83ac9092-acbf-5cb8-b787-606b9c590f96:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "511749886f04acbfe8eef27d5d7c12f885530f641ae425a63c90f9c34a071282",
+          "1388e23712e2c886b8d782e7d3a7575ca39bf0a8254c16493efe3567b12b68ea"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "83ac9092-acbf-5cb8-b787-606b9c590f96:0:user",
+          "83ac9092-acbf-5cb8-b787-606b9c590f96:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "511749886f04acbfe8eef27d5d7c12f885530f641ae425a63c90f9c34a071282",
+          "1388e23712e2c886b8d782e7d3a7575ca39bf0a8254c16493efe3567b12b68ea"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "83ac9092-acbf-5cb8-b787-606b9c590f96:0:user",
+          "83ac9092-acbf-5cb8-b787-606b9c590f96:1:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "83ac9092-acbf-5cb8-b787-606b9c590f96:0:user",
+      "83ac9092-acbf-5cb8-b787-606b9c590f96:1:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "83ac9092-acbf-5cb8-b787-606b9c590f96:0:user",
+          "83ac9092-acbf-5cb8-b787-606b9c590f96:1:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "83ac9092-acbf-5cb8-b787-606b9c590f96:0:user",
+          "83ac9092-acbf-5cb8-b787-606b9c590f96:1:assistant"
+        ],
+        "overlap_keys": [
+          "83ac9092-acbf-5cb8-b787-606b9c590f96:0:user",
+          "83ac9092-acbf-5cb8-b787-606b9c590f96:1:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "83ac9092-acbf-5cb8-b787-606b9c590f96:1:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n默认实例兼容测试简报\n\n本次测试围绕默认实例兼容性开展，重点验证既有默认运行模式在新阶段并行调度机制引入后，是否仍能保持原有行为和稳定性。测试以默认实例作为基准，不主动改变既有配置，不引入额外实例依赖，观察任务创建、会话初始化、请求处理、结果返回及状态记录等关键环节。测试过程中重点关注默认配置识别、历史调用路径兼容、运行状态隔离和异常处理一致性，避免新机制对既有使用方式产生非预期影响。本简报仅作为一次性非敏感测试占位记录，不代表实际测试已经执行或通过。最终结论应以对应提交版本、运行日志和可复核证据为准。",
+      "text_sha256": "1388e23712e2c886b8d782e7d3a7575ca39bf0a8254c16493efe3567b12b68ea",
+      "size_bytes": 774,
+      "assistant_uuid": "526a970a-36e1-46c1-9a43-646aed44c0b3"
+    }
+  ]
+}

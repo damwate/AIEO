@@ -1,0 +1,163 @@
+{
+  "at": "2026-11-21T04:54:53.582Z",
+  "instance_id": "agent-a",
+  "instance_lock_path": "D:\\AIEO\\runtime\\locks\\gpt-session-agent-a.lockfile",
+  "instance_debug_port": 9300,
+  "instance_profile_dir": "D:\\AIEO\\runtime\\chrome_profiles\\gpt-poc-agent-a",
+  "message_bytes": 150,
+  "reply": "ChatGPT 说：\n\n互斥测试X——测试占位简报\n\n本次测试围绕同一实例的互斥执行机制展开，重点验证任务占用期间的并发请求是否能够被正确识别和拦截。测试场景设定为实例X已经进入执行状态，随后收到第二个互斥任务请求。系统应检查实例当前状态，识别资源占用冲突，并按照既定互斥规则处理后续请求。预期结果是同一实例不会同时执行两个互斥任务，不发生状态覆盖、重复派单或执行上下文串扰。测试记录应保留请求顺序、实例标识、执行状态及最终处理结果。本段仅作为一次性非敏感测试占位文本，不代表实际执行结果或系统验收结论。",
+  "user_unit_key": "8ac67b59-9933-5166-8dd4-723995619c94:0:user",
+  "start_key_resolved": "8ac67b59-9933-5166-8dd4-723995619c94:0:user",
+  "start_resolved_by_marker": true,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "8ac67b59-9933-5166-8dd4-723995619c94:1:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "7fa22eaf-fe32-44f9-bcfa-1d36c11ae445",
+  "stability": {
+    "stable": true,
+    "interval_ms": 3010,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-21T04:54:50.441Z",
+      "read_finished_at": "2026-11-21T04:54:50.449Z",
+      "unit_keys": [
+        "8ac67b59-9933-5166-8dd4-723995619c94:1:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "8ac67b59-9933-5166-8dd4-723995619c94:1:assistant",
+          "sha256": "d114094c79279041ab2c3854c08a07626df56a365069e0fa875a4320cbead838",
+          "size_bytes": 728
+        }
+      ],
+      "assistant_uuid": "7fa22eaf-fe32-44f9-bcfa-1d36c11ae445",
+      "next_user_unit_key": null,
+      "start_key_resolved": "8ac67b59-9933-5166-8dd4-723995619c94:0:user",
+      "start_resolved_by_marker": true,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-21T04:54:53.450Z",
+      "read_finished_at": "2026-11-21T04:54:53.455Z",
+      "unit_keys": [
+        "8ac67b59-9933-5166-8dd4-723995619c94:1:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "8ac67b59-9933-5166-8dd4-723995619c94:1:assistant",
+          "sha256": "d114094c79279041ab2c3854c08a07626df56a365069e0fa875a4320cbead838",
+          "size_bytes": 728
+        }
+      ],
+      "assistant_uuid": "7fa22eaf-fe32-44f9-bcfa-1d36c11ae445",
+      "next_user_unit_key": null,
+      "start_key_resolved": "8ac67b59-9933-5166-8dd4-723995619c94:0:user",
+      "start_resolved_by_marker": true,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "8ac67b59-9933-5166-8dd4-723995619c94:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "8ac67b59-9933-5166-8dd4-723995619c94:0:user",
+          "8ac67b59-9933-5166-8dd4-723995619c94:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "8f81a44e7aab0a6b4fc2cd37465b8c629179fd3f6d7a8f093b11c24af9f17571",
+          "d114094c79279041ab2c3854c08a07626df56a365069e0fa875a4320cbead838"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": []
+      }
+    ],
+    "materialized_unit_keys": [
+      "8ac67b59-9933-5166-8dd4-723995619c94:0:user",
+      "8ac67b59-9933-5166-8dd4-723995619c94:1:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STATIC_NON_SCROLLABLE_DOM",
+      "scrollable_window_observed": false,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "8ac67b59-9933-5166-8dd4-723995619c94:0:user",
+          "8ac67b59-9933-5166-8dd4-723995619c94:1:assistant"
+        ],
+        "overlap_keys": []
+      }
+    ],
+    "window_transitions": 0
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "d114094c79279041ab2c3854c08a07626df56a365069e0fa875a4320cbead838",
+  "size_bytes": 728,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-21T04-52-35\\reply.txt",
+  "reply_readback_sha256": "d114094c79279041ab2c3854c08a07626df56a365069e0fa875a4320cbead838",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-21T04-52-35\\raw-units.json",
+  "raw_units_sha256": "77c3230fe8f4e88740bc3cae2ae729c5a54728fd29dfa8a62e7cc9f2b264c9b2",
+  "raw_units_size_bytes": 2898,
+  "raw_units_readback_sha256": "77c3230fe8f4e88740bc3cae2ae729c5a54728fd29dfa8a62e7cc9f2b264c9b2",
+  "session_id": "6b0123c9-6a8c-83ec-85ca-1f20dca188e9",
+  "conversation_url": "https://chatgpt.com/c/6b0123c9-6a8c-83ec-85ca-1f20dca188e9",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}

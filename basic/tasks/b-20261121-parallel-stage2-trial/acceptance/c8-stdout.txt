@@ -1,0 +1,14 @@
+[2026-11-21T05:09:51.821Z] 证据目录: D:\AIEO\phase0\logs\dispatch-2026-11-21T05-09-51
+[2026-11-21T05:09:52.531Z] 会话锁已获取 pid=20684 instance=trial-c8 lock=gpt-session-trial-c8.lockfile
+[2026-11-21T05:09:52.534Z] === GPT 派单（新建会话，消息 197 字节）===
+[2026-11-21T05:09:53.436Z] 会话锁已释放
+[2026-11-21T05:09:53.437Z] 致命错误: INSTANCE_REGISTRY_INVALID: INSTANCE_REGISTRY_INVALID: 注册表端口非整数或越界 9300-9399: trial-c8=9222
+Error: INSTANCE_REGISTRY_INVALID: INSTANCE_REGISTRY_INVALID: 注册表端口非整数或越界 9300-9399: trial-c8=9222
+    at readPortRegistry (file:///D:/AIEO/phase0/tools/gpt_dispatch.mjs:413:11)
+    at resolveInstancePort (file:///D:/AIEO/phase0/tools/gpt_dispatch.mjs:450:22)
+    at mainLocked (file:///D:/AIEO/phase0/tools/gpt_dispatch.mjs:615:22)
+    at main (file:///D:/AIEO/phase0/tools/gpt_dispatch.mjs:598:11)
+    at file:///D:/AIEO/phase0/tools/gpt_dispatch.mjs:827:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:661:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)

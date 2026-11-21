@@ -1,0 +1,94 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-21T04:58:33.403Z",
+  "user_unit_key": "8ecc76c8-03bd-5bed-b4e9-7eeae81fe736:0:user",
+  "start_key_resolved": "8ecc76c8-03bd-5bed-b4e9-7eeae81fe736:0:user",
+  "start_resolved_by_marker": true,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "8ecc76c8-03bd-5bed-b4e9-7eeae81fe736:1:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "6c3afd28-cafd-4190-94cf-b0e7121ff621",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "8ecc76c8-03bd-5bed-b4e9-7eeae81fe736:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "8ecc76c8-03bd-5bed-b4e9-7eeae81fe736:0:user",
+          "8ecc76c8-03bd-5bed-b4e9-7eeae81fe736:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "564727188076720391e72b9a2ba72452f328d7c4dbbd52f4d7e3a0339bd187c2",
+          "24736d790354b70d4284e46a09c13f17ad485ba11e2c69409348e8f66df40f64"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "8ecc76c8-03bd-5bed-b4e9-7eeae81fe736:0:user",
+          "8ecc76c8-03bd-5bed-b4e9-7eeae81fe736:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "564727188076720391e72b9a2ba72452f328d7c4dbbd52f4d7e3a0339bd187c2",
+          "24736d790354b70d4284e46a09c13f17ad485ba11e2c69409348e8f66df40f64"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "8ecc76c8-03bd-5bed-b4e9-7eeae81fe736:0:user",
+          "8ecc76c8-03bd-5bed-b4e9-7eeae81fe736:1:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "8ecc76c8-03bd-5bed-b4e9-7eeae81fe736:0:user",
+      "8ecc76c8-03bd-5bed-b4e9-7eeae81fe736:1:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "8ecc76c8-03bd-5bed-b4e9-7eeae81fe736:0:user",
+          "8ecc76c8-03bd-5bed-b4e9-7eeae81fe736:1:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "8ecc76c8-03bd-5bed-b4e9-7eeae81fe736:0:user",
+          "8ecc76c8-03bd-5bed-b4e9-7eeae81fe736:1:assistant"
+        ],
+        "overlap_keys": [
+          "8ecc76c8-03bd-5bed-b4e9-7eeae81fe736:0:user",
+          "8ecc76c8-03bd-5bed-b4e9-7eeae81fe736:1:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "8ecc76c8-03bd-5bed-b4e9-7eeae81fe736:1:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n并行实例A占位R2——测试简报\n\n本次测试用于验证双实例并行运行场景下，实例A在重跑条件下的独立执行能力与状态隔离情况。实例A作为本轮正例测试对象，按照预设测试边界开展独立任务处理，不依赖实例B的执行进度、临时状态或中间结果。\n\n测试重点包括：第一，实例A能够独立启动并维持自身执行上下文，任务输入、输出及过程记录保持对应关系；第二，并行运行期间，实例A不会因另一实例的活动而发生任务串扰、状态覆盖或执行中断；第三，重跑过程中能够正确区分本轮测试数据与此前测试残留，避免历史结果对本轮判断产生干扰。\n\n本次文本仅作为并行实例A的测试占位内容，用于验证双实例并行正例R2场景下的会话承载、内容隔离及独立响应能力，不构成代码实现、运行日志、自动化执行或验收通过的事实证据。实际测试结论应以对应实例的执行记录、时间信息及独立核验结果为准。",
+      "text_sha256": "24736d790354b70d4284e46a09c13f17ad485ba11e2c69409348e8f66df40f64",
+      "size_bytes": 1080,
+      "assistant_uuid": "6c3afd28-cafd-4190-94cf-b0e7121ff621"
+    }
+  ]
+}

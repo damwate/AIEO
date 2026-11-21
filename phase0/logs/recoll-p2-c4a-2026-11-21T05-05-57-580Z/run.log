@@ -1,0 +1,8 @@
+[2026-11-21T05:05:58.027Z] 会话锁已获取（p2-c4a agent-a 补采）
+[2026-11-21T05:05:58.314Z] 页面就绪 CONV_UUID=6b012577-b854-83ec-9736-4c2b73d1487f
+[2026-11-21T05:06:21.390Z] 归属校验=marker命中1条+最后user断言+回执键形绑定（receipt=fallback-turn-0:0:user materialized=b13ac390-a4c7-5e73-8f41-21e94cefae98:0:user）
+[2026-11-21T05:06:21.394Z] checks={"marked_user_unique":true,"last_user_assertion":true,"receipt_key_form_binding":true,"adjacent_assistant_tail":true,"stable_static_dom_read":true,"final_stop_button_not_visible":true,"response_length_plausible":true,"not_prev_reply_sha":true}
+[2026-11-21T05:06:21.397Z] reply 已落盘（2103 字节，SHA=841211f6172f1fe0…）
+[2026-11-21T05:06:21.397Z] RECOLL COMPLETED
+[2026-11-21T05:06:21.407Z] 视口覆盖已清除
+[2026-11-21T05:06:21.529Z] 会话锁已释放（p2-c4a agent-a 补采；临时页已清理）

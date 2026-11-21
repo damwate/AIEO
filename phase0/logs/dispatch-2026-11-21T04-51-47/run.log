@@ -1,0 +1,11 @@
+[2026-11-21T04:51:47.306Z] 证据目录: D:\AIEO\phase0\logs\dispatch-2026-11-21T04-51-47
+[2026-11-21T04:51:47.770Z] 会话锁已获取 pid=22148 instance=agent-c lock=gpt-session-agent-c.lockfile
+[2026-11-21T04:51:47.773Z] === GPT 派单（新建会话，消息 150 字节）===
+[2026-11-21T04:51:48.333Z] [instance] 端口分配: instance=agent-c port=9302（注册表已原子落盘，探测占用=0）
+[2026-11-21T04:51:48.444Z] [instance] 实例域就绪: instance=agent-c port=9302 profile=gpt-poc-agent-c lock=gpt-session-agent-c.lockfile
+[2026-11-21T04:51:49.387Z] [instance] 清理本实例 Chrome：own=0 foreign(不动)=0 remaining=0
+[2026-11-21T04:51:51.954Z] Chrome 已启动 pid=25500 port=9302
+[2026-11-21T04:51:52.948Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 0 个
+[2026-11-21T04:51:53.060Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-21T04:52:07.809Z] 会话锁已释放
+[2026-11-21T04:52:07.811Z] 致命错误: page.evaluate: Execution context was destroyed, most likely because of a navigation

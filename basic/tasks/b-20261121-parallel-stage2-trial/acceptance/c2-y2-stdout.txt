@@ -1,0 +1,15 @@
+[2026-11-21T04:52:37.098Z] 证据目录: D:\AIEO\phase0\logs\dispatch-2026-11-21T04-52-37
+[2026-11-21T04:52:37.568Z] 致命错误: SESSION_LOCK_CONFLICT: 锁文件句柄被其他进程持有（OS 级互斥）。同一 ChatGPT 会话同一时刻只允许一个在途任务，本次拒绝执行。 详情: 使用“4”个参数调用“Open”时发生异常:“文件“D:\AIEO\runtime\locks\gpt-session-agent-a.lockfile”正由另一进程使用，因此该进程无法访问此文件。”
+Error: SESSION_LOCK_CONFLICT: 锁文件句柄被其他进程持有（OS 级互斥）。同一 ChatGPT 会话同一时刻只允许一个在途任务，本次拒绝执行。 详情: 使用“4”个参数调用“Open”时发生异常:“文件“D:\AIEO\runtime\locks\gpt-session-agent-a.lockfile”正由另一进程使用，因此该进程无法访问此文件。”
+    at acquireSessionLock (file:///D:/AIEO/phase0/e2e-poc/session_lock.mjs:97:17)
+    at main (file:///D:/AIEO/phase0/tools/gpt_dispatch.mjs:595:16)
+    at file:///D:/AIEO/phase0/tools/gpt_dispatch.mjs:827:1
+    at ModuleJob.run (node:internal/modules/esm/module_job:430:25)
+    at async onImport.tracePromise.__proto__ (node:internal/modules/esm/loader:661:26)
+    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5) {
+  code: 'SESSION_LOCK_CONFLICT',
+  holder: {
+    error: '使用“4”个参数调用“Open”时发生异常:“文件“D:\\AIEO\\runtime\\locks\\gpt-session-agent-a.lockfile”正由另一进程使用，因此该进程无法访问此文件。”',
+    outcome: 'conflict'
+  }
+}

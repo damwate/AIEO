@@ -1,0 +1,16 @@
+[
+  {
+    "key": "aa2f097c-063a-5b75-930f-631939e0e05f:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 71,
+    "text_head": "[TRIAL-P2-C4B|补采闭环B，一次性非敏感简报]\n请只回复一段约500字的测试占位文本（主题：补采闭环B），不要使用工具，不要提问。"
+  },
+  {
+    "key": "aa2f097c-063a-5b75-930f-631939e0e05f:1:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 603,
+    "text_head": "ChatGPT 说：\n\n补采闭环B测试占位简报：本次测试主要围绕补采闭环B的流程完整性、任务状态衔接、信息补充与结果确认开展，用于验证系统在首次采集信息不完整、部分材料缺失或关键证据尚未形成的情况下，"
+  }
+]
