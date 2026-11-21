@@ -1,0 +1,191 @@
+[2026-11-21T09:44:21.009Z] 证据目录: D:\AIEO\phase0\logs\dispatch-2026-11-21T09-44-21
+[2026-11-21T09:44:22.303Z] 会话锁已获取 pid=15308 instance=default lock=gpt-session.lockfile
+[2026-11-21T09:44:22.305Z] === GPT 派单（新建会话，消息 1121 字节）===
+[2026-11-21T09:44:22.312Z] [instance] 实例域就绪: instance=default port=9222 profile=gpt-poc lock=gpt-session.lockfile
+[2026-11-21T09:44:24.196Z] [instance] 清理本实例 Chrome：own=0 foreign(不动)=0 remaining=0
+[2026-11-21T09:44:26.943Z] Chrome 已启动 pid=11196 port=9222
+[2026-11-21T09:44:28.676Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 0 个
+[2026-11-21T09:44:28.681Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-21T09:45:12.122Z] 新聊天页面就绪
+[2026-11-21T09:45:17.211Z] [dispatch] 基线尾部: null
+[2026-11-21T09:45:21.344Z] [dispatch] 发送双验通过（polls=2，user_unit_key=fallback-turn-0:0:user，tail 后观察）
+[2026-11-21T09:45:22.159Z] 截图: sent-dispatch.png
+[2026-11-21T09:47:29.117Z] [dispatch] COMPLETED，1 个 assistant unit，回复 3769 UTF-8 字节，区间窗口 2 个
+[2026-11-21T09:47:29.279Z] 截图: reply-dispatch.png
+[2026-11-21T09:47:29.282Z] 会话 URL 已取得且归属校验 PASS，跳过 reviewer 指针写盘: https://chatgpt.com/c/6b01682e-c1c0-83ec-b377-6fb2ac3875aa
+[2026-11-21T09:47:29.290Z] JSON/Schema/绑定校验: NOT_REQUESTED
+[2026-11-21T09:47:29.290Z] M1 本地登记: NOT_REQUESTED（三 ID 均未提供，通用非登记派单）
+[2026-11-21T09:47:31.067Z] [instance] 清理本实例 Chrome：own=9 foreign(不动)=0 remaining=0
+[2026-11-21T09:47:31.074Z] [tab-hygiene] 成功退出：浏览器连接已关+实例 default Chrome 已清理（精确归属，他实例不动；含本次自建页 0 页）；本实例 tab 清零
+[2026-11-21T09:47:31.074Z] === 派单完成，artifact_sha256=407f67846bfcad586480d7c7611ad29d147595b3b076f8d98e7599aada3fc00e size_bytes=3769 ===
+
+=====REPLY_BEGIN=====
+ChatGPT 说：
+QUEUE-PHASEB-R2｜定点复验裁定
+
+FAIL Phase B 暂不通过，不予验收授权。
+
+审查基准：f7d342ca68ed6e9ad623a55b0c72b1d8f023049f
+
+已确认该 SHA 在 damwate/AIEO 仓库存在，提交标题为 Phase B R1 整改落实。
+
+发现一项 P0 阻断：处方①没有完整落实。
+
+phase0/tools/queue_core.mjs 的 claimTask()：
+
+同一临界区读取任务账本、实例池和 Execution 账本。
+
+同一临界区写入 CLAIMED 和实例 BUSY 绑定。
+
+但成功路径只写入 task-ledger.json 和 instance-pool.json。
+
+没有在认领临界区创建 Execution 记录。
+
+Execution 创建被放在后续 c9CheckAndStart() 中。
+
+这与本轮明确要求的“三文件写入”不一致。认领成功与 C9 启动之间仍存在 Execution 尚未创建的状态窗口，不能以读取了第三个文件代替第三个文件的写入。
+
+五项处方逐项核验
+
+项目
+
+	
+
+复验结果
+
+	
+
+依据
+
+
+
+
+① 实例占用原子化
+
+	
+
+FAIL
+
+	
+
+三文件只读三文件中的两个写入；缺少认领时 Execution 创建
+
+
+
+
+② C9 接口复用
+
+	
+
+PASS
+
+	
+
+已调用 gateCheckWithWriteBack，未见修改 gpt_dispatch
+
+
+
+
+③ 镜像方向纠正
+
+	
+
+PASS
+
+	
+
+从归档读取 send-state.json，校验状态、登记差异、更新镜像；无归档时拒绝
+
+
+
+
+④ fencing
+
+	
+
+部分通过
+
+	
+
+当前任务 token 校验、REPORTED 补记及实例释放已实现，但 Execution 未保存认领 token，跨文件执行权绑定仍不完整
+
+
+
+
+⑤ 四项负例
+
+	
+
+部分通过
+
+	
+
+四项测试均存在且报告 PASS，但不能覆盖未实现的认领时三文件一致性
+
+另外两处需要关注
+
+P0-2：Execution 缺少 claim_token 绑定
+
+c9CheckAndStart() 创建 Execution 时，没有将当前 claimToken 保存进 Execution。
+
+completeExecution() 只验证任务账本中的 task.claim_token，没有验证 Execution 是否属于同一个认领令牌。
+
+因此，当前 fencing 依赖任务账本单侧校验，尚未形成 Task 与 Execution 的双向执行权一致性验证。
+
+P1-1：恢复器与完成函数存在锁顺序反转
+
+recoverExecutions()：先取得 ledger 锁，再取得 executions 锁。
+
+completeExecution()：先取得 executions 锁，再取得 ledger 锁。
+
+两者并发执行时，存在循环等待的死锁风险。建议统一锁顺序，或者采用统一的队列事务锁。
+
+测试证据核对
+报告记录 9/9 PASS
+
+已读取指定 SHA 内的：
+
+queue-phaseb-tests.json
+
+queue-phaseb-tests.log
+
+basic/tasks/b-20261121-queue-phaseb/steps.md
+
+九项测试确实全部记录 PASS，四项新增负例均有对应测试。
+
+但这是提交内的测试记录，本轮没有在独立运行环境重新执行测试。你提供的 Phase 0 12/12、四腿 122 项也不将其冒充为本轮独立实测结果。
+
+最终裁定
+FAIL
+
+Phase B 独立验收不通过。
+
+阻断原因：
+
+认领临界区缺少 Execution 创建。
+
+Execution 缺少 claim_token 执行权绑定。
+
+完成与恢复存在锁顺序反转风险。
+
+允许： 针对上述问题进行定点整改。
+
+不允许： Phase C、Bash 替换、C9/C6 已验收实现修改、N=2 重启、N=3 扩容及 main 合并。
+
+下一轮最小整改要求
+
+claimTask() 在同一临界区完成三文件一致性写入，包含 Execution 创建。
+
+Execution 保存 claim_token，完成时同时核验 Task、Execution、Instance 绑定关系。
+
+统一锁顺序，增加完成与恢复并发测试。
+
+保留现有四项负例，增加认领中断及三文件一致性故障注入。
+
+重新提交完整 SHA 和测试报告，再进行定点复验。
+
+本轮不否定已经通过的 C9 复用、归档权威源和四项负例成果，也不要求重新设计 Queue Service。
+
+最终结论：Phase B 仍处于整改状态，不能签发 PASS。
+=====REPLY_END=====
+[2026-11-21T09:47:31.182Z] 会话锁已释放

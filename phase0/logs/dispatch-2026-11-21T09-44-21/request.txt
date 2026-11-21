@@ -1,0 +1,8 @@
+[QUEUE-PHASEB-R2|Phase B整改定点复验（处方五项+四负例）]
+分支 fix/parallel-stage2 完整SHA=f7d342ca68ed6e9ad623a55b0c72b1d8f023049f：请按SHA读 queue_core.mjs+test_queue_service.mjs（对照=任务包 steps.md 补记）。处方五项：
+①实例占用原子化=claimTask 单临界区三文件写（task CLAIMED+instance BUSY 绑定+Execution 创建）；不同任务同实例→INSTANCE_NOT_IDLE 拒绝；完成对称释放 IDLE
+②C9 接口复用=gateCheckWithWriteBack 共享函数（与已验收 accountGateCheck 同语义单实现，gpt_dispatch 零修改）
+③镜像方向纠正=从归档读 send-state.json 权威源→校验→差异登记→更新镜像；无归档=MIRROR_SOURCE_MISSING 禁凭声明写入
+④fencing=completeExecution 核对 claim_token+跨文件一致（账本 REPORTED 补记 Execution 禁降级）+实例对称释放
+⑤四负例=同实例竞争/旧 token 禁完成/镜像不一致以归档为准/REPORTED 禁降级——全 PASS
+回归：queue 9/9+phase0 12/12+四腿 122 项（Python 零改动）。请定点复验给 PASS/FAIL/BLOCKED；PASS=Phase B 验收通过。

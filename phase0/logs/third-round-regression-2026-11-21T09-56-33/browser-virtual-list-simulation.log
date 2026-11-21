@@ -1,0 +1,14 @@
+$ C:\Program Files\nodejs\node.exe D:\AIEO\phase0\tools\test_browser_virtual_list.mjs
+[2026-11-21T09:57:18.875Z] START
+[2026-11-21T09:57:20.158Z] 真实浏览器仿真 DOM 测试开始；不是 ChatGPT 真实多 unit
+[2026-11-21T09:57:22.873Z] PASS 01-multi-assistant-positive
+[2026-11-21T09:57:23.834Z] PASS 02-persistent-middle-crop-negative outcome=BLOCKED
+[2026-11-21T09:57:24.792Z] PASS 03-restored-middle-positive
+[2026-11-21T09:57:25.806Z] PASS 04-no-independent-sequence-conservative-blocked outcome=BLOCKED
+[2026-11-21T09:57:25.913Z] PASS 05-marker-recovery-evidence
+[2026-11-21T09:57:26.177Z] PASS 06-new-session-redirect-stops-before-enter
+[2026-11-21T09:57:27.026Z] SUMMARY total=6 passed=6 failed=0
+结构化结果: D:\AIEO\phase0\logs\browser-virtual-list-2026-11-21T09-57-20\result.json
+控制台日志: D:\AIEO\phase0\logs\browser-virtual-list-2026-11-21T09-57-20\browser-console.log
+
+[2026-11-21T09:57:27.075Z] EXIT code=0 signal=null timed_out=false
