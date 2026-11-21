@@ -1,0 +1,5 @@
+$ C:\Program Files\nodejs\node.exe D:\AIEO\phase0\e2e-poc\test_greet.js
+[2026-11-21T08:55:02.334Z] START
+test_greet: PASS
+
+[2026-11-21T08:55:02.443Z] EXIT code=0 signal=null timed_out=false

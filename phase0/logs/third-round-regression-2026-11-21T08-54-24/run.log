@@ -1,0 +1,14 @@
+[2026-11-21T08:54:24.368Z] 第三轮统一回归开始 node=v24.14.0
+[2026-11-21T08:54:25.456Z] PASS schemas exit=0 signal=null timed_out=false log=D:\AIEO\phase0\logs\third-round-regression-2026-11-21T08-54-24\schemas.log
+[2026-11-21T08:54:26.064Z] PASS inbound-reply exit=0 signal=null timed_out=false log=D:\AIEO\phase0\logs\third-round-regression-2026-11-21T08-54-24\inbound-reply.log
+[2026-11-21T08:54:26.957Z] PASS dispatch-binding exit=0 signal=null timed_out=false log=D:\AIEO\phase0\logs\third-round-regression-2026-11-21T08-54-24\dispatch-binding.log
+[2026-11-21T08:54:29.869Z] PASS instance-config exit=0 signal=null timed_out=false log=D:\AIEO\phase0\logs\third-round-regression-2026-11-21T08-54-24\instance-config.log
+[2026-11-21T08:54:32.149Z] PASS account-gate exit=0 signal=null timed_out=false log=D:\AIEO\phase0\logs\third-round-regression-2026-11-21T08-54-24\account-gate.log
+[2026-11-21T08:54:40.547Z] PASS m1-registry exit=0 signal=null timed_out=false log=D:\AIEO\phase0\logs\third-round-regression-2026-11-21T08-54-24\m1-registry.log
+[2026-11-21T08:54:53.088Z] PASS m1-concurrency exit=0 signal=null timed_out=false log=D:\AIEO\phase0\logs\third-round-regression-2026-11-21T08-54-24\m1-concurrency.log
+[2026-11-21T08:54:59.449Z] PASS browser-virtual-list-simulation exit=0 signal=null timed_out=false log=D:\AIEO\phase0\logs\third-round-regression-2026-11-21T08-54-24\browser-virtual-list-simulation.log
+[2026-11-21T08:55:02.217Z] PASS git-pointer-local exit=0 signal=null timed_out=false log=D:\AIEO\phase0\logs\third-round-regression-2026-11-21T08-54-24\git-pointer-local.log
+[2026-11-21T08:55:02.333Z] PASS baseline-completion-judge exit=0 signal=null timed_out=false log=D:\AIEO\phase0\logs\third-round-regression-2026-11-21T08-54-24\baseline-completion-judge.log
+[2026-11-21T08:55:02.443Z] PASS baseline-greet exit=0 signal=null timed_out=false log=D:\AIEO\phase0\logs\third-round-regression-2026-11-21T08-54-24\baseline-greet.log
+[2026-11-21T08:55:17.030Z] PASS baseline-current-os-session-lock exit=0 signal=null timed_out=false log=D:\AIEO\phase0\logs\third-round-regression-2026-11-21T08-54-24\baseline-current-os-session-lock.log
+[2026-11-21T08:55:17.031Z] SUMMARY total=12 passed=12 failed=0

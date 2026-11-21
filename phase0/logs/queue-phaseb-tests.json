@@ -1,0 +1,30 @@
+{
+  "started_at": "2026-11-21T08:53:39.068Z",
+  "finished_at": "2026-11-21T08:54:15.630Z",
+  "node": "v24.14.0",
+  "total": 5,
+  "passed": 5,
+  "failed": 0,
+  "tests": [
+    {
+      "name": "测试1 双入口并发认领：4 子进程同任务恰 1 成功",
+      "result": "PASS"
+    },
+    {
+      "name": "测试2 崩溃恢复五点：窗口表逐点语义",
+      "result": "PASS"
+    },
+    {
+      "name": "测试3 C9 BLOCKED：门禁阻断零浏览器操作+任务回 READY+归一化放行",
+      "result": "PASS"
+    },
+    {
+      "name": "测试4 C6 四方追溯：Task↔Instance↔Execution↔dispatch 归档",
+      "result": "PASS"
+    },
+    {
+      "name": "测试5 回滚演练：幂等唯一/无孤儿/任务无丢失",
+      "result": "PASS"
+    }
+  ]
+}
