@@ -1,0 +1,94 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-21T08:02:40.135Z",
+  "user_unit_key": "4b2992c7-207f-514d-b70a-6b0a3ee49e3f:0:user",
+  "start_key_resolved": "4b2992c7-207f-514d-b70a-6b0a3ee49e3f:0:user",
+  "start_resolved_by_marker": true,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "4b2992c7-207f-514d-b70a-6b0a3ee49e3f:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "0cad2aed-0e68-430a-ad0c-7c20741b12ff",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "4b2992c7-207f-514d-b70a-6b0a3ee49e3f:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "4b2992c7-207f-514d-b70a-6b0a3ee49e3f:0:user",
+          "4b2992c7-207f-514d-b70a-6b0a3ee49e3f:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "a45839cc778fdd99621e9af20594974e6b12031829914f89b9c968f4fca11783",
+          "4dd61f7b78a6a9af72d3e40b7fbb94124cd05c45d26520809bc11635397a8614"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "4b2992c7-207f-514d-b70a-6b0a3ee49e3f:0:user",
+          "4b2992c7-207f-514d-b70a-6b0a3ee49e3f:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "a45839cc778fdd99621e9af20594974e6b12031829914f89b9c968f4fca11783",
+          "4dd61f7b78a6a9af72d3e40b7fbb94124cd05c45d26520809bc11635397a8614"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "4b2992c7-207f-514d-b70a-6b0a3ee49e3f:0:user",
+          "4b2992c7-207f-514d-b70a-6b0a3ee49e3f:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "4b2992c7-207f-514d-b70a-6b0a3ee49e3f:0:user",
+      "4b2992c7-207f-514d-b70a-6b0a3ee49e3f:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "4b2992c7-207f-514d-b70a-6b0a3ee49e3f:0:user",
+          "4b2992c7-207f-514d-b70a-6b0a3ee49e3f:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "4b2992c7-207f-514d-b70a-6b0a3ee49e3f:0:user",
+          "4b2992c7-207f-514d-b70a-6b0a3ee49e3f:2:assistant"
+        ],
+        "overlap_keys": [
+          "4b2992c7-207f-514d-b70a-6b0a3ee49e3f:0:user",
+          "4b2992c7-207f-514d-b70a-6b0a3ee49e3f:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "4b2992c7-207f-514d-b70a-6b0a3ee49e3f:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nQUEUE-DESIGN-R3 定点复审裁定\nBLOCKED — 不予全项关闭\n\n复审对象\n\n仓库：damwate/AIEO\n\n分支：fix/parallel-stage2\n\n指定完整 SHA：f5c17b40b4423688b1000290aeca4518428dcbb0\n\n文件：phase0/tools/parallel_queue_design_r1.md\n\n文件 Blob SHA：53a04ffc32768381e58b55804c16422cb1613d40\n\n复审范围：DEC-138 六组整改及 §⑥ 恢复。\n\n本轮不授权编码、不授权运行态变更、不授权 N=2 重启。\n\n初步结论：R3 确实补入了大量 R2 缺失的设计内容，但仍有几个影响任务唯一执行权、崩溃恢复安全性和证据可信度的实质矛盾，不能因为附表二声明完成就视为关闭。\n\n尤其是 W0 崩溃恢复和 claim_token 生命周期，属于编码前必须解决的阻断项。\n\n一、逐项复审矩阵\n\n项目\n\n\t\n\n裁定\n\n\t\n\n复审结论\n\n\n\n\nQ-01 状态归属分离\n\n\t\n\nPASS\n\n\t\n\nTask / Execution / Instance / Pool 职责分离保留\n\n\n\n\nQ-02 两段式门禁\n\n\t\n\nPASS\n\n\t\n\n时序关系已澄清，仍需注意实现调用点\n\n\n\n\nQ-03 持久化与崩溃窗口\n\n\t\n\nFAIL\n\n\t\n\nW0 恢复语义存在实质错误\n\n\n\n\nQ-04 claim_token\n\n\t\n\nBLOCKED\n\n\t\n\n生命周期有定义，但缺少防旧执行者复活机制\n\n\n\n\nQ-05 字段规格\n\n\t\n\nBLOCKED\n\n\t\n\n13 行声明与实际数量不一致，字段枚举存在漂移\n\n\n\n\nQ-06 C6 六类语义\n\n\t\n\nFAIL\n\n\t\n\n指标结构已恢复，但单位、计算口径及经济性不足\n\n\n\n\nQ-07 VerificationState\n\n\t\n\nBLOCKED\n\n\t\n\n四态名称统一，但 Pool 状态仍不是同一枚举\n\n\n\n\nQ-08 机器验收证据\n\n\t\n\nBLOCKED\n\n\t\n\n已有绑定，但部分断言不能完整证明验收目标\n\n\n\n\n§⑥ DEC-130 恢复\n\n\t\n\nPASS_WITH_CONSTRAINTS\n\n\t\n\n主体恢复，profile 删除规则存在边界冲突\n\n二、阻断问题详细说明\nP0-1：Q-03 的 W0 恢复语义错误\n必须整改\n\n位置：§②，约第 91 行。\n\nR3 定义：\n\nW0：原子认领、C9 检查、浏览器 spawn/goto/composer。\n\n恢复：任务回 READY，零浏览器操作。\n\n这两个定义互相矛盾。\n\n我进一步核对了同一 SHA 下已验收的：\n\nphase0/tools/gpt_dispatch.mjs\n\n实际代码执行顺序是：\n\nrecordSend(\"NOT_SENT\")\n\naccountGateCheck(\"startup\")\n\nstartChromeWithDebugPort()\n\nattachPage()\n\npage.goto(...)\n\ncomposer 检查、附件上传、文本填充\n\nrecordSend(\"SEND_ATTEMPTED\")\n\nEnter 发送。\n\n也就是说，SEND_ATTEMPTED 之前已经发生了真实浏览器操作。\n\n因此：\n\nW0 不能笼统定义为零浏览器操作。\n\n建议重新划分：\n\n窗口\n\n\t\n\n真实现场\n\n\t\n\n恢复要求\n\n\n\n\nW0-A\n\n\t\n\n已认领，尚未启动浏览器\n\n\t\n\n可安全释放认领，回 READY\n\n\n\n\nW0-B\n\n\t\n\n浏览器已启动或已操作，但尚未 SEND_ATTEMPTED\n\n\t\n\n保留现场，核实浏览器及 composer 状态，禁止直接按零操作处理\n\n\n\n\nW1\n\n\t\n\nSEND_ATTEMPTED 已持久化，发送结果未确认\n\n\t\n\nPENDING_VERIFY，禁止自动重发\n\n\n\n\nW2\n\n\t\n\nSEND_CONFIRMED 已持久化\n\n\t\n\n原会话补采，禁止重发\n\n这样才不会把浏览器已操作的现场错误地当成完全未执行。\n\n另外，当前 recordSend() 会依次写入可选的 callerReceipt 和归档 send-state.json 两个位置。设计需要明确双写之间发生崩溃时的权威判定及对账规则，不能只写一句唯一权威源就结束。\n\nP0-2：Q-04 claim_token 缺少真正的防旧执行者机制\n必须整改\n\n位置：§⑦，约第 189 行。\n\nR3 已经补齐四个机制：\n\n唯一有效 token。\n\n两个入口统一经过 claimTask。\n\n派发前检查 idempotency_key。\n\n归属不明人工核对。\n\n方向正确，但还缺一个关键问题：\n\n旧 worker 被判定死亡，不等于旧执行者已经失去执行能力。\n\n例如：\n\nQueue 进程崩溃。\n\nworker 注册表没有旧 token。\n\n浏览器进程仍然存活。\n\n系统扫描账本，决定重新派发。\n\n新 worker 开始执行。\n\n旧浏览器仍然可能继续产生副作用。\n\n这时即使账本只有一个有效 token，也不能证明系统只有一个实际执行者。\n\n需要补充：\n\ntoken 的持有者身份及进程身份绑定。\n\ntoken 失效的明确条件。\n\n旧 worker 的终止确认机制。\n\n新 token 生效前的隔离或 fencing 机制。\n\n所有关键账本写入必须核对当前 token，旧 token 不得继续提交结果。\n\n无法证明旧执行者已失效时，保持人工接管，不自动重新派发。\n\n还要明确 VERIFIED_FAIL、BLOCKED、DEFERRED 等路径的 token 释放规则。\n\nP1-1：Q-05 字段规格表数量不正确\n必须整改\n\n位置：§②，约第 63 行。\n\n文档声明13行，实际表格有14行：\n\nTask：4行\n\nExecution：8行\n\nInstance：1行\n\nPool：1行\n\n合计14行。\n\n还有两个字段问题：\n\n① last_checkpoint 枚举不一致\n\nJSON 契约包含：\n\nCLAIMED | C9_PASS | SENT | GENERATING | COLLECTING\n\n字段规格表却只有：\n\nCLAIMED | C9_PASS | SENT | COLLECTING\n\n缺少 GENERATING。\n\n② send-state.json 双写问题\n\n现有实现存在 callerReceipt 与归档文件双写。需要明确谁是权威源、谁是镜像，以及写入中断后的对账机制。\n\n建议重新提供完整字段清单，并逐字段核对：\n\n类型\n\n必填条件\n\n枚举\n\n状态转换\n\n主键和关联键\n\n权威源\n\n镜像规则\n\n崩溃后的恢复规则\n\n不要只修正表格行数而遗漏契约问题。\n\nP1-2：Q-06 指标仍有计算口径缺陷\n必须整改\n\n位置：§④，约第 141 行。\n\n六类内容确实已经恢复，这是本次明显的进步。\n\n但还存在三处问题：\n\n① 并发利用率定义不成立\n\n当前写的是：\n\n并行任务数 / 空闲时间\n\n这是数量与时间的混合比值，不是有效的利用率定义。\n\n建议定义为：\n\n𝑈\n=\n实例 BUSY 时间\n统计周期总时间\nU=\n统计周期总时间\n实例 BUSY 时间\n\t​\n\n\n并分别提供实例级和整机级统计。\n\n② 账号配额指标缺少单位\n\n每日消耗、每任务平均消耗、恢复量、剩余余量，需要明确可观测单位。\n\n官方不可读取的指标必须保持 NOT_OBSERVED，不能用估算值冒充真实额度。\n\n③ 经济性指标不够完整\n\n现在只有 N=3 相对 N=2 的吞吐提升、N=4 相对 N=3 的边际吞吐提升。\n\n建议增加：\n\n单位成功任务的资源消耗。\n\n单位成功任务的实际配额消耗。\n\n增加实例带来的成功吞吐增量。\n\n增加实例带来的边际资源成本。\n\n否则只能判断吞吐有没有提升，不能判断扩容是否划算。\n\nP1-3：Q-07 枚举统一仍未真正完成\nBLOCKED\n\n位置：§⑤，约第 157 行。\n\nR3 定义：\n\nVerificationState = VERIFICATION_NORMAL | VERIFICATION_SUSPECTED | VERIFICATION_REQUIRED | VERIFICATION_UNKNOWN_BLOCK\n\n这部分正确。\n\n但 Pool 的字段仍然是：\n\nALLOWED | BACKOFF | VERIFICATION_HOLD\n\n随后又说 Pool.account_gate、判定器和 c6.verification.state 三处使用同一枚举。\n\n这实际上不是同一个枚举。\n\n需要区分：\n\nVerificationState：人机验证识别状态。\n\nAccountGateState：账号级派单门禁状态。\n\n然后建立明确映射，例如：\n\nVerificationState\n\n\t\n\nAccountGateState\n\n\n\n\nVERIFICATION_NORMAL\n\n\t\n\nALLOWED（还须满足其他门禁条件）\n\n\n\n\nVERIFICATION_SUSPECTED\n\n\t\n\nVERIFICATION_HOLD\n\n\n\n\nVERIFICATION_REQUIRED\n\n\t\n\nVERIFICATION_HOLD\n\n\n\n\nVERIFICATION_UNKNOWN_BLOCK\n\n\t\n\nVERIFICATION_HOLD\n\n尤其保留原有红线：SUSPECTED 不得因超时、刷新或页面重新加载自动降级。\n\nP1-4：Q-08 机器验收仍有缺口\nBLOCKED\n\n位置：§⑧，约第 205、212 行。\n\n五测试和七附加已经从概念要求提升到证据产物和断言，方向认可。\n\n但还不能认定全部机器可核验。\n\n主要问题：\n\n崩溃四点测试虽然列出四个现场，但断言主要落在 W1，没有分别验证 W0-A、W0-B、W2。\n\nC9 BLOCKED 的浏览器进程数必须区分新建浏览器和已有实例，不能把浏览器进程存在直接判为发生了浏览器操作。\n\nPhase C 的中控操作日志需要明确事件格式、派发事件识别规则和扫描脚本。\n\n无任务丢失的差集计算需要定义任务终态集合和排除项。\n\n失败现场审计需要明确哪些文件必须存在，哪些允许缺失，以及缺失登记的机器断言。\n\n建议每项测试统一补充：\n\n测试输入 → 预期状态 → 证据文件 → 核验脚本 → 断言 → exit code\n\n特别是 W0 两个子窗口必须纳入崩溃恢复测试。\n\n三、§⑥ DEC-130 与 profile 生命周期\nPASS_WITH_CONSTRAINTS\n\n本轮恢复了：\n\n黄金源 profile。\n\n全关前置。\n\n完整目录复制。\n\n实例隔离。\n\n逐实例登录态验收。\n\n失败处置表。\n\n黄金源更新约束。\n\nDEC-135 生命周期不变量。\n\nN=2 / N=3 容量约束。\n\n主体认可。\n\n但有一个必须澄清的冲突：\n\nDEC-130 克隆规程写着：\n\n已有残留目录先删除再镜像。\n\nDEC-135 生命周期不变量又规定：\n\nprofile 目录只增不删（删除=DEC-010 另批）。\n\n两者不能无条件同时执行。\n\n建议明确：\n\n未经 DEC-010 授权，不删除已纳管 profile。\n\n克隆目标存在残留时，先隔离并登记。\n\n确认属于允许清理的临时目标后，按明确审批流程处理。\n\n不允许把重新克隆当作绕过 profile 删除审批的理由。\n\n另外，DEC-130 原文是七项操作规程，R3 正文改成六步加失败处置表和约束。内容主体已经恢复，但不能称为逐字全文恢复。应保留原文完整结构，或明确标注为等价重组版本。\n\n四、变更范围核对\n\n我还检查了指定提交本身，而不只看文件内容。\n\n指定提交实际变更文件\n\n文件\n\n\t\n\n状态\n\n\t\n\n变更\n\n\n\n\nphase0/tools/parallel_queue_design_r1.md\n\n\t\n\nmodified\n\n\t\n\n+113 / -28\n\n\n\n\nphase0/logs/_ops_section1_extract.txt\n\n\t\n\nadded\n\n\t\n\n+10 / -0\n\n范围声明需修正\n\n提交确实没有修改代码文件，但并非只修改了一个文件。\n\n第二个文件是 DEC-130 操作规范提取文本，不是运行时代码。\n\n因此：\n\n零代码变更：核对通过。\n\n零运行态变更：提交差异未发现运行态修改。\n\n仅修改设计文档：严格来说不成立，实际新增了一个辅助文本文件。\n\n建议下一轮明确该文件的归属和保留理由，不要把它隐含在单文件变更声明中。\n\n五、最终裁定与下一轮整改顺序\n\n优先级\n\n\t\n\n整改项\n\n\t\n\n关闭条件\n\n\n\n\nP0-1\n\n\t\n\nW0 拆分\n\n\t\n\n两个窗口恢复语义与真实执行顺序一致\n\n\n\n\nP0-2\n\n\t\n\nclaim_token fencing\n\n\t\n\n证明旧执行者不能继续产生有效副作用\n\n\n\n\nP1-1\n\n\t\n\n14行字段规格\n\n\t\n\n完整契约与实现字段对齐\n\n\n\n\nP1-2\n\n\t\n\nC6 指标\n\n\t\n\n单位、计算口径、经济性指标完整\n\n\n\n\nP1-3\n\n\t\n\nVerificationState\n\n\t\n\n两套状态枚举及映射关系正式统一\n\n\n\n\nP1-4\n\n\t\n\n五测试七附加\n\n\t\n\n所有断言具有明确机器核验方法\n\n\n\n\nP1-5\n\n\t\n\nDEC-130 生命周期\n\n\t\n\n解决残留目录删除与只增不删的冲突\n\n\n\n\nP1-6\n\n\t\n\n变更范围\n\n\t\n\n明确新增辅助文件的处理方式\n\n建议下一轮按 P0-1 → P0-2 → P1-1 → P1-3 → P1-2 → P1-4 → P1-5 → P1-6 顺序整改。\n\n其中 P0-1、P0-2 必须优先，不建议让智谱直接进入 Queue 编码。\n\n六、授权边界\n本轮最终状态\n\n设计方向认可\n\nPASS\n\nDEC-138 六组全部关闭\n\n未通过\n\n设计完整性\n\nBLOCKED\n\nQueue 编码授权\n\n未授权\n\nN=2 重启授权\n\n未授权\n\nN=3 扩容授权\n\n未授权\n\n运行态变更\n\n未授权\n\n最终裁定：QUEUE-DESIGN-R3 = BLOCKED。\n\n本轮没有执行代码、没有启动浏览器、没有派单、没有清理 profile，也没有修改仓库。\n\n下一步应提交 R4 设计文档及新的完整 SHA，附逐项整改对照表。R4 复审通过后，再单独作出编码授权裁定。R3 的改进予以保留，不要求推倒重写，只针对上述缺口定点整改。",
+      "text_sha256": "4dd61f7b78a6a9af72d3e40b7fbb94124cd05c45d26520809bc11635397a8614",
+      "size_bytes": 11736,
+      "assistant_uuid": "0cad2aed-0e68-430a-ad0c-7c20741b12ff"
+    }
+  ]
+}

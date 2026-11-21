@@ -1,0 +1,11 @@
+[QUEUE-DESIGN-R3|设计定点复审（DEC-138六组落实，对照表在文内附表二）]
+分支 fix/parallel-stage2 完整SHA=f5c17b40b4423688b1000290aeca4518428dcbb0：请按SHA读 phase0/tools/parallel_queue_design_r1.md（R3版）。六组落实：
+①Q-02 两段式门禁澄清（初始调用=唯一门禁状态；执行期复查=已验收实现内置；ALLOWED仅授权进入浏览器阶段）
+②Q-03 持久化顺序+崩溃窗口映射表W0/W1/W2×恢复语义（与已验收实现逐字对齐）
+③Q-04 claim_token生命周期+防双执行四机制
+④Q-05 字段规格表13行（send-state.json=权威源）
+⑤Q-06 六类完整语义恢复（观测状态/来源/单位/时间戳+扩容判断表+经济性指标）
+⑥Q-07 VerificationState统一枚举+SUSPECTED禁自动降级
+⑦Q-08 五测试+七附加逐项绑定机器可核验证据
+⑧§⑥ DEC-130规程全文恢复+profile生命周期不变量
+变更声明：仅设计文档，零代码零运行态。请定点复审给PASS/FAIL/BLOCKED终判；全关闭才进编码授权裁定。

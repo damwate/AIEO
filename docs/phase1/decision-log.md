@@ -1180,3 +1180,11 @@
 - **判定：** BLOCKED 收敛中——Q-01 PASS、验收失败两分 PASS；Q-02 BLOCKED（初始 C9 调用与执行期复查点关系歧义）、Q-03 FAIL（发送前持久化顺序+崩溃窗口未封闭）、Q-04 FAIL（令牌生命周期/崩溃恢复/防双执行机制缺）、Q-05 BLOCKED（字段类型/必填性/枚举转换/归档关联缺）、Q-06 FAIL（须恢复 R1 六类指标完整语义，逐类明确观测状态/来源/单位/时间戳）、Q-07 PASS_WITH_CONSTRAINTS（统一四态正式枚举名）、Q-08 PASS_WITH_CONSTRAINTS（五测试七条件补机器可核验证据）；"既有约束逐条未动"须恢复 R1 §⑥ 完整约束内容（摘要不替代操作规范）。
 - **R3 要求（只改设计文档，新 SHA 定点复审）：** 六组细化按上；全部 P0/P1 关闭+既有约束复核通过才进入编码授权裁定。授权边界：Phase A/B/C 均不授权启动；N=3 独立审批；N=2 不构成重启授权；既有约束清单不得因整改修改。
 - **登记：** 本轮设计迭代为 L-023 机制下的中控+ChatGPT 子任务循环（用户只收总体进度），在途项=R3 设计稿整改。
+
+### DEC-139 Queue设计R3复审 BLOCKED（高度收敛：P0×2+P1×6 定点整改）（2026-11-21）
+
+- **复审：** QUEUE-DESIGN-R3（one-shot 会话 6b014f52，reply SHA-256=4dd61f7b78a6a9af72d3e40b7fbb94124cd05c45d26520809bc11635397a8614，被测 SHA=f5c17b40…dcbb0）。**DEC-138 六组全部关闭**（Q-01 两分语义 PASS/§⑥ PASS_WITH_CONSTRAINTS 等）；R3 改进保留不推倒。
+- **P0×2（必须整改）：** **P0-1 W0 恢复语义实质错误**——W0 笼统定义"零浏览器操作"与实际执行序矛盾（recordSend(SEND_ATTEMPTED) 前已有 spawn/goto/composer 真实操作）；整改=拆 W0-A（已认领未启动浏览器→可安全释放回 READY）/W0-B（浏览器已启动未 SEND_ATTEMPTED→保留现场核实浏览器与 composer 状态，禁按零操作处理）+ recordSend 双写（callerReceipt/send-state.json）权威源与对账规则；**P0-2 claim_token 缺防旧执行者复活机制**——worker 判死≠失去执行能力（浏览器可能仍在产生副作用）；整改=token 持有者身份+进程身份绑定、token 失效明确条件、旧 worker 终止确认、新 token 生效前 fencing、关键账本写入核对当前 token（旧 token 禁提交）、无法证明旧执行者失效→人工接管禁自动重派、VERIFIED_FAIL/BLOCKED/DEFERRED 路径 token 释放规则。
+- **P1×6：** P1-1 字段规格表声明 13 行实际 14 行+last_checkpoint 枚举漂移（JSON 含 GENERATING 表格缺）+send-state 双写权威源规则——重出完整字段清单（逐字段：类型/必填条件/枚举/状态转换/主外键/权威源/镜像规则/崩溃恢复规则）；P1-2 C6 三缺陷（并发利用率定义不成立→改 U=实例 BUSY 时间/统计周期总时间分实例与整机；配额指标缺单位——不可读保持 NOT_OBSERVED；经济性指标补四项——单位成功任务资源消耗/单位成功任务配额消耗/增实例吞吐增量/边际资源成本）；P1-3 VerificationState 统一但 Pool.account_gate 仍为另一枚举——须两枚举+显式映射表（NORMAL→ALLOWED(还须其他门禁)/SUSPECTED→HOLD/REQUIRED→HOLD/UNKNOWN_BLOCK→HOLD），SUSPECTED 禁自动降级红线保留；P1-4 机器验收缺口——崩溃四点断言主要落 W1 须补 W0-A/W0-B/W2、C9 BLOCKED 浏览器进程数须区分新建与已有实例、Phase C 中控操作日志需事件格式与扫描脚本、无任务丢失差集需定义终态集合与排除项、失败现场审计需明确必备/允许缺失文件及机器断言——每项测试统一格式=测试输入→预期状态→证据文件→核验脚本→断言→exit code，W0 两子窗口纳入崩溃恢复测试；P1-5 §⑥ 冲突澄清——DEC-130"残留目录先删除再镜像"（初始化期对未含登录态的克隆残留）与 DEC-135"只增不删"（保护含登录态 profile）边界须精确定义；P1-6 新增辅助文件处理方式明确（_ops_section1_extract.txt 等过程文件不入库或移证据目录）。
+- **R4 要求：** 提交 R4 设计文档+新完整 SHA+逐项整改对照表；R4 通过后**单独**作出编码授权裁定。R3 改进保留，只定点整改。
+- **边界（照登）：** 不授权编码/运行态变更/N=2 重启/N=3 扩容。
