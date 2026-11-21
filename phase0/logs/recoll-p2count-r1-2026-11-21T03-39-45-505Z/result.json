@@ -1,0 +1,32 @@
+{
+  "recollection": true,
+  "driver": "recoll_p2count_r1.mjs",
+  "conversation_url": "https://chatgpt.com/c/6b00e02a-8270-83ec-a61b-b824978dd586",
+  "failed_dispatch_dir": "phase0/logs/dispatch-2026-11-21T03-36-41",
+  "failure_code": "INBOUND_WINDOW_COMPLETENESS_UNPROVEN",
+  "recovery": "视口拉高静态DOM全量物化+归属校验三件套+前轮SHA排除（禁重发，L-018 七查）",
+  "send_receipt_crossref": "phase0/logs/dispatch-2026-11-20T17-14-34/send-state.json (SEND_CONFIRMED, user_unit_key=fallback-turn-0:0:user)",
+  "marked_user_unit_key": "fd71c8f2-d238-5bc3-8248-90b3f5757b73:0:user",
+  "assistant_unit_key": "fd71c8f2-d238-5bc3-8248-90b3f5757b73:2:assistant",
+  "assistant_unit_count": 1,
+  "after_units": [
+    {
+      "key": "fd71c8f2-d238-5bc3-8248-90b3f5757b73:2:assistant",
+      "role": "assistant",
+      "text_len": 4094
+    }
+  ],
+  "reply_bytes": 9016,
+  "reply_sha256": "d0c8b0474de16eeb6a669b0f74ac010f6886e9a8582e84dd8efe5b42e913d722",
+  "checks": {
+    "marked_user_unique": true,
+    "last_user_assertion": true,
+    "duplicate_send_confirmed": false,
+    "adjacent_assistant_tail": true,
+    "stable_static_dom_read": true,
+    "final_stop_button_not_visible": true,
+    "response_length_plausible": true,
+    "not_prev_reply_sha": true
+  },
+  "extracted_at": "2026-11-21T03:40:09.229Z"
+}
