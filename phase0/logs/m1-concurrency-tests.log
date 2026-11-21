@@ -1,17 +1,17 @@
-[2026-11-21T03:53:48.001Z] M1 真实多进程并发测试开始 node=v24.14.0 pid=27160
-[2026-11-21T03:53:56.204Z] PASS 4 个真实进程并发登记不同 artifact：ID 唯一且记录不丢失
-[2026-11-21T03:53:56.204Z] PASS 4 个真实进程并发登记同一 artifact：返回同一 ID 且仅一条记录
-[2026-11-21T03:53:56.204Z] PASS 4 个真实进程以同一身份并发提交不同 hash：仅一个登记，其余拒绝冲突
-[2026-11-21T03:53:56.204Z] WORKER group=distinct worker=w1 pid=28040 exit=0 status=REGISTERED artifact_id=ART-M1-000001
-[2026-11-21T03:53:56.204Z] WORKER group=distinct worker=w2 pid=10028 exit=0 status=REGISTERED artifact_id=ART-M1-000003
-[2026-11-21T03:53:56.204Z] WORKER group=distinct worker=w3 pid=18724 exit=0 status=REGISTERED artifact_id=ART-M1-000004
-[2026-11-21T03:53:56.204Z] WORKER group=distinct worker=w4 pid=11952 exit=0 status=REGISTERED artifact_id=ART-M1-000002
-[2026-11-21T03:53:56.204Z] WORKER group=duplicate worker=w1 pid=3768 exit=0 status=DUPLICATE artifact_id=ART-M1-000001
-[2026-11-21T03:53:56.204Z] WORKER group=duplicate worker=w2 pid=28688 exit=0 status=REGISTERED artifact_id=ART-M1-000001
-[2026-11-21T03:53:56.204Z] WORKER group=duplicate worker=w3 pid=29920 exit=0 status=DUPLICATE artifact_id=ART-M1-000001
-[2026-11-21T03:53:56.204Z] WORKER group=duplicate worker=w4 pid=17064 exit=0 status=DUPLICATE artifact_id=ART-M1-000001
-[2026-11-21T03:53:56.204Z] WORKER group=conflict worker=w1 pid=4636 exit=1 status=M1_ARTIFACT_HASH_CONFLICT artifact_id=none
-[2026-11-21T03:53:56.204Z] WORKER group=conflict worker=w2 pid=8536 exit=0 status=REGISTERED artifact_id=ART-M1-000001
-[2026-11-21T03:53:56.204Z] WORKER group=conflict worker=w3 pid=30500 exit=1 status=M1_ARTIFACT_HASH_CONFLICT artifact_id=none
-[2026-11-21T03:53:56.204Z] WORKER group=conflict worker=w4 pid=25428 exit=1 status=M1_ARTIFACT_HASH_CONFLICT artifact_id=none
-[2026-11-21T03:53:56.203Z] SUMMARY total=3 passed=3 failed=0
+[2026-11-21T04:00:23.028Z] M1 真实多进程并发测试开始 node=v24.14.0 pid=7572
+[2026-11-21T04:00:31.395Z] PASS 4 个真实进程并发登记不同 artifact：ID 唯一且记录不丢失
+[2026-11-21T04:00:31.395Z] PASS 4 个真实进程并发登记同一 artifact：返回同一 ID 且仅一条记录
+[2026-11-21T04:00:31.395Z] PASS 4 个真实进程以同一身份并发提交不同 hash：仅一个登记，其余拒绝冲突
+[2026-11-21T04:00:31.395Z] WORKER group=distinct worker=w1 pid=9560 exit=0 status=REGISTERED artifact_id=ART-M1-000003
+[2026-11-21T04:00:31.395Z] WORKER group=distinct worker=w2 pid=10944 exit=0 status=REGISTERED artifact_id=ART-M1-000002
+[2026-11-21T04:00:31.395Z] WORKER group=distinct worker=w3 pid=27624 exit=0 status=REGISTERED artifact_id=ART-M1-000001
+[2026-11-21T04:00:31.395Z] WORKER group=distinct worker=w4 pid=17616 exit=0 status=REGISTERED artifact_id=ART-M1-000004
+[2026-11-21T04:00:31.395Z] WORKER group=duplicate worker=w1 pid=30740 exit=0 status=DUPLICATE artifact_id=ART-M1-000001
+[2026-11-21T04:00:31.395Z] WORKER group=duplicate worker=w2 pid=20884 exit=0 status=REGISTERED artifact_id=ART-M1-000001
+[2026-11-21T04:00:31.395Z] WORKER group=duplicate worker=w3 pid=22288 exit=0 status=DUPLICATE artifact_id=ART-M1-000001
+[2026-11-21T04:00:31.395Z] WORKER group=duplicate worker=w4 pid=9152 exit=0 status=DUPLICATE artifact_id=ART-M1-000001
+[2026-11-21T04:00:31.395Z] WORKER group=conflict worker=w1 pid=31380 exit=1 status=M1_ARTIFACT_HASH_CONFLICT artifact_id=none
+[2026-11-21T04:00:31.395Z] WORKER group=conflict worker=w2 pid=30076 exit=1 status=M1_ARTIFACT_HASH_CONFLICT artifact_id=none
+[2026-11-21T04:00:31.395Z] WORKER group=conflict worker=w3 pid=26152 exit=0 status=REGISTERED artifact_id=ART-M1-000001
+[2026-11-21T04:00:31.395Z] WORKER group=conflict worker=w4 pid=26080 exit=1 status=M1_ARTIFACT_HASH_CONFLICT artifact_id=none
+[2026-11-21T04:00:31.395Z] SUMMARY total=3 passed=3 failed=0

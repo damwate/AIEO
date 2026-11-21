@@ -1,0 +1,35 @@
+ChatGPT 说：
+
+[P2-FIX-VERIFY-R2|②有界重试定点复验]
+
+审查基线：damwate/AIEO
+完整 SHA：f75919c97bbe4a3ea234c3e5e1a5076808184d55
+文件：phase0/tools/gpt_dispatch.mjs
+
+② FAIL
+
+重试机制的主体已接通，两个调用点也正确：
+
+accountGateCheck 使用 acquireAccountLockWithRetry("account-gate")，最终冲突被捕获为非致命降级。
+
+observeAccountRisk 使用 acquireAccountLockWithRetry("account-risk-write")，最终冲突被记录，之后仍然抛出 ACCOUNT_BACKOFF_TRIGGERED，保持 fail-closed。
+
+冲突判断限定为 SESSION_LOCK_CONFLICT，退避间隔为 50–99ms。
+
+剩余一个边界缺口：重试超时配置没有校验。
+
+JavaScript
+const timeoutMs = Number(process.env.AIEO_ACCOUNT_LOCK_TIMEOUT_MS || 60000);
+
+如果环境变量被配置为非数字字符串，Number(...) 得到 NaN，那么：
+
+JavaScript
+Date.now() - startedAt >= timeoutMs
+
+永远为 false。持续锁冲突时，循环就可能无限重试，违反有界重试要求。
+
+建议将超时配置校验为有限、正数；非法值明确回退到 60000ms，或直接 fail-closed 抛出配置错误。另建议在每轮尝试前检查截止时间，避免退避睡眠结束后额外启动一次超时后的锁获取。
+
+最终裁定：② FAIL；C1 两修复整体仍暂不通过。
+
+本轮没有否定正常配置下的重试实现，也不需要重做并发测试；只需补齐超时配置异常边界，再提供新的完整 SHA。登录态人工核对与 B 限流页核实继续并行，仍不授权重启 N=2。

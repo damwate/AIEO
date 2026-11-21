@@ -40,7 +40,7 @@ import {
   deriveInstancePaths, allocateInstancePort, assertPointerWriterAllowed, buildKillProfileScript,
   decidePortReuse, validatePortRegistry,
   accountStatePath, readAccountStateFile, writeAccountStateFileAtomic,
-  evaluateAccountGate, applyAccountBackoff,
+  evaluateAccountGate, applyAccountBackoff, resolveAccountLockTimeoutMs,
 } from "./dispatch_options.mjs";
 import { readReplySnapshot, readTailUnit } from "./inbound_dom.mjs";
 
@@ -472,16 +472,21 @@ async function resolveInstancePort() {
 // 50-100ms 随机退避重试，60s 上限；最终冲突向上抛由调用方降级，不静默吞掉）。
 function acquireAccountLockWithRetry(holderSuffix) {
   const path = accountStatePath(AIEO_ROOT);
-  const timeoutMs = Number(process.env.AIEO_ACCOUNT_LOCK_TIMEOUT_MS || 60000);
+  const timeoutMs = resolveAccountLockTimeoutMs(process.env.AIEO_ACCOUNT_LOCK_TIMEOUT_MS);
   const startedAt = Date.now();
   for (;;) {
+    // 每轮尝试前检查截止时间（审查方建议：避免退避睡眠后再启动一次超时获取）
+    if (Date.now() - startedAt >= timeoutMs) {
+      const err = new Error(`SESSION_LOCK_CONFLICT: 账号状态锁重试窗口（${timeoutMs}ms）耗尽`);
+      err.code = "SESSION_LOCK_CONFLICT";
+      throw err;
+    }
     try {
       return acquireSessionLock({ holder: `${holderSuffix}:${INSTANCE.instanceId}`, lockPath: `${path}.lockfile` });
     } catch (error) {
-      if (error.code !== "SESSION_LOCK_CONFLICT" || Date.now() - startedAt >= timeoutMs) {
-        throw error;
-      }
-      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, 50 + Math.floor(Math.random() * 50));
+      if (error.code !== "SESSION_LOCK_CONFLICT") throw error;
+      const remain = timeoutMs - (Date.now() - startedAt);
+      Atomics.wait(new Int32Array(new SharedArrayBuffer(4)), 0, 0, Math.min(remain, 50 + Math.floor(Math.random() * 50)));
     }
   }
 }

@@ -9,6 +9,7 @@ import {
   ACCOUNT_BACKOFF_MIN_MINUTES, ACCOUNT_BACKOFF_MAX_MINUTES,
 } from "./dispatch_options.mjs";
 import { acquireSessionLock } from "../e2e-poc/session_lock.mjs";
+import { resolveAccountLockTimeoutMs } from "./dispatch_options.mjs";
 
 const tmp = mkdtempSync(join(tmpdir(), "acct-gate-test-"));
 const statePath = join(tmp, "account-risk-state.json");
@@ -75,6 +76,15 @@ const tests = [
     assert.equal(extended.backoff_until, "2026-11-21T13:30:00.000Z"); // 60min 提议 < 现有 until → 维持更长（不缩短）
     const longer = applyAccountBackoff({ ...active, backoff_until: "2026-11-21T12:10:00.000Z" }, NOW, 60, "manual-strong");
     assert.equal(longer.backoff_until, "2026-11-21T13:00:00.000Z"); // 60min > 现有 → 延长
+  }],
+  ["R2整改：锁超时配置校验——非法值回退 60000，合法值直通", () => {
+    assert.equal(resolveAccountLockTimeoutMs(undefined), 60000);
+    assert.equal(resolveAccountLockTimeoutMs("abc"), 60000);   // NaN → 回退
+    assert.equal(resolveAccountLockTimeoutMs("-5"), 60000);    // 非正数 → 回退
+    assert.equal(resolveAccountLockTimeoutMs(0), 60000);
+    assert.equal(resolveAccountLockTimeoutMs(Number.POSITIVE_INFINITY), 60000);
+    assert.equal(resolveAccountLockTimeoutMs("1500"), 1500);
+    assert.equal(resolveAccountLockTimeoutMs(30000), 30000);
   }],
   ["R1②整改：账号状态锁有界重试——持锁者释放后重试获取成功（真实 OS 锁并发）", () => {
     const lockPath = join(tmp, "account-retry.lockfile");

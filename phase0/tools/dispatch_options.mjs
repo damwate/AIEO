@@ -345,6 +345,12 @@ export function applyAccountBackoff(state, nowMs, minutes, reason = "429-observe
   };
 }
 
+/** C9 验收 R2 整改：锁重试超时配置必须为有限正数；非法值明确回退 60000，禁 NaN 无界循环。 */
+export function resolveAccountLockTimeoutMs(raw) {
+  const n = Number(raw);
+  return Number.isFinite(n) && n > 0 ? n : 60000;
+}
+
 /** 状态读取（文件级）：缺失=NORMAL 初始化；损坏/异型=fail-closed（约束B）。 */
 export function readAccountStateFile(path, nowMs) {
   if (!existsSync(path)) return normalizeAccountState(null, nowMs);

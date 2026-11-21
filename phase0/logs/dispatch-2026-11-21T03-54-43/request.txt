@@ -1,0 +1,2 @@
+[P2-FIX-VERIFY-R2|②有界重试补齐定点复验]
+分支 fix/parallel-stage2 新完整SHA=f75919c97bbe4a3ea234c3e5e1a5076808184d55：①上轮已PASS不重复审。②你指出的缺口已补齐=新增 acquireAccountLockWithRetry（M1 acquireRegistryLock 同模式：SESSION_LOCK_CONFLICT 后 50-100ms 随机退避重试，60s 上限由 AIEO_ACCOUNT_LOCK_TIMEOUT_MS 可调，最终冲突向上抛由调用方降级），gate 写回与 observeAccountRisk 两处接线；新增真实 OS 锁并发测试（持锁者500ms窗口内重试持续冲突后抛出+释放后重试获取成功），account-gate 现 9/9+phase0 12/12。请只复验②给PASS/FAIL；PASS即C1两修复整体通过（登录态人工核对与B限流页核实并行推进中）。
