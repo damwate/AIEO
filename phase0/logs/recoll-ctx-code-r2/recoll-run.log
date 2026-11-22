@@ -1,0 +1,10 @@
+[2026-11-22T09:32:04.329Z] 补采实例域: instance=default lock=D:\AIEO\runtime\locks\gpt-session.lockfile cdp=http://127.0.0.1:9222
+[2026-11-22T09:32:04.335Z] 会话锁已获取（review-leg 补采；仅采集不发送）
+[2026-11-22T09:32:05.071Z] [tab-hygiene] 会话页命中 1 个，取末位（最近创建）
+[2026-11-22T09:32:05.072Z] 页面就位: https://chatgpt.com/c/6b02a805-88f0-83ec-8fa3-ff4f30e21f65
+[2026-11-22T09:32:13.108Z] 静置门通过（6 units）；滚动到底+额外静置 30000ms
+[2026-11-22T09:32:53.194Z] 本轮 user 定位成功: 53dfdd55-6ef0-59e0-9794-5adcd1ee4454:0:user（标记唯一+最后 user；发送双验报告键=53dfdd55-6ef0-59e0-9794-5adcd1ee4454:0:user 供对照）
+[2026-11-22T09:32:57.441Z] checks={"final_stop_button_not_visible":true,"tail_is_assistant":true,"dil_uuid_present":true,"uuid_stable":true,"stable_unit_read":true,"target_range_materialized":true,"not_prev_reply_sha":true}
+[2026-11-22T09:32:57.453Z] reply 已落盘: D:\AIEO\phase0\logs\recoll-ctx-code-r2\reply.txt（6085 字节，SHA256=9986051372397d58…）
+[2026-11-22T09:32:57.454Z] recoll COMPLETED
+[2026-11-22T09:32:57.596Z] 会话锁已释放（review-leg 补采）

@@ -1,0 +1,229 @@
+ChatGPT 说：
+
+附件 v2 我已实际运行：17/17 测试通过。但测试全绿不代表测试断言本身符合验收语义；我发现一处账本累计的确定性错误，以及 C6/C8 测试对指定并发条件的证明不足，因此目前还不能直接给 PASS。
+
+一、P0：升级后既有账本可能静默失去记账能力
+P0-1：open_turn_bytes 没有数据库迁移
+
+session-budget.mjs 第 58–71 行的 ensureSchema() 只有：
+
+SQL
+CREATE TABLE IF NOT EXISTS ledger(...)
+
+它新增了 open_turn_bytes 列定义，但没有对已存在的旧表执行 ALTER TABLE。
+
+这不是纯粹的兼容性问题：
+
+R1 已创建的数据库表没有 open_turn_bytes。
+
+R2 的 recordTurn() 对既有行执行 UPDATE 时引用该列，会报 no such column；新行 INSERT 也会引用该列而失败。
+
+AIEO 记账异常被捕获后只告警，不中止已确认的派单。
+
+后续 assessLedger() 仍能读取旧表的 total_bytes，不会因为缺列而报账本异常。
+
+因此预检可能继续使用旧的、没有完整累计新轮次的数值放行派单。
+
+这是可能造成账本长期不更新、预检仍使用陈旧数据的 fail-open 风险。
+
+整改要求：
+
+对旧 schema 增加幂等迁移，例如 ALTER TABLE ledger ADD COLUMN open_turn_bytes INTEGER NOT NULL DEFAULT 0。
+
+迁移完成后验证列存在，再允许读写。
+
+迁移失败必须使账本进入 UNREADABLE/UNCERTAIN，不能继续用旧 schema 的数据正常放行。
+
+增加真实旧版数据库升级测试：先用 R1 schema 创建并写入数据，再加载 R2 代码，验证历史累计保留、新轮次可正常记账。
+
+二、P1：累计字节数发生重复计算
+P1-1：T2 测试把错误的 total_bytes 当成正确结果
+
+当前代码第 227–234 行：
+
+JavaScript
+const turnBytes = completing
+  ? ledger.openTurnBytes + outBytes
+  : inBytes + outBytes;
+
+totalBytes: ledger.totalBytes + turnBytes,
+
+输入阶段已经将 inBytes 加进 ledger.totalBytes。完成阶段再次把 openTurnBytes + outBytes 整体加到 totalBytes，于是输入被重复累计。
+
+附件 T2 的实际测试数据：
+
+输入：100B
+
+输出：10240B
+
+正确累计：10340B
+
+当前代码累计：10440B
+
+测试反而断言：
+
+JavaScript
+assert.equal(a.totals.totalBytes, 10440);
+
+这是测试预期本身错误，不是实现符合设计。
+
+整改要求： 完成阶段 totalBytes 只增加 outBytes；maxTurnBytes 仍按 openTurnBytes + outBytes 计算。T2 应断言 turns=1、maxTurnBytes=10340、totalBytes=10340。
+
+三、P1：C6、C8 测试仍未完全证明设计指定的竞态
+P1-2：C6 没有可靠证明挂起进程已取得写锁
+
+测试用下面的条件判断挂起进程是否已经执行 UPDATE：
+
+JavaScript
+if (row && row.turns === 2) break;
+
+但挂起进程的 UPDATE 尚未 COMMIT，另一个连接在事务隔离下读不到这个未提交的 turns=2。
+
+所以父进程会一直轮询到循环结束，再继续执行被测调用；这并不等于已经确认子进程持有写锁。
+
+整改要求： 子进程在成功执行 BEGIN IMMEDIATE 和 UPDATE 后，写入独立 ready 文件或通过 IPC 发出就绪信号；父进程必须等待该信号，并对超时未就绪直接判 FAIL，不能超时后继续执行测试。
+
+P1-3：C8 没有证明唯一约束冲突处理路径确实发生
+
+本轮 C8 已经改为两个异步进程和 ready/go 屏障，较 R1 有实质进步。
+
+但测试只断言最终 turns=2 和总字节数，没有证明两个进程都读到了“无该行”，也没有断言后到者实际经过：
+
+SQLITE_CONSTRAINT_PRIMARYKEY → 显式 ROLLBACK → 重读 → 新事务 gen 更新
+
+因此目前能证明的是并发启动后两轮最终累计，不能证明设计指定的首写唯一约束冲突分支确实被执行。
+
+整改要求： 增加可观察的冲突路径证据或确定性故障注入，并断言唯一约束冲突分支执行、显式 ROLLBACK 成功、后续新事务完成第二轮累计。
+
+四、R1 整改项复核状态
+
+R1 问题
+
+	
+
+本轮复核
+
+
+
+
+P0-1 COMMIT 独立错误语义
+
+	
+
+代码通过 独立捕获并上抛 LEDGER_COMMIT_UNCERTAIN
+
+
+
+
+P0-2 PRAGMA 设置失败
+
+	
+
+代码通过 失败关闭连接并 fail-closed；但缺专门故障注入测试
+
+
+
+
+P1-1 C9 两态注入
+
+	
+
+通过 两态、连接废弃、后续新连接均有断言
+
+
+
+
+P1-2 C1/C8 异步并发
+
+	
+
+部分通过 真并发启动；C8 冲突路径证据不足
+
+
+
+
+P1-3 两时点关联
+
+	
+
+未通过 单轮峰值正确，但 totalBytes 重复计算
+
+
+
+
+P1-4 延迟 UUID 统一记账
+
+	
+
+代码通过 recordInOnce() 统一调用并去重
+
+
+
+
+P1-5 T4/C6/3000ms
+
+	
+
+部分通过 T4证据存在，C2/C10实测通过，C6同步条件不成立
+
+五、本次实际执行结果
+
+附件测试
+
+17/17 PASS
+17 / 17
+
+本次环境实际执行，Node v22.16.0，退出码 0
+
+项目
+
+	
+
+本次结果
+
+
+
+
+C2 实际墙上时间
+
+	
+
+约 2608ms
+
+
+
+
+C10 实际墙上时间
+
+	
+
+约 2607ms
+
+
+
+
+C6 测试总耗时
+
+	
+
+约 4663ms
+
+
+
+
+T4 证据
+
+	
+
+已提交诊断 JSON，命中“上下文窗口已达上限”
+
+附件 SHA256：8a1955cb276a8d4580cfff38bb8e524f64adf2c3b05a59d2c9b2b590e51f21be。与 AIEO commit 内 ZIP 的 Git blob SHA 一致。
+
+AIEO 接入代码也已按完整 SHA 4d4c0a0d8281d5276c86b324735eb24baa8418aa 核对：recordInOnce() 已覆盖首次及延迟确认，完成时使用 completeOpenTurn: true；预检 HARD 拒发、账本异常 fail-closed、--allow-near-limit 留痕逻辑存在。T4 诊断 JSON 确实记录了上限横幅关键词。
+
+最终裁定
+[FAIL + 逐条]
+
+本轮 R1 的 COMMIT 语义、PRAGMA 失败处理、C9 两态注入和 AIEO 延迟确认记账均有实质整改；但 P0-1 schema 迁移缺失会使既有账本升级后可能持续使用陈旧数据，P1-1 totalBytes 重复计算又会污染预算统计。此外 C6/C8 的测试证明仍不充分。
+
+当前不授权合并、部署或生产启用。 下一轮只需聚焦四件事：旧 schema 迁移及升级测试、修正 totalBytes 与 T2、C6 就绪信号、C8 唯一约束分支证据。修完后提交新完整 SHA 和测试日志，再做定点复验。

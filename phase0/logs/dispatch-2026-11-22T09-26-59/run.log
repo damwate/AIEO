@@ -1,0 +1,16 @@
+[2026-11-22T09:26:59.174Z] 证据目录: D:\AIEO\phase0\logs\dispatch-2026-11-22T09-26-59
+[2026-11-22T09:27:00.701Z] 会话锁已获取 pid=29088 instance=default lock=gpt-session.lockfile
+[2026-11-22T09:27:00.704Z] === GPT 派单（已有会话，消息 1001 字节）===
+[2026-11-22T09:27:00.706Z] [instance] 实例域就绪: instance=default port=9222 profile=gpt-poc lock=gpt-session.lockfile
+[2026-11-22T09:27:02.634Z] 复用本实例调试端口 9222（归属核验 own=9）
+[2026-11-22T09:27:02.826Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 1 个
+[2026-11-22T09:27:02.827Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-22T09:27:15.614Z] 会话就绪: https://chatgpt.com/c/6b02a805-88f0-83ec-8fa3-ff4f30e21f65
+[2026-11-22T09:27:20.640Z] [dispatch] 基线尾部: {"role":"assistant","key":"6811d369-7fad-5af7-84ca-c1253d7e41e5:2:assistant","assistantUuid":"9fea7d22-7e00-4b13-b5d9-cd35787a3831"}
+[2026-11-22T09:27:25.938Z] [dispatch] 附件已挂载并上传完成: session-budget-code.zip
+[2026-11-22T09:27:29.648Z] [ctx-budget] WARN: 记账失败（不影响本次派单证据，下次预检按 UNCERTAIN fail-closed）: no such column: open_turn_bytes
+[2026-11-22T09:27:29.649Z] [dispatch] 发送双验通过（polls=1，user_unit_key=fallback-turn-0:0:user，tail 后观察）
+[2026-11-22T09:27:30.575Z] 截图: sent-dispatch.png
+[2026-11-22T09:31:24.052Z] 会话锁已释放
+[2026-11-22T09:31:24.053Z] 致命错误: INBOUND_WINDOW_COMPLETENESS_UNPROVEN: BLOCKED: 滚动中实际观察到渲染 unit 集合变化，且缺少独立逻辑序列，不能排除持续遗漏中间 unit details={"materialized_unit_keys":["53dfdd55-6ef0-59e0-9794-5adcd1ee4454:0:user","53dfdd55-6ef0-59e0-9794-5adcd1ee4454:2:assistant"],"remediation":"提供可信的完整逻辑 unit 序列，或在非虚拟化静态 DOM 上重新读取"}
+[2026-11-22T09:31:24.055Z] [tab-hygiene] 发送已发生：保留现场不关页（禁重发语义依赖现场）；退出后由人工/补采链按 L-018 处置

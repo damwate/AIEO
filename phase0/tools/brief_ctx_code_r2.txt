@@ -1,0 +1,5 @@
+[CTX-CODE-R2|编码整改复核|b-20261122-session-ctx-mgmt]
+R1七项全整改，附件=更新zip(session-budget.mjs v2+test 17用例)。AIEO：fix/session-ctx-mgmt @ 4d4c0a0d(agent-kit 403如实登记,zip=完整代码)。
+逐项：P0-1=COMMIT阶段独立try报错LEDGER_COMMIT_UNCERTAIN(语句阶段保留原语义)；P0-2=PRAGMA失败fail-closed不再吞；P1-1=C9两态注入(CommitFailConn代理:tx_active=COMMIT前抛错事务活动/tx_gone=COMMIT成功后抛错；断言UNCERTAIN+连接废弃+后续新连接,tx_active未计/tx_gone在账)；P1-2=C1/C8改async spawn+ready/go屏障真并发(C8同时首写两turn均累计)；P1-3=completeOpenTurn两时点关联(T2断言turns=1,max=in+out)；P1-4=recordInOnce统一去重(首次+延迟确认同路径)；P1-5=T4实测横幅存证(6b009b70 --diagnose)+C6外置挂起进程+严格3000ms。
+另新增：并发open/read瞬态locked与损坏UNREADABLE分流(locked按预算重试)。
+测试：17/17全绿。请给[编码验收PASS]或[FAIL+逐条]。
