@@ -18,7 +18,12 @@ STATE: NORMAL <24KB ≤ WARN <48KB ≤ HARD（in+out 累计 UTF-8 字节；含 m
 - **账本路径**：`~/.agents/session-usage/<uuid>.json`（机器级本地持久化；同 UUID 跨仓共享=同一 ChatGPT 会话的预算本就该共享；不同 UUID 天然隔离，防串用）
 - **字段**（R1 裁定）：`{uuid, turns, in_bytes, out_bytes, total_bytes, max_turn_bytes, first_at, last_at, budget_version:1}`
 - **原子化**（P1-1）：写临时文件→fsync→rename→父目录 fsync 尽力而为（Windows 平台差异登记）。
-- **并发安全（R2 复核追加，原子写≠并发安全）**：同 UUID 跨进程更新必须串行化——每账本配 <uuid>.lock 锁文件（O_EXCL 创建+PID+时间戳），持有 TTL=10s；获取锁重试退避 200ms×5 后仍失败=LEDGER_LOCK_TIMEOUT（fail-closed 转 UNCERTAIN，不静默放行）；锁持有进程崩溃=TTL 过期后接管（接管时核对 PID 存活）；锁内完成 读→改→写→rename 全程，锁释放用删除（幂等）。两个进程串行化后不存在后写覆盖前写；账本损坏（JSON 非法/字段缺失/类型错）=LEDGER_UNREADABLE fail-closed，不静默重建。
+- **并发安全协议 v3（generation 号 CAS + owner token，替代 v2 纯锁方案；回应 R2b 三个 P0）**：
+  - **账本内容含 `lock_gen`（世代号，单调递增）**——写路径=乐观并发 CAS：锁内读账本（记 gen G）→计算新状态→写临时文件→rename 前**重读账本文件核对 gen 仍==G**→一致才 rename（新内容 gen=G）；不一致=GEN_CONFLICT 放弃本轮写入并重走 acquire。**接管把 gen+1 落进账本**→旧持锁者挂起的写必然 CAS 失败，从机制上隔离旧持锁者（P0-3 的"接管后旧持锁者继续写入"被 gen 比对阻断，而非靠杀死进程）。
+  - **owner token（P0-1）**：锁文件内容={token:32hex随机,pid,ts,gen:G}；释放=读锁文件**核对 token==自己**才删除，不匹配=LOCK_OWNER_MISMATCH 不删（PID 复用/他人锁不可混淆）；接管前同样重读锁文件核对 token 未变。
+  - **接管原子协议（P0-2）**：过期接管经 O_EXCL 创建 `<uuid>.takeover.<token>` 意图文件——**只有一个接管者能创建成功**；成功者重读旧锁核对 token 未变→gen+1 原子落账本→删除旧锁→创建新锁（新 gen）；失败者（意图文件已存在）退避重试。杜绝两接管者竞态。
+  - **TTL 边界（P0-3）**：TTL=10s 是"存活假设"不是硬杀——持锁者每次实际 I/O 进展刷新 ts（心跳）；正常持锁操作>10s 由心跳维持；PID 存活但挂死（无心跳）→过期→接管→gen+1→挂死者后续写 CAS 失败；接管后旧锁文件已删且 gen 已变，旧 token 永久失效。
+  - **获取失败语义**：活跃锁退避 200ms×5 后=LEDGER_LOCK_TIMEOUT（fail-closed 转 UNCERTAIN，不静默放行）；账本损坏=LEDGER_UNREADABLE 不静默重建。
 - **fail-closed**（P1-3）：账本损坏/读取失败→assess 抛 LEDGER_UNREADABLE，调用方置 UNCERTAIN 禁自动放行，要求修复账本或新会话
 - **阈值**：默认 WARN=24576B/HARD=49152B（24/48KB，首版工程预算估计值，budget_version=1）；env `SESSION_BUDGET_WARN/HARD` 可覆盖；按真实样本校准后 bump version
 
@@ -46,8 +51,14 @@ STATE: NORMAL <24KB ≤ WARN <48KB ≤ HARD（in+out 累计 UTF-8 字节；含 m
 | T3 | 账本损坏 | UNCERTAIN 禁放行 |
 | T4 | DOM 出现上限横幅 | 检测命中（--diagnose+诊断路径） |
 | T5 | 新会话 UUID | 独立账本建立 |
-| T6 | 多仓共用 | 账本按 UUID 隔离无串用 |
+| T6a | 同一 UUID 两仓读写 | 命中同一份账本（共享口径） |
+| T6b | 不同 UUID | 账本完全隔离无串用 |
 | T7 | WARN 后新会话 | 自包含简报恢复审查上下文 |
+| C1 | 两进程并发更新同 UUID | 累计值不丢失（锁串行化+gen CAS） |
+| C2 | 锁被占用 | 等待方按超时转 UNCERTAIN |
+| C3 | 持锁进程异常退出 | 过期锁安全接管（唯一接管者） |
+| C4 | 旧持锁者接管后继续写 | gen CAS 失败，不覆盖新账本 |
+| C5 | 释放锁 | token 不匹配不删他人锁 |
 
 ## 6. 交付与部署序
 

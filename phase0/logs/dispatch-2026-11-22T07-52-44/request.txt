@@ -1,0 +1,2 @@
+[CTX-R2b|设计原文核验]
+design-r2.md 已推 main：github.com/damwate/AIEO @ db3ddd24fca669646883b2f4e3ff65e8ce59ea6c，路径 basic/tasks/b-20261122-session-ctx-mgmt/design-r2.md。已补并发安全设计：每账本配 <uuid>.lock 锁文件(O_EXCL+PID+时间戳,TTL=10s,重试退避200ms×5后LEDGER_LOCK_TIMEOUT fail-closed转UNCERTAIN,崩溃=TTL过期接管核对PID存活,锁内完成读改写rename全程)；账本损坏=LEDGER_UNREADABLE不静默重建。请按该SHA核对设计原文+并发细节+R1七条验收要求，给[CTX-R2设计PASS+编码授权]或[FAIL+理由]。
