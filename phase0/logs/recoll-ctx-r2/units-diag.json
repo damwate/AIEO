@@ -1,0 +1,26 @@
+[
+  {
+    "key": "506e8c7c-2fec-50c2-beff-3e91ed17442e:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[R3|DEC-129定点复核]\nR2唯一残留已修：三task-brief「当前步骤」已与steps.md同步（S1-S3全部完成，待用户验收）。请定点复核：g"
+  },
+  {
+    "key": "506e8c7c-2fec-50c2-beff-3e91ed17442e:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n[R3核验PASS]\n\n已按完整 SHA 59da346174ce96ad26929595b05423a125e20a25，仅核对指定三个"
+  },
+  {
+    "key": "df2848c8-fc0e-586d-b360-f6a0a15c2b73:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[CTX-R2|设计整改确认]\nR1裁定三修改点已吸收，请确认设计R2（AIEO仓@当前main basic/tasks/b-20261122-session-"
+  },
+  {
+    "key": "df2848c8-fc0e-586d-b360-f6a0a15c2b73:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\n当前裁定：暂不确认设计 R2 PASS，暂不授权编码实施。\n\n先说明一个证据问题：我查询了 AIEO main 分支，解析到当前完整 S"
+  }
+]

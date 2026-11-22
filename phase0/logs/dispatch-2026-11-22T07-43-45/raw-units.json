@@ -1,0 +1,94 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-22T07:46:33.753Z",
+  "user_unit_key": "95ae6d3e-5407-53b1-9b96-f6a619f92d47:0:user",
+  "start_key_resolved": "95ae6d3e-5407-53b1-9b96-f6a619f92d47:0:user",
+  "start_resolved_by_marker": false,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "95ae6d3e-5407-53b1-9b96-f6a619f92d47:1:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "4f614c4b-8408-4cb5-8952-fd9d4facac69",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "95ae6d3e-5407-53b1-9b96-f6a619f92d47:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "95ae6d3e-5407-53b1-9b96-f6a619f92d47:0:user",
+          "95ae6d3e-5407-53b1-9b96-f6a619f92d47:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "578b66fb7f344eb181720cc1fe5a29d44716541298e279ccbdad8f914ca142ae",
+          "530777222b7a2adcd64ba70d9b0855612029febeaea49c401d920da8a0015f90"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "95ae6d3e-5407-53b1-9b96-f6a619f92d47:0:user",
+          "95ae6d3e-5407-53b1-9b96-f6a619f92d47:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "578b66fb7f344eb181720cc1fe5a29d44716541298e279ccbdad8f914ca142ae",
+          "530777222b7a2adcd64ba70d9b0855612029febeaea49c401d920da8a0015f90"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "95ae6d3e-5407-53b1-9b96-f6a619f92d47:0:user",
+          "95ae6d3e-5407-53b1-9b96-f6a619f92d47:1:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "95ae6d3e-5407-53b1-9b96-f6a619f92d47:0:user",
+      "95ae6d3e-5407-53b1-9b96-f6a619f92d47:1:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "95ae6d3e-5407-53b1-9b96-f6a619f92d47:0:user",
+          "95ae6d3e-5407-53b1-9b96-f6a619f92d47:1:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "95ae6d3e-5407-53b1-9b96-f6a619f92d47:0:user",
+          "95ae6d3e-5407-53b1-9b96-f6a619f92d47:1:assistant"
+        ],
+        "overlap_keys": [
+          "95ae6d3e-5407-53b1-9b96-f6a619f92d47:0:user",
+          "95ae6d3e-5407-53b1-9b96-f6a619f92d47:1:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "95ae6d3e-5407-53b1-9b96-f6a619f92d47:1:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nCTX-R1｜会话上下文管理根治方案裁定\n\n有条件通过\n\n总体裁定：同意治理方向，但建议修改三个关键设计点。\n\n这次问题的根因不是单纯的上下文容量不足，而是监控指标失真：现有规则按消息条数判断会话健康，却没有衡量实际输入输出负载；同时，诊断工具没有识别已经发生的上下文耗尽。\n\n这与 VPN 端口漂移属于同一类工程问题：系统存在可观测的异常信号，却没有将其转化为自动检测和预防机制。\n\nQ1｜24KB / 48KB 阈值是否合理？\n同意，首版可用\n\n建议保留 24KB WARN、48KB HARD，但明确它们是工程预算，不是模型上下文窗口的实际容量。\n\n理由：\n\n目前没有可靠的公开依据可以将 ChatGPT 实际可用窗口容量换算成固定字节数。\n\n中英文、代码、JSON、工具输出的 token/byte 比例差异很大。\n\n输入和输出虽然都消耗上下文预算，但不同轮次的历史消息可能存在压缩、摘要或其他处理，不能简单认为账本字节数等于实际 token 消耗。\n\n10KB 单轮输出足以说明仅按消息数量判断存在明显盲区。\n\n建议增加一项：\n\n不要只记录累计字节数，还要记录单轮峰值。\n\n建议账本字段：\n\n字段\n\n\t\n\n用途\n\n\n\n\nturns\n\n\t\n\n已完成轮数\n\n\n\n\nin_bytes\n\n\t\n\n累计输入字节\n\n\n\n\nout_bytes\n\n\t\n\n累计输出字节\n\n\n\n\ntotal_bytes\n\n\t\n\n累计输入输出\n\n\n\n\nmax_turn_bytes\n\n\t\n\n单轮最大输入输出\n\n\n\n\nlast_updated\n\n\t\n\n最近更新时间\n\n\n\n\nbudget_version\n\n\t\n\n阈值版本\n\n另外，累计值必须采用实际 UTF-8 字节数，并明确统计口径，避免不同模块重复计数。\n\n阈值后续通过真实会话样本校准，而不是通过猜测模型窗口容量校准。\n\nQ2｜超 HARD 后拒发还是告警放行？\n同意：默认拒发\n\n我支持：\n\nWARN 告警，HARD 拒绝继续发送，并要求创建新会话。\n\n不建议默认告警放行。\n\n原因：\n\n已经出现三次上下文耗尽，说明单纯告警不能形成有效防线。\n\n用户仍然可以输入发送，意味着发送端需要主动承担保护责任。\n\n继续发送可能导致任务上下文不完整、审查遗漏，甚至产生貌似完整但实际上缺少历史依据的裁定。\n\n但这里有一个重要修改：\n\n不能把 48KB 作为绝对不可突破的硬编码限制。\n\n建议采用三级状态：\n\n状态\n\n\t\n\n触发条件\n\n\t\n\n行为\n\n\n\n\nNORMAL\n\n\t\n\n小于24KB\n\n\t\n\n正常发送\n\n\n\n\nWARN\n\n\t\n\n24KB–48KB\n\n\t\n\n告警，建议切换\n\n\n\n\nHARD\n\n\t\n\n大于等于48KB\n\n\t\n\n默认拒发，要求新会话\n\n注意：HARD 应在发送前执行，不能等本轮完成后才发现超限。\n\n新会话的自包含简报应包含：\n\n当前任务及目标\n\n已确认的事实和证据\n\n已作出的裁定\n\n尚未解决的问题\n\n下一步操作\n\n必须保留的完整 SHA、分支和文件路径\n\n这样才能避免切换会话后丢失审查连续性。\n\n同时保留明确的管理员级诊断或紧急恢复通道，但不能默认放行，也不能静默绕过。\n\nQ3｜账本放 phase0/tools 还是 agent-kit monitor？\n修改：agent-kit monitor 为主\n\n我倾向于将账本和监控逻辑放在 agent-kit monitor 层。\n\n原因：\n\n问题属于会话生命周期管理，不属于某个仓库的业务逻辑。\n\nAIEO、GDC、AI-Image-Service 等项目都可能遇到相同问题。\n\n如果每个仓库独立实现，会产生阈值不一致、统计口径不一致、修复重复等问题。\n\nagent-kit monitor 更适合作为统一监控和防护入口。\n\n建议分层：\n\nagent-kit monitor\n\n统一会话监控、预算判断、发送前拦截、横幅诊断\n\n**session-usage/\n\nAIEO\n\n仓库接入\n\nGDC\n\n仓库接入\n\nAISVC\n\n仓库接入\n\n不过有一个部署约束：\n\n账本应当保存在本地持久化目录，而不是 agent-kit 仓库的 Git 追踪目录中。不同项目共用 monitor，但不能共用同一个会话账本。\n\nAIEO 的 phase0/tools 只保留接入配置、使用说明和验收测试，不重复实现监控核心。\n\n额外提出：R1 方案还缺少三个防复发条件\n\n这三项我建议加入设计，不应留到后续发现问题再补。\n\n编号\n\n\t\n\n要求\n\n\t\n\n理由\n\n\n\n\nP1-1\n\n\t\n\n账本写入必须原子化\n\n\t\n\n防止异常退出导致累计值丢失或损坏\n\n\n\n\nP1-2\n\n\t\n\nUNCERTAIN 独立于 NORMAL\n\n\t\n\n诊断证据不足时不能默认为健康\n\n\n\n\nP1-3\n\n\t\n\n发送门必须 fail-closed\n\n\t\n\n账本缺失、损坏、读取失败时不能静默放行\n\n尤其是 P1-3：\n\n账本不可读取不代表会话没有消耗。建议进入 UNCERTAIN，禁止自动放行，要求修复账本或创建新会话。\n\n另外，横幅扫描应当与字节预算独立：\n\n字节预算：预测即将发生的上下文风险。\n\nDOM 横幅扫描：检测已经发生的上下文耗尽。\n\n两者任一触发，都应进入保护流程。\n\n最终裁定汇总\n\n问题\n\n\t\n\n裁定\n\n\t\n\n最终意见\n\n\n\n\nQ1：24/48KB\n\n\t\n\n同意\n\n\t\n\n首版估计值，增加单轮峰值\n\n\n\n\nQ2：HARD策略\n\n\t\n\n同意\n\n\t\n\n默认拒发，强制新会话\n\n\n\n\nQ3：存放位置\n\n\t\n\n修改\n\n\t\n\nagent-kit monitor 统一实现\n\n\n\n\n横幅诊断\n\n\t\n\n同意\n\n\t\n\n纳入 UNCERTAIN 检测\n\n\n\n\nL-018 §6\n\n\t\n\n同意\n\n\t\n\n增补字节预算规则\n\n\n\n\n故障安全\n\n\t\n\n增补\n\n\t\n\n账本异常 fail-closed\n\n建议下一步：批准进入设计整改，不授权编码。\n\n验收时必须有以下测试：\n\n7条消息但累计超过48KB，必须拦截。\n\n仅2条消息但单轮输出10KB，必须正确累计。\n\n账本损坏，必须进入 UNCERTAIN。\n\nDOM 出现「上下文窗口已达上限」，必须检测。\n\n新会话 UUID 必须建立独立账本。\n\n多仓库共用 monitor 时，不得发生账本串用。\n\n达到 WARN 后创建新会话，必须能通过自包含简报恢复审查上下文。\n\n最终原则：不能再让用户承担系统本应自动发现的上下文耗尽风险。",
+      "text_sha256": "530777222b7a2adcd64ba70d9b0855612029febeaea49c401d920da8a0015f90",
+      "size_bytes": 5887,
+      "assistant_uuid": "4f614c4b-8408-4cb5-8952-fd9d4facac69"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+[CTX|会话上下文管理根治R1|b-20261122-session-ctx-mgmt]
+背景：审查会话第三次撞上下文上限(6b009b70)，又是人发现工具没发现——与已根治的VPN端口漂移同类。请裁定方案(只评审不改码)。
+实证：上限态DOM签名=持久横幅「上下文窗口已达上限」(check_conv_units --diagnose实拍,composer仍可输入发送端不拦)；撞上限时user消息仅~8条但单轮reply达10KB——4条消息规则按数不按量是缺陷。
+方案v1：1会话用量账本 session-usage/<uuid>.json累计turns/in_bytes/out_bytes(源=result.json现成字段) 2发送前预检门：累计>WARN(24KB)告警+建议--new-session,>HARD(48KB)拒发；阈值可配置 3UNCERTAIN诊断并入横幅扫描 4L-018§6增补字节预算规则 5诚实边界：窗口token上限非公开,阈值首版为估计值待校准。
+三问：
+Q1阈值首版(24/48KB累计in+out)是否合理？你侧有无窗口实际容量更准参照？
+Q2超阈值默认=拒发强制--new-session(自包含简报可补上下文)还是仅告警放行？
+Q3账本放AIEO仓phase0/tools(每仓本地)还是agent-kit monitor层(跨仓共享)？
+请逐问[同意/修改/反对]+理由。

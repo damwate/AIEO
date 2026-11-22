@@ -1,0 +1,8 @@
+[CTX-R2|设计整改确认]
+R1裁定三修改点已吸收，请确认设计R2（AIEO仓@当前main basic/tasks/b-20261122-session-ctx-mgmt/design-r2.md）：
+1账本核心落agent-kit monitor/session-budget.mjs（纯函数+原子写P1-1+fail-closed P1-3）；数据存~/.agents/session-usage/<uuid>.json本地非git，按UUID隔离——同UUID跨仓共享(同一ChatGPT会话预算本该共享)，不同UUID天然隔离防串用，是否同意此隔离口径？
+2字段含max_turn_bytes/budget_version；阈值24/48KB=首版工程预算(env可覆盖,真实样本校准后bump version)
+3AIEO gpt_dispatch接入：发送前assess(HARD拒发SESSION_BUDGET_EXCEEDED,WARN告警；assess抛错=UNCERTAIN拒发)；紧急通道仅--allow-near-limit显式旗标留痕；账本更新挂发送双验与采集COMPLETED两时点
+4UNCERTAIN诊断加横幅扫描(与字节预算独立)；模块缺失=SESSION_BUDGET_CORE_MISSING不静默降级
+5验收=你R1的7条测试全真实执行
+若设计确认PASS，是否授权进入编码实施（分支内，验收后仍走DEC-010用户拍板合并）？
