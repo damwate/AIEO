@@ -1,0 +1,38 @@
+[
+  {
+    "key": "2926fa2a-48e8-57cb-84e2-54c987eec8df:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[CTX-R5|v5设计复核]\nv5统一权威版已推main @ 292b30a6877f904738b9cc25138fee233a3106b3（design-"
+  },
+  {
+    "key": "2926fa2a-48e8-57cb-84e2-54c987eec8df:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n[CTX-R5设计FAIL+理由]\n\n已按指定完整 SHA 核对 design-r2.md 原文及提交差异，没有使用 HEAD。\n\n仓库："
+  },
+  {
+    "key": "3bc0246a-5434-51ef-8c1e-3bd4f56eef53:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[CTX-R6|三定点复核]\nv6已推main @ cc06550c88c351f4b1c30c77a3fcbba9d743f3d5（design-r2.md "
+  },
+  {
+    "key": "3bc0246a-5434-51ef-8c1e-3bd4f56eef53:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n三项定点复核\n① 并发首写：未通过，P0\n\n§2 第6步正确识别了 R5 的关键问题：\n\n只捕获 SQLITE_CONSTRAINT_PR"
+  },
+  {
+    "key": "b04e1c49-f835-5d4d-8f3e-a3b356f0fd9a:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[CTX-R7|三边界定点复核]\nv7已推main @ 908610539062d85f12e3c8bdbdb6c4feaa4c3f7b。按你R6三组边界修正："
+  },
+  {
+    "key": "b04e1c49-f835-5d4d-8f3e-a3b356f0fd9a:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n[CTX-R7设计 FAIL + 理由]\n\n指定版本已按完整 SHA 固定读取：908610539062d85f12e3c8bdbdb6c"
+  }
+]

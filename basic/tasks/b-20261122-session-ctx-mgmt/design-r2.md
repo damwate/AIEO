@@ -19,8 +19,8 @@
 3. BEGIN IMMEDIATE（取得写事务资格）
 4. 事务内条件更新：INSERT …（新行路径）或 UPDATE ledger SET …, gen=gen+1 WHERE uuid=? AND gen=G
 5. changes==1 ⇒ COMMIT；changes==0 ⇒ ROLLBACK（显式结束本事务）后**重走第 1 步**。语义精确化（R6 P0）：**GEN_CONFLICT=放弃"旧快照写入尝试"，绝不放弃已确认的 turn 计数**——执行顺序=ROLLBACK 结束事务→重读账本最新状态→在最新状态上重新计算新值→开启新事务重试条件更新；**禁止静默丢弃已确认 turn**（丢计数=数据丢失）。重试上限 3 轮，仍冲突=LEDGER_GEN_CONFLICT_EXHAUSTED 如实上抛（调用方 UNCERTAIN），不无限循环
-6. **并发首写竞态（R5 P0-1，R6 补事务边界）**：两进程同读"无该行"→后到者 INSERT 命中 PRIMARY KEY 唯一约束=SQL 异常（**不是 changes==0**）——处理**执行顺序**=①按错误码捕获（node:sqlite SQLITE_CONSTRAINT_PRIMARYKEY，不得把所有 SQLITE_CONSTRAINT 当首写冲突）→②**显式 ROLLBACK 结束当前事务**（SQLite 默认 ABORT 只回滚当前语句不结束事务；不 ROLLBACK 就重读会仍在原写事务内持有写锁）→③确认事务已结束→④重读账本取最新 gen→⑤开启**新事务**走 gen 条件更新→两轮数据都被累计（C8 断言=两 turn 都在账本中，非仅行存在）
-7. **COMMIT 失败清理（R5 P0-2，R6 补连接处置映射）**：COMMIT 可能失败（如 BUSY）且事务仍活动——**状态检查结果必须映射到明确连接处置**：①COMMIT 失败+事务仍活动=显式 ROLLBACK，成功→连接可复用；②ROLLBACK 也失败=**废弃连接（close 不复用）**；③提交结果不确定（COMMIT 报错但实际可能已提交）=**该连接标记不可复用并关闭**，本轮 LEDGER_COMMIT_UNCERTAIN 如实上抛（不计成功、不重放同轮计数），调用方按 UNCERTAIN 处理，**后续调用必须新建连接**，不得误用提交状态不明的连接（C9 覆盖四分支：ROLLBACK 成功/ROLLBACK 失败关闭/结果不确定不复用/后续新连接）
+6. **并发首写竞态（R5 P0-1，R6 补事务边界）**：两进程同读"无该行"→后到者 INSERT 命中 PRIMARY KEY 唯一约束=SQL 异常（**不是 changes==0**）——处理**执行顺序**=①按错误码捕获（node:sqlite SQLITE_CONSTRAINT_PRIMARYKEY，不得把所有 SQLITE_CONSTRAINT 当首写冲突）→②**显式 ROLLBACK 结束当前事务**（SQLite 默认 ABORT 只回滚当前语句不结束事务；不 ROLLBACK 就重读会仍在原写事务内持有写锁）→③确认事务已结束→④重读账本取最新 gen→⑤开启**新事务**走 gen 条件更新→两轮数据都被累计（C8 断言=两 turn 都在账本中，非仅行存在）。**ROLLBACK 本身失败的分支（R7）**：显式 ROLLBACK 报错或无法确认事务已结束=**关闭并废弃该连接**（禁止在该连接上重读/重试——事务态不明连接会重新引入写锁占用与状态污染），本轮按 UNCERTAIN 上抛；C8 增加该分支断言=旧连接不再使用、后续调用使用新连接
+7. **COMMIT 失败清理（R5 P0-2→R7 状态判定精确化）**：COMMIT 报错后用 `DatabaseSync.isTransaction`（对应 sqlite3_get_autocommit()）判定事务状态，**两种状态分别映射连接处置**：①`isTransaction===true`（事务仍活动）=尝试显式 ROLLBACK→成功则连接可复用→ROLLBACK 也失败=关闭废弃连接（同第 6 步分支）；②`isTransaction===false`（事务已结束）=**不能据此判定提交成功**——按提交结果不确定处理：关闭连接、LEDGER_COMMIT_UNCERTAIN 上抛、不计成功、不重放同轮计数；③两种状态下**后续调用都必须新建连接**，不得复用提交状态不明的连接（C9 对两状态分别注入故障并验证连接处置）
 8. **BUSY 等待预算统一（R5 P1-1，R6 修正口径冲突）**：**§1 与本步统一 busy_timeout=500ms**（§1 的 5000ms 已改）；单次 SQL 阻塞上限 500ms，外部重试 3 次（间隔 200ms），全程至多 4 次尝试——**计时口径=含重试间隔与 SQL 执行开销的实际墙上时间，不假设非阻塞耗时为零**；C10 断言=实测墙上时间上限（≈2-3s 内），不只检查配置值
 9. SQLITE_BUSY 预算耗尽=**LEDGER_BUSY_TIMEOUT**（调用方转 UNCERTAIN 拒发，fail-closed）
 
@@ -53,7 +53,7 @@ assess(uuid) 读路径：普通 SELECT（无需事务）；同上错误语义。
 | T6 | 多仓共用 | 同 UUID 同行共享；异 UUID 行隔离无串用 |
 | C8 | 两进程并发首次写同 UUID | 唯一约束捕获→显式 ROLLBACK→重读→新事务 gen 更新；**断言两 turn 都在账本** |
 | C9 | COMMIT 失败四分支 | ROLLBACK 成功可复用/ROLLBACK 失败废弃连接/结果不确定连接关闭不复用/后续调用新连接 |
-| C10 | BUSY 等待预算 | 实测墙上时间上限（含间隔与开销，≈2-3s 内），耗尽=LEDGER_BUSY_TIMEOUT |
+| C10 | BUSY 等待预算 | **硬上限 T_wall ≤ 3000ms**（计时起点=首次 BEGIN IMMEDIATE/首条受阻 SQL 调用，终点=LEDGER_BUSY_TIMEOUT 抛出；受控锁竞争下实测，超限即 FAIL），耗尽=LEDGER_BUSY_TIMEOUT |
 | T7 | WARN 后新会话 | 自包含简报恢复审查上下文 |
 | C1 | 两独立进程并发更新同 UUID | 累计值不丢失 |
 | C2 | 写事务被占用 | busy 等待超时=LEDGER_BUSY_TIMEOUT 转 UNCERTAIN |

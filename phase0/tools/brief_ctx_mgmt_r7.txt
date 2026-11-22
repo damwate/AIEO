@@ -1,0 +1,2 @@
+[CTX-R7|三边界定点复核]
+v7已推main @ 908610539062d85f12e3c8bdbdb6c4feaa4c3f7b。按你R6三组边界修正：①首写冲突执行序=捕获SQLITE_CONSTRAINT_PRIMARYKEY→显式ROLLBACK结束当前事务(SQLite默认ABORT只回滚语句不结束事务)→确认事务结束→重读最新gen→新事务条件更新；C8断言两turn都在账本。②GEN_CONFLICT语义=放弃旧快照写入尝试,绝不放弃已确认turn——ROLLBACK→重读→最新状态重算→新事务重试,禁静默丢计数,重试3轮仍冲突LEDGER_GEN_CONFLICT_EXHAUSTED上抛UNCERTAIN。③COMMIT失败连接处置映射=仍活动ROLLBACK成功可复用/回滚失败close废弃/结果不确定标记不可复用并关闭+LEDGER_COMMIT_UNCERTAIN(不计成功不重放同轮)/后续调用必须新连接,C9覆盖四分支；busy_timeout §1§2统一500ms,计时口径含重试间隔与SQL开销实测墙上时间,C10断言实测上限不只查配置值。请给[CTX-R7设计PASS+编码授权]或[FAIL+理由]。
