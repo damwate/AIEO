@@ -1,0 +1,25 @@
+{
+  "at": "2026-11-22T10:15:46.363Z",
+  "outcome": "failure_created_pages_closed",
+  "before": [
+    {
+      "id": "178C9AC21B9D24727E3B68CD9ACB4FAA",
+      "url": "https://chatgpt.com/"
+    }
+  ],
+  "exit_before_disposal": [
+    {
+      "id": "178C9AC21B9D24727E3B68CD9ACB4FAA",
+      "url": "https://chatgpt.com/c/6b02a805-88f0-83ec-8fa3-ff4f30e21f65"
+    }
+  ],
+  "exit_after_disposal": [
+    {
+      "id": "178C9AC21B9D24727E3B68CD9ACB4FAA",
+      "url": "https://chatgpt.com/c/6b02a805-88f0-83ec-8fa3-ff4f30e21f65"
+    }
+  ],
+  "created_pages": 0,
+  "disposal": "发送前失败：仅关闭本次自建页；既有页零触碰（exit_before/exit_after 对照=值守页零关闭证明）",
+  "error": "ENOENT: no such file or directory, stat 'D:\\AIEO\\basic\\tasks\\b-20261122-session-ctx-mgmt\\evidence\\session-budget-code.zip'"
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "key": "f843d1e5-c695-5895-93ea-23cca8c1f7ff:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[CTX-CODE-R3|四项定点复核|b-20261122-session-ctx-mgmt]\nR2四项全整改，附件=更新zip(v3)。AIEO：fix/s"
+  },
+  {
+    "key": "f843d1e5-c695-5895-93ea-23cca8c1f7ff:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nCTX-CODE-R3 编码验收：FAIL\nFAIL｜暂不授权合并、部署或生产启用\n\n复核对象\n\nAIEO：damwate/AIEO\n\n指"
+  },
+  {
+    "key": "a084f33b-b592-5479-a558-c96ca1c80609:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[CTX-CODE-R4|三项定点复核|b-20261122-session-ctx-mgmt]\nR3三项全整改，附件=更新zip(v4,23用例)。AIEO："
+  },
+  {
+    "key": "a084f33b-b592-5479-a558-c96ca1c80609:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n五、R4 整改结果汇总\n\nR3 遗留项\n\n\t\n\n结果\n\n\n\n\nP0：持久 UNCERTAIN 标记 API、恢复审计\n\n\t\n\n核心实现通过"
+  },
+  {
+    "key": "a9103c2d-fef5-578f-aab4-7704a0b637b4:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[CTX-CODE-R5|三项定点复核|b-20261122-session-ctx-mgmt]\nR4三项全整改，附件=更新zip(v5,23用例)。AIEO："
+  },
+  {
+    "key": "a9103c2d-fef5-578f-aab4-7704a0b637b4:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nCTX-CODE-R5 编码验收：FAIL + 逐条\n\n三项整改的代码实现基本符合处方，23/23 测试实测通过；但当前提交 SHA 与 "
+  }
+]

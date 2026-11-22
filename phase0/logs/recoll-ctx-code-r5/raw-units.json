@@ -1,0 +1,110 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-22T10:23:06.627Z",
+  "user_unit_key": "a9103c2d-fef5-578f-aab4-7704a0b637b4:0:user",
+  "start_key_resolved": "a9103c2d-fef5-578f-aab4-7704a0b637b4:0:user",
+  "start_resolved_by_marker": false,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "a9103c2d-fef5-578f-aab4-7704a0b637b4:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "6742b523-b3e2-4c43-bad2-e5dbd7bd5dd5",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "a9103c2d-fef5-578f-aab4-7704a0b637b4:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "a084f33b-b592-5479-a558-c96ca1c80609:0:user",
+          "a084f33b-b592-5479-a558-c96ca1c80609:2:assistant",
+          "a9103c2d-fef5-578f-aab4-7704a0b637b4:0:user",
+          "a9103c2d-fef5-578f-aab4-7704a0b637b4:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "1e94f2d0787552e481654dbb975715f0a23f971ce33261af4452eec7f49a557e",
+          "a46a3b3038112c3332a1002a77f0844bebf67870ca096657a62e1acda1d07667",
+          "213397bd700f58539fd28e5bd1ca872e73dcf1b9f50c6d06fb90f4cf63ed91e5",
+          "5a0774d1d683bc35abd95cc903c0aeee2763563a22f9c26e03357efe556cc3d4"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "a084f33b-b592-5479-a558-c96ca1c80609:0:user",
+          "a084f33b-b592-5479-a558-c96ca1c80609:2:assistant",
+          "a9103c2d-fef5-578f-aab4-7704a0b637b4:0:user",
+          "a9103c2d-fef5-578f-aab4-7704a0b637b4:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "1e94f2d0787552e481654dbb975715f0a23f971ce33261af4452eec7f49a557e",
+          "a46a3b3038112c3332a1002a77f0844bebf67870ca096657a62e1acda1d07667",
+          "213397bd700f58539fd28e5bd1ca872e73dcf1b9f50c6d06fb90f4cf63ed91e5",
+          "5a0774d1d683bc35abd95cc903c0aeee2763563a22f9c26e03357efe556cc3d4"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "a084f33b-b592-5479-a558-c96ca1c80609:0:user",
+          "a084f33b-b592-5479-a558-c96ca1c80609:2:assistant",
+          "a9103c2d-fef5-578f-aab4-7704a0b637b4:0:user",
+          "a9103c2d-fef5-578f-aab4-7704a0b637b4:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "a9103c2d-fef5-578f-aab4-7704a0b637b4:0:user",
+      "a9103c2d-fef5-578f-aab4-7704a0b637b4:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "a084f33b-b592-5479-a558-c96ca1c80609:0:user",
+          "a084f33b-b592-5479-a558-c96ca1c80609:2:assistant",
+          "a9103c2d-fef5-578f-aab4-7704a0b637b4:0:user",
+          "a9103c2d-fef5-578f-aab4-7704a0b637b4:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "a084f33b-b592-5479-a558-c96ca1c80609:0:user",
+          "a084f33b-b592-5479-a558-c96ca1c80609:2:assistant",
+          "a9103c2d-fef5-578f-aab4-7704a0b637b4:0:user",
+          "a9103c2d-fef5-578f-aab4-7704a0b637b4:2:assistant"
+        ],
+        "overlap_keys": [
+          "a084f33b-b592-5479-a558-c96ca1c80609:0:user",
+          "a084f33b-b592-5479-a558-c96ca1c80609:2:assistant",
+          "a9103c2d-fef5-578f-aab4-7704a0b637b4:0:user",
+          "a9103c2d-fef5-578f-aab4-7704a0b637b4:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "a9103c2d-fef5-578f-aab4-7704a0b637b4:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nCTX-CODE-R5 编码验收：FAIL + 逐条\n\n三项整改的代码实现基本符合处方，23/23 测试实测通过；但当前提交 SHA 与 v5 附件之间缺少可验证的 Git 绑定，且关键派单故障路径没有端到端测试。因此本轮不能给出编码验收 PASS。\n\n一、三项定点复核\n\nR4 遗留项\n\n\t\n\n复核结果\n\n\t\n\n依据\n\n\n\n\nP0：UNCERTAIN 预检拒发\n\n\t\n\n代码通过\n\n\t\n\ngpt_dispatch.mjs 已显式判断 verdict.state === \"UNCERTAIN\" 并抛出 SESSION_BUDGET_UNCERTAIN；判断位于 HARD 和 allowNearLimit 处理之前，不会被 --allow-near-limit 绕过\n\n\n\n\nP0：标记写入失败中止\n\n\t\n\n代码通过\n\n\t\n\ninput 钩子 markUncertain() 失败后上抛 SESSION_BUDGET_MARK_FAILED；confirmSend() 等待该钩子，异常会传出 sendAndCollect()，进入派单失败处理。out 钩子位于证据落盘及校验之后，标记失败上抛时回复证据已先落盘\n\n\n\n\nP1：迁移结构复验\n\n\t\n\n实现通过\n\n\t\n\nensureSchema() 逐列检查类型，非 uuid 列检查 NOT NULL，uuid 检查 pk === 1；不匹配时抛出迁移错误\n\n补充：out 记账失败时，即使 markUncertain() 成功，代码也会中止派单，这是保守的 fail-closed 行为。不过此时错误码仍写成 SESSION_BUDGET_MARK_FAILED，实际含义是“out 记账失败且已标记”，错误码语义不够准确，建议后续修正。\n\n二、实测结果\n23/23 PASS\n\n实际运行环境：Node.js v22.16.0。\n\n命令：node --test test-session-budget.mjs。\n\n退出码：0。\n\n4 个测试套件、23 个测试全部通过，耗时约 8.95 秒。\n\nC1–C10、迁移、UNCERTAIN 持久标记及恢复审计等测试均通过。\n\n三、阻断验收的事项\n\nP1-1：v5 附件没有绑定到本轮 AIEO commit。\n\n这是本轮的主要阻断项：\n\n目标 commit：784542841874333b9fd8a2f8f662322bc5b5fb88。\n\n该 commit 的文件变更记录显示：旧归档 basic/tasks/b-20261122-session-ctx-mgmt/evidence/session-budget-code.zip 被删除。\n\n没有看到本轮 v5 ZIP 作为新增文件进入该 commit。\n\n当前附件实测 Git blob SHA：b507babc3ac88f2887ff77435ba72a0e788009c8。\n\n被删除的旧 ZIP blob SHA：8257650f2388349a2ab8648266b95f4435f327f3。\n\n因此，附件中的 session-budget.mjs 和 test-session-budget.mjs 虽然可以独立运行并通过测试，但目前无法证明它们就是该 AIEO commit 所绑定的 agent-kit 代码版本。不能把“附件测试通过”直接等同于“目标提交的完整代码验收通过”。\n\nP1-2：三项整改缺少派单端到端故障注入。\n\nv5 的 UNCERTAIN 测试仍主要直接调用 markUncertain()，并未实际驱动 gpt_dispatch 验证：\n\nUNCERTAIN 状态下，带 --allow-near-limit 的真实派单仍然拒发。\n\ninput 记账失败且标记写入失败时，confirmSend() 的异常确实阻止后续流程。\n\nout 记账失败且标记写入失败时，回复证据已落盘，派单以失败状态退出。\n\n代码路径静态复核符合预期，但这几条关键保证尚未由端到端测试锁定。\n\n四、最终裁定\n\n[FAIL + 逐条]\n\nP0 预检拒发：代码通过。\n\nP0 标记失败中止：代码通过。\n\nP1 迁移类型及约束复验：实现通过。\n\n自动化测试：23/23 实测通过。\n\nP1-1 提交与 v5 附件绑定：未通过，阻断验收。\n\nP1-2 关键派单故障路径端到端测试：缺失。\n\n不授权本轮编码验收 PASS，不据此授权合并、部署或生产启用。\n\n下一轮只需补齐 v5 代码的可追溯提交绑定，并增加上述三条派单故障路径测试，不需要推翻现有账本架构或重做全部 23 项测试。",
+      "text_sha256": "5a0774d1d683bc35abd95cc903c0aeee2763563a22f9c26e03357efe556cc3d4",
+      "size_bytes": 3621,
+      "assistant_uuid": "6742b523-b3e2-4c43-bad2-e5dbd7bd5dd5"
+    }
+  ]
+}

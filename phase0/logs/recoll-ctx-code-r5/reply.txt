@@ -1,0 +1,120 @@
+ChatGPT 说：
+CTX-CODE-R5 编码验收：FAIL + 逐条
+
+三项整改的代码实现基本符合处方，23/23 测试实测通过；但当前提交 SHA 与 v5 附件之间缺少可验证的 Git 绑定，且关键派单故障路径没有端到端测试。因此本轮不能给出编码验收 PASS。
+
+一、三项定点复核
+
+R4 遗留项
+
+	
+
+复核结果
+
+	
+
+依据
+
+
+
+
+P0：UNCERTAIN 预检拒发
+
+	
+
+代码通过
+
+	
+
+gpt_dispatch.mjs 已显式判断 verdict.state === "UNCERTAIN" 并抛出 SESSION_BUDGET_UNCERTAIN；判断位于 HARD 和 allowNearLimit 处理之前，不会被 --allow-near-limit 绕过
+
+
+
+
+P0：标记写入失败中止
+
+	
+
+代码通过
+
+	
+
+input 钩子 markUncertain() 失败后上抛 SESSION_BUDGET_MARK_FAILED；confirmSend() 等待该钩子，异常会传出 sendAndCollect()，进入派单失败处理。out 钩子位于证据落盘及校验之后，标记失败上抛时回复证据已先落盘
+
+
+
+
+P1：迁移结构复验
+
+	
+
+实现通过
+
+	
+
+ensureSchema() 逐列检查类型，非 uuid 列检查 NOT NULL，uuid 检查 pk === 1；不匹配时抛出迁移错误
+
+补充：out 记账失败时，即使 markUncertain() 成功，代码也会中止派单，这是保守的 fail-closed 行为。不过此时错误码仍写成 SESSION_BUDGET_MARK_FAILED，实际含义是“out 记账失败且已标记”，错误码语义不够准确，建议后续修正。
+
+二、实测结果
+23/23 PASS
+
+实际运行环境：Node.js v22.16.0。
+
+命令：node --test test-session-budget.mjs。
+
+退出码：0。
+
+4 个测试套件、23 个测试全部通过，耗时约 8.95 秒。
+
+C1–C10、迁移、UNCERTAIN 持久标记及恢复审计等测试均通过。
+
+三、阻断验收的事项
+
+P1-1：v5 附件没有绑定到本轮 AIEO commit。
+
+这是本轮的主要阻断项：
+
+目标 commit：784542841874333b9fd8a2f8f662322bc5b5fb88。
+
+该 commit 的文件变更记录显示：旧归档 basic/tasks/b-20261122-session-ctx-mgmt/evidence/session-budget-code.zip 被删除。
+
+没有看到本轮 v5 ZIP 作为新增文件进入该 commit。
+
+当前附件实测 Git blob SHA：b507babc3ac88f2887ff77435ba72a0e788009c8。
+
+被删除的旧 ZIP blob SHA：8257650f2388349a2ab8648266b95f4435f327f3。
+
+因此，附件中的 session-budget.mjs 和 test-session-budget.mjs 虽然可以独立运行并通过测试，但目前无法证明它们就是该 AIEO commit 所绑定的 agent-kit 代码版本。不能把“附件测试通过”直接等同于“目标提交的完整代码验收通过”。
+
+P1-2：三项整改缺少派单端到端故障注入。
+
+v5 的 UNCERTAIN 测试仍主要直接调用 markUncertain()，并未实际驱动 gpt_dispatch 验证：
+
+UNCERTAIN 状态下，带 --allow-near-limit 的真实派单仍然拒发。
+
+input 记账失败且标记写入失败时，confirmSend() 的异常确实阻止后续流程。
+
+out 记账失败且标记写入失败时，回复证据已落盘，派单以失败状态退出。
+
+代码路径静态复核符合预期，但这几条关键保证尚未由端到端测试锁定。
+
+四、最终裁定
+
+[FAIL + 逐条]
+
+P0 预检拒发：代码通过。
+
+P0 标记失败中止：代码通过。
+
+P1 迁移类型及约束复验：实现通过。
+
+自动化测试：23/23 实测通过。
+
+P1-1 提交与 v5 附件绑定：未通过，阻断验收。
+
+P1-2 关键派单故障路径端到端测试：缺失。
+
+不授权本轮编码验收 PASS，不据此授权合并、部署或生产启用。
+
+下一轮只需补齐 v5 代码的可追溯提交绑定，并增加上述三条派单故障路径测试，不需要推翻现有账本架构或重做全部 23 项测试。

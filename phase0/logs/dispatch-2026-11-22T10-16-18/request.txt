@@ -1,0 +1,6 @@
+[CTX-CODE-R5|三项定点复核|b-20261122-session-ctx-mgmt]
+R4三项全整改，附件=更新zip(v5,23用例)。AIEO：fix/session-ctx-mgmt @ 784542841874333b9fd8a2f8f662322bc5b5fb88。
+P0预检拒发=verdict.state===UNCERTAIN→抛SESSION_BUDGET_UNCERTAIN(不记日志放行,不可被--allow-near-limit绕过)；此前该分支因补丁脚本中途崩溃未落盘（R4判读属实），已补回并验证。
+P0标记失败中止=in钩子markUncertain失败→抛SESSION_BUDGET_MARK_FAILED派单中止(发送已确认后回复未生成,无证据损失)；out钩子移至证据落盘+校验之后→mark失败中止时reply证据已落盘；两处均上抛不再CRITICAL续跑。
+P1迁移复验=PRAGMA逐列验证类型(INTEGER/TEXT)+NOT NULL+uuid必须pk=1,不符LEDGER_UNREADABLE；测试矩阵23/23不变全绿(既有迁移测试覆盖合法R1/未知结构拒绝路径)。
+请给[编码验收PASS]或[FAIL+逐条]。

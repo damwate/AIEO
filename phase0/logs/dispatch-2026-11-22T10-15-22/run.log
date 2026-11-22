@@ -1,0 +1,12 @@
+[2026-11-22T10:15:22.449Z] 证据目录: D:\AIEO\phase0\logs\dispatch-2026-11-22T10-15-22
+[2026-11-22T10:15:23.267Z] 会话锁已获取 pid=3260 instance=default lock=gpt-session.lockfile
+[2026-11-22T10:15:23.269Z] === GPT 派单（已有会话，消息 919 字节）===
+[2026-11-22T10:15:23.271Z] [instance] 实例域就绪: instance=default port=9222 profile=gpt-poc lock=gpt-session.lockfile
+[2026-11-22T10:15:24.934Z] [instance] 清理本实例 Chrome：own=0 foreign(不动)=15 remaining=0
+[2026-11-22T10:15:27.714Z] Chrome 已启动 pid=29340 port=9222
+[2026-11-22T10:15:29.671Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 0 个
+[2026-11-22T10:15:29.672Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-22T10:15:38.536Z] 会话就绪: https://chatgpt.com/c/6b02a805-88f0-83ec-8fa3-ff4f30e21f65
+[2026-11-22T10:15:44.805Z] [dispatch] 基线尾部: {"role":"assistant","key":"a084f33b-b592-5479-a558-c96ca1c80609:2:assistant","assistantUuid":"0d2ef533-8c63-4bc1-a053-9733ea79ee20"}
+[2026-11-22T10:15:46.345Z] 会话锁已释放
+[2026-11-22T10:15:46.346Z] 致命错误: ENOENT: no such file or directory, stat 'D:\AIEO\basic\tasks\b-20261122-session-ctx-mgmt\evidence\session-budget-code.zip'
