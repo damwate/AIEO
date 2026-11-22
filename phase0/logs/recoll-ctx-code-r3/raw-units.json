@@ -1,0 +1,94 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-22T09:59:43.780Z",
+  "user_unit_key": "f843d1e5-c695-5895-93ea-23cca8c1f7ff:0:user",
+  "start_key_resolved": "f843d1e5-c695-5895-93ea-23cca8c1f7ff:0:user",
+  "start_resolved_by_marker": false,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "f843d1e5-c695-5895-93ea-23cca8c1f7ff:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "9879589f-69b5-4545-af9d-b79c440c251a",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "f843d1e5-c695-5895-93ea-23cca8c1f7ff:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "f843d1e5-c695-5895-93ea-23cca8c1f7ff:0:user",
+          "f843d1e5-c695-5895-93ea-23cca8c1f7ff:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "772370e5cd97b08858f768048fed1c1938ca219cba682e3ed644051196ba2cff",
+          "b6c4813d818dfbf344796b1389036c5f09f65973ddeca5f0169f2279998fbc34"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "f843d1e5-c695-5895-93ea-23cca8c1f7ff:0:user",
+          "f843d1e5-c695-5895-93ea-23cca8c1f7ff:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "772370e5cd97b08858f768048fed1c1938ca219cba682e3ed644051196ba2cff",
+          "b6c4813d818dfbf344796b1389036c5f09f65973ddeca5f0169f2279998fbc34"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "f843d1e5-c695-5895-93ea-23cca8c1f7ff:0:user",
+          "f843d1e5-c695-5895-93ea-23cca8c1f7ff:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "f843d1e5-c695-5895-93ea-23cca8c1f7ff:0:user",
+      "f843d1e5-c695-5895-93ea-23cca8c1f7ff:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "f843d1e5-c695-5895-93ea-23cca8c1f7ff:0:user",
+          "f843d1e5-c695-5895-93ea-23cca8c1f7ff:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "f843d1e5-c695-5895-93ea-23cca8c1f7ff:0:user",
+          "f843d1e5-c695-5895-93ea-23cca8c1f7ff:2:assistant"
+        ],
+        "overlap_keys": [
+          "f843d1e5-c695-5895-93ea-23cca8c1f7ff:0:user",
+          "f843d1e5-c695-5895-93ea-23cca8c1f7ff:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "f843d1e5-c695-5895-93ea-23cca8c1f7ff:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nCTX-CODE-R3 编码验收：FAIL\n\n(FAIL｜暂不授权合并、部署或生产启用)\n\n复核对象\n\nAIEO：`damwate/AIEO`\n指定完整 SHA：`d6a2b50b58ca955985d9b84053fe1a4105255aae`\n附件：`session-budget-code(2).zip`\n附件 SHA-256：`e5189fbb4de02f445ee7ef40fde4125eacfdc258b6f3bf9e36951c7c9211e15c`\nZIP 在该 AIEO commit 中的 Git blob SHA：`9919229514e45e787129834479cf9a120a8325c0`，与附件计算值一致，确认审查的是该提交所绑定的代码包。\n\n实际执行：19/19 PASS\n\n我在 Node v22.16.0 下重新运行了附件中的 node --test test-session-budget.mjs，退出码为 0，19 项全部通过。测试结果属实，但仍发现一个未闭环的 P0 接入问题，以及一个并发测试门禁缺口。\n\n一、R2 四项整改复核\n项目\t复核结果\t证据与判断\nP0-1 schema 迁移\t(通过)\tensureSchema() 检查列并补 open_turn_bytes；迁移测试保留旧数据，3轮/600B 后新增一轮为4轮/620B。\nP1-1 totalBytes\t(通过)\t完成阶段只累加 outBytes；T2 实际断言 turns=1、`maxTurnBytes=10340`、`totalBytes=10340`。\nP1-2 C6 就绪信号\t(通过)\t子进程在持有事务写锁、执行 UPDATE 后写 barrier.hang.ready；父进程等待信号，超时直接断言失败；C6 已改为 async。\nP1-3 C8 唯一约束证据\t(部分通过)\tC8b 确定性注入确实命中唯一约束分支，事件、重试后 turns=2 和 totalBytes+1400 均有断言；但 C8 公共屏障仍缺少“两个 worker 都 ready”的超时失败断言。\nP1-3 补充缺口\n\nspawnBarrierPair() 第45–49行最多等待 30 秒，但等待结束后无论是否两个 ready 文件都存在，都会写 .go 放行。它没有在超时后 assert 两个 worker 均已就绪。\n\n这意味着 C1/C8 的测试可能在未确认双方都抵达屏障时继续执行。C8b 已经补足了唯一约束路径的确定性分支证明，但不能替代真并发测试自身的启动屏障完整性。\n\n处方： 等待结束后必须断言 nameA.ready 和 nameB.ready 均存在；未齐全立即失败，禁止写 .go。\n\n二、P0 阻断：记账失败没有形成可持续的 UNCERTAIN 状态\n\n文件： phase0/tools/gpt_dispatch.mjs\n复核依据： 指定 SHA 下该文件的实际内容，blob SHA 6273763e19a5ff18e3397bddcde2f1d6069ff66b。\n\n发送确认后的 recordInOnce()：\n\n调用 recordTurn() 记 input；\n成功才设置 inBytesRecorded = true；\n失败时只写 WARN 日志，继续派单流程。\n\n回复采集完成后的 output 记账也采用相同处理：`recordTurn(... completeOpenTurn: true)` 失败后只记录 WARN，不把当前会话转入持久的 UNCERTAIN 状态。\n\n这与设计约束不一致：设计明确要求 BUSY 超时等记账异常由调用方转 UNCERTAIN、fail-closed；UNCERTAIN 不得自动放行。\n\n具体风险场景：\n\n发送已确认，input 记账因 LEDGER_BUSY_TIMEOUT 失败。\n当前代码只告警，派单仍继续。\n下一次预检时数据库已恢复，`assessLedger()` 可以正常读取旧账本。\n旧账本没有本轮 input，预检可能仍返回 NORMAL 并允许继续发送。\n\n即使数据库没有损坏、下一次读取完全成功，账本也可能是陈旧但看似正常的。因此“下次预检按 UNCERTAIN fail-closed”的日志说明并没有对应的状态机制来保证。\n\noutput 记账失败也有类似问题：本轮 output 未计入，`open_turn_bytes` 可能遗留；而 assessLedger() 的预算判定只看 total_bytes，不会因为未完成轮次自动转 UNCERTAIN。\n\n整改处方：\n\n发送确认后的 input 记账失败，必须使该会话进入可被后续预检读取的持久 UNCERTAIN 状态；不能只靠日志。\nCOMPLETED 阶段 output 记账失败，同样必须保留 UNCERTAIN，不得让后续预检把旧累计值当成完整账本。\n预检遇到 UNCERTAIN 必须拒发，直到有明确、可审计的恢复/核对流程解除。\n增加故障注入测试：分别模拟 input 记账失败、output 记账失败；随后恢复数据库，再执行预检，必须仍拒发，不能回到 NORMAL。\n\n这是发送已经发生、账本却可能漏记，后续仍自动放行的问题，属于 P0。\n\n三、P1 补充：迁移只验证列名，没有验证 schema 结构\n\nsession-budget.mjs 第58–84行：\n\nREQUIRED_COLUMNS 只保存列名。\n对任何缺失列都统一执行 ALTER TABLE ... ADD COLUMN ... INTEGER NOT NULL DEFAULT 0。\n迁移后仍然只验证列名存在，没有验证列类型、`uuid` 主键约束等结构。\n\n对本轮测试的 R1 schema，缺少的只有 open_turn_bytes，所以迁移测试通过。但如果遇到其他不兼容旧表，例如缺少 uuid，当前逻辑可能添加一个普通 INTEGER 列，然后因列名齐全而继续使用；它并没有恢复 uuid PRIMARY KEY 约束。\n\n处方： 将迁移限定为已知 R1 → R2 的精确 schema 变更，只允许补 open_turn_bytes；迁移前验证其余旧列和主键结构，迁移后复验类型及约束。遇到未知结构必须 LEDGER_UNREADABLE，不能用通用 INTEGER 列补齐后继续运行。\n\n四、最终裁定\n项目\t结果\nR2 四项整改\t3项通过，C8屏障部分通过\n19项自动化测试\t19/19 PASS\nP0：记账失败未持久化 UNCERTAIN\t阻断\nP1：并发屏障缺少 ready 超时断言\t待整改\nP1：schema 迁移未验证结构约束\t待整改\n\n最终：`[FAIL + 逐条]`。\n\n当前不授权合并、部署或生产启用。R2 四项的主体实现已经有明显进展，但不能用 19/19 测试通过掩盖接入层的 P0 数据完整性缺口。\n\n下一轮建议只处理以上三项，尤其先闭环“记账失败 → 持久 UNCERTAIN → 后续预检拒发”这条链。修复后提交新的完整 SHA、更新 ZIP 和故障注入日志，再做定点复验。\n\n重新加载回复",
+      "text_sha256": "b6c4813d818dfbf344796b1389036c5f09f65973ddeca5f0169f2279998fbc34",
+      "size_bytes": 5765,
+      "assistant_uuid": "9879589f-69b5-4545-af9d-b79c440c251a"
+    }
+  ]
+}

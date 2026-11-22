@@ -1,0 +1,38 @@
+[
+  {
+    "key": "6811d369-7fad-5af7-84ca-c1253d7e41e5:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[CTX-CODE|会话预算编码验收|b-20261122-session-ctx-mgmt]\n设计CTX-R9已PASS授权编码。代码验收，附件=sessio"
+  },
+  {
+    "key": "6811d369-7fad-5af7-84ca-c1253d7e41e5:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\n(当前不能验收 PASS)\n\n先给出附件静态审查中已能确认的阻断项：\n\nC9 缺失：测试文件没有 COMMIT 故障注入，也没有分别覆盖"
+  },
+  {
+    "key": "53dfdd55-6ef0-59e0-9794-5adcd1ee4454:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[CTX-CODE-R2|编码整改复核|b-20261122-session-ctx-mgmt]\nR1七项全整改，附件=更新zip(session-budget"
+  },
+  {
+    "key": "53dfdd55-6ef0-59e0-9794-5adcd1ee4454:3:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\n附件 v2 我已实际运行：17/17 测试通过。但测试全绿不代表测试断言本身符合验收语义；我发现一处账本累计的确定性错误，以及 C6/C"
+  },
+  {
+    "key": "f843d1e5-c695-5895-93ea-23cca8c1f7ff:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[CTX-CODE-R3|四项定点复核|b-20261122-session-ctx-mgmt]\nR2四项全整改，附件=更新zip(v3)。AIEO：fix/s"
+  },
+  {
+    "key": "f843d1e5-c695-5895-93ea-23cca8c1f7ff:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nCTX-CODE-R3 编码验收：FAIL\n\n(FAIL｜暂不授权合并、部署或生产启用)\n\n复核对象\n\nAIEO：`damwate/AIE"
+  }
+]

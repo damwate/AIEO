@@ -580,7 +580,9 @@ async function mainLocked() {
       inBytesRecorded = true;
       log(`[ctx-budget] turn+in_bytes=${Buffer.byteLength(message, "utf8")}B → ${confirmedSessionId}`);
     } catch (e) {
-      log(`[ctx-budget] WARN: 记账失败（不影响本次派单证据，下次预检按 UNCERTAIN fail-closed）: ${e.message}`);
+      // 记账失败=持久 UNCERTAIN（R3 P0）：标记落盘，预检读到即拒发；解除仅走显式恢复流程
+      try { requireSessionBudget().markUncertain(confirmedSessionId, `in_record_failed: ${e.message}`); log(`[ctx-budget] UNCERTAIN 标记已写入 ${confirmedSessionId}`); }
+      catch (e2) { log(`[ctx-budget] CRITICAL: 记账失败且 UNCERTAIN 标记写入失败，需人工核查: ${e.message} / ${e2.message}`); }
     }
   };
   const confirmSend = async (userUnitKey) => {
@@ -613,7 +615,9 @@ async function mainLocked() {
         requireSessionBudget().recordTurn(collectUuid, { inBytes: 0, outBytes: Buffer.byteLength(snapshot.reply, "utf8") }, { completeOpenTurn: true });
         log(`[ctx-budget] turn+out_bytes=${Buffer.byteLength(snapshot.reply, "utf8")}B → ${collectUuid}`);
       } catch (e) {
-        log(`[ctx-budget] WARN: 记账失败（不影响本次派单证据，下次预检按 UNCERTAIN fail-closed）: ${e.message}`);
+        // out 记账失败同样持久 UNCERTAIN（R3 P0）：open_turn 可能遗留，旧累计不可当完整账本
+        try { requireSessionBudget().markUncertain(collectUuid, `out_record_failed: ${e.message}`); log(`[ctx-budget] UNCERTAIN 标记已写入 ${collectUuid}`); }
+        catch (e2) { log(`[ctx-budget] CRITICAL: 记账失败且 UNCERTAIN 标记写入失败，需人工核查: ${e.message} / ${e2.message}`); }
       }
     }
   }

@@ -1,0 +1,8 @@
+[CTX-CODE-R3|四项定点复核|b-20261122-session-ctx-mgmt]
+R2四项全整改，附件=更新zip(v3)。AIEO：fix/session-ctx-mgmt @ d6a2b50b58ca955985d9b84053fe1a4105255aae。
+P0-1=schema幂等迁移：ensureSchema建表后PRAGMA table_info核对必需列,缺列ALTER ADD,再验,失败LEDGER_UNREADABLE不续用旧schema；新增迁移测试(R1旧库+3轮数据→R2加载→历史保留→新轮4轮620B)。
+P1-1=complete阶段totalBytes只加outBytes；T2断言改turns=1/maxTurn=10340/total=10340。
+P1-2=C6改文件就绪信号：子进程UPDATE后写barrier.hang.ready,父等信号超时FAIL；C6改async。
+P1-3=C8两worker收集onEvent写.events文件(断言仅已知类型)+新增C8b确定性注入：代理连接首次SELECT返回null强制INSERT→唯一约束→事件first_write_constraint_retry→重读→gen更新成功(断言事件+turns=2+total=前值+1400)。
+另：语句阶段ROLLBACK成功=同连接复用(v6),失败=废弃(v8)——修正R2引入的无条件废弃矛盾。测试19/19全绿(+C8b+迁移)。
+请给[编码验收PASS]或[FAIL+逐条]。
