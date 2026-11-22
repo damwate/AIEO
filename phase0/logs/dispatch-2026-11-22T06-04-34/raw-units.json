@@ -1,0 +1,94 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-22T06:08:44.681Z",
+  "user_unit_key": "6c3785dc-a8db-5fc4-b8d9-66ef6f5fdddd:0:user",
+  "start_key_resolved": "6c3785dc-a8db-5fc4-b8d9-66ef6f5fdddd:0:user",
+  "start_resolved_by_marker": true,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "6c3785dc-a8db-5fc4-b8d9-66ef6f5fdddd:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "3bdfdef1-cc75-43f0-893a-5e0dc3022d34",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "6c3785dc-a8db-5fc4-b8d9-66ef6f5fdddd:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "6c3785dc-a8db-5fc4-b8d9-66ef6f5fdddd:0:user",
+          "6c3785dc-a8db-5fc4-b8d9-66ef6f5fdddd:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "1f400978333d56b7850d2cdf5d9e2d8c56406d70ba2e00d66e2fa6206c9e8f93",
+          "3932741c6fbafb5c426ffeaabc53b2231c2a8f796fa4d78eb8e642d9502931a9"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "6c3785dc-a8db-5fc4-b8d9-66ef6f5fdddd:0:user",
+          "6c3785dc-a8db-5fc4-b8d9-66ef6f5fdddd:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "1f400978333d56b7850d2cdf5d9e2d8c56406d70ba2e00d66e2fa6206c9e8f93",
+          "3932741c6fbafb5c426ffeaabc53b2231c2a8f796fa4d78eb8e642d9502931a9"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "6c3785dc-a8db-5fc4-b8d9-66ef6f5fdddd:0:user",
+          "6c3785dc-a8db-5fc4-b8d9-66ef6f5fdddd:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "6c3785dc-a8db-5fc4-b8d9-66ef6f5fdddd:0:user",
+      "6c3785dc-a8db-5fc4-b8d9-66ef6f5fdddd:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "6c3785dc-a8db-5fc4-b8d9-66ef6f5fdddd:0:user",
+          "6c3785dc-a8db-5fc4-b8d9-66ef6f5fdddd:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "6c3785dc-a8db-5fc4-b8d9-66ef6f5fdddd:0:user",
+          "6c3785dc-a8db-5fc4-b8d9-66ef6f5fdddd:2:assistant"
+        ],
+        "overlap_keys": [
+          "6c3785dc-a8db-5fc4-b8d9-66ef6f5fdddd:0:user",
+          "6c3785dc-a8db-5fc4-b8d9-66ef6f5fdddd:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "6c3785dc-a8db-5fc4-b8d9-66ef6f5fdddd:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nGDC 缓存推广 R1｜架构裁定\n\n总体倾向：同意以现有资产版本化缓存蓝本为基础合流，不建议重做；但不批准一次性把三个 P0 混成一个发布。\n\n这里需要区分三个目标：\n\n减少重复下载：资产版本化与 HTTP 缓存。\n\n减少结果图重复生成、重复传输：AI 结果图 immutable。\n\n解决公开分享页缓存策略过度保守：按资源类型解除 no-store。\n\n它们有依赖关系，但不是同一个缓存问题，必须分别验收。\n\nQ1｜合流蓝本 vs 重做\n同意：保留蓝本，定点移植\n\n我核对了两个分支的实际 Git 状态：\n\n项目\n\n\t\n\nSHA\n\n\n\n\n当前 dev\n\n\t\n\n5c9ba1558a58b29633ea731fcdb563361b4c343b\n\n\n\n\n缓存分支\n\n\t\n\n227172c99a5704bb9154ae2cdca900c8dbab1857\n\n\n\n\n共同祖先\n\n\t\n\n98c32e5ec50c369bfaccd03acdd3fa18b0e9f75e\n\n两个分支已经明显分叉：\n\n缓存分支领先共同祖先 22 个提交。\n\ndev 领先共同祖先 29 个提交。\n\n不是简单的快进合并，也不应该直接把旧分支整体合入 dev。\n\n我的裁定是：移植缓存能力，不移植旧分支的整体历史。\n\n理由：\n\n现有蓝本已经处理了 SHA-256 版本表、同名替换窗口、KTX2 独立 kv、纹理缓存键纳入 mapUrl 等关键问题。\n\n301 行缓存专项测试及跨方案浏览器测试有复用价值。\n\n重做会重新引入已经踩过的同名替换、KTX2 陈旧派生和版本表一致性问题。\n\n漂移面及合流处方\n\n漂移点\n\n\t\n\n裁定\n\n\t\n\n合流要求\n\n\n\n\nasset_thumbs?max=\n\n\t\n\n修改\n\n\t\n\n保留 dev 当前缩略图尺寸、ETag、LRU 语义；不能让 max 参数或缩略图缓存键失去区分能力\n\n\n\n\nKTX2 回退\n\n\t\n\n保留并核对\n\n\t\n\n源图 v 与派生文件 kv 分离；缺少 kv 必须保守回退，不能错误 immutable\n\n\n\n\nbuild_catalog\n\n\t\n\n修改\n\n\t\n\n保留 dev 当前目录生成、校验、数据源和构建契约；只移植版本表生成及 --check\n\n\n\n\ncatalog.py\n\n\t\n\n修改\n\n\t\n\n版本表缓存独立于商品目录缓存，保留路径及 mtime 失效语义\n\n\n\n\nmain.py\n\n\t\n\n修改\n\n\t\n\n中间件作为独立缓存头裁决点接入，不覆盖其他 API 缓存策略\n\n\n\n\nnginx.conf\n\n\t\n\n修改\n\n\t\n\n两个 server block 一致，只有明确版本匹配的静态资源允许长期缓存\n\n\n\n\nthreeMaterials.ts\n\n\t\n\n保留\n\n\t\n\nURL 纳入纹理身份，避免材质版本不变但换图后继续显示旧贴图\n\n这里有一个重要发现：dev 当前 /assets/ 的业务资源确实被 Nginx 强制 no-cache，但带内容哈希的 Vite 构建资源已经是 immutable。不能把这两类资源混为一谈。\n\n另一个容易漏掉的问题是：缓存分支的方案明确指出，版本化 catalog URL 不能破坏 2D 预载的 images 键与 expectSrcs 匹配关系。合流时必须保留原来的预载行为，不能为了缓存而扩大 2D 预载范围。\n\nQ1 最终意见：修改为定点移植，禁止整分支直接合并，也禁止从零重写。\n\nQ2｜P0 推进顺序及验收门\n修改：A → B → C，但 C 增加安全门禁\n\n我的建议：\n\nP0-1：A 资产版本化合流\n\n第一优先\n\n解决 3D 80MB 次日重拉、2D 24MB 重复加载，以及跨方案重复下载。\n\n验收门：\n\n首次加载：资源正常下载，URL 带正确版本。\n\n再次进入：相同字节从本机缓存读取，不重复传输。\n\n同名替换：新 URL、新字节，不能命中旧纹理。\n\nKTX2：源图 v 和派生图 kv 各自匹配。\n\n冷方案、热方案、跨方案、浏览器硬重启均通过。\n\n缺版本、错误响应、版本不匹配一律不授予长期缓存。\n\nP0-2：B AI 结果图 immutable\n\n第二优先\n\nAI 结果图具有独立资产身份，适合按内容身份缓存，不应该依赖整个页面的缓存策略。\n\n验收门：\n\n同一 asset_id 对应内容不可原位覆盖。\n\n内容变化必须产生新资产身份或新版本 URL。\n\n不同用户、项目、方案之间不得出现越权读取。\n\n失败响应不缓存为成功结果。\n\n图片替换、删除、撤回和历史快照引用均有回归测试。\n\nP0-3：C 分享页缓存策略调整\n\n安全门禁后实施\n\n不建议直接删除 publication.py:973 的 no-store。\n\n我核对了该端点：/api/public/share/{token}/media/{asset_id} 先验证有效 Publication，再验证资产属于授权快照，最后才读取媒体。\n\n这意味着 no-store 不一定是历史遗留配置，它可能承担分享撤回后的访问控制语义。\n\n验收门：\n\n撤回分享后，服务器端必须拒绝后续请求。\n\n不得因为浏览器或 CDN 缓存而绕过 token 授权。\n\n不同分享 token、不同账户之间隔离。\n\n明确区分浏览器私有缓存与公共代理缓存。\n\n分享页静态 JS/CSS/公开素材可以单独缓存，不能因此放开授权媒体接口。\n\n为什么不是先改 C？\n\n因为 no-store 可能保护的是访问控制，而不是普通性能策略。\n\n特别要防止这个情况：\n\n客户打开分享页，成功取得 AI 结果图。\n\n管理员撤回分享。\n\n客户再次打开页面。\n\n浏览器直接使用旧缓存图片，绕过服务器的撤回检查。\n\n即使服务器已经正确返回 404，浏览器仍可能持有先前缓存的内容。\n\n所以我的原则是：先解决静态资源缓存，再解决 AI 结果图身份缓存，最后优化分享媒体缓存；不能为了性能破坏撤回语义。\n\n另外，A 和 B 可以并行做设计，但建议分开提交、分开验收，避免问题归因困难。\n\nQ3｜hidden 资产 1h 缓存延迟\n修改：有条件接受\n\n我不建议对所有 hidden 资产统一接受 1h 延迟，也不建议全部降级为 no-cache。\n\n需要区分两种语义：\n\nhidden 的含义\n\n\t\n\n裁定\n\n\t\n\n策略\n\n\n\n\n仅从商品目录、选择器或展示列表隐藏\n\n\t\n\n接受\n\n\t\n\n1h 可接受\n\n\n\n\n隐藏代表不再授权访问\n\n\t\n\n反对\n\n\t\n\n不允许依赖缓存过期实现撤权\n\n\n\n\n隐藏后仍允许历史快照引用\n\n\t\n\n接受\n\n\t\n\n历史引用与当前目录可见性分离\n\n\n\n\n涉及客户隐私、私有媒体\n\n\t\n\n反对\n\n\t\n\n严格授权，必要时 no-store\n\n这里还有一个容易混淆的 HTTP 语义：\n\nno-cache：允许存储，但每次使用前必须重新验证。\n\nno-store：不允许存储响应。\n\nmax-age=3600：允许在 1 小时内直接使用缓存，可能不向服务器重新验证。\n\n因此，如果 hidden 是访问控制状态，单纯从 max-age=3600 改成 no-cache 仍然不能替代服务端授权检查。\n\n最终裁定汇总\n\n问题\n\n\t\n\n裁定\n\n\t\n\n决定\n\n\n\n\nQ1 合流还是重做\n\n\t\n\n修改\n\n\t\n\n以现有蓝本为唯一实现基础，定点移植到 dev\n\n\n\n\nQ2 P0 推进顺序\n\n\t\n\n修改\n\n\t\n\nA → B → C，C 必须先通过授权及撤回安全门\n\n\n\n\nQ3 hidden 资产 1h\n\n\t\n\n修改\n\n\t\n\n纯展示隐藏可接受；权限隐藏不接受\n\n额外锁定四条架构红线\n\n不引入前端持久化新体系：首期继续使用普通 HTTP 缓存，不增加 Service Worker、IndexedDB、Cache Storage。\n\n不扩大 2D 预载范围：先解决重复传输，不把缓存优化变成启动时全量下载。\n\n不混淆资产版本和业务版本：内容 SHA-256 决定资源身份，不能用 catalog 版本或 mtime 代替实际字节版本。\n\n不以缓存替代授权：隐藏、撤回、删除、账户隔离始终由服务端负责。\n\n建议下一轮任务边界\n\n我建议下一轮只做一个独立任务：\n\nGDC-CACHE-PROMOTION-R2\n\n交付物限定为：\n\ndev 与缓存蓝本的逐文件漂移矩阵。\n\nA 资产版本化的定点移植清单。\n\nB AI 结果图 immutable 的独立接口契约。\n\nC 分享页缓存安全边界说明。\n\n三阶段验收矩阵及回滚条件。\n\n当前状态：架构方向有条件通过；不授权直接合并旧分支，不授权修改代码，不授权取消分享媒体的 no-store。\n\n这样可以最大程度复用已经验证的 1666 行工作，同时避免把旧分支 29 个提交的 dev 漂移带入当前主线。",
+      "text_sha256": "3932741c6fbafb5c426ffeaabc53b2231c2a8f796fa4d78eb8e642d9502931a9",
+      "size_bytes": 7880,
+      "assistant_uuid": "3bdfdef1-cc75-43f0-893a-5e0dc3022d34"
+    }
+  ]
+}

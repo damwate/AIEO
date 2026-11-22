@@ -1,0 +1,191 @@
+{
+  "at": "2026-11-22T06:01:15.142Z",
+  "instance_id": "default",
+  "instance_lock_path": "D:\\AIEO\\runtime\\locks\\gpt-session.lockfile",
+  "instance_debug_port": 9222,
+  "instance_profile_dir": "D:\\AIEO\\runtime\\chrome_profiles\\gpt-poc",
+  "message_bytes": 1124,
+  "reply": "ChatGPT 说：\nT1｜AISVC 白图输入 R1 方案评审\n\n总体裁定：同意问题判断，修改处理策略。\n\n核心原则：白图检测应当是输入质量门禁，而不是简单的白色像素过滤。尤其是园林设计场景，线稿、平面图、效果图可能存在大面积有意留白，不能把白色区域直接判定为异常。\n\n我的建议是采用：\n\n上游预防为主；\n\nAISVC 输入检测为第二道防线；\n\n输出检测作为质量反馈；\n\n默认不因单一视觉指标直接拒绝任务。\n\nQ1｜白块检测算法\n修改后同意\n\n建议采用多指标联合检测，而不是单一阈值。\n\n1. 检测指标\n\n指标\n\n\t\n\n检测目标\n\n\t\n\n建议\n\n\n\n\n局部标准差\n\n\t\n\n判断区域是否接近纯色\n\n\t\n\n核心指标\n\n\n\n\n白色像素占比\n\n\t\n\n判断区域是否大面积接近白色\n\n\t\n\n核心指标\n\n\n\n\n边缘密度\n\n\t\n\n判断区域是否缺乏结构和轮廓\n\n\t\n\n核心指标\n\n\n\n\n连通区域面积\n\n\t\n\n判断异常区域是否形成大块连续区域\n\n\t\n\n核心指标\n\n\n\n\n区域边界特征\n\n\t\n\n判断是否存在矩形截图、贴图加载边界\n\n\t\n\n辅助指标\n\n建议先做图像分块，例如：\n\n32×32：细粒度检测。\n\n64×64：主要检测尺度。\n\n128×128：大面积异常区域检测。\n\n不建议直接把整张图片缩小后计算一次统计量，因为局部白块很容易被其他正常内容稀释。\n\n2. 如何区分白块与设计留白？\n\n这是整个方案最重要的部分。\n\n我建议引入两个概念：\n\nA. 结构性留白\n\n例如：\n\n线稿中未绘制的区域。\n\n设计图纸外围白色背景。\n\n草图中尚未填充的区域。\n\n有意保留的白色铺装或背景。\n\nB. 加载性白块\n\n例如：\n\n3D 视口中纹理尚未加载的矩形区域。\n\n局部材质丢失形成的纯白区域。\n\n原本应该存在草坪、铺装、植物纹理，但被白色占位区域覆盖。\n\n区别不应只看白色，而应综合：\n\n区域是否具有明显矩形边界。\n\n区域内部是否缺乏纹理和边缘。\n\n区域是否与周边正常设计内容存在突兀的视觉断层。\n\n是否与上游渲染区域、贴图加载状态相对应。\n\n特别建议增加一个可选的上游元数据：\n\nrender_assets_ready\n\n用于表达截图时贴图、模型材质等资源是否已经完成加载。\n\n关键判断：检测算法只能给出异常概率，不能仅凭白色占比断言区域未加载。\n\n3. 推荐检测结果分级\n\n等级\n\n\t\n\n结果\n\n\t\n\n处理\n\n\n\n\nL0\n\n\t\n\n未发现明显异常\n\n\t\n\n正常放行\n\n\n\n\nL1\n\n\t\n\n疑似异常白块\n\n\t\n\n告警，允许放行\n\n\n\n\nL2\n\n\t\n\n高置信度加载异常\n\n\t\n\n暂停并要求确认\n\n\n\n\nL3\n\n\t\n\n已确认关键素材缺失\n\n\t\n\n拒绝提交\n\n初期不建议直接确定具体数值阈值，应使用真实的 GDC 截图样本建立正负样本集，再确定阈值。\n\nQ2｜输入拦截策略\n修改后同意\n\n三种方案的优先级：\n\n第一优先：上游拦截\n\nP0\n\nGDC 在截图上传之前确认 GLB、纹理、材质等资源已经就绪。\n\n第二优先：AISVC 告警放行\n\nP1\n\nAISVC 对输入图像执行质量检测，发现疑似白块时记录告警，保留原图及检测结果。\n\n第三优先：条件性 422\n\nP2\n\n仅在明确违反输入完整性要求时拒绝，不以普通白色区域或算法疑似结果直接返回 422。\n\n为什么不建议默认 422？\n\n因为当前业务存在两种情况：\n\n真正的素材未加载，应该阻止生图。\n\n设计本身就是白色或线稿留白，应该允许生图。\n\n如果只依据图像统计指标返回 422，会造成正常业务误拒。\n\n我建议区分两个接口层面的概念：\n\n422 INPUT_ASSET_INCOMPLETE：有可靠证据确认输入素材不完整。\n\n200/正常受理 + quality_warning：检测存在疑点，但无法确定是否异常。\n\n注意，告警放行必须保留告警记录，不能让调用方误以为输入质量已经通过检查。\n\n另外，建议记录：\n\n原始文件 SHA256；\n\n检测算法版本；\n\n异常区域坐标；\n\n各项指标；\n\n最终处理决策。\n\n这样后续才能进行问题追溯和阈值迭代。\n\nQ3｜输出端是否增加检测？\n同意\n\n但需要明确：输入检测和输出检测的目的不同。\n\n比较项\n\n\t\n\n输入检测\n\n\t\n\n输出检测\n\n\n\n\n主要目的\n\n\t\n\n发现素材加载缺失\n\n\t\n\n发现生成结果异常\n\n\n\n\n检测对象\n\n\t\n\n用户上传参考图\n\n\t\n\nAI 生成结果\n\n\n\n\n主要关注\n\n\t\n\n局部纯白、纹理缺失\n\n\t\n\n局部空白、异常色块、结构缺失\n\n\n\n\n处理方式\n\n\t\n\n告警、阻止提交\n\n\t\n\n质量评分、人工复核、重试建议\n\n输出端建议额外关注三个问题\n\n输入中存在白块，输出是否将白块错误扩展成大片设计内容？\n\n输入完整，输出是否仍出现局部空白或异常白色矩形？\n\n输出是否遗漏了输入中明确存在的关键景观元素？\n\n第三项已经超出简单白块检测范畴，可以作为后续视觉一致性评价能力。\n\n不建议第一阶段就把输出白块检测升级为自动拒绝或自动重试，否则可能产生不必要的重试成本。\n\n最终建议：采用三层质量防线\n\n第一层：GDC 上游资源完整性门禁\n\nGLB + 纹理 + 材质 + 截图时机\n\n第二层：AISVC 输入图像检测\n\n分块检测 + 异常评分 + 告警/条件性拦截\n\n第三层：AISVC 输出图像检测\n\n生成质量异常 + 白块 + 视觉完整性评价\n\n实施顺序\n\n顺序\n\n\t\n\n工作\n\n\t\n\n优先级\n\n\n\n\n1\n\n\t\n\nGDC 纹理加载完成门禁，修复只检查 GLB 的问题\n\n\t\n\nP0\n\n\n\n\n2\n\n\t\n\nAISVC 输入端分块白块检测，先只记录不拦截\n\n\t\n\nP1\n\n\n\n\n3\n\n\t\n\n建立真实样本集，校准误报率和漏报率\n\n\t\n\nP1\n\n\n\n\n4\n\n\t\n\n根据验证结果增加高置信度异常拦截\n\n\t\n\nP2\n\n\n\n\n5\n\n\t\n\n输出端增加相同的基础检测框架\n\n\t\n\nP2\n\n\n\n\n6\n\n\t\n\n输入输出视觉一致性评价\n\n\t\n\nP3\n\n最终裁定：\n\nQ1：修改后同意。采用多指标、分块、上下文联合判断。\n\nQ2：修改后同意。上游拦截优先，AISVC 告警放行作为初期默认，确认素材不完整后才硬拒。\n\nQ3：同意。输入输出都检测，但输出端第一阶段只做质量评价，不自动拒绝。\n\n一个特别重要的架构原则：不要把生图模型的 size=1024x1024 与输入图片完整性混为一谈。 当前问题是参考图内容缺失，而不是输出分辨率不足。提高生成分辨率不会自动修复参考图中的白块。\n\n本轮仅作方案评审，不涉及代码修改，也不授予编码实施授权。",
+  "user_unit_key": "4e5b6e02-12e5-5980-8376-c724532348e1:0:user",
+  "start_key_resolved": "4e5b6e02-12e5-5980-8376-c724532348e1:0:user",
+  "start_resolved_by_marker": true,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "4e5b6e02-12e5-5980-8376-c724532348e1:1:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "1d6c8318-1cf4-4162-bfce-013152e0eab9",
+  "stability": {
+    "stable": true,
+    "interval_ms": 5042,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-22T06:01:09.388Z",
+      "read_finished_at": "2026-11-22T06:01:11.424Z",
+      "unit_keys": [
+        "4e5b6e02-12e5-5980-8376-c724532348e1:1:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "4e5b6e02-12e5-5980-8376-c724532348e1:1:assistant",
+          "sha256": "6048534e6be7cb6c488f0b3f949aee4a8eac4dabaaca72db70eeece5caefb0ad",
+          "size_bytes": 6448
+        }
+      ],
+      "assistant_uuid": "1d6c8318-1cf4-4162-bfce-013152e0eab9",
+      "next_user_unit_key": null,
+      "start_key_resolved": "4e5b6e02-12e5-5980-8376-c724532348e1:0:user",
+      "start_resolved_by_marker": true,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-22T06:01:14.430Z",
+      "read_finished_at": "2026-11-22T06:01:14.968Z",
+      "unit_keys": [
+        "4e5b6e02-12e5-5980-8376-c724532348e1:1:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "4e5b6e02-12e5-5980-8376-c724532348e1:1:assistant",
+          "sha256": "6048534e6be7cb6c488f0b3f949aee4a8eac4dabaaca72db70eeece5caefb0ad",
+          "size_bytes": 6448
+        }
+      ],
+      "assistant_uuid": "1d6c8318-1cf4-4162-bfce-013152e0eab9",
+      "next_user_unit_key": null,
+      "start_key_resolved": "4e5b6e02-12e5-5980-8376-c724532348e1:0:user",
+      "start_resolved_by_marker": true,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "4e5b6e02-12e5-5980-8376-c724532348e1:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "4e5b6e02-12e5-5980-8376-c724532348e1:0:user",
+          "4e5b6e02-12e5-5980-8376-c724532348e1:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "5b7b20b895da731f5a1ebb36617b2854042b7c90db023939b56b1dec90e15757",
+          "6048534e6be7cb6c488f0b3f949aee4a8eac4dabaaca72db70eeece5caefb0ad"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "4e5b6e02-12e5-5980-8376-c724532348e1:0:user",
+          "4e5b6e02-12e5-5980-8376-c724532348e1:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "5b7b20b895da731f5a1ebb36617b2854042b7c90db023939b56b1dec90e15757",
+          "6048534e6be7cb6c488f0b3f949aee4a8eac4dabaaca72db70eeece5caefb0ad"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "4e5b6e02-12e5-5980-8376-c724532348e1:0:user",
+          "4e5b6e02-12e5-5980-8376-c724532348e1:1:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "4e5b6e02-12e5-5980-8376-c724532348e1:0:user",
+      "4e5b6e02-12e5-5980-8376-c724532348e1:1:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "4e5b6e02-12e5-5980-8376-c724532348e1:0:user",
+          "4e5b6e02-12e5-5980-8376-c724532348e1:1:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "4e5b6e02-12e5-5980-8376-c724532348e1:0:user",
+          "4e5b6e02-12e5-5980-8376-c724532348e1:1:assistant"
+        ],
+        "overlap_keys": [
+          "4e5b6e02-12e5-5980-8376-c724532348e1:0:user",
+          "4e5b6e02-12e5-5980-8376-c724532348e1:1:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "6048534e6be7cb6c488f0b3f949aee4a8eac4dabaaca72db70eeece5caefb0ad",
+  "size_bytes": 6448,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-22T05-58-32\\reply.txt",
+  "reply_readback_sha256": "6048534e6be7cb6c488f0b3f949aee4a8eac4dabaaca72db70eeece5caefb0ad",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-22T05-58-32\\raw-units.json",
+  "raw_units_sha256": "c79dc8b9b82e800426cd641ac6c06c6e30518d2eaa99ca00ea63e03793b41af1",
+  "raw_units_size_bytes": 10076,
+  "raw_units_readback_sha256": "c79dc8b9b82e800426cd641ac6c06c6e30518d2eaa99ca00ea63e03793b41af1",
+  "session_id": "6b0284c3-06d0-83ec-bd06-d47dc956c122",
+  "conversation_url": "https://chatgpt.com/c/6b0284c3-06d0-83ec-bd06-d47dc956c122",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}

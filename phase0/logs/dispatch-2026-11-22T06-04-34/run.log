@@ -1,0 +1,21 @@
+[2026-11-22T06:04:34.934Z] 证据目录: D:\AIEO\phase0\logs\dispatch-2026-11-22T06-04-34
+[2026-11-22T06:04:35.854Z] 会话锁已获取 pid=30028 instance=default lock=gpt-session.lockfile
+[2026-11-22T06:04:35.858Z] === GPT 派单（新建会话，消息 1189 字节）===
+[2026-11-22T06:04:35.860Z] [instance] 实例域就绪: instance=default port=9222 profile=gpt-poc lock=gpt-session.lockfile
+[2026-11-22T06:04:37.568Z] [instance] 清理本实例 Chrome：own=0 foreign(不动)=15 remaining=0
+[2026-11-22T06:04:40.202Z] Chrome 已启动 pid=23424 port=9222
+[2026-11-22T06:04:41.374Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 0 个
+[2026-11-22T06:04:41.374Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-22T06:05:23.261Z] 新聊天页面就绪
+[2026-11-22T06:05:28.334Z] [dispatch] 基线尾部: null
+[2026-11-22T06:05:31.102Z] [dispatch] 发送双验通过（polls=2，user_unit_key=fallback-turn-0:0:user，tail 后观察）
+[2026-11-22T06:05:32.011Z] 截图: sent-dispatch.png
+[2026-11-22T06:08:44.498Z] [dispatch] COMPLETED，1 个 assistant unit，回复 7880 UTF-8 字节，区间窗口 2 个
+[2026-11-22T06:08:44.678Z] 截图: reply-dispatch.png
+[2026-11-22T06:08:44.681Z] 会话 URL 已取得且归属校验 PASS，跳过 reviewer 指针写盘: https://chatgpt.com/c/6b028629-c8ec-83ec-bc4f-facbeffd58de
+[2026-11-22T06:08:44.691Z] JSON/Schema/绑定校验: NOT_REQUESTED
+[2026-11-22T06:08:44.692Z] M1 本地登记: NOT_REQUESTED（三 ID 均未提供，通用非登记派单）
+[2026-11-22T06:08:46.972Z] [instance] 清理本实例 Chrome：own=9 foreign(不动)=15 remaining=0
+[2026-11-22T06:08:46.975Z] [tab-hygiene] 成功退出：浏览器连接已关+实例 default Chrome 已清理（精确归属，他实例不动；含本次自建页 0 页）；本实例 tab 清零
+[2026-11-22T06:08:46.976Z] === 派单完成，artifact_sha256=3932741c6fbafb5c426ffeaabc53b2231c2a8f796fa4d78eb8e642d9502931a9 size_bytes=7880 ===
+[2026-11-22T06:08:47.091Z] 会话锁已释放

@@ -1100,3 +1100,11 @@
 - **申请：** phase0/tools/parallel_stage2_apply_r1.md @ f9c9e6ce936691203e5f3a8e45ccc68ee9f2e807（阶段1 已合入 main=4a961e4，DEC-127）；派单 dispatch-2026-11-20T23-22-34→补采 recoll-stage2-r1-…（reply 3984B SHA-256=`c2e1b071083b17141d8d866f0575a5c68c70c4497bc90be45dde0c1d3a4854f1`；过程注记=派生 PREV_REPLY_SHA256 取了 R5 轮旧值而非 R7 最新值——排除效力不受影响（marker+最后 user 断言为主证），如实登记为派生参数取值口径待改进）。
 - **四问裁定：** ①C9 有条件认可（五约束：A 退避期限不得被缩短——已有 BACKOFF 只能延长或维持；B 缺失状态=明确 NORMAL 初始化路径、损坏/读取失败=fail-closed 禁静默 NORMAL；C EXPIRED_ALLOW 须原子归一化 NORMAL 防残留歧义；D 检查点须覆盖实际浏览器操作边界——启动门+操作前复查，"已过检查未始操作"实例的竞态窗口须如实说明处置，不得宣称启动读一次即绝对零操作；E 观察点保持被动，C5 无真实 429=登记 NOT_OBSERVED 不得记 PASS）；②阶段2 有条件批准——C9 实现+本地回归+独立验收全 PASS 后方可执行真实 N=2，范围严格限定 C1-C5/C7/C8，fix/parallel-stage2 分支，--new-session --no-update-pointer，失败即停，逐项 PASS/FAIL/BLOCKED/NOT_OBSERVED 登记；③退避 9-60min 认可（真实 429 默认≥9min，上限 60min，活动退避不得缩短）；④阶段3 原则认可（C6 观察轮数/指标/异常判据须先明确，资源数据支撑 N=3 判断，满足条件=可提交评估非自动放行）。
 - **授权边界：** 不含阶段3、不含 N=3、不含 main 后续代码合并授权。
+
+### DEC-129 标准版多任务试运行完成（3 只读分析任务 M2 并行，用户指令 2026-11-22）
+
+- **授权依据：** 用户指令原话（三任务+标准版多任务试运行+测试报告+全程不改目标代码+每任务"本地分析→ChatGPT 讨论→方案"）登记于 `basic/tasks/b-20261122-standard-multitask-trial/requirement.md`；选型 Standard/S2。
+- **执行（M2 受控并行：任务级并行+通道级串行）：** 三子任务包 b-20261122-aisvc-blank-input / b-20261122-gdc-cache-formats / b-20261122-gdc-cache-promotion——本地分析（主会话+2 只读 Explore 子代理真并行）→串行派单三**独立新会话**（--new-session --no-update-pointer；dispatch-2026-11-22T05-58-32/06-01-40/06-04-34，会话 6b0284c3…/6b02857c…/6b028629…；reply SHA256=6048534e…/02b77989…/3932741c…）→三份方案 proposal.md。通道三单串行 10m15s 全部一次采集成功，零补采零重派。
+- **M2 复盘五指标：** 工作区污染 0/文件分支冲突 0/派单归属错误 0/验收会话串用 0/并行净收益为正（详见试运行 delivery.md 第三节）。ST-05 三包最终态 IN_PROGRESS（验收中）全过。
+- **如实登记（发现的问题三项）：** ①ST-05 对「当前状态」表格行格式与 steps⑥占位写法报误，建包两轮 FAIL 迭代（易用性改进候选，未夹带修复）②缩写 SHA 仅够方案级裁定（T2 审查方自注），实施类简报须附完整 40 位 SHA（T3 完整仓库指针对照有效）③简报 1200B 压缩迭代成本（候选模板化）。
+- **边界：** 全轮目标仓库零代码修改；审查会话指针 6b009b70 未动（累计 3 条 user 消息，低于 L-018§6 迁移评估线）；三份方案与后续实施任务（GDC P0 门禁/GDC-CACHE-PROMOTION-R2/AISVC P1 检测）均未立项未授权，待用户批准；Standard 阶段2 N=2 仍按 DEC-128 边界未启动。

@@ -1,0 +1,12 @@
+[T2|GDC缓存格式排查R1|b-20261122-gdc-cache-formats]
+背景：排查缓存漏网图片格式。只讨论不改码。
+结论（5c9ba155…343b dev；仓库Hulkhao/Garden-Design-Calculator按SHA读）：
+1)缓存四层全内存级：3D纹理Map键不含mapUrl换图不失效(threeMaterials.ts:63)、预览LRU、Plan挂载期、HTTP被nginx压no-cache。
+2)格式覆盖：3D材质路径仅认webp/png/jpg/jpeg(ktx2.ts:34；404无回退=永久纯色)；svg/gif/bmp/avif/heic必败；上传/?max白名单同4种+魔数。现网全在白名单内，漏网是结构性的。
+3)漏网点：catalog种入非白名单扩展参考图条目→Worker按octet-stream直发AI(external_jobs.py:47)；?max对svg/gif不缩放。
+4)白板直接成因：billboard未加载=纯白大面片(billboard.ts:122)，未加载树=整块白矩形；截图门只等GLB(ThreeView.tsx:544)纹理等全不在门内；photo无门禁；上传前零像素校验(aiGeneration.ts:139)。
+三问：
+Q1 mime兜底改415拒vs扩白名单？catalog校验加build_catalog？
+Q2 billboard白面片：非白底/隐藏vs纳入capture等待门？
+Q3材质路径ktx2 404加回退？
+请逐问[同意/修改/反对]+理由。

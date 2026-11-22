@@ -1,0 +1,191 @@
+{
+  "at": "2026-11-22T06:04:19.813Z",
+  "instance_id": "default",
+  "instance_lock_path": "D:\\AIEO\\runtime\\locks\\gpt-session.lockfile",
+  "instance_debug_port": 9222,
+  "instance_profile_dir": "D:\\AIEO\\runtime\\chrome_profiles\\gpt-poc",
+  "message_bytes": 1181,
+  "reply": "ChatGPT 说：\nGDC 缓存格式排查 R1｜架构裁定\n\n总体意见：三项均建议整改，但不建议把问题简单归结为扩展白名单。\n\n当前暴露的是三个不同层次的问题：\n\n输入资源准入不完整。\n\n渲染资源加载状态没有进入截图门禁。\n\n资源加载失败缺乏降级与错误传播机制。\n\n以下先基于你提供的排查结论作方案裁定。由于目前提供的是缩写 SHA（5c9ba155…343b），尚不能按完整 SHA 独立核验源码，因此这是方案级裁定，不冒充源码终审。\n\nQ1：MIME 兜底改 415 拒绝，还是扩白名单？\n修改后同意\n\n建议：以 415 拒绝不支持格式为底线，采用分层扩展，而不是直接扩大白名单。\n\n理由：\n\n当前 3D 材质路径只支持 WebP、PNG、JPG、JPEG，上传端白名单与其一致。\n\nSVG、GIF、BMP、AVIF、HEIC 即使成功上传，也不代表后续渲染链路能够正确消费。\n\napplication/octet-stream 不能作为格式兼容的依据，更不能直接将未知格式交给 AI Worker。\n\n建议建立三层约束：\n\n层级\n\n\t\n\n处理要求\n\n\n\n\n上传入口\n\n\t\n\n魔数识别 + MIME 校验 + 扩展名校验\n\n\n\n\nCatalog 构建\n\n\t\n\nbuild_catalog 增加资源格式校验\n\n\n\n\nWorker 出口\n\n\t\n\n再次校验实际文件格式，不支持返回 415\n\n具体建议：\n\n暂时保持四种格式白名单。\n\n对 SVG、GIF、BMP、AVIF、HEIC 明确拒绝，不允许伪装成 octet-stream 绕过。\n\nbuild_catalog 必须校验目录内实际资源，而不只是检查配置文件声明。\n\n将来增加格式时，必须同时确认上传、缩放、Worker、3D 材质、预览和截图链路支持情况。\n\n特别强调：\n\nCatalog 校验应该是构建阶段的提前拦截，运行时 MIME 校验是最后一道防线，两者不能互相替代。\n\nQ2：Billboard 白面片，非白底/隐藏，还是纳入 capture 等待门？\n修改后同意\n\n建议：隐藏未加载的 Billboard，并将纹理加载纳入 capture 等待门。两者都需要。\n\n不建议只改成非白底。\n\n原因：\n\n白色大矩形本质上是未加载资源仍然参与渲染。\n\n即使改成灰色、透明或其他底色，也不能保证截图内容正确。\n\n如果纹理加载尚未完成，截图仍然可能把不完整场景当成最终结果。\n\n建议明确两套规则：\n\nA. 渲染规则\n\nBillboard 纹理未加载：不显示面片。\n\n纹理加载成功：允许显示。\n\n纹理加载失败：不显示错误白块，同时记录资源错误。\n\n树木等依赖图片纹理的对象执行同样规则。\n\nB. 截图规则\n\n当前 ThreeView.tsx 只等待 GLB，不足以作为截图完成条件。\n\n建议 capture gate 至少等待：\n\n资源\n\n\t\n\n是否纳入等待\n\n\n\n\nGLB 模型\n\n\t\n\n是\n\n\n\n\n3D 材质纹理\n\n\t\n\n是\n\n\n\n\nBillboard 纹理\n\n\t\n\n是\n\n\n\n\n树木贴图\n\n\t\n\n是\n\n\n\n\n其他场景图片资源\n\n\t\n\n是\n\n\n\n\nGPU 资源上传/渲染准备\n\n\t\n\n需要考虑\n\n还要增加超时与失败处理：\n\n所有必要资源加载成功：允许截图。\n\n必要资源加载失败：截图失败，返回明确错误。\n\n超时：不允许把不完整画面当作成功结果。\n\n特别指出：photo 路径也必须纳入检查。\n\n不能只修 ThreeView 的截图门禁，而遗漏 photo 直接截图路径。\n\nQ3：材质路径 KTX2 404 加回退？\n同意\n\n建议增加回退机制，但必须区分资源不存在和资源格式不支持。\n\n目前 404 后没有回退，导致材质永久纯色，这属于明显的容错缺陷。\n\n建议：\n\n情况\n\n\t\n\n处理\n\n\n\n\n首选纹理 404\n\n\t\n\n尝试合法备用资源\n\n\n\n\n首选纹理加载失败\n\n\t\n\n尝试备用资源\n\n\n\n\n备用资源也失败\n\n\t\n\n标记材质失败\n\n\n\n\n所有资源失败\n\n\t\n\n使用明确的错误占位材质，不允许静默成功\n\n需要增加三个约束：\n\n回退资源必须经过格式校验，不能无限尝试不同 URL。\n\n失败必须留下资源 URL、错误类型和回退结果，方便定位。\n\n如果材质属于截图必要资源，回退失败必须向 capture gate 传播失败状态。\n\n另外，不能把 404 当成唯一失败条件，还应考虑解码错误、网络中断、跨域失败等情况。\n\n最终裁定汇总\n\n问题\n\n\t\n\n裁定\n\n\t\n\n核心决定\n\n\n\n\nQ1 MIME / Catalog\n\n\t\n\n修改后同意\n\n\t\n\n415 fail-closed + build_catalog 校验\n\n\n\n\nQ2 Billboard / Capture\n\n\t\n\n修改后同意\n\n\t\n\n未加载隐藏 + 完整资源等待门\n\n\n\n\nQ3 材质 404 回退\n\n\t\n\n同意\n\n\t\n\n有限回退 + 错误传播\n\n建议的整改优先级\n\nP0：修复白板直接成因\n\nBillboard 未加载不显示；capture gate 覆盖纹理资源；photo 路径补门禁。\n\nP0：堵住非法格式输入\n\nMIME/魔数校验、415 拒绝、Catalog 构建校验，阻止不支持的资源进入 AI Worker。\n\nP1：完善材质容错\n\n404 回退、加载失败状态传播、日志与错误占位。\n\nP1：缓存生命周期治理\n\n3D 纹理 Map 增加资源身份或 URL 维度，解决 mapUrl 变化后旧纹理仍被复用的问题；同时明确预览 LRU 和 Plan 生命周期的失效规则。\n\n额外架构意见：\n\n你列出的四层缓存问题中，threeMaterials.ts:63 的 Map 键不含 mapUrl，是独立于格式漏网的缓存正确性问题。即使格式校验全部完善，换图仍可能命中旧纹理。\n\n因此不要把这次整改定义成单纯的「图片格式兼容修复」，建议定义为：\n\nGDC 图片资源准入、加载生命周期与截图完整性治理。\n\n这样可以避免只修复白块表象，却留下缓存错图和资源加载竞态。\n\n下一步建议提供完整 40 位 commit SHA，我可以按该版本对三个裁定逐项进行源码定点复核，确认是否存在遗漏的调用路径。",
+  "user_unit_key": "b06a41da-ed9e-5d6c-8ad5-59fe01b746b6:0:user",
+  "start_key_resolved": "b06a41da-ed9e-5d6c-8ad5-59fe01b746b6:0:user",
+  "start_resolved_by_marker": true,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "b06a41da-ed9e-5d6c-8ad5-59fe01b746b6:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "69fb6ba6-92ea-4d81-835f-86f8e6c4b43c",
+  "stability": {
+    "stable": true,
+    "interval_ms": 4355,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-22T06:04:14.721Z",
+      "read_finished_at": "2026-11-22T06:04:16.065Z",
+      "unit_keys": [
+        "b06a41da-ed9e-5d6c-8ad5-59fe01b746b6:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "b06a41da-ed9e-5d6c-8ad5-59fe01b746b6:2:assistant",
+          "sha256": "02b77989c40a6e75b673a2b0055fe796a98a6da905d3431ab2bd700f63cef7c5",
+          "size_bytes": 5662
+        }
+      ],
+      "assistant_uuid": "69fb6ba6-92ea-4d81-835f-86f8e6c4b43c",
+      "next_user_unit_key": null,
+      "start_key_resolved": "b06a41da-ed9e-5d6c-8ad5-59fe01b746b6:0:user",
+      "start_resolved_by_marker": true,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-22T06:04:19.076Z",
+      "read_finished_at": "2026-11-22T06:04:19.614Z",
+      "unit_keys": [
+        "b06a41da-ed9e-5d6c-8ad5-59fe01b746b6:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "b06a41da-ed9e-5d6c-8ad5-59fe01b746b6:2:assistant",
+          "sha256": "02b77989c40a6e75b673a2b0055fe796a98a6da905d3431ab2bd700f63cef7c5",
+          "size_bytes": 5662
+        }
+      ],
+      "assistant_uuid": "69fb6ba6-92ea-4d81-835f-86f8e6c4b43c",
+      "next_user_unit_key": null,
+      "start_key_resolved": "b06a41da-ed9e-5d6c-8ad5-59fe01b746b6:0:user",
+      "start_resolved_by_marker": true,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "b06a41da-ed9e-5d6c-8ad5-59fe01b746b6:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "b06a41da-ed9e-5d6c-8ad5-59fe01b746b6:0:user",
+          "b06a41da-ed9e-5d6c-8ad5-59fe01b746b6:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "1725b3e71f6dff5a475d3a536edd976d407b2c8a2f833f3f3de0f85a1afc0b10",
+          "02b77989c40a6e75b673a2b0055fe796a98a6da905d3431ab2bd700f63cef7c5"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "b06a41da-ed9e-5d6c-8ad5-59fe01b746b6:0:user",
+          "b06a41da-ed9e-5d6c-8ad5-59fe01b746b6:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "1725b3e71f6dff5a475d3a536edd976d407b2c8a2f833f3f3de0f85a1afc0b10",
+          "02b77989c40a6e75b673a2b0055fe796a98a6da905d3431ab2bd700f63cef7c5"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "b06a41da-ed9e-5d6c-8ad5-59fe01b746b6:0:user",
+          "b06a41da-ed9e-5d6c-8ad5-59fe01b746b6:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "b06a41da-ed9e-5d6c-8ad5-59fe01b746b6:0:user",
+      "b06a41da-ed9e-5d6c-8ad5-59fe01b746b6:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "b06a41da-ed9e-5d6c-8ad5-59fe01b746b6:0:user",
+          "b06a41da-ed9e-5d6c-8ad5-59fe01b746b6:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "b06a41da-ed9e-5d6c-8ad5-59fe01b746b6:0:user",
+          "b06a41da-ed9e-5d6c-8ad5-59fe01b746b6:2:assistant"
+        ],
+        "overlap_keys": [
+          "b06a41da-ed9e-5d6c-8ad5-59fe01b746b6:0:user",
+          "b06a41da-ed9e-5d6c-8ad5-59fe01b746b6:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "02b77989c40a6e75b673a2b0055fe796a98a6da905d3431ab2bd700f63cef7c5",
+  "size_bytes": 5662,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-22T06-01-40\\reply.txt",
+  "reply_readback_sha256": "02b77989c40a6e75b673a2b0055fe796a98a6da905d3431ab2bd700f63cef7c5",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-22T06-01-40\\raw-units.json",
+  "raw_units_sha256": "12eddfd87fd1cfc7ac344f4817928b599db65f6074bb1a8c6651dae8092e7c2d",
+  "raw_units_size_bytes": 9121,
+  "raw_units_readback_sha256": "12eddfd87fd1cfc7ac344f4817928b599db65f6074bb1a8c6651dae8092e7c2d",
+  "session_id": "6b02857c-e1b8-83ec-9e6f-5e2058ccd81e",
+  "conversation_url": "https://chatgpt.com/c/6b02857c-e1b8-83ec-9e6f-5e2058ccd81e",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}

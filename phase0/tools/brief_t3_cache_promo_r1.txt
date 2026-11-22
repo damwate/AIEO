@@ -1,0 +1,11 @@
+[T3|GDC缓存推广R1|b-20261122-gdc-cache-promotion]
+背景：GDC"只有3D页有缓存"——5层缓存全内存级刷新即失，nginx压/assets为no-cache(nginx.conf:30)，3D次日80MB重拉。只讨论不改码。
+本地结论（dev@5c9ba155…343b，github.com/Hulkhao/Garden-Design-Calculator按SHA读）：
+1)蓝本未合入dev：分支feat/web-demo-asset-cache-20261119=31文件1666行资产版本化缓存已实现(asset_cache.py版本表?v=、301行测试、同名替换/KTX2坑已踩平)；另有473行方案分支。
+2)缺口：公开分享页no-store(publication.py:973)最痛；2D页挂载重载24MB级(Plan.tsx:281)；零持久化前端缓存。
+3)白板成因：3D截图门禁只数GLB不计纹理(ThreeView.tsx:400)，贴图晚到只补帧→白帧上传；闭环=threeMaterials.ts的loaded字段(L63)聚合纹理settled信号并入capture守卫。
+三问：
+Q1合流蓝本vs重做？与dev漂移面(asset_thumbs?max=、KTX2回退、build_catalog)合流成本？
+Q2 P0序：A=assets版本化合流/B=AI结果图immutable/C=分享页去no-store——顺序+验收门？
+Q3 hidden资产1h缓存延迟：接受还是降级no-cache？
+请逐问[同意/修改/反对]+理由。

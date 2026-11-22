@@ -1,0 +1,11 @@
+[T1|AISVC白图输入R1|b-20261122-aisvc-blank-input]
+背景：生图输入参考图含未加载白块，AI瞎编白块区。只讨论方案不改码。
+本地结论（AI-Image-Service@0c53c963…c57d，github.com/YotinGarden/AI-Image-Service可按SHA读码）：
+1)参数=配置驱动(ai_provider_openai.py:355)，生产通道实读size=1024x1024固定、quality=low。无"最低1K"下限逻辑；请求方可传auto/宽x高(generic_params.py:46)。
+2)白图不可识别：输入链零内容检测——上传仅decode+边≤8192(storage.py:252)+20MB；装载仅sha256+槽位连续(job_spec.py:82)；multipart直发。唯一空白检测_validity(evaluation.py:235)仅评估跑分用，且整图extrema抓不住部分白块。
+3)上游成因：GDC 3D截图门禁只数GLB，纹理不计(ThreeView.tsx:400)；贴图晚到只补帧→白帧上传。
+三问：
+Q1白块检测算法（块stddev/白占比/边缘密度）？如何区分未加载白块vs设计留白（线稿本有大留白）？
+Q2拦截：422硬拒/告警放行/仅上游拦——优先级？
+Q3输出端同加检测？
+请逐问[同意/修改/反对]+理由。
