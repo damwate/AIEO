@@ -1,0 +1,2 @@
+[R3|DEC-129定点复核]
+R2唯一残留已修：三task-brief「当前步骤」已与steps.md同步（S1-S3全部完成，待用户验收）。请定点复核：github.com/damwate/AIEO @ 59da346174ce96ad26929595b05423a125e20a25，仅核 basic/tasks/{b-20261122-aisvc-blank-input,b-20261122-gdc-cache-formats,b-20261122-gdc-cache-promotion}/task-brief.md 状态表当前步骤字段与各steps.md的一致性。不扩大范围。请给[R3核验PASS]或[R3核验FAIL+理由]。

@@ -1,0 +1,110 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-22T07:26:58.308Z",
+  "user_unit_key": "506e8c7c-2fec-50c2-beff-3e91ed17442e:0:user",
+  "start_key_resolved": "506e8c7c-2fec-50c2-beff-3e91ed17442e:0:user",
+  "start_resolved_by_marker": false,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "506e8c7c-2fec-50c2-beff-3e91ed17442e:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "00bfabef-5f05-441f-9054-7b713b2610b4",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "506e8c7c-2fec-50c2-beff-3e91ed17442e:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "2b628b36-d7e3-55fc-8cc6-9210bec92751:0:user",
+          "2b628b36-d7e3-55fc-8cc6-9210bec92751:2:assistant",
+          "506e8c7c-2fec-50c2-beff-3e91ed17442e:0:user",
+          "506e8c7c-2fec-50c2-beff-3e91ed17442e:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "83d290d1e948067513a54c59bfa087e46ed50d86561ebd7604f11526f53c8f0a",
+          "7ba8271015748f7a9ada58c15f8364b2517b040ae9d6f799a4c12a902fe41652",
+          "7fdf7eda137310ba978b137049801352cc175513e8e94b929dc36768809def57",
+          "8dd3429e9371d9fddd27a2ec49f64158e09ad71a04ee10f9d69180af8bcb2b84"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "2b628b36-d7e3-55fc-8cc6-9210bec92751:0:user",
+          "2b628b36-d7e3-55fc-8cc6-9210bec92751:2:assistant",
+          "506e8c7c-2fec-50c2-beff-3e91ed17442e:0:user",
+          "506e8c7c-2fec-50c2-beff-3e91ed17442e:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "83d290d1e948067513a54c59bfa087e46ed50d86561ebd7604f11526f53c8f0a",
+          "7ba8271015748f7a9ada58c15f8364b2517b040ae9d6f799a4c12a902fe41652",
+          "7fdf7eda137310ba978b137049801352cc175513e8e94b929dc36768809def57",
+          "8dd3429e9371d9fddd27a2ec49f64158e09ad71a04ee10f9d69180af8bcb2b84"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "2b628b36-d7e3-55fc-8cc6-9210bec92751:0:user",
+          "2b628b36-d7e3-55fc-8cc6-9210bec92751:2:assistant",
+          "506e8c7c-2fec-50c2-beff-3e91ed17442e:0:user",
+          "506e8c7c-2fec-50c2-beff-3e91ed17442e:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "506e8c7c-2fec-50c2-beff-3e91ed17442e:0:user",
+      "506e8c7c-2fec-50c2-beff-3e91ed17442e:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "2b628b36-d7e3-55fc-8cc6-9210bec92751:0:user",
+          "2b628b36-d7e3-55fc-8cc6-9210bec92751:2:assistant",
+          "506e8c7c-2fec-50c2-beff-3e91ed17442e:0:user",
+          "506e8c7c-2fec-50c2-beff-3e91ed17442e:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "2b628b36-d7e3-55fc-8cc6-9210bec92751:0:user",
+          "2b628b36-d7e3-55fc-8cc6-9210bec92751:2:assistant",
+          "506e8c7c-2fec-50c2-beff-3e91ed17442e:0:user",
+          "506e8c7c-2fec-50c2-beff-3e91ed17442e:2:assistant"
+        ],
+        "overlap_keys": [
+          "2b628b36-d7e3-55fc-8cc6-9210bec92751:0:user",
+          "2b628b36-d7e3-55fc-8cc6-9210bec92751:2:assistant",
+          "506e8c7c-2fec-50c2-beff-3e91ed17442e:0:user",
+          "506e8c7c-2fec-50c2-beff-3e91ed17442e:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "506e8c7c-2fec-50c2-beff-3e91ed17442e:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n[R3核验PASS]\n\n已按完整 SHA 59da346174ce96ad26929595b05423a125e20a25，仅核对指定三个任务包的 task-brief.md「当前步骤」字段与各自 steps.md：\n\n任务\n\n\t\n\ntask-brief 当前步骤\n\n\t\n\nsteps.md 状态\n\n\t\n\n结果\n\n\n\n\naisvc-blank-input\n\n\t\n\nS1-S3 全部完成，待用户验收\n\n\t\n\nS1、S2、S3 均已完成，均有 PASS\n\n\t\n\n一致\n\n\n\n\ngdc-cache-formats\n\n\t\n\nS1-S3 全部完成，待用户验收\n\n\t\n\nS1、S2、S3 均已完成，均有 PASS\n\n\t\n\n一致\n\n\n\n\ngdc-cache-promotion\n\n\t\n\nS1-S3 全部完成，待用户验收\n\n\t\n\nS1、S2、S3 均已完成，均有 PASS\n\n\t\n\n一致\n\nR2 唯一残留已闭环。 三份 task-brief.md 的当前步骤字段均与对应 steps.md 一致，没有发现状态矛盾。\n\n本次为限定范围的状态一致性复核，不代表重新验收任务内容，也不扩大到 M2 并行治理或其他任务包。",
+      "text_sha256": "8dd3429e9371d9fddd27a2ec49f64158e09ad71a04ee10f9d69180af8bcb2b84",
+      "size_bytes": 874,
+      "assistant_uuid": "00bfabef-5f05-441f-9054-7b713b2610b4"
+    }
+  ]
+}

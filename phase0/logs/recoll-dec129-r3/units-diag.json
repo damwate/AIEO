@@ -1,0 +1,38 @@
+[
+  {
+    "key": "c883e091-b495-5a36-ad2b-09269df2b644:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[报告核验R1|标准版多任务试运行]\n请核验试运行测试报告（DEC-129）：github.com/damwate/AIEO @ commit d61179b4"
+  },
+  {
+    "key": "c883e091-b495-5a36-ad2b-09269df2b644:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nDEC-129 试运行报告核验 R1\n\n核验对象：damwate/AIEO\n\n固定版本：d61179b45d0166a4373f0a7c4"
+  },
+  {
+    "key": "2b628b36-d7e3-55fc-8cc6-9210bec92751:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[R2|DEC-129整改复核]\nR1裁定[核验FAIL]五阻断项已整改，请定点复核：github.com/damwate/AIEO @ f54143128aa"
+  },
+  {
+    "key": "2b628b36-d7e3-55fc-8cc6-9210bec92751:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nDEC-129 R2 整改复核\n\n核验基线：damwate/AIEO\n\ncommit: f54143128aa8f64ea7c4e51a1"
+  },
+  {
+    "key": "506e8c7c-2fec-50c2-beff-3e91ed17442e:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[R3|DEC-129定点复核]\nR2唯一残留已修：三task-brief「当前步骤」已与steps.md同步（S1-S3全部完成，待用户验收）。请定点复核：g"
+  },
+  {
+    "key": "506e8c7c-2fec-50c2-beff-3e91ed17442e:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n[R3核验PASS]\n\n已按完整 SHA 59da346174ce96ad26929595b05423a125e20a25，仅核对指定三个"
+  }
+]

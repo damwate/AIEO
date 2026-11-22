@@ -1,0 +1,8 @@
+[2026-11-22T07:25:26.669Z] 补采实例域: instance=default lock=D:\AIEO\runtime\locks\gpt-session.lockfile cdp=http://127.0.0.1:9222
+[2026-11-22T07:25:26.671Z] 会话锁已获取（review-leg 补采；仅采集不发送）
+[2026-11-22T07:25:26.671Z] recoll FAILED: 失败现场目录不存在: dispatch-2026-11-22T07-20-56
+[2026-11-22T07:25:26.784Z] 会话锁已释放（review-leg 补采）
+[2026-11-22T07:25:39.888Z] 补采实例域: instance=default lock=D:\AIEO\runtime\locks\gpt-session.lockfile cdp=http://127.0.0.1:9222
+[2026-11-22T07:25:39.890Z] 会话锁已获取（review-leg 补采；仅采集不发送）
+[2026-11-22T07:25:39.893Z] recoll FAILED: 失败现场目录不存在: dispatch-2026-11-22T07-20-56
+[2026-11-22T07:25:40.018Z] 会话锁已释放（review-leg 补采）

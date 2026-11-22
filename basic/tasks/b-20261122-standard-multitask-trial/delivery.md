@@ -86,3 +86,11 @@ R1 报告曾宣称"三子任务步骤全 PASS"，与当时任务包实际状态�
 - 核验对象=v1 报告 @ commit d61179b45d0166a4373f0a7c4bca00ba4f44d569（未改写）。
 - 整改对照：阻断项①并行超限→§四 P0-1；②四件套→§四 P0-2；③步骤状态不同步→§七+steps 回填；④五指标证据边界→§三重述；⑤1 字节差异+marker 口径+过程证据→§四 4/5、§四 1/3。
 - **原始派单日志与 reply 文件零改写**（审查方保留令遵守）。
+- **R2 复核（dispatch-2026-11-22T07-15-51，reply SHA256=7ba82710…全值见 acceptance/verify-r2-reply.txt）=[R2核验FAIL] 唯一残留**：task-brief「当前步骤」未随 steps 同步（其余 4 项全 PASS）。整改=三 task-brief 状态表同步（commit 59da346）。
+- **R3 定点复核（dispatch-2026-11-22T07-20-56 派单发送 SEND_CONFIRMED→采集 fail-closed INBOUND_START_UNIT_MISSING→recoll 补采 recoll-dec129-r3，七查全过）=[R3核验PASS]**（reply SHA256=8dd3429e9371d9fd…，acceptance/verify-r3-reply.txt）。DEC-129 报告核验链闭环：R1 FAIL→R2 4/5→R3 PASS。
+- **维持边界（审查方 R2 裁定继续有效）**：不扩大并行数/不宣告 M2 试运行通过/不自动立项/不授权改码/不修改原始证据。
+
+## 九、白板成因 RCA 增补（用户 2026-11-22 追加指令）
+
+- 取证+因果链+防复发=同目录 rca-whiteboard.md；ChatGPT 续判裁定=acceptance/rca-r1-reply.txt（recoll 补采，SHA256=259bf49281541f58…，会话 6b02857c 续 T2 任务上下文）。
+- 核心结论：白板=**3D 场景纹理未渲染完就截图**（非图片半包）；两案 camera_snapshot 三证+case1 建站后 2 分 04 秒冷载实拍；工作定义 GDC-RCA-01（审查方提出），验收核心=设计白墙允许/未加载不许冒充最终渲染/失败可观测/冷热启动正确/可追溯。实施须用户批准另立任务。

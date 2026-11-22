@@ -1,0 +1,10 @@
+[RCA|白板成因实证|增补任务2讨论]
+背景：两单白板输入已取证，请续判防复发(不改码)。
+实证：两图均GDC 3D页截图(camera_snapshot三证)；case1建站后2分04秒即截图(首建冷载)；case2当天新开页。白块=白墙/顶棚/立柱(贴图载体)，同图砖纹木纹已加载——纹理竞态实拍。
+因果链：nginx压/assets no-cache→每次开页冷载80MB；capture门只等GLB(ThreeView.tsx:544,纹理不计:400)；KTX2晚于GLB晚到只补帧(:308)；未挂map=basecolor纯色(threeMaterials.ts:98)白墙成块，billboard未挂=纯白面片(billboard.ts:122)；上传仅验blob非空；AISVC无检测→AI瞎编白块。
+防复发五措（承接你R1裁定）：1capture门用CacheEntry.loaded聚合settled+photo补门 2billboard未载不显示 3assets缓存合流(消冷载) 4job带render_assets_ready元数据 5AISVC输入检测record-only。
+三问：
+Q1白块=纹理未载vs设计白墙,能否用revision材质配置交叉验证？
+Q2最小闭环排序：你R1的P0(门禁+格式堵截)与缓存合流并行还是串行？
+Q3 render_assets_ready放GDC提交表单还是AISVC params_json？
+请逐问[同意/修改/反对]+理由。

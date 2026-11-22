@@ -1108,3 +1108,10 @@
 - **M2 复盘五指标：** 工作区污染 0/文件分支冲突 0/派单归属错误 0/验收会话串用 0/并行净收益为正（详见试运行 delivery.md 第三节）。ST-05 三包最终态 IN_PROGRESS（验收中）全过。
 - **如实登记（发现的问题三项）：** ①ST-05 对「当前状态」表格行格式与 steps⑥占位写法报误，建包两轮 FAIL 迭代（易用性改进候选，未夹带修复）②缩写 SHA 仅够方案级裁定（T2 审查方自注），实施类简报须附完整 40 位 SHA（T3 完整仓库指针对照有效）③简报 1200B 压缩迭代成本（候选模板化）。
 - **边界：** 全轮目标仓库零代码修改；审查会话指针 6b009b70 未动（累计 3 条 user 消息，低于 L-018§6 迁移评估线）；三份方案与后续实施任务（GDC P0 门禁/GDC-CACHE-PROMOTION-R2/AISVC P1 检测）均未立项未授权，待用户批准；Standard 阶段2 N=2 仍按 DEC-128 边界未启动。
+
+### DEC-130 审查会话二次迁移 + DEC-129 报告核验链闭环（R1 FAIL→R2→R3 PASS）+ 白板 RCA 裁定（2026-11-22）
+
+- **审查会话迁移（第 2 次）：** 6b009b70 报告核验派单发送双验 UNCERTAIN（dispatch-2026-11-22T07-02-42，SEND_ATTEMPTED 现场保留）→只读诊断=草稿完整留存+unit 无增长=未送达（DEC-072 分支③）；用户实见"上下文窗口已达上限"并指令换新会话→按 L-018§6 主动迁移，新审查会话=**6b02952e-a570-83ec-9d08-eab047f5d21a**（--new-session 指针自动更新，旧指针备份 gpt-reviewer-session.pre-migration-20261122.json）；07-07-17 轮取消于导航期（NOT_SENT 零发送）；清理草稿前经码点级归属校验（clear_composer_draft v2.1 白名单不含新 marker 前缀，--force 前先程序化比对 brief 全文 MATCH=True）。教训登记：marker 前缀白名单需随简报格式演进更新（工具易用性候选）；fallback-turn-N 键跨重渲染重排（手册§6.2 已载，采集端按键回搜失败为第二实例）。
+- **DEC-129 核验链：** R1=[核验FAIL]五阻断（并行超限未登记/四件套未落实/T2T3 步骤状态不同步/五指标证据边界/字节+marker+过程证据口径，reply SHA256=298f6c2d…）→v2 报告整改（f5414312）→R2=[R2核验FAIL]唯一残留 task-brief 当前步骤未同步（4/5 PASS，reply SHA256=7ba82710…）→整改（59da3461）→R3 派单 SEND_CONFIRMED 后采集 fail-closed（INBOUND_START_UNIT_MISSING）→recoll 补采（derive 占位符 __INSTANCE_ID__ 漏替换当场 grep 抓获+绝对路径口径，七查全过）→**[R3核验PASS]**（reply SHA256=8dd3429e…）。**维持边界：不扩并行/不宣告 M2 试运行通过/不自动立项/不授权改码/原始证据零改写。**
+- **白板 RCA（用户追加指令）：** 两案取证（camera_snapshot 三证+case1 建站后 2m04s 冷载）→因果链=冷载 80MB×门禁只等 GLB×纹理晚到=basecolor 白块×上传无检测；ChatGPT 续判（6b02857c 续 T2 上下文，recoll 补采 reply SHA256=259bf492…）：三阶段排序（正确性基线先行→缓存/格式并行→端到端）、render_assets 结构化元数据进 params_json（系统生成只读）、四实测场景+旧 revision 缓存负例验收、工作定义 GDC-RCA-01。实施待用户批准。
+- **边界：** 全程目标仓库零代码修改；全部 reply 原始字节归档（dispatch 现场+recoll 目录）；业务三方案仍仅为建议。

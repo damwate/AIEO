@@ -1,0 +1,14 @@
+[
+  {
+    "key": "b7354db9-b0f4-5449-ac0b-0543029843d7:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[RCA|白板成因实证|增补任务2讨论]\n背景：两单白板输入已取证，请续判防复发(不改码)。\n实证：两图均GDC 3D页截图(camera_snapshot三证"
+  },
+  {
+    "key": "b7354db9-b0f4-5449-ac0b-0543029843d7:1:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nGDC 白板成因实证｜RCA 防复发裁定\n\n总体判断：同意这次 RCA 的核心因果链，且它比 R1 的初步判断更准确。\n\n这次最重要的新证"
+  }
+]
