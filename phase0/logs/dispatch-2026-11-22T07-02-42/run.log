@@ -1,0 +1,13 @@
+[2026-11-22T07:02:42.975Z] 证据目录: D:\AIEO\phase0\logs\dispatch-2026-11-22T07-02-42
+[2026-11-22T07:02:44.525Z] 会话锁已获取 pid=21188 instance=default lock=gpt-session.lockfile
+[2026-11-22T07:02:44.528Z] === GPT 派单（已有会话，消息 889 字节）===
+[2026-11-22T07:02:44.530Z] [instance] 实例域就绪: instance=default port=9222 profile=gpt-poc lock=gpt-session.lockfile
+[2026-11-22T07:02:46.666Z] [instance] 清理本实例 Chrome：own=0 foreign(不动)=15 remaining=0
+[2026-11-22T07:02:49.563Z] Chrome 已启动 pid=29340 port=9222
+[2026-11-22T07:02:51.050Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 0 个
+[2026-11-22T07:02:51.051Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-22T07:03:04.378Z] 会话就绪: https://chatgpt.com/c/6b009b70-1458-83ec-adf8-d4d5e52f0fca
+[2026-11-22T07:03:09.405Z] [dispatch] 基线尾部: {"role":"assistant","key":"0e4a63cc-b147-50c1-a41b-1c0883a69a3d:2:assistant","assistantUuid":null}
+[2026-11-22T07:03:41.255Z] 会话锁已释放
+[2026-11-22T07:03:41.256Z] 致命错误: 发送双验未通过（tailOk=false stopOkAfterTail=false userUnitKey=missing），UNCERTAIN，不重发
+[2026-11-22T07:03:41.258Z] [tab-hygiene] 发送已发生：保留现场不关页（禁重发语义依赖现场）；退出后由人工/补采链按 L-018 处置

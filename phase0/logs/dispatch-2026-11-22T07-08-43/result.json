@@ -1,0 +1,191 @@
+{
+  "at": "2026-11-22T07:12:01.366Z",
+  "instance_id": "default",
+  "instance_lock_path": "D:\\AIEO\\runtime\\locks\\gpt-session.lockfile",
+  "instance_debug_port": 9222,
+  "instance_profile_dir": "D:\\AIEO\\runtime\\chrome_profiles\\gpt-poc",
+  "message_bytes": 889,
+  "reply": "ChatGPT 说：\nDEC-129 试运行报告核验 R1\n\n核验对象：damwate/AIEO\n\n固定版本：d61179b45d0166a4373f0a7c4bca00ba4f44d569\n\n暂不签发 PASS\n\n目前已确认报告及对应的三份派单日志、三份 R1 回复、M2 治理规范均能在指定 commit 中找到。初步核验结果如下：\n\n核验项\n\n\t\n\n初步结果\n\n\n\n\n1. M2 五指标全 0\n\n\t\n\n部分有证据，尚需区分事实与统计推断\n\n\n\n\n2. 三元组归属核验\n\n\t\n\n派单时间线和会话 UUID 有直接证据\n\n\n\n\n3. 三项问题登记\n\n\t\n\n报告登记内容基本有据\n\n\n\n\n4. 三份方案与回复 SHA256\n\n\t\n\n日志中的完整 SHA256 已找到，仍需核实回复文件字节级对应关系\n\n\n\n\n5. 后续建议授权边界\n\n\t\n\n报告明确声明待用户批准，未授权实施\n\n以下是需要特别注意的证据边界。\n\n一、逐项核验结果\n1. M2 五指标全 0：不完全成立\n存在治理偏差\n\n先区分五项指标的真实性与 M2 规则合规性。\n\n指标\n\n\t\n\n核验结论\n\n\t\n\n理由\n\n\n\n\n工作区污染 0\n\n\t\n\n有条件成立\n\n\t\n\n三个目标项目均声明只读，但不能据此证明符合工作区隔离规则\n\n\n\n\n文件与分支冲突 0\n\n\t\n\n结果成立，证明力不足\n\n\t\n\n没有实际使用独立 worktree/任务分支，不能证明隔离机制有效\n\n\n\n\n派单归属错误 0\n\n\t\n\n基本成立\n\n\t\n\n三个派单日志对应三个不同会话\n\n\n\n\n验收会话串用 0\n\n\t\n\n成立\n\n\t\n\n三个会话 UUID 不同\n\n\n\n\n并行净收益为正\n\n\t\n\n证据不足\n\n\t\n\n节省时间和管理成本均为估算，净收益区间接近 0\n\n发现两个重要的 M2 规则偏差：\n\nP0-1：实际并行任务数超过规范上限。\n\nstandard/parallel-governance-draft.md §4 明确规定：\n\n小规模实战最多 2 个并行任务。\n\n根据实战证据再决定是否扩大并行数。\n\n但本次执行时间线显示：\n\n05:47：T2、T3 两个 Explore 子代理启动。\n\n同一时段：主会话完成 T1 分析。\n\n即实际存在三个任务同时执行。\n\n这不是最多两个并行任务的试运行，而是未经单独裁定的三任务并行扩展。\n\nP0-2：没有落实 M2 一任务四件套。\n\nM2 §1 明确要求：\n\n每任务独立 worktree。\n\n每任务独立任务分支。\n\n每任务独立执行会话。\n\n每任务独立验收会话。\n\n但三个 task-brief 均记录：\n\n只读不建 worktree——零写入\n\n只读确实降低了文件冲突风险，但 M2 规范没有规定只读任务可以豁免 worktree 和分支隔离。\n\n因此：\n\n零冲突是本次运行的观察结果，不等于 M2 隔离机制通过验证。\n\n另外，节省 10–15 分钟、额外成本约 10 分钟，只能支持「可能有小幅正收益」，不能证明净收益必然为正。\n\n2. 三元组派单归属：基本成立，但 marker 口径需要修正\n会话归属有证据\n\n三个派单日志记录如下：\n\n任务\n\n\t\n\n派单时间\n\n\t\n\n会话 UUID\n\n\n\n\nT1\n\n\t\n\n05:58:32\n\n\t\n\n6b0284c3-06d0-83ec-bd06-d47dc956c122\n\n\n\n\nT2\n\n\t\n\n06:01:40\n\n\t\n\n6b02857c-e1b8-83ec-9e6f-5e2058ccd81e\n\n\n\n\nT3\n\n\t\n\n06:04:34\n\n\t\n\n6b028629-c8ec-83ec-bc4f-facbeffd58de\n\n三个日志均有：\n\n新建会话记录；\n\n发送双验通过；\n\nCOMPLETED；\n\n会话 URL；\n\n回复归档 SHA256。\n\n三份 request-r1.txt 首行均含任务 ID：\n\n[T1|AISVC白图输入R1|b-20261122-aisvc-blank-input]\n\n[T2|GDC缓存格式排查R1|b-20261122-gdc-cache-formats]\n\n[T3|GDC缓存推广R1|b-20261122-gdc-cache-promotion]\n\n但有一个口径问题：\n\n回复首行采用的是 ChatGPT 说：T1｜AISVC 白图输入 R1 这样的标题，并没有原样回显完整的三段式 marker。\n\n因此：\n\n会话 UUID：可以独立核实。\n\n请求 marker：可以核实。\n\n回复归属：可以通过标题、会话和归档关系交叉判断。\n\n严格意义上的完整 marker 原样回显：没有实现。\n\n建议以后要求回复首行回显完整任务 marker，避免仅凭标题做归属判断。\n\n3. 三项问题登记：基本如实，但存在漏报\n需要补充\n\n登记问题\n\n\t\n\n核验结果\n\n\n\n\nST-05 检查器误报、格式迭代\n\n\t\n\n问题描述合理；两轮 FAIL 的原始运行记录未在本次已核对证据中找到\n\n\n\n\n缩写 SHA 核验边界\n\n\t\n\n属实，T2 回复明确说明只能作方案级裁定\n\n\n\n\n简报压缩成本\n\n\t\n\n属实，但 2–4 轮压缩过程缺少版本历史佐证\n\n另外发现一个报告未登记的事实：\n\n三个简报字节数与派单日志相差 1 字节。\n\n任务\n\n\t\n\n报告记录\n\n\t\n\n派单日志\n\n\n\n\nT1\n\n\t\n\n1125B\n\n\t\n\n1124B\n\n\n\n\nT2\n\n\t\n\n1182B\n\n\t\n\n1181B\n\n\n\n\nT3\n\n\t\n\n1190B\n\n\t\n\n1189B\n\n可能是文件末尾换行与实际发送载荷的统计口径不同，但报告没有解释。\n\n更重要的是，前述两项 M2 治理偏差（超过并行上限、未建独立 worktree）没有登记。\n\n因此，三项问题虽然基本属实，但不能称为本轮全部问题已如实登记。\n\n4. 三份方案与 reply SHA256 对账\n仓库记录一致\n\n我逐份读取了三个任务包的 acceptance/reply-r1.txt、proposal.md、steps.md，并与派单日志核对。\n\nT1｜AISVC 白图输入\n\ndispatch-2026-11-22T05-58-32\n\n6048534e6be7cb6c488f0b3f949aee4a8eac4dabaaca72db70eeece5caefb0ad\n\n日志、steps、proposal 中的完整 SHA256 一致\n\nT2｜GDC 缓存格式排查\n\ndispatch-2026-11-22T06-01-40\n\n02b77989c40a6e75b673a2b0055fe796a98a6da905d3431ab2bd700f63cef7c5\n\n日志、steps、proposal 中的完整 SHA256 一致\n\nT3｜GDC 缓存推广\n\ndispatch-2026-11-22T06-04-34\n\n3932741c6fbafb5c426ffeaabc53b2231c2a8f796fa4d78eb8e642d9502931a9\n\n日志、steps、proposal 中的完整 SHA256 一致\n\n三个派单日志中的 artifact_sha256 与 reply_readback_sha256 一致，任务包和方案文件也记录了相同的完整摘要。\n\n核验边界： 目前完成的是仓库内摘要记录、归档内容及交叉引用对账，没有独立重新计算三个 reply 文件原始字节的 SHA256。因此不能把这一项表述成独立密码学复算通过。\n\n5. 后续建议是否越权\n通过\n\n这一项报告处理正确。\n\n三份方案均有明确边界：\n\nT1：只做方案评审，不授予编码实施授权。\n\nT2：只做方案评审，实施另立任务。\n\nT3：定点移植方向有条件通过，不授权合并旧分支、不授权修改代码、不授权取消 no-store。\n\n报告第六节的五项后续建议，也明确要求用户批准后另立任务。\n\n尤其是 GDC-CACHE-PROMOTION-R2 的五项交付物建议，没有自动变成立项，更没有实施授权。\n\n这一点没有发现越权。\n\n二、额外发现：完工自查与任务包状态不一致\n\n这是另一个需要整改的证据问题。\n\n报告第七节宣称：\n\n三子任务步骤全 PASS。\n\n但我读取的实际任务文件显示：\n\n任务\n\n\t\n\nsteps.md 状态\n\n\n\n\nT1\n\n\t\n\nS2、S3 已完成\n\n\n\n\nT2\n\n\t\n\nS2 仍标记为进行中，执行结果写着「待子代理返回」\n\n\n\n\nT3\n\n\t\n\nS2 仍标记为进行中，执行结果写着「待子代理返回」\n\n而 T2、T3 的 analysis.md 实际已经存在，说明步骤文件没有随执行完成同步更新。\n\n任务书中的当前步骤也存在相应的陈旧状态。\n\n这导致报告所称的「三子任务步骤全 PASS」与实际交付记录不一致。\n\n这是交付管理六查中的明确缺口，不能用分析文件已经存在代替步骤验收记录。\n\n三、最终裁定\n\n[核验FAIL+逐条理由]\n\n本次不通过 DEC-129 报告的完整性及 M2 试运行合规性核验。\n\n阻断项：\n\n超过 M2 最多两个并行任务的试运行上限，未作为治理偏差登记。\n\n三任务均未建立独立 worktree 和任务分支，不符合 M2 一任务四件套。\n\nT2、T3 的步骤状态仍为进行中，却在总报告中宣称三任务步骤全 PASS。\n\n五指标全 0 和净收益为正的结论存在证据边界问题，尤其不能据此认定 M2 隔离机制已经验证成功。\n\nST-05 及简报压缩成本的迭代次数缺少完整过程证据；简报字节统计还存在统一的 1 字节差异。\n\n四、建议整改顺序\n\n不需要重做三个业务任务，也不需要修改业务项目代码。\n\n先修正报告事实：把三任务并行超限、worktree 缺失、步骤状态不同步列入问题登记。\n\n重新定义五指标：区分观察结果、机制验证结果和未经量化的估算；净收益改为待进一步验证。\n\n补齐任务包记录：T2/T3 的 S2 完成状态及独立验收记录必须与实际交付一致。\n\n补充派单证据说明：解释字节统计差异，明确 marker 的精确匹配规则。\n\n保留原始 R1 证据：不要为了取得 PASS 覆盖原始派单日志或回复文件。\n\n最终边界： 本轮失败不代表三个业务分析结论无效，也不代表三份方案不能作为后续讨论输入。失败的是「M2 受控并行合规性」及「试运行报告的完整证据闭环」。\n\n建议整改后提交 DEC-129 R2，重新进行定点核验。在 R2 通过前，不建议据此扩大 Standard 的并行任务数量，也不建议宣告本次 M2 试运行正式通过。",
+  "user_unit_key": "c883e091-b495-5a36-ad2b-09269df2b644:0:user",
+  "start_key_resolved": "c883e091-b495-5a36-ad2b-09269df2b644:0:user",
+  "start_resolved_by_marker": true,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "c883e091-b495-5a36-ad2b-09269df2b644:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "0258ed81-ace5-48a0-8dbb-009a2eef4376",
+  "stability": {
+    "stable": true,
+    "interval_ms": 6566,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-22T07:11:53.348Z",
+      "read_finished_at": "2026-11-22T07:11:56.902Z",
+      "unit_keys": [
+        "c883e091-b495-5a36-ad2b-09269df2b644:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "c883e091-b495-5a36-ad2b-09269df2b644:2:assistant",
+          "sha256": "298f6c2d52b6a591d51c3580af1f6d441b445268c8a238564d78f494c39fe605",
+          "size_bytes": 8934
+        }
+      ],
+      "assistant_uuid": "0258ed81-ace5-48a0-8dbb-009a2eef4376",
+      "next_user_unit_key": null,
+      "start_key_resolved": "c883e091-b495-5a36-ad2b-09269df2b644:0:user",
+      "start_resolved_by_marker": true,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-22T07:11:59.913Z",
+      "read_finished_at": "2026-11-22T07:12:00.905Z",
+      "unit_keys": [
+        "c883e091-b495-5a36-ad2b-09269df2b644:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "c883e091-b495-5a36-ad2b-09269df2b644:2:assistant",
+          "sha256": "298f6c2d52b6a591d51c3580af1f6d441b445268c8a238564d78f494c39fe605",
+          "size_bytes": 8934
+        }
+      ],
+      "assistant_uuid": "0258ed81-ace5-48a0-8dbb-009a2eef4376",
+      "next_user_unit_key": null,
+      "start_key_resolved": "c883e091-b495-5a36-ad2b-09269df2b644:0:user",
+      "start_resolved_by_marker": true,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "c883e091-b495-5a36-ad2b-09269df2b644:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "c883e091-b495-5a36-ad2b-09269df2b644:0:user",
+          "c883e091-b495-5a36-ad2b-09269df2b644:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "6deccab3580416228c4017225680b631b249a458a0c32577aac10b0d9a845407",
+          "298f6c2d52b6a591d51c3580af1f6d441b445268c8a238564d78f494c39fe605"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "c883e091-b495-5a36-ad2b-09269df2b644:0:user",
+          "c883e091-b495-5a36-ad2b-09269df2b644:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "6deccab3580416228c4017225680b631b249a458a0c32577aac10b0d9a845407",
+          "298f6c2d52b6a591d51c3580af1f6d441b445268c8a238564d78f494c39fe605"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "c883e091-b495-5a36-ad2b-09269df2b644:0:user",
+          "c883e091-b495-5a36-ad2b-09269df2b644:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "c883e091-b495-5a36-ad2b-09269df2b644:0:user",
+      "c883e091-b495-5a36-ad2b-09269df2b644:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "c883e091-b495-5a36-ad2b-09269df2b644:0:user",
+          "c883e091-b495-5a36-ad2b-09269df2b644:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "c883e091-b495-5a36-ad2b-09269df2b644:0:user",
+          "c883e091-b495-5a36-ad2b-09269df2b644:2:assistant"
+        ],
+        "overlap_keys": [
+          "c883e091-b495-5a36-ad2b-09269df2b644:0:user",
+          "c883e091-b495-5a36-ad2b-09269df2b644:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "298f6c2d52b6a591d51c3580af1f6d441b445268c8a238564d78f494c39fe605",
+  "size_bytes": 8934,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-22T07-08-43\\reply.txt",
+  "reply_readback_sha256": "298f6c2d52b6a591d51c3580af1f6d441b445268c8a238564d78f494c39fe605",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-22T07-08-43\\raw-units.json",
+  "raw_units_sha256": "1472f6dbfdf063ef1e4bf70b3c829aad2c3514e29e58f760b691ea3498d67cc2",
+  "raw_units_size_bytes": 12600,
+  "raw_units_readback_sha256": "1472f6dbfdf063ef1e4bf70b3c829aad2c3514e29e58f760b691ea3498d67cc2",
+  "session_id": "6b02952e-a570-83ec-9d08-eab047f5d21a",
+  "conversation_url": "https://chatgpt.com/c/6b02952e-a570-83ec-9d08-eab047f5d21a",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}

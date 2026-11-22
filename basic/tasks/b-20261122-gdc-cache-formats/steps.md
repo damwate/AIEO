@@ -18,15 +18,15 @@
 
 **验收结论：PASS**（开工登记齐备；独立验收证据随 S3 派单轮统一落盘）
 
-## S2 本地分析（进行中——Explore 子代理执行）
+## S2 本地分析（已完成）
 
 ①本步骤目标：缓存机制本体/缓存键/格式覆盖/图片加载点全扫描/漏网判定/上传链路，六节报告。
 
 ②修改文件：basic/tasks/b-20261122-gdc-cache-formats/analysis.md（待子代理报告落盘）。
 
-③修改内容：子代理执行中（只读扫描 D:\Garden-Design-Calculator @ 5c9ba155）。
+③修改内容：analysis.md 新增（子代理报告全文）。
 
-④执行结果：待子代理返回。
+④执行结果：Explore 子代理完成只读扫描（89 次工具调用），报告全文落 analysis.md——缓存四层机制/格式覆盖矩阵/结构性漏网三点/白板直接成因（billboard 纯白面片 billboard.ts:122+截图门只等 GLB ThreeView.tsx:544+photo 零门禁）。
 
 ⑤测试结果：未测（只读静态分析）。
 
