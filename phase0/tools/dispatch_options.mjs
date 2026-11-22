@@ -278,6 +278,8 @@ export function parseDispatchOptions(argv, { readMessageFile = (path) => readFil
   // 误覆盖→简报错发实战会话）。默认仍更新（保持审查会话迁移既有语义）；显式
   // --no-update-pointer 才跳过写盘，纯增量、零默认行为变化。
   const noUpdatePointer = argv.includes("--no-update-pointer");
+  // ctx-mgmt（b-20261122-session-ctx-mgmt，CTX-R9）：HARD 预算拒发的显式紧急通道（留痕不静默）
+  const allowNearLimit = argv.includes("--allow-near-limit");
   const messageValue = optionalArg(argv, "--message");
   const messageFile = optionalArg(argv, "--message-file");
   if (messageValue !== null && messageFile !== null) {
@@ -323,6 +325,7 @@ export function parseDispatchOptions(argv, { readMessageFile = (path) => readFil
     newSession,
     sessionResult,
     noUpdatePointer,
+    allowNearLimit,
     instanceId,
     ids,
     schemaPath,

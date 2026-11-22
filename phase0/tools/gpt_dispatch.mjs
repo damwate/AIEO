@@ -24,7 +24,7 @@ import { spawn, execFile } from "node:child_process";
 import { existsSync, mkdirSync, writeFileSync, readFileSync, appendFileSync, renameSync } from "node:fs";
 import { randomUUID } from "node:crypto";
 import { basename, dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 import { acquireSessionLock } from "../e2e-poc/session_lock.mjs";
 import { describePages, pickChatGptPage, cleanupDecision } from "./tab_hygiene.mjs";
 import {
@@ -46,6 +46,21 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const AIEO_ROOT = join(__dirname, "..", "..");
 const LOG_DIR = join(__dirname, "..", "logs");
 const REVIEWER_SESSION = join(LOG_DIR, "gpt-reviewer-session.json");
+
+// ---------- 会话上下文预算（b-20261122-session-ctx-mgmt，CTX-R9 授权编码） ----------
+// 核心在 agent-kit monitor/session-budget.mjs（SQLite 唯一权威账本）；本工具只做接入：
+// 发送前预检门（HARD 拒发/WARN 告警/账本异常 UNCERTAIN fail-closed）+ 轮次记账。
+const AGENT_KIT_DIR = process.env.AGENT_KIT_DIR || "D:/CommonProjects/agent-kit";
+let sessionBudget = null;
+try {
+  sessionBudget = await import(pathToFileURL(join(AGENT_KIT_DIR, "monitor", "session-budget.mjs")).href);
+} catch {}
+function requireSessionBudget() {
+  if (!sessionBudget) {
+    throw new Error(`SESSION_BUDGET_CORE_MISSING: agent-kit monitor/session-budget.mjs 不可用（AGENT_KIT_DIR=${AGENT_KIT_DIR}）；fail-closed 拒绝派单，不静默降级`);
+  }
+  return sessionBudget;
+}
 const SESSION_JSON = join(LOG_DIR, "gpt-poc-session.json");
 
 const CHROME = "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe";
@@ -536,6 +551,24 @@ async function mainLocked() {
   await assertDispatchPage(page, target);
   await stopIfContextLimit(page);
 
+  // 会话上下文预算预检门（两条独立防线之一：字节预算=预测；stopIfContextLimit=已发生）
+  const budgetUuid = targetSessionId ?? extractSessionId(targetUrl);
+  if (budgetUuid) {
+    const sb = requireSessionBudget();
+    let verdict;
+    try {
+      verdict = sb.assessLedger(budgetUuid);
+    } catch (e) {
+      throw new Error(`SESSION_BUDGET_UNCERTAIN: ${e.message}（账本异常不得自动放行，fail-closed）`);
+    }
+    if (verdict.state === "HARD" && !dispatchOptions.allowNearLimit) {
+      throw new Error(`SESSION_BUDGET_EXCEEDED: 会话 ${budgetUuid} 累计 ${verdict.totals.totalBytes}B ≥ HARD ${verdict.thresholds.hardBytes}B；请改用 --new-session 自包含简报迁移（紧急通道 --allow-near-limit 显式留痕）`);
+    }
+    if (verdict.state !== "NORMAL") {
+      log(`[ctx-budget] ${verdict.state}: 累计 ${verdict.totals.totalBytes}B（WARN≥${verdict.thresholds.warnBytes}/HARD≥${verdict.thresholds.hardBytes}）${dispatchOptions.allowNearLimit ? "（--allow-near-limit 显式放行）" : ""}`);
+    }
+  }
+
   let confirmedSessionId = null;
   const confirmSend = async (userUnitKey) => {
     const isAttributable = (url) => sessionIdIsAttributable({
@@ -546,6 +579,15 @@ async function mainLocked() {
       session_id: confirmedSessionId,
       user_unit_key: userUnitKey,
     });
+    // ctx-mgmt 记账：发送确认即记 in_bytes（此后采集失败也已在账；失败仅告警不毁证据）
+    if (confirmedSessionId) {
+      try {
+        requireSessionBudget().recordTurn(confirmedSessionId, { inBytes: Buffer.byteLength(message, "utf8"), outBytes: 0 });
+        log(`[ctx-budget] turn+in_bytes=${Buffer.byteLength(message, "utf8")}B → ${confirmedSessionId}`);
+      } catch (e) {
+        log(`[ctx-budget] WARN: 记账失败（不影响本次派单证据，下次预检按 UNCERTAIN fail-closed）: ${e.message}`);
+      }
+    }
     if (newSession && !confirmedSessionId) {
       await page.waitForURL(isAttributable, { timeout: 5000 }).catch(() => {});
       if (isAttributable(page.url())) {
@@ -557,6 +599,18 @@ async function mainLocked() {
   const { snapshot, assistant_uuid, checks, stability, sentUserUnitKey } = await sendAndCollect(
     page, message, "dispatch", attachPath, target, confirmSend,
   );
+  // ctx-mgmt 记账：采集 COMPLETED 记 out_bytes（reply 字节数）
+  {
+    const collectUuid = confirmedSessionId ?? extractSessionId(page.url());
+    if (collectUuid) {
+      try {
+        requireSessionBudget().recordTurn(collectUuid, { inBytes: 0, outBytes: Buffer.byteLength(snapshot.reply, "utf8") });
+        log(`[ctx-budget] turn+out_bytes=${Buffer.byteLength(snapshot.reply, "utf8")}B → ${collectUuid}`);
+      } catch (e) {
+        log(`[ctx-budget] WARN: 记账失败（不影响本次派单证据，下次预检按 UNCERTAIN fail-closed）: ${e.message}`);
+      }
+    }
+  }
 
   // 保存当前真实会话 URL（local-chatgpt 草稿态跳过；上限已在发送前安全停止）
   let conversationUrl = null;

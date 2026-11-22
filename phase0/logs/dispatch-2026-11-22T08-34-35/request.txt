@@ -1,0 +1,2 @@
+[CTX-R9|两处定点复核]
+v9已推main @ 86a5bc4a72044b5663d9ea7cb17e43183592e178（design-r2.md §2第7/9步+C9/C10）。按你R8处方：P0-1=COMMIT报错后无论事务状态一律废弃连接(close不复用)单出口；isTransaction仅决定是否尝试ROLLBACK(true=尝试释放写锁,false=跳过),不作为复用依据；LEDGER_COMMIT_UNCERTAIN上抛不计成功不重放；后续调用必须新建连接；C9注入两态故障断言旧连接废弃+新连接正常。P1-1=绝对deadline运行时强制：T0=performance.now()记入recordTurn,deadline=T0+3000ms；每轮循环先查剩余预算(剩余<200ms即停),单次busy_timeout动态设min(500ms,剩余预算),耗尽立即LEDGER_BUSY_TIMEOUT；计时覆盖首次受阻调用至异常抛出完整路径(理论预算2600ms留400ms余量)；C10保留真实受控锁竞争实测T_wall≤3000ms,不用计算预算代替实测。①首写冲突/GEN_CONFLICT你已判通过未动。请给[CTX-R9设计PASS+编码授权]或[FAIL+理由]。

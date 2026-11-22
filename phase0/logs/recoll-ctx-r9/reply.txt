@@ -1,0 +1,216 @@
+ChatGPT 说：
+
+CTX-R9 设计 PASS 授权进入编码
+
+复核对象
+
+仓库：damwate/AIEO
+
+分支：main
+
+完整 SHA：86a5bc4a72044b5663d9ea7cb17e43183592e178
+
+文件：basic/tasks/b-20261122-session-ctx-mgmt/design-r2.md
+
+文件版本：v5
+
+已按指定 SHA 读取并复核。
+
+一、两处整改裁定
+
+项目
+
+	
+
+R9 实际修改
+
+	
+
+裁定
+
+
+
+
+P0-1 COMMIT 失败
+
+	
+
+无论事务状态，一律关闭废弃连接
+
+	
+
+PASS
+
+
+
+
+P0-1 状态判断
+
+	
+
+isTransaction 仅决定是否尝试 ROLLBACK
+
+	
+
+PASS
+
+
+
+
+P0-1 结果不确定
+
+	
+
+LEDGER_COMMIT_UNCERTAIN，不计成功、不重放
+
+	
+
+PASS
+
+
+
+
+P0-1 后续调用
+
+	
+
+强制新建连接，C9 验证
+
+	
+
+PASS
+
+
+
+
+P1-1 时间预算
+
+	
+
+performance.now() + 3000ms 绝对 deadline
+
+	
+
+PASS（设计）
+
+
+
+
+P1-1 单次等待
+
+	
+
+动态调整 busy_timeout，按剩余预算截断
+
+	
+
+PASS（设计）
+
+
+
+
+P1-1 实测验收
+
+	
+
+C10 真实锁竞争，完整路径计时
+
+	
+
+PASS（验收要求）
+
+二、重要边界说明
+
+设计通过不等于运行时实现已经通过。
+
+编码阶段特别注意三个细节：
+
+DatabaseSync.isTransaction 是 Node.js API 的属性，编码必须按实际运行环境的 API 使用，不能误写成函数调用。
+
+SQLite busy_timeout 是连接级配置。动态调整必须确保不会影响其他并发操作的连接状态。
+
+T_wall ≤ 3000ms 必须由真实受控锁竞争证明。deadline 检查不能只放在重试循环入口，还必须保证单次阻塞不会突破总 deadline。
+
+第三项尤其重要：如果底层 SQLite 调用本身无法被中断，单纯动态设置 busy_timeout 并不自动等于绝对墙上时间保证。C10 必须保留为编码后的硬验收门。
+
+三、编码授权范围
+AUTHORIZED
+
+授权进入 agent-kit 的 monitor/session-budget.mjs 及对应测试编码。
+
+保留以下不可变约束：
+
+SQLite 是唯一权威账本。
+
+GEN_CONFLICT 不允许丢失已确认 turn。
+
+首写冲突必须显式 ROLLBACK 后重读。
+
+ROLLBACK 失败必须废弃连接。
+
+COMMIT 报错必须废弃连接。
+
+UNCERTAIN 不得自动放行。
+
+BUSY 超时必须 fail-closed。
+
+不恢复旧 JSON 账本及文件锁协议。
+
+四、下一阶段验收门
+
+验收项
+
+	
+
+通过条件
+
+
+
+
+C8
+
+	
+
+首写竞争两 turn 均累计；ROLLBACK 失败后旧连接不再使用
+
+
+
+
+C9
+
+	
+
+两态故障注入；旧连接废弃；新连接正常
+
+
+
+
+C10
+
+	
+
+真实锁竞争，完整路径实测不超过3000ms
+
+
+
+
+C1–C7
+
+	
+
+原 SQLite 专项矩阵全部通过
+
+
+
+
+T1–T7
+
+	
+
+原业务验收矩阵全部通过
+
+最终裁定：CTX-R9 = 设计 PASS，正式授权编码。
+
+授权仅覆盖设计认可和进入编码，不代表提前批准合并、部署或生产验收。
+
+下一检查点：提交完整 Git SHA 后，进行独立代码审查及 C8/C9/C10 定点复验。

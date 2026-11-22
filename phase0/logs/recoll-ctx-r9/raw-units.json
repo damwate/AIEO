@@ -1,0 +1,110 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-22T08:38:05.845Z",
+  "user_unit_key": "52d3d2fc-9864-50cb-a6ce-04587aa40069:0:user",
+  "start_key_resolved": "52d3d2fc-9864-50cb-a6ce-04587aa40069:0:user",
+  "start_resolved_by_marker": false,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "52d3d2fc-9864-50cb-a6ce-04587aa40069:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "81539cfe-bc1c-411f-9ba3-5575994b3691",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "52d3d2fc-9864-50cb-a6ce-04587aa40069:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "f36ad6ef-46b1-5464-804f-75424bf79f0e:0:user",
+          "f36ad6ef-46b1-5464-804f-75424bf79f0e:2:assistant",
+          "52d3d2fc-9864-50cb-a6ce-04587aa40069:0:user",
+          "52d3d2fc-9864-50cb-a6ce-04587aa40069:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "4f3359119d8631efc48f0bab40cc412a4f4345eacb065f22b3d2e26241d93aad",
+          "dafbc84f085018c3db86e5e33f83acae5aa01e806f0ecc322488d7374f335e29",
+          "fcd2a2caf97fb1541206c75006f128615c0f493466730bfef8038cc8219a596a",
+          "b0005ce687c38b46951f1f8da7ffefb6bdce11a24d57d656471a867bb35e0024"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "f36ad6ef-46b1-5464-804f-75424bf79f0e:0:user",
+          "f36ad6ef-46b1-5464-804f-75424bf79f0e:2:assistant",
+          "52d3d2fc-9864-50cb-a6ce-04587aa40069:0:user",
+          "52d3d2fc-9864-50cb-a6ce-04587aa40069:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "4f3359119d8631efc48f0bab40cc412a4f4345eacb065f22b3d2e26241d93aad",
+          "dafbc84f085018c3db86e5e33f83acae5aa01e806f0ecc322488d7374f335e29",
+          "fcd2a2caf97fb1541206c75006f128615c0f493466730bfef8038cc8219a596a",
+          "b0005ce687c38b46951f1f8da7ffefb6bdce11a24d57d656471a867bb35e0024"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "f36ad6ef-46b1-5464-804f-75424bf79f0e:0:user",
+          "f36ad6ef-46b1-5464-804f-75424bf79f0e:2:assistant",
+          "52d3d2fc-9864-50cb-a6ce-04587aa40069:0:user",
+          "52d3d2fc-9864-50cb-a6ce-04587aa40069:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "52d3d2fc-9864-50cb-a6ce-04587aa40069:0:user",
+      "52d3d2fc-9864-50cb-a6ce-04587aa40069:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "f36ad6ef-46b1-5464-804f-75424bf79f0e:0:user",
+          "f36ad6ef-46b1-5464-804f-75424bf79f0e:2:assistant",
+          "52d3d2fc-9864-50cb-a6ce-04587aa40069:0:user",
+          "52d3d2fc-9864-50cb-a6ce-04587aa40069:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "f36ad6ef-46b1-5464-804f-75424bf79f0e:0:user",
+          "f36ad6ef-46b1-5464-804f-75424bf79f0e:2:assistant",
+          "52d3d2fc-9864-50cb-a6ce-04587aa40069:0:user",
+          "52d3d2fc-9864-50cb-a6ce-04587aa40069:2:assistant"
+        ],
+        "overlap_keys": [
+          "f36ad6ef-46b1-5464-804f-75424bf79f0e:0:user",
+          "f36ad6ef-46b1-5464-804f-75424bf79f0e:2:assistant",
+          "52d3d2fc-9864-50cb-a6ce-04587aa40069:0:user",
+          "52d3d2fc-9864-50cb-a6ce-04587aa40069:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "52d3d2fc-9864-50cb-a6ce-04587aa40069:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\nCTX-R9 设计 PASS 授权进入编码\n\n复核对象\n\n仓库：damwate/AIEO\n\n分支：main\n\n完整 SHA：86a5bc4a72044b5663d9ea7cb17e43183592e178\n\n文件：basic/tasks/b-20261122-session-ctx-mgmt/design-r2.md\n\n文件版本：v5\n\n已按指定 SHA 读取并复核。\n\n一、两处整改裁定\n\n项目\n\n\t\n\nR9 实际修改\n\n\t\n\n裁定\n\n\n\n\nP0-1 COMMIT 失败\n\n\t\n\n无论事务状态，一律关闭废弃连接\n\n\t\n\nPASS\n\n\n\n\nP0-1 状态判断\n\n\t\n\nisTransaction 仅决定是否尝试 ROLLBACK\n\n\t\n\nPASS\n\n\n\n\nP0-1 结果不确定\n\n\t\n\nLEDGER_COMMIT_UNCERTAIN，不计成功、不重放\n\n\t\n\nPASS\n\n\n\n\nP0-1 后续调用\n\n\t\n\n强制新建连接，C9 验证\n\n\t\n\nPASS\n\n\n\n\nP1-1 时间预算\n\n\t\n\nperformance.now() + 3000ms 绝对 deadline\n\n\t\n\nPASS（设计）\n\n\n\n\nP1-1 单次等待\n\n\t\n\n动态调整 busy_timeout，按剩余预算截断\n\n\t\n\nPASS（设计）\n\n\n\n\nP1-1 实测验收\n\n\t\n\nC10 真实锁竞争，完整路径计时\n\n\t\n\nPASS（验收要求）\n\n二、重要边界说明\n\n设计通过不等于运行时实现已经通过。\n\n编码阶段特别注意三个细节：\n\nDatabaseSync.isTransaction 是 Node.js API 的属性，编码必须按实际运行环境的 API 使用，不能误写成函数调用。\n\nSQLite busy_timeout 是连接级配置。动态调整必须确保不会影响其他并发操作的连接状态。\n\nT_wall ≤ 3000ms 必须由真实受控锁竞争证明。deadline 检查不能只放在重试循环入口，还必须保证单次阻塞不会突破总 deadline。\n\n第三项尤其重要：如果底层 SQLite 调用本身无法被中断，单纯动态设置 busy_timeout 并不自动等于绝对墙上时间保证。C10 必须保留为编码后的硬验收门。\n\n三、编码授权范围\nAUTHORIZED\n\n授权进入 agent-kit 的 monitor/session-budget.mjs 及对应测试编码。\n\n保留以下不可变约束：\n\nSQLite 是唯一权威账本。\n\nGEN_CONFLICT 不允许丢失已确认 turn。\n\n首写冲突必须显式 ROLLBACK 后重读。\n\nROLLBACK 失败必须废弃连接。\n\nCOMMIT 报错必须废弃连接。\n\nUNCERTAIN 不得自动放行。\n\nBUSY 超时必须 fail-closed。\n\n不恢复旧 JSON 账本及文件锁协议。\n\n四、下一阶段验收门\n\n验收项\n\n\t\n\n通过条件\n\n\n\n\nC8\n\n\t\n\n首写竞争两 turn 均累计；ROLLBACK 失败后旧连接不再使用\n\n\n\n\nC9\n\n\t\n\n两态故障注入；旧连接废弃；新连接正常\n\n\n\n\nC10\n\n\t\n\n真实锁竞争，完整路径实测不超过3000ms\n\n\n\n\nC1–C7\n\n\t\n\n原 SQLite 专项矩阵全部通过\n\n\n\n\nT1–T7\n\n\t\n\n原业务验收矩阵全部通过\n\n最终裁定：CTX-R9 = 设计 PASS，正式授权编码。\n\n授权仅覆盖设计认可和进入编码，不代表提前批准合并、部署或生产验收。\n\n下一检查点：提交完整 Git SHA 后，进行独立代码审查及 C8/C9/C10 定点复验。",
+      "text_sha256": "b0005ce687c38b46951f1f8da7ffefb6bdce11a24d57d656471a867bb35e0024",
+      "size_bytes": 2777,
+      "assistant_uuid": "81539cfe-bc1c-411f-9ba3-5575994b3691"
+    }
+  ]
+}
