@@ -1,0 +1,2 @@
+[CTX-R3|并发设计复核]
+v3已推main @ 94ec9ccb9220024c120122bdec2cfc758d2be692（design-r2.md）。三P0回应：P0-1=owner token 32hex随机入锁文件,释放/接管前均重读核对token,PID复用不可混淆；P0-2=接管经O_EXCL意图文件<uuid>.takeover.<token>唯一接管者+重读旧锁token未变+gen+1原子落账本+删旧锁+建新锁,杜绝双接管竞态；P0-3=账本内容含lock_gen世代号,写路径乐观CAS(rename前重读gen仍==G才落盘),接管gen+1使旧持锁者挂起写必然CAS失败——旧持锁者隔离靠世代比对非靠杀进程；TTL=存活假设,持锁者I/O进展心跳刷新,挂死无心跳→过期→接管→gen失效。测试矩阵：T6拆T6a同UUID跨仓共享/T6b异UUID隔离+新增并发专项C1并发累计不丢/C2占用超时转UNCERTAIN/C3崩溃过期接管唯一/C4旧持锁者CAS失败/C5 token不匹配不删他人锁。请给[CTX-R3设计PASS+编码授权]或[FAIL+理由]。

@@ -1,0 +1,94 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-22T08:02:48.210Z",
+  "user_unit_key": "4813b2f3-0023-5ee6-9881-7d775fe408ff:0:user",
+  "start_key_resolved": "4813b2f3-0023-5ee6-9881-7d775fe408ff:0:user",
+  "start_resolved_by_marker": false,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "4813b2f3-0023-5ee6-9881-7d775fe408ff:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "9314df87-7196-48b0-8f14-59edbecaf9b5",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "4813b2f3-0023-5ee6-9881-7d775fe408ff:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "4813b2f3-0023-5ee6-9881-7d775fe408ff:0:user",
+          "4813b2f3-0023-5ee6-9881-7d775fe408ff:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "3d90a995c9c109c149be39d0546105261905456dea39c6d39f78d1b8b5a6427f",
+          "b0b3dcf48812664fee7014a96d27dbb75b576643d3545a13cdec96673c228a26"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "4813b2f3-0023-5ee6-9881-7d775fe408ff:0:user",
+          "4813b2f3-0023-5ee6-9881-7d775fe408ff:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "3d90a995c9c109c149be39d0546105261905456dea39c6d39f78d1b8b5a6427f",
+          "b0b3dcf48812664fee7014a96d27dbb75b576643d3545a13cdec96673c228a26"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "4813b2f3-0023-5ee6-9881-7d775fe408ff:0:user",
+          "4813b2f3-0023-5ee6-9881-7d775fe408ff:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "4813b2f3-0023-5ee6-9881-7d775fe408ff:0:user",
+      "4813b2f3-0023-5ee6-9881-7d775fe408ff:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "4813b2f3-0023-5ee6-9881-7d775fe408ff:0:user",
+          "4813b2f3-0023-5ee6-9881-7d775fe408ff:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "4813b2f3-0023-5ee6-9881-7d775fe408ff:0:user",
+          "4813b2f3-0023-5ee6-9881-7d775fe408ff:2:assistant"
+        ],
+        "overlap_keys": [
+          "4813b2f3-0023-5ee6-9881-7d775fe408ff:0:user",
+          "4813b2f3-0023-5ee6-9881-7d775fe408ff:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "4813b2f3-0023-5ee6-9881-7d775fe408ff:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n[CTX-R3设计FAIL+理由]\n\n已按指定完整 SHA 核对 design-r2.md 原文及该提交差异，没有使用 HEAD。\n\n仓库：damwate/AIEO\n\nCommit：94ec9ccb9220024c120122bdec2cfc758d2be692\n\n文件：basic/tasks/b-20261122-session-ctx-mgmt/design-r2.md\n\n文件 Blob SHA：2bd6cb3ca8185a5d9ae03d81b8cece64dc2d7f7f\n\n结论：R3 对 R2b 三项阻断有实质补充，但并发协议仍存在两个关键竞态，不能证明旧持锁者不会覆盖新账本，也不能证明接管者唯一。设计不通过，不授予编码授权。\n\n一、三项 P0 复核\n\n项目\n\n\t\n\n结论\n\n\t\n\n核验意见\n\n\n\n\nP0-1 owner token\n\n\t\n\n基本通过\n\n\t\n\n32hex 随机 token，并在释放、接管前重读核对，解决了仅凭 PID 识别所有权的问题。\n\n\n\n\nP0-2 原子接管\n\n\t\n\n未通过\n\n\t\n\n接管意图文件名包含各自随机 token，实际不能保证只有一个接管者创建成功。\n\n\n\n\nP0-3 旧持锁者隔离\n\n\t\n\n未通过\n\n\t\n\ngen 检查与 rename 不是一个原子操作，检查后仍存在被接管者插入的竞态窗口。\n\n二、两个阻断问题\nP0-1：接管意图文件并没有实现互斥\n\n原文规定：\n\n<uuid>.takeover.<token>，通过 O_EXCL 创建，声称只有一个接管者能创建成功。\n\n问题在于：每个接管者使用自己的随机 token，文件路径因此不同。\n\n例如：\n\n进程 A 创建 uuid.takeover.tokenA，成功。\n\n进程 B 创建 uuid.takeover.tokenB，也成功。\n\n两个文件均不存在，所以 O_EXCL 不会阻止 B 创建第二个文件。\n\nO_EXCL 只保证同一个路径不能被重复创建，不保证不同路径之间互斥。\n\n因此，当前协议无法推出“唯一接管者”。两个接管者可能先后读取相同旧锁、竞争更新账本世代、删除旧锁或创建新锁。\n\n**整改要求：**接管竞争必须落在同一个确定性互斥对象上，例如固定路径 <uuid>.takeover，通过 O_EXCL 争夺同一个路径；或者采用其他经过证明的原子选主机制。随机 token 应作为文件内容中的 owner 身份，而不是用来区分互斥文件路径。\n\n还必须定义接管意图文件的异常退出恢复、过期清理和接管失败后的释放规则。\n\nP0-2：gen CAS 检查与 rename 之间仍有 TOCTOU 竞态\n\n原文的写入流程：\n\n读取账本，记录 gen=G。\n\n计算新状态。\n\n写临时文件。\n\nrename 前重新读取账本，检查 gen 仍为 G。\n\n一致就 rename。\n\n这并不是严格意义上的 CAS。第 4 步的检查与第 5 步的 rename 之间仍然存在时间窗口。\n\n可能发生：\n\n旧持锁者 A 读取 gen=G，完成 CAS 前检查，确认仍为 G。\n\nA 暂停。\n\n接管者 B 将账本更新为 gen=G+1。\n\nB 完成接管。\n\nA 恢复执行，将旧内容 rename 覆盖账本。\n\n最终账本可能重新变成 gen=G，接管者刚写入的内容也可能丢失。\n\n所以，“接管把 gen+1 落进账本”本身不足以保证旧持锁者后续写入必然失败。真正需要保证的是：检查世代与提交写入之间不能被另一个世代变更插入。\n\n**整改要求：**明确采用真正具备原子条件更新语义的提交机制，或重新设计写入协调机制，使接管与旧持锁者提交不可能交错。不能仅用“rename 前重读一次”称为 CAS。\n\n三、TTL 与心跳还需要补齐的边界\n\nR3 将 TTL 定义为存活假设，并规定实际 I/O 进展时刷新时间戳，方向正确，但仍缺少以下协议细节：\n\n心跳刷新前如何确认自己仍拥有当前锁，避免旧持锁者刷新已经失效的锁。\n\n心跳刷新与接管者判定过期之间如何避免竞态。\n\n接管完成后，旧持锁者是否必须在每次账本提交时验证当前锁 token 和世代。\n\n接管者在 gen+1 落账本后、删除旧锁前或创建新锁前崩溃，如何恢复。\n\n接管意图文件遗留时，下一次接管如何判断它是有效占用还是崩溃遗留。\n\n这些内容需要写成可执行的状态转换与恢复规则，而不是只写原则描述。\n\n四、测试矩阵复核\n\n测试\n\n\t\n\n结论\n\n\t\n\n意见\n\n\n\n\nT1–T5\n\n\t\n\n保留\n\n\t\n\n原 R1 验收要求不变，必须真实执行。\n\n\n\n\nT6a\n\n\t\n\n通过设计补充\n\n\t\n\n明确同 UUID 跨仓共享。\n\n\n\n\nT6b\n\n\t\n\n通过设计补充\n\n\t\n\n明确不同 UUID 隔离。\n\n\n\n\nT7\n\n\t\n\n保留\n\n\t\n\nWARN 后新会话的自包含简报恢复。\n\n\n\n\nC1\n\n\t\n\n需补强\n\n\t\n\n需要覆盖并发写入及接管交错。\n\n\n\n\nC2\n\n\t\n\n保留\n\n\t\n\n锁占用超时必须 fail-closed。\n\n\n\n\nC3\n\n\t\n\n未充分\n\n\t\n\n还需两个或多个接管者同时争夺同一过期锁。\n\n\n\n\nC4\n\n\t\n\n未充分\n\n\t\n\n必须精确构造“旧进程完成 gen 检查后暂停，接管者更新 gen，旧进程恢复提交”的竞态。\n\n\n\n\nC5\n\n\t\n\n保留\n\n\t\n\ntoken 不匹配时不得删除他人锁。\n\n建议增加两项明确负例：\n\n**C6：双接管者竞争。**两个进程同时发现过期锁，必须只有一个获得接管权，另一个不得修改账本或锁。\n\n**C7：CAS 检查后接管。**旧持锁者完成世代检查后暂停，接管者完成接管，旧持锁者恢复；必须证明旧写入无法覆盖新账本。\n\n五、最终授权裁定\n\n范围\n\n\t\n\n裁定\n\n\n\n\nagent-kit 统一实现方向\n\n\t\n\n认可\n\n\n\n\nUUID 跨仓共享、跨 UUID 隔离\n\n\t\n\n通过\n\n\n\n\n阈值、账本字段及 fail-closed 方向\n\n\t\n\n通过\n\n\n\n\nAIEO dispatch 接入方向\n\n\t\n\n认可\n\n\n\n\nT1–T7 验收要求\n\n\t\n\n保留\n\n\n\n\nC1–C5 并发专项测试\n\n\t\n\n需补强\n\n\n\n\n并发协议 v3\n\n\t\n\n未通过\n\n\n\n\nCTX-R3 设计 PASS\n\n\t\n\n不授予\n\n\n\n\n编码实施授权\n\n\t\n\n不授予\n\n\n\n\nDEC-010 最终用户拍板合并门禁\n\n\t\n\n继续有效\n\n下一版只需聚焦两件事：\n\n把接管竞争改成真正共享同一互斥对象的原子选主协议。\n\n把 gen 检查与账本提交改成不可被接管插入的原子提交协议。\n\n不需要推翻整体架构，也不需要重新讨论 UUID 隔离和预算策略。修订后再做定点复审；在这两个 P0 关闭前，不建议进入编码阶段。",
+      "text_sha256": "b0b3dcf48812664fee7014a96d27dbb75b576643d3545a13cdec96673c228a26",
+      "size_bytes": 5955,
+      "assistant_uuid": "9314df87-7196-48b0-8f14-59edbecaf9b5"
+    }
+  ]
+}
