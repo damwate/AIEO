@@ -1,0 +1,5 @@
+[CTX-CODE-R6|R5两项闭环|b-20261122-session-ctx-mgmt]
+R5两项全闭环，附件=更新zip(4文件:session-budget.mjs+test(23)+新增ctx_budget_hooks.mjs+test_ctx_budget_hooks.mjs(8))。AIEO：fix/session-ctx-mgmt @ 下方SHA。
+P1-1=zip已作为新增文件正式入commit（此前Compress-Archive失败导致缺包,已用python zipfile重打+入包+推送）。
+P1-2=派单故障路径抽成纯函数并真实故障注入测试：phase0/tools/ctx_budget_hooks.mjs=assessBudgetGate/recordInTurn/recordOutTurn(gpt_dispatch已改为调用这三函数,语义与内联版一致)；phase0/tools/test_ctx_budget_hooks.mjs 8用例：UNCERTAIN拒发且--allow-near-limit不绕过/HARD拒发+显式放行留痕/账本异常fail-closed/input记账失败markUncertain成功不中止/out+mark双失败SESSION_BUDGET_MARK_FAILED中止(引用证据目录)/out同语义。
+测试：hooks 8/8+核心23/23全绿。请给[编码验收PASS]或[FAIL+逐条]。
