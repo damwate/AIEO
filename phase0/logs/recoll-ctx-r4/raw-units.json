@@ -1,0 +1,94 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-22T08:09:27.546Z",
+  "user_unit_key": "3c604a62-cab6-58c7-a6df-c59827019ba9:0:user",
+  "start_key_resolved": "3c604a62-cab6-58c7-a6df-c59827019ba9:0:user",
+  "start_resolved_by_marker": false,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "3c604a62-cab6-58c7-a6df-c59827019ba9:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "c6ec30dd-e9dc-4b42-8909-0bd81d61d14a",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "3c604a62-cab6-58c7-a6df-c59827019ba9:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "3c604a62-cab6-58c7-a6df-c59827019ba9:0:user",
+          "3c604a62-cab6-58c7-a6df-c59827019ba9:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "7290c7bc5168d79472f4ea84678b73cbeaae1eb39d9f2d32ffee47afd94c514e",
+          "3472d0393ffaa4a94438be252746b5a75e469296f06e4b4c3abd68f27918de02"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "3c604a62-cab6-58c7-a6df-c59827019ba9:0:user",
+          "3c604a62-cab6-58c7-a6df-c59827019ba9:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "7290c7bc5168d79472f4ea84678b73cbeaae1eb39d9f2d32ffee47afd94c514e",
+          "3472d0393ffaa4a94438be252746b5a75e469296f06e4b4c3abd68f27918de02"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "3c604a62-cab6-58c7-a6df-c59827019ba9:0:user",
+          "3c604a62-cab6-58c7-a6df-c59827019ba9:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "3c604a62-cab6-58c7-a6df-c59827019ba9:0:user",
+      "3c604a62-cab6-58c7-a6df-c59827019ba9:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "3c604a62-cab6-58c7-a6df-c59827019ba9:0:user",
+          "3c604a62-cab6-58c7-a6df-c59827019ba9:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "3c604a62-cab6-58c7-a6df-c59827019ba9:0:user",
+          "3c604a62-cab6-58c7-a6df-c59827019ba9:2:assistant"
+        ],
+        "overlap_keys": [
+          "3c604a62-cab6-58c7-a6df-c59827019ba9:0:user",
+          "3c604a62-cab6-58c7-a6df-c59827019ba9:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "3c604a62-cab6-58c7-a6df-c59827019ba9:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n[CTX-R4设计FAIL+理由]\n\n已按指定完整 SHA 核对 design-r2.md 原文及该提交差异。\n\n仓库：damwate/AIEO\n\nCommit：0a1359e4598afa23439ee1b4a6075ae562e8aa00\n\n文件：basic/tasks/b-20261122-session-ctx-mgmt/design-r2.md\n\n文件 Blob SHA：06099ae8f26587ba8f61db57c93601f5b62afd97\n\n裁定：SQLite 方向正确，R3 两个手搓锁竞态的根因基本被替换掉；但当前文档存在事务挂起边界未解决、旧协议残留、验收矩阵未同步三个问题。R4 不通过，不授予编码授权。\n\n一、核心方案评价\n\n审查项\n\n\t\n\n结论\n\n\t\n\n理由\n\n\n\n\n单库、UUID 主键\n\n\t\n\n通过\n\n\t\n\n同 UUID 跨仓共享、不同 UUID 隔离，数据模型合理。\n\n\n\n\nSQLite WAL\n\n\t\n\n通过\n\n\t\n\n使用成熟事务机制替代手搓锁，方向正确。\n\n\n\n\nBEGIN IMMEDIATE\n\n\t\n\n通过\n\n\t\n\n在事务开始时取得写事务资格，避免多个写者同时进入写阶段。\n\n\n\n\nUPDATE ... WHERE gen=?\n\n\t\n\n有条件通过\n\n\t\n\n条件更新可避免旧版本覆盖新版本，但前提是事务边界及读取时序严格定义。\n\n\n\n\n删除 TTL/接管/选主\n\n\t\n\n通过\n\n\t\n\n不再需要文件锁接管协议。\n\n\n\n\nSQLITE_BUSY / 损坏 fail-closed\n\n\t\n\n方向通过\n\n\t\n\n错误分类和拒发保护符合原设计原则。\n\n\n\n\n事务挂起恢复\n\n\t\n\n未通过\n\n\t\n\nSQLite 写事务若被挂起，仍可能持有写锁，其他进程无法正常推进。\n\n\n\n\n文档及测试一致性\n\n\t\n\n未通过\n\n\t\n\n旧 JSON 文件账本、旧锁重试语义和旧 C3/C5 测试仍残留。\n\n二、阻断问题\nP0-1：SQLite 不能自动解决“事务内进程挂起”\n\nR4 写道：\n\nhung 进程不持有跨 I/O 的锁（事务短即提交/回滚），挂起期间他人正常推进。\n\n这句话不能无条件成立。\n\nSQLite 的 BEGIN IMMEDIATE 会取得写事务资格。假设：\n\n进程 A 执行 BEGIN IMMEDIATE。\n\nA 在事务尚未提交时被暂停，进程仍存活、数据库连接仍打开。\n\n进程 B 执行 BEGIN IMMEDIATE。\n\nB 无法取得写事务资格，只能等待，最终可能触发 SQLITE_BUSY。\n\nWAL 模式允许读写并行，但仍然只有一个写事务能够同时推进。WAL 不会让被挂起的写事务自动释放锁。\n\n因此必须区分两种情况：\n\n**读取后、开启事务前挂起：**其他进程可以提交；恢复后旧 gen 条件更新应失败。\n\n**已经开启写事务后挂起：**其他写者被阻塞，直到事务提交、回滚、连接关闭或进程退出。\n\n你在 R4 中提出的 C4 属于第一种情况，不能证明第二种情况也安全。\n\n整改要求：\n\n明确事务必须极短，且事务内部禁止网络、浏览器、文件 I/O、等待和其他外部操作。读取、计算与提交的具体边界必须写清楚。\n\n同时明确进程挂起时的行为：等待方达到忙等待期限后必须 fail-closed；不能声称挂起期间其他写者仍然可以正常推进。\n\nP0-2：事务读取时序和 GEN_CONFLICT 语义需要精确定义\n\n目前写法：\n\nBEGIN IMMEDIATE → UPDATE ... WHERE uuid=? AND gen=?\n\n没有明确说明 gen 是在什么时刻读取的。\n\n需要明确采用以下顺序：\n\n在事务外读取账本快照，取得 gen=G。\n\n在事务外完成纯内存计算，不执行任何外部 I/O。\n\nBEGIN IMMEDIATE。\n\n在事务内执行条件更新：WHERE uuid=? AND gen=G。\n\nchanges == 1 才允许 COMMIT。\n\nchanges == 0 必须 ROLLBACK，区分账本不存在与 gen 冲突，不能将两者混为一类。\n\n这样才能构造并验证 C4：A 读取 G 后暂停，B 提交 G+1，A 恢复后条件更新影响 0 行。\n\n另外，文档中的“检查与提交之间不存在窗口”表述不够严谨：条件 UPDATE 的判定和写入由事务保护，但 COMMIT 仍是独立步骤。应明确事务成功提交才算一次完整账本更新，COMMIT 失败不能记作成功。\n\n三、文档中有三处旧协议残留\n\n这是本次原文直接可见的问题，不是对实现的推测。\n\n1. 账本存储定义相互冲突\n\n文档前面仍写：\n\n~/.agents/session-usage/<uuid>.json\n\ntmp → fsync → rename\n\nrecordTurn 原子文件写入\n\nv4 又改成：\n\n~/.agents/session-usage/session-usage.db\n\nSQLite ledger 表\n\nSQL 事务提交\n\n两套存储协议不能同时作为权威账本。必须明确 SQLite 是唯一权威存储，旧 JSON 是迁移输入、历史归档，还是彻底废弃。\n\n2. 旧锁错误语义仍存在\n\nSQLite 方案已经定义：\n\nSQLITE_BUSY 重试后返回 LEDGER_BUSY_TIMEOUT。\n\n但后面仍残留：\n\n活跃锁退避 200ms×5 后=LEDGER_LOCK_TIMEOUT\n\n这属于已经删除的文件锁协议，应移除或明确其不再适用。\n\n3. 测试矩阵仍是 v3 版本\n\n当前 C1–C5 仍然写着：\n\n锁串行化+gen CAS\n\n锁被占用\n\n持锁进程异常退出\n\n旧持锁者接管后继续写\n\ntoken 不匹配不删他人锁\n\n这些测试依赖已经删除的锁文件、TTL、接管和 owner token，不能作为 SQLite v4 的验收标准。\n\n四、验收矩阵整改要求\n\n保留原 T1–T7，不改变业务验收口径。并发测试改成 SQLite 专项：\n\n测试\n\n\t\n\n应验证的行为\n\n\n\n\nC1\n\n\t\n\n两个独立进程并发更新同 UUID，累计值不丢失。\n\n\n\n\nC2\n\n\t\n\n写事务被占用，等待方超过 busy 等待策略后返回 LEDGER_BUSY_TIMEOUT，转 UNCERTAIN。\n\n\n\n\nC3\n\n\t\n\n写事务进程异常退出，SQLite 自动回滚未提交事务，其他进程可以继续写入。\n\n\n\n\nC4\n\n\t\n\nA 事务外读取 G 后暂停；B 提交 G+1；A 恢复，条件更新 changes=0，放弃旧写入。\n\n\n\n\nC5\n\n\t\n\n不存在旧锁文件、owner token、TTL、接管逻辑；代码和测试均不再依赖它们。\n\n\n\n\nC6\n\n\t\n\n事务内进程挂起，其他写者按忙等待期限 fail-closed，不误报成功、不静默放行。\n\n\n\n\nC7\n\n\t\n\n数据库损坏、schema 不兼容或初始化失败时，返回 LEDGER_UNREADABLE，不得静默创建空账本覆盖原数据。\n\nC6 尤其重要：它直接验证本次发现的 SQLite 事务挂起边界。\n\n五、最终授权裁定\n\n范围\n\n\t\n\n裁定\n\n\n\n\nSQLite 单库方案\n\n\t\n\n认可\n\n\n\n\nUUID 隔离及跨仓共享\n\n\t\n\n通过\n\n\n\n\nWAL + BEGIN IMMEDIATE\n\n\t\n\n认可\n\n\n\n\ngen 条件更新\n\n\t\n\n有条件认可\n\n\n\n\n删除手搓锁、TTL、接管机制\n\n\t\n\n通过\n\n\n\n\n事务挂起边界\n\n\t\n\nP0 未关闭\n\n\n\n\n存储协议及错误语义清理\n\n\t\n\n未通过\n\n\n\n\nC1–C7 SQLite 验收矩阵\n\n\t\n\n未通过\n\n\n\n\nCTX-R4 设计 PASS\n\n\t\n\n不授予\n\n\n\n\n编码实施授权\n\n\t\n\n不授予\n\n\n\n\nDEC-010 最终用户拍板合并门禁\n\n\t\n\n继续有效\n\n**下一版不需要再发明新的锁协议。**只需完成三件事：\n\n明确 SQLite 事务外读取、事务内条件更新、提交成功的完整时序，并处理事务内挂起。\n\n删除 JSON 原子写和文件锁协议的残留，统一 SQLite 为唯一权威账本。\n\n将 C1–C5 替换为 SQLite 专项测试，并增加 C6、C7。\n\n这次架构方向已经正确，整改范围应控制在上述三个边界，不需要重新讨论整体方案。",
+      "text_sha256": "3472d0393ffaa4a94438be252746b5a75e469296f06e4b4c3abd68f27918de02",
+      "size_bytes": 6915,
+      "assistant_uuid": "c6ec30dd-e9dc-4b42-8909-0bd81d61d14a"
+    }
+  ]
+}
