@@ -55,6 +55,8 @@ let sessionBudget = null;
 try {
   sessionBudget = await import(pathToFileURL(join(AGENT_KIT_DIR, "monitor", "session-budget.mjs")).href);
 } catch {}
+import { assessBudgetGate, recordInTurn, recordOutTurn } from "./ctx_budget_hooks.mjs";
+
 function requireSessionBudget() {
   if (!sessionBudget) {
     throw new Error(`SESSION_BUDGET_CORE_MISSING: agent-kit monitor/session-budget.mjs 不可用（AGENT_KIT_DIR=${AGENT_KIT_DIR}）；fail-closed 拒绝派单，不静默降级`);
@@ -552,43 +554,20 @@ async function mainLocked() {
   await stopIfContextLimit(page);
 
   // 会话上下文预算预检门（两条独立防线之一：字节预算=预测；stopIfContextLimit=已发生）
+  // 门控逻辑抽至 ctx_budget_hooks.mjs（CTX-CODE R5 P1-2：可注入测试）
   const budgetUuid = targetSessionId ?? extractSessionId(targetUrl);
   if (budgetUuid) {
-    const sb = requireSessionBudget();
-    let verdict;
-    try {
-      verdict = sb.assessLedger(budgetUuid);
-    } catch (e) {
-      throw new Error(`SESSION_BUDGET_UNCERTAIN: ${e.message}（账本异常不得自动放行，fail-closed）`);
-    }
-    if (verdict.state === "UNCERTAIN") {
-      // R4 P0：标记存在=派单被阻断，不记日志放行；不可被 --allow-near-limit 绕过
-      throw new Error(`SESSION_BUDGET_UNCERTAIN: 会话 ${budgetUuid} 存在记账失败标记（持久 UNCERTAIN，不自动放行）；请核对账本后用 agent-kit clearUncertain 显式恢复（审计留痕 recovery-log.ndjson）再派单`);
-    }
-    if (verdict.state === "HARD" && !dispatchOptions.allowNearLimit) {
-      throw new Error(`SESSION_BUDGET_EXCEEDED: 会话 ${budgetUuid} 累计 ${verdict.totals.totalBytes}B ≥ HARD ${verdict.thresholds.hardBytes}B；请改用 --new-session 自包含简报迁移（紧急通道 --allow-near-limit 显式留痕）`);
-    }
-    if (verdict.state !== "NORMAL") {
-      log(`[ctx-budget] ${verdict.state}: 累计 ${verdict.totals.totalBytes}B（WARN≥${verdict.thresholds.warnBytes}/HARD≥${verdict.thresholds.hardBytes}）${dispatchOptions.allowNearLimit ? "（--allow-near-limit 显式放行）" : ""}`);
-    }
+    assessBudgetGate(budgetUuid, { sessionBudget: requireSessionBudget(), allowNearLimit: dispatchOptions.allowNearLimit, log });
   }
 
   let confirmedSessionId = null;
   let inBytesRecorded = false; // ctx-mgmt：单次去重（首次确认/延迟确认两分支共用，防重复记账）
   const recordInOnce = () => {
     // ctx-mgmt 记账：发送确认即记 in_bytes（开启逻辑轮；完成时点以 completeOpenTurn 关联同一轮）
-    // 无论 UUID 在首次确认即得还是延迟取得，都必须经过本路径（P1-4）；失败仅告警不毁证据
+    // 无论 UUID 在首次确认即得还是延迟取得，都必须经过本路径（P1-4）；语义见 ctx_budget_hooks.recordInTurn
     if (inBytesRecorded || !confirmedSessionId) return;
-    try {
-      requireSessionBudget().recordTurn(confirmedSessionId, { inBytes: Buffer.byteLength(message, "utf8"), outBytes: 0 });
-      inBytesRecorded = true;
-      log(`[ctx-budget] turn+in_bytes=${Buffer.byteLength(message, "utf8")}B → ${confirmedSessionId}`);
-    } catch (e) {
-      // 记账失败=持久 UNCERTAIN（R3 P0）：标记落盘，预检读到即拒发；解除仅走显式恢复流程
-      // markUncertain 自身失败=中止派单上抛（R4 P0：磁盘故障时持久标记不存在，不得继续）
-      try { requireSessionBudget().markUncertain(confirmedSessionId, `in_record_failed: ${e.message}`); log(`[ctx-budget] UNCERTAIN 标记已写入 ${confirmedSessionId}`); }
-      catch (e2) { throw new Error(`SESSION_BUDGET_MARK_FAILED: in 记账失败且 UNCERTAIN 标记写入失败，派单中止: ${e.message} / ${e2.message}`); }
-    }
+    recordInTurn(confirmedSessionId, Buffer.byteLength(message, "utf8"), { sessionBudget: requireSessionBudget(), log });
+    inBytesRecorded = true;
   };
   const confirmSend = async (userUnitKey) => {
     const isAttributable = (url) => sessionIdIsAttributable({
@@ -665,25 +644,11 @@ async function mainLocked() {
   log(`JSON/Schema/绑定校验: ${validation.status}`);
 
   // ctx-mgmt 记账：采集 COMPLETED 记 out_bytes（reply 字节数）——置于证据落盘之后：
-  // 记账失败→markUncertain 持久 UNCERTAIN；markUncertain 自身失败→中止派单上抛（R4 P0：不得 CRITICAL 后继续）
+  // 语义见 ctx_budget_hooks.recordOutTurn（R4 P0：markUncertain 自身失败=中止派单上抛，不 CRITICAL 续跑）
   {
     const collectUuid = confirmedSessionId ?? extractSessionId(page.url());
     if (collectUuid) {
-      let recorded = false;
-      try {
-        requireSessionBudget().recordTurn(collectUuid, { inBytes: 0, outBytes: Buffer.byteLength(snapshot.reply, "utf8") }, { completeOpenTurn: true });
-        recorded = true;
-        log(`[ctx-budget] turn+out_bytes=${Buffer.byteLength(snapshot.reply, "utf8")}B → ${collectUuid}`);
-      } catch (e) {
-        // out 记账失败=持久 UNCERTAIN（R3 P0）：open_turn 可能遗留，旧累计不可当完整账本
-        try { requireSessionBudget().markUncertain(collectUuid, `out_record_failed: ${e.message}`); log(`[ctx-budget] UNCERTAIN 标记已写入 ${collectUuid}`); }
-        catch (e2) {
-          throw new Error(`SESSION_BUDGET_MARK_FAILED: out 记账失败且 UNCERTAIN 标记写入失败，派单中止（证据已落盘 ${EV_DIR}，需人工核查）: ${e.message} / ${e2.message}`);
-        }
-      }
-      if (!recorded) {
-        throw new Error(`SESSION_BUDGET_MARK_FAILED: out 记账失败（UNCERTAIN 已标记），派单中止；证据已落盘 ${EV_DIR}`);
-      }
+      recordOutTurn(collectUuid, Buffer.byteLength(snapshot.reply, "utf8"), { sessionBudget: requireSessionBudget(), log, evDir: EV_DIR });
     }
   }
 
