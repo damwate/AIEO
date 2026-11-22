@@ -1,0 +1,38 @@
+[
+  {
+    "key": "4813b2f3-0023-5ee6-9881-7d775fe408ff:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[CTX-R3|并发设计复核]\nv3已推main @ 94ec9ccb9220024c120122bdec2cfc758d2be692（design-r2.md"
+  },
+  {
+    "key": "4813b2f3-0023-5ee6-9881-7d775fe408ff:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n[CTX-R3设计FAIL+理由]\n\n已按指定完整 SHA 核对 design-r2.md 原文及该提交差异，没有使用 HEAD。\n\n仓库"
+  },
+  {
+    "key": "3c604a62-cab6-58c7-a6df-c59827019ba9:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[CTX-R4|v4设计复核]\nv4已推main @ 0a1359e4598afa23439ee1b4a6075ae562e8aa00（design-r2.md"
+  },
+  {
+    "key": "3c604a62-cab6-58c7-a6df-c59827019ba9:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n[CTX-R4设计FAIL+理由]\n\n已按指定完整 SHA 核对 design-r2.md 原文及该提交差异。\n\n仓库：damwate/A"
+  },
+  {
+    "key": "2926fa2a-48e8-57cb-84e2-54c987eec8df:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[CTX-R5|v5设计复核]\nv5统一权威版已推main @ 292b30a6877f904738b9cc25138fee233a3106b3（design-"
+  },
+  {
+    "key": "2926fa2a-48e8-57cb-84e2-54c987eec8df:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n[CTX-R5设计FAIL+理由]\n\n已按指定完整 SHA 核对 design-r2.md 原文及提交差异，没有使用 HEAD。\n\n仓库："
+  }
+]

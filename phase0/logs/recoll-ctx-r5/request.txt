@@ -1,0 +1,2 @@
+[CTX-R5|v5设计复核]
+v5统一权威版已推main @ 292b30a6877f904738b9cc25138fee233a3106b3（design-r2.md整文件重写）。逐条关闭R4三整改：①事务挂起边界=§3：事务内仅SQL执行禁止一切外部I/O；两种挂起形态界定(读后挂起=C4安全,事务内挂起=C6他人按busy期限fail-closed拒发,不再声称挂起期他人正常推进)；诚实声明事务内挂死为固有边界,防线=极短纪律+BUSY超时。②存储统一=§1：JSON/文件锁/token/TTL/接管/LEDGER_LOCK_TIMEOUT全部废弃明示,SQLite唯一权威账本,旧错误码由LEDGER_BUSY_TIMEOUT取代,无历史JSON需迁移。③精确时序=§2：事务外读快照→事务外纯内存计算(禁外部I/O)→BEGIN IMMEDIATE→条件UPDATE→changes==1 COMMIT(COMMIT成功才算更新)→changes==0 ROLLBACK并区分GEN_CONFLICT与并发首写竞态两类→BUSY重试3×500ms后LEDGER_BUSY_TIMEOUT转UNCERTAIN。④测试矩阵=§5完整采纳你的C1-C7裁定表+T1-T7保留。请给[CTX-R5设计PASS+编码授权]或[FAIL+理由]。

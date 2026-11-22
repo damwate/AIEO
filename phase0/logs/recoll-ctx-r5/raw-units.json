@@ -1,0 +1,94 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-22T08:16:12.074Z",
+  "user_unit_key": "2926fa2a-48e8-57cb-84e2-54c987eec8df:0:user",
+  "start_key_resolved": "2926fa2a-48e8-57cb-84e2-54c987eec8df:0:user",
+  "start_resolved_by_marker": false,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "2926fa2a-48e8-57cb-84e2-54c987eec8df:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "e86e5848-3ae6-468c-a3ff-9c7bc3ae0bfe",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "2926fa2a-48e8-57cb-84e2-54c987eec8df:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "2926fa2a-48e8-57cb-84e2-54c987eec8df:0:user",
+          "2926fa2a-48e8-57cb-84e2-54c987eec8df:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "fb3b6d1208877ea03ab1e73867bc6fde7c7f0487e492f2768813a7e9895e36c8",
+          "dd91f12bdbb2b5beaa0543f7c0f2cb77898417c19b75bba15bc23c65d612cd88"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "2926fa2a-48e8-57cb-84e2-54c987eec8df:0:user",
+          "2926fa2a-48e8-57cb-84e2-54c987eec8df:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "fb3b6d1208877ea03ab1e73867bc6fde7c7f0487e492f2768813a7e9895e36c8",
+          "dd91f12bdbb2b5beaa0543f7c0f2cb77898417c19b75bba15bc23c65d612cd88"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "2926fa2a-48e8-57cb-84e2-54c987eec8df:0:user",
+          "2926fa2a-48e8-57cb-84e2-54c987eec8df:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "2926fa2a-48e8-57cb-84e2-54c987eec8df:0:user",
+      "2926fa2a-48e8-57cb-84e2-54c987eec8df:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "2926fa2a-48e8-57cb-84e2-54c987eec8df:0:user",
+          "2926fa2a-48e8-57cb-84e2-54c987eec8df:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "2926fa2a-48e8-57cb-84e2-54c987eec8df:0:user",
+          "2926fa2a-48e8-57cb-84e2-54c987eec8df:2:assistant"
+        ],
+        "overlap_keys": [
+          "2926fa2a-48e8-57cb-84e2-54c987eec8df:0:user",
+          "2926fa2a-48e8-57cb-84e2-54c987eec8df:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "2926fa2a-48e8-57cb-84e2-54c987eec8df:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n[CTX-R5设计FAIL+理由]\n\n已按指定完整 SHA 核对 design-r2.md 原文及提交差异，没有使用 HEAD。\n\n仓库：damwate/AIEO\n\nCommit：292b30a6877f904738b9cc25138fee233a3106b3\n\n文件 Blob SHA：a5ebf21eb83b00fd28614ea5d9353cd557ca3946\n\nR4 的三项整改在文档层面基本落实：SQLite 唯一权威存储、事务挂起边界如实披露、C1–C7 已替换为 SQLite 专项矩阵。R4 原有的“挂起期间其他写者正常推进”错误表述已删除。\n\n但 R5 仍有事务协议的关键缺口，尤其是并发首写路径和提交失败后的事务清理。它们会影响账本正确性及后续写者能否继续工作，因此不能授予设计 PASS。\n\n阻断项\nP0-1：并发首写竞态的处理路径不成立\n\n§2 第1步规定：事务外查询无该行，走 INSERT 路径。\n\n但第5步又规定：changes==0 且行不存在，判定为并发首写竞态，重走 INSERT 路径。\n\n这里存在 SQL 语义问题：\n\n假设 A、B 同时读取，均发现 UUID 不存在。\n\nB 先取得写事务资格并成功 INSERT、COMMIT。\n\nA 随后取得写事务资格，再执行普通 INSERT。\n\nA 遇到的是 PRIMARY KEY 唯一约束冲突，通常是 SQL 异常，不是 changes==0。\n\n因此，文档所写的“并发首写竞态通过 changes==0 识别”不能覆盖实际路径。\n\n整改要求：\n\n明确首写 INSERT 的冲突处理，例如捕获指定的主键唯一约束冲突，再重新读取账本并进入已有行的 gen 条件更新路径。\n\n不得把所有 SQLITE_CONSTRAINT 都当成并发首写冲突。\n\n增加两个独立进程同时首次写入同一 UUID 的测试，断言两轮数据都被正确累计，不能丢失其中一轮。\n\n这是数据正确性阻断项。\n\nP0-2：COMMIT 失败后的事务状态没有定义\n\n§2 第5步规定 COMMIT 失败时如实上抛，但没有定义失败后连接和事务如何清理。\n\nSQLite 中，某些 COMMIT 失败（例如遇到 BUSY）时，事务可能仍然处于活动状态，并不意味着自动回滚。\n\n如果直接上抛并复用连接，可能出现：\n\n连接仍持有未完成事务；\n\n后续操作遇到事务状态异常；\n\n写锁继续被持有，其他进程持续等待；\n\n原本可恢复的错误扩大成账本不可用。\n\n整改要求：\n\n明确 COMMIT 失败后的事务状态检查和清理策略。\n\n在可回滚的情况下显式 ROLLBACK。\n\n如果回滚也失败，废弃该连接，不得继续复用。\n\n明确提交结果不确定时的处理方式：不得直接把本轮计数当作成功，也不得盲目重放导致重复累计。\n\n增加 COMMIT 失败及连接清理测试。\n\n这项是事务生命周期的完整性要求。\n\nP1-1：busy_timeout 与重试策略存在冲突\n\n§1 设置 busy_timeout=5000ms，§2 又规定 SQLITE_BUSY 后重试 3×500ms。\n\n两个参数的关系没有定义清楚：\n\n如果每次 SQL 操作内部已经等待 5000ms，外部再重试 3 次，实际等待时间可能远超预期。\n\n如果预期总等待约 1500ms，则 5000ms 的 busy_timeout 与该目标不一致。\n\n**整改要求：**统一等待预算，明确 busy_timeout 是单次等待上限还是整个操作的总等待期限；给出可验证的最大等待时间，避免调用方误以为 3×500ms 就是总时限。\n\nR4 整改逐项核验\n\nR4 整改项\n\n\t\n\nR5 结果\n\n\n\n\nSQLite 唯一权威账本，旧 JSON/锁协议废弃\n\n\t\n\n通过\n\n\n\n\n事务内禁止外部 I/O\n\n\t\n\n通过\n\n\n\n\n两种挂起形态及 fail-closed 边界\n\n\t\n\n通过\n\n\n\n\n事务外读取、事务内条件更新\n\n\t\n\n基本通过\n\n\n\n\nCOMMIT 成功才算更新成功\n\n\t\n\n原则通过\n\n\n\n\n并发首写竞态处理\n\n\t\n\n未通过\n\n\n\n\nCOMMIT 失败后的事务清理\n\n\t\n\n未通过\n\n\n\n\nC1–C7 SQLite 专项矩阵\n\n\t\n\n已写入，尚需补强\n\n授权裁定\n\nSQLite 单库及 WAL：认可。\n\nUUID 隔离与跨仓共享：认可。\n\n删除文件锁、TTL、接管机制：通过。\n\n事务挂起边界：通过。\n\ngen 条件更新：有条件认可。\n\n并发首写处理：P0 未关闭。\n\nCOMMIT 失败清理：P0 未关闭。\n\nbusy 等待预算：P1 未关闭。\n\nCTX-R5 设计 PASS：不授予。\n\n编码实施授权：不授予。\n\nDEC-010 最终用户拍板合并门禁：继续有效。\n\n下一版整改范围\n\n不需要重新讨论架构，也不需要再设计锁协议。只需针对 §2：\n\n补齐并发首写的唯一约束冲突处理及重读重试路径。\n\n补齐 COMMIT 失败、ROLLBACK 失败、连接废弃和结果不确定的处理规则。\n\n统一 busy_timeout 与重试的总等待预算，并增加对应测试。\n\n**建议止损边界：**下一轮只复核这三项，不再重复审查已经通过的 SQLite 架构和挂起边界。完成后再申请 R6 设计复核。",
+      "text_sha256": "dd91f12bdbb2b5beaa0543f7c0f2cb77898417c19b75bba15bc23c65d612cd88",
+      "size_bytes": 4721,
+      "assistant_uuid": "e86e5848-3ae6-468c-a3ff-9c7bc3ae0bfe"
+    }
+  ]
+}
