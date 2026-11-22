@@ -1,0 +1,110 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-22T10:11:44.284Z",
+  "user_unit_key": "a084f33b-b592-5479-a558-c96ca1c80609:0:user",
+  "start_key_resolved": "a084f33b-b592-5479-a558-c96ca1c80609:0:user",
+  "start_resolved_by_marker": true,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "a084f33b-b592-5479-a558-c96ca1c80609:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "0d2ef533-8c63-4bc1-a053-9733ea79ee20",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "a084f33b-b592-5479-a558-c96ca1c80609:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "f843d1e5-c695-5895-93ea-23cca8c1f7ff:0:user",
+          "f843d1e5-c695-5895-93ea-23cca8c1f7ff:2:assistant",
+          "a084f33b-b592-5479-a558-c96ca1c80609:0:user",
+          "a084f33b-b592-5479-a558-c96ca1c80609:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "772370e5cd97b08858f768048fed1c1938ca219cba682e3ed644051196ba2cff",
+          "509066f1f2e05d73b7776d6dc9ad6d6413574c19b01332b8658ce2a1f0f93a0a",
+          "1e94f2d0787552e481654dbb975715f0a23f971ce33261af4452eec7f49a557e",
+          "a46a3b3038112c3332a1002a77f0844bebf67870ca096657a62e1acda1d07667"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "f843d1e5-c695-5895-93ea-23cca8c1f7ff:0:user",
+          "f843d1e5-c695-5895-93ea-23cca8c1f7ff:2:assistant",
+          "a084f33b-b592-5479-a558-c96ca1c80609:0:user",
+          "a084f33b-b592-5479-a558-c96ca1c80609:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "772370e5cd97b08858f768048fed1c1938ca219cba682e3ed644051196ba2cff",
+          "509066f1f2e05d73b7776d6dc9ad6d6413574c19b01332b8658ce2a1f0f93a0a",
+          "1e94f2d0787552e481654dbb975715f0a23f971ce33261af4452eec7f49a557e",
+          "a46a3b3038112c3332a1002a77f0844bebf67870ca096657a62e1acda1d07667"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "f843d1e5-c695-5895-93ea-23cca8c1f7ff:0:user",
+          "f843d1e5-c695-5895-93ea-23cca8c1f7ff:2:assistant",
+          "a084f33b-b592-5479-a558-c96ca1c80609:0:user",
+          "a084f33b-b592-5479-a558-c96ca1c80609:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "a084f33b-b592-5479-a558-c96ca1c80609:0:user",
+      "a084f33b-b592-5479-a558-c96ca1c80609:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "f843d1e5-c695-5895-93ea-23cca8c1f7ff:0:user",
+          "f843d1e5-c695-5895-93ea-23cca8c1f7ff:2:assistant",
+          "a084f33b-b592-5479-a558-c96ca1c80609:0:user",
+          "a084f33b-b592-5479-a558-c96ca1c80609:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "f843d1e5-c695-5895-93ea-23cca8c1f7ff:0:user",
+          "f843d1e5-c695-5895-93ea-23cca8c1f7ff:2:assistant",
+          "a084f33b-b592-5479-a558-c96ca1c80609:0:user",
+          "a084f33b-b592-5479-a558-c96ca1c80609:2:assistant"
+        ],
+        "overlap_keys": [
+          "f843d1e5-c695-5895-93ea-23cca8c1f7ff:0:user",
+          "f843d1e5-c695-5895-93ea-23cca8c1f7ff:2:assistant",
+          "a084f33b-b592-5479-a558-c96ca1c80609:0:user",
+          "a084f33b-b592-5479-a558-c96ca1c80609:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "a084f33b-b592-5479-a558-c96ca1c80609:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n五、R4 整改结果汇总\n\nR3 遗留项\n\n\t\n\n结果\n\n\n\n\nP0：持久 UNCERTAIN 标记 API、恢复审计\n\n\t\n\n核心实现通过\n\n\n\n\nP0：预检 UNCERTAIN 拒发\n\n\t\n\n未落实\n\n\n\n\nP1：双 worker ready 屏障超时断言\n\n\t\n\n通过\n\n\n\n\nP1：R1→R2 精确迁移、未知主键结构拒绝\n\n\t\n\n部分通过\n\n\n\n\n自动化测试\n\n\t\n\n23/23 PASS\n\n其他需要保留的通过项\n\nmarkUncertain()、hasUncertain()、clearUncertain() 已实现。\n\n恢复先追加 uncertain-recovery-log.ndjson，再删除标记；没有自动解除逻辑。\n\ninput/output 记账失败路径均已接入标记调用。\n\nC8/C8b、C6、迁移拒绝和历史数据保留测试均通过。\n\nR2 的 totalBytes 修正、C9 COMMIT 两态连接废弃等既有整改未发现回退。\n\n六、整改处方\n\n本轮不需要推翻账本架构，也不需要重做 23 项测试。优先修正以下问题：\n\nP0：预检门增加明确拒发分支。 verdict.state === \"UNCERTAIN\" 时必须抛出 SESSION_BUDGET_UNCERTAIN，不得只记录日志；不能被 --allow-near-limit 绕过。\n\nP0：标记写入失败时当前派单必须停止。 markUncertain() 失败不能只记 CRITICAL 后继续执行。必须向上抛错并中止派单；否则磁盘写入失败时，持久标记并未建立，后续预检也无法识别。\n\nP1：迁移增加结构约束验证。 除列名和 uuid 主键外，验证已知 R1 列的类型、NOT NULL 等约束，以及已有 open_turn_bytes 的定义；不符合已知 schema 的数据库必须拒绝使用。\n\n最终裁定：[FAIL + 逐条]。\n\n这次最关键的不是测试数量，而是实际派单门禁：当前代码能够产生 UNCERTAIN 标记，却没有在预检处真正拒绝 UNCERTAIN。必须把“标记存在”落实为“派单被阻断”，再谈编码验收 PASS。",
+      "text_sha256": "a46a3b3038112c3332a1002a77f0844bebf67870ca096657a62e1acda1d07667",
+      "size_bytes": 1802,
+      "assistant_uuid": "0d2ef533-8c63-4bc1-a053-9733ea79ee20"
+    }
+  ]
+}

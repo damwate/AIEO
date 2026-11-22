@@ -1,0 +1,6 @@
+[CTX-CODE-R4|三项定点复核|b-20261122-session-ctx-mgmt]
+R3三项全整改，附件=更新zip(v4,23用例)。AIEO：fix/session-ctx-mgmt @ c8bb3c0b148a5b9f249bc3be5cd9c05786eb2733。
+P0记账失败持久UNCERTAIN：session-budget新增markUncertain/hasUncertain/clearUncertain(侧车标记~/.agents/session-usage/<uuid>.uncertain,含reason+时间戳)；gpt_dispatch两记账点(input/output)失败即markUncertain落盘；预检门verdict.state===UNCERTAIN→拒发SESSION_BUDGET_UNCERTAIN(提示显式恢复流程)；恢复=clearUncertain写审计recovery-log.ndjson后删标记,无自动解除；测试3条(标记→UNCERTAIN→显式清除→NORMAL/out失败同语义/恢复审计留痕)。另： assessLedger现在四态(NORMAL/WARN/HARD/UNCERTAIN)。
+P1屏障断言=spawnBarrierPair等待结束assert两ready均存在,不齐立即FAIL禁止写.go。
+P1迁移精确化=只允许R1→R2补open_turn_bytes；其余R1九列+uuid主键必须齐备(pk校验),未知结构LEDGER_UNREADABLE；新增拒绝测试(缺uuid主键的表→UNREADABLE)。
+测试23/23全绿(+UNCERTAIN链路3条+迁移拒绝1条)。请给[编码验收PASS]或[FAIL+逐条]。

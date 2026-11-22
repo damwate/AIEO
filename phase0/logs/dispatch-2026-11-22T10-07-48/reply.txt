@@ -1,0 +1,79 @@
+ChatGPT 说：
+五、R4 整改结果汇总
+
+R3 遗留项
+
+	
+
+结果
+
+
+
+
+P0：持久 UNCERTAIN 标记 API、恢复审计
+
+	
+
+核心实现通过
+
+
+
+
+P0：预检 UNCERTAIN 拒发
+
+	
+
+未落实
+
+
+
+
+P1：双 worker ready 屏障超时断言
+
+	
+
+通过
+
+
+
+
+P1：R1→R2 精确迁移、未知主键结构拒绝
+
+	
+
+部分通过
+
+
+
+
+自动化测试
+
+	
+
+23/23 PASS
+
+其他需要保留的通过项
+
+markUncertain()、hasUncertain()、clearUncertain() 已实现。
+
+恢复先追加 uncertain-recovery-log.ndjson，再删除标记；没有自动解除逻辑。
+
+input/output 记账失败路径均已接入标记调用。
+
+C8/C8b、C6、迁移拒绝和历史数据保留测试均通过。
+
+R2 的 totalBytes 修正、C9 COMMIT 两态连接废弃等既有整改未发现回退。
+
+六、整改处方
+
+本轮不需要推翻账本架构，也不需要重做 23 项测试。优先修正以下问题：
+
+P0：预检门增加明确拒发分支。 verdict.state === "UNCERTAIN" 时必须抛出 SESSION_BUDGET_UNCERTAIN，不得只记录日志；不能被 --allow-near-limit 绕过。
+
+P0：标记写入失败时当前派单必须停止。 markUncertain() 失败不能只记 CRITICAL 后继续执行。必须向上抛错并中止派单；否则磁盘写入失败时，持久标记并未建立，后续预检也无法识别。
+
+P1：迁移增加结构约束验证。 除列名和 uuid 主键外，验证已知 R1 列的类型、NOT NULL 等约束，以及已有 open_turn_bytes 的定义；不符合已知 schema 的数据库必须拒绝使用。
+
+最终裁定：[FAIL + 逐条]。
+
+这次最关键的不是测试数量，而是实际派单门禁：当前代码能够产生 UNCERTAIN 标记，却没有在预检处真正拒绝 UNCERTAIN。必须把“标记存在”落实为“派单被阻断”，再谈编码验收 PASS。
