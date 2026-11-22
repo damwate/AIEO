@@ -1,0 +1,11 @@
+[2026-11-22T08:28:21.056Z] 证据目录: D:\AIEO\phase0\logs\dispatch-2026-11-22T08-28-21
+[2026-11-22T08:28:21.984Z] 会话锁已获取 pid=8748 instance=default lock=gpt-session.lockfile
+[2026-11-22T08:28:21.985Z] === GPT 派单（已有会话，消息 951 字节）===
+[2026-11-22T08:28:21.986Z] [instance] 实例域就绪: instance=default port=9222 profile=gpt-poc lock=gpt-session.lockfile
+[2026-11-22T08:28:23.065Z] 复用本实例调试端口 9222（归属核验 own=9）
+[2026-11-22T08:28:23.458Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 1 个
+[2026-11-22T08:28:23.459Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-22T08:28:30.891Z] 会话就绪: https://chatgpt.com/c/6b02952e-a570-83ec-9d08-eab047f5d21a
+[2026-11-22T08:28:34.182Z] 截图: session-context-limit-stop.png
+[2026-11-22T08:28:34.294Z] 会话锁已释放
+[2026-11-22T08:28:34.295Z] 致命错误: CONTEXT_LIMIT_STOP: 上下文窗口已达上限，已停止自动化；请由主会话换会话，不重发、不自动迁移

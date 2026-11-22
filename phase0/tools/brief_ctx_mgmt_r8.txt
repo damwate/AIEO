@@ -1,0 +1,2 @@
+[CTX-R8|三硬点定点复核]
+v8已推main @ 0fa278df3c746e1e39dacbff936c42db4172fc6a。按你R7三硬点：①首写冲突ROLLBACK失败分支=显式ROLLBACK报错或无法确认事务结束→关闭废弃该连接(禁在其上重读重试),本轮UNCERTAIN上抛,C8增断言旧连接不再使用后续新连接；②COMMIT报错后用DatabaseSync.isTransaction(sqlite3_get_autocommit)两态判定——true=显式ROLLBACK,成功可复用/ROLLBACK也失败废弃连接;false=不能据此判定提交成功,按结果不确定处理:关闭连接+LEDGER_COMMIT_UNCERTAIN+不计成功+不重放同轮计数;C9对两态分别注入故障验证连接处置,后续调用必须新建连接；③C10硬上限=T_wall≤3000ms,计时起点=首次BEGIN IMMEDIATE/首条受阻SQL,终点=LEDGER_BUSY_TIMEOUT抛出,受控锁竞争实测超限即FAIL,不只查配置值。GEN_CONFLICT语义R7已通过未动。请给[CTX-R8设计PASS+编码授权]或[FAIL+理由]。

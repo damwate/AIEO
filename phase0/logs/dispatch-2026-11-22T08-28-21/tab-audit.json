@@ -1,0 +1,25 @@
+{
+  "at": "2026-11-22T08:28:34.310Z",
+  "outcome": "failure_created_pages_closed",
+  "before": [
+    {
+      "id": "DA7FB5C4BC86422E60B454B498A28C65",
+      "url": "https://chatgpt.com/c/6b02952e-a570-83ec-9d08-eab047f5d21a"
+    }
+  ],
+  "exit_before_disposal": [
+    {
+      "id": "DA7FB5C4BC86422E60B454B498A28C65",
+      "url": "https://chatgpt.com/c/6b02952e-a570-83ec-9d08-eab047f5d21a"
+    }
+  ],
+  "exit_after_disposal": [
+    {
+      "id": "DA7FB5C4BC86422E60B454B498A28C65",
+      "url": "https://chatgpt.com/c/6b02952e-a570-83ec-9d08-eab047f5d21a"
+    }
+  ],
+  "created_pages": 0,
+  "disposal": "发送前失败：仅关闭本次自建页；既有页零触碰（exit_before/exit_after 对照=值守页零关闭证明）",
+  "error": "CONTEXT_LIMIT_STOP: 上下文窗口已达上限，已停止自动化；请由主会话换会话，不重发、不自动迁移"
+}

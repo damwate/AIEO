@@ -1,0 +1,94 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-22T08:32:12.018Z",
+  "user_unit_key": "f36ad6ef-46b1-5464-804f-75424bf79f0e:0:user",
+  "start_key_resolved": "f36ad6ef-46b1-5464-804f-75424bf79f0e:0:user",
+  "start_resolved_by_marker": true,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "f36ad6ef-46b1-5464-804f-75424bf79f0e:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "c8041a7b-66b7-4411-a99f-77bb2716bea6",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "f36ad6ef-46b1-5464-804f-75424bf79f0e:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "f36ad6ef-46b1-5464-804f-75424bf79f0e:0:user",
+          "f36ad6ef-46b1-5464-804f-75424bf79f0e:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "4f3359119d8631efc48f0bab40cc412a4f4345eacb065f22b3d2e26241d93aad",
+          "dafbc84f085018c3db86e5e33f83acae5aa01e806f0ecc322488d7374f335e29"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "f36ad6ef-46b1-5464-804f-75424bf79f0e:0:user",
+          "f36ad6ef-46b1-5464-804f-75424bf79f0e:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "4f3359119d8631efc48f0bab40cc412a4f4345eacb065f22b3d2e26241d93aad",
+          "dafbc84f085018c3db86e5e33f83acae5aa01e806f0ecc322488d7374f335e29"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "f36ad6ef-46b1-5464-804f-75424bf79f0e:0:user",
+          "f36ad6ef-46b1-5464-804f-75424bf79f0e:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "f36ad6ef-46b1-5464-804f-75424bf79f0e:0:user",
+      "f36ad6ef-46b1-5464-804f-75424bf79f0e:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "f36ad6ef-46b1-5464-804f-75424bf79f0e:0:user",
+          "f36ad6ef-46b1-5464-804f-75424bf79f0e:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "f36ad6ef-46b1-5464-804f-75424bf79f0e:0:user",
+          "f36ad6ef-46b1-5464-804f-75424bf79f0e:2:assistant"
+        ],
+        "overlap_keys": [
+          "f36ad6ef-46b1-5464-804f-75424bf79f0e:0:user",
+          "f36ad6ef-46b1-5464-804f-75424bf79f0e:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "f36ad6ef-46b1-5464-804f-75424bf79f0e:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\nFAIL — 暂不授权编码\n\n复核对象\n\n仓库：damwate/AIEO\n\n分支：main\n\n完整 SHA：0fa278df3c746e1e39dacbff936c42db4172fc6a\n\n设计文件：basic/tasks/b-20261122-session-ctx-mgmt/design-r2.md\n\n文件版本：v5\n\n已按指定 SHA 读取设计文件。R8 三个硬点的方向基本正确，但仍有两处必须关闭的设计缺陷。\n\n一、逐项裁定\n\n硬点\n\n\t\n\n裁定\n\n\t\n\n理由\n\n\n\n\n① 首写冲突 ROLLBACK 失败\n\n\t\n\n通过\n\n\t\n\n明确要求废弃旧连接、禁止重读重试，并要求 C8 验证后续新连接\n\n\n\n\n② COMMIT 失败两态判定\n\n\t\n\n不通过\n\n\t\n\n连接复用规则存在内部矛盾\n\n\n\n\n③ BUSY 3 秒硬上限\n\n\t\n\n有条件不通过\n\n\t\n\n写明硬上限，但尚未定义保证硬上限的运行时截止机制\n\nP0-1：COMMIT 两态的连接处置自相矛盾\n\n§2 第7步：\n\nisTransaction === true：事务仍活动，ROLLBACK 成功后连接可复用。\n\nisTransaction === false：事务已结束，结果不确定，关闭连接。\n\n但是随后又写：\n\n两种状态下后续调用都必须新建连接。\n\n这与第一种状态下允许复用连接直接冲突。\n\n必须明确区分：\n\nROLLBACK 成功且事务状态已确认结束：允许复用，还是强制新建？\n\nROLLBACK 失败：必须废弃旧连接。\n\nCOMMIT 结果不确定：必须废弃旧连接，禁止重放本轮计数。\n\n我的建议： 采用最容易审计的策略——COMMIT 报错后，无论事务状态如何，均废弃该连接；根据 isTransaction 决定是否尝试 ROLLBACK，但不再复用该连接。\n\n这样连接生命周期规则只有一个出口，不会因状态分支产生二次污染。\n\nP1-1：3000ms 硬上限缺少执行层保证\n\n§2 第8步规定：\n\nbusy_timeout = 500ms\n\n最多4次尝试\n\n3次重试间隔200ms\n\nC10 实测不超过3000ms\n\n理论预算：\n\n4\n×\n500\n+\n3\n×\n200\n=\n2600\n𝑚\n𝑠\n4×500+3×200=2600ms\n\n剩余约400ms并不能自动构成硬保证。\n\n问题是：固定500ms的 busy_timeout、调度延迟、SQL执行开销和重试间隔，都可能让实际耗时超过3000ms。\n\n必须增加：\n\n单调时钟计算绝对 deadline。\n\n每轮等待不得超过剩余预算。\n\n单次 SQLite busy 等待不得超过剩余 deadline。\n\ndeadline 耗尽立即停止重试并抛出 LEDGER_BUSY_TIMEOUT。\n\n计时必须覆盖首次受阻调用至异常抛出的完整路径。\n\nC10 保留真实受控锁竞争测试，不能用计算预算代替实测。\n\n二、已通过部分\n\n① 首写冲突：\n\n明确区分 SQLITE_CONSTRAINT_PRIMARYKEY 与一般约束异常，显式 ROLLBACK，确认事务结束后才重读。失败则废弃连接。这条设计正确。\n\nGEN_CONFLICT：\n\nR7 已通过，本轮未发现需要重新打开的理由。\n\n③ 测试方向：\n\nC8、C9、C10 均已进入验收矩阵，覆盖方向正确，但必须补齐上述执行语义。\n\n三、下一轮整改处方\n\n建议直接形成 R9，仅修改以下两处：\n\nP0-1： 统一 COMMIT 失败后的连接生命周期，删除互相矛盾的复用规则，并明确 C9 每个故障注入分支的预期连接行为。\n\nP1-1： 增加绝对 deadline 和剩余预算约束，确保3000ms是执行硬上限，而非理论估算。\n\n验收要求：\n\nC8：首写冲突及 ROLLBACK 失败分支全部通过。\n\nC9：两种 isTransaction 状态分别注入故障，验证连接处置和后续连接身份。\n\nC10：真实锁竞争，测量完整墙上时间，超过3000ms直接 FAIL。\n\n最终裁定：CTX-R8 = FAIL。\n\n不授权进入编码阶段。\n\n这不是推翻 SQLite 架构，也不是重新讨论 GEN_CONFLICT。只需关闭一个 P0 语义矛盾和一个 P1 时间预算执行缺口，再进行 R9 定点复核。",
+      "text_sha256": "dafbc84f085018c3db86e5e33f83acae5aa01e806f0ecc322488d7374f335e29",
+      "size_bytes": 3675,
+      "assistant_uuid": "c8041a7b-66b7-4411-a99f-77bb2716bea6"
+    }
+  ]
+}
