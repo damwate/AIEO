@@ -18,7 +18,7 @@ STATE: NORMAL <24KB ≤ WARN <48KB ≤ HARD（in+out 累计 UTF-8 字节；含 m
 - **账本路径**：`~/.agents/session-usage/<uuid>.json`（机器级本地持久化；同 UUID 跨仓共享=同一 ChatGPT 会话的预算本就该共享；不同 UUID 天然隔离，防串用）
 - **字段**（R1 裁定）：`{uuid, turns, in_bytes, out_bytes, total_bytes, max_turn_bytes, first_at, last_at, budget_version:1}`
 - **原子化**（P1-1）：写临时文件→fsync→rename→父目录 fsync 尽力而为（Windows 平台差异登记）。
-- **并发安全（R2 复核追加，原子写≠并发安全）**：同 UUID 跨进程更新必须串行化——每账本配  锁文件（O_EXCL 创建+PID+时间戳），持有 TTL=10s；获取锁重试退避 200ms×5 后仍失败=LEDGER_LOCK_TIMEOUT（fail-closed 转 UNCERTAIN，不静默放行）；锁持有进程崩溃=TTL 过期后接管（接管时核对 PID 存活）；锁内完成 读→改→写→rename 全程，锁释放用删除（幂等）。两个进程串行化后不存在后写覆盖前写；账本损坏（JSON 非法/字段缺失/类型错）=LEDGER_UNREADABLE fail-closed，不静默重建。
+- **并发安全（R2 复核追加，原子写≠并发安全）**：同 UUID 跨进程更新必须串行化——每账本配 <uuid>.lock 锁文件（O_EXCL 创建+PID+时间戳），持有 TTL=10s；获取锁重试退避 200ms×5 后仍失败=LEDGER_LOCK_TIMEOUT（fail-closed 转 UNCERTAIN，不静默放行）；锁持有进程崩溃=TTL 过期后接管（接管时核对 PID 存活）；锁内完成 读→改→写→rename 全程，锁释放用删除（幂等）。两个进程串行化后不存在后写覆盖前写；账本损坏（JSON 非法/字段缺失/类型错）=LEDGER_UNREADABLE fail-closed，不静默重建。
 - **fail-closed**（P1-3）：账本损坏/读取失败→assess 抛 LEDGER_UNREADABLE，调用方置 UNCERTAIN 禁自动放行，要求修复账本或新会话
 - **阈值**：默认 WARN=24576B/HARD=49152B（24/48KB，首版工程预算估计值，budget_version=1）；env `SESSION_BUDGET_WARN/HARD` 可覆盖；按真实样本校准后 bump version
 
