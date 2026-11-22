@@ -1,0 +1,94 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-22T09:04:41.459Z",
+  "user_unit_key": "6811d369-7fad-5af7-84ca-c1253d7e41e5:0:user",
+  "start_key_resolved": "6811d369-7fad-5af7-84ca-c1253d7e41e5:0:user",
+  "start_resolved_by_marker": false,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "6811d369-7fad-5af7-84ca-c1253d7e41e5:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "9fea7d22-7e00-4b13-b5d9-cd35787a3831",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "6811d369-7fad-5af7-84ca-c1253d7e41e5:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "6811d369-7fad-5af7-84ca-c1253d7e41e5:0:user",
+          "6811d369-7fad-5af7-84ca-c1253d7e41e5:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "5c005b3a9f695e252b92241dcfbaedfc80361c85222aec6ef7d9add229f552bc",
+          "607f6665f0862e026ad6b5ae945fa30a23a69b43bad632a593688c21dec05d2d"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "6811d369-7fad-5af7-84ca-c1253d7e41e5:0:user",
+          "6811d369-7fad-5af7-84ca-c1253d7e41e5:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "5c005b3a9f695e252b92241dcfbaedfc80361c85222aec6ef7d9add229f552bc",
+          "607f6665f0862e026ad6b5ae945fa30a23a69b43bad632a593688c21dec05d2d"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "6811d369-7fad-5af7-84ca-c1253d7e41e5:0:user",
+          "6811d369-7fad-5af7-84ca-c1253d7e41e5:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "6811d369-7fad-5af7-84ca-c1253d7e41e5:0:user",
+      "6811d369-7fad-5af7-84ca-c1253d7e41e5:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "6811d369-7fad-5af7-84ca-c1253d7e41e5:0:user",
+          "6811d369-7fad-5af7-84ca-c1253d7e41e5:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "6811d369-7fad-5af7-84ca-c1253d7e41e5:0:user",
+          "6811d369-7fad-5af7-84ca-c1253d7e41e5:2:assistant"
+        ],
+        "overlap_keys": [
+          "6811d369-7fad-5af7-84ca-c1253d7e41e5:0:user",
+          "6811d369-7fad-5af7-84ca-c1253d7e41e5:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "6811d369-7fad-5af7-84ca-c1253d7e41e5:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n当前不能验收 PASS\n\n先给出附件静态审查中已能确认的阻断项：\n\nC9 缺失：测试文件没有 COMMIT 故障注入，也没有分别覆盖 isTransaction=true/false 的两态连接废弃、后续新连接可用及 LEDGER_COMMIT_UNCERTAIN 断言。\n\nC8 不是真正并发：两个 worker 使用连续的 spawnSync，第一个进程结束后才启动第二个；这不能验证双进程首写竞态。\n\nC2 的时间断言放宽了门槛：代码断言 T_wall <= 3500ms，不是设计要求的 <=3000ms。C10虽有3000ms断言，但不能替代C2及完整矩阵的时间验收。\n\n我会继续核对核心实现和 AIEO 指定 SHA 的接入代码，确认是否还有独立的 P0/P1 问题。\n\nCTX-CODE 编码验收：FAIL\nFAIL — 暂不通过编码验收\n\n被测对象：\n\nAIEO：fix/session-ctx-mgmt，完整 SHA 0634f3b2d3f8dea9daaa1bb6a059015712a2b39e\n\n核心附件：session-budget-code.zip\n\n我已核对附件 Git blob SHA：8a1419ddb617922f35daaf766e9b7a0e3aa21d89，与该 AIEO commit 中入包的 ZIP blob 一致。\n\n本地实际执行：Node v22.16.0，node --test test-session-budget.mjs，结果 15/15 PASS。\n\n15/15 是测试脚本现有断言全绿，不等于设计要求的完整验收矩阵已通过。以下问题阻断验收。\n\n一、P0：必须修复\nP0-1：COMMIT 报错没有实现规定的错误码\n\nsession-budget.mjs 的写事务代码把 SQL 语句异常和 COMMIT 异常放在同一个 catch 中。\n\n当前逻辑确实做到了：\n\n读取 conn.isTransaction 属性；\n\n仅在事务仍活动时尝试 ROLLBACK；\n\n无论事务状态如何都关闭连接；\n\n不复用该连接。\n\n但异常最终执行的是 throw e，没有将 COMMIT 失败转换为设计要求的：\n\nLEDGER_COMMIT_UNCERTAIN\n\n这意味着 COMMIT 失败时，调用方拿不到约定的 UNCERTAIN 错误语义。不能把“连接已关闭”视为“COMMIT 失败协议已完成”。\n\n整改要求： 区分 COMMIT 阶段与普通 SQL 阶段。COMMIT 报错必须关闭连接并上抛 LEDGER_COMMIT_UNCERTAIN；不得计成功、不得重放本轮。普通 SQL 错误保留各自错误语义。\n\nP0-2：busy_timeout 设置失败被静默吞掉，绝对 deadline 存在失效路径\n\n当前实现：\n\nJavaScript\ntry { conn.exec(`PRAGMA busy_timeout=${busyMs}`); } catch {}\n\n这里的 catch {} 会吞掉动态 busy_timeout 设置失败。\n\n一旦设置失败，连接可能继续使用默认等待参数。随后 BEGIN IMMEDIATE 仍可能阻塞超过剩余 deadline。当前的 3000ms 保护依赖动态参数成功设置，因此不能把设置失败当作无害异常忽略。\n\n整改要求： 动态 PRAGMA busy_timeout 设置失败必须进入 fail-closed 路径，关闭连接并抛出明确错误；不能继续执行可能超时的写事务。\n\n二、P1：测试矩阵与业务记账不符合设计\nP1-1：C9 两态故障注入测试缺失\n\n附件测试文件中没有 COMMIT 故障注入测试，也没有覆盖：\n\n场景\n\n\t\n\n设计要求\n\n\t\n\n当前附件\n\n\n\n\nisTransaction=true\n\n\t\n\n尝试 ROLLBACK、废弃旧连接、UNCERTAIN\n\n\t\n\n未测试\n\n\n\n\nisTransaction=false\n\n\t\n\n跳过 ROLLBACK、仍废弃旧连接、UNCERTAIN\n\n\t\n\n未测试\n\n\n\n\n后续调用\n\n\t\n\n新连接成功工作\n\n\t\n\n未测试\n\n这是设计 R9 明确要求的 C9，不是可选测试。\n\nP1-2：C1、C8 的“双进程并发”实际是顺序执行\n\n测试中使用：\n\nJavaScript\nconst p1 = spawnSync(process.execPath, [worker]);\nconst p2 = spawnSync(process.execPath, [worker]);\n\nspawnSync 会等待第一个进程结束，才会执行第二个进程。\n\n因此：\n\nC1 没有验证双进程并发更新；\n\nC8 没有验证双进程同时首次写入同 UUID 的唯一约束竞态。\n\n两项测试只能证明两个进程先后执行时累计正确，不能证明并发竞态闭环。\n\n整改要求： 改用异步 spawn 或等效并发启动方式，并设置同步屏障，确保两个 worker 都完成“事务外读无行”后再竞争首写。C8 必须证明两轮都累计，且确实经过唯一约束冲突处理路径。\n\nP1-3：AIEO 两时点记账导致 turns 和 maxTurnBytes 失真\n\nAIEO phase0/tools/gpt_dispatch.mjs 中：\n\nSEND_CONFIRMED 调用一次 recordTurn(inBytes, 0)；\n\nCOMPLETED 再调用一次 recordTurn(0, outBytes)。\n\n而核心 recordTurn() 每次调用都会：\n\nturns + 1；\n\n更新 maxTurnBytes。\n\n所以一条实际对话轮次会被记成两轮；maxTurnBytes 也分别记录输入和输出峰值，而不是该轮 inBytes + outBytes 的合计峰值。\n\n总字节数仍然可以正确累计，但轮数与单轮峰值统计不正确。这会使账本的字段语义与设计中的“轮次”不一致。\n\n整改要求： 保留发送确认时先记输入、完成时再记输出的两时点特性，同时增加同一逻辑 turn 的关联机制，使第二次记账更新该轮，而不是再创建一轮。必须补测单轮输入输出分别记账后 turns=1 且 maxTurnBytes=inBytes+outBytes。\n\nP1-4：新会话 UUID 延迟确认时漏记输入\n\ngpt_dispatch.mjs 的 confirmSend() 有一条分支：\n\n首次确认时 confirmedSessionId 为空；\n\n随后等待 URL 变化；\n\n获取到新 UUID；\n\n写入 SEND_CONFIRMED。\n\n这条延迟获取 UUID 的分支没有执行 recordTurn(...inBytes...)。\n\n因此新会话 URL 未能在首次确认时立即出现，就可能漏记该轮输入字节。\n\n整改要求： 无论 UUID 在首次确认时取得，还是等待 URL 后取得，都必须经过同一输入记账逻辑；同时保证不会重复记账。\n\nP1-5：完整测试矩阵并未覆盖\n\n附件实际测试内容：\n\n设计项\n\n\t\n\n当前状态\n\n\n\n\nT1、T2、T3、T5、T6、T7\n\n\t\n\n有测试\n\n\n\n\nT4 上限横幅诊断\n\n\t\n\n附件无测试\n\n\n\n\nC1、C8\n\n\t\n\n有测试，但不是并发测试\n\n\n\n\nC2\n\n\t\n\n有测试，断言上限为 3500ms\n\n\n\n\nC3、C4、C5、C7\n\n\t\n\n有测试\n\n\n\n\nC6 事务内进程挂起\n\n\t\n\n无测试\n\n\n\n\nC9 COMMIT 两态注入\n\n\t\n\n无测试\n\n\n\n\nC10\n\n\t\n\n有真实锁竞争测试\n\n另外，C2 断言写的是 T_wall <= 3500ms，不是设计要求的 3000ms。\n\n我在当前环境重新执行时，C2 和 C10 均约为 2606ms，C10 的 3000ms 断言通过。但这不能替代 C2 的门槛修正，也不能证明用户报告的 651ms 是本次实际执行结果。\n\n三、已通过的部分\n\n以下是本次静态审查或本地测试能够支持的结论：\n\nSQLite 单库唯一账本、WAL、阈值配置校验：实现存在。\n\nisTransaction 按属性读取：实现符合要求。\n\nCOMMIT/语句异常路径关闭连接：连接废弃动作存在，但 COMMIT 错误码不符合要求。\n\nGEN 冲突的 ROLLBACK → 重读 → 重算 路径：实现存在。\n\nBUSY 使用单调时钟 performance.now()、动态等待预算及重试次数限制：实现存在，但 PRAGMA 设置失败被吞掉，故硬上限仍有缺口。\n\nT1/T2/T3/T5/T6/T7：本地执行通过。\n\nC3/C5/C7：本地执行通过。\n\nC10：本地执行通过，实测约 2606ms。\n\n四、整改顺序与重新验收门\n\n建议按以下顺序处理，不要先扩展功能：\n\n先修 P0-1、P0-2：COMMIT 错误语义和 busy_timeout 设置失败路径。\n\n再修 P1-1、P1-2：补 C9 两态注入，C1/C8 改为真实并发。\n\n再修 P1-3、P1-4：统一逻辑 turn 的两时点记账，补 UUID 延迟确认分支。\n\n补齐矩阵：T4、C6；C2 改为严格 3000ms 断言。\n\n重新运行完整测试，并提交新的完整 SHA、被测文件清单和原始测试日志。\n\n最终裁定： 核心架构方向和部分实现通过，但存在两个 P0 实现缺口，且 C9/C8 等关键验收证据不成立。当前不能给出 [编码验收PASS]，也不能据此授权合并或部署。",
+      "text_sha256": "607f6665f0862e026ad6b5ae945fa30a23a69b43bad632a593688c21dec05d2d",
+      "size_bytes": 7625,
+      "assistant_uuid": "9fea7d22-7e00-4b13-b5d9-cd35787a3831"
+    }
+  ]
+}

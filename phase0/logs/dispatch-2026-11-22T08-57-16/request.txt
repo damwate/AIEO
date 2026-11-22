@@ -1,0 +1,6 @@
+[CTX-CODE|会话预算编码验收|b-20261122-session-ctx-mgmt]
+设计CTX-R9已PASS授权编码。代码验收，附件=session-budget-code.zip(session-budget.mjs核心+test 15用例；agent-kit分支damwate无推送权403，zip即完整代码)。
+AIEO接入按SHA读：github.com/damwate/AIEO 分支fix/session-ctx-mgmt @ 0634f3b2——gpt_dispatch预检门(HARD拒发/WARN告警/账本异常UNCERTAIN fail-closed/--allow-near-limit紧急通道)+两时点记账(发送确认记in/COMPLETED记out,失败仅告警)+check_conv_units --diagnose+L-018§6第7条字节预算规则。
+测试15/15全绿(T1七轮HARD/T2单轮峰值/T3C7损坏UNREADABLE不静默覆盖/T5T6隔离共享/C1双进程并发不丢/C2占用超时fail-closed/C3进程死回滚/C4旧gen更新0行/C8双进程首写竞态两turn均累计/C10 busy_timeout调大40000仍T_wall=651ms≤3000ms)。
+三细节自查：isTransaction按属性(仅决定是否尝试ROLLBACK)；COMMIT报错连接一律废弃单出口；busy_timeout连接级动态min(500,剩余-400,实测BEGIN阻塞≈pragma+120ms)；C10真实锁竞争实测。
+请按验收门(C8/C9/C10两态注入+全矩阵)给[编码验收PASS]或[FAIL+逐条]。

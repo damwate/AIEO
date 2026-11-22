@@ -570,6 +570,19 @@ async function mainLocked() {
   }
 
   let confirmedSessionId = null;
+  let inBytesRecorded = false; // ctx-mgmt：单次去重（首次确认/延迟确认两分支共用，防重复记账）
+  const recordInOnce = () => {
+    // ctx-mgmt 记账：发送确认即记 in_bytes（开启逻辑轮；完成时点以 completeOpenTurn 关联同一轮）
+    // 无论 UUID 在首次确认即得还是延迟取得，都必须经过本路径（P1-4）；失败仅告警不毁证据
+    if (inBytesRecorded || !confirmedSessionId) return;
+    try {
+      requireSessionBudget().recordTurn(confirmedSessionId, { inBytes: Buffer.byteLength(message, "utf8"), outBytes: 0 });
+      inBytesRecorded = true;
+      log(`[ctx-budget] turn+in_bytes=${Buffer.byteLength(message, "utf8")}B → ${confirmedSessionId}`);
+    } catch (e) {
+      log(`[ctx-budget] WARN: 记账失败（不影响本次派单证据，下次预检按 UNCERTAIN fail-closed）: ${e.message}`);
+    }
+  };
   const confirmSend = async (userUnitKey) => {
     const isAttributable = (url) => sessionIdIsAttributable({
       newSession, sessionId: extractSessionId(url), targetSessionId, preexistingSessionIds,
@@ -579,20 +592,13 @@ async function mainLocked() {
       session_id: confirmedSessionId,
       user_unit_key: userUnitKey,
     });
-    // ctx-mgmt 记账：发送确认即记 in_bytes（此后采集失败也已在账；失败仅告警不毁证据）
-    if (confirmedSessionId) {
-      try {
-        requireSessionBudget().recordTurn(confirmedSessionId, { inBytes: Buffer.byteLength(message, "utf8"), outBytes: 0 });
-        log(`[ctx-budget] turn+in_bytes=${Buffer.byteLength(message, "utf8")}B → ${confirmedSessionId}`);
-      } catch (e) {
-        log(`[ctx-budget] WARN: 记账失败（不影响本次派单证据，下次预检按 UNCERTAIN fail-closed）: ${e.message}`);
-      }
-    }
+    recordInOnce();
     if (newSession && !confirmedSessionId) {
       await page.waitForURL(isAttributable, { timeout: 5000 }).catch(() => {});
       if (isAttributable(page.url())) {
         confirmedSessionId = extractSessionId(page.url());
         recordSend("SEND_CONFIRMED", { session_id: confirmedSessionId, user_unit_key: userUnitKey });
+        recordInOnce(); // 延迟确认分支同样记账（P1-4）
       }
     }
   };
@@ -604,7 +610,7 @@ async function mainLocked() {
     const collectUuid = confirmedSessionId ?? extractSessionId(page.url());
     if (collectUuid) {
       try {
-        requireSessionBudget().recordTurn(collectUuid, { inBytes: 0, outBytes: Buffer.byteLength(snapshot.reply, "utf8") });
+        requireSessionBudget().recordTurn(collectUuid, { inBytes: 0, outBytes: Buffer.byteLength(snapshot.reply, "utf8") }, { completeOpenTurn: true });
         log(`[ctx-budget] turn+out_bytes=${Buffer.byteLength(snapshot.reply, "utf8")}B → ${collectUuid}`);
       } catch (e) {
         log(`[ctx-budget] WARN: 记账失败（不影响本次派单证据，下次预检按 UNCERTAIN fail-closed）: ${e.message}`);
