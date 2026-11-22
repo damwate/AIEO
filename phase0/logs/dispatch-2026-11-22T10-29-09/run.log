@@ -1,0 +1,15 @@
+[2026-11-22T10:29:09.842Z] 证据目录: D:\AIEO\phase0\logs\dispatch-2026-11-22T10-29-09
+[2026-11-22T10:29:11.781Z] 会话锁已获取 pid=24012 instance=default lock=gpt-session.lockfile
+[2026-11-22T10:29:11.783Z] === GPT 派单（已有会话，消息 220 字节）===
+[2026-11-22T10:29:11.785Z] [instance] 实例域就绪: instance=default port=9222 profile=gpt-poc lock=gpt-session.lockfile
+[2026-11-22T10:29:13.082Z] 复用本实例调试端口 9222（归属核验 own=9）
+[2026-11-22T10:29:13.505Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 1 个
+[2026-11-22T10:29:13.506Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-22T10:29:32.037Z] 会话就绪: https://chatgpt.com/c/6b02a805-88f0-83ec-8fa3-ff4f30e21f65
+[2026-11-22T10:29:37.089Z] [dispatch] 基线尾部: {"role":"assistant","key":"a9103c2d-fef5-578f-aab4-7704a0b637b4:2:assistant","assistantUuid":"6742b523-b3e2-4c43-bad2-e5dbd7bd5dd5"}
+[2026-11-22T10:29:39.260Z] [ctx-budget] turn+in_bytes=220B → 6b02a805-88f0-83ec-8fa3-ff4f30e21f65
+[2026-11-22T10:29:39.260Z] [dispatch] 发送双验通过（polls=1，user_unit_key=fallback-turn-0:0:user，tail 后观察）
+[2026-11-22T10:29:39.657Z] 截图: sent-dispatch.png
+[2026-11-22T10:31:59.042Z] 会话锁已释放
+[2026-11-22T10:31:59.045Z] 致命错误: INBOUND_WINDOW_OVERLAP_CHANGED: 重叠 unit 的角色、UUID 或原文发生变化 details={"unit_key":"6811d369-7fad-5af7-84ca-c1253d7e41e5:2:assistant"}
+[2026-11-22T10:31:59.046Z] [tab-hygiene] 发送已发生：保留现场不关页（禁重发语义依赖现场）；退出后由人工/补采链按 L-018 处置

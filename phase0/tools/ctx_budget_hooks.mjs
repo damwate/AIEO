@@ -15,6 +15,10 @@ export async function loadSessionBudget(env = process.env) {
 
 // 发送前预检门。返回 verdict（NORMAL/WARN 时调用方继续）；HARD/UNCERTAIN/账本异常 = 抛错中止派单。
 export function assessBudgetGate(uuid, { sessionBudget, allowNearLimit = false, log = () => {} }) {
+  // 新会话阶段：UUID 尚未取得（--new-session）→ 无既有账本可评估，跳过预检（不触碰账本）
+  if (!uuid) {
+    return { state: "NORMAL", totals: { turns: 0, inBytes: 0, outBytes: 0, totalBytes: 0, maxTurnBytes: 0 }, thresholds: sessionBudget.thresholds?.() ?? null, provableEmpty: true, skipped: true };
+  }
   let verdict;
   try {
     verdict = sessionBudget.assessLedger(uuid);

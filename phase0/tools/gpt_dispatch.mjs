@@ -512,6 +512,7 @@ async function mainLocked() {
   const { browser, page, createdPages, preexistingSessionIds } = await attachPage();
   ownedCreatedPages = createdPages;
   let targetSessionId = null; // 既有会话派单的目标 UUID（归属校验用）；新会话为 null
+  let targetUrl = null; // 既有会话分支读取的目标 URL；新会话阶段保持 null（预算预检跳过，ctx_budget_hooks 契约）
   log(`[tab-hygiene] attach 前页清单 ${Array.isArray(tabAuditBefore) ? tabAuditBefore.length + " 页" : "不可达"}`);
 
   if (newSession) {
@@ -529,7 +530,8 @@ async function mainLocked() {
     log("新聊天页面就绪");
   } else {
     const sessionFile = dispatchOptions.sessionResult ?? (existsSync(REVIEWER_SESSION) ? REVIEWER_SESSION : SESSION_JSON);
-    const { conversation_url: targetUrl, session_id: recordedSessionId } = JSON.parse(readFileSync(sessionFile, "utf8"));
+    const { conversation_url: parsedTargetUrl, session_id: recordedSessionId } = JSON.parse(readFileSync(sessionFile, "utf8"));
+    targetUrl = parsedTargetUrl; // 外层作用域赋值（CTX-CODE-R7 P0：targetUrl 在 mainLocked 外层声明）
     targetSessionId = extractSessionId(targetUrl);
     if (!targetSessionId || ((dispatchOptions.sessionResult || recordedSessionId !== undefined)
         && recordedSessionId !== targetSessionId)) {

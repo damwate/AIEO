@@ -1,0 +1,14 @@
+[2026-11-22T10:32:57.364Z] 补采实例域: instance=default lock=D:\AIEO\runtime\locks\gpt-session.lockfile cdp=http://127.0.0.1:9222
+[2026-11-22T10:32:57.366Z] 会话锁已获取（review-leg 补采；仅采集不发送）
+[2026-11-22T10:32:57.473Z] [tab-hygiene] 会话页命中 1 个，取末位（最近创建）
+[2026-11-22T10:32:57.473Z] 页面就位: https://chatgpt.com/c/6b02a805-88f0-83ec-8fa3-ff4f30e21f65
+[2026-11-22T10:33:05.527Z] 静置门通过（6 units）；滚动到底+额外静置 30000ms
+[2026-11-22T10:33:45.599Z] recoll FAILED: 本轮标记 user 定位失败: 命中 0 条（需恰 1 条）
+[2026-11-22T10:33:45.717Z] 会话锁已释放（review-leg 补采）
+[2026-11-22T10:34:05.877Z] 补采实例域: instance=default lock=D:\AIEO\runtime\locks\gpt-session.lockfile cdp=http://127.0.0.1:9222
+[2026-11-22T10:34:05.878Z] 会话锁已获取（review-leg 补采；仅采集不发送）
+[2026-11-22T10:34:06.190Z] [tab-hygiene] 会话页命中 1 个，取末位（最近创建）
+[2026-11-22T10:34:06.191Z] 页面就位: https://chatgpt.com/c/6b02a805-88f0-83ec-8fa3-ff4f30e21f65
+[2026-11-22T10:34:14.204Z] 静置门通过（6 units）；滚动到底+额外静置 30000ms
+[2026-11-22T10:34:54.266Z] recoll FAILED: 本轮标记 user 定位失败: 命中 0 条（需恰 1 条）
+[2026-11-22T10:34:54.385Z] 会话锁已释放（review-leg 补采）

@@ -33,6 +33,14 @@ describe("assessBudgetGate 预检门", () => {
     const v = assessBudgetGate("uuid-x", { sessionBudget: sb });
     assert.equal(v.state, "NORMAL");
   });
+  test("新会话阶段（UUID 未取得）→ 跳过预检不触碰账本（CTX-CODE-R7 P0 配套）", () => {
+    let assessCalled = false;
+    const sb = fakeBudget({ assess: () => { assessCalled = true; return { state: "HARD", totals: { totalBytes: 99999 }, thresholds: { warnBytes: 24576, hardBytes: 49152 } }; } });
+    const v = assessBudgetGate(null, { sessionBudget: sb });
+    assert.equal(v.state, "NORMAL");
+    assert.equal(v.skipped, true);
+    assert.equal(assessCalled, false, "新会话阶段不得评估不存在的账本");
+  });
 });
 
 describe("recordInTurn / recordOutTurn 记账钩子", () => {
