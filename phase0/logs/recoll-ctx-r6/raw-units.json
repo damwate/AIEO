@@ -1,0 +1,94 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-22T08:21:21.148Z",
+  "user_unit_key": "3bc0246a-5434-51ef-8c1e-3bd4f56eef53:0:user",
+  "start_key_resolved": "3bc0246a-5434-51ef-8c1e-3bd4f56eef53:0:user",
+  "start_resolved_by_marker": false,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "3bc0246a-5434-51ef-8c1e-3bd4f56eef53:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "e038974f-6858-4988-b321-14771ef07c4b",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "3bc0246a-5434-51ef-8c1e-3bd4f56eef53:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "3bc0246a-5434-51ef-8c1e-3bd4f56eef53:0:user",
+          "3bc0246a-5434-51ef-8c1e-3bd4f56eef53:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "722c9bd095ccee618c327c9a441765d58a2c907da97095a5f80b7a1ce0c51303",
+          "b0fce4c5182859d72cbed607d3dbbbf322bbe55ee74bc1d612ac500241cce743"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "3bc0246a-5434-51ef-8c1e-3bd4f56eef53:0:user",
+          "3bc0246a-5434-51ef-8c1e-3bd4f56eef53:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "722c9bd095ccee618c327c9a441765d58a2c907da97095a5f80b7a1ce0c51303",
+          "b0fce4c5182859d72cbed607d3dbbbf322bbe55ee74bc1d612ac500241cce743"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "3bc0246a-5434-51ef-8c1e-3bd4f56eef53:0:user",
+          "3bc0246a-5434-51ef-8c1e-3bd4f56eef53:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "3bc0246a-5434-51ef-8c1e-3bd4f56eef53:0:user",
+      "3bc0246a-5434-51ef-8c1e-3bd4f56eef53:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "3bc0246a-5434-51ef-8c1e-3bd4f56eef53:0:user",
+          "3bc0246a-5434-51ef-8c1e-3bd4f56eef53:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "3bc0246a-5434-51ef-8c1e-3bd4f56eef53:0:user",
+          "3bc0246a-5434-51ef-8c1e-3bd4f56eef53:2:assistant"
+        ],
+        "overlap_keys": [
+          "3bc0246a-5434-51ef-8c1e-3bd4f56eef53:0:user",
+          "3bc0246a-5434-51ef-8c1e-3bd4f56eef53:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "3bc0246a-5434-51ef-8c1e-3bd4f56eef53:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n三项定点复核\n① 并发首写：未通过，P0\n\n§2 第6步正确识别了 R5 的关键问题：\n\n只捕获 SQLITE_CONSTRAINT_PRIMARYKEY，没有把所有 SQLITE_CONSTRAINT 都误判为首写冲突。\n\n冲突后重读账本，再走 gen 条件更新路径。\n\nC8 已加入两进程并发首次写入测试。\n\n但还缺少一个必要的事务边界：\n\nINSERT 发生主键冲突后，必须先明确当前事务如何结束，再重读账本。\n\nSQLite 默认 ABORT 冲突处理通常只回滚当前 SQL 语句，不自动结束整个事务。此时若直接重走第1步，可能仍处于原写事务中，连接和写锁没有释放。\n\n整改要求：\n\n捕获指定主键错误。\n\n显式 ROLLBACK，确认事务结束。\n\n再重新读取账本，获取最新 gen。\n\n开启新事务，执行条件更新。\n\nC8 断言两个请求都完成累计，而不仅仅是最终行存在或 gen 增加。\n\n另外，§2 第5步把 GEN_CONFLICT 写成“放弃本轮”，需要明确是放弃旧快照并重新计算，还是放弃这次 recordTurn 请求。若直接丢弃本轮计数，会造成累计数据丢失。正确语义应是放弃旧写入尝试，重读、重新计算并重试，不能静默丢弃已确认的 turn。\n\n② COMMIT 失败清理：部分通过，仍有缺口\n\n§2 第7步已覆盖：\n\n检查事务状态；\n\n事务仍活动时显式 ROLLBACK；\n\nROLLBACK 失败时关闭并废弃连接；\n\nLEDGER_COMMIT_UNCERTAIN 不计成功、不盲目重放。\n\n方向正确，但还需要明确：COMMIT 报错后，事务状态检查结果必须对应明确的连接处置规则。\n\n特别是提交结果不确定时，即使无法证明本轮是否已提交，也不能通过重新执行同一轮计数来“恢复”。建议将该连接标记为不可复用，关闭后由调用方进入 UNCERTAIN；不能让后续调用误用一个提交状态不明的连接。\n\nC9 应覆盖：\n\nCOMMIT 失败且事务仍活动，ROLLBACK 成功；\n\nCOMMIT 失败且 ROLLBACK 失败，连接关闭；\n\nCOMMIT 结果不确定，不重放、不计成功；\n\n后续调用使用新连接。\n\n③ BUSY 等待预算：未通过，P1\n\n这里有一个直接的文档冲突：\n\n§1 仍写 busy_timeout=5000ms。\n\n§2 第8步改成 busy_timeout=500ms，外部重试3次。\n\n因此当前文件并未真正统一等待预算。即使第8步意图明确，§1 的实际配置仍可能让实现者采用5000ms。\n\n另外，“总时限约1.5–2s”应明确计时口径：4次尝试各自最多等待500ms，外部重试间隔、SQL执行开销也应计入预算；不能将非阻塞执行耗时假设为零。\n\n整改要求：\n\n§1、§2统一为500ms。\n\n明确最多4次尝试及重试间隔。\n\nC10 应以实际耗时断言上限，而不是仅检查配置值。\n\n最终授权裁定\n\n复核范围\n\n\t\n\n结果\n\n\n\n\n首写唯一约束错误码识别\n\n\t\n\n通过\n\n\n\n\n首写冲突后的事务释放\n\n\t\n\n未通过\n\n\n\n\nGEN_CONFLICT 重试语义\n\n\t\n\n未通过\n\n\n\n\nCOMMIT 失败基本清理流程\n\n\t\n\n基本通过\n\n\n\n\nCOMMIT 不确定状态及连接处置\n\n\t\n\n需补强\n\n\n\n\nBUSY 配置统一\n\n\t\n\n未通过\n\n\n\n\nC8/C9/C10 测试补充\n\n\t\n\n已写入，需按上述边界补强\n\n[CTX-R6设计FAIL+理由]\n\nSQLite 架构、挂起边界、UUID 口径：继续认可，不重新审查。\n\n并发首写：P0 未关闭。\n\nGEN_CONFLICT 是否丢弃已确认计数：P0 未关闭。\n\nCOMMIT 失败清理：部分关闭。\n\nBUSY 等待预算：P1 未关闭。\n\n设计 PASS：不授予。\n\n编码授权：不授予。\n\nDEC-010 最终用户拍板合并门禁：继续有效。\n\n下一版只需修正上述三组边界。特别是首写冲突后先结束旧事务，以及 GEN_CONFLICT 不得丢失已确认 turn，这两点必须写成明确的执行顺序和测试断言。",
+      "text_sha256": "b0fce4c5182859d72cbed607d3dbbbf322bbe55ee74bc1d612ac500241cce743",
+      "size_bytes": 3762,
+      "assistant_uuid": "e038974f-6858-4988-b321-14771ef07c4b"
+    }
+  ]
+}

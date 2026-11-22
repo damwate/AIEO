@@ -1,0 +1,2 @@
+[CTX-R6|三定点复核]
+v6已推main @ cc06550c88c351f4b1c30c77a3fcbba9d743f3d5（design-r2.md §2第5-9步+§5新增C8-C10）。按你R5止损边界只复核三项：①并发首写=INSERT命中PRIMARY KEY唯一约束按错误码SQLITE_CONSTRAINT_PRIMARYKEY捕获(不把所有CONSTRAINT当首写冲突)→重走读账本→gen条件更新路径,两轮数据都累计(C8新增)；②COMMIT失败=检查事务状态→仍活动显式ROLLBACK→回滚也失败=废弃连接close不复用；提交结果不确定=LEDGER_COMMIT_UNCERTAIN如实上抛,不计成功不盲重放(C9新增)；③BUSY预算统一=busy_timeout改500ms单次上限+外部重试3次,总时限约1.5-2s可验证明确(非3×5000ms),耗尽LEDGER_BUSY_TIMEOUT转UNCERTAIN(C10新增)。架构/挂起边界/UUID口径均未动。请给[CTX-R6设计PASS+编码授权]或[FAIL+理由]。

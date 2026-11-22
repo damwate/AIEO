@@ -1,0 +1,14 @@
+[2026-11-22T08:17:07.670Z] 证据目录: D:\AIEO\phase0\logs\dispatch-2026-11-22T08-17-07
+[2026-11-22T08:17:08.486Z] 会话锁已获取 pid=29372 instance=default lock=gpt-session.lockfile
+[2026-11-22T08:17:08.488Z] === GPT 派单（已有会话，消息 851 字节）===
+[2026-11-22T08:17:08.490Z] [instance] 实例域就绪: instance=default port=9222 profile=gpt-poc lock=gpt-session.lockfile
+[2026-11-22T08:17:09.809Z] 复用本实例调试端口 9222（归属核验 own=9）
+[2026-11-22T08:17:10.172Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 1 个
+[2026-11-22T08:17:10.173Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-22T08:17:17.391Z] 会话就绪: https://chatgpt.com/c/6b02952e-a570-83ec-9d08-eab047f5d21a
+[2026-11-22T08:17:22.487Z] [dispatch] 基线尾部: {"role":"assistant","key":"2926fa2a-48e8-57cb-84e2-54c987eec8df:2:assistant","assistantUuid":"e86e5848-3ae6-468c-a3ff-9c7bc3ae0bfe"}
+[2026-11-22T08:17:25.113Z] [dispatch] 发送双验通过（polls=1，user_unit_key=fallback-turn-0:0:user，tail 后观察）
+[2026-11-22T08:17:25.631Z] 截图: sent-dispatch.png
+[2026-11-22T08:19:58.667Z] 会话锁已释放
+[2026-11-22T08:19:58.667Z] 致命错误: INBOUND_WINDOW_COMPLETENESS_UNPROVEN: BLOCKED: 滚动中实际观察到渲染 unit 集合变化，且缺少独立逻辑序列，不能排除持续遗漏中间 unit details={"materialized_unit_keys":["3bc0246a-5434-51ef-8c1e-3bd4f56eef53:0:user","3bc0246a-5434-51ef-8c1e-3bd4f56eef53:2:assistant"],"remediation":"提供可信的完整逻辑 unit 序列，或在非虚拟化静态 DOM 上重新读取"}
+[2026-11-22T08:19:58.668Z] [tab-hygiene] 发送已发生：保留现场不关页（禁重发语义依赖现场）；退出后由人工/补采链按 L-018 处置
