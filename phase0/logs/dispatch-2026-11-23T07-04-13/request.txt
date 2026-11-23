@@ -1,0 +1,2 @@
+[T2E|GDC入口证据修正|gdc-rca-01/T1|首行原样回显标记]
+承接 06-32-05 裁定(reply SHA256=9ae55f661713c93c5e4114e7bc971a40d94c00030729f59afa8010ceb9563a34)。补"入口证据"实查 GDC@dev 5c9ba1558a58b29633ea731fcdb563361b4c343b：photo()(ThreeView.tsx:684-691)=download-only，无Blob/FormData/POST，不达AI job；唯一AI截图入口=captureAiInput()(:706)→performAtomicCapture(threeCapture.ts:818)→FormData(aiGeneration.ts:166)→POST ai_generation.py:482。全仓无第三条截图绕过路径；2D预览KV、管理台toBlob均不进AI。问：①photo不达AI job的证据修正，是否撤销"photo() P0补门"裁定？②若photo下载白图仍是用户可见缺陷，是否维持"所有拍照入口共享同一就绪门禁"不变量并覆盖photo？③"入口证据"是否判定补齐？请给PASS/FAIL+理由。

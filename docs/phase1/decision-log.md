@@ -1132,3 +1132,12 @@
 - **裁定：** T1=分层 PASS（A-FE 前端流/A-BE 后端流独立验收）+缺数据留空 PASS（附条件，三态门禁 VERIFIED/MISSING/INVALID）+A01-A10 待补原始清单+A11-A20；T2=PASS_WITH_CONSTRAINTS（有条件方案收敛，非实施授权）——photo() 提升阶段一 P0、五缺口进台账（params_json 不入本轮）、五负例 A-E、实施前四项证据门。
 - **首次整改项复核：** P0-1 并行超限→本次 PASS（并行=2）；P0-2 四件套→**仍未整改**（只读任务无写入面，M2 §1 无豁免条款，如实登记）；R2 残留状态不同步→PASS（task-brief/steps 同步，ST-05 终检无 FAIL）；marker 回显→T2 完整/T1 自拟标题（部分改善）；缩写 SHA→PASS（全 40/64 位）。
 - **边界：** 全轮目标仓库（bms-ui/GDC/AISVC）零代码修改；不立项、不授权实施、不扩大并行、不宣告 M2 试运行通过；两方案与四组待拍板项（T1 A-FE/A-BE、T2 GDC-RCA-01 立项/params_json 独立、四件套豁免条款、实施顺序）待用户批准。测试报告=basic/tasks/b-20261123-standard-second-trial/delivery.md。
+
+### DEC-133 用户批准双任务实施（BMS R2-A 前端流 + GDC-RCA-01 立项拆三阶段）（2026-11-23）
+
+- **授权依据：** 用户原话"BMS的修改方案我认可，你可以先建立子agent改BMS页面吧"+"GDC-RCA-01立项，拆任务吧，然后开始作为第二个任务与前面BMS的并驾执行"——覆盖 DEC-132 中"暂不授权实施"状态，进入真实改码（仍不解除 DEC-010 合并/发布红线）。
+- **BMS A-FE（已实施）：** bms-ui 独立 worktree `bms-ui-r2a-worktree`/分支 `task/bms-quote-r2a-fe`，父 `cf79e4c2`→commit `63ac9b17b5bf9de20301afb34ee0c79045cf30a3`；四页签命名/可见表 pcs 文案/产品价格与人工价格展示位（缺数据显示 —）/纯厚度规格格式化；导出打印零改动。验收：read_lints 0 + node --check 与基线同 3 个既有模板误报；记录=basic/tasks/b-20261123-bms-quote-preview/implementation.md。
+- **GDC-RCA-01 立项（charter.md）：** 三阶段=T1 正确性基线（本轮实施）/T2 缓存与格式准入/T3 端到端元数据+record-only；`AiGenerationJob.params_json` 独立数据模型任务不混入。
+- **入口证据修正（派单 dispatch-2026-11-23T07-04-13，reply SHA256=3a611ccb81ee7d41f2b14d421f5e580b36a9d733f7bb4481acd5f63aa3872205）：** 撤销 photo() AI job P0 误分类（download-only 不进 AI job）；AI 截图唯一入口=captureAiInput()；photo 白图作为独立用户可见缺陷、共享底层就绪原语但不进 AI 门禁；全仓无第三绕过路径。
+- **GDC T1（已实施）：** 独立 worktree `D:\GDC-rca01-t1-worktree`/分支 `task/gdc-rca-01-t1-gate`，父 `5c9ba1558a58b29633ea731fcdb563361b4c343b`→commit `b6ac457b2bdd6f41b996df93dc880d359054862f`；新增纯函数 sceneReady 门（贴图/billboard settled）、billboard 载前隐藏、photo/AI 两入口共享原语（isAssetReady GLB-only 逐字不变、pendingGlbs 语义不变、timeout 归 T2）。验收：全量前端 217 files/3256 tests PASS/0 FAIL + tsc exit 0；记录=basic/tasks/gdc-rca-01/implementation-T1.md；测试日志=phase0/logs/gdc-t1-vitest-full-src.log。
+- **边界：** 两任务均只在本机任务分支落地，未合并 bms-ui master / GDC dev，未 push；须用户拍板合并与 E2E 四场景+负例实测后进入 T2。

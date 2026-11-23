@@ -1,0 +1,94 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-23T07:06:43.873Z",
+  "user_unit_key": "efc40f3b-cc9f-50e5-b625-ea563f452950:0:user",
+  "start_key_resolved": "efc40f3b-cc9f-50e5-b625-ea563f452950:0:user",
+  "start_resolved_by_marker": true,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "efc40f3b-cc9f-50e5-b625-ea563f452950:1:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "46f23204-3ef0-4f04-9776-03eb1c74db7a",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "efc40f3b-cc9f-50e5-b625-ea563f452950:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "efc40f3b-cc9f-50e5-b625-ea563f452950:0:user",
+          "efc40f3b-cc9f-50e5-b625-ea563f452950:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "8442f8a4d66c04d7e2b6dc94221c44a148a26f67a5643c648b3afc71eb592d54",
+          "3a611ccb81ee7d41f2b14d421f5e580b36a9d733f7bb4481acd5f63aa3872205"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "efc40f3b-cc9f-50e5-b625-ea563f452950:0:user",
+          "efc40f3b-cc9f-50e5-b625-ea563f452950:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "8442f8a4d66c04d7e2b6dc94221c44a148a26f67a5643c648b3afc71eb592d54",
+          "3a611ccb81ee7d41f2b14d421f5e580b36a9d733f7bb4481acd5f63aa3872205"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "efc40f3b-cc9f-50e5-b625-ea563f452950:0:user",
+          "efc40f3b-cc9f-50e5-b625-ea563f452950:1:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "efc40f3b-cc9f-50e5-b625-ea563f452950:0:user",
+      "efc40f3b-cc9f-50e5-b625-ea563f452950:1:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "efc40f3b-cc9f-50e5-b625-ea563f452950:0:user",
+          "efc40f3b-cc9f-50e5-b625-ea563f452950:1:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "efc40f3b-cc9f-50e5-b625-ea563f452950:0:user",
+          "efc40f3b-cc9f-50e5-b625-ea563f452950:1:assistant"
+        ],
+        "overlap_keys": [
+          "efc40f3b-cc9f-50e5-b625-ea563f452950:0:user",
+          "efc40f3b-cc9f-50e5-b625-ea563f452950:1:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "efc40f3b-cc9f-50e5-b625-ea563f452950:1:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n[T2E|GDC入口证据修正|gdc-rca-01/T1|首行原样回显标记]\n\n裁定结果\n入口证据修正 PASS\n\n裁定项\n\n\t\n\n结果\n\n\t\n\n理由\n\n\n\n\n① 撤销 photo() P0 补门裁定\n\n\t\n\nPASS：撤销\n\n\t\n\nphoto() 仅执行下载，不进入 AI job 链路。此前将其认定为 AI 截图入口，入口分类有误。\n\n\n\n\n② 维持共享就绪门禁不变量并覆盖 photo\n\n\t\n\nPASS：维持，但需区分门禁目的\n\n\t\n\n如果 photo 下载白图属于用户可见缺陷，仍应修复其自身的就绪判断；但不能因此认定 photo 必须接入 AI job 门禁。\n\n\n\n\n③ 入口证据是否补齐\n\n\t\n\nPASS\n\n\t\n\n已明确唯一 AI 截图入口及完整调用链，并排除了其他截图绕过路径。\n\n逐项裁定\n\n① 撤销 photo() P0 补门裁定。\n\n证据链：\n\nThreeView.tsx:684-691：photo() 是 download-only。\n\n不包含 Blob、FormData、POST。\n\n不进入 AI job 创建流程。\n\n唯一 AI 截图入口是：\n\ncaptureAiInput()\n→ performAtomicCapture()（threeCapture.ts:818）\n→ FormData（aiGeneration.ts:166）\n→ POST（ai_generation.py:482）。\n\n因此，原先针对 photo() 的 AI job P0 补门要求失去依据，应撤销，而不是保留一个错误的 AI 入口分类。\n\n② 共享就绪门禁不变量维持，但不能机械扩大门禁范围。\n\n这里需要区分两个概念：\n\nAI 输入就绪门禁：保证提交给 AI 的截图符合就绪条件，必须覆盖唯一 AI 截图入口。\n\n拍照下载就绪门禁：保证用户通过 photo() 下载的图片不是白图或未完成渲染的图片。\n\n如果项目原定不变量是「所有拍照入口都必须在场景就绪后才能输出图片」，那么 photo() 仍应遵守这个不变量。\n\n但这不等于 photo() 必须进入 AI job 流程，也不等于它必须复用 AI job 门禁的全部实现。\n\n建议保持：\n\nAI 截图：captureAiInput() 执行原子捕获及就绪检查。\n\n用户下载：photo() 执行适合下载场景的就绪检查。\n\n两者可以共享底层场景就绪判断，但不强制共享 AI job 流程。\n\n③ 入口证据补齐。\n\nPASS\n\n本轮已经完成入口边界划分：\n\n唯一 AI 截图入口已定位。\n\n从前端捕获到后端 POST 的完整调用链已定位。\n\nphoto() 已证明不进入 AI job。\n\n2D 预览 KV、管理台 toBlob 已排除。\n\n全仓未发现第三条截图绕过路径（以本轮核查范围为准）。\n\n最终处理意见\n\n撤销 photo() 的 AI job P0 补门裁定。\n\n保留 photo() 白图问题作为独立用户可见缺陷，不因入口分类修正而豁免。\n\n保留所有拍照输出必须满足场景就绪条件的不变量，但允许不同入口使用不同的业务门禁。\n\nAI job 入口审查范围收敛为 captureAiInput() 唯一路径。\n\n本轮不要求改码，不新增 P0。\n\n建议将本次裁定记录为：入口证据修正 PASS / 原 photo() P0 误分类撤销 / photo() 下载质量问题独立跟踪。",
+      "text_sha256": "3a611ccb81ee7d41f2b14d421f5e580b36a9d733f7bb4481acd5f63aa3872205",
+      "size_bytes": 2924,
+      "assistant_uuid": "46f23204-3ef0-4f04-9776-03eb1c74db7a"
+    }
+  ]
+}
