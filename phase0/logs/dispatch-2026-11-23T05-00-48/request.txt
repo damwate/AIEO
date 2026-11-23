@@ -1,0 +1,4 @@
+[DYN-SCHED-R5|动态任务调度方案收敛复审]
+R4三项已收敛,方案全文:完整SHA cb5a8d83bd213d33db1820ee55cad8a18758539e 下 basic/tasks/b-20261123-dynamic-task-scheduling/acceptance/design-proposal-r5.md(已推GitHub)。R2-01/05/06已PASS不重开,不重审需求/v1.0,不扩新功能。
+三项同根用统一PreemptionTx事务模型一次闭合:R2-02唯一权威账本=workflow_journal(仅追加/fsync),scheduler-state与任务表为物化视图由journal重放;容量=active+valid_reserved<=3,RESERVED占额,RELEASED/COMMITTED/EXPIRED全为txn,EXPIRED按expires_at+后续journal判定；R2-03阶段2 DECISION_ACCEPTED为唯一不可撤销决策提交点(txn A同时epoch+1+victim锁定+DRAINING置位),阶段6改名PROPOSAL_CLOSED仅流程标记,阶段5 victim状态+额度释放在txn C同一提交点,三段失败按journal重放续跑不重选不重复释放；R2-04三动作合并阶段2原子操作,游标白名单{cursor_low/high,seen_ids}界内去重界外拒绝,阶段5同txn关白名单+generation+1,写入口服务端校验fencing token。
+逐项确认R2-02/03/04是否闭合,给[R5 PASS/FAIL+未闭合编号依据建议]。仅方案复审不涉代码,不授实施权限。

@@ -1,0 +1,4 @@
+[DYN-SCHED-R4|动态任务调度方案定向复审]
+R3五项已逐条闭环,方案全文:完整SHA d5797f8615d0effacdfdc4d8fac67667596fb0a1 下 basic/tasks/b-20261123-dynamic-task-scheduling/acceptance/design-proposal-r4.md(已推GitHub)。R2-06已PASS不重开,不重审需求/v1.0,不扩新功能。
+修法:R2-01定义AuthCheckContract最小授权契约(三类主体/操作/检查点/fail-closed,控制面不得绕过M1写授权);R2-02容量=active_count+valid_reserved<=3,RESERVED立即占额,RESERVED→COMMITTED/RELEASED/EXPIRED原子转换,重启三类数据对账不丢弃,幂等释放;R2-03决策前置——新增DECISION_ACCEPTED早于DRAINING,victim释放只在决策持久化后,journal+状态+额度同事务;R2-04 DRAINING屏障epoch+1+inflight白名单+游标,交接后generation再+1,写入口服务端校验fencing token;R2-05 Git现场存staged/unstaged binary diff+未跟踪文件实际内容,纳入MANIFEST/SHA256,恢复前校验基线禁静默覆盖。
+逐项确认R2-01~05是否闭合,给[R4 PASS/FAIL+未闭合编号依据建议]。仅方案复审不涉代码,不授予实施权限。

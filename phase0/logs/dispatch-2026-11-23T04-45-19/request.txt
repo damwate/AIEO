@@ -1,0 +1,5 @@
+[DYN-SCHED-R2|动态任务调度方案定向复审]
+R1-01已修正：design-proposal-r1.md现已提交入完整SHA 37b08e074dc2734f75846b2114b89a1ced905778（已推GitHub），该SHA下 basic/tasks/b-20261123-dynamic-task-scheduling/{acceptance/design-proposal-r1.md,requirement.md} 均存在。请按R1承诺直接R2定向复审五项重点，不重述需求、不重审已冻结v1.0。
+五项裁定口径请结合方案全文逐条确认：①写路径并发须待906⑥ PASS，控制面不获M1写授权；②WAITING与依赖阻塞区分、WAITING→READY推进方式；③抢占五步链在途轮不中断+fail-closed；④交接包须满足五件套/SHA256/会话绑定/人工恢复；⑤新WAITING状态必要性或不新增的更简机制。
+另请明确：并行上限3属P3，本方案是否仅作控制面设计冻结、不构成P1/P2/P3实施授权。
+输出[R2 PASS/FAIL+逐条问题编号依据建议]，仅方案复审不涉代码。被测SHA 37b08e0。
