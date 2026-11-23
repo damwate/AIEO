@@ -1,0 +1,86 @@
+{
+  "recollection": true,
+  "driver": "recoll_ctx_code_r8.mjs (derived from r7, L-018 三参数核对)",
+  "remediation": "归属校验型定位（标记文本唯一+最后user断言+前轮SHA排除），未重发任何消息",
+  "reference_failed_dispatch_dir": "D:/AIEO/phase0/logs/dispatch-2026-11-23T04-45-19",
+  "conversation_url": "https://chatgpt.com/c/6b03c2a0-b284-83ec-b272-758afdaa1625",
+  "sent_user_unit_key_reported": "fallback-turn-0:0:user",
+  "located_user_unit_key": "f59a4105-c91e-5892-8c61-d3b49836afa5:0:user",
+  "assistant_uuid": "1a3d721d-6b69-454c-b1a7-3c06a641fac1",
+  "unit_keys": [
+    "f59a4105-c91e-5892-8c61-d3b49836afa5:2:assistant"
+  ],
+  "unit_count": 1,
+  "reply_bytes": 10819,
+  "reply_sha256": "cfdaeb0c6856744088cfc73cc187bd4ba847d02f0c394bff74d14b2ddee74ba6",
+  "checks": {
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "not_prev_reply_sha": true
+  },
+  "stability": {
+    "stable": true,
+    "interval_ms": 3595,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-23T04:50:28.165Z",
+      "read_finished_at": "2026-11-23T04:50:28.754Z",
+      "unit_keys": [
+        "f59a4105-c91e-5892-8c61-d3b49836afa5:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "f59a4105-c91e-5892-8c61-d3b49836afa5:2:assistant",
+          "sha256": "cfdaeb0c6856744088cfc73cc187bd4ba847d02f0c394bff74d14b2ddee74ba6",
+          "size_bytes": 10819
+        }
+      ],
+      "assistant_uuid": "1a3d721d-6b69-454c-b1a7-3c06a641fac1",
+      "next_user_unit_key": null,
+      "start_key_resolved": "f59a4105-c91e-5892-8c61-d3b49836afa5:0:user",
+      "start_resolved_by_marker": false,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-23T04:50:31.759Z",
+      "read_finished_at": "2026-11-23T04:50:32.309Z",
+      "unit_keys": [
+        "f59a4105-c91e-5892-8c61-d3b49836afa5:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "f59a4105-c91e-5892-8c61-d3b49836afa5:2:assistant",
+          "sha256": "cfdaeb0c6856744088cfc73cc187bd4ba847d02f0c394bff74d14b2ddee74ba6",
+          "size_bytes": 10819
+        }
+      ],
+      "assistant_uuid": "1a3d721d-6b69-454c-b1a7-3c06a641fac1",
+      "next_user_unit_key": null,
+      "start_key_resolved": "f59a4105-c91e-5892-8c61-d3b49836afa5:0:user",
+      "start_resolved_by_marker": false,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "extracted_at": "2026-11-23T04:50:32.319Z",
+  "artifacts": {
+    "reply": "D:\\AIEO\\phase0\\logs\\recoll-dynsched-r2\\reply.txt",
+    "raw_units": "D:\\AIEO\\phase0\\logs\\recoll-dynsched-r2\\raw-units.json"
+  }
+}
