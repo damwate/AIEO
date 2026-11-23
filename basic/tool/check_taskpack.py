@@ -23,6 +23,13 @@ from collections import Counter
 from dataclasses import dataclass, field
 from pathlib import Path, PurePosixPath
 
+REPO_ROOT = Path(__file__).resolve().parents[2]
+STARTUP_SECTION = "开工核对"
+SKILL_BY_VERSION = {
+    version: f".github/skills/aieo-{version.lower()}/SKILL.md"
+    for version in ("Basic", "Standard")
+}
+
 # ---- 冻结口径常量 ----
 
 # task-brief.md「当前状态」→ 阶段映射（steps.md 冻结口径 1）
@@ -223,6 +230,70 @@ def split_h2_sections(text: str) -> list:
     return sections
 
 
+def startup_value(section: str, name: str) -> str | None:
+    values = re.findall(rf"^- {name}[：:]([^\n]*)$", section, re.MULTILINE)
+    return values[0].strip().strip("`") if len(values) == 1 else None
+
+
+def startup_action(value: str | None) -> bool:
+    if not value or is_placeholder(value):
+        return False
+    value = value.strip().rstrip("。.")
+    return bool(re.search(r"[\w\u3400-\u9fff]", value)) and value not in {
+        "已读", "遵守", "按经验执行", "参考开发经验", "见文档", "无", "N/A",
+    } and not re.fullmatch(r"<[^>]+>", value)
+
+
+def check_startup(task_dir: Path, *, required: bool) -> list[str] | None:
+    """Check the startup record, allowing legacy packs without one in default mode."""
+    try:
+        brief = read_file_safe(task_dir / "task-brief.md")
+    except FileDecodeError as exc:
+        return [str(exc)] if required else None
+
+    sections = [body for title, body in split_h2_sections(brief) if title == STARTUP_SECTION]
+    if not sections:
+        return ["task-brief.md 缺少「## 开工核对」小节"] if required else None
+    if len(sections) != 1:
+        return ["task-brief.md「开工核对」小节必须唯一"]
+
+    selected = extract_brief_field(brief, "选定版本") or ""
+    version = re.match(r"^[`* ]*(Basic|Standard)\b", selected, flags=re.I)
+    if not version or count_brief_field_rows(brief, "选定版本") != 1:
+        return ["开工核对要求唯一且已定档的 Basic 或 Standard「选定版本」"]
+    expected = SKILL_BY_VERSION[version.group(1).capitalize()]
+    section = sections[0]
+    problems = []
+    skill = startup_value(section, "已读技能")
+    if skill != expected:
+        problems.append(f"「已读技能」须唯一并与选定版本一致: {expected}")
+    elif not (REPO_ROOT / skill).is_file():
+        problems.append(f"技能文件不存在: {skill}")
+
+    entries = re.findall(r"^\|[ \t]*`?(L-[^|` \t\n]+)`?[ \t]*\|([^|\n]*)\|[ \t]*$", section, re.MULTILINE)
+    keywords = startup_value(section, "未命中关键词")
+    if entries:
+        if keywords:
+            problems.append("已记录命中经验，请移除「未命中关键词」")
+        try:
+            lessons = read_file_safe(REPO_ROOT / "docs/AI-DEV-LESSONS.md")
+        except FileDecodeError as exc:
+            return [*problems, str(exc)]
+        known = set(re.findall(r"^### (L-\d{3})\s", lessons, re.MULTILINE))
+        counts = Counter(lesson for lesson, _ in entries)
+        for lesson, action in entries:
+            if lesson not in known:
+                problems.append(f"开发经验库没有 {lesson}")
+            if not startup_action(action):
+                problems.append(f"{lesson} 缺少本任务可检查的防错动作")
+        for lesson, count in counts.items():
+            if count > 1:
+                problems.append(f"开工核对重复记录 {lesson}")
+    elif not startup_action(keywords) or not startup_action(startup_value(section, "本次防错动作")):
+        problems.append("请登记相关 L-xxx 和防错动作，或写明未命中的检索关键词与本次防错动作")
+    return problems
+
+
 def get_step_sections(text: str) -> list:
     """提取步骤小节 [(编号:int, 标题, 正文)]（标题形如 `S1 骨架：...`）"""
     steps = []
@@ -378,6 +449,11 @@ def render_text(result: dict) -> str:
     for r in result["items"]:
         lines.append(f"[{r['status']}] {CIRCLED[r['no'] - 1]} {r['name']}")
         for problem in r["problems"]:
+            lines.append(f"       - {problem}")
+    if "startup" in result:
+        startup = result["startup"]
+        lines.append(f"[{startup['status']}] 开工核对")
+        for problem in startup["problems"]:
             lines.append(f"       - {problem}")
     lines.append(f"Overall: {result['overall']}")
     return "\n".join(lines)
@@ -757,6 +833,9 @@ def main(argv: list) -> int:
     parser.add_argument("task_dir", help="Basic 任务目录路径（basic/tasks/<任务ID>）")
     parser.add_argument("--json", action="store_true",
                         help="输出机器可读 JSON（与文本共用同一检查结果对象）")
+    modes = parser.add_mutually_exclusive_group()
+    modes.add_argument("--startup", action="store_true", help="仅检查 Basic / Standard 开工核对")
+    modes.add_argument("--require-startup", action="store_true", help="完整检查并要求开工核对")
     args = parser.parse_args(argv)
 
     task_dir = Path(args.task_dir)
@@ -766,12 +845,20 @@ def main(argv: list) -> int:
                             [f"任务目录不存在: {task_dir}"], STATUS_FAIL)
         exit_code = 1
     else:
-        phase_info = read_phase(task_dir)
-        results = [fn(task_dir) for fn in CHECK_FUNCS[:5]]
-        results.append(check_delivery(task_dir, phase_info.phase))
+        phase_info = PhaseInfo() if args.startup else read_phase(task_dir)
+        startup = check_startup(task_dir, required=args.startup or args.require_startup)
+        if args.startup:
+            results = []
+        else:
+            results = [fn(task_dir) for fn in CHECK_FUNCS[:5]]
+            results.append(check_delivery(task_dir, phase_info.phase))
         overall, exit_code = summarize(results, phase_info.phase)
+        if startup:
+            overall, exit_code = STATUS_FAIL, 1
         data = build_result(task_dir.name, phase_info.phase, phase_info.problems,
                             results, [], overall)
+        if startup is not None:
+            data["startup"] = {"status": STATUS_FAIL if startup else STATUS_PASS, "problems": startup}
 
     if args.json:
         print(json.dumps(data, ensure_ascii=False, indent=2))

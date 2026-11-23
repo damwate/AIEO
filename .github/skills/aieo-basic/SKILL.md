@@ -14,6 +14,8 @@ description: 按 AIEO Basic 初级版执行已定档的单任务开发、任务�
 3. 独立验收 PASS 后推进下一步。REJECT 进入返工记录，BLOCKED 保留可核查原因与恢复条件。交付归档实际测试、原始回复及 SHA-256，按清单收尾。 [验收清单](../../../basic/ACCEPTANCE-CHECKLIST.md)
 4. 当前任务收到 Standard 字样、并行或扩大权限的建议时，先核对已批准的版本、阶段和范围。按既有决策办理切换。DEC-010 的 main 合并、生产发布、数据删除由用户本人拍板。 [决策日志](../../../docs/phase1/decision-log.md)
 
+开工时把已读技能路径、实际命中的经验编号和防错动作写进任务书。运行 `python -I basic/tool/check_taskpack.py basic/tasks/<任务ID> --startup` 核对。 [开工核对](../../../basic/tool/README.md#开工核对)
+
 ## 常用开发经验
 
 | 情形 | 先读的条目 |

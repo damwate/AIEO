@@ -18,6 +18,7 @@ python3 phase0/tools/playwright_queue.py status
 python3 phase0/tools/playwright_queue.py status 1
 ```
 
+- 使用已登记的 `b-YYYYMMDD-...` 任务 ID 提交时，服务先检查任务书的开工核对。修复缺口后沿用同一轮次键重试。 [开工核对](../basic/tool/README.md#开工核对)
 - `lane` 支持 `planning`、`architecture`、`code-review`、`test-acceptance`。同一任务和用途的首轮新建会话，后续轮绑定同一 UUID；跨任务或用途的已有 UUID 复用一律拒绝。主动迁移用新的轮次和经过确认的迁移简报，加 `--new-session`，旧 UUID 归属保留。按 L-018 在累计 4 条 user 消息时评估迁移。
 - `task + lane + round` 是唯一提交键。客户端重试沿用原键和简报，服务自动加入轮次标记并校验合计 1200 UTF-8 字节。派单 FIFO 按数据库入队顺序，开发加急对派单 FIFO 无影响。成功结果返回 UUID、user unit 键、回复 SHA256 和本地证据路径。
 - `NOT_SENT` 表示子进程退出且原发送回执证明未触发发送。修复原因后由主会话决定是否以新轮次提交。无回执或发送/采集未决则挂起通道，待原轮核对。重启不会重取 `RUNNING` 或 `BLOCKED` 轮次。

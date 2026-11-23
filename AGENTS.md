@@ -9,6 +9,8 @@
 - Basic 初级版单任务使用 [aieo-basic](.github/skills/aieo-basic/SKILL.md)。
 - Standard 中级版与任务池使用 [aieo-standard](.github/skills/aieo-standard/SKILL.md)。
 
+新建任务、换任务或由新会话接手时，先读当前版本技能，再用模块名、错误码或操作关键词检索 [开发经验库](docs/AI-DEV-LESSONS.md)。在任务书「开工核对」记录相关 L-xxx 和本任务可检查的防错动作。已有记录可供接手核对，范围或执行方式变化时补充。动手前运行 `python -I basic/tool/check_taskpack.py basic/tasks/<任务ID> --startup`。新任务验收沿用 ST-05，并加 `--require-startup`。
+
 VS Code Copilot 可从 `.github/skills/` 发现项目技能。使用其他 IDE 或 Agent 时，通过上述仓库内路径直接读取同一份 `SKILL.md`。业务代码在其他仓库执行时，由 AIEO 任务包注明选定版本和适用规则。
 
 ## 异常处置第一动作（最高优先级，违反=流程事故）

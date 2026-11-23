@@ -298,6 +298,18 @@ def run_once(queue, adapter=dispatch, log_dir=LOG_DIR):
         return queue.finish(seq, "BLOCKED", {"reason": str(error), "worker_dir": str(folder)})
 
 
+def check_registered_task_startup(task):
+    if not re.fullmatch(r"b-\d{8}-[A-Za-z0-9_.-]+", task):
+        return
+    pack = ROOT / "basic" / "tasks" / task
+    result = subprocess.run(
+        [sys.executable, "-I", str(ROOT / "basic/tool/check_taskpack.py"), str(pack), "--startup"],
+        cwd=ROOT, capture_output=True, encoding="utf-8", check=False,
+    )
+    if result.returncode != 0:
+        raise QueueError(result.stdout.strip() or result.stderr.strip() or "任务包开工核对执行失败")
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     commands = parser.add_subparsers(dest="command", required=True)
@@ -318,6 +330,7 @@ def main():
     try:
         queue = Queue(STATE_DIR)
         if args.command == "submit":
+            check_registered_task_startup(args.task)
             result = queue.submit(args.task, args.lane, args.round, args.brief.read_bytes().decode("utf-8"),
                                   new_session=args.new_session)
         elif args.command == "status":

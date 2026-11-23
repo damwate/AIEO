@@ -101,8 +101,8 @@ class CLIBase(unittest.TestCase):
                 fp.write_text(content, encoding="utf-8")
         return d
 
-    def run_cli(self, task_path, json_mode=False):
-        argv = [sys.executable, "-I", str(TOOL), str(task_path)]
+    def run_cli(self, task_path, json_mode=False, flags=()):
+        argv = [sys.executable, "-I", str(TOOL), str(task_path), *flags]
         if json_mode:
             argv.append("--json")
         r = subprocess.run(argv, capture_output=True, text=True,
@@ -426,6 +426,54 @@ class TestRework(CLIBase):
         self.assertIn("REJECT 所在要素值与⑥验收证据引用均未引用问题编号", out)
         self.assertEqual(self.item_status(out, 5), "PASS")
         self.assertEqual(code, 1)
+
+
+class TestStartup(CLIBase):
+    def pack(self, name, *, version="Basic", skill="basic", lesson="L-018",
+             action="记录本轮 user unit，断言不重发"):
+        text = BRIEF_TMPL.format(status="待规划", step="S1")
+        text = text.replace("Basic 工作流 v0.2", version)
+        record = (
+            f"\n## 开工核对\n- 已读技能：`.github/skills/aieo-{skill}/SKILL.md`\n"
+            f"| 已读经验 | 本任务的防错动作或验收断言 |\n|---|---|\n| {lesson} | {action} |\n"
+        )
+        return self.make_task(name, brief=text + record)
+
+    def test_startup_only_allows_both_versions_before_steps_exist(self):
+        for version in ("Basic", "Standard"):
+            with self.subTest(version=version):
+                task = self.pack(version, version=version, skill=version.lower(), action="断言占额 <= 3")
+                out, code = self.run_cli(task, json_mode=True, flags=("--startup",))
+                data = json.loads(out)
+                self.assertEqual(code, 0)
+                self.assertEqual(data["startup"]["status"], "PASS")
+                self.assertEqual(data["items"], [])
+
+    def test_missing_section_fails_explicit_startup_and_acceptance(self):
+        task = self.make_task("missing-startup", status="完成", steps="## S1 交付\n" + six_block(),
+                              delivery=DELIVERY_OK)
+        self.assertEqual(self.run_cli(task)[1], 0)
+        for mode in ("--startup", "--require-startup"):
+            out, code = self.run_cli(task, flags=(mode,))
+            self.assertEqual(code, 1)
+            self.assertIn("缺少「## 开工核对」", out)
+
+    def test_check_identifies_wrong_skill_fake_lesson_and_empty_action(self):
+        task = self.pack("wrong-everything", version="Standard", lesson="L-999", action="已读。")
+        for mode in ("--startup", None):
+            out, code = self.run_cli(task, flags=(mode,) if mode else ())
+            self.assertEqual(code, 1)
+            self.assertIn("与选定版本一致", out)
+            self.assertIn("开发经验库没有 L-999", out)
+            self.assertIn("缺少本任务可检查的防错动作", out)
+
+    def test_no_match_can_record_search_and_action(self):
+        brief = BRIEF_TMPL.format(status="待规划", step="S1") + (
+            "\n## 开工核对\n- 已读技能：.github/skills/aieo-basic/SKILL.md\n"
+            "- 未命中关键词：前端键盘焦点\n- 本次防错动作：验证 Tab 键顺序\n"
+        )
+        task = self.make_task("no-lesson", brief=brief)
+        self.assertEqual(self.run_cli(task, flags=("--startup",))[1], 0)
 
 
 class TestJsonConsistency(CLIBase):

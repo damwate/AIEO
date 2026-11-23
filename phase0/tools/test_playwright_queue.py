@@ -6,7 +6,9 @@ from tempfile import TemporaryDirectory
 import unittest
 from unittest.mock import patch
 
-from playwright_queue import INSTANCE, Queue, QueueError, checked_recollection, dispatch, run_once
+from playwright_queue import (
+    INSTANCE, ROOT, Queue, QueueError, check_registered_task_startup, checked_recollection, dispatch, run_once,
+)
 
 
 A = "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa"
@@ -112,6 +114,26 @@ class QueueTest(unittest.TestCase):
         self.assertEqual(run_once(self.queue, self.fake_adapter(B, B), self.logs)["state"], "COMPLETED")
         self.submit("b")
         self.assertEqual(run_once(self.queue, self.fake_adapter(A), self.logs)["state"], "BLOCKED")
+
+    def test_registered_dispatch_requires_a_passing_startup(self):
+        checkout = self.root / "checkout"
+        pack = checkout / "basic/tasks/b-20261123-preflight"
+        pack.mkdir(parents=True)
+        tool = checkout / "basic/tool/check_taskpack.py"
+        tool.parent.mkdir()
+        script = ROOT / "basic/tool/check_taskpack.py"
+        tool.write_text(f"import runpy\nrunpy.run_path({str(script)!r}, run_name='__main__')\n")
+        brief = pack / "task-brief.md"
+        brief.write_text("- 选定版本：Standard\n", encoding="utf-8")
+        with patch("playwright_queue.ROOT", checkout):
+            with self.assertRaisesRegex(QueueError, "缺少.*开工核对"):
+                check_registered_task_startup(pack.name)
+            with brief.open("a", encoding="utf-8") as file:
+                file.write(
+                    "\n## 开工核对\n- 已读技能：.github/skills/aieo-standard/SKILL.md\n"
+                    "| L-018 | 核对原轮 user unit，断言发送次数仍为 1 |\n"
+                )
+            check_registered_task_startup(pack.name)
 
     def test_worker_never_uses_the_shared_session_pointer(self):
         folder = self.root / "flags"

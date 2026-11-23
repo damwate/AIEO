@@ -14,6 +14,8 @@ description: 按 AIEO Standard 中级版执行已定档的多任务管理、批�
 3. 启用 Playwright 队列的任务从同一个服务工作区提交和查询。worker 独占浏览器；派单按提交顺序逐轮完成，绑定任务、用途和原轮次。重试查询沿用原键，疑似已发送则核对和补采。发布给审查方的关联信息以简报和证据为准。 [队列操作说明](../../../standard/PLAYWRIGHT-QUEUE-WORKFLOW.md#chatgpt-唯一派单入口)
 4. 审查 REWORK 返回原任务，验收 PASS 和证据落盘后释放名额并回收子 Agent。接管时对账占额、暂停任务和未决派单。记录真实覆盖和剩余门禁。 [验收基线](../../../docs/reviews/STANDARD-TASK-MANAGEMENT-ACCEPTANCE.md)
 
+开工时把已读技能路径、实际命中的经验编号和防错动作写进任务书。运行 `python -I basic/tool/check_taskpack.py basic/tasks/<任务ID> --startup` 核对。 [开工核对](../../../basic/tool/README.md#开工核对)
+
 ## 常用开发经验
 
 | 情形 | 先读的条目 |

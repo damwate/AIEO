@@ -16,6 +16,20 @@ python -I basic/tool/check_taskpack.py basic/tasks/<任务ID> --json
 
 仅 Python 标准库（argparse/dataclasses/json/re/pathlib/collections），无第三方依赖，Python ≥3.9。
 
+### 开工核对
+
+Basic 和 Standard 新任务共用任务书的 `## 开工核对`。写入反查过的技能路径和相关经验，并将每条经验转成具体动作。例如，L-018 的动作可写「注入发送确认后采集中断，断言同一轮补采且发送次数仍为 1」。检索无直接命中时，可以改用 `- 未命中关键词：...` 和 `- 本次防错动作：...`。
+
+```bash
+# 开工前，仅检查开工核对，不等待步骤与交付材料
+python -I basic/tool/check_taskpack.py basic/tasks/<任务ID> --startup
+
+# 新任务验收前，检查开工核对和原有六项
+python -I basic/tool/check_taskpack.py basic/tasks/<任务ID> --require-startup
+```
+
+检查版本与技能路径是否一致、经验编号是否存在，以及是否填了可供审查的动作。已有开工小节也纳入默认检查，旧任务包沿用原有六项。检查器核对记录，实际阅读和动作是否执行由交接、测试或审查证据核实。
+
 ### 检查六项（单项 PASS/FAIL/N/A；整体 PASS/FAIL/IN_PROGRESS）
 
 | 项 | 检查内容（要点） |
@@ -46,7 +60,7 @@ python -I basic/tool/check_taskpack.py basic/tasks/<任务ID> --json
 python -I -m unittest discover -s basic/tool -p "test_check_taskpack.py" -v
 ```
 
-33 用例（黑盒 subprocess 走 CLI 真实退出码+validate_pack_path 单元直调），自包含：临时目录动态构造任务包，不依赖仓库 fixtures。符号链接用例在无 symlink 权限环境（Windows 非开发者模式）skipTest 如实跳过。S3 验收历史：首验 REJECT→941ee88→复验R1 REJECT→b1bd307→复验R2（六查实质全 PASS+验收方 Linux 沙箱附件独立执行 33/33 OK）→78c6cc8 文档修正→复验R3 PASS。
+37 用例（含开工核对，黑盒 subprocess 走 CLI 真实退出码+validate_pack_path 单元直调），自包含：临时目录动态构造任务包，不依赖仓库 fixtures。符号链接用例在无 symlink 权限环境（Windows 非开发者模式）skipTest 如实跳过。S3 验收历史：首验 REJECT→941ee88→复验R1 REJECT→b1bd307→复验R2（六查实质全 PASS+验收方 Linux 沙箱附件独立执行 33/33 OK）→78c6cc8 文档修正→复验R3 PASS。
 
 ### 验证用 fixtures
 
