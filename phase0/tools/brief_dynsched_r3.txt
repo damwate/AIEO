@@ -1,0 +1,4 @@
+[DYN-SCHED-R3|动态任务调度方案定向复审]
+R2六项已逐条收敛，方案全文：完整SHA 5cd68f9b7620f9bdcd514f3e1b0a11627b85e0ef 下 basic/tasks/b-20261123-dynamic-task-scheduling/acceptance/design-proposal-r3.md（已推GitHub，不重审需求/v1.0）。
+逐项修法：R2-01四层授权边界表(设计冻结/控制面实施/M1写路径906⑥/P3独立批准)；R2-02 WAITING三分语义+名额释放自动推进FIFO+CAS原子预留(reservation_id/失败释放/重启重算),推进状态≠批准执行；R2-03废弃五步链改六阶段持久化抢占事务(PROPOSAL_OPEN→DRAINING→HANDOFF_READY→VICTIM_RELEASED→DECISION_COMMITTED→URGENT_ADMITTED,幂等键+恢复策略,阶段4后不回滚重选)；R2-04 DRAINING排空屏障+task_generation fencing拒旧轮迟到写；R2-05交接包七类(Git现场SHA/dirty/diff+消息游标+五件套MANIFEST+base_commit三方一致);R2-06保留WAITING仅容量等待+FIFO+加急仅用户授权。
+请逐项确认R2-01~06是否闭合，给[R3 PASS/FAIL+未闭合编号依据建议]。仅方案复审不涉代码，不授予任何实施阶段权限。

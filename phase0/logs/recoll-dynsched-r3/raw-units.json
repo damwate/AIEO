@@ -1,0 +1,94 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-23T04:55:28.143Z",
+  "user_unit_key": "ca0f69d7-5396-5b9f-acdd-c5ed50f4f1ee:0:user",
+  "start_key_resolved": "ca0f69d7-5396-5b9f-acdd-c5ed50f4f1ee:0:user",
+  "start_resolved_by_marker": false,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "ca0f69d7-5396-5b9f-acdd-c5ed50f4f1ee:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "4272755b-9c69-4e66-b533-0360ff3fa7a6",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "ca0f69d7-5396-5b9f-acdd-c5ed50f4f1ee:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "ca0f69d7-5396-5b9f-acdd-c5ed50f4f1ee:0:user",
+          "ca0f69d7-5396-5b9f-acdd-c5ed50f4f1ee:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "14cecf5d1b402afe15122916939957fcaa7228a6a848058ae40e4a0313d969fe",
+          "a85ef9e3a999e5e38a3285b474eddccfd0728aabd68583d845a575cb02ae7726"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "ca0f69d7-5396-5b9f-acdd-c5ed50f4f1ee:0:user",
+          "ca0f69d7-5396-5b9f-acdd-c5ed50f4f1ee:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "14cecf5d1b402afe15122916939957fcaa7228a6a848058ae40e4a0313d969fe",
+          "a85ef9e3a999e5e38a3285b474eddccfd0728aabd68583d845a575cb02ae7726"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "ca0f69d7-5396-5b9f-acdd-c5ed50f4f1ee:0:user",
+          "ca0f69d7-5396-5b9f-acdd-c5ed50f4f1ee:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "ca0f69d7-5396-5b9f-acdd-c5ed50f4f1ee:0:user",
+      "ca0f69d7-5396-5b9f-acdd-c5ed50f4f1ee:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "ca0f69d7-5396-5b9f-acdd-c5ed50f4f1ee:0:user",
+          "ca0f69d7-5396-5b9f-acdd-c5ed50f4f1ee:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "ca0f69d7-5396-5b9f-acdd-c5ed50f4f1ee:0:user",
+          "ca0f69d7-5396-5b9f-acdd-c5ed50f4f1ee:2:assistant"
+        ],
+        "overlap_keys": [
+          "ca0f69d7-5396-5b9f-acdd-c5ed50f4f1ee:0:user",
+          "ca0f69d7-5396-5b9f-acdd-c5ed50f4f1ee:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "ca0f69d7-5396-5b9f-acdd-c5ed50f4f1ee:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n已按完整 SHA 5cd68f9b7620f9bdcd514f3e1b0a11627b85e0ef 读取指定的 design-proposal-r3.md。本轮只依据该提交中的 R3 方案裁定，不重审需求/v1.0，也不涉及代码。\n\n初步结论：R3 仍有未闭合项，不能判 PASS。 六项中，R2-06 已明确收敛；R2-01、02、03、04、05 仍需核对关键边界和故障窗口，尤其是授权检查引用、额度预留的崩溃恢复，以及抢占决策的持久化顺序。\n\nR3 逐项裁定\n\n编号\n\n\t\n\n裁定\n\n\t\n\n结论\n\n\n\n\nR2-01\n\n\t\n\n未闭合 REWORK\n\n\t\n\n四层授权边界已列出，但授权检查链引用缺失\n\n\n\n\nR2-02\n\n\t\n\n未闭合 REWORK\n\n\t\n\nCAS/单写者方向正确，额度预留与崩溃恢复语义仍不完整\n\n\n\n\nR2-03\n\n\t\n\n未闭合 REWORK\n\n\t\n\n六阶段持久化方向正确，但不可逆释放早于决策持久化\n\n\n\n\nR2-04\n\n\t\n\n未闭合 REWORK\n\n\t\n\n有排空步骤和 generation，但 fencing 生效时点与在途写入边界未定义\n\n\n\n\nR2-05\n\n\t\n\n未闭合 REWORK\n\n\t\n\n七类字段已补齐，但 Git dirty/untracked 现场尚不能据此证明可完整恢复\n\n\n\n\nR2-06\n\n\t\n\n闭合 PASS\n\n\t\n\nWAITING 语义、FIFO、容量占用和用户授权加急已明确\n\nR2-01：四层授权边界\n\n已闭合的部分：\n\n明确区分设计冻结、控制面代码实施、M1 写路径并行、P3 并行度启用。\n\n明确 906⑥ PASS 前不解除 M1 写路径限制。\n\n明确控制面实施和 P3 启用均需独立授权。\n\n调度额度计数不等于 M1 写授权。\n\n未闭合： 文档要求新增 REST handler 经既有授权检查链（§8.6），但本文件没有 §8.6，也没有给出该检查链的实际入口、检查条件和拒绝规则。不能用一个未定义的章节作为安全边界的实现依据。\n\n建议： 补充授权检查链的准确引用或在本方案中定义最小契约：哪些调用主体、操作、状态转换必须通过检查；检查失败时如何 fail-closed；控制面不得绕过 M1 写路径授权的验证点在哪里。\n\nR2-02：WAITING 自动推进与额度原子预留\n\n已闭合的部分：\n\nNOT_READY、READY、WAITING 三分语义清晰。\n\nWAITING FIFO，名额释放后自动推进到 READY。\n\n明确推进队列状态不代表批准执行。\n\n引入 reservation_id、CAS/单写者和重启重算。\n\n未闭合： 额度账本的占用口径不够严密。方案规定先预留，再推进 READY，授权通过后才占实额，但没有明确 RESERVED 是否立即计入容量上限。如果多个任务先后预留，而预留不计入容量，CAS 仍可能让多个任务都认为最后一个额度可用。\n\n重启时“丢弃所有未提交预留”也不够安全：如果崩溃发生在任务状态已推进、额度状态尚未提交的窗口，简单丢弃预留可能造成任务状态与额度账本不一致。\n\n建议：\n\n明确容量计算：active_count + valid_reserved_count 不得超过上限；预留必须独占一个容量名额。\n\n定义 RESERVED→COMMITTED/RELEASED 的完整状态转换，以及每个转换的原子性边界。\n\n重启时依据持久化任务状态、预留记录和事务日志进行对账；不能无条件丢弃所有未提交预留。\n\n对授权检查失败、进程崩溃、重复重试分别规定幂等释放和恢复行为。\n\nR2-03：六阶段持久化抢占事务\n\n已闭合的部分：\n\n已替换原五步线性链。\n\n每个阶段有幂等键、前置条件和恢复策略。\n\n明确阶段 4 后不回滚重选 victim。\n\n引入 workflow_journal，有重启续跑方向。\n\n未闭合： 阶段顺序有关键故障窗口。\n\n阶段 1 是 PROPOSAL_OPEN，描述为等待用户决策；阶段 2 已进入 DRAINING；但用户决策真正持久化却放在阶段 5 DECISION_COMMITTED。这意味着 victim 已在阶段 4 被释放后，系统才持久化决策。若阶段 4 完成、阶段 5 写入失败或进程崩溃，系统可能已经执行不可逆让路动作，却没有可靠的已提交决策记录。\n\n建议：\n\n将“用户明确决策已持久化”设为进入 DRAINING 的前置条件。\n\n可以增加独立的 DECISION_ACCEPTED 阶段，或明确在 DRAINING 前原子提交决策记录。\n\n阶段 4 后只允许按已提交决策继续恢复，不允许重新选择 victim。\n\n明确 workflow_journal 与 victim 状态变更、额度释放之间的持久化一致性边界，避免日志显示已释放而额度实际未释放，或反之。\n\nR2-04：DRAINING 排空屏障与 fencing\n\n已闭合的部分：\n\nDRAINING 禁止新派单轮。\n\n要求在途轮完成采集或 fail-closed 挂起。\n\n要求无未决发送、核验 execution_id/轮次/会话，并完成交接包校验后才释放额度。\n\n引入单调递增 task_generation，拒绝旧 generation 更新。\n\n未闭合： task_generation 的生效时点不明确，且与“允许已开始轮次完成采集”存在潜在冲突。\n\n如果 generation 仅在进入执行轮时递增，那么 DRAINING 开始后，旧轮迟到写入仍携带当前 generation，仍可能被接受；如果 DRAINING 时立即递增，已开始轮次的合法采集更新又可能被拒绝。当前方案没有定义如何区分这两类写入。\n\n建议：\n\n定义 DRAINING 的原子屏障时点：此后不再接受新派单轮。\n\n明确屏障前已登记的在途轮次、允许完成的采集事件，以及其最后可接受的消息/事件游标。\n\n在排空确认后推进 fencing epoch，确保交接完成、额度释放之后旧轮写入全部失效。\n\n所有相关写入口必须服务端校验 fencing token，不能只依赖调度器本地检查。\n\n核心要求是：在途合法采集可以完成，但交接完成后的迟到写入不能再改变 victim 状态或污染新一轮现场。\n\nR2-05：交接包无损恢复\n\n已闭合的部分：\n\n身份、Git、执行、派单、消息安全、证据、恢复七类信息均已列出。\n\n纳入 task_generation、采集游标、未决发送、MANIFEST 和逐文件 SHA256。\n\n明确五件套、SHA256SUMS、base_commit 三方一致、任务身份绑定及人工恢复约束。\n\n未闭合： Git 现场目前列出 HEAD、分支、dirty 状态、未跟踪文件和必要 diff，但没有明确要求保存 dirty/untracked 内容本身。仅记录“存在未跟踪文件”或“工作区 dirty”，无法在恢复时重建现场；仅保存必要 diff，也没有说明 staged 与 unstaged 变化、未跟踪文件内容是否全部纳入。\n\n建议：\n\n明确分别保存 staged diff、unstaged diff，以及所有未跟踪文件的实际内容。\n\n对这些现场材料逐项纳入 MANIFEST 和 SHA256 校验。\n\n若存在无法纳入交接包的文件类型或大文件，必须记录明确的外部引用、内容校验值和恢复前可访问性验证；不能仅保留路径。\n\n恢复前校验目标 worktree 与交接包的基线关系，禁止静默覆盖恢复目标中的新变化。\n\nR2-06：WAITING 状态定义\nPASS\n\n本项已闭合：\n\nWAITING 只表示任务已 READY、但容量不足。\n\n依赖未满足保持 NOT_READY，不混入容量队列。\n\nFIFO 顺序明确。\n\n加急必须经用户协商授权，AI 不得自行提高优先级。\n\nWAITING 不占额度，SUSPENDED 在交接完成后释放额度，CANCELLED 为终态。\n\n保留 WAITING 比用 READY 加时间戳混合表达更清晰，本项无需再改。\n\n最终裁定\n[R3 FAIL]\n\n未闭合编号：R2-01、R2-02、R2-03、R2-04、R2-05。\n\nR2-06 PASS。R3 的修订方向总体正确，但前五项仍有影响授权安全、额度一致性、抢占事务恢复和交接无损性的实质缺口，不能以“字段已列出”替代闭环证明。\n\n本轮仅方案复审：\n\n未修改任何代码或仓库文件。\n\n不授予控制面代码实施权限。\n\n不解除 M1 写路径并行限制；906⑥ 独立 PASS 仍是门槛。\n\n不授予 P1/P2/P3 实施权限；P3 并行度 3 仍不是当前运行授权。\n\nR4 建议只针对上述五项修订，尤其先修正 R2-03 的决策持久化顺序，再闭合 R2-02 的预留账本和 R2-04 的 fencing 时点。无需重开 R2-06，也无需扩展新功能。",
+      "text_sha256": "a85ef9e3a999e5e38a3285b474eddccfd0728aabd68583d845a575cb02ae7726",
+      "size_bytes": 8042,
+      "assistant_uuid": "4272755b-9c69-4e66-b533-0360ff3fa7a6"
+    }
+  ]
+}
