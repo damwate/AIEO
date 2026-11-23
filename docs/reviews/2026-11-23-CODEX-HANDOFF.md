@@ -3,7 +3,7 @@
 **生成时间：** 2026-11-23（UTC）  **生成者：** ZCode 执行会话
 **性质：** 事实（附证据）／决策（注明版本）／待确认（不得当事实）——逐条标注
 **用途：** 用户将本文件路径交给 Codex 直接检查仓库；并请 Codex 协助解决第 5 节三组未闭合问题。
-**基线 commit：** `23d3b60a1590b2bb28e841cdcfab1cb313607ee5`（`git rev-parse HEAD` 实查；main，工作区 clean，与 origin/main 同步 ahead=0 behind=0）
+**基线 commit：** `23d3b60a1590b2bb28e841cdcfab1cb313607ee5`（本交接包所审内容均在此 commit 中，已推送；main，工作区 clean，与 origin/main 同步 ahead=0 behind=0）。本交接包自身位于后续 commit `ed1b6520de081e454a869f993d797fbdd6062088`，无代码改动。
 
 ---
 
