@@ -1,0 +1,94 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-23T05:05:18.578Z",
+  "user_unit_key": "a8ff4308-3198-5864-affd-d1863ae49ffe:0:user",
+  "start_key_resolved": "a8ff4308-3198-5864-affd-d1863ae49ffe:0:user",
+  "start_resolved_by_marker": false,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "a8ff4308-3198-5864-affd-d1863ae49ffe:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "1a214efb-ee4b-4720-9677-ce5aad235c36",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "a8ff4308-3198-5864-affd-d1863ae49ffe:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "a8ff4308-3198-5864-affd-d1863ae49ffe:0:user",
+          "a8ff4308-3198-5864-affd-d1863ae49ffe:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "5f7a6e4c93266c5af8706146c8176e3d54a58fbf4e5f5edebab6d623292657bf",
+          "dd39b3e32e349fbecced3c5a6707c9e3616e27b3ea8cadee8db823b6448c109d"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "a8ff4308-3198-5864-affd-d1863ae49ffe:0:user",
+          "a8ff4308-3198-5864-affd-d1863ae49ffe:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "5f7a6e4c93266c5af8706146c8176e3d54a58fbf4e5f5edebab6d623292657bf",
+          "dd39b3e32e349fbecced3c5a6707c9e3616e27b3ea8cadee8db823b6448c109d"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "a8ff4308-3198-5864-affd-d1863ae49ffe:0:user",
+          "a8ff4308-3198-5864-affd-d1863ae49ffe:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "a8ff4308-3198-5864-affd-d1863ae49ffe:0:user",
+      "a8ff4308-3198-5864-affd-d1863ae49ffe:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "a8ff4308-3198-5864-affd-d1863ae49ffe:0:user",
+          "a8ff4308-3198-5864-affd-d1863ae49ffe:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "a8ff4308-3198-5864-affd-d1863ae49ffe:0:user",
+          "a8ff4308-3198-5864-affd-d1863ae49ffe:2:assistant"
+        ],
+        "overlap_keys": [
+          "a8ff4308-3198-5864-affd-d1863ae49ffe:0:user",
+          "a8ff4308-3198-5864-affd-d1863ae49ffe:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "a8ff4308-3198-5864-affd-d1863ae49ffe:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n[R5 FAIL] — 3 项仍未完全闭合\n\n已按指定完整 SHA cb5a8d83bd213d33db1820ee55cad8a18758539e 读取 design-proposal-r5.md 全文。本轮只复审 R2-02、R2-03、R2-04；R2-01、R2-05、R2-06 按此前裁定维持 PASS，不重开。\n\nR5 的方向是正确的：把 workflow_journal 定为唯一权威账本，以单条 COMMIT 作为事务提交点，统一预留、抢占、额度和 fencing 变更。它解决了 R4 中“多个独立持久化对象分别提交”的核心设计缺陷。但统一事务模型还缺少并发写入、事件去重原子性和确定性恢复规则，尚不足以裁定三项全部闭合。\n\n编号\n\n\t\n\n裁定\n\n\t\n\n主要依据\n\n\n\n\nR2-02 额度预留账本\n\n\t\n\nREWORK\n\n\t\n\n单账本和重放方向成立，但容量并发竞争、终态转换竞争尚未定义\n\n\n\n\nR2-03 决策提交与恢复\n\n\t\n\nREWORK\n\n\t\n\ntxn A、txn C 的提交点已清晰，但部分阶段的故障恢复仍不确定\n\n\n\n\nR2-04 fencing 与游标边界\n\n\t\n\nREWORK\n\n\t\n\nepoch/generation 的事务边界已清晰，但白名单事件接收与去重缺少原子约束\n\n逐项依据\n1. R2-02：REWORK\n\n已闭合的部分\n\nworkflow_journal 是唯一权威账本，JSON 和任务状态表降为物化视图。\n\n额度预留与释放都纳入事务，RESERVED 立即占额。\n\n只有有效 COMMIT 的事务参与重放，重复执行通过 txn_id 幂等。\n\nEXPIRED 不再通过简单丢弃预留来处理，而是写入终态事务。\n\n未闭合的关键点\n\n1. 容量检查与预留提交之间仍有并发竞争。\n\nR5 定义了：\n\nactive_count + valid_reserved_count ≤ 3\n\n但没有规定两个并发申请如何串行执行容量检查和 RESERVED 提交。例如，当前只有一个空闲名额，两个申请同时读取到相同账本状态，都可能判定可以预留，随后各自提交，突破容量上限。\n\n需要明确唯一 journal 写入者、全局事务锁或等效的串行化机制，并规定容量校验必须基于最新已提交 journal 序号，在同一串行化边界内完成预留 COMMIT。\n\n2. RESERVED 的终态竞争缺少明确的条件转换规则。\n\nR5 列出了 COMMITTED、RELEASED、EXPIRED，但没有明确规定：当过期处理、授权通过、授权失败等操作同时发生时，如何确保只有一个终态转换成功。\n\n需要定义基于 reservation 当前版本或状态的原子条件转换，保证一个 reservation 只能有一个终态，迟到的操作不得覆盖已经提交的终态。\n\n3. EXPIRED 的默认时长尚未真正定义。\n\n文档说 T 是配置常量，需用户可调但默认明确；实际没有给出默认值，也没有明确时钟基准和过期边界的判定规则。\n\n建议： 补齐事务串行化、reservation 终态条件转换和 EXPIRED 时间规则。不要改变现有容量模型或引入新调度功能。\n\n2. R2-03：REWORK\n\n已闭合的部分\n\n阶段 2 DECISION_ACCEPTED 已成为唯一不可撤销的用户决策提交点。\n\ntxn A 同时提交决策、epoch+1、victim 锁定和 DRAINING。\n\n阶段 6 改为 PROPOSAL_CLOSED，不再重复承担决策提交语义。\n\ntxn C 将 victim 状态变化与额度释放纳入同一 COMMIT。\n\ntxn C 成功后，即使 txn D 失败，也明确要求只补流程关闭，不重复释放或重新选择 victim。\n\n这些修改解决了 R4 中阶段 2/阶段 6语义重叠，以及 victim 释放与额度释放不一致的问题。\n\n未闭合的关键点\n\n1. txn B 失败或进程重启后的恢复动作没有明确写出。\n\nR5 规定阶段 4 HANDOFF_READY 使用 txn B，但失败续跑只列出 txn A、阶段 3/4、txn C、txn D 和 txn E 的部分情形。需要明确 txn B 提交前后发生崩溃时，系统如何判断是否可以继续排空、是否需要重新校验交接包，以及何时允许进入 txn C。\n\n2. txn E 的恢复规则仍是二选一式描述。\n\n文档写的是：txn E 失败时，加急任务预留仍为 RESERVED，按 EXPIRED 规则或重放决定继续/归还。\n\n“继续”还是“归还”不能留给恢复程序自行选择。需要给出确定性判定条件，例如：根据已提交的预留状态、有效期和加急准入决策，明确哪种情况续跑、哪种情况释放；并保证恢复不会出现已经准入但名额又被归还的状态。\n\n建议： 只补充 txn B、txn E 的故障矩阵和确定性恢复规则。保留阶段 2 为唯一决策提交点、阶段 5 为 victim 释放及额度释放的共同提交点。\n\n3. R2-04：REWORK\n\n已闭合的部分\n\n用户决策、epoch+1、victim 置 DRAINING 已合并为 txn A。\n\n阶段 5 在 txn C 中关闭白名单并 generation+1。\n\n服务端而不是调度器本地负责 fencing token 校验。\n\n游标上界 cursor_high 在屏障时刻锁定，越界事件拒绝并审计。\n\n这比 R4 的阶段时点定义明确得多。\n\n未闭合的关键点\n\n1. 事件去重与事件实际效果没有定义为同一原子操作。\n\nR5 用 seen_event_ids[] 去重，但没有说明：事件被接受、实际写入采集结果，以及 seen_event_ids 被持久化，是否处于同一事务提交边界。\n\n如果事件效果已经写入、但 seen ID 尚未提交，重试可能重复应用事件；反过来，如果 seen ID 已记录、事件效果未落盘，重试又可能被错误地判定为重复。\n\n需要明确事件效果与去重记录必须原子提交，或采用等效的可恢复协议。\n\n2. cursor_low 的来源和游标作用域不够明确。\n\ncursor_high 定义为屏障时刻最后事件序号，但没有定义 cursor_low 是哪一个已提交游标，也没有说明 event_seq 是全局序号还是每个 inflight_round_id 独立的序号。\n\n需要明确序号作用域、低水位取值，以及白名单如何绑定到具体在途轮次，避免不同轮次的事件序号发生混淆。\n\n3. 服务端校验使用的物化视图可能落后于 journal。\n\nR5 要求服务端对照 journal 物化视图校验 fencing token，但物化视图本身是可重建的派生数据。需要规定写入口如何确保读取的是最新已提交 epoch/generation，而不是尚未追平 journal 的旧视图。\n\n建议： 补充事件效果与去重记录的原子性、游标作用域，以及服务端读取最新已提交 fencing 状态的约束。无需重新设计 fencing 阶段。\n\n收敛结论\n\n项目\n\n\t\n\nR4\n\n\t\n\nR5\n\n\n\n\nR2-02 额度预留账本\n\n\t\n\nREWORK\n\n\t\n\nREWORK\n\n\n\n\nR2-03 决策提交与恢复\n\n\t\n\nREWORK\n\n\t\n\nREWORK\n\n\n\n\nR2-04 fencing 与游标\n\n\t\n\nREWORK\n\n\t\n\nREWORK\n\n\n\n\nR2-01 授权边界\n\n\t\n\nPASS\n\n\t\n\n维持 PASS\n\n\n\n\nR2-05 交接包无损恢复\n\n\t\n\nPASS\n\n\t\n\n维持 PASS\n\n\n\n\nR2-06 WAITING 语义\n\n\t\n\nPASS\n\n\t\n\n维持 PASS\n\nR5 尚不能 PASS。 但这次不是事务模型方向错误，而是统一事务模型的执行约束和故障边界还需要补齐。\n\n下一轮建议只收敛以下三组问题：\n\nR2-02：事务串行化、reservation 终态竞争、EXPIRED 时间规则。\n\nR2-03：txn B、txn E 的确定性故障恢复。\n\nR2-04：事件效果与去重原子性、游标作用域、最新 fencing 状态读取。\n\n边界确认： 本次仅方案复审，未修改仓库文件或代码，不授予实施权限。P1/P2/P3 仍需用户独立授权；并行度 3 仍是设计目标，不是当前运行授权；906⑥ 独立 PASS 前，M1 写路径并行限制继续有效。",
+      "text_sha256": "dd39b3e32e349fbecced3c5a6707c9e3616e27b3ea8cadee8db823b6448c109d",
+      "size_bytes": 7293,
+      "assistant_uuid": "1a214efb-ee4b-4720-9677-ce5aad235c36"
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "key": "ca0f69d7-5396-5b9f-acdd-c5ed50f4f1ee:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[DYN-SCHED-R3|动态任务调度方案定向复审]\nR2六项已逐条收敛，方案全文：完整SHA 5cd68f9b7620f9bdcd514f3e1b0a116"
+  },
+  {
+    "key": "ca0f69d7-5396-5b9f-acdd-c5ed50f4f1ee:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\n已按完整 SHA 5cd68f9b7620f9bdcd514f3e1b0a11627b85e0ef 读取指定的 design-propo"
+  },
+  {
+    "key": "52f131d1-4048-5285-83a2-7b8abe585439:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[DYN-SCHED-R4|动态任务调度方案定向复审]\nR3五项已逐条闭环,方案全文:完整SHA d5797f8615d0effacdfdc4d8fac6766"
+  },
+  {
+    "key": "52f131d1-4048-5285-83a2-7b8abe585439:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n[R4 FAIL] — 3 项未闭合\n\n已按完整提交 SHA d5797f8615d0effacdfdc4d8fac67667596fb0"
+  },
+  {
+    "key": "a8ff4308-3198-5864-affd-d1863ae49ffe:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[DYN-SCHED-R5|动态任务调度方案收敛复审]\nR4三项已收敛,方案全文:完整SHA cb5a8d83bd213d33db1820ee55cad8a18"
+  },
+  {
+    "key": "a8ff4308-3198-5864-affd-d1863ae49ffe:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n[R5 FAIL] — 3 项仍未完全闭合\n\n已按指定完整 SHA cb5a8d83bd213d33db1820ee55cad8a1875"
+  }
+]
