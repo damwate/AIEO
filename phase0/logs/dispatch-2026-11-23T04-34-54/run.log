@@ -1,0 +1,15 @@
+[2026-11-23T04:34:54.785Z] 证据目录: D:\AIEO\phase0\logs\dispatch-2026-11-23T04-34-54
+[2026-11-23T04:34:55.364Z] 会话锁已获取 pid=15384 instance=default lock=gpt-session.lockfile
+[2026-11-23T04:34:55.396Z] === GPT 派单（新建会话，消息 1019 字节）===
+[2026-11-23T04:34:55.419Z] [instance] 实例域就绪: instance=default port=9222 profile=gpt-poc lock=gpt-session.lockfile
+[2026-11-23T04:34:56.362Z] 复用本实例调试端口 9222（归属核验 own=10）
+[2026-11-23T04:34:56.426Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 1 个
+[2026-11-23T04:34:56.426Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-23T04:35:38.547Z] 新聊天页面就绪
+[2026-11-23T04:35:43.625Z] [dispatch] 基线尾部: null
+[2026-11-23T04:35:49.263Z] [ctx-budget] turn+in_bytes=1019B → 6b03c2a0-b284-83ec-b272-758afdaa1625
+[2026-11-23T04:35:49.264Z] [dispatch] 发送双验通过（polls=2，user_unit_key=fallback-turn-0:0:user，tail 后观察）
+[2026-11-23T04:35:49.779Z] 截图: sent-dispatch.png
+[2026-11-23T04:38:08.732Z] 会话锁已释放
+[2026-11-23T04:38:08.733Z] 致命错误: INBOUND_END_BOUNDARY_INVALID: 已到底但目标区间尾部不是 assistant，且没有下一 user 边界
+[2026-11-23T04:38:08.734Z] [tab-hygiene] 发送已发生：保留现场不关页（禁重发语义依赖现场）；退出后由人工/补采链按 L-018 处置

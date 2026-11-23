@@ -1,0 +1,122 @@
+[
+  {
+    "url": "https://chatgpt.com/c/6b03c2a0-b284-83ec-b272-758afdaa1625",
+    "samples": [
+      {
+        "t": "2026-11-23T04:42:15.013Z",
+        "url": "https://chatgpt.com/c/6b03c2a0-b284-83ec-b272-758afdaa1625",
+        "title": "动态调度方案复审",
+        "unitCount": 2,
+        "units": [
+          {
+            "key": "9b660fa2-fe02-5ca5-b340-f560dc6599d2:0:user",
+            "role": "user",
+            "head": "[DYN-SCHED-R1|动态任务调度方案复审]\n仓库 damwate/AIEO 分支 main 完整SHA：a74f02776db19d6f8d5332e089689436a1",
+            "len": 543
+          },
+          {
+            "key": "9b660fa2-fe02-5ca5-b340-f560dc6599d2:2:assistant",
+            "role": "assistant",
+            "head": "ChatGPT 说：\n[R1 FAIL] — 复审材料缺失，暂不作技术放行\n\nR1 FAIL 仅方案复审，未涉及代码\n\n被测基线： damwate/AIEO@a74f02776db",
+            "len": 1443
+          }
+        ],
+        "stopVisible": 0,
+        "scrollH": 945,
+        "scrollT": 0
+      },
+      {
+        "t": "2026-11-23T04:42:23.021Z",
+        "url": "https://chatgpt.com/c/6b03c2a0-b284-83ec-b272-758afdaa1625",
+        "title": "动态调度方案复审",
+        "unitCount": 2,
+        "units": [
+          {
+            "key": "9b660fa2-fe02-5ca5-b340-f560dc6599d2:0:user",
+            "role": "user",
+            "head": "[DYN-SCHED-R1|动态任务调度方案复审]\n仓库 damwate/AIEO 分支 main 完整SHA：a74f02776db19d6f8d5332e089689436a1",
+            "len": 543
+          },
+          {
+            "key": "9b660fa2-fe02-5ca5-b340-f560dc6599d2:2:assistant",
+            "role": "assistant",
+            "head": "ChatGPT 说：\n[R1 FAIL] — 复审材料缺失，暂不作技术放行\n\nR1 FAIL 仅方案复审，未涉及代码\n\n被测基线： damwate/AIEO@a74f02776db",
+            "len": 1443
+          }
+        ],
+        "stopVisible": 0,
+        "scrollH": 945,
+        "scrollT": 0
+      },
+      {
+        "t": "2026-11-23T04:42:31.043Z",
+        "url": "https://chatgpt.com/c/6b03c2a0-b284-83ec-b272-758afdaa1625",
+        "title": "动态调度方案复审",
+        "unitCount": 2,
+        "units": [
+          {
+            "key": "9b660fa2-fe02-5ca5-b340-f560dc6599d2:0:user",
+            "role": "user",
+            "head": "[DYN-SCHED-R1|动态任务调度方案复审]\n仓库 damwate/AIEO 分支 main 完整SHA：a74f02776db19d6f8d5332e089689436a1",
+            "len": 543
+          },
+          {
+            "key": "9b660fa2-fe02-5ca5-b340-f560dc6599d2:2:assistant",
+            "role": "assistant",
+            "head": "ChatGPT 说：\n[R1 FAIL] — 复审材料缺失，暂不作技术放行\n\nR1 FAIL 仅方案复审，未涉及代码\n\n被测基线： damwate/AIEO@a74f02776db",
+            "len": 1443
+          }
+        ],
+        "stopVisible": 0,
+        "scrollH": 945,
+        "scrollT": 0
+      },
+      {
+        "t": "2026-11-23T04:42:39.049Z",
+        "url": "https://chatgpt.com/c/6b03c2a0-b284-83ec-b272-758afdaa1625",
+        "title": "动态调度方案复审",
+        "unitCount": 2,
+        "units": [
+          {
+            "key": "9b660fa2-fe02-5ca5-b340-f560dc6599d2:0:user",
+            "role": "user",
+            "head": "[DYN-SCHED-R1|动态任务调度方案复审]\n仓库 damwate/AIEO 分支 main 完整SHA：a74f02776db19d6f8d5332e089689436a1",
+            "len": 543
+          },
+          {
+            "key": "9b660fa2-fe02-5ca5-b340-f560dc6599d2:2:assistant",
+            "role": "assistant",
+            "head": "ChatGPT 说：\n[R1 FAIL] — 复审材料缺失，暂不作技术放行\n\nR1 FAIL 仅方案复审，未涉及代码\n\n被测基线： damwate/AIEO@a74f02776db",
+            "len": 1443
+          }
+        ],
+        "stopVisible": 0,
+        "scrollH": 945,
+        "scrollT": 0
+      },
+      {
+        "t": "2026-11-23T04:42:47.071Z",
+        "url": "https://chatgpt.com/c/6b03c2a0-b284-83ec-b272-758afdaa1625",
+        "title": "动态调度方案复审",
+        "unitCount": 2,
+        "units": [
+          {
+            "key": "9b660fa2-fe02-5ca5-b340-f560dc6599d2:0:user",
+            "role": "user",
+            "head": "[DYN-SCHED-R1|动态任务调度方案复审]\n仓库 damwate/AIEO 分支 main 完整SHA：a74f02776db19d6f8d5332e089689436a1",
+            "len": 543
+          },
+          {
+            "key": "9b660fa2-fe02-5ca5-b340-f560dc6599d2:2:assistant",
+            "role": "assistant",
+            "head": "ChatGPT 说：\n[R1 FAIL] — 复审材料缺失，暂不作技术放行\n\nR1 FAIL 仅方案复审，未涉及代码\n\n被测基线： damwate/AIEO@a74f02776db",
+            "len": 1443
+          }
+        ],
+        "stopVisible": 0,
+        "scrollH": 945,
+        "scrollT": 0
+      }
+    ]
+  }
+]

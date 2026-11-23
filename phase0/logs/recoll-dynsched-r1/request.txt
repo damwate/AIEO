@@ -1,0 +1,6 @@
+[DYN-SCHED-R1|动态任务调度方案复审]
+仓库 damwate/AIEO 分支 main 完整SHA：a74f02776db19d6f8d5332e089689436a141ea59
+新需求（用户已拍板规则）：并行上限=3（第4个起WAITING等待，不是队列长度上限）；允许协商式抢占——加急任务使并发将超3时，不自动抢占，生成提议交用户拍板让路任务暂停(SUSPENDED)或终止(CANCELLED)交接；被让路任务先完成在途采集+交接包才释放名额。
+方案全文请读该SHA下 basic/tasks/b-20261123-dynamic-task-scheduling/acceptance/design-proposal-r1.md（基于已冻结的 standard/MULTITASK-IMPLEMENTATION-PLAN.md v1.0 做增量）。
+重点裁定：①是否须等P1/906⑥门后才能做控制面增量；②WAITING→READY自动还是人工推进；③抢占五步链fail-closed边界与在途轮竞态；④交接包是否足以无损恢复；⑤是否用更简机制替代新WAITING状态。
+仅方案复审不涉代码。请给[R1 PASS]或[R1 FAIL+逐条问题编号/依据/建议]。
