@@ -1,6 +1,15 @@
 # AIEO 项目执行纪律（用户 2026-11-15 两次明确批评"没遵守开发经验"后固化）
 
-> **适用范围（ChatGPT 复核意见修正，reply sha256=21d3150d…）：** 本文件由 ZCode 执行会话自动加载（工作区约定，随会话注入）；**ChatGPT 网页审查会话不会自动读取本文件**——对审查方需知悉的纪律靠派单简报明文携带，不假定其已读。
+> **适用范围（ChatGPT 复核意见修正，reply sha256=21d3150d…）：** 在 AIEO 工作区打开的 IDE Agent 以本文件为共同入口（ZCode 工作区已配置加载）；**ChatGPT 网页审查会话不会自动读取本文件**——对审查方需知悉的纪律靠派单简报明文携带，不假定其已读。
+
+## IDE Agent 开工入口
+
+按用户指定或已批准任务书中的版本，开工前读取对应技能。Basic 和 Standard 各自有工作流与常用经验索引。定档仍不明确时先核对任务书、交接包和既有授权，按版本选型规则处理。
+
+- Basic 初级版单任务使用 [aieo-basic](.github/skills/aieo-basic/SKILL.md)。
+- Standard 中级版与任务池使用 [aieo-standard](.github/skills/aieo-standard/SKILL.md)。
+
+VS Code Copilot 可从 `.github/skills/` 发现项目技能。使用其他 IDE 或 Agent 时，通过上述仓库内路径直接读取同一份 `SKILL.md`。业务代码在其他仓库执行时，由 AIEO 任务包注明选定版本和适用规则。
 
 ## 异常处置第一动作（最高优先级，违反=流程事故）
 
@@ -32,6 +41,6 @@
 - push 一律走 `toolkit/check-push.mjs`；派单流程照 `chatgpt-web-dispatch` skill（含手册 EGO-LITE-HANDBOOK.md）；
 - 仓库当前审查会话 UUID 在 `phase0/logs/gpt-reviewer-session.json`。
 
-## 标准版 ZCode 任务池
+## 标准版任务池
 
-标准版任务由主 ZCode 会话按 [PLAYWRIGHT-QUEUE-WORKFLOW.md](standard/PLAYWRIGHT-QUEUE-WORKFLOW.md) 管理。启用队列的任务统一通过同一服务工作区提交和查询 ChatGPT 派单。后台 worker 独占专属浏览器实例，子 Agent 不直接调用网页派单工具。
+标准版任务由已指定的主 IDE Agent 会话按 [PLAYWRIGHT-QUEUE-WORKFLOW.md](standard/PLAYWRIGHT-QUEUE-WORKFLOW.md) 管理。启用队列的任务统一通过同一服务工作区提交和查询 ChatGPT 派单。后台 worker 独占专属浏览器实例，子 Agent 不直接调用网页派单工具。

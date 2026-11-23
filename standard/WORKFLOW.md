@@ -81,6 +81,6 @@
 | v0.1（S1 复验补订） | 2026-11-15 | 草案（状态不变） | 附录 B 决议核对表补齐（DEC-010~052 逐项，A2 载体）；版本记录移至附录 C | b-20261115-standard-kickoff S1 验收 P1-02 修正 |
 | v0.1（生效） | 2026-11-16 | **生效** | 状态翻转 草案→生效；§3 第 2 条 M2 同步为已批准可选模式（M1 交替推进仍为默认）；正文规则零变更 | 复审通过=S1-R2 限定复验 PASS（677b1b96…）；用户批准=2026-11-16 执行指令明列"WORKFLOW+M2 生效"（DEC-063） |
 
-## 标准版 ZCode 任务池与 ChatGPT 对话
+## 标准版任务池与 ChatGPT 对话
 
-任务池、加急交接和子 Agent 生命周期由主 ZCode 会话按[任务执行与派单规则](PLAYWRIGHT-QUEUE-WORKFLOW.md)统一管理。ChatGPT 网页操作由该规则指定的唯一 Playwright 队列服务串行执行。
+任务池、加急交接和子 Agent 生命周期由指定的主 IDE Agent 会话按[任务执行与派单规则](PLAYWRIGHT-QUEUE-WORKFLOW.md)统一管理。ChatGPT 网页操作由该规则指定的唯一 Playwright 队列服务串行执行。
