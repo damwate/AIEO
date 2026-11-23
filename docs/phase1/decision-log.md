@@ -1124,3 +1124,11 @@
 - **合并方式：** fast-forward（git merge --ff-only），main 86a5bc4 → 630b1b2e7413e951a9585c666d7a553ff9a27c8e，零冲突；随后在 main 上追加本决策登记 commit。
 - **如实登记（权限边界）：** agent-kit 分支 fix/session-budget 对 damwate GitHub 403 无推送权，未绕过（不改账号/不换仓库/不复制冒充）；核心源码经 session-budget-code.zip 入 AIEO 仓供核验。审查会话因目标重定向至根路径（实测非上下文上限，账本 6 轮 7268B）由 6b02a805 迁移至 6b03aea8，指针已更新、旧指针留档。
 - **边界：** 无生产发布、无数据删除；本合并不解除 DEC-017 任何扩展场景门禁；fix/parallel-stage2 等其他分支不在本次授权范围。
+
+### DEC-132 标准版第二次多任务试运行（BMS 报价预览 R2-A + GDC 生图异常；2 任务 M2 并行）（2026-11-23）
+
+- **授权依据：** 用户指令原话（"AIEO标准版并行解决如下问题，请详细记录过程并给出测试报告（此为标准版第二次测试）"），两条补充澄清（BMS 承接 11-20 两轮裁定；生图主对象=GDC，承接白板 RCA 三阶段裁定）。母任务 b-20261123-standard-second-trial；选型 Standard/S2。
+- **执行（M2 受控并行，并行数=2 符合 §4.3）：** 两子任务 b-20261123-bms-quote-preview / b-20261123-aisvc-page-exception——2 只读 Explore 子代理并行本地盘点 → 串行派单两独立新会话（--new-session --no-update-pointer；dispatch-2026-11-23T06-28-37 会话 6b03dd4f / 06-32-05 会话 6b03de1d；reply SHA256=b2f4914ba523c9fa4c9665a88e6448d3d8b4f7026a4c8cbdcdf7ee42bb3ce616 / 9ae55f661713c93c5e4114e7bc971a40d94c00030729f59afa8010ceb9563a34）→ 两方案 proposal.md。通道两单串行 6m23s，零补采零重派。
+- **裁定：** T1=分层 PASS（A-FE 前端流/A-BE 后端流独立验收）+缺数据留空 PASS（附条件，三态门禁 VERIFIED/MISSING/INVALID）+A01-A10 待补原始清单+A11-A20；T2=PASS_WITH_CONSTRAINTS（有条件方案收敛，非实施授权）——photo() 提升阶段一 P0、五缺口进台账（params_json 不入本轮）、五负例 A-E、实施前四项证据门。
+- **首次整改项复核：** P0-1 并行超限→本次 PASS（并行=2）；P0-2 四件套→**仍未整改**（只读任务无写入面，M2 §1 无豁免条款，如实登记）；R2 残留状态不同步→PASS（task-brief/steps 同步，ST-05 终检无 FAIL）；marker 回显→T2 完整/T1 自拟标题（部分改善）；缩写 SHA→PASS（全 40/64 位）。
+- **边界：** 全轮目标仓库（bms-ui/GDC/AISVC）零代码修改；不立项、不授权实施、不扩大并行、不宣告 M2 试运行通过；两方案与四组待拍板项（T1 A-FE/A-BE、T2 GDC-RCA-01 立项/params_json 独立、四件套豁免条款、实施顺序）待用户批准。测试报告=basic/tasks/b-20261123-standard-second-trial/delivery.md。

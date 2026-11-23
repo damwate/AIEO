@@ -1,0 +1,2 @@
+[T2|GDC-RCA实施就绪|b-20261123-aisvc-page-exception|首行原样回显标记]
+承接11-22白板RCA三阶段裁定(rca-whiteboard.md)。本轮只读核对 GDC@dev 5c9ba1558a58b29633ea731fcdb563361b4c343b，不改码。已证：门禁只认pendingGlbs===0(ThreeView.tsx:544)，纹理/billboard明确排除(:400,:420-421)；KTX2晚到只补帧；billboard载前可见(:174-187)；render_assets全仓0命中。新发现5缺口：photo()无门(:684-691)、capture无超时、纹理缓存键缺revision(threeMaterials.ts:68)、camera_snapshot客户端自造非服务端事实、AiGenerationJob无params_json(db.py:449-483)。问：①新缺口是否纳入GDC-RCA-01范围？②三阶段顺序是否仍一→二→三，photo()补门是否提前到阶段一P0？③五场景验收(冷/热/404/纯白墙/旧revision)是否足够，需否加强"缓存命中但pending"负例？请给PASS/FAIL+理由+补充验收点。

@@ -1487,3 +1487,49 @@ AI 执行者：
 
 #### 8. 下一步建议与验证标准
 用户拍板合并后：由用户执行 main 合并（或明确授权）；合并后按 L-006 阶段边界评估主会话轮换。若用户暂不合并，分支与证据链已冻结可随时核验。验证标准=合并 commit 含被测 353e190 + 补证 4fe07fa，且 AIEO main 全量回归保持 hooks 9/9、core 23/23。
+
+### L-022 UTF-8 字节计量必须先锁定解码口径（简报 1200B 上限误报实战）
+
+**scope:** GLOBAL（所有需按字节计量文本的场景）；ENVIRONMENT_SPECIFIC（Windows PowerShell 默认 ANSI 读 UTF-8 中文）；AIEO（简报 1200 UTF-8 字节上限）
+**status:** ACTIVE
+**验证结果:** 2026-11-23 标准版第二次试运行（b-20261123-standard-second-trial）：两份中文简报 PowerShell `Get-Content -Raw` + UTF8 `GetByteCount` 得 1185/1423B 误判超限，显式 UTF-8 解码实为 907/913B。
+
+**有效经验：**
+1. Windows PowerShell 5.1 `Get-Content -Raw` 默认按系统 ANSI（GBK）解码 UTF-8 文件——每个 3 字节汉字被读成 1 个字符，再按 UTF-8 重编码得约 1.5 倍虚增（3→2 字节再编码回 6 字节的极端情形更高）。凡字节计量必须先 `[IO.File]::ReadAllText(path, [Text.Encoding]::UTF8)` 或 `Get-Content -Encoding UTF8`，以工具自身报告（gpt_dispatch 的 message_bytes）为交叉验证。
+2. 简报超限处置前先复核计量口径，不要因虚高读数启动不必要的压缩（本次压缩两轮，终版虽合规但属无效成本）。
+3. 与 L-011.7 同族：SHA256 与字节数都必须注明"对象 + 基准"；UTF-8 字节数的基准=解码方式，不可只写"文件字节数"。
+
+**证据:** `phase0/tools/brief_bms_r2a_r1.txt`、`brief_gdc_rca_impl_r1.txt`；两轮 dispatch-2026-11-23T06-28-37/06-32-05 的 request.txt（907B/913B）与 run.log message_bytes 一致；DEC-132。
+
+### DEV-20261123-002 标准版第二次多任务试运行（2 任务 M2 并行，全程只读）
+
+- **Task ID / 模块：** b-20261123-standard-second-trial / Standard M2 受控并行
+- **时间与时区：** 2026-11-23 06:10–06:35（UTC）
+- **状态：** PASS（试运行交付闭环；不宣告 M2 试运行通过——四件套未验证）
+- **分支与基线：** AIEO main `0c573e0d`；BMS `cf79e4c2`；GDC `5c9ba155`(dev)；AISVC `0c53c963`(main)
+- **结果 Commit：** 本批文档提交时填写（不预写）
+- **工作区状态：** 本批新增三任务包+两简报+两 stdout+报告+治理登记
+
+#### 1. 本次完成内容
+两子任务并行本地盘点（T1 BMS R2-A 代码盘点；T2 GDC 生图异常代码盘点+AISVC 下游补充）→两轮串行 ChatGPT 派单讨论（新会话 SHA256 绑定）→两方案 proposal.md→测试报告 delivery.md；目标项目零代码修改。
+
+#### 2. 测试及验收结果
+ST-05 两子包终检无 FAIL（2 步完整 PASS+1 步未到期，整体 IN_PROGRESS）；派单 2/2 一次采集成功、零补采零重发；reply SHA256 与 artifact_sha256 一致；目标代码测试=NOT_APPLICABLE。五指标：工作区污染 0/冲突 0/派单归属错误 0/会话串用 0/并行净收益为正（估算，本地盘点省≈190s）。
+
+#### 3. 遇到的问题
+①PowerShell 字节计量误报超限（→L-022）；②T1 marker 未原样回显（同首次）；③审查方两处自述越界（T1 自述核对未要求的 diff；T2 明示 SHA 未绑定故条件裁定）——已如实登记不扩大采纳；④ST-05 首检 S1/S2 ⑥ 缺 dispatch+SHA，补齐后过。
+
+#### 4. 根因与尝试过的方案
+字节误报根因=ANSI/UTF-8 解码口径不一致，改显式 UTF-8 解码即证；其余为流程/证据问题非源码返工。无同类问题三次失败，未触发止损。
+
+#### 5. 是否触发返工止损机制
+否。两轮派单均一次 COMPLETED，零 REJECT。
+
+#### 6. 本次新增的开发经验
+L-022（UTF-8 字节计量口径）；M2 并行数=2 时本地盘点净收益为正但通道串行仍是硬成本；marker 回显纪律继续有效（T1 未回显、T2 回显的对照）。
+
+#### 7. 当前遗留问题
+P0-2 四件套仍未整改（只读无豁免条款）；四组待用户拍板（T1 A-FE/A-BE 与 A11-A20、T2 GDC-RCA-01 与 params_json 独立、四件套豁免、实施顺序）；M2 隔离机制未被验证，不宣告试运行通过。
+
+#### 8. 下一步建议与验证标准
+用户拍板后另立实施任务；验证标准=T1 按 A-FE/A-BE 分别验收且金额/导出不回归，T2 按五场景+五负例且 all capture entries 共享门禁。若做独立核验，须新会话+完整 SHA 绑定。

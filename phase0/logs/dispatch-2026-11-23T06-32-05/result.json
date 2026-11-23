@@ -1,0 +1,191 @@
+{
+  "at": "2026-11-23T06:35:04.712Z",
+  "instance_id": "default",
+  "instance_lock_path": "D:\\AIEO\\runtime\\locks\\gpt-session.lockfile",
+  "instance_debug_port": 9222,
+  "instance_profile_dir": "D:\\AIEO\\runtime\\chrome_profiles\\gpt-poc",
+  "message_bytes": 913,
+  "reply": "ChatGPT 说：\n\n[T2|GDC-RCA实施就绪|b-20261123-aisvc-page-exception|首行原样回显标记]\n\nGDC-RCA 实施就绪裁定\n\n总体结论：PASS_WITH_CONSTRAINTS（有条件通过方案收敛，不等于允许直接实施）。\n\n先明确本轮边界：只读核对，不改码、不扩大实施授权。\n\n有一个证据问题需要单独标记：目前 GitHub 文件读取接口没有成功将你提供的完整 SHA 5c9ba1558a58b29633ea731fcdb563361b4c343b 与读取到的源码内容绑定。因此，以下裁定以你提供的行号、代码事实和五项新发现为输入，属于条件性架构裁定，不冒充已完成该 SHA 的独立复验。\n\n① 五项新缺口是否纳入 GDC-RCA-01？\nPASS：纳入 RCA 问题台账\n\n但不建议五项全部直接并入 GDC-RCA-01 的实施范围。应该区分根因、旁路风险和数据契约问题。\n\n新缺口\n\n\t\n\n裁定\n\n\t\n\n理由\n\n\n\n\nphoto() 无门\n\n\t\n\n纳入，P0\n\n\t\n\n可能绕过已有生成门禁，是直接的入口一致性问题\n\n\n\n\ncapture 无超时\n\n\t\n\n纳入，P1\n\n\t\n\n异步操作可能无限等待，影响恢复和资源释放\n\n\n\n\n纹理缓存键缺 revision\n\n\t\n\n纳入，P1\n\n\t\n\n可能跨版本复用旧纹理，破坏版本隔离\n\n\n\n\ncamera_snapshot 客户端自造\n\n\t\n\n纳入，P1\n\n\t\n\n客户端声明不能直接等同于服务端确认的事实\n\n\n\n\nAiGenerationJob 缺 params_json\n\n\t\n\n纳入 RCA，暂不纳入本轮修复\n\n\t\n\n涉及任务参数持久化契约，可能需要独立数据模型变更\n\n关键边界： GDC-RCA-01 应解决渲染就绪状态与生成入口之间的门禁一致性。不能借此次 RCA 顺手演变成完整 AI Job 数据模型重构。\n\n② 三阶段顺序是否保持？photo() 是否提前？\nPASS：保留一→二→三\n\n建议不改变三阶段依赖顺序，但调整第一阶段的 P0 清单。\n\n阶段\n\n\t\n\n实施重点\n\n\t\n\n本轮裁定\n\n\n\n\n阶段一\n\n\t\n\n统一就绪门禁、阻断不完整场景提交\n\n\t\n\nphoto() 提升为 P0\n\n\n\n\n阶段二\n\n\t\n\ncapture 生命周期、纹理版本隔离\n\n\t\n\n保持原阶段\n\n\n\n\n阶段三\n\n\t\n\n服务端事实、Job 参数持久化及完整链路验证\n\n\t\n\n保持原阶段\n\nphoto() 提升 P0 的理由\n\n现有事实是：\n\nThreeView 主入口只认 pendingGlbs===0。\n\n纹理与 billboard 明确不参与这个门禁。\n\nphoto() 没有门禁。\n\n这意味着即使主入口已经正确阻止未就绪场景，另一个拍照入口仍可能绕过同一安全约束。\n\n这不是普通体验问题，而是同一个业务操作存在两个不同的就绪判定标准。\n\n建议阶段一增加以下不变量：\n\n所有提交 AI 输入的入口必须使用同一就绪判定。\n\n就绪状态不能由单个入口自行推断。\n\n门禁失败不得触发 capture、上传或 AI Job 创建。\n\n纹理与 billboard 的既定排除语义不因修复而改变。\n\n特别注意：不要简单地把 pendingTextures、pendingBillboards 塞进 pendingGlbs。这会改变原有门禁定义，必须有独立需求和证据才能调整。\n\n③ 五场景验收是否足够？\nPASS_WITH_CONSTRAINTS：需要增加负例\n\n原五场景覆盖了主要业务表现，但还不足以证明异步竞态和缓存隔离正确。\n\n建议保留五场景，增加以下验收。\n\n原五场景\n\n场景\n\n\t\n\n预期结果\n\n\n\n\n冷加载\n\n\t\n\n未完成 GLB 加载时禁止提交\n\n\n\n\n热加载\n\n\t\n\n已加载且满足门禁时正常提交\n\n\n\n\n404\n\n\t\n\n资源加载失败，不得误判成功\n\n\n\n\n纯白墙\n\n\t\n\n不得因无纹理或纯白外观误判未就绪\n\n\n\n\n旧 revision\n\n\t\n\n旧版本资源不能污染当前版本结果\n\n必须增加的负例\nP0 验收补充\n\nA. 缓存命中但 pending（必须增加）\n\n这是我认为最重要的新增测试。\n\n构造条件：\n\n纹理缓存已有资源。\n\n当前 GLB 仍处于 pending。\n\nbillboard 也可能尚未完成。\n\n用户触发 photo()。\n\n预期：\n\nphoto() 必须被门禁阻止。\n\n不产生 capture。\n\n不产生上传。\n\n不创建 AI Job。\n\n缓存命中不能替代 GLB 就绪证明。\n\nB. pending → resolved 的竞态\n\npending 状态触发 photo()，必须拒绝。\n\n加载完成后再次触发，允许通过。\n\n不允许第一次失败的请求在异步加载结束后自动变成成功提交。\n\nC. capture 超时\n\n人为阻塞 capture。\n\n达到超时阈值后必须结束等待。\n\n超时不得生成伪成功结果。\n\n后续重新拍摄不能受到前一次失败状态污染。\n\nD. revision 缓存隔离\n\nR1 加载纹理并写入缓存。\n\n切换 R2。\n\nR2 不得错误复用 R1 的纹理。\n\nR1 的迟到响应不得覆盖 R2。\n\nE. camera_snapshot 事实边界\n\n客户端提交伪造或过期快照。\n\n服务端不得把未经验证的客户端字段当作权威事实。\n\n服务端生成的事实必须能与对应 Job 及 Revision 建立关联。\n\n最终验收矩阵\n\n验收类别\n\n\t\n\n原有\n\n\t\n\n补充\n\n\t\n\n裁定\n\n\n\n\n场景加载\n\n\t\n\n3\n\n\t\n\n1\n\n\t\n\n保留\n\n\n\n\n版本隔离\n\n\t\n\n1\n\n\t\n\n1\n\n\t\n\n加强\n\n\n\n\n门禁竞态\n\n\t\n\n0\n\n\t\n\n2\n\n\t\n\n必须增加\n\n\n\n\n超时恢复\n\n\t\n\n0\n\n\t\n\n1\n\n\t\n\n必须增加\n\n\n\n\n服务端事实\n\n\t\n\n0\n\n\t\n\n1\n\n\t\n\n必须增加\n\n最终裁定汇总\n\n问题\n\n\t\n\n裁定\n\n\n\n\n① 五项新缺口纳入 RCA\n\n\t\n\nPASS\n\n\n\n\n① 五项全部并入 GDC-RCA-01 实施范围\n\n\t\n\nFAIL\n\n\n\n\n② 保留一→二→三\n\n\t\n\nPASS\n\n\n\n\n② photo() 提前至阶段一 P0\n\n\t\n\nPASS\n\n\n\n\n③ 原五场景作为基础验收\n\n\t\n\nPASS\n\n\n\n\n③ 原五场景直接作为完整验收\n\n\t\n\nFAIL\n\n\n\n\n③ 增加缓存命中但 pending 负例\n\n\t\n\n必须\n\n\n\n\n本轮直接进入实施\n\n\t\n\n暂不授权\n\n实施前必须补齐的四项证据\n\n范围证据： GDC-RCA-01 明确区分门禁问题、异步生命周期问题和 Job 数据契约问题。\n\n入口证据： 找出全部调用 capture / photo 的生产入口，证明不存在第三条绕过路径。\n\n状态证据： 明确 pendingGlbs===0 的状态生命周期，以及加载失败、取消、组件卸载时的处理。\n\n版本证据： 确认 revision 是纹理缓存键的必要维度，并明确迟到响应的失效策略。\n\n我的最终建议：保留原三阶段架构，只把 photo() 门禁作为阶段一 P0 前置修复；五项新发现全部进入 RCA 台账，但不把 Job 数据模型改造混入 GDC-RCA-01。\n\n还有一条不能放松：阶段一完成后，必须先证明所有生产入口共享门禁，再允许进入阶段二。不能因为 ThreeView 主入口通过测试，就宣布整个系统的拍照门禁已经闭环。",
+  "user_unit_key": "445efb2a-26ee-573b-8e86-9329192af067:0:user",
+  "start_key_resolved": "445efb2a-26ee-573b-8e86-9329192af067:0:user",
+  "start_resolved_by_marker": true,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "445efb2a-26ee-573b-8e86-9329192af067:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "655e58f3-908e-4ed4-804e-2c2b9d0abd9f",
+  "stability": {
+    "stable": true,
+    "interval_ms": 4688,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-23T06:34:59.310Z",
+      "read_finished_at": "2026-11-23T06:35:00.995Z",
+      "unit_keys": [
+        "445efb2a-26ee-573b-8e86-9329192af067:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "445efb2a-26ee-573b-8e86-9329192af067:2:assistant",
+          "sha256": "9ae55f661713c93c5e4114e7bc971a40d94c00030729f59afa8010ceb9563a34",
+          "size_bytes": 6371
+        }
+      ],
+      "assistant_uuid": "655e58f3-908e-4ed4-804e-2c2b9d0abd9f",
+      "next_user_unit_key": null,
+      "start_key_resolved": "445efb2a-26ee-573b-8e86-9329192af067:0:user",
+      "start_resolved_by_marker": true,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-23T06:35:03.998Z",
+      "read_finished_at": "2026-11-23T06:35:04.575Z",
+      "unit_keys": [
+        "445efb2a-26ee-573b-8e86-9329192af067:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "445efb2a-26ee-573b-8e86-9329192af067:2:assistant",
+          "sha256": "9ae55f661713c93c5e4114e7bc971a40d94c00030729f59afa8010ceb9563a34",
+          "size_bytes": 6371
+        }
+      ],
+      "assistant_uuid": "655e58f3-908e-4ed4-804e-2c2b9d0abd9f",
+      "next_user_unit_key": null,
+      "start_key_resolved": "445efb2a-26ee-573b-8e86-9329192af067:0:user",
+      "start_resolved_by_marker": true,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "445efb2a-26ee-573b-8e86-9329192af067:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "445efb2a-26ee-573b-8e86-9329192af067:0:user",
+          "445efb2a-26ee-573b-8e86-9329192af067:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "ac0b44dc0d607666948d6a602dd1c43841f34fb297a9d05deacb748caff52114",
+          "9ae55f661713c93c5e4114e7bc971a40d94c00030729f59afa8010ceb9563a34"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "445efb2a-26ee-573b-8e86-9329192af067:0:user",
+          "445efb2a-26ee-573b-8e86-9329192af067:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "ac0b44dc0d607666948d6a602dd1c43841f34fb297a9d05deacb748caff52114",
+          "9ae55f661713c93c5e4114e7bc971a40d94c00030729f59afa8010ceb9563a34"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "445efb2a-26ee-573b-8e86-9329192af067:0:user",
+          "445efb2a-26ee-573b-8e86-9329192af067:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "445efb2a-26ee-573b-8e86-9329192af067:0:user",
+      "445efb2a-26ee-573b-8e86-9329192af067:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "445efb2a-26ee-573b-8e86-9329192af067:0:user",
+          "445efb2a-26ee-573b-8e86-9329192af067:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "445efb2a-26ee-573b-8e86-9329192af067:0:user",
+          "445efb2a-26ee-573b-8e86-9329192af067:2:assistant"
+        ],
+        "overlap_keys": [
+          "445efb2a-26ee-573b-8e86-9329192af067:0:user",
+          "445efb2a-26ee-573b-8e86-9329192af067:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "9ae55f661713c93c5e4114e7bc971a40d94c00030729f59afa8010ceb9563a34",
+  "size_bytes": 6371,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-23T06-32-05\\reply.txt",
+  "reply_readback_sha256": "9ae55f661713c93c5e4114e7bc971a40d94c00030729f59afa8010ceb9563a34",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-23T06-32-05\\raw-units.json",
+  "raw_units_sha256": "1db56fbea4378922903d51dbfc03625a5aa845344cda34e33f773d01fa9ae020",
+  "raw_units_size_bytes": 10029,
+  "raw_units_readback_sha256": "1db56fbea4378922903d51dbfc03625a5aa845344cda34e33f773d01fa9ae020",
+  "session_id": "6b03de1d-ee04-83ec-8bd6-0c01824b8b2f",
+  "conversation_url": "https://chatgpt.com/c/6b03de1d-ee04-83ec-8bd6-0c01824b8b2f",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}

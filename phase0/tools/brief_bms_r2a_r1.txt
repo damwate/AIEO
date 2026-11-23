@@ -1,0 +1,2 @@
+[T1|BMS-R2A核对|b-20261123-bms-quote-preview|首行原样回显标记]
+承接11-20裁定(reply SHA256=fd66845fe52e8740d9f010f7ca0bf4e7ade5b2849f04b1f958fa148cfabf7c0b)。本轮只读盘点 bms-ui@master cf79e4c2d2b78ec6f27bbc0c76a8c274f5ca0d36，不改码。已证：四页签6-9行、pcs可见22行、含重量导出=downExcel3(1718-1746)、改li文本不破坏handler。阻塞：SchemeItemDTO有skuPrice:124/artificialPrice:132但全仓无set调用；无行级整装标识(仅合同层ContractTypeEnum:9)；销售单位在ModelItemDTO:26等但未进预览DTO；草皮长宽厚度缺失。问：①R2-A应否拆"前端文案/可见表流"与"后端数据流"并行核准？②后端三项数据(行级价+整装标识+单位规格)是否列为前端展示前置门禁，缺数据展示位留空(不伪造)可否？③A01-A10验收有无遗漏或需加测试点？请给PASS/FAIL+理由+补充验收点。
