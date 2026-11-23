@@ -87,19 +87,6 @@ export class HttpM1Client {
     return payload;
   }
 
-  async nextStandardTask() {
-    return this._request("GET", "/api/v1/standard/next");
-  }
-
-  async submitStandardReview({ task_id, ...round }) {
-    return this._request("POST", `/api/v1/standard/tasks/${encodeURIComponent(task_id)}/reviews`, round);
-  }
-
-  async standardReviewStatus(taskId, roundId) {
-    return this._request("GET",
-      `/api/v1/standard/tasks/${encodeURIComponent(taskId)}/reviews/${encodeURIComponent(roundId)}`);
-  }
-
   /** POST /api/v1/tasks/{task_id}/claim（C1 §2.3：非幂等独占租约；TASK-0003/RES-0001 由 M1 判定并透传）。 */
   async claimTask(req) {
     return this._request("POST", `/api/v1/tasks/${encodeURIComponent(req.task_id)}/claim`, {

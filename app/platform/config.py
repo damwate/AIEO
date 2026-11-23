@@ -38,7 +38,6 @@ class Settings:
     session_idle_seconds: int
     session_absolute_seconds: int
     artifact_max_inline_bytes: int
-    standard_limit: int = 1
 
     @classmethod
     def from_environ(cls, overrides: Mapping[str, str] | None = None) -> "Settings":
@@ -95,9 +94,6 @@ class Settings:
             raw = Path(str(value(env_key, file_key, str(default))))
             return raw if raw.is_absolute() else (REPO_ROOT / raw).resolve()
 
-        standard_limit = integer("AIEO_STANDARD_LIMIT", "standard.limit", 1, 1)
-        if standard_limit > 3:
-            errors.append("AIEO_STANDARD_LIMIT must not exceed 3")
         if errors:
             raise ValueError("Invalid AIEO configuration:\n- " + "\n- ".join(errors))
 
@@ -117,6 +113,5 @@ class Settings:
             log_retention_days=integer("AIEO_LOG_RETENTION_DAYS", "log.retention_days", 30, 1),
             session_idle_seconds=integer("AIEO_SESSION_IDLE_SECONDS", "session.idle_seconds", 28800, 60),
             session_absolute_seconds=integer("AIEO_SESSION_ABSOLUTE_SECONDS", "session.absolute_seconds", 86400, 60),
-            standard_limit=standard_limit,
             artifact_max_inline_bytes=integer("AIEO_ARTIFACT_MAX_INLINE_BYTES", "platform.artifact_max_inline_bytes", 1048576, 1),
         )

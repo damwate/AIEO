@@ -45,9 +45,6 @@ def _require_execution(conn: sqlite3.Connection, task_id: str, execution_id: str
             f"execution {execution_id} does not belong to task {task_id}",
             details={"field": "execution_id"},
         )
-    managed = conn.execute("SELECT phase,execution_id FROM standard_tasks WHERE task_id=?", (task_id,)).fetchone()
-    if managed and (managed["phase"] not in ("ACTIVE", "DRAINING") or managed["execution_id"] != execution_id):
-        raise invalid_transition("standard report or commit does not match an active execution")
     return execution
 
 

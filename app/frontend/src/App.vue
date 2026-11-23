@@ -64,8 +64,6 @@
         </table>
       </section>
 
-      <StandardWork v-else-if="currentTab === '任务管理'" :projects="projects" />
-
       <section v-else>
         <h2>进度看板（完成率只统计 ACCEPTED 任务权重，04-规范 §4）</h2>
         <div v-for="item in board" :key="item.project_id" class="board-card">
@@ -96,9 +94,8 @@
 <script setup>
 import { onMounted, ref } from "vue";
 import { api, setCsrfToken } from "./api.js";
-import StandardWork from "./StandardWork.vue";
 
-const tabs = ["项目", "任务", "任务管理", "看板"];
+const tabs = ["项目", "任务", "看板"];
 const currentTab = ref("看板");
 const username = ref("");
 const error = ref("");
@@ -140,9 +137,7 @@ async function logout() {
 
 onMounted(async () => {
   try {
-    const session = await api.session();
-    username.value = session.username;
-    setCsrfToken(session.csrf_token);
+    username.value = (await api.session()).username;
     await refresh();
   } catch {
     /* not logged in yet */

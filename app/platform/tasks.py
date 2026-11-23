@@ -154,10 +154,6 @@ def submit_event(conn: sqlite3.Connection, task_id: str, body: TaskEventIn, prin
         "cancelled_by": body.cancelled_by or principal.actor_id,
         "cancelled_reason": body.cancelled_reason,
     }
-    if body.event == "DISPATCH" and conn.execute(
-        "SELECT 1 FROM standard_tasks WHERE task_id=?", (task_id,)
-    ).fetchone():
-        raise invalid_transition("standard tasks must use the atomic claim endpoint")
     return apply_event(
         conn, task_id, body.event, body.event_id,
         actor_id=principal.actor_id, actor_type=principal.actor_type,

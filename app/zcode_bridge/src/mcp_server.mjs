@@ -123,41 +123,6 @@ export function createAieoMcpServer(deps, opts = {}) {
     }
   }
 
-  if (typeof m1.nextStandardTask === "function") {
-    server.registerTool(
-      "next_standard_task",
-      { description: "读取任务池中下一个可执行任务及绑定的前置提交。使用 claim_task 原子领取。" },
-      wrapTool("next_standard_task", async () => ({ payload: await m1.nextStandardTask() })),
-    );
-  }
-
-  if (typeof m1.submitStandardReview === "function") {
-    server.registerTool(
-      "submit_standard_review",
-      {
-        description: "将当前任务的审查请求提交到单通道 FIFO。重试时沿用同一个 round_id。",
-        inputSchema: {
-          task_id: z.string(),
-          execution_id: z.string(),
-          round_id: z.string().min(1).max(100),
-          purpose: z.enum(["planning", "review", "acceptance"]),
-          message: z.string().min(1).max(1200),
-        },
-      },
-      wrapTool("submit_standard_review", async (args) => ({ payload: await m1.submitStandardReview(args) })),
-    );
-    server.registerTool(
-      "standard_review_status",
-      {
-        description: "读取原审查轮状态及已核对的证据引用。",
-        inputSchema: { task_id: z.string(), round_id: z.string().min(1).max(100) },
-      },
-      wrapTool("standard_review_status", async (args) => ({
-        payload: await m1.standardReviewStatus(args.task_id, args.round_id),
-      })),
-    );
-  }
-
   // ---- claim_task ----
   server.registerTool(
     "claim_task",

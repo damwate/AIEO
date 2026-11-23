@@ -32,9 +32,5 @@ export const api = {
   projects: () => request("GET", "/projects"),
   tasks: (query = "") => request("GET", `/tasks${query}`),
   task: (taskId) => request("GET", `/tasks/${taskId}`),
-  standardWork: () => request("GET", "/standard/work"),
-  approveStandardPlan: (plan) => request("POST", "/standard/plans", plan),
-  previewStandardUrgent: (id) => request("GET", `/standard/tasks/${id}/urgent`),
-  promoteStandardTask: (id, victim) => request("POST", `/standard/tasks/${id}/urgent`, { expected_victim: victim }),
   board: (projectId = "") => request("GET", `/board${projectId}`),
 };
