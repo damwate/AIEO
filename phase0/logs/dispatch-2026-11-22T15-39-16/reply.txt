@@ -1,0 +1,735 @@
+ChatGPT 说：
+Windows 单进程 VPN 代理裁定
+
+评审结论 可以实现，而且不需要 TUN，也不需要重启 SakuraCat。
+
+根据现有实测，关键问题不是 SakuraCat 的 SOCKS5 服务不可用，而是：
+
+wow.exe 使用原始 TCP 连接，不读取 Windows 系统代理设置。
+
+SakuraCat 的 127.0.0.1:1080 已经能够正常提供 SOCKS5/HTTP 代理。
+
+需要增加一个进程级网络拦截与代理转发层，把 wow.exe 的 TCP 连接转发到 SOCKS5。
+
+其他程序不能被纳入拦截范围。
+
+因此，单纯修改 SakuraCat 的配置文件不是解决方向。下面逐项裁定。
+
+Q1. 不用 TUN 的单进程代理方案
+
+首先区分三种技术路线：
+
+内核网络过滤：在 Windows 网络层识别进程，再将指定流量转换为 SOCKS5。
+
+进程 API Hook / DLL 注入：拦截目标程序的 Winsock 调用，在程序内部完成 SOCKS5 握手。
+
+应用自身代理设置：让程序主动使用 SOCKS5。你的 wow.exe 已经实测不支持这种方式。
+
+方案比较
+
+方案
+
+	
+
+可靠性
+
+	
+
+侵入性
+
+	
+
+费用
+
+
+
+
+Proxifier
+
+	
+
+高
+
+	
+
+中
+
+	
+
+付费
+
+
+
+
+ProxyBridge
+
+	
+
+较高
+
+	
+
+中
+
+	
+
+免费开源
+
+
+
+
+ProxiFyre
+
+	
+
+较高
+
+	
+
+中
+
+	
+
+免费开源
+
+
+
+
+AppTun
+
+	
+
+有待更多实测
+
+	
+
+中
+
+	
+
+免费开源
+
+
+
+
+Force-Proxy DLL
+
+	
+
+中低
+
+	
+
+高
+
+	
+
+免费开源
+
+
+
+
+Python 自研转发
+
+	
+
+低（开发成本高）
+
+	
+
+高
+
+	
+
+免费
+
+这里的侵入性主要指是否需要驱动、拦截网络包或向进程注入 DLL，并非是否改变系统默认路由。
+
+候选工具
+
+1. Proxifier
+
+成熟商业方案
+
+按程序名配置 SOCKS5。
+
+不需要 TUN。
+
+对不支持系统代理的普通 TCP 应用有成熟的透明代理方案。
+
+缺点：付费，不能把它当成完整的 UDP 游戏代理方案。
+
+官网：Proxifier
+
+2. ProxyBridge
+
+我的首选推荐
+
+MIT 开源协议。
+
+按 exe 名称设置规则。
+
+SOCKS5 / HTTP。
+
+TCP、UDP 均支持。
+
+Windows 使用 WinDivert 驱动，不创建 TUN 虚拟网卡。
+
+支持 PROXY、DIRECT、BLOCK 三种动作。
+
+GitHub 官方仓库
+
+3. ProxiFyre
+
+第二推荐
+
+AGPL-3.0 开源。
+
+基于 Windows Packet Filter / NDISAPI。
+
+按进程名或路径匹配。
+
+支持 TCP、UDP、IPv4、IPv6。
+
+有 GUI 和 Windows 服务。
+
+缺点：需要相应网络过滤驱动及运行环境，安装配置比预期更复杂。
+
+GitHub 官方仓库
+
+4. AppTun
+
+MIT 开源。
+
+支持按 exe、目录、正则表达式匹配。
+
+支持 SOCKS5 TCP、UDP 和 DNS。
+
+不创建虚拟网卡，不改变系统路由。
+
+有中文界面。
+
+但项目目前规模较小，成熟度需要自行验证。
+
+GitHub 官方仓库
+
+参考了各项目的官方仓库和 Windows 实现说明。
+GitHub
++4
+
+排序裁定：
+
+免费、开源、适合本次需求：ProxyBridge 第一。
+
+更成熟的商业产品：Proxifier。
+
+需要长期运行的 TCP/UDP 代理服务：可以进一步评估 ProxiFyre。
+
+AppTun 值得作为备选，但不建议在没有测试的情况下直接用于长期游戏连接。
+
+注意：ProxyBridge 虽然不使用 TUN，但它需要管理员权限安装和运行 WinDivert 内核驱动。它会在网络层检查出站包，再对命中规则的流量进行处理。这不等于完全不碰其他程序的网络层，只是未命中规则的流量会原样放行。
+GitHub
++1
+
+Q2. 修改 sing-box config.json 的 process_name 是否无效？
+对当前架构无效
+
+这是本次问题最重要的技术判断。
+
+你的当前架构：
+
+SakuraCat / sing-box
+
+0.0.0.0:1080 mixed inbound
+
+SOCKS5 / HTTP 客户端请求
+
+sing-box outbound
+
+VPN 远端出口
+
+问题在于：
+
+process_name 不是一个可以从 SOCKS5 请求内容中直接读取的字段。
+
+SOCKS5 客户端向服务器发送的是目标地址、端口和代理协商数据，并不会在协议中携带原始 Windows 客户端的 exe 名称。
+
+因此：
+
+sing-box 收到 wow.exe 的 SOCKS5 请求时，不能仅凭这个请求可靠地知道发起者是 wow.exe。
+
+Windows 上 sing-box 支持 process_name，不意味着所有 inbound 都能识别原始发起进程。
+
+process_name 更适合 sing-box 能够直接关联到原始进程的流量接管场景，例如适当的 TUN 路由。
+
+官方文档确实列出了 Windows 的 process_name 支持，但这不意味着 SOCKS inbound 自动获得客户端进程身份。
+sing-box
++2
+
+会不会误伤其他程序？
+
+如果你只在现有 mixed inbound 上增加：
+
+JSON
+{
+  "process_name": [
+    "wow.exe"
+  ],
+  "outbound": "proxy"
+}
+
+它不会自动让 wow.exe 的原始 TCP 连接进入 SOCKS5。
+
+更重要的是，不要把这个规则误认为已经实现进程隔离。
+
+裁定：不建议修改 SakuraCat 的 config.json 来解决这个问题。 保持现有配置不动，可以减少无关变量。
+
+Q3. 免费开源方案具体推荐哪个？
+第一选择：ProxyBridge
+
+我认为它最符合你给出的限制条件。
+
+理由：
+
+不需要 TUN。
+
+不需要重启 SakuraCat。
+
+不需要修改 wow.exe。
+
+可以按 wow.exe 配置 SOCKS5。
+
+不匹配的程序保持 DIRECT。
+
+能处理 TCP 和 UDP。
+
+还有一个很重要的安全设置：不要使用全局代理规则，只添加 wow.exe 的精确规则。
+
+为什么不直接推荐 Python？
+
+Python 可以做 SOCKS5 转发，但有一个技术障碍：
+
+普通 Python 程序只能监听、接收和转发已经交给它的连接，不能自动识别 Windows 上哪个原始进程正在发起 TCP 连接。
+
+要实现完整功能，还需要：
+
+Windows 网络过滤驱动，例如 WinDivert。
+
+进程 PID 与网络连接的关联。
+
+TCP 连接状态及数据转发。
+
+SOCKS5 CONNECT 协议实现。
+
+UDP ASSOCIATE（如果游戏需要 UDP）。
+
+DNS 处理。
+
+连接关闭、超时和异常恢复。
+
+所以 Python 可以作为代理转发服务的开发语言，但不能靠简单写一个 Python SOCKS5 客户端，就实现按 exe 透明分流。
+
+另外有一个开源项目值得知道：Force-Proxy。它通过 Winsock API Hook 和 DLL 注入实现 SOCKS5 转发。其 TCP/UDP 功能值得研究，但我不建议把 DLL 注入作为这次的首选，尤其是游戏程序可能存在反作弊、完整性检查或更新兼容问题。
+GitHub
++1
+
+Proxifier 值不值得买？
+
+我的判断：
+
+如果只是 TCP 程序，需要成熟 GUI、稳定运行，值得考虑。
+
+如果希望完整代理游戏的 TCP + UDP，优先考虑 ProxyBridge 或 ProxiFyre。
+
+如果不想付费，也不想修改 SakuraCat，先测试 ProxyBridge。
+
+Proxifier 的优势是成熟，而不是它在所有网络协议上的能力都优于开源项目。
+
+Q4. 最终落地步骤与验证方法
+
+以下按 ProxyBridge 方案设计，不修改 SakuraCat，也不改 wow.exe。
+
+第一步：确认 SakuraCat 代理端口
+
+保留现有状态：
+
+配置
+
+	
+
+要求
+
+
+
+
+SakuraCat
+
+	
+
+保持运行
+
+
+
+
+sing-box mixed
+
+	
+
+127.0.0.1:1080 可访问
+
+
+
+
+TUN
+
+	
+
+关闭
+
+
+
+
+系统代理
+
+	
+
+保持原状
+
+
+
+
+wow.exe
+
+	
+
+不修改
+
+建议用 PowerShell 测试：
+
+powershell
+Test-NetConnection 127.0.0.1 -Port 1080
+
+预期：
+
+纯文本
+TcpTestSucceeded : True
+
+再检查代理出口：
+
+powershell
+curl.exe --proxy socks5h://127.0.0.1:1080 https://api.ipify.org
+
+这里使用 socks5h，让域名解析也交给代理端处理。
+
+记录得到的 VPN 出口 IP，记为 VPN_IP。
+
+第二步：安装 ProxyBridge
+推荐安装来源
+ProxyBridge 官方 GitHub Releases
+
+操作：
+
+下载 Windows x64 安装包。
+
+检查发布版本及文件来源。
+
+以管理员身份安装。
+
+以管理员身份启动 ProxyBridge。
+
+不安装其他代理客户端，不改变 SakuraCat 配置。
+
+官方安装说明：Windows 使用文档。
+GitHub
++1
+
+第三步：配置代理服务器
+
+进入 ProxyBridge 的 Proxy Settings：
+
+项目
+
+	
+
+设置
+
+
+
+
+Proxy Type
+
+	
+
+SOCKS5
+
+
+
+
+Host
+
+	
+
+127.0.0.1
+
+
+
+
+Port
+
+	
+
+1080
+
+
+
+
+Username
+
+	
+
+留空（如果 SakuraCat 没有认证）
+
+
+
+
+Password
+
+	
+
+留空（如果 SakuraCat 没有认证）
+
+先执行 Test Proxy Connection。
+
+必须确认连接成功，再配置规则。
+
+第四步：只添加 wow.exe 规则
+
+进入 Proxy Rules：
+
+规则配置示例
+
+仅匹配目标程序
+Applications
+
+wow.exe
+
+Target Hosts
+
+*
+
+所有目标地址
+Target Ports
+
+*
+
+Protocol
+
+Both（TCP + UDP）
+
+Action
+PROXY
+
+其他程序
+
+DIRECT（不匹配规则，原样直连）
+
+注意两个问题：
+
+wow.exe 的规则要精确匹配，不要写 *。
+
+如果启动器或游戏进程另外派生网络子进程，需要检查连接日志。不能假定只有 wow.exe 一个进程产生游戏流量。
+
+另一个重要细节：ProxyBridge 文档说明，如果代理没有正确配置，PROXY 规则可能回退为 DIRECT。因此一定要先配置代理并测试成功，不能把规则显示为 PROXY 就当成故障时绝不泄漏的保证。
+GitHub
+
+第五步：验证两个出口 IP
+
+这是最终验收，不是只看软件是否显示连接成功。
+
+出口 IP 验收标准
+
+wow.exe
+
+应走 VPN
+
+游戏实际建立网络连接时，外部服务观察到的出口 IP
+
+VPN_IP
+
+普通浏览器 / 其他程序
+
+应保持直连
+
+同一时间直接访问 IP 查询服务
+
+DIRECT_IP
+必须满足 VPN_IP ≠ DIRECT_IP，且两边各自符合预期。
+
+建议按下面顺序验证：
+
+A. 普通程序直连
+
+先关闭 ProxyBridge 的目标程序规则，或者使用一个不匹配规则的普通程序访问：
+
+powershell
+curl.exe https://api.ipify.org
+
+记录 DIRECT_IP。
+
+B. SOCKS5 代理出口
+
+powershell
+curl.exe --proxy socks5h://127.0.0.1:1080 https://api.ipify.org
+
+记录 VPN_IP。
+
+C. 游戏实际出口
+
+启动 ProxyBridge，确保规则已启用，再启动游戏。
+
+检查 ProxyBridge Connections 日志：
+
+Application 应为 wow.exe。
+
+Action 应为 PROXY。
+
+TCP/UDP 连接应能看到对应记录。
+
+游戏实际网络功能正常。
+
+然后检查游戏服务端观察到的 IP，或使用游戏内实际访问的、可控的公网测试服务验证出口。
+
+D. 再次检查其他程序
+
+不关闭 SakuraCat 和 ProxyBridge，重新执行：
+
+powershell
+curl.exe https://api.ipify.org
+
+应仍然得到 DIRECT_IP。
+
+E. 验证故障隔离
+
+临时停止 SakuraCat 的本地代理监听（不要退出客户端或重启客户端），测试：
+
+wow.exe 应当连接失败，而不是偷偷走直连。
+
+其他程序应继续正常直连。
+
+这个测试非常重要。它能检查是否发生代理故障后的直连回退。
+
+完成后恢复 SakuraCat 原有代理服务。
+
+第六步：额外检查 DNS 和 UDP
+
+游戏代理与浏览器代理有一个区别：即使 TCP 出口正确，也不代表 DNS、UDP 全部没有泄漏。
+
+建议：
+
+ProxyBridge 先设置 Both，而不是仅 TCP。
+
+检查游戏是否有 UDP 连接。
+
+检查 DNS 查询是否由游戏进程发出，还是由 Windows DNS Client（通常是 svchost.exe）代为发出。
+
+使用 DNS 泄漏检测网站进行辅助检查。
+
+如果 DNS 仍然直连，需要单独设计 DNS 转发策略，不能简单把 svchost.exe 全部代理，否则会影响其他程序。
+
+另外，游戏可能存在独立启动器、更新器和登录进程。需要根据连接日志决定是否增加规则，不能直接扩大匹配范围。
+
+第七步：回滚方案
+
+如果出现游戏无法连接、延迟异常或其他程序受到影响：
+
+先关闭 ProxyBridge 规则或停止过滤。
+
+检查其他程序是否恢复直连。
+
+退出 ProxyBridge。
+
+检查 SakuraCat 仍然保持原有状态。
+
+如果需要彻底卸载，再通过正常卸载流程清除 ProxyBridge 及其驱动。
+
+ProxyBridge 使用的是网络过滤驱动，不是 TUN，但它确实有内核级网络拦截能力。因此，建议先小范围测试，不要直接设置开机自动运行。
+
+最终裁定
+最小推荐方案
+
+SakuraCat + ProxyBridge
+
+保留 SakuraCat v1.4.3，保持 127.0.0.1:1080。
+
+不启用 TUN，不重启 SakuraCat，不修改 config.json。
+
+安装 ProxyBridge，只添加 wow.exe → SOCKS5 127.0.0.1:1080 规则。
+
+其他程序不匹配规则，保持 DIRECT。
+分别验证游戏出口、其他程序出口、UDP 和 DNS。
+
+我的最终判断：
+
+问题
+
+	
+
+裁定
+
+
+
+
+Q1 单进程原始 TCP 走 SOCKS5
+
+	
+
+可以，使用进程级网络拦截
+
+
+
+
+Q2 sing-box 增加 process_name
+
+	
+
+当前 mixed inbound 架构下不能解决
+
+
+
+
+Q3 免费开源工具
+
+	
+
+首选 ProxyBridge
+
+
+
+
+Q3 Proxifier
+
+	
+
+TCP 场景值得购买，游戏 UDP 场景不优先
+
+
+
+
+Q3 Python
+
+	
+
+可以开发转发组件，不建议从零自研拦截层
+
+
+
+
+Q4 出口验证
+
+	
+
+游戏 VPN IP，其他程序直连 IP
+
+还有一个需要特别确认的条件： 如果这个 wow.exe 是带反作弊机制的游戏客户端，我建议先验证 ProxyBridge 的驱动拦截是否与游戏兼容，再决定是否长期使用。不要直接尝试 DLL 注入。
+
+我建议先只做 ProxyBridge 的安装、SOCKS5 连通性测试和单进程规则测试，暂时不改任何现有 VPN 配置。

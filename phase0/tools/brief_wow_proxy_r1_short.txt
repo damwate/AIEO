@@ -1,0 +1,8 @@
+[VPN单进程代理裁定|wow.exe|只评审不改码]
+Windows，用户要让 D:\wow\twmoa_1181_cn\wow.exe 单独走VPN，其他程序直连；明确拒绝TUN(怕影响其他程序)，也拒绝重启VPN客户端。
+实测：SakuraCat v1.4.3(sing-box内核)，0.0.0.0:1080 mixed(SOCKS5+HTTP)可用；wow.exe原始TCP不走系统代理故未走VPN；tunEnabled=false；未装Proxifier/SocksCap/Clash/v2rayN；有Python3.12/winget/choco/管理员权限。
+Q1 不用TUN不动其他程序，让单个原始TCP进程走127.0.0.1:1080有哪些方案？按可靠性/侵入性/免费排序。
+Q2 直接改sing-box config.json加route规则(process_name匹配wow.exe)是否无效(流量没进1080入站)？会不会误伤其他程序？
+Q3 免费开源、无需TUN、按exe名分流到SOCKS5的Windows工具具体推荐哪个？Proxifier值得吗？有无Python方案？
+Q4 给最终落地步骤+验证法(证明wow出口IP变VPN而其他程序没变)。
+逐条[结论+理由]，末尾给最小推荐方案。

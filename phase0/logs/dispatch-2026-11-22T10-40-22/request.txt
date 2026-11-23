@@ -1,0 +1,6 @@
+[CTX-CODE-R7|targetUrl定点复验|b-20261122-session-ctx-mgmt]
+你R6/合并复核的P0已修：github.com/damwate/AIEO 分支fix/session-ctx-mgmt @ aed42794bf48ce5528c5df5231d17c41d911dc48。
+①targetUrl外层作用域声明let并null初始化(mainLocked外层,紧邻targetSessionId)；else分支解析后赋值(解构改名parsedTargetUrl中转)；新会话分支不再引用该变量。
+②门控跳过收进可测函数：assessBudgetGate对uuid=null返回{state:NORMAL,skipped:true}且不触碰账本(新增测试断言assess未调用)；gpt_dispatch门控统一走assessBudgetGate。
+③生产账本实战证据：今日派单已由新钩子记账——ledger实况=6b02a805…会话5轮/in4540B/out1802B/合计6342B/gen6(open_turn=220为pin消息的in,其out经recoll采集故该轮保持开启,如实登记)。
+测试：hooks 9/9(+新会话阶段测试)+核心23/23全绿。请给[编码验收PASS]或[FAIL+逐条]。

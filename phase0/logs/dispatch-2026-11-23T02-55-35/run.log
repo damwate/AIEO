@@ -1,0 +1,11 @@
+[2026-11-23T02:55:35.264Z] 证据目录: D:\AIEO\phase0\logs\dispatch-2026-11-23T02-55-35
+[2026-11-23T02:55:35.842Z] 会话锁已获取 pid=18704 instance=default lock=gpt-session.lockfile
+[2026-11-23T02:55:35.844Z] === GPT 派单（已有会话，消息 1026 字节）===
+[2026-11-23T02:55:35.846Z] [instance] 实例域就绪: instance=default port=9222 profile=gpt-poc lock=gpt-session.lockfile
+[2026-11-23T02:55:36.983Z] [instance] 清理本实例 Chrome：own=0 foreign(不动)=10 remaining=0
+[2026-11-23T02:55:39.599Z] Chrome 已启动 pid=8916 port=9222
+[2026-11-23T02:55:45.695Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 0 个
+[2026-11-23T02:55:45.696Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-23T02:56:26.445Z] 会话就绪: https://chatgpt.com/c/6b02a805-88f0-83ec-8fa3-ff4f30e21f65
+[2026-11-23T02:56:26.559Z] 会话锁已释放
+[2026-11-23T02:56:26.560Z] 致命错误: SESSION_TARGET_MISMATCH: 页面与派单目标不符，发送前停止

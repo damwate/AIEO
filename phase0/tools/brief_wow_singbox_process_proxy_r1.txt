@@ -1,0 +1,19 @@
+[VPN|单进程代理分流|wow.exe|SakuraCat]
+
+背景：用户机器 Windows，想让 D:\wow\twmoa_1181_cn\wow.exe 这一个程序走 VPN，其他程序保持直连，明确拒绝 TUN 模式（怕影响其他程序）。
+
+已确认环境事实（本机实测，勿臆测）：
+1. VPN 客户端 = SakuraCat VPN v1.4.3，基于 sing-box 内核（安装目录下 singbox.dll，配置在 C:\Users\youting\AppData\Roaming\sakuracat\sakuracat\config.json）。
+2. 客户端在 0.0.0.0:1080 开 mixed 入站（SOCKS5+HTTP），当前大量 ESTABLISHED 连接 PID 11136，代理本身工作正常。
+3. 系统代理模式：sakuracat.ini 的 [SystemProxy] 显示 http/https/socks 都指向 127.0.0.1:1080，只影响读取系统代理的程序；wow.exe 是原始 TCP 直连，不走系统代理，所以没经过 VPN。
+4. tunEnabled=false，用户明确不要开 TUN。机器上有 TAP-Windows Adapter V9 但处于 Not Present。
+5. 机器上没装 Proxifier/SocksCap/ProxyCap/Clash/v2rayN 等任何进程级代理工具。有 Python 3.12、winget、chocolatey，有管理员权限可用。
+6. 用户拒绝我用 taskkill 强制结束进程，所以任何需要重启 SakuraCat 的方案要由用户手动完成。
+
+请裁定（只给方案，不要代码，诚实标注不确定性）：
+Q1. 在「不用 TUN、不动其他程序」的硬约束下，让单个原始 TCP 游戏进程走 127.0.0.1:1080 的方案有哪些？按可靠性/侵入性/是否免费排序，逐个给结论。
+Q2. 能否直接改 SakuraCat 的 config.json 加 route.rules（如 process_path_regex / process_name 匹配 wow.exe 走 proxy）达到目的？注意流量根本没进入 1080 入站，分析这样改是否无效，以及 final=proxy 下会不会误伤其他程序。
+Q3. 如果必须用第三方进程代理工具：在 Windows 上免费、开源、无需 TUN、可按 exe 名分流到 SOCKS5 的，具体推荐哪个（给官网/仓库名）？Proxifier 是否值得（付费/试用）？有没有 Python 开源方案（如 proxifier 替代）可 keylog-free 地实现？
+Q4. 推荐一套最终落地步骤（工具选择 + 关键配置点 + 验证方法），验证要能证明 wow.exe 的出口 IP 已变成 VPN 节点而其他程序未变。
+
+请按 Q1-Q4 逐条给 [结论 + 理由]，最后给「最小推荐方案」一段。
