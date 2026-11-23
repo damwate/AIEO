@@ -1,0 +1,21 @@
+{
+  "target": "https://chatgpt.com/c/6b02a805-88f0-83ec-8fa3-ff4f30e21f65",
+  "httpStatus": 200,
+  "redirects": [
+    "https://chatgpt.com/c/6b02a805-88f0-83ec-8fa3-ff4f30e21f65",
+    "https://chatgpt.com/c/6b02a805-88f0-83ec-8fa3-ff4f30e21f65",
+    "https://chatgpt.com/"
+  ],
+  "snap": {
+    "url": "https://chatgpt.com/",
+    "title": "ChatGPT",
+    "unitCount": 0,
+    "sidebarCount": 3,
+    "userMenuButtons": 0,
+    "loginSignalHits": [],
+    "sessionSignalHits": [
+      "chatgpt"
+    ],
+    "bodyHead": "跳转到内容\nChatGPT\n新聊天\n图像\n定时任务\n资料库\n插件\n健康\n探索\n项目\n项目开发\n公司业务框架整理\n最近\nWindows单进程代理评审\nming\n免费版\n获取优惠\n免费优惠\n随时可以开始。\n\n\n\n\n思考"
+  }
+}

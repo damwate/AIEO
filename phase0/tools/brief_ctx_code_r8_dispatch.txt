@@ -1,0 +1,7 @@
+CTX-CODE-R8 定点复验（最终轮）
+仓库 damwate/AIEO 分支 fix/session-ctx-mgmt 完整SHA：353e190b230abb1080964f68577c5a1cf00a080a
+复验R7三项整改，逐项给PASS/FAIL：
+1. gpt_dispatch.mjs：requireSessionBudget()已无条件前置（新会话路径发送前即确认核心可用，不再发送后暴露）；门控统一单次assessBudgetGate(budgetUuid,{sessionBudget,allowNearLimit})，budgetUuid=targetSessionId??extractSessionId(targetUrl)，null由hooks skipped语义跳过。
+2. 测试：node --test phase0/tools/test_ctx_budget_hooks.mjs 9/9通过（含新会话uuid=null不触碰账本断言）；node --test monitor/test-session-budget.mjs 23/23通过（agent-kit仓库）。
+3. 账本快照证据已入commit：basic/tasks/b-20261122-session-ctx-mgmt/evidence/ledger-snapshot.json+session-usage.db（生产账本6b02a805会话6轮/in 5466B/out 1802B/total 7268B，budget_version=1）。
+裁定格式：[PASS+逐条]或[FAIL+逐条]。PASS则本任务编码验收闭环，仅余用户拍板合并。
