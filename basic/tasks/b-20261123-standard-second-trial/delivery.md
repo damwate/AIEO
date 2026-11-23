@@ -79,7 +79,7 @@
 
 ## 九、Git commit
 
-本批文档 commit 以实际提交为准（报告成文时未预写自引用 SHA，遵守 L-0.3.8）。push 一律走 `node toolkit/check-push.mjs --push --yes`（L-014 第 6 条），不手工猜端口。
+本批文档 commit=`f160f88409a74bd9c4cc8ae2a7d8c7349ee437f1`（报告成文后回填，遵守 L-0.3.8 不预写自引用 SHA）。push 走 `node toolkit/check-push.mjs --push --yes`（L-014 第 6 条）：直连 FAIL（Connection reset）→注册表代理 1080 OK，复核 ahead=0 behind=0。
 
 ## 十、原始需求
 
