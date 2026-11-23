@@ -19,3 +19,19 @@
 ## Playwright 队列隔离验证
 
 被测提交 `9fb05495282034478f980a32ae7903d6200b3d86`。Python 3.12.3 队列测试 7/7（模拟派单），Node 24.14.0 派单参数回归 16/16（含真实 CLI 的发送前参数拒绝）。待在获批的受管浏览器实例上验证两个任务交错派单、会话归属和真实网页补采。现行第二轮验证的工作区和版本沿用原设置。
+
+## 独立 Chrome 环境复跑
+
+被测代码 `b7adfe020371e008ff4387e06c6279cbc2475903`，测试开始前为干净的独立检出。环境为 Linux、Python 3.12.3、Node 24.14.0、Google Chrome 156.0.8078.47，按锁文件安装 Playwright 依赖。下列命令均退出 0，实际运行于 2026-11-23。
+
+| 命令 | 通过 |
+|---|---|
+| `python -I -m unittest discover -s basic/tool -p test_check_taskpack.py` | 37/37 |
+| `python -m unittest discover -s phase0/tools -p test_playwright_queue.py` | 11/11 |
+| `node phase0/tools/test_dispatch_options.mjs` | 16/16 |
+| `node phase0/tools/test_browser_virtual_list.mjs` | Chrome 本地采集 6/6 |
+| `python phase0/tools/test_browser_queue_e2e.py runtime/browser-queue-check` | 有界面 Chrome 与 SQLite 队列联调 5/5 |
+
+五个联调场景覆盖本地暂停时浏览器调用为零、暂停 A 后 B 使用独立会话、队列重启后 A 续轮返回原会话、错页时发送意图与按键均为零，以及已发送但结果缺失时重启后禁止重发和派下一单。
+
+Chrome 由 Playwright 加载本地仿真页面，队列使用独立账本。真实 ChatGPT 网页、账号登录、Windows 生产入口和真实网页补采仍待验收。 [依赖与复跑说明](../../standard/PLAYWRIGHT-QUEUE-WORKFLOW.md#复跑真实-chrome-本地场景)
