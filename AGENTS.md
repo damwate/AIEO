@@ -31,3 +31,7 @@
 - 每任务开工：读交接包/上一任务 delivery 的「后续建议」+ AI-DEV-LESSONS.md 相关条目（开工指令点名的条目逐字读完）；
 - push 一律走 `toolkit/check-push.mjs`；派单流程照 `chatgpt-web-dispatch` skill（含手册 EGO-LITE-HANDBOOK.md）；
 - 仓库当前审查会话 UUID 在 `phase0/logs/gpt-reviewer-session.json`。
+
+## 标准版 ZCode 任务池
+
+标准版任务由主 ZCode 会话按 [PLAYWRIGHT-QUEUE-WORKFLOW.md](standard/PLAYWRIGHT-QUEUE-WORKFLOW.md) 管理。启用队列的任务统一通过同一服务工作区提交和查询 ChatGPT 派单。后台 worker 独占专属浏览器实例，子 Agent 不直接调用网页派单工具。
