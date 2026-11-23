@@ -7,6 +7,21 @@
 - 并行名额以获批阶段为准，目标上限为 3。开发任务各用独立编辑器会话、ChatGPT 用途会话、worktree 和分支。提交 ChatGPT、等回复、排空交接时仍持有名额。模型 PASS 与既有验收证据落盘后结项并回收子 Agent；REWORK 回到原任务。
 - 加急让位先停开新步骤，确认子 Agent 停写，保存检查点并核清在途派单，再交接名额。仅因加急暂停且已安全交接的任务按队列顺序恢复。人工暂停、故障和未决发送继续走原恢复条件。主会话汇报当前占额、下一任务和各等待原因。
 
+## 暂停大功能并切换到独立任务
+
+主会话把独立小任务视为新任务。用户要求暂停大功能时，按以下顺序处理。
+
+1. 停止给选定子任务安排新步骤。已使用审查队列时，先从统一服务工作区暂停全部相关子任务的派单领取，并查看命令返回的未结轮次。暂停命令和查询都只读写本地账本，整个存档阶段不使用 Playwright。
+2. 等各子 Agent 到安全点并确认停写。本地档案留在原任务包，记录每个子任务的分支、worktree、完整 HEAD SHA、未提交改动、未跟踪文件及保留位置、进度、待验收项、派单序号和下一步。保留原工作区和现场。主会话确认临时暂停与恢复条件后更新任务池。
+3. 队列只暂挂尚未领取的轮次，暂停期间拒绝同任务的新轮次；其他任务仍按可领取的 FIFO 顺序运行。已领取的轮次保留原状态并继续由原 worker 收口。若结果不明，按 L-018 核对原轮，共享通道继续等待该轮收口。先开始独立小任务的本地工作须符合当前可用名额。原任务在停写、归档和原轮收口后释放名额。
+4. 新会话按独立任务书和自己的基线开工。小任务若修改大功能同一个仓库，使用独立 worktree 和分支，记录后续是否需要把已验收的修复纳入大功能。
+5. 用户要求继续大功能时，确认容量并复核主会话的暂停记录、当前工作区和原派单状态，再恢复原任务。队列恢复后，未发送轮次按原序号重新参与 FIFO，沿用原任务、用途及会话绑定。
+
+```sh
+python3 phase0/tools/playwright_queue.py pause --task b-20261123-feature-t1 --task b-20261123-feature-t2
+python3 phase0/tools/playwright_queue.py resume --task b-20261123-feature-t1 --task b-20261123-feature-t2
+```
+
 ## 主会话汇报与疑难升级
 
 - 多任务运行时，主会话维护占额、队列变更、任务状态和待决事项。子 Agent 在独立会话处理开发、调试和常规整改，长日志、完整回复和试错过程归档到原任务包。
@@ -18,7 +33,7 @@
 
 ## ChatGPT 唯一派单入口
 
-主 IDE Agent 统一指定一个服务工作区。主会话运行 worker；编辑器及各子 Agent 都通过**这个工作区的同一个脚本**提交和查询。任务进程不得直接开、切换、关闭浏览器或调用派单 CLI。Worker 用专属 `standard-queue` 浏览器实例和 profile，经授权准备该 profile 的 ChatGPT 登录与既有 `AGENT_KIT_DIR` 预算模块后启动。常规派单不读写全局 reviewer 指针。
+主 IDE Agent 统一指定一个服务工作区。主会话运行 worker；编辑器及各子 Agent 都通过**这个工作区的同一个脚本**提交和查询。任务进程不得直接开、切换、关闭浏览器或调用派单 CLI。Worker 用专属 `standard-queue` 浏览器实例和 profile，经授权准备该 profile 的 ChatGPT 登录与既有 `AGENT_KIT_DIR` 预算模块后启动。常规派单不读写全局 reviewer 指针。升级到支持暂停的 worker 时，先让旧 worker 收口当前轮，再由新版本继续消费同一个账本。
 
 ```sh
 python3 phase0/tools/playwright_queue.py worker
@@ -29,8 +44,8 @@ python3 phase0/tools/playwright_queue.py status 1
 
 - 使用已登记的 `b-YYYYMMDD-...` 任务 ID 提交时，服务先检查任务书的开工核对。修复缺口后沿用同一轮次键重试。 [开工核对](../basic/tool/README.md#开工核对)
 - `lane` 支持 `planning`、`architecture`、`code-review`、`test-acceptance`。同一任务和用途的首轮新建会话，后续轮绑定同一 UUID；跨任务或用途的已有 UUID 复用一律拒绝。主动迁移用新的轮次和经过确认的迁移简报，加 `--new-session`，旧 UUID 归属保留。按 L-018 在累计 4 条 user 消息时评估迁移。
-- `task + lane + round` 是唯一提交键。客户端重试沿用原键和简报，服务自动加入轮次标记并校验合计 1200 UTF-8 字节。派单 FIFO 按数据库入队顺序，开发加急对派单 FIFO 无影响。成功结果返回 UUID、user unit 键、回复 SHA256 和本地证据路径。
+- `task + lane + round` 是唯一提交键。客户端重试沿用原键和简报，服务自动加入轮次标记并校验合计 1200 UTF-8 字节。派单 FIFO 按可领取轮次的数据库入队顺序，开发加急沿用这一顺序。成功结果返回 UUID、user unit 键、回复 SHA256 和本地证据路径。
 - `NOT_SENT` 表示子进程退出且原发送回执证明未触发发送。修复原因后由主会话决定是否以新轮次提交。无回执或发送/采集未决则挂起通道，待原轮核对。重启不会重取 `RUNNING` 或 `BLOCKED` 轮次。
 - 派单已完整落盘但 worker 没有记录完成时，使用 `reconcile <队列序号>`。如需补采，按 L-018 检查原会话、原 user unit 及现场目录，由控制方在独占浏览器时完成只读补采，再用 `reconcile <队列序号> --recoll <归档目录>` 导入。归档必须包含 `recoll-result.json`、`units-diag.json` 和 `reply.txt`。服务重验原发送回执、唯一轮次标记、最后 user、上轮 SHA 排除及采集检查。无法确认归属或原发送结果的轮次继续挂起。补采与导入均禁止重发。
 
-隔离验收命令为 `python3 -m unittest discover -s phase0/tools -p test_playwright_queue.py`。使用模拟派单验证不同任务与用途不串号、同用途续轮、并发认领、崩溃后原轮补采和显式迁移。受管浏览器、真实网页和现行阶段门禁按批准范围单独验收。
+隔离验收命令为 `python3 -m unittest discover -s phase0/tools -p test_playwright_queue.py`。使用模拟派单验证不同任务与用途不串号、同用途续轮、并发认领、崩溃后原轮补采、显式迁移和暂停恢复。受管浏览器、真实网页和现行阶段门禁按批准范围单独验收。

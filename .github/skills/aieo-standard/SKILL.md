@@ -1,6 +1,6 @@
 ---
 name: aieo-standard
-description: 按 AIEO Standard 中级版执行已定档的多任务管理、批准方案批量入池、并行开发、加急交接和 ChatGPT FIFO 派单。也适用于 Standard 平台及治理工作。
+description: 按 AIEO Standard 中级版执行已定档的多任务管理、大功能分解与并行开发、独立小任务、暂停切换、加急交接和 ChatGPT FIFO 派单。也适用于 Standard 平台及治理工作。
 ---
 
 # AIEO Standard 多任务工作流
@@ -17,6 +17,14 @@ description: 按 AIEO Standard 中级版执行已定档的多任务管理、批�
 多任务时让主会话只收状态变化、交付结论和待决事项。子 Agent 按任务包保存排查细节。疑难升级须带已排除事项、证据、影响、下一动作及恢复条件。持续阻塞留在状态汇总里，有进展、需拍板或到约定检查点时再汇报。 [主会话汇报与疑难升级](../../../standard/PLAYWRIGHT-QUEUE-WORKFLOW.md#主会话汇报与疑难升级)
 
 开工时把已读技能路径、实际命中的经验编号和防错动作写进任务书。运行 `python -I basic/tool/check_taskpack.py basic/tasks/<任务ID> --startup` 核对。 [开工核对](../../../basic/tool/README.md#开工核对)
+
+## 暂停大功能，切换到独立小任务
+
+Standard 支持大功能拆分并行和多个无关的小任务。用户要求切换时，为原任务留可恢复的本地检查点，为小任务开独立会话并重新做开工核对。
+
+1. 主会话确认要暂停的大功能和子任务 ID，停止给它们分配新步骤。若已接入队列，在服务工作区执行 `python3 phase0/tools/playwright_queue.py pause --task <子任务ID>`。多个子任务在同一次调用重复传 `--task`。该命令只操作本地账本。暂停整理全程保留旧会话，禁止新派单和启动 Playwright。
+2. 确认相关子 Agent 停写。在原任务包保存分支、worktree、完整 HEAD SHA、未提交改动和未跟踪文件的保留位置、已完成和待验收步骤、原派单序号及恢复后的第一步。已发或未决轮次保留原状态。
+3. 本地工作停稳、档案落盘且原轮收口后，释放相应名额。未发送的待审轮次留在原队列位置并暂停领取。新会话只读小任务自己的材料，用独立工作区和任务 ID。用户要继续大功能时，先对账检查点、名额和原轮，再恢复该批任务。 [暂停切换细则](../../../standard/PLAYWRIGHT-QUEUE-WORKFLOW.md#暂停大功能并切换到独立任务)
 
 ## 常用开发经验
 

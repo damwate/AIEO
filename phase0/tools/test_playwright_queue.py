@@ -148,6 +148,46 @@ class QueueTest(unittest.TestCase):
         self.assertNotIn("--new-session", argv)
         self.assertEqual(json.loads((folder / "session.json").read_text())["session_id"], A)
 
+    def test_pause_skips_existing_rounds_and_resumes_in_original_order(self):
+        first = self.submit("feature-t1")
+        second = self.submit("feature-t2")
+        bug = self.submit("bug")
+        paused = self.queue.set_paused(["feature-t1", "feature-t2"], paused=True)
+        self.assertEqual([first["seq"], second["seq"]], [job["seq"] for job in paused["pending"]])
+        self.assertTrue(all(job["paused"] for job in paused["pending"]))
+        recovered = Queue(self.queue.directory)
+        self.assertTrue(recovered.get(first["seq"])["paused"])
+        self.assertTrue(self.submit("feature-t1")["paused"])
+        with self.assertRaisesRegex(QueueError, "paused"):
+            self.submit("feature-t1", round_id="r2")
+        self.assertEqual(run_once(recovered, self.fake_adapter(A), self.logs)["seq"], bug["seq"])
+        recovered.set_paused(["feature-t1", "feature-t2"], paused=False)
+        self.assertFalse(recovered.get(first["seq"])["paused"])
+        self.assertEqual(run_once(recovered, self.fake_adapter(B), self.logs)["seq"], first["seq"])
+        self.assertEqual(recovered.claim()["seq"], second["seq"])
+
+    def test_pause_leaves_running_round_and_uncertain_gate_in_place(self):
+        feature = self.submit("feature")
+        bug = self.submit("bug")
+        self.assertEqual(self.queue.claim()["seq"], feature["seq"])
+        self.queue.set_paused(["feature"], paused=True)
+        self.assertEqual(self.queue.get(feature["seq"])["state"], "RUNNING")
+        self.assertIsNone(self.queue.claim())
+        self.queue.finish(feature["seq"], "BLOCKED", {"reason": "unconfirmed"})
+        self.assertTrue(self.queue.get(feature["seq"])["paused"])
+        self.assertIsNone(self.queue.claim())
+        self.queue.finish(feature["seq"], "COMPLETED", {
+            "session_id": A, "conversation_url": f"https://chatgpt.com/c/{A}",
+        })
+        self.assertEqual(self.queue.claim()["seq"], bug["seq"])
+
+    def test_bad_task_id_does_not_partially_pause_a_batch(self):
+        feature = self.submit("feature")
+        with self.assertRaises(QueueError):
+            self.queue.set_paused(["feature", "../bad"], paused=True)
+        self.assertFalse(self.queue.get(feature["seq"])["paused"])
+        self.assertEqual(self.queue.claim()["seq"], feature["seq"])
+
     def test_only_confirmed_pre_send_failure_can_release_channel(self):
         first = self.submit()
         second = self.submit("b")

@@ -37,6 +37,9 @@ CREATE TABLE IF NOT EXISTS jobs (
     evidence TEXT,
     UNIQUE(task,lane,round)
 );
+CREATE TABLE IF NOT EXISTS paused_tasks (
+    task TEXT PRIMARY KEY
+);
 CREATE TABLE IF NOT EXISTS sessions (
     session_id TEXT PRIMARY KEY,
     task TEXT NOT NULL,
@@ -46,6 +49,14 @@ CREATE TABLE IF NOT EXISTS sessions (
 );
 CREATE INDEX IF NOT EXISTS sessions_owner ON sessions(task,lane,opened_by_seq DESC);
 CREATE UNIQUE INDEX IF NOT EXISTS single_inflight ON jobs ((1)) WHERE state IN ('RUNNING','BLOCKED');
+"""
+
+
+JOB_STATUS = """
+    SELECT jobs.*, EXISTS (
+        SELECT 1 FROM paused_tasks WHERE paused_tasks.task=jobs.task
+    ) AS paused
+    FROM jobs
 """
 
 
@@ -89,21 +100,41 @@ class Queue:
             raise QueueError("brief plus automatic round marker exceeds 1200 UTF-8 bytes")
         values = (task, lane, round_id, brief, int(new_session))
         with self.transaction() as conn:
-            current = conn.execute("SELECT * FROM jobs WHERE task=? AND lane=? AND round=?", values[:3]).fetchone()
+            current = conn.execute(JOB_STATUS + " WHERE task=? AND lane=? AND round=?", values[:3]).fetchone()
             if current:
                 if (current["brief"], current["new_session"]) != values[3:]:
                     raise QueueError("round already belongs to a different brief or rotation decision")
                 return visible(current)
+            if conn.execute("SELECT 1 FROM paused_tasks WHERE task=?", (task,)).fetchone():
+                raise QueueError(f"task is paused: {task}")
             seq = conn.execute(
                 "INSERT INTO jobs(task,lane,round,brief,new_session) VALUES (?,?,?,?,?)", values
             ).lastrowid
             return {"seq": seq, "task": task, "lane": lane, "round": round_id, "state": "QUEUED"}
 
+    def set_paused(self, tasks, *, paused):
+        tasks = tuple(dict.fromkeys(tasks))
+        if not tasks or any(not KEY.fullmatch(task) for task in tasks):
+            raise QueueError("invalid task ID for pause or resume")
+        with self.transaction() as conn:
+            statement = ("INSERT OR IGNORE INTO paused_tasks(task) VALUES (?)" if paused
+                         else "DELETE FROM paused_tasks WHERE task=?")
+            conn.executemany(statement, ((task,) for task in tasks))
+            parameters = ", ".join("?" for _ in tasks)
+            pending = [visible(row) for row in conn.execute(JOB_STATUS + f"""
+                WHERE task IN ({parameters}) AND state IN ('QUEUED','RUNNING','BLOCKED') ORDER BY seq
+            """, tasks)]
+            return {"tasks": list(tasks), "paused": paused, "pending": pending}
+
     def claim(self):
         with self.transaction() as conn:
             if conn.execute("SELECT 1 FROM jobs WHERE state IN ('RUNNING','BLOCKED')").fetchone():
                 return None
-            job = conn.execute("SELECT * FROM jobs WHERE state='QUEUED' ORDER BY seq LIMIT 1").fetchone()
+            job = conn.execute("""
+                SELECT * FROM jobs WHERE state='QUEUED' AND NOT EXISTS (
+                    SELECT 1 FROM paused_tasks WHERE paused_tasks.task=jobs.task
+                ) ORDER BY seq LIMIT 1
+            """).fetchone()
             if job is None:
                 return None
             binding = None
@@ -119,15 +150,15 @@ class Queue:
 
     def get(self, seq):
         with self.connect() as conn:
-            row = conn.execute("SELECT * FROM jobs WHERE seq=?", (seq,)).fetchone()
+            row = conn.execute(JOB_STATUS + " WHERE seq=?", (seq,)).fetchone()
             if row is None:
                 raise QueueError("unknown queue sequence")
             return dict(row)
 
     def pending(self):
         with self.connect() as conn:
-            return [visible(row) for row in conn.execute("""
-                SELECT * FROM jobs WHERE state IN ('QUEUED','RUNNING','BLOCKED') ORDER BY seq
+            return [visible(row) for row in conn.execute(JOB_STATUS + """
+                WHERE state IN ('QUEUED','RUNNING','BLOCKED') ORDER BY seq
             """)]
 
     def previous_reply_digest(self, session_id, seq):
@@ -143,7 +174,7 @@ class Queue:
 
     def finish(self, seq, state, evidence):
         with self.transaction() as conn:
-            job = conn.execute("SELECT * FROM jobs WHERE seq=?", (seq,)).fetchone()
+            job = conn.execute(JOB_STATUS + " WHERE seq=?", (seq,)).fetchone()
             if job["state"] not in ("RUNNING", "BLOCKED"):
                 return visible(job)
             if state == "COMPLETED":
@@ -159,7 +190,7 @@ class Queue:
                                  (session, job["task"], job["lane"], evidence["conversation_url"], seq))
             conn.execute("UPDATE jobs SET state=?,evidence=? WHERE seq=?",
                          (state, json.dumps(evidence, ensure_ascii=False), seq))
-            return visible(conn.execute("SELECT * FROM jobs WHERE seq=?", (seq,)).fetchone())
+            return visible(conn.execute(JOB_STATUS + " WHERE seq=?", (seq,)).fetchone())
 
 
 def round_marker(task, lane, round_id):
@@ -170,6 +201,7 @@ def round_marker(task, lane, round_id):
 def visible(row):
     result = {key: row[key] for key in ("seq", "task", "lane", "round", "state", "target_session")}
     result["evidence"] = json.loads(row["evidence"]) if row["evidence"] else None
+    result["paused"] = bool(row["paused"])
     return result
 
 
@@ -319,6 +351,10 @@ def main():
     submit.add_argument("--round", required=True)
     submit.add_argument("--brief", type=Path, required=True)
     submit.add_argument("--new-session", action="store_true", help="Rotate this task lane with explicit authorization")
+    pause = commands.add_parser("pause", help="Hold queued rounds and reject new rounds without opening the browser")
+    pause.add_argument("--task", action="append", required=True)
+    resume = commands.add_parser("resume", help="Make the tasks eligible for FIFO dispatch again")
+    resume.add_argument("--task", action="append", required=True)
     status = commands.add_parser("status")
     status.add_argument("seq", type=int, nargs="?")
     worker = commands.add_parser("worker")
@@ -333,6 +369,8 @@ def main():
             check_registered_task_startup(args.task)
             result = queue.submit(args.task, args.lane, args.round, args.brief.read_bytes().decode("utf-8"),
                                   new_session=args.new_session)
+        elif args.command in ("pause", "resume"):
+            result = queue.set_paused(args.task, paused=args.command == "pause")
         elif args.command == "status":
             result = visible(queue.get(args.seq)) if args.seq is not None else queue.pending()
         elif args.command == "reconcile":
