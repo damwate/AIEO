@@ -533,6 +533,11 @@
 
 **证据：** `phase0/logs/diag_r4_*/`（三步诊断现场）；`phase0/logs/recoll-2026-11-15T01-58-08-575Z/`（误导向现场，如实归档）；`phase0/logs/dispatch-2026-11-15T01-38-05/`（CONTEXT_LIMIT_STOP 现场）；`phase0/tools/phasec-workflow-stats-ev1-migrate.txt`（迁移简报 1171B）。
 
+**2026-11-23 增补（CTX-CODE-R8 三次派单实证，同族新变体）：**
+- **(a) "目标会话重定向到根路径"≠上下文上限，判别三件套：** HTTP 200 + 已登录（侧边栏/历史会话/用户名可见）+ 目标 URL 加载后稳定重定向至 `/` + unitCount=0 + 无上限横幅关键词 + composer 可编辑 → 判**会话不可达**，不是上限；此时 `--new-session` 迁移仍是对策，但**迁移原因不可写成"上下文已满"**（本次 6b02a805 账本仅 6 轮/7268B）。诊断证据 `phase0/logs/diag-r8-target-20261123/diag.json`，迁移现场 `gpt-reviewer-session.pre-migration-20261123.json`。
+- **(b) 续派（已有会话）同样触发 fallback 键漂移，且新变体是"发送确认但 DOM 未物化新 unit"：** send-state=SEND_CONFIRMED + 记账已发生，但多时点观察 unitCount 恒定（仅旧轮次）、标记文本 0 命中——不是"消息未送达"，而是新 unit 未物化。**先 reload 再补采**（L-018 第 2 条三步诊断的重载对照步）：reload 后 4 unit 全部物化，本轮标记可见，归属校验补采七查全过；全程禁重发。证据 `phase0/logs/diag-r8-recheck2-state/samples.json`（reload 前 2 unit 恒定）+ `diag-r8-recheck2-reload/after-reload.json`（reload 后 4 unit）+ `recoll-ctx-code-r8-recheck2/`（补采成功）。
+- **(c) 审查方的"证据不足 FAIL"与"代码缺陷 FAIL"分开处置：** R8 首轮 2PASS/1FAIL 的第 2 项仅为 agent-kit 测试执行日志未在 AIEO 仓可核验（非测试失败）；正确收尾=真实重跑测试+双仓完整 SHA 绑定+逐文件 SHA-256 落盘（不伪造历史日志、不改已 PASS 源码），只重裁定该项。证据 `basic/tasks/b-20261122-session-ctx-mgmt/evidence/r8-test-execution-evidence.md`。
+
 ### L-019 止损执行序＝停止→三方会商→交用户：止损是升级阶梯的起点不是终点；多 AI 协作降档会商模式有效
 
 **scope:** GLOBAL（多 AI 协作项目（执行者+ChatGPT 独立验收）的止损与降档处置；用户 2026-11-15 指令冻结为四级阶梯）  
@@ -1445,3 +1450,40 @@ AI 执行者：
 4. **补采驱动派生三参数核对必须含 CONV_UUID 的"当前值核对"：** 审查会话会漂移（本日 6af99227→6af9a767→6af9b028 三次），派生驱动若继承母本 CONV_UUID 即定位 0 命中（两度发生，均凭 units-diag.json 当场发现）；派生前先读 gpt-reviewer-session.json 当前值+派单日志会话就绪 URL 交叉核对。
 
 **证据：** basic/tasks/b-20261115-standard-kickoff/（steps.md 返工表问题1/7/8/9、acceptance/ 驱动与证据）；dispatch/recoll-2026-11-15T1*（10 次 fail-closed 现场）；DEC-053~057。
+
+### DEV-20261123-001 CTX-CODE-R8 编码验收闭环（3/3 PASS）+ 会话迁移 + 证据不足型 FAIL 收尾
+
+- **Task ID / 模块：** b-20261122-session-ctx-mgmt / S4 独立验收（会话上下文预算令牌管理）
+- **时间与时区：** 2026-11-23 03:09–03:23（UTC）
+- **状态：** PASS（编码验收闭环）；合并 main 待用户拍板（DEC-010）
+- **分支与基线：** fix/session-ctx-mgmt / 被测锚点 353e190b230abb1080964f68577c5a1cf00a080a；补证提交 4fe07fa3407ec22f561976ad2e879d09e0d3fdef
+- **工作区状态：** 证据与登记文件均已提交；无源码改动（被测代码锚点不变）
+
+#### 1. 本次完成内容
+接 zcode 交接派发 CTX-CODE-R8 定点复验。诊断确认旧审查会话 6b02a805 因重定向至根路径不可达（非上下文上限，实测 HTTP200+已登录+无横幅+账本 7268B），`--new-session` 迁移至 6b03aea8 并更新 reviewer 指针（旧指针留档）。R8 首派被测 SHA 353e190（用户指定指向最新 HEAD，diff 确认仅日志/brief 新增、零代码变更），2PASS/1FAIL（第 2 项"测试证据不足"非代码缺陷）。按审查方最小收尾动作补证并 recheck2 续派，最终 3/3 PASS 闭环。
+
+#### 2. 测试及验收结果
+- 独立审查：R8 首轮 `recoll-ctx-code-r8/reply.txt`（SHA 10b759fc…，2PASS/1FAIL）+ recheck2 `recoll-ctx-code-r8-recheck2/reply.txt`（SHA 55cd8a65…，3/3 PASS）；被测代码锚点 353e190，补证 commit 4fe07fa。
+- 本轮真实重跑：agent-kit core 23/23 exit0（@6d9aad05，`evidence/test-session-budget-r8-run.log`）；AIEO hooks 9/9 exit0（@353e190，`evidence/test_ctx_budget_hooks-r8-run.log`）。逐文件 SHA-256 绑定见 `evidence/r8-test-execution-evidence.md`。
+- 补采质量：两次均七查全过（含 not_prev_reply_sha），零重发。
+- 测试层级：unit + 双进程真实并发；`real_chatgpt` 派单/采集为真实浏览器 CDP 接管路径。
+
+#### 3. 遇到的问题
+①旧会话 6b02a805 目标重定向至 `/`，首派 SESSION_TARGET_MISMATCH（NOT_SENT 零发送）。②首派/recheck2 两次 `INBOUND_START_UNIT_MISSING`（fallback 键漂移）；recheck2 更特殊——发送已确认且已记账但 DOM 未物化新 unit，多时点 unitCount 恒定、标记 0 命中。③审查方第 2 项以"证据不足"判 FAIL（agent-kit 测试日志不可独立核验），非测试失败。
+
+#### 4. 根因与尝试过的方案
+①=会话页不可达（非上限）：relaunch_chrome 拉起受管 CDP→check_conv_units --diagnose→独立 diag 交叉验证→`--new-session` 迁移。②=fallback 键在 reload/虚拟化后失效：禁用固定键，改简报标记文本唯一+最后 user 断言+前轮 SHA 排除的归属校验型补采；recheck2 的 DOM 未物化经**先 reload 再补采**解决（三步诊断的重载对照步），全程禁重发。③=证据链断裂而非代码缺陷：真实重跑两仓测试+双仓 SHA 绑定+逐文件 SHA-256 落盘，补证 commit 可核验。无同类问题第三次失败，未触发止损。
+
+#### 5. 是否触发返工止损机制
+否。三个问题均为流程/证据链问题，非源码返工；R8 裁定链 R1→R8 收敛，无同一问题连续三次失败。
+
+#### 6. 本次新增的开发经验
+并入 L-018 第 2026-11-23 增补三条：(a) 目标会话重定向根路径≠上下文上限的判别三件套；(b) 续派同样有 fallback 键漂移+"发送确认但 DOM 未物化"变体，先 reload 再补采；(c) "证据不足 FAIL"与"代码缺陷 FAIL"分开处置，补证不伪造历史日志、不改已 PASS 源码。
+
+#### 7. 当前遗留问题
+- 合并 fix/session-ctx-mgmt → main 待用户本人拍板（DEC-010 红线，AI 不自行合并）。
+- agent-kit 分支 fix/session-budget 对 damwate GitHub 403 无推送权，如实登记未绕过；核心源码经 zip 入 AIEO 仓供核验。
+- 迁移成本：旧会话 6b02a805 仅留档不写指针；后续轮次统一在新会话 6b03aea8。
+
+#### 8. 下一步建议与验证标准
+用户拍板合并后：由用户执行 main 合并（或明确授权）；合并后按 L-006 阶段边界评估主会话轮换。若用户暂不合并，分支与证据链已冻结可随时核验。验证标准=合并 commit 含被测 353e190 + 补证 4fe07fa，且 AIEO main 全量回归保持 hooks 9/9、core 23/23。

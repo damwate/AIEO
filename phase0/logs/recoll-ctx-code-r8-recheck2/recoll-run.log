@@ -1,0 +1,17 @@
+[2026-11-23T03:19:11.189Z] 补采实例域: instance=default lock=D:\AIEO\runtime\locks\gpt-session.lockfile cdp=http://127.0.0.1:9222
+[2026-11-23T03:19:11.193Z] 会话锁已获取（R8 recoll；仅采集不发送）
+[2026-11-23T03:19:11.318Z] [tab-hygiene] 会话页命中 1 个，取末位（最近创建）
+[2026-11-23T03:19:11.319Z] 页面就位: https://chatgpt.com/c/6b03aea8-a898-83ec-bcfc-3e13d6006ce7
+[2026-11-23T03:19:19.355Z] 静置门通过（2 units）；滚动到底+额外静置 30000ms
+[2026-11-23T03:19:59.404Z] recoll FAILED: 本轮标记 user 定位失败: 命中 0 条（需恰 1 条）
+[2026-11-23T03:19:59.835Z] 会话锁已释放（R8 recoll）
+[2026-11-23T03:22:36.712Z] 补采实例域: instance=default lock=D:\AIEO\runtime\locks\gpt-session.lockfile cdp=http://127.0.0.1:9222
+[2026-11-23T03:22:36.713Z] 会话锁已获取（R8 recoll；仅采集不发送）
+[2026-11-23T03:22:36.781Z] [tab-hygiene] 会话页命中 1 个，取末位（最近创建）
+[2026-11-23T03:22:36.781Z] 页面就位: https://chatgpt.com/c/6b03aea8-a898-83ec-bcfc-3e13d6006ce7
+[2026-11-23T03:22:44.814Z] 静置门通过（4 units）；滚动到底+额外静置 30000ms
+[2026-11-23T03:23:24.884Z] 本轮 user 定位成功: 67934863-f415-5d0c-b141-7740630f56b8:0:user（标记唯一+最后 user；发送双验报告键=fallback-turn-0:0:user 供对照）
+[2026-11-23T03:23:29.027Z] checks={"final_stop_button_not_visible":true,"tail_is_assistant":true,"dil_uuid_present":true,"uuid_stable":true,"stable_unit_read":true,"target_range_materialized":true,"not_prev_reply_sha":true}
+[2026-11-23T03:23:29.034Z] reply 已落盘: D:\AIEO\phase0\logs\recoll-ctx-code-r8-recheck2\reply.txt（1437 字节，SHA256=55cd8a6520afd5ec…）
+[2026-11-23T03:23:29.035Z] recoll COMPLETED
+[2026-11-23T03:23:29.470Z] 会话锁已释放（R8 recoll）

@@ -1,0 +1,17 @@
+[
+  {
+    "url": "https://chatgpt.com/c/6b03aea8-a898-83ec-bcfc-3e13d6006ce7",
+    "title": "复验裁定结果",
+    "unitCount": 2,
+    "units": [
+      {
+        "key": "373bc88e-fa10-54e7-a552-41e8b7765c83:0:user",
+        "head": "CTX-CODE-R8 定点复验（最终轮）\n仓库 damwate/AIEO 分支 fix/session-ctx-mgmt 完整SHA：35"
+      },
+      {
+        "key": "373bc88e-fa10-54e7-a552-41e8b7765c83:2:assistant",
+        "head": "ChatGPT 说：\nCTX-CODE-R8 定点复验裁定\n\n复验基准：damwate/AIEO，指定完整 SHA：\n\n353e190b23"
+      }
+    ]
+  }
+]

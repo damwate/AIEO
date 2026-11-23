@@ -48,8 +48,18 @@
 
 ⑥验收证据引用：待 S4 验收派单轮回填。
 
-## S4 独立验收（待执行）
+## S4 独立验收（已完成：CTX-CODE-R8 编码验收 PASS，3/3）
 
 ①本步骤目标：代码验收派单（完整 SHA+三细节复验：isTransaction 属性用法/busy_timeout 连接级/C10 硬验收门）。
 
-②③④⑤⑥：待派单后回填。
+②修改文件：evidence/{r8-test-execution-evidence.md,test-session-budget-r8-run.log,test_ctx_budget_hooks-r8-run.log}（第 2 项补证）；phase0/logs/{dispatch-2026-11-23T03-09-42,recoll-ctx-code-r8,dispatch-2026-11-23T03-17-07,recoll-ctx-code-r8-recheck2}（派单/补采现场）；phase0/tools/{brief_ctx_code_r8_dispatch.txt,brief_ctx_code_r8_recheck2.txt,recoll_ctx_code_r8.mjs,recoll_ctx_code_r8_recheck2.mjs}；gpt-reviewer-session.json 迁移；本 steps.md。
+
+③修改内容：编码验收 CTX-CODE-R1..R8 裁定链闭环。R7 三项整改（无条件 requireSessionBudget 前置 + 统一 assessBudgetGate + budgetUuid=null 走 skipped；agent-kit 23/23；生产账本快照入 commit）经 R8 首派（被测 SHA 353e190）复验；首轮 2 PASS/1 FAIL（第 2 项"证据不足"非代码缺陷——agent-kit 测试执行日志未入 AIEO 仓、审查方无法独立核验）。按审查方最小收尾动作补证：真实重跑 agent-kit core 23/23（@6d9aad05）+ AIEO hooks 9/9（@353e190）并落盘，逐文件 SHA-256 绑定双仓版本，补证 commit 4fe07fa 推送 GitHub；recheck2 续派仅重裁定第 2 项 → PASS。
+
+④执行结果：CTX-CODE-R8 最终 3/3 PASS，审查方原始回复 `phase0/logs/recoll-ctx-code-r8/reply.txt`（首轮 2PASS/1FAIL，SHA 10b759fc…）与 `phase0/logs/recoll-ctx-code-r8-recheck2/reply.txt`（recheck2 PASS，SHA 55cd8a65…）。被测代码锚点 353e190，补证 commit 4fe07fa。审查会话由失效的 6b02a805（重定向至根路径，实测非上下文上限）迁移至 6b03aea8（--new-session 首派即活，指针已更新；旧指针留档 gpt-reviewer-session.pre-migration-20261123.json）。
+
+⑤测试结果：agent-kit core `node --test monitor/test-session-budget.mjs` 23/23 exit0（evidence/test-session-budget-r8-run.log）；AIEO hooks `node --test phase0/tools/test_ctx_budget_hooks.mjs` 9/9 exit0（evidence/test_ctx_budget_hooks-r8-run.log）；均为本轮真实执行，含 C1/C8 双进程并发与 C10 busy deadline 实测。agent-kit 分支 fix/session-budget 对 damwate GitHub 403 无推送权，如实登记未绕过，源码经 session-budget-code.zip 入 AIEO 仓。
+
+⑥验收证据引用：本步骤 ②③④⑤ 所列路径；会话迁移诊断 phase0/logs/diag-r8-target-20261123/diag.json（HTTP200+已登录+目标重定向根路径，排除上下文上限）；recheck2 reload 物化诊断 phase0/logs/diag-r8-recheck2-reload/after-reload.json（send-state=SEND_CONFIRMED 但 DOM 未物化→reload 后 4 unit，虚拟化卸载，未重发）。
+
+**验收结论：PASS**（CTX-CODE-R8 编码验收闭环，3/3；仅余用户拍板合并 fix/session-ctx-mgmt → main，DEC-010）。

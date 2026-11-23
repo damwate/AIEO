@@ -1,0 +1,8 @@
+[CTX-CODE-R8-RECHECK2|仅重裁定第2项]
+按R8回复最小收尾动作补证，第1/3项已PASS不重做，被测代码锚点仍=353e190b230abb1080964f68577c5a1cf00a080a（门控逻辑未改）。
+补证commit=4fe07fa3407ec22f561976ad2e879d09e0d3fdef（已推GitHub，仅追加证据不改源码）。请读取该SHA下：
+basic/tasks/b-20261122-session-ctx-mgmt/evidence/r8-test-execution-evidence.md（版本绑定：AIEO 353e190 hooks / agent-kit 6d9aad05 核心，SHA-256逐文件）
+同目录 test-session-budget-r8-run.log=真实node --test 23/23 exit0（agent-kit core，含C1/C8并发+C10 deadline）
+同目录 test_ctx_budget_hooks-r8-run.log=真实9/9 exit0（AIEO hooks）
+agent-kit分支403无推送权如实登记，源码zip在evidence/session-budget-code.zip（SHA已核）。
+裁定：第2项测试证据 [证据已补齐→PASS] 或 [仍不足→FAIL+说明]。仅此项，无需重做1/3。
