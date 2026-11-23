@@ -49,3 +49,16 @@ python3 phase0/tools/playwright_queue.py status 1
 - 派单已完整落盘但 worker 没有记录完成时，使用 `reconcile <队列序号>`。如需补采，按 L-018 检查原会话、原 user unit 及现场目录，由控制方在独占浏览器时完成只读补采，再用 `reconcile <队列序号> --recoll <归档目录>` 导入。归档必须包含 `recoll-result.json`、`units-diag.json` 和 `reply.txt`。服务重验原发送回执、唯一轮次标记、最后 user、上轮 SHA 排除及采集检查。无法确认归属或原发送结果的轮次继续挂起。补采与导入均禁止重发。
 
 隔离验收命令为 `python3 -m unittest discover -s phase0/tools -p test_playwright_queue.py`。使用模拟派单验证不同任务与用途不串号、同用途续轮、并发认领、崩溃后原轮补采、显式迁移和暂停恢复。受管浏览器、真实网页和现行阶段门禁按批准范围单独验收。
+
+## 复跑真实 Chrome 本地场景
+
+在仓库根目录使用 Python 3.12、Node 24 和已安装的 Google Chrome。无桌面的 Linux 主机可通过 `xvfb-run -a` 运行浏览器命令。已有 Chrome 在非默认路径时，用 `AIEO_CHROME_EXECUTABLE` 指定其可执行文件。
+
+```sh
+npm ci --prefix phase0/tools
+python -I -m unittest discover -s basic/tool -p test_check_taskpack.py
+python -m unittest discover -s phase0/tools -p test_playwright_queue.py
+python phase0/tools/test_browser_queue_e2e.py runtime/browser-queue-check
+```
+
+最后一条命令需要新的输出目录，生成 `report.json`、本地队列、截图和原始证据。Chrome 的页面请求由 Playwright 的本地 fixture 接管。暂停、恢复及错误会话用例不会向 ChatGPT 站点发送消息。已有的虚拟列表采集回归可另跑 `node phase0/tools/test_browser_virtual_list.mjs`。
