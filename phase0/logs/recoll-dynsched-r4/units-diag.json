@@ -1,0 +1,38 @@
+[
+  {
+    "key": "f59a4105-c91e-5892-8c61-d3b49836afa5:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[DYN-SCHED-R2|动态任务调度方案定向复审]\nR1-01已修正：design-proposal-r1.md现已提交入完整SHA 37b08e074dc"
+  },
+  {
+    "key": "f59a4105-c91e-5892-8c61-d3b49836afa5:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n[R2 FAIL] — 动态任务调度方案需要修订\n\nR2 FAIL / REWORK R1-01 已解决\n\n被测基线： damwate/A"
+  },
+  {
+    "key": "ca0f69d7-5396-5b9f-acdd-c5ed50f4f1ee:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[DYN-SCHED-R3|动态任务调度方案定向复审]\nR2六项已逐条收敛，方案全文：完整SHA 5cd68f9b7620f9bdcd514f3e1b0a116"
+  },
+  {
+    "key": "ca0f69d7-5396-5b9f-acdd-c5ed50f4f1ee:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\n已按完整 SHA 5cd68f9b7620f9bdcd514f3e1b0a11627b85e0ef 读取指定的 design-propo"
+  },
+  {
+    "key": "52f131d1-4048-5285-83a2-7b8abe585439:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[DYN-SCHED-R4|动态任务调度方案定向复审]\nR3五项已逐条闭环,方案全文:完整SHA d5797f8615d0effacdfdc4d8fac6766"
+  },
+  {
+    "key": "52f131d1-4048-5285-83a2-7b8abe585439:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n[R4 FAIL] — 3 项未闭合\n\n已按完整提交 SHA d5797f8615d0effacdfdc4d8fac67667596fb0"
+  }
+]

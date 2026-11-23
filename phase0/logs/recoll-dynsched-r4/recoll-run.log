@@ -1,0 +1,10 @@
+[2026-11-23T04:59:16.333Z] 补采实例域: instance=default lock=D:\AIEO\runtime\locks\gpt-session.lockfile cdp=http://127.0.0.1:9222
+[2026-11-23T04:59:16.334Z] 会话锁已获取（R8 recoll；仅采集不发送）
+[2026-11-23T04:59:16.397Z] [tab-hygiene] 会话页命中 1 个，取末位（最近创建）
+[2026-11-23T04:59:16.397Z] 页面就位: https://chatgpt.com/c/6b03c2a0-b284-83ec-b272-758afdaa1625
+[2026-11-23T04:59:24.415Z] 静置门通过（6 units）；滚动到底+额外静置 30000ms
+[2026-11-23T05:00:04.472Z] 本轮 user 定位成功: 52f131d1-4048-5285-83a2-7b8abe585439:0:user（标记唯一+最后 user；发送双验报告键=fallback-turn-0:0:user 供对照）
+[2026-11-23T05:00:08.592Z] checks={"final_stop_button_not_visible":true,"tail_is_assistant":true,"dil_uuid_present":true,"uuid_stable":true,"stable_unit_read":true,"target_range_materialized":true,"not_prev_reply_sha":true}
+[2026-11-23T05:00:08.597Z] reply 已落盘: D:\AIEO\phase0\logs\recoll-dynsched-r4\reply.txt（5608 字节，SHA256=445d19e5b0991aba…）
+[2026-11-23T05:00:08.598Z] recoll COMPLETED
+[2026-11-23T05:00:09.090Z] 会话锁已释放（R8 recoll）
