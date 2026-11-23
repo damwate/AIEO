@@ -1115,3 +1115,12 @@
 - **DEC-129 核验链：** R1=[核验FAIL]五阻断（并行超限未登记/四件套未落实/T2T3 步骤状态不同步/五指标证据边界/字节+marker+过程证据口径，reply SHA256=298f6c2d…）→v2 报告整改（f5414312）→R2=[R2核验FAIL]唯一残留 task-brief 当前步骤未同步（4/5 PASS，reply SHA256=7ba82710…）→整改（59da3461）→R3 派单 SEND_CONFIRMED 后采集 fail-closed（INBOUND_START_UNIT_MISSING）→recoll 补采（derive 占位符 __INSTANCE_ID__ 漏替换当场 grep 抓获+绝对路径口径，七查全过）→**[R3核验PASS]**（reply SHA256=8dd3429e…）。**维持边界：不扩并行/不宣告 M2 试运行通过/不自动立项/不授权改码/原始证据零改写。**
 - **白板 RCA（用户追加指令）：** 两案取证（camera_snapshot 三证+case1 建站后 2m04s 冷载）→因果链=冷载 80MB×门禁只等 GLB×纹理晚到=basecolor 白块×上传无检测；ChatGPT 续判（6b02857c 续 T2 上下文，recoll 补采 reply SHA256=259bf492…）：三阶段排序（正确性基线先行→缓存/格式并行→端到端）、render_assets 结构化元数据进 params_json（系统生成只读）、四实测场景+旧 revision 缓存负例验收、工作定义 GDC-RCA-01。实施待用户批准。
 - **边界：** 全程目标仓库零代码修改；全部 reply 原始字节归档（dispatch 现场+recoll 目录）；业务三方案仍仅为建议。
+
+### DEC-131 用户批准 fix/session-ctx-mgmt 合并 main（DEC-010 拍板，会话上下文预算令牌管理）（2026-11-23）
+
+- **拍板依据：** 用户 2026-11-23 指令原话"同意合并"——批准 fix/session-ctx-mgmt 合入 main；属 DEC-010 高危红线（main 合并须用户本人拍板），AI 不自行决策。
+- **独立验收前置：** CTX-CODE-R8 编码验收 3/3 PASS（被测代码锚点 `353e190b230abb1080964f68577c5a1cf00a080a`，补证 commit `4fe07fa3407ec22f561976ad2e879d09e0d3fdef`；首轮 reply SHA 10b759fc… 2PASS/1FAIL=证据不足非代码缺陷，recheck2 reply SHA 55cd8a65… 3/3 PASS）；agent-kit core 23/23 exit0 @6d9aad05、AIEO hooks 9/9 exit0 @353e190 真实重跑留证。任务登记 DEV-20261123-001，steps.md S4 结论 PASS。
+- **范围终核：** git diff main..分支 共 16 commit / 186 文件（+3007/-2），全部落在 b-20261122-session-ctx-mgmt（任务包/证据）、phase0/logs（派单/补采/诊断现场）、phase0/tools（gpt_dispatch.mjs、dispatch_options.mjs、ctx_budget_hooks.mjs 等 R1–R8 整改对象）、docs/AI-DEV-LESSONS.md；无无关文件混入；main 无独有提交（merge-base=main HEAD=86a5bc4）。
+- **合并方式：** fast-forward（git merge --ff-only），main 86a5bc4 → 630b1b2e7413e951a9585c666d7a553ff9a27c8e，零冲突；随后在 main 上追加本决策登记 commit。
+- **如实登记（权限边界）：** agent-kit 分支 fix/session-budget 对 damwate GitHub 403 无推送权，未绕过（不改账号/不换仓库/不复制冒充）；核心源码经 session-budget-code.zip 入 AIEO 仓供核验。审查会话因目标重定向至根路径（实测非上下文上限，账本 6 轮 7268B）由 6b02a805 迁移至 6b03aea8，指针已更新、旧指针留档。
+- **边界：** 无生产发布、无数据删除；本合并不解除 DEC-017 任何扩展场景门禁；fix/parallel-stage2 等其他分支不在本次授权范围。
