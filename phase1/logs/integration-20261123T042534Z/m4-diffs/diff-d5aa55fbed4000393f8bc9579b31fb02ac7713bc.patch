@@ -1,0 +1,7 @@
+diff --git a/src/impl.py b/src/impl.py
+new file mode 100644
+index 0000000..dbea9bb
+--- /dev/null
++++ b/src/impl.py
+@@ -0,0 +1 @@
++VALUE = 42  # integration e2e
