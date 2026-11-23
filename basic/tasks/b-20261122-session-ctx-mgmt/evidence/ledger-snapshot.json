@@ -1,0 +1,16 @@
+(Use `node --trace-warnings ...` to show where the warning was created)
+[
+ {
+  "uuid": "6b02a805-88f0-83ec-8fa3-ff4f30e21f65",
+  "turns": 6,
+  "in_bytes": 5466,
+  "out_bytes": 1802,
+  "total_bytes": 7268,
+  "max_turn_bytes": 2954,
+  "open_turn_bytes": 926,
+  "gen": 7,
+  "first_at": "2026-11-22T08:57:54.863Z",
+  "last_at": "2026-11-22T10:41:00.808Z",
+  "budget_version": 1
+ }
+]

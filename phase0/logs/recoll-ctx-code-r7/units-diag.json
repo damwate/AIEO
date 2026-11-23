@@ -1,0 +1,38 @@
+[
+  {
+    "key": "a9103c2d-fef5-578f-aab4-7704a0b637b4:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[CTX-CODE-R5|三项定点复核|b-20261122-session-ctx-mgmt]\nR4三项全整改，附件=更新zip(v5,23用例)。AIEO："
+  },
+  {
+    "key": "a9103c2d-fef5-578f-aab4-7704a0b637b4:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nCTX-CODE-R5 编码验收：FAIL + 逐条\n\n三项整改的代码实现基本符合处方，23/23 测试实测通过；但当前提交 SHA 与 "
+  },
+  {
+    "key": "d7bfce97-3433-5022-a216-617696b46cf1:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "补充：本轮证据包 commit=e147effbd6dbabc0fbbd1b6ee3afa166f337a841（zip 于 c83624ab7fb82d72f"
+  },
+  {
+    "key": "d7bfce97-3433-5022-a216-617696b46cf1:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\nCTX-CODE-R5/R6 合并复核：FAIL + 逐条\n\n本轮按你补充的证据链重新核对。R5 的两个遗留项已经闭环，但在 R6 的 g"
+  },
+  {
+    "key": "f4a80c23-42f4-501b-bc26-e9ed40bd5492:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[CTX-CODE-R7|targetUrl定点复验|b-20261122-session-ctx-mgmt]\n你R6/合并复核的P0已修：github.com"
+  },
+  {
+    "key": "f4a80c23-42f4-501b-bc26-e9ed40bd5492:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\n本轮按 aed42794bf48ce5528c5df5231d17c41d911dc48 做定点复验，不以分支当前状态或简报中的“全绿”"
+  }
+]

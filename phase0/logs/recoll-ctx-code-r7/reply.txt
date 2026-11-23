@@ -1,0 +1,134 @@
+ChatGPT 说：
+
+本轮按 aed42794bf48ce5528c5df5231d17c41d911dc48 做定点复验，不以分支当前状态或简报中的“全绿”代替证据。重点核验三件事：targetUrl 作用域修复是否真正覆盖新会话路径、uuid=null 跳过门控是否安全且可测、生产账本记录是否能与代码及证据对应。
+
+复核结果
+
+targetUrl 的 R6 P0 已修复：R7 在 mainLocked() 中、分支判断之前声明 let targetUrl = null；既有会话分支通过 parsedTargetUrl 中转后赋值；新会话分支不再读取未初始化的 URL。新会话路径的 ReferenceError 已关闭。
+
+assessBudgetGate(null) 的纯函数语义也已实现：返回 NORMAL + skipped:true，并且新增测试断言不调用账本评估函数。但这里还存在一个主流程级缺口，见下方 P0。
+
+阻断项
+
+P0：新会话路径未在发送前确认预算核心模块可用。
+
+gpt_dispatch.mjs 的顶层动态导入失败时会把 sessionBudget 留为 null，由 requireSessionBudget() 负责 fail-closed。但新会话路径当前是：
+
+JavaScript
+const budgetUuid = targetSessionId ?? extractSessionId(targetUrl);
+if (budgetUuid) {
+  assessBudgetGate(budgetUuid, {
+    sessionBudget: requireSessionBudget(),
+    ...
+  });
+}
+
+新会话阶段 targetSessionId 和 targetUrl 都是 null，所以整个门控块被跳过，requireSessionBudget() 也没有执行。之后 confirmSend() 在发送确认后调用 recordInOnce()，才会触发 requireSessionBudget()。
+
+因此，当 agent-kit 预算核心模块不可用时，新会话仍可能先发送消息，再因记账模块缺失而失败。这与“核心模块缺失必须在派单前拒绝”的 fail-closed 约束不一致，是主流程阻断，不是单纯测试覆盖问题。
+
+处方：
+
+在发送动作之前无条件执行 requireSessionBudget()，先确认预算核心可用。
+
+无论 budgetUuid 是否为空，都统一调用 assessBudgetGate()；新会话传 null，由其 skipped:true 语义负责跳过账本评估。
+
+增加主流程级故障注入测试：--new-session 且预算核心加载失败，必须在发送前退出；预算核心正常时，UUID 尚未取得阶段跳过评估，取得真实 UUID 后 input/out 记账绑定该 UUID。
+
+其他复核项
+
+P1：新会话跳过门控的新增测试尚未证明主流程接入。
+
+test_ctx_budget_hooks.mjs 的新增用例确实验证了 assessBudgetGate(null) 不调用 assessLedger()。但主流程仍用 if (budgetUuid) 包住调用，因此新会话时根本没有调用该函数。需要按上面的处方统一调用，避免“函数行为有测试、实际流程没走该函数”。
+
+P1：生产账本实战证据未闭环。
+
+目标提交中的派单日志可以确认一次 220B 的 input 记账记录，但同一日志随后出现 INBOUND_WINDOW_OVERLAP_CHANGED；对应补采日志两次均为 recoll FAILED。提交中没有可核对的 SQLite 账本快照或对应的 out 记账证据。因此，用户所述的 6b02a805… 五轮、in=4540B/out=1802B 汇总目前不能由该提交中的证据独立确认。这里不判定账本数字错误，只判定证据不足。
+
+测试与证据边界
+
+targetUrl 外层作用域修复：代码核验通过。
+
+assessBudgetGate(null) 的跳过语义：代码和测试定义核验通过。
+
+附件 ZIP：其 ctx_budget_hooks.mjs 与 R7 提交版本 blob 不同，仍是旧版；测试文件也不是 R7 当前版本。
+
+我实际运行了附件中的核心测试：23/23 PASS；旧版 hooks 测试：8/8 PASS。
+
+R7 提交中的 hooks 测试文件包含新增用例，当前代码定义共 9 个测试，但本轮没有执行 R7 版本的 9 个测试。因此不能把附件的 8/8 或简报声明写成 R7 的 9/9 实测。
+
+最终裁定
+[FAIL + 逐条]
+
+项目
+
+	
+
+裁定
+
+
+
+
+R6 targetUrl 作用域 P0
+
+	
+
+PASS，已关闭
+
+
+
+
+新会话 uuid=null 纯函数语义
+
+	
+
+PASS
+
+
+
+
+新会话预算核心缺失时发送前阻断
+
+	
+
+P0 FAIL
+
+
+
+
+主流程统一调用 assessBudgetGate
+
+	
+
+P1 未落实
+
+
+
+
+生产账本五轮汇总证据
+
+	
+
+P1 未核实
+
+
+
+
+附件核心测试
+
+	
+
+23/23 实测通过
+
+
+
+
+R7 hooks 9 项测试
+
+	
+
+本轮未实测
+
+不授权 [编码验收PASS]，不授权合并、部署或生产启用。
+
+本轮不需要推翻预算设计，也不需要重做 targetUrl 修复。先修复新会话路径的预算核心预检，再补主流程故障注入测试和可核验的账本证据，之后做一次定点复验即可。

@@ -557,10 +557,11 @@ async function mainLocked() {
 
   // 会话上下文预算预检门（两条独立防线之一：字节预算=预测；stopIfContextLimit=已发生）
   // 门控逻辑抽至 ctx_budget_hooks.mjs（CTX-CODE R5 P1-2：可注入测试）
-  const budgetUuid = targetSessionId ?? extractSessionId(targetUrl);
-  if (budgetUuid) {
-    assessBudgetGate(budgetUuid, { sessionBudget: requireSessionBudget(), allowNearLimit: dispatchOptions.allowNearLimit, log });
-  }
+  // R7 P0：requireSessionBudget() 无条件前置——新会话路径也必须在发送前确认核心可用，不得发送后才发现缺失
+  const sessionBudget = requireSessionBudget();
+  // R7 P1 统一调用：uuid=null（新会话阶段）由 assessBudgetGate 的 skipped 语义跳过账本评估
+  const budgetUuid = targetSessionId ?? (targetUrl ? extractSessionId(targetUrl) : null);
+  assessBudgetGate(budgetUuid, { sessionBudget, allowNearLimit: dispatchOptions.allowNearLimit, log });
 
   let confirmedSessionId = null;
   let inBytesRecorded = false; // ctx-mgmt：单次去重（首次确认/延迟确认两分支共用，防重复记账）
