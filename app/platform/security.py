@@ -218,6 +218,9 @@ def enforce_csrf(request: Request, principal: Principal) -> None:
 SERVICE_ALLOWED_ENDPOINTS: frozenset[tuple[str, str]] = frozenset({
     ("GET", "/api/v1/auth/session"),
     ("GET", "/api/v1/tasks"),
+    ("GET", "/api/v1/standard/next"),
+    ("GET", "/api/v1/standard/tasks/{task_id}/reviews/{round_id}"),
+    ("POST", "/api/v1/standard/tasks/{task_id}/reviews"),
     ("GET", "/api/v1/batches/{batch_id}"),
     ("GET", "/api/v1/tasks/{task_id}"),
     ("GET", "/api/v1/tasks/{task_id}/dependencies"),

@@ -10,7 +10,7 @@ from fastapi import Depends, FastAPI, Request
 from fastapi.responses import JSONResponse
 
 from . import board as board_svc
-from . import messaging, registry, reports, tasks
+from . import messaging, registry, reports, standard_work, tasks
 from .config import Settings
 from .database import Database, audit, to_utc, utc_now
 from .errors import APIError, bad_request, install_error_handlers
@@ -219,6 +219,7 @@ def build_app(ctx: PlatformContext) -> FastAPI:
             "username": principal.username,
             "agent_id": principal.agent_id,
             "agent_type": principal.agent_type,
+            **({"csrf_token": principal.csrf_token} if principal.kind == "user" else {}),
         }
 
     # ---- projects ----
@@ -342,8 +343,94 @@ def build_app(ctx: PlatformContext) -> FastAPI:
                    principal: Principal = Depends(get_principal)):
         correlation_id = getattr(request.state, "correlation_id", None)
         with ctx.db.transaction() as conn:
-            return tasks.claim_task(conn, task_id, body, principal, correlation_id,
+            return standard_work.claim(conn, task_id, body, principal, correlation_id,
                                     settings=ctx.settings, logger=ctx.logger)
+
+    def standard_owner(principal: Principal = Depends(get_principal)) -> Principal:
+        if principal.kind != "user":
+            raise forbidden("standard management requires a user")
+        return principal
+
+    @app.get("/api/v1/standard/work")
+    def standard_snapshot(principal: Principal = Depends(standard_owner)):
+        with ctx.db.reading() as conn:
+            return standard_work.snapshot(conn, ctx.settings.standard_limit)
+
+    @app.get("/api/v1/standard/next")
+    def standard_next(principal: Principal = Depends(get_principal)):
+        if principal.kind == "service" and principal.agent_type != "developer":
+            raise forbidden("only developer agents can poll the standard queue")
+        with ctx.db.reading() as conn:
+            candidate = standard_work.next_task(conn)
+            if candidate is None:
+                return {"task": None}
+            if candidate["phase"] != "RESERVED" and standard_work.occupied(conn) >= ctx.settings.standard_limit:
+                return {"task": None}
+            inputs = standard_work.dependency_outputs(conn, candidate["task_id"])
+            bases = set(inputs.values())
+            base = next(iter(bases)) if len(bases) == 1 else candidate["base_commit"]
+            task = {name: candidate[name] for name in
+                    ("task_id", "title", "batch_id", "project_id", "phase", "execution_id")}
+            return {"task": {**task, "base_commit": base}, "dependency_commits": inputs}
+
+    @app.post("/api/v1/standard/plans")
+    def standard_plan(body: standard_work.Plan, request: Request,
+                      principal: Principal = Depends(standard_owner)):
+        with ctx.db.transaction() as conn:
+            return standard_work.approve(conn, body, principal, request.state.trace_id)
+
+    @app.get("/api/v1/standard/tasks/{task_id}/urgent")
+    def standard_preview(task_id: str, principal: Principal = Depends(standard_owner)):
+        with ctx.db.reading() as conn:
+            return standard_work.preview(conn, task_id, ctx.settings.standard_limit)
+
+    @app.post("/api/v1/standard/tasks/{task_id}/urgent")
+    def standard_promote(task_id: str, body: standard_work.PriorityChange,
+                         principal: Principal = Depends(standard_owner)):
+        with ctx.db.transaction() as conn:
+            return standard_work.promote(conn, task_id, body, ctx.settings.standard_limit, principal.actor_id)
+
+    @app.post("/api/v1/standard/tasks/{task_id}/pause")
+    def standard_pause(task_id: str, body: standard_work.Checkpoint,
+                       principal: Principal = Depends(standard_owner)):
+        with ctx.db.transaction() as conn:
+            return standard_work.pause(conn, task_id, body, principal.actor_id)
+
+    @app.post("/api/v1/standard/tasks/{task_id}/resume")
+    def standard_resume(task_id: str, body: standard_work.ExecutionCommand,
+                        principal: Principal = Depends(standard_owner)):
+        if ctx.settings.env != "test":
+            raise forbidden("standard execution requires isolated test mode")
+        with ctx.db.transaction() as conn:
+            return standard_work.resume(conn, task_id, body, ctx.settings.standard_limit, principal.actor_id)
+
+    @app.post("/api/v1/standard/tasks/{task_id}/recycle")
+    def standard_recycle(task_id: str, body: standard_work.ExecutionCommand,
+                         principal: Principal = Depends(standard_owner)):
+        with ctx.db.transaction() as conn:
+            return standard_work.recycle(conn, task_id, body.execution_id, principal.actor_id)
+
+    def authorize_standard_review(conn, task_id, principal):
+        if principal.kind == "user":
+            return
+        slot = standard_work.entry(conn, task_id)
+        execution = conn.execute("SELECT agent_id FROM task_executions WHERE execution_id=?",
+                                 (slot["execution_id"],)).fetchone()
+        if principal.agent_type != "developer" or not execution or execution["agent_id"] != principal.agent_id:
+            raise forbidden("only the assigned developer may access this review")
+
+    @app.post("/api/v1/standard/tasks/{task_id}/reviews")
+    def standard_review(task_id: str, body: standard_work.ReviewRequest,
+                        principal: Principal = Depends(get_principal)):
+        with ctx.db.transaction() as conn:
+            authorize_standard_review(conn, task_id, principal)
+            return standard_work.enqueue_review(conn, task_id, body)
+
+    @app.get("/api/v1/standard/tasks/{task_id}/reviews/{round_id}")
+    def standard_review_status(task_id: str, round_id: str, principal: Principal = Depends(get_principal)):
+        with ctx.db.reading() as conn:
+            authorize_standard_review(conn, task_id, principal)
+            return standard_work.review_status(conn, task_id, round_id)
 
     # ---- messages ----
     @app.post("/api/v1/messages", status_code=202)

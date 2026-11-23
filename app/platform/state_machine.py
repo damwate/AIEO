@@ -140,6 +140,16 @@ def apply_event(
     task = conn.execute("SELECT * FROM tasks WHERE task_id=?", (task_id,)).fetchone()
     if not task:
         raise not_found("task", task_id)
+    managed = conn.execute("SELECT phase FROM standard_tasks WHERE task_id=?", (task_id,)).fetchone()
+    if managed:
+        if managed["phase"] in ("PAUSED", "CLOSED"):
+            raise invalid_transition("standard execution is paused or closed")
+        if event == "DISPATCH" and managed["phase"] not in ("ACTIVE", "DRAINING"):
+            raise invalid_transition("standard dispatch must claim a pool slot")
+        if event == "CANCEL" and managed["phase"] != "WAITING":
+            raise invalid_transition("release the managed execution before cancelling")
+        if event in ("START", "DEVELOPMENT_COMPLETED") and managed["phase"] == "DRAINING":
+            raise invalid_transition("standard execution is draining")
     current = task["status"]
     destination = TRANSITIONS.get(current, {}).get(event)
     if destination is None:
