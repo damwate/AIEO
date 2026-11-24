@@ -1206,3 +1206,9 @@
 4. **任务1** AIS：生产 computed style 实证白字根因（`--text:#e8eaee` 浅字叠 `#f8fafc` 浅底）；修 `.input-prompt` 深字 + 新增鉴权输入媒体端点 `GET /jobs/{id}/inputs/{slot}`（按冻结 slot 取图、防越权）+ 前端缩略图（Blob URL 卸载撤销）。分支 `task/jobdetail-input-display` @ `559a195`；前端 3/3、后端 20/20。
 5. **任务3** GDC：补 `discoverySealed`（资源发现封口）+ `captureAiInput` 最终渲染屏障二次验门，防贴图晚到白块入生图；分支 `task/gdc-scene-ready-hardening` @ `e52b10a6`；前端 60/60。如实登记 ChatGPT G1–G11 中 G5/G7/G8/G9/G11 未覆盖，不宣称全闭环。
 6. 三分支均 push 功能分支、未合并主分支；未自行生产发布，DEC-010 保持。汇总见 `basic/tasks/b-20261124-standard-fourth-trial/three-issues-delivery.md`。
+
+## DEC-140 交付文档推分支交 codex 审查：条件授权合并 main 与发布待审查通过（2026-11-24）
+1. 用户指令「推送到分支吧，我让 codex 审查，如果没问题就提交到主分支，并发布」。据此把三问题交付文档整包推到独立审查分支，**不直接入 main**；合并 main 与生产发布须以 codex 审查通过为前提，届时再由用户明确拍板（DEC-010 不因本条预授权而失效）。
+2. 主工作区 `delivery.md` 原第 51 行「未做运行时 DB 验证」与 DEC-139 生产实跑 PASS 冲突、且 `three-issues-delivery.md` 等仅存于 worktree——本轮补齐主工作区交付文档（8 文件）+ evidence，修正 delivery.md 三处旧口径（边界 push 状态、DB 验证升级、未决项 SQL 层已 PASS）。
+3. 新建分支 `docs/three-issues-delivery-review` @ `f04f9e42e6329de6d0a0d55ae6a51717e652e152`（20 文件 / +652 行），经活代理 `127.0.0.1:1080` 推送并建立 upstream；`ls-remote` 复核远端 SHA 一致，ahead=0/behind=0。仓库配置的 `6822` 为死端口、直连 300s 超时，按 L-014 先诊断后走活代理，未改任何 git 配置。
+4. codex 审查对象=该分支的交付文档与决策登记；三个业务修复分支（bms-service/bms-ui `299b7262`/`b1b85257`、AIS `559a195`、GDC `e52b10a6`）仍各自独立，未并入本仓、未合并 master/dev、未发布。审查通过后由用户拍板合并与发布，本会话不自行执行。
