@@ -55,6 +55,8 @@
 
 （技能取自 feat/standard-task-management 分支 worktree；并读 standard/WORKFLOW.md、standard/PLAYWRIGHT-QUEUE-WORKFLOW.md、basic/templates/task-brief.md）
 
+- 补读技能/规范（2026-11-24 会话管理复核轮）：`.github/skills/aieo-basic/SKILL.md`、`standard/parallel-governance-draft.md`（M2 受控并行一任务四件套/派单串行/优先级两级）、`standard/STANDARD-EXECUTION-AND-CHATGPT-QUEUE.md`（M1 单任务交替、单 worker 独占浏览器、single-inflight FIFO 串行）、`docs/AI-DEV-LESSONS.md` L-018 第 6/7 条（4 条 user 消息评估迁移、24/48KB 字节预算）、L-014/L-019。已确认：本任务为 M1 单任务形态，未启 M2 并行；派单由唯一 `standard-queue` worker 串行，不另起浏览器管理子进程。
+
 | 经验 | 本任务防错动作 |
 |---|---|
 | L-014 | 连接异常第一动作走 check-push/注册表活端口探测；本次实测 .git/config 6822 死、注册表 1080 活，fetch 成功留证 |

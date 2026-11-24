@@ -114,7 +114,7 @@ MF-01a、MF-01b 均复验通过，R1 技术阻断关闭。正式步骤缺口仍�
 
 **L-018 核对**：S3 发出前 user 消息 3 条 / 累计 11238B（NORMAL），未达阈值；发出后 4 条 / 11977B（NORMAL），达阈值，因仅一轮且已发出、迁移反增交接成本且上下文边界明确，记录理由不迁移，此后每增 2 条重评。**ST-05**：③步骤验收记录 FAIL（S1/S3 仍缺 PASS 结论），如实保留、不伪造 PASS。任务保持**验收中**；未合并 main/dev、未生产发布、未付费验收；是否 push 及是否再发起一轮复核需用户另行决策。
 
-## S3 第二轮针对性复核（seq11，用户追加授权 push + 复核）
+## 第二轮针对性复核记录（seq11，用户追加授权 push + 复核）
 
 用户确认 push 到分支无问题、会交 codex 复核，并授权放宽「各最多一轮」再发一轮 S3 针对性复核。按 L-014 走 `check-push.mjs --push --yes`（直连失败→注册表活代理 1080）推送补证提交 `7cc4fc1d4a175198bc5d87f7a6aa7d55b2bad7c8` 至 `origin/feat/standard-task-management`，ahead=0，**未触碰 main**；`acceptance/s3-supplement/` 六份文件（三份 UTF-8 副本 + SHA256-CONTRAST.md + COLLECT-ONLY-MANIFEST.md + README.md）进入远端可读提交树。
 
