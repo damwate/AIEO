@@ -1,5 +1,7 @@
 # Codex 交接：GDC/AIS 生图链路改造验收
 
+> 最新裁定见 [Codex R2 独立复验](acceptance/codex-r2-recheck.md)。
+
 > 日常任务与多任务管理统一在 **AIEO**。本文件是执行入口；业务代码分别在下列两个项目，不要在 AIEO 仓内查找业务实现。
 > 任务 ID：`b-20261123-standard-third-trial`。详细过程与证据见同包 `delivery.md`、`steps.md`、`acceptance/`。
 > **首轮独立验收 MUST-FIX 的整改回交见 `acceptance/mustfix-r2-remediation.md`**；本节被测 HEAD 已更新为该回交的 R2 提交。

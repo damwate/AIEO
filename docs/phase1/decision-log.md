@@ -1156,3 +1156,8 @@
 1. 用户对账issue#126后发现原始上传设计图仅列SHA未显示，补PlatformAdmin私有输入媒体端点与前端展示（021de64a）。
 2. 全量基线对照仅2项新增回归，R1产品name事实源由load_assets_cached改为catalog()，相关119项通过；最终GDC HEAD=0a5a4ec59b71bc3af41aa99ac82808767ffa785a。
 3. 其余197项失败/错误在基线同现，如实保留不掩盖；最终全量复查与codex逐文件审查继续独立进行。
+
+## 2026-11-24 第三次 Standard 试运行 Codex R2 独立复验
+
+1. 启动复验时核对 GDC、AIS、AIEO 远端功能分支和完整 SHA，在独立工作区运行目标套件与跨仓测试。
+2. 合法请求、同键重放、AIS 详情回读和 GDC 单图原件通过。非法产品清单 HTTP 500 与目录发布时的名称快照不一致仍须整改，任务继续验收中。ST-05 的 S1、S3 正式验收证据缺口保留。见 [R2 独立复验](../../basic/tasks/b-20261123-standard-third-trial/acceptance/codex-r2-recheck.md)。

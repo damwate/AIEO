@@ -63,7 +63,7 @@
 ## S3 R1/R2/R3 与 auto 尺寸本地实施
 ①本步骤目标：完成两仓功能实施及零费用测试。
 ②修改文件：GDC ai/product_constraints.py、ai_generation.py、external_jobs.py、AiJobsAdmin、网关；AIS Vendors.vue 与出站测试。
-③修改内容：GDC HEAD=0a5a4ec59b71bc3af41aa99ac82808767ffa785a；AIS HEAD=418087cbe5bd3954e689faf3b256a4e2be311402；尺寸不硬编码。
+③修改内容：GDC HEAD=0a5a4ec59b71bc3af41aa99ac82808767ffa785a；AIS HEAD=418087c31e8765ba48fd765ab3c9a50cc21b2458；尺寸不硬编码。
 ④执行结果：本地提交完成，未合并、未发布；220/221 配置已回滚。
 ⑤测试结果：GDC AI 112 passed、前端 3284 passed；AIS capabilities 16 passed、前端 42 passed；全程 mock。
 ⑥验收证据引用：验收结论：IN_PROGRESS（被测 commit=0a5a4ec59b71bc3af41aa99ac82808767ffa785a，本地 mock 已通过；正式逐文件验收待代码可读）。证据包内路径 acceptance/test-logs/gdc-ai-catalog-fix.log。
@@ -80,3 +80,7 @@
 | 11-24 13:45 | 全量基线对照完成：base=3301/194+3，16555=3336/196+3；仅2项新增（media_binding），根因=R1误用load_assets_cached查产品name。改权威catalog()后相关回归+AI/媒体119项PASS，修复commit=0a5a4ec5；其余197项失败/错误基线同现 |
 | 11-24 14:05 | 三分支已推送并核对远端SHA一致。交接前补AIS原生R3：prompt原文+params/product_constraints展示，AIS 418087c（admin API 19、JobDetail 3 PASS）。CODEX-HANDOFF.md落AIEO任务包，明确三项目与验收清单 |
 | 11-24 复验轮 | 首轮独立验收 MUST-FIX 两项整改：AIS /v1 接受并校验 product_constraints（GenerationBody+edits 白名单+元数据参数门），GDC multipart 结构化参数改 JSON 编码；GDC 单图任务详情/原图端点按冻结五列合成 slot 1。GDC=4f162d16、AIS=afc4d6c（已推送并复核远端一致），GDC 9 文件目标套件 121 passed、AIS 相关 55 passed，全程 mock。证据 acceptance/mustfix-r2-remediation.md；ST-05 S1/S3 正式证据仍缺，保持验收中 |
+
+## Codex R2 独立复验
+
+原 422 启动阻断与单图 404 已复验通过。整体仍为 MUST-FIX，AIS 无效清单 500 和 GDC 产品名称快照一致性待整改。完整被测 SHA、实测结果和复验条件见 [R2 独立复验](acceptance/codex-r2-recheck.md)。
