@@ -2,7 +2,7 @@
 
 - 依据：首轮独立验收结论（MUST-FIX）与本地复现；被测基线 GDC `0a5a4ec59b71bc3af41aa99ac82808767ffa785a`、AIS `418087c31e8765ba48fd765ab3c9a50cc21b2458`、AIEO `d77d6a1`。
 - 执行方式：AIEO Standard / M1 单任务；仅修复两个阻塞项，不扩改权限、排序、尺寸、付费与生产范围。
-- 证据口径：全部为本地 mock / 单元测试，未调用付费生图，未合并 main/dev，未生产发布，新提交未推送。
+- 证据口径：全部为本地 mock / 单元测试，未调用付费生图，未合并 main/dev，未生产发布；R2 三分支已推送并复核远端 SHA 一致。
 
 ## 1. 阻塞项 A：带 product_constraints 的生图请求被 AIS 422 拒绝
 
@@ -49,7 +49,7 @@ GDC scheme `submit_job` 仅在多图（主图+额外截图）时写 `input_image
 
 ## 5. 边界与未决
 
-- 新提交均**未推送**，按独立复验要求回交 SHA；推送如需进行仍走 `toolkit/check-push.mjs`。
+- 推送：GDC/AIS/AIEO 三分支均按 L-014 走 `toolkit/check-push.mjs --push --yes` 成功（直连失败，注册表活代理 `127.0.0.1:1080` 路径可用）。GDC 远端 `4f162d16dd49ff8c5f9af6cd69b82d67a52c65b2`、AIS 远端 `afc4d6cb739b031dab898a2ce3a3b9ce8f2f7b5c` 已用 `git ls-remote` 复核与本地一致。
 - 未复测生产、未调用真实付费供应商；参数接受≠效果/计费确认。
 - AIEO ST-05 的 S1、S3 正式步骤派单/回复证据仍缺，任务状态保持**验收中**，不以本整改文件替代正式验收。
 - 供应商排序权限、保存与路由回归通过结论沿用首轮，本轮未改动该路径。

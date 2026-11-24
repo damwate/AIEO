@@ -6,7 +6,7 @@
 
 ## 一、本次改了哪些项目
 
-| 项目 | 本地路径 | 分支（R2 新提交未推送） | 被测 HEAD |
+| 项目 | 本地路径 | 分支（R2 已推送） | 被测 HEAD |
 |---|---|---|---|
 | Garden-Design-Calculator（GDC） | `D:\Garden-Design-Calculator` | `feature/product-constraints-auto-size-20261124` | `4f162d16dd49ff8c5f9af6cd69b82d67a52c65b2` |
 | AI-Image-Service（AIS） | `D:\YotinGarden\AI-Image-Service` | `feature/garden-proxy-order-edit-20261123` | `afc4d6cb739b031dab898a2ce3a3b9ce8f2f7b5c` |

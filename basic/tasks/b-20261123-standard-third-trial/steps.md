@@ -79,4 +79,4 @@
 | 11-24 13:30 | 用户截图对账发现R3缺口：原始上传设计图此前仅sha清单未显示图片。补PlatformAdmin私有输入媒体端点+前端原图展示，GDC 021de64a；后端详情6项、前端26项、最终AI 113项PASS。R1原提示词+产品组成+设计稿/产品原图发送链不变 |
 | 11-24 13:45 | 全量基线对照完成：base=3301/194+3，16555=3336/196+3；仅2项新增（media_binding），根因=R1误用load_assets_cached查产品name。改权威catalog()后相关回归+AI/媒体119项PASS，修复commit=0a5a4ec5；其余197项失败/错误基线同现 |
 | 11-24 14:05 | 三分支已推送并核对远端SHA一致。交接前补AIS原生R3：prompt原文+params/product_constraints展示，AIS 418087c（admin API 19、JobDetail 3 PASS）。CODEX-HANDOFF.md落AIEO任务包，明确三项目与验收清单 |
-| 11-24 复验轮 | 首轮独立验收 MUST-FIX 两项整改：AIS /v1 接受并校验 product_constraints（GenerationBody+edits 白名单+元数据参数门），GDC multipart 结构化参数改 JSON 编码；GDC 单图任务详情/原图端点按冻结五列合成 slot 1。GDC=4f162d16、AIS=afc4d6c（未推送），GDC 9 文件目标套件 121 passed、AIS 相关 55 passed，全程 mock。证据 acceptance/mustfix-r2-remediation.md；ST-05 S1/S3 正式证据仍缺，保持验收中 |
+| 11-24 复验轮 | 首轮独立验收 MUST-FIX 两项整改：AIS /v1 接受并校验 product_constraints（GenerationBody+edits 白名单+元数据参数门），GDC multipart 结构化参数改 JSON 编码；GDC 单图任务详情/原图端点按冻结五列合成 slot 1。GDC=4f162d16、AIS=afc4d6c（已推送并复核远端一致），GDC 9 文件目标套件 121 passed、AIS 相关 55 passed，全程 mock。证据 acceptance/mustfix-r2-remediation.md；ST-05 S1/S3 正式证据仍缺，保持验收中 |
