@@ -88,3 +88,7 @@
 ## R3 整改回交（第二次 MUST-FIX）
 
 AIS 将编辑接口 Pydantic 校验异常归一化为 422，并把占比数值判断改为先范围后有限性，消除对象/非对象数组与极大整数引发的 500；GDC 新增 `product_constraints_json` 冻结列与幂等迁移，提交时用同一目录快照派生 prompt 与清单，出站优先读冻结值、旧任务 NULL 回落。机制与上一轮不同（错误归一化、现场重算→提交冻结），按 L-019 记为第二次返工。GDC 10 文件目标套件 145 passed/2 skipped，AIS 4 文件 78 passed；GDC=90ce2233、AIS=a1f55b52，均已推送并复核远端一致。详见 [R3 整改](acceptance/codex-r3-remediation.md)。ST-05 S1/S3 正式证据仍缺，保持验收中。
+
+## Codex R3 独立复验
+
+MF-01a、MF-01b 均复验通过，R1 技术阻断关闭。正式步骤缺口仍为 S1、S3，任务保持验收中。被测完整 SHA、迁移及接口复跑结果见 [R3 独立复验](acceptance/codex-r3-recheck.md)。

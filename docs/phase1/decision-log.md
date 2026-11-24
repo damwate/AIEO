@@ -1167,3 +1167,8 @@
 1. AIS 无效清单 500 的机制修复：编辑接口 Pydantic 校验异常归一化 422，占比数值先判范围再判有限性；12 项正反回归覆盖对象/非对象数组/空名/越界/极大整数/超长列表。
 2. GDC 名称快照机制修复：新增 `product_constraints_json` 冻结列与幂等迁移，提交时同一目录快照派生 prompt 与清单，出站只读冻结值、旧任务 NULL 回落；目录改名窗口与旧任务兼容回归通过。
 3. GDC 10 文件目标套件 145 passed/2 skipped，AIS 4 文件 78 passed；GDC `90ce2233b4da9d844cf1e165c43cec2ecdd3cddd`、AIS `a1f55b523f90763bcd12823bf52cff9d710381a6` 已推送并复核远端一致。任务仍验收中，ST-05 S1/S3 正式派单证据缺口不变。见 [R3 整改](../../basic/tasks/b-20261123-standard-third-trial/acceptance/codex-r3-remediation.md)。
+
+## 2026-11-24 第三次 Standard 试运行 Codex R3 独立复验
+
+1. 启动复验时绑定 GDC、AIS 与 AIEO 完整远端 SHA，在独立工作区执行目标套件、跨仓请求和迁移检查。
+2. MF-01a 的无效清单 422 与 MF-01b 的名称快照一致性均复验 PASS，关闭 R1 两项技术阻断。S1、S3 的正式步骤验收证据仍缺，任务继续验收中。见 [R3 独立复验](../../basic/tasks/b-20261123-standard-third-trial/acceptance/codex-r3-recheck.md)。

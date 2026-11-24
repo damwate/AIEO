@@ -1,5 +1,7 @@
 # Codex 交接：GDC/AIS 生图链路改造验收
 
+> 最新裁定见 [Codex R3 独立复验](acceptance/codex-r3-recheck.md)。
+
 > 最新裁定见 [Codex R2 独立复验](acceptance/codex-r2-recheck.md)；其两项 MUST-FIX 的整改回交见 [Codex R3 整改](acceptance/codex-r3-remediation.md)。
 
 > 日常任务与多任务管理统一在 **AIEO**。本文件是执行入口；业务代码分别在下列两个项目，不要在 AIEO 仓内查找业务实现。
