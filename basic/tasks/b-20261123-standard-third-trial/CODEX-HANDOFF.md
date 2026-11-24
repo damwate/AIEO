@@ -2,13 +2,14 @@
 
 > 日常任务与多任务管理统一在 **AIEO**。本文件是执行入口；业务代码分别在下列两个项目，不要在 AIEO 仓内查找业务实现。
 > 任务 ID：`b-20261123-standard-third-trial`。详细过程与证据见同包 `delivery.md`、`steps.md`、`acceptance/`。
+> **首轮独立验收 MUST-FIX 的整改回交见 `acceptance/mustfix-r2-remediation.md`**；本节被测 HEAD 已更新为该回交的 R2 提交。
 
 ## 一、本次改了哪些项目
 
-| 项目 | 本地路径 | 已推送分支 | 被测 HEAD |
+| 项目 | 本地路径 | 分支（R2 新提交未推送） | 被测 HEAD |
 |---|---|---|---|
-| Garden-Design-Calculator（GDC） | `D:\Garden-Design-Calculator` | `feature/product-constraints-auto-size-20261124` | `0a5a4ec59b71bc3af41aa99ac82808767ffa785a` |
-| AI-Image-Service（AIS） | `D:\YotinGarden\AI-Image-Service` | `feature/garden-proxy-order-edit-20261123` | `418087c31e8765ba48fd765ab3c9a50cc21b2458` |
+| Garden-Design-Calculator（GDC） | `D:\Garden-Design-Calculator` | `feature/product-constraints-auto-size-20261124` | `4f162d16dd49ff8c5f9af6cd69b82d67a52c65b2` |
+| AI-Image-Service（AIS） | `D:\YotinGarden\AI-Image-Service` | `feature/garden-proxy-order-edit-20261123` | `afc4d6cb739b031dab898a2ce3a3b9ce8f2f7b5c` |
 | AIEO（流程、技能、证据） | `D:\AIEO`（技能工作区 `D:\AIEO\.worktrees\feat-standard-task-management`） | `feat/standard-task-management` | 本交接提交及其前一提交 `df84557bfda0286f071bb2e6c327e5e73701640f` |
 
 远程分支：
