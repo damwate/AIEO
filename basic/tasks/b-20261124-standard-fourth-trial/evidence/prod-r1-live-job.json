@@ -1,0 +1,157 @@
+[
+  {
+    "job_id": "8c472c6c-5806-400f-a12d-8ae7fbe48184",
+    "project_id": "0ebdc816-1b23-443c-b236-9f11e2ef11e7",
+    "source_app": "garden-design-calculator",
+    "requested_by": "garden-design-calculator",
+    "provider_model": "gpt-image-2.5-sunburst",
+    "params_json": {
+      "n": 1,
+      "product_constraints": [
+        {
+          "name": "deck",
+          "color_variant": "柚木色",
+          "score": 0.1396073824626025,
+          "screen_coverage": 0.019513413242009132
+        },
+        {
+          "name": "大号长花箱",
+          "color_variant": "星芒灰",
+          "score": 0.060158444012892935,
+          "screen_coverage": 0.0038794948630136985
+        }
+      ]
+    },
+    "result_assets_json": [
+      {
+        "index": 0,
+        "storage_key": "ai-output/generic/8c472c6c-5806-400f-a12d-8ae7fbe48184_0.png",
+        "sha256": "0cb9f5feabfd34757ae74c5833942a7cc6f29e0fd30ca6e66b24c15c90f693b6",
+        "mime": "image/png",
+        "width": 1918,
+        "height": 820,
+        "byte_size": 1828500
+      }
+    ],
+    "status": "succeeded",
+    "provider": "openai_compat",
+    "provider_vendor_id": "vendor-38a26ea7-3742-4e52-9337-0d25bd5cf408",
+    "execution_outcome": "succeeded",
+    "error_code": null,
+    "error_message": null,
+    "execution": {
+      "attempts": [
+        {
+          "n": 1,
+          "attempt_id": "cac7d6e7-6e19-41c6-b34d-5e7918ce46e7",
+          "job_id": "8c472c6c-5806-400f-a12d-8ae7fbe48184",
+          "worker_id": "worker-6c7cd3ed-t2",
+          "retry_round": 0,
+          "adapter": "openai_compat",
+          "vendor_id": "vendor-38a26ea7-3742-4e52-9337-0d25bd5cf408",
+          "iteration": 0,
+          "stage": "succeeded",
+          "http_status": 200,
+          "started_at": "2026-11-24T13:11:48.490453+00:00",
+          "completed_at": "2026-11-24T13:13:56.527523+00:00",
+          "duration_ms": 128037,
+          "action": "deliver",
+          "start_reason": "按冻结顺序选择首个可用供应商",
+          "request_id": "45db368f-bad7-44ea-8c26-6ef28767b00e, 59018f97-2157-4fe9-9177-a86c670d3b00, req_804a2867c99c400b98b9712d",
+          "actual_http_version": "V2_0",
+          "response_headers_received_at": "2026-11-24T13:13:53.056037+00:00",
+          "response_body_completed_at": "2026-11-24T13:13:56.506317+00:00",
+          "request_started_at": "2026-11-24T13:11:48.503424+00:00",
+          "response_received_at": "2026-11-24T13:13:56.506613+00:00",
+          "response_completed_at": "2026-11-24T13:13:56.506640+00:00",
+          "provider_completed_at": "2026-11-24T13:13:56.527513+00:00",
+          "storage_started_at": "2026-11-24T13:13:56.529483+00:00",
+          "storage_completed_at": "2026-11-24T13:13:56.542899+00:00",
+          "output_commit_started_at": "2026-11-24T13:13:56.549887+00:00",
+          "phase_events": [
+            {
+              "name": "request_send",
+              "status": "succeeded",
+              "at": "2026-11-24T13:11:48.503676+00:00",
+              "completed_at": "2026-11-24T13:13:56.506591+00:00"
+            },
+            {
+              "name": "response_received",
+              "status": "succeeded",
+              "at": "2026-11-24T13:13:56.506605+00:00",
+              "completed_at": "2026-11-24T13:13:56.506648+00:00"
+            },
+            {
+              "name": "response_parse",
+              "status": "succeeded",
+              "at": "2026-11-24T13:13:56.506671+00:00",
+              "completed_at": "2026-11-24T13:13:56.517185+00:00"
+            },
+            {
+              "name": "result_extract",
+              "status": "succeeded",
+              "at": "2026-11-24T13:13:56.517204+00:00",
+              "completed_at": "2026-11-24T13:13:56.517213+00:00"
+            },
+            {
+              "name": "image_decode",
+              "status": "succeeded",
+              "at": "2026-11-24T13:13:56.517219+00:00",
+              "completed_at": "2026-11-24T13:13:56.527217+00:00"
+            },
+            {
+              "name": "download",
+              "status": "not_applicable",
+              "at": "2026-11-24T13:13:56.527229+00:00",
+              "completed_at": "2026-11-24T13:13:56.527231+00:00"
+            },
+            {
+              "name": "image_validate",
+              "status": "not_reached",
+              "at": null
+            },
+            {
+              "name": "image_guard",
+              "status": "not_applicable",
+              "at": "2026-11-24T13:13:56.527246+00:00",
+              "completed_at": "2026-11-24T13:13:56.527248+00:00"
+            },
+            {
+              "name": "storage",
+              "status": "succeeded",
+              "at": "2026-11-24T13:13:56.529498+00:00",
+              "completed_at": "2026-11-24T13:13:56.542921+00:00"
+            },
+            {
+              "name": "output_commit",
+              "status": "succeeded",
+              "at": "2026-11-24T13:13:56.549908+00:00",
+              "completed_at": "2026-11-24T13:13:56.549916+00:00"
+            }
+          ],
+          "transport_status": "http_2xx",
+          "provider_business_status": "unconfirmed",
+          "delivery_status": "delivered",
+          "billing_status": "unknown"
+        }
+      ],
+      "vendors": [
+        {
+          "vendor_id": "vendor-38a26ea7-3742-4e52-9337-0d25bd5cf408",
+          "state": "succeeded"
+        },
+        {
+          "vendor_id": "wukong",
+          "state": "unattempted"
+        },
+        {
+          "vendor_id": "yuanqiao",
+          "state": "unattempted"
+        }
+      ]
+    },
+    "created_at": "2026-11-24T13:11:47.904167+00:00",
+    "started_at": "2026-11-24T13:11:48.432534+00:00",
+    "completed_at": "2026-11-24T13:13:56.542967+00:00"
+  }
+]

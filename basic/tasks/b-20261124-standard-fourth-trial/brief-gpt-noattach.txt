@@ -1,0 +1,5 @@
+[TAG|STD5-3ISSUES]
+生产实测R1任务8c472c6c请求含product_constraints、auto尺寸PASS。三问题请逐项给裁定+风险+最小动作，不改码、不付费：
+①AIS任务详情JobDetail.vue:143的pre白字看不清；只显示"输入参考图N张"无设计稿/参考图。后端admin_api.py:408/518已有私有输入媒体与inputs。白字根因？是否展示缩略图及鉴权边界？
+②BMS综合报价价格线上全"—"：根因=SchemeItem.xml#selectGroupModelListBySchemeId未取sku_price/artificial_price+SchemeDetailVO无字段致copyProperties丢失。已修bms-service 299b7262（LEFT JOIN聚合quote_detail，50/99归人工其余归产品）、bms-ui b1b85257（补VO）。请审SQL语义风险与部署后复验口径。
+③GDC点AI照片有几率闪白块→生图拿未就绪参考图。分支已有T1门sceneReady.ts+ThreeView.tsx:697/743判pendingGlbs/贴图/billboard，isAssetReady仍GLB-only。请判贴图晚到/wallFade/renderFinalFrame竞态与最小补强、可mock验收点。

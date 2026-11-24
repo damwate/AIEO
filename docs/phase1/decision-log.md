@@ -1141,3 +1141,68 @@
 - **入口证据修正（派单 dispatch-2026-11-23T07-04-13，reply SHA256=3a611ccb81ee7d41f2b14d421f5e580b36a9d733f7bb4481acd5f63aa3872205）：** 撤销 photo() AI job P0 误分类（download-only 不进 AI job）；AI 截图唯一入口=captureAiInput()；photo 白图作为独立用户可见缺陷、共享底层就绪原语但不进 AI 门禁；全仓无第三绕过路径。
 - **GDC T1（已实施）：** 独立 worktree `D:\GDC-rca01-t1-worktree`/分支 `task/gdc-rca-01-t1-gate`，父 `5c9ba1558a58b29633ea731fcdb563361b4c343b`→commit `b6ac457b2bdd6f41b996df93dc880d359054862f`；新增纯函数 sceneReady 门（贴图/billboard settled）、billboard 载前隐藏、photo/AI 两入口共享原语（isAssetReady GLB-only 逐字不变、pendingGlbs 语义不变、timeout 归 T2）。验收：全量前端 217 files/3256 tests PASS/0 FAIL + tsc exit 0；记录=basic/tasks/gdc-rca-01/implementation-T1.md；测试日志=phase0/logs/gdc-t1-vitest-full-src.log。
 - **边界：** 两任务均只在本机任务分支落地，未合并 bms-ui master / GDC dev，未 push；须用户拍板合并与 E2E 四场景+负例实测后进入 T2。
+
+## 2026-11-24 b-20261123-standard-third-trial 用户决策
+
+1. 2K 默认项（220 相关）暂时关闭挂起——证据包与门禁保留，恢复零重建。
+2. 「都停止吧」——停止 R2/R3 实施子代理（测试收尾骤停），全场冻结；两仓提交仅本地未 push。
+3. 「任务都跟220有关」——用户判断；实际 R1/R2/R3 代码线为本地仓库工作不依赖 220，已在交接包注明备查。
+4. 「把任务交接出来，明天再处理」——交接包落 basic/tasks/b-20261123-standard-third-trial/HANDOFF.md，恢复入口=「R2/R3 独立复核」。
+
+## 2026-11-24 b-20261123-standard-third-trial 恢复执行与尺寸定稿
+
+1. 按 R4 采用官方文档→本地 Mock→只读证据→授权付费验收分层；用户补充：接口初建可授权全量业务验收，后续只做有业务意义的目标测试。
+2. 第三方接口必须官方文档找到并归档，禁止黑盒；用户需求先以文档校准，不机械执行早期假设。
+3. 尺寸最终拍板：前端未显式传 size/quality 时不硬编码，保持 auto；撤销 GDC 固定 2048（16555dea），220/221 配置从备份恢复。
+4. 本地交付：GDC R2/R3=1a77baad、R1+auto HEAD=16555dea；AIS R2+出站测试 HEAD=e442fba。生产未发布、付费验收未做。
+5. 分支推送授权询问未获回答，按未推送处理；ChatGPT 逐文件复审保留为未决项。
+
+## 2026-11-24 R3原图展示与全量回归修复
+
+1. 用户对账issue#126后发现原始上传设计图仅列SHA未显示，补PlatformAdmin私有输入媒体端点与前端展示（021de64a）。
+2. 全量基线对照仅2项新增回归，R1产品name事实源由load_assets_cached改为catalog()，相关119项通过；最终GDC HEAD=0a5a4ec59b71bc3af41aa99ac82808767ffa785a。
+3. 其余197项失败/错误在基线同现，如实保留不掩盖；最终全量复查与codex逐文件审查继续独立进行。
+
+## DEC-134 AIEO 标准版第四次试运行：BMS 综合报价价格修复 + codex 已发布代码生产验证（2026-11-24）
+
+1. 用户两任务（BMS 综合报价产品价格/人工价格未读取；验证 codex 已发布到生产的今日代码）授权限定：按版本词自动读取 `standard/WORKFLOW.md`，第 2 条「可以拆成多任务」启用 M2 受控多任务；全程完成并写测试报告。
+2. 任务 A 根因穿透两层：`SchemeItem.xml#selectGroupModelListBySchemeId` 未取 `sku_price/artificial_price`（同文件 SchemeId2 有），且 `SchemeDetailVO` 无对应字段导致 `BeanUtil.copyProperties` 丢失；分别在两仓独立 worktree/分支修复（bms-service `299b7262`、bms-ui `b1b85257`），两仓 `mvn -DskipTests compile` exit0、XML 结构校验通过。**未合并/未 push/未部署**，运行时 DB 验证待 codex 部署后复验。
+3. 任务 B 生产只读验证：GDC 生图记录详情（原始上传图/产品参考清单/未入选原因/机位快照）与 AIS 任务详情输入参数、Garden 供应商排序编辑 UI 均已上线；排序实际写回、R1 请求契约（历史任务 params 均 `{"n":1}`）、size 出站均未验证；BMS 生产强制企业微信/账号登录，本会话无凭据，验收 BLOCKED 交 codex/用户。未做生产写入、未付费、未扩大 S1 既有裁定。
+4. 如实登记：M2 五指标为工作区污染 0 / 文件分支冲突 0 / 派单归属错误不适用（本轮无派单）/ 验收会话串用 0 / 并行净收益正；M2 四件套对只读验证任务无豁免条款（DEC-132 P0-2 重现）建议补条款。详见 `basic/tasks/b-20261124-standard-fourth-trial/delivery.md`。
+
+## DEC-135 标准版第四次试运行补充验证：BMS 登录阻塞解除 + R1 本地自测（2026-11-24）
+
+1. 用户已登录 BMS 生产并指示「产品占比自己想办法测，代码都有」；按此补验，不追问凭据、不触发真实付费生图。
+2. BMS 综合报价在合同 `SO2611169704`（scheme `2125121801040719874`）精确复现：21 个行节点产品价格/人工价格全为 `—`，直接 fetch `items/sortedByGroup` 确认 JSON 中 `skuPrice/artificialPrice` 两个 key 不存在，坐实 VO 层根因；本地修复两分支不变，待 codex 部署后复验。
+3. R1 产品占比改走本地契约自测：GDC `test_product_constraints.py + test_external_ai_service.py` 33 passed（含 JSON 编码、edits multipart、同源冻结、size 缺省 `{"n":1}`、catalog 权威名），AIS `test_generic_jobs_capabilities.py` 16 passed（含 422 与出站覆盖）；均未调用真实供应商。结论为「代码级 PASS / 生产端到端未验」，不宣称线上真实请求已验。
+4. 证据与截图归入 `basic/tasks/b-20261124-standard-fourth-trial/evidence/`；未合并/未发布/未付费，DEC-010 保持。
+
+## DEC-136 标准版第四次试运行 R1 生产端到端 PASS（用户授权实测一笔，2026-11-24）
+
+1. 用户指示「生产上生图服务已经发布过了，你测试一笔吧，或者找下之前的请求数据」。先查生产 103 笔任务（11-01 起）：`product_constraints` 命中 0 笔、64 笔为 `size:auto/quality:auto`，确认无现成样本，按授权实测一笔。
+2. 入口=东海岸方案7（有冻结选品）→ 3D → AI 照片 → 夜景照（仅点一次）；新任务 `8c472c6c-5806-400f-a12d-8ae7fbe48184`，生产 AIS 详情 `params_json` 含 2 条 product_constraints（deck/柚木色、大号长花箱/星芒灰，含 score 与 screen_coverage），无 size/quality。
+3. 结果：status=succeeded，首个供应商一次成功（无切换、无重复计费尝试），结果图 1918×820 非方图、非硬编码 2048，坐实 R1 请求契约与 auto 画幅口径。证据见 `evidence/prod-r1-live-job.json` 与 `prod-r1-live-job-detail.png`。
+4. 边界：本决策仅授权这一笔真实生图，不扩大付费测试、不改变 DEC-010（未合并/未由本人发布/未删除数据）；BMS 修复仍待 codex 部署后复验。 `basic/tasks/b-20261124-standard-fourth-trial/delivery.md` 已同步更新。
+
+## DEC-137 三问题派 ChatGPT 讨论：AIS 详情 / BMS 价格 SQL / GDC 白块就绪门（2026-11-24）
+
+1. 用户就三问题指示「可以找 ChatGPT 讨论」。按派单纪律：首两轮分别因页面导航中断（NOT_SENT）与附件 chip 未验证（NOT_SENT）停止，均无重发；第三轮用 `standard-queue` 实例（profile gpt-poc-standard-queue，端口 9300）在既有审查会话 `6b056690…` 成功发送（SEND_CONFIRMED，1015B）。
+2. 采集 `INBOUND_WINDOW_COMPLETENESS_UNPROVEN` fail-closed → 禁重发 → 按 L-018 派生 `recoll_std5_three_issues.mjs`（CONV_UUID/SENT_USER_UNIT_KEY/FAILED_DIR 三参数全换，标记 `[TAG|STD5-3ISSUES]`，前轮 SHA 排除）→ 静态 DOM 全量物化补采，归属七查全过；reply 14493B，SHA256=`411fee632a0595e7…`，归档 `phase0/logs/recoll-std5-three-issues-2026-11-24T13-37-18-585Z/`。
+3. ChatGPT 裁定：①AIS **有条件认可**（白字与信息缺失分开；不能拿当前 main 源码断言生产 CSS 根因；缩略图须鉴权、不暴露私有存储地址）；②BMS **有条件认可修复方向，SQL 语义未 PASS**（须核对聚合键、50/99 分类、金额与明细对账，不能只看页面不再 `—`）；③GDC **现有门禁不予通过**（GLB Ready≠视觉资源就绪；贴图晚到/wallFade/renderFinalFrame 三类竞态未闭环；补 resource lifecycle + generation 隔离 + G1–G11 mock，含 G11 图片内容检查）。三项验收标准独立，Mock 通过不得宣称为生产通过。
+4. 本轮 ChatGPT 仅审查、不改码/不部署/不付费；实际修复与发布仍须用户拍板，DEC-010 保持。结果归档 `basic/tasks/b-20261124-standard-fourth-trial/gpt-discussion-result.md`。
+
+## DEC-138 用户指定主攻 BMS 价格修复：SQL 语义核对通过并推分支交 codex 部署（2026-11-24）
+
+1. 用户明确「1（AIS 详情）和 3（GDC 白块）已改好，你主要做 2」——本轮只推进 BMS 综合报价价格问题，不再动 1/3。
+2. 按 DEC-137 ChatGPT 裁定做只读 SQL 语义核对：五项风险（LEFT JOIN 保留行/聚合粒度/产品与人工分类/字段与 VO 映射）+ 补充项（历史报价隔离、SUM 不换 MAX、字段存在性、前端不重算）全部通过；CASE `purchase_type 50/99` 与同文件既有 `selectGroupModelListBySchemeId2` 逐字一致，枚举确认 50=安装基材、99=安装人工。本机无 MySQL、220 不可达，**未实际执行 SQL，不把静态核对冒充运行结果**。见 `bms-sql-review.md`。
+3. 两修复分支经代理 1080 push 到远端并核对完整 SHA：bms-service `task/bms-quote-price-be` @ `299b72629a586fd108be1a3d8a3d3d32c45d69c5`、bms-ui 同分支 @ `b1b852572df0f15eccaa8ade57547f68689344e7`；均为功能分支，未合并主分支。
+4. 交接 codex 部署的一句话与核对指针见 `codex-handoff-bms.md`；部署后在同一 scheme 做四层（SQL→VO→API→页面）与 6 类金额对照复验。DEC-010 保持——合并/其他生产发布仍须用户本人拍板。
+
+## DEC-139 用户纠正 1/3 未改 + 并行处理三问题：三分支修复完成、BMS 生产库实跑对账（2026-11-24）
+
+1. 用户纠正「1 和 3 我没改，刚才不是你说要处理吗」，并指示「mysql 可以按 BMS 部署文件连远端服务器和数据库；1、2、3 并行处理」。此前 DEC-138 把 1/3 误标由用户方处理，本决策更正：1/3 重新激活并处理。
+2. 按用户提示从 `/d/youting/BMS相关/00_系统基础/01_系统架构与部署规范.md` 取连接方式，生产库实为 `172.25.62.153:3306/ecog_bim`（配置里的 RDS 域名在跳板无法解析），经白名单跳板 `47.97.16.242` 用 Python+pymysql 只读查询；凭据不写入记忆/报告。
+3. **任务2 生产实跑 PASS**：从 mapper 提取修复后 SQL 原文执行，13 行全部有价格值；`SUM price=54184.1` = 生产 `totalPrice=54184.1`；`SUM sku=54116.0` + `SUM artificial=68.1` = 54184.1；明细分类（1:260/5:52356/60:运费1500 归产品，50:8.1/99:60 归人工）与关键行"产品及安装"328.1→260+68.1 均正确。任务2 从静态核对升级为生产实跑对账通过，仍待部署后页面四层复验。
+4. **任务1** AIS：生产 computed style 实证白字根因（`--text:#e8eaee` 浅字叠 `#f8fafc` 浅底）；修 `.input-prompt` 深字 + 新增鉴权输入媒体端点 `GET /jobs/{id}/inputs/{slot}`（按冻结 slot 取图、防越权）+ 前端缩略图（Blob URL 卸载撤销）。分支 `task/jobdetail-input-display` @ `559a195`；前端 3/3、后端 20/20。
+5. **任务3** GDC：补 `discoverySealed`（资源发现封口）+ `captureAiInput` 最终渲染屏障二次验门，防贴图晚到白块入生图；分支 `task/gdc-scene-ready-hardening` @ `e52b10a6`；前端 60/60。如实登记 ChatGPT G1–G11 中 G5/G7/G8/G9/G11 未覆盖，不宣称全闭环。
+6. 三分支均 push 功能分支、未合并主分支；未自行生产发布，DEC-010 保持。汇总见 `basic/tasks/b-20261124-standard-fourth-trial/three-issues-delivery.md`。
