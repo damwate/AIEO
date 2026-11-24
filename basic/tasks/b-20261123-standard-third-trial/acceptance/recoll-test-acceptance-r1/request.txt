@@ -1,0 +1,5 @@
+[AIEO-ROUND:323dcf7f63c7f0e4a442570e]
+R1/R2/R3+2K 实施验收。被测提交：GDC R2/R3=1a77baadbc2c041faaa0168963e96b0fe6f3e3c4，R1+2K=abf40b2bc77b73d0aa280e21d8568978fe83e03b（基于前者）；AIS R2=146ea3cfdfd2aae2b0e18c93e17c83da042d4690，出站测试=e442fbabe5bd3954e689faf3b256a4e2be311402。
+实现：R1冻结selected同源双写prompt区块+params.product_constraints，缺variant省略、HALF_UP、非法422、旧任务不注入；2K由GDC params显式2048x2048（AIS job_spec会覆盖配置默认auto）；R2代理排序写白名单；R3详情输入参数。
+测试：GDC AI 112 passed、前端3284 passed；AIS相关16 passed、前端42 passed；AIS全套572 passed+13项基线同样失败/单跑flaky，非本提交回归。全为mock，未再真实调用。远桥官方文档支持1:1 2K=2048x2048，悟空契约UNKNOWN。
+请审查代码逻辑与测试缺口，列MUST-FIX；不批准生产发布/付费验收。

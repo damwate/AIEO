@@ -1,0 +1,14 @@
+[
+  {
+    "key": "6ee17059-552d-5eeb-a0cc-c811aa0dfc85:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[AIEO-ROUND:2b375278906e2d57246174a1]\n2K 档位裁定。背景：生图服务默认 1K 改 2K，对象是三家 openai_com"
+  },
+  {
+    "key": "6ee17059-552d-5eeb-a0cc-c811aa0dfc85:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\n[AIEO-ROUND:2b375278906e2d57246174a1]\n\n2K 档位裁定\n\n初步裁定：不批准直接将三家供应商的 si"
+  }
+]

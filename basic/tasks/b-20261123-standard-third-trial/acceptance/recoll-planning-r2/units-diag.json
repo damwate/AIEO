@@ -1,0 +1,14 @@
+[
+  {
+    "key": "3dc7a4f6-3b84-5156-9367-018129b06b04:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[AIEO-ROUND:d441bc7f31b9b5a665a92c59]\nR2 契约审议。前置核实已完成：\n1) screen_coverage=0..1 占"
+  },
+  {
+    "key": "3dc7a4f6-3b84-5156-9367-018129b06b04:1:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\n[AIEO-ROUND:d441bc7f31b9b5a665a92c59]\n\nR2 契约审议裁定：有条件通过，可以进入实施准备；暂不批准"
+  }
+]

@@ -1,0 +1,8 @@
+[AIEO-ROUND:2b375278906e2d57246174a1]
+2K 档位裁定。背景：生图服务默认 1K 改 2K，对象是三家 openai_compat 网关供应商（wukong api.wukong.support、yuanqiao api.yuanqiaoyun.com，模型 gpt-image-2.6-sunburst；vendor-d5b728b6 同形）。
+实测：size=1024x1024 → 1254x1254；size=2048x2048 → 恰 2048x2048；size=auto/未识别 → 内容自适应怪尺寸（1448x1086、1312x1199）。
+用户断言：1K/2K/4K 是供应商档位参数，非像素值。请裁定：
+1) 配置 size 写 "2K" 是否即为正确档位调用？yuanqiao 与 vendor-d5b728b6 是否同认？
+2) 1024x1024→1254x1254 说明网关把像素串重映射；写 "2K" 与其档位表如何对应？
+3) vendor-38a26ea7（intelalloc，edits 通道）size=auto 且常 HTTP 400，保持 auto 还是处理？
+4) 修正执行（apply-2k.sh 烟测）前还有何必查项？

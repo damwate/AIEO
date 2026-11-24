@@ -1,0 +1,86 @@
+{
+  "recollection": true,
+  "driver": "recoll_ctx_code_r8.mjs (derived from r7, L-018 三参数核对)",
+  "remediation": "归属校验型定位（标记文本唯一+最后user断言+前轮SHA排除），未重发任何消息",
+  "reference_failed_dispatch_dir": "D:/AIEO/.worktrees/feat-standard-task-management/phase0/logs/dispatch-2026-11-24T03-56-47",
+  "conversation_url": "https://chatgpt.com/c/6b050b37-40b8-83ec-9365-8a0ca627b757",
+  "sent_user_unit_key_reported": "fallback-turn-0:0:user",
+  "located_user_unit_key": "6efaea29-3968-515a-87f1-c3ae6afcfb9e:0:user",
+  "assistant_uuid": "ca9f27ff-ebae-4846-bed2-c6b2b2b39b0f",
+  "unit_keys": [
+    "6efaea29-3968-515a-87f1-c3ae6afcfb9e:2:assistant"
+  ],
+  "unit_count": 1,
+  "reply_bytes": 8923,
+  "reply_sha256": "a58d9a5b408c0f911c1ba4a5cd69abd06e4bc41482fcedcd8051ee34beabfe98",
+  "checks": {
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "not_prev_reply_sha": true
+  },
+  "stability": {
+    "stable": true,
+    "interval_ms": 3539,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-24T04:17:45.018Z",
+      "read_finished_at": "2026-11-24T04:17:45.553Z",
+      "unit_keys": [
+        "6efaea29-3968-515a-87f1-c3ae6afcfb9e:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "6efaea29-3968-515a-87f1-c3ae6afcfb9e:2:assistant",
+          "sha256": "a58d9a5b408c0f911c1ba4a5cd69abd06e4bc41482fcedcd8051ee34beabfe98",
+          "size_bytes": 8923
+        }
+      ],
+      "assistant_uuid": "ca9f27ff-ebae-4846-bed2-c6b2b2b39b0f",
+      "next_user_unit_key": null,
+      "start_key_resolved": "6efaea29-3968-515a-87f1-c3ae6afcfb9e:0:user",
+      "start_resolved_by_marker": false,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-24T04:17:48.557Z",
+      "read_finished_at": "2026-11-24T04:17:49.099Z",
+      "unit_keys": [
+        "6efaea29-3968-515a-87f1-c3ae6afcfb9e:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "6efaea29-3968-515a-87f1-c3ae6afcfb9e:2:assistant",
+          "sha256": "a58d9a5b408c0f911c1ba4a5cd69abd06e4bc41482fcedcd8051ee34beabfe98",
+          "size_bytes": 8923
+        }
+      ],
+      "assistant_uuid": "ca9f27ff-ebae-4846-bed2-c6b2b2b39b0f",
+      "next_user_unit_key": null,
+      "start_key_resolved": "6efaea29-3968-515a-87f1-c3ae6afcfb9e:0:user",
+      "start_resolved_by_marker": false,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "extracted_at": "2026-11-24T04:17:49.102Z",
+  "artifacts": {
+    "reply": "D:\\AIEO\\basic\\tasks\\b-20261123-standard-third-trial\\acceptance\\recoll-test-acceptance-r1\\reply.txt",
+    "raw_units": "D:\\AIEO\\basic\\tasks\\b-20261123-standard-third-trial\\acceptance\\recoll-test-acceptance-r1\\raw-units.json"
+  }
+}

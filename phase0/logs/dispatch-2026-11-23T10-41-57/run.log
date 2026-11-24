@@ -1,0 +1,24 @@
+[2026-11-23T10:41:57.128Z] 证据目录: D:\AIEO\.worktrees\feat-standard-task-management\phase0\logs\dispatch-2026-11-23T10-41-57
+[2026-11-23T10:41:57.708Z] 会话锁已获取 pid=41860 instance=standard-queue lock=gpt-session-standard-queue.lockfile
+[2026-11-23T10:41:57.709Z] === GPT 派单（新建会话，消息 1195 字节）===
+[2026-11-23T10:41:58.258Z] [instance] 端口分配: instance=standard-queue port=9300（注册表已原子落盘，探测占用=0）
+[2026-11-23T10:41:58.374Z] [instance] 实例域就绪: instance=standard-queue port=9300 profile=gpt-poc-standard-queue lock=gpt-session-standard-queue.lockfile
+[2026-11-23T10:41:59.714Z] [instance] 清理本实例 Chrome：own=0 foreign(不动)=17 remaining=0
+[2026-11-23T10:42:02.264Z] Chrome 已启动 pid=1012 port=9300
+[2026-11-23T10:42:05.400Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 0 个
+[2026-11-23T10:42:05.401Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-23T10:42:48.382Z] 新聊天页面就绪
+[2026-11-23T10:42:53.462Z] [dispatch] 基线尾部: null
+[2026-11-23T10:42:56.652Z] [ctx-budget] turn+in_bytes=1195B → 6b0418af-0fcc-83ec-aff0-dad2dd269864
+[2026-11-23T10:42:56.652Z] [dispatch] 发送双验通过（polls=2，user_unit_key=fallback-turn-0:0:user，tail 后观察）
+[2026-11-23T10:42:57.489Z] 截图: sent-dispatch.png
+[2026-11-23T10:44:45.376Z] [dispatch] COMPLETED，1 个 assistant unit，回复 9361 UTF-8 字节，区间窗口 2 个
+[2026-11-23T10:44:45.534Z] 截图: reply-dispatch.png
+[2026-11-23T10:44:45.536Z] 会话 URL 已取得且归属校验 PASS，跳过 reviewer 指针写盘: https://chatgpt.com/c/6b0418af-0fcc-83ec-aff0-dad2dd269864
+[2026-11-23T10:44:45.542Z] JSON/Schema/绑定校验: NOT_REQUESTED
+[2026-11-23T10:44:45.553Z] [ctx-budget] turn+out_bytes=9361B → 6b0418af-0fcc-83ec-aff0-dad2dd269864
+[2026-11-23T10:44:45.553Z] M1 本地登记: NOT_REQUESTED（三 ID 均未提供，通用非登记派单）
+[2026-11-23T10:44:47.265Z] [instance] 清理本实例 Chrome：own=10 foreign(不动)=17 remaining=1
+[2026-11-23T10:44:47.268Z] [tab-hygiene] 成功退出：浏览器连接已关+实例 standard-queue Chrome 已清理（精确归属，他实例不动；含本次自建页 0 页）；本实例 tab 清零
+[2026-11-23T10:44:47.269Z] === 派单完成，artifact_sha256=1fe0f3a3a7ff9c41df1b120608341376ad0d609a5b116d56aa9ac9577bd3307e size_bytes=9361 ===
+[2026-11-23T10:44:47.377Z] 会话锁已释放

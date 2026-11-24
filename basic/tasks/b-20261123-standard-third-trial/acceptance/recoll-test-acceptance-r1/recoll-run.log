@@ -1,0 +1,21 @@
+[2026-11-24T04:09:45.178Z] 补采实例域: instance=standard-queue lock=D:\AIEO\.worktrees\feat-standard-task-management\runtime\locks\gpt-session-standard-queue.lockfile cdp=http://127.0.0.1:9300
+[2026-11-24T04:09:45.179Z] 会话锁已获取（R8 recoll；仅采集不发送）
+[2026-11-24T04:09:45.204Z] recoll FAILED: browserType.connectOverCDP: connect ECONNREFUSED 127.0.0.1:9300
+Call log:
+[2m  - <ws preparing> retrieving websocket url from http://127.0.0.1:9300[22m
+
+[2026-11-24T04:09:45.322Z] 会话锁已释放（R8 recoll）
+[2026-11-24T04:10:28.164Z] 补采实例域: instance=standard-queue lock=D:\AIEO\.worktrees\feat-standard-task-management\runtime\locks\gpt-session-standard-queue.lockfile cdp=http://127.0.0.1:9300
+[2026-11-24T04:10:28.165Z] 会话锁已获取（R8 recoll；仅采集不发送）
+[2026-11-24T04:10:28.789Z] [tab-hygiene] 会话页命中 1 个，取末位（最近创建）
+[2026-11-24T04:10:28.790Z] 页面就位: https://chatgpt.com/c/6b050b37-40b8-83ec-9365-8a0ca627b757
+[2026-11-24T04:16:55.386Z] 补采实例域: instance=standard-queue lock=D:\AIEO\.worktrees\feat-standard-task-management\runtime\locks\gpt-session-standard-queue.lockfile cdp=http://127.0.0.1:9300
+[2026-11-24T04:16:55.387Z] 会话锁已获取（R8 recoll；仅采集不发送）
+[2026-11-24T04:16:55.474Z] [tab-hygiene] 会话页命中 1 个，取末位（最近创建）
+[2026-11-24T04:16:55.475Z] 页面就位: https://chatgpt.com/c/6b050b37-40b8-83ec-9365-8a0ca627b757
+[2026-11-24T04:17:04.978Z] 静置门通过（2 units）；滚动到底+额外静置 30000ms
+[2026-11-24T04:17:45.018Z] 本轮 user 定位成功: 6efaea29-3968-515a-87f1-c3ae6afcfb9e:0:user（标记唯一+最后 user；发送双验报告键=fallback-turn-0:0:user 供对照）
+[2026-11-24T04:17:49.102Z] checks={"final_stop_button_not_visible":true,"tail_is_assistant":true,"dil_uuid_present":true,"uuid_stable":true,"stable_unit_read":true,"target_range_materialized":true,"not_prev_reply_sha":true}
+[2026-11-24T04:17:49.109Z] reply 已落盘: D:\AIEO\basic\tasks\b-20261123-standard-third-trial\acceptance\recoll-test-acceptance-r1\reply.txt（8923 字节，SHA256=a58d9a5b408c0f91…）
+[2026-11-24T04:17:49.110Z] recoll COMPLETED
+[2026-11-24T04:17:49.233Z] 会话锁已释放（R8 recoll）

@@ -1,0 +1,57 @@
+........................................................................ [ 64%]
+........................................                                 [100%]
+============================== warnings summary ===============================
+C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\fields.py:1076
+C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\fields.py:1076
+C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\fields.py:1076
+C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\fields.py:1076
+C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\fields.py:1076
+C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\fields.py:1076
+C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\fields.py:1076
+C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\fields.py:1076
+  C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\fields.py:1076: PydanticDeprecatedSince20: Using extra keyword arguments on `Field` is deprecated and will be removed. Use `json_schema_extra` instead. (Extra keys: 'exclude_if'). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.11/migration/
+    warn(
+
+C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\site-packages\starlette\testclient.py:37
+  C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\site-packages\starlette\testclient.py:37: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = typing.Callable[[], typing.ContextManager[anyio.abc.BlockingPortal]]
+
+app\ai\external_jobs.py:210
+  D:\Garden-Design-Calculator\src\backend\app\ai\external_jobs.py:210: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    @app.on_event('startup')
+
+C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\site-packages\fastapi\applications.py:4495
+C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\site-packages\fastapi\applications.py:4495
+  C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\site-packages\fastapi\applications.py:4495: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    return self.router.on_event(event_type)
+
+app\ai\external_jobs.py:216
+  D:\Garden-Design-Calculator\src\backend\app\ai\external_jobs.py:216: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    @app.on_event('shutdown')
+
+backend/tests/test_l2w1_ai_multiimage.py::test_migration_fresh_db_upgrade_twice_idempotent
+backend/tests/test_l2w1_ai_multiimage.py::test_migration_fresh_db_upgrade_twice_idempotent
+backend/tests/test_l2w1_ai_multiimage.py::test_migration_hotpatch_db_upgrade_skips_existing_ddl
+backend/tests/test_l2w1_ai_multiimage.py::test_migration_hotpatch_db_upgrade_skips_existing_ddl
+backend/tests/test_l2w1_ai_multiimage.py::test_migration_hotpatch_db_upgrade_skips_existing_ddl
+backend/tests/test_l2w1_ai_multiimage.py::test_migration_model_matches_db
+  C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\site-packages\alembic\config.py:604: DeprecationWarning: No path_separator found in configuration; falling back to legacy splitting on spaces, commas, and colons for prepend_sys_path.  Consider adding path_separator=os to Alembic config.
+    util.warn_deprecated(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+112 passed, 19 warnings in 33.47s

@@ -1,0 +1,260 @@
+
+> youting-workspace@0.6.0 test
+> vitest run src --run
+
+
+[1m[46m RUN [49m[22m [36mv3.2.7 [39m[90mD:/Garden-Design-Calculator/src/frontend[39m
+
+ [32m✓[39m src/renderFinalFrame.contract.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 182[2mms[22m[39m
+ [32m✓[39m src/project/legacyNavGuard.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 176[2mms[22m[39m
+ [32m✓[39m src/utils/cloneWiring.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 220[2mms[22m[39m
+ [32m✓[39m src/project/w7LegacyRetired.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 379[2mms[22m[39m
+ [32m✓[39m src/model.test.ts [2m([22m[2m116 tests[22m[2m)[22m[32m 284[2mms[22m[39m
+ [32m✓[39m src/fixtureGeometry.test.ts [2m([22m[2m39 tests[22m[2m)[22m[32m 213[2mms[22m[39m
+ [32m✓[39m src/plan/placementTransform.test.ts [2m([22m[2m35 tests[22m[2m)[22m[32m 243[2mms[22m[39m
+ [32m✓[39m src/project/ThreeViewSubtree.test.tsx [2m([22m[2m14 tests[22m[2m)[22m[32m 254[2mms[22m[39m
+ [32m✓[39m src/project/aiGeneration.test.ts [2m([22m[2m122 tests[22m[2m)[22m[32m 254[2mms[22m[39m
+ [32m✓[39m src/components/siteui/FixtureEditSheet.v4.test.tsx [2m([22m[2m17 tests[22m[2m)[22m[32m 258[2mms[22m[39m
+[90mstderr[2m | src/threeScene.test.ts[2m > [22m[2mW2-B 失配 key 回退默认：结构不崩、PlantingHost 照建（GOAL 12.3 渲染侧）
+[22m[39m[threeScene] placement p1: planting_recipe_key "ghost_key" 不存在，回退默认 Recipe spring_01（GOAL 12.3，不回写 Scene）
+
+ [32m✓[39m src/threeScene.test.ts [2m([22m[2m97 tests[22m[2m)[22m[33m 568[2mms[22m[39m
+ [32m✓[39m src/project/padVisualContracts.test.ts [2m([22m[2m28 tests[22m[2m)[22m[32m 161[2mms[22m[39m
+ [32m✓[39m src/threeScene.fixtureCW.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 190[2mms[22m[39m
+ [32m✓[39m src/components/siteui/siteui.test.tsx [2m([22m[2m54 tests[22m[2m)[22m[33m 359[2mms[22m[39m
+ [32m✓[39m src/aiReference/selectionParity.test.ts [2m([22m[2m45 tests[22m[2m | [22m[33m14 skipped[39m[2m)[22m[32m 172[2mms[22m[39m
+ [32m✓[39m src/smartOrientation.test.ts [2m([22m[2m58 tests[22m[2m)[22m[32m 117[2mms[22m[39m
+ [32m✓[39m src/three/siteFixtureMeshes.v4.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 135[2mms[22m[39m
+ [32m✓[39m src/plan/WallConfigOverlay.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[32m 84[2mms[22m[39m
+ [32m✓[39m src/project/NewProjectWizard.test.tsx [2m([22m[2m29 tests[22m[2m)[22m[32m 241[2mms[22m[39m
+ [32m✓[39m src/utils/polygonGeometry.test.ts [2m([22m[2m65 tests[22m[2m)[22m[32m 160[2mms[22m[39m
+ [32m✓[39m src/utils/siteGeometry.test.ts [2m([22m[2m46 tests[22m[2m)[22m[32m 119[2mms[22m[39m
+ [32m✓[39m src/aiReference/threeCapture.test.ts [2m([22m[2m49 tests[22m[2m)[22m[32m 117[2mms[22m[39m
+ [32m✓[39m src/threeScene.stop6.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 173[2mms[22m[39m
+ [32m✓[39m src/project/siteEditorEdgeSelect.test.ts [2m([22m[2m30 tests[22m[2m)[22m[32m 77[2mms[22m[39m
+ [32m✓[39m src/threeSky.test.ts [2m([22m[2m35 tests[22m[2m)[22m[32m 123[2mms[22m[39m
+ [32m✓[39m src/plan/siteFixtureVisual.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 82[2mms[22m[39m
+ [32m✓[39m src/plan/edgeMeasurements.test.ts [2m([22m[2m35 tests[22m[2m)[22m[32m 76[2mms[22m[39m
+ [32m✓[39m src/planting/recipe.test.ts [2m([22m[2m46 tests[22m[2m)[22m[32m 62[2mms[22m[39m
+ [32m✓[39m src/utils/siteDraftPatch.test.ts [2m([22m[2m37 tests[22m[2m)[22m[32m 83[2mms[22m[39m
+ [32m✓[39m src/utils/directionCandidates.test.ts [2m([22m[2m23 tests[22m[2m)[22m[32m 54[2mms[22m[39m
+ [32m✓[39m src/aiReference/selection.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 56[2mms[22m[39m
+ [32m✓[39m src/plan/wallCornerAssembly3d.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 53[2mms[22m[39m
+ [32m✓[39m src/sceneProps.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 75[2mms[22m[39m
+ [32m✓[39m src/threeEnv.test.ts [2m([22m[2m46 tests[22m[2m)[22m[32m 70[2mms[22m[39m
+ [32m✓[39m src/plan/fixtureInteraction.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 52[2mms[22m[39m
+ [32m✓[39m src/components/siteui/CustomSiteTraceCanvas.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[32m 51[2mms[22m[39m
+[90mstderr[2m | src/planting/billboard.test.ts[2m > [22m[2mTexture/Material 缓存（GOAL 22.2-7 + 23：同图复用、引用计数 dispose）[2m > [22m[2mT1(b)：失败 failed=1 / isReady=false；release 后计数归零
+[22m[39m[planting] 植物贴图加载失败，保持素色面片: /assets/planting/t1_fail.webp
+
+[90mstderr[2m | src/planting/billboard.test.ts[2m > [22m[2mPlantMaterialCache foliage fill（同 Texture 作 map+emissiveMap，禁第二份加载/克隆）[2m > [22m[2memissive fill 只在贴图到达后启用：加载前/失败时 emissive 保持黑（素色面片不发光）
+[22m[39m[planting] 植物贴图加载失败，保持素色面片: /assets/planting/a.webp
+
+ [32m✓[39m src/planting/billboard.test.ts [2m([22m[2m48 tests[22m[2m)[22m[32m 65[2mms[22m[39m
+ [32m✓[39m src/project/generationBatch.test.ts [2m([22m[2m58 tests[22m[2m)[22m[32m 49[2mms[22m[39m
+ [32m✓[39m src/project/BriefPage.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[32m 53[2mms[22m[39m
+ [32m✓[39m src/catalogContract.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 39[2mms[22m[39m
+ [32m✓[39m src/components/workbench/SelectionPropertySheet.test.tsx [2m([22m[2m11 tests[22m[2m)[22m[32m 75[2mms[22m[39m
+ [32m✓[39m src/threeMaterials.test.ts [2m([22m[2m30 tests[22m[2m)[22m[32m 41[2mms[22m[39m
+ [32m✓[39m src/plan/elevationGeometry.test.ts [2m([22m[2m35 tests[22m[2m)[22m[32m 47[2mms[22m[39m
+ [32m✓[39m src/components/workbench/LayoutCheckSheet.test.tsx [2m([22m[2m4 tests[22m[2m)[22m[32m 40[2mms[22m[39m
+ [32m✓[39m src/aiReference/contracts.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 37[2mms[22m[39m
+ [32m✓[39m src/utils/customSceneBridge.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 42[2mms[22m[39m
+[90mstdout[2m | src/three/pondHollowOcclusion.test.ts[2m > [22m[2mE3 pond hollow see-through probe[2m > [22m[2mray from outside west hits outer wall before cavity
+[22m[39mMESH_COUNT [33m2[39m [
+  { name: [32m''[39m, basin: [32m'base'[39m, verts: [33m36[39m },
+  { name: [32m''[39m, basin: [32m'walls'[39m, verts: [33m96[39m }
+]
+WEST_RAY_HITS [33m4[39m [
+  { d: [32m'4.200'[39m, x: [32m'1.200'[39m },
+  { d: [32m'4.200'[39m, x: [32m'1.200'[39m },
+  { d: [32m'5.600'[39m, x: [32m'2.600'[39m },
+  { d: [32m'5.600'[39m, x: [32m'2.600'[39m }
+]
+
+[90mstdout[2m | src/three/pondHollowOcclusion.test.ts[2m > [22m[2mE3 pond hollow see-through probe[2m > [22m[2mvertical ray down into cavity hits basin base top
+[22m[39mDOWN_RAY_HITS [33m1[39m [ { d: [32m'2.900'[39m, y: [32m'0.100'[39m } ]
+
+[90mstdout[2m | src/three/pondHollowOcclusion.test.ts[2m > [22m[2mE3 pond hollow see-through probe[2m > [22m[2mray from inside cavity outward hits inner wall front face (normal faces cavity)
+[22m[39mINSIDE_OUT_HITS [33m2[39m [ { d: [32m'0.600'[39m, x: [32m'1.400'[39m }, { d: [32m'0.600'[39m, x: [32m'1.400'[39m } ]
+
+ [32m✓[39m src/three/pondHollowOcclusion.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 40[2mms[22m[39m
+ [32m✓[39m src/planting/plantingData.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m src/project/unsavedLeave.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32m✓[39m src/components/siteui/siteEditGuideOverlay.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 36[2mms[22m[39m
+ [32m✓[39m src/utils/customTrace.test.ts [2m([22m[2m37 tests[22m[2m)[22m[32m 47[2mms[22m[39m
+ [32m✓[39m src/plan/snapEngine.test.ts [2m([22m[2m39 tests[22m[2m)[22m[32m 36[2mms[22m[39m
+ [32m✓[39m src/project/generationBatch.stream.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 41[2mms[22m[39m
+ [32m✓[39m src/planting/editor.test.ts [2m([22m[2m39 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+ [32m✓[39m src/components/siteui/optionImageGrid.test.tsx [2m([22m[2m9 tests[22m[2m)[22m[32m 42[2mms[22m[39m
+ [32m✓[39m src/project/SchemeAiGallery.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 33[2mms[22m[39m
+ [32m✓[39m src/plan/combination.test.ts [2m([22m[2m37 tests[22m[2m)[22m[32m 35[2mms[22m[39m
+ [32m✓[39m src/plan/groupMode.test.ts [2m([22m[2m28 tests[22m[2m)[22m[32m 38[2mms[22m[39m
+ [32m✓[39m src/project/SiteImportSheet.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[32m 34[2mms[22m[39m
+ [32m✓[39m src/project/openingNotices.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 48[2mms[22m[39m
+ [32m✓[39m src/plan/siteVertexEditing.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 34[2mms[22m[39m
+ [32m✓[39m src/project/siteEditHistory.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+ [32m✓[39m src/components/workbench/right/ProductLibrary.test.ts [2m([22m[2m27 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+ [32m✓[39m src/plan/blockClamp.m3.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 27[2mms[22m[39m
+ [32m✓[39m src/project/projectClient.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 35[2mms[22m[39m
+ [32m✓[39m src/admin/CategoryAdmin.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 32[2mms[22m[39m
+ [32m✓[39m src/quote.test.ts [2m([22m[2m42 tests[22m[2m)[22m[32m 37[2mms[22m[39m
+ [32m✓[39m src/plan/placementStacking.test.ts [2m([22m[2m25 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+ [32m✓[39m src/components/workbench/QuoteSheet.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+ [32m✓[39m src/threeWallFade.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 31[2mms[22m[39m
+ [32m✓[39m src/planting/occlusion.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+ [32m✓[39m src/project/CopyProjectWizard.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 27[2mms[22m[39m
+ [32m✓[39m src/components/form/CentimeterInput.test.tsx [2m([22m[2m14 tests[22m[2m)[22m[32m 27[2mms[22m[39m
+ [32m✓[39m src/utils/openingRules.test.ts [2m([22m[2m69 tests[22m[2m)[22m[32m 33[2mms[22m[39m
+ [32m✓[39m src/plan/wallTopView.test.ts [2m([22m[2m42 tests[22m[2m)[22m[32m 33[2mms[22m[39m
+ [32m✓[39m src/share/shareModel.test.ts [2m([22m[2m29 tests[22m[2m)[22m[32m 32[2mms[22m[39m
+ [32m✓[39m src/components/workbench/stoneCutDxf.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+ [32m✓[39m src/components/form/ReadOnlyValue.test.tsx [2m([22m[2m5 tests[22m[2m)[22m[32m 28[2mms[22m[39m
+ [32m✓[39m src/plan/dropResolution.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+ [32m✓[39m src/project/sceneSave.test.ts [2m([22m[2m33 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+ [32m✓[39m src/plan/poSceneCompat.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+ [32m✓[39m src/plan/editCommand.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 28[2mms[22m[39m
+ [32m✓[39m src/admin/AiJobsAdmin.test.ts [2m([22m[2m26 tests[22m[2m)[22m[32m 27[2mms[22m[39m
+ [32m✓[39m src/plan/surfaceSnap.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+ [32m✓[39m src/utils/chamferHandles.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 27[2mms[22m[39m
+ [32m✓[39m src/plan/openingHit.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 26[2mms[22m[39m
+ [32m✓[39m src/components/LottieLoopIcon.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+ [32m✓[39m src/plan/siteEdgeDrag.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 29[2mms[22m[39m
+ [32m✓[39m src/plan/wallCards.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 27[2mms[22m[39m
+ [32m✓[39m src/plan/cardLayout.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32m✓[39m src/plan/wallInset.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 21[2mms[22m[39m
+ [32m✓[39m src/threeWalk.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32m✓[39m src/components/avatarImage.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32m✓[39m src/project/GenerateOverlay.test.tsx [2m([22m[2m2 tests[22m[2m)[22m[32m 21[2mms[22m[39m
+ [32m✓[39m src/plan/openingBoundaryDrag.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32m✓[39m src/plan/fixtureMoveMath.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+ [32m✓[39m src/plan/surfaceTransform.m2.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32m✓[39m src/project/sceneSeed.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32m✓[39m src/three3DHosts.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m src/state/ui.test.ts [2m([22m[2m25 tests[22m[2m)[22m[32m 21[2mms[22m[39m
+ [32m✓[39m src/project/projectHome.test.ts [2m([22m[2m24 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32m✓[39m src/project/SchemeSession.v5-lock.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32m✓[39m src/plan/snapEngine.m1.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32m✓[39m src/utils/clone.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32m✓[39m src/project/briefSingleSource.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m src/project/customSiteGeneration.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32m✓[39m src/share/SharePage.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m src/plan/openings.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32m✓[39m src/plan/edgeNaming.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 24[2mms[22m[39m
+ [32m✓[39m src/cutZone.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32m✓[39m src/aiReference/threeCapture.lockFingerprint.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+ [32m✓[39m src/components/workbench/LightingTuneDrawer.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m src/project/shareLink.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m src/project/schemePreview.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32m✓[39m src/project/siteRevision.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m src/plan/surfaceTransform.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32m✓[39m src/utils/fileName.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m src/project/onboardingSave.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32m✓[39m src/plan/snapEngine.r21.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32m✓[39m src/plan/wallConfig.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32m✓[39m src/three/siteFixtureMeshes.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32m✓[39m src/project/workspaceApi.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32m✓[39m src/project/previewCache.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32m✓[39m src/admin/productEditor.test.ts [2m([22m[2m30 tests[22m[2m)[22m[32m 27[2mms[22m[39m
+ [32m✓[39m src/three/contextLoss.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m src/project/publicationModel.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32m✓[39m src/project/customSitePageIntegration.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m src/plan/blockClamp.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32m✓[39m src/ctaContrast.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 25[2mms[22m[39m
+ [32m✓[39m src/utils/panelDrag.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m src/plan/textureAssets.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m src/admin/LightingConfigAdmin.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32m✓[39m src/threeObserve.test.ts [2m([22m[2m27 tests[22m[2m)[22m[32m 21[2mms[22m[39m
+ [32m✓[39m src/plan/snapEngine.m3-circle.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32m✓[39m src/plan/surfaceTransform.m3.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m src/project/routes.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32m✓[39m src/utils/dragIntent.test.ts [2m([22m[2m18 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32m✓[39m src/plan/snapEngine.m4.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m src/plan/pendingPlacement.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m src/plan/vertexOrthogonalSnap.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m src/plan/dimensionEmphasis.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m src/components/workbench/right/ValidationPanel.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 16[2mms[22m[39m
+ [32m✓[39m src/plan/viewport.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m src/components/workbench/openingDefault.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m src/components/siteui/fixtureSelectionActions.test.tsx [2m([22m[2m3 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m src/plan/orientedGeometry.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32m✓[39m src/three/onDemandLoop.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m src/plan/collisionPolicy.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m src/project/projectShareModel.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m src/plan/fixtureTransformControls.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32m✓[39m src/plan/fixtureTransformControls.m1.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m src/threeScene.furniture.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m src/plan/fixtureInteraction.m3.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32m✓[39m src/project/publishModel.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m src/project/siteErrorViolations.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32m✓[39m src/plan/siteFixtureGeometry.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m src/plan/collisionPolicy.m3.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m src/threeCamera.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m src/plan/transformBox.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32m✓[39m src/project/revisionNote.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m src/plan/groundTiling.test.ts [2m([22m[2m12 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m src/plan/touchGesture.test.ts [2m([22m[2m19 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m src/project/copyFallback.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m src/project/projectClient_r3c.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m src/project/responsive.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m src/plan/deckLayout.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m src/project/regionCascade.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m src/state/undo.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m src/plan/pointerDrag.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m src/plan/dimensionLanes.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32m✓[39m src/assetVersions.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m src/plan/dimScene.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m src/plan/wallCornerJoins.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32m✓[39m src/admin/productFilters.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m src/shopLinks.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m src/plan/plantingScope.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m src/plan/openingTapPlacement.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m src/assetVersionResolver.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m src/plan/pinch.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m src/admin/ComboAdmin.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m src/components/SelectionFloatingToolbar.test.tsx [2m([22m[2m7 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m src/plan/materialGlobal.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m src/plan/fixtureNaming.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m src/components/identity.test.tsx [2m([22m[2m10 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m src/plan/surfaceFill.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m src/admin/plantImageConvert.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m src/crossDomainPatch.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m src/utils/importScene.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m src/admin/PlantAssetAdmin.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m src/three/ktx2.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+ [32m✓[39m src/project/productIntent.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m src/components/form/CmInput.test.tsx [2m([22m[2m6 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m src/aiReference/captureFrame.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m src/project/schemeName.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 10[2mms[22m[39m
+ [32m✓[39m src/sceneReady.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m src/admin/userForm.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m src/plan/orientedGeometry.m3.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m src/components/siteui/fixtureToolbarActions.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m src/admin/SkyLabAdmin.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m src/project/threeChunkRecovery.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m src/three/retiredStudios.contract.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m src/admin/ShareConfigAdmin.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32m✓[39m src/plan/worldGrid.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m src/project/customSitePage.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m src/project/SchemeCard.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m src/components/workbench/CutPlanSheet.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m src/components/three/aiQuickQueue.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m src/plan/drawSegmentLength.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 8[2mms[22m[39m
+ [32m✓[39m src/utils/orientation.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m src/utils/inputModality.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m src/utils/unit.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m src/model.m3.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32m✓[39m src/sceneReady.wiring.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m src/admin/AiPromptConfigAdmin.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m src/admin/ScenePropAdmin.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m src/project/siteRevisionPhysicallyStale.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m src/components/workbench/QuoteTable.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32m✓[39m src/project/aiReferencePermissions.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m src/project/SitePhotoViewer.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32m✓[39m src/components/three/AiQuickPhotoPanel.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 4[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m220 passed[39m[22m[90m (220)[39m
+[2m      Tests [22m [1m[32m3284 passed[39m[22m[2m | [22m[33m14 skipped[39m[90m (3298)[39m
+[2m   Start at [22m 11:56:27
+[2m   Duration [22m 50.00s[2m (transform 23.74s, setup 0ms, collect 59.20s, tests 9.62s, environment 78ms, prepare 89.16s)[22m
+

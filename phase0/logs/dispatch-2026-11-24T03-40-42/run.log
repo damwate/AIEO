@@ -1,0 +1,17 @@
+[2026-11-24T03:40:42.729Z] 证据目录: D:\AIEO\.worktrees\feat-standard-task-management\phase0\logs\dispatch-2026-11-24T03-40-42
+[2026-11-24T03:40:43.851Z] 会话锁已获取 pid=38884 instance=standard-queue lock=gpt-session-standard-queue.lockfile
+[2026-11-24T03:40:43.852Z] === GPT 派单（已有会话，消息 842 字节）===
+[2026-11-24T03:40:44.526Z] [instance] 端口沿用注册表登记: instance=standard-queue port=9300
+[2026-11-24T03:40:44.636Z] [instance] 实例域就绪: instance=standard-queue port=9300 profile=gpt-poc-standard-queue lock=gpt-session-standard-queue.lockfile
+[2026-11-24T03:40:46.454Z] [instance] 清理本实例 Chrome：own=0 foreign(不动)=17 remaining=0
+[2026-11-24T03:40:49.012Z] Chrome 已启动 pid=16684 port=9300
+[2026-11-24T03:40:51.474Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 0 个
+[2026-11-24T03:40:51.474Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-24T03:41:31.832Z] 会话就绪: https://chatgpt.com/c/6b0418af-0fcc-83ec-aff0-dad2dd269864
+[2026-11-24T03:41:36.860Z] [dispatch] 基线尾部: {"role":"assistant","key":"6ee17059-552d-5eeb-a0cc-c811aa0dfc85:2:assistant","assistantUuid":"2676252e-1648-44db-868b-e1549a008ed8"}
+[2026-11-24T03:41:37.898Z] [ctx-budget] turn+in_bytes=842B → 6b0418af-0fcc-83ec-aff0-dad2dd269864
+[2026-11-24T03:41:37.898Z] [dispatch] 发送双验通过（polls=1，user_unit_key=fallback-turn-0:0:user，tail 后观察）
+[2026-11-24T03:41:38.160Z] 截图: sent-dispatch.png
+[2026-11-24T03:43:55.014Z] 会话锁已释放
+[2026-11-24T03:43:55.015Z] 致命错误: INBOUND_START_UNIT_MISSING: 连续向上搜索到顶部仍未找到可分段读取的 fallback-turn-0:0:user (marker=[AIEO-ROUND:14f17ab580755841eb2737b0])
+[2026-11-24T03:43:55.017Z] [tab-hygiene] 发送已发生：保留现场不关页（禁重发语义依赖现场）；退出后由人工/补采链按 L-018 处置

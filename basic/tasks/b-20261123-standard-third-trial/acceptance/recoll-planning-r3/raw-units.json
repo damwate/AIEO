@@ -1,0 +1,94 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-23T15:59:29.989Z",
+  "user_unit_key": "6ee17059-552d-5eeb-a0cc-c811aa0dfc85:0:user",
+  "start_key_resolved": "6ee17059-552d-5eeb-a0cc-c811aa0dfc85:0:user",
+  "start_resolved_by_marker": false,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "6ee17059-552d-5eeb-a0cc-c811aa0dfc85:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "2676252e-1648-44db-868b-e1549a008ed8",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "6ee17059-552d-5eeb-a0cc-c811aa0dfc85:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "6ee17059-552d-5eeb-a0cc-c811aa0dfc85:0:user",
+          "6ee17059-552d-5eeb-a0cc-c811aa0dfc85:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "f3dc30b25f3fbfacc6a6638a8e54c364f2eb16ab7f1e84e3de4066fd1585399c",
+          "4bb41bc0596afa30399f99cd8ad48c77d90b40813b81e0b49ce4a6f4e48feaf3"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "6ee17059-552d-5eeb-a0cc-c811aa0dfc85:0:user",
+          "6ee17059-552d-5eeb-a0cc-c811aa0dfc85:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "f3dc30b25f3fbfacc6a6638a8e54c364f2eb16ab7f1e84e3de4066fd1585399c",
+          "4bb41bc0596afa30399f99cd8ad48c77d90b40813b81e0b49ce4a6f4e48feaf3"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "6ee17059-552d-5eeb-a0cc-c811aa0dfc85:0:user",
+          "6ee17059-552d-5eeb-a0cc-c811aa0dfc85:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "6ee17059-552d-5eeb-a0cc-c811aa0dfc85:0:user",
+      "6ee17059-552d-5eeb-a0cc-c811aa0dfc85:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "6ee17059-552d-5eeb-a0cc-c811aa0dfc85:0:user",
+          "6ee17059-552d-5eeb-a0cc-c811aa0dfc85:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "6ee17059-552d-5eeb-a0cc-c811aa0dfc85:0:user",
+          "6ee17059-552d-5eeb-a0cc-c811aa0dfc85:2:assistant"
+        ],
+        "overlap_keys": [
+          "6ee17059-552d-5eeb-a0cc-c811aa0dfc85:0:user",
+          "6ee17059-552d-5eeb-a0cc-c811aa0dfc85:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "6ee17059-552d-5eeb-a0cc-c811aa0dfc85:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n[AIEO-ROUND:2b375278906e2d57246174a1]\n\n2K 档位裁定\n\n初步裁定：不批准直接将三家供应商的 size 统一改成 \"2K\" 后执行 apply-2k.sh。建议按供应商、模型、通道分别确认档位映射，再实施。\n\n这里必须区分三个概念：\n\n档位参数：供应商定义的 1K、2K、4K。\n\n请求参数：实际发送的 size 字符串。\n\n输出像素尺寸：服务最终返回图片的宽、高。\n\n这三者不能直接画等号。\n\n你提供的实测已经证明：\n\n请求 size\n\n\t\n\n实际输出\n\n\t\n\n能够证明什么\n\n\n\n\n1024x1024\n\n\t\n\n1254×1254\n\n\t\n\n像素串没有按字面尺寸输出\n\n\n\n\n2048x2048\n\n\t\n\n2048×2048\n\n\t\n\n此请求得到目标尺寸\n\n\n\n\nauto / 未识别\n\n\t\n\n1448×1086 等\n\n\t\n\n存在内容自适应行为\n\n尤其需要注意：2048×2048 的实测成功，只能证明该请求组合产生了 2048×2048 输出，不能单独证明它对应供应商定义的 2K 档位。\n\n同样，不能因为 1024×1024 输出 1254×1254，就推断供应商的档位表一定将其映射为 1K。\n\n一、问题1：size=\"2K\" 是否正确？\n不能统一认定正确\n\n目前能查到的供应商资料给出了一个重要区别：\n\n远桥云公开的 Images API 文档明确规定：\n\nsize 使用 宽x高，例如 1024x1024。\n\n1K、2K、4K 对应具体像素尺寸。\n\n不应直接把 1K、2K、4K 写入 quality。\n\n对不支持的尺寸会返回 HTTP 400。\n远桥云\n\n官方 GPT Image 文档也将 size 定义为输出尺寸，支持明确像素尺寸及 auto。\nOpenAI API\n+1\n\n因此：\n\n供应商\n\n\t\n\nsize=\"2K\" 裁定\n\n\n\n\nWukong\n\n\t\n\n未取得足够官方证据，待实测\n\n\n\n\nYuanqiao\n\n\t\n\n公开文档不支持直接认定，倾向使用像素尺寸\n\n\n\n\nvendor-d5b728b6\n\n\t\n\n未取得独立证据，不能继承其他供应商结论\n\n特别说明：远桥云公开文档针对 GPT Image 2 / 2.5 的内容，不能直接当作 gpt-image-2.6-sunburst 的完整供应商契约。\n\n也不能因为三家都是 openai_compat，就认为它们对非标准扩展参数具有相同解释。\n\n二、问题2：1024×1024 输出1254×1254意味着什么？\n\n目前只能确认：\n\n网关或上游处理链路没有保证输出尺寸等于请求尺寸。\n\n可能的原因包括：\n\n档位映射。\n\n模型内部画布尺寸调整。\n\n网关预处理或后处理。\n\n输出图片裁切、缩放或尺寸归一化。\n\n1254 不是足以识别 1K 档位的标准证据。\n\n如果供应商使用独立档位参数，那么应该以其参数定义为准，而不是通过输出像素反推。\n\n例如，某些网关确实存在 size_tier 这种独立字段，但这不意味着 Wukong、Yuanqiao 也支持它。\n星渊 API 指南\n\n当前不能建立 1024x1024 → 1K、2048x2048 → 2K 的供应商通用映射表。\n\n三、问题3：IntelAlloc（vendor-38a26ea7）是否保留 auto？\n建议处理，不建议继续无条件使用 auto\n\nIntelAlloc 的 /images/edits 文档有明确说明：\n\n使用 multipart/form-data。\n\nsize 是可选字段。\n\n示例使用 2048x1152。\n\n可用尺寸取决于模型。\n\n不要手动设置 multipart 的 Content-Type，应让 HTTP 客户端生成 boundary。\nIntelAlloc Docs\n\n官方 GPT Image 接口允许部分模型使用 auto，但这不代表 IntelAlloc 当前模型和 edits 通道一定正确支持。\nOpenAI API Reference\n+1\n\n我的裁定：\n\n不再把 auto 当成生产默认值。\n\n暂时不把 IntelAlloc 纳入 2K 档位统一切换。\n\n先分别测试省略 size、明确 2048x2048。\n\n必须保留 HTTP 400 原始响应体和请求字段快照。\n\n尤其不能直接认定 HTTP 400 是 auto 引起的。\n\n还要检查：\n\nimage[] 是否正确传递。\n\nmultipart boundary 是否完整。\n\n模型 ID 是否在 /models 返回的可用目录中。\n\n输入图片数量、格式和大小是否满足限制。\n\nquality 是否与模型兼容。\n\n是否有其他不支持的参数。\n\n如果省略 size 成功、auto 失败，才有充分理由从 IntelAlloc 的生产请求中移除 auto。\n\n四、问题4：apply-2k.sh 执行前必须检查什么？\n\n我建议增加一个明确的实施门禁。\n\nMUST-FIX-01：三家供应商分别证明档位映射\n\n不能按 openai_compat 类型批量修改。\n\n供应商\n\n\t\n\n必须取得的证据\n\n\n\n\nWukong\n\n\t\n\nsize=2K 是否被识别，实际输出尺寸\n\n\n\n\nYuanqiao\n\n\t\n\n2.6 Sunburst edits 通道的实际参数定义\n\n\n\n\nvendor-d5b728b6\n\n\t\n\n独立确认参数映射，不继承其他供应商结果\n\n特别是 Yuanqiao，要区分：\n\nImages API generations。\n\nImages API edits。\n\nOpenAI-compatible 其他通道。\n\n不能拿 generations 的成功结果证明 edits 的行为。\n\nMUST-FIX-02：请求与响应必须成对留证\n\n每家供应商至少做以下测试：\n\n测试\n\n\t\n\n请求 size\n\n\t\n\n目的\n\n\n\n\nA\n\n\t\n\n1024x1024\n\n\t\n\n旧行为基线\n\n\n\n\nB\n\n\t\n\n2048x2048\n\n\t\n\n明确像素请求\n\n\n\n\nC\n\n\t\n\n2K\n\n\t\n\n档位字符串探测\n\n\n\n\nD\n\n\t\n\n不传 size\n\n\t\n\n默认行为探测\n\n\n\n\nE\n\n\t\n\nauto\n\n\t\n\n自动尺寸行为探测\n\n每项记录：\n\n供应商 ID。\n\nmodel ID。\n\nendpoint。\n\n实际发送的原始 size。\n\nHTTP 状态码。\n\n原始响应错误体。\n\n返回图片真实宽高。\n\n图片文件 SHA256。\n\n费用或计费档位（可获得时）。\n\n耗时。\n\n不能仅凭 HTTP 200 就判定 2K 成功。\n\nMUST-FIX-03：确认费用和实际档位\n\n这是生产环境的重要风险。\n\n如果供应商把 2K 当作不支持的像素字符串、忽略参数，或者回退默认档位，就可能发生：\n\n实际仍然是 1K。\n\n输出尺寸不稳定。\n\n费用档位与预期不符。\n\n不同供应商成本不可比较。\n\n必须获得供应商返回的实际档位信息，或者通过供应商账单、计费记录确认。\n\nMUST-FIX-04：脚本安全性\n\napply-2k.sh 至少检查：\n\n只修改明确列出的供应商配置。\n\n修改前备份。\n\n显示修改前后 diff。\n\n不覆盖其他模型配置。\n\n不修改 IntelAlloc 配置。\n\n不触碰生产密钥。\n\n烟测失败立即停止。\n\n能够一键回滚。\n\n烟测结果绑定 Git commit 和配置 SHA256。\n\n五、建议最终实施策略\n\n我不建议现在就把三家统一配置成：\n\n纯文本\nsize = \"2K\"\n\n建议采用供应商独立配置：\n\n纯文本\nprovider_size_policy:\n  wukong:\n    model: gpt-image-2.6-sunburst\n    mode: 待实测确认\n\n  yuanqiao:\n    model: gpt-image-2.6-sunburst\n    mode: 待实测确认\n\n  vendor-d5b728b6:\n    model: gpt-image-2.6-sunburst\n    mode: 待实测确认\n\n  vendor-38a26ea7:\n    model: intelalloc\n    mode: 暂不纳入2K切换\n\nmode 应最终明确区分：\n\npixel_size：发送具体像素尺寸。\n\nsize_tier：供应商明确支持的独立档位参数。\n\nauto：供应商确认支持的自动尺寸。\n\nomit：不发送 size，由供应商决定。\n\n不要为了统一配置格式而假设所有供应商使用相同参数。\n\n六、最终裁定汇总\n2K 档位 R1 裁定\n\n总体方向\n\n通过分供应商验证\n\n项目\n\n\t\n\n裁定\n\n\n\n\nsize=\"2K\" 通用正确\n\n\t\n\n不通过\n\n\n\n\nYuanqiao 与 Wukong 同认\n\n\t\n\n未证实\n\n\n\n\nvendor-d5 同认\n\n\t\n\n未证实\n\n\n\n\n2048×2048 输出\n\n\t\n\n已有实测支持\n\n\n\n\n1024→1254 映射解释\n\n\t\n\n证据不足\n\n\n\n\nIntelAlloc 保留 auto\n\n\t\n\n不作为生产默认\n\n\n\n\nIntelAlloc 立即改2K\n\n\t\n\n暂缓\n\n\n\n\napply-2k.sh\n\n\t\n\n门禁通过前禁止执行\n\n我的最终建议：先做三家供应商的独立参数烟测，再生成供应商能力矩阵，最后才执行 apply-2k.sh。\n\n这次不要把「输出像素达到 2K」和「供应商确实调用了 2K 计费档位」混为一谈。\n\n目前最重要的未决证据是：Wukong、Yuanqiao、vendor-d5 对 size=\"2K\" 的真实处理结果，以及实际计费档位。 在这两项得到证明前，不批准统一切换。",
+      "text_sha256": "4bb41bc0596afa30399f99cd8ad48c77d90b40813b81e0b49ce4a6f4e48feaf3",
+      "size_bytes": 7661,
+      "assistant_uuid": "2676252e-1648-44db-868b-e1549a008ed8"
+    }
+  ]
+}

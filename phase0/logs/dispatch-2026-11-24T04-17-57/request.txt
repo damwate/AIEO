@@ -1,0 +1,3 @@
+[AIEO-ROUND:46f5e95b65f9e6d6f2852ffb]
+R5 size/auto参数来源裁定。用户最新理解：gpt-image 2.* sunburst在edits带设计参考图时，应根据设计图自动生成对应画幅；quality/size默认auto，除非前端显式传值。GDC前端当前无size字段，GDC后端曾硬编码params.size=2048x2048（未发布，待撤/改）。远桥官方文档：GPT Image 2.6 sunburst的size用宽x高，1:1 2K=2048x2048。悟空官方gpt-image-1 edits文档：quality默认auto，size仅1024x1024/1536x1024/1024x1536/auto(默认)，但未找到2.6 sunburst独立契约。
+请仅依据文档与代码契约裁定：1) edits有参考图时auto是否应让模型决定尺寸/画幅，能否保证；2) 前端未传时后端是否完全省略size/quality，由AIS落auto，而非硬编码2K；3) 原“默认2K”需求应如何通过前端显式选项实现；4) 旧任务/重试与配置覆盖怎么处理。禁止真实接口调用，UNKNOWN须明示。

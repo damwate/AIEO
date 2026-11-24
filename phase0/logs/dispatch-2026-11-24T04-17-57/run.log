@@ -1,0 +1,7 @@
+[2026-11-24T04:17:57.990Z] 证据目录: D:\AIEO\.worktrees\feat-standard-task-management\phase0\logs\dispatch-2026-11-24T04-17-57
+[2026-11-24T04:17:58.560Z] 会话锁已获取 pid=30048 instance=standard-queue lock=gpt-session-standard-queue.lockfile
+[2026-11-24T04:17:58.561Z] === GPT 派单（已有会话，消息 959 字节）===
+[2026-11-24T04:17:59.214Z] [instance] 端口沿用注册表登记: instance=standard-queue port=9300
+[2026-11-24T04:17:59.322Z] [instance] 实例域就绪: instance=standard-queue port=9300 profile=gpt-poc-standard-queue lock=gpt-session-standard-queue.lockfile
+[2026-11-24T04:18:00.123Z] 会话锁已释放
+[2026-11-24T04:18:00.124Z] 致命错误: INSTANCE_PORT_FOREIGN: 端口 9300 归属核验未通过（decision=FOREIGN_STOP, ownProcs=0），fail-closed 不复用

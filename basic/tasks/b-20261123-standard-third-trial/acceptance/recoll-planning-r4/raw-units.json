@@ -1,0 +1,94 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-24T03:47:28.461Z",
+  "user_unit_key": "ce6baa7d-7d2f-5103-8700-57706eed1bea:0:user",
+  "start_key_resolved": "ce6baa7d-7d2f-5103-8700-57706eed1bea:0:user",
+  "start_resolved_by_marker": false,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "ce6baa7d-7d2f-5103-8700-57706eed1bea:1:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "edabcee9-edb0-4134-a276-ad45b9de26a2",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "ce6baa7d-7d2f-5103-8700-57706eed1bea:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "ce6baa7d-7d2f-5103-8700-57706eed1bea:0:user",
+          "ce6baa7d-7d2f-5103-8700-57706eed1bea:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "b51dbdc8af7fe47654199b64f4c3152caf739d31fc41a5dfa12d24f9ccc7065d",
+          "74ca76a19e2bd62ccab4fc5795f514cd771be03bc885dfe5fdb17b0354e4c6a6"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "ce6baa7d-7d2f-5103-8700-57706eed1bea:0:user",
+          "ce6baa7d-7d2f-5103-8700-57706eed1bea:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "b51dbdc8af7fe47654199b64f4c3152caf739d31fc41a5dfa12d24f9ccc7065d",
+          "74ca76a19e2bd62ccab4fc5795f514cd771be03bc885dfe5fdb17b0354e4c6a6"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "ce6baa7d-7d2f-5103-8700-57706eed1bea:0:user",
+          "ce6baa7d-7d2f-5103-8700-57706eed1bea:1:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "ce6baa7d-7d2f-5103-8700-57706eed1bea:0:user",
+      "ce6baa7d-7d2f-5103-8700-57706eed1bea:1:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "ce6baa7d-7d2f-5103-8700-57706eed1bea:0:user",
+          "ce6baa7d-7d2f-5103-8700-57706eed1bea:1:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "ce6baa7d-7d2f-5103-8700-57706eed1bea:0:user",
+          "ce6baa7d-7d2f-5103-8700-57706eed1bea:1:assistant"
+        ],
+        "overlap_keys": [
+          "ce6baa7d-7d2f-5103-8700-57706eed1bea:0:user",
+          "ce6baa7d-7d2f-5103-8700-57706eed1bea:1:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "ce6baa7d-7d2f-5103-8700-57706eed1bea:1:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n[AIEO-ROUND:14f17ab580755841eb2737b0]\n\nR4 付费接口测试方法审议\n\n裁定：推荐采用「官方契约优先 → 本地 Mock 验证 → 只读证据核对 → 单次授权付费验收」四阶段方法。\n\n核心原则：\n\n不用真实 API 调用探索未知参数。\n\n不用 HTTP 200 代替参数契约证明。\n\n不用输出像素尺寸代替计费档位证明。\n\n不用供应商 A 的文档推断供应商 B 的行为。\n\n未经用户明确授权，不产生任何真实生成费用。\n\n一次付费验收不是探索性测试，而是对已经通过前三阶段的方案做最终确认。\n\n本轮方法裁定\n\n方法方向通过\n\n本轮只审议方法，不调用任何真实接口，不产生 API 费用。\n\n官方文档作为参数契约的首要依据。\n\nMock 证明本地程序实际发送什么。\n\n只读验证证明供应商账户和历史运行状态。\n\n一次付费验收证明真实端到端行为。\n\n一、官方文档取证方法\n1. 建立供应商独立证据档案\n\n不能只按 openai_compat 分类。\n\n建议每个供应商建立一份独立证据记录：\n\n字段\n\n\t\n\n必须记录的内容\n\n\n\n\nprovider_id\n\n\t\n\n供应商内部 ID\n\n\n\n\nvendor_name\n\n\t\n\n供应商名称\n\n\n\n\nbase_url\n\n\t\n\n实际 API 域名\n\n\n\n\nendpoint\n\n\t\n\ngenerations / edits\n\n\n\n\nmodel_id\n\n\t\n\n完整模型 ID\n\n\n\n\napi_version\n\n\t\n\nAPI 版本\n\n\n\n\ndoc_url\n\n\t\n\n官方文档地址\n\n\n\n\ndoc_version\n\n\t\n\n文档版本或发布日期\n\n\n\n\nretrieved_at\n\n\t\n\n获取日期\n\n\n\n\ndoc_sha256\n\n\t\n\n文档快照 SHA256\n\n\n\n\nevidence_status\n\n\t\n\n已证实/部分证实/未证实\n\n\n\n\nconflicts\n\n\t\n\n文档冲突记录\n\n建议将证据分成四级：\n\nE1：官方 API 契约\n\n供应商官方 API 文档、OpenAPI Schema、正式参数定义。\n\nE2：官方版本证据\n\n官方更新日志、模型版本说明、正式公告、参数变更记录。\n\nE3：官方账户证据\n\n控制台模型目录、账户配额、账单规则、账户实际启用能力。\n\nE4：历史运行证据\n\n已有请求日志、历史响应、账单记录。只能证明特定历史请求发生过什么，不能自动证明当前契约。\n\n注意：E1 与 E2 是接口契约的主要依据，E3 是账户能力的补充依据，E4 是历史行为证据。\n\n它们不能互相替代。\n\n2. 供应商差异如何取证\n\n针对本项目，建议建立如下矩阵：\n\n供应商\n\n\t\n\n模型\n\n\t\n\n通道\n\n\t\n\n独立取证\n\n\n\n\nWukong\n\n\t\n\ngpt-image-2.6-sunburst\n\n\t\n\nedits\n\n\t\n\n是\n\n\n\n\nYuanqiao\n\n\t\n\ngpt-image-2.6-sunburst\n\n\t\n\nedits\n\n\t\n\n是\n\n\n\n\nvendor-d5b728b6\n\n\t\n\n对应模型\n\n\t\n\n实际通道\n\n\t\n\n是\n\n\n\n\nIntelAlloc\n\n\t\n\n实际模型\n\n\t\n\nedits\n\n\t\n\n是\n\n每个组合单独核实：\n\nsize 是否允许 2K。\n\n是否只允许 1024x1024 一类像素字符串。\n\n是否存在单独的档位字段。\n\n是否允许 auto。\n\n缺省值是什么。\n\n是否存在模型专属限制。\n\nedits 与 generations 是否有不同限制。\n\n不同模型版本是否存在参数差异。\n\n不能因为 endpoint 相同，就认为参数能力相同。\n\n3. 文档缺失或冲突时，禁止哪些推断？\n\n这是本轮最重要的止损规则。\n\n证据缺口\n\n\t\n\n禁止推断\n\n\n\n\n没有 size 定义\n\n\t\n\n禁止推断 2K 一定有效\n\n\n\n\n只描述像素尺寸\n\n\t\n\n禁止推断支持档位字符串\n\n\n\n\n只有模型介绍\n\n\t\n\n禁止推断 API 参数兼容性\n\n\n\n\n只有 generations 文档\n\n\t\n\n禁止推断 edits 通道相同\n\n\n\n\n只有 HTTP 200 历史日志\n\n\t\n\n禁止认定参数符合契约\n\n\n\n\n输出2048×2048\n\n\t\n\n禁止认定按2K计费\n\n\n\n\n账单显示某金额\n\n\t\n\n禁止单独认定生成尺寸正确\n\n\n\n\n供应商客服口头承诺\n\n\t\n\n禁止直接作为正式契约\n\n\n\n\n文档与 OpenAPI 冲突\n\n\t\n\n禁止自行选择有利解释\n\n\n\n\n不同版本文档冲突\n\n\t\n\n禁止混用不同版本的参数定义\n\n遇到冲突时：\n\n记录冲突双方。\n\n确认实际使用的 API 版本。\n\n优先要求供应商提供对应版本的书面解释。\n\n没有解决前，将该能力标记为 UNKNOWN。\n\n禁止进入付费验收。\n\n这里建议明确一个原则：\n\nUNKNOWN 不等于不支持，但 UNKNOWN 必须按不允许生产启用处理。\n\n二、本地 Mock 契约测试\n\nMock 阶段的目标不是证明供应商接受参数，而是证明自己的程序能够正确构造请求。\n\n这是可以完全不产生费用完成的主要验证阶段。\n\n1. Mock 架构\n\n建议在外部供应商 HTTP 客户端与业务代码之间增加可替换的测试传输层。\n\n纯文本\nJob\n |\n v\n配置加载与覆盖\n |\n v\n请求组装\n |\n +---- Prompt\n |\n +---- Size\n |\n +---- Params\n |\n +---- Reference Images\n |\n v\nHTTP Client\n |\n +--------------------+\n |                    |\n v                    v\n真实 Transport       Mock Transport\n |                    |\n v                    v\n供应商接口           本地断言\n\nMock 必须截获最终出站请求，而不是只测试请求构造函数的中间结果。\n\n否则可能出现：\n\n组装函数返回 2K。\n\nHTTP Client 又把它覆盖为 auto。\n\n实际 multipart 请求仍然发送错误参数。\n\n因此必须在 HTTP Transport 最后一层记录请求快照。\n\n2. 出站 size / params 验证\n\n至少验证：\n\n测试项\n\n\t\n\n断言\n\n\n\n\nsize\n\n\t\n\n实际发送值与最终有效配置一致\n\n\n\n\n缺省 size\n\n\t\n\n符合供应商独立策略\n\n\n\n\nparams\n\n\t\n\n字段名、类型、值正确\n\n\n\n\n未支持参数\n\n\t\n\n不得静默注入\n\n\n\n\n空参数\n\n\t\n\n按契约省略或显式发送\n\n\n\n\nmultipart\n\n\t\n\nboundary、字段、文件部分正确\n\n\n\n\nJSON\n\n\t\n\nContent-Type、序列化结果正确\n\n\n\n\nendpoint\n\n\t\n\n使用正确的供应商路径\n\n\n\n\nmodel\n\n\t\n\n与对应供应商配置匹配\n\n尤其要测试最终请求：\n\n纯文本\nconfigured_size\n    ==\neffective_size\n    ==\noutbound_size\n\n如果存在默认值、环境变量或任务快照覆盖，必须在测试中展示最终值的来源。\n\n3. 参考图验证\n\n参考图必须验证实际出站内容。\n\n针对现有生图链路，建议覆盖：\n\n设计截图仍然发送。\n\n选中产品原图仍然发送。\n\nvariant → default → product_image 回退正确。\n\n相同原图只发送一次。\n\n不同原图不被错误合并。\n\n图片顺序符合既定契约。\n\nMIME、文件名和文件字节正确。\n\n图片内容 SHA256 与源文件一致。\n\n特别注意：\n\n不能只验证 external_ref 数组长度。\n\n必须验证实际 multipart 文件内容。\n\n4. 配置覆盖链验证\n\n这是生产事故的高风险来源。\n\n建议将配置优先级明确写成项目自己的正式契约。\n\n例如：\n\n纯文本\n系统默认配置\n      |\n      v\n供应商默认配置\n      |\n      v\n供应商模型配置\n      |\n      v\n任务创建时冻结配置\n      |\n      v\n最终出站配置\n\n以上只是建议顺序，不能未经代码核实就认定现有系统已经如此。\n\n必须先从真实配置加载代码确认：\n\n哪些层存在。\n\n谁覆盖谁。\n\nJob 创建时是否冻结。\n\n重试时是否重新读取配置。\n\n环境变量是否能够覆盖模型配置。\n\n缺失配置是否触发隐式默认值。\n\n测试方式：\n\n每个层设置不同的唯一哨兵值，例如：\n\n纯文本\ndefault       = SIZE_A\nprovider      = SIZE_B\nmodel         = SIZE_C\njob_snapshot  = SIZE_D\n\n最后检查实际请求使用哪个值，并验证配置来源。\n\n不要用四层相同的 2048x2048 测试，因为无法识别究竟是哪一层生效。\n\n5. 重试和旧任务兼容\n\n必须区分两种行为。\n\n同一 Job 重试：\n\n不重新选择产品。\n\n不重新生成参考图列表。\n\n不意外改变 prompt。\n\n不改变冻结的请求参数。\n\n不因全局默认值变化而偷偷切换档位。\n\n旧 Job：\n\n不自动注入新字段。\n\n不把历史缺省值解释成新档位。\n\n不重新生成历史任务配置。\n\n按原有兼容策略执行。\n\n无法确定历史参数时，必须明确标记，不得自行猜测。\n\n建议增加以下测试：\n\n场景\n\n\t\n\n预期\n\n\n\n\nJob 创建后全局默认变更\n\n\t\n\n重试仍遵守既定冻结策略\n\n\n\n\n供应商配置变更\n\n\t\n\n不意外改变已冻结 Job\n\n\n\n\n旧 Job 无 size 字段\n\n\t\n\n保持旧逻辑\n\n\n\n\n旧 Job 有 auto\n\n\t\n\n不擅自转换成 2K\n\n\n\n\n新 Job 使用 2K\n\n\t\n\n只使用明确配置的供应商策略\n\n\n\n\n重试遇到 429/5xx\n\n\t\n\n遵循已有退避和重试规则\n\n\n\n\n重试遇到 400\n\n\t\n\n不进行无意义的无限重试\n\n如果系统当前并未冻结 size，那么不能通过 Mock 测试把这个事实隐藏起来，应先作为独立问题裁定。\n\n三、不经生成的只读验证\n\n这是一个很有价值的阶段。\n\n它能在不调用生成接口的情况下，确认账户和供应商环境的部分事实。\n\n但必须划清权限边界。\n\n1. 允许的只读操作\n\n操作\n\n\t\n\n允许范围\n\n\t\n\n能证明什么\n\n\n\n\n账单查询\n\n\t\n\n历史账单\n\n\t\n\n历史扣费记录\n\n\n\n\n用量查询\n\n\t\n\n历史用量\n\n\t\n\n已发生的使用量\n\n\n\n\n配额查询\n\n\t\n\n当前账户\n\n\t\n\n账户剩余配额\n\n\n\n\n模型目录\n\n\t\n\n只读 GET\n\n\t\n\n账户可见模型\n\n\n\n\n价格目录\n\n\t\n\n官方价格页或控制台\n\n\t\n\n公示价格\n\n\n\n\n历史请求日志\n\n\t\n\n只读查询\n\n\t\n\n过去实际请求\n\n\n\n\n历史任务记录\n\n\t\n\n只读查询\n\n\t\n\nJob 参数与结果\n\n\n\n\n配置审计\n\n\t\n\n本地只读\n\n\t\n\n当前有效配置\n\n2. 明确禁止\n\n以下操作不属于只读验证：\n\nPOST 生成请求。\n\nPOST edits 请求。\n\n创建任务并触发异步生成。\n\n以测试为名调用供应商计费接口。\n\n触发可能产生费用的模型预览。\n\n上传图片到不明确是否收费的接口。\n\n为验证模型可用性而发送生成请求。\n\n即使接口名称是 /models 或 /usage，也不能仅凭路径判断安全。\n\n应确认其 HTTP 方法、供应商官方定义以及是否产生副作用。\n\n3. 只读验证的证明边界\n\n例如：\n\n只读查询得到模型存在\n\n可以证明\n\n该账户能够看到这个模型目录项。\n\n不能证明\n\n模型一定可以生成。\n\n模型一定支持 2K。\n\nedits 一定支持 2K。\n\n当前账户一定有对应权限。\n\n调用一定按 2K 计费。\n\n同理，账单显示历史生成扣款，只能证明那笔历史费用，不能证明未来一次请求会使用同一档位。\n\n四、唯一一次付费验收\n\n这一步必须作为独立的授权关口。\n\n我建议采用：\n\n单供应商、单模型、单通道、单 Job、单次真实生成。\n\n不要将一次验收扩展成多个供应商的探索性调用。\n\n1. 付费前置条件\n\n必须全部满足：\n\n条件\n\n\t\n\n要求\n\n\n\n\n官方契约\n\n\t\n\n已取得目标供应商正式参数依据\n\n\n\n\n版本\n\n\t\n\n模型和 endpoint 版本已锁定\n\n\n\n\nMock\n\n\t\n\n全部关键测试通过\n\n\n\n\n配置\n\n\t\n\n最终 size 来源可追溯\n\n\n\n\n参考图\n\n\t\n\n输入文件和数量已确认\n\n\n\n\n价格\n\n\t\n\n单次费用已知或存在明确上限\n\n\n\n\n配额\n\n\t\n\n账户剩余额度足够\n\n\n\n\n重试\n\n\t\n\n禁止自动重复付费\n\n\n\n\n回滚\n\n\t\n\n有可恢复的旧配置\n\n\n\n\n授权\n\n\t\n\n用户明确同意该次调用\n\n任何一项缺失：\n\n不允许发起付费调用。\n\n2. 用户授权内容\n\n建议每次真实验收都提交一份授权单：\n\n真实 API 付费验收授权单\n\n必须由用户明确批准\n\n项目\n\n\t\n\n必须填写\n\n\n\n\n供应商\n\n\t\n\n精确 provider_id\n\n\n\n\n模型\n\n\t\n\n完整 model_id\n\n\n\n\n通道\n\n\t\n\ngenerations / edits\n\n\n\n\nEndpoint\n\n\t\n\n完整路径\n\n\n\n\nsize\n\n\t\n\n实际发送值\n\n\n\n\n输入图片\n\n\t\n\n数量及 SHA256\n\n\n\n\n预计费用\n\n\t\n\n明确金额\n\n\n\n\n最高费用\n\n\t\n\n明确金额上限\n\n\n\n\n自动重试\n\n\t\n\n禁止\n\n\n\n\n验收次数\n\n\t\n\n1 次\n\n\n\n\n数据用途\n\n\t\n\n供应商处理及留存边界\n\n\n\n\n结果记录\n\n\t\n\n请求快照、响应、输出 SHA256、账单\n\n授权原则\n\n用户必须针对以上具体组合批准，不能以此前同意某项开发工作代替本次付费授权。\n\n授权还应明确：\n\n是否允许上传真实业务图片。\n\n是否允许供应商留存输入及输出。\n\n是否允许失败请求产生费用。\n\n是否允许供应商自动重试。\n\n费用上限是否包含税费。\n\n是否允许产生异步任务。\n\n3. 成本控制\n\n建议采用以下规则：\n\n一次调用、一次任务、一次输出验收。\n\n具体要求：\n\n关闭应用层自动重试。\n\n禁止失败自动降级到其他供应商。\n\n禁止自动重新提交。\n\n设置 HTTP 超时。\n\n记录请求 ID 和供应商任务 ID。\n\n对超时、断连等结果标记 UNKNOWN_CHARGE_STATUS。\n\n在费用状态确认之前，不再次调用。\n\n这里特别强调：\n\nHTTP 超时不等于供应商没有收到请求。\n\n因此失败即停，不允许因为客户端没有收到响应，就再次发送生成请求。\n\n4. 失败即停规则\n\n失败情况\n\n\t\n\n处理\n\n\n\n\nHTTP 400\n\n\t\n\n停止，不修改参数后重试\n\n\n\n\nHTTP 401/403\n\n\t\n\n停止，检查账户权限\n\n\n\n\nHTTP 429\n\n\t\n\n停止，不自动重试\n\n\n\n\nHTTP 5xx\n\n\t\n\n停止，先确认是否计费\n\n\n\n\n客户端超时\n\n\t\n\n标记费用状态未知\n\n\n\n\n图片输出异常\n\n\t\n\n停止，不自动重新生成\n\n\n\n\n尺寸不符合预期\n\n\t\n\n停止，不换参数再次试\n\n\n\n\n账单无法核对\n\n\t\n\n保留待核实状态\n\n一次验收失败后，重新审议测试方案。\n\n不能把原本一次授权解释成无限次重试授权。\n\n五、测试分层与证据等级\n\n这是建议最终写入 AIEO 测试规范的部分。\n\n1. 三种证据必须分开\n证据一：参数被接受\n证明接口接收请求\n\n证据：\n\nHTTP 响应。\n\n供应商任务 ID。\n\n参数校验结果。\n\n官方契约。\n\n不能证明最终输出尺寸，也不能证明实际计费档位。\n\n证据二：输出符合\n证明生成结果符合要求\n\n证据：\n\n原始图片文件。\n\n图片 SHA256。\n\n实际宽高。\n\n文件格式。\n\n输出质量验收记录。\n\n不能证明供应商实际使用哪个计费档位。\n\n证据三：实际计费\n证明实际扣费情况\n\n证据：\n\n供应商账单明细。\n\n任务对应的用量记录。\n\n供应商正式计费规则。\n\n请求 ID 与账单关联证据。\n\n不能仅由输出尺寸或 HTTP 200 推断。\n\n三个证据之间的关系：\n\n证据\n\n\t\n\n官方文档\n\n\t\n\nMock\n\n\t\n\n只读查询\n\n\t\n\n真实调用\n\n\n\n\n参数契约\n\n\t\n\n可以\n\n\t\n\n不可以\n\n\t\n\n辅助\n\n\t\n\n辅助\n\n\n\n\n本地实际出站参数\n\n\t\n\n不可以\n\n\t\n\n可以\n\n\t\n\n不可以\n\n\t\n\n可以\n\n\n\n\n参数被供应商接受\n\n\t\n\n不能单独证明\n\n\t\n\n不可以\n\n\t\n\n历史证据\n\n\t\n\n可以\n\n\n\n\n输出尺寸\n\n\t\n\n规格说明\n\n\t\n\n不可以\n\n\t\n\n历史证据\n\n\t\n\n可以\n\n\n\n\n实际计费\n\n\t\n\n规则说明\n\n\t\n\n不可以\n\n\t\n\n历史账单\n\n\t\n\n可以，需账单核实\n\n注意：真实调用得到 HTTP 200，也只是参数接受的部分证据；真正的实际计费仍须核对账单或供应商认可的用量明细。\n\n2. 建议测试分层\n\nL0：官方契约核验\n\n零生成费用\n\n文档、版本、模型、endpoint、参数、价格。\n\nL1：静态配置验证\n\n零生成费用\n\nYAML/JSON Schema、配置覆盖、默认值、非法配置。\n\nL2：本地 Mock 契约测试\n\n零生成费用\n\n出站请求、multipart、图片、重试、旧任务兼容。\n\nL3：只读供应商验证\n\n不调用生成接口\n\n模型目录、配额、历史账单、历史日志。\n\nL4：授权付费验收\n\n产生真实费用\n\n单供应商、单模型、单通道、单次调用。\n\nL5：发布后只读监控\n\n不主动生成\n\n监控历史调用成功率、尺寸、计费及异常。\n\n六、最小测试清单\n\n建议为本次 2K 参数调整建立独立测试包。\n\nR4 执行检查表\n\n0/30\n\nL0 官方契约\n\n每家供应商独立取得官方文档及版本\n确认模型 ID 与 generations/edits 通道\n确认 size 类型、允许值、默认值\n确认参数限制及计费规则\n文档冲突标记 UNKNOWN，不做推断\n\nL1 配置\n\n配置 Schema 校验\n四层覆盖优先级验证\n配置来源可追溯\n非法 size 拒绝\nIntelAlloc 独立策略，不被批量覆盖\n\nL2 Mock\n\n最终出站 size 精确匹配\nparams 字段和类型精确匹配\nmultipart 图片字节及 SHA256 匹配\n截图和产品原图完整发送\n原图去重及回退不变\n重试使用冻结请求参数\n400 不无限重试\n旧 Job 不注入新参数\n\nL3 只读\n\n模型目录只读查询\n配额只读查询\n历史账单查询\n历史请求日志与 Job 关联\n确认只读接口没有生成副作用\n\nL4 付费验收\n\n用户针对单次调用明确授权\n供应商/模型/通道/size 与授权一致\n自动重试及自动切换关闭\n最高费用及失败成本已确认\n响应及输出证据留存\n账单与请求 ID 核对\n失败即停，不自动补测\n重置检查\n此表仅用于本轮审议和人工跟踪，不会调用接口或触发任何付费操作。\n七、发布门禁\n\n建议将发布条件写成严格的 AND 关系：\n\n𝐺\n=\n𝐿\n0\n∧\n𝐿\n1\n∧\n𝐿\n2\n∧\n𝐿\n3\n∧\n𝐿\n4\nG=L0∧L1∧L2∧L3∧L4\n\n具体门禁：\n\n门禁\n\n\t\n\nPASS 条件\n\n\t\n\nFAIL 处理\n\n\n\n\nG0 文档\n\n\t\n\n供应商契约清楚\n\n\t\n\n禁止配置变更\n\n\n\n\nG1 配置\n\n\t\n\n覆盖链明确\n\n\t\n\n禁止部署\n\n\n\n\nG2 Mock\n\n\t\n\n全部关键测试通过\n\n\t\n\n修复后重测\n\n\n\n\nG3 只读\n\n\t\n\n账户与价格证据完整\n\n\t\n\n禁止付费验收\n\n\n\n\nG4 授权\n\n\t\n\n用户明确批准具体调用\n\n\t\n\n不调用\n\n\n\n\nG5 付费验收\n\n\t\n\n参数、输出、账单证据完整\n\n\t\n\n停止发布\n\n\n\n\nG6 发布\n\n\t\n\n回滚及监控就绪\n\n\t\n\n不切生产\n\n其中 G4 必须由用户单独授权，不能由开发人员、自动化脚本或历史授权代替。\n\n八、最终裁定与实施建议\nR4 方法裁定\n建议通过\n\n允许立即实施的工作：\n\n官方文档取证与归档。\n\n供应商能力矩阵。\n\n本地 Mock 测试。\n\n配置覆盖链验证。\n\n历史账单、配额和日志只读核查。\n\n发布门禁及授权单设计。\n\n明确禁止\n\n本轮不允许：\n\n真实生成接口调用。\n\n付费参数探索。\n\n真实图片 edits 冒烟。\n\n自动降级或自动重试产生第二笔费用。\n\n在证据不足时执行 apply-2k.sh。\n\n我建议增加一条 AIEO 长期工程规则\n\n付费 API 的参数验证必须先证明本地出站请求正确，再证明供应商契约支持，最后才申请真实调用授权。\n\n同时将以下三个状态分开记录：\n\n纯文本\nPARAMETER_ACCEPTED\nOUTPUT_CONFORMED\nBILLING_CONFIRMED\n\n三者不能互相替代，也不能因为其中一项 PASS 就自动将整个供应商能力标记为 PASS。\n\n最终建议：R4 方法通过，可以进入 L0–L3 零费用实施；L4 真实付费验收保持冻结，必须另行提交具体授权申请。\n\n这既能避免重复支付探索成本，也能让每次真实调用都成为有明确目的、可追溯、可审计的验收证据。",
+      "text_sha256": "74ca76a19e2bd62ccab4fc5795f514cd771be03bc885dfe5fdb17b0354e4c6a6",
+      "size_bytes": 18326,
+      "assistant_uuid": "edabcee9-edb0-4134-a276-ad45b9de26a2"
+    }
+  ]
+}

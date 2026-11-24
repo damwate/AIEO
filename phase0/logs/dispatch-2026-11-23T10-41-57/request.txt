@@ -1,0 +1,13 @@
+[AIEO-ROUND:3be149cb62c8b36ce965aab1]
+生图请求参数扩展讨论（R1，用户要求先讨论后实施）。
+
+现状（GDC dev@c3154aa0 已勘察）：前端只上送3槽截图+visibility_manifest（测量事实）；后端重放选品冻结进 Job.reference_selection_json（selected 含 rank/score/screen_coverage/resolved_assets，原图回退 variant→default→product_image）；worker 已把截图+选中产品原图去重后发外部 /v1/images/edits，文本体仅 {prompt, external_ref, params}，prompt 服务端 compose_prompt 冻结。
+
+需求：推送参数除设计稿+提示词外，加产品占比清单——每个选中产品带 名称/颜色variant/评分/画面占比（同 issue#126 样式，共6条）。原图继续全送。
+
+讨论点：
+1. 清单进 prompt 文本（供应商零改造）还是 params 结构化字段（可校验）？或双写？
+2. 进 prompt：并入 compose_prompt 冻结 resolved_prompt，还是 worker 另加字段不动 resolved_prompt？
+3. ReferenceSelection 冻结契约保持不动、只改请求组装层？
+4. TS/pytest/golden parity 哪些断言要补？
+请给推荐方案+理由+风险，收敛到一条可落地路径。

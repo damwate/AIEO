@@ -1,0 +1,10 @@
+R2 契约审议。前置核实已完成：
+1) screen_coverage=0..1 占比（visible_pixels/mask_total），selected 必填非空，Python 镜像同源；展示×100 一位小数。
+2) 映射 product_constraints[i]←selected[i]：name=placement 域取 catalog.products[id].name（其他域用 subject_id）；color_variant=variant（空=缺失）；score=score（审计语义只进 params）；screen_coverage 原值。
+3) 组装：compose_prompt 增 selection 参拼区块入 resolved_prompt；worker submit_external 的 params 加 product_constraints 同源生成；原图/去重不动。
+prompt 区块 golden 样例：
+【产品选择与画面占比约束】以下产品均为本次设计必须参考的产品，请使用对应产品原图作为外观、颜色和材质依据。
+1. 产品：{name} 颜色规格：{variant} 画面占比：{coverage}%
+…共计{n}项。请保持产品外观与参考原图一致，并尽可能遵循上述画面占比。
+测试：TS 类型+pytest（正常/缺失/顺序/回退/去重/重试+旧任务反向）+golden 新旧分区+worker 三计数一致。
+请裁定可否进入实施；MUST-FIX 请列明。

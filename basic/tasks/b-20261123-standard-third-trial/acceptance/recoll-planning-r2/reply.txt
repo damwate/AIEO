@@ -1,0 +1,441 @@
+ChatGPT 说：
+
+[AIEO-ROUND:d441bc7f31b9b5a665a92c59]
+
+R2 契约审议裁定：有条件通过，可以进入实施准备；暂不批准直接编码。
+
+R1 的核心架构决策没有变化。R2 已补齐主要字段来源、数值语义、生成位置和测试范围，整体方案可以收敛。
+
+架构方案通过 2项 MUST-FIX 待落实
+
+一、逐项裁定
+
+审议项目
+
+	
+
+裁定
+
+	
+
+说明
+
+
+
+
+screen_coverage
+
+	
+
+PASS
+
+	
+
+0..1，来源 visible_pixels/mask_total
+
+
+
+
+展示格式
+
+	
+
+PASS
+
+	
+
+×100，一位小数
+
+
+
+
+name 映射
+
+	
+
+PASS
+
+	
+
+placement 域取 catalog.products[id].name
+
+
+
+
+其他域 name
+
+	
+
+PASS
+
+	
+
+使用 subject_id
+
+
+
+
+color_variant
+
+	
+
+PASS
+
+	
+
+来自 variant，空值表示缺失
+
+
+
+
+score
+
+	
+
+PASS
+
+	
+
+仅进入 params，保持审计语义
+
+
+
+
+product_constraints
+
+	
+
+PASS
+
+	
+
+从 selected 同源派生
+
+
+
+
+compose_prompt
+
+	
+
+PASS
+
+	
+
+新增 selection 参数并冻结进 resolved_prompt
+
+
+
+
+worker params
+
+	
+
+PASS
+
+	
+
+增加结构化 product_constraints
+
+
+
+
+原图与去重
+
+	
+
+PASS
+
+	
+
+保持现有行为
+
+
+
+
+测试范围
+
+	
+
+PASS
+
+	
+
+覆盖主要回归及一致性场景
+
+二、MUST-FIX
+MF-01：明确缺失 variant 的序列化规则
+
+当前约定：
+
+color_variant=variant（空=缺失）
+
+还不够明确。
+
+必须固定：
+
+variant 为有效非空值：正常输出。
+
+variant 为 null 或空字符串：结构化 params 使用 null。
+
+prompt 中不输出字面量 None、null 或空占位符。
+
+prompt 中统一省略颜色规格片段，避免产生错误信息。
+
+例如：
+
+纯文本
+有颜色：
+1. 产品：景观灯 颜色规格：暖白 画面占比：18.2%
+
+无颜色：
+2. 产品：户外花盆 画面占比：12.5%
+
+禁止将缺失颜色解释成默认颜色。
+
+MF-02：固定数值序列化及舍入规则
+
+已经明确：
+
+内部值：0..1。
+
+params：保留原始值。
+
+prompt：乘以100，保留一位小数。
+
+还需要固定：
+
+使用统一舍入规则，Python 实现不能依赖不同格式化方式产生不同结果。
+
+prompt 使用百分数，不带额外空格，例如 18.2%。
+
+params 不得使用百分数转换后的值。
+
+内部值必须通过有限数值校验，拒绝 NaN、Infinity 和越界数据。
+
+特别注意 Python 的 round() 使用 ties-to-even，不能在未定义规则时直接拿它作为跨语言契约。
+
+建议统一采用十进制 ROUND_HALF_UP，明确输入精度和格式化行为，并增加边界 golden。
+
+三、另外三项实施约束
+
+以下不作为阻塞性 MUST-FIX，但实施时必须遵守。
+
+1. selection 参数不得成为第二份选品事实。
+
+compose_prompt(selection) 和 worker 的 params 必须读取同一份冻结 selected 数据。
+
+不得重新选品、重新计算 score、重新计算 screen_coverage。
+
+2. name 映射必须有明确失败策略。
+
+placement 域：
+
+catalog.products[id].name
+
+如果 id 不存在或 name 为空，不得静默退回 subject_id，否则会掩盖数据完整性问题。
+
+其他域使用 subject_id，也必须验证非空。
+
+建议 fail-closed，避免产生不完整的产品约束。
+
+3. 旧任务兼容必须明确。
+
+没有冻结选品数据的旧 Job：
+
+不生成产品约束区块。
+
+不生成 product_constraints。
+
+保持原有 prompt。
+
+保持原有 params。
+
+不影响原图发送和任务重试。
+
+不要为了满足新契约而给历史任务补造数据。
+
+四、测试验收要求
+
+R2 提出的测试范围通过，补充以下精确断言：
+
+测试
+
+	
+
+必须证明
+
+
+
+
+正常数据
+
+	
+
+六项完整映射
+
+
+
+
+缺失 variant
+
+	
+
+params=null，prompt 省略颜色
+
+
+
+
+顺序
+
+	
+
+与 selected 顺序严格一致
+
+
+
+
+回退
+
+	
+
+variant→default→product_image 不变
+
+
+
+
+去重
+
+	
+
+external_ref 去重结果不变
+
+
+
+
+重试
+
+	
+
+同一 Job 的 prompt 和 params 稳定
+
+
+
+
+旧任务
+
+	
+
+无产品约束、无新字段注入
+
+
+
+
+数值
+
+	
+
+原始比例与展示比例分离
+
+
+
+
+非法数据
+
+	
+
+NaN、Infinity、越界比例 fail-closed
+
+
+
+
+name
+
+	
+
+缺失时明确失败，不静默替代
+
+Golden 建议分为两个独立目录或测试组：
+
+legacy_prompt：保护旧任务及原提示词主体。
+
+selection_prompt：验证新产品约束区块。
+
+Worker 最终需要验证：
+
+𝑁
+selected
+=
+𝑁
+prompt
+=
+𝑁
+params
+N
+selected
+	​
+
+=N
+prompt
+	​
+
+=N
+params
+	​
+
+
+这里的三个计数必须对应同一个 Job 的冻结选品集合，不能只比较数组长度，还要比较顺序和逐项字段映射。
+
+五、最终实施边界
+
+允许进入实施的范围
+
+通过
+
+compose_prompt 增加 selection 参数。
+
+resolved_prompt 增加产品约束区块。
+
+worker params 增加 product_constraints。
+
+增加对应 TS、pytest、golden 和集成测试。
+
+明确禁止扩展
+
+禁止
+
+修改 ReferenceSelection 冻结契约。
+
+修改选品算法及评分计算。
+
+修改 screen_coverage 计算。
+
+修改原图解析、回退和去重。
+
+修改前端截图槽位和 visibility_manifest。
+
+为旧任务补造产品选品数据。
+
+要求供应商修改接口。
+
+六、最终裁定
+
+R2：有条件通过，MF-01、MF-02 落实后可进入编码实施。
+
+建议实施提交时附带：
+
+最终请求契约及字段映射。
+
+新旧 prompt golden。
+
+TS 和 pytest 完整测试结果。
+
+worker 实际请求快照（脱敏）。
+
+原图发送及去重未回归的证据。
+
+完整 Git commit SHA。
+
+特别强调：这次是请求组装层扩展，不是选品系统升级。不要顺手重构 ReferenceSelection，也不要扩大改动范围。
+
+下一轮验收标准：证明同一份冻结 selected 数据，产生了完全一致的 prompt 产品清单和 params 结构化清单，同时原有原图链路没有变化。

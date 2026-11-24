@@ -1,0 +1,94 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-24T04:23:12.476Z",
+  "user_unit_key": "10e9febc-2b2a-5163-a224-7c1bcf7d143e:0:user",
+  "start_key_resolved": "10e9febc-2b2a-5163-a224-7c1bcf7d143e:0:user",
+  "start_resolved_by_marker": false,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "10e9febc-2b2a-5163-a224-7c1bcf7d143e:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "54e03eae-bf23-4574-9e99-f367bc423c0d",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "10e9febc-2b2a-5163-a224-7c1bcf7d143e:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "10e9febc-2b2a-5163-a224-7c1bcf7d143e:0:user",
+          "10e9febc-2b2a-5163-a224-7c1bcf7d143e:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "2e02aef9652a1848bc065b616c0df671a03f5d4d72392a923d6d2dca0fac1273",
+          "147044d8864903038a8b3f207e361c5b84c9d3ccfe285c55c9e1efb1e8b08ce6"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "10e9febc-2b2a-5163-a224-7c1bcf7d143e:0:user",
+          "10e9febc-2b2a-5163-a224-7c1bcf7d143e:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "2e02aef9652a1848bc065b616c0df671a03f5d4d72392a923d6d2dca0fac1273",
+          "147044d8864903038a8b3f207e361c5b84c9d3ccfe285c55c9e1efb1e8b08ce6"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "10e9febc-2b2a-5163-a224-7c1bcf7d143e:0:user",
+          "10e9febc-2b2a-5163-a224-7c1bcf7d143e:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "10e9febc-2b2a-5163-a224-7c1bcf7d143e:0:user",
+      "10e9febc-2b2a-5163-a224-7c1bcf7d143e:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "10e9febc-2b2a-5163-a224-7c1bcf7d143e:0:user",
+          "10e9febc-2b2a-5163-a224-7c1bcf7d143e:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "10e9febc-2b2a-5163-a224-7c1bcf7d143e:0:user",
+          "10e9febc-2b2a-5163-a224-7c1bcf7d143e:2:assistant"
+        ],
+        "overlap_keys": [
+          "10e9febc-2b2a-5163-a224-7c1bcf7d143e:0:user",
+          "10e9febc-2b2a-5163-a224-7c1bcf7d143e:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "10e9febc-2b2a-5163-a224-7c1bcf7d143e:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n[AIEO-ROUND:a558c967111127330699fc81]\n\nR5：size / auto 参数来源裁定\n\n初步裁定：前端未显式选择尺寸时，后端不应硬编码 2048x2048。推荐采用「显式参数优先、未指定则省略参数、供应商默认值接管」的策略。\n\n这与 R4 的官方契约优先原则一致，也能避免把 2K 固定画布错误地施加到带设计参考图的 edits 请求上。\n\n本轮严格区分三个概念：\n\nauto：请求参数的自动模式。\n\n省略 size：不发送该参数，由接口默认值决定。\n\n2048x2048：明确指定正方形输出尺寸。\n\n三者不能视为等价。\n\n本轮不调用真实接口，不通过输出结果反推供应商行为。以下对未取得独立契约的部分明确标记 UNKNOWN。\n\n一、问题1：edits 有参考图时，auto 是否让模型决定尺寸和画幅？\n\nauto 默认方向通过 保持参考图画幅 UNKNOWN\n\n需要把两个判断拆开。\n\nA. 模型是否可以自动决定输出尺寸？\n\n可以。OpenAI 当前 GPT Image 2.6 Sunburst / Flare 官方文档明确：\n\nsize 支持 auto。\n\nquality 支持 auto。\n\n两者默认均为 auto。\n\nsize=auto 时，由模型根据 prompt 自动选择合适选项。\nOpenAI API\n+1\n\nB. 是否保证 edits 输出与设计参考图保持相同画幅？\n\nUNKNOWN：不能保证\n\n现有文档没有明确承诺：\n\n自动读取第一张参考图的宽高比。\n\n输出必须与第一张参考图宽高比一致。\n\n多张参考图时优先采用设计稿的画幅。\n\n自动选择画幅时不进行裁切或构图调整。\n\n官方说明的是根据 prompt 自动选择，而不是明确规定根据输入图片尺寸选择。\n\n因此，用户的理解可以作为产品期望，但不能写成已证实的 API 契约。\n\n建议在系统需求中分开表述：\n\n能力\n\n\t\n\n当前裁定\n\n\n\n\n不指定 size，由模型自动选择\n\n\t\n\nPASS\n\n\n\n\n自动选择输出尺寸\n\n\t\n\nPASS\n\n\n\n\n根据 prompt 选择尺寸\n\n\t\n\nPASS\n\n\n\n\n自动匹配设计稿宽高比\n\n\t\n\nUNKNOWN\n\n\n\n\n保证输出与设计稿同画幅\n\n\t\n\nUNKNOWN\n\n还有一个值得注意的文档依据：OpenAI 对 Sunburst 2.6 明确支持自定义 WIDTHxHEIGHT，并规定宽高为16的倍数、长短边比例在1:3至3:1之间，最大边不超过3840像素。\nOpenAI API\n\n所以，如果未来需要严格保持设计稿画幅，应该考虑显式传入符合约束的尺寸，而不是依赖 auto。\n\n二、问题2：前端不传时，后端是否完全省略 size / quality？\n推荐通过\n\n裁定：是。前端没有显式传值时，后端不应主动补入 size 或 quality。\n\n推荐的请求组装规则：\n\n前端输入\n\n\t\n\n后端出站行为\n\n\n\n\nsize 未提供\n\n\t\n\n完全省略 size\n\n\n\n\nquality 未提供\n\n\t\n\n完全省略 quality\n\n\n\n\n显式 size\n\n\t\n\n按已验证的供应商契约传递\n\n\n\n\n显式 quality\n\n\t\n\n按已验证的供应商契约传递\n\n例如：\n\n前端未选择尺寸或质量时的目标请求\n\nJSON\n{\n  \"model\": \"gpt-image-2.6-sunburst\",\n  \"prompt\": \"设计提示词\",\n  \"image\": \"设计参考图\"\n}\n\n注意：这里是逻辑请求示意，实际 edits 使用 multipart/form-data。\n\n不建议后端主动补：\n\nJSON\n{\n  \"size\": \"2048x2048\",\n  \"quality\": \"auto\"\n}\n\n也不建议主动补：\n\nJSON\n{\n  \"size\": \"auto\",\n  \"quality\": \"auto\"\n}\n\n理由是：\n\n省略字段与显式传递 auto，在请求契约上不是同一件事。\n\n供应商文档规定默认值为 auto 时，省略字段即可由接口应用默认值。OpenAI 当前文档也明确说明 Sunburst / Flare 默认 auto。\nOpenAI API\n\n远桥云公开文档同样把 size、quality 定义为可选字段，但其公开页面目前列出的 Sunburst 版本是 2.5，不能直接把这份文档当作 2.6 Sunburst 的独立 edits 契约。\n远桥云\n\n对 GDC 当前代码的具体裁定\n\n依据你提供的代码事实：\n\n前端没有 size 字段。\n\n后端曾硬编码 params.size=2048x2048。\n\n该修改未发布。\n\n建议：\n\n撤销未发布的硬编码。\n\n后端请求组装层不主动补 size。\n\n后端请求组装层不主动补 quality。\n\n保留供应商 adapter 的参数转换能力，但默认不得注入这两个字段。\n\nMock 必须断言 multipart 中不存在这两个字段。\n\n这里的关键不是把硬编码从 2048x2048 改成 auto，而是恢复参数缺省语义。\n\n三、问题3：原来的「默认2K」需求如何通过前端显式选项实现？\n\n建议将原需求重新定义为：\n\n默认自动画幅；用户可以主动选择输出分辨率档位。\n\n不要再把 2K 当作所有设计稿都适用的固定正方形尺寸。\n\n推荐前端交互\n\n生图输出设置\n\n默认值\n\n自动画幅 / 自动质量\n\n输出分辨率\n\n自动\n\n默认\n模型决定\n\n1K\n\n显式指定\n\n2K\n\n显式指定\n4K 可以作为后续可选档位，但必须先确认供应商支持范围及成本策略。\n\n输出质量\n\n自动（默认）\n\nLow / Medium / High\n\nXHigh / Max（供应商支持时开放）\n\n这里的交互示意不代表已经批准 UI 实施。\n\n2K 的参数映射\n\n2K 是分辨率档位，不是固定画幅。\n\n建议根据设计稿画幅映射具体宽高：\n\n画幅\n\n\t\n\n2K 示例尺寸\n\n\n\n\n1:1\n\n\t\n\n2048×2048\n\n\n\n\n16:9\n\n\t\n\n2560×1440\n\n\n\n\n9:16\n\n\t\n\n1440×2560\n\n\n\n\n4:3\n\n\t\n\n2304×1728\n\n\n\n\n3:2\n\n\t\n\n2496×1664\n\n这些映射中，1:1 的 2048×2048 与你提供的远桥文档一致；其他比例应以对应供应商、模型版本的正式支持范围为准。\n\nOpenAI 2.6 官方文档支持自定义尺寸，但并没有把所有可能尺寸定义成统一的离散 2K 档位。\nOpenAI API\n\n因此建议在前端选择 2K 时：\n\n获取设计稿的有效宽高比。\n\n根据 2K 预设表确定具体宽高。\n\n检查供应商支持范围。\n\n将最终尺寸显式传给后端。\n\n后端冻结该尺寸并发送。\n\n如果供应商不支持该比例或尺寸，不允许静默退回 2048×2048。\n\n建议 API 契约\n\n前端可以采用：\n\nJSON\n{\n  \"output_options\": {\n    \"resolution\": \"2K\",\n    \"size\": \"2560x1440\",\n    \"quality\": \"auto\"\n  }\n}\n\n默认自动模式：\n\nJSON\n{\n  \"output_options\": {}\n}\n\n这里有一项重要约束：\n\nresolution 是产品层选项，size 是最终 API 参数。\n\n两者不能混淆。可以由前端或统一的后端尺寸解析层完成映射，但必须只有一个权威映射结果，不能前后端分别计算出不同尺寸。\n\n四、问题4：旧任务、重试及配置覆盖\n\n这部分建议作为本轮实施的重点。\n\n1. 旧任务兼容\n\n建议采用以下规则：\n\nJob 类型\n\n\t\n\n行为\n\n\n\n\n旧 Job，历史无 size\n\n\t\n\n按旧任务原有缺省语义处理\n\n\n\n\n旧 Job，已冻结 2048×2048\n\n\t\n\n保持原冻结值\n\n\n\n\n新 Job，前端未选择\n\n\t\n\n不发送 size / quality\n\n\n\n\n新 Job，前端选择 2K\n\n\t\n\n冻结具体宽高\n\n\n\n\n新 Job，前端选择质量\n\n\t\n\n冻结 quality\n\n不能因为本轮修改，就把所有历史任务的缺省值重新解释为 2K 或 auto。\n\n尤其要注意：历史任务的 null、字段不存在、空字符串，必须先区分其历史含义，不能一概转换。\n\n2. 重试策略\n\n推荐原则：\n\n同一个 Job 的重试，使用任务创建时冻结的参数语义，不重新读取全局默认值。\n\n例如：\n\nJob A：创建时没有指定尺寸\n\n重试保持省略\n纯文本\n第一次：size 不发送\n第二次：size 不发送\n第三次：size 不发送\n\nJob B：创建时选择 2K\n\n重试保持显式尺寸\n纯文本\n创建时：size = 2560x1440\n第一次：2560x1440\n重试：2560x1440\n\n注意：如果供应商模型版本发生变化，或者原参数已经不再被支持，应进入明确的失败处理流程，而不是偷偷改变尺寸重新提交。\n\n3. 配置覆盖优先级\n\n建议固定以下规则：\n\n优先级\n\n\t\n\n来源\n\n\t\n\n作用\n\n\n\n\n1\n\n\t\n\nJob 冻结的显式用户选择\n\n\t\n\n最终任务参数\n\n\n\n\n2\n\n\t\n\n创建时经过验证的供应商策略\n\n\t\n\n参数适配\n\n\n\n\n3\n\n\t\n\n供应商接口默认值\n\n\t\n\n用户未选择时接管\n\n全局配置不得再存在一个无条件的 size=2048x2048，覆盖用户的自动模式。\n\n还要防止：\n\n环境变量偷偷补入 size。\n\n模型默认配置补入 size。\n\nworker 重试时重新套用新默认值。\n\n供应商 adapter 将字段缺失自动转换成 2048x2048。\n\n4. 建议冻结语义，而不只是冻结数值\n\n这一点非常重要。\n\n建议 Job 快照能够区分：\n\n纯文本\nsize_mode:\n  OMIT\n  EXPLICIT\n\nquality_mode:\n  OMIT\n  EXPLICIT\n\n例如：\n\nJSON\n{\n  \"size_mode\": \"OMIT\",\n  \"size\": null,\n  \"quality_mode\": \"OMIT\",\n  \"quality\": null\n}\n\n或者：\n\nJSON\n{\n  \"size_mode\": \"EXPLICIT\",\n  \"size\": \"2560x1440\",\n  \"quality_mode\": \"OMIT\",\n  \"quality\": null\n}\n\n这样才能证明用户选择的是自动默认，而不是用户明确要求某个字符串 auto。\n\n供应商 adapter 根据冻结语义构造出站请求，不允许自行猜测。\n\n五、最终 UNKNOWN 清单\n\n以下问题目前不能仅依据已有证据判定：\n\n问题\n\n\t\n\n状态\n\n\t\n\n原因\n\n\n\n\nSunburst 2.6 auto 是否自动匹配参考图画幅\n\n\t\n\nUNKNOWN\n\n\t\n\n官方文档没有明确承诺\n\n\n\n\nYuanqiao 2.6 edits 是否与 OpenAI 官方契约完全一致\n\n\t\n\nUNKNOWN\n\n\t\n\n当前公开文档版本存在差异\n\n\n\n\nWukong 是否支持 Sunburst 2.6 的相同参数规则\n\n\t\n\nUNKNOWN\n\n\t\n\n现有材料是 GPT Image 1 文档\n\n\n\n\n所有供应商省略 size 都默认 auto\n\n\t\n\nUNKNOWN\n\n\t\n\n必须逐供应商核实\n\n\n\n\n所有供应商省略 quality 都默认 auto\n\n\t\n\nUNKNOWN\n\n\t\n\n必须逐供应商核实\n\n\n\n\n自动画幅是否保证不裁切设计稿\n\n\t\n\nUNKNOWN\n\n\t\n\n没有正式保证\n\n尤其是远桥云：本次检索到的公开文档明确列出 2.5 Flare / Sunburst 的 Images API 参数规则，但没有找到足以确认 2.6 Sunburst edits 完整行为的独立版本契约。\n远桥云\n\n不能拿 OpenAI 官方模型文档替代第三方网关的实际兼容契约。\n\n六、最终 R5 裁定\nR5 推荐方案\n架构方向通过\n\n决策项\n\n\t\n\n裁定\n\n\n\n\n前端默认尺寸\n\n\t\n\n自动\n\n\n\n\n前端默认质量\n\n\t\n\n自动\n\n\n\n\n未显式传 size\n\n\t\n\n后端完全省略\n\n\n\n\n未显式传 quality\n\n\t\n\n后端完全省略\n\n\n\n\n后端硬编码 2048×2048\n\n\t\n\n撤销\n\n\n\n\n用户显式选 2K\n\n\t\n\n映射具体宽高\n\n\n\n\n画幅来源\n\n\t\n\n设计稿比例\n\n\n\n\n自动画幅匹配保证\n\n\t\n\nUNKNOWN\n\n\n\n\n旧任务\n\n\t\n\n保留原有冻结语义\n\n\n\n\n重试\n\n\t\n\n使用原 Job 参数语义\n\n\n\n\n全局默认覆盖\n\n\t\n\n禁止覆盖显式选择\n\n\n\n\n供应商差异\n\n\t\n\n独立 adapter 契约\n\n实施前 MUST-FIX\n\n撤销未发布的后端 2048x2048 硬编码。\n\n核实 GDC 请求组装层是否还存在其他隐式 size / quality 注入点。\n\n确认旧 Job 的字段缺失、null、显式值三种状态。\n\n建立 OMIT / EXPLICIT 冻结语义。\n\n增加 Mock 断言：未选择时出站 multipart 不包含 size 和 quality。\n\n增加显式 2K 的宽高映射和重试一致性测试。\n\n未取得供应商独立契约前，不把省略参数的行为标记为所有供应商 PASS。\n\n最终结论：原来的「默认 2K」应调整为「默认自动，用户可显式选择 2K」。\n\n这不仅是修改一个默认值，而是恢复用户选择权，并把供应商默认行为与产品业务选项分离。\n\n本轮可以进入代码契约和 Mock 设计；不批准真实接口调用，也不批准以未经证实的 auto 画幅行为作为验收承诺。",
+      "text_sha256": "147044d8864903038a8b3f207e361c5b84c9d3ccfe285c55c9e1efb1e8b08ce6",
+      "size_bytes": 11192,
+      "assistant_uuid": "54e03eae-bf23-4574-9e99-f367bc423c0d"
+    }
+  ]
+}

@@ -1,0 +1,94 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-24T04:17:49.102Z",
+  "user_unit_key": "6efaea29-3968-515a-87f1-c3ae6afcfb9e:0:user",
+  "start_key_resolved": "6efaea29-3968-515a-87f1-c3ae6afcfb9e:0:user",
+  "start_resolved_by_marker": false,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "6efaea29-3968-515a-87f1-c3ae6afcfb9e:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "ca9f27ff-ebae-4846-bed2-c6b2b2b39b0f",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "6efaea29-3968-515a-87f1-c3ae6afcfb9e:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "6efaea29-3968-515a-87f1-c3ae6afcfb9e:0:user",
+          "6efaea29-3968-515a-87f1-c3ae6afcfb9e:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "9596af879f4b2fd1add5c43ce5b843b220b2b501f88ba0165910e5fdb496ff08",
+          "a58d9a5b408c0f911c1ba4a5cd69abd06e4bc41482fcedcd8051ee34beabfe98"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "6efaea29-3968-515a-87f1-c3ae6afcfb9e:0:user",
+          "6efaea29-3968-515a-87f1-c3ae6afcfb9e:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "9596af879f4b2fd1add5c43ce5b843b220b2b501f88ba0165910e5fdb496ff08",
+          "a58d9a5b408c0f911c1ba4a5cd69abd06e4bc41482fcedcd8051ee34beabfe98"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "6efaea29-3968-515a-87f1-c3ae6afcfb9e:0:user",
+          "6efaea29-3968-515a-87f1-c3ae6afcfb9e:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "6efaea29-3968-515a-87f1-c3ae6afcfb9e:0:user",
+      "6efaea29-3968-515a-87f1-c3ae6afcfb9e:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "6efaea29-3968-515a-87f1-c3ae6afcfb9e:0:user",
+          "6efaea29-3968-515a-87f1-c3ae6afcfb9e:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "6efaea29-3968-515a-87f1-c3ae6afcfb9e:0:user",
+          "6efaea29-3968-515a-87f1-c3ae6afcfb9e:2:assistant"
+        ],
+        "overlap_keys": [
+          "6efaea29-3968-515a-87f1-c3ae6afcfb9e:0:user",
+          "6efaea29-3968-515a-87f1-c3ae6afcfb9e:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "6efaea29-3968-515a-87f1-c3ae6afcfb9e:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n[AIEO-ROUND:323dcf7f63c7f0e4a442570e]\nR1/R2/R3 + 2K 实施验收审查\n\n暂不通过实施验收 不批准生产发布\n\n先给出本轮审查边界：\n\n目前提供的测试结果可以支持“所述测试范围内通过”，但不足以支持“实现逻辑已完整验收”。\n\n尤其需要区分三个结论：\n\n测试通过：mock 环境下的指定测试通过。\n\n实现正确：参数传递、数据持久化、代理排序和详情编辑逻辑均符合契约。\n\n生产可用：真实供应商行为、部署配置、付费成本和异常处理均得到验证。\n\n这三者不能相互替代。你明确要求不批准生产发布和付费验收，我会维持这个限制，不建议用生产冒烟补齐证据。\n\n一、代码证据状态\n\n我尝试通过 GitHub 对指定四个完整 SHA 进行读取，但当前接口均返回 No commit found，没有取得可核验的提交 diff。\n\n因此，本轮不能声称已经完成逐行代码审查，也不能把根据实现描述推断的风险冒充为已经发现的代码缺陷。\n\n二、按实现模块审查\n\n以下是根据你提供的实现说明进行的契约级审查。MUST-FIX 表示验收前必须补齐的实现保证或证据，不代表已经确认代码存在对应 bug。\n\nR1：selected 同源双写及参数约束\nMUST-FIX：补齐一致性证据\n\n审查点\n\n\t\n\n当前判断\n\n\t\n\n必须补充的验证\n\n\n\n\nselected 冻结\n\n\t\n\n方向正确\n\n\t\n\n验证冻结的是同一份选中数据，而不是两个独立查询结果\n\n\n\n\nprompt 区块双写\n\n\t\n\n有必要\n\n\t\n\n验证两个位置内容完全一致，避免后续单侧修改\n\n\n\n\nproduct_constraints\n\n\t\n\n方向正确\n\n\t\n\n验证来源、结构、字段缺失处理\n\n\n\n\nvariant 缺省省略\n\n\t\n\n合理\n\n\t\n\n验证序列化后确实不存在该字段，而非 null 或空字符串\n\n\n\n\nHALF_UP\n\n\t\n\n正确的舍入策略选择\n\n\t\n\n验证正负边界、中间值及精度\n\n\n\n\n非法参数 422\n\n\t\n\n合理\n\n\t\n\n验证所有入口和所有非法参数均执行同一校验\n\n\n\n\n旧任务不注入\n\n\t\n\n非常重要\n\n\t\n\n验证历史任务读取、重试、恢复均不会被新参数污染\n\n特别关注三个问题：\n\n双写是否具有原子性？如果 prompt 更新成功、params 更新失败，是否可能形成不一致任务？\n\nselected 冻结发生在什么时间点？是否存在校验后、持久化前被其他逻辑重新读取的情况？\n\n旧任务是否真的保持原样？不能只测试正常历史任务，还应测试历史任务重试和重新入队。\n\n我建议把双写一致性作为一个独立不变量：\n\nprompt_constraints == params.product_constraints\n\n并在创建任务、持久化、读取恢复三个边界分别验证。\n\nR2：代理排序白名单\nMUST-FIX：补齐边界测试\n\n代理排序写白名单是合理的安全设计，但需要证明它不是单纯的前端过滤。\n\n必须验证：\n\n只允许白名单字段参与排序。\n\n任意未知字段不能进入 SQL 排序表达式。\n\n排序方向只能是预设的 ASC/DESC。\n\n多字段排序不能通过拼接参数绕过白名单。\n\n非法排序字段应有确定的错误处理。\n\n空值、重复字段、未知字段的组合有确定行为。\n\n默认排序与旧客户端请求保持兼容。\n\n重点： 白名单必须在服务端生效，不能只依赖前端下拉选项。\n\n如果排序最终拼接 SQL，应重点检查字段标识符和排序方向的生成位置。\n\nR3：详情输入参数\nMUST-FIX：补齐完整生命周期测试\n\n仅有详情页面输入和保存成功的测试还不够。\n\n需要覆盖：\n\n初始详情正确回显。\n\n修改参数后保存。\n\n刷新页面后重新读取。\n\n关闭页面重新进入后仍然一致。\n\n非法值被服务端拒绝。\n\n未授权用户不能修改参数。\n\n并发修改不会静默覆盖其他用户的修改。\n\n旧任务缺失字段时不会被错误补默认值。\n\n还需要明确 R3 的参数属于：\n\n仅任务展示参数；\n\n任务执行参数；\n\n可编辑的供应商请求参数。\n\n三者不能混为一谈。特别是已执行任务，不应该因为详情编辑而意外改变历史执行记录。\n\n2K：分辨率传递链\nMUST-FIX：补齐端到端契约证据\n\n你提供的关键事实是：\n\nGDC 显式指定 2048x2048。\n\nAIS 的 job_spec 会覆盖配置默认 auto。\n\n远桥官方文档支持 1:1 2K = 2048x2048。\n\n悟空契约为 UNKNOWN。\n\n这里最重要的是区分：\n\n预期参数传递链\n\nGDC params\n\nsize = 2048x2048\n\nAIS job_spec\n\n必须保留显式 size，不能被 auto 覆盖\n\nProvider adapter\n\n必须按供应商契约转换参数\n\n最终请求参数\n\n必须能证明没有被默认值、兼容层或适配器覆盖\n\n必须补充以下测试：\n\n测试场景\n\n\t\n\n预期\n\n\n\n\nGDC 显式 2048x2048\n\n\t\n\nAIS 收到相同值\n\n\n\n\nGDC 未提供 size\n\n\t\n\n按既定默认策略处理\n\n\n\n\nAIS 配置默认 auto\n\n\t\n\n不覆盖显式 2048x2048\n\n\n\n\n供应商不支持指定尺寸\n\n\t\n\n明确拒绝或按已批准策略降级\n\n\n\n\n供应商返回错误尺寸信息\n\n\t\n\n不宣称已获得 2K\n\n\n\n\n供应商切换\n\n\t\n\n不丢失尺寸约束\n\n悟空必须单独处理。\n\n在契约 UNKNOWN 的情况下，不能把远桥的能力外推给悟空，也不能将悟空的 auto 或默认尺寸认定为 2K。\n\n建议增加供应商能力矩阵，未确认的能力使用 UNKNOWN，不能默认为支持。\n\n三、现有测试结果评价\n\n项目\n\n\t\n\n结果\n\n\t\n\n审查评价\n\n\n\n\nGDC AI\n\n\t\n\n112 passed\n\n\t\n\n指定测试通过\n\n\n\n\nGDC 前端\n\n\t\n\n3284 passed\n\n\t\n\n指定测试通过\n\n\n\n\nAIS 相关\n\n\t\n\n16 passed\n\n\t\n\n指定测试通过\n\n\n\n\nAIS 前端\n\n\t\n\n42 passed\n\n\t\n\n指定测试通过\n\n\n\n\nAIS 全套\n\n\t\n\n572 passed\n\n\t\n\n指定测试通过\n\n\n\n\nAIS 基线失败\n\n\t\n\n13 项\n\n\t\n\n需保留基线证据\n\n\n\n\n单跑 flaky\n\n\t\n\n存在\n\n\t\n\n需区分环境波动和真实缺陷\n\n现有测试有一个明显优点：没有为了取得测试通过而再次真实调用付费接口。\n\n但是还有以下测试缺口。\n\n必须补齐的测试证据\n\n编号\n\n\t\n\n缺口\n\n\t\n\n优先级\n\n\n\n\nT1\n\n\t\n\nR1 双写一致性及失败回滚\n\n\t\n\nP1\n\n\n\n\nT2\n\n\t\n\nHALF_UP 正负边界及精度测试\n\n\t\n\nP1\n\n\n\n\nT3\n\n\t\n\n历史任务重试、恢复不注入新参数\n\n\t\n\nP1\n\n\n\n\nT4\n\n\t\n\nR2 服务端 SQL 白名单及注入测试\n\n\t\n\nP1\n\n\n\n\nT5\n\n\t\n\nR3 参数保存、重新读取、权限测试\n\n\t\n\nP1\n\n\n\n\nT6\n\n\t\n\nGDC→AIS→Provider 参数传递测试\n\n\t\n\nP1\n\n\n\n\nT7\n\n\t\n\n显式 size 优先于 AIS 默认 auto\n\n\t\n\nP1\n\n\n\n\nT8\n\n\t\n\nUNKNOWN 供应商能力拒绝或降级测试\n\n\t\n\nP1\n\n\n\n\nT9\n\n\t\n\n13 项基线失败与本提交测试结果对照\n\n\t\n\nP1\n\n\n\n\nT10\n\n\t\n\n单跑 flaky 的重复运行及根因分类\n\n\t\n\nP2\n\n其中 T6、T7、T8 是 2K 实现验收的核心，不能仅凭 GDC 的 mock 测试通过。\n\n四、关于 13 项基线失败\n\n这里不建议简单把它们标记为非回归后结束。\n\n应该建立逐项对照：\n\n字段\n\n\t\n\n要求\n\n\n\n\n测试名称\n\n\t\n\n完整名称\n\n\n\n\n基线提交\n\n\t\n\n明确完整 SHA\n\n\n\n\n被测提交\n\n\t\n\n明确完整 SHA\n\n\n\n\n基线结果\n\n\t\n\nPASS/FAIL\n\n\n\n\n当前结果\n\n\t\n\nPASS/FAIL\n\n\n\n\n单独运行\n\n\t\n\n结果\n\n\n\n\n失败原因\n\n\t\n\n有日志证据\n\n\n\n\n回归判定\n\n\t\n\n非回归/新增回归/未确定\n\n特别注意：\n\n基线失败不等于永远可以忽略。\n\n如果其中某项恰好覆盖本次修改的任务创建、参数解析或供应商调度逻辑，即使之前失败，也不能自动排除本次引入回归的可能。\n\n五、最终裁定\nPASS_WITH_CONSTRAINTS（仅限测试执行层面）\n\n验收对象\n\n\t\n\n裁定\n\n\n\n\nGDC R1/R2/R3\n\n\t\n\n实现描述合理，待代码核验\n\n\n\n\nGDC 2K\n\n\t\n\n参数设计合理，待完整传递链验证\n\n\n\n\nAIS R2\n\n\t\n\n测试结果通过，待代码核验\n\n\n\n\nAIS 出站测试\n\n\t\n\nmock 证据，不代表供应商实测\n\n\n\n\n远桥 2K\n\n\t\n\n官方文档支持，不代表实际付费调用验收\n\n\n\n\n悟空 2K\n\n\t\n\nUNKNOWN，不予认定\n\n生产发布：不批准\n付费验收：不批准\n实施验收：暂缓\n六、建议下一轮最小收敛动作\n\n不需要重新跑全部测试，也不需要真实调用 API。\n\n建议只做以下工作：\n\n提供四个提交对应的代码 diff，按完整 SHA 固定证据。\n\n对照上述 T1–T10 检查现有测试，已经覆盖的直接引用测试文件和测试名称，不重复开发。\n\n对缺失的 P1 项补充 mock 或纯单元测试。\n\n单独形成远桥、悟空的供应商能力契约表。\n\n输出一份最终验收矩阵，区分代码 PASS、测试 PASS、官方文档支持和真实供应商 UNKNOWN。\n\n我的核心意见： 这轮实施方向没有从现有描述中发现明显的设计性否决理由，但目前不能把测试通过升级成实现验收通过。尤其 2K 的核心不是 GDC 能否写入 2048x2048，而是这个约束能否穿过 AIS 的默认值、job_spec 和供应商适配层而不丢失。\n\n你可以把四个 SHA 对应的 diff 或代码包提供给我，我再按完整提交逐文件做第二轮审查，给出真正有文件路径、代码位置和复现条件的 MUST-FIX 清单。",
+      "text_sha256": "a58d9a5b408c0f911c1ba4a5cd69abd06e4bc41482fcedcd8051ee34beabfe98",
+      "size_bytes": 8923,
+      "assistant_uuid": "ca9f27ff-ebae-4846-bed2-c6b2b2b39b0f"
+    }
+  ]
+}

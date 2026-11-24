@@ -1,0 +1,191 @@
+{
+  "at": "2026-11-23T10:44:45.537Z",
+  "instance_id": "standard-queue",
+  "instance_lock_path": "D:\\AIEO\\.worktrees\\feat-standard-task-management\\runtime\\locks\\gpt-session-standard-queue.lockfile",
+  "instance_debug_port": 9300,
+  "instance_profile_dir": "D:\\AIEO\\.worktrees\\feat-standard-task-management\\runtime\\chrome_profiles\\gpt-poc-standard-queue",
+  "message_bytes": 1195,
+  "reply": "ChatGPT 说：\n\n[AIEO-ROUND:3be149cb62c8b36ce965aab1]\n\nR1 方案裁定：推荐「compose_prompt 冻结清单 + worker 请求层结构化双写」，ReferenceSelection 冻结契约不变。\n\n这条路径兼顾供应商兼容性、提示词可追溯性和参数可校验性，不需要改变选品重放或原图解析机制。\n\n推荐通过，可进入实施设计 尚非代码实施批准\n\n一、四个讨论点的裁定\n1. 清单放 prompt 还是 params？\n\n推荐：双写，但职责不同。\n\n位置\n\n\t\n\n职责\n\n\t\n\n是否必需\n\n\n\n\nprompt 文本\n\n\t\n\n让图像模型理解每个产品的视觉约束\n\n\t\n\n必需\n\n\n\n\nparams 结构化字段\n\n\t\n\n供后端校验、审计、调试及未来供应商适配\n\n\t\n\n必需\n\n原因：\n\n供应商现有接口已经接受 prompt，不需要供应商改造。\n\n结构化字段不会因为提示词格式变化而丢失。\n\nprompt 是模型实际理解的内容，params 是系统可验证的事实，两者不能互相替代。\n\n建议结构：\n\nJSON\n{\n  \"prompt\": \"原有设计提示词 + 产品占比清单\",\n  \"external_ref\": [],\n  \"params\": {\n    \"product_constraints\": [\n      {\n        \"name\": \"产品名称\",\n        \"color_variant\": \"颜色/规格\",\n        \"score\": 0.92,\n        \"screen_coverage\": 0.18\n      }\n    ]\n  }\n}\n\n注意：这里是请求层的目标结构示意，不代表现有供应商 params 已支持该字段。\n\n重要约束：\n\nscreen_coverage 必须沿用选品冻结结果的原始语义和单位。\n\n不得将缺失值伪造为 0。\n\n不得重新计算 score 或占比。\n\n清单必须与本次实际选中的产品一一对应。\n\n2. 清单是否进入 compose_prompt？\n\n推荐：进入 compose_prompt，合并进 resolved_prompt 冻结。\n\n不推荐 worker 临时拼接另一段提示词。\n\n理由：\n\nresolved_prompt 应当代表本次 Job 实际执行的完整提示词。\n\n任务重试必须复用相同提示词。\n\n调试时可以直接追溯模型实际收到的设计约束。\n\n避免 compose_prompt 与 worker 各自维护一套产品约束表达。\n\n建议提示词增加独立区块：\n\n纯文本\n【产品选择与画面占比约束】\n\n以下产品均为本次设计必须参考的产品。\n请使用对应产品原图作为外观、颜色和材质依据。\n\n1. 产品：XXX\n   颜色规格：XXX\n   评分：0.92\n   画面占比：18%\n\n2. 产品：YYY\n   颜色规格：YYY\n   评分：0.88\n   画面占比：15%\n\n共计6项。\n请保持产品外观与参考原图一致，并尽可能遵循上述画面占比。\n\n这里有一个特别重要的语义问题：\n\n评分是选品依据，不一定是图像生成约束。\n\n建议：\n\n名称、颜色、占比：作为生成约束。\n\nscore：作为选品审计信息，不要求模型按照分数改变视觉效果。\n\n评分不得被解释为产品优先级或画面占比。\n\n另外，占比属于生成模型的软约束，不能承诺最终像素级占比精确达标。\n\n3. ReferenceSelection 冻结契约是否保持不动？\n保持不动\n\n这是本次方案最重要的架构边界。\n\n不修改：\n\nJob.reference_selection_json\n\nselected 的现有字段定义\n\nrank / score / screen_coverage 的计算规则\n\nresolved_assets 的解析规则\n\nvariant → default → product_image 原图回退顺序\n\n原图去重和发送逻辑\n\n只扩展：\n\ncompose_prompt：读取冻结选品结果，生成产品约束文本。\n\nworker 请求组装层：生成结构化 product_constraints。\n\n必要的请求模型及校验逻辑。\n\n数据流：\n\n纯文本\n前端截图 + visibility_manifest\n             |\n             v\n      后端选品冻结\n             |\n             v\n Job.reference_selection_json\n             |\n       +-----+------+\n       |            |\n       v            v\n compose_prompt   worker\n       |            |\n       v            |\n resolved_prompt   |\n       |            |\n       +------+-----+\n              |\n              v\n       外部 images/edits\n              |\n       +------+------+\n       |             |\n       v             v\n    prompt          params\n  产品约束文本    结构化清单\n\n       external_ref\n       继续发送原图\n\n这样不会把请求参数扩展演变成选品契约升级。\n\n二、TS / pytest / golden parity 测试裁定\n\n建议按四层补齐。\n\n测试层\n\n\t\n\n必须补充的断言\n\n\n\n\nTypeScript\n\n\t\n\nproduct_constraints 类型、字段及可选值约束\n\n\n\n\npytest\n\n\t\n\n清单生成、字段映射、数量和数据一致性\n\n\n\n\ngolden parity\n\n\t\n\ncompose_prompt 的新旧行为及新提示词内容\n\n\n\n\nworker 集成\n\n\t\n\nprompt、params、external_ref 三者对应同一批冻结选品\n\n1. TypeScript\n\n至少验证：\n\n产品名称字段类型正确。\n\ncolor_variant 类型正确，允许既定的缺失状态。\n\nscore 不发生字符串化。\n\nscreen_coverage 使用统一数值单位。\n\nproduct_constraints 数组结构正确。\n\n不允许因为前端类型扩展而改变原有 API 输入契约。\n\n特别注意：TS 类型不能代替运行时校验。\n\n2. pytest\n\n建议覆盖以下场景：\n\n场景\n\n\t\n\n预期\n\n\n\n\n6个正常选中产品\n\n\t\n\n生成6条约束\n\n\n\n\n只有部分产品有颜色规格\n\n\t\n\n保留缺失状态，不伪造颜色\n\n\n\n\n产品占比缺失\n\n\t\n\n不补0、不猜测\n\n\n\n\nselected 顺序变化\n\n\t\n\n遵循冻结数据既定顺序\n\n\n\n\n原图存在 variant\n\n\t\n\n使用原有解析结果\n\n\n\n\nvariant 缺失\n\n\t\n\n继续 default 回退\n\n\n\n\ndefault 缺失\n\n\t\n\n继续 product_image 回退\n\n\n\n\n相同原图重复引用\n\n\t\n\nexternal_ref 仍去重\n\n\n\n\n重试同一个 Job\n\n\t\n\n清单和提示词保持一致\n\n还应增加一个反向测试：\n\n没有产品选品数据的旧任务，不能凭空生成产品约束。\n\n3. Golden parity\n\n这里建议明确区分两个概念：\n\n旧 golden：原有提示词行为，防止无关内容被修改。\n\n新 golden：包含产品约束区块的完整 resolved_prompt。\n\n不能简单要求新旧 prompt 字符串完全一致，因为本次需求本来就需要增加内容。\n\n应验证：\n\n原设计提示词主体没有非预期变化。\n\n产品清单内容与冻结数据一致。\n\n数字格式和单位稳定。\n\n同一输入重复生成得到相同结果。\n\n产品排列顺序稳定。\n\n不出现重复产品约束区块。\n\n4. Worker 集成\n\n这是最关键的验收点。\n\n对同一个 Job，断言：\n\n纯文本\nresolved_prompt 中的产品数量\n    ==\nparams.product_constraints 数量\n    ==\n冻结 selected 产品数量\n\n并进一步断言：\n\n纯文本\nparams.product_constraints[i]\n    ==\nreference_selection_json.selected[i] 对应字段映射\n\n原图发送另行验证：\n\n每个需要的产品原图均发送。\n\n截图仍然发送。\n\n去重行为不变。\n\nexternal_ref 中没有因为新增清单而丢失原图。\n\nprompt 和 params 不包含未经冻结数据支持的产品。\n\n三、主要风险及防护\n\n风险\n\n\t\n\n等级\n\n\t\n\n防护措施\n\n\n\n\nprompt 与 params 数据不一致\n\n\t\n\n高\n\n\t\n\n同一冻结数据源、同一组装逻辑\n\n\n\n\n评分被模型误解为视觉优先级\n\n\t\n\n中\n\n\t\n\n明确评分仅供选品参考\n\n\n\n\n占比单位不统一\n\n\t\n\n高\n\n\t\n\n固定字段语义及序列化规范\n\n\n\n\nprompt 过长\n\n\t\n\n低\n\n\t\n\n六条清单独立区块，控制字段长度\n\n\n\n\n供应商忽略 params\n\n\t\n\n低\n\n\t\n\nprompt 保留完整约束\n\n\n\n\n旧任务重试出现行为变化\n\n\t\n\n高\n\n\t\n\n使用 Job 冻结数据，不重新选品\n\n\n\n\n原图发送逻辑被意外改变\n\n\t\n\n高\n\n\t\n\n不修改 external_ref 解析和去重链路\n\n还有一个需要特别防范的问题：\n\n不能让 params 中的结构化清单变成第二份独立业务事实。\n\n它只能是 reference_selection_json 的派生表达，不能被后续重试、审计或其他模块反向当作选品真相。\n\n四、最终推荐实施路径\n\n建议按以下顺序实施，避免一次修改过多层次。\n\n第一步：定义请求层数据契约\n\n明确 product_constraints 字段、类型、单位、缺失值规则及排列顺序。不改 ReferenceSelection。\n\n第二步：扩展 compose_prompt\n\n从冻结的 selected 数据生成产品约束区块，写入 resolved_prompt。\n\n第三步：扩展 worker 请求组装\n\n从相同冻结数据生成 params.product_constraints；保持 external_ref 原有行为。\n\n第四步：补齐测试\n\nTS → pytest → golden parity → worker 集成测试。\n\n第五步：验收请求快照\n\n检查实际发出的 prompt、params、external_ref，证明三者来自同一份冻结选品数据。\n\n五、R1 最终裁定\n推荐方案：双写，单一事实源\n架构方向通过\n\n决策项\n\n\t\n\n裁定\n\n\n\n\nprompt / params\n\n\t\n\n双写\n\n\n\n\nprompt 生成位置\n\n\t\n\ncompose_prompt\n\n\n\n\nresolved_prompt\n\n\t\n\n包含产品约束\n\n\n\n\nparams\n\n\t\n\n新增结构化清单\n\n\n\n\nReferenceSelection\n\n\t\n\n不修改\n\n\n\n\nworker 原图链路\n\n\t\n\n不修改\n\n\n\n\n选品计算\n\n\t\n\n不修改\n\n\n\n\n测试\n\n\t\n\nTS + pytest + golden + 集成\n\n\n\n\n供应商改造\n\n\t\n\n不要求\n\n实施前还有一个必要核实点：\n\n当前资料没有给出 screen_coverage 的真实存储单位、是否允许 null，以及 issue#126 六条清单的精确字段定义。因此不能直接把示例中的 0.18 和 18% 当成正式契约。\n\n建议把这三项作为实施设计的前置核对，而不是让开发人员自行推断。\n\n最终边界：本轮只批准上述架构方向，不批准直接改代码。 下一轮应提交请求数据契约、字段映射表和 prompt golden 样例，审议通过后再实施。",
+  "user_unit_key": "bc0d580a-9d56-5129-b1b6-c3a8700dab96:0:user",
+  "start_key_resolved": "bc0d580a-9d56-5129-b1b6-c3a8700dab96:0:user",
+  "start_resolved_by_marker": true,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "bc0d580a-9d56-5129-b1b6-c3a8700dab96:1:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "b9b16c29-d46f-482d-8146-c28f9dfb5b36",
+  "stability": {
+    "stable": true,
+    "interval_ms": 6132,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-23T10:44:38.698Z",
+      "read_finished_at": "2026-11-23T10:44:41.818Z",
+      "unit_keys": [
+        "bc0d580a-9d56-5129-b1b6-c3a8700dab96:1:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "bc0d580a-9d56-5129-b1b6-c3a8700dab96:1:assistant",
+          "sha256": "1fe0f3a3a7ff9c41df1b120608341376ad0d609a5b116d56aa9ac9577bd3307e",
+          "size_bytes": 9361
+        }
+      ],
+      "assistant_uuid": "b9b16c29-d46f-482d-8146-c28f9dfb5b36",
+      "next_user_unit_key": null,
+      "start_key_resolved": "bc0d580a-9d56-5129-b1b6-c3a8700dab96:0:user",
+      "start_resolved_by_marker": true,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-23T10:44:44.831Z",
+      "read_finished_at": "2026-11-23T10:44:45.366Z",
+      "unit_keys": [
+        "bc0d580a-9d56-5129-b1b6-c3a8700dab96:1:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "bc0d580a-9d56-5129-b1b6-c3a8700dab96:1:assistant",
+          "sha256": "1fe0f3a3a7ff9c41df1b120608341376ad0d609a5b116d56aa9ac9577bd3307e",
+          "size_bytes": 9361
+        }
+      ],
+      "assistant_uuid": "b9b16c29-d46f-482d-8146-c28f9dfb5b36",
+      "next_user_unit_key": null,
+      "start_key_resolved": "bc0d580a-9d56-5129-b1b6-c3a8700dab96:0:user",
+      "start_resolved_by_marker": true,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "bc0d580a-9d56-5129-b1b6-c3a8700dab96:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "bc0d580a-9d56-5129-b1b6-c3a8700dab96:0:user",
+          "bc0d580a-9d56-5129-b1b6-c3a8700dab96:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "e37dfb677a157f8eab200e6edeb7984f0d93ece3ea45ece3512b39c893054f5b",
+          "1fe0f3a3a7ff9c41df1b120608341376ad0d609a5b116d56aa9ac9577bd3307e"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "bc0d580a-9d56-5129-b1b6-c3a8700dab96:0:user",
+          "bc0d580a-9d56-5129-b1b6-c3a8700dab96:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "e37dfb677a157f8eab200e6edeb7984f0d93ece3ea45ece3512b39c893054f5b",
+          "1fe0f3a3a7ff9c41df1b120608341376ad0d609a5b116d56aa9ac9577bd3307e"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "bc0d580a-9d56-5129-b1b6-c3a8700dab96:0:user",
+          "bc0d580a-9d56-5129-b1b6-c3a8700dab96:1:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "bc0d580a-9d56-5129-b1b6-c3a8700dab96:0:user",
+      "bc0d580a-9d56-5129-b1b6-c3a8700dab96:1:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "bc0d580a-9d56-5129-b1b6-c3a8700dab96:0:user",
+          "bc0d580a-9d56-5129-b1b6-c3a8700dab96:1:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "bc0d580a-9d56-5129-b1b6-c3a8700dab96:0:user",
+          "bc0d580a-9d56-5129-b1b6-c3a8700dab96:1:assistant"
+        ],
+        "overlap_keys": [
+          "bc0d580a-9d56-5129-b1b6-c3a8700dab96:0:user",
+          "bc0d580a-9d56-5129-b1b6-c3a8700dab96:1:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "1fe0f3a3a7ff9c41df1b120608341376ad0d609a5b116d56aa9ac9577bd3307e",
+  "size_bytes": 9361,
+  "reply_path": "D:\\AIEO\\.worktrees\\feat-standard-task-management\\phase0\\logs\\dispatch-2026-11-23T10-41-57\\reply.txt",
+  "reply_readback_sha256": "1fe0f3a3a7ff9c41df1b120608341376ad0d609a5b116d56aa9ac9577bd3307e",
+  "raw_units_path": "D:\\AIEO\\.worktrees\\feat-standard-task-management\\phase0\\logs\\dispatch-2026-11-23T10-41-57\\raw-units.json",
+  "raw_units_sha256": "e82036f9d0b85b3f1ce19985c3b70a22d8aeef62dc4de9b81c08f44888e8bf06",
+  "raw_units_size_bytes": 13190,
+  "raw_units_readback_sha256": "e82036f9d0b85b3f1ce19985c3b70a22d8aeef62dc4de9b81c08f44888e8bf06",
+  "session_id": "6b0418af-0fcc-83ec-aff0-dad2dd269864",
+  "conversation_url": "https://chatgpt.com/c/6b0418af-0fcc-83ec-aff0-dad2dd269864",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}

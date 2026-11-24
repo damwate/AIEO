@@ -1,0 +1,20 @@
+{
+  "at": "2026-11-24T04:18:00.134Z",
+  "outcome": "failure_created_pages_closed",
+  "before": null,
+  "exit_before_disposal": [
+    {
+      "id": "40C89A68F7FECC54B0E96C723C55F158",
+      "url": "https://chatgpt.com/c/6b050b37-40b8-83ec-9365-8a0ca627b757"
+    }
+  ],
+  "exit_after_disposal": [
+    {
+      "id": "40C89A68F7FECC54B0E96C723C55F158",
+      "url": "https://chatgpt.com/c/6b050b37-40b8-83ec-9365-8a0ca627b757"
+    }
+  ],
+  "created_pages": 0,
+  "disposal": "发送前失败：仅关闭本次自建页；既有页零触碰（exit_before/exit_after 对照=值守页零关闭证明）",
+  "error": "INSTANCE_PORT_FOREIGN: 端口 9300 归属核验未通过（decision=FOREIGN_STOP, ownProcs=0），fail-closed 不复用"
+}

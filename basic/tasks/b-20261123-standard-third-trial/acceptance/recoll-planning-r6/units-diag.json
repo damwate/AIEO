@@ -1,0 +1,38 @@
+[
+  {
+    "key": "6ee17059-552d-5eeb-a0cc-c811aa0dfc85:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[AIEO-ROUND:2b375278906e2d57246174a1]\n2K 档位裁定。背景：生图服务默认 1K 改 2K，对象是三家 openai_com"
+  },
+  {
+    "key": "6ee17059-552d-5eeb-a0cc-c811aa0dfc85:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\n[AIEO-ROUND:2b375278906e2d57246174a1]\n\n2K 档位裁定\n\n初步裁定：不批准直接将三家供应商的 si"
+  },
+  {
+    "key": "ce6baa7d-7d2f-5103-8700-57706eed1bea:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[AIEO-ROUND:14f17ab580755841eb2737b0]\nR4 付费接口测试方法审议。背景：生图/付费 API 参数验证曾用真实调用矩阵+生产"
+  },
+  {
+    "key": "ce6baa7d-7d2f-5103-8700-57706eed1bea:1:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\n[AIEO-ROUND:14f17ab580755841eb2737b0]\n\nR4 付费接口测试方法审议\n\n裁定：推荐采用「官方契约优先"
+  },
+  {
+    "key": "10e9febc-2b2a-5163-a224-7c1bcf7d143e:0:user",
+    "role": "user",
+    "visible": true,
+    "text_head": "[AIEO-ROUND:a558c967111127330699fc81]\nR5 size/auto参数来源裁定。用户最新理解：gpt-image 2.* su"
+  },
+  {
+    "key": "10e9febc-2b2a-5163-a224-7c1bcf7d143e:2:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_head": "ChatGPT 说：\n\n[AIEO-ROUND:a558c967111127330699fc81]\n\nR5：size / auto 参数来源裁定\n\n初步裁定：前"
+  }
+]

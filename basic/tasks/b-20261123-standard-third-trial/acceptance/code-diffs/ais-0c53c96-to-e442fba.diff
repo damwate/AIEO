@@ -1,0 +1,157 @@
+diff --git a/backend/tests/test_generic_jobs_capabilities.py b/backend/tests/test_generic_jobs_capabilities.py
+index 200d7d9..945e1f0 100644
+--- a/backend/tests/test_generic_jobs_capabilities.py
++++ b/backend/tests/test_generic_jobs_capabilities.py
+@@ -91,3 +91,33 @@ def test_config_pruning_keeps_queued_generic_provider_snapshot(env):
+         db.commit()
+         _prune_generations(doc, db)
+         assert '1' not in doc['generations']
++
++
++def test_final_outbound_size_tracks_job_params_not_vendor_default(monkeypatch):
++    """L1/L2 零费用覆盖链：供应商配置 size 会被任务 params 覆盖；未传时明确回落 auto。
++    在 provider 最终 _post_raw 边界截获，防止中间层构造正确、出站前又被改写。"""
++    import base64
++    import json
++    from types import SimpleNamespace
++    from app.ai.job_spec import GENERIC_SPEC
++    from app.ai.ai_provider_openai import OpenAICompatImageProvider
++
++    for params, expected in [({'size': '2048x2048'}, '2048x2048'), ({}, 'auto')]:
++        cfg = dict(provider='openai_compat', base_url='https://example.test', api_key='test',
++                   model='gpt-image-2.6-sunburst', channel='generations',
++                   size='1024x1024', quality='low', output_format='png')
++        job = SimpleNamespace(job_id='size-override', prompt='size contract', params_json=params)
++        request = GENERIC_SPEC.build_request(job, cfg, input_images=[],
++                                            input_image=None, input_mime=None, ref_images=[])
++        calls = []
++
++        def post_raw(url, body, content_type, timeout, bearer, attempt=None, **_kwargs):
++            calls.append(json.loads(body))
++            payload = {'data': [{'b64_json': base64.b64encode(png_bytes(2, 2)).decode()}]}
++            return 'application/json', json.dumps(payload).encode()
++
++        provider = OpenAICompatImageProvider()
++        monkeypatch.setattr(provider, '_post_raw', post_raw)
++        assert provider.generate_image(request).image_bytes
++        assert len(calls) == 1
++        assert calls[0]['size'] == expected
+diff --git a/frontend/src/views/Vendors.vue b/frontend/src/views/Vendors.vue
+index 2338951..ddb5171 100644
+--- a/frontend/src/views/Vendors.vue
++++ b/frontend/src/views/Vendors.vue
+@@ -6,6 +6,9 @@ import { fmtTime } from '../format'
+ import type { ModelsView, RoutingView, VendorRow } from '../types'
+ 
+ // 排序只写全局路由；供应商状态与参数保持独立。
++// 2026-11-23 R2（gdc-aigen-admin-20261123）：Garden 代理入口（/ai-console）放开排序编辑——
++// Garden 网关写白名单放行 PUT /ai-console/routing/order 并代持 Admin Token + 操作审计；
++// 供应商字段编辑（enabled/priority 等，若同页）仍限直连模式；模型能力只读表仍直连专属。
+ const vendors = ref<VendorRow[]>([])
+ const routing = ref<RoutingView | null>(null)
+ const models = ref<ModelsView | null>(null)
+@@ -17,7 +20,7 @@ const order = ref<string[]>([])
+ const savedOrder = ref<string[]>([])
+ const saving = ref(false)
+ const saved = ref(false)
+-const readOnly = isGardenProxy()
++const gardenProxy = isGardenProxy()
+ const dirty = computed(() => JSON.stringify(order.value) !== JSON.stringify(savedOrder.value))
+ 
+ function vendorName(id: string): string {
+@@ -26,7 +29,7 @@ function vendorName(id: string): string {
+ 
+ function move(index: number, delta: number): void {
+   const other = index + delta
+-  if (readOnly || loading.value || saving.value || other < 0 || other >= order.value.length) return
++  if (loading.value || saving.value || other < 0 || other >= order.value.length) return
+   const next = [...order.value]
+   ;[next[index], next[other]] = [next[other]!, next[index]!]
+   order.value = next
+@@ -34,7 +37,7 @@ function move(index: number, delta: number): void {
+ }
+ 
+ async function saveOrder(): Promise<void> {
+-  if (readOnly || !dirty.value || saving.value || loading.value || stale.value) return
++  if (!dirty.value || saving.value || loading.value || stale.value) return
+   saving.value = true
+   error.value = ''
+   saved.value = false
+@@ -60,7 +63,7 @@ async function load(): Promise<void> {
+     const [v, r, mo] = await Promise.all([
+       fetchJson<VendorRow[]>(adminUrl('/vendors')),
+       fetchJson<RoutingView>(adminUrl('/routing')),
+-      readOnly ? Promise.resolve(null) : fetchJson<ModelsView>(adminUrl('/models')),
++      gardenProxy ? Promise.resolve(null) : fetchJson<ModelsView>(adminUrl('/models')),
+     ])
+     vendors.value = v
+     routing.value = r
+@@ -102,15 +105,15 @@ function cap(v: boolean | undefined): string {
+   <div class="page">
+     <h2>调用顺序</h2>
+     <p class="note">新任务优先调用靠前的可用供应商，满足切换条件时再尝试下一家。状态与排序独立；已提交任务不变。有独立项目策略的项目仍按各自策略执行。</p>
+-    <p v-if="readOnly" class="note">当前为 Garden 查询入口。请直接登录独立生图控制台调整顺序。</p>
++    <p v-if="gardenProxy" class="note">当前为 Garden 查询入口。排序编辑已开放：保存将写回全局路由（经 Garden 网关代持管理凭证并留审计）；供应商参数与模型能力仍请直连独立生图控制台。</p>
+     <ol class="vendor-order" aria-label="全局供应商调用顺序">
+       <li v-for="(id, index) in order" :key="id">
+         <span>{{ vendorName(id) }}</span>
+-        <button v-if="!readOnly" type="button" :aria-label="`上移${vendorName(id)}`" :disabled="index === 0 || loading || saving || stale" @click="move(index, -1)">上移</button>
+-        <button v-if="!readOnly" type="button" :aria-label="`下移${vendorName(id)}`" :disabled="index === order.length - 1 || loading || saving || stale" @click="move(index, 1)">下移</button>
++        <button type="button" :aria-label="`上移${vendorName(id)}`" :disabled="index === 0 || loading || saving || stale" @click="move(index, -1)">上移</button>
++        <button type="button" :aria-label="`下移${vendorName(id)}`" :disabled="index === order.length - 1 || loading || saving || stale" @click="move(index, 1)">下移</button>
+       </li>
+     </ol>
+-    <button v-if="!readOnly" type="button" :disabled="!dirty || loading || saving || stale" @click="saveOrder">{{ saving ? '保存中…' : '保存顺序' }}</button>
++    <button type="button" :disabled="!dirty || loading || saving || stale" @click="saveOrder">{{ saving ? '保存中…' : '保存顺序' }}</button>
+     <button v-if="dirty || stale" type="button" :disabled="loading || saving" @click="saved = false; load()">放弃修改并刷新</button>
+     <span v-if="dirty" role="status"> 顺序尚未保存</span>
+     <span v-else-if="saved" role="status"> 已保存，新任务将按此顺序调用</span>
+@@ -177,7 +180,7 @@ function cap(v: boolean | undefined): string {
+         </tr>
+       </tbody>
+     </table>
+-    <p v-else-if="readOnly" class="note">模型能力请在独立生图控制台查看。</p>
++    <p v-else-if="gardenProxy" class="note">模型能力请在独立生图控制台查看。</p>
+     <p v-else class="note">(未取到能力合同;active_provider={{ models?.active_provider ?? '—' }})</p>
+ 
+     <p v-if="error" class="error-text">{{ error }}<span v-if="stale" class="stale-text">(显示上次成功数据)</span></p>
+diff --git a/frontend/tests/vendors.spec.ts b/frontend/tests/vendors.spec.ts
+index 17ba3a9..3861312 100644
+--- a/frontend/tests/vendors.spec.ts
++++ b/frontend/tests/vendors.spec.ts
+@@ -56,13 +56,32 @@ it('Garden query entry shows order without writes or unsupported model requests'
+   setSession({ username: 'admin', csrf_token: 'test-csrf' })
+   const fetch = setup()
+   await flushPromises()
+-  expect(wrapper!.text()).toContain('请直接登录独立生图控制台调整顺序')
++  expect(wrapper!.text()).toContain('保存将写回全局路由')
+   expect(wrapper!.findAll('.vendor-order li')).toHaveLength(3)
+-  expect(wrapper!.findAll('button')).toHaveLength(0)
+-  expect(fetch.mock.calls.some(([url, opts]) => url.endsWith('/models') || opts?.method === 'PUT')).toBe(false)
++  // 排序编辑已开放（R2）：上移/下移/保存按钮在 Garden 入口可用；模型能力仍不请求
++  expect(wrapper!.find('[aria-label="上移yuanqiao"]').exists()).toBe(true)
++  expect(fetch.mock.calls.some(([url]) => url.endsWith('/models'))).toBe(false)
+   expect(new Headers(fetch.mock.calls[0]![1]!.headers).has('X-Admin-Token')).toBe(false)
+ })
+ 
++it('Garden query entry can reorder and save via proxy path without CSRF header', async () => {
++  window.history.replaceState(null, '', '/ai-console/')
++  setSession({ username: 'admin', csrf_token: 'test-csrf' })
++  const fetch = setup()
++  await flushPromises()
++  await wrapper!.get('[aria-label="上移yuanqiao"]').trigger('click')
++  await wrapper!.get('[aria-label="上移yuanqiao"]').trigger('click')
++  expect(fetch.mock.calls.filter(([, opts]) => opts?.method === 'PUT')).toHaveLength(0)
++  await button('保存顺序').trigger('click')
++  await flushPromises()
++  const writes = fetch.mock.calls.filter(([, opts]) => opts?.method === 'PUT')
++  expect(writes).toHaveLength(1)
++  expect(writes[0]![0]).toBe('/ai-console/routing/order')   // 页面所在路径即 API 前缀
++  expect(JSON.parse(String(writes[0]![1]!.body))).toEqual({ vendor_plan: ['yuanqiao', 'wukong', 'in'], expected_vendor_plan: ids })
++  expect(new Headers(writes[0]![1]!.headers).has('X-CSRF-Token')).toBe(false)  // 代理入口免 CSRF（网关代持 Token）
++  expect(wrapper!.text()).toContain('已保存，新任务将按此顺序调用')
++})
++
+ it.each([409, 502])('retains edits and requires a fresh read after HTTP %s', async (status) => {
+   setup(status)
+   await flushPromises()

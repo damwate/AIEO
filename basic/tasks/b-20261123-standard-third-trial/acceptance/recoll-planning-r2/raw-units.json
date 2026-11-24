@@ -1,0 +1,94 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-23T10:58:39.536Z",
+  "user_unit_key": "3dc7a4f6-3b84-5156-9367-018129b06b04:0:user",
+  "start_key_resolved": "3dc7a4f6-3b84-5156-9367-018129b06b04:0:user",
+  "start_resolved_by_marker": false,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "3dc7a4f6-3b84-5156-9367-018129b06b04:1:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "54444b65-d364-434b-b527-1319b8bac531",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "3dc7a4f6-3b84-5156-9367-018129b06b04:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "3dc7a4f6-3b84-5156-9367-018129b06b04:0:user",
+          "3dc7a4f6-3b84-5156-9367-018129b06b04:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "abe71473ae5b59756a885ed24ee616571b0937045ece46d7e87bbfa1a7affb82",
+          "7f3def1ce3571bcff2f9b2a14ddd0a1a5fe0a3d5e4114a1dd82af487bb230e90"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "3dc7a4f6-3b84-5156-9367-018129b06b04:0:user",
+          "3dc7a4f6-3b84-5156-9367-018129b06b04:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "abe71473ae5b59756a885ed24ee616571b0937045ece46d7e87bbfa1a7affb82",
+          "7f3def1ce3571bcff2f9b2a14ddd0a1a5fe0a3d5e4114a1dd82af487bb230e90"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "3dc7a4f6-3b84-5156-9367-018129b06b04:0:user",
+          "3dc7a4f6-3b84-5156-9367-018129b06b04:1:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "3dc7a4f6-3b84-5156-9367-018129b06b04:0:user",
+      "3dc7a4f6-3b84-5156-9367-018129b06b04:1:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "3dc7a4f6-3b84-5156-9367-018129b06b04:0:user",
+          "3dc7a4f6-3b84-5156-9367-018129b06b04:1:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "3dc7a4f6-3b84-5156-9367-018129b06b04:0:user",
+          "3dc7a4f6-3b84-5156-9367-018129b06b04:1:assistant"
+        ],
+        "overlap_keys": [
+          "3dc7a4f6-3b84-5156-9367-018129b06b04:0:user",
+          "3dc7a4f6-3b84-5156-9367-018129b06b04:1:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "3dc7a4f6-3b84-5156-9367-018129b06b04:1:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n[AIEO-ROUND:d441bc7f31b9b5a665a92c59]\n\nR2 契约审议裁定：有条件通过，可以进入实施准备；暂不批准直接编码。\n\nR1 的核心架构决策没有变化。R2 已补齐主要字段来源、数值语义、生成位置和测试范围，整体方案可以收敛。\n\n架构方案通过 2项 MUST-FIX 待落实\n\n一、逐项裁定\n\n审议项目\n\n\t\n\n裁定\n\n\t\n\n说明\n\n\n\n\nscreen_coverage\n\n\t\n\nPASS\n\n\t\n\n0..1，来源 visible_pixels/mask_total\n\n\n\n\n展示格式\n\n\t\n\nPASS\n\n\t\n\n×100，一位小数\n\n\n\n\nname 映射\n\n\t\n\nPASS\n\n\t\n\nplacement 域取 catalog.products[id].name\n\n\n\n\n其他域 name\n\n\t\n\nPASS\n\n\t\n\n使用 subject_id\n\n\n\n\ncolor_variant\n\n\t\n\nPASS\n\n\t\n\n来自 variant，空值表示缺失\n\n\n\n\nscore\n\n\t\n\nPASS\n\n\t\n\n仅进入 params，保持审计语义\n\n\n\n\nproduct_constraints\n\n\t\n\nPASS\n\n\t\n\n从 selected 同源派生\n\n\n\n\ncompose_prompt\n\n\t\n\nPASS\n\n\t\n\n新增 selection 参数并冻结进 resolved_prompt\n\n\n\n\nworker params\n\n\t\n\nPASS\n\n\t\n\n增加结构化 product_constraints\n\n\n\n\n原图与去重\n\n\t\n\nPASS\n\n\t\n\n保持现有行为\n\n\n\n\n测试范围\n\n\t\n\nPASS\n\n\t\n\n覆盖主要回归及一致性场景\n\n二、MUST-FIX\nMF-01：明确缺失 variant 的序列化规则\n\n当前约定：\n\ncolor_variant=variant（空=缺失）\n\n还不够明确。\n\n必须固定：\n\nvariant 为有效非空值：正常输出。\n\nvariant 为 null 或空字符串：结构化 params 使用 null。\n\nprompt 中不输出字面量 None、null 或空占位符。\n\nprompt 中统一省略颜色规格片段，避免产生错误信息。\n\n例如：\n\n纯文本\n有颜色：\n1. 产品：景观灯 颜色规格：暖白 画面占比：18.2%\n\n无颜色：\n2. 产品：户外花盆 画面占比：12.5%\n\n禁止将缺失颜色解释成默认颜色。\n\nMF-02：固定数值序列化及舍入规则\n\n已经明确：\n\n内部值：0..1。\n\nparams：保留原始值。\n\nprompt：乘以100，保留一位小数。\n\n还需要固定：\n\n使用统一舍入规则，Python 实现不能依赖不同格式化方式产生不同结果。\n\nprompt 使用百分数，不带额外空格，例如 18.2%。\n\nparams 不得使用百分数转换后的值。\n\n内部值必须通过有限数值校验，拒绝 NaN、Infinity 和越界数据。\n\n特别注意 Python 的 round() 使用 ties-to-even，不能在未定义规则时直接拿它作为跨语言契约。\n\n建议统一采用十进制 ROUND_HALF_UP，明确输入精度和格式化行为，并增加边界 golden。\n\n三、另外三项实施约束\n\n以下不作为阻塞性 MUST-FIX，但实施时必须遵守。\n\n1. selection 参数不得成为第二份选品事实。\n\ncompose_prompt(selection) 和 worker 的 params 必须读取同一份冻结 selected 数据。\n\n不得重新选品、重新计算 score、重新计算 screen_coverage。\n\n2. name 映射必须有明确失败策略。\n\nplacement 域：\n\ncatalog.products[id].name\n\n如果 id 不存在或 name 为空，不得静默退回 subject_id，否则会掩盖数据完整性问题。\n\n其他域使用 subject_id，也必须验证非空。\n\n建议 fail-closed，避免产生不完整的产品约束。\n\n3. 旧任务兼容必须明确。\n\n没有冻结选品数据的旧 Job：\n\n不生成产品约束区块。\n\n不生成 product_constraints。\n\n保持原有 prompt。\n\n保持原有 params。\n\n不影响原图发送和任务重试。\n\n不要为了满足新契约而给历史任务补造数据。\n\n四、测试验收要求\n\nR2 提出的测试范围通过，补充以下精确断言：\n\n测试\n\n\t\n\n必须证明\n\n\n\n\n正常数据\n\n\t\n\n六项完整映射\n\n\n\n\n缺失 variant\n\n\t\n\nparams=null，prompt 省略颜色\n\n\n\n\n顺序\n\n\t\n\n与 selected 顺序严格一致\n\n\n\n\n回退\n\n\t\n\nvariant→default→product_image 不变\n\n\n\n\n去重\n\n\t\n\nexternal_ref 去重结果不变\n\n\n\n\n重试\n\n\t\n\n同一 Job 的 prompt 和 params 稳定\n\n\n\n\n旧任务\n\n\t\n\n无产品约束、无新字段注入\n\n\n\n\n数值\n\n\t\n\n原始比例与展示比例分离\n\n\n\n\n非法数据\n\n\t\n\nNaN、Infinity、越界比例 fail-closed\n\n\n\n\nname\n\n\t\n\n缺失时明确失败，不静默替代\n\nGolden 建议分为两个独立目录或测试组：\n\nlegacy_prompt：保护旧任务及原提示词主体。\n\nselection_prompt：验证新产品约束区块。\n\nWorker 最终需要验证：\n\n𝑁\nselected\n=\n𝑁\nprompt\n=\n𝑁\nparams\nN\nselected\n\t​\n\n=N\nprompt\n\t​\n\n=N\nparams\n\t​\n\n\n这里的三个计数必须对应同一个 Job 的冻结选品集合，不能只比较数组长度，还要比较顺序和逐项字段映射。\n\n五、最终实施边界\n\n允许进入实施的范围\n\n通过\n\ncompose_prompt 增加 selection 参数。\n\nresolved_prompt 增加产品约束区块。\n\nworker params 增加 product_constraints。\n\n增加对应 TS、pytest、golden 和集成测试。\n\n明确禁止扩展\n\n禁止\n\n修改 ReferenceSelection 冻结契约。\n\n修改选品算法及评分计算。\n\n修改 screen_coverage 计算。\n\n修改原图解析、回退和去重。\n\n修改前端截图槽位和 visibility_manifest。\n\n为旧任务补造产品选品数据。\n\n要求供应商修改接口。\n\n六、最终裁定\n\nR2：有条件通过，MF-01、MF-02 落实后可进入编码实施。\n\n建议实施提交时附带：\n\n最终请求契约及字段映射。\n\n新旧 prompt golden。\n\nTS 和 pytest 完整测试结果。\n\nworker 实际请求快照（脱敏）。\n\n原图发送及去重未回归的证据。\n\n完整 Git commit SHA。\n\n特别强调：这次是请求组装层扩展，不是选品系统升级。不要顺手重构 ReferenceSelection，也不要扩大改动范围。\n\n下一轮验收标准：证明同一份冻结 selected 数据，产生了完全一致的 prompt 产品清单和 params 结构化清单，同时原有原图链路没有变化。",
+      "text_sha256": "7f3def1ce3571bcff2f9b2a14ddd0a1a5fe0a3d5e4114a1dd82af487bb230e90",
+      "size_bytes": 5630,
+      "assistant_uuid": "54444b65-d364-434b-b527-1319b8bac531"
+    }
+  ]
+}

@@ -1,0 +1,1072 @@
+diff --git a/src/backend/app/ai/ai_console_gateway.py b/src/backend/app/ai/ai_console_gateway.py
+index 01bbeb92..b93b4b13 100644
+--- a/src/backend/app/ai/ai_console_gateway.py
++++ b/src/backend/app/ai/ai_console_gateway.py
+@@ -1,15 +1,21 @@
+-"""生图控制台白名单代理（2026-11-14，V3 最小接入：Garden 平台超管点击直达）。
++"""生图控制台白名单代理（2026-11-23 R2：GET 只读 + PUT 单条写白名单）。
+ 
+ 链路：Garden 后台（PlatformAdmin 门禁）→ nginx /ai-console → 本代理 →
+ 独立 AI-Image-Service /admin 管理面（SPA 静态壳 + 管理 JSON）。
+ 纪律（AI-Image-Service docs/ADMIN_CONSOLE_PLAN_20261114.md §4.1/§4.5 + 交接纪律）：
+ - Admin Token 仅存服务端环境（AI_IMAGE_SERVICE_ADMIN_TOKEN），绝不进浏览器/URL/Cookie；
+-- 仅放行 GET——V1 控制台是只读监控，代理层强制；写操作留 V2 并需操作者审计；
++- 写白名单条款（2026-11-23 R2，gdc-aigen-admin-20261123）：仅放行
++  PUT /ai-console/routing/order（供应商全局排序直通）一条写路径——请求体必须 JSON object
++  （否则 422），原样转发上游 PUT /admin/routing/order（X-Admin-Token；
++  Content-Type: application/json），透传上游状态码/响应体，并记录操作审计
++  （actor user_id、vendor_plan、expected_vendor_plan、上游状态码）；其余写路径一律 404；
+ - 不透传上游 Cookie/Set-Cookie/Authorization；响应只带 content-type 与缓存控制；
+ - 上游故障显式化（502），不吞错、不用假数据降级；Token 未配置 fail-closed（503）。
+ SPA 端按部署路径自适应（frontend adminBase()）：挂在 /ai-console/ 下时其请求即
+ /ai-console/{x}，此处一一转译为上游 /admin/{x}，同一份构建产物两处部署通用。
+ """
++import json
++import logging
+ import os
+ import re
+ from urllib.parse import urlsplit
+@@ -20,6 +26,8 @@ from fastapi.responses import RedirectResponse
+ 
+ from ..deps import PlatformAdmin
+ 
++logger = logging.getLogger(__name__)
++
+ HTTP_TRANSPORT = None  # 隔离测试注入点（同 service_client 口径）
+ 
+ router = APIRouter()
+@@ -65,6 +73,39 @@ def console_entry(actor: PlatformAdmin):
+     return RedirectResponse('/ai-console/', status_code=307)
+ 
+ 
++@router.put('/ai-console/routing/order')
++def console_routing_order(actor: PlatformAdmin, body: dict):
++    """写白名单唯一放行（R2）：供应商全局排序直通上游 PUT /admin/routing/order。
++
++    请求体必须是 JSON object（FastAPI dict 形参保证非 JSON/非 object 一律 422）；
++    语义原样转发（键序保持）；透传上游状态码与响应体；操作审计记录操作者与两计划。
++    """
++    root, token = _upstream()
++    payload = json.dumps(body, ensure_ascii=False).encode('utf-8')
++    try:
++        with httpx.Client(timeout=httpx.Timeout(30, connect=5), trust_env=False,
++                          follow_redirects=False, transport=HTTP_TRANSPORT) as client:
++            upstream = client.put(root + '/admin/routing/order', content=payload,
++                                  headers={'X-Admin-Token': token,
++                                           'Content-Type': 'application/json'})
++    except httpx.HTTPError:
++        raise HTTPException(502, '生图控制台上游不可达（AI-Image-Service）') from None
++    logger.info('ai-console 供应商排序写回：actor=%s vendor_plan=%s expected_vendor_plan=%s '
++                '上游状态=%s', actor.user_id, body.get('vendor_plan'),
++                body.get('expected_vendor_plan'), upstream.status_code)
++    headers = {'Cache-Control': 'no-store'}
++    content_type = upstream.headers.get('content-type')
++    if content_type:
++        headers['Content-Type'] = content_type
++    return Response(upstream.content, status_code=upstream.status_code, headers=headers)
++
++
++@router.put('/ai-console/{path:path}')
++def console_put_deny(actor: PlatformAdmin, path: str):
++    """写白名单条款：除 routing/order 外，其余 PUT 路径一律 404（不放行、不暗示存在）。"""
++    raise HTTPException(404, '生图控制台不支持此写路径')
++
++
+ @router.get('/ai-console/{path:path}')
+ def console_proxy(path: str, actor: PlatformAdmin, request: Request):
+     """通用白名单转译：/ai-console/{x} → 上游 /admin/{x}（GET；查询串原样）。"""
+diff --git a/src/backend/app/ai/ai_generation.py b/src/backend/app/ai/ai_generation.py
+index 7022b40b..0834e536 100644
+--- a/src/backend/app/ai/ai_generation.py
++++ b/src/backend/app/ai/ai_generation.py
+@@ -272,15 +272,27 @@ def select_references_for_submit(manifest: dict, screenshot_count: int, *, db=No
+ 
+ 
+ def compose_prompt(db, preset_key: str, brief_snapshot: dict | None,
+-                   people_mode: str | None = None) -> str:
++                   people_mode: str | None = None, selection=None) -> str:
+     """resolved prompt（Wave 1B 起后台配置化）：当前激活 Prompt Config Revision 的 base 段
+     （{{input_roles}} 运行时展开——本波输入=1 张方案截图+无现场照片）+ 场景段 + 人物段
+     （批次 D1 people_mode：auto=画面需添加人物（贴图为示意，AI 重绘）/ none=画面不出现任何人物）+ Brief 风格基调。
+     无激活 Revision（未跑种子的库）回落内置 R1 默认，零配置行为不变；提交时一次冻结
+-    （Job 同时存 prompt_config_revision_id + resolved_prompt，可复现红线）。"""
++    （Job 同时存 prompt_config_revision_id + resolved_prompt，可复现红线）。
++    selection=冻结 reference_selection_json（R1 产品占比清单）：非空且 selected 非空时，
++    追加产品占比约束区块入 resolved_prompt（与 worker params 同源派生，重试可复现）。"""
+     from .ai_prompt_config import compose_prompt as _compose
+     style = (brief_snapshot or {}).get('style')
+-    return _compose(db, preset_key, style, people_mode)
++    base = _compose(db, preset_key, style, people_mode)
++    if selection and (selection.get('selected') or []):
++        from .product_constraints import build_product_constraints, format_constraint_block
++        from ..catalog import catalog as load_catalog
++        try:
++            block = format_constraint_block(build_product_constraints(selection, load_catalog()))
++        except ValueError as e:
++            raise HTTPException(422, f'产品占比清单契约校验失败：{e}') from e
++        if block:
++            base = base.rstrip() + '\n\n' + block
++    return base
+ 
+ 
+ # ============================ Job DTO（D8 呈现事实：preset/基于哪个 Revision/结果图）============================
+@@ -426,7 +438,7 @@ def submit_job(db, ctx, project: Project, scheme: DesignScheme, *, revision_id:
+             brief_snapshot_json=brief_snapshot,
+             scene_content_hash=rev.scene_content_hash,
+             prompt_config_revision_id=_active_prompt_revision_id(db),
+-            resolved_prompt=compose_prompt(db, preset_key, brief_snapshot, people_mode),
++            resolved_prompt=compose_prompt(db, preset_key, brief_snapshot, people_mode, selection),
+             reference_assets_json=references,
+             **_pinned_provider_fields())  # 提交时 pinning（AI-PROVIDER-ADMIN 2026-10-16）：新任务走
+             # 当时启用 vendor+配置代；改 key/换 vendor 后已排队 Job 按旧代快照跑完（PO 拍板）。
+diff --git a/src/backend/app/ai/ai_records.py b/src/backend/app/ai/ai_records.py
+index bd68c1ce..9601b7b4 100644
+--- a/src/backend/app/ai/ai_records.py
++++ b/src/backend/app/ai/ai_records.py
+@@ -8,6 +8,34 @@ from ..media_storage import MediaStorage, MediaStorageError, read_private_media,
+ router = APIRouter()
+ _LIST_LIMIT = 500
+ 
++
++def _reference_entry_view(entry: dict, product_names: dict) -> dict:
++    """参考选择条目投影：冻结字段原样带上 + 服务端解析 display_name（不改动冻结 JSON 本体）。
++
++    display_name 口径与前端 aiReferenceDisplayName 对齐：placement 域 subject_id=product_id
++    查 catalog products name（解析不出回退 subject_id）；其他域 subject_id 非产品 id 原样展示。"""
++    view = dict(entry)
++    subject = entry.get('subject') if isinstance(entry.get('subject'), dict) else {}
++    domain = subject.get('domain')
++    subject_id = subject.get('subject_id')
++    if domain == 'placement' and subject_id:
++        view['display_name'] = product_names.get(subject_id) or subject_id
++    else:
++        view['display_name'] = subject_id
++    return view
++
++
++def _product_names(db) -> dict:
++    """catalog products 的 {product_id: name}（catalog.json 事实源自 import_catalog；
++    读取失败按空目录处理——display_name 回退 subject_id，不阻断详情查询）。"""
++    try:
++        from ..catalog import catalog as load_catalog
++        products = (load_catalog() or {}).get('products') or {}
++        return {pid: p.get('name') for pid, p in products.items()
++                if isinstance(p, dict) and p.get('name')}
++    except Exception:
++        return {}
++
+ def _local_midnight_utc_iso() -> str:
+     """服务器时区当日午夜 → UTC ISO（与 created_at 形态可比字符串；「今天」边界唯一口径）。"""
+     local_now = datetime.now().astimezone()
+@@ -182,3 +210,63 @@ def admin_ai_job_result(job_id: str, actor: PlatformAdmin, db: DB,
+     return Response(data, media_type=entry.get('mime') or 'application/octet-stream', headers=headers)
+ 
+ 
++@router.get('/api/admin/ai-jobs/{job_id}/detail')
++def admin_ai_job_detail(job_id: str, actor: PlatformAdmin, db: DB,
++                        job_type: str = 'scheme'):
++    """任务详情：客户端输入参数投影（gdc-aigen-admin-20261123 R3，issue #126）。
++
++    scheme 类：resolved_prompt / input_images_json.images / reference_selection_json
++    （selected+rejected 原样）/ reference_assets_json（含 /assets 公开参考图 URL）/
++    camera_snapshot_json / preset_key；generic 类：prompt / params_json / input_images_json。
++    产品显示名服务端解析：placement 域查 catalog products name（其他域回退 subject_id），
++    输出 display_name 字段，不动冻结 JSON 本体。写路径不存在——本端点只读。"""
++    if job_type not in ('scheme', 'generic'):
++        raise HTTPException(422, 'job_type 必须是 scheme 或 generic')
++    generic = job_type == 'generic'
++    job = db.get(GenericImageJob if generic else AiGenerationJob, job_id)
++    if job is None:
++        raise HTTPException(404, '该任务不存在')
++    if generic:
++        return {'job_id': job.job_id, 'job_type': 'generic', 'source_app': job.source_app,
++                'prompt': job.prompt, 'params_json': job.params_json,
++                'input_images_json': job.input_images_json}
++    selection = job.reference_selection_json if isinstance(job.reference_selection_json, dict) else None
++    product_names = _product_names(db) if selection else {}
++    selected, rejected = [], []
++    if selection:
++        selected = [_reference_entry_view(e, product_names) for e in selection.get('selected') or []
++                    if isinstance(e, dict)]
++        rejected = [_reference_entry_view(e, product_names) for e in selection.get('rejected') or []
++                    if isinstance(e, dict)]
++    return {'job_id': job.job_id, 'job_type': 'scheme', 'preset_key': job.preset_key,
++            'resolved_prompt': job.resolved_prompt,
++            'input_images_json': job.input_images_json,
++            'reference_selection_json': job.reference_selection_json,  # 冻结原样
++            'reference_selected': selected, 'reference_rejected': rejected,
++            'reference_assets_json': job.reference_assets_json,
++            'camera_snapshot_json': job.camera_snapshot_json}
++
++
++@router.get('/api/admin/ai-jobs/{job_id}/inputs/{slot}')
++def admin_ai_job_input_image(job_id: str, slot: int, actor: PlatformAdmin, db: DB,
++                             job_type: str = 'scheme'):
++    """原始上传设计图只读媒体端点（R3 issue #126）：PlatformAdmin + 任务归属校验，
++    按冻结 input_images_json.images[slot] 从私有区读取，绝不接受客户端传 storage_key。"""
++    if job_type not in ('scheme', 'generic'):
++        raise HTTPException(422, 'job_type 必须是 scheme 或 generic')
++    job = db.get(GenericImageJob if job_type == 'generic' else AiGenerationJob, job_id)
++    if job is None:
++        raise HTTPException(404, '该任务不存在')
++    bundle = job.input_images_json if isinstance(job.input_images_json, dict) else {}
++    rows = [r for r in bundle.get('images') or [] if isinstance(r, dict)]
++    row = next((r for r in rows if r.get('slot') == slot), None)
++    if row is None:
++        raise HTTPException(404, '输入图片不存在')
++    try:
++        data = read_private_media(MediaStorage.provider, row['storage_key'])
++    except (MediaStorageError, FileNotFoundError, KeyError) as e:
++        raise HTTPException(404, '输入图片文件不存在或已损坏') from e
++    return Response(data, media_type=row.get('mime') or 'application/octet-stream',
++                    headers={'Cache-Control': 'private, max-age=60'})
++
++
+diff --git a/src/backend/app/ai/external_jobs.py b/src/backend/app/ai/external_jobs.py
+index 54cec253..6b9eb064 100644
+--- a/src/backend/app/ai/external_jobs.py
++++ b/src/backend/app/ai/external_jobs.py
+@@ -51,7 +51,18 @@ def submit_external(db, job):
+         images = _inputs(job)
+         if isinstance(job, AiGenerationJob):
+             prompt = append_frame_prompt(job.resolved_prompt or '', job.camera_snapshot_json)
++            # size/quality 默认由 AIS 落 auto，保持设计参考图画幅；仅前端明确传值时才覆盖。
++            # 禁止后端硬编码 2048x2048：非方设计稿（如 1480×1100）不应被强制改成方图。
+             params = {'n': 1}
++            # R1 产品占比清单：与 prompt 区块同源派生自冻结 reference_selection_json（可校验审计）。
++            if job.reference_selection_json and (job.reference_selection_json.get('selected') or []):
++                from .product_constraints import build_product_constraints
++                from ..catalog import catalog as load_catalog
++                try:
++                    params['product_constraints'] = build_product_constraints(
++                        job.reference_selection_json, load_catalog())
++                except ValueError as e:
++                    raise HTTPException(422, f'产品占比清单契约校验失败：{e}') from e
+             user_id = job.requested_by_user_id
+         else:
+             prompt, params, user_id = job.prompt, job.params_json, job.requested_by_user_id
+diff --git a/src/backend/app/ai/product_constraints.py b/src/backend/app/ai/product_constraints.py
+new file mode 100644
+index 00000000..60db446d
+--- /dev/null
++++ b/src/backend/app/ai/product_constraints.py
+@@ -0,0 +1,76 @@
++"""R1 产品占比清单（issue #126）：从冻结 reference_selection_json 派生可审计的产品约束。
++单一事实源=Job.reference_selection_json；本模块只读派生，绝不重新选品/算分/算占比。
++双写：prompt 文本区块（模型可读）+ params.product_constraints（可校验审计），同源派生。
++MF-01：缺失 variant → params color_variant=null，prompt 省略颜色规格段。
++MF-02：内部 0..1，params 保留原始 float；prompt=(x*100) 一位小数百分数（Decimal ROUND_HALF_UP）。
++fail-closed：NaN/Infinity/越界/name 缺失 → ValueError（调用层转 422），不静默降级。
++"""
++from decimal import Decimal, ROUND_HALF_UP
++
++HEADER = ('【产品选择与画面占比约束】以下产品均为本次设计必须参考的产品，'
++          '请使用对应产品原图作为外观、颜色和材质依据。')
++FOOTER = '请保持产品外观与参考原图一致，并尽可能遵循上述画面占比。'
++
++
++def validate_coverage(x):
++    """finite 且 0..1，否则 ValueError。bool 拒绝（Python bool 是 int 子类，必须显式挡）。"""
++    if isinstance(x, bool) or not isinstance(x, (int, float)):
++        raise ValueError(f'screen_coverage 必须为数值，实得 {type(x).__name__}')
++    if x != x or x in (float('inf'), float('-inf')):  # NaN / Infinity
++        raise ValueError('screen_coverage 必须为有限数值')
++    if not (0 <= x <= 1):
++        raise ValueError(f'screen_coverage 越界：{x}（须在 [0,1]）')
++    return float(x)
++
++
++def _coverage_pct(x):
++    """0..1 → 一位小数百分数字符串（Decimal ROUND_HALF_UP，禁止 Python round ties-to-even）。"""
++    pct = (Decimal(str(x)) * 100).quantize(Decimal('0.1'), rounding=ROUND_HALF_UP)
++    return f'{pct}%'
++
++
++def build_product_constraints(selection, assets):
++    """selection=冻结 reference_selection_json（含 selected[]）；assets=catalog.json（load_assets_cached()）。
++    返回 [{'name','color_variant','score','screen_coverage'}]，顺序=selected 原序。
++    placement 域 name 取 catalog.products[subject_id].name（fail-closed，不回退 subject_id）；
++    其他域 name=subject_id（必须非空）。color_variant=subject.variant，空/None→None。"""
++    if not selection:
++        return []
++    products = (assets or {}).get('products') or {}
++    items = []
++    for entry in selection.get('selected') or []:
++        subject = entry.get('subject') or {}
++        domain = subject.get('domain')
++        subject_id = subject.get('subject_id')
++        if domain == 'placement':
++            product = products.get(subject_id) or {}
++            name = product.get('name')
++            if not name or not str(name).strip():
++                raise ValueError(f'placement 域产品 {subject_id!r} 在 catalog 中缺失 name')
++            name = str(name).strip()
++        else:
++            if not subject_id or not str(subject_id).strip():
++                raise ValueError(f'{domain} 域 subject_id 缺失')
++            name = str(subject_id).strip()
++        variant = subject.get('variant')
++        variant = variant if (variant and str(variant).strip()) else None
++        coverage = validate_coverage(entry.get('screen_coverage'))
++        score = entry.get('score')
++        items.append({'name': name, 'color_variant': variant,
++                      'score': score, 'screen_coverage': coverage})
++    return items
++
++
++def format_constraint_block(items):
++    """items=build_product_constraints 输出 → golden 文本区块。空列表返回空串。"""
++    if not items:
++        return ''
++    lines = [HEADER]
++    for i, it in enumerate(items, 1):
++        seg = f'{i}. 产品：{it["name"]}'
++        if it.get('color_variant'):
++            seg += f' 颜色规格：{it["color_variant"]}'
++        seg += f' 画面占比：{_coverage_pct(it["screen_coverage"])}'
++        lines.append(seg)
++    lines.append(f'…共计{len(items)}项。{FOOTER}')
++    return '\n'.join(lines)
+diff --git a/src/backend/tests/test_admin_ai_job_detail.py b/src/backend/tests/test_admin_ai_job_detail.py
+new file mode 100644
+index 00000000..0fd5df5c
+--- /dev/null
++++ b/src/backend/tests/test_admin_ai_job_detail.py
+@@ -0,0 +1,153 @@
++# GET /api/admin/ai-jobs/{job_id}/detail 契约回归（gdc-aigen-admin-20261123 R3，issue #126）。
++# 覆盖：scheme/generic 200 输入参数投影；404；权限 403；job_type 422；
++# display_name 服务端解析（placement 查 catalog name / 未知产品回退 subject_id /
++# 非 placement 域原样 subject_id）；冻结 JSON 原样（响应往返后 DB 列不变）。
++import pytest
++from sqlalchemy import select
++
++from app.db import AiGenerationJob, GenericImageJob
++from test_domain_reset_w5_jobs_api import env, _client  # noqa: F401（env 复用 W5 工厂）
++
++ROUTE = '/api/admin/ai-jobs/{}/detail'
++
++SELECTION = {
++    'algorithm_version': 'v-test', 'thresholds': {'min_score': 0.1},
++    'selected': [
++        {'rank': 1, 'subject': {'domain': 'placement', 'subject_id': 'shadow_stone_panel',
++                                'variant': '柔纹白'},
++         'score': 0.32, 'screen_coverage': 0.143, 'visible_ratio': 0.9,
++         'identity_importance': 'high',
++         'resolved_assets': [{'storage_key': 'assets/images/ref-a.webp'}]},
++        {'rank': 2, 'subject': {'domain': 'placement', 'subject_id': 'unknown_sku_zzz',
++                                'variant': ''},
++         'score': 0.21, 'screen_coverage': 0.05, 'visible_ratio': 0.4,
++         'identity_importance': 'normal', 'resolved_assets': []},
++    ],
++    'rejected': [
++        {'rank': 3, 'subject': {'domain': 'surface', 'subject_id': 'soil_moss', 'variant': ''},
++         'score': 0.08, 'screen_coverage': 0.02, 'visible_ratio': 0.1,
++         'identity_importance': 'low', 'reason': 'below_threshold',
++         'resolved_assets': []},
++    ],
++}
++INPUT_IMAGES = {'primary_slot': 1, 'images': [
++    {'slot': 1, 'storage_key': 'private/ai-input/job1/s1.png',
++     'sha256': 'a' * 64, 'mime': 'image/png', 'width': 800, 'height': 600}]}
++REFERENCE_ASSETS = [{'storage_key': 'assets/images/ref-a.webp',
++                     'ai_reference_image': '/assets/images/ref-a.webp',
++                     'mime_type': 'image/webp'}]
++CAMERA = {'position': [1, 2, 3], 'target': [0, 0, 0], 'fov': 45}
++
++
++def _mk_scheme_job(db, env, rid):  # noqa: F811（env 夹具直建行，字段口径同 _mk_job）
++    j = AiGenerationJob(workspace_id=env['ws'].workspace_id,
++                        project_id=env['project'].project_id,
++                        scheme_id=env['scheme'].scheme_id, scheme_revision_id=rid,
++                        requested_by_user_id=env['users']['member'].user_id,
++                        preset_key='morning', client_request_id='detail-act-1',
++                        status='succeeded', brief_snapshot_json={}, scene_content_hash='b' * 64,
++                        resolved_prompt='清晨柔光庭院，白墙配柔纹白景石',
++                        input_images_json=INPUT_IMAGES, camera_snapshot_json=CAMERA,
++                        reference_selection_json=SELECTION,
++                        reference_assets_json=REFERENCE_ASSETS)
++    db.add(j); db.commit()
++    return j
++
++
++def _mk_generic_job(db, env):
++    j = GenericImageJob(source_app='playground',
++                        requested_by_user_id=env['users']['member'].user_id,
++                        client_request_id='generic-detail-1', prompt='一只在花盆里的猫',
++                        params_json={'n': 2, 'size': '1024x1024'},
++                        input_images_json=INPUT_IMAGES, status='succeeded')
++    db.add(j); db.commit()
++    return j
++
++
++def test_scheme_detail_projects_inputs_and_resolves_display_name(env):
++    from test_domain_reset_w5_jobs_api import _save_revision, scene_payload
++    admin = _client(env, 'root')
++    member_client = _client(env, 'member')
++    revision = _save_revision(member_client, env, scene_payload())
++    with env['factory']() as db:
++        job = _mk_scheme_job(db, env, revision)
++        job_id = job.job_id
++        frozen_before = dict(job.reference_selection_json)
++    r = admin.get(ROUTE.format(job_id))
++    assert r.status_code == 200, r.text
++    body = r.json()
++    assert body['job_type'] == 'scheme' and body['preset_key'] == 'morning'
++    assert body['resolved_prompt'] == '清晨柔光庭院，白墙配柔纹白景石'
++    assert body['input_images_json'] == INPUT_IMAGES
++    assert body['camera_snapshot_json'] == CAMERA
++    assert body['reference_assets_json'] == REFERENCE_ASSETS
++    # 冻结 JSON 原样透传（不嵌 display_name、不改数值）
++    assert body['reference_selection_json'] == SELECTION
++    sel = body['reference_selected']
++    assert [e['rank'] for e in sel] == [1, 2]
++    assert sel[0]['display_name'] == '影石系列'      # placement 域→catalog products name
++    assert sel[1]['display_name'] == 'unknown_sku_zzz'  # 解析不出回退 subject_id
++    rej = body['reference_rejected']
++    assert rej[0]['display_name'] == 'soil_moss'    # 非 placement 域原样 subject_id
++    assert rej[0]['reason'] == 'below_threshold'
++    # 冻结 JSON 本体不动：响应只读后 DB 列逐字节同快照
++    with env['factory']() as db:
++        frozen_after = db.get(AiGenerationJob, job_id).reference_selection_json
++    assert frozen_after == frozen_before
++
++
++def test_generic_detail_projects_prompt_params_inputs(env):
++    admin = _client(env, 'root')
++    with env['factory']() as db:
++        job = _mk_generic_job(db, env)
++        job_id = job.job_id
++    r = admin.get(ROUTE.format(job_id), params={'job_type': 'generic'})
++    assert r.status_code == 200, r.text
++    body = r.json()
++    assert body['job_type'] == 'generic' and body['source_app'] == 'playground'
++    assert body['prompt'] == '一只在花盆里的猫'
++    assert body['params_json'] == {'n': 2, 'size': '1024x1024'}
++    assert body['input_images_json'] == INPUT_IMAGES
++
++
++def test_detail_404_and_type_mismatch(env):
++    admin = _client(env, 'root')
++    assert admin.get(ROUTE.format('no-such-job')).status_code == 404
++    assert admin.get(ROUTE.format('no-such-job'), params={'job_type': 'generic'}).status_code == 404
++    with env['factory']() as db:
++        job_id = _mk_generic_job(db, env).job_id
++    # 类型不匹配=不存在（同 result 端点惯例）
++    assert admin.get(ROUTE.format(job_id)).status_code == 404
++
++
++def test_detail_platform_admin_gate(env):
++    with env['factory']() as db:
++        job_id = _mk_generic_job(db, env).job_id
++    member = _client(env, 'member')
++    assert member.get(ROUTE.format(job_id), params={'job_type': 'generic'}).status_code == 403
++
++
++def test_detail_job_type_validation(env):
++    admin = _client(env, 'root')
++    with env['factory']() as db:
++        job_id = _mk_generic_job(db, env).job_id
++    assert admin.get(ROUTE.format(job_id), params={'job_type': 'bogus'}).status_code == 422
++
++
++def test_original_input_image_admin_media_endpoint(env, monkeypatch):
++    from test_domain_reset_w5_jobs_api import _save_revision, scene_payload
++    from app.ai import ai_records
++    admin = _client(env, 'root')
++    member_client = _client(env, 'member')
++    revision = _save_revision(member_client, env, scene_payload())
++    with env['factory']() as db:
++        job_id = _mk_scheme_job(db, env, revision).job_id
++    calls = []
++    monkeypatch.setattr(ai_records, 'read_private_media',
++                        lambda provider, key: calls.append((provider, key)) or b'original-image-bytes')
++    r = admin.get(f'/api/admin/ai-jobs/{job_id}/inputs/1')
++    assert r.status_code == 200 and r.content == b'original-image-bytes'
++    assert r.headers['content-type'].startswith('image/png')
++    assert calls[0][1] == 'private/ai-input/job1/s1.png'
++    assert admin.get(f'/api/admin/ai-jobs/{job_id}/inputs/99').status_code == 404
++    assert member_client.get(f'/api/admin/ai-jobs/{job_id}/inputs/1').status_code == 403
+diff --git a/src/backend/tests/test_ai_console_gateway.py b/src/backend/tests/test_ai_console_gateway.py
+index df5ab4f0..f80e0072 100644
+--- a/src/backend/tests/test_ai_console_gateway.py
++++ b/src/backend/tests/test_ai_console_gateway.py
+@@ -1,7 +1,9 @@
+-"""生图控制台白名单代理回归（2026-11-14 V3 最小接入）。
++"""生图控制台白名单代理回归（2026-11-14 V3 最小接入；2026-11-23 R2 加写白名单）。
+ 
+ 平台超管经 /ai-console 只读直达独立 AI 管理面：Admin Token 只在服务端环境，
+-浏览器不持有；非超管拒绝；仅 GET；上游故障/未配置显式化；查询串与缓存控制透传。
++浏览器不持有；非超管拒绝；GET 只读；写白名单仅 PUT /ai-console/routing/order
++（其余 PUT 一律 404），透传上游状态码/响应体并留操作审计；上游故障/未配置显式化；
++查询串与缓存控制透传。
+ 隔离：httpx.MockTransport 假上游 + sqlite 会话，绝不触真实 AI 服务与供应商。"""
+ import httpx
+ import pytest
+@@ -16,8 +18,11 @@ from app.main import app  # noqa: E402
+ 
+ def _handler(calls: list[dict]):
+     def handler(request: httpx.Request) -> httpx.Response:
+-        calls.append({'path': request.url.path, 'params': dict(request.url.params),
+-                      'token': request.headers.get('X-Admin-Token')})
++        calls.append({'method': request.method, 'path': request.url.path,
++                      'params': dict(request.url.params),
++                      'token': request.headers.get('X-Admin-Token'),
++                      'content_type': request.headers.get('Content-Type'),
++                      'body': request.content})
+         headers = {'content-type': 'application/json'}
+         if '/assets/' in request.url.path:
+             headers['cache-control'] = 'public, max-age=31536000, immutable'
+@@ -90,9 +95,74 @@ def test_non_admin_rejected(console):
+     assert console['calls'] == []                          # 门禁在上游之前,零出站
+ 
+ 
+-def test_get_only_no_write_proxy(console):
+-    assert console['boss'].put('/ai-console/admin/routing', json={}).status_code == 405
+-    assert console['boss'].post('/ai-console/admin/test-jobs', json={}).status_code == 405
++def test_write_whitelist_put_only_routing_order(console):
++    """R2 写白名单：仅 PUT /ai-console/routing/order 放行并原样转发上游。"""
++    body = {'vendor_plan': ['wukong', 'intelalloc'], 'expected_vendor_plan': ['intelalloc', 'wukong']}
++    r = console['boss'].put('/ai-console/routing/order', json=body)
++    assert r.status_code == 200 and r.json() == {'ok': True}
++    call = console['calls'][-1]
++    assert call['method'] == 'PUT'
++    assert call['path'] == '/admin/routing/order'           # 转译到上游管理面
++    assert call['token'] == 'console-tok-123'               # 服务端持 Token 出站
++    assert call['content_type'] == 'application/json'
++    import json
++    assert json.loads(call['body']) == body                     # 语义原样转发
++    assert 'set-cookie' not in r.headers
++
++
++@pytest.mark.parametrize('path', ['admin/routing', 'vendors', 'routing', 'jobs'])
++def test_write_whitelist_other_puts_are_404(console, path):
++    """R2 写白名单：除 routing/order 外其余 PUT 一律 404，零出站。"""
++    assert console['boss'].put('/ai-console/' + path, json={}).status_code == 404
++    assert console['calls'] == []
++
++
++def test_write_whitelist_rejects_non_object_body(console):
++    """R2：请求体必须 JSON object——数组/非 JSON 一律 422，零出站。"""
++    assert console['boss'].put('/ai-console/routing/order', json=['a', 'b']).status_code == 422
++    r = console['boss'].put('/ai-console/routing/order', content=b'not-json',
++                            headers={'Content-Type': 'text/plain'})
++    assert r.status_code == 422
++    assert console['calls'] == []
++
++
++def test_write_whitelist_non_admin_rejected_before_upstream(console):
++    assert console['designer'].put('/ai-console/routing/order',
++        json={'vendor_plan': ['a'], 'expected_vendor_plan': ['a']}).status_code == 403
++    assert console['anon'].put('/ai-console/routing/order',
++        json={'vendor_plan': ['a'], 'expected_vendor_plan': ['a']}).status_code in (401, 403)
++    assert console['calls'] == []
++
++
++def test_write_whitelist_upstream_4xx_passthrough(console, monkeypatch):
++    """上游 4xx（如 409 顺序已被改）原样透传状态码与响应体，代理不吞错不重写。"""
++    def conflict(request: httpx.Request) -> httpx.Response:
++        return httpx.Response(409, json={'detail': '供应商顺序已被修改，请刷新后重新调整'},
++                              headers={'content-type': 'application/json'})
++    monkeypatch.setattr(gw, 'HTTP_TRANSPORT', httpx.MockTransport(conflict))
++    r = console['boss'].put('/ai-console/routing/order',
++        json={'vendor_plan': ['a'], 'expected_vendor_plan': ['b']})
++    assert r.status_code == 409
++    assert r.json() == {'detail': '供应商顺序已被修改，请刷新后重新调整'}
++
++
++def test_write_whitelist_audit_log(console, caplog):
++    """R2 操作审计：actor user_id、vendor_plan、expected_vendor_plan、上游状态码落日志。"""
++    import logging
++    body = {'vendor_plan': ['wukong'], 'expected_vendor_plan': ['yuanqiao']}
++    with caplog.at_level(logging.INFO, logger='app.ai.ai_console_gateway'):
++        assert console['boss'].put('/ai-console/routing/order', json=body).status_code == 200
++    with console['factory']() as db:
++        from app.db import User
++        from sqlalchemy import select
++        boss = db.scalar(select(User).where(User.username == 'boss'))
++    records = [r for r in caplog.records if '供应商排序写回' in r.getMessage()]
++    assert len(records) == 1
++    message = records[0].getMessage()
++    assert boss.user_id in message
++    assert str(body['vendor_plan']) in message
++    assert str(body['expected_vendor_plan']) in message
++    assert '上游状态=200' in message
+ 
+ 
+ def test_upstream_down_is_explicit_502(console, monkeypatch):
+diff --git a/src/backend/tests/test_external_ai_service.py b/src/backend/tests/test_external_ai_service.py
+index 6f2bafa5..ea120f12 100644
+--- a/src/backend/tests/test_external_ai_service.py
++++ b/src/backend/tests/test_external_ai_service.py
+@@ -170,3 +170,84 @@ def test_garden_admin_history_and_image_remain_local_with_service_offline(env, r
+     assert item['provider_vendor_name']=='wukong'
+     assert admin.get('/api/admin/ai-jobs/'+local['job_id']+'/result').status_code==200
+     assert client.get('/api/admin/ai-jobs').status_code==403
++
++
++def _external_job(selection, resolved_prompt='base prompt'):
++    from app.db import AiGenerationJob
++    job = AiGenerationJob()
++    job.job_id = 'local-r1-job'
++    job.provider = 'ai_image_service'
++    job.provider_job_id = None
++    job.resolved_prompt = resolved_prompt
++    job.camera_snapshot_json = None
++    job.reference_selection_json = selection
++    job.requested_by_user_id = 'user-1'
++    return job
++
++
++def _capture_external_submit(monkeypatch, assets):
++    from app.ai import external_jobs
++    from app import catalog
++    captured = {}
++    monkeypatch.setattr(external_jobs, '_inputs', lambda job: [])
++    monkeypatch.setattr(catalog, 'catalog', lambda: assets)
++    monkeypatch.setattr(service_client, 'submit',
++                        lambda job_id, user_id, prompt, images, params:
++                        captured.update(prompt=prompt, params=params, images=images) or
++                        {'job_id': 'remote-r1', 'status': 'queued'})
++    class DB:
++        def commit(self):
++            pass
++    return external_jobs, DB(), captured
++
++
++def test_external_default_size_remains_auto_and_legacy_job_has_no_product_constraints(monkeypatch):
++    external_jobs, db, captured = _capture_external_submit(monkeypatch, {'products': {}})
++    job = external_jobs.submit_external(db, _external_job(None))
++    assert job.provider_job_id == 'remote-r1'
++    assert captured['params'] == {'n': 1}  # 未传 size → AIS auto，保持设计画幅
++    assert 'product_constraints' not in captured['params']
++
++
++def test_external_product_constraints_match_frozen_prompt_and_selected(monkeypatch):
++    from app.ai import ai_generation, ai_prompt_config
++    from app import catalog
++    selection = {'selected': [
++        {'rank': 1, 'subject': {'domain': 'placement', 'subject_id': 'p-1', 'variant': '暖白'},
++         'score': 0.9, 'screen_coverage': 0.182},
++        {'rank': 2, 'subject': {'domain': 'placement', 'subject_id': 'p-2', 'variant': None},
++         'score': 0.7, 'screen_coverage': 0.125},
++    ]}
++    assets = {'products': {'p-1': {'name': '景观灯'}, 'p-2': {'name': '户外花盆'}}}
++    monkeypatch.setattr(ai_prompt_config, 'compose_prompt', lambda *args: 'legacy base prompt')
++    monkeypatch.setattr(catalog, 'catalog', lambda: assets)
++    prompt = ai_generation.compose_prompt(None, 'preset', None, selection=selection)
++    assert prompt.startswith('legacy base prompt\n\n【产品选择与画面占比约束】')
++    assert '颜色规格：暖白' in prompt and prompt.count('颜色规格') == 1
++    assert '画面占比：18.2%' in prompt and '画面占比：12.5%' in prompt
++    assert ai_generation.compose_prompt(None, 'preset', None) == 'legacy base prompt'
++
++    external_jobs, db, captured = _capture_external_submit(monkeypatch, assets)
++    external_jobs.submit_external(db, _external_job(selection, prompt))
++    constraints = captured['params']['product_constraints']
++    assert 'size' not in captured['params']
++    assert len(selection['selected']) == len(constraints) == prompt.count('产品：') == 2
++    for entry, item in zip(selection['selected'], constraints):
++        assert item['name'] in prompt
++        assert item['screen_coverage'] == entry['screen_coverage']
++        assert item['score'] == entry['score']
++    assert [x['name'] for x in constraints] == ['景观灯', '户外花盆']
++
++
++def test_compose_prompt_invalid_product_constraint_is_422(monkeypatch):
++    from fastapi import HTTPException
++    from app.ai import ai_generation, ai_prompt_config
++    from app import catalog
++    selection = {'selected': [{'rank': 1,
++                               'subject': {'domain': 'placement', 'subject_id': 'missing', 'variant': None},
++                               'score': 0.1, 'screen_coverage': 0.2}]}
++    monkeypatch.setattr(ai_prompt_config, 'compose_prompt', lambda *args: 'base')
++    monkeypatch.setattr(catalog, 'catalog', lambda: {'products': {}})
++    with pytest.raises(HTTPException) as exc:
++        ai_generation.compose_prompt(None, 'preset', None, selection=selection)
++    assert exc.value.status_code == 422
+diff --git a/src/backend/tests/test_product_constraints.py b/src/backend/tests/test_product_constraints.py
+new file mode 100644
+index 00000000..1aada192
+--- /dev/null
++++ b/src/backend/tests/test_product_constraints.py
+@@ -0,0 +1,114 @@
++"""R1 产品占比清单单元测试：MF-01 缺失 variant 序列化、MF-02 数值舍入、fail-closed、旧任务兼容。
++被测：app.ai.product_constraints（validate_coverage/build_product_constraints/format_constraint_block）。
++"""
++import pytest
++from app.ai.product_constraints import (
++    build_product_constraints, format_constraint_block, validate_coverage,
++)
++
++ASSETS = {'products': {
++    'p-1': {'name': '景观灯'}, 'p-2': {'name': '户外花盆'},
++    'p-3': {'name': '木平台'}, 'p-4': {'name': '防腐木围栏'},
++    'p-5': {'name': '户外长椅'}, 'p-6': {'name': '遮阳伞'},
++}}
++
++
++def _sel(subject_id='p-1', domain='placement', variant='暖白', coverage=0.182, score=0.9):
++    return {'selected': [{'rank': 1,
++                          'subject': {'domain': domain, 'subject_id': subject_id, 'variant': variant},
++                          'score': score, 'screen_coverage': coverage}]}
++
++
++def test_normal_mapping_and_golden_block():
++    items = build_product_constraints(_sel(), ASSETS)
++    assert items == [{'name': '景观灯', 'color_variant': '暖白', 'score': 0.9, 'screen_coverage': 0.182}]
++    block = format_constraint_block(items)
++    assert '产品：景观灯' in block
++    assert '颜色规格：暖白' in block
++    assert '画面占比：18.2%' in block  # 0.182*100=18.2 一位小数无空格
++    assert block.startswith('【产品选择与画面占比约束】')
++    assert '…共计1项。' in block
++
++
++def test_missing_variant_omits_color_segment_mf01():
++    for variant in (None, '', '   '):
++        items = build_product_constraints(_sel(variant=variant), ASSETS)
++        assert items[0]['color_variant'] is None
++        block = format_constraint_block(items)
++        assert '颜色规格' not in block  # 省略，禁止字面量 None/null/占位符
++        assert 'None' not in block and 'null' not in block
++
++
++def test_order_matches_selected():
++    sel = {'selected': [
++        {'rank': 1, 'subject': {'domain': 'placement', 'subject_id': 'p-1', 'variant': '暖白'},
++         'score': 0.9, 'screen_coverage': 0.182},
++        {'rank': 2, 'subject': {'domain': 'placement', 'subject_id': 'p-2', 'variant': None},
++         'score': 0.7, 'screen_coverage': 0.125},
++    ]}
++    items = build_product_constraints(sel, ASSETS)
++    assert [it['name'] for it in items] == ['景观灯', '户外花盆']
++    block = format_constraint_block(items)
++    assert block.index('景观灯') < block.index('户外花盆')
++    assert '…共计2项。' in block
++    # 第一项有颜色段、第二项省略
++    assert block.count('颜色规格') == 1
++
++
++def test_coverage_half_up_rounding_mf02():
++    # 0.1505*100=15.05 → HALF_UP=15.1（Python round 会 ties-to-even 到 15.0，禁止）
++    items = build_product_constraints(_sel(coverage=0.1505), ASSETS)
++    assert '画面占比：15.1%' in format_constraint_block(items)
++    # 0.1504*100=15.04 → 15.0
++    items = build_product_constraints(_sel(coverage=0.1504), ASSETS)
++    assert '画面占比：15.0%' in format_constraint_block(items)
++    # 边界 0 与 1
++    assert '画面占比：0.0%' in format_constraint_block(build_product_constraints(_sel(coverage=0), ASSETS))
++    assert '画面占比：100.0%' in format_constraint_block(build_product_constraints(_sel(coverage=1), ASSETS))
++
++
++@pytest.mark.parametrize('bad', [float('nan'), float('inf'), float('-inf'), -0.01, 1.01, '0.5', True, None])
++def test_validate_coverage_fail_closed(bad):
++    with pytest.raises(ValueError):
++        validate_coverage(bad)
++
++
++@pytest.mark.parametrize('bad', [float('nan'), float('inf'), -0.1, 1.5])
++def test_build_fail_closed_on_bad_coverage(bad):
++    with pytest.raises(ValueError):
++        build_product_constraints(_sel(coverage=bad), ASSETS)
++
++
++def test_missing_placement_name_fail_closed():
++    # id 不在 catalog → 不回退 subject_id，直接 ValueError
++    with pytest.raises(ValueError):
++        build_product_constraints(_sel(subject_id='p-not-exist'), ASSETS)
++    # name 为空 → ValueError
++    with pytest.raises(ValueError):
++        build_product_constraints(_sel(subject_id='p-empty'), {'products': {'p-empty': {'name': '  '}}})
++
++
++def test_non_placement_domain_uses_subject_id():
++    items = build_product_constraints(_sel(domain='surface', subject_id='deck-1', variant=None), ASSETS)
++    assert items[0]['name'] == 'deck-1'
++    with pytest.raises(ValueError):
++        build_product_constraints(_sel(domain='surface', subject_id='  '), ASSETS)
++
++
++def test_empty_selection_returns_empty_and_no_block():
++    assert build_product_constraints(None, ASSETS) == []
++    assert build_product_constraints({'selected': []}, ASSETS) == []
++    assert format_constraint_block([]) == ''
++
++
++def test_retry_stability_same_job():
++    sel = _sel()
++    a = build_product_constraints(sel, ASSETS)
++    b = build_product_constraints(sel, ASSETS)
++    assert a == b
++    assert format_constraint_block(a) == format_constraint_block(b)
++
++
++def test_params_preserve_raw_float_not_percent():
++    items = build_product_constraints(_sel(coverage=0.182), ASSETS)
++    assert items[0]['screen_coverage'] == 0.182  # params 保留原始值，不是 18.2
+diff --git a/src/frontend/src/admin/AiJobsAdmin.test.ts b/src/frontend/src/admin/AiJobsAdmin.test.ts
+index 890179e6..616ea624 100644
+--- a/src/frontend/src/admin/AiJobsAdmin.test.ts
++++ b/src/frontend/src/admin/AiJobsAdmin.test.ts
+@@ -1,5 +1,5 @@
+ import {describe,expect,it} from 'vitest';
+-import {formatDuration,formatTime,presetLabel,providerCell,resultImgSrc,
++import {formatDuration,formatTime,presetLabel,providerCell,resultImgSrc,inputImgSrc,
+   statusLabel} from './AiJobsAdmin';
+ 
+ // 当天生图记录块纯函数锁定（AI-PROVIDER-ADMIN Feature B）。组件渲染/轮询/e2e 见
+@@ -99,6 +99,48 @@ import {adminApi,type AiJobTodayRow} from './adminApi';
+ 
+ afterEach(()=>vi.unstubAllGlobals());
+ 
++// R3 任务详情纯函数（gdc-aigen-admin-20261123，issue #126 清单样式锁定）
++import {describe as d3,expect as e3,it as i3} from 'vitest';
++import {inputImageLine,rejectedLineText,referenceLineText,shaShort} from './AiJobsAdmin';
++import type {AiJobReferenceEntry} from './adminApi';
++
++d3('任务详情清单行（issue #126 样式）',()=>{
++  const entry:AiJobReferenceEntry={rank:1,display_name:'柔纹白',score:0.32,screen_coverage:0.143,
++    subject:{domain:'placement',subject_id:'shadow_stone_panel',variant:''}};
++  i3('完整行：#rank 名称 · 评分两位 · 占比一位小数%',()=>{
++    expect(referenceLineText(entry)).toBe('#1 柔纹白 · 评分 0.32 · 画面占比 14.3%');
++  });
++  i3('variant 并入名称段；缺字段逐段省略',()=>{
++    expect(referenceLineText({...entry,subject:{...entry.subject!,variant:'岩岸巧'}}))
++      .toBe('#1 柔纹白 岩岸巧 · 评分 0.32 · 画面占比 14.3%');
++    expect(referenceLineText({rank:2,display_name:'X'})).toBe('#2 X');
++    expect(referenceLineText({rank:3,display_name:'Y',score:0.5})).toBe('#3 Y · 评分 0.50');
++  });
++  i3('display_name 缺失回退 subject_id',()=>{
++    expect(referenceLineText({rank:1,subject:{domain:'surface',subject_id:'soil_moss'}}))
++      .toBe('#1 soil_moss');
++  });
++  i3('未入选摘要：名称 · 原因 · 占比',()=>{
++    expect(rejectedLineText({rank:4,display_name:'苔藓',reason:'below_threshold',
++      screen_coverage:0.02})).toBe('苔藓 · 原因 below_threshold · 画面占比 2.0%');
++    expect(rejectedLineText({rank:4,display_name:'苔藓'})).toBe('苔藓');
++  });
++  i3('输入截图清单行与 sha 短码',()=>{
++    expect(inputImageLine({slot:1,storage_key:'private/ai-input/j/s1.png',
++      sha256:'abcdef0123456789'})).toBe('#1 private/ai-input/j/s1.png · abcdef01');
++    expect(shaShort(undefined)).toBe('—');
++    expect(shaShort(null)).toBe('—');
++  });
++  i3('详情接口 URL 携带 job_type 且路径转义',async()=>{
++    const fetch=vi.fn().mockResolvedValue(new Response(JSON.stringify({job_id:'j'})));
++    vi.stubGlobal('fetch',fetch);
++    await adminApi.aiJobDetail('job/a','generic');
++    const [url,init]=fetch.mock.calls[0];
++    expect(String(url)).toBe('/api/admin/ai-jobs/job%2Fa/detail?job_type=generic');
++    expect(init.credentials).toBe('same-origin');
++  });
++});
++
+ describe('统一生图来源与多图结果',()=>{
+  it('来源标签与旧庭院响应兼容',()=>{
+   expect(sourceLabel('garden-web')).toBe('Garden');
+@@ -109,6 +151,8 @@ describe('统一生图来源与多图结果',()=>{
+   expect(resultImgSrc('job-1','generic',2)).toBe('/api/admin/ai-jobs/job-1/result?job_type=generic&index=2');
+   expect(resultImgSrc('job/a','generic',0)).toContain('job%2Fa');
+   expect(resultImgSrc('job-1','scheme',0)).toBe('/api/admin/ai-jobs/job-1/result');
++  expect(inputImgSrc('job-1',1)).toBe('/api/admin/ai-jobs/job-1/inputs/1');
++  expect(inputImgSrc('job/a',2,'generic')).toBe('/api/admin/ai-jobs/job%2Fa/inputs/2?job_type=generic');
+  });
+  it('所有通用输出均保留，失败任务的部分结果不重新编号',()=>{
+   const job={job_id:'g',status:'failed',results:[{index:1,storage_key:'ai-output/one'},{index:3,storage_key:'ai-output/three'}]} as AiJobTodayRow;
+diff --git a/src/frontend/src/admin/AiJobsAdmin.tsx b/src/frontend/src/admin/AiJobsAdmin.tsx
+index 35771bdc..11356d6d 100644
+--- a/src/frontend/src/admin/AiJobsAdmin.tsx
++++ b/src/frontend/src/admin/AiJobsAdmin.tsx
+@@ -5,7 +5,8 @@
+ // 纯函数（状态汉化/耗时格式化/preset 名/供应商列/结果图 src）导出供 vitest。
+ // 非目标：不做导出；不做删除单条记录。
+ import {useCallback,useEffect,useRef,useState} from 'react';
+-import {adminApi,AdminApiError,AiJobsPage,AiJobTodayRow,PlatformUser} from './adminApi';
++import {adminApi,AdminApiError,AiJobDetail,AiJobInputImage,AiJobReferenceEntry,
++  AiJobsPage,AiJobTodayRow,PlatformUser} from './adminApi';
+ 
+ const STATUS_LABELS:Record<string,string>={
+   queued:'排队中',running:'进行中',retry_wait:'重试等待',
+@@ -31,6 +32,10 @@ export function resultImgSrc(jobId:string,kind:'scheme'|'generic'='scheme',index
+   const base=`/api/admin/ai-jobs/${encodeURIComponent(jobId)}/result`;
+   return kind==='generic'?`${base}?job_type=generic&index=${index}`:base;
+ }
++export function inputImgSrc(jobId:string,slot:number,kind:'scheme'|'generic'='scheme'):string{
++  const base=`/api/admin/ai-jobs/${encodeURIComponent(jobId)}/inputs/${slot}`;
++  return kind==='generic'?`${base}?job_type=generic`:base;
++}
+ export function sourceLabel(source:string|undefined):string{
+   return source==='playground'?'Playground':'Garden';
+ }
+@@ -44,6 +49,34 @@ export function providerCell(name:string|null,model:string|null,
+   return parts.length?parts.join(' · '):'—';
+ }
+ 
++// ---------------- R3 任务详情纯函数（gdc-aigen-admin-20261123，issue #126）----------------
++/** sha256 短码（清单展示用；缺省 —）。 */
++export function shaShort(sha:string|null|undefined):string{
++  return sha?sha.slice(0,8):'—';
++}
++/** 输入截图清单行：`#槽位 storage_key · sha短码`。 */
++export function inputImageLine(img:AiJobInputImage):string{
++  return `#${img.slot} ${img.storage_key} · ${shaShort(img.sha256)}`;
++}
++/** 产品参考清单行（issue #126 样式）：`#1 柔纹白 · 评分 0.32 · 画面占比 14.3%`
++ *  （占比=screen_coverage×100 一位小数；排序依据=score 降序即 rank，由后端 rank 给出）。 */
++export function referenceLineText(e:AiJobReferenceEntry):string{
++  const name=e.display_name||e.subject?.subject_id||'?';
++  const variant=e.subject?.variant;
++  const bits=[`#${e.rank??'?'} ${name}${variant?' '+variant:''}`];
++  if(typeof e.score==='number')bits.push(`评分 ${e.score.toFixed(2)}`);
++  if(typeof e.screen_coverage==='number')bits.push(`画面占比 ${(e.screen_coverage*100).toFixed(1)}%`);
++  return bits.join(' · ');
++}
++/** 未入选参考摘要：`名称 · 原因 xxx · 画面占比 y%`。 */
++export function rejectedLineText(e:AiJobReferenceEntry):string{
++  const name=e.display_name||e.subject?.subject_id||'?';
++  const bits=[name];
++  if(e.reason)bits.push(`原因 ${e.reason}`);
++  if(typeof e.screen_coverage==='number')bits.push(`画面占比 ${(e.screen_coverage*100).toFixed(1)}%`);
++  return bits.join(' · ');
++}
++
+ export type RangeKey='today'|'yesterday'|'last7'|'last30'|'custom';
+ export const RANGE_LABELS:Record<RangeKey,string>={
+   today:'今天',yesterday:'昨天',last7:'最近 7 天',last30:'最近 30 天',custom:'自定义'};
+@@ -74,6 +107,73 @@ function formatDateTime(iso:string):string{
+ 
+ export const POLL_MS=2500;
+ 
++/** R3（issue #126）：行内「详情」展开——首次打开才取 /detail（轮询不重复拉详情）。 */
++function JobDetailPanel({jobId,jobType}:{jobId:string;jobType:'scheme'|'generic'}){
++  const [loaded,setLoaded]=useState(false);
++  const [data,setData]=useState<AiJobDetail|null>(null);
++  const [err,setErr]=useState('');
++  async function onToggle(e:React.SyntheticEvent<HTMLDetailsElement>){
++    if(!e.currentTarget.open||loaded)return;
++    setErr('');
++    try{
++      setData(await adminApi.aiJobDetail(jobId,jobType));
++      setLoaded(true);
++    }catch(ex){setErr(ex instanceof AdminApiError?ex.message:'加载失败')}
++  }
++  const preStyle:React.CSSProperties={whiteSpace:'pre-wrap',wordBreak:'break-word',
++    margin:'4px 0',fontSize:12};
++  return <details onToggle={e=>void onToggle(e)}>
++    <summary style={{minHeight:44,cursor:'pointer'}}>详情</summary>
++    {err&&<p className="admin-error" role="alert">{err}</p>}
++    {!loaded&&!err&&<p className="admin-muted">加载中…</p>}
++    {data&&<div className="aijt-detail">
++      {data.job_type==='generic'?<>
++        <h4>提示词（用户原文）</h4>
++        <pre style={preStyle}>{data.prompt??'—'}</pre>
++        {data.params_json&&<><h4>生成参数</h4>
++          <pre style={preStyle}>{JSON.stringify(data.params_json,null,2)}</pre></>}
++      </>:<>
++        <h4>提示词（服务端解析全文）</h4>
++        <pre style={preStyle}>{data.resolved_prompt??'—'}</pre>
++      </>}
++      {!!data.input_images_json?.images?.length&&<>
++        <h4>原始上传设计图</h4>
++        <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
++          {data.input_images_json.images.map(img=>
++            <div key={img.slot}>
++              <img src={inputImgSrc(jobId,img.slot,jobType)} alt={`原始上传设计图 ${img.slot}`}
++                   loading="lazy" style={{maxWidth:180,maxHeight:180,borderRadius:4,border:'1px solid #ddd'}}/>
++              <p style={{margin:'2px 0',fontSize:12}}>{inputImageLine(img)}</p>
++            </div>)}
++        </div>
++      </>}
++      {!!data.reference_selected?.length&&<>
++        <h4>产品参考清单（排序依据：score 降序，即 rank 次序）</h4>
++        {data.reference_selected.map((e,i)=>
++          <p key={i} style={{margin:'2px 0',fontSize:12}}>{referenceLineText(e)}</p>)}
++      </>}
++      {!!data.reference_assets_json?.length&&<>
++        <h4>原始参考图</h4>
++        <div style={{display:'flex',gap:8,flexWrap:'wrap'}}>
++          {data.reference_assets_json.map((a,i)=>a.ai_reference_image
++            ?<img key={i} src={a.ai_reference_image} alt={`参考图 ${i+1}`} loading="lazy"
++                style={{maxWidth:120,maxHeight:120,borderRadius:4,border:'1px solid #ddd'}}/>
++            :<span key={i} className="admin-muted">{a.storage_key}</span>)}
++        </div>
++      </>}
++      {!!data.reference_rejected?.length&&<>
++        <h4>未入选参考</h4>
++        {data.reference_rejected.map((e,i)=>
++          <p key={i} style={{margin:'2px 0',fontSize:12}}>{rejectedLineText(e)}</p>)}
++      </>}
++      {data.job_type==='scheme'&&data.camera_snapshot_json&&<>
++        <h4>机位快照</h4>
++        <pre style={preStyle}>{JSON.stringify(data.camera_snapshot_json,null,2)}</pre>
++      </>}
++    </div>}
++  </details>;
++}
++
+ export default function AiJobsAdmin({flash}:{flash:(msg:string)=>void}){
+   const [range,setRange]=useState<RangeKey>('today');
+   const [customStart,setCustomStart]=useState(''),[customEnd,setCustomEnd]=useState('');
+@@ -161,7 +261,7 @@ export default function AiJobsAdmin({flash}:{flash:(msg:string)=>void}){
+     {!!shown.length&&<table className="aijt-table">
+       <thead><tr>
+         <th>发起用户</th><th>发起时间</th><th>来源 / 类型</th><th>状态</th>
+-        <th>供应商 / model / 通道</th><th>耗时</th><th>结果</th>
++        <th>供应商 / model / 通道</th><th>耗时</th><th>结果</th><th>输入参数</th>
+       </tr></thead>
+       <tbody>
+         {shown.map(j=><tr key={`${j.job_type??'scheme'}:${j.job_id}`} data-job-id={j.job_id} data-job-type={j.job_type??'scheme'}>
+@@ -195,6 +295,7 @@ export default function AiJobsAdmin({flash}:{flash:(msg:string)=>void}){
+               :<span className="admin-muted">—</span>}
+ 
+           </td>
++          <td><JobDetailPanel jobId={j.job_id} jobType={j.job_type??'scheme'}/></td>
+         </tr>)}
+       </tbody>
+     </table>}
+diff --git a/src/frontend/src/admin/adminApi.ts b/src/frontend/src/admin/adminApi.ts
+index 978a8a24..b84be5f2 100644
+--- a/src/frontend/src/admin/adminApi.ts
++++ b/src/frontend/src/admin/adminApi.ts
+@@ -140,7 +140,30 @@ export type AiJobTodayRow={job_id:string;job_type?:'scheme'|'generic';source_app
+ export type AiJobsToday={items:AiJobTodayRow[];scope:string;since:string};
+ // 生图记录页（2026-10-24）：时间段/用户筛选 + 分页（total=过滤后总条数）
+ export type AiJobsPage={items:AiJobTodayRow[];scope:string;since:string|null;until:string|null;
+- user_id:string|null;total:number;limit:number;offset:number};
++  user_id:string|null;total:number;limit:number;offset:number};
++
++// ---------------- R3 任务详情（gdc-aigen-admin-20261123，issue #126）----------------
++// GET /api/admin/ai-jobs/{job_id}/detail：客户端输入参数投影，冻结 JSON 原样 +
++// 服务端解析 display_name（placement 域查 catalog products name，其他域回退 subject_id）。
++export type AiJobInputImage={slot:number;storage_key:string;sha256?:string|null;
++  mime?:string|null;width?:number|null;height?:number|null};
++export type AiJobReferenceEntry={rank:number;
++  subject?:{domain?:string;subject_id?:string;variant?:string}|null;
++  score?:number|null;screen_coverage?:number|null;visible_ratio?:number|null;
++  identity_importance?:string|null;reason?:string|null;resolved_assets?:unknown[];
++  display_name?:string|null};
++export type AiJobReferenceAsset={storage_key:string;ai_reference_image?:string|null;
++  mime_type?:string|null};
++export type AiJobDetail={job_id:string;job_type:'scheme'|'generic';
++  // scheme 类
++  preset_key?:string|null;resolved_prompt?:string|null;
++  input_images_json?:{primary_slot?:number;images?:AiJobInputImage[]}|null;
++  reference_selection_json?:Record<string,unknown>|null;
++  reference_selected?:AiJobReferenceEntry[];reference_rejected?:AiJobReferenceEntry[];
++  reference_assets_json?:AiJobReferenceAsset[]|null;
++  camera_snapshot_json?:Record<string,unknown>|null;
++  // generic 类
++  source_app?:string;prompt?:string|null;params_json?:Record<string,unknown>|null};
+ 
+ // ---------------- B1b 灯光配置（GOAL_SEP25_BATCH Wave2，D1 冻结口径）----------------
+ // 时间关键帧数组+连续插值；四个参数键可选（缺失=设计师端用内置默认）；keyframes=null=未配置
+@@ -399,6 +422,10 @@ export const adminApi={
+     if(q.limit!=null)p.set('limit',String(q.limit));
+     if(q.offset!=null)p.set('offset',String(q.offset));
+     return call<AiJobsPage>(`/ai-jobs?${p.toString()}`)},
++  // R3（issue #126）：任务详情=客户端输入参数投影（scheme: 提示词/输入截图/参考清单/机位；
++  // generic: prompt/params/输入截图）。job_type 同 result 端点惯例，缺省 scheme。
++  aiJobDetail:(jobId:string,jobType:'scheme'|'generic')=>call<AiJobDetail>(
++    `/ai-jobs/${encodeURIComponent(jobId)}/detail?job_type=${jobType}`),
+   // ---------------- B1b 灯光配置（D1：时间关键帧数组+连续插值）----------------
+   // 读=任一平台岗；写/恢复默认=平台超管。设计师端启动拉取一次（/api/config/lighting），
+   // 保存后设计师端下次打开页面即按新关键帧渲染。
