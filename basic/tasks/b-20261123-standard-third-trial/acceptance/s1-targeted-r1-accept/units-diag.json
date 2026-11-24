@@ -1,0 +1,16 @@
+[
+  {
+    "key": "10be2074-24f1-5ba6-bee1-7b1bbee08358:0:user",
+    "role": "user",
+    "visible": true,
+    "text_len": 673,
+    "text_head": "[AIEO-ROUND:3d7bd51109e46f8f55251385]\n【会话迁移接棒】迁移接棒：旧会话6b050b37达5条user超限，本会话接棒 b-20261123-standard-th"
+  },
+  {
+    "key": "10be2074-24f1-5ba6-bee1-7b1bbee08358:1:assistant",
+    "role": "assistant",
+    "visible": true,
+    "text_len": 3878,
+    "text_head": "ChatGPT 说：\n\n[AIEO-ROUND:3d7bd51109e46f8f55251385]\n\nS1补证复核裁定\n\nREJECT（维持）"
+  }
+]

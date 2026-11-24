@@ -1193,3 +1193,10 @@
 2. seq11 `s3-targeted-r2` 简报含自动 marker 986B（≤1200B；`playwright_queue.py` 拼接 38B marker 后校验，首版 1222B 草稿已精简）。发送确认后采集 fail-closed，按 L-018 禁重发→三步诊断→静态 DOM 补采→归属七查全过→reconcile COMPLETED，零重发。
 3. 实际裁定 **PASS_WITH_CONSTRAINTS**（S3 本步骤补证闭环），完整 reply SHA256=`da668776dfe9da79c77782f662debd4d4aa2535ceab0674d5dde1c85e15714ca`；①PASS、④PASS_WITH_CONSTRAINTS、⑥PASS，⑤沿用不重开；seq8/9/10 三轮 REJECT 保留。审查方逐字节核对六项 SHA256、GDC 10/10 与 AIS 4/4 清单文件可读，并读取 S1 缺项报告认可「先回报未派单」处置。见 [s3-targeted-r2-accept](../../basic/tasks/b-20261123-standard-third-trial/acceptance/s3-targeted-r2-accept/reply.txt)。
 4. ST-05 ③ 仍 FAIL、任务保持验收中；未合并/发布/付费。会话 `6b050b37…` 发出前 4 条 user 消息已按 L-018 评估并记录暂不迁移理由，发出后 5 条，本轮随即回交不再增轮。
+
+## 2026-11-24 S1 补证复核（seq12，会话迁移）
+
+1. S1 是 ST-05 最后剩余失败项。用户授权带「已确认 + 四类缺项」派 S1 补证复核；原审查会话 6b050b37 达 5 条 user（超新规 4 条上限），按用户口径与 L-018 主动迁移，迁移简报自包含 1191B（≤1200B），新建会话 6b056690…。
+2. worker SEND_CONFIRMED 后成功采集（reply 3878B、artifact SHA256=7592f262…、归属 marker 唯一定位、UUID 稳定、stability 全过）；队列收尾因 fallback 键漂移报 "confirmed send and collected round differ" BLOCKED，按 L-018 以真实采集证据 reconcile COMPLETED，零重发。
+3. 实际裁定 **REJECT（维持）**，完整 reply SHA256=`7592f262376dd4e3e7f5563617b01d0ebd74123d7efb06f9df493dc943ac0567`；明确「代码修复成立≠线上重发验收成立」，四项缺项 E1（c3154aa0重发记录）/E2（抽测原始记录）/E3（重发后测试日志）/E4（对照构建产物）不可补齐则降档 S1: PARTIAL / NOT VERIFIED，不允许编造或事后补写。
+4. 四项属网页验证不了的历史原始记录/实际测试疑难项，按用户分级规则交 codex 核验（见 acceptance/s1-targeted-r1-accept/RULING-AND-HANDOFF.md）。首轮 seq8 REJECT 保留；S3 已闭环不重开；ST-05 仍 FAIL（S1 缺 PASS），任务保持验收中；未合并/发布/付费。

@@ -51,6 +51,7 @@
 ④执行结果：R0/R0' 闭环，用户抽测通过。
 ⑤测试结果：特征证据+人工抽测通过。
 ⑥验收证据引用：验收结论：REJECT（问题1：正式派单 seq8/s1-formal；dispatch-2026-11-24T07-47-21；完整 reply sha256=87b19055d5d8c15487cd3c7759ea8bacb4fdfdba1b7f838cb6ae7b3208a97a39；被测 GDC c3154aa0fcf0a8fdddb7b1c6f14e6ea205b439fc）。六查代码方向认可但正式步骤证据不足；R0' 两项限制保留。证据包内路径 acceptance/s1-formal-accept/reply.txt、acceptance/republish-review/EVIDENCE.md。
+针对性补证复核（seq12=`s1-targeted-r1`，会话迁移新建 6b056690…；dispatch-2026-11-24T10-26-37；worker 成功采集后按 L-018 reconcile COMPLETED、零重发）：验收结论：REJECT（维持）——四项缺项（E1 c3154aa0重发执行记录、E2 用户抽测原始记录、E3 重发后测试日志、E4 对照用本地构建产物）无法补齐，不升 PASS；完整 reply sha256=7592f262376dd4e3e7f5563617b01d0ebd74123d7efb06f9df493dc943ac0567（3878B）。审查方给出降档条件 S1: PARTIAL / NOT VERIFIED（认可代码已合入 commit + bundle 修复特征 + 部分静态证据；不宣称已证明8870运行c3154aa0构建/抽测通过/线上验收）。首轮 seq8 REJECT 原文与问题1返工记录原样保留。四项历史原始记录属网页验证不了的疑难项，按用户分级规则交 codex 核验，不伪造补齐。证据包内路径 acceptance/s1-targeted-r1-accept/reply.txt、acceptance/s1-targeted-r1-accept/RULING-AND-HANDOFF.md。
 
 ## S2 规划协商与契约裁定
 ①本步骤目标：完成 R1/R2/R3、付费测试及 auto 尺寸方案的 ChatGPT 裁定。

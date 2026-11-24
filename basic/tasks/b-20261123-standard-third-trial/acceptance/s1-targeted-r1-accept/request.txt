@@ -1,0 +1,6 @@
+[AIEO-ROUND:3d7bd51109e46f8f55251385]
+【会话迁移接棒】迁移接棒：旧会话6b050b37达5条user超限，本会话接棒 b-20261123-standard-third-trial 的S1补证复核。
+S1验收：GDC缓存修复合入后8870重新发布是否可核查验证。被测GDC c3154aa0fcf0a8fdddb7b1c6f14e6ea205b439fc（PR#127缓存重试+PR#128参考图缓存修复）。seq8/s1-formal首轮REJECT（证据不足，reply SHA256=87b19055d5d8c15487cd3c7759ea8bacb4fdfdba1b7f838cb6ae7b3208a97a39）保留，本轮只补未通过项。
+已确认：GDC dev快进至c3154aa0；8870 bundle归档acceptance/republish-review/dep-*.js（远端7dfdc858树可读）含asset_versions与onTextureSettled/onTextureStart特征，见EVIDENCE.md。
+四类缺项：c3154aa0重发执行记录、用户抽测原始记录、重发后测试日志、对照用本地构建产物。热启动缓存命中未做浏览器复测、线上产物与源码未逐字节锁定，按原边界不扩大。
+请裁定S1本步骤PASS/REJECT并绑定SHA与路径；缺项无法补齐则给现有证据下最小可接受路径或降档条件。边界：不合并/发布/付费，DEC-010用户拍板，S3已闭环不重开，任务验收中。

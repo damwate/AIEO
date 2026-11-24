@@ -1,0 +1,37 @@
+{
+  "recollection": true,
+  "driver": "gpt_dispatch.mjs success-path evidence (worker 采集已完成)",
+  "remediation": "worker SEND_CONFIRMED 后成功采集；队列收尾键漂移导致 BLOCKED，按 L-018 以真实采集证据 reconcile",
+  "reference_failed_dispatch_dir": "D:/AIEO/.worktrees/feat-standard-task-management/phase0/logs/dispatch-2026-11-24T10-26-37",
+  "conversation_url": "https://chatgpt.com/c/6b056690-87b8-83ee-a67a-6be774fcc829",
+  "sent_user_unit_key_reported": "fallback-turn-0:0:user",
+  "located_user_unit_key": "10be2074-24f1-5ba6-bee1-7b1bbee08358:0:user",
+  "assistant_uuid": "a7a6bc3f-f131-4266-ae5f-5602fb5bcfb3",
+  "unit_keys": [
+    "10be2074-24f1-5ba6-bee1-7b1bbee08358:1:assistant"
+  ],
+  "unit_count": 1,
+  "reply_bytes": 3878,
+  "reply_sha256": "7592f262376dd4e3e7f5563617b01d0ebd74123d7efb06f9df493dc943ac0567",
+  "checks": {
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "not_prev_reply_sha": true
+  },
+  "attribution_proof": {
+    "start_resolved_by_marker": true,
+    "start_key_resolved": "10be2074-24f1-5ba6-bee1-7b1bbee08358:0:user",
+    "next_user_unit_key": null,
+    "window_integrity": {
+      "complete": true,
+      "method": "STATIC_NON_SCROLLABLE_DOM",
+      "scrollable_window_observed": false,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    }
+  }
+}

@@ -1,0 +1,163 @@
+{
+  "at": "2026-11-24T10:29:03.754Z",
+  "instance_id": "standard-queue",
+  "instance_lock_path": "D:\\AIEO\\.worktrees\\feat-standard-task-management\\runtime\\locks\\gpt-session-standard-queue.lockfile",
+  "instance_debug_port": 9300,
+  "instance_profile_dir": "D:\\AIEO\\.worktrees\\feat-standard-task-management\\runtime\\chrome_profiles\\gpt-poc-standard-queue",
+  "message_bytes": 1191,
+  "reply": "ChatGPT 说：\n\n[AIEO-ROUND:3d7bd51109e46f8f55251385]\n\nS1补证复核裁定\n\nREJECT（维持）\n\n当前证据不足以将 S1 本步骤提升为 PASS。 但这不代表缓存修复无效，也不代表8870重发失败，而是尚未形成完整、可追溯的重发验证证据链。\n\n一、现有证据认定\n\n被测版本：\n\nGDC c3154aa0fcf0a8fdddb7b1c6f14e6ea205b439fc\n\n验收内容\n\n\t\n\n当前认定\n\n\t\n\n说明\n\n\n\n\nGDC dev 已快进至 c3154aa0\n\n\t\n\nPASS\n\n\t\n\n版本锚点明确\n\n\n\n\nPR#127 缓存重试修复\n\n\t\n\n有证据\n\n\t\n\n已有对应代码变更\n\n\n\n\nPR#128 参考图缓存修复\n\n\t\n\n有证据\n\n\t\n\n已有对应代码变更\n\n\n\n\n8870 bundle 归档\n\n\t\n\n部分PASS\n\n\t\n\n远端7dfdc858树可读\n\n\n\n\nasset_versions 特征\n\n\t\n\nPASS\n\n\t\n\n归档文件可查\n\n\n\n\nonTextureSettled/onTextureStart 特征\n\n\t\n\nPASS\n\n\t\n\n归档文件可查\n\n\n\n\n8870 确实由 c3154aa0 重发\n\n\t\n\n未证实\n\n\t\n\n缺少重发执行记录\n\n\n\n\n用户实际抽测\n\n\t\n\n未证实\n\n\t\n\n缺少原始记录\n\n\n\n\n重发后测试结果\n\n\t\n\n未证实\n\n\t\n\n缺少测试日志\n\n\n\n\n本地构建与线上产物对照\n\n\t\n\n未证实\n\n\t\n\n缺少对照产物\n\n注意：bundle 中出现修复代码特征，只能证明归档产物具有相关特征，不能单独证明它由指定 commit 构建并实际部署到8870。\n\n二、四项未通过证据\n\n编号\n\n\t\n\n缺失证据\n\n\t\n\n最小补证要求\n\n\n\n\nS1-E1\n\n\t\n\nc3154aa0重发执行记录\n\n\t\n\n原始部署日志，明确构建版本、部署目标8870、执行时间及结果\n\n\n\n\nS1-E2\n\n\t\n\n用户抽测原始记录\n\n\t\n\n原始测试记录，包含测试时间、操作步骤、结果及异常\n\n\n\n\nS1-E3\n\n\t\n\n重发后测试日志\n\n\t\n\n测试执行原始日志，能够对应重发后的8870环境\n\n\n\n\nS1-E4\n\n\t\n\n本地构建产物\n\n\t\n\n与本次部署对应的构建产物及SHA256\n\n不接受事后补写一份总结来替代原始执行证据。\n\n三、最小可接受补证路径\n\n建议只做一次针对性补证，不扩大测试范围。\n\n补E1： 找回原始部署记录，绑定 c3154aa0 和8870。\n\n补E2： 找回用户真实抽测记录，不要求重新扩大抽测场景。\n\n补E3： 找回重发之后实际执行的测试日志。\n\n补E4： 找回对应本地构建产物，计算SHA256，绑定归档文件。\n\n四项证据均应记录：\n\nGit commit SHA。\n\n文件相对路径。\n\n文件 SHA256。\n\n原始证据来源。\n\n与8870重发事件的关联关系。\n\n如果原始记录确实不存在，不允许通过重新编造记录补齐。\n\n四、降档条件\n\n如果四项证据无法完整恢复，可以采用以下降档结论：\n\nS1：PARTIAL / NOT VERIFIED\n\n允许认可：\n\n修复代码已经合入指定 commit。\n\n归档 bundle 存在相关修复特征。\n\n8870相关产物具备部分静态证据。\n\n不允许宣称：\n\n已证明8870运行的是c3154aa0对应构建。\n\n已证明重发后用户抽测通过。\n\n已完成缓存修复的线上验收。\n\n热启动缓存命中未进行浏览器复测，以及线上产物与源码未逐字节锁定，继续维持原有边界，不新增为本轮强制补证项。\n\n五、最终裁定记录\n\nb-20261123-standard-third-trial / S1\n\n验收结论\n\nREJECT\n\n被测代码：c3154aa0fcf0a8fdddb7b1c6f14e6ea205b439fc\n\n已有归档树：7dfdc858\n\n归档证据路径：acceptance/republish-review/dep-*.js\n\n原首轮拒绝：保留\n\n未通过项：E1、E2、E3、E4\n\nS3：已闭环，不重开\n\nDEC-010：仍由用户拍板\n\n发布、合并、付费：本轮均不授权\n\n执行建议： 先查找四项历史原始证据，不要重新部署8870，也不要为了取得PASS而制造新的部署事件。\n\n本轮裁定是基于你提供的证据摘要作出的审查意见，并非我已独立读取GitHub远端文件或验证其SHA256。现阶段不应伪造新的证据文件SHA绑定。\n\n最终原则：代码修复成立，不等于线上重发验收成立；静态产物特征成立，不等于部署来源链成立。",
+  "user_unit_key": "10be2074-24f1-5ba6-bee1-7b1bbee08358:0:user",
+  "start_key_resolved": "10be2074-24f1-5ba6-bee1-7b1bbee08358:0:user",
+  "start_resolved_by_marker": true,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "10be2074-24f1-5ba6-bee1-7b1bbee08358:1:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "a7a6bc3f-f131-4266-ae5f-5602fb5bcfb3",
+  "stability": {
+    "stable": true,
+    "interval_ms": 3012,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-24T10:28:57.535Z",
+      "read_finished_at": "2026-11-24T10:28:57.540Z",
+      "unit_keys": [
+        "10be2074-24f1-5ba6-bee1-7b1bbee08358:1:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "10be2074-24f1-5ba6-bee1-7b1bbee08358:1:assistant",
+          "sha256": "7592f262376dd4e3e7f5563617b01d0ebd74123d7efb06f9df493dc943ac0567",
+          "size_bytes": 3878
+        }
+      ],
+      "assistant_uuid": "a7a6bc3f-f131-4266-ae5f-5602fb5bcfb3",
+      "next_user_unit_key": null,
+      "start_key_resolved": "10be2074-24f1-5ba6-bee1-7b1bbee08358:0:user",
+      "start_resolved_by_marker": true,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-24T10:29:00.546Z",
+      "read_finished_at": "2026-11-24T10:29:00.551Z",
+      "unit_keys": [
+        "10be2074-24f1-5ba6-bee1-7b1bbee08358:1:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "10be2074-24f1-5ba6-bee1-7b1bbee08358:1:assistant",
+          "sha256": "7592f262376dd4e3e7f5563617b01d0ebd74123d7efb06f9df493dc943ac0567",
+          "size_bytes": 3878
+        }
+      ],
+      "assistant_uuid": "a7a6bc3f-f131-4266-ae5f-5602fb5bcfb3",
+      "next_user_unit_key": null,
+      "start_key_resolved": "10be2074-24f1-5ba6-bee1-7b1bbee08358:0:user",
+      "start_resolved_by_marker": true,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "10be2074-24f1-5ba6-bee1-7b1bbee08358:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "10be2074-24f1-5ba6-bee1-7b1bbee08358:0:user",
+          "10be2074-24f1-5ba6-bee1-7b1bbee08358:1:assistant"
+        ],
+        "unit_text_sha256": [
+          "08c987fcfa3185627c13a106345ac3858f80a24fe1a20cd2032ef3bce0ea3772",
+          "7592f262376dd4e3e7f5563617b01d0ebd74123d7efb06f9df493dc943ac0567"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": []
+      }
+    ],
+    "materialized_unit_keys": [
+      "10be2074-24f1-5ba6-bee1-7b1bbee08358:0:user",
+      "10be2074-24f1-5ba6-bee1-7b1bbee08358:1:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STATIC_NON_SCROLLABLE_DOM",
+      "scrollable_window_observed": false,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "10be2074-24f1-5ba6-bee1-7b1bbee08358:0:user",
+          "10be2074-24f1-5ba6-bee1-7b1bbee08358:1:assistant"
+        ],
+        "overlap_keys": []
+      }
+    ],
+    "window_transitions": 0
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "7592f262376dd4e3e7f5563617b01d0ebd74123d7efb06f9df493dc943ac0567",
+  "size_bytes": 3878,
+  "reply_path": "D:\\AIEO\\.worktrees\\feat-standard-task-management\\phase0\\logs\\dispatch-2026-11-24T10-26-37\\reply.txt",
+  "reply_readback_sha256": "7592f262376dd4e3e7f5563617b01d0ebd74123d7efb06f9df493dc943ac0567",
+  "raw_units_path": "D:\\AIEO\\.worktrees\\feat-standard-task-management\\phase0\\logs\\dispatch-2026-11-24T10-26-37\\raw-units.json",
+  "raw_units_sha256": "b1f74b233ee8da111ebb2987f78829654e52bcce67917f7b21e4de7a7cd497bb",
+  "raw_units_size_bytes": 6379,
+  "raw_units_readback_sha256": "b1f74b233ee8da111ebb2987f78829654e52bcce67917f7b21e4de7a7cd497bb",
+  "session_id": "6b056690-87b8-83ee-a67a-6be774fcc829",
+  "conversation_url": "https://chatgpt.com/c/6b056690-87b8-83ee-a67a-6be774fcc829",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}
