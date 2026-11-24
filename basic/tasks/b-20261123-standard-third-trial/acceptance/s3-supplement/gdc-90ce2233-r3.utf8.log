@@ -1,0 +1,83 @@
+# === PROVENANCE ===
+# Source: acceptance/test-logs/gdc-90ce2233-r3.log
+# Source SHA256: 34f2b71f68e3b0d4ff3d0a423e84491b30587fed40246dfae699d771bb2975db
+# Original encoding: UTF-8 header + UTF-16 LE body (hybrid)
+# Converted to UTF-8 (no BOM) at 2026-11-24T08:36:12Z; original file untouched.
+# Tested SHA: 90ce2233b4da9d844cf1e165c43cec2ecdd3cddd
+# File list: reconstructed from actual execution records (pytest --collect-only at tested SHA).
+# Original header placeholder was: <10 target files>
+# === ORIGINAL HEADER (CMD line with file list filled in) ===
+# CMD: python -m pytest -q -p no:cacheprovider \
+#   tests/test_admin_ai_job_detail.py \
+#   tests/test_external_ai_service.py \
+#   tests/test_ai_prompt_config.py \
+#   tests/test_d1_ai_people_prompt.py \
+#   tests/test_b10_ai_reference.py \
+#   tests/test_l2w3_ai_reference_selection.py \
+#   tests/test_l2w1_ai_multiimage.py \
+#   tests/test_product_constraints.py \
+#   tests/test_domain_reset_w5_job_media_binding.py \
+#   tests/test_ai_console_gateway.py
+# SHA: 90ce2233b4da9d844cf1e165c43cec2ecdd3cddd
+# Date: 2026-11-24T16:05:32.6606026+08:00
+# === FILE-LIST VERIFICATION ===
+# --collect-only at 90ce2233: 9 files=123, +test_ai_console_gateway.py(24)=147 = 145 passed + 2 skipped
+# === ORIGINAL BODY (verbatim, re-encoded from UTF-16 LE) ===
+........................................................................ [ 48%]
+........................................................................ [ 97%]
+.ss                                                                      [100%]
+============================== warnings summary ===============================
+C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\fields.py:1076
+C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\fields.py:1076
+C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\fields.py:1076
+C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\fields.py:1076
+C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\fields.py:1076
+C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\fields.py:1076
+C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\fields.py:1076
+C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\fields.py:1076
+  C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\site-packages\pydantic\fields.py:1076: PydanticDeprecatedSince20: Using extra keyword arguments on `Field` is deprecated and will be removed. Use `json_schema_extra` instead. (Extra keys: 'exclude_if'). Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.11/migration/
+    warn(
+
+C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\site-packages\starlette\testclient.py:37
+  C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\site-packages\starlette\testclient.py:37: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = typing.Callable[[], typing.ContextManager[anyio.abc.BlockingPortal]]
+
+app\ai\external_jobs.py:215
+  D:\Garden-Design-Calculator\src\backend\app\ai\external_jobs.py:215: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    @app.on_event('startup')
+
+C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\site-packages\fastapi\applications.py:4495
+C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\site-packages\fastapi\applications.py:4495
+  C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\site-packages\fastapi\applications.py:4495: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    return self.router.on_event(event_type)
+
+app\ai\external_jobs.py:221
+  D:\Garden-Design-Calculator\src\backend\app\ai\external_jobs.py:221: DeprecationWarning: 
+          on_event is deprecated, use lifespan event handlers instead.
+  
+          Read more about it in the
+          [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+          
+    @app.on_event('shutdown')
+
+backend/tests/test_l2w1_ai_multiimage.py::test_migration_fresh_db_upgrade_twice_idempotent
+backend/tests/test_l2w1_ai_multiimage.py::test_migration_fresh_db_upgrade_twice_idempotent
+backend/tests/test_l2w1_ai_multiimage.py::test_migration_hotpatch_db_upgrade_skips_existing_ddl
+backend/tests/test_l2w1_ai_multiimage.py::test_migration_hotpatch_db_upgrade_skips_existing_ddl
+backend/tests/test_l2w1_ai_multiimage.py::test_migration_hotpatch_db_upgrade_skips_existing_ddl
+backend/tests/test_l2w1_ai_multiimage.py::test_migration_model_matches_db
+  C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\site-packages\alembic\config.py:604: DeprecationWarning: No path_separator found in configuration; falling back to legacy splitting on spaces, commas, and colons for prepend_sys_path.  Consider adding path_separator=os to Alembic config.
+    util.warn_deprecated(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+145 passed, 2 skipped, 19 warnings in 55.32s

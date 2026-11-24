@@ -1,0 +1,22 @@
+# === PROVENANCE ===
+# Source: acceptance/test-logs/aieo-queue-4d184e8-r3.log
+# Source SHA256: 76f4288c7f1b023f137f944b0fc937d12ef26c3e6dd2f30ffd7a81f249963e2f
+# Original encoding: UTF-8 header + UTF-16 LE body (hybrid)
+# Converted to UTF-8 (no BOM) at 2026-11-24T08:36:12Z; original file untouched.
+# Tested SHA: 4d184e8de4eab56519c4e0f57a6e37afbc7984ac
+# === ORIGINAL HEADER (verbatim) ===
+# CMD: python -m unittest discover -s phase0/tools -p test_playwright_queue.py
+# SHA: 4d184e8de4eab56519c4e0f57a6e37afbc7984ac
+# Date: 2026-11-24T16:06:33.2610436+08:00
+# === ORIGINAL BODY (verbatim, re-encoded from UTF-16 LE) ===
+python : ............
+所在位置 C:\Users\youting\AppData\Local\Temp\genie-ps-1795507592746-cr9n1n.ps1:954 字符: 352
++ ...  utf8 $log; python -m unittest discover -s phase0/tools -p test_playw ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (............:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+----------------------------------------------------------------------
+Ran 12 tests in 1.618s
+
+OK

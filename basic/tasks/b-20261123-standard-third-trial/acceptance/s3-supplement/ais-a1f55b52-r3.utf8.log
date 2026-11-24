@@ -1,0 +1,28 @@
+# === PROVENANCE ===
+# Source: acceptance/test-logs/ais-a1f55b52-r3.log
+# Source SHA256: ebc0b9389ff7ef6131ff7f14f97ebf1c39cbc85c943a47a714d3cec19fb24170
+# Original encoding: UTF-8 header + UTF-16 LE body (hybrid)
+# Converted to UTF-8 (no BOM) at 2026-11-24T08:36:12Z; original file untouched.
+# Tested SHA: a1f55b523f90763bcd12823bf52cff9d710381a6
+# File list: reconstructed from actual execution records (pytest --collect-only at tested SHA).
+# Original header placeholder was: <4 target files>
+# === ORIGINAL HEADER (CMD line with file list filled in) ===
+# CMD: python -m pytest -q -p no:cacheprovider \
+#   tests/test_project_auth_v1.py \
+#   tests/test_generic_jobs_capabilities.py \
+#   tests/test_admin_api.py \
+#   tests/test_t07b_governance_audit.py
+# SHA: a1f55b523f90763bcd12823bf52cff9d710381a6
+# Date: 2026-11-24T16:05:33.4741780+08:00
+# === FILE-LIST VERIFICATION ===
+# --collect-only at a1f55b52: 4 files=78 tests = 78 passed
+# === ORIGINAL BODY (verbatim, re-encoded from UTF-16 LE) ===
+........................................................................ [ 92%]
+......                                                                   [100%]
+============================== warnings summary ===============================
+C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\site-packages\starlette\testclient.py:37
+  C:\Users\youting\AppData\Local\Programs\Python\Python312\Lib\site-packages\starlette\testclient.py:37: DeprecationWarning: The anyio.abc.BlockingPortal alias is deprecated, use anyio.from_thread.BlockingPortal instead.
+    _PortalFactoryType = typing.Callable[[], typing.ContextManager[anyio.abc.BlockingPortal]]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+78 passed, 1 warning in 14.52s
