@@ -14,7 +14,7 @@
 | R0' 重新发布复核 | bundle 特征证据归档，用户热启动抽测通过（「还行」） |
 | R1 产品占比清单 | 本地实现：冻结 selected 同源双写 prompt 区块与 `params.product_constraints`，原图/去重链不改 |
 | R2 花园入口供应商排序 | 本地实现：GDC 仅放行 `PUT /ai-console/routing/order`，AIS Garden 代理页允许排序保存，审计与权限保留 |
-| R3 任务详情输入参数 | 本地实现：GDC admin detail 端点与前端详情展示，冻结输入/选品信息按权限呈现；原始上传设计图与产品原图均可视展示 |
+| R3 任务详情输入参数 | 本地实现：GDC与AIS原生admin详情均展示客户端输入；GDC原始上传设计图与产品原图可视展示，AIS显示prompt原文与params/product_constraints |
 | 尺寸需求 | 经文档与用户复核，最终为：**未显式传 size/quality 时不硬编码固定尺寸，沿用 auto；未来尺寸由前端显式选择并按设计画幅映射** |
 
 重要：最初“默认 2K”不再实现为全局 `2048x2048`。1480×1100 等设计稿不得被强制改成方图。早前写入 220/221 供应商配置的固定尺寸已从 `.bak-20261123` 全部回滚。
@@ -29,7 +29,8 @@
 | GDC | `021de64a0f101a9522bd75c3036786bbf8339564` | 任务详情补显原始上传设计图，闭合 issue#126 媒体缺口 |
 | GDC HEAD | `0a5a4ec59b71bc3af41aa99ac82808767ffa785a` | 产品名称改用权威 catalog()，修复全量对照发现的2项回归 |
 | AIS | `146ea3cfdfd2aae2b0e18c93e17c83da042d4690` | Garden 代理入口排序编辑 |
-| AIS HEAD | `e442fbabe5bd3954e689faf3b256a4e2be311402` | 最终 `_post_raw` 出站参数覆盖链测试 |
+| AIS | `e442fbabe5bd3954e689faf3b256a4e2be311402` | 最终 `_post_raw` 出站参数覆盖链测试 |
+| AIS HEAD | `418087c31e8765ba48fd765ab3c9a50cc21b2458` | 原生AIS任务详情展示prompt原文与params/product_constraints |
 
 分支：GDC `feature/product-constraints-auto-size-20261124`；AIS `feature/garden-proxy-order-edit-20261123`。均**未合并 main/dev**。推送授权询问未获回答，本报告生成时按未推送处理；代码 diff 已归档 `acceptance/code-diffs/`。
 
@@ -42,6 +43,8 @@
 | GDC product_constraints 纯单元 | **21 passed** | 正常映射、缺 variant、顺序、HALF_UP、NaN/Infinity/越界、name fail-closed |
 | GDC 前端 vitest | **220 files / 3284 passed / 14 skipped** | `acceptance/test-logs/gdc-vitest-abf40b2b.log` |
 | AIS 最终出站 capabilities | **16 passed** | `acceptance/test-logs/ais-capabilities-e442fba.log` |
+| AIS admin API | **19 passed** | `acceptance/test-logs/ais-admin-api-418087c.log` |
+| AIS JobDetail | **3 passed** | prompt与product_constraints显示 |
 | AIS 前端 vitest | **42 passed** | R2 Garden 代理排序用例含在内 |
 | AIS 后端全量（新增出站测试前一轮） | 571 passed / 13 failed / 1 skipped | 基线对照：admin_auth/migrations/config 等 12 项基线同挂；failover 单跑通过=flaky |
 | GDC 后端全量对照 | 基线 3301 passed/194 failed/3 errors；16555dea 3336 passed/196 failed/3 errors | 仅2项新增失败，均为R1名称事实源误用；已在0a5a4ec修复并经相关119项测试验证。其余197项失败/错误基线同现 |

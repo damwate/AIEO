@@ -63,7 +63,7 @@
 ## S3 R1/R2/R3 与 auto 尺寸本地实施
 ①本步骤目标：完成两仓功能实施及零费用测试。
 ②修改文件：GDC ai/product_constraints.py、ai_generation.py、external_jobs.py、AiJobsAdmin、网关；AIS Vendors.vue 与出站测试。
-③修改内容：GDC HEAD=0a5a4ec59b71bc3af41aa99ac82808767ffa785a；AIS HEAD=e442fbabe5bd3954e689faf3b256a4e2be311402；尺寸不硬编码。
+③修改内容：GDC HEAD=0a5a4ec59b71bc3af41aa99ac82808767ffa785a；AIS HEAD=418087cbe5bd3954e689faf3b256a4e2be311402；尺寸不硬编码。
 ④执行结果：本地提交完成，未合并、未发布；220/221 配置已回滚。
 ⑤测试结果：GDC AI 112 passed、前端 3284 passed；AIS capabilities 16 passed、前端 42 passed；全程 mock。
 ⑥验收证据引用：验收结论：IN_PROGRESS（被测 commit=0a5a4ec59b71bc3af41aa99ac82808767ffa785a，本地 mock 已通过；正式逐文件验收待代码可读）。证据包内路径 acceptance/test-logs/gdc-ai-catalog-fix.log。
@@ -78,3 +78,4 @@
 | 11-24 13:00 | ST-05 全检：①②⑥开工 PASS；③ FAIL——S1/S3为本地功能完成但缺独立dispatch+reply SHA正式验收，S4代码复审未闭环。保持IN_PROGRESS，不伪造派单证据/不标完成 |
 | 11-24 13:30 | 用户截图对账发现R3缺口：原始上传设计图此前仅sha清单未显示图片。补PlatformAdmin私有输入媒体端点+前端原图展示，GDC 021de64a；后端详情6项、前端26项、最终AI 113项PASS。R1原提示词+产品组成+设计稿/产品原图发送链不变 |
 | 11-24 13:45 | 全量基线对照完成：base=3301/194+3，16555=3336/196+3；仅2项新增（media_binding），根因=R1误用load_assets_cached查产品name。改权威catalog()后相关回归+AI/媒体119项PASS，修复commit=0a5a4ec5；其余197项失败/错误基线同现 |
+| 11-24 14:05 | 三分支已推送并核对远端SHA一致。交接前补AIS原生R3：prompt原文+params/product_constraints展示，AIS 418087c（admin API 19、JobDetail 3 PASS）。CODEX-HANDOFF.md落AIEO任务包，明确三项目与验收清单 |
