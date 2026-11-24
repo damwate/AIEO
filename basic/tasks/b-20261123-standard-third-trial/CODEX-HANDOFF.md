@@ -16,6 +16,21 @@
 - AIS：https://github.com/YotinGarden/AI-Image-Service/tree/feature/garden-proxy-order-edit-20261123
 - AIEO：https://github.com/damwate/AIEO/tree/feat/standard-task-management
 
+## 需求总账（原始需求与中途新增，不得漏项）
+
+| 来源 | 用户要求 | 本次处理与验收状态 |
+|---|---|---|
+| 原始 R0 | 重新拉取 GDC；缓存代码此前未合 dev、现已合并 | dev ff-only 到 `c3154aa0`，确认 PR#127 缓存重试整合与 PR#128 3D 参考图缓存修复；完成 |
+| 原始 R0' | 花园计算器已重新发布，复核此前未加入缓存的修改 | 线上 bundle 特征证据归档；用户热启动抽测「还行」；完成，证据在 `acceptance/republish-review/` |
+| 原始 R1 | 生图请求除设计稿+提示词外，加入截图中的产品组成/占比，产品原图全部给生图服务；先与 GPT 仔细讨论 | 经 planning R1/R2 裁定后实现双写；原提示词、设计图、入选产品原图与去重链保留；代码待 codex 逐文件验收 |
+| 原始 R2 | 花园计算器链接到生图后台的页面也能调整供应商优先级顺序 | GDC 写白名单+AIS Garden 代理排序编辑；待验保存后的实际路由顺序与权限 |
+| 原始 R3 | 生图服务任务详情不能只显示结果，要显示客户端输入参数 | GDC 与 AIS 原生详情均补输入；原始上传设计图、产品原图、prompt、params/product_constraints 分项验收 |
+| 中途新增 | AI-IMAGE-SERVICE 默认 1K 改 2K | 经官方文档与用户复核，**不定稿为固定 2048×2048**；最终为未显式传值时 auto，未来由前端按画幅选择；220/221 早前配置已回滚 |
+| 中途新增 | quality/size 默认 auto，除非前端传值；设计稿不能被强制改成方图 | GDC 固定尺寸已撤销；验收不得恢复全局 2K 硬编码，也不得宣称 auto 保证同画幅 |
+| 中途新增 | 后台补原始上传参考图、物品清单和排序依据 | GDC 已补私有原图端点、原始上传图与产品原图展示、selected/rejected/score/coverage/rank；待 codex 验权限与展示 |
+| 中途新增 | 第三方接口必须文档先行；付费测试谨慎且有意义；工作心得写入 skill | 远桥/悟空文档归档；L-023 与 Basic/Standard skill 已提交推送；后续禁止无授权付费矩阵 |
+| 流程要求 | 用 AIEO Standard 完成并给测试报告；推送分支、交接 codex | `delivery.md` 已归档，三分支已推送，本文件为 codex 验收入口 |
+
 ## 二、每个项目实际做了什么
 
 ### 1. GDC
