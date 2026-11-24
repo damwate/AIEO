@@ -49,3 +49,15 @@
 ```
 
 > 三次均为 L-014 固化处置：直连失败→注册表发现活代理 1080→TCP 预筛 + git dry-run 验证→真实推送；工具严格只读、不改写 git config / 系统代理。
+
+## 第四次推送（补齐 codex 核验缺项 `523d080`，约 18:12 +0800）
+
+```
+操作：push feat/standard-task-management → origin/feat/standard-task-management（ahead=1）【真实推送】
+路径 直连（绕过仓库代理）：OK
+可用路径：直连（绕过仓库代理）
+真实推送命令：git -c http.proxy= -c http.https://github.com/damwate/AIEO.git.proxy= push   （使用端口 （直连））
+[check-push] 推送成功（端口 直连）。复核：ahead=0 behind=0
+```
+
+> 本次直连可用（网络恢复），无需代理；与 L-014「候选按每次实测判定、不写死端口」一致。
