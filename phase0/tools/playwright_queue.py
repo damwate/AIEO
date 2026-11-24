@@ -267,7 +267,10 @@ def checked_recollection(queue, folder, log_dir, job, recovered):
     session = receipt["session_id"]
     validate_session(session, report["conversation_url"])
     marker = round_marker(job["task"], job["lane"], job["round"])
-    matched = [unit for unit in units if marker in unit.get("text_head", "")]
+    # 归属只看 user 单元：assistant 回复常原样引用简报标记（GPT 回显 round marker 属常态），
+    # 跨角色计数会把真实归属误判为重复（2026-11-23 首跑实战缺陷）。
+    matched = [unit for unit in units
+               if unit.get("role") == "user" and marker in unit.get("text_head", "")]
     users = [unit for unit in units if unit["role"] == "user"]
     if len(matched) != 1 or not users or matched[0] != users[-1] or (
         matched[0]["key"] != report["located_user_unit_key"]

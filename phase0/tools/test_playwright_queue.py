@@ -105,6 +105,37 @@ class QueueTest(unittest.TestCase):
         queue.finish(first["seq"], "COMPLETED", evidence)
         self.assertEqual(run_once(queue, self.fake_adapter(B), self.logs)["seq"], second["seq"])
 
+    def test_recollection_marker_echoed_in_assistant_reply_still_attributed(self):
+        """GPT 常原样引用简报 round marker：assistant 单元带标记不得使 user 归属失败。"""
+        first = self.submit()
+        self.assertEqual(run_once(self.queue, self.fake_adapter(A, exit_code=1), self.logs)["state"], "BLOCKED")
+        queue = Queue(self.queue.directory)
+        job = queue.get(first["seq"])
+        recovered = self.root / "recovered-echo"
+        recovered.mkdir()
+        reply = b"verified reply"
+        (recovered / "reply.txt").write_bytes(reply)
+        marker = job["brief"].splitlines()[0]
+        units = [
+            {"role": "user", "key": "collected-1", "text_head": marker},
+            {"role": "assistant", "key": "collected-2", "text_head": f"引用：{marker}"},
+        ]
+        (recovered / "units-diag.json").write_text(json.dumps(units), encoding="utf-8")
+        result = {
+            "recollection": True,
+            "reference_failed_dispatch_dir": str(self.logs / "dispatch-test-1"),
+            "sent_user_unit_key_reported": "turn-1", "located_user_unit_key": "collected-1",
+            "conversation_url": f"https://chatgpt.com/c/{A}",
+            "reply_sha256": sha256(reply).hexdigest(), "reply_bytes": len(reply),
+            "checks": dict.fromkeys(("final_stop_button_not_visible", "tail_is_assistant",
+                                    "dil_uuid_present", "uuid_stable", "stable_unit_read",
+                                    "target_range_materialized", "not_prev_reply_sha"), True),
+        }
+        (recovered / "recoll-result.json").write_text(json.dumps(result), encoding="utf-8")
+        folder = queue.directory / "jobs" / str(first["seq"])
+        evidence = checked_recollection(queue, folder, self.logs, job, recovered)
+        self.assertEqual(evidence["user_unit_key"], "collected-1")
+
     def test_explicit_lane_rotation_keeps_historical_ownership(self):
         self.submit()
         run_once(self.queue, self.fake_adapter(A), self.logs)
