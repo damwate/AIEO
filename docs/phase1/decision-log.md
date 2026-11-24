@@ -1200,3 +1200,7 @@
 2. worker SEND_CONFIRMED 后成功采集（reply 3878B、artifact SHA256=7592f262…、归属 marker 唯一定位、UUID 稳定、stability 全过）；队列收尾因 fallback 键漂移报 "confirmed send and collected round differ" BLOCKED，按 L-018 以真实采集证据 reconcile COMPLETED，零重发。
 3. 实际裁定 **REJECT（维持）**，完整 reply SHA256=`7592f262376dd4e3e7f5563617b01d0ebd74123d7efb06f9df493dc943ac0567`；明确「代码修复成立≠线上重发验收成立」，四项缺项 E1（c3154aa0重发记录）/E2（抽测原始记录）/E3（重发后测试日志）/E4（对照构建产物）不可补齐则降档 S1: PARTIAL / NOT VERIFIED，不允许编造或事后补写。
 4. 四项属网页验证不了的历史原始记录/实际测试疑难项，按用户分级规则交 codex 核验（见 acceptance/s1-targeted-r1-accept/RULING-AND-HANDOFF.md）。首轮 seq8 REJECT 保留；S3 已闭环不重开；ST-05 仍 FAIL（S1 缺 PASS），任务保持验收中；未合并/发布/付费。
+
+## 2026-11-24 第三次 Standard 试运行 S1 最终评估
+
+在 AIEO `7f0f6eac9cad2b2756686f31d532ed031de67577` 上核对 E1/E3/E4 找回记录和 8870 新测。S1 以 **PARTIAL / NOT VERIFIED** 收尾。E2 历史原始抽测缺失，新测仅确认刷新后渲染与菜单交互。保留历史 REJECT，任务包继续验收中。见 [S1 最终评估](../../basic/tasks/b-20261123-standard-third-trial/acceptance/s1-supplement/CODEX-FINAL-ASSESSMENT.md)。

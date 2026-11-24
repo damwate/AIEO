@@ -127,3 +127,7 @@ seq11 `s3-targeted-r2` 简报正文 948B / 含自动 marker 986B（`playwright_q
 审查方核验 S1 缺项报告（Blob `123c4136…`）认可「历史记录找不到先回报、未派单、不补造、不降档」，S1 本轮仍未派单。ST-05 ③仍 FAIL（S1/S3 缺 PASS 结论），如实保留。
 
 **会话管理留痕**：seq11 发出前审查会话 `6b050b37…` 已 4 条 user 消息（L-018 阈值），已评估并记录「暂不迁移」理由（最后验收阶段、上下文边界清晰、预算 NORMAL 11977B、迁移反增成本）；发出后为第 5 条，本轮授权两轮复核均已完成、随即回交，不再在此会话增轮。用户另提示「每窗口最多 4 次对话、完了开新窗口」的更严口径已注意，后续如需再派单应先 `--new-session` 迁移。详见 [复审范围（交 codex）](acceptance/s3-targeted-r2-accept/REVIEW-SCOPE-FOR-CODEX.md) 与 [汇总](acceptance/s1-s3-targeted-r1-summary.md)。任务保持**验收中**；未合并/发布/付费。
+
+## Codex S1 最终评估
+
+S1 本轮补证按 **PARTIAL / NOT VERIFIED** 收尾。E1/E3/E4 找回，E2 历史原始抽测仍缺。新测确认刷新后的 3D 渲染和 AI 照片菜单可用，截图就绪检查和缓存命中来源未验证。保留历史 seq8、seq12 REJECT，ST-05 仍因 S1 缺正式 PASS 而 FAIL，任务保持验收中。详见 [S1 最终评估](acceptance/s1-supplement/CODEX-FINAL-ASSESSMENT.md)。
