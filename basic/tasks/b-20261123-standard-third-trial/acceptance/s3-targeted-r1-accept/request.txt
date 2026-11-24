@@ -1,0 +1,2 @@
+[AIEO-ROUND:ab597a5a8c5e48037393eaf2]
+[复核S3|b-20261123-standard-third-trial] 仅复核S3上轮REJECT未通过项①④⑤⑥，保留原REJECT，已通过代码项不重开。被测GDC 90ce2233b4da9d844cf1e165c43cec2ecdd3cddd、AIS a1f55b523f90763bcd12823bf52cff9d710381a6；AIEO复验归档4d184e8de4eab56519c4e0f57a6e37afbc7984ac、补证归档7dfdc858891d4319088c8744618fb48d7db65f4a。补证：原日志UTF-8副本在 acceptance/s3-supplement/（3份，原件保留并标源SHA256）；GDC/AIS日志头文件清单已按被测SHA实测collect-only补齐（GDC10文件=147项145passed/2skipped；AIS4文件=78passed）。请就S3本步骤独立裁定PASS/REJECT并绑定SHA与证据路径。边界：不合并/不发布/不付费。

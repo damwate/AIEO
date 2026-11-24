@@ -101,5 +101,15 @@ MF-01a、MF-01b 均复验通过，R1 技术阻断关闭。正式步骤缺口仍�
 
 | 问题编号 | 关联步骤 | 问题摘要 | 修复 commit / 证据提交 | 状态 |
 |---|---|---|---|---|
-| 问题1 | S1 | 正式步骤证据不足：EVIDENCE.md/steps.md 不能从被测 SHA 读取，缺本轮测试执行记录 | 267408a611e139544eaac2f64c330fe7b9938cd0 | 原始回复与补证日志已归档；针对性复核待用户授权 |
-| 问题2 | S3 | 正式步骤未闭环：缺 145/2、78 原始日志，AIEO SHA 对账不足 | 267408a611e139544eaac2f64c330fe7b9938cd0 | 原始回复与补证日志已归档；针对性复核待用户授权 |
+| 问题1 | S1 | 正式步骤证据不足：EVIDENCE.md/steps.md 不能从被测 SHA 读取，缺本轮测试执行记录 | 267408a611e139544eaac2f64c330fe7b9938cd0 | 原始回复与补证日志已归档；针对性复核已授权，因历史记录缺项先回报（见下） |
+| 问题2 | S3 | 正式步骤未闭环：缺 145/2、78 原始日志，AIEO SHA 对账不足 | 267408a611e139544eaac2f64c330fe7b9938cd0 | 原始回复与补证日志已归档；已发起一轮针对性复核（见下） |
+
+## S1/S3 针对性补证复核（2026-11-24，各最多一轮）
+
+用户授权本地补证 + S1/S3 各最多一轮针对性补证复核，保留 seq8/seq9 两轮 REJECT 不改写、只复核未通过证据项，任务保持验收中。用户已核对 `7dfdc858…` 中两份原始回复 SHA256 与登记一致。
+
+**S3（先走，seq10=`s3-targeted-r1`）**：`standard-queue` 发送确认（SEND_CONFIRMED）后采集 `INBOUND_WINDOW_COMPLETENESS_UNPROVEN` fail-closed；按 L-018 禁重发→三步诊断（`virtualization_inferred=true`）→静态 DOM 全量物化补采 + 归属校验三件套，标记唯一 1 + 最后 user 断言 + 前轮 reply SHA 排除集，七查全过，reconcile COMPLETED，**零重发**。实际裁定 **REJECT（证据不足型）**，完整 reply SHA256=`d33fd97f008c85710dd17df0007a0163d1f4e22ddc80cd1f7401dbf7deaac7ed`。六查：①REJECT ④REJECT ⑤PASS_WITH_CONSTRAINTS ⑥PASS_WITH_CONSTRAINTS；审查方认可三份原始日志真实可读、四 SHA 绑定、AIEO SHA 对账 PASS、测试执行真实性本轮认可。REJECT 根因：审查方从远端 GitHub 提交树读取，指定「补证归档 `7dfdc858…`」树中不含 `acceptance/s3-supplement/`（404），补证在本地未推送提交、远端不可读。最小补证动作＝把三份 UTF-8 副本 + 源 SHA256 对照 + GDC 10/AIS 4 文件 collect-only 清单确实提交到 `s3-supplement/` 并给出新提交完整 SHA，无需重跑测试。本地补证已做（原件保留 + 来源标注 + 占位符清单补齐 + 对照表），**未 push**。详见 [针对性复核汇总](acceptance/s1-s3-targeted-r1-summary.md)。
+
+**S1（补齐再发 → 因缺项先回报，未派单）**：对照原回复核查，已找到可核查项（GDC reflog 重拉 ff-only、8870 部署产物 `dep-*.js` 四份、EVIDENCE.md 特征核验、操作时间线）；**确实找不到的具体缺项**：① c3154aa0 重新发布执行记录（现有脚本全属 66ead431 部署）② 用户抽测原始记录（「还行」仅二手转述）③ R0' 对应测试执行日志（现有 T1 E2E 属 66ead431 期且场景 2 FAIL）④ c3154aa0 本地构建 dist 产物未归档。按用户「若历史记录找不到，先回报具体缺项」与「S1 补齐再发」，本轮未发起 S1 派单。三项原边界（bundle 特征核验不升级、未做浏览器复测、逐字节未锁定）按原状登记。详见 [S1 缺项报告](acceptance/s1-supplement/GAP-REPORT.md)。
+
+**L-018 核对**：S3 发出前 user 消息 3 条 / 累计 11238B（NORMAL），未达阈值；发出后 4 条 / 11977B（NORMAL），达阈值，因仅一轮且已发出、迁移反增交接成本且上下文边界明确，记录理由不迁移，此后每增 2 条重评。**ST-05**：③步骤验收记录 FAIL（S1/S3 仍缺 PASS 结论），如实保留、不伪造 PASS。任务保持**验收中**；未合并 main/dev、未生产发布、未付费验收；是否 push 及是否再发起一轮复核需用户另行决策。

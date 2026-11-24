@@ -1178,3 +1178,11 @@
 1. 用户授权后启动 `standard-queue` worker，seq8=`s1-formal`、seq9=`s3-formal` 各一轮；两轮发送确认后采集 fail-closed，按 L-018 禁重发→三步诊断→静态 DOM 补采，归属七查全过并 reconcile COMPLETED，零重发。
 2. 两轮实际裁定均 REJECT：S1 reply SHA256=`87b19055d5d8c15487cd3c7759ea8bacb4fdfdba1b7f838cb6ae7b3208a97a39`，S3 reply SHA256=`81b313dfcc8fc135b4bf2a404031da55aa01d2dcff832b3739d32329adcf0ffd`；已登记 dispatch 目录、被测完整 SHA 与六查结果。
 3. 补归档 GDC `145 passed/2 skipped`、AIS `78 passed`、AIEO 队列 `12 passed` 的原始日志并解释 AIEO `c63fe3c…`→`4d184e8…` 证据链关系；不改已通过源码。ST-05 的 S1/S3 仍未闭环，任务保持验收中，针对性复核需用户另行授权。见 [派单证据](../../basic/tasks/b-20261123-standard-third-trial/acceptance/s1-s3-formal-dispatch-summary.md)。
+
+## 2026-11-24 S1/S3 针对性补证复核（各最多一轮，保留两轮 REJECT）
+
+1. 用户授权本地补证 + S1/S3 各最多一轮针对性补证复核；保留 seq8/seq9 两轮 REJECT 不改写、只复核未通过证据项；每轮发出前按 L-018 核对会话消息数与预算；任务保持验收中。用户已核对 `7dfdc858…` 两份原始回复 SHA256 与登记一致。
+2. S3（先走，seq10=`s3-targeted-r1`）：发送确认后采集 fail-closed，按 L-018 禁重发→三步诊断→静态 DOM 全量物化补采 + 归属七查，reconcile COMPLETED，零重发。实际裁定 **REJECT（证据不足型）**，完整 reply SHA256=`d33fd97f008c85710dd17df0007a0163d1f4e22ddc80cd1f7401dbf7deaac7ed`；⑤测试真实执行、AIEO SHA 对账获认可，①④⑥仍未闭环。根因：审查方读远端 GitHub 提交树，指定补证归档 `7dfdc858…` 树中无 `s3-supplement/`，本地补证未 push 不可读。最小补证＝三份 UTF-8 副本 + 源 SHA256 对照 + GDC10/AIS4 文件清单提交并给出新提交完整 SHA，无需重跑测试。
+3. 本地补证（授权内）：三份日志 UTF-8 副本（原件保留 + 来源 SHA256 标注 + CMD 占位符以实测文件清单补齐）、`SHA256-CONTRAST.md`、`COLLECT-ONLY-MANIFEST.md`（GDC 147=145+2、AIS 78 实测 collect-only），未重跑测试/未访问生产。见 [针对性复核汇总](../../basic/tasks/b-20261123-standard-third-trial/acceptance/s1-s3-targeted-r1-summary.md)。
+4. S1（补齐再发 → 因缺项先回报，未派单）：已找到可核查项（GDC reflog 重拉、8870 dep-*.js 产物、EVIDENCE.md 特征核验、时间线）；确实找不到的具体缺项＝c3154aa0 重新发布记录、用户抽测原始记录、R0' 对应测试日志、本地 dist 产物。按用户「先回报具体缺项」不派单；三项原边界按原状登记。见 [S1 缺项报告](../../basic/tasks/b-20261123-standard-third-trial/acceptance/s1-supplement/GAP-REPORT.md)。
+5. L-018：S3 发出前 3 条/11238B NORMAL；发出后 4 条/11977B NORMAL，达阈值记录理由不迁移。ST-05 ③ 步骤验收记录 FAIL（S1/S3 缺 PASS），如实保留、不伪造。任务保持验收中；未合并/发布/付费；未 push，是否 push 及是否再发起一轮复核需用户另行决策。

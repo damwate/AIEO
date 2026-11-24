@@ -1,0 +1,33 @@
+{
+  "recollection": true,
+  "driver": "recoll_s3_targeted_r1.mjs",
+  "conversation_url": "https://chatgpt.com/c/6b050b37-40b8-83ec-9365-8a0ca627b757",
+  "failed_dispatch_dir": "phase0/logs/dispatch-2026-11-24T08-37-23",
+  "failure_code": "INBOUND_WINDOW_COMPLETENESS_UNPROVEN",
+  "diagnosis": "phase0/logs/diag-s3-targeted-r1-2026-11-24T09-06-29-210Z/report.json (virtualization_inferred=true; 静态DOM路径适用)",
+  "recovery": "视口拉高静态DOM全量物化+归属校验三件套（禁重发）",
+  "sent_user_unit_key": "fallback-turn-0:0:user",
+  "marked_user_unit_key": "c31ac34c-7286-5eb3-9526-d349e593ed27:0:user",
+  "assistant_unit_key": "c31ac34c-7286-5eb3-9526-d349e593ed27:2:assistant",
+  "assistant_unit_count": 1,
+  "after_units": [
+    {
+      "key": "c31ac34c-7286-5eb3-9526-d349e593ed27:2:assistant",
+      "role": "assistant",
+      "text_len": 4259,
+      "text_head": "ChatGPT 说：\n\n[AIEO-ROUND:ab597a5a8c5e48037393eaf2]\n\nS3 针对性复核裁"
+    }
+  ],
+  "reply_bytes": 6901,
+  "reply_sha256": "d33fd97f008c85710dd17df0007a0163d1f4e22ddc80cd1f7401dbf7deaac7ed",
+  "checks": {
+    "marked_user_unique": true,
+    "last_user_assertion": true,
+    "adjacent_assistant_tail": true,
+    "stable_static_dom_read": true,
+    "final_stop_button_not_visible": true,
+    "not_prev_reply_sha": true,
+    "response_length_plausible": true
+  },
+  "extracted_at": "2026-11-24T09:08:33.587Z"
+}

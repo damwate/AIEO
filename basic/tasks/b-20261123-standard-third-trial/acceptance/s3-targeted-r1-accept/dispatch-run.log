@@ -1,0 +1,17 @@
+[2026-11-24T08:37:23.104Z] 证据目录: D:\AIEO\.worktrees\feat-standard-task-management\phase0\logs\dispatch-2026-11-24T08-37-23
+[2026-11-24T08:37:23.680Z] 会话锁已获取 pid=6120 instance=standard-queue lock=gpt-session-standard-queue.lockfile
+[2026-11-24T08:37:23.681Z] === GPT 派单（已有会话，消息 739 字节）===
+[2026-11-24T08:37:24.208Z] [instance] 端口沿用注册表登记: instance=standard-queue port=9300
+[2026-11-24T08:37:24.323Z] [instance] 实例域就绪: instance=standard-queue port=9300 profile=gpt-poc-standard-queue lock=gpt-session-standard-queue.lockfile
+[2026-11-24T08:37:25.554Z] [instance] 清理本实例 Chrome：own=0 foreign(不动)=14 remaining=0
+[2026-11-24T08:37:28.165Z] Chrome 已启动 pid=7368 port=9300
+[2026-11-24T08:37:29.561Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 0 个
+[2026-11-24T08:37:29.561Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-24T08:37:33.415Z] 会话就绪: https://chatgpt.com/c/6b050b37-40b8-83ec-9365-8a0ca627b757
+[2026-11-24T08:37:38.438Z] [dispatch] 基线尾部: {"role":"assistant","key":"75d41b64-8fc1-556e-afb8-66cea982d6b3:2:assistant","assistantUuid":"17ec3d04-f561-40e2-a940-5db704b80947"}
+[2026-11-24T08:37:39.815Z] [ctx-budget] turn+in_bytes=739B → 6b050b37-40b8-83ec-9365-8a0ca627b757
+[2026-11-24T08:37:39.815Z] [dispatch] 发送双验通过（polls=1，user_unit_key=fallback-turn-0:0:user，tail 后观察）
+[2026-11-24T08:37:40.162Z] 截图: sent-dispatch.png
+[2026-11-24T08:43:00.679Z] 会话锁已释放
+[2026-11-24T08:43:00.679Z] 致命错误: INBOUND_WINDOW_COMPLETENESS_UNPROVEN: BLOCKED: 滚动中实际观察到渲染 unit 集合变化，且缺少独立逻辑序列，不能排除持续遗漏中间 unit details={"materialized_unit_keys":["c31ac34c-7286-5eb3-9526-d349e593ed27:0:user","c31ac34c-7286-5eb3-9526-d349e593ed27:2:assistant"],"remediation":"提供可信的完整逻辑 unit 序列，或在非虚拟化静态 DOM 上重新读取"}
+[2026-11-24T08:43:00.681Z] [tab-hygiene] 发送已发生：保留现场不关页（禁重发语义依赖现场）；退出后由人工/补采链按 L-018 处置
