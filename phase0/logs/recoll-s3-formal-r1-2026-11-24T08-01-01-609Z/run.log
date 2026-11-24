@@ -1,0 +1,8 @@
+[2026-11-24T08:01:02.072Z] 会话锁已获取（S3 正式验收补采）
+[2026-11-24T08:01:02.148Z] 页面归属命中 CONV_UUID=6b050b37-40b8-83ec-9365-8a0ca627b757
+[2026-11-24T08:01:25.389Z] 归属校验=标记唯一(1)+最后user断言（target=75d41b64-8fc1-556e-afb8-66cea982d6b3:0:user）
+[2026-11-24T08:01:25.399Z] checks={"marked_user_unique":true,"last_user_assertion":true,"adjacent_assistant_tail":true,"stable_static_dom_read":true,"final_stop_button_not_visible":true,"not_prev_reply_sha":true,"response_length_plausible":true}
+[2026-11-24T08:01:25.402Z] reply 已落盘（8330 字节，SHA=81b313dfcc8fc135…）
+[2026-11-24T08:01:25.403Z] RECOLL COMPLETED
+[2026-11-24T08:01:25.427Z] 视口覆盖已清除
+[2026-11-24T08:01:25.880Z] 会话锁已释放（S3 正式验收补采）

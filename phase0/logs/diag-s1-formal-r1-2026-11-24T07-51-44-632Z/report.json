@@ -1,0 +1,83 @@
+{
+  "conv_uuid": "6b050b37-40b8-83ec-9365-8a0ca627b757",
+  "marker": "[正式验收S1|b-20261123-standard-third-trial]",
+  "prev_reply_sha": "a58d9a5b408c0f911c1ba4a5cd69abd06e4bc41482fcedcd8051ee34beabfe98",
+  "failed_dir": "phase0/logs/dispatch-2026-11-24T07-47-21",
+  "steps": [
+    {
+      "step": 1,
+      "name": "current_window",
+      "keys": [
+        "ac31ce82-615b-52bc-9cca-7df94d3cc8c9:0:user",
+        "ac31ce82-615b-52bc-9cca-7df94d3cc8c9:2:assistant"
+      ],
+      "roles": [
+        "user",
+        "assistant"
+      ],
+      "at_top": false,
+      "at_bottom": true,
+      "scrollable": true,
+      "marker_hits": 1
+    },
+    {
+      "step": 2,
+      "name": "scroll_up",
+      "keys": [
+        "ac31ce82-615b-52bc-9cca-7df94d3cc8c9:0:user",
+        "ac31ce82-615b-52bc-9cca-7df94d3cc8c9:2:assistant"
+      ],
+      "roles": [
+        "user",
+        "assistant"
+      ],
+      "at_top": false,
+      "at_bottom": true,
+      "scrollable": true,
+      "marker_hits": 1,
+      "changed_vs_initial": false
+    },
+    {
+      "step": 2,
+      "name": "scroll_down",
+      "keys": [
+        "ac31ce82-615b-52bc-9cca-7df94d3cc8c9:0:user",
+        "ac31ce82-615b-52bc-9cca-7df94d3cc8c9:2:assistant"
+      ],
+      "roles": [
+        "user",
+        "assistant"
+      ],
+      "at_top": false,
+      "at_bottom": true,
+      "scrollable": true,
+      "marker_hits": 1,
+      "changed_vs_up": false
+    },
+    {
+      "step": 3,
+      "name": "after_reload",
+      "keys": [
+        "6efaea29-3968-515a-87f1-c3ae6afcfb9e:0:user",
+        "6efaea29-3968-515a-87f1-c3ae6afcfb9e:2:assistant",
+        "ac31ce82-615b-52bc-9cca-7df94d3cc8c9:0:user",
+        "ac31ce82-615b-52bc-9cca-7df94d3cc8c9:2:assistant"
+      ],
+      "roles": [
+        "user",
+        "assistant",
+        "user",
+        "assistant"
+      ],
+      "at_top": false,
+      "at_bottom": true,
+      "scrollable": true,
+      "marker_hits": 1,
+      "changed_vs_initial": true
+    }
+  ],
+  "virtualization_inferred": true,
+  "failed_code": "INBOUND_WINDOW_COMPLETENESS_UNPROVEN",
+  "remediation": "CDP 视口拉高静态 DOM 全量物化补采（禁重发）",
+  "captured_at": "2026-11-24T07:51:57.653Z"
+}

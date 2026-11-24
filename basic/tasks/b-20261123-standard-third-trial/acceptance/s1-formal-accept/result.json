@@ -1,0 +1,32 @@
+{
+  "recollection": true,
+  "driver": "recoll_s1_formal_r1.mjs",
+  "conversation_url": "https://chatgpt.com/c/6b050b37-40b8-83ec-9365-8a0ca627b757",
+  "failed_dispatch_dir": "phase0/logs/dispatch-2026-11-24T07-47-21",
+  "failure_code": "INBOUND_WINDOW_COMPLETENESS_UNPROVEN",
+  "diagnosis": "phase0/logs/diag-s1-formal-r1-2026-11-24T07-51-44-632Z/report.json (virtualization_inferred=true; 静态DOM路径适用)",
+  "recovery": "视口拉高静态DOM全量物化+归属校验三件套（禁重发）",
+  "marked_user_unit_key": "ac31ce82-615b-52bc-9cca-7df94d3cc8c9:0:user",
+  "assistant_unit_key": "ac31ce82-615b-52bc-9cca-7df94d3cc8c9:2:assistant",
+  "assistant_unit_count": 1,
+  "after_units": [
+    {
+      "key": "ac31ce82-615b-52bc-9cca-7df94d3cc8c9:2:assistant",
+      "role": "assistant",
+      "text_len": 2587,
+      "text_head": "ChatGPT 说：\n[AIEO-ROUND:791de5491feb3cf273c6e692]\nR0/R0' 正式步骤"
+    }
+  ],
+  "reply_bytes": 4949,
+  "reply_sha256": "87b19055d5d8c15487cd3c7759ea8bacb4fdfdba1b7f838cb6ae7b3208a97a39",
+  "checks": {
+    "marked_user_unique": true,
+    "last_user_assertion": true,
+    "adjacent_assistant_tail": true,
+    "stable_static_dom_read": true,
+    "final_stop_button_not_visible": true,
+    "not_prev_reply_sha": true,
+    "response_length_plausible": true
+  },
+  "extracted_at": "2026-11-24T07:52:41.068Z"
+}

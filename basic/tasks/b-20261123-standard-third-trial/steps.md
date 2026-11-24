@@ -50,7 +50,7 @@
 ③修改内容：dev ff-only 至 c3154aa0，PR#127/#128 特征与线上 bundle 核验，用户热启动抽测。
 ④执行结果：R0/R0' 闭环，用户抽测通过。
 ⑤测试结果：特征证据+人工抽测通过。
-⑥验收证据引用：验收结论：IN_PROGRESS（功能复核已完成：本地基线 commit=c3154aa0、用户热启动抽测通过；正式步骤验收未单独派单）。证据包内路径 acceptance/republish-review/EVIDENCE.md。
+⑥验收证据引用：验收结论：REJECT（正式派单 seq8/s1-formal；dispatch-2026-11-24T07-47-21；完整 reply sha256=87b19055d5d8c15487cd3c7759ea8bacb4fdfdba1b7f838cb6ae7b3208a97a39；被测 GDC c3154aa0fcf0a8fdddb7b1c6f14e6ea205b439fc）。六查代码方向认可但正式步骤证据不足；R0' 两项限制保留。证据包内路径 acceptance/s1-formal-accept/reply.txt、acceptance/republish-review/EVIDENCE.md。
 
 ## S2 规划协商与契约裁定
 ①本步骤目标：完成 R1/R2/R3、付费测试及 auto 尺寸方案的 ChatGPT 裁定。
@@ -66,7 +66,7 @@
 ③修改内容：GDC HEAD=0a5a4ec59b71bc3af41aa99ac82808767ffa785a；AIS HEAD=418087c31e8765ba48fd765ab3c9a50cc21b2458；尺寸不硬编码。
 ④执行结果：本地提交完成，未合并、未发布；220/221 配置已回滚。
 ⑤测试结果：GDC AI 112 passed、前端 3284 passed；AIS capabilities 16 passed、前端 42 passed；全程 mock。
-⑥验收证据引用：验收结论：IN_PROGRESS（被测 commit=0a5a4ec59b71bc3af41aa99ac82808767ffa785a，本地 mock 已通过；正式逐文件验收待代码可读）。证据包内路径 acceptance/test-logs/gdc-ai-catalog-fix.log。
+⑥验收证据引用：验收结论：REJECT（正式派单 seq9/s3-formal；dispatch-2026-11-24T07-53-18；完整 reply sha256=81b313dfcc8fc135b4bf2a404031da55aa01d2dcff832b3739d32329adcf0ffd；被测 GDC 90ce2233b4da9d844cf1e165c43cec2ecdd3cddd、AIS a1f55b523f90763bcd12823bf52cff9d710381a6、AIEO 4d184e8de4eab56519c4e0f57a6e37afbc7984ac）。R1 技术阻断独立复验 PASS，正式步骤证据未闭环。证据包内路径 acceptance/s3-formal-accept/reply.txt、acceptance/test-logs/gdc-90ce2233-r3.log、acceptance/test-logs/ais-a1f55b52-r3.log、acceptance/test-logs/aieo-queue-4d184e8-r3.log。
 
 ## S4 验收、测试报告与发布边界
 ①本步骤目标：归档测试报告并明确未决项。
@@ -92,3 +92,7 @@ AIS 将编辑接口 Pydantic 校验异常归一化为 422，并把占比数值�
 ## Codex R3 独立复验
 
 MF-01a、MF-01b 均复验通过，R1 技术阻断关闭。正式步骤缺口仍为 S1、S3，任务保持验收中。被测完整 SHA、迁移及接口复跑结果见 [R3 独立复验](acceptance/codex-r3-recheck.md)。
+
+## S1/S3 正式派单与 ST-05
+
+经用户授权启动 `standard-queue` worker，seq8=`s1-formal`、seq9=`s3-formal` 两轮均发送确认但采集 fail-closed；按 L-018 禁重发→三步诊断→静态 DOM 补采，归属七查全过并 reconcile COMPLETED，零重发。两轮实际裁定均为 REJECT：S1 reply SHA256=87b19055d5d8c15487cd3c7759ea8bacb4fdfdba1b7f838cb6ae7b3208a97a39；S3 reply SHA256=81b313dfcc8fc135b4bf2a404031da55aa01d2dcff832b3739d32329adcf0ffd。已补归档 GDC 145/2、AIS 78、AIEO 队列 12 的原始日志并登记 AIEO SHA 对账。ST-05 的 S1/S3 正式步骤仍未闭环，任务保持验收中；针对性复核未发起（用户仅授权两轮正式派单）。详见 [S1/S3 正式派单证据](acceptance/s1-s3-formal-dispatch-summary.md)。

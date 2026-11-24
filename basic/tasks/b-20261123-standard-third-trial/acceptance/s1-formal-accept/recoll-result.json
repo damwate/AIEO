@@ -1,0 +1,27 @@
+{
+  "recollection": true,
+  "driver": "recoll_s1_formal_r1.mjs",
+  "remediation": "视口拉高静态DOM全量物化+归属校验三件套（禁重发）",
+  "reference_failed_dispatch_dir": "D:/AIEO/.worktrees/feat-standard-task-management/phase0/logs/dispatch-2026-11-24T07-47-21",
+  "conversation_url": "https://chatgpt.com/c/6b050b37-40b8-83ec-9365-8a0ca627b757",
+  "sent_user_unit_key_reported": "fallback-turn-0:0:user",
+  "located_user_unit_key": "ac31ce82-615b-52bc-9cca-7df94d3cc8c9:0:user",
+  "assistant_uuid": null,
+  "unit_keys": [
+    "ac31ce82-615b-52bc-9cca-7df94d3cc8c9:2:assistant"
+  ],
+  "unit_count": 1,
+  "reply_bytes": 4949,
+  "reply_sha256": "87b19055d5d8c15487cd3c7759ea8bacb4fdfdba1b7f838cb6ae7b3208a97a39",
+  "checks": {
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "not_prev_reply_sha": true
+  },
+  "diagnosis": "phase0/logs/diag-s1-formal-r1-2026-11-24T07-51-44-632Z/report.json (virtualization_inferred=true; 静态DOM路径适用)",
+  "extracted_at": "2026-11-24T07:52:41.068Z"
+}

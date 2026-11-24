@@ -1,0 +1,32 @@
+{
+  "recollection": true,
+  "driver": "recoll_s3_formal_r1.mjs",
+  "conversation_url": "https://chatgpt.com/c/6b050b37-40b8-83ec-9365-8a0ca627b757",
+  "failed_dispatch_dir": "phase0/logs/dispatch-2026-11-24T07-53-18",
+  "failure_code": "INBOUND_WINDOW_COMPLETENESS_UNPROVEN",
+  "diagnosis": "phase0/logs/diag-s3-formal-r1-2026-11-24T08-00-35-773Z/report.json (virtualization_inferred=true; 静态DOM路径适用)",
+  "recovery": "视口拉高静态DOM全量物化+归属校验三件套（禁重发）",
+  "marked_user_unit_key": "75d41b64-8fc1-556e-afb8-66cea982d6b3:0:user",
+  "assistant_unit_key": "75d41b64-8fc1-556e-afb8-66cea982d6b3:2:assistant",
+  "assistant_unit_count": 1,
+  "after_units": [
+    {
+      "key": "75d41b64-8fc1-556e-afb8-66cea982d6b3:2:assistant",
+      "role": "assistant",
+      "text_len": 4641,
+      "text_head": "ChatGPT 说：\n\n[AIEO-ROUND:34c859f576ea93942883736c]\n\n已核实三个被测提交"
+    }
+  ],
+  "reply_bytes": 8330,
+  "reply_sha256": "81b313dfcc8fc135b4bf2a404031da55aa01d2dcff832b3739d32329adcf0ffd",
+  "checks": {
+    "marked_user_unique": true,
+    "last_user_assertion": true,
+    "adjacent_assistant_tail": true,
+    "stable_static_dom_read": true,
+    "final_stop_button_not_visible": true,
+    "not_prev_reply_sha": true,
+    "response_length_plausible": true
+  },
+  "extracted_at": "2026-11-24T08:01:25.401Z"
+}

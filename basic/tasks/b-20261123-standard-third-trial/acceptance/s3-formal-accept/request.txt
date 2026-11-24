@@ -1,0 +1,2 @@
+[AIEO-ROUND:34c859f576ea93942883736c]
+[正式验收S3|b-20261123-standard-third-trial] R1/R2/R3+auto尺寸正式步骤验收。被测：GDC 90ce2233b4da9d844cf1e165c43cec2ecdd3cddd，AIS a1f55b523f90763bcd12823bf52cff9d710381a6，AIEO 4d184e8de4eab56519c4e0f57a6e37afbc7984ac。证据：acceptance/codex-r3-remediation.md（产品清单冻结/422修复/单图原图）、codex-r3-recheck.md（独立复验PASS）、codex-r2-recheck.md（前轮问题）、delivery.md。实测：GDC 145 passed/2 skipped、AIS 78 passed、队列12 passed；SQLite迁移通过，PostgreSQL未演练。请六查并给PASS/REJECT，绑定完整SHA与证据路径。不批准生产发布/付费验收。

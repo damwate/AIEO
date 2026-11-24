@@ -1172,3 +1172,9 @@
 
 1. 启动复验时绑定 GDC、AIS 与 AIEO 完整远端 SHA，在独立工作区执行目标套件、跨仓请求和迁移检查。
 2. MF-01a 的无效清单 422 与 MF-01b 的名称快照一致性均复验 PASS，关闭 R1 两项技术阻断。S1、S3 的正式步骤验收证据仍缺，任务继续验收中。见 [R3 独立复验](../../basic/tasks/b-20261123-standard-third-trial/acceptance/codex-r3-recheck.md)。
+
+## 2026-11-24 S1/S3 正式派单与 ST-05 证据回交
+
+1. 用户授权后启动 `standard-queue` worker，seq8=`s1-formal`、seq9=`s3-formal` 各一轮；两轮发送确认后采集 fail-closed，按 L-018 禁重发→三步诊断→静态 DOM 补采，归属七查全过并 reconcile COMPLETED，零重发。
+2. 两轮实际裁定均 REJECT：S1 reply SHA256=`87b19055d5d8c15487cd3c7759ea8bacb4fdfdba1b7f838cb6ae7b3208a97a39`，S3 reply SHA256=`81b313dfcc8fc135b4bf2a404031da55aa01d2dcff832b3739d32329adcf0ffd`；已登记 dispatch 目录、被测完整 SHA 与六查结果。
+3. 补归档 GDC `145 passed/2 skipped`、AIS `78 passed`、AIEO 队列 `12 passed` 的原始日志并解释 AIEO `c63fe3c…`→`4d184e8…` 证据链关系；不改已通过源码。ST-05 的 S1/S3 仍未闭环，任务保持验收中，针对性复核需用户另行授权。见 [派单证据](../../basic/tasks/b-20261123-standard-third-trial/acceptance/s1-s3-formal-dispatch-summary.md)。

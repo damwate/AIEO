@@ -1,0 +1,313 @@
+ChatGPT 说：
+
+[AIEO-ROUND:34c859f576ea93942883736c]
+
+已核实三个被测提交的完整 SHA 均与请求一致：
+
+GDC：90ce2233b4da9d844cf1e165c43cec2ecdd3cddd
+
+AIS：a1f55b523f90763bcd12823bf52cff9d710381a6
+
+AIEO：4d184e8de4eab56519c4e0f57a6e37afbc7984ac
+
+先提示一个关键验收点：AIEO 仓内的 codex-r3-recheck.md 明确写着，R1 两项技术阻断已 PASS，但 ST-05 的 S1、S3 正式步骤证据仍缺，任务保持“验收中”。因此，技术复验 PASS 不能自动等同于正式步骤验收 PASS；我会继续核对本轮 steps.md 和交付记录是否已补齐这项缺口。
+
+一、六查裁定
+
+总裁定：REJECT 三个提交 SHA 已核实
+
+检查项
+
+	
+
+裁定
+
+	
+
+核查结果
+
+
+
+
+① 目标是否完成
+
+	
+
+REJECT
+
+	
+
+R1/R2/R3 的技术实现和整改复验有进展，但 S1、S3 的正式步骤验收仍标记 IN_PROGRESS，不能认定本轮正式步骤验收闭环。
+
+
+
+
+② 是否符合用户拍板
+
+	
+
+PASS_WITH_CONSTRAINTS
+
+	
+
+R1 修复方向符合要求：非法清单统一返回 422；提交时冻结产品清单，prompt 与出站参数共用同一快照。尺寸继续遵循不硬编码固定 2048×2048、未显式选择不强行注入尺寸的裁定。
+
+
+
+
+③ 是否超范围
+
+	
+
+PASS
+
+	
+
+本轮 GDC 只改 6 个后端文件，AIS 只改 3 个后端文件；没有看到扩大到生产发布、真实供应商调用或付费验证。
+
+
+
+
+④ 证据质量
+
+	
+
+REJECT
+
+	
+
+R3 整改和独立复验报告较完整，但本轮 145/2、78 的原始测试日志未在所核对的证据路径中找到；旧日志对应旧提交，不能代替新 SHA 的执行日志。
+
+
+
+
+⑤ 测试是否真实执行
+
+	
+
+PASS_WITH_CONSTRAINTS
+
+	
+
+独立复验报告记录了实际复跑结果和具体验证场景；但当前 GitHub 三个提交均没有返回关联 CI status，最新两组测试也缺少原始日志，故只能认可报告级执行证据，不能升级为完整可复核的测试证据。
+
+
+
+
+⑥ 证据是否可核查
+
+	
+
+REJECT
+
+	
+
+提交、代码差异和主要报告路径可核查；但 S1/S3 正式验收引用仍未闭环，且独立复验报告中的 AIEO SHA 与本轮提交不一致。
+
+二、代码与提交核对
+1. GDC
+GDC 90ce2233 完整提交
+
+被测 SHA：90ce2233b4da9d844cf1e165c43cec2ecdd3cddd
+
+相对基线 4f162d16dd49ff8c5f9af6cd69b82d67a52c65b2：仅前进 1 个提交。
+
+修改范围：ai_generation.py、external_jobs.py、db.py、迁移文件及两个测试文件。
+
+核心修复：新增 product_constraints_json 冻结列；提交时由同一目录快照生成 prompt 产品区块和结构化清单；出站优先使用冻结值；旧任务 NULL 时保留旧派生逻辑。
+
+技术判断： 这次修复针对 R2 复验暴露的“提交时与出站时分别读取目录，导致产品名称不一致”问题，机制上是合理的。迁移兼容旧任务的方向也正确。
+
+2. AIS
+AIS a1f55b52 完整提交
+
+被测 SHA：a1f55b523f90763bcd12823bf52cff9d710381a6
+
+相对基线 afc4d6cb739b031dab898a2ce3a3b9ce8f2f7b5c：仅前进 1 个提交。
+
+修改范围：api_v1.py、generic_params.py、test_project_auth_v1.py。
+
+核心修复：
+
+编辑入口捕获 Pydantic ValidationError，归一化为 HTTP 422。
+
+screen_coverage 先检查类型和范围，再进行有限性判断，避免极大整数转换触发 OverflowError。
+
+新增非法输入回归测试。
+
+技术判断： 修复针对性明确。报告所列对象、非对象数组、越界值、极大整数和超长列表等负例，覆盖了之前发现的 500 问题。
+
+3. AIEO
+AIEO 4d184e8e 完整提交
+
+被测 SHA：4d184e8de4eab56519c4e0f57a6e37afbc7984ac
+
+本轮归档了 steps.md、task-brief.md、CODEX-HANDOFF.md、acceptance/codex-r3-recheck.md 等流程材料。
+
+但 steps.md 中 S1 和 S3 的第⑥项仍分别写着 IN_PROGRESS，并明确说明正式步骤验收未单独派单或正式逐文件验收待完成。
+
+还有一个需要明确记录的 SHA 绑定问题：
+
+acceptance/codex-r3-recheck.md 中记录的独立复验 AIEO SHA 是：
+
+c63fe3ce2765940c3dc6dd3a99d3afaa7b6f9945
+
+而本轮要求验收的 AIEO SHA 是：
+
+4d184e8de4eab56519c4e0f57a6e37afbc7984ac
+
+这不代表 GDC/AIS 的复验结果无效，但说明该报告没有绑定到本轮指定的 AIEO 提交。需要在正式验收记录中解释这是后续证据归档提交，还是复验基线发生了变化。
+
+三、证据路径核对
+
+以下路径均在 AIEO 的本轮提交树中读取成功：
+
+证据文件
+
+	
+
+文件 SHA（Blob）
+
+	
+
+判断
+
+
+
+
+basic/tasks/b-20261123-standard-third-trial/acceptance/codex-r3-remediation.md
+
+	
+
+40358fb4b7739103a51b4ba419e49520f0f5f2ac
+
+	
+
+R3 整改内容、边界和测试摘要完整
+
+
+
+
+basic/tasks/b-20261123-standard-third-trial/acceptance/codex-r3-recheck.md
+
+	
+
+9609ae9aa02c24ea98cc74d9eebd241241ee7479
+
+	
+
+MF-01a、MF-01b 独立复验 PASS；但仍注明 S1/S3 正式步骤证据待补
+
+
+
+
+basic/tasks/b-20261123-standard-third-trial/acceptance/codex-r2-recheck.md
+
+	
+
+26ca8a4af73765937eb2c2f19a52e625c3f44e70
+
+	
+
+R2 的两个保留阻断及复现条件有记录
+
+
+
+
+basic/tasks/b-20261123-standard-third-trial/delivery.md
+
+	
+
+b522c4931439951b8a82fb37522e3bc2ef5a5a27
+
+	
+
+交付报告完整，但其中部分测试和提交数据是较早轮次的历史记录
+
+
+
+
+basic/tasks/b-20261123-standard-third-trial/steps.md
+
+	
+
+28c864ca1223cec3872c008f3de51fad0f6a7997
+
+	
+
+正式步骤状态仍未闭环
+
+
+
+
+basic/tasks/b-20261123-standard-third-trial/acceptance/republish-review/EVIDENCE.md
+
+	
+
+1e713d481d1fb9aaae88c129c983622721a1c925
+
+	
+
+R0' 线上 bundle 特征证据存在，但仍有残留项
+
+测试证据的关键区别
+
+本轮报告中的测试摘要：
+
+GDC：145 passed / 2 skipped
+
+AIS：78 passed
+
+AIEO 队列：12 passed
+
+SQLite 迁移：PASS
+
+PostgreSQL：未演练
+
+我找到的原始日志包括：
+
+acceptance/test-logs/gdc-ai-catalog-fix.log：119 passed，属于此前版本，不是本轮 GDC 145 passed 的日志。
+
+acceptance/test-logs/ais-capabilities-e442fba.log：16 passed，属于此前 AIS capabilities 测试，不是本轮 AIS 78 passed 的完整日志。
+
+因此，不能把旧日志直接当作本轮测试的原始执行凭证。R3 独立复验报告确实记录了 145/2、78 和 12 的复跑结论，但需要把对应新日志归档，才能做到测试结果与被测 SHA 一一绑定。
+
+R0' 的遗留限制
+
+EVIDENCE.md 记录了线上 bundle 的 asset_versions、onTextureSettled/onTextureStart 和渲染就绪门特征；但也明确保留两项限制：
+
+热启动缓存命中放行的上次 E2E 失败场景，没有做浏览器复测。
+
+线上 bundle 与源码树尚未逐字节锁定。
+
+所以 R0' 可以认可为“完成特征核验并有用户热启动抽测”，但不宜扩大表述为“线上缓存行为已完整复验”。
+
+四、最终裁定与最小补证
+
+本轮整体：REJECT（正式步骤验收未通过）。
+
+这不是否定 R3 的技术整改结果。当前可认可的结论是：
+
+R1 两项技术阻断：独立复验报告 PASS。
+
+产品清单冻结、AIS 422 处理：方向和修复机制通过代码差异核查。
+
+auto 尺寸决策：文档口径保持正确，没有证据支持恢复固定方图。
+
+R0/R0'：有证据，但仍存在已记录的复测限制。
+
+S1/S3 正式步骤验收：尚未闭环。
+
+建议只做以下最小补证，不需要重新开发，也不需要无差别重跑全套：
+
+S1：补正式派单引用、完整 reply SHA 和 PASS 结论；R0' 的热启动复测限制应明确保留，不能写成未执行即 PASS。
+
+S3：把本轮三个完整 SHA 绑定到正式验收记录，并补正式 dispatch、完整 reply SHA 和 PASS/REJECT 结论。
+
+测试证据：归档本轮 GDC 145/2、AIS 78 的原始日志，以及 AIEO 队列 12 项对应执行记录；标明执行命令、被测 SHA。
+
+AIEO SHA 对账：解释 R3 recheck 中 c63fe3ce... 与本轮 4d184e8e... 的关系，避免把证据归档提交误当成复验被测提交。
+
+发布边界维持不变：不批准合并 main/dev、不批准生产发布、不批准付费业务验收。 SQLite 迁移通过不代表 PostgreSQL 迁移通过；接口参数与本地 mock 通过也不代表真实供应商出图效果或计费已经验收。
+
+这轮最重要的工作已经完成在技术整改层面，当前应该止步于正式证据闭环，不再开启新一轮代码返工。
