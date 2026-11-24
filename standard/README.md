@@ -16,6 +16,11 @@
 
 Basic（`../basic/`）开发时**可直接从中级版资产复制初级功能**出来用（用户 2026-11-14 指示）；复制不得改动中级版资产本体。公共工具（派单、体检、推送）仍按"引用不复制"引用 `phase0/tools/` 与 `toolkit/`。
 
+## 执行与队列成果
+
+- [Standard 多任务执行与 ChatGPT 网页队列实现机制](STANDARD-EXECUTION-AND-CHATGPT-QUEUE.md)：架构、fail-closed 补采、规范索引及后续 M2 验证重点。
+- [第三次 Standard 试运行完整测试报告](../basic/tasks/b-20261123-standard-third-trial/delivery.md)。
+
 ## 现状
 
 中级版暂不迭代（当前重心 Basic MVP，见 `../basic/WORKFLOW.md`）；本 README 先登记归属映射，后续做中级版时在此展开。
