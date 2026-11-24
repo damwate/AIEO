@@ -19,13 +19,15 @@ seq11 只复核①④⑥：①目标完成 PASS（远端五份补证文件按 Bl
 
 用户已核对 `7dfdc858…` 中两份原始回复 SHA256 与登记一致；执行者亦复核三份全一致。
 
-## 3. 只复核「上轮未通过的证据项」
+## 3. 只复核「上轮未完全闭环的证据项」
 审查方 seq10 已明确认可、本轮**不重开**：
 - ⑤ 测试真实执行 → `PASS_WITH_CONSTRAINTS`（GDC 145/2、AIS 78、AIEO 队列 12 三份原始日志真实可读，含命令/被测 SHA/时间/结果）
 - AIEO SHA 对账 → `PASS`（`c63fe3c…` R3整改回交 → `4d184e8…` 独立复验归档 → `7dfdc858…` 返工关联登记，用途区分合理，GDC/AIS 被测 SHA 未因此变化）
 - 四个完整 SHA 绑定、代码修复方向与机制（沿用上轮 PASS）
 
-本轮**只重审 seq10 仍未通过的 ①目标完成 / ④证据质量 / ⑥证据可核查**，请审查方就 S3 本步骤独立裁定 PASS/REJECT。
+**保留 seq10 的逐项原始口径**（依据 codex 2026-11-24 复核意见）：①目标完成 `REJECT`、④证据质量 `REJECT`、⑤测试真实执行 `PASS_WITH_CONSTRAINTS`、**⑥证据可核查 `PASS_WITH_CONSTRAINTS`**（不是 REJECT；其未闭环的是「补充文件路径与文件清单缺失」那一部分，整体裁定仍为 `PASS_WITH_CONSTRAINTS`，不得改写为 REJECT 或 PASS）。
+
+本轮**只重审 ①目标完成 / ④证据质量 / ⑥证据可核查尚未闭环的部分**，请审查方就 S3 本步骤独立裁定 PASS/REJECT。
 
 ## 4. seq10 REJECT 的根因与本轮补证
 - **根因**：审查方按 Git Blob SHA 从**远端 GitHub 提交树**读取证据；seq10 简报指定的「补证归档 `7dfdc858…`」树中不含 `acceptance/s3-supplement/`（404），且原始日志为 UTF-16LE/NUL 交错、CMD 头仍是 `<10 target files>` / `<4 target files>` 占位符。补证当时只在本地未推送提交里，远端不可读。
