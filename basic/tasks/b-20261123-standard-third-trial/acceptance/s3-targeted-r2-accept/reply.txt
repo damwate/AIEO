@@ -1,0 +1,227 @@
+ChatGPT 说：
+S3r2 独立复核裁定
+PASS_WITH_CONSTRAINTS
+
+S3 本步骤补证闭环
+
+本轮只复核①④⑥。 上轮 seq8/9、seq10 的 REJECT 原始裁定均保留；⑤测试真实执行、四 SHA 绑定、AIEO SHA 对账及代码认可项不重开。
+
+被测提交与补证归档 SHA 均按本轮指定值核对。
+
+1. ① 目标完成：PASS
+
+远端提交树已经能读取全部五份补证文件。之前因未推送而无法读取的问题，本轮已消除。
+
+提交：7cc4fc1d4a175198bc5d87f7a6aa7d55b2bad7c8
+
+目录：basic/tasks/b-20261123-standard-third-trial/acceptance/s3-supplement/
+
+实际文件名如下：
+
+文件
+
+	
+
+Git Blob SHA
+
+
+
+
+gdc-90ce2233-r3.utf8.log
+
+	
+
+682720c8212944484abaeb8b46b1710f1fa2d7b4
+
+
+
+
+ais-a1f55b52-r3.utf8.log
+
+	
+
+23548a4894802c2c93ef023b60de77b596cb7ab2
+
+
+
+
+aieo-queue-4d184e8-r3.utf8.log
+
+	
+
+3b20ebd4683365877162c61811043d85823250b3
+
+
+
+
+SHA256-CONTRAST.md
+
+	
+
+cd7dffaa7e2a055eae796267f9d8964e02c9c535
+
+
+
+
+COLLECT-ONLY-MANIFEST.md
+
+	
+
+51ff57cf8a3f45a843e0db8433ae2366784fc444
+
+三份原始日志仍保留在 acceptance/test-logs/，没有被替换。
+
+2. ④ 证据质量：PASS_WITH_CONSTRAINTS
+
+这次不是只看对照表自述，我对原始日志和 UTF-8 副本分别按文件字节计算了 SHA-256。
+
+六项哈希全部吻合
+
+日志
+
+	
+
+原始文件 SHA256
+
+	
+
+UTF-8 副本 SHA256
+
+
+
+
+GDC
+
+	
+
+34f2b71f…bb2975db
+
+	
+
+f9da9ebf…fac52ea
+
+
+
+
+AIS
+
+	
+
+ebc0b938…fb24170
+
+	
+
+0f0a43fa…a73fd0
+
+
+
+
+AIEO 队列
+
+	
+
+76f4288c…9963e2f
+
+	
+
+41af9ec7…fa5639
+
+以上完整 SHA256 均与 SHA256-CONTRAST.md 登记一致。Git Blob SHA 与文件内容 SHA256 也没有混用。
+
+collect-only 清单核对：
+
+GDC：10 个目标文件，9 个文件 123 项，网关文件 24 项，合计 147 项。
+
+AIS：4 个目标文件，合计 78 项。
+
+我又分别在 GDC 90ce2233… 和 AIS a1f55b52… 的提交树中核查了清单里的文件，GDC 10/10、AIS 4/4 全部可读取。
+
+约束在于：collect-only 的计数和执行情况记录在 COLLECT-ONLY-MANIFEST.md 中，本轮没有另行取得独立的原始 collect-only 控制台日志。因此我不把它升级为独立执行日志级别的证据。
+
+3. ⑥ 证据可核查：PASS
+
+远端证据路径、提交 SHA、文件 Blob SHA 和内容 SHA256 已经能够互相对照。
+
+另外，我用 feat/standard-task-management 分支读取了 SHA256-CONTRAST.md，其 Blob SHA 与指定提交中的文件一致，证明补证文件已进入该远端分支的可读取内容。
+
+原先认可的四个 SHA 绑定继续有效：
+
+对象
+
+	
+
+完整 SHA
+
+
+
+
+GDC
+
+	
+
+90ce2233b4da9d844cf1e165c43cec2ecdd3cddd
+
+
+
+
+AIS
+
+	
+
+a1f55b523f90763bcd12823bf52cff9d710381a6
+
+
+
+
+AIEO 复验归档
+
+	
+
+4d184e8de4eab56519c4e0f57a6e37afbc7984ac
+
+
+
+
+AIEO 前轮补证归档
+
+	
+
+7dfdc858891d4319088c8744618fb48d7db65f4a
+
+本轮新补证归档：7cc4fc1d4a175198bc5d87f7a6aa7d55b2bad7c8。
+
+4. S1 缺项处理：符合要求，未派单
+
+我读取了：
+
+basic/tasks/b-20261123-standard-third-trial/acceptance/s1-supplement/GAP-REPORT.md
+
+Blob SHA：123c41364f47beb46cd50a175a33660cf4ada431
+
+报告明确列出四项历史缺失：
+
+G1：c3154aa0 对应的重新发布执行记录。
+
+G2：用户抽测原始记录。
+
+G3：R0' 对应的测试执行日志。
+
+G4：c3154aa0 本地构建的 dist 产物。
+
+按“历史记录找不到，先回报具体缺项”的要求，S1 本轮未派单。没有把二手转述补造成原始证据，也没有擅自降低原验收要求。
+
+5. 最终边界与后续状态
+
+seq8、seq9、seq10 原始 REJECT 均保留，不改写。
+
+S3 本轮①通过、④达到有约束通过、⑥通过。
+
+⑤沿用此前认可结果，不重跑测试。
+
+ST-05 步骤验收记录仍需更新：当前 steps.md 仍记录 S1/S3 缺少 PASS 结论，不能因为本次独立复核就宣称任务包已整体完成。
+
+不合并、不发布、不付费；SQLite 不代表 PostgreSQL 已完成演练。
+
+最终结论：S3r2 的远端补证缺口已经消除，①和⑥闭环，④达到 PASS_WITH_CONSTRAINTS。S3 本步骤独立裁定 PASS_WITH_CONSTRAINTS。
+
+本轮完整提交可在此核查：AIEO commit 7cc4fc1d

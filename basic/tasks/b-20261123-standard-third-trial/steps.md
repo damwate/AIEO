@@ -113,3 +113,15 @@ MF-01a、MF-01b 均复验通过，R1 技术阻断关闭。正式步骤缺口仍�
 **S1（补齐再发 → 因缺项先回报，未派单）**：对照原回复核查，已找到可核查项（GDC reflog 重拉 ff-only、8870 部署产物 `dep-*.js` 四份、EVIDENCE.md 特征核验、操作时间线）；**确实找不到的具体缺项**：① c3154aa0 重新发布执行记录（现有脚本全属 66ead431 部署）② 用户抽测原始记录（「还行」仅二手转述）③ R0' 对应测试执行日志（现有 T1 E2E 属 66ead431 期且场景 2 FAIL）④ c3154aa0 本地构建 dist 产物未归档。按用户「若历史记录找不到，先回报具体缺项」与「S1 补齐再发」，本轮未发起 S1 派单。三项原边界（bundle 特征核验不升级、未做浏览器复测、逐字节未锁定）按原状登记。详见 [S1 缺项报告](acceptance/s1-supplement/GAP-REPORT.md)。
 
 **L-018 核对**：S3 发出前 user 消息 3 条 / 累计 11238B（NORMAL），未达阈值；发出后 4 条 / 11977B（NORMAL），达阈值，因仅一轮且已发出、迁移反增交接成本且上下文边界明确，记录理由不迁移，此后每增 2 条重评。**ST-05**：③步骤验收记录 FAIL（S1/S3 仍缺 PASS 结论），如实保留、不伪造 PASS。任务保持**验收中**；未合并 main/dev、未生产发布、未付费验收；是否 push 及是否再发起一轮复核需用户另行决策。
+
+## S3 第二轮针对性复核（seq11，用户追加授权 push + 复核）
+
+用户确认 push 到分支无问题、会交 codex 复核，并授权放宽「各最多一轮」再发一轮 S3 针对性复核。按 L-014 走 `check-push.mjs --push --yes`（直连失败→注册表活代理 1080）推送补证提交 `7cc4fc1d4a175198bc5d87f7a6aa7d55b2bad7c8` 至 `origin/feat/standard-task-management`，ahead=0，**未触碰 main**；`acceptance/s3-supplement/` 六份文件（三份 UTF-8 副本 + SHA256-CONTRAST.md + COLLECT-ONLY-MANIFEST.md + README.md）进入远端可读提交树。
+
+seq11 `s3-targeted-r2` 简报正文 948B / 含自动 marker 986B（`playwright_queue.py:98-100` 会拼接 `[AIEO-ROUND:24位]\n` 再校验 ≤1200B；首版草稿 1185B 合 1222B 会超限，已精简后提交）。SEND_CONFIRMED 后采集 `INBOUND_WINDOW_COMPLETENESS_UNPROVEN` fail-closed；按 L-018 禁重发→三步诊断(`virtualization_inferred=true`)→静态 DOM 补采 + 归属三件套→七查全过→reconcile COMPLETED，**零重发**。
+
+实际裁定 **PASS_WITH_CONSTRAINTS**（S3 本步骤补证闭环），完整 reply SHA256=`da668776dfe9da79c77782f662debd4d4aa2535ceab0674d5dde1c85e15714ca`。只复核①④⑥：①目标完成 **PASS**（远端五份补证文件按 Blob SHA 全部可读，未推送问题消除）、④证据质量 **PASS_WITH_CONSTRAINTS**（六项 SHA256 逐字节吻合、GDC 10/10 与 AIS 4/4 清单文件在被测提交树可读；collect-only 计数仅有清单记录、无独立控制台日志，不升级为独立执行日志）、⑥证据可核查 **PASS**。⑤沿用认可、不重开。seq8/9/10 三轮 REJECT 原样保留，不改写。
+
+审查方核验 S1 缺项报告（Blob `123c4136…`）认可「历史记录找不到先回报、未派单、不补造、不降档」，S1 本轮仍未派单。ST-05 ③仍 FAIL（S1/S3 缺 PASS 结论），如实保留。
+
+**会话管理留痕**：seq11 发出前审查会话 `6b050b37…` 已 4 条 user 消息（L-018 阈值），已评估并记录「暂不迁移」理由（最后验收阶段、上下文边界清晰、预算 NORMAL 11977B、迁移反增成本）；发出后为第 5 条，本轮授权两轮复核均已完成、随即回交，不再在此会话增轮。用户另提示「每窗口最多 4 次对话、完了开新窗口」的更严口径已注意，后续如需再派单应先 `--new-session` 迁移。详见 [复审范围（交 codex）](acceptance/s3-targeted-r2-accept/REVIEW-SCOPE-FOR-CODEX.md) 与 [汇总](acceptance/s1-s3-targeted-r1-summary.md)。任务保持**验收中**；未合并/发布/付费。

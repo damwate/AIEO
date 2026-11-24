@@ -1,0 +1,33 @@
+{
+  "recollection": true,
+  "driver": "recoll_s3_targeted_r2.mjs",
+  "conversation_url": "https://chatgpt.com/c/6b050b37-40b8-83ec-9365-8a0ca627b757",
+  "failed_dispatch_dir": "phase0/logs/dispatch-2026-11-24T09-49-38",
+  "failure_code": "INBOUND_WINDOW_COMPLETENESS_UNPROVEN",
+  "diagnosis": "phase0/logs/diag-s3-targeted-r2-2026-11-24T09-54-31-018Z/report.json (virtualization_inferred=true; 静态DOM路径适用)",
+  "recovery": "视口拉高静态DOM全量物化+归属校验三件套（禁重发）",
+  "sent_user_unit_key": "fallback-turn-0:0:user",
+  "marked_user_unit_key": "22839894-d6e9-59b0-b0b8-3be366f984cb:0:user",
+  "assistant_unit_key": "22839894-d6e9-59b0-b0b8-3be366f984cb:2:assistant",
+  "assistant_unit_count": 1,
+  "after_units": [
+    {
+      "key": "22839894-d6e9-59b0-b0b8-3be366f984cb:2:assistant",
+      "role": "assistant",
+      "text_len": 2562,
+      "text_head": "ChatGPT 说：\nS3r2 独立复核裁定\nPASS_WITH_CONSTRAINTS\n\nS3 本步骤补证闭环\n\n本轮"
+    }
+  ],
+  "reply_bytes": 4120,
+  "reply_sha256": "da668776dfe9da79c77782f662debd4d4aa2535ceab0674d5dde1c85e15714ca",
+  "checks": {
+    "marked_user_unique": true,
+    "last_user_assertion": true,
+    "adjacent_assistant_tail": true,
+    "stable_static_dom_read": true,
+    "final_stop_button_not_visible": true,
+    "not_prev_reply_sha": true,
+    "response_length_plausible": true
+  },
+  "extracted_at": "2026-11-24T09:56:48.292Z"
+}

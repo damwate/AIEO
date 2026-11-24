@@ -1186,3 +1186,10 @@
 3. 本地补证（授权内）：三份日志 UTF-8 副本（原件保留 + 来源 SHA256 标注 + CMD 占位符以实测文件清单补齐）、`SHA256-CONTRAST.md`、`COLLECT-ONLY-MANIFEST.md`（GDC 147=145+2、AIS 78 实测 collect-only），未重跑测试/未访问生产。见 [针对性复核汇总](../../basic/tasks/b-20261123-standard-third-trial/acceptance/s1-s3-targeted-r1-summary.md)。
 4. S1（补齐再发 → 因缺项先回报，未派单）：已找到可核查项（GDC reflog 重拉、8870 dep-*.js 产物、EVIDENCE.md 特征核验、时间线）；确实找不到的具体缺项＝c3154aa0 重新发布记录、用户抽测原始记录、R0' 对应测试日志、本地 dist 产物。按用户「先回报具体缺项」不派单；三项原边界按原状登记。见 [S1 缺项报告](../../basic/tasks/b-20261123-standard-third-trial/acceptance/s1-supplement/GAP-REPORT.md)。
 5. L-018：S3 发出前 3 条/11238B NORMAL；发出后 4 条/11977B NORMAL，达阈值记录理由不迁移。ST-05 ③ 步骤验收记录 FAIL（S1/S3 缺 PASS），如实保留、不伪造。任务保持验收中；未合并/发布/付费；未 push，是否 push 及是否再发起一轮复核需用户另行决策。
+
+## 2026-11-24 S3 第二轮针对性复核（seq11）
+
+1. 用户确认 push 到分支无问题并交 codex 复核，授权放宽「各最多一轮」再发一轮 S3 复核。按 L-014 `check-push.mjs --push --yes`（代理 1080）推送补证提交 `7cc4fc1d4a175198bc5d87f7a6aa7d55b2bad7c8` 至 `origin/feat/standard-task-management`，未触碰 main。
+2. seq11 `s3-targeted-r2` 简报含自动 marker 986B（≤1200B；`playwright_queue.py` 拼接 38B marker 后校验，首版 1222B 草稿已精简）。发送确认后采集 fail-closed，按 L-018 禁重发→三步诊断→静态 DOM 补采→归属七查全过→reconcile COMPLETED，零重发。
+3. 实际裁定 **PASS_WITH_CONSTRAINTS**（S3 本步骤补证闭环），完整 reply SHA256=`da668776dfe9da79c77782f662debd4d4aa2535ceab0674d5dde1c85e15714ca`；①PASS、④PASS_WITH_CONSTRAINTS、⑥PASS，⑤沿用不重开；seq8/9/10 三轮 REJECT 保留。审查方逐字节核对六项 SHA256、GDC 10/10 与 AIS 4/4 清单文件可读，并读取 S1 缺项报告认可「先回报未派单」处置。见 [s3-targeted-r2-accept](../../basic/tasks/b-20261123-standard-third-trial/acceptance/s3-targeted-r2-accept/reply.txt)。
+4. ST-05 ③ 仍 FAIL、任务保持验收中；未合并/发布/付费。会话 `6b050b37…` 发出前 4 条 user 消息已按 L-018 评估并记录暂不迁移理由，发出后 5 条，本轮随即回交不再增轮。

@@ -1,0 +1,36 @@
+{
+  "recollection": true,
+  "driver": "recoll_s3_targeted_r2.mjs",
+  "remediation": "视口拉高静态DOM全量物化+归属校验三件套（禁重发）",
+  "reference_failed_dispatch_dir": "D:/AIEO/.worktrees/feat-standard-task-management/phase0/logs/dispatch-2026-11-24T09-49-38",
+  "conversation_url": "https://chatgpt.com/c/6b050b37-40b8-83ec-9365-8a0ca627b757",
+  "sent_user_unit_key_reported": "fallback-turn-0:0:user",
+  "located_user_unit_key": "22839894-d6e9-59b0-b0b8-3be366f984cb:0:user",
+  "assistant_uuid": null,
+  "unit_keys": [
+    "6efaea29-3968-515a-87f1-c3ae6afcfb9e:0:user",
+    "6efaea29-3968-515a-87f1-c3ae6afcfb9e:2:assistant",
+    "ac31ce82-615b-52bc-9cca-7df94d3cc8c9:0:user",
+    "ac31ce82-615b-52bc-9cca-7df94d3cc8c9:2:assistant",
+    "75d41b64-8fc1-556e-afb8-66cea982d6b3:0:user",
+    "75d41b64-8fc1-556e-afb8-66cea982d6b3:2:assistant",
+    "c31ac34c-7286-5eb3-9526-d349e593ed27:0:user",
+    "c31ac34c-7286-5eb3-9526-d349e593ed27:2:assistant",
+    "22839894-d6e9-59b0-b0b8-3be366f984cb:0:user",
+    "22839894-d6e9-59b0-b0b8-3be366f984cb:2:assistant"
+  ],
+  "unit_count": 10,
+  "reply_bytes": 4120,
+  "reply_sha256": "da668776dfe9da79c77782f662debd4d4aa2535ceab0674d5dde1c85e15714ca",
+  "checks": {
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "not_prev_reply_sha": true
+  },
+  "diagnosis": "phase0/logs/diag-s3-targeted-r2-2026-11-24T09-54-31-018Z/report.json (virtualization_inferred=true; 静态DOM路径适用)",
+  "extracted_at": "2026-11-24T09:56:48.292Z"
+}
