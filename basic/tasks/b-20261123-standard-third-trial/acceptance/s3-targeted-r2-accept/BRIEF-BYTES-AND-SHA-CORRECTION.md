@@ -23,3 +23,9 @@ codex 按我先前提供的 `7cc4fc1` 查不到 seq11 证据——**是我给的
 | 发送/补采记录 | 已在 HEAD 树：`send-state.json`、`dispatch-run.log`、`recoll-result.json`、`units-diag.json`、`run.log`、`diag-report.json`、`reply.txt` |
 | 原始裁定 + 完整 reply SHA256 | `reply.txt` + `result.json`（SHA256=`da668776dfe9da79c77782f662debd4d4aa2535ceab0674d5dde1c85e15714ca`，逐字核验一致） |
 | seq10 ⑥ 口径应保留 PASS_WITH_CONSTRAINTS | `REVIEW-SCOPE-FOR-CODEX.md` §3 已修正 |
+
+## 4. 补 codex 复核意见（第二回合）
+
+- **reconcile 状态快照**：新增 `QUEUE-STATE-SEQ11.json`（`playwright_queue.py status 11` 机器输出，state=COMPLETED、reply_sha256 一致），补 codex「reconcile COMPLETED 缺队列命令输出」一项。
+- **S3 ⑥栏登记**：在 `steps.md` S3 R1/R2/R3 小节的⑥栏保留 seq9 REJECT 原文后，追加 seq11 的 dispatch、完整 reply SHA256、原始裁定（①PASS/④PASS_WITH_CONSTRAINTS/⑥PASS）与④约束；检查器 `re.search(r"验收结论[：:]\s*\**\s*PASS")` 为前缀匹配，`PASS_WITH_CONSTRAINTS` 满足前缀但约束全文保留、未简化为 PASS。
+- **ST-05 结果**：①/②/④/⑤/开工核对 PASS，③因 S1 仍缺 PASS 而 FAIL，任务保持验收中；S3 已满足「步骤验收记录 PASS 前缀 + ⑥证据引用」条件，未伪造 S1 通过。

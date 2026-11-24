@@ -67,6 +67,7 @@
 ④执行结果：本地提交完成，未合并、未发布；220/221 配置已回滚。
 ⑤测试结果：GDC AI 112 passed、前端 3284 passed；AIS capabilities 16 passed、前端 42 passed；全程 mock。
 ⑥验收证据引用：验收结论：REJECT（问题2：正式派单 seq9/s3-formal；dispatch-2026-11-24T07-53-18；完整 reply sha256=81b313dfcc8fc135b4bf2a404031da55aa01d2dcff832b3739d32329adcf0ffd；被测 GDC 90ce2233b4da9d844cf1e165c43cec2ecdd3cddd、AIS a1f55b523f90763bcd12823bf52cff9d710381a6、AIEO 4d184e8de4eab56519c4e0f57a6e37afbc7984ac）。R1 技术阻断独立复验 PASS，正式步骤证据未闭环。证据包内路径 acceptance/s3-formal-accept/reply.txt、acceptance/test-logs/gdc-90ce2233-r3.log、acceptance/test-logs/ais-a1f55b52-r3.log、acceptance/test-logs/aieo-queue-4d184e8-r3.log。
+针对性补证复核闭环（seq11=`s3-targeted-r2`，用户授权放宽轮次上限后发起；dispatch-2026-11-24T09-49-38，补采七查全过、reconcile COMPLETED、零重发）：验收结论：PASS_WITH_CONSTRAINTS（S3 本步骤补证闭环；完整 reply sha256=da668776dfe9da79c77782f662debd4d4aa2535ceab0674d5dde1c85e15714ca；原始裁定①PASS、④PASS_WITH_CONSTRAINTS、⑥PASS，⑤沿用认可）。约束保留：④中 collect-only 计数仅有清单记录、无独立控制台日志，不升级为独立执行日志级别；⑤沿用上轮认可不重跑；seq8/seq9/seq10 三轮 REJECT 原文及其问题编号2返工记录原样保留，不改写。证据包内路径 acceptance/s3-targeted-r2-accept/reply.txt、acceptance/s3-targeted-r2-accept/QUEUE-STATE-SEQ11.json、acceptance/s3-supplement/。
 
 ## S4 验收、测试报告与发布边界
 ①本步骤目标：归档测试报告并明确未决项。
