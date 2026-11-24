@@ -84,3 +84,7 @@
 ## Codex R2 独立复验
 
 原 422 启动阻断与单图 404 已复验通过。整体仍为 MUST-FIX，AIS 无效清单 500 和 GDC 产品名称快照一致性待整改。完整被测 SHA、实测结果和复验条件见 [R2 独立复验](acceptance/codex-r2-recheck.md)。
+
+## R3 整改回交（第二次 MUST-FIX）
+
+AIS 将编辑接口 Pydantic 校验异常归一化为 422，并把占比数值判断改为先范围后有限性，消除对象/非对象数组与极大整数引发的 500；GDC 新增 `product_constraints_json` 冻结列与幂等迁移，提交时用同一目录快照派生 prompt 与清单，出站优先读冻结值、旧任务 NULL 回落。机制与上一轮不同（错误归一化、现场重算→提交冻结），按 L-019 记为第二次返工。GDC 10 文件目标套件 145 passed/2 skipped，AIS 4 文件 78 passed；GDC=90ce2233、AIS=a1f55b52，均已推送并复核远端一致。详见 [R3 整改](acceptance/codex-r3-remediation.md)。ST-05 S1/S3 正式证据仍缺，保持验收中。

@@ -1161,3 +1161,9 @@
 
 1. 启动复验时核对 GDC、AIS、AIEO 远端功能分支和完整 SHA，在独立工作区运行目标套件与跨仓测试。
 2. 合法请求、同键重放、AIS 详情回读和 GDC 单图原件通过。非法产品清单 HTTP 500 与目录发布时的名称快照不一致仍须整改，任务继续验收中。ST-05 的 S1、S3 正式验收证据缺口保留。见 [R2 独立复验](../../basic/tasks/b-20261123-standard-third-trial/acceptance/codex-r2-recheck.md)。
+
+## 2026-11-24 第三次 Standard 试运行 R3 整改回交（第二次 MUST-FIX）
+
+1. AIS 无效清单 500 的机制修复：编辑接口 Pydantic 校验异常归一化 422，占比数值先判范围再判有限性；12 项正反回归覆盖对象/非对象数组/空名/越界/极大整数/超长列表。
+2. GDC 名称快照机制修复：新增 `product_constraints_json` 冻结列与幂等迁移，提交时同一目录快照派生 prompt 与清单，出站只读冻结值、旧任务 NULL 回落；目录改名窗口与旧任务兼容回归通过。
+3. GDC 10 文件目标套件 145 passed/2 skipped，AIS 4 文件 78 passed；GDC `90ce2233b4da9d844cf1e165c43cec2ecdd3cddd`、AIS `a1f55b523f90763bcd12823bf52cff9d710381a6` 已推送并复核远端一致。任务仍验收中，ST-05 S1/S3 正式派单证据缺口不变。见 [R3 整改](../../basic/tasks/b-20261123-standard-third-trial/acceptance/codex-r3-remediation.md)。

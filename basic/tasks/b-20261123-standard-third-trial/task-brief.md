@@ -37,7 +37,7 @@
 | 字段 | 值 |
 |---|---|
 | 当前状态 | 验收中 |
-| 当前步骤 | S4 验收中。Codex R2 复验确认合法请求及单图原件通过，R1 仍有两项 MUST-FIX，详见 [R2 独立复验](acceptance/codex-r2-recheck.md)。 |
+| 当前步骤 | S4 验收中。R2 两项 MUST-FIX 已整改并推送：GDC HEAD=90ce2233、AIS HEAD=a1f55b52，证据见 [R3 整改](acceptance/codex-r3-remediation.md)；待独立复验。 |
 | 最终结果 | R0/R0'闭环；R1/R2/R3本地实现完成；尺寸按文档与用户裁定改为auto，220/221固定尺寸已回滚；R2 修复 AIS 产品清单 422 与 GDC 单图原图槽位。详见 delivery.md 与 R2 整改文件 |
 
 ## 步骤清单（规划协商拍板后填写并冻结，未拍板留空不得动工）
