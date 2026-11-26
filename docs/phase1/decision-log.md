@@ -1141,3 +1141,21 @@
 - **入口证据修正（派单 dispatch-2026-11-23T07-04-13，reply SHA256=3a611ccb81ee7d41f2b14d421f5e580b36a9d733f7bb4481acd5f63aa3872205）：** 撤销 photo() AI job P0 误分类（download-only 不进 AI job）；AI 截图唯一入口=captureAiInput()；photo 白图作为独立用户可见缺陷、共享底层就绪原语但不进 AI 门禁；全仓无第三绕过路径。
 - **GDC T1（已实施）：** 独立 worktree `D:\GDC-rca01-t1-worktree`/分支 `task/gdc-rca-01-t1-gate`，父 `5c9ba1558a58b29633ea731fcdb563361b4c343b`→commit `b6ac457b2bdd6f41b996df93dc880d359054862f`；新增纯函数 sceneReady 门（贴图/billboard settled）、billboard 载前隐藏、photo/AI 两入口共享原语（isAssetReady GLB-only 逐字不变、pendingGlbs 语义不变、timeout 归 T2）。验收：全量前端 217 files/3256 tests PASS/0 FAIL + tsc exit 0；记录=basic/tasks/gdc-rca-01/implementation-T1.md；测试日志=phase0/logs/gdc-t1-vitest-full-src.log。
 - **边界：** 两任务均只在本机任务分支落地，未合并 bms-ui master / GDC dev，未 push；须用户拍板合并与 E2E 四场景+负例实测后进入 T2。
+
+### DEC-134 依依提成数据核验与 BMS 提成错因只读审计（数据口径固化为业务标准）（2026-11-25）
+
+- **授权依据：** 用户指令"建议你用AIEO standard处理"+"任务2……先跟chatgpt讨论如何处理，不改代码"+"本次计算提成先跑通，后面再改代码"+"你把数据得来算法整理存档，作为后续的参考标准"——Standard/S3，任务包 `basic/tasks/b-20261125-bms-commission-audit`；全程只读审计+数据整理，不改业务代码、不发布（DEC-010 红线不变）。
+- **审计结论（三轮 ChatGPT 规划/复核，会话 6b069510-5a18-83ec-a00f-189fd24daefc；reply SHA256=2b17ffe6c7f9744fbe888c50011bb7c4b180b95fb80d74d02cb4733cf25e9253 / e5d98a5a6785a0884f5d14f63e908aa0ee3101a777a45ec154c79e130f8d2b04 / 8247a5fa25f59ccaa5ca2160058b1ae3a28e29de029614dad31a93fafa74d172）：** 当前提成按流程+成本记录动态汇总，存在凭证未统一去重、首收款按签约月/最早时间、类型 5 漏算、退款事件缺失、人员费率漂移；A–E 五项经 ChatGPT 复核均 CONFIRM（其声明未直读源码，本地 file:line 核查为准）。方案=`proposal.md`（M0 对账→M1 凭证→M2 退款→M3 核算+快照→M4 并行试切），不构成实施授权。
+- **数据实证（生产库只读会话 SELECT）：** 依依 9–10 月 7 笔企微"电商首付"全部为 `flow_type=5`（产品额 22,560.05），类型 5 漏算由代码机制升级为数据实证；小店同号重复挂账 5 组、1 笔运费 84.00 混入产品额、小店收款无整装/零售拆分均得到印证。
+- **数据结果：** 35 条→19 笔（同凭证挂多合同去 15 条、同笔多企微交易号合并去 1 条）；9 月产品额 27,703.05（整装 1,458.13/零售 26,244.92），10 月 20,047.27（480.00/19,567.27）；退款 1 笔 150.00（10-28 收款、10-30 申请、11-12 动账，11 月冲减、原月不回改）；小店 12 单经原订单售后信息核验无售后。19 行逐行复核无差异。
+- **数据标准固化：** yotin/document `01_业务功能/04_变更与结算专题/04_设计师提成收款数据计算标准.md`（sha256=3f7e458e1218ab586299468e676ae8ab3211c9ecf64711cb48ac06a2f8277bb6，磁盘原始字节，LF，16771B）并登记于 `07_财务与审批.md` 索引；文档数字经 `check_archive_doc.py` 与留存证据核对 26/26。要点：同一凭证=同一笔；小店单全计零售；小店产品额=实付−运费；企微产品额取系统等效产品额并按报价单 `sku_price/(sku_price+retail_sku_price)` 拆整装（两者并列相加，非包含关系）；退款月冲减。
+- **过程问题（如实）：** ①列环境变量名时命令未过滤多行值，`yotin-project.env` 中微信支付私钥/公钥被输出到会话命令结果，未使用/未保存/未外传，已告知用户，是否轮换待定；②小店售后讨论派单采集 `INBOUND_WINDOW_OVERLAP_CHANGED`，按 L-018 禁重发+静态 DOM 补采成功（recoll-shop-aftersale-r1）；③重定向生成的证据文本曾为 GBK，已统一转 UTF-8；④ChatGPT R3"运费/差价是否拆分后再冲减"不采纳，按用户拍板直接冲减实际退款金额；⑤版式整理原计划由执行侧统一完成，用户改为自行整理，执行侧停止写入表格。
+- **边界：** 业务代码零修改、生产库仅只读 SELECT；AIEO 任务包与 yotin/document 文档、表格均未提交 Git；表格版式由用户自行整理；是否另立代码实施任务及提交范围待用户拍板。
+
+### DEC-135 BMS 变更收款 Er+F 由 Basic 换轨 Standard，启用绑定核验与派单恢复（2026-11-26）
+
+- **授权依据：** 用户原话"用AIEO的standard版本里面的workflow解决遇到的问题、"，任务包=`basic/tasks/b-20261126-bms-change-recv-erf`；选型 Standard/S3，M1 单任务交替，不启 M2。
+- **唯一基线：** service `a0789c1126b4df0258522b757a7ba842c4e7bc26`（parent=`28611b52d4f7dc5290c9a1692a88a076f468fead`）、UI `342791f9a649fec84b97916ac8232fd41573ff4c`（parent=`1a0742d6caa1471473dd8c917543df43e282f1b5`）、文档 `c2ca13738464645a05dcd044dae39cd45f62a32d`（parent=`d347e32c2eefa3c62247b6599240d1bc025048d3`）。三仓 ST-01 均 PASS；7+3 功能文件迁移前后 Git blob 一致，WIP 未混入。
+- **问题登记：** 新 service 仍有退款负 E/负 F 符号缺陷，动态单 2168 首笔 100 元退款失败且零落库；候选 3 行修正未获规划复审前不得在新仓动工，§7 不登记全量通过。
+- **派单恢复：** ego 链缺 CLI/profile 后改走 Standard 既有 `phase0/tools/gpt_dispatch.mjs`，环境预检关键依赖齐全。原审查会话首次发送因 Composer 非空停止，`send-state=NOT_SENT`；未知草稿未清理、原消息未重发，且旧会话预算 43452B 接近 HARD，按 L-018 改用自包含简报新建审查会话。
+- **边界：** 新 service 仅允许在规划 PASS 后就退款符号做最小修改；不碰大池子算法/报价公式/退款 a×r 规则；生产发布、数据删除、main 合并仍须用户本人拍板。

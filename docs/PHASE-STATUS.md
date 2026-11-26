@@ -1,6 +1,14 @@
 # AIEO 阶段进度与状态（PHASE-STATUS）
 
-**版本：** v0.19（2026-11-21 深夜，并行阶段1 合入 main）
+**版本：** v0.20（2026-11-26，BMS Er+F Standard 任务规划协商中）
+
+## 当前进度（2026-11-26，BMS 变更收款 Er+F）
+
+| 工作块 | 状态 | 证据指针 |
+|---|---|---|
+| YotinGarden 三仓迁移与 ST-01 绑定 | 三仓 PASS；7+3 功能文件新旧 blob 一致，WIP 未混入 | `basic/tasks/b-20261126-bms-change-recv-erf/evidence/st01-*.json`；DEC-135 |
+| 退款负 E/负 F 验收 | OPEN：首笔退款实测失败，Standard 规划复审中，未获准改码 | FEASIBILITY F-008；任务包 steps.md S1 |
+| ChatGPT 派通道 | 采用 Standard `gpt_dispatch`；默认 Composer 两次 NOT_SENT 后切换独立命名实例，未清理未知草稿 | `phase0/logs/dispatch-2026-11-26T13-36-46`、`13-37-51` |
 
 ## 当前进度（2026-11-21 深夜）
 
@@ -196,3 +204,4 @@
 | v0.12 | 2026-11-18 | 状态同步：等级B受控试运行正式结项（DEC-099~104，三批 5 任务全 PASS，ChatGPT 最终裁定 A）；四腿 GPT-02/03/04/05 交付闭环；Basic 启动裁定 A＝实战待命 ACTIVE-READY（DEC-105） | 主会话（节点授权执行） |
 | v0.10 | 2026-11-15 | 文件头版本行同步 §0 真实状态（v0.9 头部残留"下一项=F-001 立项准备"与 §0 校正矛盾——S2 复验问题3 未关闭点）；F-001 已落地（T-P1-908/DEC-036）+下一项=GPT-02~05 逐角色 | 主会话（b-20261115-standard-kickoff S2-R3 修正） |
 | v0.9 | 2026-11-15 | 新增 §0 分级路线快照：Basic 建成（DEC-051，挂起项在案）/Standard 启动（DEC-053，kickoff 规划闭环，S1 治理基线实施中；WORKFLOW 与 M2 规范候选待用户批准）/Advanced 占位；平台路线下一项=F-001 立项准备；§1-§5（2026-11-14 基线）声明继续有效 | 主会话（b-20261115-standard-kickoff S1，节点授权执行） |
+| v0.20 | 2026-11-26 | BMS Er+F 任务由 Basic 换轨 Standard/S3：三仓 ST-01 PASS、退款负值边界登记 F-008、规划协商与独立命名实例派单恢复中；不表示 §7 或交付已完成 | 用户指令换轨（DEC-135） |

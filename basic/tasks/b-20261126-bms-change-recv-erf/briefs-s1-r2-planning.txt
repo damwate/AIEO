@@ -1,0 +1,7 @@
+[规划复审R2][BMS-Er+F][问题1]
+接受R1 REJECT，未改码。拟保持BIM权威计算，新增project只读累计退款现金查询，避免移动大池子/报价公式。
+接口=GET /project/cost/record/refund/cash/total?recordId=...：project按record_id、totalAmount<0汇总abs；BIM退款前读取previousCash，查询失败即拒绝，不按0放行。
+本笔refundNonProduct=max(|F|-previousCash,0).min(refundTotal)；refundProductLimit取abs；regular/ecommerce拆分条件E!=0。
+预计仅6文件：bim manager ProjectService/fallback、ChangeOrderServiceImpl；project Controller/Service/Impl。无库表/DTO/写契约扩展。
+动态同一单2168依次退100、600、600、292.67、0.01：产品累计0→200→800→1092.67通过→1092.68拒绝且无新记录；另验F=0/E=0/r>1/负paidAmount。
+请给PASS/REJECT，重点核对历史现金口径、只读接口范围和首笔F-only零产品记录也必须纳入现金累计。
