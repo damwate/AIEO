@@ -1159,3 +1159,11 @@
 - **问题登记：** 新 service 仍有退款负 E/负 F 符号缺陷，动态单 2168 首笔 100 元退款失败且零落库；候选 3 行修正未获规划复审前不得在新仓动工，§7 不登记全量通过。
 - **派单恢复：** ego 链缺 CLI/profile 后改走 Standard 既有 `phase0/tools/gpt_dispatch.mjs`，环境预检关键依赖齐全。原审查会话首次发送因 Composer 非空停止，`send-state=NOT_SENT`；未知草稿未清理、原消息未重发，且旧会话预算 43452B 接近 HARD，按 L-018 改用自包含简报新建审查会话。
 - **边界：** 新 service 仅允许在规划 PASS 后就退款符号做最小修改；不碰大池子算法/报价公式/退款 a×r 规则；生产发布、数据删除、main 合并仍须用户本人拍板。
+
+### DEC-136 BMS Er+F S2 独立验收 REJECT 与 R4 修复：L-019 止损触发、验收人变更为 codex（2026-11-27）
+
+- **授权依据：** 用户 2026-11-27 原话"差不多了就提交代码和文档吧，交接给codex验收"——在收到两处 P0 报告后拍板：修复→提交代码与文档→验收人由 ChatGPT 变更为 codex。
+- **S2 独立验收（dispatch-2026-11-26T16-02-15，reply SHA256=`7f9bc3e5dd614cfef63f803fc9fa8b197a445eddc1e86fa25adf8f39c1bbeb11`，被测 commit=`3ac3ded3b5c5b252424c799f0496546a7589219f`）：** 整体 REJECT。多笔F分摊/事务行锁/负向幂等/0.01超限无新增四项 PASS；业务额分离、PM实收两项 P0 REJECT——`getChangeBusinessAmount()` 用 `selectById(record.getId())` 把 costRecord 主键当 Flow 主键（实测 8234→5194 两 ID 不同），PM `payDate==null` 独立 OR 仍可清零非零实收。问题2 返工计数=3，触发 L-019 止损，停止对 ChatGPT 的常规返工循环。
+- **R4 修复：** commit `8a745547eef28c7976753799a92aa13b0701c8cd`（parent=`3ac3ded3b5c5b252424c799f0496546a7589219f`，仅 `ApprovalFlowServiceImpl.java` 1 文件 +13/−3，ST-01 PASS=`evidence/st01-r4-fix.json`）：Flow 改按 `object_id`+`object_type=ChangeOrderFlow` 关联查询（多条 fail-closed，仅旧数据无 Flow 回退）；PM 零完成改 `zeroCashAmount && (payDate==null || zeroBusinessAmount)`。真实编译日志补齐=`evidence/build-service-refund-r4.log`（4766 字节 BUILD SUCCESS，修复上一轮 0 字节日志缺口）。业务 commit 未推送、未合并 master、未发布。
+- **codex 交接：** `handoff.md` §15 为验收入口。至少含：两处 P0 修复源码审查；reply 要求的两组干净动态证据（干净合同基线多笔退款证明 otherPrice 与大池子 addAmount 各只应用一次 T；flow.amount=0+payAmount 非零+payDate=null 的 PM 场景证明实收不清零）；5195/5196 历史测试数据不得当干净断言、Sku 3100050 存量 0 阻塞事实均已标注。
+- **边界：** DEC-010 红线与 §12 禁扩范围不变；推送远端/合并/发布仍须用户拍板；验收结论回写任务夹后方可进入 S3/S4。

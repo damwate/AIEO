@@ -2,7 +2,7 @@
 
 ## 规划状态
 
-当前为 Standard 换轨后的规划协商阶段。S2 退款代码修正在 ChatGPT 复审通过前不得动工；旧诊断 worktree 的 3 行候选修改仅作问题证据，不属新仓实施。
+当前为 S2 R4：S2 独立验收 **REJECT**（问题2第3次）后，已按用户 2026-11-27 指示完成两处 P0 修复并提交（`8a745547eef28c7976753799a92aa13b0701c8cd`，ST-01 PASS），待 codex 验收。验收人由 ChatGPT 变更为 codex 系用户拍板（触发 L-019 止损后的处置）。
 
 ## 开工事实
 
@@ -51,18 +51,35 @@
 |---|---|---|---|---|---|
 | 问题1：多笔退款重复抵扣 F | S1-R1 REJECT（上述 reply SHA） | 本笔计算只使用完整 F，无历史退款现金来源，导致多笔非产品费用重复抵扣 | 1 | `e60d072b5df08e5b92d44fd15728de05ebe75bd1`（R2 规划修订，非业务代码实施） | S1-R2 规划 project 只读累计现金接口 + BIM 剩余 F 分摊；未实施 |
 | 问题1：多笔退款重复抵扣 F | S1-R2 REJECT（dispatch-2026-11-26T13-57-50，reply sha256=`927dba7d6220fb8d0bac6613137113ecdaa211a621081da9e1fc42a69b1f5931`） | 历史必须仅计成功退款；跨服务先读后写及审批中重复退款存在竞态 | 2 | `e60d072b5df08e5b92d44fd15728de05ebe75bd1`（R2 规划修订，非业务代码实施） | S1-R3 补 completed 状态、审批中拦截、project 主键行锁与现金快照复核；未实施 |
-| 问题2：多笔退款完成与业务额重复应用 | S2-R1/R2 REJECT（dispatch-2026-11-26T14-44-32 / 14-50-13） | 负向确认非幂等；审计额、审批应用额及大池子消费口径需分离，不能用 recordId 猜首次退款 | 2 | 问题2 R3 规划修订 commit 待登记 | R3=PASS：负向幂等 + flowBusinessAmount + calcIncomeSkuAmountNew 改读 Flow.amount，实施中 |
+| 问题2：多笔退款完成与业务额重复应用 | S2-R1/R2 REJECT（dispatch-2026-11-26T14-44-32 / 14-50-13） | 负向确认非幂等；审计额、审批应用额及大池子消费口径需分离，不能用 recordId 猜首次退款 | 2 | `cec4b280607a9467991ddea6102b98fa98b9f6d6`（问题2 R3 规划修订，非业务代码实施） | R3=PASS：负向幂等 + flowBusinessAmount + calcIncomeSkuAmountNew 改读 Flow.amount，实施中 |
+| 问题2：多笔退款完成与业务额重复应用 | S2 独立验收 REJECT（dispatch-2026-11-26T16-02-15，reply sha256=`7f9bc3e5dd614cfef63f803fc9fa8b197a445eddc1e86fa25adf8f39c1bbeb11`） | 两处 P0 实现缺陷：①`getChangeBusinessAmount()` 用 `selectById(record.getId())` 把 costRecord 主键当 Flow 主键，后续退款回退完整 T 破坏业务额去重；②PM 完成条件 `payDate==null` 为独立 OR，flow.amount=0 且 payAmount 非零时仍清零真实实收 | 3 | `8a745547eef28c7976753799a92aa13b0701c8cd`（业务代码修复，1 文件 +13/−3） | 触发 L-019 止损，停止对 ChatGPT 的常规返工循环；按用户 2026-11-27 指示修复提交后改交接 codex 验收 |
 
 ## S2 R3 实施与动态回归
 
 ①本步骤目标：按 S1-R3 PASS 在干净 worktree 完成 8 文件退款修正，并跑通逐笔审批动态矩阵。
 
-②修改文件：bim manager `ProjectService`、fallback、`ProjectCostFlowParam`、`ChangeOrderServiceImpl`；project `ProjectController`、api param、`ProjectService`、`ProjectServiceImpl`。当前仍为未提交 diff，业务 commit 待动态与独立验收后形成。
+②修改文件：9 文件，独立分支 `task/bms-change-recv-erf-refund`，被测 commit=`3ac3ded3b5c5b252424c799f0496546a7589219f`，parent=`a0789c1126b4df0258522b757a7ba842c4e7bc26`；ST-01 PASS。
 
-③修改内容：负 F 剩余额分摊、退款上限取绝对值、E!=0 拆分、成功退款现金只读接口、历史现金快照参数、project 主键行锁与审批中拦截。首次编译因 fallback 缺 `throws SystemException` 失败，修正后 service/UI package 均 PASS。
+③修改内容：负 F 剩余额分摊、退款上限取绝对值、E!=0 拆分、成功退款现金只读接口、历史现金快照、project 主键行锁与审批中拦截；负向 Confirmed 幂等；costRecord/flow 业务额分离；calcIncomeSkuAmountNew 改读 Flow.amount；PM 保留真实 payAmount，零实收才直接完成。完整 diff=`evidence/service-refund-r3-full.diff`。
 
-④执行结果：问题2 R3 方案 PASS，最终按 9 文件实施：R3 的 8 文件 + `ApprovalFlowServiceImpl`。首笔 100 已完成，第二笔 600 已正确落库（total=-600、sku=-200）；第二笔完成曾触发负向确认状态错误，现增加负向幂等、flowBusinessAmount 分离及大池子读取 Flow.amount，待重编译后从第二笔财务续验。
+④执行结果：最终业务 commit 已形成，未推送。动态矩阵完成：100、600、292.67、600 四笔均到 99，产品退款累计 0→200→492.67→1092.67；最后 0.01 超限拒绝且无新增。最后 600 为 `flow.amount=0 / payAmount=-600`，未再被 PM 清零。旧第二笔全额 flow.amount 与第三笔 PM 修复前直接完成均单独标为历史测试数据，不冒充干净合同断言。
 
-⑤测试结果：service/UI 首次 package PASS；R3 动态已证实金额计算与 F-only 累计正确。业务额去重、第二至第四笔完成、第五笔超限及合同/大池子副作用仍待动态复核，未提前标 PASS。
+⑤测试结果：service/UI package PASS；ST-01 R1/R2/R4 PASS；动态退款金额、F-only 累计、负向幂等、后续业务额和超限断言通过。其他 §7 场景（AsOrder、进度款、凭证查重、浏览器及 F=0/E=0/r>1 补充边界）仍未完成。
 
-⑥验收证据引用：IN_PROGRESS（问题2 R3 规划 PASS：dispatch-2026-11-26T14-54-50，reply sha256=`387d1a607fd8f85fcd648bf9ad0223e791cbc512173911e466db06ad711b2acf`；动态证据=`evidence/refund-r3-dynamic*.json` 和 `runtime/logs/refund-r3-dynamic*.log`；最终 commit、独立验收与 reply SHA 待形成）。
+⑥验收证据引用：S2 独立验收=**REJECT**（问题2第3次；dispatch-2026-11-26T16-02-15，reply sha256=`7f9bc3e5dd614cfef63f803fc9fa8b197a445eddc1e86fa25adf8f39c1bbeb11`）：多笔F分摊/事务行锁/负向幂等/0.01超限四项 PASS；业务额分离、PM实收两项 P0 REJECT，修复见下节 S2 R4。动态最终证据=`evidence/refund-r3-dynamic-final7.json`、`evidence/refund-r3-final-flow-records.json`；ST-01=`evidence/st01-service-r3.json`。
+
+### S2-R4 独立验收 REJECT 两处 P0 修复（L-019 止损后按用户指示路径）
+
+①本步骤目标：修复 S2 独立验收（问题2第3次 REJECT）裁定的两处 P0——历史 Flow 关联查询错误、PM 零完成可清零真实实收。
+
+②修改文件：`service-project/src/main/java/com/ecog/service/project/service/impl/ApprovalFlowServiceImpl.java` 1 文件（+13/−3），commit=`8a745547eef28c7976753799a92aa13b0701c8cd`，parent=`3ac3ded3b5c5b252424c799f0496546a7589219f`；ST-01 PASS（`evidence/st01-r4-fix.json`，R1/R2/R4 均 PASS）。
+
+③修改内容：
+- P0-1 `getChangeBusinessAmount()`：由错误的 `new ProjectApprovalFlow().selectById(record.getId())`（把 costRecord 主键当 Flow 主键）改为 `object_id=record.getId()` + `object_type=ChangeOrderFlow` 查询（与创建侧 `flow.setObjectId(costRecord.getId())` 真实关联一致）；`selectList` 显式校验唯一性，>1 条抛异常 fail-closed；Flow 存在但 amount 为空仍 fail-closed；仅"确实查不到 Flow"（旧数据）才回退 `record.getAmount()`，不再把"主键查不到"误当"旧数据没有 Flow"。
+- P0-2 PM 完成条件：由 `payDate==null || (amount==0 && zeroCash)` 改为 `zeroCashAmount && (payDate==null || zeroBusinessAmount)`——仅"无真实实收"（payAmount 空/0）才按零现金直接完成；非零 payAmount 一律保留并进财务审核，payDate 为空不再能覆盖实收；`flow.getAmount()` 判空防 NPE。AsOrderFlow 同分支一并受保护。
+
+④执行结果：commit 已形成于 `task/bms-change-recv-erf-refund`，未推送、未合并 master、未发布。`mvn -pl service-project -am package -DskipTests` **BUILD SUCCESS**，真实日志=`evidence/build-service-refund-r4.log`（4766 字节，含 Reactor Summary 与 BUILD SUCCESS，补齐上一轮 0 字节日志缺陷）。累计 diff 仍为同一批 9 文件（+196/−23）=`evidence/service-refund-r4-full.diff`（sha256=`3c3f47e45d13e0611efa36459ef3c2b74658a8c37d42be6f2844cd1e939e2e1c`）。
+
+⑤测试结果：编译打包 PASS；ST-01 PASS。service-bim 源码本轮未动（bim.jar sha256 与 r3 构建相同=`c5b75eb63cf4557072c32599b92f989f2969538c3fb2bed82abb9098cce83e0a`），project.jar r4 构建=`ec62907b5fe34b2ef9c0a51d2dfbc70930811ed755b545dc7120f0b49ba6fa65`（`evidence/r4-jar-sha256.txt`）。动态回归本轮未重跑：验收方要求的两笔干净动态证据（干净基线多笔退款证明 otherPrice/addAmount 各只应用一次 T；flow.amount=0 + payAmount 非零 + payDate=null 的 PM 场景证明真实实收不清零）移交 codex 验收执行；此前干净基线尝试受 Sku 3100050 存量 0 阻塞的事实已在验收评审登记，codex 需先解决存量或改用新合同数据。
+
+⑥验收证据引用：待 codex 验收（用户 2026-11-27 指示，交接材料=handoff.md §15）。S2 独立验收（问题2第3次 REJECT）reply 原文=`D:/AIEO/phase0/logs/dispatch-2026-11-26T16-02-15/reply.txt`（sha256=`7f9bc3e5dd614cfef63f803fc9fa8b197a445eddc1e86fa25adf8f39c1bbeb11`，artifact_sha256 与派单日志一致）。

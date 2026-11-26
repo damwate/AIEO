@@ -1,0 +1,4 @@
+[独立验收][BMS-Er+F][S2]
+被测=YotinGarden/bms-service task/bms-change-recv-erf-refund，commit=3ac3ded3b5c5b252424c799f0496546a7589219f，parent=a0789c1126b4df0258522b757a7ba842c4e7bc26。
+附件=r3-review-pack.zip（SHA256=128c1f0c29b013c1e387aadd7cd71ca749e6c238cd0c99b67b4b12e5b1606fdf），含9文件完整diff、ST-01、编译、动态矩阵、summary及历史数据说明。
+请按六查逐项给PASS/REJECT，不只读总结：核对多笔F分摊/事务行锁/负向幂等/costRecord与flow业务额分离/PM实收保持/0.01超限无新增。旧5195/5196已在summary标注，勿当干净合同证据。若附件不可读请明确BLOCKED原因。

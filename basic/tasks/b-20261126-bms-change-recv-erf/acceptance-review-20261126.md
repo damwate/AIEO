@@ -82,3 +82,26 @@
 - 本机缺少 `C:/Users/youting/.agents/ego-profile.json`，无法执行账号钉扎。按 skill 的 `ACCOUNT_CONFIG_MISSING_STOP` 规则停止，不猜账号、不改走非授权通道。
 
 恢复条件：安装/恢复 ego-browser，并按本机真实 ChatGPT Plus profile 配置 `ego-profile.json` 的 `defaultProfileId/defaultAccount` 后，再执行 `ego-browser skill`、账号校验、GitHub handoff、`send-new` 与受管 `watch`。
+
+> **2026-11-26 更新：** §6 所述 ego-browser 阻塞已按用户指示换用 AIEO Standard 派单链解决——命名实例 `bms-erf`（独立 profile `gpt-poc-bms-erf` / 端口 9303）。S1-R3 规划、S2-R3 实施与 16-02-15 独立验收均经 `phase0/tools/gpt_dispatch.mjs --instance bms-erf` 发送并归档 reply；§6 保留作历史记录。
+
+## 7. S2 独立验收裁定（2026-11-26，整体 REJECT）
+
+- 派单：dispatch-2026-11-26T16-02-15，附件 `r3-review-pack.zip`（sha256=`128c1f0c29b013c1e387aadd7cd71ca749e6c238cd0c99b67b4b12e5b1606fdf`），被测 commit=`3ac3ded3b5c5b252424c799f0496546a7589219f`。
+- reply 原文：`D:/AIEO/phase0/logs/dispatch-2026-11-26T16-02-15/reply.txt`（sha256=`7f9bc3e5dd614cfef63f803fc9fa8b197a445eddc1e86fa25adf8f39c1bbeb11`，与派单日志 artifact_sha256 一致）。
+- 六项裁定：
+  - 多笔 F 分摊 **PASS**：实际顺序 100→600→292.67→600 与 F=-500、产品退款上限 1092.67 的分摊吻合，产品退款累计 0→200→492.67→1092.67。
+  - 事务行锁 **PASS**（边界）：`@Transactional` + `SELECT id FROM project_info WHERE id=? FOR UPDATE` 结构正确，锁内无远程调用；并发压力测试与同数据源证明未覆盖。
+  - 负向幂等 **PASS**（源码）：Confirmed+负额即返回，位于报价检查后、原状态校验前；缺重复调用动态日志。
+  - 业务额分离 **REJECT（P0）**：写入分离正确，但 `getChangeBusinessAmount()` 用 `selectById(record.getId())` 把 costRecord 主键当 Flow 主键（实测 8234→5194 两 ID 不同；真实关联为 `object_id`+`object_type`）。后续部分退款回退完整 T 会再次累计，破坏 R3 去重；还可能误读同 ID 其他业务 Flow。
+  - PM 实收保持 **REJECT（P0）**：`payDate==null` 为独立 OR，flow.amount=0 + payAmount 非零 + payDate=null 仍会把真实实收清零；5197 动态样本通过不能证明所有实收安全。
+  - 0.01 超限无新增 **PASS**；附带建议：超限返回 INTERNAL_SERVER_ERROR 而非业务参数错误，建议核查 BIM 异常包装（非阻断）。
+- 证据边界：`build-new-service-refund-r3.log` 0 字节不能作编译证据；commit 未推送（GitHub API 422）无法远端核验；项目 1652 混合数据（含 5195 旧流程 T 与 5196 旧 PM 数据）不能证明 otherPrice 从干净基线只应用一次 T。
+
+## 8. R4 修复与 codex 交接（2026-11-27）
+
+- 两处 P0 已修复并提交 `8a745547eef28c7976753799a92aa13b0701c8cd`（parent=`3ac3ded3b5c5b252424c799f0496546a7589219f`，仅 `ApprovalFlowServiceImpl.java` 1 文件 +13/−3，ST-01 PASS=`evidence/st01-r4-fix.json`）；修改明细见 steps.md「S2 R4」。
+- 编译证据补齐：`evidence/build-service-refund-r4.log`（4766 字节，mvn BUILD SUCCESS，Reactor Summary 可核）；jar 指纹=`evidence/r4-jar-sha256.txt`（bim.jar 与 r3 相同，project.jar r4 构建）。
+- 问题2 返工计数=3，触发 L-019 止损；停止对 ChatGPT 的常规返工循环、修复后提交、验收人变更为 codex，均为用户 2026-11-27 拍板。
+- codex 验收须补两组干净动态证据（reply 明确要求）：①干净合同基线多笔退款，证明 otherPrice 与大池子 addAmount 各只应用一次 T、后续为 0；②flow.amount=0、payAmount 非零、payDate=null 的 PM 场景，证明真实实收不被清零。须知：5195/5196 为历史测试数据（r3-review-summary 已标注）不得当干净断言；此前干净基线尝试因 Sku 3100050 存量 0 阻塞（`evidence/scenario-refund-r3-clean-prepare.json`），需先补存量或换新合同数据。
+- 其余 §7 场景（AsOrder、进度款释放、企微凭证查重、浏览器实测、F=0/E=0/r>1）仍不在本次 PASS 范围。

@@ -80,3 +80,37 @@ R7（7ea5f57d…最小清单）→ R8（65ac56e8…大池子复核）→ R9（c8
 - 旧路径本机 dev 的部分实测已完成，正向 Er+F、超收大池子、NO_PAYMENT、ZERO 等有证据；退款场景发现负 E/负 F 符号问题，新 `a0789c11` 同样存在，不能登记 §7 全通过。
 - 详细证据索引与未完成项见同目录 `acceptance-review-20261126.md`。
 - ChatGPT 派单因本机缺 `ego-browser` 及 `~/.agents/ego-profile.json` 按工作流 fail-closed 停止，**尚未发送**；旧路径本机服务已全部停止。
+- 2026-11-26 后续：ego-browser 阻塞按用户指示换用 AIEO Standard 派单链（命名实例 `bms-erf`）解决，ChatGPT 规划复审、实施复核与独立验收均已完成并归档 reply。
+
+## 15. 2026-11-27 S2 独立验收 REJECT 与 R4 修复——交接 codex 验收
+
+**验收人变更（用户决策）：** 由 ChatGPT 变更为 codex。问题2 返工计数=3 触发 L-019 止损后，用户 2026-11-27 拍板：修复两处 P0 → 提交代码与文档 → 交接 codex 验收。
+
+**当前被测（事实）：**
+
+- worktree：`D:/YotinGarden/.worktrees/bms-change-recv-erf-service`（干净隔离 worktree，分支 `task/bms-change-recv-erf-refund`，未推送）
+- 被测 commit=`8a745547eef28c7976753799a92aa13b0701c8cd`（parent=`3ac3ded3b5c5b252424c799f0496546a7589219f`；相对迁移基线 `a0789c1126b4df0258522b757a7ba842c4e7bc26` 累计仍为 9 文件 +196/−23）
+- ST-01 PASS=`evidence/st01-r4-fix.json`；累计 diff=`evidence/service-refund-r4-full.diff`（sha256=`3c3f47e45d13e0611efa36459ef3c2b74658a8c37d42be6f2844cd1e939e2e1c`）
+- 真实编译日志=`evidence/build-service-refund-r4.log`（mvn BUILD SUCCESS，4766 字节）；jar 指纹=`evidence/r4-jar-sha256.txt`（bim.jar 与 r3 构建相同，project.jar 为 r4 构建）
+- 远端核验说明：commit 未推送（推送须用户批准），GitHub API 对本地 SHA 返回 422 属预期；请以本地 worktree/diff 为审查对象。
+
+**上一轮独立验收（REJECT，供对照）：** reply=`D:/AIEO/phase0/logs/dispatch-2026-11-26T16-02-15/reply.txt`（sha256=`7f9bc3e5dd614cfef63f803fc9fa8b197a445eddc1e86fa25adf8f39c1bbeb11`）。六项中多笔F分摊、事务行锁、负向幂等、0.01超限无新增 PASS；业务额分离、PM实收两项 P0 REJECT（详见 `acceptance-review-20261126.md` §7）。
+
+**R4 已修两处 P0（`ApprovalFlowServiceImpl.java`）：**
+
+1. `getChangeBusinessAmount()`：`selectById(record.getId())`（主键误当 Flow 主键）→ 按 `object_id=record.getId()` + `object_type=ChangeOrderFlow` 查询；`selectList` 显式校验唯一性，>1 条抛异常 fail-closed；Flow 存在但 amount 为空 fail-closed；仅确实查不到 Flow（旧数据）才回退 `record.getAmount()`。
+2. PM 完成条件：`payDate==null || (amount==0 && zeroCash)` → `zeroCashAmount && (payDate==null || zeroBusinessAmount)`：仅"无真实实收"按零现金直接完成；非零 payAmount 一律保留并进财务审核；`flow.getAmount()` 判空防 NPE；AsOrderFlow 同分支一并受保护。
+
+**codex 验收范围（至少）：**
+
+1. 源码审查 commit `8a745547`：两处 P0 修复是否满足 reply 要求（真实关联+类型过滤+唯一性+旧数据回退保留；payDate 为空不得覆盖非零实收、无实收零金额流程才可零现金完成）。
+2. 补两组干净动态证据（reply 明确要求）：①干净合同基线执行多笔退款，证明合同 otherPrice 与大池子 addAmount 各只应用一次 T、后续为 0；②构造 flow.amount=0、payAmount 非零、payDate=null 的 PM 审批场景，证明真实实收不被清零。
+3. 数据须知：项目 1652 的 flow 5195/5196 为历史测试数据（`evidence/r3-review-pack/r3-review-summary.md` 已标注），不得当干净合同断言；此前干净基线尝试因 Sku 3100050 存量 0 阻塞（`evidence/scenario-refund-r3-clean-prepare.json`），需先补存量或换新合同数据。
+4. 可选补强（reply 证据边界）：同一负向变更单重复确认的动态日志；同项目并发双退款压力测试；0.01 超限返回 INTERNAL_SERVER_ERROR 的异常包装核查（reply 建议项，非阻断）。
+5. 范围外（勿混判）：AsOrder 正向下限豁免、进度款 E/F 释放、企微凭证查重、浏览器实测、F=0/E=0/r>1 边界与 §7 全量复测不在本次 PASS 范围。
+
+**运行环境（事实）：** 本机 dev 服务已停；dev MySQL `47.96.67.90:8306`（只读口令经 `DEV_DB_PASSWORD` 环境变量传入，禁写入任何脚本/Git）；动态回归脚本=`runtime/refund_r3_regression.py`（含 RESUME_STAGE 续跑说明）、BMS 登录/提交辅助=`runtime/bms_client.py` 等；217 部署步骤见 §11。
+
+**结论登记：** 验收结论回写本任务夹（`acceptance-review-20261126.md`、`steps.md`、`task-brief.md` 状态表）；PASS 方可进入 S3（§7 其余场景）与 S4（ST-05 终检/delivery/decision-log）。
+
+**禁止事项不变（§12 + §2）：** 不重构大池子、不动报价公式、不做跨类型防重、不新增库表、不恢复 0929 等额校验、不改退款上限 a×r；生产发布/数据操作/main 合并/推送远端须用户拍板；他人 WIP（`D:/YotinGarden/bms-service` 工作区 7 文件、`bms-document` stash@{0}）勿动勿提交；部署构建必须从干净 worktree/commit 出，禁止打包主仓工作区。
