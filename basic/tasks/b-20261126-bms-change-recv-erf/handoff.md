@@ -11,9 +11,9 @@
 
 ## 2. 仓库与基线（事实）
 
-- service：`master` @ `d95e7c07`（feat(project): 变更单收款金额控制重构，7 文件）
-- bms：`master` @ `0188505`（feat(bms): 变更单收款页实收下限Er+F前端校验与提示，3 文件）
-- 均**本地 commit，未推送** gitee；工作区残留无关改动（service 5 个 application-prod.yml、bms application.yml BOM），不属本任务
+- service：`master` @ `d95e7c07`（feat(project): 变更单收款金额控制重构，7 文件）——**已推送 gitee**（b13d18cf..d95e7c07）
+- bms：`master` @ `0188505`（feat(bms): 变更单收款页实收下限Er+F前端校验与提示，3 文件）——**已推送 gitee**（cf79e4c..0188505）
+- 工作区残留无关改动（service 5 个 application-prod.yml、bms application.yml BOM），不属本任务，未提交未推送
 - 首要文件=需求文档：`D:/javacode/yotin/document/01_业务功能/04_变更与结算专题/05_变更收款金额控制需求文档_20261126.md`（v3 定稿，含口径沿革/规则 R1-R10/实施位置/验收矩阵 §7/完成状态 §8.3）
 
 ## 3. 已完成事项（事实）
