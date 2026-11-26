@@ -35,3 +35,4 @@ Thumbs.db
 # M1 登记 OS 锁残留（运行时 sidecar，非证据）
 *.lockfile
 .zcode/
+basic/tasks/b-20261126-bms-change-recv-erf/worktrees/
