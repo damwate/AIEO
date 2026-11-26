@@ -11,15 +11,18 @@
 
 ## 2. 仓库与基线（事实）
 
-- service：`master` @ `d95e7c07`（feat(project): 变更单收款金额控制重构，7 文件）——**已推送 gitee**（b13d18cf..d95e7c07）
-- bms：`master` @ `0188505`（feat(bms): 变更单收款页实收下限Er+F前端校验与提示，3 文件）——**已推送 gitee**（cf79e4c..0188505）
-- 工作区残留无关改动（service 5 个 application-prod.yml、bms application.yml BOM），不属本任务，未提交未推送
-- 首要文件=需求文档：`D:/javacode/yotin/document/01_业务功能/04_变更与结算专题/05_变更收款金额控制需求文档_20261126.md`（v3 定稿，含口径沿革/规则 R1-R10/实施位置/验收矩阵 §7/完成状态 §8.3）
+**验收基线为 YotinGarden GitHub 新仓库**（2026-11-26 迁移；老仓库 `D:/javacode/yotin`（gitee）上的同名推送 `d95e7c07`/`0188505` 已作废，勿以老仓库为验收对象）：
+
+- service：`D:/YotinGarden/bms-service` `master` @ `a0789c11`（feat(project): 变更单收款金额控制重构，7 文件 +156/−37）——**已推送 GitHub**（28611b52..a0789c11）
+- 前端：`D:/YotinGarden/bms-ui` `master` @ `342791f9`（feat(bms): 变更单收款页实收下限Er+F前端校验与提示，3 文件 +54/−18）——**已推送 GitHub**（1a0742d6..342791f9）
+- 文档：`D:/YotinGarden/bms-document` `master` @ `c2ca137`（02 §3.3 / 03 §5.1 / 05 全套；05 §8.3 已登记上述代码 SHA 与迁移记录）
+- 新仓库工作区残留他人 WIP（bms-service 7 文件"客户转设计师"、bms-document stash@{0} commission-audit），**不属本任务，勿动勿提交**
+- 首要文件=需求文档：`D:/YotinGarden/bms-document/01_业务功能/04_变更与结算专题/05_变更收款金额控制需求文档_20261126.md`（v3 定稿，含口径沿革/规则 R1-R10/实施位置/验收矩阵 §7/完成状态 §8.3）
 
 ## 3. 已完成事项（事实）
 
 1. 需求文档 v3 定稿（用户三次口径修正 + ChatGPT R9 裁定，reply sha256 `c84c8d75a10b3196…`，`D:/AIEO/phase0/logs/dispatch-2026-11-26T11-32-13/reply.txt`）
-2. 三处代码：bim `ChangeOrderServiceImpl.addChangeOrderCostFlow`（权威下限 `实收+1 ≥ min(changeAmount, E+F)`，排除 AsOrder）；bms `list_set` 预校验 + `receivables` 提示/比对行（commit 见 §2）
+2. 三处代码：service-bim `ChangeOrderServiceImpl.addChangeOrderCostFlow`（权威下限 `实收+1 ≥ min(changeAmount, E+F)`，排除 AsOrder）；bms-ui `list_set` 预校验 + `receivables` 提示/比对行（commit 见 §2；两仓库均 rebase 到远端最新 quote-preview 系列之后）
 3. 编译：两仓库 `mvn -q -DskipTests compile` PASS
 4. 文档同步：02 §3.3、03 §5.1、05 全套
 
@@ -41,7 +44,7 @@
 
 ## 7. 测试环境与已知约束（事实）
 
-- 测试机 192.168.0.217（mstsc yotin/yotin@666），dev MySQL 47.96.67.90:8306；联调指南 `document/00_系统基础/05_测试环境联调指南.md`
+- 测试机 192.168.0.217（mstsc yotin/yotin@666），dev MySQL 47.96.67.90:8306；联调指南 `D:/YotinGarden/bms-document/00_系统基础/05_测试环境联调指南.md`
 - 潜伏缺陷登记（非本任务）：`QuoteServiceImpl.quoteNew:497` 购销分支 changeAmount 漏 retailSkuPrice，生效路径均被重算覆盖，可选防御性修复（05 §3）
 
 ## 8. 历史审查结论（事实）
@@ -55,11 +58,11 @@ R7（7ea5f57d…最小清单）→ R8（65ac56e8…大池子复核）→ R9（c8
 
 ## 10. 测试命令与结果（事实）
 
-`cd D:/javacode/yotin/service && mvn -q -DskipTests compile` → exit 0；`cd D:/javacode/yotin/bms && mvn -q -DskipTests compile` → exit 0（2026-11-26，d95e7c07/0188505 状态）。
+`cd D:/YotinGarden/bms-service && mvn -q -DskipTests compile` → exit 0；`cd D:/YotinGarden/bms-ui && mvn -q -DskipTests compile` → exit 0（2026-11-26，迁移后内容与 a0789c11/342791f9 提交一致）。
 
 ## 11. 下一步（计划）
 
-1. 部署 217 测试环境（service-bim/service-project/bms jar）
+1. 部署 217 测试环境（`D:/YotinGarden/bms-service` 构建 service-bim/service-project jar + `D:/YotinGarden/bms-ui` 构建 bms jar，基线 SHA 见 §2）
 2. 按 05 §7 矩阵逐场景实测，结论登记回本任务夹
 3. 发现偏差：小偏差直接修+commit；口径级偏差 STOP 报用户
 
