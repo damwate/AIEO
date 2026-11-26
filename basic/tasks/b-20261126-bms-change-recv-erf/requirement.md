@@ -11,3 +11,9 @@
 > AIEO 交接包已同步更新为新仓库基线（handoff.md，本地提交 41f451a，codex 直接读盘即可）。他人 WIP 均已保回原状：bms-service 7 个未提交文件在作区、bms-document 留在 stash，未动未提交。
 
 > 用AIEO的standard版本里面的workflow解决遇到的问题、
+
+> 差不多了就提交代码和文档吧，交接给codex验收（2026-11-27，S2 独立验收 REJECT 两处 P0 报告后拍板）
+
+> 提交到git，给我一句话交接给codex（2026-11-27，批准推送任务分支与 AIEO main）
+
+> codex在远端，你把交接文档也提交到git吧（2026-11-27，批准交接证据入 Git 供远端 codex 读取）

@@ -1,13 +1,13 @@
 # 会话交接包：BMS 变更单收款重构（Er+F）→ codex 验收
 
-**生成时间：** 2026-11-26  **生成者：** ZCode 开发会话
+**生成时间：** 2026-11-26  **最近更新：** 2026-11-27（S2-R4 修复完成，交接 codex 验收，见 §15）  **生成者：** ZCode 开发会话
 **性质：** 事实（附证据）／决策（注明版本）／待确认——逐条标注
 
 ## 1. 目标与阶段
 
-变更单收款从"金额写死"重构为"实收下限 = 理论变更金额 Er+F"（覆盖收款额→实收产品额→大池子→提成影响链）。当前阶段：**代码已提交，待部署回归验收**。
+变更单收款从"金额写死"重构为"实收下限 = 理论变更金额 Er+F"（覆盖收款额→实收产品额→大池子→提成影响链）。当前阶段（2026-11-27）：**正向收款已实施提交；退款返工经 S1-S2 循环至 R4 两处 P0 修复已提交并推送，待 codex 独立验收（§15）**。
 
-**任务版本选型：** Basic（S2——需求已定稿、改动已实施、剩余为验收执行）；批准人/日期：用户 2026-11-26。
+**任务版本选型：** 2026-11-26 由 Basic 换轨 Standard/S3（用户原话"用AIEO的standard版本里面的workflow解决遇到的问题"，DEC-135）；2026-11-27 验收人由 ChatGPT 变更为 codex（用户原话"差不多了就提交代码和文档吧，交接给codex验收"，DEC-136）。
 
 ## 2. 仓库与基线（事实）
 
@@ -16,6 +16,7 @@
 - service：`D:/YotinGarden/bms-service` `master` @ `a0789c11`（feat(project): 变更单收款金额控制重构，7 文件 +156/−37）——**已推送 GitHub**（28611b52..a0789c11）
 - 前端：`D:/YotinGarden/bms-ui` `master` @ `342791f9`（feat(bms): 变更单收款页实收下限Er+F前端校验与提示，3 文件 +54/−18）——**已推送 GitHub**（1a0742d6..342791f9）
 - 文档：`D:/YotinGarden/bms-document` `master` @ `c2ca137`（02 §3.3 / 03 §5.1 / 05 全套；05 §8.3 已登记上述代码 SHA 与迁移记录）
+- **退款返工分支（本任务 S1-S2 新增，验收对象）**：`bms-service` 分支 `task/bms-change-recv-erf-refund` @ `8a745547eef28c7976753799a92aa13b0701c8cd`（master `a0789c11` 之上两笔退款修复提交，详见 §15）——2026-11-27 已推送 GitHub，未合并 master
 - 新仓库工作区残留他人 WIP（bms-service 7 文件"客户转设计师"、bms-document stash@{0} commission-audit），**不属本任务，勿动勿提交**
 - 首要文件=需求文档：`D:/YotinGarden/bms-document/01_业务功能/04_变更与结算专题/05_变更收款金额控制需求文档_20261126.md`（v3 定稿，含口径沿革/规则 R1-R10/实施位置/验收矩阵 §7/完成状态 §8.3）
 
@@ -26,9 +27,10 @@
 3. 编译：两仓库 `mvn -q -DskipTests compile` PASS
 4. 文档同步：02 §3.3、03 §5.1、05 全套
 
-## 4. 未完成事项（事实）
+## 4. 未完成事项（事实，2026-11-27 更新）
 
-- 部署后按 05 §7 验收矩阵实测（13 场景：电商/整装/超折扣/贴下限/超收/售后/退款/凭证查重等）——**全部未开始，这是本次交接的验收范围**
+- 退款返工 S2-R4 两处 P0 修复的 **codex 独立验收** + 两组干净动态证据（干净合同基线多笔退款证明 otherPrice/addAmount 各只应用一次 T；PM flow.amount=0 + payAmount 非零 + payDate=null 不清零）——**这是本次交接的验收范围，入口见 §15**
+- 05 §7 矩阵其余场景：AsOrder 正向下限豁免、进度款 E/F 释放、企微凭证查重、前端浏览器实测、F=0/E=0/r>1 补充边界、新基线 217 部署全套复测（正向 Er+F/贴下限/超收/NO_PAYMENT/ZERO 已有本机 dev 实测证据，acceptance-review §3；退款多笔分摊/行锁/幂等/超限四项已经 ChatGPT 独立验收 PASS，acceptance-review §7）
 - R8 提出的 13 个大池子场景与 05 §7 矩阵重叠部分一并回归
 
 ## 5. 架构决策（决策）
@@ -60,11 +62,11 @@ R7（7ea5f57d…最小清单）→ R8（65ac56e8…大池子复核）→ R9（c8
 
 `cd D:/YotinGarden/bms-service && mvn -q -DskipTests compile` → exit 0；`cd D:/YotinGarden/bms-ui && mvn -q -DskipTests compile` → exit 0（2026-11-26，迁移后内容与 a0789c11/342791f9 提交一致）。
 
-## 11. 下一步（计划）
+## 11. 下一步（计划，2026-11-27 更新）
 
-1. 部署 217 测试环境（`D:/YotinGarden/bms-service` 构建 service-bim/service-project jar + `D:/YotinGarden/bms-ui` 构建 bms jar，基线 SHA 见 §2）
-2. 按 05 §7 矩阵逐场景实测，结论登记回本任务夹
-3. 发现偏差：小偏差直接修+commit；口径级偏差 STOP 报用户
+1. codex 按 §15 验收 commit `8a745547`：两处 P0 修复源码审查 + 两组干净动态证据，结论回写本任务夹（acceptance-review/steps/task-brief）
+2. PASS 后进入 S3：217 测试环境部署（从干净分支/commit 构建 service-bim/service-project/bms jar，勿打包主仓工作区）+ §7 矩阵其余场景实测（AsOrder/进度款/凭证查重/浏览器/边界）
+3. S4 收尾：ST-05 终检、delivery.md 七要素、decision-log 登记；发现偏差：小偏差直接修+commit，口径级偏差 STOP 报用户
 
 ## 12. 禁止事项（决策）
 
@@ -90,7 +92,7 @@ R7（7ea5f57d…最小清单）→ R8（65ac56e8…大池子复核）→ R9（c8
 
 **当前被测（事实）：**
 
-- worktree：`D:/YotinGarden/.worktrees/bms-change-recv-erf-service`（干净隔离 worktree，分支 `task/bms-change-recv-erf-refund`，未推送）
+- worktree：`D:/YotinGarden/.worktrees/bms-change-recv-erf-service`（干净隔离 worktree，分支 `task/bms-change-recv-erf-refund`，2026-11-27 已推送 origin，见下方远端核验说明）
 - 被测 commit=`8a745547eef28c7976753799a92aa13b0701c8cd`（parent=`3ac3ded3b5c5b252424c799f0496546a7589219f`；相对迁移基线 `a0789c1126b4df0258522b757a7ba842c4e7bc26` 累计仍为 9 文件 +196/−23）
 - ST-01 PASS=`evidence/st01-r4-fix.json`；累计 diff=`evidence/service-refund-r4-full.diff`（sha256=`3c3f47e45d13e0611efa36459ef3c2b74658a8c37d42be6f2844cd1e939e2e1c`）
 - 真实编译日志=`evidence/build-service-refund-r4.log`（mvn BUILD SUCCESS，4766 字节）；jar 指纹=`evidence/r4-jar-sha256.txt`（bim.jar 与 r3 构建相同，project.jar 为 r4 构建）

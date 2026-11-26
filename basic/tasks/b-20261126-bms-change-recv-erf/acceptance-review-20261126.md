@@ -62,6 +62,8 @@
 
 旧 worktree 中留有仅用于诊断的 3 行候选修正（`nonProductAmount.abs()`、`refundProductLimit.abs()`、拆分条件 `!=0`），**未提交、未带入新仓库、未作为验收通过依据**。应由 ChatGPT 先独立复核业务口径和边界，再决定是否形成新仓库修复提交。
 
+> **2026-11-26/27 处置（已闭环至待验收）：** 上述三处符号问题已经 S1 规划复审（R3 PASS）→ S2 实施修复（`3ac3ded3`）→ ChatGPT 独立验收（REJECT 两 P0）→ R4 修复（`8a745547`）处置完毕，待 codex 验收（handoff §15）。本节保留为问题发现时点的历史记录；候选 3 行修正从未提交，实际实施以独立验收后的 9 文件 diff 为准（见 §7/§8）。
+
 ## 5. 尚未完成的 §7 场景
 
 - AsOrder 正向下限豁免。
@@ -96,7 +98,7 @@
   - 业务额分离 **REJECT（P0）**：写入分离正确，但 `getChangeBusinessAmount()` 用 `selectById(record.getId())` 把 costRecord 主键当 Flow 主键（实测 8234→5194 两 ID 不同；真实关联为 `object_id`+`object_type`）。后续部分退款回退完整 T 会再次累计，破坏 R3 去重；还可能误读同 ID 其他业务 Flow。
   - PM 实收保持 **REJECT（P0）**：`payDate==null` 为独立 OR，flow.amount=0 + payAmount 非零 + payDate=null 仍会把真实实收清零；5197 动态样本通过不能证明所有实收安全。
   - 0.01 超限无新增 **PASS**；附带建议：超限返回 INTERNAL_SERVER_ERROR 而非业务参数错误，建议核查 BIM 异常包装（非阻断）。
-- 证据边界：`build-new-service-refund-r3.log` 0 字节不能作编译证据；commit 未推送（GitHub API 422）无法远端核验；项目 1652 混合数据（含 5195 旧流程 T 与 5196 旧 PM 数据）不能证明 otherPrice 从干净基线只应用一次 T。
+- 证据边界：`build-new-service-refund-r3.log` 0 字节不能作编译证据；commit 未推送（GitHub API 422）无法远端核验——*该两项为验收时点事实，r4 已补真实编译日志且分支已推送（§8）*；项目 1652 混合数据（含 5195 旧流程 T 与 5196 旧 PM 数据）不能证明 otherPrice 从干净基线只应用一次 T。
 
 ## 8. R4 修复与 codex 交接（2026-11-27）
 
