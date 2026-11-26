@@ -92,7 +92,7 @@ R7（7ea5f57d…最小清单）→ R8（65ac56e8…大池子复核）→ R9（c8
 - 被测 commit=`8a745547eef28c7976753799a92aa13b0701c8cd`（parent=`3ac3ded3b5c5b252424c799f0496546a7589219f`；相对迁移基线 `a0789c1126b4df0258522b757a7ba842c4e7bc26` 累计仍为 9 文件 +196/−23）
 - ST-01 PASS=`evidence/st01-r4-fix.json`；累计 diff=`evidence/service-refund-r4-full.diff`（sha256=`3c3f47e45d13e0611efa36459ef3c2b74658a8c37d42be6f2844cd1e939e2e1c`）
 - 真实编译日志=`evidence/build-service-refund-r4.log`（mvn BUILD SUCCESS，4766 字节）；jar 指纹=`evidence/r4-jar-sha256.txt`（bim.jar 与 r3 构建相同，project.jar 为 r4 构建）
-- 远端核验说明：commit 未推送（推送须用户批准），GitHub API 对本地 SHA 返回 422 属预期；请以本地 worktree/diff 为审查对象。
+- 远端核验说明：分支 `task/bms-change-recv-erf-refund` 已于 2026-11-27 经用户批准推送 origin（YotinGarden/bms-service），远端可按 commit `8a745547eef28c7976753799a92aa13b0701c8cd` 核验；**未合并 master、未发布**。
 
 **上一轮独立验收（REJECT，供对照）：** reply=`D:/AIEO/phase0/logs/dispatch-2026-11-26T16-02-15/reply.txt`（sha256=`7f9bc3e5dd614cfef63f803fc9fa8b197a445eddc1e86fa25adf8f39c1bbeb11`）。六项中多笔F分摊、事务行锁、负向幂等、0.01超限无新增 PASS；业务额分离、PM实收两项 P0 REJECT（详见 `acceptance-review-20261126.md` §7）。
 
