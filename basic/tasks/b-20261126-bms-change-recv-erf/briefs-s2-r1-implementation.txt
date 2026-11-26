@@ -1,0 +1,4 @@
+[实施发现会商][BMS-Er+F][问题2]
+R3金额矩阵已实现，但2168第二笔cwAudit在flow→99后调用confirmChangeOrder，因首笔已置Confirmed而报“状态错误”并回滚。另有重复业务额风险：每条部分退款flow.amount均为完整T=-1592.67，直接幂等放行会重复累计合同增减项及大池子addAmount。
+拟最小处置：①仅“changeAmount<0且status=Confirmed”时confirmChangeOrder幂等返回，不重复JST/BOM；正向状态校验不放宽。②首条退款flow.amount保留完整T，后续部分退款flow.amount=0，totalAmount仍按实退、skuAmount按剩余F计算；这样不改大池子算法且理论业务额仅入一次，previousCash>0可识别后续笔。
+请裁定②是否满足R8落库矩阵，还是必须record.amount保留T并另做去重。请给PASS/REJECT及合同otherPrice/大池子具体断言，未回复前不继续改码。

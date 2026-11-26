@@ -1,0 +1,4 @@
+[实施发现R3][BMS-Er+F][问题2]
+不再用(recordType,recordId)猜首次退款。改让calcIncomeSkuAmountNew的addAmount直接读取与每条costRecord同ID的ProjectApprovalFlow.amount（首笔T、后续0），currentAmount同样取当前flow.amount；仅ChangeOrder分支调整，旧数据无flow时回退costRecord.amount。这样首次退款必带T、后续天然0，无需去重键，其他E/F/sku/total/paySku公式不动。
+①负金额且Confirmed的幂等返回置于JST/BOM之前，project其他落库/现金处理继续；②params分离flowBusinessAmount，costRecord.amount始终=T。文件=原8+ApprovalFlowServiceImpl=9个。
+动态断言：首笔otherPrice/addAmount均含T一次，后续均0但现金/产品逐笔；不同业务互不影响、F-only现金照计、超限无新增。请给PASS/REJECT。

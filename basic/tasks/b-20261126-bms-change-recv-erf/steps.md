@@ -37,10 +37,32 @@
 
 ⑤测试结果：已有负例=变更单 2168、实退 100 元失败且未落库；ChatGPT 给出动态序列 100→600→600，要求产品退款累计依次为 0→200→800，另需覆盖 1092.67 临界、1092.68 超限、E=0/F=0/r>1/负 paidAmount。
 
-⑥验收证据引用：REJECT（dispatch-2026-11-26T13-45-22，reply sha256=`533c19306d81de19874059ed5222baa0104f6f0aea76d149ec36c3b87dab70e2`）。进入问题1第1次返工，不进入 S2。
+⑥验收证据引用：验收结论：PASS（S1-R3 规划通过；dispatch-2026-11-26T14-05-50，reply sha256=`7e0efa0120d52e3085021df169e2051bd1e3539cdc7e8ad0240d545ac67287e8`）。R1/R2 的 REJECT 与返工记录保留；R3 明确 8 文件、真实行锁、成功状态、审批中拦截和动态矩阵，允许进入 S2。
+
+### S1-R2 补充裁定与第 2 次返工
+
+- R2=REJECT（dispatch-2026-11-26T13-57-50，reply sha256=`927dba7d6220fb8d0bac6613137113ecdaa211a621081da9e1fc42a69b1f5931`）。只读累计现金方向获认可，但需补：①仅 completed=99 的退款业务类型记录计入成功退款；②同一 recordId 的并发控制。
+- R3=**PASS**（dispatch-2026-11-26T14-05-50，reply sha256=`7e0efa0120d52e3085021df169e2051bd1e3539cdc7e8ad0240d545ac67287e8`）：200/205/300 类型、真实 `SELECT ... FOR UPDATE`、锁内检查、NULL 状态按活跃、快照非空、失败闭锁和锁内禁止远程调用均成为实施硬约束。
+- 问题1返工计数=2；第 3 次方案若仍不能通过，将按 Standard 停止常规返工并进入三方会商，不盲目续轮。
 
 ## 返工记录
 
 | 问题编号 | 触发验收 | 根因 | 次数 | 修复 commit | 当前处置 |
 |---|---|---|---|---|---|
-| 问题1：多笔退款重复抵扣 F | S1-R1 REJECT（上述 reply SHA） | 本笔计算只使用完整 F，无历史退款现金来源，导致多笔非产品费用重复抵扣 | 1 | R2 规划修订 commit 待登记 | S1-R2 规划 project 只读累计现金接口 + BIM 剩余 F 分摊；未实施 |
+| 问题1：多笔退款重复抵扣 F | S1-R1 REJECT（上述 reply SHA） | 本笔计算只使用完整 F，无历史退款现金来源，导致多笔非产品费用重复抵扣 | 1 | `e60d072b5df08e5b92d44fd15728de05ebe75bd1`（R2 规划修订，非业务代码实施） | S1-R2 规划 project 只读累计现金接口 + BIM 剩余 F 分摊；未实施 |
+| 问题1：多笔退款重复抵扣 F | S1-R2 REJECT（dispatch-2026-11-26T13-57-50，reply sha256=`927dba7d6220fb8d0bac6613137113ecdaa211a621081da9e1fc42a69b1f5931`） | 历史必须仅计成功退款；跨服务先读后写及审批中重复退款存在竞态 | 2 | `e60d072b5df08e5b92d44fd15728de05ebe75bd1`（R2 规划修订，非业务代码实施） | S1-R3 补 completed 状态、审批中拦截、project 主键行锁与现金快照复核；未实施 |
+| 问题2：多笔退款完成与业务额重复应用 | S2-R1/R2 REJECT（dispatch-2026-11-26T14-44-32 / 14-50-13） | 负向确认非幂等；审计额、审批应用额及大池子消费口径需分离，不能用 recordId 猜首次退款 | 2 | 问题2 R3 规划修订 commit 待登记 | R3=PASS：负向幂等 + flowBusinessAmount + calcIncomeSkuAmountNew 改读 Flow.amount，实施中 |
+
+## S2 R3 实施与动态回归
+
+①本步骤目标：按 S1-R3 PASS 在干净 worktree 完成 8 文件退款修正，并跑通逐笔审批动态矩阵。
+
+②修改文件：bim manager `ProjectService`、fallback、`ProjectCostFlowParam`、`ChangeOrderServiceImpl`；project `ProjectController`、api param、`ProjectService`、`ProjectServiceImpl`。当前仍为未提交 diff，业务 commit 待动态与独立验收后形成。
+
+③修改内容：负 F 剩余额分摊、退款上限取绝对值、E!=0 拆分、成功退款现金只读接口、历史现金快照参数、project 主键行锁与审批中拦截。首次编译因 fallback 缺 `throws SystemException` 失败，修正后 service/UI package 均 PASS。
+
+④执行结果：问题2 R3 方案 PASS，最终按 9 文件实施：R3 的 8 文件 + `ApprovalFlowServiceImpl`。首笔 100 已完成，第二笔 600 已正确落库（total=-600、sku=-200）；第二笔完成曾触发负向确认状态错误，现增加负向幂等、flowBusinessAmount 分离及大池子读取 Flow.amount，待重编译后从第二笔财务续验。
+
+⑤测试结果：service/UI 首次 package PASS；R3 动态已证实金额计算与 F-only 累计正确。业务额去重、第二至第四笔完成、第五笔超限及合同/大池子副作用仍待动态复核，未提前标 PASS。
+
+⑥验收证据引用：IN_PROGRESS（问题2 R3 规划 PASS：dispatch-2026-11-26T14-54-50，reply sha256=`387d1a607fd8f85fcd648bf9ad0223e791cbc512173911e466db06ad711b2acf`；动态证据=`evidence/refund-r3-dynamic*.json` 和 `runtime/logs/refund-r3-dynamic*.log`；最终 commit、独立验收与 reply SHA 待形成）。
