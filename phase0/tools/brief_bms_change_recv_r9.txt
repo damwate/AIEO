@@ -1,0 +1,5 @@
+[BMS-CHGREC-R9|收款下限Er+F定稿讨论]
+
+用户当日第三次修正（回调R8金额不校验与a×r下限）：理论变更金额=Er+F通式覆盖全合同类型（E=skuPrice+retailSkuPrice，F=addition+design+freight）；电商无施工F=0退化为Er，此前a×r即此特例。已核changeAmount即此式（Scheme:426/Quote:1352,1196三处E含retail；quoteNew:497仅skuPrice不一致；整装E×(r-1)+totalPrice待验totalPrice=E+F）。
+规则定稿：实收≥changeAmount−1（容差1元）；多收不限、多收部分进产品额入大池子、等效产品额按实收计（影响提成）；整装未收款none累计不变；退款累计上限a×r不变；0929等额校验不恢复；公司承担ZERO不拦；凭证查重不变。
+待裁定：Q1 a>1时下限封顶=min(Er,E)+F还是min(Er+F,E+F)？退款上限a×r是否对称封E？Q2 整装totalPrice=E+F等价性成立否？Q3 quoteNew购销分支缺retailSkuPrice需修否？Q4 售后单AsOrder是否适用下限？Q5 容差单边−1即可？Q6 超收ratio>1维持现有算法？请逐条裁定并给最小实施差异清单（现过渡实现=min(r,1)×E仅产品，待改含F）。

@@ -1,0 +1,24 @@
+[2026-11-26T11:32:13.045Z] 证据目录: D:\AIEO\phase0\logs\dispatch-2026-11-26T11-32-13
+[2026-11-26T11:32:13.616Z] 会话锁已获取 pid=32864 instance=default lock=gpt-session.lockfile
+[2026-11-26T11:32:13.617Z] === GPT 派单（已有会话，消息 1156 字节）===
+[2026-11-26T11:32:13.619Z] [instance] 实例域就绪: instance=default port=9222 profile=gpt-poc lock=gpt-session.lockfile
+[2026-11-26T11:32:14.853Z] [instance] 清理本实例 Chrome：own=0 foreign(不动)=19 remaining=0
+[2026-11-26T11:32:17.402Z] Chrome 已启动 pid=39464 port=9222
+[2026-11-26T11:32:17.955Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 0 个
+[2026-11-26T11:32:17.955Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-26T11:32:22.417Z] 会话就绪: https://chatgpt.com/c/6b080302-21e4-83ec-bf70-3a4fa7199edf
+[2026-11-26T11:32:27.465Z] [ctx-budget] WARN: 累计 32915B（WARN≥24576/HARD≥49152）
+[2026-11-26T11:32:27.492Z] [dispatch] 基线尾部: {"role":"assistant","key":"d199acbc-44c6-5860-befd-ef6dabcc3db9:2:assistant","assistantUuid":"303a4b44-aef2-42d7-b915-9f4d7c1cc7e5"}
+[2026-11-26T11:32:30.596Z] [ctx-budget] turn+in_bytes=1156B → 6b080302-21e4-83ec-bf70-3a4fa7199edf
+[2026-11-26T11:32:30.596Z] [dispatch] 发送双验通过（polls=1，user_unit_key=fallback-turn-0:0:user，tail 后观察）
+[2026-11-26T11:32:31.011Z] 截图: sent-dispatch.png
+[2026-11-26T11:35:22.859Z] [dispatch] COMPLETED，1 个 assistant unit，回复 9381 UTF-8 字节，区间窗口 2 个
+[2026-11-26T11:35:23.022Z] 截图: reply-dispatch.png
+[2026-11-26T11:35:23.024Z] 审查会话已保存（归属校验 PASS）: https://chatgpt.com/c/6b080302-21e4-83ec-bf70-3a4fa7199edf
+[2026-11-26T11:35:23.030Z] JSON/Schema/绑定校验: NOT_REQUESTED
+[2026-11-26T11:35:23.040Z] [ctx-budget] turn+out_bytes=9381B → 6b080302-21e4-83ec-bf70-3a4fa7199edf
+[2026-11-26T11:35:23.040Z] M1 本地登记: NOT_REQUESTED（三 ID 均未提供，通用非登记派单）
+[2026-11-26T11:35:24.264Z] [instance] 清理本实例 Chrome：own=9 foreign(不动)=19 remaining=0
+[2026-11-26T11:35:24.267Z] [tab-hygiene] 成功退出：浏览器连接已关+实例 default Chrome 已清理（精确归属，他实例不动；含本次自建页 0 页）；本实例 tab 清零
+[2026-11-26T11:35:24.267Z] === 派单完成，artifact_sha256=c84c8d75a10b3196b119f9d010c4526cea5e50050f1fdd6dec2625f58d4663c1 size_bytes=9381 ===
+[2026-11-26T11:35:24.374Z] 会话锁已释放

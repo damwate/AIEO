@@ -1,0 +1,110 @@
+{
+  "format_version": "1.1",
+  "extracted_at": "2026-11-26T11:35:23.025Z",
+  "user_unit_key": "92498c74-8ce1-5ffb-b2e8-423dd4f8c5be:0:user",
+  "start_key_resolved": "92498c74-8ce1-5ffb-b2e8-423dd4f8c5be:0:user",
+  "start_resolved_by_marker": true,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "92498c74-8ce1-5ffb-b2e8-423dd4f8c5be:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "c86139ba-10f5-4885-92d8-6f54de817863",
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "92498c74-8ce1-5ffb-b2e8-423dd4f8c5be:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "d199acbc-44c6-5860-befd-ef6dabcc3db9:0:user",
+          "d199acbc-44c6-5860-befd-ef6dabcc3db9:2:assistant",
+          "92498c74-8ce1-5ffb-b2e8-423dd4f8c5be:0:user",
+          "92498c74-8ce1-5ffb-b2e8-423dd4f8c5be:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "bff6730c064c956a0a4e1b7b8c6c22f4e827764a2b8488a6a85388d616a34d82",
+          "65ac56e8ab8193ee7967ddbb6876efe3cbeaeecc2905830ddd4f4cf64a130763",
+          "0aecae00001a9f60466d2dc86fcf5181c0ca63cb67c2d77e4eb71fdf8c839959",
+          "c84c8d75a10b3196b119f9d010c4526cea5e50050f1fdd6dec2625f58d4663c1"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "d199acbc-44c6-5860-befd-ef6dabcc3db9:0:user",
+          "d199acbc-44c6-5860-befd-ef6dabcc3db9:2:assistant",
+          "92498c74-8ce1-5ffb-b2e8-423dd4f8c5be:0:user",
+          "92498c74-8ce1-5ffb-b2e8-423dd4f8c5be:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "bff6730c064c956a0a4e1b7b8c6c22f4e827764a2b8488a6a85388d616a34d82",
+          "65ac56e8ab8193ee7967ddbb6876efe3cbeaeecc2905830ddd4f4cf64a130763",
+          "0aecae00001a9f60466d2dc86fcf5181c0ca63cb67c2d77e4eb71fdf8c839959",
+          "c84c8d75a10b3196b119f9d010c4526cea5e50050f1fdd6dec2625f58d4663c1"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "d199acbc-44c6-5860-befd-ef6dabcc3db9:0:user",
+          "d199acbc-44c6-5860-befd-ef6dabcc3db9:2:assistant",
+          "92498c74-8ce1-5ffb-b2e8-423dd4f8c5be:0:user",
+          "92498c74-8ce1-5ffb-b2e8-423dd4f8c5be:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "92498c74-8ce1-5ffb-b2e8-423dd4f8c5be:0:user",
+      "92498c74-8ce1-5ffb-b2e8-423dd4f8c5be:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "d199acbc-44c6-5860-befd-ef6dabcc3db9:0:user",
+          "d199acbc-44c6-5860-befd-ef6dabcc3db9:2:assistant",
+          "92498c74-8ce1-5ffb-b2e8-423dd4f8c5be:0:user",
+          "92498c74-8ce1-5ffb-b2e8-423dd4f8c5be:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "d199acbc-44c6-5860-befd-ef6dabcc3db9:0:user",
+          "d199acbc-44c6-5860-befd-ef6dabcc3db9:2:assistant",
+          "92498c74-8ce1-5ffb-b2e8-423dd4f8c5be:0:user",
+          "92498c74-8ce1-5ffb-b2e8-423dd4f8c5be:2:assistant"
+        ],
+        "overlap_keys": [
+          "d199acbc-44c6-5860-befd-ef6dabcc3db9:0:user",
+          "d199acbc-44c6-5860-befd-ef6dabcc3db9:2:assistant",
+          "92498c74-8ce1-5ffb-b2e8-423dd4f8c5be:0:user",
+          "92498c74-8ce1-5ffb-b2e8-423dd4f8c5be:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "units": [
+    {
+      "key": "92498c74-8ce1-5ffb-b2e8-423dd4f8c5be:2:assistant",
+      "role": "assistant",
+      "text": "ChatGPT 说：\n\n[BMS-CHGREC-R9|收款下限Er+F定稿讨论]\n\n本轮建议锁定一个核心原则：\n\n折扣只作用于产品部分 E，非产品部分 F 不打折；实收下限按理论变更金额计算，多收不设上限，多收部分全部按产品额进入大池子。\n\n因此，R9 应纠正 R8 的一个问题：不能再把 skuPrice 单独作为完整产品池，也不能把整笔 Er+F 直接乘折扣。\n\n统一定义：\n\n𝐸\n=\n𝑠\n𝑘\n𝑢\n𝑃\n𝑟\n𝑖\n𝑐\n𝑒\n+\n𝑟\n𝑒\n𝑡\n𝑎\n𝑖\n𝑙\n𝑆\n𝑘\n𝑢\n𝑃\n𝑟\n𝑖\n𝑐\n𝑒\nE=skuPrice+retailSkuPrice\n𝐹\n=\n𝑎\n𝑑\n𝑑\n𝑖\n𝑡\n𝑖\n𝑜\n𝑛\n+\n𝑑\n𝑒\n𝑠\n𝑖\n𝑔\n𝑛\n+\n𝑓\n𝑟\n𝑒\n𝑖\n𝑔\nℎ\n𝑡\nF=addition+design+freight\n𝑇\n=\n𝐸\n𝑟\n+\n𝐹\nT=Er+F\n\n其中 \n𝑟\nr 为签约折扣，T 为理论变更金额，也就是应当使用的 changeAmount。\n\n一、Q1：折扣超过1时，理论金额如何封顶？\n裁定：产品部分封顶，F 不封顶、不打折\n\n这里我按你给出的 min(Er,E) 理解，讨论的是折扣系数 \n𝑟\n>\n1\nr>1 的情况。\n\n正确口径：\n\n𝑇\n=\nmin\n⁡\n(\n𝐸\n𝑟\n,\n𝐸\n)\n+\n𝐹\nT=min(Er,E)+F\n\t​\n\n\n而不是：\n\nmin\n⁡\n(\n𝐸\n𝑟\n+\n𝐹\n,\n𝐸\n+\n𝐹\n)\nmin(Er+F,E+F)\n\n虽然这两个表达式在数学上相等，但前者明确体现业务结构：产品部分封顶，非产品费用完整计入。\n\n例子：\n\nE=10,000\n\nF=2,000\n\nr=1.2\n\n则：\n\n项目\n\n\t\n\n金额\n\n\n\n\n产品折后金额\n\n\t\n\n10,000\n\n\n\n\n非产品金额\n\n\t\n\n2,000\n\n\n\n\n理论变更金额\n\n\t\n\n12,000\n\n如果 r=0.9，则理论金额为11,000。\n\n退款上限：保留 a×r，但产品退款不能超过原产品金额 a。\n\n因此建议统一为：\n\n退款产品上限\n=\nmin\n⁡\n(\n𝑎\n𝑟\n,\n𝑎\n)\n退款产品上限=min(ar,a)\n\t​\n\n\n这里的 a 是产品原价，不包含 F。\n\n也就是说，退款上限与正向产品金额采用相同的封顶规则，但退款不把非产品金额纳入产品退款额度。\n\n如果现有业务保证 r 永远不超过1，那么 min(a×r,a) 与原来的 a×r 完全一致，不改变现有结果。\n\n二、Q2：整装 E×(r−1)+totalPrice 是否等价？\n有条件成立\n\n如果：\n\n𝑡\n𝑜\n𝑡\n𝑎\n𝑙\n𝑃\n𝑟\n𝑖\n𝑐\n𝑒\n=\n𝐸\n+\n𝐹\ntotalPrice=E+F\n\n那么：\n\n𝐸\n(\n𝑟\n−\n1\n)\n+\n𝑡\n𝑜\n𝑡\n𝑎\n𝑙\n𝑃\n𝑟\n𝑖\n𝑐\n𝑒\n=\n𝐸\n(\n𝑟\n−\n1\n)\n+\n𝐸\n+\n𝐹\n=\n𝐸\n𝑟\n+\n𝐹\nE(r−1)+totalPrice=E(r−1)+E+F=Er+F\n\n与统一公式完全等价。\n\n但必须核实三个条件：\n\ntotalPrice 确实包含完整的 E 和 F。\n\nE、F 的组成与统一公式完全一致。\n\ntotalPrice 没有重复包含某些设计费、运费或增项。\n\n建议不要保留两套业务口径。最终统一成：\n\nJava\nchangeAmount = min(E * r, E) + F;\n\n如果当前整装公式已经正确，最小改动可以只做等价性验证，不必为了统一写法而重构整装计算。\n\n三、Q3：quoteNew 购销分支缺少 retailSkuPrice 是否修复？\n裁定：需要修复\n\n已知：\n\nScheme:426：E 包含 retailSkuPrice。\n\nQuote:1352、1196：E 包含 retailSkuPrice。\n\nquoteNew:497：仅使用 skuPrice。\n\n如果 quoteNew:497 是同一套购销产品金额计算，则它漏掉了零售产品金额。\n\n建议改成：\n\nJava\nE = skuPrice + retailSkuPrice;\nF = addition + design + freight;\n\nchangeAmount = min(E * r, E) + F;\n\n但先核对 retailSkuPrice 是否已经包含在 skuPrice 中。\n\n如果两者存在包含关系，不能直接相加，否则重复计算。\n\n修复范围仅限统一金额口径的分支，不修改其他报价规则。\n\n四、Q4：售后单 AsOrder 是否适用实收下限？\n建议：不适用普通正向变更下限\n\n建议按业务类型分流：\n\n类型\n\n\t\n\n实收下限\n\n\n\n\n普通正向变更\n\n\t\n\nchangeAmount - 1\n\n\n\n\n大额正向变更\n\n\t\n\nchangeAmount - 1\n\n\n\n\n购销全款正向变更\n\n\t\n\nchangeAmount - 1\n\n\n\n\n售后单 AsOrder\n\n\t\n\n不执行普通正向下限\n\n\n\n\n公司承担 ZERO\n\n\t\n\n不执行\n\n\n\n\n退款\n\n\t\n\n不执行正向收款下限\n\n售后单原有例外继续保留，不能因为 R9 引入统一下限而误伤售后处理。\n\n同时，售后单是否产生实际退款，仍按现有退款业务处理，不能将售后例外解释为可以虚构收款。\n\n五、Q5：容差是否只允许单边 −1 元？\n裁定：是\n\n采用：\n\nJava\nverifiedPaidAmount.add(BigDecimal.ONE)\n    .compareTo(changeAmount) >= 0\n\n等价于：\n\n实收金额\n+\n1\n≥\n理论变更金额\n实收金额+1≥理论变更金额\n\n例子：\n\n理论金额\n\n\t\n\n实收金额\n\n\t\n\n结果\n\n\n\n\n10,000\n\n\t\n\n10,000\n\n\t\n\n通过\n\n\n\n\n10,000\n\n\t\n\n9,999\n\n\t\n\n通过\n\n\n\n\n10,000\n\n\t\n\n9,998.99\n\n\t\n\n拒绝\n\n\n\n\n10,000\n\n\t\n\n10,500\n\n\t\n\n通过\n\n\n\n\n10,000\n\n\t\n\n12,000\n\n\t\n\n通过\n\n不设置正向上限，不采用正负双向容差。\n\n注意金额必须使用 BigDecimal，避免浮点误差。\n\n对于负变更和 ZERO，不进入这条正向收款校验。\n\n六、Q6：超收 ratio 大于1，是否维持现有算法？\n有条件保留，不做 ratio 截断\n\n建议：\n\n不使用 Math.min(ratio, 1)。\n\n不因 ratio 大于1而拒绝收款。\n\n不截断实际收款。\n\n多收部分必须全部进入产品额。\n\n但需要区分两个计算：\n\n第一层：本笔金额入池\n\nJava\nrecord.amount = changeAmount;\nrecord.totalAmount = verifiedPaidAmount;\nrecord.skuAmount = verifiedPaidAmount - nonProductAmount;\n\n按 R9，超收部分全部进入产品额。\n\n第二层：大池子释放\n\n现有算法：\n\nJava\nratio = currentTotalAmount / E;\npaySkuAmount = ratio * F;\n\n不能仅因为 ratio 大于1就直接认定算法正确。\n\n需要核对：\n\nE 是否包含本笔新增应收及本笔实际收款。\n\nF 是否包含本笔实际产品额。\n\n本笔是否在汇总中重复计算。\n\n超收部分是否已经进入 F，且是否被重复释放。\n\n如果当前 E/F 已经正确包含超收后的本笔金额，那么可以保留现有算法。\n\n如果 F 尚未包含超收部分，却直接用大于1的 ratio 乘 F，就可能超额释放产品金额。\n\n本轮建议：保留 ratio 原值，不做截断；先核对 E/F 汇总时点，不允许为消除 ratio 大于1而丢弃多收金额。\n\n七、最小实施差异清单\n\n重点是修正过渡实现，不重构整套报价和大池子。\n\nP0：必须修改\n\n1. 统一理论变更金额\n\n当前过渡实现：\n\nJava\nchangeAmount = min(r, 1) * E;\n\n改为：\n\nJava\nchangeAmount = min(E * r, E) + F;\n\n补回非产品费用 F。\n\n2. 修复 quoteNew 购销分支\n\n检查并补齐 retailSkuPrice，保证 E 的组成一致。\n\n3. 修改正向收款下限\n\nJava\nif (!isAfterSale && !isZero && isFullPayment) {\n    if (verifiedPaidAmount.add(BigDecimal.ONE)\n            .compareTo(changeAmount) < 0) {\n        throw new BusinessException(\"实收金额不足\");\n    }\n}\n\n这里的 isFullPayment 表示本次有实际收款，不是购销全款合同类型。实际变量名按项目现状调整。\n\n4. 超收产品额\n\nJava\nrecord.amount = changeAmount;\nrecord.totalAmount = verifiedPaidAmount;\nrecord.skuAmount = verifiedPaidAmount.subtract(nonProductAmount);\n\n多收不截断，全部进入产品额。\n\n5. 保留退款累计上限\n\nJava\nrefundLimit = a.multiply(r);\n\n按 R9 已定稿规则，不擅自改为 min(a*r, a)。退款仍按原有产品退款上限累计控制。\n\n6. 保留原有其他规则\n\n大额、购销全款强收。\n\n售后单例外。\n\n公司承担 ZERO 不拦截。\n\n凭证重复检查。\n\nNO_PAYMENT 整装后续进度款累计逻辑。\n\n八、必测回归矩阵\n\n场景\n\n\t\n\n输入\n\n\t\n\n预期\n\n\n\n\n电商无施工\n\n\t\n\nE=10000,F=0,r=0.9\n\n\t\n\nT=9000\n\n\n\n\n整装有施工\n\n\t\n\nE=10000,F=2000,r=0.9\n\n\t\n\nT=11000\n\n\n\n\n折扣系数超过1\n\n\t\n\nE=10000,F=2000,r=1.2\n\n\t\n\nT=12000\n\n\n\n\n实收刚好达到下限\n\n\t\n\nT=11000，实收10999\n\n\t\n\n通过\n\n\n\n\n实收低于下限\n\n\t\n\nT=11000，实收10998.99\n\n\t\n\n拒绝\n\n\n\n\n多收\n\n\t\n\nT=11000，实收12000\n\n\t\n\n通过，产品额按实际实收\n\n\n\n\n购销分支\n\n\t\n\nE包含零售产品金额\n\n\t\n\n计算与 Scheme 一致\n\n\n\n\n整装未收款\n\n\t\n\nNO_PAYMENT\n\n\t\n\n理论金额进入池子，totalAmount=0\n\n\n\n\n后续进度款\n\n\t\n\n正常实收\n\n\t\n\n按现有 E/F 释放\n\n\n\n\n售后单\n\n\t\n\nAsOrder\n\n\t\n\n不受普通正向下限拦截\n\n\n\n\n公司承担\n\n\t\n\nZERO\n\n\t\n\n不拦截\n\n\n\n\n退款\n\n\t\n\n多笔部分退款\n\n\t\n\n累计不超过 a×r\n\n\n\n\n重复凭证\n\n\t\n\n相同凭证重复提交\n\n\t\n\n拒绝\n\n\n\n\n当前记录重复计算\n\n\t\n\n汇总已包含当前记录\n\n\t\n\n不得再次加本笔\n\n九、最终裁定汇总\n\n问题\n\n\t\n\n最终意见\n\n\n\n\nQ1 正向金额封顶\n\n\t\n\nmin(Er,E)+F\n\n\n\n\nQ1 退款封顶\n\n\t\n\n保留 a×r，不擅自增加 E 封顶\n\n\n\n\nQ2 整装公式\n\n\t\n\ntotalPrice=E+F 时完全等价\n\n\n\n\nQ3 quoteNew 漏 retailSkuPrice\n\n\t\n\n修复，先排除重复包含\n\n\n\n\nQ4 AsOrder\n\n\t\n\n不适用普通正向实收下限\n\n\n\n\nQ5 容差\n\n\t\n\n单边 −1 元\n\n\n\n\nQ6 ratio>1\n\n\t\n\n不截断，核实 E/F 汇总时点及释放不重复\n\n还有一个实施前必须核对的细节：\n\ncalcIncomeSkuAmountNew 中，当前变更单的 record.skuAmount 是在计算 paySkuAmount 之前还是之后进入 F 的汇总？\n\n这决定超收部分是否已经进入产品池，以及 ratio 大于1时是否会造成重复释放。\n\n建议开发只针对这个方法做一次调用链和 SQL 汇总核验，不扩大成大池子重构。\n\nR9 最终实施口径：理论金额补齐 F，正向实收下限为理论金额减1元，多收不限且全部计入产品额；退款上限仍为 a×r；未收款、强收、售后及凭证查重沿用既定规则。",
+      "text_sha256": "c84c8d75a10b3196b119f9d010c4526cea5e50050f1fdd6dec2625f58d4663c1",
+      "size_bytes": 9381,
+      "assistant_uuid": "c86139ba-10f5-4885-92d8-6f54de817863"
+    }
+  ]
+}
