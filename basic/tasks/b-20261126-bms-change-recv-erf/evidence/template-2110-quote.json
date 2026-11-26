@@ -1,0 +1,32 @@
+{
+  "code": "OK",
+  "msg": "",
+  "data": {
+    "id": "2065382485297541122",
+    "schemeId": "2065382483280080897",
+    "retailSkuPrice": 560.0,
+    "skuPrice": 0.0,
+    "skuCost": 160.0,
+    "additionPrice": null,
+    "laborPrice": 0.0,
+    "freightPrice": 500.0,
+    "carryPrice": null,
+    "sundryPrice": 0.0,
+    "totalPrice": 1060.0,
+    "originalPrice": 0.0,
+    "status": 1,
+    "discountType": 1,
+    "fees": [],
+    "additions": [],
+    "designPrice": 0.0,
+    "minPrice": 900.0,
+    "minProductPrice": 900.0,
+    "baseMaterialPrice": 0.0,
+    "remark": null,
+    "discountPrice": 0.0,
+    "productOnlyPrice": null,
+    "gmtCreate": "2026-06-12",
+    "priceRemark": null
+  },
+  "success": true
+}

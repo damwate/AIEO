@@ -1,0 +1,207 @@
+{
+  "at": "2026-11-26T16:07:03.290Z",
+  "instance_id": "bms-erf",
+  "instance_lock_path": "D:\\AIEO\\runtime\\locks\\gpt-session-bms-erf.lockfile",
+  "instance_debug_port": 9303,
+  "instance_profile_dir": "D:\\AIEO\\runtime\\chrome_profiles\\gpt-poc-bms-erf",
+  "message_bytes": 660,
+  "reply": "ChatGPT 说：\n\n[独立验收][BMS-Er+F][S2]\n\n已成功读取附件，并核实 ZIP 的 SHA256 与你提供的值完全一致：128c1f0c29b013c1e387aadd7cd71ca749e6c238cd0c99b67b4b12e5b1606fdf。\n\n我会以指定完整 commit 3ac3ded3b5c5b252424c799f0496546a7589219f 的 9 文件 diff 为代码审查对象；动态日志、数据库快照和 summary 作为独立证据交叉核对，不把 summary 的 PASS 直接当验收结论。\n\n六项验收结果\n整体 REJECT\n\n#\n\n\t\n\n验收项\n\n\t\n\n结论\n\n\t\n\n核验结果\n\n\n\n\n1\n\n\t\n\n多笔 F 分摊\n\n\t\n\nPASS\n\n\t\n\n动态记录与公式结果一致\n\n\n\n\n2\n\n\t\n\n事务行锁\n\n\t\n\nPASS\n\n\t\n\n源码有事务内主键行锁；并发压力证据不足\n\n\n\n\n3\n\n\t\n\n负向幂等\n\n\t\n\nPASS\n\n\t\n\n源码位置和条件符合要求；缺少重复调用动态证据\n\n\n\n\n4\n\n\t\n\ncostRecord / Flow 业务额分离\n\n\t\n\nREJECT\n\n\t\n\n存储分离正确，但历史 Flow 关联查询使用了错误主键\n\n\n\n\n5\n\n\t\n\nPM 实收保持\n\n\t\n\nREJECT\n\n\t\n\n动态样本通过，但源码仍存在清零真实实收的分支\n\n\n\n\n6\n\n\t\n\n0.01 超限无新增\n\n\t\n\nPASS\n\n\t\n\n动态日志显示拒绝，记录集合未增加\n\n1. 多笔 F 分摊：PASS\n\n动态日志实际执行顺序是 100 → 600 → 292.67 → 600，不是此前规划中 100 → 600 → 600 → 292.67 的顺序。\n\n逐笔结果：\n\n退款现金\n\n\t\n\n本笔产品退款\n\n\t\n\n累计产品退款\n\n\t\n\n累计现金退款\n\n\n\n\n100.00\n\n\t\n\n0.00\n\n\t\n\n0.00\n\n\t\n\n100.00\n\n\n\n\n600.00\n\n\t\n\n200.00\n\n\t\n\n200.00\n\n\t\n\n700.00\n\n\n\n\n292.67\n\n\t\n\n292.67\n\n\t\n\n492.67\n\n\t\n\n992.67\n\n\n\n\n600.00\n\n\t\n\n600.00\n\n\t\n\n1092.67\n\n\t\n\n1592.67\n\n这与 F=-500、产品退款上限 1092.67 的分摊结果吻合。首笔 F-only 退款的现金进入后续累计，产品额为 0；剩余非产品费抵扣完后，后续退款全部计入产品额。\n\n动态证据：refund-r3-dynamic-final7.log、refund-r3-final-flow-records.json。\n\n2. 事务行锁：PASS（并发验证未覆盖）\n\n源码 ProjectServiceImpl.setCostAndAddFlow：\n\n方法有 @Transactional(rollbackFor = Exception.class)。\n\n使用 JdbcTemplate 执行：\n\nSQL\nSELECT id FROM project_info WHERE id = ? FOR UPDATE\n\n锁后检查活跃退款、重算已完成退款现金、比较 refundPreviousCashAmount、检查产品上限，然后才插入成本记录和审批流。\n\n锁内没有调用 BIM 远程接口。\n\n这是实际的数据库行锁，不是普通 selectById()。以项目主键锁定，会串行化同一项目上的退款提交，范围比单个变更单更宽，但能保护同一项目的并发退款。\n\n证据边界： 附件没有并发双请求压力测试，也没有直接证明 JdbcTemplate 与 DAO 使用同一事务管理器/数据源。代码结构符合预期，但这两点还不能算动态验证通过。\n\n3. 负向幂等：PASS（源码验证）\n\nChangeOrderServiceImpl.confirmChangeOrder 在原有 Submitted 状态校验之前增加：\n\n状态为 Confirmed；\n\nchangeAmount < 0；\n\n同时满足即返回，不再重复执行 JST/BOM 处理。\n\n分支位于报价状态检查之后、原状态校验之前，符合“仅负向已确认变更单幂等返回，正向状态校验不放宽”的要求。\n\n证据边界： 附件没有提供同一负向变更单重复调用的动态日志，因此本项是源码 PASS，不是动态回归 PASS。\n\n4. costRecord / Flow 业务额分离：REJECT\n\n这一项发现了明确的源码缺陷。\n\n写入部分正确：\n\nProjectCostRecord.amount 保存完整 businessAmountValue，即 T。\n\nProjectApprovalFlow.amount 保存 flowBusinessAmountValue，首笔 T、后续 0。\n\n动态记录也显示了这种分离：costRecord 的 record_amount 都是 -1592.67；后续 5197 的 flow_amount=0。\n\n但历史读取关联错了。\n\nApprovalFlowServiceImpl.getChangeBusinessAmount() 当前执行：\n\nJava\nProjectApprovalFlow flow =\n    new ProjectApprovalFlow().selectById(record.getId());\n\n这里把 ProjectCostRecord.id 当成 ProjectApprovalFlow.id 使用。\n\n附件中的实际数据已经证明两个 ID 不相同：\n\ncostRecord ID\n\n\t\n\nFlow ID\n\n\t\n\nFlow amount\n\n\n\n\n8234\n\n\t\n\n5194\n\n\t\n\n-1592.67\n\n\n\n\n8235\n\n\t\n\n5195\n\n\t\n\n-1592.67\n\n\n\n\n8236\n\n\t\n\n5196\n\n\t\n\n0.00\n\n\n\n\n8237\n\n\t\n\n5197\n\n\t\n\n0.00\n\n而创建 Flow 时，源码实际建立的关联是：\n\nJava\nflow.setObjectId(String.valueOf(projectCostRecord.getId()));\n\n也就是说，正确关联依据是 Flow 的 objectId，不是 Flow 主键等于 costRecord 主键。\n\n影响：\n\nselectById(record.getId()) 找不到对应 Flow 时，就会回退 record.amount。对后续部分退款而言，回退值是完整 T，而本应读取的 Flow amount 是 0。这会使历史 addAmount 再次累计 T，直接破坏 R3 的核心去重效果。\n\n更危险的是，如果恰好存在一个 ID 相同但属于其他业务的 Flow，还可能读到错误业务金额。\n\nP0 级阻断\n\n必须改为通过真实关联关系查询对应审批流，并确认 Flow 类型及关联唯一性；不存在对应 Flow 的旧数据回退规则也必须保留，但不能把“主键查不到”误当作“旧数据没有 Flow”。\n\n5. PM 实收保持：REJECT\n\n这里需要区分动态样本和源码完整性。\n\n动态样本通过：\n\n5197 的记录为：\n\nflow.amount=0.00\n\npay_amount=-600.00\n\nflow_status=99\n\n说明该样本确实保留了后续退款的实际现金金额，并完成审批。\n\n但源码还有一个会清零真实实收的分支。\n\nApprovalFlowServiceImpl 当前条件：\n\nJava\nif (flow.getPayDate() == null\n        || (flow.getAmount().compareTo(BigDecimal.ZERO) == 0 && zeroCashAmount)) {\n    flow.setPayAmount(BigDecimal.ZERO);\n    newStatus = FlowStatusEnum.completed.getValue();\n}\n\n问题在于第一个条件是独立的 OR。\n\n如果 flow.amount=0、payAmount=-600，但 payDate==null，整个条件仍然成立，随后真实 payAmount 会被直接改成 0。\n\n所以 5197 的动态通过不能证明所有实际实收都安全。当前代码没有做到“只要有真实实收，就不得清零”。\n\n需要修正判断： payDate 为空不能覆盖真实实收金额；有非零 payAmount 时必须保留并进入财务审核路径。无实收的零金额流程才可以按零现金完成逻辑处理。\n\n6. 0.01 超限无新增：PASS\n\n动态日志中再次提交 0.01：\n\n返回失败；\n\n最终 costRecord 仍只有 8234、8235、8236、8237 四条；\n\ncashTotal 仍为 1592.67；\n\n没有新增退款记录。\n\n符合“超限拒绝且不新增记录”的验收要求。\n\n另一个小问题：日志返回的是 INTERNAL_SERVER_ERROR，不是清晰的业务参数错误。虽然本次没有新增记录，但建议后续确认 BIM 对超限异常的包装，避免前端把业务拒绝显示成系统故障。\n\n合同 otherPrice 证据：不能判定为干净 PASS\n\n附件中的项目快照：\n\n开工前 otherPrice=11681.83\n\n最终 otherPrice=8496.49\n\n总变化 -3185.34\n\n这正好是 2 × -1592.67\n\nsummary 对 5195 的解释是：它在 flowBusinessAmount 分离前创建，仍保留完整 T。因此第二次 T 是旧数据遗留，不应当归咎于新实现。\n\n我遵照你的要求，没有把 5195 当成新实现的干净反例；同样，也不能把这份混合数据当成“合同 otherPrice 只变化一次”的完整证明。\n\n可确认的是：\n\n5194 的 Flow amount 为 T；\n\n5195 是旧流程，Flow amount 仍为 T；\n\n5196、5197 的 Flow amount 为 0；\n\n5197 的实际 payAmount=-600。\n\n但因为 5196 还有 PM 实收为 0 的历史问题，且最终快照包含 5195 的旧 T，本次数据不足以证明从干净基线开始，合同 otherPrice 和 addAmount 均只应用一次 T。\n\n附件完整性与验收边界\n\nZIP SHA256：与用户提供值一致。\n\nMANIFEST.sha256：8 个列出的文件均通过 SHA256 校验。\n\nST-01 文件：报告结果为 PASS，目标 SHA 与 parent SHA 均与请求一致；部分中文 detail 字段出现乱码，但 JSON 结构和 numstat 可读。\n\nbuild-new-service-refund-r3.log：文件大小为 0 字节，因此不能把它作为编译日志证据。附件提供了两个 JAR 的 SHA256，但没有提供可核验的构建输出。\n\n我尝试通过 GitHub 获取指定 commit，API 返回 422 No commit found for SHA。因此，不能独立确认远端仓库该 SHA 的实际内容；本次源码判断以已校验的附件 diff 为依据。\n\n最终裁定\nREJECT — 不建议合并或发布\n\n本轮不是全部失败：多笔 F 分摊、行锁结构、负向幂等、超限无新增都有支持性证据。但有两个必须修复的源码问题：\n\nP0： getChangeBusinessAmount() 用 costRecord 主键查 Flow 主键，历史业务额读取关联错误，可能导致后续 T 再次累计。\n\nP0： PM 审批的 payDate == null 分支仍能清零非零真实 payAmount。\n\n修复后至少需要补两组干净动态证据：\n\n从干净合同基线重新执行多笔退款，证明 otherPrice 和 addAmount 的 T 均只应用一次，后续为 0。\n\n构造 flow.amount=0、payAmount 非零、payDate=null 的 PM 审批场景，证明真实实收不会被清零。\n\n本次独立验收到此为止：REJECT。未执行任何代码修改、提交或发布。",
+  "user_unit_key": "75a91be1-11bf-5b80-aa03-3ff33a9dd0e3:0:user",
+  "start_key_resolved": "75a91be1-11bf-5b80-aa03-3ff33a9dd0e3:0:user",
+  "start_resolved_by_marker": true,
+  "next_user_unit_key": null,
+  "unit_keys": [
+    "75a91be1-11bf-5b80-aa03-3ff33a9dd0e3:2:assistant"
+  ],
+  "unit_count": 1,
+  "assistant_uuid": "2e27256b-1693-4c97-a041-7616c5260eb2",
+  "stability": {
+    "stable": true,
+    "interval_ms": 5698,
+    "checks": {
+      "interval_at_least_3000ms": true,
+      "first_range_complete": true,
+      "second_range_complete": true,
+      "unit_key_list_equal": true,
+      "unit_count_equal": true,
+      "unit_text_hashes_equal": true,
+      "assistant_uuid_present": true,
+      "assistant_uuid_stable": true,
+      "next_user_boundary_stable": true,
+      "range_end_reason_stable": true
+    },
+    "first": {
+      "read_started_at": "2026-11-26T16:06:56.806Z",
+      "read_finished_at": "2026-11-26T16:06:59.491Z",
+      "unit_keys": [
+        "75a91be1-11bf-5b80-aa03-3ff33a9dd0e3:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "75a91be1-11bf-5b80-aa03-3ff33a9dd0e3:2:assistant",
+          "sha256": "7f9bc3e5dd614cfef63f803fc9fa8b197a445eddc1e86fa25adf8f39c1bbeb11",
+          "size_bytes": 9020
+        }
+      ],
+      "assistant_uuid": "2e27256b-1693-4c97-a041-7616c5260eb2",
+      "next_user_unit_key": null,
+      "start_key_resolved": "75a91be1-11bf-5b80-aa03-3ff33a9dd0e3:0:user",
+      "start_resolved_by_marker": true,
+      "range_end_reason": "DOM_BOTTOM"
+    },
+    "second": {
+      "read_started_at": "2026-11-26T16:07:02.504Z",
+      "read_finished_at": "2026-11-26T16:07:03.049Z",
+      "unit_keys": [
+        "75a91be1-11bf-5b80-aa03-3ff33a9dd0e3:2:assistant"
+      ],
+      "unit_count": 1,
+      "unit_text_sha256": [
+        {
+          "key": "75a91be1-11bf-5b80-aa03-3ff33a9dd0e3:2:assistant",
+          "sha256": "7f9bc3e5dd614cfef63f803fc9fa8b197a445eddc1e86fa25adf8f39c1bbeb11",
+          "size_bytes": 9020
+        }
+      ],
+      "assistant_uuid": "2e27256b-1693-4c97-a041-7616c5260eb2",
+      "next_user_unit_key": null,
+      "start_key_resolved": "75a91be1-11bf-5b80-aa03-3ff33a9dd0e3:0:user",
+      "start_resolved_by_marker": true,
+      "range_end_reason": "DOM_BOTTOM"
+    }
+  },
+  "range_proof": {
+    "complete": true,
+    "user_unit_key": "75a91be1-11bf-5b80-aa03-3ff33a9dd0e3:0:user",
+    "next_user_unit_key": null,
+    "end_reason": "DOM_BOTTOM",
+    "windows": [
+      {
+        "index": 0,
+        "unit_keys": [
+          "633e02bf-d4dc-55f3-b425-f85b82ee5b58:0:user",
+          "633e02bf-d4dc-55f3-b425-f85b82ee5b58:2:assistant",
+          "75a91be1-11bf-5b80-aa03-3ff33a9dd0e3:0:user",
+          "75a91be1-11bf-5b80-aa03-3ff33a9dd0e3:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "4f36489dbe4646c773247a4e183ab4b2bee1fe0e5ec289d52268dceacca3f397",
+          "387d1a607fd8f85fcd648bf9ad0223e791cbc512173911e466db06ad711b2acf",
+          "dea961535b361c816b8d279f986f4fd8cf3a74b74d10a80476b48507d259f835",
+          "7f9bc3e5dd614cfef63f803fc9fa8b197a445eddc1e86fa25adf8f39c1bbeb11"
+        ],
+        "window_offset": 0,
+        "at_bottom": false,
+        "overlap_keys": []
+      },
+      {
+        "index": 1,
+        "unit_keys": [
+          "633e02bf-d4dc-55f3-b425-f85b82ee5b58:0:user",
+          "633e02bf-d4dc-55f3-b425-f85b82ee5b58:2:assistant",
+          "75a91be1-11bf-5b80-aa03-3ff33a9dd0e3:0:user",
+          "75a91be1-11bf-5b80-aa03-3ff33a9dd0e3:2:assistant"
+        ],
+        "unit_text_sha256": [
+          "4f36489dbe4646c773247a4e183ab4b2bee1fe0e5ec289d52268dceacca3f397",
+          "387d1a607fd8f85fcd648bf9ad0223e791cbc512173911e466db06ad711b2acf",
+          "dea961535b361c816b8d279f986f4fd8cf3a74b74d10a80476b48507d259f835",
+          "7f9bc3e5dd614cfef63f803fc9fa8b197a445eddc1e86fa25adf8f39c1bbeb11"
+        ],
+        "window_offset": 0,
+        "at_bottom": true,
+        "overlap_keys": [
+          "633e02bf-d4dc-55f3-b425-f85b82ee5b58:0:user",
+          "633e02bf-d4dc-55f3-b425-f85b82ee5b58:2:assistant",
+          "75a91be1-11bf-5b80-aa03-3ff33a9dd0e3:0:user",
+          "75a91be1-11bf-5b80-aa03-3ff33a9dd0e3:2:assistant"
+        ]
+      }
+    ],
+    "materialized_unit_keys": [
+      "75a91be1-11bf-5b80-aa03-3ff33a9dd0e3:0:user",
+      "75a91be1-11bf-5b80-aa03-3ff33a9dd0e3:2:assistant"
+    ],
+    "window_integrity": {
+      "complete": true,
+      "method": "STABLE_RENDERED_UNIT_SET",
+      "scrollable_window_observed": true,
+      "virtualization_observed": false,
+      "limitation": "仅适用于滚动期间渲染 unit 集合未变化的当前 DOM；不宣称证明持续隐藏 unit 或所有未来虚拟化行为"
+    },
+    "start_search_windows": [
+      {
+        "unit_keys": [
+          "633e02bf-d4dc-55f3-b425-f85b82ee5b58:0:user",
+          "633e02bf-d4dc-55f3-b425-f85b82ee5b58:2:assistant",
+          "75a91be1-11bf-5b80-aa03-3ff33a9dd0e3:0:user",
+          "75a91be1-11bf-5b80-aa03-3ff33a9dd0e3:2:assistant"
+        ],
+        "overlap_keys": []
+      },
+      {
+        "unit_keys": [
+          "633e02bf-d4dc-55f3-b425-f85b82ee5b58:0:user",
+          "633e02bf-d4dc-55f3-b425-f85b82ee5b58:2:assistant",
+          "75a91be1-11bf-5b80-aa03-3ff33a9dd0e3:0:user",
+          "75a91be1-11bf-5b80-aa03-3ff33a9dd0e3:2:assistant"
+        ],
+        "overlap_keys": [
+          "633e02bf-d4dc-55f3-b425-f85b82ee5b58:0:user",
+          "633e02bf-d4dc-55f3-b425-f85b82ee5b58:2:assistant",
+          "75a91be1-11bf-5b80-aa03-3ff33a9dd0e3:0:user",
+          "75a91be1-11bf-5b80-aa03-3ff33a9dd0e3:2:assistant"
+        ],
+        "relative_offset": 0
+      }
+    ],
+    "window_transitions": 2
+  },
+  "json_schema_binding": {
+    "status": "NOT_REQUESTED",
+    "json": {
+      "status": "NOT_REQUESTED"
+    },
+    "schema": {
+      "status": "NOT_REQUESTED"
+    },
+    "binding": {
+      "status": "NOT_REQUESTED",
+      "task_id": "NOT_REQUESTED",
+      "execution_id": "NOT_REQUESTED",
+      "correlation_id": "NOT_REQUESTED"
+    }
+  },
+  "m1_registration": {
+    "status": "NOT_REQUESTED",
+    "reason": "三 ID 均未提供且未显式请求 M1；本次为通用非登记派单",
+    "adapter_scope": "MINIMAL_LOCAL_M1_NOT_FULL_PLATFORM"
+  },
+  "artifact_sha256": "7f9bc3e5dd614cfef63f803fc9fa8b197a445eddc1e86fa25adf8f39c1bbeb11",
+  "size_bytes": 9020,
+  "reply_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-26T16-02-15\\reply.txt",
+  "reply_readback_sha256": "7f9bc3e5dd614cfef63f803fc9fa8b197a445eddc1e86fa25adf8f39c1bbeb11",
+  "raw_units_path": "D:\\AIEO\\phase0\\logs\\dispatch-2026-11-26T16-02-15\\raw-units.json",
+  "raw_units_sha256": "0b7a25c5503223b4498d6992ae6daaf2cfec32f00cddeeaf8c1d7ffc136998ae",
+  "raw_units_size_bytes": 13666,
+  "raw_units_readback_sha256": "0b7a25c5503223b4498d6992ae6daaf2cfec32f00cddeeaf8c1d7ffc136998ae",
+  "session_id": "6b083828-d174-83ec-8d45-58971fca139d",
+  "conversation_url": "https://chatgpt.com/c/6b083828-d174-83ec-8d45-58971fca139d",
+  "completion_checks": {
+    "generation_observed": true,
+    "generation_ended": true,
+    "final_stop_button_not_visible": true,
+    "tail_is_assistant": true,
+    "dil_uuid_present": true,
+    "uuid_stable": true,
+    "target_tail_matches_overall": true,
+    "stable_unit_read": true,
+    "target_range_materialized": true,
+    "composer_empty": true,
+    "raw_units_artifact_readback": true,
+    "reply_artifact_readback": true,
+    "json_schema_binding": true,
+    "m1_registration": true
+  }
+}

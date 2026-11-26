@@ -1,0 +1,21 @@
+[
+  {
+    "cost_id": 8228,
+    "record_id": 2158,
+    "record_type": 200,
+    "amount": "2581.78",
+    "total_amount": "2559.00",
+    "sku_amount": "559.00",
+    "sku_amount_regular": "0.00",
+    "sku_amount_ecommerce": "559.00",
+    "sku_cost": "160.00",
+    "design_amount": "0.00",
+    "artificial_amount": "0.00",
+    "flow_id": 5188,
+    "object_type": 50,
+    "flow_status": 0,
+    "flow_business_amount": "2581.78",
+    "pay_amount": "2559.00",
+    "pay_type": "transfer"
+  }
+]

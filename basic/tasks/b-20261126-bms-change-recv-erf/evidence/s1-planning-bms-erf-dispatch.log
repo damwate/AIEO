@@ -1,0 +1,20 @@
+[2026-11-26T13:42:38.716Z] 证据目录: D:\AIEO\phase0\logs\dispatch-2026-11-26T13-42-38
+[2026-11-26T13:42:40.980Z] 会话锁已获取 pid=3416 instance=bms-erf lock=gpt-session-bms-erf.lockfile
+[2026-11-26T13:42:40.982Z] === GPT 派单（新建会话，消息 801 字节）===
+(node:3416) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+[2026-11-26T13:42:42.031Z] [instance] 端口分配: instance=bms-erf port=9303（注册表已原子落盘，探测占用=0）
+[2026-11-26T13:42:42.144Z] [instance] 实例域就绪: instance=bms-erf port=9303 profile=gpt-poc-bms-erf lock=gpt-session-bms-erf.lockfile
+[2026-11-26T13:42:43.987Z] [instance] 清理本实例 Chrome：own=0 foreign(不动)=9 remaining=0
+[2026-11-26T13:42:47.229Z] Chrome 已启动 pid=22800 port=9303
+[2026-11-26T13:42:49.152Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 0 个
+[2026-11-26T13:42:49.157Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-26T13:43:31.721Z] 新聊天页面就绪
+[2026-11-26T13:43:31.947Z] 会话锁已释放
+[2026-11-26T13:43:31.948Z] 致命错误: SESSION_TARGET_MISMATCH: 页面与派单目标不符，发送前停止
+Error: SESSION_TARGET_MISMATCH: 页面与派单目标不符，发送前停止
+    at assertDispatchTarget (file:///D:/AIEO/phase0/tools/dispatch_options.mjs:76:23)
+    at assertDispatchPage (file:///D:/AIEO/phase0/tools/dispatch_options.mjs:81:3)
+    at async mainLocked (file:///D:/AIEO/phase0/tools/gpt_dispatch.mjs:557:3)
+    at async main (file:///D:/AIEO/phase0/tools/gpt_dispatch.mjs:493:5)
+Assertion failed: !(handle->flags & UV_HANDLE_CLOSING), file src\win\async.c, line 76

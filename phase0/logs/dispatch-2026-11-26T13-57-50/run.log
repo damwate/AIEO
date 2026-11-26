@@ -1,0 +1,24 @@
+[2026-11-26T13:57:50.069Z] 证据目录: D:\AIEO\phase0\logs\dispatch-2026-11-26T13-57-50
+[2026-11-26T13:57:52.764Z] 会话锁已获取 pid=2112 instance=bms-erf lock=gpt-session-bms-erf.lockfile
+[2026-11-26T13:57:52.766Z] === GPT 派单（已有会话，消息 945 字节）===
+[2026-11-26T13:57:53.945Z] [instance] 端口沿用注册表登记: instance=bms-erf port=9303
+[2026-11-26T13:57:54.070Z] [instance] 实例域就绪: instance=bms-erf port=9303 profile=gpt-poc-bms-erf lock=gpt-session-bms-erf.lockfile
+[2026-11-26T13:57:56.157Z] [instance] 清理本实例 Chrome：own=0 foreign(不动)=23 remaining=0
+[2026-11-26T13:57:59.827Z] Chrome 已启动 pid=5672 port=9303
+[2026-11-26T13:58:00.136Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 0 个
+[2026-11-26T13:58:00.137Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-26T13:58:06.428Z] 会话就绪: https://chatgpt.com/c/6b083828-d174-83ec-8d45-58971fca139d
+[2026-11-26T13:58:11.461Z] [dispatch] 基线尾部: {"role":"assistant","key":"dcd0038b-460e-529c-b5e8-639e625ffc79:2:assistant","assistantUuid":"2ac97db7-e36f-4d04-811d-e0cc13ec59b2"}
+[2026-11-26T13:58:14.004Z] [ctx-budget] turn+in_bytes=945B → 6b083828-d174-83ec-8d45-58971fca139d
+[2026-11-26T13:58:14.005Z] [dispatch] 发送双验通过（polls=1，user_unit_key=fallback-turn-0:0:user，tail 后观察）
+[2026-11-26T13:58:14.572Z] 截图: sent-dispatch.png
+[2026-11-26T14:01:06.993Z] [dispatch] COMPLETED，1 个 assistant unit，回复 5899 UTF-8 字节，区间窗口 2 个
+[2026-11-26T14:01:07.145Z] 截图: reply-dispatch.png
+[2026-11-26T14:01:07.148Z] 会话 URL 已取得且归属校验 PASS，跳过 reviewer 指针写盘: https://chatgpt.com/c/6b083828-d174-83ec-8d45-58971fca139d
+[2026-11-26T14:01:07.158Z] JSON/Schema/绑定校验: NOT_REQUESTED
+[2026-11-26T14:01:07.170Z] [ctx-budget] turn+out_bytes=5899B → 6b083828-d174-83ec-8d45-58971fca139d
+[2026-11-26T14:01:07.171Z] M1 本地登记: NOT_REQUESTED（三 ID 均未提供，通用非登记派单）
+[2026-11-26T14:01:09.222Z] [instance] 清理本实例 Chrome：own=10 foreign(不动)=21 remaining=0
+[2026-11-26T14:01:09.226Z] [tab-hygiene] 成功退出：浏览器连接已关+实例 bms-erf Chrome 已清理（精确归属，他实例不动；含本次自建页 0 页）；本实例 tab 清零
+[2026-11-26T14:01:09.227Z] === 派单完成，artifact_sha256=927dba7d6220fb8d0bac6613137113ecdaa211a621081da9e1fc42a69b1f5931 size_bytes=5899 ===
+[2026-11-26T14:01:09.363Z] 会话锁已释放

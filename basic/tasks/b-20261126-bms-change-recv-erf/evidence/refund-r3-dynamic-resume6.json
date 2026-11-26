@@ -1,0 +1,31 @@
+[
+  {
+    "step": "resume",
+    "stage": "SECOND",
+    "records": [
+      {
+        "id": 8234,
+        "record_id": 2168,
+        "record_type": 200,
+        "status": 99,
+        "amount": "-1592.67",
+        "total_amount": "-100.00",
+        "sku_amount": "0.00",
+        "sku_amount_regular": "0.00",
+        "sku_amount_ecommerce": "0.00"
+      },
+      {
+        "id": 8235,
+        "record_id": 2168,
+        "record_type": 200,
+        "status": 11,
+        "amount": "-1592.67",
+        "total_amount": "-600.00",
+        "sku_amount": "-200.00",
+        "sku_amount_regular": "0.00",
+        "sku_amount_ecommerce": "-200.00"
+      }
+    ],
+    "cashTotal": "100.0"
+  }
+]

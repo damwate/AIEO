@@ -1,0 +1,18 @@
+[2026-11-26T13:37:51.563Z] 证据目录: D:\AIEO\phase0\logs\dispatch-2026-11-26T13-37-51
+[2026-11-26T13:37:52.478Z] 会话锁已获取 pid=34768 instance=default lock=gpt-session.lockfile
+[2026-11-26T13:37:52.480Z] === GPT 派单（新建会话，消息 801 字节）===
+[2026-11-26T13:37:52.483Z] [instance] 实例域就绪: instance=default port=9222 profile=gpt-poc lock=gpt-session.lockfile
+(node:34768) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+[2026-11-26T13:37:54.056Z] 复用本实例调试端口 9222（归属核验 own=9）
+[2026-11-26T13:37:54.223Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 1 个
+[2026-11-26T13:37:54.224Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-26T13:38:38.748Z] 新聊天页面就绪
+[2026-11-26T13:38:43.827Z] [dispatch] 基线尾部: null
+[2026-11-26T13:38:43.963Z] 会话锁已释放
+[2026-11-26T13:38:43.963Z] 致命错误: Composer 非空，STOP
+Error: Composer 非空，STOP
+    at sendAndCollect (file:///D:/AIEO/phase0/tools/gpt_dispatch.mjs:288:58)
+    at async mainLocked (file:///D:/AIEO/phase0/tools/gpt_dispatch.mjs:596:76)
+    at async main (file:///D:/AIEO/phase0/tools/gpt_dispatch.mjs:493:5)
+Assertion failed: !(handle->flags & UV_HANDLE_CLOSING), file src\win\async.c, line 76

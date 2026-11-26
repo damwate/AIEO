@@ -1,0 +1,19 @@
+[
+  {
+    "step": "initial",
+    "records": [],
+    "cashTotal": "0"
+  },
+  {
+    "step": "submit",
+    "amount": "100",
+    "response": {
+      "code": "OK",
+      "msg": "",
+      "data": true,
+      "success": true
+    },
+    "records": [],
+    "cashTotal": "0"
+  }
+]

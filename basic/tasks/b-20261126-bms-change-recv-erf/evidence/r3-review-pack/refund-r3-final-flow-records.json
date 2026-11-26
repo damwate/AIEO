@@ -1,0 +1,58 @@
+[
+  {
+    "cost_id": 8234,
+    "record_id": 2168,
+    "status": 99,
+    "record_amount": "-1592.67",
+    "total_amount": "-100.00",
+    "sku_amount": "0.00",
+    "pay_sku_amount": "1083.74",
+    "pay_sku_amount_ecommerce": "1069.59",
+    "flow_id": 5194,
+    "flow_amount": "-1592.67",
+    "pay_amount": "-100.00",
+    "flow_status": 99
+  },
+  {
+    "cost_id": 8235,
+    "record_id": 2168,
+    "status": 99,
+    "record_amount": "-1592.67",
+    "total_amount": "-600.00",
+    "sku_amount": "-200.00",
+    "pay_sku_amount": "49.60",
+    "pay_sku_amount_ecommerce": "47.99",
+    "flow_id": 5195,
+    "flow_amount": "-1592.67",
+    "pay_amount": "-600.00",
+    "flow_status": 99
+  },
+  {
+    "cost_id": 8236,
+    "record_id": 2168,
+    "status": 99,
+    "record_amount": "-1592.67",
+    "total_amount": "-292.67",
+    "sku_amount": "-292.67",
+    "pay_sku_amount": null,
+    "pay_sku_amount_ecommerce": "0.00",
+    "flow_id": 5196,
+    "flow_amount": "0.00",
+    "pay_amount": "0.00",
+    "flow_status": 99
+  },
+  {
+    "cost_id": 8237,
+    "record_id": 2168,
+    "status": 99,
+    "record_amount": "-1592.67",
+    "total_amount": "-600.00",
+    "sku_amount": "-600.00",
+    "pay_sku_amount": "-208.66",
+    "pay_sku_amount_ecommerce": "-209.37",
+    "flow_id": 5197,
+    "flow_amount": "0.00",
+    "pay_amount": "-600.00",
+    "flow_status": 99
+  }
+]

@@ -1,0 +1,70 @@
+{
+  "config": {
+    "caseId": 2306,
+    "projectId": 1652,
+    "customerResponsible": 0,
+    "remark": "ERF-20261126-company-ZERO-专用验收",
+    "items": [
+      {
+        "modelSn": "G3100050",
+        "qty": 20,
+        "sortIndex": 1,
+        "groupName": "元气种植",
+        "groupIndex": 100,
+        "remark": ""
+      }
+    ]
+  },
+  "createResponse": {
+    "code": "OK",
+    "msg": "",
+    "data": 2163,
+    "success": true
+  },
+  "changeId": 2163,
+  "confirmResponse": {
+    "code": "OK",
+    "msg": "",
+    "data": {
+      "id": 2163,
+      "orderId": "2125938881605267457",
+      "changeAmount": 0.0,
+      "skuAmount": 546.34,
+      "skuCost": 160.0,
+      "income": false
+    },
+    "success": true
+  },
+  "quoteResponse": {
+    "code": "OK",
+    "msg": "",
+    "data": {
+      "id": "2125938881605267457",
+      "schemeId": "2125938880627994626",
+      "retailSkuPrice": 560.0,
+      "skuPrice": 0.0,
+      "skuCost": 160.0,
+      "additionPrice": null,
+      "laborPrice": 0.0,
+      "freightPrice": 0.0,
+      "carryPrice": null,
+      "sundryPrice": 0.0,
+      "totalPrice": 560.0,
+      "originalPrice": 0.0,
+      "status": 1,
+      "discountType": 1,
+      "fees": [],
+      "additions": [],
+      "designPrice": 0.0,
+      "minPrice": 400.0,
+      "minProductPrice": 400.0,
+      "baseMaterialPrice": 0.0,
+      "remark": "ERF-20261126-company-ZERO-专用验收",
+      "discountPrice": 0.0,
+      "productOnlyPrice": null,
+      "gmtCreate": "2026-11-26",
+      "priceRemark": null
+    },
+    "success": true
+  }
+}

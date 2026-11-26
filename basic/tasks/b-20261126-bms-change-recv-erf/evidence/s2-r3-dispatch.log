@@ -1,0 +1,172 @@
+[2026-11-26T14:54:50.895Z] 证据目录: D:\AIEO\phase0\logs\dispatch-2026-11-26T14-54-50
+[2026-11-26T14:54:52.386Z] 会话锁已获取 pid=19436 instance=bms-erf lock=gpt-session-bms-erf.lockfile
+[2026-11-26T14:54:52.388Z] === GPT 派单（已有会话，消息 823 字节）===
+(node:19436) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+[2026-11-26T14:54:53.962Z] [instance] 端口沿用注册表登记: instance=bms-erf port=9303
+[2026-11-26T14:54:54.089Z] [instance] 实例域就绪: instance=bms-erf port=9303 profile=gpt-poc-bms-erf lock=gpt-session-bms-erf.lockfile
+[2026-11-26T14:54:56.366Z] [instance] 清理本实例 Chrome：own=0 foreign(不动)=0 remaining=0
+[2026-11-26T14:54:59.302Z] Chrome 已启动 pid=3416 port=9303
+[2026-11-26T14:54:59.999Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 0 个
+[2026-11-26T14:55:00.000Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-26T14:55:07.328Z] 会话就绪: https://chatgpt.com/c/6b083828-d174-83ec-8d45-58971fca139d
+[2026-11-26T14:55:12.366Z] [ctx-budget] WARN: 累计 30019B（WARN≥24576/HARD≥49152）
+[2026-11-26T14:55:12.371Z] [dispatch] 基线尾部: {"role":"assistant","key":"d9abc500-38f1-5e78-9430-d445f8bc7714:2:assistant","assistantUuid":"0aae8e69-5c0c-41e8-a1a4-dcb445367930"}
+[2026-11-26T14:55:14.367Z] [ctx-budget] turn+in_bytes=823B → 6b083828-d174-83ec-8d45-58971fca139d
+[2026-11-26T14:55:14.367Z] [dispatch] 发送双验通过（polls=1，user_unit_key=fallback-turn-0:0:user，tail 后观察）
+[2026-11-26T14:55:14.655Z] 截图: sent-dispatch.png
+[2026-11-26T14:57:07.546Z] [dispatch] COMPLETED，1 个 assistant unit，回复 3249 UTF-8 字节，区间窗口 2 个
+[2026-11-26T14:57:07.735Z] 截图: reply-dispatch.png
+[2026-11-26T14:57:07.737Z] 会话 URL 已取得且归属校验 PASS，跳过 reviewer 指针写盘: https://chatgpt.com/c/6b083828-d174-83ec-8d45-58971fca139d
+[2026-11-26T14:57:07.747Z] JSON/Schema/绑定校验: NOT_REQUESTED
+[2026-11-26T14:57:07.760Z] [ctx-budget] turn+out_bytes=3249B → 6b083828-d174-83ec-8d45-58971fca139d
+[2026-11-26T14:57:07.761Z] M1 本地登记: NOT_REQUESTED（三 ID 均未提供，通用非登记派单）
+[2026-11-26T14:57:10.025Z] [instance] 清理本实例 Chrome：own=9 foreign(不动)=0 remaining=0
+[2026-11-26T14:57:10.029Z] [tab-hygiene] 成功退出：浏览器连接已关+实例 bms-erf Chrome 已清理（精确归属，他实例不动；含本次自建页 0 页）；本实例 tab 清零
+[2026-11-26T14:57:10.030Z] === 派单完成，artifact_sha256=387d1a607fd8f85fcd648bf9ad0223e791cbc512173911e466db06ad711b2acf size_bytes=3249 ===
+
+=====REPLY_BEGIN=====
+ChatGPT 说：
+
+[实施发现R3][BMS-Er+F][问题2]
+
+PASS（附实施约束）
+
+这次方案解决了 R2 的核心缺口：不再通过 (recordType, recordId) 推测首次退款，而是让 addAmount 直接使用实际驱动合同 otherPrice 的同一来源——ProjectApprovalFlow.amount。两个消费端使用同一业务金额口径，首次 T、后续 0，逻辑闭合。
+
+逐项裁定
+
+① confirmChangeOrder 幂等：PASS
+
+限定 changeAmount < 0 && status == Confirmed，并将幂等返回放在 JST/BOM 操作之前，可以避免重复执行这些副作用。
+
+约束：幂等返回不能提前跳过 project 侧其他落库和现金处理；正向业务的状态校验不得放宽。
+
+② flowBusinessAmount 分离：PASS
+
+ProjectCostRecord.amount 始终保存完整 T。
+
+ProjectApprovalFlow.amount 首笔为 T，后续为 0。
+
+totalAmount、skuAmount、paySkuAmount 仍按每笔实际退款及原有规则保存。
+
+③ calcIncomeSkuAmountNew 改读 Flow.amount：PASS
+
+相较 R2 的同键判重，这种方式更直接，也不会误伤原始变更单：
+
+新数据：历史 addAmount 读取对应 ProjectApprovalFlow.amount。
+
+当前记录：currentAmount 使用当前业务对应的 flowBusinessAmount。
+
+老数据：不存在对应 Flow 时，回退 ProjectCostRecord.amount。
+
+仅调整 ChangeOrder 分支，其他分支不变。
+
+实施时必须守住的边界
+
+当前记录不能依赖尚未创建的 Flow 查询。 calcIncomeSkuAmountNew 执行时，当前 flowBusinessAmount 必须已经从参数或当前业务对象明确传入；不能因为 Flow 尚未落库而误走旧数据回退。
+
+历史 Flow 必须按 costRecord 的真实关联关系取值，确认一条 costRecord 不会因多条 Flow 记录产生重复汇总；如果存在多条，必须按真实业务规则确定对应金额，不能任意取第一条。
+
+旧数据回退只针对确实不存在 Flow 的记录；Flow 存在但 amount 为 NULL 或查询异常时，不得静默回退成 costRecord.amount，否则会掩盖新数据异常并重复累计。
+
+只替换 addAmount 的金额来源，不改变原有历史记录筛选范围、E/F 计算、skuAmount、totalAmount、paySkuAmount 公式。
+
+Flow 与 costRecord 的写入必须保持同一事务的原子性，避免出现 costRecord 已落库而 Flow 缺失、被误判为旧数据的情况。
+
+动态验收断言
+
+以 T=-1592.67，退款 100、600、600、292.67 为例：
+
+验收项
+
+	
+
+预期结果
+
+
+
+
+首笔合同 otherPrice 变化
+
+	
+
+-1592.67
+
+
+
+
+后续三笔合同 otherPrice 变化
+
+	
+
+均为 0
+
+
+
+
+首笔 addAmount 退款贡献
+
+	
+
+-1592.67
+
+
+
+
+后续三笔 addAmount 退款贡献
+
+	
+
+均为 0
+
+
+
+
+现金累计
+
+	
+
+逐笔按实际退款增加
+
+
+
+
+产品退款累计
+
+	
+
+0 / 200 / 800 / 1092.67
+
+
+
+
+不同业务记录
+
+	
+
+各自独立，不互相吞金额
+
+
+
+
+F-only 退款
+
+	
+
+现金照计，产品池不增加
+
+
+
+
+超限 0.01
+
+	
+
+拒绝且无新增记录、无金额副作用
+
+最终裁定：PASS（规划通过，可按9个文件实施）。
+
+注意：这是对方案的裁定，不代表代码已经实现或动态测试已经通过。实施后仍须按完整 commit SHA 复核上述关联查询、事务边界和动态断言；在实现证据通过前，不得宣称实施完成。
+=====REPLY_END=====
+[2026-11-26T14:57:10.150Z] 会话锁已释放

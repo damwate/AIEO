@@ -1,0 +1,44 @@
+[
+  {
+    "step": "resumeAfterFirst",
+    "records": [
+      {
+        "id": 8234,
+        "record_id": 2168,
+        "record_type": 200,
+        "status": 99,
+        "amount": "-1592.67",
+        "total_amount": "-100.00",
+        "sku_amount": "0.00",
+        "sku_amount_regular": "0.00",
+        "sku_amount_ecommerce": "0.00"
+      }
+    ],
+    "cashTotal": "100.0"
+  },
+  {
+    "step": "approve",
+    "amount": "100",
+    "transitions": [],
+    "finalFlow": {
+      "id": 5194,
+      "flow_status": 99,
+      "pay_amount": "-100.00",
+      "amount": "-1592.67"
+    },
+    "records": [
+      {
+        "id": 8234,
+        "record_id": 2168,
+        "record_type": 200,
+        "status": 99,
+        "amount": "-1592.67",
+        "total_amount": "-100.00",
+        "sku_amount": "0.00",
+        "sku_amount_regular": "0.00",
+        "sku_amount_ecommerce": "0.00"
+      }
+    ],
+    "cashTotal": "100.0"
+  }
+]

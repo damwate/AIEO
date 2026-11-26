@@ -1,0 +1,24 @@
+{
+  "code": "OK",
+  "msg": "",
+  "data": {
+    "id": 2158,
+    "caseId": 2256,
+    "changeType": 1,
+    "changeTypeDesc": null,
+    "designer": "龚达明(13524602481)",
+    "customerResponsible": true,
+    "remark": "ERF-20261126-rGT1-F2000-专用验收",
+    "status": 1,
+    "statusDesc": null,
+    "quoted": true,
+    "gmtCreate": "2026-11-26 20:49:20",
+    "gmtModified": "2026-11-26 20:54:08",
+    "projectId": 1610,
+    "skuPrice": null,
+    "retailSkuPrice": null,
+    "discountPrice": null,
+    "skuCost": null
+  },
+  "success": true
+}

@@ -1,0 +1,28 @@
+page url: https://chatgpt.com/
+{
+  "candidates": [
+    {
+      "tag": "DIV",
+      "id": null,
+      "ariaLabel": "询问 ChatGPT",
+      "testid": null,
+      "placeholder": null,
+      "visible": true,
+      "rect": {
+        "w": 536,
+        "h": 26
+      },
+      "innerTextJSON": "\"lu\"",
+      "textLen": 2,
+      "isContentEditable": true
+    }
+  ],
+  "promptTextarea": null,
+  "askLabels": [
+    {
+      "tag": "DIV",
+      "label": "询问 ChatGPT",
+      "visible": true
+    }
+  ]
+}

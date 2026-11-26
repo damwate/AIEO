@@ -1,0 +1,393 @@
+[
+  {
+    "step": "resume",
+    "stage": "APPROVE600",
+    "records": [
+      {
+        "id": 8234,
+        "record_id": 2168,
+        "record_type": 200,
+        "status": 99,
+        "amount": "-1592.67",
+        "total_amount": "-100.00",
+        "sku_amount": "0.00",
+        "sku_amount_regular": "0.00",
+        "sku_amount_ecommerce": "0.00"
+      },
+      {
+        "id": 8235,
+        "record_id": 2168,
+        "record_type": 200,
+        "status": 99,
+        "amount": "-1592.67",
+        "total_amount": "-600.00",
+        "sku_amount": "-200.00",
+        "sku_amount_regular": "0.00",
+        "sku_amount_ecommerce": "-200.00"
+      },
+      {
+        "id": 8236,
+        "record_id": 2168,
+        "record_type": 200,
+        "status": 99,
+        "amount": "-1592.67",
+        "total_amount": "-292.67",
+        "sku_amount": "-292.67",
+        "sku_amount_regular": "0.00",
+        "sku_amount_ecommerce": "-292.67"
+      },
+      {
+        "id": 8237,
+        "record_id": 2168,
+        "record_type": 200,
+        "status": 99,
+        "amount": "-1592.67",
+        "total_amount": "-600.00",
+        "sku_amount": "-600.00",
+        "sku_amount_regular": "0.00",
+        "sku_amount_ecommerce": "-600.00"
+      }
+    ],
+    "cashTotal": "1592.67"
+  },
+  {
+    "step": "approve",
+    "amount": "600",
+    "transitions": [],
+    "finalFlow": {
+      "id": 5197,
+      "flow_status": 99,
+      "pay_amount": "-600.00",
+      "amount": "0.00"
+    },
+    "records": [
+      {
+        "id": 8234,
+        "record_id": 2168,
+        "record_type": 200,
+        "status": 99,
+        "amount": "-1592.67",
+        "total_amount": "-100.00",
+        "sku_amount": "0.00",
+        "sku_amount_regular": "0.00",
+        "sku_amount_ecommerce": "0.00"
+      },
+      {
+        "id": 8235,
+        "record_id": 2168,
+        "record_type": 200,
+        "status": 99,
+        "amount": "-1592.67",
+        "total_amount": "-600.00",
+        "sku_amount": "-200.00",
+        "sku_amount_regular": "0.00",
+        "sku_amount_ecommerce": "-200.00"
+      },
+      {
+        "id": 8236,
+        "record_id": 2168,
+        "record_type": 200,
+        "status": 99,
+        "amount": "-1592.67",
+        "total_amount": "-292.67",
+        "sku_amount": "-292.67",
+        "sku_amount_regular": "0.00",
+        "sku_amount_ecommerce": "-292.67"
+      },
+      {
+        "id": 8237,
+        "record_id": 2168,
+        "record_type": 200,
+        "status": 99,
+        "amount": "-1592.67",
+        "total_amount": "-600.00",
+        "sku_amount": "-600.00",
+        "sku_amount_regular": "0.00",
+        "sku_amount_ecommerce": "-600.00"
+      }
+    ],
+    "cashTotal": "1592.67"
+  },
+  {
+    "step": "approve",
+    "amount": "600",
+    "transitions": [],
+    "finalFlow": {
+      "id": 5197,
+      "flow_status": 99,
+      "pay_amount": "-600.00",
+      "amount": "0.00"
+    },
+    "records": [
+      {
+        "id": 8234,
+        "record_id": 2168,
+        "record_type": 200,
+        "status": 99,
+        "amount": "-1592.67",
+        "total_amount": "-100.00",
+        "sku_amount": "0.00",
+        "sku_amount_regular": "0.00",
+        "sku_amount_ecommerce": "0.00"
+      },
+      {
+        "id": 8235,
+        "record_id": 2168,
+        "record_type": 200,
+        "status": 99,
+        "amount": "-1592.67",
+        "total_amount": "-600.00",
+        "sku_amount": "-200.00",
+        "sku_amount_regular": "0.00",
+        "sku_amount_ecommerce": "-200.00"
+      },
+      {
+        "id": 8236,
+        "record_id": 2168,
+        "record_type": 200,
+        "status": 99,
+        "amount": "-1592.67",
+        "total_amount": "-292.67",
+        "sku_amount": "-292.67",
+        "sku_amount_regular": "0.00",
+        "sku_amount_ecommerce": "-292.67"
+      },
+      {
+        "id": 8237,
+        "record_id": 2168,
+        "record_type": 200,
+        "status": 99,
+        "amount": "-1592.67",
+        "total_amount": "-600.00",
+        "sku_amount": "-600.00",
+        "sku_amount_regular": "0.00",
+        "sku_amount_ecommerce": "-600.00"
+      }
+    ],
+    "cashTotal": "1592.67"
+  },
+  {
+    "step": "approve",
+    "amount": "292.67",
+    "transitions": [],
+    "finalFlow": {
+      "id": 5197,
+      "flow_status": 99,
+      "pay_amount": "-600.00",
+      "amount": "0.00"
+    },
+    "records": [
+      {
+        "id": 8234,
+        "record_id": 2168,
+        "record_type": 200,
+        "status": 99,
+        "amount": "-1592.67",
+        "total_amount": "-100.00",
+        "sku_amount": "0.00",
+        "sku_amount_regular": "0.00",
+        "sku_amount_ecommerce": "0.00"
+      },
+      {
+        "id": 8235,
+        "record_id": 2168,
+        "record_type": 200,
+        "status": 99,
+        "amount": "-1592.67",
+        "total_amount": "-600.00",
+        "sku_amount": "-200.00",
+        "sku_amount_regular": "0.00",
+        "sku_amount_ecommerce": "-200.00"
+      },
+      {
+        "id": 8236,
+        "record_id": 2168,
+        "record_type": 200,
+        "status": 99,
+        "amount": "-1592.67",
+        "total_amount": "-292.67",
+        "sku_amount": "-292.67",
+        "sku_amount_regular": "0.00",
+        "sku_amount_ecommerce": "-292.67"
+      },
+      {
+        "id": 8237,
+        "record_id": 2168,
+        "record_type": 200,
+        "status": 99,
+        "amount": "-1592.67",
+        "total_amount": "-600.00",
+        "sku_amount": "-600.00",
+        "sku_amount_regular": "0.00",
+        "sku_amount_ecommerce": "-600.00"
+      }
+    ],
+    "cashTotal": "1592.67"
+  },
+  {
+    "step": "approve",
+    "amount": "600",
+    "transitions": [],
+    "finalFlow": {
+      "id": 5197,
+      "flow_status": 99,
+      "pay_amount": "-600.00",
+      "amount": "0.00"
+    },
+    "records": [
+      {
+        "id": 8234,
+        "record_id": 2168,
+        "record_type": 200,
+        "status": 99,
+        "amount": "-1592.67",
+        "total_amount": "-100.00",
+        "sku_amount": "0.00",
+        "sku_amount_regular": "0.00",
+        "sku_amount_ecommerce": "0.00"
+      },
+      {
+        "id": 8235,
+        "record_id": 2168,
+        "record_type": 200,
+        "status": 99,
+        "amount": "-1592.67",
+        "total_amount": "-600.00",
+        "sku_amount": "-200.00",
+        "sku_amount_regular": "0.00",
+        "sku_amount_ecommerce": "-200.00"
+      },
+      {
+        "id": 8236,
+        "record_id": 2168,
+        "record_type": 200,
+        "status": 99,
+        "amount": "-1592.67",
+        "total_amount": "-292.67",
+        "sku_amount": "-292.67",
+        "sku_amount_regular": "0.00",
+        "sku_amount_ecommerce": "-292.67"
+      },
+      {
+        "id": 8237,
+        "record_id": 2168,
+        "record_type": 200,
+        "status": 99,
+        "amount": "-1592.67",
+        "total_amount": "-600.00",
+        "sku_amount": "-600.00",
+        "sku_amount_regular": "0.00",
+        "sku_amount_ecommerce": "-600.00"
+      }
+    ],
+    "cashTotal": "1592.67"
+  },
+  {
+    "step": "submit",
+    "amount": "0.01",
+    "response": {
+      "code": "INTERNAL_SERVER_ERROR",
+      "msg": "申请变更单流程失败发起变更流程失败",
+      "data": null,
+      "success": false
+    },
+    "records": [
+      {
+        "id": 8234,
+        "record_id": 2168,
+        "record_type": 200,
+        "status": 99,
+        "amount": "-1592.67",
+        "total_amount": "-100.00",
+        "sku_amount": "0.00",
+        "sku_amount_regular": "0.00",
+        "sku_amount_ecommerce": "0.00"
+      },
+      {
+        "id": 8235,
+        "record_id": 2168,
+        "record_type": 200,
+        "status": 99,
+        "amount": "-1592.67",
+        "total_amount": "-600.00",
+        "sku_amount": "-200.00",
+        "sku_amount_regular": "0.00",
+        "sku_amount_ecommerce": "-200.00"
+      },
+      {
+        "id": 8236,
+        "record_id": 2168,
+        "record_type": 200,
+        "status": 99,
+        "amount": "-1592.67",
+        "total_amount": "-292.67",
+        "sku_amount": "-292.67",
+        "sku_amount_regular": "0.00",
+        "sku_amount_ecommerce": "-292.67"
+      },
+      {
+        "id": 8237,
+        "record_id": 2168,
+        "record_type": 200,
+        "status": 99,
+        "amount": "-1592.67",
+        "total_amount": "-600.00",
+        "sku_amount": "-600.00",
+        "sku_amount_regular": "0.00",
+        "sku_amount_ecommerce": "-600.00"
+      }
+    ],
+    "cashTotal": "1592.67"
+  },
+  {
+    "step": "final",
+    "records": [
+      {
+        "id": 8234,
+        "record_id": 2168,
+        "record_type": 200,
+        "status": 99,
+        "amount": "-1592.67",
+        "total_amount": "-100.00",
+        "sku_amount": "0.00",
+        "sku_amount_regular": "0.00",
+        "sku_amount_ecommerce": "0.00"
+      },
+      {
+        "id": 8235,
+        "record_id": 2168,
+        "record_type": 200,
+        "status": 99,
+        "amount": "-1592.67",
+        "total_amount": "-600.00",
+        "sku_amount": "-200.00",
+        "sku_amount_regular": "0.00",
+        "sku_amount_ecommerce": "-200.00"
+      },
+      {
+        "id": 8236,
+        "record_id": 2168,
+        "record_type": 200,
+        "status": 99,
+        "amount": "-1592.67",
+        "total_amount": "-292.67",
+        "sku_amount": "-292.67",
+        "sku_amount_regular": "0.00",
+        "sku_amount_ecommerce": "-292.67"
+      },
+      {
+        "id": 8237,
+        "record_id": 2168,
+        "record_type": 200,
+        "status": 99,
+        "amount": "-1592.67",
+        "total_amount": "-600.00",
+        "sku_amount": "-600.00",
+        "sku_amount_regular": "0.00",
+        "sku_amount_ecommerce": "-600.00"
+      }
+    ],
+    "cashTotal": "1592.67",
+    "verdict": "PASS"
+  }
+]

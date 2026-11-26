@@ -1,0 +1,46 @@
+[
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "model_info"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "model_item"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "model_item_property"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "model_property"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "model_sorted"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "model_tag"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim_test",
+    "TABLE_NAME": "model_info"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim_test",
+    "TABLE_NAME": "model_item"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_courtyard",
+    "TABLE_NAME": "questionnaire_price"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_courtyard",
+    "TABLE_NAME": "questionnaire_price_detail"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_courtyard",
+    "TABLE_NAME": "questionnaire_price_factor"
+  }
+]

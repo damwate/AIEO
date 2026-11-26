@@ -1,0 +1,186 @@
+[2026-11-26T14:05:50.979Z] 证据目录: D:\AIEO\phase0\logs\dispatch-2026-11-26T14-05-50
+[2026-11-26T14:05:53.467Z] 会话锁已获取 pid=14124 instance=bms-erf lock=gpt-session-bms-erf.lockfile
+[2026-11-26T14:05:53.468Z] === GPT 派单（已有会话，消息 1010 字节）===
+(node:14124) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+[2026-11-26T14:05:54.633Z] [instance] 端口沿用注册表登记: instance=bms-erf port=9303
+[2026-11-26T14:05:54.757Z] [instance] 实例域就绪: instance=bms-erf port=9303 profile=gpt-poc-bms-erf lock=gpt-session-bms-erf.lockfile
+[2026-11-26T14:05:56.814Z] [instance] 清理本实例 Chrome：own=0 foreign(不动)=21 remaining=0
+[2026-11-26T14:05:59.904Z] Chrome 已启动 pid=36916 port=9303
+[2026-11-26T14:06:00.543Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 0 个
+[2026-11-26T14:06:00.545Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-26T14:06:08.182Z] 会话就绪: https://chatgpt.com/c/6b083828-d174-83ec-8d45-58971fca139d
+[2026-11-26T14:06:13.234Z] [dispatch] 基线尾部: {"role":"assistant","key":"b846ad23-c2b1-50c9-9c15-5ec677df17ba:2:assistant","assistantUuid":"3609d31f-9117-473a-aa3f-321756e8f302"}
+[2026-11-26T14:06:17.232Z] [ctx-budget] turn+in_bytes=1010B → 6b083828-d174-83ec-8d45-58971fca139d
+[2026-11-26T14:06:17.234Z] [dispatch] 发送双验通过（polls=1，user_unit_key=fallback-turn-0:0:user，tail 后观察）
+[2026-11-26T14:06:17.850Z] 截图: sent-dispatch.png
+[2026-11-26T14:10:03.756Z] [dispatch] COMPLETED，1 个 assistant unit，回复 4588 UTF-8 字节，区间窗口 2 个
+[2026-11-26T14:10:04.041Z] 截图: reply-dispatch.png
+[2026-11-26T14:10:04.043Z] 会话 URL 已取得且归属校验 PASS，跳过 reviewer 指针写盘: https://chatgpt.com/c/6b083828-d174-83ec-8d45-58971fca139d
+[2026-11-26T14:10:04.056Z] JSON/Schema/绑定校验: NOT_REQUESTED
+[2026-11-26T14:10:04.072Z] [ctx-budget] turn+out_bytes=4588B → 6b083828-d174-83ec-8d45-58971fca139d
+[2026-11-26T14:10:04.073Z] M1 本地登记: NOT_REQUESTED（三 ID 均未提供，通用非登记派单）
+[2026-11-26T14:10:06.345Z] [instance] 清理本实例 Chrome：own=10 foreign(不动)=26 remaining=0
+[2026-11-26T14:10:06.348Z] [tab-hygiene] 成功退出：浏览器连接已关+实例 bms-erf Chrome 已清理（精确归属，他实例不动；含本次自建页 0 页）；本实例 tab 清零
+[2026-11-26T14:10:06.349Z] === 派单完成，artifact_sha256=7e0efa0120d52e3085021df169e2051bd1e3539cdc7e8ad0240d545ac67287e8 size_bytes=4588 ===
+
+=====REPLY_BEGIN=====
+ChatGPT 说：
+
+[规划复审R3][BMS-Er+F][问题1第2次返工]
+
+初步结论：并发控制方案成立，方向上已补齐 R2 的核心缺口。 project_info.id 主键行锁可以把同一项目的退款检查与插入串行化；锁内检查活跃退款、重算历史现金并与 BIM 的 previousCash 比对，也能封住“两个请求拿到相同旧余额”的竞态。
+
+但有两个实现边界必须核实：行锁是否能在限定的 8 个文件内真实落地，以及 200/205/300 是否确实覆盖所有退款记录类型。继续核实这两点后再给最终裁定。
+
+PASS（规划通过，按下列硬约束实施）
+
+复核基准：YotinGarden/bms-service@a0789c1126b4df0258522b757a7ba842c4e7bc26。本轮仅复核规划，未改码、未提交、未运行动态测试。
+
+关键核对结果
+
+1. 记录类型：通过。 当前 RecordTypeEnum 中，200=ChangeOrder、205=OrgChangeOrder、300=AsOrder，与 ChangeOrderServiceImpl 按变更类型选择记录类型的路径吻合。负退款仍沿用这三类记录类型；不能把 210 ChangeOrderExpand 擅自加入本次查询范围。
+
+2. 历史现金与产品累计：通过。
+
+历史现金：record_id、recordType IN (200,205,300)、status=99、totalAmount<0，汇总 ABS(totalAmount)。
+
+产品累计：使用相同记录范围和状态条件，但汇总 ABS(skuAmount)。
+
+F-only 记录虽然 skuAmount=0，仍因 totalAmount<0 计入历史现金；不能再用 sku_amount<0 作为现金查询条件。
+
+3. 审批中拦截与重试：通过。 同一范围内，退款记录状态不是 99 或 -10 就拒绝新退款；99 才进入历史累计，-10 不累计且允许重试。状态为 NULL 时也必须按异常/活跃记录处理，不能因 SQL NOT IN 的 NULL 语义漏过。
+
+4. 并发控制：通过，但有明确实现要求。
+
+setCostAndAddFlow 已有事务边界；锁、检查、累计校验、插入必须处于同一个事务、同一数据源连接。
+
+先锁 project_info.id 主键行，再做活跃退款查询、历史现金重算、previousCash 比对、产品上限校验，最后插入。
+
+BIM 传入的 previousCash 必须非 NULL；与锁内重算值用 BigDecimal.compareTo() 比较，不一致就拒绝重试。
+
+锁必须是实际的 SELECT ... FOR UPDATE。我核对了当前 ProjectInfoDao，它只有 BaseDao 继承及普通查询，没有现成的行锁方法。因此在限定 8 文件内，需在 ProjectServiceImpl 用同一事务数据源执行锁 SQL（例如 JdbcTemplate）；普通 selectById() 不等于行锁。
+
+这是项目级锁，会串行化同一项目下的退款，而不只是同一 recordId；不会锁全表。这个粒度可以接受。
+
+实施时不可省略的约束
+
+退款类型的负数收支记录，必须强制要求 previousCash、refundProductLimit 等必要参数存在；不能沿用当前“参数为空就跳过产品累计校验”的行为。
+
+现有产品累计校验必须移入行锁之后，并改成 R3 的成功记录口径；不能保留旧的 record_id + sku_amount<0 先行校验。
+
+previousCash 查询失败、Feign fallback、响应失败或数据为空，都不能转成 0 放行。
+
+不要在持有项目行锁期间调用 BIM 或其他远程服务；BIM 先查询、再发起写请求，project 侧只负责锁内复核和写入。
+
+公式与动态用例
+
+R3 公式可以保留：
+
+𝑟
+𝑒
+𝑓
+𝑢
+𝑛
+𝑑
+𝑁
+𝑜
+𝑛
+𝑃
+𝑟
+𝑜
+𝑑
+𝑢
+𝑐
+𝑡
+=
+min
+⁡
+(
+max
+⁡
+(
+∣
+𝐹
+∣
+−
+𝑝
+𝑟
+𝑒
+𝑣
+𝑖
+𝑜
+𝑢
+𝑠
+𝐶
+𝑎
+𝑠
+ℎ
+,
+0
+)
+,
+𝑟
+𝑒
+𝑓
+𝑢
+𝑛
+𝑑
+𝑇
+𝑜
+𝑡
+𝑎
+𝑙
+)
+refundNonProduct=min(max(∣F∣−previousCash,0),refundTotal)
+𝑟
+𝑒
+𝑓
+𝑢
+𝑛
+𝑑
+𝑃
+𝑟
+𝑜
+𝑑
+𝑢
+𝑐
+𝑡
+=
+𝑟
+𝑒
+𝑓
+𝑢
+𝑛
+𝑑
+𝑇
+𝑜
+𝑡
+𝑎
+𝑙
+−
+𝑟
+𝑒
+𝑓
+𝑢
+𝑛
+𝑑
+𝑁
+𝑜
+𝑛
+𝑃
+𝑟
+𝑜
+𝑑
+𝑢
+𝑐
+𝑡
+refundProduct=refundTotal−refundNonProduct
+
+refundProductLimit=|E×r|，E!=0 才拆普通/电商产品额。负 paidAmount 取绝对值；r>1 不额外截断。
+
+2168 的预期累计结果也正确：100、600、600、292.67 分别产生产品退款 0、200、600、292.67，累计 0、200、800、1092.67；再退 0.01 超限，且不得新增记录。审批中拒绝、F=0、E=0、r>1、负 paidAmount 都应纳入实测。
+
+最终裁定：PASS。 R2 的历史现金口径、F-only 首笔记录、审批中竞态和并发重复使用 F 的问题，R3 方案均已覆盖。没有必要再为规划本身续一轮；实施后应以完整 SHA 复核 8 文件改动，并以动态测试结果决定是否允许提交或发布。
+=====REPLY_END=====
+[2026-11-26T14:10:06.464Z] 会话锁已释放

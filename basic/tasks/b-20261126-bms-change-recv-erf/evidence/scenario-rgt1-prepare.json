@@ -1,0 +1,78 @@
+{
+  "config": {
+    "caseId": 2256,
+    "projectId": 1610,
+    "customerResponsible": 1,
+    "remark": "ERF-20261126-rGT1-F2000-专用验收",
+    "items": [
+      {
+        "modelSn": "G3100050",
+        "qty": 20,
+        "sortIndex": 1,
+        "groupName": "元气种植",
+        "groupIndex": 100,
+        "remark": ""
+      },
+      {
+        "modelSn": "YSF10002",
+        "qty": 2,
+        "sortIndex": 877099,
+        "groupName": "措施费",
+        "groupIndex": 200,
+        "remark": "ERF验收非产品费"
+      }
+    ]
+  },
+  "createResponse": {
+    "code": "OK",
+    "msg": "",
+    "data": 2158,
+    "success": true
+  },
+  "changeId": 2158,
+  "confirmResponse": {
+    "code": "OK",
+    "msg": "",
+    "data": {
+      "id": 2158,
+      "orderId": "2125935018349293569",
+      "changeAmount": 2560.0,
+      "skuAmount": 560.0,
+      "skuCost": 160.0,
+      "income": true
+    },
+    "success": true
+  },
+  "quoteResponse": {
+    "code": "OK",
+    "msg": "",
+    "data": {
+      "id": "2125935018349293569",
+      "schemeId": "2125934934081531906",
+      "retailSkuPrice": 560.0,
+      "skuPrice": 0.0,
+      "skuCost": 160.0,
+      "additionPrice": null,
+      "laborPrice": 0.0,
+      "freightPrice": 2000.0,
+      "carryPrice": null,
+      "sundryPrice": 0.0,
+      "totalPrice": 2560.0,
+      "originalPrice": 0.0,
+      "status": 1,
+      "discountType": 1,
+      "fees": [],
+      "additions": [],
+      "designPrice": 0.0,
+      "minPrice": 2400.0,
+      "minProductPrice": 2400.0,
+      "baseMaterialPrice": 0.0,
+      "remark": "ERF-20261126-rGT1-F2000-专用验收",
+      "discountPrice": 0.0,
+      "productOnlyPrice": null,
+      "gmtCreate": "2026-11-26",
+      "priceRemark": null
+    },
+    "success": true
+  }
+}

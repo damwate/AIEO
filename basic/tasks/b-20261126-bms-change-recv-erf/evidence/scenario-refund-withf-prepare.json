@@ -1,0 +1,79 @@
+{
+  "config": {
+    "caseId": 2306,
+    "projectId": 1652,
+    "customerResponsible": 1,
+    "changeType": 2,
+    "remark": "ERF-20261126-refund-multi-partial-withF-专用验收",
+    "items": [
+      {
+        "modelSn": "G3100050",
+        "qty": -40,
+        "sortIndex": 1,
+        "groupName": "元气种植",
+        "groupIndex": 100,
+        "remark": ""
+      },
+      {
+        "modelSn": "YSF10002",
+        "qty": -0.5,
+        "sortIndex": 877099,
+        "groupName": "措施费",
+        "groupIndex": 200,
+        "remark": "ERF退款非产品费"
+      }
+    ]
+  },
+  "createResponse": {
+    "code": "OK",
+    "msg": "",
+    "data": 2168,
+    "success": true
+  },
+  "changeId": 2168,
+  "confirmResponse": {
+    "code": "OK",
+    "msg": "",
+    "data": {
+      "id": 2168,
+      "orderId": "2125939544443711489",
+      "changeAmount": -1592.67,
+      "skuAmount": -1092.67,
+      "skuCost": -320.0,
+      "income": true
+    },
+    "success": true
+  },
+  "quoteResponse": {
+    "code": "OK",
+    "msg": "",
+    "data": {
+      "id": "2125939544443711489",
+      "schemeId": "2125939542589829122",
+      "retailSkuPrice": -1120.0,
+      "skuPrice": 0.0,
+      "skuCost": -320.0,
+      "additionPrice": null,
+      "laborPrice": 0.0,
+      "freightPrice": -500.0,
+      "carryPrice": null,
+      "sundryPrice": 0.0,
+      "totalPrice": -1620.0,
+      "originalPrice": 0.0,
+      "status": 1,
+      "discountType": 1,
+      "fees": [],
+      "additions": [],
+      "designPrice": 0.0,
+      "minPrice": -1500.0,
+      "minProductPrice": -1500.0,
+      "baseMaterialPrice": 0.0,
+      "remark": "ERF-20261126-refund-multi-partial-withF-专用验收",
+      "discountPrice": 0.0,
+      "productOnlyPrice": null,
+      "gmtCreate": "2026-11-26",
+      "priceRemark": null
+    },
+    "success": true
+  }
+}

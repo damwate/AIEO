@@ -1,0 +1,493 @@
+[2026-11-26T16:02:15.964Z] 证据目录: D:\AIEO\phase0\logs\dispatch-2026-11-26T16-02-15
+[2026-11-26T16:02:18.268Z] 会话锁已获取 pid=20740 instance=bms-erf lock=gpt-session-bms-erf.lockfile
+[2026-11-26T16:02:18.271Z] === GPT 派单（已有会话，消息 660 字节）===
+(node:20740) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+[2026-11-26T16:02:19.882Z] [instance] 端口沿用注册表登记: instance=bms-erf port=9303
+[2026-11-26T16:02:19.998Z] [instance] 实例域就绪: instance=bms-erf port=9303 profile=gpt-poc-bms-erf lock=gpt-session-bms-erf.lockfile
+[2026-11-26T16:02:22.798Z] [instance] 清理本实例 Chrome：own=0 foreign(不动)=0 remaining=0
+[2026-11-26T16:02:26.605Z] Chrome 已启动 pid=24572 port=9303
+[2026-11-26T16:02:27.543Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 0 个
+[2026-11-26T16:02:27.547Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-26T16:02:33.696Z] 会话就绪: https://chatgpt.com/c/6b083828-d174-83ec-8d45-58971fca139d
+[2026-11-26T16:02:38.736Z] [ctx-budget] WARN: 累计 34091B（WARN≥24576/HARD≥49152）
+[2026-11-26T16:02:38.742Z] [dispatch] 基线尾部: {"role":"assistant","key":"633e02bf-d4dc-55f3-b425-f85b82ee5b58:2:assistant","assistantUuid":"a5b40188-e0b4-4751-ba8a-03fcfee87354"}
+[2026-11-26T16:02:43.635Z] [dispatch] 附件已挂载并上传完成: r3-review-pack.zip
+[2026-11-26T16:02:45.682Z] [ctx-budget] turn+in_bytes=660B → 6b083828-d174-83ec-8d45-58971fca139d
+[2026-11-26T16:02:45.685Z] [dispatch] 发送双验通过（polls=1，user_unit_key=fallback-turn-0:0:user，tail 后观察）
+[2026-11-26T16:02:46.072Z] 截图: sent-dispatch.png
+[2026-11-26T16:07:03.067Z] [dispatch] COMPLETED，1 个 assistant unit，回复 9020 UTF-8 字节，区间窗口 2 个
+[2026-11-26T16:07:03.284Z] 截图: reply-dispatch.png
+[2026-11-26T16:07:03.289Z] 会话 URL 已取得且归属校验 PASS，跳过 reviewer 指针写盘: https://chatgpt.com/c/6b083828-d174-83ec-8d45-58971fca139d
+[2026-11-26T16:07:03.305Z] JSON/Schema/绑定校验: NOT_REQUESTED
+[2026-11-26T16:07:03.322Z] [ctx-budget] turn+out_bytes=9020B → 6b083828-d174-83ec-8d45-58971fca139d
+[2026-11-26T16:07:03.322Z] M1 本地登记: NOT_REQUESTED（三 ID 均未提供，通用非登记派单）
+[2026-11-26T16:07:05.454Z] [instance] 清理本实例 Chrome：own=9 foreign(不动)=0 remaining=0
+[2026-11-26T16:07:05.461Z] [tab-hygiene] 成功退出：浏览器连接已关+实例 bms-erf Chrome 已清理（精确归属，他实例不动；含本次自建页 0 页）；本实例 tab 清零
+[2026-11-26T16:07:05.462Z] === 派单完成，artifact_sha256=7f9bc3e5dd614cfef63f803fc9fa8b197a445eddc1e86fa25adf8f39c1bbeb11 size_bytes=9020 ===
+
+=====REPLY_BEGIN=====
+ChatGPT 说：
+
+[独立验收][BMS-Er+F][S2]
+
+已成功读取附件，并核实 ZIP 的 SHA256 与你提供的值完全一致：128c1f0c29b013c1e387aadd7cd71ca749e6c238cd0c99b67b4b12e5b1606fdf。
+
+我会以指定完整 commit 3ac3ded3b5c5b252424c799f0496546a7589219f 的 9 文件 diff 为代码审查对象；动态日志、数据库快照和 summary 作为独立证据交叉核对，不把 summary 的 PASS 直接当验收结论。
+
+六项验收结果
+整体 REJECT
+
+#
+
+	
+
+验收项
+
+	
+
+结论
+
+	
+
+核验结果
+
+
+
+
+1
+
+	
+
+多笔 F 分摊
+
+	
+
+PASS
+
+	
+
+动态记录与公式结果一致
+
+
+
+
+2
+
+	
+
+事务行锁
+
+	
+
+PASS
+
+	
+
+源码有事务内主键行锁；并发压力证据不足
+
+
+
+
+3
+
+	
+
+负向幂等
+
+	
+
+PASS
+
+	
+
+源码位置和条件符合要求；缺少重复调用动态证据
+
+
+
+
+4
+
+	
+
+costRecord / Flow 业务额分离
+
+	
+
+REJECT
+
+	
+
+存储分离正确，但历史 Flow 关联查询使用了错误主键
+
+
+
+
+5
+
+	
+
+PM 实收保持
+
+	
+
+REJECT
+
+	
+
+动态样本通过，但源码仍存在清零真实实收的分支
+
+
+
+
+6
+
+	
+
+0.01 超限无新增
+
+	
+
+PASS
+
+	
+
+动态日志显示拒绝，记录集合未增加
+
+1. 多笔 F 分摊：PASS
+
+动态日志实际执行顺序是 100 → 600 → 292.67 → 600，不是此前规划中 100 → 600 → 600 → 292.67 的顺序。
+
+逐笔结果：
+
+退款现金
+
+	
+
+本笔产品退款
+
+	
+
+累计产品退款
+
+	
+
+累计现金退款
+
+
+
+
+100.00
+
+	
+
+0.00
+
+	
+
+0.00
+
+	
+
+100.00
+
+
+
+
+600.00
+
+	
+
+200.00
+
+	
+
+200.00
+
+	
+
+700.00
+
+
+
+
+292.67
+
+	
+
+292.67
+
+	
+
+492.67
+
+	
+
+992.67
+
+
+
+
+600.00
+
+	
+
+600.00
+
+	
+
+1092.67
+
+	
+
+1592.67
+
+这与 F=-500、产品退款上限 1092.67 的分摊结果吻合。首笔 F-only 退款的现金进入后续累计，产品额为 0；剩余非产品费抵扣完后，后续退款全部计入产品额。
+
+动态证据：refund-r3-dynamic-final7.log、refund-r3-final-flow-records.json。
+
+2. 事务行锁：PASS（并发验证未覆盖）
+
+源码 ProjectServiceImpl.setCostAndAddFlow：
+
+方法有 @Transactional(rollbackFor = Exception.class)。
+
+使用 JdbcTemplate 执行：
+
+SQL
+SELECT id FROM project_info WHERE id = ? FOR UPDATE
+
+锁后检查活跃退款、重算已完成退款现金、比较 refundPreviousCashAmount、检查产品上限，然后才插入成本记录和审批流。
+
+锁内没有调用 BIM 远程接口。
+
+这是实际的数据库行锁，不是普通 selectById()。以项目主键锁定，会串行化同一项目上的退款提交，范围比单个变更单更宽，但能保护同一项目的并发退款。
+
+证据边界： 附件没有并发双请求压力测试，也没有直接证明 JdbcTemplate 与 DAO 使用同一事务管理器/数据源。代码结构符合预期，但这两点还不能算动态验证通过。
+
+3. 负向幂等：PASS（源码验证）
+
+ChangeOrderServiceImpl.confirmChangeOrder 在原有 Submitted 状态校验之前增加：
+
+状态为 Confirmed；
+
+changeAmount < 0；
+
+同时满足即返回，不再重复执行 JST/BOM 处理。
+
+分支位于报价状态检查之后、原状态校验之前，符合“仅负向已确认变更单幂等返回，正向状态校验不放宽”的要求。
+
+证据边界： 附件没有提供同一负向变更单重复调用的动态日志，因此本项是源码 PASS，不是动态回归 PASS。
+
+4. costRecord / Flow 业务额分离：REJECT
+
+这一项发现了明确的源码缺陷。
+
+写入部分正确：
+
+ProjectCostRecord.amount 保存完整 businessAmountValue，即 T。
+
+ProjectApprovalFlow.amount 保存 flowBusinessAmountValue，首笔 T、后续 0。
+
+动态记录也显示了这种分离：costRecord 的 record_amount 都是 -1592.67；后续 5197 的 flow_amount=0。
+
+但历史读取关联错了。
+
+ApprovalFlowServiceImpl.getChangeBusinessAmount() 当前执行：
+
+Java
+ProjectApprovalFlow flow =
+    new ProjectApprovalFlow().selectById(record.getId());
+
+这里把 ProjectCostRecord.id 当成 ProjectApprovalFlow.id 使用。
+
+附件中的实际数据已经证明两个 ID 不相同：
+
+costRecord ID
+
+	
+
+Flow ID
+
+	
+
+Flow amount
+
+
+
+
+8234
+
+	
+
+5194
+
+	
+
+-1592.67
+
+
+
+
+8235
+
+	
+
+5195
+
+	
+
+-1592.67
+
+
+
+
+8236
+
+	
+
+5196
+
+	
+
+0.00
+
+
+
+
+8237
+
+	
+
+5197
+
+	
+
+0.00
+
+而创建 Flow 时，源码实际建立的关联是：
+
+Java
+flow.setObjectId(String.valueOf(projectCostRecord.getId()));
+
+也就是说，正确关联依据是 Flow 的 objectId，不是 Flow 主键等于 costRecord 主键。
+
+影响：
+
+selectById(record.getId()) 找不到对应 Flow 时，就会回退 record.amount。对后续部分退款而言，回退值是完整 T，而本应读取的 Flow amount 是 0。这会使历史 addAmount 再次累计 T，直接破坏 R3 的核心去重效果。
+
+更危险的是，如果恰好存在一个 ID 相同但属于其他业务的 Flow，还可能读到错误业务金额。
+
+P0 级阻断
+
+必须改为通过真实关联关系查询对应审批流，并确认 Flow 类型及关联唯一性；不存在对应 Flow 的旧数据回退规则也必须保留，但不能把“主键查不到”误当作“旧数据没有 Flow”。
+
+5. PM 实收保持：REJECT
+
+这里需要区分动态样本和源码完整性。
+
+动态样本通过：
+
+5197 的记录为：
+
+flow.amount=0.00
+
+pay_amount=-600.00
+
+flow_status=99
+
+说明该样本确实保留了后续退款的实际现金金额，并完成审批。
+
+但源码还有一个会清零真实实收的分支。
+
+ApprovalFlowServiceImpl 当前条件：
+
+Java
+if (flow.getPayDate() == null
+        || (flow.getAmount().compareTo(BigDecimal.ZERO) == 0 && zeroCashAmount)) {
+    flow.setPayAmount(BigDecimal.ZERO);
+    newStatus = FlowStatusEnum.completed.getValue();
+}
+
+问题在于第一个条件是独立的 OR。
+
+如果 flow.amount=0、payAmount=-600，但 payDate==null，整个条件仍然成立，随后真实 payAmount 会被直接改成 0。
+
+所以 5197 的动态通过不能证明所有实际实收都安全。当前代码没有做到“只要有真实实收，就不得清零”。
+
+需要修正判断： payDate 为空不能覆盖真实实收金额；有非零 payAmount 时必须保留并进入财务审核路径。无实收的零金额流程才可以按零现金完成逻辑处理。
+
+6. 0.01 超限无新增：PASS
+
+动态日志中再次提交 0.01：
+
+返回失败；
+
+最终 costRecord 仍只有 8234、8235、8236、8237 四条；
+
+cashTotal 仍为 1592.67；
+
+没有新增退款记录。
+
+符合“超限拒绝且不新增记录”的验收要求。
+
+另一个小问题：日志返回的是 INTERNAL_SERVER_ERROR，不是清晰的业务参数错误。虽然本次没有新增记录，但建议后续确认 BIM 对超限异常的包装，避免前端把业务拒绝显示成系统故障。
+
+合同 otherPrice 证据：不能判定为干净 PASS
+
+附件中的项目快照：
+
+开工前 otherPrice=11681.83
+
+最终 otherPrice=8496.49
+
+总变化 -3185.34
+
+这正好是 2 × -1592.67
+
+summary 对 5195 的解释是：它在 flowBusinessAmount 分离前创建，仍保留完整 T。因此第二次 T 是旧数据遗留，不应当归咎于新实现。
+
+我遵照你的要求，没有把 5195 当成新实现的干净反例；同样，也不能把这份混合数据当成“合同 otherPrice 只变化一次”的完整证明。
+
+可确认的是：
+
+5194 的 Flow amount 为 T；
+
+5195 是旧流程，Flow amount 仍为 T；
+
+5196、5197 的 Flow amount 为 0；
+
+5197 的实际 payAmount=-600。
+
+但因为 5196 还有 PM 实收为 0 的历史问题，且最终快照包含 5195 的旧 T，本次数据不足以证明从干净基线开始，合同 otherPrice 和 addAmount 均只应用一次 T。
+
+附件完整性与验收边界
+
+ZIP SHA256：与用户提供值一致。
+
+MANIFEST.sha256：8 个列出的文件均通过 SHA256 校验。
+
+ST-01 文件：报告结果为 PASS，目标 SHA 与 parent SHA 均与请求一致；部分中文 detail 字段出现乱码，但 JSON 结构和 numstat 可读。
+
+build-new-service-refund-r3.log：文件大小为 0 字节，因此不能把它作为编译日志证据。附件提供了两个 JAR 的 SHA256，但没有提供可核验的构建输出。
+
+我尝试通过 GitHub 获取指定 commit，API 返回 422 No commit found for SHA。因此，不能独立确认远端仓库该 SHA 的实际内容；本次源码判断以已校验的附件 diff 为依据。
+
+最终裁定
+REJECT — 不建议合并或发布
+
+本轮不是全部失败：多笔 F 分摊、行锁结构、负向幂等、超限无新增都有支持性证据。但有两个必须修复的源码问题：
+
+P0： getChangeBusinessAmount() 用 costRecord 主键查 Flow 主键，历史业务额读取关联错误，可能导致后续 T 再次累计。
+
+P0： PM 审批的 payDate == null 分支仍能清零非零真实 payAmount。
+
+修复后至少需要补两组干净动态证据：
+
+从干净合同基线重新执行多笔退款，证明 otherPrice 和 addAmount 的 T 均只应用一次，后续为 0。
+
+构造 flow.amount=0、payAmount 非零、payDate=null 的 PM 审批场景，证明真实实收不会被清零。
+
+本次独立验收到此为止：REJECT。未执行任何代码修改、提交或发布。
+=====REPLY_END=====
+[2026-11-26T16:07:05.570Z] 会话锁已释放

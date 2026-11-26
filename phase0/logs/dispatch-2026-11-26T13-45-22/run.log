@@ -1,0 +1,23 @@
+[2026-11-26T13:45:22.674Z] 证据目录: D:\AIEO\phase0\logs\dispatch-2026-11-26T13-45-22
+[2026-11-26T13:45:24.725Z] 会话锁已获取 pid=35740 instance=bms-erf lock=gpt-session-bms-erf.lockfile
+[2026-11-26T13:45:24.728Z] === GPT 派单（新建会话，消息 801 字节）===
+[2026-11-26T13:45:25.737Z] [instance] 端口沿用注册表登记: instance=bms-erf port=9303
+[2026-11-26T13:45:25.851Z] [instance] 实例域就绪: instance=bms-erf port=9303 profile=gpt-poc-bms-erf lock=gpt-session-bms-erf.lockfile
+[2026-11-26T13:45:27.261Z] 复用本实例调试端口 9303（归属核验 own=10）
+[2026-11-26T13:45:27.546Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 0 个
+[2026-11-26T13:45:27.546Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-26T13:46:10.166Z] 新聊天页面就绪
+[2026-11-26T13:46:15.260Z] [dispatch] 基线尾部: null
+[2026-11-26T13:46:19.791Z] [ctx-budget] turn+in_bytes=801B → 6b083828-d174-83ec-8d45-58971fca139d
+[2026-11-26T13:46:19.792Z] [dispatch] 发送双验通过（polls=3，user_unit_key=fallback-turn-0:0:user，tail 后观察）
+[2026-11-26T13:46:21.186Z] 截图: sent-dispatch.png
+[2026-11-26T13:50:14.086Z] [dispatch] COMPLETED，1 个 assistant unit，回复 6830 UTF-8 字节，区间窗口 2 个
+[2026-11-26T13:50:14.313Z] 截图: reply-dispatch.png
+[2026-11-26T13:50:14.316Z] 会话 URL 已取得且归属校验 PASS，跳过 reviewer 指针写盘: https://chatgpt.com/c/6b083828-d174-83ec-8d45-58971fca139d
+[2026-11-26T13:50:14.336Z] JSON/Schema/绑定校验: NOT_REQUESTED
+[2026-11-26T13:50:14.355Z] [ctx-budget] turn+out_bytes=6830B → 6b083828-d174-83ec-8d45-58971fca139d
+[2026-11-26T13:50:14.355Z] M1 本地登记: NOT_REQUESTED（三 ID 均未提供，通用非登记派单）
+[2026-11-26T13:50:16.794Z] [instance] 清理本实例 Chrome：own=10 foreign(不动)=25 remaining=0
+[2026-11-26T13:50:16.798Z] [tab-hygiene] 成功退出：浏览器连接已关+实例 bms-erf Chrome 已清理（精确归属，他实例不动；含本次自建页 0 页）；本实例 tab 清零
+[2026-11-26T13:50:16.798Z] === 派单完成，artifact_sha256=533c19306d81de19874059ed5222baa0104f6f0aea76d149ec36c3b87dab70e2 size_bytes=6830 ===
+[2026-11-26T13:50:16.916Z] 会话锁已释放

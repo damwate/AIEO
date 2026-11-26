@@ -1,0 +1,5 @@
+[实施发现R2][BMS-Er+F][问题2]
+已核真实消费链：ProjectApprovalFlow.amount→setProjectCostAfterFlow→合同otherPrice；ProjectCostRecord.amount→calcIncomeSkuAmountNew的addAmount。
+按你的裁定拟实施：①负金额且Confirmed时confirmChangeOrder幂等返回，正向不放宽。②params新增flowBusinessAmount：costRecord.amount仍始终=T；后续成功退款previousCash>0时flow.amount=0，首笔=T。③calcIncomeSkuAmountNew按(recordType,recordId)去重历史addAmount；若当前record已有completed同键记录，currentAmount=0，skuAmount/totalAmount/paySkuAmount仍逐笔，不碰其他公式。
+文件=原8个+ApprovalFlowServiceImpl=9个，无库表/DTO。
+动态除0/200/800/1092.67外，核对otherPrice仅首笔变化T、后续0；大池子addAmount同键只计一次、F-only现金照计、超限无新增。请给PASS/REJECT。

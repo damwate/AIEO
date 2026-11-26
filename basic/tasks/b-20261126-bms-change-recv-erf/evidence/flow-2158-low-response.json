@@ -1,0 +1,6 @@
+{
+  "code": "BAD_REQUEST",
+  "msg": "实收金额（2558.99）不得低于本次变更理论应收（2560.00），差额 1 元内方可提交",
+  "data": null,
+  "success": false
+}

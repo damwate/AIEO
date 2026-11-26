@@ -1,0 +1,64 @@
+{
+  "tool": "check-binding.py (C1)",
+  "verdict": "PASS",
+  "baseline": "28611b52d4f7dc5290c9a1692a88a076f468fead",
+  "target": "a0789c1126b4df0258522b757a7ba842c4e7bc26",
+  "declared_count": 1,
+  "rules": [
+    {
+      "id": "R1",
+      "verdict": "PASS",
+      "detail": "区间 commit 数申报=1 实际=1"
+    },
+    {
+      "id": "R2",
+      "verdict": "PASS",
+      "detail": "线性链逐条核验通过（每 commit 恰 1 parent，首 parent=基线，末=待验收）",
+      "commits": [
+        "a0789c1126b4df0258522b757a7ba842c4e7bc26"
+      ]
+    },
+    {
+      "id": "R4",
+      "verdict": "PASS",
+      "detail": "待验收 commit 无后代（=当前 HEAD），为最终申报对象"
+    }
+  ],
+  "numstat": [
+    [
+      "24",
+      "0",
+      "service-bim/src/main/java/com/ecog/service/bim/manager/params/ProjectCostFlowParam.java"
+    ],
+    [
+      "67",
+      "20",
+      "service-bim/src/main/java/com/ecog/service/bim/service/impl/ChangeOrderServiceImpl.java"
+    ],
+    [
+      "1",
+      "1",
+      "service-project/src/main/java/com/ecog/service/project/api/ProjectController.java"
+    ],
+    [
+      "24",
+      "0",
+      "service-project/src/main/java/com/ecog/service/project/api/param/ProjectCostFlowParam.java"
+    ],
+    [
+      "1",
+      "1",
+      "service-project/src/main/java/com/ecog/service/project/service/ProjectService.java"
+    ],
+    [
+      "5",
+      "4",
+      "service-project/src/main/java/com/ecog/service/project/service/impl/ApprovalFlowServiceImpl.java"
+    ],
+    [
+      "34",
+      "11",
+      "service-project/src/main/java/com/ecog/service/project/service/impl/ProjectServiceImpl.java"
+    ]
+  ]
+}

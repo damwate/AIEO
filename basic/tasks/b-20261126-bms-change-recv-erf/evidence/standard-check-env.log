@@ -1,0 +1,20 @@
+===== AIEO 环境体检 2026-11-26T13:32:48.516Z =====
+[INFO] OS: win32 10.0.26300 x64 主机=DESKTOP-9C0M7GR
+[OK]   node 24.14.0（需 ≥18：派单工具链/playwright 要求）
+[OK]   git version 2.47.1.windows.1
+[OK]   仓库 D:/AIEO
+[INFO] 分支=main 上游=origin/main ahead=3 behind=0 未提交变更=79
+[INFO] 最近提交: 41f451a task(b-20261126-bms-change-recv-erf): 交接包更新为 YotinGarden 新仓库基线
+[INFO] 代理配置(只读) http.https://github.com.proxy = http://127.0.0.1:6822
+[INFO] 代理配置(只读) http.proxy = http://127.0.0.1:6822
+[WARN] 端口 6822：未监听（常见波动，非必故障）
+[WARN] Chrome CDP 127.0.0.1:9222 不在线（gpt-poc Chrome 由派单工具按需拉起，属常见态）
+[OK]   phase0/tools/gpt_dispatch.mjs（派单主工具）
+[OK]   phase0/tools/inbound_dom.mjs（回复采集器）
+[OK]   phase0/tools/node_modules/playwright（playwright 依赖）
+[OK]   phase0/e2e-poc/session_lock.mjs（会话锁）
+[OK]   runtime/chrome_profiles/gpt-poc（gpt-poc Chrome profile）
+[OK]   basic/WORKFLOW.md（Basic 工作流规范）
+[OK]   docs/phase1/handoff-template.md（交接包权威模板）
+[OK]   docs/phase1/version-directory-plan.md（版本目录方案 v1.0）
+===== 体检完成（报告型工具，退出码恒 0）=====

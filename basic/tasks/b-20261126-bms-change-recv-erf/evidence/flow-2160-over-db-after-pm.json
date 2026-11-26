@@ -1,0 +1,16 @@
+[
+  {
+    "cost_id": 8230,
+    "record_id": 2160,
+    "status": 11,
+    "amount": "2559.10",
+    "total_amount": "2559.10",
+    "sku_amount": "1000.00",
+    "pay_sku_amount": null,
+    "sku_cost": "160.00",
+    "pay_sku_cost_amount": null,
+    "flow_id": 5190,
+    "flow_status": 11,
+    "pay_amount": "2559.10"
+  }
+]

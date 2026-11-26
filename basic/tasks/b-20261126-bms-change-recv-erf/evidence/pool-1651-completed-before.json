@@ -1,0 +1,26 @@
+[
+  {
+    "id": 8177,
+    "record_id": 1651,
+    "record_type": 21,
+    "status": 99,
+    "amount": "0.00",
+    "total_amount": "24300.00",
+    "sku_amount": "0.00",
+    "pay_sku_amount": "24300.00",
+    "sku_cost": "0.00",
+    "pay_sku_cost_amount": "13023.08"
+  },
+  {
+    "id": 8178,
+    "record_id": 2145,
+    "record_type": 200,
+    "status": 99,
+    "amount": "4529.46",
+    "total_amount": "4500.00",
+    "sku_amount": "4079.46",
+    "pay_sku_amount": "4219.90",
+    "sku_cost": "2295.68",
+    "pay_sku_cost_amount": "2329.65"
+  }
+]

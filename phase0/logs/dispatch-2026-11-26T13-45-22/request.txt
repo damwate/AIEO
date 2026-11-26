@@ -1,0 +1,5 @@
+[规划复审][BMS-Er+F][S1]
+仓库=YotinGarden/bms-service，baseline=28611b52d4f7dc5290c9a1692a88a076f468fead，target=a0789c1126b4df0258522b757a7ba842c4e7bc26；文件=service-bim/.../ChangeOrderServiceImpl.java；需求=bms-document 05 §4 R4/§7退款。
+动态实测2168：E=-1120、F=-500、r=.9756、T=-1592.67，首笔退款100即失败且未落库。源码：459负F未abs、463负E致refundProductLimit为负、538仅E>0才拆分regular/ecommerce。
+候选仅同文件3处：①nonProductAmount.abs().min(refundTotal)；②refundProductLimit=totalSkuPrice*skuRate取abs；③拆分条件改E!=0。a×r不变（r>1不截断），不动大池子/报价公式。
+请独立核对根因与范围，给PASS/REJECT及首笔/多笔/超限/负F拆分具体断言。PASS后才实施并动态回归。

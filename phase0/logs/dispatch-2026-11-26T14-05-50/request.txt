@@ -1,0 +1,8 @@
+[规划复审R3][BMS-Er+F][问题1第2次返工]
+未改码。补齐R2两项并封闭审批中竞态：
+①历史查询限定recordType∈(200,205,300)、status=99、totalAmount<0；产品上限累计同步此口径。审批中(status非99/-10)退款存在时先拒绝，必须完成后再退，rejected可重试。
+②project事务以主键project_info.id SELECT...FOR UPDATE串行化（不依赖无索引record_id，不锁全表）。锁内先拒绝活跃退款，再重算历史现金并与BIM传入previousCash比较，不一致拒绝重试；随后校验产品上限并插入。
+BIM公式=max(|F|-previousCash,0).min(refundTotal)，limit取abs，E!=0拆分；Feign失败/null拒绝。
+文件=R2的6个+两仓ProjectCostFlowParam，共8个，无库表/DAO/新锁表。
+动态2168每笔先审批至99：100/600/600/292.67→产品0/200/800/1092.67；再0.01超限无新增；另验审批中拒绝、F=0/E=0/r>1/负paidAmount。
+请给最终PASS/REJECT；若仍有关键缺口请明确，避免无效续轮。

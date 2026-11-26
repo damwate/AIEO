@@ -1,0 +1,730 @@
+[2026-11-26T13:57:50.069Z] 证据目录: D:\AIEO\phase0\logs\dispatch-2026-11-26T13-57-50
+[2026-11-26T13:57:52.764Z] 会话锁已获取 pid=2112 instance=bms-erf lock=gpt-session-bms-erf.lockfile
+[2026-11-26T13:57:52.766Z] === GPT 派单（已有会话，消息 945 字节）===
+(node:2112) ExperimentalWarning: SQLite is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+[2026-11-26T13:57:53.945Z] [instance] 端口沿用注册表登记: instance=bms-erf port=9303
+[2026-11-26T13:57:54.070Z] [instance] 实例域就绪: instance=bms-erf port=9303 profile=gpt-poc-bms-erf lock=gpt-session-bms-erf.lockfile
+[2026-11-26T13:57:56.157Z] [instance] 清理本实例 Chrome：own=0 foreign(不动)=23 remaining=0
+[2026-11-26T13:57:59.827Z] Chrome 已启动 pid=5672 port=9303
+[2026-11-26T13:58:00.136Z] [tab-hygiene] 选页: 复用既有页#0（既有 1 页）；自建页注册 0 页；既有会话 UUID 0 个
+[2026-11-26T13:58:00.137Z] [tab-hygiene] attach 前页清单 1 页
+[2026-11-26T13:58:06.428Z] 会话就绪: https://chatgpt.com/c/6b083828-d174-83ec-8d45-58971fca139d
+[2026-11-26T13:58:11.461Z] [dispatch] 基线尾部: {"role":"assistant","key":"dcd0038b-460e-529c-b5e8-639e625ffc79:2:assistant","assistantUuid":"2ac97db7-e36f-4d04-811d-e0cc13ec59b2"}
+[2026-11-26T13:58:14.004Z] [ctx-budget] turn+in_bytes=945B → 6b083828-d174-83ec-8d45-58971fca139d
+[2026-11-26T13:58:14.005Z] [dispatch] 发送双验通过（polls=1，user_unit_key=fallback-turn-0:0:user，tail 后观察）
+[2026-11-26T13:58:14.572Z] 截图: sent-dispatch.png
+[2026-11-26T14:01:06.993Z] [dispatch] COMPLETED，1 个 assistant unit，回复 5899 UTF-8 字节，区间窗口 2 个
+[2026-11-26T14:01:07.145Z] 截图: reply-dispatch.png
+[2026-11-26T14:01:07.148Z] 会话 URL 已取得且归属校验 PASS，跳过 reviewer 指针写盘: https://chatgpt.com/c/6b083828-d174-83ec-8d45-58971fca139d
+[2026-11-26T14:01:07.158Z] JSON/Schema/绑定校验: NOT_REQUESTED
+[2026-11-26T14:01:07.170Z] [ctx-budget] turn+out_bytes=5899B → 6b083828-d174-83ec-8d45-58971fca139d
+[2026-11-26T14:01:07.171Z] M1 本地登记: NOT_REQUESTED（三 ID 均未提供，通用非登记派单）
+[2026-11-26T14:01:09.222Z] [instance] 清理本实例 Chrome：own=10 foreign(不动)=21 remaining=0
+[2026-11-26T14:01:09.226Z] [tab-hygiene] 成功退出：浏览器连接已关+实例 bms-erf Chrome 已清理（精确归属，他实例不动；含本次自建页 0 页）；本实例 tab 清零
+[2026-11-26T14:01:09.227Z] === 派单完成，artifact_sha256=927dba7d6220fb8d0bac6613137113ecdaa211a621081da9e1fc42a69b1f5931 size_bytes=5899 ===
+
+=====REPLY_BEGIN=====
+ChatGPT 说：
+[规划复审R2][BMS-Er+F][问题1]
+REJECT（补充一项关键约束后再审）
+
+R2 的架构方向正确：BIM 保留退款金额计算权威，Project 只负责读取历史现金退款累计额。
+
+但当前接口定义只过滤 totalAmount<0，没有明确历史记录的生效状态。这会把尚未成功的退款也算进去，与此前确定的「只有成功退款才计入累计」口径不一致。
+
+我核对了 target a0789c1126b4df0258522b757a7ba842c4e7bc26 的实际代码。
+
+1. 历史现金口径
+核心字段确认
+
+ProjectServiceImpl.setCostAndAddFlow 中已经明确：
+
+record_id：变更单关联键。
+
+total_amount：真实现金流。
+
+退款现金流为负数。
+
+sku_amount：产品退款额，也为负数。
+
+sku_amount=0 不代表没有退款现金。
+
+现有代码创建 ProjectCostRecord 时，先设置 recordId、totalAmount、skuAmount，再插入记录。
+
+这里特别确认一个关键点：
+
+首笔 F-only 退款虽然产品退款额为零，但现金退款记录仍然会正常插入。
+
+所以，按 totalAmount<0 查询，比按 skuAmount<0 查询正确。
+
+必须增加状态条件
+
+当前 FlowStatusEnum 包含：
+
+状态
+
+	
+
+值
+
+	
+
+是否应计入成功退款累计
+
+
+
+
+init
+
+	
+
+0
+
+	
+
+否
+
+
+
+
+rejected
+
+	
+
+-10
+
+	
+
+否
+
+
+
+
+confirmedWaitingCw
+
+	
+
+11
+
+	
+
+否
+
+
+
+
+paid
+
+	
+
+80
+
+	
+
+需按退款流程实际完成语义核实
+
+
+
+
+received
+
+	
+
+81
+
+	
+
+需按退款流程实际完成语义核实
+
+
+
+
+completed
+
+	
+
+99
+
+	
+
+是
+
+建议以退款流程最终成功完成的状态作为统计依据，不能简单用 status>=0。
+
+另外，查询必须限定退款业务记录类型，避免将同一 record_id 下其他负向业务记录误算成退款现金。
+
+2. 接口设计裁定
+
+建议保留你的接口路径：
+
+GET /project/cost/record/refund/cash/total?recordId=...
+
+建议契约：
+
+项目
+
+	
+
+要求
+
+
+
+
+参数
+
+	
+
+recordId，必须大于0
+
+
+
+
+数据来源
+
+	
+
+project_cost_record
+
+
+
+
+关联条件
+
+	
+
+record_id
+
+| 现金条件 | total_amount通过
+
+建议严格限制在：
+
+ProjectController：增加 GET。
+
+ProjectService：增加查询方法。
+
+ProjectServiceImpl：增加聚合查询。
+
+不增加 DTO，不增加数据库字段，不改变 setCostAndAddFlow，不移动大池子或报价公式。
+
+BIM 侧：
+
+ProjectService：增加 Feign GET。
+
+ProjectServiceFallbackHandler：失败必须抛异常。
+
+ChangeOrderServiceImpl：调用并计算。
+
+合计仍为你规划的 6 个文件。
+
+3. BIM 权威计算公式
+
+建议明确为：
+
+𝐹
+𝑟
+𝑒
+𝑚
+𝑎
+𝑖
+𝑛
+=
+max
+⁡
+(
+∣
+𝐹
+∣
+−
+𝑝
+𝑟
+𝑒
+𝑣
+𝑖
+𝑜
+𝑢
+𝑠
+𝐶
+𝑎
+𝑠
+ℎ
+,
+0
+)
+F
+remain
+	​
+
+=max(∣F∣−previousCash,0)
+𝑟
+𝑒
+𝑓
+𝑢
+𝑛
+𝑑
+𝑁
+𝑜
+𝑛
+𝑃
+𝑟
+𝑜
+𝑑
+𝑢
+𝑐
+𝑡
+=
+min
+⁡
+(
+𝐹
+𝑟
+𝑒
+𝑚
+𝑎
+𝑖
+𝑛
+,
+𝑟
+𝑒
+𝑓
+𝑢
+𝑛
+𝑑
+𝑇
+𝑜
+𝑡
+𝑎
+𝑙
+)
+refundNonProduct=min(F
+remain
+	​
+
+,refundTotal)
+𝑟
+𝑒
+𝑓
+𝑢
+𝑛
+𝑑
+𝑃
+𝑟
+𝑜
+𝑑
+𝑢
+𝑐
+𝑡
+=
+𝑟
+𝑒
+𝑓
+𝑢
+𝑛
+𝑑
+𝑇
+𝑜
+𝑡
+𝑎
+𝑙
+−
+𝑟
+𝑒
+𝑓
+𝑢
+𝑛
+𝑑
+𝑁
+𝑜
+𝑛
+𝑃
+𝑟
+𝑜
+𝑑
+𝑢
+𝑐
+𝑡
+refundProduct=refundTotal−refundNonProduct
+
+产品退款金额仍按负数保存。
+
+上限：
+
+𝑟
+𝑒
+𝑓
+𝑢
+𝑛
+𝑑
+𝑃
+𝑟
+𝑜
+𝑑
+𝑢
+𝑐
+𝑡
+𝐿
+𝑖
+𝑚
+𝑖
+𝑡
+=
+∣
+𝐸
+×
+𝑟
+∣
+refundProductLimit=∣E×r∣
+
+普通、电商拆分：
+
+𝐸
+≠
+0
+E
+
+=0
+
+保持原有比例及舍入处理。
+
+特别注意：Feign 返回失败、响应为空、data 为空，都必须拒绝本次退款。只有接口成功且明确返回零，才能视为历史没有退款。
+
+4. 2168 动态回归预期
+
+E=-1120，F=-500，r=.9756。
+
+产品上限：
+
+1120
+×
+0.9756
+=
+1092.672
+1120×0.9756=1092.672
+
+如果金额按分精度取 1092.67：
+
+笔次
+
+	
+
+本次退款
+
+	
+
+历史现金
+
+	
+
+本次非产品额
+
+	
+
+本次产品额
+
+	
+
+产品累计
+
+
+
+
+1
+
+	
+
+100
+
+	
+
+0
+
+	
+
+100
+
+	
+
+0
+
+	
+
+0
+
+
+
+
+2
+
+	
+
+600
+
+	
+
+100
+
+	
+
+400
+
+	
+
+200
+
+	
+
+200
+
+
+
+
+3
+
+	
+
+600
+
+	
+
+700
+
+	
+
+0
+
+	
+
+600
+
+	
+
+800
+
+
+
+
+4
+
+	
+
+292.67
+
+	
+
+1300
+
+	
+
+0
+
+	
+
+292.67
+
+	
+
+1092.67
+
+
+
+
+5
+
+	
+
+0.01
+
+	
+
+1592.67
+
+	
+
+0
+
+	
+
+0.01
+
+	
+
+拒绝
+
+必须满足
+
+第五笔拒绝，且数据库不能新增退款记录。
+
+这里还要验证首笔记录：
+
+totalAmount=-100
+
+skuAmount=0
+
+recordId=2168
+
+第二笔查询必须能统计到首笔的100元。
+
+这是本次 R2 最重要的回归断言。
+
+5. 另外四项边界
+
+场景
+
+	
+
+预期
+
+
+
+
+F=0
+
+	
+
+全部退款归入产品退款
+
+
+
+
+E=0
+
+	
+
+走原兜底，不发生比例除零
+
+
+
+
+r>1
+
+	
+
+不截断，按 E×r 计算
+
+
+
+
+paidAmount 为负
+
+	
+
+按退款金额绝对值计算，不能反向放大退款
+
+6. 还有一个并发风险
+
+目前设计是：
+
+BIM 查询 previousCash。
+
+BIM 计算本笔退款。
+
+Project 插入退款记录。
+
+这是跨服务的先读后写，并不是原子操作。
+
+如果同一个 recordId 同时发起两笔退款，两次查询可能读到相同 previousCash，导致 F 被重复抵扣。
+
+建议把同一变更单的退款操作串行化，或者另行设计可靠的并发保护。不能把普通只读查询误认为已经解决并发问题。
+
+7. 最终裁定
+
+复审项
+
+	
+
+结果
+
+
+
+
+BIM 保留计算权威
+
+	
+
+PASS
+
+
+
+
+Project 只读查询
+
+	
+
+PASS
+
+
+
+
+record_id 关联
+
+	
+
+PASS
+
+
+
+
+totalAmount 作为现金口径
+
+	
+
+PASS
+
+
+
+
+F-only 零产品记录纳入
+
+	
+
+PASS
+
+
+
+
+排除未成功退款记录
+
+	
+
+待补充
+
+
+
+
+失败闭锁
+
+	
+
+PASS（按约定实现）
+
+
+
+
+6 文件范围
+
+	
+
+PASS
+
+
+
+
+并发退款保护
+
+	
+
+待明确
+
+R2 REJECT，暂不实施。
+
+只需要补齐两个裁定：
+
+Project 查询明确限定退款业务类型及成功完成状态，不能只过滤 totalAmount<0。
+
+明确同一 recordId 的退款并发控制方式。
+
+其他 Er+F、a×r、负 E 拆分及大池子规则不重新讨论。
+
+不需要扩大改造范围，也不需要改库表。 补齐这两点后，可以进入 S2 最终 PASS 复审。
+=====REPLY_END=====
+[2026-11-26T14:01:09.363Z] 会话锁已释放

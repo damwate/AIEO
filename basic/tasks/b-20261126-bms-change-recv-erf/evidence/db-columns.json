@@ -1,0 +1,1142 @@
+[
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "change_order",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "change_order",
+    "COLUMN_NAME": "case_id",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "change_order",
+    "COLUMN_NAME": "change_type",
+    "COLUMN_TYPE": "tinyint"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "change_order",
+    "COLUMN_NAME": "change_amount",
+    "COLUMN_TYPE": "decimal(10,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "change_order",
+    "COLUMN_NAME": "status",
+    "COLUMN_TYPE": "tinyint"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "change_order",
+    "COLUMN_NAME": "designer",
+    "COLUMN_TYPE": "varchar(50)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "change_order",
+    "COLUMN_NAME": "company",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "change_order",
+    "COLUMN_NAME": "customer_responsible",
+    "COLUMN_TYPE": "tinyint(1)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "change_order",
+    "COLUMN_NAME": "remark",
+    "COLUMN_TYPE": "varchar(500)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "change_order",
+    "COLUMN_NAME": "quoted",
+    "COLUMN_TYPE": "tinyint(1)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "change_order",
+    "COLUMN_NAME": "data_version",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "change_order",
+    "COLUMN_NAME": "gmt_create",
+    "COLUMN_TYPE": "datetime"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "change_order",
+    "COLUMN_NAME": "gmt_modified",
+    "COLUMN_TYPE": "datetime"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "change_order",
+    "COLUMN_NAME": "is_deleted",
+    "COLUMN_TYPE": "tinyint(1)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "change_order",
+    "COLUMN_NAME": "project_id",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "change_order",
+    "COLUMN_NAME": "designer_id",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "change_order",
+    "COLUMN_NAME": "designer_org_id",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "quote_order",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "bigint"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "quote_order",
+    "COLUMN_NAME": "scheme_id",
+    "COLUMN_TYPE": "bigint"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "quote_order",
+    "COLUMN_NAME": "sku_price",
+    "COLUMN_TYPE": "decimal(20,8)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "quote_order",
+    "COLUMN_NAME": "retail_sku_price",
+    "COLUMN_TYPE": "decimal(20,8)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "quote_order",
+    "COLUMN_NAME": "sku_cost",
+    "COLUMN_TYPE": "decimal(20,8)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "quote_order",
+    "COLUMN_NAME": "addition_price",
+    "COLUMN_TYPE": "decimal(20,8)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "quote_order",
+    "COLUMN_NAME": "labor_price",
+    "COLUMN_TYPE": "decimal(20,8)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "quote_order",
+    "COLUMN_NAME": "base_material_price",
+    "COLUMN_TYPE": "decimal(20,8)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "quote_order",
+    "COLUMN_NAME": "freight_price",
+    "COLUMN_TYPE": "decimal(20,8)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "quote_order",
+    "COLUMN_NAME": "carry_price",
+    "COLUMN_TYPE": "decimal(20,8)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "quote_order",
+    "COLUMN_NAME": "sundry_price",
+    "COLUMN_TYPE": "decimal(20,8)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "quote_order",
+    "COLUMN_NAME": "design_price",
+    "COLUMN_TYPE": "decimal(20,8)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "quote_order",
+    "COLUMN_NAME": "discount_type",
+    "COLUMN_TYPE": "tinyint"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "quote_order",
+    "COLUMN_NAME": "total_price",
+    "COLUMN_TYPE": "decimal(20,8)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "quote_order",
+    "COLUMN_NAME": "original_price",
+    "COLUMN_TYPE": "decimal(20,8)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "quote_order",
+    "COLUMN_NAME": "product_price",
+    "COLUMN_TYPE": "decimal(20,8)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "quote_order",
+    "COLUMN_NAME": "install_price",
+    "COLUMN_TYPE": "decimal(20,8)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "quote_order",
+    "COLUMN_NAME": "min_price",
+    "COLUMN_TYPE": "decimal(20,8)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "quote_order",
+    "COLUMN_NAME": "min_product_price",
+    "COLUMN_TYPE": "decimal(20,8)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "quote_order",
+    "COLUMN_NAME": "status",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "quote_order",
+    "COLUMN_NAME": "data_version",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "quote_order",
+    "COLUMN_NAME": "gmt_create",
+    "COLUMN_TYPE": "datetime"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "quote_order",
+    "COLUMN_NAME": "gmt_modified",
+    "COLUMN_TYPE": "datetime"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "quote_order",
+    "COLUMN_NAME": "is_deleted",
+    "COLUMN_TYPE": "tinyint(1)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "quote_order",
+    "COLUMN_NAME": "handle_type",
+    "COLUMN_TYPE": "tinyint"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "quote_order",
+    "COLUMN_NAME": "handle_order_id",
+    "COLUMN_TYPE": "varchar(50)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "quote_order",
+    "COLUMN_NAME": "handle_as_id",
+    "COLUMN_TYPE": "varchar(50)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "quote_order",
+    "COLUMN_NAME": "contract_no",
+    "COLUMN_TYPE": "varchar(50)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "quote_order",
+    "COLUMN_NAME": "handle_order_status",
+    "COLUMN_TYPE": "tinyint"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "quote_order",
+    "COLUMN_NAME": "remark",
+    "COLUMN_TYPE": "varchar(500)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "quote_order",
+    "COLUMN_NAME": "discount_price",
+    "COLUMN_TYPE": "decimal(10,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "scheme_info",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "bigint"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "scheme_info",
+    "COLUMN_NAME": "case_id",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "scheme_info",
+    "COLUMN_NAME": "target_type",
+    "COLUMN_TYPE": "tinyint"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "scheme_info",
+    "COLUMN_NAME": "target_id",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "scheme_info",
+    "COLUMN_NAME": "discount_type",
+    "COLUMN_TYPE": "tinyint"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "scheme_info",
+    "COLUMN_NAME": "name",
+    "COLUMN_TYPE": "varchar(50)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "scheme_info",
+    "COLUMN_NAME": "designer",
+    "COLUMN_TYPE": "varchar(30)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "scheme_info",
+    "COLUMN_NAME": "version",
+    "COLUMN_TYPE": "bigint"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "scheme_info",
+    "COLUMN_NAME": "status",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "scheme_info",
+    "COLUMN_NAME": "data_version",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "scheme_info",
+    "COLUMN_NAME": "gmt_create",
+    "COLUMN_TYPE": "datetime"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "scheme_info",
+    "COLUMN_NAME": "gmt_modified",
+    "COLUMN_TYPE": "datetime"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_bim",
+    "TABLE_NAME": "scheme_info",
+    "COLUMN_NAME": "is_deleted",
+    "COLUMN_TYPE": "tinyint(1)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_approval_flow",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_approval_flow",
+    "COLUMN_NAME": "flow_name",
+    "COLUMN_TYPE": "varchar(255)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_approval_flow",
+    "COLUMN_NAME": "object_id",
+    "COLUMN_TYPE": "varchar(50)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_approval_flow",
+    "COLUMN_NAME": "object_type",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_approval_flow",
+    "COLUMN_NAME": "flow_status",
+    "COLUMN_TYPE": "tinyint"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_approval_flow",
+    "COLUMN_NAME": "flow_type",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_approval_flow",
+    "COLUMN_NAME": "finance_type",
+    "COLUMN_TYPE": "tinyint"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_approval_flow",
+    "COLUMN_NAME": "company",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_approval_flow",
+    "COLUMN_NAME": "amount",
+    "COLUMN_TYPE": "decimal(12,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_approval_flow",
+    "COLUMN_NAME": "audit_date",
+    "COLUMN_TYPE": "datetime"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_approval_flow",
+    "COLUMN_NAME": "pay_date",
+    "COLUMN_TYPE": "datetime"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_approval_flow",
+    "COLUMN_NAME": "project_id",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_approval_flow",
+    "COLUMN_NAME": "gmt_operator",
+    "COLUMN_TYPE": "varchar(255)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_approval_flow",
+    "COLUMN_NAME": "gmt_create",
+    "COLUMN_TYPE": "datetime"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_approval_flow",
+    "COLUMN_NAME": "create_user_id",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_approval_flow",
+    "COLUMN_NAME": "create_org_id",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_approval_flow",
+    "COLUMN_NAME": "gmt_modified",
+    "COLUMN_TYPE": "datetime"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_approval_flow",
+    "COLUMN_NAME": "is_deleted",
+    "COLUMN_TYPE": "tinyint"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_approval_flow",
+    "COLUMN_NAME": "send_date",
+    "COLUMN_TYPE": "datetime"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_approval_flow",
+    "COLUMN_NAME": "pay_amount",
+    "COLUMN_TYPE": "decimal(12,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_approval_flow",
+    "COLUMN_NAME": "pre_send_amount",
+    "COLUMN_TYPE": "decimal(12,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_approval_flow",
+    "COLUMN_NAME": "send_amount",
+    "COLUMN_TYPE": "decimal(12,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_approval_flow",
+    "COLUMN_NAME": "remark",
+    "COLUMN_TYPE": "varchar(1000)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_approval_flow",
+    "COLUMN_NAME": "pay_type",
+    "COLUMN_TYPE": "varchar(20)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_approval_flow",
+    "COLUMN_NAME": "out_trade_no",
+    "COLUMN_TYPE": "varchar(64)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_approval_flow",
+    "COLUMN_NAME": "prepay_order_no",
+    "COLUMN_TYPE": "varchar(64)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_approval_flow",
+    "COLUMN_NAME": "prepay_amount",
+    "COLUMN_TYPE": "decimal(18,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_approval_flow",
+    "COLUMN_NAME": "shop_name",
+    "COLUMN_TYPE": "varchar(64)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_cost_record",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_cost_record",
+    "COLUMN_NAME": "project_id",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_cost_record",
+    "COLUMN_NAME": "status",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_cost_record",
+    "COLUMN_NAME": "record_id",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_cost_record",
+    "COLUMN_NAME": "record_type",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_cost_record",
+    "COLUMN_NAME": "record_date",
+    "COLUMN_TYPE": "datetime"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_cost_record",
+    "COLUMN_NAME": "total_amount",
+    "COLUMN_TYPE": "decimal(10,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_cost_record",
+    "COLUMN_NAME": "remark",
+    "COLUMN_TYPE": "varchar(255)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_cost_record",
+    "COLUMN_NAME": "gmt_operator",
+    "COLUMN_TYPE": "varchar(255)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_cost_record",
+    "COLUMN_NAME": "gmt_create",
+    "COLUMN_TYPE": "datetime"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_cost_record",
+    "COLUMN_NAME": "gmt_modified",
+    "COLUMN_TYPE": "datetime"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_cost_record",
+    "COLUMN_NAME": "is_deleted",
+    "COLUMN_TYPE": "tinyint(1)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_cost_record",
+    "COLUMN_NAME": "fee_responsible",
+    "COLUMN_TYPE": "varchar(20)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_cost_record",
+    "COLUMN_NAME": "sku_amount",
+    "COLUMN_TYPE": "decimal(10,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_cost_record",
+    "COLUMN_NAME": "sku_amount_regular",
+    "COLUMN_TYPE": "decimal(12,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_cost_record",
+    "COLUMN_NAME": "sku_amount_ecommerce",
+    "COLUMN_TYPE": "decimal(12,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_cost_record",
+    "COLUMN_NAME": "customer_id",
+    "COLUMN_TYPE": "bigint"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_cost_record",
+    "COLUMN_NAME": "design_amount",
+    "COLUMN_TYPE": "decimal(10,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_cost_record",
+    "COLUMN_NAME": "artificial_amount",
+    "COLUMN_TYPE": "decimal(10,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_cost_record",
+    "COLUMN_NAME": "amount",
+    "COLUMN_TYPE": "decimal(10,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_cost_record",
+    "COLUMN_NAME": "sku_cost",
+    "COLUMN_TYPE": "decimal(10,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_cost_record",
+    "COLUMN_NAME": "sku_cost_regular",
+    "COLUMN_TYPE": "decimal(12,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_cost_record",
+    "COLUMN_NAME": "sku_cost_ecommerce",
+    "COLUMN_TYPE": "decimal(12,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_cost_record",
+    "COLUMN_NAME": "pay_sku_amount",
+    "COLUMN_TYPE": "decimal(10,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_cost_record",
+    "COLUMN_NAME": "pay_sku_amount_regular",
+    "COLUMN_TYPE": "decimal(12,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_cost_record",
+    "COLUMN_NAME": "pay_sku_amount_ecommerce",
+    "COLUMN_TYPE": "decimal(12,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_cost_record",
+    "COLUMN_NAME": "pay_sku_cost_amount",
+    "COLUMN_TYPE": "decimal(12,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_cost_record",
+    "COLUMN_NAME": "pay_sku_cost_amount_regular",
+    "COLUMN_TYPE": "decimal(12,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_cost_record",
+    "COLUMN_NAME": "pay_sku_cost_amount_ecommerce",
+    "COLUMN_TYPE": "decimal(12,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_cost_record",
+    "COLUMN_NAME": "transaction_no",
+    "COLUMN_TYPE": "varchar(64)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "id",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "name",
+    "COLUMN_TYPE": "varchar(50)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "channel",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "garden_type",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "garden_area",
+    "COLUMN_TYPE": "double(20,14)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "shop",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "address",
+    "COLUMN_TYPE": "varchar(100)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "customer",
+    "COLUMN_TYPE": "varchar(30)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "customer_id",
+    "COLUMN_TYPE": "bigint"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "phone",
+    "COLUMN_TYPE": "varchar(11)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "case_id",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "financial_status",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "status",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "sku_price",
+    "COLUMN_TYPE": "decimal(12,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "artificial_price",
+    "COLUMN_TYPE": "decimal(12,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "addition_price",
+    "COLUMN_TYPE": "decimal(10,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "freight_price",
+    "COLUMN_TYPE": "decimal(10,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "design_price",
+    "COLUMN_TYPE": "decimal(10,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "sundry_price",
+    "COLUMN_TYPE": "decimal(10,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "sku_cost",
+    "COLUMN_TYPE": "decimal(10,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "sku_cost_price",
+    "COLUMN_TYPE": "decimal(12,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "regular_sku_price",
+    "COLUMN_TYPE": "decimal(12,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "ecommerce_sku_price",
+    "COLUMN_TYPE": "decimal(12,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "regular_sku_cost_price",
+    "COLUMN_TYPE": "decimal(12,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "ecommerce_sku_cost_price",
+    "COLUMN_TYPE": "decimal(12,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "contract_no",
+    "COLUMN_TYPE": "varchar(64)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "contract_price",
+    "COLUMN_TYPE": "decimal(10,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "contract_final_price",
+    "COLUMN_TYPE": "decimal(10,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "contract_other_price",
+    "COLUMN_TYPE": "decimal(10,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "contract_paymented",
+    "COLUMN_TYPE": "decimal(10,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "contract_unpaid",
+    "COLUMN_TYPE": "decimal(10,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "pre_gross_profit",
+    "COLUMN_TYPE": "double"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "gross_profit",
+    "COLUMN_TYPE": "double(255,0)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "rate_gross_profit",
+    "COLUMN_TYPE": "double"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "other_fee",
+    "COLUMN_TYPE": "decimal(10,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "pay_royalty_fee",
+    "COLUMN_TYPE": "decimal(10,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "royalty_fee",
+    "COLUMN_TYPE": "decimal(10,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "sign_date",
+    "COLUMN_TYPE": "date"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "construction_date",
+    "COLUMN_TYPE": "double"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "company",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "project_designer",
+    "COLUMN_TYPE": "varchar(255)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "project_designer_id",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "project_remark",
+    "COLUMN_TYPE": "varchar(1000)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "completed",
+    "COLUMN_TYPE": "tinyint(1)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "complete_date",
+    "COLUMN_TYPE": "date"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "gmt_creater",
+    "COLUMN_TYPE": "varchar(32)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "gmt_create",
+    "COLUMN_TYPE": "datetime"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "gmt_modifieder",
+    "COLUMN_TYPE": "varchar(32)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "gmt_modified",
+    "COLUMN_TYPE": "datetime"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "is_deleted",
+    "COLUMN_TYPE": "tinyint(1)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "pre_construct_date",
+    "COLUMN_TYPE": "datetime"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "pre_complete_date",
+    "COLUMN_TYPE": "datetime"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "contract_type",
+    "COLUMN_TYPE": "tinyint"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "scheme_id",
+    "COLUMN_TYPE": "bigint"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "qo_id",
+    "COLUMN_TYPE": "bigint"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "plan_construct_date",
+    "COLUMN_TYPE": "datetime"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "region_id",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "region",
+    "COLUMN_TYPE": "varchar(100)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "region_path",
+    "COLUMN_TYPE": "varchar(200)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "first_pay_percent_type",
+    "COLUMN_TYPE": "tinyint"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "first_pay_price",
+    "COLUMN_TYPE": "decimal(10,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "middle_price",
+    "COLUMN_TYPE": "decimal(10,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "last_price",
+    "COLUMN_TYPE": "decimal(10,2)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "responsible_id",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "org_id",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "plant_org_id",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "sku_rate",
+    "COLUMN_TYPE": "double(10,8)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "district_id",
+    "COLUMN_TYPE": "int"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "hand_over_date",
+    "COLUMN_TYPE": "datetime"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "qingflow_id",
+    "COLUMN_TYPE": "varchar(30)"
+  },
+  {
+    "TABLE_SCHEMA": "ecog_project",
+    "TABLE_NAME": "project_info",
+    "COLUMN_NAME": "customer_code",
+    "COLUMN_TYPE": "varchar(32)"
+  }
+]

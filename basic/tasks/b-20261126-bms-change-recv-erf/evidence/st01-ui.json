@@ -1,0 +1,44 @@
+{
+  "tool": "check-binding.py (C1)",
+  "verdict": "PASS",
+  "baseline": "1a0742d6caa1471473dd8c917543df43e282f1b5",
+  "target": "342791f9a649fec84b97916ac8232fd41573ff4c",
+  "declared_count": 1,
+  "rules": [
+    {
+      "id": "R1",
+      "verdict": "PASS",
+      "detail": "区间 commit 数申报=1 实际=1"
+    },
+    {
+      "id": "R2",
+      "verdict": "PASS",
+      "detail": "线性链逐条核验通过（每 commit 恰 1 parent，首 parent=基线，末=待验收）",
+      "commits": [
+        "342791f9a649fec84b97916ac8232fd41573ff4c"
+      ]
+    },
+    {
+      "id": "R4",
+      "verdict": "PASS",
+      "detail": "待验收 commit 无后代（=当前 HEAD），为最终申报对象"
+    }
+  ],
+  "numstat": [
+    [
+      "4",
+      "9",
+      "src/main/java/com/ecog/web/bms/controller/ChangeOrderController.java"
+    ],
+    [
+      "19",
+      "2",
+      "src/main/resources/static/views/project/project_change_order_list_set.html"
+    ],
+    [
+      "31",
+      "7",
+      "src/main/resources/static/views/project/project_change_order_receivables.html"
+    ]
+  ]
+}

@@ -1,0 +1,41 @@
+[
+  {
+    "id": 1652,
+    "name": "防晒霜地方1213142141412",
+    "case_id": 2306,
+    "channel": 26,
+    "contract_type": 10,
+    "sku_rate": 0.9756,
+    "contract_price": "14800.00",
+    "first_pay_price": "13320.00",
+    "middle_price": "0.00",
+    "last_price": "1480.00",
+    "change_count": 2
+  },
+  {
+    "id": 1498,
+    "name": "北京测试项目20250906002",
+    "case_id": 2180,
+    "channel": 21,
+    "contract_type": 10,
+    "sku_rate": 0.8895,
+    "contract_price": "46300.00",
+    "first_pay_price": "41670.00",
+    "middle_price": "0.00",
+    "last_price": "4630.00",
+    "change_count": 0
+  },
+  {
+    "id": 1265,
+    "name": "测试test012地址",
+    "case_id": 1820,
+    "channel": 51,
+    "contract_type": 10,
+    "sku_rate": 0.8899,
+    "contract_price": "800.00",
+    "first_pay_price": "800.00",
+    "middle_price": "0.00",
+    "last_price": "0.00",
+    "change_count": 6
+  }
+]

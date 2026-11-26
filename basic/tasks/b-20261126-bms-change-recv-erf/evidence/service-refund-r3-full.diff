@@ -1,0 +1,445 @@
+diff --git a/service-bim/src/main/java/com/ecog/service/bim/manager/ProjectService.java b/service-bim/src/main/java/com/ecog/service/bim/manager/ProjectService.java
+index 5a3d1af7..418221a8 100644
+--- a/service-bim/src/main/java/com/ecog/service/bim/manager/ProjectService.java
++++ b/service-bim/src/main/java/com/ecog/service/bim/manager/ProjectService.java
+@@ -10,6 +10,7 @@ import com.ecog.service.common.exception.SystemException;
+ import org.springframework.cloud.openfeign.FeignClient;
+ import org.springframework.web.bind.annotation.*;
+ 
++import java.math.BigDecimal;
+ import java.util.List;
+ 
+ @FeignClient(value = "service-project", fallback = ProjectServiceFallbackHandler.class)
+@@ -20,6 +21,8 @@ public interface ProjectService {
+     HttpResult<ProjectInfoDTO> getProjectInfoDetail(@PathVariable("id") Integer id);
+     @PostMapping("/project/add/cost/flow")
+     HttpResult<Boolean> addCostFlow(@RequestBody ProjectCostFlowParam param) throws SystemException;
++    @GetMapping("/project/cost/record/refund/cash/total")
++    HttpResult<BigDecimal> getRefundCashTotal(@RequestParam("recordId") Integer recordId) throws SystemException;
+     @PostMapping("/project/set/allInfo")
+     HttpResult<Integer> addProjectInfoAndBomList(@RequestBody ProjectAndBomListParam projectParam) throws SystemException;
+ 
+diff --git a/service-bim/src/main/java/com/ecog/service/bim/manager/fallback/ProjectServiceFallbackHandler.java b/service-bim/src/main/java/com/ecog/service/bim/manager/fallback/ProjectServiceFallbackHandler.java
+index 1c589246..639f40a4 100644
+--- a/service-bim/src/main/java/com/ecog/service/bim/manager/fallback/ProjectServiceFallbackHandler.java
++++ b/service-bim/src/main/java/com/ecog/service/bim/manager/fallback/ProjectServiceFallbackHandler.java
+@@ -9,6 +9,7 @@ import com.ecog.service.common.controller.HttpResult;
+ import com.ecog.service.common.exception.ServiceException;
+ import com.ecog.service.common.exception.SystemException;
+ 
++import java.math.BigDecimal;
+ import java.util.List;
+ 
+ public class ProjectServiceFallbackHandler implements ProjectService {
+@@ -27,6 +28,11 @@ public class ProjectServiceFallbackHandler implements ProjectService {
+         throw new ServiceException();
+     }
+ 
++    @Override
++    public HttpResult<BigDecimal> getRefundCashTotal(Integer recordId) throws SystemException {
++        throw new ServiceException();
++    }
++
+     @Override
+     public HttpResult<Integer> addProjectInfoAndBomList(ProjectAndBomListParam param) throws SystemException {
+         throw new ServiceException();
+diff --git a/service-bim/src/main/java/com/ecog/service/bim/manager/params/ProjectCostFlowParam.java b/service-bim/src/main/java/com/ecog/service/bim/manager/params/ProjectCostFlowParam.java
+index 3e90f2a5..67060994 100644
+--- a/service-bim/src/main/java/com/ecog/service/bim/manager/params/ProjectCostFlowParam.java
++++ b/service-bim/src/main/java/com/ecog/service/bim/manager/params/ProjectCostFlowParam.java
+@@ -96,6 +96,30 @@ public class ProjectCostFlowParam {
+      * 2026-11-26 新口径：退款产品金额累计上限（产品原价×签约折扣），仅退款分支使用
+      */
+     private BigDecimal refundProductLimit;
++    /**
++     * 发起本次退款前，已完成退款现金累计额；project 事务内需复核，防止重复抵扣非产品费
++     */
++    private BigDecimal refundPreviousCashAmount;
++    /**
++     * 审批完成时应用的变更业务额：首笔为理论变更额，后续部分退款为 0；审计额仍由 businessAmount 保存
++     */
++    private BigDecimal flowBusinessAmount;
++
++    public BigDecimal getFlowBusinessAmount() {
++        return flowBusinessAmount;
++    }
++
++    public void setFlowBusinessAmount(BigDecimal flowBusinessAmount) {
++        this.flowBusinessAmount = flowBusinessAmount;
++    }
++
++    public BigDecimal getRefundPreviousCashAmount() {
++        return refundPreviousCashAmount;
++    }
++
++    public void setRefundPreviousCashAmount(BigDecimal refundPreviousCashAmount) {
++        this.refundPreviousCashAmount = refundPreviousCashAmount;
++    }
+ 
+     public BigDecimal getBusinessAmount() {
+         return businessAmount;
+diff --git a/service-bim/src/main/java/com/ecog/service/bim/service/impl/ChangeOrderServiceImpl.java b/service-bim/src/main/java/com/ecog/service/bim/service/impl/ChangeOrderServiceImpl.java
+index 16d959b8..f14eefab 100644
+--- a/service-bim/src/main/java/com/ecog/service/bim/service/impl/ChangeOrderServiceImpl.java
++++ b/service-bim/src/main/java/com/ecog/service/bim/service/impl/ChangeOrderServiceImpl.java
+@@ -218,6 +218,11 @@ public class ChangeOrderServiceImpl extends ServiceImpl<ChangeOrderDao, ChangeOr
+         if (!changeOrder.getQuoted()) {
+             throw new DataExpiredException("变更单尚未报价");
+         }
++        // 多笔部分退款：首笔已完成 JST/BOM 后，后续负向退款完成只做幂等确认，正向状态校验不放宽
++        if (changeOrder.getStatus() == ChangeOrderStatusEnum.Confirmed.getValue()
++                && changeOrder.getChangeAmount() != null && changeOrder.getChangeAmount().compareTo(BigDecimal.ZERO) < 0) {
++            return true;
++        }
+         if (changeOrder.getStatus() != ChangeOrderStatusEnum.Submitted.getValue()) {
+             throw new DataExpiredException(String.format("变更单%d状态错误",orderId));
+         }
+@@ -450,17 +455,27 @@ public class ChangeOrderServiceImpl extends ServiceImpl<ChangeOrderDao, ChangeOr
+         BigDecimal actualSkuAmount;
+         BigDecimal flowPaidAmount;
+         BigDecimal refundProductLimit = null;
++        BigDecimal refundPreviousCashAmount = null;
++        BigDecimal flowBusinessAmount = null;
+         if ("none".equals(payType)) {
+             cashAmount = BigDecimal.ZERO;
+             actualSkuAmount = theoreticalSkuAmount;
+             flowPaidAmount = BigDecimal.ZERO;
+         } else if (calculatedChangeAmount.compareTo(BigDecimal.ZERO) < 0) {
+             BigDecimal refundTotal = paidAmount == null ? calculatedChangeAmount.abs() : paidAmount.abs();
+-            BigDecimal refundNonProduct = nonProductAmount.min(refundTotal);
++            HttpResult<BigDecimal> refundCashResult = projectService.getRefundCashTotal(changeOrderId);
++            if (refundCashResult == null || !refundCashResult.isSuccess() || refundCashResult.getData() == null) {
++                throw new IllegalArgumentException("历史退款现金查询失败，禁止提交本次退款");
++            }
++            refundPreviousCashAmount = refundCashResult.getData();
++            flowBusinessAmount = refundPreviousCashAmount.compareTo(BigDecimal.ZERO) > 0
++                    ? BigDecimal.ZERO : calculatedChangeAmount;
++            BigDecimal remainingNonProduct = nonProductAmount.abs().subtract(refundPreviousCashAmount).max(BigDecimal.ZERO);
++            BigDecimal refundNonProduct = remainingNonProduct.min(refundTotal);
+             cashAmount = refundTotal.negate();
+             actualSkuAmount = refundTotal.subtract(refundNonProduct).negate();
+             flowPaidAmount = cashAmount;
+-            refundProductLimit = totalSkuPrice.multiply(skuRate).setScale(2, RoundingMode.HALF_UP);
++            refundProductLimit = totalSkuPrice.multiply(skuRate).abs().setScale(2, RoundingMode.HALF_UP);
+         } else {
+             BigDecimal received = paidAmount == null ? calculatedChangeAmount : paidAmount;
+             // 2026-11-26 定稿（用户当日三次修正 + ChatGPT R9）：实收下限=理论变更金额 Er+F
+@@ -510,6 +525,8 @@ public class ChangeOrderServiceImpl extends ServiceImpl<ChangeOrderDao, ChangeOr
+         param.setSkuAmount(actualSkuAmount);
+         param.setBusinessAmount(calculatedChangeAmount);
+         param.setRefundProductLimit(refundProductLimit);
++        param.setRefundPreviousCashAmount(refundPreviousCashAmount);
++        param.setFlowBusinessAmount(flowBusinessAmount);
+         param.setSkuCost(changeSkuCost);
+         // 对公转账必须选择收款公司；其他方式未传时回退变更单所属公司
+         if ("transfer".equals(payType)) {
+@@ -535,7 +552,7 @@ public class ChangeOrderServiceImpl extends ServiceImpl<ChangeOrderDao, ChangeOr
+         BigDecimal skuAmountEcommerce;
+         BigDecimal skuCostRegular;
+         BigDecimal skuCostEcommerce;
+-        if (totalSkuPrice.compareTo(BigDecimal.ZERO) > 0) {
++        if (totalSkuPrice.compareTo(BigDecimal.ZERO) != 0) {
+             skuAmountRegular = actualSkuAmount.multiply(regularSkuPrice).divide(totalSkuPrice, 2, RoundingMode.HALF_UP);
+             skuAmountEcommerce = actualSkuAmount.subtract(skuAmountRegular);
+             skuCostRegular = changeSkuCost.multiply(regularSkuPrice).divide(totalSkuPrice, 2, RoundingMode.HALF_UP);
+diff --git a/service-project/src/main/java/com/ecog/service/project/api/ProjectController.java b/service-project/src/main/java/com/ecog/service/project/api/ProjectController.java
+index 87baa468..40b9f405 100644
+--- a/service-project/src/main/java/com/ecog/service/project/api/ProjectController.java
++++ b/service-project/src/main/java/com/ecog/service/project/api/ProjectController.java
+@@ -585,7 +585,7 @@ public class ProjectController extends BaseApiController {
+     @PostMapping("/add/cost/flow")
+     public HttpResult<Boolean> addCostFlow(@RequestBody ProjectCostFlowParam param) {
+         try {
+-            return HttpResult.success(projectService.setCostAndAddFlow(param.getCompany(), param.getCreateUserId(), param.getCreateOrgId(), param.getProjectId(), param.getRecordId(), param.getOperator(), param.getRecordType(), param.getRemark(), param.getTotalAmount(), param.getSkuAmount(), param.getSkuCost(), param.getSkuAmountRegular(), param.getSkuAmountEcommerce(), param.getSkuCostRegular(), param.getSkuCostEcommerce(), param.getDesignAmount(),param.getArtificialAmount(), param.getWarrantyAmount(), param.getFeeResponsible(), param.getRecordDate(), param.getAttachmentList(), param.getPayType(), param.getTransactionNo(), param.getPayScreenshot(), param.getPaidAmount(), param.getBusinessAmount(), param.getRefundProductLimit()));
++            return HttpResult.success(projectService.setCostAndAddFlow(param.getCompany(), param.getCreateUserId(), param.getCreateOrgId(), param.getProjectId(), param.getRecordId(), param.getOperator(), param.getRecordType(), param.getRemark(), param.getTotalAmount(), param.getSkuAmount(), param.getSkuCost(), param.getSkuAmountRegular(), param.getSkuAmountEcommerce(), param.getSkuCostRegular(), param.getSkuCostEcommerce(), param.getDesignAmount(),param.getArtificialAmount(), param.getWarrantyAmount(), param.getFeeResponsible(), param.getRecordDate(), param.getAttachmentList(), param.getPayType(), param.getTransactionNo(), param.getPayScreenshot(), param.getPaidAmount(), param.getBusinessAmount(), param.getRefundProductLimit(), param.getRefundPreviousCashAmount(), param.getFlowBusinessAmount()));
+         } catch (IllegalArgumentException e) {
+             return HttpResult.parameterError(StrUtil.isBlank(e.getMessage()) ? "参数错误" : e.getMessage());
+         } catch (Exception e) {
+@@ -789,6 +789,24 @@ public class ProjectController extends BaseApiController {
+         return HttpResult.systemError("查询项目成本记录不成功.");
+     }
+ 
++    /**
++     * 查询同一变更单已完成退款现金累计额，供 BIM 计算本笔剩余非产品费抵扣。
++     */
++    @GetMapping("/cost/record/refund/cash/total")
++    public HttpResult<BigDecimal> getRefundCashTotal(@RequestParam("recordId") Integer recordId) {
++        if (recordId == null || recordId <= 0) {
++            return HttpResult.parameterError("变更单编号必须大于0");
++        }
++        try {
++            return HttpResult.success(projectService.getRefundCashTotal(recordId));
++        } catch (IllegalArgumentException e) {
++            return HttpResult.parameterError(StrUtil.isBlank(e.getMessage()) ? "参数错误" : e.getMessage());
++        } catch (Exception e) {
++            logger.error("查询历史退款现金异常.", e);
++        }
++        return HttpResult.systemError("查询历史退款现金不成功.");
++    }
++
+     /**
+      * @param current
+      * @param limit
+diff --git a/service-project/src/main/java/com/ecog/service/project/api/param/ProjectCostFlowParam.java b/service-project/src/main/java/com/ecog/service/project/api/param/ProjectCostFlowParam.java
+index cb148a01..f5aae66d 100644
+--- a/service-project/src/main/java/com/ecog/service/project/api/param/ProjectCostFlowParam.java
++++ b/service-project/src/main/java/com/ecog/service/project/api/param/ProjectCostFlowParam.java
+@@ -97,6 +97,30 @@ public class ProjectCostFlowParam {
+      * 2026-11-26 新口径：退款产品金额累计上限（产品原价×签约折扣），仅退款分支使用
+      */
+     private BigDecimal refundProductLimit;
++    /**
++     * 发起本次退款前，已完成退款现金累计额；project 事务内需复核，防止重复抵扣非产品费
++     */
++    private BigDecimal refundPreviousCashAmount;
++    /**
++     * 审批完成时应用的变更业务额：首笔为理论变更额，后续部分退款为 0；审计额仍由 businessAmount 保存
++     */
++    private BigDecimal flowBusinessAmount;
++
++    public BigDecimal getFlowBusinessAmount() {
++        return flowBusinessAmount;
++    }
++
++    public void setFlowBusinessAmount(BigDecimal flowBusinessAmount) {
++        this.flowBusinessAmount = flowBusinessAmount;
++    }
++
++    public BigDecimal getRefundPreviousCashAmount() {
++        return refundPreviousCashAmount;
++    }
++
++    public void setRefundPreviousCashAmount(BigDecimal refundPreviousCashAmount) {
++        this.refundPreviousCashAmount = refundPreviousCashAmount;
++    }
+ 
+     public BigDecimal getBusinessAmount() {
+         return businessAmount;
+diff --git a/service-project/src/main/java/com/ecog/service/project/service/ProjectService.java b/service-project/src/main/java/com/ecog/service/project/service/ProjectService.java
+index ca37ab45..a7a2ca8d 100644
+--- a/service-project/src/main/java/com/ecog/service/project/service/ProjectService.java
++++ b/service-project/src/main/java/com/ecog/service/project/service/ProjectService.java
+@@ -135,7 +135,7 @@ public interface ProjectService extends IService<ProjectInfo> {
+      */
+     Boolean setProjectCost(Integer projectId, String operator, Integer recordType, BigDecimal totalAmount, Date recordDate, String remark, String attachment) throws SystemException;
+ 
+-    Boolean setCostAndAddFlow(Integer company, Integer createUserId, Integer createOrgId, Integer projectId, Integer recordId, String operator, Integer recordType, String remark, BigDecimal totalAmount, BigDecimal skuAmount, BigDecimal skuCost, BigDecimal skuAmountRegular, BigDecimal skuAmountEcommerce, BigDecimal skuCostRegular, BigDecimal skuCostEcommerce, BigDecimal designAmount, BigDecimal artificialAmount, BigDecimal warrantyAmount, String feeResponsible, String recordDate, List<AttachmentParam> attachmentList, String payType, String transactionNo, String payScreenshot, BigDecimal paidAmount, BigDecimal businessAmount, BigDecimal refundProductLimit) throws SystemException;
++    Boolean setCostAndAddFlow(Integer company, Integer createUserId, Integer createOrgId, Integer projectId, Integer recordId, String operator, Integer recordType, String remark, BigDecimal totalAmount, BigDecimal skuAmount, BigDecimal skuCost, BigDecimal skuAmountRegular, BigDecimal skuAmountEcommerce, BigDecimal skuCostRegular, BigDecimal skuCostEcommerce, BigDecimal designAmount, BigDecimal artificialAmount, BigDecimal warrantyAmount, String feeResponsible, String recordDate, List<AttachmentParam> attachmentList, String payType, String transactionNo, String payScreenshot, BigDecimal paidAmount, BigDecimal businessAmount, BigDecimal refundProductLimit, BigDecimal refundPreviousCashAmount, BigDecimal flowBusinessAmount) throws SystemException;
+ 
+     Boolean setProjectCostAfterFlow(ProjectInfo projectInfo, Integer projectCostId, RecordTypeEnum recordTypeEnum, BigDecimal totalAmount, Date recordDate, String remark, List<AttachmentParam> attachmentList) throws SystemException;
+ 
+@@ -278,6 +278,8 @@ public interface ProjectService extends IService<ProjectInfo> {
+      */
+     Page<CostRecordBO> getCostRecordList(Integer current, Integer limit, String projectName, String contractNo, String recordDateFrom, String recordDateTo, String recordTypes, Integer designerUserId, Integer status);
+ 
++    BigDecimal getRefundCashTotal(Integer recordId);
++
+     ProjectCostRecordDTO getProjectCostRecord(Integer id);
+ 
+ 
+diff --git a/service-project/src/main/java/com/ecog/service/project/service/impl/ApprovalFlowServiceImpl.java b/service-project/src/main/java/com/ecog/service/project/service/impl/ApprovalFlowServiceImpl.java
+index 9141300a..a1b6b41e 100644
+--- a/service-project/src/main/java/com/ecog/service/project/service/impl/ApprovalFlowServiceImpl.java
++++ b/service-project/src/main/java/com/ecog/service/project/service/impl/ApprovalFlowServiceImpl.java
+@@ -1022,15 +1022,18 @@ public class ApprovalFlowServiceImpl extends ServiceImpl<ProjectApprovalFlowDao,
+         else if(newStatus == FlowStatusEnum.pmAudited.getValue()) {
+             //变更单项目经理审核后完成
+             if (flow.getFlowType() == ApprovalFlowTypeEnum.ChangeOrderFlow.getValue() || flow.getFlowType() == ApprovalFlowTypeEnum.AsOrderFlow.getValue()) {
+-                if (flow.getPayDate() == null || flow.getAmount().compareTo(BigDecimal.ZERO) == 0) {
++                boolean zeroCashAmount = flow.getPayAmount() == null || flow.getPayAmount().compareTo(BigDecimal.ZERO) == 0;
++                if (flow.getPayDate() == null || (flow.getAmount().compareTo(BigDecimal.ZERO) == 0 && zeroCashAmount)) {
+                     flow.setPayDate(new Date());
+                     flow.setAuditDate(new Date());
+                     //收款金额为0
+                     flow.setPayAmount(BigDecimal.ZERO);
+                     newStatus = FlowStatusEnum.completed.getValue();
+                 } else {
+-                    // 对公转账也需要财务审核，不区分是否电商项目
+-                    flow.setPayAmount(flow.getAmount());
++                    // 对公转账也需要财务审核，不区分是否电商项目；已有真实实收不得被理论额或0覆盖
++                    if (flow.getPayAmount() == null) {
++                        flow.setPayAmount(flow.getAmount());
++                    }
+                     newStatus = FlowStatusEnum.confirmedWaitingCw.getValue();
+                 }
+             }
+@@ -1759,7 +1762,7 @@ public class ApprovalFlowServiceImpl extends ServiceImpl<ProjectApprovalFlowDao,
+                     changeRecord.setStatus(flow.getFlowStatus());
+                     ProjectInfo project2 = projectService.selectById(changeRecord.getProjectId());
+                     // 变更单的等效产品额根据收款金额按公式计算：实际收款/剩余总价*剩余总产品额
+-                    EquivalentResult changeEquivalent = ApprovalFlowServiceImpl.calcIncomeSkuAmountNew(project2, changeRecord);
++                    EquivalentResult changeEquivalent = ApprovalFlowServiceImpl.calcIncomeSkuAmountNew(project2, changeRecord, flow.getAmount());
+                     changeRecord.setPaySkuAmount(changeEquivalent.paySkuAmount);
+                     changeRecord.setPaySkuCostAmount(changeEquivalent.paySkuCostAmount);
+                     changeRecord.setPaySkuAmountRegular(changeEquivalent.paySkuAmountRegular);
+@@ -1891,6 +1894,11 @@ public class ApprovalFlowServiceImpl extends ServiceImpl<ProjectApprovalFlowDao,
+     //基于历史已完结数据的上期结余口径 + 本期发生额动态入池法
+     //确保项目尾款全额结清时，等效产品额与等效产品成本 100% 配平
+     public static EquivalentResult calcIncomeSkuAmountNew(ProjectInfo project, ProjectCostRecord currentRecord) {
++        return calcIncomeSkuAmountNew(project, currentRecord, null);
++    }
++
++    public static EquivalentResult calcIncomeSkuAmountNew(ProjectInfo project, ProjectCostRecord currentRecord,
++                                                           BigDecimal currentFlowBusinessAmount) {
+         //查询历史已完结的项目收款/变更记录（不含当前正在审核的这一行）
+         List<ProjectCostRecord> completeList = new ProjectCostRecord().selectList(
+                 new EntityWrapper<ProjectCostRecord>()
+@@ -1919,7 +1927,7 @@ public class ApprovalFlowServiceImpl extends ServiceImpl<ProjectApprovalFlowDao,
+         BigDecimal historyPaySkuCostAmountEcommerce = BigDecimal.ZERO;
+ 
+         for (ProjectCostRecord detail : completeList) {
+-            addAmount = addAmount.add(detail.getAmount() == null ? BigDecimal.ZERO : detail.getAmount());
++            addAmount = addAmount.add(getChangeBusinessAmount(detail));
+             paidAmount = paidAmount.add(detail.getTotalAmount() == null ? BigDecimal.ZERO : detail.getTotalAmount());
+             addSkuAmount = addSkuAmount.add(detail.getSkuAmount() == null ? BigDecimal.ZERO : detail.getSkuAmount());
+             historyPaySkuAmount = historyPaySkuAmount.add(detail.getPaySkuAmount() == null ? BigDecimal.ZERO : detail.getPaySkuAmount());
+@@ -1946,7 +1954,8 @@ public class ApprovalFlowServiceImpl extends ServiceImpl<ProjectApprovalFlowDao,
+         BigDecimal ecommerceSkuCostPrice = project.getEcommerceSkuCostPrice() == null ? BigDecimal.ZERO : project.getEcommerceSkuCostPrice();
+ 
+         // 本期发生额
+-        BigDecimal currentAmount = currentRecord.getAmount() == null ? BigDecimal.ZERO : currentRecord.getAmount();
++        BigDecimal currentAmount = currentFlowBusinessAmount != null ? currentFlowBusinessAmount
++                : currentRecord.getAmount() == null ? BigDecimal.ZERO : currentRecord.getAmount();
+         BigDecimal currentSkuAmount = currentRecord.getSkuAmount() == null ? BigDecimal.ZERO : currentRecord.getSkuAmount();
+         BigDecimal currentSkuCost = currentRecord.getSkuCost() == null ? BigDecimal.ZERO : currentRecord.getSkuCost();
+         BigDecimal currentTotalAmount = currentRecord.getTotalAmount() == null ? BigDecimal.ZERO : currentRecord.getTotalAmount();
+@@ -1991,6 +2000,21 @@ public class ApprovalFlowServiceImpl extends ServiceImpl<ProjectApprovalFlowDao,
+         return result;
+     }
+ 
++    private static BigDecimal getChangeBusinessAmount(ProjectCostRecord record) {
++        if (record.getRecordType() != RecordTypeEnum.ChangeOrder.getValue()) {
++            return record.getAmount() == null ? BigDecimal.ZERO : record.getAmount();
++        }
++        ProjectApprovalFlow flow = new ProjectApprovalFlow().selectById(record.getId());
++        if (flow == null) {
++            // 旧数据没有对应审批流时才回退审计金额；新数据 Flow 与 CostRecord 同事务写入，不应缺失。
++            return record.getAmount() == null ? BigDecimal.ZERO : record.getAmount();
++        }
++        if (flow.getAmount() == null) {
++            throw new IllegalArgumentException("变更审批流业务额为空，costRecordId=" + record.getId());
++        }
++        return flow.getAmount();
++    }
++
+     /**
+      * 判断项目是否为“收全款”项目（无尾款，变更单完成后立即结清）。
+      * 判断依据：首付款等于合同总价，且进度款/尾款均为 0。
+diff --git a/service-project/src/main/java/com/ecog/service/project/service/impl/ProjectServiceImpl.java b/service-project/src/main/java/com/ecog/service/project/service/impl/ProjectServiceImpl.java
+index f0d24b6c..ed9d22f9 100644
+--- a/service-project/src/main/java/com/ecog/service/project/service/impl/ProjectServiceImpl.java
++++ b/service-project/src/main/java/com/ecog/service/project/service/impl/ProjectServiceImpl.java
+@@ -36,6 +36,7 @@ import com.ecog.service.project.service.QingFlowService;
+ import org.slf4j.Logger;
+ import org.slf4j.LoggerFactory;
+ import org.springframework.beans.factory.annotation.Autowired;
++import org.springframework.jdbc.core.JdbcTemplate;
+ import org.springframework.stereotype.Service;
+ import org.springframework.transaction.annotation.Transactional;
+ 
+@@ -63,6 +64,9 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectInfoDao, ProjectInfo>
+     @Autowired
+     private ProjectCostRecordDao projectCostRecordDao;
+ 
++    @Autowired
++    private JdbcTemplate jdbcTemplate;
++
+     @Autowired
+     private AttachmentDao attachmentDao;
+ 
+@@ -1601,34 +1605,75 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectInfoDao, ProjectInfo>
+         return true;
+     }
+ 
++    private List<ProjectCostRecord> listChangeRefundRecords(Integer recordId) {
++        Wrapper<ProjectCostRecord> wrapper = new EntityWrapper<ProjectCostRecord>()
++                .eq("record_id", recordId)
++                .in("record_type", Arrays.asList(RecordTypeEnum.ChangeOrder.getValue(),
++                        RecordTypeEnum.OrgChangeOrder.getValue(), RecordTypeEnum.AsOrder.getValue()))
++                .lt("total_amount", BigDecimal.ZERO)
++                .orderBy("id", true);
++        return projectCostRecordDao.selectList(wrapper);
++    }
++
++    @Override
++    public BigDecimal getRefundCashTotal(Integer recordId) {
++        if (recordId == null || recordId <= 0) {
++            throw new IllegalArgumentException("变更单编号必须大于0");
++        }
++        BigDecimal refundedCash = BigDecimal.ZERO;
++        for (ProjectCostRecord record : listChangeRefundRecords(recordId)) {
++            if (record.getStatus() != null && record.getStatus() == FlowStatusEnum.completed.getValue()) {
++                refundedCash = refundedCash.add(record.getTotalAmount().abs());
++            }
++        }
++        return refundedCash;
++    }
++
+     @Override
+     @Transactional(rollbackFor = Exception.class)
+-    public Boolean setCostAndAddFlow(Integer company, Integer createUserId, Integer createOrgId, Integer projectId, Integer recordId, String operator, Integer recordType, String remark, BigDecimal totalAmount, BigDecimal skuAmount, BigDecimal skuCost, BigDecimal skuAmountRegular, BigDecimal skuAmountEcommerce, BigDecimal skuCostRegular, BigDecimal skuCostEcommerce, BigDecimal designAmount, BigDecimal artificialAmount, BigDecimal warrantyAmount, String feeResponsible, String recordDate, List<AttachmentParam> attachmentList, String payType, String transactionNo, String payScreenshot, BigDecimal paidAmount, BigDecimal businessAmount, BigDecimal refundProductLimit) {
++    public Boolean setCostAndAddFlow(Integer company, Integer createUserId, Integer createOrgId, Integer projectId, Integer recordId, String operator, Integer recordType, String remark, BigDecimal totalAmount, BigDecimal skuAmount, BigDecimal skuCost, BigDecimal skuAmountRegular, BigDecimal skuAmountEcommerce, BigDecimal skuCostRegular, BigDecimal skuCostEcommerce, BigDecimal designAmount, BigDecimal artificialAmount, BigDecimal warrantyAmount, String feeResponsible, String recordDate, List<AttachmentParam> attachmentList, String payType, String transactionNo, String payScreenshot, BigDecimal paidAmount, BigDecimal businessAmount, BigDecimal refundProductLimit, BigDecimal refundPreviousCashAmount, BigDecimal flowBusinessAmount) {
+         //必填项校验
+         if (projectId == null || recordId == null || recordType == null || totalAmount == null) {
+             throw new IllegalArgumentException("无法操作,缺少参数");
+         }
+         BigDecimal businessAmountValue = businessAmount != null ? businessAmount : totalAmount;
+-        // 2026-11-26 新口径：退款产品金额累计上限 = 产品原价×签约折扣（由 bim 计算传入）。
+-        // 按 record_id 聚合已生效的负产品额记录，当前记录尚未入库，不会重复计入。
+-        if (totalAmount.compareTo(BigDecimal.ZERO) < 0 && refundProductLimit != null && skuAmount != null) {
+-            Wrapper<ProjectCostRecord> refundWrapper = new EntityWrapper<ProjectCostRecord>()
+-                    .eq("record_id", recordId).lt("sku_amount", BigDecimal.ZERO);
+-            List<ProjectCostRecord> refundRecords = projectCostRecordDao.selectList(refundWrapper);
++        BigDecimal flowBusinessAmountValue = flowBusinessAmount != null ? flowBusinessAmount : businessAmountValue;
++        RecordTypeEnum recordTypeEnum = RecordTypeEnum.getEnum(recordType);
++        boolean changeRefund = totalAmount.compareTo(BigDecimal.ZERO) < 0
++                && (recordTypeEnum == RecordTypeEnum.ChangeOrder || recordTypeEnum == RecordTypeEnum.OrgChangeOrder
++                || recordTypeEnum == RecordTypeEnum.AsOrder);
++        if (changeRefund) {
++            if (skuAmount == null || refundProductLimit == null || refundPreviousCashAmount == null) {
++                throw new IllegalArgumentException("退款缺少产品额、产品上限或历史现金快照，禁止提交");
++            }
++            // 真实行锁与后续检查/插入同事务同数据源；锁内不调用远程服务。
++            jdbcTemplate.queryForObject("SELECT id FROM project_info WHERE id = ? FOR UPDATE", Integer.class, projectId);
++            List<ProjectCostRecord> refundRecords = listChangeRefundRecords(recordId);
++            for (ProjectCostRecord refundRecord : refundRecords) {
++                Integer status = refundRecord.getStatus();
++                if (status == null || (status != FlowStatusEnum.completed.getValue()
++                        && status != FlowStatusEnum.rejected.getValue())) {
++                    throw new IllegalArgumentException("存在审批中的退款记录，请先完成审批再提交下一笔退款");
++                }
++            }
++            BigDecimal refundedCash = BigDecimal.ZERO;
+             BigDecimal refundedProduct = BigDecimal.ZERO;
+-            if (refundRecords != null) {
+-                for (ProjectCostRecord refundRecord : refundRecords) {
++            for (ProjectCostRecord refundRecord : refundRecords) {
++                if (refundRecord.getStatus() != null && refundRecord.getStatus() == FlowStatusEnum.completed.getValue()) {
++                    refundedCash = refundedCash.add(refundRecord.getTotalAmount().abs());
+                     if (refundRecord.getSkuAmount() != null) {
+-                        refundedProduct = refundedProduct.subtract(refundRecord.getSkuAmount());
++                        refundedProduct = refundedProduct.add(refundRecord.getSkuAmount().abs());
+                     }
+                 }
+             }
++            if (refundedCash.compareTo(refundPreviousCashAmount) != 0) {
++                throw new IllegalArgumentException("历史退款现金已变化，请刷新后重试");
++            }
+             BigDecimal currentRefundProduct = skuAmount.abs();
+             if (refundedProduct.add(currentRefundProduct).compareTo(refundProductLimit) > 0) {
+                 throw new IllegalArgumentException("累计退款产品金额超过原购买产品金额上限（" + refundProductLimit + "）");
+             }
+         }
+-        RecordTypeEnum recordTypeEnum = RecordTypeEnum.getEnum(recordType);
+ //        if(recordTypeEnum == RecordTypeEnum.ChangeOrder){
+ //            if(totalAmount.compareTo(BigDecimal.ZERO) < 0){
+ //                recordTypeEnum = RecordTypeEnum.ChangeOrderExpand;
+@@ -1713,7 +1758,7 @@ public class ProjectServiceImpl extends ServiceImpl<ProjectInfoDao, ProjectInfo>
+         flow.setGmtOperator(operator);
+         flow.setObjectId(String.valueOf(projectCostRecord.getId()));
+         flow.setProjectId(projectId);
+-        flow.setAmount(businessAmountValue);
++        flow.setAmount(flowBusinessAmountValue);
+         if(StrUtil.isNotEmpty(recordDate)) {
+             flow.setPayDate(DateUtil.parseDate(recordDate));
+         }

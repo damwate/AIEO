@@ -1,0 +1,79 @@
+diff --git a/service-bim/src/main/java/com/ecog/service/bim/service/impl/QuoteServiceImpl.java b/service-bim/src/main/java/com/ecog/service/bim/service/impl/QuoteServiceImpl.java
+index d10d28e5..f078ddf5 100644
+--- a/service-bim/src/main/java/com/ecog/service/bim/service/impl/QuoteServiceImpl.java
++++ b/service-bim/src/main/java/com/ecog/service/bim/service/impl/QuoteServiceImpl.java
+@@ -802,71 +802,73 @@ public class QuoteServiceImpl extends ServiceImpl<QuoteOrderDao, QuoteOrder> imp
+         BigDecimal amount = BigDecimal.ZERO;
+         for (SchemeItem item : items) {
+             List<QuoteDetail> skuDetails = details.stream()
+                     .filter(d -> d.getSchemeItemId().equals(item.getId()))
+                     .collect(Collectors.toList());
+ 
+             boolean quoted = true;
+             BigDecimal total = BigDecimal.ZERO;
+             for (QuoteDetail skuDetail : skuDetails) {
+                 if (skuDetail.getSkuQty() == null) {
+                     quoted = false;
+                     continue;
+                 }
+                 total = total.add(skuDetail.getSkuUnitPrice().multiply(BigDecimal.valueOf(skuDetail.getSkuQty())));
+             }
+ 
+             item.setPrice(total);
+             item.setQuoted(quoted);
+             if (!item.updateById()) {
+                 throw new RuntimeException();
+             }
+             amount = amount.add(total);
+         }
+ 
+         order.setSkuPrice(amount);
+         order.setTotalPrice(calcTotalPrice(order));
+         if (!order.updateById()) {
+             throw new RuntimeException("报价单保存失败");
+         }
+         return true;
+     }
+ 
+     @Override
+     public QuoteOrderBO getByScheme(long schemeId) {
+         QuoteOrder order = selectOne(new EntityWrapper<QuoteOrder>()
+-                .eq("scheme_id", schemeId).orderBy("gmt_create", false));
++                .eq("scheme_id", schemeId)
++                .in("status", CollUtil.newArrayList(OrderStatusEnum.Init.getValue(), OrderStatusEnum.Confirmed.getValue()))
++                .orderBy("gmt_create", false).orderBy("id", false));
+ 
+         return toBO(order);
+     }
+ 
+     @Override
+     public QuoteOrderDetailDTO getDetailByScheme(long schemeId) {
+         QuoteOrder order = selectOne(new EntityWrapper<QuoteOrder>()
+                 .eq("scheme_id", schemeId).orderBy("gmt_create", false));
+ 
+         return toDetailDTO(order);
+     }
+ 
+     @Override
+     public QuoteOrderDetailDTO getAdditionDetailByScheme(long schemeId) {
+         QuoteOrder order = selectOne(new EntityWrapper<QuoteOrder>()
+                 .eq("scheme_id", schemeId).orderBy("gmt_create", false));
+ 
+         return toAdditionDetailDTO(order);
+     }
+ 
+     @Override
+     public QuoteOrderBO getByCase(int caseId, boolean isConfirmed) {
+         List<QuoteOrder> orders = this.baseMapper.selectByCaseId(caseId, isConfirmed ? OrderStatusEnum.Confirmed.getValue() : null);
+         if (orders == null || orders.isEmpty()) {
+             return null;
+         }
+         return toBO(orders.get(0));
+     }
+ 
+     @Override
+     public List<QuoteFee> getOrderFee(long orderId) {
+         return feeDao.selectList(new EntityWrapper<QuoteFee>().eq("order_id", orderId));
+     }
+ 
+     @Override
