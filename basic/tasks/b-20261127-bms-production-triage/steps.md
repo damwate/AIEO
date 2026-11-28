@@ -134,6 +134,8 @@ P0/P1 根因已定位到具体代码；P0 具备“生产数据 + nginx动作序
 
 - **fixture方案R1审查=REWORK（主体保留）→R2修订已提交待复审**：方案简报续派采集fail-closed（INBOUND_START_UNIT_MISSING，send-state=SEND_CONFIRMED）→按L-018派生`recoll_fixtureplan_r1.mjs`补采（三参数核对+reload先行+归属校验七查全过，未重发），reply 6510B SHA256=`ca47ba09…070572`。裁定：九项PASS（含虚构身份/唯一性/最小字段/逻辑删链/调用点替换），两项必改——**P1-1** LIKE中`_`为通配符须改`LEFT(col,CHAR_LENGTH(%s))=%s`参数绑定严格字面前缀（user_name/qywx_user_id两处）；**P1-2** 双进程并发互删风险须MySQL GET_LOCK跨进程互斥（覆盖预检→创建→测试→清理、连接保持、异常/退出释放、fail-closed）。补充：清理顺序固定（先token后用户再释锁）、清理结果验证失败=验收失败、1062不重试保持。修订版=evidence/task1-fixture-plan/fixture-plan.md（R2：§2 P1-1/P1-2落地、§3五步顺序+三项验证）；授权边界=允许提交修订、暂不允许实施。
 
+- **fixture方案审查循环R2→R6（经GitHub交接分支收敛，见DEC-144~DEC-148）**：R2复审=主体通过+补三项异常生命周期（try/finally释锁核验、部分初始化static立即登记、锁连接三态，SHA256=`5f253f4d…3871976`）→R3修订→R3终审=REWORK两项（失锁边界未封闭+归档错名，SHA256=`2cb4fc17…06ea60`；错名已按内容git mv更正r1/r2/r3系列零丢失）→R4修订（破坏性操作前锁归属核验+失锁fail-closed+finally异常分离）→R4终审=REWORK唯一遗留TOCTOU（SHA256=`39f80914…784ece`，要求技术论证）→R5论证=锁连接承载全部破坏性操作（会话绑定消除TOCTOU）+进程级FileLock外层互斥+双层不变式→R5终审=REWORK两项（SHA256=`3bfde7d4…2e208e`：文件锁target/路径随目录变化非单机全局、业务流写入未证明纳入保护；已通过项冻结）→R6修订=锁文件改user.home锚定固定机器级路径（同机同OS用户必争同一把锁，跨OS用户/跨主机如实声明边界）+业务流写入清单代码实证（token.insert仅UserServiceImpl:195/:296、logout逻辑删UserController:670、自动绑定分支UserController:633在fixture测试下不可达）+时间窗+awaitWorkersTermination无时限等isTerminated()异步闭合证明（测试文件:233-240），未增加核验次数。授权边界不变=仅方案；实施/INSERT/重跑未授权。
+
 ## S4 P2 三方商品价格正式比对与业务清单
 
 ①本步骤目标：使用已抓全的BMS/小店/JST原始数据生成可复算、可回链的差异清单，供用户讨论；零同步写入。
@@ -159,3 +161,8 @@ P0/P1 根因已定位到具体代码；P0 具备“生产数据 + nginx动作序
 - R4=REWORK（2026-11-28，仅R4-1两阶段清理时间边界）→R5修订落实（DEC-143）。
 - R5=REWORK（2026-11-28，固定1s等待轮越deadline残余）→R6按审查方终版修法落实（DEC-143）。
 - R6=PASS（2026-11-28）→授权两轮测试执行；4项qywx=BLOCKED转fixture方案审查轮（DEC-143）。
+- fixture方案R1=REWORK（2026-11-28，LIKE通配符+跨进程互斥）→R2修订落实（DEC-144）。
+- fixture方案R2复审=主体通过+三项补齐（2026-11-28）→R3修订落实（DEC-145）。
+- fixture方案R3终审=REWORK（2026-11-28，失锁边界+归档错名）→R4修订落实（DEC-146）。
+- fixture方案R4终审=REWORK（2026-11-28，核验与操作间TOCTOU）→R5会话绑定论证落实（DEC-147）。
+- fixture方案R5终审=REWORK（2026-11-28，文件锁路径非单机全局+应用层写入未证明）→R6修订落实（DEC-148）。
