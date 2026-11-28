@@ -136,6 +136,7 @@ P0/P1 根因已定位到具体代码；P0 具备“生产数据 + nginx动作序
 
 - **fixture方案审查循环R2→R6（经GitHub交接分支收敛，见DEC-144~DEC-148）**：R2复审=主体通过+补三项异常生命周期（try/finally释锁核验、部分初始化static立即登记、锁连接三态，SHA256=`5f253f4d…3871976`）→R3修订→R3终审=REWORK两项（失锁边界未封闭+归档错名，SHA256=`2cb4fc17…06ea60`；错名已按内容git mv更正r1/r2/r3系列零丢失）→R4修订（破坏性操作前锁归属核验+失锁fail-closed+finally异常分离）→R4终审=REWORK唯一遗留TOCTOU（SHA256=`39f80914…784ece`，要求技术论证）→R5论证=锁连接承载全部破坏性操作（会话绑定消除TOCTOU）+进程级FileLock外层互斥+双层不变式→R5终审=REWORK两项（SHA256=`3bfde7d4…2e208e`：文件锁target/路径随目录变化非单机全局、业务流写入未证明纳入保护；已通过项冻结）→R6修订=锁文件改user.home锚定固定机器级路径（同机同OS用户必争同一把锁，跨OS用户/跨主机如实声明边界）+业务流写入清单代码实证（token.insert仅UserServiceImpl:195/:296、logout逻辑删UserController:670、自动绑定分支UserController:633在fixture测试下不可达）+时间窗+awaitWorkersTermination无时限等isTerminated()异步闭合证明（测试文件:233-240），未增加核验次数。授权边界不变=仅方案；实施/INSERT/重跑未授权。
 - **fixture方案R6终审=P1-2 REWORK（实为版本分歧）→R7版本绑定修订已提交待终审**：R6简报正常送达，reply 4754B SHA256=`3fdfa164…5c5c32`。裁定=P1-1有条件通过（补约束后冻结）、异步终止有条件通过（补实施验收条件）、边界区分PASS、P1-2=REWORK（称清单漏列deleteByMap）。核实=审查方读主checkout HEAD版（07fa3546，工作区干净）：userLogin/qywxLogin确有`userTokenDao.deleteByMap`（HEAD:188/:293，MP物理DELETE user_id+app_id旧单设备行为）——观察对该版正确；**被测版=worktree工作区（同HEAD+未提交修改），两块已删，grep登录路径0命中，删除该调用正是被测功能（多会话并存）本身**。R7=§2写入清单改版本绑定陈述（被测版内容SHA256绑定：UserServiceImpl=`d83d92dc…`、测试文件=`c070798b…`，源码副本+diff+binding.json归档）+P1-1三约束文字（禁-Duser.home覆盖/同规范化路径+同文件系统命名空间/四步fail-closed，边界扩展跨OS用户/跨主机/不同命名空间）+§5异步实施验收条件。新增§10。授权边界不变=仅方案。
+- **fixture方案R7终审=P1-1 PASS冻结+异步终止PASS；R8仅补工作区变更范围**：reply 5112B SHA256=`6f8ab339…1765`。P1-1三约束+边界声明核对通过=冻结；异步终止=PASS_WITH_CONSTRAINTS（审查方实测归档测试源码awaitWorkersTermination确认实际终止才返回，实施须按实际代码验收）；双锁设计冻结；P1-2=REWORK仅一项=缺worktree完整变更清单（版本分歧本身已确认成立：HEAD两处deleteByMap/被测版两处已删/token.insert行号195/296均核对一致）。R8=归档acl-worktree-change-scope.txt（5修改+2新增；UserTokenServiceImpl未修改=HEAD一致）+全量diff+UserController副本（raw=`155743a5…`/blob=`0cb4f096…`），§2补范围闭环，新增§11。授权不变=仅方案终审。
 
 ## S4 P2 三方商品价格正式比对与业务清单
 
@@ -168,3 +169,4 @@ P0/P1 根因已定位到具体代码；P0 具备“生产数据 + nginx动作序
 - fixture方案R4终审=REWORK（2026-11-28，核验与操作间TOCTOU）→R5会话绑定论证落实（DEC-147）。
 - fixture方案R5终审=REWORK（2026-11-28，文件锁路径非单机全局+应用层写入未证明）→R6修订落实（DEC-148）。
 - fixture方案R6终审=P1-2 REWORK（2026-11-28，漏列deleteByMap=版本分歧：被测版无此调用，审查方读的是HEAD版）→R7版本绑定修订落实（DEC-149）。
+- fixture方案R7终审=P1-2 REWORK（2026-11-28，仅差工作区完整变更范围证明；P1-1已PASS冻结）→R8最小补证落实（DEC-150）。

@@ -95,6 +95,17 @@ runid = UUID 去横线取 8 位 hex，每次运行新生成；user_name 与 qywx
       `c070798b98aae6bad508a0977ccb5303b9638fd68cfae5e9a3f88eba70226e30`，diff 归档
       acl-userServiceImpl-tested-vs-HEAD.diff）。审查方所读=YotinGarden/bms-acl 主 checkout（HEAD
       相同、工作区干净=GitHub HEAD 版）。
+    - **【R8 补·工作区完整变更范围（R7 终审要求的最小补证）】**：修改（已跟踪）=pom.xml（仅
+      +spring-boot-starter-test 测试依赖）、UserController.java（30 天有效期常量+token 有效性
+      判断重构，无新增写入路径；plan 引用行号取自被测工作区文件，副本
+      acl-userController-tested-version.java raw=`155743a5…ad1152`/blob=`0cb4f096…69e12c` +
+      acl-userController-tested-vs-HEAD.diff 归档）、UserToken.java（仅+isValid(Date) 助手，无写）、
+      AuthInterceptor.java（token 有效性读路径重构，无写）、UserServiceImpl.java（已归档）；
+      新增（未跟踪）=MultiDeviceLoginIntegrationTest.java、UserTokenTest.java。全量 diff=
+      acl-worktree-tested-vs-HEAD.diff，清单=acl-worktree-change-scope.txt。
+      **UserTokenServiceImpl.java 不在修改清单=与 HEAD 一致**，plan 引用（:50 deleteByToken）对
+      被测版有效；即写入清单涉及的调用链（UserController/UserServiceImpl/UserTokenServiceImpl）
+      在被测工作区无其他未归档修改。
     - **被测版写入清单（本轮唯一有效清单）**：userLogin 唯一业务写入=`token.insert()`
       （UserServiceImpl.java:195）；qywxLogin 唯一业务写入=`token.insert()`（:296）；**被测版不存在
       `userTokenDao.deleteByMap`**——HEAD 版 184-188/286-290 两块（物理 DELETE user_id+app_id，MP
@@ -213,6 +224,10 @@ runid = UUID 去横线取 8 位 hex，每次运行新生成；user_name 与 qywx
 | r4-plan-finalreview-verdict.txt | R4 方案终审裁定（REWORK：核验与破坏性操作间 TOCTOU） | `39f80914258570d2137efc92775a314c774c8647f60d47075d0ff8a5b2784ece` | 3753 |
 | r5-plan-finalreview-verdict.txt | R5 方案终审裁定（REWORK：文件锁路径非单机全局+应用层写入未证明纳入保护） | `3bfde7d4cd6f2ec74a7e0fc5dad1bc2e3fc949b4043a5e185bdf935acd2e208e` | 5169 |
 | r6-plan-finalreview-verdict.txt | R6 方案终审裁定（P1-2 REWORK：漏列 deleteByMap=版本分歧；P1-1 有条件通过） | `3fdfa16498b5ff0feffedf5c7e6e51ff059ef3de9678875c2dd90c8d523c5c32` | 4754 |
+| r7-plan-finalreview-verdict.txt | R7 方案终审裁定（P1-1 PASS 冻结；异步终止 PASS_WITH_CONSTRAINTS；P1-2 REWORK 仅差工作区变更范围） | `6f8ab3394f447ce5820b198269e0e0aa639b56e2a5ff4ee10a223f0518571765` | 5112 |
+| acl-worktree-change-scope.txt | 被测 worktree 完整变更范围清单（status/diff-name-only/未跟踪/调用链核对） | commit 内 | 1570 |
+| acl-worktree-tested-vs-HEAD.diff | 被测工作区 vs HEAD 全量 diff（5 个修改文件） | commit 内 | 10949 |
+| acl-userController-tested-version.java | 被测版 UserController 工作区副本（raw=155743a5…/blob=0cb4f096…） | binding.json | 30208 |
 | acl-userServiceImpl-tested-version.java | 被测版 UserServiceImpl 工作区副本（raw=d83d92dc…645e1c5；repo blob LF=1d91da09…83875a，仅行尾差异） | binding.json | 12595 |
 | acl-multiDeviceLoginIntegrationTest-tested-version.java | 被测版测试文件工作区副本（raw=blob=c070798b…226e30） | 同左 | 18793 |
 | acl-userServiceImpl-tested-vs-HEAD.diff | 被测版 vs HEAD（07fa3546）diff——deleteByMap 移除即被测功能 | commit 内 | 见文件 |
@@ -276,3 +291,24 @@ runid = UUID 去横线取 8 位 hex，每次运行新生成；user_name 与 qywx
   不同文件系统命名空间均不覆盖。锁机制不再更换。
 - **异步实施验收条件**已写入 §2/§5：实施时以实际代码验证 awaitWorkersTermination 所有返回路径
   确认 executor 实际终止；无法终止=继续等待或本轮失败，绝不提前释放文件锁。
+
+## 11. R7 终审裁定与 R8 最小补证（终审明令：不改写方案、不重开已通过项、不重设计双锁）
+
+- R7 终审（r7-plan-finalreview-verdict.txt，SHA256=
+  `6f8ab3394f447ce5820b198269e0e0aa639b56e2a5ff4ee10a223f0518571765`）：**P1-1=PASS 冻结**（三项
+  约束+边界声明核对通过，不再要求换锁机制）；**异步线程终止=PASS_WITH_CONSTRAINTS**（归档测试
+  源码实测 awaitWorkersTermination:215/shutdownNow:233/isTerminated 循环:234，逻辑满足"实际终止
+  才返回"；实施时须按实际代码验收，不得用注释代替；代价=极端情况一直等待，安全优先取舍被认可）；
+  已冻结双锁及清理设计=冻结；**P1-2=REWORK 仅一项**——版本分歧基本证明成立（HEAD 两处
+  deleteByMap 确认、被测版两处已删确认、token.insert 被测版行号 195/296 与方案一致），但缺
+  **worktree 完整变更文件清单**：UserController:633/670、UserTokenServiceImpl:50 等引用此前按
+  HEAD 核对，不能排除被测工作区其他未归档修改。
+- **R8 补证（本 commit，仅补范围证明不改方案设计）**：归档 acl-worktree-change-scope.txt
+  （git status --short + diff --name-only + 未跟踪清单 + 调用链核对结论）、
+  acl-worktree-tested-vs-HEAD.diff（全量 diff）、acl-userController-tested-version.java（副本，
+  raw=`155743a5…`/blob=`0cb4f096…`）。实测变更范围=5 个已跟踪修改（pom.xml=仅测试依赖；
+  UserController=30 天有效期常量+有效性判断重构，无新增写入路径；UserToken 实体=仅+isValid
+  助手；AuthInterceptor=读路径重构；UserServiceImpl=已归档）+2 个新增测试文件。
+  **UserTokenServiceImpl 不在修改清单=与 HEAD 一致**；写入清单涉及调用链
+  （UserController/UserServiceImpl/UserTokenServiceImpl）在被测工作区无其他未归档修改。
+  §2 版本绑定段已补该范围闭环。

@@ -1,0 +1,27 @@
+# 被测worktree完整变更范围（R8证据，2026-11-28T06:12:24Z）
+# repo=YotinGarden/.worktrees/bms-multi-device-login-acl branch=task/bms-multi-device-login HEAD=07fa35463d478716c51fd5a291c82a39aaaa96fd
+
+== git status --short ==
+ M acl-server/pom.xml
+ M acl-server/src/main/java/com/ecog/acl/api/UserController.java
+ M acl-server/src/main/java/com/ecog/acl/entity/UserToken.java
+ M acl-server/src/main/java/com/ecog/acl/mvc/AuthInterceptor.java
+ M acl-server/src/main/java/com/ecog/acl/service/impl/UserServiceImpl.java
+?? acl-server/src/test/
+
+== git diff --name-only（已跟踪修改）==
+acl-server/pom.xml
+acl-server/src/main/java/com/ecog/acl/api/UserController.java
+acl-server/src/main/java/com/ecog/acl/entity/UserToken.java
+acl-server/src/main/java/com/ecog/acl/mvc/AuthInterceptor.java
+acl-server/src/main/java/com/ecog/acl/service/impl/UserServiceImpl.java
+
+== git ls-files --others --exclude-standard（未跟踪=新增）==
+acl-server/src/test/java/com/ecog/acl/MultiDeviceLoginIntegrationTest.java
+acl-server/src/test/java/com/ecog/acl/entity/UserTokenTest.java
+
+== 相关调用链修改核对 ==
+UserTokenServiceImpl.java: 不在修改清单=与HEAD一致，plan引用(:50 deleteByToken)对被测版有效
+UserController.java: 已修改（见acl-userController-tested-vs-HEAD.diff与源码副本），plan引用行号取自被测工作区文件
+UserServiceImpl.java: 已修改（已归档acl-userServiceImpl-tested-version.java与diff）
+UserToken.java/AuthInterceptor.java/pom.xml: 已修改（见全量diff），均无新增数据库写入路径

@@ -26,5 +26,31 @@
   "verdicts_chain": {
     "r6_plan_finalreview_verdict": "3fdfa16498b5ff0feffedf5c7e6e51ff059ef3de9678875c2dd90c8d523c5c32"
   },
-  "archive_hash_note": "SHA256(raw_local)=磁盘原样字节；SHA256(repo_blob_lf)=git归一化(CRLF→LF)后blob内容。UserServiceImpl副本原文件为CRLF故两值不同(语义同)；测试文件副本原文件即LF故两值相同。已用CRLF→LF变换法验证与git实际blob一致。"
+  "archive_hash_note": "SHA256(raw_local)=磁盘原样字节；SHA256(repo_blob_lf)=git归一化(CRLF→LF)后blob内容。UserServiceImpl副本原文件为CRLF故两值不同(语义同)；测试文件副本原文件即LF故两值相同。已用CRLF→LF变换法验证与git实际blob一致。",
+  "worktree_change_scope": {
+    "archive": "acl-worktree-change-scope.txt",
+    "full_diff": {
+      "archive": "acl-worktree-tested-vs-HEAD.diff",
+      "sha256_raw_local": "778ccf01d693b5922c9dc623f429b7b9f082efcedf92542ee2c32e5c0417fb3b",
+      "bytes": 10949
+    },
+    "modified_tracked": [
+      "acl-server/pom.xml",
+      "acl-server/src/main/java/com/ecog/acl/api/UserController.java",
+      "acl-server/src/main/java/com/ecog/acl/entity/UserToken.java",
+      "acl-server/src/main/java/com/ecog/acl/mvc/AuthInterceptor.java",
+      "acl-server/src/main/java/com/ecog/acl/service/impl/UserServiceImpl.java"
+    ],
+    "untracked_new": [
+      "acl-server/src/test/java/com/ecog/acl/MultiDeviceLoginIntegrationTest.java",
+      "acl-server/src/test/java/com/ecog/acl/entity/UserTokenTest.java"
+    ],
+    "UserTokenServiceImpl.java": "NOT modified = identical to HEAD; plan citation UserTokenServiceImpl.java:50 valid for tested version",
+    "relevance_note": "pom=+spring-boot-starter-test(test scope, build only); UserToken entity=+isValid(Date) helper(no write); AuthInterceptor=token validity read-path refactor(no write); UserController=30d expiry constant+validity refactor(no new write path; plan cited lines taken from tested working tree)",
+    "UserController.java": {
+      "archive": "acl-userController-tested-version.java",
+      "sha256_raw_local": "155743a54ef3f0403885d3e7014efb3af7a96f0fcee66184e4f338e80dad1152",
+      "sha256_repo_blob_lf": "0cb4f096a1f185a67d3517b3f6eec95af08f477a32f164be47f492b23269e12c"
+    }
+  }
 }

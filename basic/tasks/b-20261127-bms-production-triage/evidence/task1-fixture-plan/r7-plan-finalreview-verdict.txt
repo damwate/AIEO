@@ -1,0 +1,179 @@
+ChatGPT 说：
+
+本轮复核只针对 R7 新增的两项，不重开已冻结内容，也不构成实施授权。
+
+R7 提出的“版本分歧”在逻辑上成立：如果被测工作区确实已经删除 deleteByMap()，那么不能把主 checkout 的旧版写入行为套到被测版本上；但必须由归档副本、diff 和版本绑定记录证明，而不能只凭说明或 grep 结论。我会按 R7 指定的 AIEO 完整 SHA 核对这些证据。
+
+R7 方案终审
+
+REWORK P1-1 已闭合；P1-2 的版本分歧基本得到证明，但工作区版本范围尚未完全闭合。暂不授权实施。
+
+基线：damwate/AIEO，完整 SHA：
+
+9196b97a060b49e6b3c69b9c3602457fd18ab5f4
+
+方案文件：basic/tasks/b-20261127-bms-production-triage/evidence/task1-fixture-plan/fixture-plan.md
+
+逐项裁定
+
+项目
+
+	
+
+裁定
+
+	
+
+核验结果
+
+
+
+
+P1-1 user.home 锁路径约束
+
+	
+
+PASS
+
+	
+
+三项约束已写入，边界声明完整
+
+
+
+
+P1-2 deleteByMap 版本分歧
+
+	
+
+REWORK
+
+	
+
+被测版副本与 diff 能证明删除行为，但缺少完整工作区变更范围证明
+
+
+
+
+异步线程终止
+
+	
+
+PASS
+
+	
+
+归档测试源码实际实现满足终止后才能继续
+
+
+
+
+已冻结的双锁及清理设计
+
+	
+
+冻结
+
+	
+
+不重开、不要求重新设计
+
+1. P1-1：通过，按约束冻结
+
+我核对了 §2，三项要求均已明确：
+
+禁止 runner 使用 -Duser.home 覆盖路径，运行期间也不得修改该系统属性。
+
+纳入互斥范围的进程必须使用相同规范化 user.home 路径及相同文件系统命名空间。
+
+目录创建、路径解析、文件打开、锁获取任一步失败，均 fail-closed。
+
+跨 OS 用户、跨主机、不同文件系统命名空间不覆盖，也已如实声明。
+
+裁定：P1-1 PASS，冻结，不再要求更换锁机制。
+
+2. P1-2：版本分歧有实质证据，但还差一项
+
+这次我分别核对了 HEAD 和归档的被测版本。
+
+主 checkout / GitHub HEAD：
+
+YotinGarden/bms-acl，07fa35463d478716c51fd5a291c82a39aaaa96fd
+
+实际源码确认：
+
+userLogin()：第 188 行存在 userTokenDao.deleteByMap(mapper)。
+
+qywxLogin()：第 293 行存在 userTokenDao.deleteByMap(mapper)。
+
+两处之后分别在第 199、304 行执行 token.insert()。
+
+因此，R6 对 HEAD 版本的观察完全正确。
+
+R7 归档的被测工作区版本：
+
+UserServiceImpl 原始内容 SHA256：d83d92dc...645e1c5
+
+归一化后仓库内容 SHA256：1d91da09...383875a
+
+测试文件 SHA256：c070798b...226e30
+
+acl-userServiceImpl-tested-vs-HEAD.diff 明确展示两处 deleteByMap() 被删除，并改为保留其他设备/场景的有效 token。
+
+归档被测版中，token.insert() 实际位于第 195、296 行，与方案标注一致。
+
+所以，R6 指出的两处 deleteByMap() 确实存在于审查方读取的 HEAD，但不在 R7 提供的被测版 UserServiceImpl 中。 删除登录前清 token 的行为正是多设备功能的一部分，不应将旧版调用列入新版本写入清单。
+
+不过还差一个证据闭环：
+
+R7 绑定了 UserServiceImpl 和测试文件的内容哈希，却没有提供该 worktree 的完整变更文件清单。方案中的 UserController.java:633/670、UserTokenServiceImpl.java:50 等调用链，目前仍是按 HEAD 版本核对。尚不能排除被测工作区还有其他未归档的相关修改。
+
+这不是要求再改代码，而是要求把“HEAD + 未提交修改”这个版本范围证明完整。
+
+最小补证要求：
+
+提供该 worktree 的 git status --short 和 git diff --name-only（包含未跟踪文件清单）。
+
+明确确认 UserController、UserTokenServiceImpl 及其相关调用链没有未归档修改；若有，则补对应源码内容哈希或副本。
+
+不需要重做 UserServiceImpl 的 diff，也不需要重新论证 deleteByMap。
+
+完成这项后，才可以对 P1-2 作最终 PASS 裁定。
+
+3. 异步线程终止：通过，实施时保留硬约束
+
+我核对了归档测试文件：
+
+awaitWorkersTermination()：第 215 行。
+
+shutdownNow()：第 233 行。
+
+随后循环等待 executor.isTerminated()：第 234 行。
+
+代码逻辑确实是：
+
+先 shutdown()，在宽限期内等待自然终止。
+
+超时后 shutdownNow()，但不把中断请求当作终止。
+
+继续等待，直到 isTerminated() 为 true 才返回。
+
+中断状态在方法返回前恢复。
+
+因此，工作线程无法终止时，代码会继续等待，不会提前扫描登记或释放文件锁。这符合安全要求，代价是极端情况下测试进程可能一直等待；这是可接受的安全优先取舍。
+
+裁定：PASS_WITH_CONSTRAINTS。实施时必须按实际代码验收，不得用注释代替验证。
+
+最终授权状态
+
+P1-1：PASS，冻结。
+
+P1-2：REWORK，仅补工作区完整变更范围证据。
+
+异步终止：PASS_WITH_CONSTRAINTS。
+
+其余历史通过项：全部冻结。
+
+当前仍然只有方案终审授权。 不允许据此开始代码修改、数据库写入或清理，也不允许重跑测试。
+
+R8 只需补齐 P1-2 的工作区变更范围证明；不需要重新设计双锁、不需要改写方案、不需要重开已通过项。
