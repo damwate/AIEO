@@ -1319,3 +1319,10 @@
 
 - **提交：** bms-acl worktree（分支task/bms-multi-device-login，父=07fa3546）正式变更提交=`0db9b6541ca7ddf867a84f08e900d9fe51f633e5`（7文件：5个已跟踪修改+MultiDeviceLoginIntegrationTest.java+UserTokenTest.java，1061插入/50删除）；提交后worktree干净=被测状态固化，内容绑定不变（实施版223f0565…）。提交信息完整记载被测功能/fixture设施/验收结论与证据链指针。
 - **边界：** 审查方建议"提交独立任务分支保留完整SHA后单独申请合并审查"——本步仅本地提交保留SHA，**未push远端、未合并master、未发布**；合并审查申请须用户拍板（DEC-010）。
+
+### DEC-155b 任务分支重定基最新main并推送（用户指令"提交到分支"；并发版审查交远端Codex）（2026-11-28）
+
+- **用户指令：** 推送前先拉最新main、确保分支从main主分支拉过来；并发版审查交接给远端Codex（用户安排，替代ChatGPT合并审查派单）。
+- **bms-acl：** 拉取发现master前进07fa354→`603ca0d`（仅application-prod.yml配置提交，与7任务文件零冲突）；rebase后`0db9b65`→**`0852e5e`**（内容逐字节不变，SHA更新=DEC-155a绑定由本条承接）；`git push -u origin task/bms-multi-device-login`成功（直连）。
+- **bms-ui：** 直连拉取连续失败（Connection reset）→按L-016候选序（注册表ProxyServer无值、仓config无代理）netstat发现0.0.0.0:14979=SakuraCat先例端口，curl实测TLS+HTTP 200验证通过后一次性`-c http.proxy`使用（零配置写入）；拉取证实master又前进342791f9→**`a65603b2`**（进度回单两提交）。UI任务分支原基=98c71c01（P0热修本地提交，不在master，已由既有分支task/bms-zero-change-audit-hotfix保全不混入）；两文件（MobileOAuthController/FrameCookieUtils，cookie统一30天，内容与worktree被测版逐字节一致、编译PASS先例）首次正式提交=**`83309c78`**（基线a65603b2）；`git push -u origin task/bms-multi-device-login-ui`成功（直连）。
+- **边界：** 仅推送两任务分支保留SHA供审查；未合并master、未发布；两worktree干净。
