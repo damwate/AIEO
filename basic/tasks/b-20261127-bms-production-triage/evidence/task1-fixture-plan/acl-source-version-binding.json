@@ -51,6 +51,12 @@
       "archive": "acl-userController-tested-version.java",
       "sha256_raw_local": "155743a54ef3f0403885d3e7014efb3af7a96f0fcee66184e4f338e80dad1152",
       "sha256_repo_blob_lf": "0cb4f096a1f185a67d3517b3f6eec95af08f477a32f164be47f492b23269e12c"
+    },
+    "UserTokenTest.java": {
+      "archive": "acl-userTokenTest-tested-version.java",
+      "sha256_raw_local": "88907d175fb2bfef5f3031c1fe649a350b86ebe1b99681a00b81dc0133872728",
+      "sha256_repo_blob_lf": "88907d175fb2bfef5f3031c1fe649a350b86ebe1b99681a00b81dc0133872728",
+      "nature": "pure in-memory unit test (32 lines): constructs UserToken POJO, asserts isValid() boundary semantics (null expireTime / past / exact / future / null now). No Spring context, no DB access, no Dao/Service, no writes. Does not touch fixture lifecycle or application write chain."
     }
   }
 }

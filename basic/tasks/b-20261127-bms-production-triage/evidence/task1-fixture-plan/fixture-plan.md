@@ -103,6 +103,13 @@ runid = UUID 去横线取 8 位 hex，每次运行新生成；user_name 与 qywx
       AuthInterceptor.java（token 有效性读路径重构，无写）、UserServiceImpl.java（已归档）；
       新增（未跟踪）=MultiDeviceLoginIntegrationTest.java、UserTokenTest.java。全量 diff=
       acl-worktree-tested-vs-HEAD.diff，清单=acl-worktree-change-scope.txt。
+      **【R9 补·UserTokenTest.java 归档闭环】**：副本 acl-userTokenTest-tested-version.java
+      （raw=blob=`88907d175fb2bfef5f3031c1fe649a350b86ebe1b99681a00b81dc0133872728`）——
+      **32 行纯内存单元测试**：构造 UserToken POJO 断言 isValid() 边界语义（null/过去/恰到期/
+      未来/null now），无 Spring 上下文、无数据库访问、无 Dao/Service、无任何写入；不改变
+      fixture 生命周期与应用写入链路。方案"单测试文件"指 fixture 改造范围
+      （MultiDeviceLoginIntegrationTest.java）；UserTokenTest 为独立既有功能单元测试
+      （=§5 验收目标中的"UserTokenTest PASS"本体），两者互不影响。
       **UserTokenServiceImpl.java 不在修改清单=与 HEAD 一致**，plan 引用（:50 deleteByToken）对
       被测版有效；即写入清单涉及的调用链（UserController/UserServiceImpl/UserTokenServiceImpl）
       在被测工作区无其他未归档修改。
@@ -228,6 +235,8 @@ runid = UUID 去横线取 8 位 hex，每次运行新生成；user_name 与 qywx
 | acl-worktree-change-scope.txt | 被测 worktree 完整变更范围清单（status/diff-name-only/未跟踪/调用链核对） | commit 内 | 1570 |
 | acl-worktree-tested-vs-HEAD.diff | 被测工作区 vs HEAD 全量 diff（5 个修改文件） | commit 内 | 10949 |
 | acl-userController-tested-version.java | 被测版 UserController 工作区副本（raw=155743a5…/blob=0cb4f096…） | binding.json | 30208 |
+| acl-userTokenTest-tested-version.java | 被测版 UserTokenTest 工作区副本（raw=blob=88907d17…，纯内存单元测试无DB无写入） | 同左 | 804 |
+| r8-plan-finalreview-verdict.txt | R8 方案终审裁定（主体证据通过，仅差 UserTokenTest 归档闭环） | `cf1f02e39372f220de7b4075cb40a685cae390583f6f96abf72c0e4b3c63b7bf` | 2845 |
 | acl-userServiceImpl-tested-version.java | 被测版 UserServiceImpl 工作区副本（raw=d83d92dc…645e1c5；repo blob LF=1d91da09…83875a，仅行尾差异） | binding.json | 12595 |
 | acl-multiDeviceLoginIntegrationTest-tested-version.java | 被测版测试文件工作区副本（raw=blob=c070798b…226e30） | 同左 | 18793 |
 | acl-userServiceImpl-tested-vs-HEAD.diff | 被测版 vs HEAD（07fa3546）diff——deleteByMap 移除即被测功能 | commit 内 | 见文件 |
@@ -312,3 +321,19 @@ runid = UUID 去横线取 8 位 hex，每次运行新生成；user_name 与 qywx
   **UserTokenServiceImpl 不在修改清单=与 HEAD 一致**；写入清单涉及调用链
   （UserController/UserServiceImpl/UserTokenServiceImpl）在被测工作区无其他未归档修改。
   §2 版本绑定段已补该范围闭环。
+
+## 12. R8 终审裁定与 R9 最后补证（终审明令：不重做全量 diff、不重审五文件、不动双锁）
+
+- R8 终审（r8-plan-finalreview-verdict.txt，SHA256=
+  `cf1f02e39372f220de7b4075cb40a685cae390583f6f96abf72c0e4b3c63b7bf`）：工作区已跟踪变更范围
+  **已闭合**——5 个修改文件逐一复核一致（pom 仅测试依赖/UserController 无新增写入路径/UserToken
+  仅 isValid/AuthInterceptor 读路径/UserServiceImpl 两处 deleteByMap 已删、被测版登录写入=
+  token.insert()）；被测版 UserController 副本核对 updateById:633 与 deleteByToken:670 属实；
+  UserTokenServiceImpl 未修改=可沿用 HEAD 证据；自动绑定分支不可达结论维持。**唯一剩余缺口**=
+  UserTokenTest.java 无源码归档（git diff 不含未跟踪文件），且需澄清"单测试文件"表述与实际
+  两个新增文件的关系。
+- **R9 补证（本 commit）**：归档 acl-userTokenTest-tested-version.java（raw=blob=
+  `88907d17…3872728`）——32 行纯内存单元测试，仅断言 isValid() 边界（null/过去/恰到期/未来/
+  null now），无 Spring 上下文、无数据库访问、无写入，不改变 fixture 生命周期与应用写入链路；
+  §2 已补该闭环与"单测试文件=fixture 改造范围，UserTokenTest=独立既有功能单元测试（§5 验收
+  目标本体）互不影响"的澄清。

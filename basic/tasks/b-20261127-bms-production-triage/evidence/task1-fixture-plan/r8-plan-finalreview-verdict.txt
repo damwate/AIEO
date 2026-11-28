@@ -1,0 +1,118 @@
+ChatGPT 说：
+R8 复核裁定
+REWORK — 仅剩一项归档缺口
+
+基线：damwate/AIEO，完整 SHA：
+
+44c4444605da0120e8db706dcc2184c526b9da1f
+
+1. 已闭合：工作区已跟踪变更范围
+
+我核对了 acl-worktree-change-scope.txt 和 acl-worktree-tested-vs-HEAD.diff。
+
+5 个已跟踪修改文件与实际 diff 一致：
+
+文件
+
+	
+
+复核结果
+
+
+
+
+pom.xml
+
+	
+
+仅增加 test scope 依赖
+
+
+
+
+UserController.java
+
+	
+
+30 天有效期常量及有效性判断重构；未见新增写入路径
+
+
+
+
+UserToken.java
+
+	
+
+增加 isValid()；无写入
+
+
+
+
+AuthInterceptor.java
+
+	
+
+认证读路径重构；无新增写入
+
+
+
+
+UserServiceImpl.java
+
+	
+
+两处 deleteByMap() 已删除；被测版登录写入为 token.insert()
+
+另外核对了被测版 UserController 副本：
+
+updateById(dbUser) 仍在第 633 行，属于企微自动绑定分支。
+
+deleteByToken(accessToken) 在第 670 行。
+
+UserTokenServiceImpl 未修改，因此其 deleteByToken() 逻辑删除实现仍可沿用 HEAD 证据。
+
+被测版 UserServiceImpl 的 token.insert() 在第 195、296 行。
+
+结合预绑定 fixture 与 mock userid 相同的测试条件，自动绑定分支不可达。当前证据没有显示新增的应用层写入路径。
+
+R8 对此前最重要的缺口——UserController 等调用链是否还有未归档修改——已经给出有效证明。
+
+2. 唯一剩余缺口：第二个未跟踪测试文件没有源码归档
+
+R8 的完整状态清单列出了两个未跟踪文件：
+
+MultiDeviceLoginIntegrationTest.java
+
+UserTokenTest.java
+
+第一个已有归档副本及 SHA，可以核对。
+
+但当前 AIEO 证据目录中没有找到 UserTokenTest.java 的源码副本或内容哈希。git diff 本身也不会包含未跟踪文件。
+
+这不代表它存在问题，只是目前不能把“完整工作区变更范围”认定为源码级证据闭合。另外，原方案写着“仅 MultiDeviceLoginIntegrationTest.java 单测试文件”，与实际新增两个测试文件不完全一致。
+
+3. 最小补证要求
+
+只需补：
+
+UserTokenTest.java 原始源码副本及 SHA256。
+
+简要说明它是纯单元测试，是否访问数据库、是否存在写入；若纯粹测试 UserToken.isValid()，明确写明即可。
+
+在补证说明中澄清：第二个新增文件是独立单元测试，不改变 fixture 生命周期和应用写入链路。
+
+不要求重做全量 diff，不要求重审五个已跟踪文件，也不要求改动双锁设计。
+
+授权状态
+
+P1-1：PASS，冻结。
+
+P1-2：主体证据通过，尚差 UserTokenTest.java 归档闭环。
+
+异步线程终止：PASS_WITH_CONSTRAINTS，冻结实施验收条件。
+
+双锁、清理机制及其他已通过项：冻结。
+
+仍然只有方案终审授权，不允许实施、数据库写入/清理或重跑测试。
+
+R9 只补一个测试文件的源码证据即可。
