@@ -132,6 +132,8 @@ P0/P1 根因已定位到具体代码；P0 具备“生产数据 + nginx动作序
 - **两轮授权测试**：run1=装配级失败（NONE无ServletContext→上下文未起、被测逻辑零执行、基线逐字段零污染），审查批复"R6测试装配处置：PASS，授权实施最小修复并重跑"仅授权NONE→MOCK一词（`dispatch-2026-11-28T04-41-39/reply.txt` SHA256=`c5766d4f…8ac65`）；run2=上下文成功、`accountTokensCoexistAndLogoutOnlyRevokesCurrentToken`端到端PASS、UserTokenTest PASS、4项qywx卡`findQywxBoundUser`前置（dev库180用户qywx绑定数=0）；+2 token逐项对账（均is_deleted=1、现有行零变化）。证据=evidence/task1-test-run{,2}。
 - **R6裁定=fixture选B**（`dispatch-2026-11-28T04-51-29/reply.txt` SHA256=`72b537eb…cd8fa6`）：4项qywx=BLOCKED（非业务FAIL非PASS）；拒绝A一次性INSERT（不可重复、生命周期分离易遗留）；本轮仅授权提交方案。方案=`evidence/task1-fixture-plan/fixture-plan.md`（+user表15列SHOW COLUMNS实测+命名空间零占用预检）；要点=虚构命名空间`acl_it_fixture_<runid8hex>`（user_name UNIQUE逻辑删旧行仍占名→随机防冲突）、最小字段、is_admin显式false、MP @TableLogic链deleteById实为UPDATE逻辑删、@AfterClass token兜底+下轮预检清残留、4处findQywxBoundUser调用点替换、测试体/断言/并发清理零改动、验收=R6裁定四条+5/5。
 
+- **fixture方案R1审查=REWORK（主体保留）→R2修订已提交待复审**：方案简报续派采集fail-closed（INBOUND_START_UNIT_MISSING，send-state=SEND_CONFIRMED）→按L-018派生`recoll_fixtureplan_r1.mjs`补采（三参数核对+reload先行+归属校验七查全过，未重发），reply 6510B SHA256=`ca47ba09…070572`。裁定：九项PASS（含虚构身份/唯一性/最小字段/逻辑删链/调用点替换），两项必改——**P1-1** LIKE中`_`为通配符须改`LEFT(col,CHAR_LENGTH(%s))=%s`参数绑定严格字面前缀（user_name/qywx_user_id两处）；**P1-2** 双进程并发互删风险须MySQL GET_LOCK跨进程互斥（覆盖预检→创建→测试→清理、连接保持、异常/退出释放、fail-closed）。补充：清理顺序固定（先token后用户再释锁）、清理结果验证失败=验收失败、1062不重试保持。修订版=evidence/task1-fixture-plan/fixture-plan.md（R2：§2 P1-1/P1-2落地、§3五步顺序+三项验证）；授权边界=允许提交修订、暂不允许实施。
+
 ## S4 P2 三方商品价格正式比对与业务清单
 
 ①本步骤目标：使用已抓全的BMS/小店/JST原始数据生成可复算、可回链的差异清单，供用户讨论；零同步写入。
