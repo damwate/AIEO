@@ -1,0 +1,21 @@
+{
+  "acl_repo": "YotinGarden/.worktrees/bms-multi-device-login-acl",
+  "branch": "task/bms-multi-device-login",
+  "acl_head_commit": "07fa35463d478716c51fd5a291c82a39aaaa96fd",
+  "tested_source_state": "HEAD + uncommitted working-tree modifications (the feature under test, not yet committed)",
+  "reviewer_readable_version": "YotinGarden/bms-acl main checkout, same HEAD 07fa3546, clean working tree (= GitHub HEAD)",
+  "tested_version_files": {
+    "UserServiceImpl.java": "d83d92dcbcfa965847621e52b1a25dc1bd89a603eec0fe667287a3f9b645e1c5",
+    "MultiDeviceLoginIntegrationTest.java": "c070798b98aae6bad508a0977ccb5303b9638fd68cfae5e9a3f88eba70226e30"
+  },
+  "diff_vs_head": {
+    "file": "acl-userServiceImpl-tested-vs-HEAD.diff",
+    "sha256": "c2076479f04a120865cdd6ad9a288a8a9a524d20ecb1814e1d68d507c09b876b",
+    "summary": "removes userTokenDao.deleteByMap(user_id+app_id) blocks in userLogin(HEAD:184-188) and qywxLogin(HEAD:286-290); replaces getUserAccessToken(name,pwd,..) with secure-random getUserAccessToken()"
+  },
+  "deleteByMap_semantics_HEAD": "MP BaseMapper.deleteByMap = physical DELETE on user_token by user_id+app_id (old single-device behavior); UserTokenDao extends BaseDao<UserToken> with no custom deleteByMap",
+  "tested_version_grep_deleteByMap": "0 hits in UserServiceImpl/login paths; only ApplicationServiceImpl.47 and RelationServiceImpl.54 (unrelated tables)",
+  "verdicts_chain": {
+    "r6_plan_finalreview_verdict": "3fdfa16498b5ff0feffedf5c7e6e51ff059ef3de9678875c2dd90c8d523c5c32"
+  }
+}

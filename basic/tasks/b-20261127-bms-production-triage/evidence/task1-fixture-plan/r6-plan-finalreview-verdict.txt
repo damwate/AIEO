@@ -1,0 +1,165 @@
+ChatGPT 说：
+
+我发现一个需要重点核实的遗漏：R6 的写入清单称 userLogin / qywxLogin 的唯一写入是 token.insert()，但我读取到的 bms-acl UserServiceImpl 实现中，这两个登录方法在插入新 token 之前，还会调用 userTokenDao.deleteByMap(...) 清理该用户、该应用的旧 token。这也是数据库写操作，不能从“全部写入清单”中漏掉。接下来需要确认 R6 所引用的源码版本是否与当前可读取版本一致，以及该清理是否属于本轮测试路径。
+
+还有一个边界需要收紧：System.getProperty("user.home") 是 JVM 系统属性，通常对应 OS 用户主目录，但它可以被启动参数 -Duser.home=... 覆盖，也可能因容器/挂载命名空间而不同。因此“同机同 OS 用户必然争同一文件”应改成有明确前提的结论：同一 OS 用户、相同且不可被 runner 覆盖的 user.home、相同文件系统命名空间。当前方案只声明了 OS 用户边界，还没有把后两个前提写成强制约束。## R6 终审裁定
+
+REWORK 两项尚未全部闭合，暂不授权实施。
+
+基线：damwate/AIEO，commit 48bc9eecf0e1d116ad314b49014171de6878be40；fixture-plan.md blob SHA 476d85c9e618dbdbff93dbd717159b4fffd66c20。
+
+复核项
+
+	
+
+裁定
+
+	
+
+结论
+
+
+
+
+P1-1 user.home 固定锁路径
+
+	
+
+PASS_WITH_CONSTRAINTS
+
+	
+
+已解决 checkout/worktree 路径分裂，但需补足 JVM 属性和文件系统命名空间约束
+
+
+
+
+P1-2 应用层写入清单
+
+	
+
+REWORK
+
+	
+
+漏列 userTokenDao.deleteByMap()，当前不能认定写入清单完整
+
+
+
+
+异步线程终止
+
+	
+
+PASS_WITH_CONSTRAINTS
+
+	
+
+方案所述无时限等待逻辑成立，但最终实施必须保留“线程实际终止后才能释放文件锁”的条件
+
+
+
+
+保护边界区分
+
+	
+
+PASS
+
+	
+
+已正确区分 L 会话保护与文件锁生命周期保护，没有再宣称全部写入由 L 保护
+
+P1-1：路径方案基本通过，补充约束即可冻结
+
+user.home/.acl-it/acl-it-fixture-mutex.lock 不再依赖 checkout、worktree 或 runner 工作目录，方向正确。
+
+但 System.getProperty("user.home") 是 JVM 属性，并非不可覆盖的 OS 身份标识。请在方案中明确：
+
+本轮 runner 禁止通过 -Duser.home 指定不同路径，也不允许运行期间修改该属性。
+
+所有纳入本轮互斥范围的进程，必须使用同一个规范化后的 user.home 路径和同一文件系统命名空间。
+
+目录创建、路径解析、文件打开或锁获取任一步失败，都必须 fail-closed。
+
+边界仍可声明为跨 OS 用户、跨主机及不同文件系统命名空间不覆盖。满足上述约束后，P1-1 可以冻结，不必再更换锁机制。
+
+P1-2：遗漏登录前的旧 token 清理
+
+我读取了 YotinGarden/bms-acl 可访问的 UserServiceImpl.java 实现，发现：
+
+userLogin() 在 token.insert() 前执行 userTokenDao.deleteByMap(mapper)。
+
+qywxLogin() 同样在 token.insert() 前执行 userTokenDao.deleteByMap(mapper)。
+
+也就是说，实际写入链路应至少列为：
+
+业务路径
+
+	
+
+数据库写操作
+
+
+
+
+userLogin
+
+	
+
+userTokenDao.deleteByMap() + token.insert()
+
+
+
+
+qywxLogin
+
+	
+
+userTokenDao.deleteByMap() + token.insert()
+
+
+
+
+logout
+
+	
+
+userTokenService.deleteByToken()
+
+
+
+
+qywxOAuthLogin 自动绑定分支
+
+	
+
+userService.updateById()，按 fixture 预绑定与 mock 条件应不可达
+
+R6 目前只把前两条路径的 token.insert() 列为写入，漏掉了两次 deleteByMap()。即使它们最终只影响当前 fixture 用户的 token，这仍然是应用层数据库写操作，必须进入清单和生命周期证明。
+
+请补充：
+
+两处 deleteByMap() 的准确调用位置及其 SQL/逻辑删除语义。
+
+说明它们只针对当前 fixture 的 user_id + app_id，不会扩大到其他用户。
+
+明确它们与 token.insert() 一样，均发生在文件锁保护窗内。
+
+将 ACL 源码和测试源码的完整 commit SHA 写入证据，避免仅凭文件行号绑定代码版本。
+
+异步部分还要保留一个实施验收条件：awaitWorkersTermination 必须在所有返回路径上确认 executor 已终止；如果线程无法终止，就只能继续等待或让本轮失败，不能提前释放文件锁。实施时需按实际代码验证，不能只凭方案注释认定。
+
+授权状态
+
+P1-1：有条件通过，补充约束后冻结。
+
+P1-2：REWORK，仅补全遗漏写入及源码版本证据。
+
+其他历史已通过项：冻结，不重开。
+
+代码修改、数据库写入、清理、测试重跑：均未授权。
+
+R6 原有端到端 PASS 证据继续有效；4 项 qywx 测试仍未完成，不计入 PASS。
+
+请 R7 只处理 P1-2，并补齐 P1-1 的约束文字。不要重做双锁设计，也不要改动已冻结部分。

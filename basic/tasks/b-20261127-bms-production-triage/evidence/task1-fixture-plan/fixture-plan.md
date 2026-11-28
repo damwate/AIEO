@@ -11,7 +11,13 @@ R4 终审 REWORK 唯一遗留=核验与破坏性操作间 TOCTOU 竞态（r4-pla
 R5 终审 REWORK 两项（r5-plan-finalreview-verdict.txt，SHA256=
 `3bfde7d4cd6f2ec74a7e0fc5dad1bc2e3fc949b4043a5e185bdf935acd2e208e`：P1-1 文件锁路径随工作目录变化非单机全局、
 P1-2 应用层写入未证明纳入保护；并明令冻结已通过项）→
-本 R6=**固定机器级文件锁路径（user.home 锚定）+ 应用层写入生命周期证明（代码实证）**，其余已通过项一概不动。
+本 R6=**固定机器级文件锁路径（user.home 锚定）+ 应用层写入生命周期证明（代码实证）**，其余已通过项一概不动 →
+R6 终审（r6-plan-finalreview-verdict.txt，SHA256=
+`3fdfa16498b5ff0feffedf5c7e6e51ff059ef3de9678875c2dd90c8d523c5c32`）：P1-1=PASS_WITH_CONSTRAINTS
+（补 JVM 属性与文件系统命名空间约束后冻结）、异步终止=PASS_WITH_CONSTRAINTS（补实施验收条件）、
+保护边界区分=PASS；**P1-2=REWORK——写入清单漏列 userTokenDao.deleteByMap()**（审查方所读版本含此调用）→
+本 R7=**版本绑定（被测版=工作区修改版，审查方所读=HEAD/GitHub 版；deleteByMap 的移除正是被测功能本身）
++ P1-1 约束文字补齐**，双锁设计与已冻结部分不动（终审明令）。
 状态：**仅方案修订，未实施**。授权边界：通过前不改代码、不执行 INSERT、不重跑测试。
 范围：仅 `MultiDeviceLoginIntegrationTest.java` 单测试文件；业务代码、生产配置、测试断言零改动；
 运行方式与命令不变（`python -I runtime/run_acl_tests.py`）。
@@ -68,27 +74,50 @@ runid = UUID 去横线取 8 位 hex，每次运行新生成；user_name 与 qywx
     R5 旧路径（测试模块 `target/`）随 checkout/worktree/runner 工作目录变化，同机不同目录各自得锁、
     互斥不闭合（终审 P1-1 场景），废止。user.home 由 OS 用户账户决定，与 checkout/worktree/工作目录
     无关：**同机所有以同一 OS 用户身份启动的测试进程必然竞争同一把锁**（同一 JVM 内重复获取触发
-    OverlappingFileLockException，同样 fail-closed）。如实声明的边界：跨 OS 用户并发与跨主机并发
-    均不在本轮范围（runner 本机单用户本地执行，run_acl_tests.py），两项作为约束声明，不宣称全覆盖。
+    OverlappingFileLockException，同样 fail-closed）。**【R6 终审 P1-1 有条件通过的冻结约束】**：
+    ① runner 禁止以 `-Duser.home` 启动参数指定不同路径，运行期禁止修改该系统属性（runner
+    与测试代码均不得设置）；② 纳入本轮互斥范围的所有进程必须使用同一规范化后的 user.home
+    路径与同一文件系统命名空间；③ 目录创建、路径解析、文件打开、锁获取任一步失败均 fail-closed。
+    如实声明的边界（扩展后）：**跨 OS 用户、跨主机、不同文件系统命名空间均不覆盖**（runner
+    本机单用户本地执行，run_acl_tests.py），不宣称全覆盖。
     锁文件在 user.home 下，repo 之外，天然不入 Git。FileChannel 存 static 字段，@AfterClass finally
     中释放并关闭；JVM 进程死亡由 OS 释放（本地文件系统可靠）。**作用：A 进程存活期间 B 完全无法进入
     生命周期——即使 A 的锁会话已死，B 也拿不到文件锁**（终审 P1-1 场景 A 活跃+B 换目录得锁 被排除；
     若 A 崩溃则文件锁与 MySQL 会话同时释放，B 由预检清理残留，与既有设计一致）。
-  - **【R6·应用层写入生命周期证明（回应终审 P1-2）】**：被测业务流经应用连接池的写入不受 L 会话绑定
-    保护，其保护唯一依据=文件锁覆盖整个生命周期，逐项实证如下：
-    - **写入清单（代码实测）**：userLogin 与 qywxLogin 的唯一业务写入=`token.insert()`（user_token
-      INSERT；UserServiceImpl.java:195 / :296）；logout 的唯一业务写入=`userTokenService.deleteByToken`
-      （user_token 逻辑删；UserController.java:670 → UserTokenServiceImpl.java:50 `this.delete`）；
-      qywxOAuthLogin 另有手机号自动绑定分支 `userService.updateById(dbUser)`（UserController.java:633），
+  - **【R6/R7·应用层写入生命周期证明（回应终审 P1-2；R7 版本绑定修订）】**：被测业务流经应用连接池的
+    写入不受 L 会话绑定保护，其保护唯一依据=文件锁覆盖整个生命周期。**写入清单必须按源码版本绑定陈述**
+    （R6 终审指出清单漏列 deleteByMap——经核实那是版本差异，不是清单遗漏于被测版）：
+    - **版本绑定（acl-source-version-binding.json，R7 新增证据）**：被测源码=worktree
+      `task/bms-multi-device-login`（HEAD=`07fa35463d478716c51fd5a291c82a39aaaa96fd` **+ 未提交工作区
+      修改**——被测功能本身尚未提交，故以内容 SHA256 绑定：UserServiceImpl.java=
+      `d83d92dcbcfa965847621e52b1a25dc1bd89a603eec0fe667287a3f9b645e1c5`（副本
+      acl-userServiceImpl-tested-version.java）、MultiDeviceLoginIntegrationTest.java=
+      `c070798b98aae6bad508a0977ccb5303b9638fd68cfae5e9a3f88eba70226e30`，diff 归档
+      acl-userServiceImpl-tested-vs-HEAD.diff）。审查方所读=YotinGarden/bms-acl 主 checkout（HEAD
+      相同、工作区干净=GitHub HEAD 版）。
+    - **被测版写入清单（本轮唯一有效清单）**：userLogin 唯一业务写入=`token.insert()`
+      （UserServiceImpl.java:195）；qywxLogin 唯一业务写入=`token.insert()`（:296）；**被测版不存在
+      `userTokenDao.deleteByMap`**——HEAD 版 184-188/286-290 两块（物理 DELETE user_id+app_id，MP
+      BaseMapper.deleteByMap，旧单设备行为）在工作区修改中已删除，grep 全仓登录路径 0 命中（仅
+      ApplicationServiceImpl:47/RelationServiceImpl:54 无关表）；**删除"登录前清 token"正是被测功能
+      本身（多设备/多会话并存）**。logout 唯一业务写入=`userTokenService.deleteByToken`（user_token
+      逻辑删；UserController.java:670 → UserTokenServiceImpl.java:50 `this.delete`）。
+      qywxOAuthLogin 手机号自动绑定分支 `userService.updateById(dbUser)`（UserController.java:633）
       **fixture 测试下不可达**：mock `getUserInfoByCode` 返回虚构 userid=`acl_it_fixture_<runid>`、
-      fixture 预绑定同一值 → 控制器第 2 步 selectOne 直接命中，dbUser 永不为 null，分支不进入；
-      mock 不回调真实 API 为既有约束。三类业务流其余全部为只读查询（区域/角色/用户查询），无其他写入。
+      fixture 预绑定同一值 → 控制器第 2 步 selectOne 直接命中，dbUser 永不为 null；mock 不回调真实
+      API 为既有约束。三类业务流其余全部为只读查询，无其他写入。
+    - **审查方所读版本（HEAD/GitHub）写入清单**：userLogin/qywxLogin=`userTokenDao.deleteByMap`
+      （HEAD:188/:293，物理 DELETE）+`token.insert()`——审查方 R6 观察对该版本**正确**，该清单不适用
+      于被测版，特此并列声明以闭合版本分歧。
     - **时间窗论证**：文件锁在 @BeforeClass 第一语句获取（先于一切测试代码与业务调用），于 @AfterClass
       finally 中清理与验证全部完成后释放——同步业务写入全部发生在测试方法体内，必然处于锁窗内。
     - **异步闭合论证**：并发测试 executor 为方法级局部变量；`awaitWorkersTermination` 第二阶段
       shutdownNow 后**无时限等待 `isTerminated()`**（MultiDeviceLoginIntegrationTest.java:233-240），
       任何返回路径下工作线程都已实际终止；兜底登记在终止确认后扫描——不存在"登记后仍新增 token"或
       "释放文件锁后仍有业务写入"的窗口；测试类无其他常驻线程/Timer/Scheduled（grep 实测仅此类局部 executor）。
+      **【R6 终审补·实施验收条件】**：实施时必须对照实际代码验证 awaitWorkersTermination 在所有
+      返回路径上确认 executor 已实际终止（不得只凭方案注释认定）；线程无法终止时只能继续等待或使
+      本轮失败，**不得提前释放文件锁**——此条件列入 §5 验收。
     - **如实声明的保护边界（终审明令不得宣称全由 L 保护）**：测试自有写入（fixture INSERT/残留清理/
       token 吊销/用户逻辑删除/验证）=L 会话绑定保护（会话死=语句不可能执行）；被测业务流写入
       （上列清单）=不受 L 保护，靠**文件锁互斥窗内执行+异步终止证明**约束；A 进程在 L 失效且文件锁
@@ -161,6 +190,8 @@ runid = UUID 去横线取 8 位 hex，每次运行新生成；user_name 与 qywx
   （fixture 行 pre/post、LEFT 前缀命名空间活跃计数 pre/post）。
 - 验收目标（=R6 裁定四条）：5/5 PASS；UserTokenTest PASS；全部测试 token 已吊销；
   fixture 用户已逻辑删除；现有数据无非预期变化。**清理验证失败=本轮验收失败**（复审补充要求 2）。
+- **【R7 新增·异步实施验收条件】**：实施版须以实际代码验证 awaitWorkersTermination 所有返回
+  路径确认 executor 已实际终止；无法终止=继续等待或本轮失败，绝不提前释放文件锁（R6 终审约束）。
 - 净留痕：每次运行后新增 1 行 is_deleted=1 fixture 用户 + 本轮 token（均 is_deleted=1，前缀可识别）。
 
 ## 6. 风险与禁止事项（复审补充要求 3：1062 处理保持原样）
@@ -181,6 +212,10 @@ runid = UUID 去横线取 8 位 hex，每次运行新生成；user_name 与 qywx
 | r3-plan-finalreview-verdict.txt | R3 方案终审裁定（REWORK：锁失效边界+归档修正） | `2cb4fc175a5a9dbfefc0f3183822e048b7b4e683a0155fa22e8b5fc31106ea60` | 7483 |
 | r4-plan-finalreview-verdict.txt | R4 方案终审裁定（REWORK：核验与破坏性操作间 TOCTOU） | `39f80914258570d2137efc92775a314c774c8647f60d47075d0ff8a5b2784ece` | 3753 |
 | r5-plan-finalreview-verdict.txt | R5 方案终审裁定（REWORK：文件锁路径非单机全局+应用层写入未证明纳入保护） | `3bfde7d4cd6f2ec74a7e0fc5dad1bc2e3fc949b4043a5e185bdf935acd2e208e` | 5169 |
+| r6-plan-finalreview-verdict.txt | R6 方案终审裁定（P1-2 REWORK：漏列 deleteByMap=版本分歧；P1-1 有条件通过） | `3fdfa16498b5ff0feffedf5c7e6e51ff059ef3de9678875c2dd90c8d523c5c32` | 4754 |
+| acl-userServiceImpl-tested-version.java | 被测版 UserServiceImpl 工作区副本（SHA256=d83d92dc…645e1c5） | 同左 | 12595 |
+| acl-userServiceImpl-tested-vs-HEAD.diff | 被测版 vs HEAD（07fa3546）diff——deleteByMap 移除即被测功能 | commit 内 | 见文件 |
+| acl-source-version-binding.json | 版本绑定：分支/HEAD/两版清单/SHA256/grep 结论 | commit 内 | 见文件 |
 
 错名修正说明：原 `r3-review-reply.txt` 实际内容为 R2 复审 reply，终审（R3 裁定二·C）指出后已按内容
 更名为 `r2-plan-review-verdict.txt` 并新增真正的 R3 终审 reply `r3-plan-finalreview-verdict.txt`；
@@ -217,3 +252,26 @@ runid = UUID 去横线取 8 位 hex，每次运行新生成；user_name 与 qywx
   实际终止，锁释放前不存在在途业务写入。保护边界如实区分（测试自有写入=L 会话绑定；业务流
   写入=文件锁窗+异步终止证明），未宣称全部破坏性操作都由 L 保护；未增加任何操作前核验次数
   （终审明令禁止以加核验替代证明）。
+
+## 10. R6 终审裁定与 R7 回答（终审明令：只处理 P1-2 + P1-1 约束文字，双锁设计与冻结部分不动）
+
+- R6 终审裁定（r6-plan-finalreview-verdict.txt，SHA256=
+  `3fdfa16498b5ff0feffedf5c7e6e51ff059ef3de9678875c2dd90c8d523c5c32`）：P1-1 user.home 固定锁路径
+  =PASS_WITH_CONSTRAINTS（补 JVM 属性与文件系统命名空间约束后可冻结，不必再换锁机制）；异步线程
+  终止=PASS_WITH_CONSTRAINTS（实施必须保留"线程实际终止后才能释放文件锁"，按实际代码验证）；
+  保护边界区分=PASS；**P1-2=REWORK——写入清单漏列 userTokenDao.deleteByMap()**。
+- **R7 对 P1-2 的回答（版本绑定闭合分歧）**：审查方观察属实但适用对象不同——其读取的
+  YotinGarden/bms-acl 主 checkout=HEAD `07fa3546`（GitHub 版，工作区干净），该版 userLogin/qywxLogin
+  确在 token.insert() 前执行 `userTokenDao.deleteByMap(mapper)`（HEAD:188/:293，MP BaseMapper
+  deleteByMap=物理 DELETE user_id+app_id，旧单设备行为）。**被测源码=worktree task/bms-multi-device-login
+  工作区（同 HEAD+未提交修改），该两块已删除，grep 登录路径 0 命中**——删除"登录前清 token"正是
+  被测功能本身（多设备/多会话并存）。被测版以内容 SHA256 绑定（UserServiceImpl=d83d92dc…、
+  测试文件=c070798b…）并归档源码副本+diff+binding.json（§7）。两版清单在 §2 并列陈述，被测版
+  清单不变：userLogin/qywxLogin 仅 token.insert()（:195/:296）、logout 仅 deleteByToken 逻辑删
+  （:670）、绑定分支 :633 不可达。
+- **R7 对 P1-1 的回答**：按终审三条冻结约束补齐 §2 文字——①runner 禁止 `-Duser.home` 覆盖与
+  运行期修改该属性；②互斥范围内所有进程必须使用同一规范化 user.home 与同一文件系统命名空间；
+  ③目录创建/路径解析/文件打开/锁获取任一步失败 fail-closed；边界扩展声明=跨 OS 用户/跨主机/
+  不同文件系统命名空间均不覆盖。锁机制不再更换。
+- **异步实施验收条件**已写入 §2/§5：实施时以实际代码验证 awaitWorkersTermination 所有返回路径
+  确认 executor 实际终止；无法终止=继续等待或本轮失败，绝不提前释放文件锁。
