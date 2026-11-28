@@ -1304,3 +1304,12 @@
 - **实施披露（非静默变更）：** ①双锁获取钩子@BeforeClass→@Before（JUnit4+SpringRunner静态方法无法访问注入DataSource；获取时序/fail-closed/锁窗口语义不变，窗口覆盖全部测试强于冻结）；②@After吊销通道应用层→锁连接L（§2冻结条款）；③R4入口核验实施于三处+@After加严；④基线脚本补fixture维度+修复stdin双用途陷阱（python3 -吃掉JSON stdin→scp+PYTHONPATH=/tmp/pylib，AIEO任务侧工具只读）。
 - **验收材料：** evidence/task1-fixture-impl/（八项交付：前后文件+SHA/diff+变更范围/33行双锁证据/异步终止依据/完整日志+exit0/pre-post基线+对账JSON/清理结果/impl-acceptance-report.md）。实施方自检8/8 PASS，提交审查方会话6b0a741f独立复核；验收通过不自动获得main合并/生产发布权限。
 - **授权边界遵守：** 仅改授权文件（实施后git status与冻结归档一致）；业务代码/生产配置零触碰；断言原样（5个@Test方法体除4处调用点替换外零改动）；零物理DELETE；1062未配置重试；ST-05=IN_PROGRESS无FAIL。
+
+
+### DEC-155 实施独立验收=PASS（R1一轮收敛，8/8全过零REWORK）；P1-2节点闭环（2026-11-28）
+
+- **验收裁定：** 实施验收简报（1181B）采集fail-closed（第3次INBOUND_START_UNIT_MISSING，send-state=SEND_CONFIRMED）→按L-018派生`recoll_implaccept.mjs`补采（CONV_UUID=6b0a741f…不变/MARKER=[实施验收提交|/PREV_SHA=7ca5ce96…），reload先行+七查全过未重发，reply 5019B SHA256=`88d2eb0acb174de0b20426135e156331e6cec5fe1d71776f1045ad47c6de886f`（存档impl-acceptance-verdict.txt）。**裁定：实施独立验收PASS，R1=8/8全过，无REWORK代码问题。**
+- **独立核验要点：** ①变更范围=仅1新增提交（fe34d934…），未发现借实施之名改业务代码/生产配置；②双锁实际代码逐项确认（user.home锚定/连接L autocommit/GET_LOCK=1/fail-closed/入口探活+归属核验/RELEASE_LOCK=1/释放顺序），特别确认未把GET_LOCK成功历史当持续持锁证明；③**异步终止（本轮重点）=awaitWorkersTermination与R9冻结归档版逐行比对完全一致**，所有返回路径以实际终止为前提——PASS_WITH_CONSTRAINTS条款落地；④fixture创建清理=LEFT前缀无LIKE/精确唯一预检/L上INSERT/userId立即登记/先token后用户/a-b-c验证/零物理DELETE/零1062重试；⑤两项实施披露均接受（@Before钩子=JUnit4生命周期限制、锁覆盖反而延伸未弱化；@After走L=R5冻结要求）；⑥DB对账复核（23→23/1→1/新增2均逻辑删/零状态变化/fixture is_deleted=1）。
+- **保留约束（不构成REWORK）：** 文件锁边界=同OS用户/同规范化user.home/同文件系统命名空间（跨OS用户/跨主机不覆盖）；极端情况异步线程可能无限等待=冻结方案安全优先取舍；对账=测试环境证据不代表生产验证。
+- **权限边界：** 允许将实施标记为验收完成；未授权合并BMS master、未授权生产发布。审查方建议=将worktree正式变更提交独立任务分支保留完整SHA后单独申请合并审查；建议本轮关闭，不再改fixture方案或测试代码。
+- **P1-2节点状态：** fixture方案审查循环（R1→R9）+实施授权+实施+独立验收 全链闭环；4项qywx=PASS；5/5集成+1/1单元。待办=worktree任务分支提交（实施方节点自主推进）+合并审查申请（须用户拍板，DEC-010）。
