@@ -1,8 +1,10 @@
-# qywx fixture 自建自清方案（B 方案，修订版 R2）—— P1 任务1 测试代码修改计划
+# qywx fixture 自建自清方案（B 方案，修订版 R3·终审轮）—— P1 任务1 测试代码修改计划
 
-提交轮次：R6-B 方案复审 REWORK 后修订（复审 reply=`phase0/logs/recoll-fixtureplan-r1/reply.txt`，
-6510B，SHA256=`ca47ba09934dec14a3fcdf22d568fc6116f43288a915630b1708156c6b070572`，会话 6b0a5e02）
-状态：**仅方案修订，未实施**。授权边界：复审通过前不改代码、不执行 INSERT、不重跑测试。
+提交轮次：R1 审查 REWORK（P1-1/P1-2）→ R2 修订 → R2 复审主体通过（P1-1/P1-2 基本成立，
+reply=`phase0/logs/dispatch-2026-11-28T05-15-59/reply.txt`，5295B，
+SHA256=`5f253f4d7e828aabd9172d6a8f6e8768c0dd81670fb3687d8d3d6d6cd3871976`）→ 本 R3 仅补齐三项
+异常生命周期（try/finally 释锁+核验返回值、部分初始化可清理、锁连接异常三态），不重开已通过事项。
+状态：**仅方案修订，未实施**。授权边界：终审通过前不改代码、不执行 INSERT、不重跑测试。
 范围：仅 `MultiDeviceLoginIntegrationTest.java` 单测试文件；业务代码、生产配置、测试断言零改动；
 运行方式与命令不变（`python -I runtime/run_acl_tests.py`）。
 
@@ -34,30 +36,38 @@ runid = UUID 去横线取 8 位 hex，每次运行新生成；user_name 与 qywx
   LIKE——其语义偏宽（多匹配方向），"零占用"结论不受影响；实施版一律 LEFT 字面前缀。
 - **【P1-2 新增】跨进程互斥（MySQL 命名锁）**：@BeforeClass 第一步（先于残留检查）用 dataSource
   独立连接（autocommit=true，仅用于锁，不承载业务 SQL）执行 `SELECT GET_LOCK('acl_it_fixture_mutex', 0)`：
-  - 返回 1 → 持锁继续；返回 0 或 NULL → **fail-closed 抛异常，本轮测试不执行、不清残留、不创建 fixture**。
-  - 持锁连接存 static 字段，覆盖残留检查→创建→4 测试生命周期→清理→验证全程。
-  - 释放：@AfterClass 清理与验证全部完成后 `SELECT RELEASE_LOCK(...)` 再关连接。
+  - 返回 1 → 持锁继续；返回 0 或 NULL 或获取过程抛异常 → **fail-closed：关闭该未持锁连接并抛异常，
+    本轮不扫描、不清理、不创建**。
+  - 持锁连接存 static 字段，同一连接持有至清理验证完成，覆盖残留检查→创建→4 测试生命周期→清理→验证全程。
+  - **持锁连接失效（测试中途检测到连接异常）→ 立即终止测试并如实失败，不得换连接后假定仍持锁**。
+  - 释放：@AfterClass 清理与验证全部完成后 `SELECT RELEASE_LOCK(...)` 再关连接（try/finally 结构见 §3）。
   - 异常/进程退出安全：@AfterClass 即使 @BeforeClass 失败仍执行（JUnit4 ClassRoadie）；锁未持有则
     清理逻辑整体跳过（无对象可清）；进程崩溃时 MySQL 会话断开、GET_LOCK 自动释放——三个退出路径均不依赖文档声明。
   - 锁仅用于测试进程互斥，不做任何生产业务逻辑。
 - **token 清理**：每测试 `@After` 对登记 token `deleteByToken` 吊销（既有机制）；
   @AfterClass 按 fixture userId 兜底吊销剩余活跃 token。
 
-## 3. 清理顺序固定与结果验证（复审补充要求 1/2）
+## 3. 清理顺序固定、try/finally 释锁与结果验证（R2 复审补充要求 + R3 异常生命周期补齐）
 
-@AfterClass 顺序固定为（先 token 后用户，不先删用户再找 token）：
+@AfterClass 整体为 **try/finally**：
 
-1. 若 fixture 未创建（@BeforeClass 持锁前失败）→ 跳过清理，仅尝试释放锁（若持有）。
-2. 按 fixture userId 查询活跃 token → 全部 deleteById 逻辑吊销（user_token 同为 @TableLogic 链路）。
-3. `userService.deleteById(fixture)` 逻辑删除用户。
-4. **清理结果验证（jdbc 只读，任一失败即抛异常使本轮验收失败并输出残留行审计信息
-   id/user_name/计数，不含敏感值）**：
-   a) fixture 用户行存在且 is_deleted=1（行仍在=未发生物理 DELETE）；
-   b) fixture userId 名下全部 token is_deleted=1（无活跃残留）；
-   c) LEFT 前缀命名空间（user_name 与 qywx_user_id 两列）无 is_deleted=0 非预期活跃记录。
-5. `RELEASE_LOCK` + 关闭持锁连接。
-
-每测试 `@After` 吊销登记 token 的既有顺序不变；两级清理均不物理 DELETE。
+- **try（顺序固定，先 token 后用户，不先删用户再找 token）**：
+  1. 若 fixture 未创建（@BeforeClass 持锁前失败）→ 跳过清理，无对象可清。
+  2. 按 fixture userId 查询活跃 token → 全部 deleteById 逻辑吊销（user_token 同为 @TableLogic 链路）。
+  3. `userService.deleteById(fixture)` 逻辑删除用户。
+  4. **清理结果验证（jdbc 只读，任一失败即抛异常使本轮验收失败并输出残留行审计信息
+     id/user_name/计数，不含敏感值）**：
+     a) fixture 用户行存在且 is_deleted=1（行仍在=未发生物理 DELETE）；
+     b) fixture userId 名下全部 token is_deleted=1（无活跃残留）；
+     c) LEFT 前缀命名空间（user_name 与 qywx_user_id 两列）无 is_deleted=0 非预期活跃记录。
+- **finally（无论 try 中 token 清理、用户逻辑删除或验证是否抛异常都执行）**：
+  - 若曾持锁：`SELECT RELEASE_LOCK('acl_it_fixture_mutex')` 并**核验返回值=1**；
+    释放失败必须记录并使本轮验收失败，不静默忽略。
+  - 关闭持锁连接（连接已死则按已关闭处理并记录）。
+- **部分初始化必须可清理（R3 补齐）**：fixture INSERT 成功后**立即**将 user_name / qywx_user_id /
+  生成的 userId 写入 static 字段（先于回读断言）；即使后续回读或断言失败，@AfterClass 仍按 static
+  字段定位并清理该 fixture——不因创建方法未完整返回而跳过清理。
+- 每测试 `@After` 吊销登记 token 的既有顺序不变；两级清理均不物理 DELETE。
 
 ## 4. 测试改造点（单文件，仅调用点替换）——复审 PASS 原样保留
 
