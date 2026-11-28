@@ -237,6 +237,7 @@ runid = UUID 去横线取 8 位 hex，每次运行新生成；user_name 与 qywx
 | acl-userController-tested-version.java | 被测版 UserController 工作区副本（raw=155743a5…/blob=0cb4f096…） | binding.json | 30208 |
 | acl-userTokenTest-tested-version.java | 被测版 UserTokenTest 工作区副本（raw=blob=88907d17…，纯内存单元测试无DB无写入） | 同左 | 804 |
 | r8-plan-finalreview-verdict.txt | R8 方案终审裁定（主体证据通过，仅差 UserTokenTest 归档闭环） | `cf1f02e39372f220de7b4075cb40a685cae390583f6f96abf72c0e4b3c63b7bf` | 2845 |
+| r9-plan-finalreview-verdict.txt | R9 方案终审裁定（**PASS，P1-2 正式闭环，方案终审结束**） | `f230f10a5f4a47419bae421899b4add1a4127a439bb3764408e540eb782408b0` | 2601 |
 | acl-userServiceImpl-tested-version.java | 被测版 UserServiceImpl 工作区副本（raw=d83d92dc…645e1c5；repo blob LF=1d91da09…83875a，仅行尾差异） | binding.json | 12595 |
 | acl-multiDeviceLoginIntegrationTest-tested-version.java | 被测版测试文件工作区副本（raw=blob=c070798b…226e30） | 同左 | 18793 |
 | acl-userServiceImpl-tested-vs-HEAD.diff | 被测版 vs HEAD（07fa3546）diff——deleteByMap 移除即被测功能 | commit 内 | 见文件 |
@@ -337,3 +338,22 @@ runid = UUID 去横线取 8 位 hex，每次运行新生成；user_name 与 qywx
   null now），无 Spring 上下文、无数据库访问、无写入，不改变 fixture 生命周期与应用写入链路；
   §2 已补该闭环与"单测试文件=fixture 改造范围，UserTokenTest=独立既有功能单元测试（§5 验收
   目标本体）互不影响"的澄清。
+
+## 13. R9 终审=PASS，方案终审结束（循环 R1→R9 收敛，2026-11-28）
+
+- R9 终审（r9-plan-finalreview-verdict.txt，SHA256=
+  `f230f10a5f4a47419bae421899b4add1a4127a439bb3764408e540eb782408b0`）：五项全 PASS（源码归档/
+  内容完整性/数据库及写入风险/测试范围/单测试文件表述），R8 最小补证要求全部满足。
+  **最终状态：P1-1=PASS 冻结；P1-2=PASS 冻结；R9=PASS；异步线程终止=PASS_WITH_CONSTRAINTS
+  （冻结实施验收条件）；双锁、清理机制及此前通过项=维持冻结。整体方案 PASS_WITH_CONSTRAINTS。**
+- **授权边界（终审原文要点）：本轮仅通过方案终审，不构成实施授权。** 仍禁止：修改 BMS 代码、
+  执行 fixture INSERT 或数据库清理、重跑 run_acl_tests.py、擅改已冻结双锁及清理机制。
+  进入实施必须另行明确授权；实施验收须核对实际代码中的异步线程终止、锁释放和清理结果，
+  不能以方案 PASS 替代实施验收。
+- 标识命名澄清（终审指出，不影响闭环）：内容 SHA256（88907d17…）与 Git blob 对象 SHA-1
+  （UserTokenTest=2026606cd19aaf8cc9b63f3e6f2feb30070a67ef，实测一致）为两类摘要；
+  binding.json 已补各归档文件的 git_blob_sha1 字段并澄清命名。
+- 循环轨迹：R1 REWORK（LIKE/互斥）→R2 主体通过+三补→R3 REWORK（失锁边界+归档错名）→
+  R4 REWORK（TOCTOU）→R5 REWORK（锁路径+应用层写入）→R6 REWORK（deleteByMap 版本分歧）→
+  R7 REWORK（工作区变更范围）→R8 REWORK（UserTokenTest 归档）→**R9 PASS**。九轮裁定
+  reply 全部存档于 §7 索引，SHA256 链完整。

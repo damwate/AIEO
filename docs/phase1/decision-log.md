@@ -1274,3 +1274,11 @@
 - **R8终审：** `dispatch-2026-11-28T06-14-14/reply.txt`（2845B，SHA256=`cf1f02e39372f220de7b4075cb40a685cae390583f6f96abf72c0e4b3c63b7bf`，存档r8-plan-finalreview-verdict.txt）。裁定：工作区已跟踪变更范围**已闭合**（5修改文件逐一复核一致；被测版UserController副本核对updateById:633/deleteByToken:670属实；UserTokenServiceImpl未修改可沿用HEAD证据；自动绑定分支不可达维持）；**唯一剩余=UserTokenTest.java无源码归档**（git diff不含未跟踪文件）+需澄清"单测试文件"与实际两个新增文件的关系。终审明令：不重做全量diff、不重审五文件、不动双锁。
 - **R9补证（本commit）**：UserTokenTest.java=32行纯内存单元测试（仅断言isValid()边界：null/过去/恰到期/未来/null now，无Spring上下文/无DB/无Dao Service/无写入），副本acl-userTokenTest-tested-version.java归档（raw=blob=`88907d175fb2bfef5f3031c1fe649a350b86ebe1b99681a00b81dc0133872728`），binding.json补条目；§2补闭环+"单测试文件=fixture改造范围、UserTokenTest=独立既有功能单元测试（§5验收'UserTokenTest PASS'本体）互不影响"澄清；§7补两行；新增§12。
 - **授权状态不变：** 仅方案终审授权；实施/写入/清理/重跑未授权。
+
+### DEC-152 fixture方案R9终审=PASS，方案终审结束（R1→R9循环收敛）；待单独实施授权（2026-11-28）
+
+- **R9终审：** `dispatch-2026-11-28T06-19-25`简报（968B）采集fail-closed→按L-018派生`recoll_fixtureplan_r9.mjs`补采（CONV_UUID=6b0a651f…不变/MARKER=[R6-B R9补证|/PREV_SHA=cf1f02e3…），七查全过未重发，reply 2601B SHA256=`f230f10a5f4a47419bae421899b4add1a4127a439bb3764408e540eb782408b0`（存档r9-plan-finalreview-verdict.txt）。裁定：五项全PASS（源码归档/内容完整性/无DB无写入风险/测试范围不介入fixture链/单测试文件表述澄清），R8最小补证要求全部满足。**最终状态：P1-1=PASS冻结、P1-2=PASS冻结、R9=PASS、异步终止=PASS_WITH_CONSTRAINTS（冻结实施验收条件）、双锁及清理机制维持冻结；整体方案PASS_WITH_CONSTRAINTS。**
+- **授权边界（终审明确）：本轮仅通过方案终审，不构成实施授权**——修改BMS代码/fixture INSERT或清理/重跑run_acl_tests.py/擅改冻结机制均仍禁止；进入实施必须另行明确授权；实施验收须核对实际代码的异步线程终止、锁释放和清理结果，不能以方案PASS替代。
+- **标识命名澄清：** 终审指出内容SHA256（88907d17…）与Git blob对象SHA-1（UserTokenTest=`2026606cd19aaf8cc9b63f3e6f2feb30070a67ef`，实测一致）为两类摘要勿混称；binding.json已补四个归档文件的git_blob_sha1字段并加命名澄清。
+- **循环轨迹（九轮全部有reply存档+SHA链）：** R1 REWORK（LIKE/互斥）→R2主体通过+三项异常生命周期→R3 REWORK（失锁边界+归档错名更正）→R4 REWORK（核验与操作TOCTOU）→R5 REWORK（文件锁路径非单机全局+应用层写入未证明）→R6 REWORK（deleteByMap版本分歧，实为审查方读HEAD版）→R7 REWORK（工作区完整变更范围）→R8 REWORK（UserTokenTest归档）→**R9 PASS**。fixture-plan.md新增§13终局节、§7补r9行。
+- **下一步：** 向审查方申请实施授权（新会话简报自包含）；获授权后按冻结方案实施MultiDeviceLoginIntegrationTest改造，实施验收照§5（5/5 PASS+UserTokenTest PASS+token全吊销+fixture逻辑删+无非预期变化+异步终止实际代码核验）。

@@ -138,6 +138,7 @@ P0/P1 根因已定位到具体代码；P0 具备“生产数据 + nginx动作序
 - **fixture方案R6终审=P1-2 REWORK（实为版本分歧）→R7版本绑定修订已提交待终审**：R6简报正常送达，reply 4754B SHA256=`3fdfa164…5c5c32`。裁定=P1-1有条件通过（补约束后冻结）、异步终止有条件通过（补实施验收条件）、边界区分PASS、P1-2=REWORK（称清单漏列deleteByMap）。核实=审查方读主checkout HEAD版（07fa3546，工作区干净）：userLogin/qywxLogin确有`userTokenDao.deleteByMap`（HEAD:188/:293，MP物理DELETE user_id+app_id旧单设备行为）——观察对该版正确；**被测版=worktree工作区（同HEAD+未提交修改），两块已删，grep登录路径0命中，删除该调用正是被测功能（多会话并存）本身**。R7=§2写入清单改版本绑定陈述（被测版内容SHA256绑定：UserServiceImpl=`d83d92dc…`、测试文件=`c070798b…`，源码副本+diff+binding.json归档）+P1-1三约束文字（禁-Duser.home覆盖/同规范化路径+同文件系统命名空间/四步fail-closed，边界扩展跨OS用户/跨主机/不同命名空间）+§5异步实施验收条件。新增§10。授权边界不变=仅方案。
 - **fixture方案R7终审=P1-1 PASS冻结+异步终止PASS；R8仅补工作区变更范围**：reply 5112B SHA256=`6f8ab339…1765`。P1-1三约束+边界声明核对通过=冻结；异步终止=PASS_WITH_CONSTRAINTS（审查方实测归档测试源码awaitWorkersTermination确认实际终止才返回，实施须按实际代码验收）；双锁设计冻结；P1-2=REWORK仅一项=缺worktree完整变更清单（版本分歧本身已确认成立：HEAD两处deleteByMap/被测版两处已删/token.insert行号195/296均核对一致）。R8=归档acl-worktree-change-scope.txt（5修改+2新增；UserTokenServiceImpl未修改=HEAD一致）+全量diff+UserController副本（raw=`155743a5…`/blob=`0cb4f096…`），§2补范围闭环，新增§11。授权不变=仅方案终审。
 - **fixture方案R8终审=主体证据全过，仅差UserTokenTest归档→R9最后补证**：reply 2845B SHA256=`cf1f02e3…63b7bf`。已闭合=5修改文件逐一复核一致（UserController副本:633/:670属实、UserTokenServiceImpl未修改=HEAD证据有效、自动绑定分支不可达维持）；唯一缺口=UserTokenTest.java源码归档（git diff不含未跟踪文件）+"单测试文件"表述澄清。R9=归档副本（raw=blob=`88907d17…`，32行纯内存单元测试无DB无写入）+§2闭环+"单测试文件=fixture改造范围、UserTokenTest=独立既有功能单元测试（§5验收本体）互不影响"澄清，新增§12。授权不变=仅方案终审。
+- **fixture方案R9终审=PASS，方案终审结束（R1→R9九轮收敛）**：reply 2601B SHA256=`f230f10a…408b0`（采集fail-closed→recoll_fixtureplan_r9.mjs补采七查全过未重发）。五项全PASS（源码归档/内容完整/无DB无写入/范围不介入fixture链/单测试文件表述）。**最终状态：P1-1=PASS冻结、P1-2=PASS冻结、R9=PASS、异步终止=PASS_WITH_CONSTRAINTS（冻结实施验收条件）、双锁清理机制维持冻结；整体方案PASS_WITH_CONSTRAINTS。授权边界=方案终审≠实施授权**：改BMS代码/INSERT或清理/重跑测试/擅改冻结机制仍禁止，实施须另行授权且验收须核对实际代码（异步终止/锁释放/清理结果）。标识澄清=内容SHA256与Git blob SHA-1两类摘要勿混称（UserTokenTest blob=`2026606c…`实测一致），binding.json已补git_blob_sha1。新增§13，§7补r9行。
 
 ## S4 P2 三方商品价格正式比对与业务清单
 
@@ -172,3 +173,4 @@ P0/P1 根因已定位到具体代码；P0 具备“生产数据 + nginx动作序
 - fixture方案R6终审=P1-2 REWORK（2026-11-28，漏列deleteByMap=版本分歧：被测版无此调用，审查方读的是HEAD版）→R7版本绑定修订落实（DEC-149）。
 - fixture方案R7终审=P1-2 REWORK（2026-11-28，仅差工作区完整变更范围证明；P1-1已PASS冻结）→R8最小补证落实（DEC-150）。
 - fixture方案R8终审=P1-2 REWORK（2026-11-28，仅差UserTokenTest.java归档闭环）→R9补证落实（DEC-151）。
+- fixture方案R9终审=PASS（2026-11-28，P1-2正式闭环，方案终审结束；九轮REWORK全部收敛无REJECT）→待单独实施授权（DEC-152）。

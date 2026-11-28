@@ -26,7 +26,7 @@
   "verdicts_chain": {
     "r6_plan_finalreview_verdict": "3fdfa16498b5ff0feffedf5c7e6e51ff059ef3de9678875c2dd90c8d523c5c32"
   },
-  "archive_hash_note": "SHA256(raw_local)=磁盘原样字节；SHA256(repo_blob_lf)=git归一化(CRLF→LF)后blob内容。UserServiceImpl副本原文件为CRLF故两值不同(语义同)；测试文件副本原文件即LF故两值相同。已用CRLF→LF变换法验证与git实际blob一致。",
+  "archive_hash_note": "标识类型澄清（R9终审指出）：sha256_raw_local/sha256_repo_blob_lf均为文件内容SHA256（后者=LF归一化内容），不是Git blob对象SHA-1；Git blob SHA-1见各条目git_blob_sha1字段。两类摘要勿混称。",
   "worktree_change_scope": {
     "archive": "acl-worktree-change-scope.txt",
     "full_diff": {
@@ -58,5 +58,10 @@
       "sha256_repo_blob_lf": "88907d175fb2bfef5f3031c1fe649a350b86ebe1b99681a00b81dc0133872728",
       "nature": "pure in-memory unit test (32 lines): constructs UserToken POJO, asserts isValid() boundary semantics (null expireTime / past / exact / future / null now). No Spring context, no DB access, no Dao/Service, no writes. Does not touch fixture lifecycle or application write chain."
     }
+  },
+  "r9_verdict": {
+    "archive": "r9-plan-finalreview-verdict.txt",
+    "sha256": "f230f10a5f4a47419bae421899b4add1a4127a439bb3764408e540eb782408b0",
+    "result": "PASS，P1-2正式闭环，方案终审结束"
   }
 }

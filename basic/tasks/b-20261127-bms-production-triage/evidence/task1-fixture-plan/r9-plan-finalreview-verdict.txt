@@ -1,0 +1,175 @@
+ChatGPT 说：
+R9 方案终审裁定
+
+PASS — P1-2 证据闭环 仅方案终审
+
+基线： damwate/AIEO，完整 SHA：
+
+092beb4673c3cd657c0c0bc551a599ee58d1a2e8
+
+已按该 SHA 核对 R9 commit、方案正文及 acl-userTokenTest-tested-version.java 源码副本。R9 的补证满足 R8 的全部最小要求。
+
+逐项裁定
+
+审查项
+
+	
+
+结论
+
+	
+
+依据
+
+
+
+
+源码归档
+
+	
+
+PASS
+
+	
+
+已归档完整 32 行源码；commit 变更记录确认新增 32 行
+
+
+
+
+内容完整性
+
+	
+
+PASS
+
+	
+
+归档内容与提交中的文件内容一致
+
+
+
+
+数据库及写入风险
+
+	
+
+PASS
+
+	
+
+仅构造 UserToken POJO、Date，无 JDBC、Spring、Dao、Service 或持久化操作
+
+
+
+
+测试范围
+
+	
+
+PASS
+
+	
+
+仅验证 isValid() 的边界语义，不介入 fixture 创建、清理或业务写入链
+
+
+
+
+单测试文件表述
+
+	
+
+PASS
+
+	
+
+已澄清 fixture 改造目标是 MultiDeviceLoginIntegrationTest.java；UserTokenTest 是独立单元测试，不属于 fixture 生命周期改造
+
+源码实际验证了五种情况：
+
+expireTime == null：无效
+
+过期时间早于当前时间：无效
+
+过期时间恰好等于当前时间：无效
+
+过期时间晚于当前时间：有效
+
+now == null：无效
+
+这些断言与方案描述一致，没有发现新增数据库副作用或对 fixture 机制的影响。
+
+一个归档标识细节： GitHub commit 元数据给出的 Git blob 对象 SHA-1 是 2026606cd19aaf8cc9b63f3e6f2feb30070a67ef；材料中的 88907d... 是文件内容 SHA256（原始内容与 LF 规范化内容一致），两者是不同类型的摘要，不应混称为 Git blob SHA。这个命名问题不影响源码证据闭环。
+
+最终状态
+
+项目
+
+	
+
+终审结论
+
+
+
+
+P1-1：user.home 文件锁路径及边界约束
+
+	
+
+PASS，冻结
+
+
+
+
+P1-2：被测工作区完整变更范围及写入清单
+
+	
+
+PASS，冻结
+
+
+
+
+R9：UserTokenTest 源码归档及范围澄清
+
+	
+
+PASS
+
+
+
+
+异步线程终止
+
+	
+
+PASS_WITH_CONSTRAINTS，冻结实施验收条件
+
+
+
+
+双锁、清理机制及此前通过项
+
+	
+
+维持冻结，不重开
+
+整体方案 PASS_WITH_CONSTRAINTS
+授权边界
+
+本轮仅通过方案终审，不构成实施授权。
+
+仍然禁止：
+
+修改 BMS 代码；
+
+执行 fixture INSERT 或数据库清理；
+
+重跑 python -I runtime/run_acl_tests.py；
+
+擅自改变已冻结的双锁及清理机制。
+
+后续如需进入实施，必须另行明确授权；实施验收仍须核对实际代码中的异步线程终止、锁释放和清理结果，不能用本轮方案 PASS 替代实施验收。
+
+裁定：R9 PASS，P1-2 正式闭环。方案终审结束，等待单独实施授权。
