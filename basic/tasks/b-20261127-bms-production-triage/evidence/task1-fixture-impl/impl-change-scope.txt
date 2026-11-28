@@ -1,0 +1,15 @@
+ M acl-server/pom.xml
+ M acl-server/src/main/java/com/ecog/acl/api/UserController.java
+ M acl-server/src/main/java/com/ecog/acl/entity/UserToken.java
+ M acl-server/src/main/java/com/ecog/acl/mvc/AuthInterceptor.java
+ M acl-server/src/main/java/com/ecog/acl/service/impl/UserServiceImpl.java
+?? acl-server/src/test/
+ acl-server/pom.xml                                 |  5 +++
+ .../main/java/com/ecog/acl/api/UserController.java | 44 +++++++++++-----------
+ .../main/java/com/ecog/acl/entity/UserToken.java   |  8 ++++
+ .../java/com/ecog/acl/mvc/AuthInterceptor.java     |  9 +----
+ .../com/ecog/acl/service/impl/UserServiceImpl.java | 29 +++++---------
+ 5 files changed, 45 insertions(+), 50 deletions(-)
+----test-dir----
+MultiDeviceLoginIntegrationTest.java
+entity

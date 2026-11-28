@@ -1,0 +1,673 @@
+--- evidence/task1-fixture-plan/acl-multiDeviceLoginIntegrationTest-tested-version.java	2026-11-28 14:05:15.044953500 +0800
++++ evidence/task1-fixture-impl/acl-multiDeviceLoginIntegrationTest-impl-version.java	2026-11-28 14:52:25.842693600 +0800
+@@ -15,6 +15,8 @@
+ import com.ecog.acl.service.UserTokenService;
+ import com.ecog.acl.service.WorkWechatService;
+ import org.junit.After;
++import org.junit.AfterClass;
++import org.junit.Before;
+ import org.junit.Test;
+ import org.junit.runner.RunWith;
+ import org.springframework.beans.factory.annotation.Autowired;
+@@ -26,10 +28,19 @@
+ import org.springframework.test.context.ActiveProfiles;
+ import org.springframework.test.context.junit4.SpringRunner;
+ 
++import java.nio.channels.FileChannel;
++import java.nio.channels.FileLock;
++import java.nio.channels.OverlappingFileLockException;
++import java.nio.file.Files;
++import java.nio.file.Path;
++import java.nio.file.Paths;
++import java.nio.file.StandardOpenOption;
++import java.util.ArrayList;
+ import java.util.Date;
+ import java.util.HashSet;
+ import java.util.List;
+ import java.util.Set;
++import java.util.UUID;
+ import java.util.concurrent.ConcurrentHashMap;
+ import java.util.concurrent.CountDownLatch;
+ import java.util.concurrent.ExecutorService;
+@@ -38,6 +49,7 @@
+ import java.util.concurrent.TimeUnit;
+ import javax.sql.DataSource;
+ import java.sql.Connection;
++import java.sql.PreparedStatement;
+ import java.sql.ResultSet;
+ import java.sql.SQLException;
+ import java.sql.Statement;
+@@ -69,6 +81,36 @@
+     // R5复核：工作线程自然终止的宽限期；期满后shutdownNow并等到实际终止才返回（见awaitWorkersTermination）
+     private static final long WORKER_GRACE_SECONDS = 90L;
+ 
++    // ==================== qywx fixture 双锁生命周期（fixture-plan.md §1-§5，R9终审PASS冻结设计；
++    // 实施授权裁定 reply SHA256=7ca5ce962a0aff7e0e645718f3ccd86069568ac63d8e2c82f2600ea54cce0e20） ====================
++    // 实施披露：冻结§2以@BeforeClass描述双锁获取时序，JUnit4+SpringRunner下静态方法无法访问实例注入的
++    // DataSource（实例注入发生在类级setup之后），故按§2原顺序（①文件锁→②连接L→③GET_LOCK）移入@Before
++    // 实例方法（每个测试前执行，类级静态守卫保证整轮仅获取一次）；获取时序、fail-closed语义、
++    // 锁窗口（覆盖全部测试+清理+验证全程，强于冻结窗口）与冻结设计一致。
++    private static final String FIXTURE_PREFIX = "acl_it_fixture_";
++    private static final int FIXTURE_PREFIX_LEN = FIXTURE_PREFIX.length();
++    private static final String MYSQL_LOCK_NAME = "acl_it_fixture_mutex";
++
++    // §1 fixture身份：runid=UUID去横线取8位hex；user_name与qywx_user_id共用同一runid
++    private static String runId;
++    private static String fixtureUserName;
++    private static String fixtureQywxUserId;
++    // §3部分初始化可清理：INSERT成功后立即登记static（先于回读断言）
++    private static Integer fixtureUserId;
++    private static boolean fixtureCreated;
++    private static boolean fixtureCleaned;
++    private static User fixtureUser;
++    // §2双锁：连接L（autocommit=true，GET_LOCK会话级持有至清理验证完成）+进程级文件锁（user.home锚定）
++    private static Connection lockConnection;
++    private static FileChannel lockChannel;
++    private static FileLock fileLock;
++    private static boolean lockHeld;
++    private static boolean lockLost;
++    private static boolean lockFailed;
++    // 生命周期证据（双锁获取/持有/释放）与失败证据（异常分离，全部保留）——打印为[FIXTURE-LOCK]行入测试日志
++    private static final List<String> lifecycleEvidence = new ArrayList<>();
++    private static final List<String> failureEvidence = new ArrayList<>();
++
+     @Autowired
+     private UserService userService;
+     @Autowired
+@@ -87,10 +129,138 @@
+ 
+     private final Set<String> testTokens = ConcurrentHashMap.newKeySet();
+ 
++    @Before
++    public void acquireFixtureLocksOnce() throws Exception {
++        // §2：①进程级文件锁→②独立连接L→③GET_LOCK(...,0)；任一步失败均fail-closed（本轮不扫描、不清理、不创建）
++        synchronized (MultiDeviceLoginIntegrationTest.class) {
++            if (lockHeld) {
++                return;
++            }
++            if (lockFailed) {
++                throw new IllegalStateException("双锁获取此前已失败，本轮fail-closed不重试（§2）："
++                        + failureEvidence);
++            }
++            try {
++                acquireProcessFileLock();
++                openLockConnection();
++                acquireMysqlNamedLock();
++                lockHeld = true;
++                if (runId == null) {
++                    runId = UUID.randomUUID().toString().replace("-", "").substring(0, 8);
++                    fixtureUserName = "acl_it_fixture_qywx_" + runId;
++                    fixtureQywxUserId = FIXTURE_PREFIX + runId;
++                }
++                recordLifecycle("双锁获取完成：runId=" + runId
++                        + "，user_name=" + fixtureUserName + "，qywx_user_id=" + fixtureQywxUserId);
++            } catch (Exception e) {
++                lockFailed = true;
++                failureEvidence.add("双锁获取失败(fail-closed)：" + e);
++                System.out.println("[FIXTURE-LOCK] FAIL-EVIDENCE: 双锁获取失败(fail-closed)：" + e);
++                closeLockConnectionQuietly();
++                releaseFileLockQuietly();
++                throw e;
++            }
++        }
++    }
++
+     @After
+     public void cleanUpTestTokens() throws Exception {
++        // §2 token清理（R5起全部走L）：登记token经锁连接L逐条逻辑吊销（复刻deleteByToken语义：
++        // UPDATE user_token SET is_deleted=1 WHERE id=? AND is_deleted=0）；L不可用=记录失败、交主异常路径
++        if (!lockHeld || lockLost) {
++            String msg = "@After：锁连接L不可用(held=" + lockHeld + ", lost=" + lockLost
++                    + ")，登记token" + testTokens.size() + "条未逐条吊销——交主异常路径（§2）";
++            failureEvidence.add(msg);
++            System.out.println("[FIXTURE-LOCK] FAIL-EVIDENCE: " + msg);
++            throw new IllegalStateException(msg);
++        }
++        verifyLockOwnership();
++        boolean anyFailure = false;
+         for (String token : testTokens) {
+-            userTokenService.deleteByToken(token);
++            try {
++                // 已在测试体内经logout逻辑删除的token此处影响行数=0属正常（幂等清理），仅记录不判败
++                revokeTokenById(token, false);
++            } catch (Exception e) {
++                anyFailure = true;
++                failureEvidence.add("@After吊销token失败（token=" + token + "）：" + e);
++                System.out.println("[FIXTURE-LOCK] FAIL-EVIDENCE: @After吊销token失败：" + e);
++            }
++        }
++        recordLifecycle("@After登记token逐条逻辑吊销完成：" + testTokens.size() + "条");
++        if (anyFailure) {
++            throw new IllegalStateException("@After存在吊销失败，交主异常路径（§2）；其余token已继续吊销");
++        }
++    }
++
++    @AfterClass
++    public static void cleanupFixtureAndReleaseLocks() {
++        // §3清理顺序固定try/finally + R4异常分离：主异常与释放异常分别记录、统一判定失败、互不掩盖
++        Throwable mainFailure = null;
++        try {
++            if (!lockHeld) {
++                // §3.1：锁未持有（获取失败/未执行）→清理整体跳过（无对象可清）
++                recordLifecycle("清理跳过：锁未持有（fixture已创建=" + fixtureCreated + "）");
++            } else if (lockLost) {
++                // R4冻结：失锁后不执行任何删除；记录+残留审计
++                failureEvidence.add("@AfterClass：失锁状态，按冻结设计不执行任何删除");
++                System.out.println("[FIXTURE-LOCK] FAIL-EVIDENCE: @AfterClass失锁，不执行任何删除");
++                dumpResidualAuditQuietly();
++            } else if (!fixtureCreated) {
++                // §3.1：持锁但fixture未创建（预检阶段失败）→无fixture可清；输出只读残留审计
++                recordLifecycle("清理跳过：fixture未创建（持锁期内失败）");
++                dumpResidualAuditQuietly();
++            } else if (fixtureCleaned) {
++                recordLifecycle("清理跳过：已完成");
++            } else {
++                try {
++                    verifyLockOwnership();               // §3.0 入口锁归属核验（失锁则不执行任何删除）
++                    revokeFixtureUserTokensOnCleanup();  // §3.2 先token（影响行数核验）
++                    logicallyDeleteFixtureUser();        // §3.3 后用户（影响行数=1核验）
++                    verifyCleanupResults();              // §3.4 清理结果验证a/b/c（jdbc只读）
++                    fixtureCleaned = true;
++                    recordLifecycle("fixture清理与验证全部通过：user_id=" + fixtureUserId);
++                } catch (Throwable t) {
++                    mainFailure = t;
++                    failureEvidence.add("@AfterClass清理失败：" + t);
++                    System.out.println("[FIXTURE-LOCK] FAIL-EVIDENCE: @AfterClass清理失败：" + t);
++                    dumpResidualAuditQuietly();
++                }
++            }
++        } finally {
++            Throwable releaseFailure = null;
++            try {
++                if (lockHeld && !lockLost) {
++                    releaseMysqlNamedLock();             // §3 finally：RELEASE_LOCK并核验返回值=1
++                } else if (lockLost) {
++                    failureEvidence.add("释锁核验跳过：失锁（会话锁随连接关闭自动释放，无法经RELEASE_LOCK核验）");
++                    System.out.println("[FIXTURE-LOCK] FAIL-EVIDENCE: 释锁核验跳过：失锁状态");
++                }
++            } catch (Throwable t) {
++                releaseFailure = t;
++                failureEvidence.add("RELEASE_LOCK失败：" + t);
++                System.out.println("[FIXTURE-LOCK] FAIL-EVIDENCE: RELEASE_LOCK失败：" + t);
++            }
++            closeLockConnectionQuietly();
++            releaseFileLockQuietly();
++            boolean failed = mainFailure != null || releaseFailure != null || !failureEvidence.isEmpty();
++            if (failed) {
++                System.out.println("[FIXTURE-LOCK] 实施验收失败——失败证据清单：");
++                for (String evidence : failureEvidence) {
++                    System.out.println("[FIXTURE-LOCK] FAIL-EVIDENCE: " + evidence);
++                }
++                if (mainFailure != null) {
++                    // 主异常优先；释放异常不覆盖不掩盖（已在FAIL-EVIDENCE清单独立保留）
++                    throw new IllegalStateException("实施验收失败（主异常，其余失败项见FAIL-EVIDENCE清单）："
++                            + mainFailure.getMessage(), mainFailure);
++                }
++                throw new IllegalStateException("实施验收失败（无主异常，失败项见FAIL-EVIDENCE清单）："
++                        + (releaseFailure != null ? releaseFailure.getMessage() : failureEvidence.toString()),
++                        releaseFailure);
++            }
++            System.out.println("[FIXTURE-LOCK] 双锁生命周期完整结束（获取→持有→清理→验证→释放），生命周期证据：");
++            for (String evidence : lifecycleEvidence) {
++                System.out.println("[FIXTURE-LOCK]   " + evidence);
++            }
+         }
+     }
+ 
+@@ -136,7 +306,7 @@
+ 
+     @Test
+     public void qywxOAuthUsesIndependentRandomTokensAndSameThirtyDays() throws Exception {
+-        User boundUser = findQywxBoundUser();
++        User boundUser = findOrCreateQywxFixtureUser();
+         Integer userId = boundUser.getId();
+         Set<String> baseline = activeTokenIds(userId);
+         when(workWechatService.getUserInfoByCode("TEST-OAUTH-CODE")).thenReturn(boundUser.getQywxUserId());
+@@ -164,7 +334,7 @@
+ 
+     @Test
+     public void concurrentQywxLoginsKeepTwoDistinctValidTokens() throws Exception {
+-        User boundUser = findQywxBoundUser();
++        User boundUser = findOrCreateQywxFixtureUser();
+         Integer userId = boundUser.getId();
+         Set<String> baseline = activeTokenIds(userId);
+         ExecutorService executor = Executors.newFixedThreadPool(2);
+@@ -248,7 +418,7 @@
+ 
+     @Test
+     public void expiredTokenIsRejectedEverywhere() throws Exception {
+-        User boundUser = findQywxBoundUser();
++        User boundUser = findOrCreateQywxFixtureUser();
+         String expired = register(userService.qywxLogin(boundUser, APP_ID, -1).getAccessToken());
+         assertInvalidEverywhere(expired);
+         // expire_time在真实库为NOT NULL；NULL语义由UserTokenTest固定时间单元测试覆盖。
+@@ -260,7 +430,7 @@
+         // 超长app_id(char(6))必然触发MySQL 1406插入失败，不存在截断落库路径
+         assertTrue("dev库必须为严格模式，否则本测试前提不成立",
+                 querySqlMode().contains("STRICT_TRANS_TABLES"));
+-        User boundUser = findQywxBoundUser();
++        User boundUser = findOrCreateQywxFixtureUser();
+         Integer userId = boundUser.getId();
+         Set<String> baseline = activeTokenIds(userId);
+         String oversizedAppId = new String(new char[256]).replace('\0', 'x');
+@@ -335,12 +505,414 @@
+         return register(login.getAccessToken());
+     }
+ 
+-    private User findQywxBoundUser() {
+-        EntityWrapper<User> wrapper = new EntityWrapper<>();
+-        wrapper.isNotNull("qywx_user_id").ne("qywx_user_id", "");
+-        List<User> users = userService.selectList(wrapper);
+-        assertFalse("No dev user with bound qywx_user_id", users.isEmpty());
+-        return users.get(0);
++    // ==================== qywx fixture：创建/预检/清理实现（全部破坏性写入在锁连接L上，
++    // PreparedStatement执行；复刻MP填充与LogicSqlInjector语句形态，零物理DELETE，禁LIKE） ====================
++
++    /**
++     * §4：替代原findQywxBoundUser()（4处调用点行139/167/251/263）。持双锁（@Before已获，此处入口核验）→
++     * LEFT前缀残留预检清理→自身完整名/虚构qywx id精确唯一性预检（=0才插入）→L上INSERT（复刻填充语义，
++     * RETURN_GENERATED_KEYS取userId立即登记static）→回读断言。fixture身份、userId、L、FileChannel均static。
++     */
++    private User findOrCreateQywxFixtureUser() throws Exception {
++        if (fixtureUser != null) {
++            return fixtureUser;
++        }
++        // 破坏性操作入口①（R4冻结）：残留命名空间扫描及残留逻辑清理前核验
++        verifyLockOwnership();
++        cleanupResidualFixtureUsers();
++        // 破坏性操作入口②（R4冻结）：fixture创建（INSERT）前核验
++        verifyLockOwnership();
++        assertFixtureNameAvailable();
++        insertFixtureUser();
++        readBackFixtureUser();
++        return fixtureUser;
++    }
++
++    /**
++     * R4冻结：破坏性操作入口核验——①连接探活（SELECT 1）②锁归属核验（原连接CONNECTION_ID()与
++     * IS_USED_LOCK('acl_it_fixture_mutex')比对，必须等于本连接id；NULL或他人持锁均判失锁）。
++     * 仅“连接对象非null”或“此前GET_LOCK曾=1”不算数。失锁=fail-closed：立即终止，不换连接、不重取锁。
++     */
++    private static void verifyLockOwnership() throws SQLException {
++        if (!lockHeld) {
++            throw new IllegalStateException("命名锁未处于持有状态，禁止破坏性操作（fail-closed）");
++        }
++        long selfId;
++        long holderId;
++        boolean holderNull;
++        try (Statement st = lockConnection.createStatement();
++             ResultSet rs = st.executeQuery("SELECT 1")) {
++            rs.next();
++        }
++        try (Statement st = lockConnection.createStatement();
++             ResultSet rs = st.executeQuery(
++                     "SELECT CONNECTION_ID(), IS_USED_LOCK('" + MYSQL_LOCK_NAME + "')")) {
++            rs.next();
++            selfId = rs.getLong(1);
++            holderId = rs.getLong(2);
++            holderNull = rs.wasNull();
++        }
++        if (holderNull) {
++            lockLost = true;
++            String msg = "失锁：IS_USED_LOCK=NULL（命名锁已释放），fail-closed";
++            failureEvidence.add(msg);
++            System.out.println("[FIXTURE-LOCK] FAIL-EVIDENCE: " + msg);
++            throw new IllegalStateException(msg);
++        }
++        if (holderId != selfId) {
++            lockLost = true;
++            String msg = "失锁：命名锁由其他会话持有（holder=" + holderId + ", self=" + selfId + "），fail-closed";
++            failureEvidence.add(msg);
++            System.out.println("[FIXTURE-LOCK] FAIL-EVIDENCE: " + msg);
++            throw new IllegalStateException(msg);
++        }
++    }
++
++    /**
++     * §2【P1-1修正】残留预检清理：命名空间扫描一律LEFT(col,?)=?字面前缀（参数1=前缀长度int、
++     * 参数2=字面量，两参数均PreparedStatement绑定），全程禁LIKE。仅处理is_deleted=0的活跃残留
++     * （逻辑删旧行=§5允许的净留痕，不动）。每行先token后用户（§3固定顺序）。
++     */
++    private static void cleanupResidualFixtureUsers() throws SQLException {
++        Set<Long> residualIds = new HashSet<>();
++        try (PreparedStatement ps = lockConnection.prepareStatement(
++                "SELECT id FROM user WHERE LEFT(user_name, ?) = ? AND is_deleted = 0")) {
++            ps.setInt(1, FIXTURE_PREFIX_LEN);
++            ps.setString(2, FIXTURE_PREFIX);
++            try (ResultSet rs = ps.executeQuery()) {
++                while (rs.next()) {
++                    residualIds.add(rs.getLong(1));
++                }
++            }
++        }
++        try (PreparedStatement ps = lockConnection.prepareStatement(
++                "SELECT id FROM user WHERE LEFT(qywx_user_id, ?) = ? AND is_deleted = 0")) {
++            ps.setInt(1, FIXTURE_PREFIX_LEN);
++            ps.setString(2, FIXTURE_PREFIX);
++            try (ResultSet rs = ps.executeQuery()) {
++                while (rs.next()) {
++                    residualIds.add(rs.getLong(1));
++                }
++            }
++        }
++        if (residualIds.isEmpty()) {
++            recordLifecycle("残留预检：命名空间无活跃残留（user_name/qywx_user_id两列LEFT前缀，is_deleted=0）");
++            return;
++        }
++        for (Long residualId : residualIds) {
++            revokeActiveTokensOfUser(residualId);
++            logicallyDeleteUserById(residualId);
++        }
++        recordLifecycle("残留预检清理完成：活跃残留" + residualIds.size() + "行已按先token后用户逻辑清理");
++    }
++
++    /** §4：自身完整名/虚构qywx id精确唯一性预检（=0才插入）；user_name为UNIQUE列且逻辑删旧行仍占
++     *  UNIQUE索引，故两列均按全行计数（含is_deleted=1）；非0即失败——1062原样失败不重试不换身份（§6）。 */
++    private static void assertFixtureNameAvailable() throws SQLException {
++        int sameName = countUserRows("SELECT COUNT(*) FROM user WHERE user_name = ?", fixtureUserName);
++        int sameQywxId = countUserRows("SELECT COUNT(*) FROM user WHERE qywx_user_id = ?", fixtureQywxUserId);
++        if (sameName != 0 || sameQywxId != 0) {
++            throw new IllegalStateException("fixture唯一性预检非零（user_name=" + sameName
++                    + ", qywx_user_id=" + sameQywxId + "）——按§6原样失败，不重试不换身份");
++        }
++    }
++
++    /**
++     * §2复刻MPMetaObjectHandler填充语义的fixture INSERT：显式is_deleted=0（防NULL被@TableLogic过滤）、
++     * is_admin=0（§1无权限提升）、pass_word=随机UUID的md5占位（非真实凭证，fixture不走密码登录）；
++     * gmt_create不设——走列默认CURRENT_TIMESTAMP（user-schema.json实测DEFAULT_GENERATED）；real_name
++     * 有UNIQUE约束必不设；其余可空列不设。列集=user-schema.json实测。RETURN_GENERATED_KEYS取userId
++     * 立即登记static（§3部分初始化可清理）。
++     */
++    private static void insertFixtureUser() throws SQLException {
++        String passWord = SecureUtil.md5(UUID.randomUUID().toString());
++        try (PreparedStatement ps = lockConnection.prepareStatement(
++                "INSERT INTO user (user_name, qywx_user_id, pass_word, is_admin, is_deleted) VALUES (?, ?, ?, 0, 0)",
++                Statement.RETURN_GENERATED_KEYS)) {
++            ps.setString(1, fixtureUserName);
++            ps.setString(2, fixtureQywxUserId);
++            ps.setString(3, passWord);
++            int affected = ps.executeUpdate();
++            if (affected != 1) {
++                throw new IllegalStateException("fixture INSERT影响行数=" + affected + "（预期1）");
++            }
++            try (ResultSet keys = ps.getGeneratedKeys()) {
++                if (!keys.next()) {
++                    throw new IllegalStateException("fixture INSERT未返回生成主键");
++                }
++                fixtureUserId = keys.getInt(1);
++            }
++        }
++        fixtureCreated = true;
++        recordLifecycle("fixture已创建（INSERT成功，userId已立即登记static）：user_id=" + fixtureUserId);
++    }
++
++    /** §4回读断言（L上只读PreparedStatement）：id非空/is_deleted=0/user_name与qywx_user_id=本runid预期值；
++     *  通过后构建最小User POJO（qywxLogin仅用getId()，UserLoginBO.from仅读普通getter，null安全）。 */
++    private static void readBackFixtureUser() throws SQLException {
++        try (PreparedStatement ps = lockConnection.prepareStatement(
++                "SELECT id, user_name, qywx_user_id, is_deleted FROM user WHERE id = ?")) {
++            ps.setInt(1, fixtureUserId);
++            try (ResultSet rs = ps.executeQuery()) {
++                assertTrue("fixture回读无行（user_id=" + fixtureUserId + "）", rs.next());
++                int id = rs.getInt(1);
++                String userName = rs.getString(2);
++                String qywxUserId = rs.getString(3);
++                int isDeleted = rs.getInt(4);
++                assertEquals("fixture回读id不一致", fixtureUserId.intValue(), id);
++                assertEquals("fixture user_name与本runid预期值不符", fixtureUserName, userName);
++                assertEquals("fixture qywx_user_id与本runid预期值不符", fixtureQywxUserId, qywxUserId);
++                assertEquals("fixture is_deleted必须=0", 0, isDeleted);
++            }
++        }
++        fixtureUser = new User();
++        fixtureUser.setId(fixtureUserId);
++        fixtureUser.setUserName(fixtureUserName);
++        fixtureUser.setQywxUserId(fixtureQywxUserId);
++    }
++
++    /** §3.2：按fixture userId查询活跃token→L上逐条吊销（影响行数核验）；@AfterClass兜底吊销同通道（§2）。 */
++    private static void revokeFixtureUserTokensOnCleanup() throws SQLException {
++        revokeActiveTokensOfUser(fixtureUserId);
++    }
++
++    /** §3.3：L上逻辑删除fixture用户（复刻LogicSqlInjector语句形态，与@TableLogic deleteById同形），影响行数=1核验。 */
++    private static void logicallyDeleteFixtureUser() throws SQLException {
++        logicallyDeleteUserById(fixtureUserId);
++    }
++
++    /** §2 token清理通道：UPDATE user_token SET is_deleted=1 WHERE id=? AND is_deleted=0（逻辑删，禁物理DELETE）。 */
++    private static void revokeActiveTokensOfUser(long userId) throws SQLException {
++        List<String> tokenIds = new ArrayList<>();
++        try (PreparedStatement ps = lockConnection.prepareStatement(
++                "SELECT id FROM user_token WHERE user_id = ? AND is_deleted = 0")) {
++            ps.setLong(1, userId);
++            try (ResultSet rs = ps.executeQuery()) {
++                while (rs.next()) {
++                    tokenIds.add(rs.getString(1));
++                }
++            }
++        }
++        for (String tokenId : tokenIds) {
++            revokeTokenById(tokenId, true);
++        }
++        recordLifecycle("user_id=" + userId + "活跃token逻辑吊销：" + tokenIds.size() + "条");
++    }
++
++    private static void revokeTokenById(String tokenId, boolean requireAffectedRow) throws SQLException {
++        try (PreparedStatement ps = lockConnection.prepareStatement(
++                "UPDATE user_token SET is_deleted=1 WHERE id=? AND is_deleted=0")) {
++            ps.setString(1, tokenId);
++            int affected = ps.executeUpdate();
++            if (requireAffectedRow && affected != 1) {
++                failureEvidence.add("token吊销影响行数=" + affected + "（预期1）token=" + tokenId);
++                System.out.println("[FIXTURE-LOCK] FAIL-EVIDENCE: token吊销影响行数=" + affected
++                        + "（预期1）token=" + tokenId);
++            }
++        }
++    }
++
++    /** §2/§3：复刻LogicSqlInjector语句形态UPDATE user SET is_deleted=1 WHERE id=? AND is_deleted=0，
++     *  影响行数=1核验；与@TableLogic deleteById生成语句同形，属既有逻辑删除机制等价执行，非物理DELETE。 */
++    private static void logicallyDeleteUserById(long userId) throws SQLException {
++        try (PreparedStatement ps = lockConnection.prepareStatement(
++                "UPDATE user SET is_deleted=1 WHERE id=? AND is_deleted=0")) {
++            ps.setLong(1, userId);
++            int affected = ps.executeUpdate();
++            if (affected != 1) {
++                throw new IllegalStateException("用户逻辑删除影响行数=" + affected + "（预期1）user_id=" + userId);
++            }
++        }
++    }
++
++    /** §3.4清理结果验证（L上只读，任一失败即抛异常使本轮验收失败并输出残留审计）：
++     *  a) fixture行存在且is_deleted=1（行仍在=未发生物理DELETE）；
++     *  b) fixture userId名下全部token is_deleted=1（无活跃残留）；
++     *  c) LEFT前缀命名空间（user_name与qywx_user_id两列）无is_deleted=0非预期活跃记录。 */
++    private static void verifyCleanupResults() throws SQLException {
++        try (PreparedStatement ps = lockConnection.prepareStatement(
++                "SELECT user_name, is_deleted FROM user WHERE id = ?")) {
++            ps.setInt(1, fixtureUserId);
++            try (ResultSet rs = ps.executeQuery()) {
++                assertTrue("清理验证a失败：fixture行不存在（疑似物理DELETE）user_id=" + fixtureUserId, rs.next());
++                assertTrue("清理验证a失败：fixture用户is_deleted必须=1，实际=" + rs.getInt(2), rs.getInt(2) == 1);
++                assertEquals("清理验证a失败：user_name不匹配", fixtureUserName, rs.getString(1));
++            }
++        }
++        try (PreparedStatement ps = lockConnection.prepareStatement(
++                "SELECT COUNT(*) FROM user_token WHERE user_id = ? AND is_deleted = 0")) {
++            ps.setInt(1, fixtureUserId);
++            try (ResultSet rs = ps.executeQuery()) {
++                rs.next();
++                assertEquals("清理验证b失败：fixture用户名下仍有活跃token", 0, rs.getInt(1));
++            }
++        }
++        assertNamespaceInactive("user_name");
++        assertNamespaceInactive("qywx_user_id");
++    }
++
++    /** §2【P1-1修正】：LEFT(col,?)=?字面前缀（禁LIKE）；列名仅来自固定字面量。 */
++    private static void assertNamespaceInactive(String column) throws SQLException {
++        try (PreparedStatement ps = lockConnection.prepareStatement(
++                "SELECT id, user_name FROM user WHERE LEFT(" + column + ", ?) = ? AND is_deleted = 0")) {
++            ps.setInt(1, FIXTURE_PREFIX_LEN);
++            ps.setString(2, FIXTURE_PREFIX);
++            try (ResultSet rs = ps.executeQuery()) {
++                if (rs.next()) {
++                    throw new IllegalStateException("清理验证c失败：" + column
++                            + "命名空间存在活跃残留，首行id=" + rs.getLong(1) + ", user_name=" + rs.getString(2));
++                }
++            }
++        }
++    }
++
++    /** 残留审计（只读，不含敏感值）：活跃fixture前缀行id/user_name逐行输出+计数。 */
++    private static void dumpResidualAuditQuietly() {
++        if (lockConnection == null) {
++            failureEvidence.add("残留审计跳过：锁连接L不可用");
++            System.out.println("[FIXTURE-LOCK] FAIL-EVIDENCE: 残留审计跳过：锁连接L不可用");
++            return;
++        }
++        try {
++            int activeByUserName = dumpResidualRowsByColumn("user_name");
++            int activeByQywxId = dumpResidualRowsByColumn("qywx_user_id");
++            System.out.println("[FIXTURE-LOCK] 残留审计汇总：user_name前缀活跃=" + activeByUserName
++                    + "行，qywx_user_id前缀活跃=" + activeByQywxId + "行");
++        } catch (SQLException e) {
++            failureEvidence.add("残留审计执行失败（L可能已死）：" + e);
++            System.out.println("[FIXTURE-LOCK] FAIL-EVIDENCE: 残留审计执行失败：" + e);
++        }
++    }
++
++    private static int dumpResidualRowsByColumn(String column) throws SQLException {
++        int count = 0;
++        try (PreparedStatement ps = lockConnection.prepareStatement(
++                "SELECT id, user_name FROM user WHERE LEFT(" + column + ", ?) = ? AND is_deleted = 0")) {
++            ps.setInt(1, FIXTURE_PREFIX_LEN);
++            ps.setString(2, FIXTURE_PREFIX);
++            try (ResultSet rs = ps.executeQuery()) {
++                while (rs.next()) {
++                    count++;
++                    System.out.println("[FIXTURE-LOCK] 残留审计：活跃fixture用户 id=" + rs.getLong(1)
++                            + ", user_name=" + rs.getString(2));
++                }
++            }
++        }
++        return count;
++    }
++
++    private static int countUserRows(String sql, String param) throws SQLException {
++        try (PreparedStatement ps = lockConnection.prepareStatement(sql)) {
++            ps.setString(1, param);
++            try (ResultSet rs = ps.executeQuery()) {
++                rs.next();
++                return rs.getInt(1);
++            }
++        }
++    }
++
++    // ==================== 双锁获取与释放（§2顺序，fail-closed） ====================
++
++    private static void acquireProcessFileLock() throws Exception {
++        // R6 P1-1冻结：user.home锚定固定机器级路径；目录创建/路径解析/文件打开/锁获取任一步失败均fail-closed。
++        // 边界（如实声明）：跨OS用户/跨主机/不同文件系统命名空间不覆盖；runner禁止-Duser.home覆盖。
++        Path lockPath = Paths.get(System.getProperty("user.home"), ".acl-it", "acl-it-fixture-mutex.lock");
++        Files.createDirectories(lockPath.getParent());
++        lockChannel = FileChannel.open(lockPath, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
++        try {
++            fileLock = lockChannel.tryLock();
++        } catch (OverlappingFileLockException e) {
++            closeChannelQuietly();
++            throw new IllegalStateException("同JVM重复获取文件锁（OverlappingFileLockException），fail-closed", e);
++        }
++        if (fileLock == null) {
++            closeChannelQuietly();
++            throw new IllegalStateException("文件锁tryLock未获得（他进程持锁），fail-closed");
++        }
++        recordLifecycle("进程级文件锁已获取：" + lockPath);
++    }
++
++    private void openLockConnection() throws SQLException {
++        lockConnection = dataSource.getConnection();
++        lockConnection.setAutoCommit(true);
++        recordLifecycle("锁连接L已建立（autocommit=true）");
++    }
++
++    private static void acquireMysqlNamedLock() throws SQLException {
++        try (PreparedStatement ps = lockConnection.prepareStatement(
++                "SELECT GET_LOCK('" + MYSQL_LOCK_NAME + "', 0)");
++             ResultSet rs = ps.executeQuery()) {
++            rs.next();
++            int result = rs.getInt(1);
++            if (rs.wasNull()) {
++                throw new IllegalStateException("GET_LOCK返回NULL，fail-closed");
++            }
++            if (result != 1) {
++                throw new IllegalStateException("GET_LOCK返回" + result + "（他会话持锁），fail-closed");
++            }
++        }
++        recordLifecycle("MySQL命名锁已获取：" + MYSQL_LOCK_NAME + "（由连接L持有至清理验证完成）");
++    }
++
++    private static void releaseMysqlNamedLock() throws SQLException {
++        try (Statement st = lockConnection.createStatement();
++             ResultSet rs = st.executeQuery("SELECT RELEASE_LOCK('" + MYSQL_LOCK_NAME + "')")) {
++            rs.next();
++            int result = rs.getInt(1);
++            if (rs.wasNull() || result != 1) {
++                throw new IllegalStateException("RELEASE_LOCK返回"
++                        + (rs.wasNull() ? "NULL" : String.valueOf(result)) + "（预期1），fail-closed");
++            }
++        }
++        lockHeld = false;
++        recordLifecycle("MySQL命名锁已释放（RELEASE_LOCK=1核验通过）");
++    }
++
++    private static void closeLockConnectionQuietly() {
++        if (lockConnection == null) {
++            return;
++        }
++        try {
++            lockConnection.close();
++            recordLifecycle("锁连接L已关闭");
++        } catch (Throwable t) {
++            recordLifecycle("锁连接L关闭异常（按已关闭处理）：" + t);
++        } finally {
++            lockConnection = null;
++        }
++    }
++
++    private static void releaseFileLockQuietly() {
++        if (fileLock != null) {
++            try {
++                fileLock.release();
++                recordLifecycle("进程级文件锁已释放");
++            } catch (Throwable t) {
++                failureEvidence.add("文件锁释放异常：" + t);
++                System.out.println("[FIXTURE-LOCK] FAIL-EVIDENCE: 文件锁释放异常：" + t);
++            } finally {
++                fileLock = null;
++            }
++        }
++        closeChannelQuietly();
++    }
++
++    private static void closeChannelQuietly() {
++        if (lockChannel != null) {
++            try {
++                lockChannel.close();
++            } catch (Throwable t) {
++                failureEvidence.add("文件锁通道关闭异常：" + t);
++                System.out.println("[FIXTURE-LOCK] FAIL-EVIDENCE: 文件锁通道关闭异常：" + t);
++            } finally {
++                lockChannel = null;
++            }
++        }
++    }
++
++    private static void recordLifecycle(String event) {
++        lifecycleEvidence.add(event);
++        System.out.println("[FIXTURE-LOCK] " + event);
+     }
+ 
+     private String register(String token) {

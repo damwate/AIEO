@@ -1,0 +1,670 @@
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.ecog.acl:common:jar:1.0.1
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-compiler-plugin is missing. @ com.ecog:acl:0.0.1-SNAPSHOT, D:\YotinGarden\.worktrees\bms-multi-device-login-acl\pom.xml, line 61, column 21
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.ecog.acl:client:jar:1.0.1
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-compiler-plugin is missing. @ com.ecog:acl:0.0.1-SNAPSHOT, D:\YotinGarden\.worktrees\bms-multi-device-login-acl\pom.xml, line 61, column 21
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.ecog.acl:server:jar:0.0.1-SNAPSHOT
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-compiler-plugin is missing. @ com.ecog:acl:0.0.1-SNAPSHOT, D:\YotinGarden\.worktrees\bms-multi-device-login-acl\pom.xml, line 61, column 21
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.ecog.acl:ui:jar:0.0.1-SNAPSHOT
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-compiler-plugin is missing. @ com.ecog:acl:0.0.1-SNAPSHOT, D:\YotinGarden\.worktrees\bms-multi-device-login-acl\pom.xml, line 61, column 21
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.ecog:acl:pom:0.0.1-SNAPSHOT
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-compiler-plugin is missing. @ line 61, column 21
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] acl
+[INFO] common
+[INFO] server
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Building acl 0.0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Building common 1.0.1
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ common ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory D:\YotinGarden\.worktrees\bms-multi-device-login-acl\acl-common\src\main\resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ common ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ common ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory D:\YotinGarden\.worktrees\bms-multi-device-login-acl\acl-common\src\test\resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:testCompile (default-testCompile) @ common ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.4.2:test (default-test) @ common ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Building server 0.0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[WARNING] The artifact mysql:mysql-connector-java:jar:8.0.33 has been relocated to com.mysql:mysql-connector-j:jar:8.0.33
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ server ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 15 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ server ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ server ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory D:\YotinGarden\.worktrees\bms-multi-device-login-acl\acl-server\src\test\resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:testCompile (default-testCompile) @ server ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.12.4:test (default-test) @ server ---
+[INFO] Surefire report directory: D:\YotinGarden\.worktrees\bms-multi-device-login-acl\acl-server\target\surefire-reports
+
+-------------------------------------------------------
+ T E S T S
+-------------------------------------------------------
+Running com.ecog.acl.entity.UserTokenTest
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.135 sec
+Running com.ecog.acl.MultiDeviceLoginIntegrationTest
+14:50:14.699 [main] DEBUG org.springframework.test.context.junit4.SpringJUnit4ClassRunner - SpringJUnit4ClassRunner constructor called with [class com.ecog.acl.MultiDeviceLoginIntegrationTest]
+14:50:14.714 [main] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating CacheAwareContextLoaderDelegate from class [org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate]
+14:50:14.732 [main] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating BootstrapContext using constructor [public org.springframework.test.context.support.DefaultBootstrapContext(java.lang.Class,org.springframework.test.context.CacheAwareContextLoaderDelegate)]
+14:50:14.765 [main] DEBUG org.springframework.test.context.BootstrapUtils - Instantiating TestContextBootstrapper for test class [com.ecog.acl.MultiDeviceLoginIntegrationTest] from class [org.springframework.boot.test.context.SpringBootTestContextBootstrapper]
+14:50:14.797 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Neither @ContextConfiguration nor @ContextHierarchy found for test class [com.ecog.acl.MultiDeviceLoginIntegrationTest], using SpringBootContextLoader
+14:50:14.804 [main] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [com.ecog.acl.MultiDeviceLoginIntegrationTest]: class path resource [com/ecog/acl/MultiDeviceLoginIntegrationTest-context.xml] does not exist
+14:50:14.805 [main] DEBUG org.springframework.test.context.support.AbstractContextLoader - Did not detect default resource location for test class [com.ecog.acl.MultiDeviceLoginIntegrationTest]: class path resource [com/ecog/acl/MultiDeviceLoginIntegrationTestContext.groovy] does not exist
+14:50:14.806 [main] INFO org.springframework.test.context.support.AbstractContextLoader - Could not detect default resource locations for test class [com.ecog.acl.MultiDeviceLoginIntegrationTest]: no resource found for suffixes {-context.xml, Context.groovy}.
+14:50:15.280 [main] DEBUG org.springframework.boot.test.context.SpringBootTestContextBootstrapper - @TestExecutionListeners is not present for class [com.ecog.acl.MultiDeviceLoginIntegrationTest]: using defaults.
+14:50:15.281 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Loaded default TestExecutionListener class names from location [META-INF/spring.factories]: [org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener, org.springframework.test.context.web.ServletTestExecutionListener, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener, org.springframework.test.context.support.DependencyInjectionTestExecutionListener, org.springframework.test.context.support.DirtiesContextTestExecutionListener, org.springframework.test.context.transaction.TransactionalTestExecutionListener, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener]
+14:50:15.321 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper - Using TestExecutionListeners: [org.springframework.test.context.web.ServletTestExecutionListener@67080771, org.springframework.test.context.support.DirtiesContextBeforeModesTestExecutionListener@72cde7cc, org.springframework.boot.test.mock.mockito.MockitoTestExecutionListener@5fd4f8f5, org.springframework.boot.test.autoconfigure.SpringBootDependencyInjectionTestExecutionListener@696da30b, org.springframework.test.context.support.DirtiesContextTestExecutionListener@4e7912d8, org.springframework.test.context.transaction.TransactionalTestExecutionListener@53976f5c, org.springframework.test.context.jdbc.SqlScriptsTestExecutionListener@2bfc268b, org.springframework.boot.test.mock.mockito.ResetMocksTestExecutionListener@2f8dad04, org.springframework.boot.test.autoconfigure.restdocs.RestDocsTestExecutionListener@29e495ff, org.springframework.boot.test.autoconfigure.web.client.MockRestServiceServerResetTestExecutionListener@41e1e210, org.springframework.boot.test.autoconfigure.web.servlet.MockMvcPrintOnlyOnFailureTestExecutionListener@be35cd9, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverTestExecutionListener@4944252c]
+14:50:15.328 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [com.ecog.acl.MultiDeviceLoginIntegrationTest]
+14:50:15.329 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [com.ecog.acl.MultiDeviceLoginIntegrationTest]
+14:50:15.329 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [com.ecog.acl.MultiDeviceLoginIntegrationTest]
+14:50:15.330 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [com.ecog.acl.MultiDeviceLoginIntegrationTest]
+14:50:15.342 [main] DEBUG org.springframework.test.context.support.AbstractDirtiesContextTestExecutionListener - Before test class: context [DefaultTestContext@22e357dc testClass = MultiDeviceLoginIntegrationTest, testInstance = [null], testMethod = [null], testException = [null], mergedContextConfiguration = [WebMergedContextConfiguration@49912c99 testClass = MultiDeviceLoginIntegrationTest, locations = '{}', classes = '{class com.ecog.acl.ServerApplication, class com.ecog.acl.ServerApplication}', contextInitializerClasses = '[]', activeProfiles = '{dev}', propertySourceLocations = '{}', propertySourceProperties = '{eureka.client.enabled=false, spring.cloud.discovery.enabled=false, spring.cloud.config.discovery.enabled=false, org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true}', contextCustomizers = set[org.springframework.boot.test.context.filter.ExcludeFilterContextCustomizer@35083305, org.springframework.boot.test.json.DuplicateJsonObjectContextCustomizerFactory$DuplicateJsonObjectContextCustomizer@55a1c291, org.springframework.boot.test.mock.mockito.MockitoContextCustomizer@aae7035e, org.springframework.boot.test.web.client.TestRestTemplateContextCustomizer@3b2da18f, org.springframework.boot.test.autoconfigure.properties.PropertyMappingContextCustomizer@0, org.springframework.boot.test.autoconfigure.web.servlet.WebDriverContextCustomizerFactory$Customizer@6107227e], resourceBasePath = 'src/main/webapp', contextLoader = 'org.springframework.boot.test.context.SpringBootContextLoader', parent = [null]], attributes = map['org.springframework.test.context.web.ServletTestExecutionListener.activateListener' -> true]], class annotated with @DirtiesContext [false] with mode [null].
+14:50:15.342 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved @ProfileValueSourceConfiguration [null] for test class [com.ecog.acl.MultiDeviceLoginIntegrationTest]
+14:50:15.342 [main] DEBUG org.springframework.test.annotation.ProfileValueUtils - Retrieved ProfileValueSource type [class org.springframework.test.annotation.SystemProfileValueSource] for class [com.ecog.acl.MultiDeviceLoginIntegrationTest]
+14:50:15.392 [main] DEBUG org.springframework.core.env.StandardEnvironment - Adding PropertySource 'systemProperties' with lowest search precedence
+14:50:15.392 [main] DEBUG org.springframework.core.env.StandardEnvironment - Adding PropertySource 'systemEnvironment' with lowest search precedence
+14:50:15.393 [main] DEBUG org.springframework.core.env.StandardEnvironment - Initialized StandardEnvironment with PropertySources [MapPropertySource@1636050357 {name='systemProperties', properties={java.runtime.name=Java(TM) SE Runtime Environment, sun.boot.library.path=D:\Program Files\Java\jdk1.8.0_152\jre\bin, java.vm.version=25.152-b16, java.vm.vendor=Oracle Corporation, java.vendor.url=http://java.oracle.com/, path.separator=;, java.vm.name=Java HotSpot(TM) 64-Bit Server VM, file.encoding.pkg=sun.io, user.country=CN, user.script=, sun.java.launcher=SUN_STANDARD, sun.os.patch.level=, test=UserTokenTest,MultiDeviceLoginIntegrationTest, java.vm.specification.name=Java Virtual Machine Specification, user.dir=D:\YotinGarden\.worktrees\bms-multi-device-login-acl\acl-server, java.runtime.version=1.8.0_152-b16, basedir=D:\YotinGarden\.worktrees\bms-multi-device-login-acl\acl-server, java.awt.graphicsenv=sun.awt.Win32GraphicsEnvironment, java.endorsed.dirs=D:\Program Files\Java\jdk1.8.0_152\jre\lib\endorsed, os.arch=amd64, surefire.real.class.path=D:\YotinGarden\.worktrees\bms-multi-device-login-acl\acl-server\target\surefire\surefirebooter4926436092430223608.jar, java.io.tmpdir=C:\Users\youting\AppData\Local\Temp\, line.separator=
+, java.vm.specification.vendor=Oracle Corporation, user.variant=, os.name=Windows 10, sun.jnu.encoding=GBK, java.library.path=D:\Program Files\Java\jdk1.8.0_152\jre\bin;C:\WINDOWS\Sun\Java\bin;C:\WINDOWS\system32;C:\WINDOWS;C:\Users\youting\.zcode\preinstalled-tools\production\bin;C:\Users\youting\bin;D:\Program Files\Git\mingw64\bin;D:\Program Files\Git\usr\local\bin;D:\Program Files\Git\usr\bin;D:\Program Files\Git\usr\bin;D:\Program Files\Git\mingw64\bin;D:\Program Files\Git\usr\bin;C:\Users\youting\bin;%JAVA_HOME%\bin;C:\ProgramData\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0;C:\WINDOWS\System32\OpenSSH;D:\Program Files\Git\cmd;D:\Program Files (x86)\Tencent\微信web开发者工具\dll;D:\apache-maven-3.5.0\bin;C:\Program Files\nodejs;C:\Program Files\nodejs\node_modules\npm;C:\ProgramData\chocolatey\bin;C:\Program Files\OpenSSL\bin;C:\Program Files\RedHat\Podman;C:\Program Files\ProxyBridge;C:\Users\youting\AppData\Local\codebuddy\bin;C:\Users\youting\AppData\Local\Programs\Python\Python312\Scripts;C:\Users\youting\AppData\Local\Programs\Python\Python312;C:\Users\youting\AppData\Local\Programs\Python\Launcher;C:\Users\youting\.mimocode\bin;C:\Users\youting\AppData\Local\Microsoft\WindowsApps;D:\Program Files\JetBrains\IntelliJ IDEA 2024.2.4\bin;D:\Program Files\Microsoft VS Code\bin;D:\tools\wget.exe;C:\Users\youting\AppData\Roaming\npm;C:\Users\youting\AppData\Local\Python\bin;C:\Program Files\RedHat\Podman;C:\Users\youting\.dotnet\tools;C:\Users\youting\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg.Essentials_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-9.0.1-essentials_build\bin;C:\Program Files\LibreOffice\program;D:\Program Files\Microsoft VS Code\bin\copilot-shim;D:\Program Files\ZCode\resources\tools\ripgrep;D:\Program Files\ZCode\resources\tools\ugrep;D:\Program Files\Git\usr\bin\vendor_perl;D:\Program Files\Git\usr\bin\core_perl;., surefire.test.class.path=D:\YotinGarden\.worktrees\bms-multi-device-login-acl\acl-server\target\test-classes;D:\YotinGarden\.worktrees\bms-multi-device-login-acl\acl-server\target\classes;D:\m2\repository\org\springframework\cloud\spring-cloud-starter-netflix-eureka-client\2.0.0.RELEASE\spring-cloud-starter-netflix-eureka-client-2.0.0.RELEASE.jar;D:\m2\repository\org\springframework\cloud\spring-cloud-starter\2.0.0.RELEASE\spring-cloud-starter-2.0.0.RELEASE.jar;D:\m2\repository\org\springframework\cloud\spring-cloud-context\2.0.0.RELEASE\spring-cloud-context-2.0.0.RELEASE.jar;D:\m2\repository\org\springframework\security\spring-security-rsa\1.0.5.RELEASE\spring-security-rsa-1.0.5.RELEASE.jar;D:\m2\repository\org\bouncycastle\bcpkix-jdk15on\1.56\bcpkix-jdk15on-1.56.jar;D:\m2\repository\org\bouncycastle\bcprov-jdk15on\1.56\bcprov-jdk15on-1.56.jar;D:\m2\repository\org\springframework\cloud\spring-cloud-netflix-core\2.0.0.RELEASE\spring-cloud-netflix-core-2.0.0.RELEASE.jar;D:\m2\repository\org\springframework\boot\spring-boot-starter-aop\2.0.6.RELEASE\spring-boot-starter-aop-2.0.6.RELEASE.jar;D:\m2\repository\org\springframework\cloud\spring-cloud-netflix-eureka-client\2.0.0.RELEASE\spring-cloud-netflix-eureka-client-2.0.0.RELEASE.jar;D:\m2\repository\com\netflix\eureka\eureka-client\1.9.2\eureka-client-1.9.2.jar;D:\m2\repository\org\codehaus\jettison\jettison\1.3.7\jettison-1.3.7.jar;D:\m2\repository\stax\stax-api\1.0.1\stax-api-1.0.1.jar;D:\m2\repository\com\netflix\netflix-commons\netflix-eventbus\0.3.0\netflix-eventbus-0.3.0.jar;D:\m2\repository\com\netflix\netflix-commons\netflix-infix\0.3.0\netflix-infix-0.3.0.jar;D:\m2\repository\commons-jxpath\commons-jxpath\1.3\commons-jxpath-1.3.jar;D:\m2\repository\joda-time\joda-time\2.9.9\joda-time-2.9.9.jar;D:\m2\repository\org\antlr\antlr-runtime\3.4\antlr-runtime-3.4.jar;D:\m2\repository\org\antlr\stringtemplate\3.2.1\stringtemplate-3.2.1.jar;D:\m2\repository\antlr\antlr\2.7.7\antlr-2.7.7.jar;D:\m2\repository\com\google\code\gson\gson\2.8.5\gson-2.8.5.jar;D:\m2\repository\org\apache\commons\commons-math\2.2\commons-math-2.2.jar;D:\m2\repository\com\netflix\archaius\archaius-core\0.7.6\archaius-core-0.7.6.jar;D:\m2\repository\javax\ws\rs\jsr311-api\1.1.1\jsr311-api-1.1.1.jar;D:\m2\repository\com\netflix\servo\servo-core\0.12.21\servo-core-0.12.21.jar;D:\m2\repository\com\sun\jersey\jersey-core\1.19.1\jersey-core-1.19.1.jar;D:\m2\repository\com\sun\jersey\jersey-client\1.19.1\jersey-client-1.19.1.jar;D:\m2\repository\com\sun\jersey\contribs\jersey-apache-client4\1.19.1\jersey-apache-client4-1.19.1.jar;D:\m2\repository\org\apache\httpcomponents\httpclient\4.5.6\httpclient-4.5.6.jar;D:\m2\repository\org\apache\httpcomponents\httpcore\4.4.10\httpcore-4.4.10.jar;D:\m2\repository\commons-codec\commons-codec\1.11\commons-codec-1.11.jar;D:\m2\repository\com\google\inject\guice\4.1.0\guice-4.1.0.jar;D:\m2\repository\aopalliance\aopalliance\1.0\aopalliance-1.0.jar;D:\m2\repository\com\github\vlsi\compactmap\compactmap\1.2.1\compactmap-1.2.1.jar;D:\m2\repository\com\github\andrewoma\dexx\dexx-collections\0.2\dexx-collections-0.2.jar;D:\m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.9.0\jackson-annotations-2.9.0.jar;D:\m2\repository\com\fasterxml\jackson\core\jackson-core\2.9.7\jackson-core-2.9.7.jar;D:\m2\repository\com\fasterxml\jackson\core\jackson-databind\2.9.7\jackson-databind-2.9.7.jar;D:\m2\repository\com\netflix\eureka\eureka-core\1.9.2\eureka-core-1.9.2.jar;D:\m2\repository\org\codehaus\woodstox\woodstox-core-asl\4.4.1\woodstox-core-asl-4.4.1.jar;D:\m2\repository\javax\xml\stream\stax-api\1.0-2\stax-api-1.0-2.jar;D:\m2\repository\org\codehaus\woodstox\stax2-api\3.1.4\stax2-api-3.1.4.jar;D:\m2\repository\org\springframework\cloud\spring-cloud-starter-netflix-archaius\2.0.0.RELEASE\spring-cloud-starter-netflix-archaius-2.0.0.RELEASE.jar;D:\m2\repository\org\springframework\cloud\spring-cloud-netflix-archaius\2.0.0.RELEASE\spring-cloud-netflix-archaius-2.0.0.RELEASE.jar;D:\m2\repository\commons-configuration\commons-configuration\1.8\commons-configuration-1.8.jar;D:\m2\repository\com\netflix\ribbon\ribbon-eureka\2.2.5\ribbon-eureka-2.2.5.jar;D:\m2\repository\org\slf4j\slf4j-api\1.7.25\slf4j-api-1.7.25.jar;D:\m2\repository\com\thoughtworks\xstream\xstream\1.4.10\xstream-1.4.10.jar;D:\m2\repository\xmlpull\xmlpull\1.1.3.1\xmlpull-1.1.3.1.jar;D:\m2\repository\xpp3\xpp3_min\1.1.4c\xpp3_min-1.1.4c.jar;D:\m2\repository\org\springframework\cloud\spring-cloud-starter-netflix-ribbon\2.0.0.RELEASE\spring-cloud-starter-netflix-ribbon-2.0.0.RELEASE.jar;D:\m2\repository\org\springframework\cloud\spring-cloud-netflix-ribbon\2.0.0.RELEASE\spring-cloud-netflix-ribbon-2.0.0.RELEASE.jar;D:\m2\repository\com\netflix\ribbon\ribbon\2.2.5\ribbon-2.2.5.jar;D:\m2\repository\com\netflix\ribbon\ribbon-transport\2.2.5\ribbon-transport-2.2.5.jar;D:\m2\repository\io\reactivex\rxnetty-contexts\0.4.9\rxnetty-contexts-0.4.9.jar;D:\m2\repository\io\reactivex\rxnetty-servo\0.4.9\rxnetty-servo-0.4.9.jar;D:\m2\repository\javax\inject\javax.inject\1\javax.inject-1.jar;D:\m2\repository\io\reactivex\rxnetty\0.4.9\rxnetty-0.4.9.jar;D:\m2\repository\io\netty\netty-codec-http\4.1.29.Final\netty-codec-http-4.1.29.Final.jar;D:\m2\repository\io\netty\netty-codec\4.1.29.Final\netty-codec-4.1.29.Final.jar;D:\m2\repository\io\netty\netty-transport-native-epoll\4.1.29.Final\netty-transport-native-epoll-4.1.29.Final.jar;D:\m2\repository\io\netty\netty-common\4.1.29.Final\netty-common-4.1.29.Final.jar;D:\m2\repository\io\netty\netty-buffer\4.1.29.Final\netty-buffer-4.1.29.Final.jar;D:\m2\repository\io\netty\netty-transport-native-unix-common\4.1.29.Final\netty-transport-native-unix-common-4.1.29.Final.jar;D:\m2\repository\io\netty\netty-transport\4.1.29.Final\netty-transport-4.1.29.Final.jar;D:\m2\repository\io\netty\netty-resolver\4.1.29.Final\netty-resolver-4.1.29.Final.jar;D:\m2\repository\com\google\guava\guava\16.0.1\guava-16.0.1.jar;D:\m2\repository\com\netflix\ribbon\ribbon-core\2.2.5\ribbon-core-2.2.5.jar;D:\m2\repository\commons-lang\commons-lang\2.6\commons-lang-2.6.jar;D:\m2\repository\com\netflix\ribbon\ribbon-httpclient\2.2.5\ribbon-httpclient-2.2.5.jar;D:\m2\repository\commons-collections\commons-collections\3.2.2\commons-collections-3.2.2.jar;D:\m2\repository\com\netflix\netflix-commons\netflix-commons-util\0.3.0\netflix-commons-util-0.3.0.jar;D:\m2\repository\com\netflix\ribbon\ribbon-loadbalancer\2.2.5\ribbon-loadbalancer-2.2.5.jar;D:\m2\repository\com\netflix\netflix-commons\netflix-statistics\0.1.1\netflix-statistics-0.1.1.jar;D:\m2\repository\io\reactivex\rxjava\1.3.8\rxjava-1.3.8.jar;D:\m2\repository\org\springframework\cloud\spring-cloud-starter-openfeign\2.0.0.RELEASE\spring-cloud-starter-openfeign-2.0.0.RELEASE.jar;D:\m2\repository\org\springframework\cloud\spring-cloud-openfeign-core\2.0.0.RELEASE\spring-cloud-openfeign-core-2.0.0.RELEASE.jar;D:\m2\repository\org\springframework\spring-web\5.0.10.RELEASE\spring-web-5.0.10.RELEASE.jar;D:\m2\repository\org\springframework\spring-beans\5.0.10.RELEASE\spring-beans-5.0.10.RELEASE.jar;D:\m2\repository\org\springframework\cloud\spring-cloud-commons\2.0.0.RELEASE\spring-cloud-commons-2.0.0.RELEASE.jar;D:\m2\repository\org\springframework\security\spring-security-crypto\5.0.9.RELEASE\spring-security-crypto-5.0.9.RELEASE.jar;D:\m2\repository\io\github\openfeign\feign-core\9.5.1\feign-core-9.5.1.jar;D:\m2\repository\io\github\openfeign\feign-slf4j\9.5.1\feign-slf4j-9.5.1.jar;D:\m2\repository\io\github\openfeign\feign-hystrix\9.5.1\feign-hystrix-9.5.1.jar;D:\m2\repository\io\github\openfeign\feign-java8\9.5.1\feign-java8-9.5.1.jar;D:\m2\repository\org\springframework\cloud\spring-cloud-starter-netflix-hystrix\2.0.0.RELEASE\spring-cloud-starter-netflix-hystrix-2.0.0.RELEASE.jar;D:\m2\repository\com\netflix\hystrix\hystrix-core\1.5.12\hystrix-core-1.5.12.jar;D:\m2\repository\org\hdrhistogram\HdrHistogram\2.1.9\HdrHistogram-2.1.9.jar;D:\m2\repository\com\netflix\hystrix\hystrix-serialization\1.5.12\hystrix-serialization-1.5.12.jar;D:\m2\repository\com\fasterxml\jackson\module\jackson-module-afterburner\2.9.7\jackson-module-afterburner-2.9.7.jar;D:\m2\repository\com\netflix\hystrix\hystrix-metrics-event-stream\1.5.12\hystrix-metrics-event-stream-1.5.12.jar;D:\m2\repository\com\netflix\hystrix\hystrix-javanica\1.5.12\hystrix-javanica-1.5.12.jar;D:\m2\repository\org\apache\commons\commons-lang3\3.7\commons-lang3-3.7.jar;D:\m2\repository\org\ow2\asm\asm\5.0.4\asm-5.0.4.jar;D:\m2\repository\org\aspectj\aspectjweaver\1.8.13\aspectjweaver-1.8.13.jar;D:\m2\repository\io\reactivex\rxjava-reactive-streams\1.2.1\rxjava-reactive-streams-1.2.1.jar;D:\m2\repository\org\reactivestreams\reactive-streams\1.0.2\reactive-streams-1.0.2.jar;D:\m2\repository\org\springframework\boot\spring-boot-starter-web\2.0.6.RELEASE\spring-boot-starter-web-2.0.6.RELEASE.jar;D:\m2\repository\org\springframework\boot\spring-boot-starter\2.0.6.RELEASE\spring-boot-starter-2.0.6.RELEASE.jar;D:\m2\repository\org\springframework\boot\spring-boot\2.0.6.RELEASE\spring-boot-2.0.6.RELEASE.jar;D:\m2\repository\org\springframework\boot\spring-boot-starter-logging\2.0.6.RELEASE\spring-boot-starter-logging-2.0.6.RELEASE.jar;D:\m2\repository\ch\qos\logback\logback-classic\1.2.3\logback-classic-1.2.3.jar;D:\m2\repository\ch\qos\logback\logback-core\1.2.3\logback-core-1.2.3.jar;D:\m2\repository\org\apache\logging\log4j\log4j-to-slf4j\2.10.0\log4j-to-slf4j-2.10.0.jar;D:\m2\repository\org\apache\logging\log4j\log4j-api\2.10.0\log4j-api-2.10.0.jar;D:\m2\repository\org\slf4j\jul-to-slf4j\1.7.25\jul-to-slf4j-1.7.25.jar;D:\m2\repository\javax\annotation\javax.annotation-api\1.3.2\javax.annotation-api-1.3.2.jar;D:\m2\repository\org\yaml\snakeyaml\1.19\snakeyaml-1.19.jar;D:\m2\repository\org\springframework\boot\spring-boot-starter-json\2.0.6.RELEASE\spring-boot-starter-json-2.0.6.RELEASE.jar;D:\m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jdk8\2.9.7\jackson-datatype-jdk8-2.9.7.jar;D:\m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jsr310\2.9.7\jackson-datatype-jsr310-2.9.7.jar;D:\m2\repository\com\fasterxml\jackson\module\jackson-module-parameter-names\2.9.7\jackson-module-parameter-names-2.9.7.jar;D:\m2\repository\org\springframework\boot\spring-boot-starter-tomcat\2.0.6.RELEASE\spring-boot-starter-tomcat-2.0.6.RELEASE.jar;D:\m2\repository\org\apache\tomcat\embed\tomcat-embed-core\8.5.34\tomcat-embed-core-8.5.34.jar;D:\m2\repository\org\apache\tomcat\embed\tomcat-embed-el\8.5.34\tomcat-embed-el-8.5.34.jar;D:\m2\repository\org\apache\tomcat\embed\tomcat-embed-websocket\8.5.34\tomcat-embed-websocket-8.5.34.jar;D:\m2\repository\org\hibernate\validator\hibernate-validator\6.0.13.Final\hibernate-validator-6.0.13.Final.jar;D:\m2\repository\javax\validation\validation-api\2.0.1.Final\validation-api-2.0.1.Final.jar;D:\m2\repository\org\jboss\logging\jboss-logging\3.3.2.Final\jboss-logging-3.3.2.Final.jar;D:\m2\repository\com\fasterxml\classmate\1.3.4\classmate-1.3.4.jar;D:\m2\repository\org\springframework\spring-webmvc\5.0.10.RELEASE\spring-webmvc-5.0.10.RELEASE.jar;D:\m2\repository\org\springframework\spring-aop\5.0.10.RELEASE\spring-aop-5.0.10.RELEASE.jar;D:\m2\repository\org\springframework\spring-context\5.0.10.RELEASE\spring-context-5.0.10.RELEASE.jar;D:\m2\repository\org\springframework\spring-expression\5.0.10.RELEASE\spring-expression-5.0.10.RELEASE.jar;D:\m2\repository\org\springframework\boot\spring-boot-starter-jdbc\2.0.6.RELEASE\spring-boot-starter-jdbc-2.0.6.RELEASE.jar;D:\m2\repository\com\zaxxer\HikariCP\2.7.9\HikariCP-2.7.9.jar;D:\m2\repository\org\springframework\spring-jdbc\5.0.10.RELEASE\spring-jdbc-5.0.10.RELEASE.jar;D:\m2\repository\org\springframework\spring-tx\5.0.10.RELEASE\spring-tx-5.0.10.RELEASE.jar;D:\m2\repository\com\mysql\mysql-connector-j\8.0.33\mysql-connector-j-8.0.33.jar;D:\m2\repository\com\google\protobuf\protobuf-java\3.21.9\protobuf-java-3.21.9.jar;D:\m2\repository\com\alibaba\druid\1.2.23\druid-1.2.23.jar;D:\m2\repository\com\baomidou\mybatis-plus-boot-starter\2.3\mybatis-plus-boot-starter-2.3.jar;D:\m2\repository\com\baomidou\mybatis-plus\2.3\mybatis-plus-2.3.jar;D:\m2\repository\com\baomidou\mybatis-plus-support\2.3\mybatis-plus-support-2.3.jar;D:\m2\repository\com\baomidou\mybatis-plus-core\2.3\mybatis-plus-core-2.3.jar;D:\m2\repository\com\github\jsqlparser\jsqlparser\1.1\jsqlparser-1.1.jar;D:\m2\repository\org\mybatis\mybatis-spring\1.3.2\mybatis-spring-1.3.2.jar;D:\m2\repository\org\mybatis\mybatis\3.4.6\mybatis-3.4.6.jar;D:\m2\repository\com\baomidou\mybatis-plus-generate\2.3\mybatis-plus-generate-2.3.jar;D:\m2\repository\org\springframework\boot\spring-boot-autoconfigure\2.0.6.RELEASE\spring-boot-autoconfigure-2.0.6.RELEASE.jar;D:\YotinGarden\.worktrees\bms-multi-device-login-acl\acl-common\target\classes;D:\m2\repository\cn\hutool\hutool-all\4.1.5\hutool-all-4.1.5.jar;D:\m2\repository\org\springframework\boot\spring-boot-starter-actuator\2.0.6.RELEASE\spring-boot-starter-actuator-2.0.6.RELEASE.jar;D:\m2\repository\org\springframework\boot\spring-boot-actuator-autoconfigure\2.0.6.RELEASE\spring-boot-actuator-autoconfigure-2.0.6.RELEASE.jar;D:\m2\repository\org\springframework\boot\spring-boot-actuator\2.0.6.RELEASE\spring-boot-actuator-2.0.6.RELEASE.jar;D:\m2\repository\io\micrometer\micrometer-core\1.0.7\micrometer-core-1.0.7.jar;D:\m2\repository\org\latencyutils\LatencyUtils\2.0.3\LatencyUtils-2.0.3.jar;D:\m2\repository\org\springframework\boot\spring-boot-starter-test\2.0.6.RELEASE\spring-boot-starter-test-2.0.6.RELEASE.jar;D:\m2\repository\org\springframework\boot\spring-boot-test\2.0.6.RELEASE\spring-boot-test-2.0.6.RELEASE.jar;D:\m2\repository\org\springframework\boot\spring-boot-test-autoconfigure\2.0.6.RELEASE\spring-boot-test-autoconfigure-2.0.6.RELEASE.jar;D:\m2\repository\com\jayway\jsonpath\json-path\2.4.0\json-path-2.4.0.jar;D:\m2\repository\net\minidev\json-smart\2.3\json-smart-2.3.jar;D:\m2\repository\net\minidev\accessors-smart\1.2\accessors-smart-1.2.jar;D:\m2\repository\junit\junit\4.12\junit-4.12.jar;D:\m2\repository\org\assertj\assertj-core\3.9.1\assertj-core-3.9.1.jar;D:\m2\repository\org\mockito\mockito-core\2.15.0\mockito-core-2.15.0.jar;D:\m2\repository\net\bytebuddy\byte-buddy\1.7.11\byte-buddy-1.7.11.jar;D:\m2\repository\net\bytebuddy\byte-buddy-agent\1.7.11\byte-buddy-agent-1.7.11.jar;D:\m2\repository\org\objenesis\objenesis\2.6\objenesis-2.6.jar;D:\m2\repository\org\hamcrest\hamcrest-core\1.3\hamcrest-core-1.3.jar;D:\m2\repository\org\hamcrest\hamcrest-library\1.3\hamcrest-library-1.3.jar;D:\m2\repository\org\skyscreamer\jsonassert\1.5.0\jsonassert-1.5.0.jar;D:\m2\repository\com\vaadin\external\google\android-json\0.0.20131108.vaadin1\android-json-0.0.20131108.vaadin1.jar;D:\m2\repository\org\springframework\spring-core\5.0.10.RELEASE\spring-core-5.0.10.RELEASE.jar;D:\m2\repository\org\springframework\spring-jcl\5.0.10.RELEASE\spring-jcl-5.0.10.RELEASE.jar;D:\m2\repository\org\springframework\spring-test\5.0.10.RELEASE\spring-test-5.0.10.RELEASE.jar;D:\m2\repository\org\xmlunit\xmlunit-core\2.5.1\xmlunit-core-2.5.1.jar;, java.specification.name=Java Platform API Specification, java.class.version=52.0, sun.management.compiler=HotSpot 64-Bit Tiered Compilers, skipTests=false, os.version=10.0, user.home=C:\Users\youting, surefire.failIfNoSpecifiedTests=false, user.timezone=Asia/Shanghai, java.awt.printerjob=sun.awt.windows.WPrinterJob, file.encoding=GBK, java.specification.version=1.8, java.class.path=D:\YotinGarden\.worktrees\bms-multi-device-login-acl\acl-server\target\test-classes;D:\YotinGarden\.worktrees\bms-multi-device-login-acl\acl-server\target\classes;D:\m2\repository\org\springframework\cloud\spring-cloud-starter-netflix-eureka-client\2.0.0.RELEASE\spring-cloud-starter-netflix-eureka-client-2.0.0.RELEASE.jar;D:\m2\repository\org\springframework\cloud\spring-cloud-starter\2.0.0.RELEASE\spring-cloud-starter-2.0.0.RELEASE.jar;D:\m2\repository\org\springframework\cloud\spring-cloud-context\2.0.0.RELEASE\spring-cloud-context-2.0.0.RELEASE.jar;D:\m2\repository\org\springframework\security\spring-security-rsa\1.0.5.RELEASE\spring-security-rsa-1.0.5.RELEASE.jar;D:\m2\repository\org\bouncycastle\bcpkix-jdk15on\1.56\bcpkix-jdk15on-1.56.jar;D:\m2\repository\org\bouncycastle\bcprov-jdk15on\1.56\bcprov-jdk15on-1.56.jar;D:\m2\repository\org\springframework\cloud\spring-cloud-netflix-core\2.0.0.RELEASE\spring-cloud-netflix-core-2.0.0.RELEASE.jar;D:\m2\repository\org\springframework\boot\spring-boot-starter-aop\2.0.6.RELEASE\spring-boot-starter-aop-2.0.6.RELEASE.jar;D:\m2\repository\org\springframework\cloud\spring-cloud-netflix-eureka-client\2.0.0.RELEASE\spring-cloud-netflix-eureka-client-2.0.0.RELEASE.jar;D:\m2\repository\com\netflix\eureka\eureka-client\1.9.2\eureka-client-1.9.2.jar;D:\m2\repository\org\codehaus\jettison\jettison\1.3.7\jettison-1.3.7.jar;D:\m2\repository\stax\stax-api\1.0.1\stax-api-1.0.1.jar;D:\m2\repository\com\netflix\netflix-commons\netflix-eventbus\0.3.0\netflix-eventbus-0.3.0.jar;D:\m2\repository\com\netflix\netflix-commons\netflix-infix\0.3.0\netflix-infix-0.3.0.jar;D:\m2\repository\commons-jxpath\commons-jxpath\1.3\commons-jxpath-1.3.jar;D:\m2\repository\joda-time\joda-time\2.9.9\joda-time-2.9.9.jar;D:\m2\repository\org\antlr\antlr-runtime\3.4\antlr-runtime-3.4.jar;D:\m2\repository\org\antlr\stringtemplate\3.2.1\stringtemplate-3.2.1.jar;D:\m2\repository\antlr\antlr\2.7.7\antlr-2.7.7.jar;D:\m2\repository\com\google\code\gson\gson\2.8.5\gson-2.8.5.jar;D:\m2\repository\org\apache\commons\commons-math\2.2\commons-math-2.2.jar;D:\m2\repository\com\netflix\archaius\archaius-core\0.7.6\archaius-core-0.7.6.jar;D:\m2\repository\javax\ws\rs\jsr311-api\1.1.1\jsr311-api-1.1.1.jar;D:\m2\repository\com\netflix\servo\servo-core\0.12.21\servo-core-0.12.21.jar;D:\m2\repository\com\sun\jersey\jersey-core\1.19.1\jersey-core-1.19.1.jar;D:\m2\repository\com\sun\jersey\jersey-client\1.19.1\jersey-client-1.19.1.jar;D:\m2\repository\com\sun\jersey\contribs\jersey-apache-client4\1.19.1\jersey-apache-client4-1.19.1.jar;D:\m2\repository\org\apache\httpcomponents\httpclient\4.5.6\httpclient-4.5.6.jar;D:\m2\repository\org\apache\httpcomponents\httpcore\4.4.10\httpcore-4.4.10.jar;D:\m2\repository\commons-codec\commons-codec\1.11\commons-codec-1.11.jar;D:\m2\repository\com\google\inject\guice\4.1.0\guice-4.1.0.jar;D:\m2\repository\aopalliance\aopalliance\1.0\aopalliance-1.0.jar;D:\m2\repository\com\github\vlsi\compactmap\compactmap\1.2.1\compactmap-1.2.1.jar;D:\m2\repository\com\github\andrewoma\dexx\dexx-collections\0.2\dexx-collections-0.2.jar;D:\m2\repository\com\fasterxml\jackson\core\jackson-annotations\2.9.0\jackson-annotations-2.9.0.jar;D:\m2\repository\com\fasterxml\jackson\core\jackson-core\2.9.7\jackson-core-2.9.7.jar;D:\m2\repository\com\fasterxml\jackson\core\jackson-databind\2.9.7\jackson-databind-2.9.7.jar;D:\m2\repository\com\netflix\eureka\eureka-core\1.9.2\eureka-core-1.9.2.jar;D:\m2\repository\org\codehaus\woodstox\woodstox-core-asl\4.4.1\woodstox-core-asl-4.4.1.jar;D:\m2\repository\javax\xml\stream\stax-api\1.0-2\stax-api-1.0-2.jar;D:\m2\repository\org\codehaus\woodstox\stax2-api\3.1.4\stax2-api-3.1.4.jar;D:\m2\repository\org\springframework\cloud\spring-cloud-starter-netflix-archaius\2.0.0.RELEASE\spring-cloud-starter-netflix-archaius-2.0.0.RELEASE.jar;D:\m2\repository\org\springframework\cloud\spring-cloud-netflix-archaius\2.0.0.RELEASE\spring-cloud-netflix-archaius-2.0.0.RELEASE.jar;D:\m2\repository\commons-configuration\commons-configuration\1.8\commons-configuration-1.8.jar;D:\m2\repository\com\netflix\ribbon\ribbon-eureka\2.2.5\ribbon-eureka-2.2.5.jar;D:\m2\repository\org\slf4j\slf4j-api\1.7.25\slf4j-api-1.7.25.jar;D:\m2\repository\com\thoughtworks\xstream\xstream\1.4.10\xstream-1.4.10.jar;D:\m2\repository\xmlpull\xmlpull\1.1.3.1\xmlpull-1.1.3.1.jar;D:\m2\repository\xpp3\xpp3_min\1.1.4c\xpp3_min-1.1.4c.jar;D:\m2\repository\org\springframework\cloud\spring-cloud-starter-netflix-ribbon\2.0.0.RELEASE\spring-cloud-starter-netflix-ribbon-2.0.0.RELEASE.jar;D:\m2\repository\org\springframework\cloud\spring-cloud-netflix-ribbon\2.0.0.RELEASE\spring-cloud-netflix-ribbon-2.0.0.RELEASE.jar;D:\m2\repository\com\netflix\ribbon\ribbon\2.2.5\ribbon-2.2.5.jar;D:\m2\repository\com\netflix\ribbon\ribbon-transport\2.2.5\ribbon-transport-2.2.5.jar;D:\m2\repository\io\reactivex\rxnetty-contexts\0.4.9\rxnetty-contexts-0.4.9.jar;D:\m2\repository\io\reactivex\rxnetty-servo\0.4.9\rxnetty-servo-0.4.9.jar;D:\m2\repository\javax\inject\javax.inject\1\javax.inject-1.jar;D:\m2\repository\io\reactivex\rxnetty\0.4.9\rxnetty-0.4.9.jar;D:\m2\repository\io\netty\netty-codec-http\4.1.29.Final\netty-codec-http-4.1.29.Final.jar;D:\m2\repository\io\netty\netty-codec\4.1.29.Final\netty-codec-4.1.29.Final.jar;D:\m2\repository\io\netty\netty-transport-native-epoll\4.1.29.Final\netty-transport-native-epoll-4.1.29.Final.jar;D:\m2\repository\io\netty\netty-common\4.1.29.Final\netty-common-4.1.29.Final.jar;D:\m2\repository\io\netty\netty-buffer\4.1.29.Final\netty-buffer-4.1.29.Final.jar;D:\m2\repository\io\netty\netty-transport-native-unix-common\4.1.29.Final\netty-transport-native-unix-common-4.1.29.Final.jar;D:\m2\repository\io\netty\netty-transport\4.1.29.Final\netty-transport-4.1.29.Final.jar;D:\m2\repository\io\netty\netty-resolver\4.1.29.Final\netty-resolver-4.1.29.Final.jar;D:\m2\repository\com\google\guava\guava\16.0.1\guava-16.0.1.jar;D:\m2\repository\com\netflix\ribbon\ribbon-core\2.2.5\ribbon-core-2.2.5.jar;D:\m2\repository\commons-lang\commons-lang\2.6\commons-lang-2.6.jar;D:\m2\repository\com\netflix\ribbon\ribbon-httpclient\2.2.5\ribbon-httpclient-2.2.5.jar;D:\m2\repository\commons-collections\commons-collections\3.2.2\commons-collections-3.2.2.jar;D:\m2\repository\com\netflix\netflix-commons\netflix-commons-util\0.3.0\netflix-commons-util-0.3.0.jar;D:\m2\repository\com\netflix\ribbon\ribbon-loadbalancer\2.2.5\ribbon-loadbalancer-2.2.5.jar;D:\m2\repository\com\netflix\netflix-commons\netflix-statistics\0.1.1\netflix-statistics-0.1.1.jar;D:\m2\repository\io\reactivex\rxjava\1.3.8\rxjava-1.3.8.jar;D:\m2\repository\org\springframework\cloud\spring-cloud-starter-openfeign\2.0.0.RELEASE\spring-cloud-starter-openfeign-2.0.0.RELEASE.jar;D:\m2\repository\org\springframework\cloud\spring-cloud-openfeign-core\2.0.0.RELEASE\spring-cloud-openfeign-core-2.0.0.RELEASE.jar;D:\m2\repository\org\springframework\spring-web\5.0.10.RELEASE\spring-web-5.0.10.RELEASE.jar;D:\m2\repository\org\springframework\spring-beans\5.0.10.RELEASE\spring-beans-5.0.10.RELEASE.jar;D:\m2\repository\org\springframework\cloud\spring-cloud-commons\2.0.0.RELEASE\spring-cloud-commons-2.0.0.RELEASE.jar;D:\m2\repository\org\springframework\security\spring-security-crypto\5.0.9.RELEASE\spring-security-crypto-5.0.9.RELEASE.jar;D:\m2\repository\io\github\openfeign\feign-core\9.5.1\feign-core-9.5.1.jar;D:\m2\repository\io\github\openfeign\feign-slf4j\9.5.1\feign-slf4j-9.5.1.jar;D:\m2\repository\io\github\openfeign\feign-hystrix\9.5.1\feign-hystrix-9.5.1.jar;D:\m2\repository\io\github\openfeign\feign-java8\9.5.1\feign-java8-9.5.1.jar;D:\m2\repository\org\springframework\cloud\spring-cloud-starter-netflix-hystrix\2.0.0.RELEASE\spring-cloud-starter-netflix-hystrix-2.0.0.RELEASE.jar;D:\m2\repository\com\netflix\hystrix\hystrix-core\1.5.12\hystrix-core-1.5.12.jar;D:\m2\repository\org\hdrhistogram\HdrHistogram\2.1.9\HdrHistogram-2.1.9.jar;D:\m2\repository\com\netflix\hystrix\hystrix-serialization\1.5.12\hystrix-serialization-1.5.12.jar;D:\m2\repository\com\fasterxml\jackson\module\jackson-module-afterburner\2.9.7\jackson-module-afterburner-2.9.7.jar;D:\m2\repository\com\netflix\hystrix\hystrix-metrics-event-stream\1.5.12\hystrix-metrics-event-stream-1.5.12.jar;D:\m2\repository\com\netflix\hystrix\hystrix-javanica\1.5.12\hystrix-javanica-1.5.12.jar;D:\m2\repository\org\apache\commons\commons-lang3\3.7\commons-lang3-3.7.jar;D:\m2\repository\org\ow2\asm\asm\5.0.4\asm-5.0.4.jar;D:\m2\repository\org\aspectj\aspectjweaver\1.8.13\aspectjweaver-1.8.13.jar;D:\m2\repository\io\reactivex\rxjava-reactive-streams\1.2.1\rxjava-reactive-streams-1.2.1.jar;D:\m2\repository\org\reactivestreams\reactive-streams\1.0.2\reactive-streams-1.0.2.jar;D:\m2\repository\org\springframework\boot\spring-boot-starter-web\2.0.6.RELEASE\spring-boot-starter-web-2.0.6.RELEASE.jar;D:\m2\repository\org\springframework\boot\spring-boot-starter\2.0.6.RELEASE\spring-boot-starter-2.0.6.RELEASE.jar;D:\m2\repository\org\springframework\boot\spring-boot\2.0.6.RELEASE\spring-boot-2.0.6.RELEASE.jar;D:\m2\repository\org\springframework\boot\spring-boot-starter-logging\2.0.6.RELEASE\spring-boot-starter-logging-2.0.6.RELEASE.jar;D:\m2\repository\ch\qos\logback\logback-classic\1.2.3\logback-classic-1.2.3.jar;D:\m2\repository\ch\qos\logback\logback-core\1.2.3\logback-core-1.2.3.jar;D:\m2\repository\org\apache\logging\log4j\log4j-to-slf4j\2.10.0\log4j-to-slf4j-2.10.0.jar;D:\m2\repository\org\apache\logging\log4j\log4j-api\2.10.0\log4j-api-2.10.0.jar;D:\m2\repository\org\slf4j\jul-to-slf4j\1.7.25\jul-to-slf4j-1.7.25.jar;D:\m2\repository\javax\annotation\javax.annotation-api\1.3.2\javax.annotation-api-1.3.2.jar;D:\m2\repository\org\yaml\snakeyaml\1.19\snakeyaml-1.19.jar;D:\m2\repository\org\springframework\boot\spring-boot-starter-json\2.0.6.RELEASE\spring-boot-starter-json-2.0.6.RELEASE.jar;D:\m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jdk8\2.9.7\jackson-datatype-jdk8-2.9.7.jar;D:\m2\repository\com\fasterxml\jackson\datatype\jackson-datatype-jsr310\2.9.7\jackson-datatype-jsr310-2.9.7.jar;D:\m2\repository\com\fasterxml\jackson\module\jackson-module-parameter-names\2.9.7\jackson-module-parameter-names-2.9.7.jar;D:\m2\repository\org\springframework\boot\spring-boot-starter-tomcat\2.0.6.RELEASE\spring-boot-starter-tomcat-2.0.6.RELEASE.jar;D:\m2\repository\org\apache\tomcat\embed\tomcat-embed-core\8.5.34\tomcat-embed-core-8.5.34.jar;D:\m2\repository\org\apache\tomcat\embed\tomcat-embed-el\8.5.34\tomcat-embed-el-8.5.34.jar;D:\m2\repository\org\apache\tomcat\embed\tomcat-embed-websocket\8.5.34\tomcat-embed-websocket-8.5.34.jar;D:\m2\repository\org\hibernate\validator\hibernate-validator\6.0.13.Final\hibernate-validator-6.0.13.Final.jar;D:\m2\repository\javax\validation\validation-api\2.0.1.Final\validation-api-2.0.1.Final.jar;D:\m2\repository\org\jboss\logging\jboss-logging\3.3.2.Final\jboss-logging-3.3.2.Final.jar;D:\m2\repository\com\fasterxml\classmate\1.3.4\classmate-1.3.4.jar;D:\m2\repository\org\springframework\spring-webmvc\5.0.10.RELEASE\spring-webmvc-5.0.10.RELEASE.jar;D:\m2\repository\org\springframework\spring-aop\5.0.10.RELEASE\spring-aop-5.0.10.RELEASE.jar;D:\m2\repository\org\springframework\spring-context\5.0.10.RELEASE\spring-context-5.0.10.RELEASE.jar;D:\m2\repository\org\springframework\spring-expression\5.0.10.RELEASE\spring-expression-5.0.10.RELEASE.jar;D:\m2\repository\org\springframework\boot\spring-boot-starter-jdbc\2.0.6.RELEASE\spring-boot-starter-jdbc-2.0.6.RELEASE.jar;D:\m2\repository\com\zaxxer\HikariCP\2.7.9\HikariCP-2.7.9.jar;D:\m2\repository\org\springframework\spring-jdbc\5.0.10.RELEASE\spring-jdbc-5.0.10.RELEASE.jar;D:\m2\repository\org\springframework\spring-tx\5.0.10.RELEASE\spring-tx-5.0.10.RELEASE.jar;D:\m2\repository\com\mysql\mysql-connector-j\8.0.33\mysql-connector-j-8.0.33.jar;D:\m2\repository\com\google\protobuf\protobuf-java\3.21.9\protobuf-java-3.21.9.jar;D:\m2\repository\com\alibaba\druid\1.2.23\druid-1.2.23.jar;D:\m2\repository\com\baomidou\mybatis-plus-boot-starter\2.3\mybatis-plus-boot-starter-2.3.jar;D:\m2\repository\com\baomidou\mybatis-plus\2.3\mybatis-plus-2.3.jar;D:\m2\repository\com\baomidou\mybatis-plus-support\2.3\mybatis-plus-support-2.3.jar;D:\m2\repository\com\baomidou\mybatis-plus-core\2.3\mybatis-plus-core-2.3.jar;D:\m2\repository\com\github\jsqlparser\jsqlparser\1.1\jsqlparser-1.1.jar;D:\m2\repository\org\mybatis\mybatis-spring\1.3.2\mybatis-spring-1.3.2.jar;D:\m2\repository\org\mybatis\mybatis\3.4.6\mybatis-3.4.6.jar;D:\m2\repository\com\baomidou\mybatis-plus-generate\2.3\mybatis-plus-generate-2.3.jar;D:\m2\repository\org\springframework\boot\spring-boot-autoconfigure\2.0.6.RELEASE\spring-boot-autoconfigure-2.0.6.RELEASE.jar;D:\YotinGarden\.worktrees\bms-multi-device-login-acl\acl-common\target\classes;D:\m2\repository\cn\hutool\hutool-all\4.1.5\hutool-all-4.1.5.jar;D:\m2\repository\org\springframework\boot\spring-boot-starter-actuator\2.0.6.RELEASE\spring-boot-starter-actuator-2.0.6.RELEASE.jar;D:\m2\repository\org\springframework\boot\spring-boot-actuator-autoconfigure\2.0.6.RELEASE\spring-boot-actuator-autoconfigure-2.0.6.RELEASE.jar;D:\m2\repository\org\springframework\boot\spring-boot-actuator\2.0.6.RELEASE\spring-boot-actuator-2.0.6.RELEASE.jar;D:\m2\repository\io\micrometer\micrometer-core\1.0.7\micrometer-core-1.0.7.jar;D:\m2\repository\org\latencyutils\LatencyUtils\2.0.3\LatencyUtils-2.0.3.jar;D:\m2\repository\org\springframework\boot\spring-boot-starter-test\2.0.6.RELEASE\spring-boot-starter-test-2.0.6.RELEASE.jar;D:\m2\repository\org\springframework\boot\spring-boot-test\2.0.6.RELEASE\spring-boot-test-2.0.6.RELEASE.jar;D:\m2\repository\org\springframework\boot\spring-boot-test-autoconfigure\2.0.6.RELEASE\spring-boot-test-autoconfigure-2.0.6.RELEASE.jar;D:\m2\repository\com\jayway\jsonpath\json-path\2.4.0\json-path-2.4.0.jar;D:\m2\repository\net\minidev\json-smart\2.3\json-smart-2.3.jar;D:\m2\repository\net\minidev\accessors-smart\1.2\accessors-smart-1.2.jar;D:\m2\repository\junit\junit\4.12\junit-4.12.jar;D:\m2\repository\org\assertj\assertj-core\3.9.1\assertj-core-3.9.1.jar;D:\m2\repository\org\mockito\mockito-core\2.15.0\mockito-core-2.15.0.jar;D:\m2\repository\net\bytebuddy\byte-buddy\1.7.11\byte-buddy-1.7.11.jar;D:\m2\repository\net\bytebuddy\byte-buddy-agent\1.7.11\byte-buddy-agent-1.7.11.jar;D:\m2\repository\org\objenesis\objenesis\2.6\objenesis-2.6.jar;D:\m2\repository\org\hamcrest\hamcrest-core\1.3\hamcrest-core-1.3.jar;D:\m2\repository\org\hamcrest\hamcrest-library\1.3\hamcrest-library-1.3.jar;D:\m2\repository\org\skyscreamer\jsonassert\1.5.0\jsonassert-1.5.0.jar;D:\m2\repository\com\vaadin\external\google\android-json\0.0.20131108.vaadin1\android-json-0.0.20131108.vaadin1.jar;D:\m2\repository\org\springframework\spring-core\5.0.10.RELEASE\spring-core-5.0.10.RELEASE.jar;D:\m2\repository\org\springframework\spring-jcl\5.0.10.RELEASE\spring-jcl-5.0.10.RELEASE.jar;D:\m2\repository\org\springframework\spring-test\5.0.10.RELEASE\spring-test-5.0.10.RELEASE.jar;D:\m2\repository\org\xmlunit\xmlunit-core\2.5.1\xmlunit-core-2.5.1.jar;, user.name=youting, failIfNoTests=false, java.vm.specification.version=1.8, sun.java.command=D:\YotinGarden\.worktrees\bms-multi-device-login-acl\acl-server\target\surefire\surefirebooter4926436092430223608.jar D:\YotinGarden\.worktrees\bms-multi-device-login-acl\acl-server\target\surefire\surefire3343883436750938156tmp D:\YotinGarden\.worktrees\bms-multi-device-login-acl\acl-server\target\surefire\surefire_05618724999520513123tmp, java.home=D:\Program Files\Java\jdk1.8.0_152\jre, sun.arch.data.model=64, user.language=zh, java.specification.vendor=Oracle Corporation, awt.toolkit=sun.awt.windows.WToolkit, java.vm.info=mixed mode, java.version=1.8.0_152, java.ext.dirs=D:\Program Files\Java\jdk1.8.0_152\jre\lib\ext;C:\WINDOWS\Sun\Java\lib\ext, sun.boot.class.path=D:\Program Files\Java\jdk1.8.0_152\jre\lib\resources.jar;D:\Program Files\Java\jdk1.8.0_152\jre\lib\rt.jar;D:\Program Files\Java\jdk1.8.0_152\jre\lib\sunrsasign.jar;D:\Program Files\Java\jdk1.8.0_152\jre\lib\jsse.jar;D:\Program Files\Java\jdk1.8.0_152\jre\lib\jce.jar;D:\Program Files\Java\jdk1.8.0_152\jre\lib\charsets.jar;D:\Program Files\Java\jdk1.8.0_152\jre\lib\jfr.jar;D:\Program Files\Java\jdk1.8.0_152\jre\classes, java.vendor=Oracle Corporation, localRepository=D:\m2\repository, file.separator=\, java.vendor.url.bug=http://bugreport.sun.com/bugreport/, sun.io.unicode.encoding=UnicodeLittle, sun.cpu.endian=little, sun.desktop=windows, sun.cpu.isalist=amd64}}, SystemEnvironmentPropertySource@1483298597 {name='systemEnvironment', properties={PATH=C:\Users\youting\.zcode\preinstalled-tools\production\bin;C:\Users\youting\bin;D:\Program Files\Git\mingw64\bin;D:\Program Files\Git\usr\local\bin;D:\Program Files\Git\usr\bin;D:\Program Files\Git\usr\bin;D:\Program Files\Git\mingw64\bin;D:\Program Files\Git\usr\bin;C:\Users\youting\bin;%JAVA_HOME%\bin;C:\ProgramData\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0;C:\WINDOWS\System32\OpenSSH;D:\Program Files\Git\cmd;D:\Program Files (x86)\Tencent\微信web开发者工具\dll;D:\apache-maven-3.5.0\bin;C:\Program Files\nodejs;C:\Program Files\nodejs\node_modules\npm;C:\ProgramData\chocolatey\bin;C:\Program Files\OpenSSL\bin;C:\Program Files\RedHat\Podman;C:\Program Files\ProxyBridge;C:\Users\youting\AppData\Local\codebuddy\bin;C:\Users\youting\AppData\Local\Programs\Python\Python312\Scripts;C:\Users\youting\AppData\Local\Programs\Python\Python312;C:\Users\youting\AppData\Local\Programs\Python\Launcher;C:\Users\youting\.mimocode\bin;C:\Users\youting\AppData\Local\Microsoft\WindowsApps;D:\Program Files\JetBrains\IntelliJ IDEA 2024.2.4\bin;D:\Program Files\Microsoft VS Code\bin;D:\tools\wget.exe;C:\Users\youting\AppData\Roaming\npm;C:\Users\youting\AppData\Local\Python\bin;C:\Program Files\RedHat\Podman;C:\Users\youting\.dotnet\tools;C:\Users\youting\AppData\Local\Microsoft\WinGet\Packages\Gyan.FFmpeg.Essentials_Microsoft.Winget.Source_8wekyb3d8bbwe\ffmpeg-9.0.1-essentials_build\bin;C:\Program Files\LibreOffice\program;D:\Program Files\Microsoft VS Code\bin\copilot-shim;D:\Program Files\ZCode\resources\tools\ripgrep;D:\Program Files\ZCode\resources\tools\ugrep;D:\Program Files\Git\usr\bin\vendor_perl;D:\Program Files\Git\usr\bin\core_perl, ZCODE_DESKTOP_CONTEXT_PROMPT_ENABLED=1, SESSIONNAME=Console, ALLUSERSPROFILE=C:\ProgramData, ZCODE_BUILTIN_PROVIDER_CONFIG_FILE=C:\Users\youting\.zcode\v2\runtime\provider\windows-x86_64\4.0.0\endpoint-78d7c3bef4024722642626fe3669a799\zcode-builtin.json, ZCODE_PROJECT_DIR=D:\AIEO, CLAUDE_PROJECT_DIR=D:\AIEO, ZCODE_CUA_WIN_HELPER_RECIPE={"command":"D:\\Program Files\\ZCode\\ZCode.exe","entryPath":"D:\\Program Files\\ZCode\\resources\\tools\\cua-helper\\dist\\windows-helper.js","root":"D:\\Program Files\\ZCode\\resources\\tools\\cua-helper","addonPath":"D:\\Program Files\\ZCode\\resources\\tools\\cua-helper\\build\\Release\\ax_native.node","commandEnv":{"ELECTRON_RUN_AS_NODE":"1"},"hostPid":10216}, FILE_ARG=D:/YotinGarden/.worktrees/bms-multi-device-login-acl/pom.xml, PROGRAMFILES=C:\Program Files, ZCODE_OFFICIAL_ENDPOINT_TOKEN=ZsyXZd0oJZBAI7HCEfE3ChhPOLEiTbn1S_zOsQcX2BI, PSMODULEPATH=C:\Program Files\WindowsPowerShell\Modules;C:\WINDOWS\system32\WindowsPowerShell\v1.0\Modules, ZCODE_PREINSTALLED_TOOLS_AVAILABLE=1, ZCODE_RG_BINARY=D:\Program Files\ZCode\resources\tools\ripgrep\rg.exe, USERNAME=youting, PWD=D:/AIEO/basic/tasks/b-20261127-bms-production-triage, FPS_BROWSER_USER_PROFILE_STRING=Default, PATHEXT=.COM;.EXE;.BAT;.CMD;.VBS;.VBE;.JS;.JSE;.WSF;.WSH;.MSC, EFC_14352_3789132940=1, HOMEPATH=\Users\youting, PROCESSOR_IDENTIFIER=Intel64 Family 6 Model 165 Stepping 2, GenuineIntel, PUBLIC=C:\Users\Public, LC_CTYPE=C.UTF-8, ZCODE_PROCESS_LABEL=local-1, EXEPATH=D:\Program Files\Git\bin, SHLVL=1, FPS_BROWSER_APP_PROFILE_STRING=Internet Explorer, JAVA_HOME=D:\Program Files\Java\jdk1.8.0_152, PROMPT=$P$G, EFC_14352_1592913036=1, GIT_EDITOR=true, PROGRAMFILES(X86)=C:\Program Files (x86), TERM=xterm-256color, CHOCOLATEYTOOLSLOCATION=C:\tools, MSYSTEM=MINGW64, APPDATA=C:\Users\youting\AppData\Roaming, CLAUDE_CODE_SESSION_ID=sess_6824005c-4f7b-4493-92d4-93617b22c3d5, ZCODE_GEN_UI_OUTPUT_ROOT=C:\Users\youting\.zcode\v2\visualizations, _=C:/Users/youting/AppData/Local/Programs/Python/Python312/python, ZCODE_UGREP_BINARY=D:\Program Files\ZCode\resources\tools\ugrep\ugrep.exe, COMPUTERNAME=DESKTOP-9C0M7GR, CLAUDE_SESSION_ID=sess_6824005c-4f7b-4493-92d4-93617b22c3d5, MAVEN_PROJECTBASEDIR=D:\AIEO\basic\tasks\b-20261127-bms-production-triage, CLASSWORLDS_LAUNCHER=org.codehaus.plexus.classworlds.launcher.Launcher, =D:=D:\YotinGarden\.worktrees\bms-multi-device-login-acl\acl-server, HOMEDRIVE=C:, NUMBER_OF_PROCESSORS=8, ZCODE_PERSONAL_PROVIDER_CONFIG_FILE=C:\Users\youting\.zcode\v2\provider_config.json, EFC_14352_1262719628=1, JVMCONFIG=\.mvn\jvm.config, EFC_14352_2283032206=1, USERDOMAIN_ROAMINGPROFILE=DESKTOP-9C0M7GR, PROCESSOR_LEVEL=6, SYSTEMDRIVE=C:, CLAUDE_CODE_GIT_BASH_PATH=D:\Program Files\Git\usr\bin\bash.exe, ZAI_OAUTH_CLIENT_ID=client_P8X5CMWmlaRO9gyO-KSqtg, PROCESSOR_ARCHITECTURE=AMD64, DRIVERDATA=C:\Windows\System32\Drivers\DriverData, MAVEN_HOME=D:\apache-maven-3.5.0\bin\.., PROGRAMDATA=C:\ProgramData, CHOCOLATEYLASTPATHUPDATE=134170927228526054, ZCODE_BUILD_COMMIT_ID=3bc8a247, WDIR=D:\, CHROME_CRASHPAD_PIPE_NAME=\\.\pipe\crashpad_2932_VOSIEKXQNPTIOPTY, ONEDRIVE=C:\Users\youting\OneDrive, SHELL=d:\Program Files\Git\bin\bash.exe, CHOCO=C:\ProgramData\chocolatey\bin, CLASSWORLDS_JAR="D:\apache-maven-3.5.0\bin\..\boot\plexus-classworlds-2.5.2.jar", ZCODE_OFFICIAL_ENDPOINT=\\.\pipe\zcode-official-18200-144382e5963bdff5, WINDIR=C:\WINDOWS, ZCODE_WINDOWS_APP_INSTALL_DIR=D:\Program Files\ZCode, EFC_14352_4126798990=1, LOCALAPPDATA=C:\Users\youting\AppData\Local, ZAI_OAUTH_ORIGIN=https://chat.z.ai, COMMONPROGRAMFILES(X86)=C:\Program Files (x86)\Common Files, USERDOMAIN=DESKTOP-9C0M7GR, LOGONSERVER=\\DESKTOP-9C0M7GR, PLINK_PROTOCOL=ssh, ACL_ADMIN_USERNAME=gongdaming, LANG=C.UTF-8, PYTHONUTF8=1, ERROR_CODE=0, EXEC_DIR=D:\AIEO\basic\tasks\b-20261127-bms-production-triage, INTELLIJ IDEA=d:\Program Files\JetBrains\IntelliJ IDEA 2024.2.4\bin;, ACL_ADMIN_PASSWORD=123456, PROGRAMW6432=C:\Program Files, ZCODE_SESSION_ID=sess_6824005c-4f7b-4493-92d4-93617b22c3d5, SYSTEMROOT=C:\WINDOWS, ZCODE_ENV=production, ZCODE_CLIENT_LANGUAGE=zh-CN, MAVEN_CMD_LINE_ARGS=-s D:\AIEO\basic\tasks\b-20261127-bms-production-triage\runtime\maven-acl-test-settings.xml -f D:/YotinGarden/.worktrees/bms-multi-device-login-acl/pom.xml -pl acl-server -am -DskipTests=false -Dtest=UserTokenTest,MultiDeviceLoginIntegrationTest -DfailIfNoTests=false -Dsurefire.failIfNoSpecifiedTests=false test, OS=Windows_NT, COMMONPROGRAMW6432=C:\Program Files\Common Files, PYTHONIOENCODING=utf-8, COMMONPROGRAMFILES=C:\Program Files\Common Files, COMSPEC=C:\WINDOWS\system32\cmd.exe, ZCODE_RUNTIME_ENV=production, JAVACMD=D:\Program Files\Java\jdk1.8.0_152\bin\java.exe, PROCESSOR_REVISION=a502, CLASSPATH=D:\Program Files\Java\jdk1.8.0_152\lib\tools.jar;D:\Program Files\Java\jdk1.8.0_152\lib\dt.jar, TEMP=C:\Users\youting\AppData\Local\Temp, USERPROFILE=C:\Users\youting, POM_DIR=D:\YotinGarden\.worktrees\bms-multi-device-login-acl, TMP=C:\Users\youting\AppData\Local\Temp, EFC_14352_2775293581=1, ZCODE_BASE_URL=https://zcode.z.ai, ZAI_BUSINESS_BASE_URL=https://api.z.ai, ZCODE_APP_VERSION=4.0.0, HOME=C:\Users\youting}}]
+14:50:15.407 [main] DEBUG org.springframework.core.env.StandardEnvironment - Adding PropertySource 'test' with highest search precedence
+14:50:15.412 [main] DEBUG org.springframework.core.env.StandardEnvironment - Adding PropertySource 'configurationProperties' with highest search precedence
+14:50:15.414 [main] DEBUG org.springframework.test.context.support.TestPropertySourceUtils - Adding inlined properties to environment: {spring.jmx.enabled=false, eureka.client.enabled=false, spring.cloud.discovery.enabled=false, spring.cloud.config.discovery.enabled=false, org.springframework.boot.test.context.SpringBootTestContextBootstrapper=true, server.port=-1}
+14:50:15.414 [main] DEBUG org.springframework.core.env.StandardEnvironment - Adding PropertySource 'Inlined Test Properties' with highest search precedence
+2026-11-28 14:50:16.868  INFO 22836 --- [           main] s.c.a.AnnotationConfigApplicationContext : Refreshing org.springframework.context.annotation.AnnotationConfigApplicationContext@68034211: startup date [Sat Nov 28 14:50:16 CST 2026]; root of context hierarchy
+2026-11-28 14:50:17.384  INFO 22836 --- [           main] f.a.AutowiredAnnotationBeanPostProcessor : JSR-330 'javax.inject.Inject' annotation found and supported for autowiring
+2026-11-28 14:50:17.496  INFO 22836 --- [           main] trationDelegate$BeanPostProcessorChecker : Bean 'configurationPropertiesRebinderAutoConfiguration' of type [org.springframework.cloud.autoconfigure.ConfigurationPropertiesRebinderAutoConfiguration$$EnhancerBySpringCGLIB$$b5fa25c6] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+14:50:18,550 |-INFO in ch.qos.logback.classic.joran.action.ConfigurationAction - Will scan for changes in [file:/D:/YotinGarden/.worktrees/bms-multi-device-login-acl/acl-server/target/classes/config/logback-spring.xml] 
+14:50:18,551 |-INFO in ch.qos.logback.classic.joran.action.ConfigurationAction - Setting ReconfigureOnChangeTask scanning period to 1 minutes
+14:50:18,556 |-INFO in ch.qos.logback.core.joran.action.AppenderAction - About to instantiate appender of type [ch.qos.logback.core.ConsoleAppender]
+14:50:18,556 |-INFO in ch.qos.logback.core.joran.action.AppenderAction - Naming appender as [CONSOLE]
+14:50:18,568 |-INFO in ch.qos.logback.core.ConsoleAppender[CONSOLE] - Enabling JANSI WindowsAnsiOutputStream for the console.
+14:50:18,569 |-WARN in ch.qos.logback.core.ConsoleAppender[CONSOLE] - Failed to create WindowsAnsiOutputStream. Falling back on the default stream. ch.qos.logback.core.util.DynamicClassLoadingException: Failed to instantiate type org.fusesource.jansi.WindowsAnsiOutputStream
+	at ch.qos.logback.core.util.DynamicClassLoadingException: Failed to instantiate type org.fusesource.jansi.WindowsAnsiOutputStream
+	at 	at ch.qos.logback.core.util.OptionHelper.instantiateByClassNameAndParameter(OptionHelper.java:69)
+	at 	at ch.qos.logback.core.util.OptionHelper.instantiateByClassNameAndParameter(OptionHelper.java:40)
+	at 	at ch.qos.logback.core.ConsoleAppender.getTargetStreamForWindows(ConsoleAppender.java:88)
+	at 	at ch.qos.logback.core.ConsoleAppender.start(ConsoleAppender.java:79)
+	at 	at ch.qos.logback.core.joran.action.AppenderAction.end(AppenderAction.java:90)
+	at 	at ch.qos.logback.core.joran.spi.Interpreter.callEndAction(Interpreter.java:309)
+	at 	at ch.qos.logback.core.joran.spi.Interpreter.endElement(Interpreter.java:193)
+	at 	at ch.qos.logback.core.joran.spi.Interpreter.endElement(Interpreter.java:179)
+	at 	at ch.qos.logback.core.joran.spi.EventPlayer.play(EventPlayer.java:62)
+	at 	at ch.qos.logback.core.joran.GenericConfigurator.doConfigure(GenericConfigurator.java:165)
+	at 	at ch.qos.logback.core.joran.GenericConfigurator.doConfigure(GenericConfigurator.java:152)
+	at 	at ch.qos.logback.core.joran.GenericConfigurator.doConfigure(GenericConfigurator.java:110)
+	at 	at ch.qos.logback.core.joran.GenericConfigurator.doConfigure(GenericConfigurator.java:53)
+	at 	at org.springframework.boot.logging.logback.LogbackLoggingSystem.configureByResourceUrl(LogbackLoggingSystem.java:180)
+	at 	at org.springframework.boot.logging.logback.LogbackLoggingSystem.loadConfiguration(LogbackLoggingSystem.java:152)
+	at 	at org.springframework.boot.logging.AbstractLoggingSystem.initializeWithSpecificConfig(AbstractLoggingSystem.java:67)
+	at 	at org.springframework.boot.logging.AbstractLoggingSystem.initialize(AbstractLoggingSystem.java:57)
+	at 	at org.springframework.boot.logging.logback.LogbackLoggingSystem.initialize(LogbackLoggingSystem.java:117)
+	at 	at org.springframework.boot.context.logging.LoggingApplicationListener.initializeSystem(LoggingApplicationListener.java:269)
+	at 	at org.springframework.boot.context.logging.LoggingApplicationListener.initialize(LoggingApplicationListener.java:237)
+	at 	at org.springframework.boot.context.logging.LoggingApplicationListener.onApplicationEnvironmentPreparedEvent(LoggingApplicationListener.java:200)
+	at 	at org.springframework.boot.context.logging.LoggingApplicationListener.onApplicationEvent(LoggingApplicationListener.java:173)
+	at 	at org.springframework.context.event.SimpleApplicationEventMulticaster.doInvokeListener(SimpleApplicationEventMulticaster.java:172)
+	at 	at org.springframework.context.event.SimpleApplicationEventMulticaster.invokeListener(SimpleApplicationEventMulticaster.java:165)
+	at 	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:139)
+	at 	at org.springframework.context.event.SimpleApplicationEventMulticaster.multicastEvent(SimpleApplicationEventMulticaster.java:127)
+	at 	at org.springframework.boot.context.event.EventPublishingRunListener.environmentPrepared(EventPublishingRunListener.java:74)
+	at 	at org.springframework.boot.SpringApplicationRunListeners.environmentPrepared(SpringApplicationRunListeners.java:54)
+	at 	at org.springframework.boot.SpringApplication.prepareEnvironment(SpringApplication.java:338)
+	at 	at org.springframework.boot.SpringApplication.run(SpringApplication.java:297)
+	at 	at org.springframework.boot.test.context.SpringBootContextLoader.loadContext(SpringBootContextLoader.java:127)
+	at 	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContextInternal(DefaultCacheAwareContextLoaderDelegate.java:99)
+	at 	at org.springframework.test.context.cache.DefaultCacheAwareContextLoaderDelegate.loadContext(DefaultCacheAwareContextLoaderDelegate.java:117)
+	at 	at org.springframework.test.context.support.DefaultTestContext.getApplicationContext(DefaultTestContext.java:108)
+	at 	at org.springframework.test.context.web.ServletTestExecutionListener.setUpRequestContextIfNecessary(ServletTestExecutionListener.java:190)
+	at 	at org.springframework.test.context.web.ServletTestExecutionListener.prepareTestInstance(ServletTestExecutionListener.java:132)
+	at 	at org.springframework.test.context.TestContextManager.prepareTestInstance(TestContextManager.java:246)
+	at 	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.createTest(SpringJUnit4ClassRunner.java:227)
+	at 	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner$1.runReflectiveCall(SpringJUnit4ClassRunner.java:289)
+	at 	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at 	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.methodBlock(SpringJUnit4ClassRunner.java:291)
+	at 	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:246)
+	at 	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.runChild(SpringJUnit4ClassRunner.java:97)
+	at 	at org.junit.runners.ParentRunner$3.run(ParentRunner.java:290)
+	at 	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:71)
+	at 	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:288)
+	at 	at org.junit.runners.ParentRunner.access$000(ParentRunner.java:58)
+	at 	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:268)
+	at 	at org.springframework.test.context.junit4.statements.RunBeforeTestClassCallbacks.evaluate(RunBeforeTestClassCallbacks.java:61)
+	at 	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at 	at org.springframework.test.context.junit4.statements.RunAfterTestClassCallbacks.evaluate(RunAfterTestClassCallbacks.java:70)
+	at 	at org.junit.runners.ParentRunner.run(ParentRunner.java:363)
+	at 	at org.springframework.test.context.junit4.SpringJUnit4ClassRunner.run(SpringJUnit4ClassRunner.java:190)
+	at 	at org.apache.maven.surefire.junit4.JUnit4Provider.execute(JUnit4Provider.java:252)
+	at 	at org.apache.maven.surefire.junit4.JUnit4Provider.executeTestSet(JUnit4Provider.java:141)
+	at 	at org.apache.maven.surefire.junit4.JUnit4Provider.invoke(JUnit4Provider.java:112)
+	at 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at 	at java.lang.reflect.Method.invoke(Method.java:498)
+	at 	at org.apache.maven.surefire.util.ReflectionUtils.invokeMethodWithArray(ReflectionUtils.java:189)
+	at 	at org.apache.maven.surefire.booter.ProviderFactory$ProviderProxy.invoke(ProviderFactory.java:165)
+	at 	at org.apache.maven.surefire.booter.ProviderFactory.invokeProvider(ProviderFactory.java:85)
+	at 	at org.apache.maven.surefire.booter.ForkedBooter.runSuitesInProcess(ForkedBooter.java:115)
+	at 	at org.apache.maven.surefire.booter.ForkedBooter.main(ForkedBooter.java:75)
+Caused by: java.lang.ClassNotFoundException: org.fusesource.jansi.WindowsAnsiOutputStream
+	at 	at java.net.URLClassLoader.findClass(URLClassLoader.java:381)
+	at 	at java.lang.ClassLoader.loadClass(ClassLoader.java:424)
+	at 	at sun.misc.Launcher$AppClassLoader.loadClass(Launcher.java:338)
+	at 	at java.lang.ClassLoader.loadClass(ClassLoader.java:357)
+	at 	at ch.qos.logback.core.util.OptionHelper.instantiateByClassNameAndParameter(OptionHelper.java:56)
+	at 	... 64 common frames omitted
+14:50:18,572 |-INFO in ch.qos.logback.core.joran.action.AppenderAction - About to instantiate appender of type [ch.qos.logback.core.rolling.RollingFileAppender]
+14:50:18,575 |-INFO in ch.qos.logback.core.joran.action.AppenderAction - Naming appender as [SYSTEM_FILE]
+14:50:18,591 |-INFO in c.q.l.core.rolling.SizeAndTimeBasedRollingPolicy@105321150 - Archive files will be limited to [10 MB] each.
+14:50:18,595 |-INFO in c.q.l.core.rolling.SizeAndTimeBasedRollingPolicy@105321150 - No compression will be used
+14:50:18,597 |-INFO in c.q.l.core.rolling.SizeAndTimeBasedRollingPolicy@105321150 - Will use the pattern acl-server/logs/acl/%d{yyyy-MM-dd}.%i.log for the active file
+14:50:18,602 |-INFO in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@3bd7f8dc - The date pattern is 'yyyy-MM-dd' from file name pattern 'acl-server/logs/acl/%d{yyyy-MM-dd}.%i.log'.
+14:50:18,602 |-INFO in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@3bd7f8dc - Roll-over at midnight.
+14:50:18,603 |-INFO in ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP@3bd7f8dc - Setting initial period to Sat Nov 28 14:50:18 CST 2026
+14:50:18,609 |-INFO in ch.qos.logback.core.rolling.RollingFileAppender[SYSTEM_FILE] - Active log file name: acl-server/logs/acl/2026-11-28.0.log
+14:50:18,609 |-INFO in ch.qos.logback.core.rolling.RollingFileAppender[SYSTEM_FILE] - File property is set to [null]
+14:50:18,612 |-INFO in ch.qos.logback.classic.joran.action.RootLoggerAction - Setting level of ROOT logger to INFO
+14:50:18,612 |-INFO in ch.qos.logback.classic.jul.LevelChangePropagator@4b21844c - Propagating INFO level on Logger[ROOT] onto the JUL framework
+14:50:18,612 |-INFO in ch.qos.logback.core.joran.action.AppenderRefAction - Attaching appender named [CONSOLE] to Logger[ROOT]
+14:50:18,612 |-INFO in ch.qos.logback.core.joran.action.AppenderRefAction - Attaching appender named [SYSTEM_FILE] to Logger[ROOT]
+14:50:18,613 |-INFO in ch.qos.logback.classic.joran.action.ConfigurationAction - End of configuration.
+14:50:18,613 |-INFO in org.springframework.boot.logging.logback.SpringBootJoranConfigurator@1b28f282 - Registering current configuration as safe fallback point
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+ :: Spring Boot ::        (v2.0.6.RELEASE)
+
+[2026-11-28 14:50:18.649] [main] [INFO ] com.ecog.acl.MultiDeviceLoginIntegrationTest - The following profiles are active: dev
+[2026-11-28 14:50:18.657] [main] [INFO ] o.s.w.context.support.GenericWebApplicationContext - Refreshing org.springframework.web.context.support.GenericWebApplicationContext@4e4efc1b: startup date [Sat Nov 28 14:50:18 CST 2026]; parent: org.springframework.context.annotation.AnnotationConfigApplicationContext@68034211
+[2026-11-28 14:50:21.840] [main] [INFO ] o.springframework.cloud.context.scope.GenericScope - BeanFactory id=e12cb712-e057-383d-b5c7-e1a51ec8eb42
+[2026-11-28 14:50:22.958] [main] [INFO ] o.s.b.f.a.AutowiredAnnotationBeanPostProcessor - JSR-330 'javax.inject.Inject' annotation found and supported for autowiring
+[2026-11-28 14:50:23.157] [main] [INFO ] o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$99e022c9] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+[2026-11-28 14:50:23.505] [main] [INFO ] o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker - Bean 'org.springframework.cloud.autoconfigure.ConfigurationPropertiesRebinderAutoConfiguration' of type [org.springframework.cloud.autoconfigure.ConfigurationPropertiesRebinderAutoConfiguration$$EnhancerBySpringCGLIB$$b5fa25c6] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+Loading class `com.mysql.jdbc.Driver'. This is deprecated. The new driver class is `com.mysql.cj.jdbc.Driver'. The driver is automatically registered via the SPI and manual loading of the driver class is generally unnecessary.
+[2026-11-28 14:50:24.418] [main] [INFO ] com.alibaba.druid.pool.DruidDataSource - {dataSource-1} inited
+[2026-11-28 14:50:25.391] [main] [WARN ] com.baomidou.mybatisplus.toolkit.TableInfoHelper - Warn: Could not find @TableId in Class: com.ecog.acl.entity.Application.
+[2026-11-28 14:50:25.391] [main] [WARN ] com.baomidou.mybatisplus.mapper.AutoSqlInjector - class com.ecog.acl.entity.Application ,Not found @TableId annotation, Cannot use Mybatis-Plus 'xxById' Method.
+[2026-11-28 14:50:27.425] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/config/menu/user/tree/list],methods=[GET]}" onto public com.ecog.acl.common.HttpResult<java.util.List<com.ecog.acl.api.dto.MenuTreeDTO>> com.ecog.acl.api.ConfigController.getUserMenuTreeList(java.lang.Integer)
+[2026-11-28 14:50:27.428] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/config/menu/role/list],methods=[GET]}" onto public com.ecog.acl.common.HttpResult<com.ecog.acl.common.PageResult<com.ecog.acl.api.dto.MenuTreeDTO>> com.ecog.acl.api.ConfigController.getRoleMenuRelationList(java.lang.Integer,java.lang.Integer,java.lang.Integer)
+[2026-11-28 14:50:27.430] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/config/application/delete],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.ConfigController.deleteApplication(java.lang.String) throws com.ecog.acl.exception.SystemException
+[2026-11-28 14:50:27.434] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/config/menu/role/array/delete],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.ConfigController.deleteRoleMenuArray(java.lang.Integer,java.util.List<java.lang.Integer>)
+[2026-11-28 14:50:27.438] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/config/delete],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.ConfigController.deleteDynamicConfig(java.lang.Integer)
+[2026-11-28 14:50:27.441] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/config/role/array/add],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.ConfigController.addRoleConfigArray(java.lang.Integer,java.util.List<java.lang.Integer>)
+[2026-11-28 14:50:27.443] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/config/modify],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.ConfigController.modifyDynamicConfig(com.ecog.acl.api.param.DynamicConfigParam$Modify)
+[2026-11-28 14:50:27.448] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/config/menu/role/delete/all],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.ConfigController.deleteRoleMenuAll(java.lang.Integer)
+[2026-11-28 14:50:27.449] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/config/role/list],methods=[GET]}" onto public com.ecog.acl.common.HttpResult<com.ecog.acl.common.PageResult<com.ecog.acl.api.dto.DynamicConfigDTO>> com.ecog.acl.api.ConfigController.getRoleConfigRelationList(java.lang.Integer,java.lang.Integer,java.lang.Integer)
+[2026-11-28 14:50:27.450] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/config/application/list],methods=[GET]}" onto public com.ecog.acl.common.HttpResult<com.ecog.acl.common.PageResult<com.ecog.acl.api.dto.ApplicationDTO>> com.ecog.acl.api.ConfigController.getApplicationList(java.lang.Integer,java.lang.Integer)
+[2026-11-28 14:50:27.451] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/config/tree/list],methods=[GET]}" onto public com.ecog.acl.common.HttpResult<com.ecog.acl.common.PageResult<com.ecog.acl.api.dto.DynamicConfigTreeDTO>> com.ecog.acl.api.ConfigController.getDynamicConfigTreeList(java.lang.Integer,java.lang.Integer)
+[2026-11-28 14:50:27.452] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/config/menu/tree/list],methods=[GET]}" onto public com.ecog.acl.common.HttpResult<com.ecog.acl.common.PageResult<com.ecog.acl.api.dto.MenuTreeDTO>> com.ecog.acl.api.ConfigController.getMenuTreeList(java.lang.Integer,java.lang.Integer)
+[2026-11-28 14:50:27.452] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/config/application/add],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.ConfigController.addApplication(com.ecog.acl.api.param.ApplicationParam)
+[2026-11-28 14:50:27.453] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/config/menu/delete],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.ConfigController.deleteMenu(java.lang.Integer)
+[2026-11-28 14:50:27.455] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/config/add],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.ConfigController.addDynamicConfig(com.ecog.acl.api.param.DynamicConfigParam$Add) throws com.ecog.acl.exception.SystemException
+[2026-11-28 14:50:27.457] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/config/get],methods=[GET]}" onto public com.ecog.acl.common.HttpResult<com.ecog.acl.api.dto.DynamicConfigDTO> com.ecog.acl.api.ConfigController.getDynamicConfig(java.lang.Integer)
+[2026-11-28 14:50:27.458] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/config/menu/role/array/add],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.ConfigController.addRoleMenuArray(java.lang.Integer,java.util.List<java.lang.Integer>)
+[2026-11-28 14:50:27.458] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/config/menu/modify],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.ConfigController.modifyMenu(com.ecog.acl.api.param.MenuParam$Modify)
+[2026-11-28 14:50:27.459] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/config/menu/add],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.ConfigController.addMenu(com.ecog.acl.api.param.MenuParam$Add) throws com.ecog.acl.exception.SystemException
+[2026-11-28 14:50:27.460] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/config/menu/get],methods=[GET]}" onto public com.ecog.acl.common.HttpResult<com.ecog.acl.api.dto.MenuDTO> com.ecog.acl.api.ConfigController.getMenu(java.lang.Integer)
+[2026-11-28 14:50:27.473] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/district/user/delete],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.DistrictController.deleteDistrictUser(java.lang.Integer,java.lang.Integer)
+[2026-11-28 14:50:27.474] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/district/user/array/delete],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.DistrictController.deleteDistrictUserArray(java.lang.Integer,java.util.List<java.lang.Integer>)
+[2026-11-28 14:50:27.474] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/district/user/delete/all],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.DistrictController.deleteDistrictUserAll(java.lang.Integer)
+[2026-11-28 14:50:27.475] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/district/user/list],methods=[GET]}" onto public com.ecog.acl.common.HttpResult<java.util.List<com.ecog.acl.api.dto.UserDTO>> com.ecog.acl.api.DistrictController.getDistrictUserRelationList(java.lang.Integer)
+[2026-11-28 14:50:27.475] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/district/user/array/add],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.DistrictController.addDistrictUserArray(java.lang.Integer,java.util.List<java.lang.Integer>)
+[2026-11-28 14:50:27.476] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/district/list],methods=[GET]}" onto public com.ecog.acl.common.HttpResult<com.ecog.acl.common.PageResult<com.ecog.acl.api.dto.DistrictDTO>> com.ecog.acl.api.DistrictController.getDistrictList(java.lang.Integer,java.lang.Integer)
+[2026-11-28 14:50:27.480] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/district/delete],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.DistrictController.deleteDistrict(java.lang.Integer)
+[2026-11-28 14:50:27.482] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/district/add],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.DistrictController.addDistrict(com.ecog.acl.api.param.DistrictParam$Add)
+[2026-11-28 14:50:27.483] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/district/modify],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.DistrictController.modifyDistrict(com.ecog.acl.api.param.DistrictParam$Modify)
+[2026-11-28 14:50:27.484] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/district/get],methods=[GET]}" onto public com.ecog.acl.common.HttpResult<com.ecog.acl.api.dto.DistrictDTO> com.ecog.acl.api.DistrictController.getDistrictById(java.lang.Integer)
+[2026-11-28 14:50:27.485] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/district/user/add],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.DistrictController.addDistrictUser(java.lang.Integer,java.lang.Integer)
+[2026-11-28 14:50:27.491] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/organize/department/list/by/master],methods=[GET]}" onto public com.ecog.acl.common.HttpResult<java.util.List<com.ecog.acl.api.dto.OrganizeDTO>> com.ecog.acl.api.OrganizeController.getDepartmentListByMasterUserId(java.lang.Integer)
+[2026-11-28 14:50:27.491] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/organize/department/list],methods=[GET]}" onto public com.ecog.acl.common.HttpResult<java.util.List<com.ecog.acl.api.dto.OrganizeDTO>> com.ecog.acl.api.OrganizeController.getDepartmentList(java.lang.Integer)
+[2026-11-28 14:50:27.493] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/organize/tree/list],methods=[GET]}" onto public com.ecog.acl.common.HttpResult<com.ecog.acl.common.PageResult<com.ecog.acl.api.dto.OrganizeTreeDTO>> com.ecog.acl.api.OrganizeController.getOrganizeTreeList(java.lang.Integer,java.lang.Integer)
+[2026-11-28 14:50:27.494] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/organize/modify],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Integer> com.ecog.acl.api.OrganizeController.modifyOrganize(com.ecog.acl.api.param.OrganizeParam$Modify)
+[2026-11-28 14:50:27.496] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/organize/delete],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.OrganizeController.deleteOrganize(java.lang.Integer) throws com.ecog.acl.exception.SystemException
+[2026-11-28 14:50:27.497] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/organize/get],methods=[GET]}" onto public com.ecog.acl.common.HttpResult<com.ecog.acl.api.dto.OrganizeTreeDTO> com.ecog.acl.api.OrganizeController.getOrganizeById(java.lang.Integer)
+[2026-11-28 14:50:27.498] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/organize/add],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Integer> com.ecog.acl.api.OrganizeController.addRole(com.ecog.acl.api.param.OrganizeParam$Add)
+[2026-11-28 14:50:27.501] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/region/{code}/sub/list],methods=[GET]}" onto public com.ecog.acl.common.HttpResult<java.util.List<com.ecog.acl.api.dto.RegionDTO>> com.ecog.acl.api.RegionController.getSubRegionListByCode(java.lang.Integer)
+[2026-11-28 14:50:27.502] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/relationmapping/delete/{id}],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.RelationController.deleteRelation(java.lang.Integer)
+[2026-11-28 14:50:27.506] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/role/user/delete/all],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.RoleController.deleteRoleUserAll(java.lang.Integer)
+[2026-11-28 14:50:27.508] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/role/code/user/list],methods=[GET]}" onto public com.ecog.acl.common.HttpResult<java.util.List<com.ecog.acl.api.dto.UserDTO>> com.ecog.acl.api.RoleController.getUserListByRoleCode(java.lang.String)
+[2026-11-28 14:50:27.509] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/role/user/list],methods=[GET]}" onto public com.ecog.acl.common.HttpResult<java.util.List<com.ecog.acl.api.dto.UserDTO>> com.ecog.acl.api.RoleController.getRoleUserRelationList(java.lang.Integer)
+[2026-11-28 14:50:27.511] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/role/user/array/delete],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.RoleController.deleteRoleUserArray(java.lang.Integer,java.util.List<java.lang.Integer>)
+[2026-11-28 14:50:27.511] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/role/user/delete],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.RoleController.deleteRoleUser(java.lang.Integer,java.lang.Integer)
+[2026-11-28 14:50:27.513] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/role/list],methods=[GET]}" onto public com.ecog.acl.common.HttpResult<com.ecog.acl.common.PageResult<com.ecog.acl.api.dto.RoleDTO>> com.ecog.acl.api.RoleController.getRoleList(java.lang.Integer,java.lang.Integer)
+[2026-11-28 14:50:27.514] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/role/modify],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.RoleController.modifyRole(com.ecog.acl.api.param.RoleParam$Modify)
+[2026-11-28 14:50:27.515] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/role/user/add],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.RoleController.addRoleUser(java.lang.Integer,java.lang.Integer)
+[2026-11-28 14:50:27.516] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/role/user/array/add],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.RoleController.addRoleUserArray(java.lang.Integer,java.util.List<java.lang.Integer>)
+[2026-11-28 14:50:27.517] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/role/delete],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.RoleController.deleteRole(java.lang.Integer)
+[2026-11-28 14:50:27.517] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/role/get],methods=[GET]}" onto public com.ecog.acl.common.HttpResult<com.ecog.acl.api.dto.RoleDTO> com.ecog.acl.api.RoleController.getRoleById(java.lang.Integer)
+[2026-11-28 14:50:27.518] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/role/add],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.RoleController.addRole(com.ecog.acl.api.param.RoleParam$Add)
+[2026-11-28 14:50:27.524] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/user/login],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<com.ecog.acl.api.dto.UserLoginDTO> com.ecog.acl.api.UserController.login(com.ecog.acl.api.param.UserLoginParam)
+[2026-11-28 14:50:27.524] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/user/logout],methods=[GET]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.UserController.logout(java.lang.String)
+[2026-11-28 14:50:27.525] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/user/qywx/oauth],methods=[GET]}" onto public com.ecog.acl.common.HttpResult<com.ecog.acl.api.dto.UserLoginDTO> com.ecog.acl.api.UserController.qywxOAuthLogin(java.lang.String,java.lang.String)
+[2026-11-28 14:50:27.526] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/user/getByToken],methods=[GET]}" onto public com.ecog.acl.common.HttpResult<com.ecog.acl.api.dto.UserDTO> com.ecog.acl.api.UserController.getUserByToken(java.lang.String)
+[2026-11-28 14:50:27.526] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/user/menu/list],methods=[GET]}" onto public com.ecog.acl.common.HttpResult<java.util.List<com.ecog.acl.api.dto.MenuTreeDTO>> com.ecog.acl.api.UserController.getUserMenuTreeList(java.lang.String)
+[2026-11-28 14:50:27.528] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/user/config/list],methods=[GET]}" onto public com.ecog.acl.common.HttpResult<java.util.List<com.ecog.acl.api.dto.DynamicConfigDTO>> com.ecog.acl.api.UserController.getUserConfigList(java.lang.String)
+[2026-11-28 14:50:27.529] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/user/sendMessageByPhone],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.UserController.sendMessageByPhone(java.lang.String)
+[2026-11-28 14:50:27.530] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/user/wechat/pay/bill/list],methods=[GET]}" onto public com.ecog.acl.common.HttpResult<java.util.List<com.ecog.acl.common.dto.WechatExternalPayBillDTO>> com.ecog.acl.api.UserController.getUserQyWechatPayBillList(java.lang.String,java.lang.String,java.lang.String)
+[2026-11-28 14:50:27.531] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/user/organize/{orgId}/master],methods=[GET]}" onto public com.ecog.acl.common.HttpResult<com.ecog.acl.api.dto.UserDTO> com.ecog.acl.api.UserController.getOrganizeMaster(java.lang.Integer)
+[2026-11-28 14:50:27.532] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/user/organize/{orgId}/master/list],methods=[GET]}" onto public com.ecog.acl.common.HttpResult<java.util.List<com.ecog.acl.api.dto.UserDTO>> com.ecog.acl.api.UserController.getOrganizeMasterList(java.lang.Integer)
+[2026-11-28 14:50:27.532] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/user/organize/{orgId}/admin/list],methods=[GET]}" onto public com.ecog.acl.common.HttpResult<java.util.List<com.ecog.acl.api.dto.UserDTO>> com.ecog.acl.api.UserController.getOrganizeAdminList(java.lang.Integer)
+[2026-11-28 14:50:27.532] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/user/wechat/pay/bill/queryByTransactionId],methods=[GET]}" onto public com.ecog.acl.common.HttpResult<com.ecog.acl.common.dto.WechatExternalPayBillDTO> com.ecog.acl.api.UserController.queryWechatBillByTransactionId(java.lang.String,java.lang.String)
+[2026-11-28 14:50:27.533] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/user/modify],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.UserController.modifyUser(com.ecog.acl.api.param.UserParam$Modify)
+[2026-11-28 14:50:27.533] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/user/setAdmin],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.UserController.setAdmin(java.lang.Integer)
+[2026-11-28 14:50:27.533] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/user/add],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.UserController.addUser(com.ecog.acl.api.param.UserParam$Add)
+[2026-11-28 14:50:27.534] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/user/get],methods=[GET]}" onto public com.ecog.acl.common.HttpResult<com.ecog.acl.api.dto.UserDetailDTO> com.ecog.acl.api.UserController.getUserById(java.lang.Integer)
+[2026-11-28 14:50:27.534] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/user/delete],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.UserController.deleteUser(java.lang.Integer)
+[2026-11-28 14:50:27.534] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/user/syncQywxUserId],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.util.Map<java.lang.String, java.lang.Object>> com.ecog.acl.api.UserController.syncQywxUserId(java.lang.String)
+[2026-11-28 14:50:27.534] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/user/list],methods=[GET]}" onto public com.ecog.acl.common.HttpResult<com.ecog.acl.common.PageResult<com.ecog.acl.api.dto.UserDTO>> com.ecog.acl.api.UserController.getUserList(java.lang.Integer,java.lang.Integer,java.lang.Integer,java.lang.String)
+[2026-11-28 14:50:27.535] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/user/modifypassword],methods=[POST]}" onto public com.ecog.acl.common.HttpResult<java.lang.Boolean> com.ecog.acl.api.UserController.modifyUserPassword(com.ecog.acl.api.param.UserParam$ModifyPassword)
+[2026-11-28 14:50:27.543] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/error]}" onto public org.springframework.http.ResponseEntity<java.util.Map<java.lang.String, java.lang.Object>> org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController.error(javax.servlet.http.HttpServletRequest)
+[2026-11-28 14:50:27.544] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerMapping - Mapped "{[/error],produces=[text/html]}" onto public org.springframework.web.servlet.ModelAndView org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController.errorHtml(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
+[2026-11-28 14:50:27.702] [main] [INFO ] o.s.web.servlet.handler.SimpleUrlHandlerMapping - Mapped URL path [/static/**] onto handler of type [class org.springframework.web.servlet.resource.ResourceHttpRequestHandler]
+[2026-11-28 14:50:27.943] [main] [INFO ] o.s.w.s.m.m.a.RequestMappingHandlerAdapter - Looking for @ControllerAdvice: org.springframework.web.context.support.GenericWebApplicationContext@4e4efc1b: startup date [Sat Nov 28 14:50:18 CST 2026]; parent: org.springframework.context.annotation.AnnotationConfigApplicationContext@68034211
+[2026-11-28 14:50:28.115] [main] [INFO ] o.s.w.s.m.m.a.ExceptionHandlerExceptionResolver - Detected @ExceptionHandler methods in globalHttpExceptionHandler
+[2026-11-28 14:50:29.084] [main] [WARN ] com.netflix.config.sources.URLConfigurationSource - No URLs will be polled as dynamic configuration sources.
+[2026-11-28 14:50:29.084] [main] [INFO ] com.netflix.config.sources.URLConfigurationSource - To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
+[2026-11-28 14:50:29.114] [main] [WARN ] com.netflix.config.sources.URLConfigurationSource - No URLs will be polled as dynamic configuration sources.
+[2026-11-28 14:50:29.114] [main] [INFO ] com.netflix.config.sources.URLConfigurationSource - To enable URLs as dynamic configuration sources, define System property archaius.configurationSource.additionalUrls or make config.properties available on classpath.
+[2026-11-28 14:50:33.840] [main] [INFO ] o.s.b.actuate.endpoint.web.EndpointLinksResolver - Exposing 2 endpoint(s) beneath base path '/actuator'
+[2026-11-28 14:50:33.872] [main] [INFO ] o.s.b.a.e.web.servlet.WebMvcEndpointHandlerMapping - Mapped "{[/actuator/health],methods=[GET],produces=[application/vnd.spring-boot.actuator.v2+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.web.servlet.AbstractWebMvcEndpointHandlerMapping$OperationHandler.handle(javax.servlet.http.HttpServletRequest,java.util.Map<java.lang.String, java.lang.String>)
+[2026-11-28 14:50:33.874] [main] [INFO ] o.s.b.a.e.web.servlet.WebMvcEndpointHandlerMapping - Mapped "{[/actuator/info],methods=[GET],produces=[application/vnd.spring-boot.actuator.v2+json || application/json]}" onto public java.lang.Object org.springframework.boot.actuate.endpoint.web.servlet.AbstractWebMvcEndpointHandlerMapping$OperationHandler.handle(javax.servlet.http.HttpServletRequest,java.util.Map<java.lang.String, java.lang.String>)
+[2026-11-28 14:50:33.879] [main] [INFO ] o.s.b.a.e.web.servlet.WebMvcEndpointHandlerMapping - Mapped "{[/actuator],methods=[GET],produces=[application/vnd.spring-boot.actuator.v2+json || application/json]}" onto protected java.util.Map<java.lang.String, java.util.Map<java.lang.String, org.springframework.boot.actuate.endpoint.web.Link>> org.springframework.boot.actuate.endpoint.web.servlet.WebMvcEndpointHandlerMapping.links(javax.servlet.http.HttpServletRequest,javax.servlet.http.HttpServletResponse)
+[2026-11-28 14:50:34.081] [main] [INFO ] com.ecog.acl.MultiDeviceLoginIntegrationTest - Started MultiDeviceLoginIntegrationTest in 18.644 seconds (JVM running for 20.986)
+[FIXTURE-LOCK] 进程级文件锁已获取：C:\Users\youting\.acl-it\acl-it-fixture-mutex.lock
+[FIXTURE-LOCK] 锁连接L已建立（autocommit=true）
+[FIXTURE-LOCK] MySQL命名锁已获取：acl_it_fixture_mutex（由连接L持有至清理验证完成）
+[FIXTURE-LOCK] 双锁获取完成：runId=28ee9487，user_name=acl_it_fixture_qywx_28ee9487，qywx_user_id=acl_it_fixture_28ee9487
+[FIXTURE-LOCK] 残留预检：命名空间无活跃残留（user_name/qywx_user_id两列LEFT前缀，is_deleted=0）
+[FIXTURE-LOCK] fixture已创建（INSERT成功，userId已立即登记static）：user_id=204
+ Time：47 ms - ID：com.ecog.acl.dao.UserTokenDao.insert
+ Execute SQL：INSERT INTO user_token ( id, user_id, app_id, expire_time,gmt_create, is_deleted ) VALUES ( ?, ?, ?, ?,?, ? )
+
+ Time：15 ms - ID：com.ecog.acl.dao.DistrictDao.selectByUserId
+ Execute SQL：select d.* from district d join relation_mapping rm on rm.object_id_from=d.id and rm.is_deleted=0 and d.is_deleted=0 where rm.object_id_to=? and rm.object_type=? order by d.gmt_create desc
+
+ Time：17 ms - ID：com.ecog.acl.dao.RoleDao.selectByUserId
+ Execute SQL：select r.* from role r join relation_mapping rm on rm.object_id_from=r.id and rm.is_deleted=0 and r.is_deleted=0 where rm.object_id_to=? and rm.object_type=? order by r.gmt_create desc
+
+ Time：15 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：16 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：16 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：16 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+[FIXTURE-LOCK] @After登记token逐条逻辑吊销完成：1条
+ Time：14 ms - ID：com.ecog.acl.dao.UserDao.selectList
+ Execute SQL：SELECT id AS id,user_name AS userName,real_name AS realName,phone,pass_word AS `passWord`,user_key AS userKey,is_admin AS isAdmin,org_id AS orgId,district_id AS districtId,mail_address AS mailAddress,sort_index AS sortIndex,qywx_user_id AS qywxUserId,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user WHERE user_name=? AND is_deleted=0
+
+ Time：16 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (app_id = ?)
+
+ Time：32 ms - ID：com.ecog.acl.dao.UserDao.selectOne
+ Execute SQL：SELECT id AS id,user_name AS userName,real_name AS realName,phone,pass_word AS `passWord`,user_key AS userKey,is_admin AS isAdmin,org_id AS orgId,district_id AS districtId,mail_address AS mailAddress,sort_index AS sortIndex,qywx_user_id AS qywxUserId,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user WHERE user_name=? AND is_deleted=0
+
+ Time：43 ms - ID：com.ecog.acl.dao.UserTokenDao.insert
+ Execute SQL：INSERT INTO user_token ( id, user_id, app_id, expire_time,gmt_create, is_deleted ) VALUES ( ?, ?, ?, ?,?, ? )
+
+ Time：16 ms - ID：com.ecog.acl.dao.DistrictDao.selectByUserId
+ Execute SQL：select d.* from district d join relation_mapping rm on rm.object_id_from=d.id and rm.is_deleted=0 and d.is_deleted=0 where rm.object_id_to=? and rm.object_type=? order by d.gmt_create desc
+
+ Time：15 ms - ID：com.ecog.acl.dao.RoleDao.selectByUserId
+ Execute SQL：select r.* from role r join relation_mapping rm on rm.object_id_from=r.id and rm.is_deleted=0 and r.is_deleted=0 where rm.object_id_to=? and rm.object_type=? order by r.gmt_create desc
+
+ Time：15 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：16 ms - ID：com.ecog.acl.dao.UserDao.selectOne
+ Execute SQL：SELECT id AS id,user_name AS userName,real_name AS realName,phone,pass_word AS `passWord`,user_key AS userKey,is_admin AS isAdmin,org_id AS orgId,district_id AS districtId,mail_address AS mailAddress,sort_index AS sortIndex,qywx_user_id AS qywxUserId,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user WHERE user_name=? AND is_deleted=0
+
+ Time：32 ms - ID：com.ecog.acl.dao.UserTokenDao.insert
+ Execute SQL：INSERT INTO user_token ( id, user_id, app_id, expire_time,gmt_create, is_deleted ) VALUES ( ?, ?, ?, ?,?, ? )
+
+ Time：15 ms - ID：com.ecog.acl.dao.DistrictDao.selectByUserId
+ Execute SQL：select d.* from district d join relation_mapping rm on rm.object_id_from=d.id and rm.is_deleted=0 and d.is_deleted=0 where rm.object_id_to=? and rm.object_type=? order by d.gmt_create desc
+
+ Time：16 ms - ID：com.ecog.acl.dao.RoleDao.selectByUserId
+ Execute SQL：select r.* from role r join relation_mapping rm on rm.object_id_from=r.id and rm.is_deleted=0 and r.is_deleted=0 where rm.object_id_to=? and rm.object_type=? order by r.gmt_create desc
+
+ Time：0 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：0 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：16 ms - ID：com.ecog.acl.dao.UserDao.selectById
+ Execute SQL：SELECT id AS id,user_name AS userName,real_name AS realName,phone,pass_word AS `passWord`,user_key AS userKey,is_admin AS isAdmin,org_id AS orgId,district_id AS districtId,mail_address AS mailAddress,sort_index AS sortIndex,qywx_user_id AS qywxUserId,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user WHERE id=? AND is_deleted=0
+
+ Time：0 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：0 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：0 ms - ID：com.ecog.acl.dao.UserDao.selectById
+ Execute SQL：SELECT id AS id,user_name AS userName,real_name AS realName,phone,pass_word AS `passWord`,user_key AS userKey,is_admin AS isAdmin,org_id AS orgId,district_id AS districtId,mail_address AS mailAddress,sort_index AS sortIndex,qywx_user_id AS qywxUserId,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user WHERE id=? AND is_deleted=0
+
+ Time：16 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (app_id = ?)
+
+ Time：15 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：16 ms - ID：com.ecog.acl.dao.UserDao.selectById
+ Execute SQL：SELECT id AS id,user_name AS userName,real_name AS realName,phone,pass_word AS `passWord`,user_key AS userKey,is_admin AS isAdmin,org_id AS orgId,district_id AS districtId,mail_address AS mailAddress,sort_index AS sortIndex,qywx_user_id AS qywxUserId,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user WHERE id=? AND is_deleted=0
+
+ Time：48 ms - ID：com.ecog.acl.dao.MenuDao.selectByUserId
+ Execute SQL：select * from menu where id in( select rm2.object_id_to from relation_mapping rm1 join relation_mapping rm2 on rm1.object_id_from = rm2.object_id_from and rm1.is_deleted=0 and rm2.is_deleted=0 and rm1.object_type=? and rm2.object_type=? where rm1.object_id_to=?) order by app_id,parent_id,sort_index
+
+ Time：16 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：17 ms - ID：com.ecog.acl.dao.UserDao.selectById
+ Execute SQL：SELECT id AS id,user_name AS userName,real_name AS realName,phone,pass_word AS `passWord`,user_key AS userKey,is_admin AS isAdmin,org_id AS orgId,district_id AS districtId,mail_address AS mailAddress,sort_index AS sortIndex,qywx_user_id AS qywxUserId,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user WHERE id=? AND is_deleted=0
+
+ Time：16 ms - ID：com.ecog.acl.dao.DynamicConfigDao.selectByUserId
+ Execute SQL：select * from dynamic_config where id in( select rm2.object_id_to from relation_mapping rm1 join relation_mapping rm2 on rm1.object_id_from = rm2.object_id_from and rm1.is_deleted=0 and rm2.is_deleted=0 and rm1.object_type=? and rm2.object_type=? where rm1.object_id_to=?) order by parent_id,gmt_create
+
+ Time：32 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：15 ms - ID：com.ecog.acl.dao.UserDao.selectById
+ Execute SQL：SELECT id AS id,user_name AS userName,real_name AS realName,phone,pass_word AS `passWord`,user_key AS userKey,is_admin AS isAdmin,org_id AS orgId,district_id AS districtId,mail_address AS mailAddress,sort_index AS sortIndex,qywx_user_id AS qywxUserId,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user WHERE id=? AND is_deleted=0
+
+ Time：31 ms - ID：com.ecog.acl.dao.UserTokenDao.delete
+ Execute SQL：UPDATE user_token SET is_deleted=1 WHERE is_deleted=0 AND (id = ?)
+
+ Time：16 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：15 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：16 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：16 ms - ID：com.ecog.acl.dao.UserDao.selectById
+ Execute SQL：SELECT id AS id,user_name AS userName,real_name AS realName,phone,pass_word AS `passWord`,user_key AS userKey,is_admin AS isAdmin,org_id AS orgId,district_id AS districtId,mail_address AS mailAddress,sort_index AS sortIndex,qywx_user_id AS qywxUserId,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user WHERE id=? AND is_deleted=0
+
+ Time：16 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (app_id = ?)
+
+ Time：14 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：18 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：14 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：16 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：33 ms - ID：com.ecog.acl.dao.UserTokenDao.delete
+ Execute SQL：UPDATE user_token SET is_deleted=1 WHERE is_deleted=0 AND (id = ?)
+
+ Time：16 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：0 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：0 ms - ID：com.ecog.acl.dao.UserDao.selectById
+ Execute SQL：SELECT id AS id,user_name AS userName,real_name AS realName,phone,pass_word AS `passWord`,user_key AS userKey,is_admin AS isAdmin,org_id AS orgId,district_id AS districtId,mail_address AS mailAddress,sort_index AS sortIndex,qywx_user_id AS qywxUserId,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user WHERE id=? AND is_deleted=0
+
+ Time：15 ms - ID：com.ecog.acl.dao.UserTokenDao.delete
+ Execute SQL：UPDATE user_token SET is_deleted=1 WHERE is_deleted=0 AND (id = ?)
+
+ Time：0 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：0 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：0 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：0 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：16 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (app_id = ?)
+
+[FIXTURE-LOCK] @After登记token逐条逻辑吊销完成：2条
+ Time：16 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (app_id = ?)
+
+ Time：31 ms - ID：com.ecog.acl.dao.UserTokenDao.insert
+ Execute SQL：INSERT INTO user_token ( id, user_id, app_id, expire_time,gmt_create, is_deleted ) VALUES ( ?, ?, ?, ?,?, ? )
+
+ Time：16 ms - ID：com.ecog.acl.dao.DistrictDao.selectByUserId
+ Execute SQL：select d.* from district d join relation_mapping rm on rm.object_id_from=d.id and rm.is_deleted=0 and d.is_deleted=0 where rm.object_id_to=? and rm.object_type=? order by d.gmt_create desc
+
+ Time：16 ms - ID：com.ecog.acl.dao.RoleDao.selectByUserId
+ Execute SQL：select r.* from role r join relation_mapping rm on rm.object_id_from=r.id and rm.is_deleted=0 and r.is_deleted=0 where rm.object_id_to=? and rm.object_type=? order by r.gmt_create desc
+
+ Time：32 ms - ID：com.ecog.acl.dao.UserTokenDao.insert
+ Execute SQL：INSERT INTO user_token ( id, user_id, app_id, expire_time,gmt_create, is_deleted ) VALUES ( ?, ?, ?, ?,?, ? )
+
+ Time：16 ms - ID：com.ecog.acl.dao.DistrictDao.selectByUserId
+ Execute SQL：select d.* from district d join relation_mapping rm on rm.object_id_from=d.id and rm.is_deleted=0 and d.is_deleted=0 where rm.object_id_to=? and rm.object_type=? order by d.gmt_create desc
+
+ Time：15 ms - ID：com.ecog.acl.dao.RoleDao.selectByUserId
+ Execute SQL：select r.* from role r join relation_mapping rm on rm.object_id_from=r.id and rm.is_deleted=0 and r.is_deleted=0 where rm.object_id_to=? and rm.object_type=? order by r.gmt_create desc
+
+ Time：16 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：16 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：15 ms - ID：com.ecog.acl.dao.UserDao.selectById
+ Execute SQL：SELECT id AS id,user_name AS userName,real_name AS realName,phone,pass_word AS `passWord`,user_key AS userKey,is_admin AS isAdmin,org_id AS orgId,district_id AS districtId,mail_address AS mailAddress,sort_index AS sortIndex,qywx_user_id AS qywxUserId,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user WHERE id=? AND is_deleted=0
+
+ Time：16 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：16 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：16 ms - ID：com.ecog.acl.dao.UserDao.selectById
+ Execute SQL：SELECT id AS id,user_name AS userName,real_name AS realName,phone,pass_word AS `passWord`,user_key AS userKey,is_admin AS isAdmin,org_id AS orgId,district_id AS districtId,mail_address AS mailAddress,sort_index AS sortIndex,qywx_user_id AS qywxUserId,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user WHERE id=? AND is_deleted=0
+
+ Time：15 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (app_id = ?)
+
+ Time：32 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (app_id = ?)
+
+[FIXTURE-LOCK] @After登记token逐条逻辑吊销完成：2条
+ Time：15 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (app_id = ?)
+
+ Time：15 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (app_id = ?)
+
+ Time：16 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (app_id = ?)
+
+ Time：16 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (app_id = ?)
+
+ Time：16 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (app_id = ?)
+
+ Time：15 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (app_id = ?)
+
+ Time：16 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (app_id = ?)
+
+[FIXTURE-LOCK] @After登记token逐条逻辑吊销完成：0条
+ Time：14 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (app_id = ?)
+
+[2026-11-28 14:50:37.962] [main] [INFO ] com.ecog.acl.api.UserController - 浼佸井OAuth鑾峰彇鍒皍serid: acl_it_fixture_28ee9487
+ Time：15 ms - ID：com.ecog.acl.dao.UserDao.selectList
+ Execute SQL：SELECT id AS id,user_name AS userName,real_name AS realName,phone,pass_word AS `passWord`,user_key AS userKey,is_admin AS isAdmin,org_id AS orgId,district_id AS districtId,mail_address AS mailAddress,sort_index AS sortIndex,qywx_user_id AS qywxUserId,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user WHERE qywx_user_id=? AND is_deleted=0
+
+ Time：32 ms - ID：com.ecog.acl.dao.UserTokenDao.insert
+ Execute SQL：INSERT INTO user_token ( id, user_id, app_id, expire_time,gmt_create, is_deleted ) VALUES ( ?, ?, ?, ?,?, ? )
+
+ Time：16 ms - ID：com.ecog.acl.dao.DistrictDao.selectByUserId
+ Execute SQL：select d.* from district d join relation_mapping rm on rm.object_id_from=d.id and rm.is_deleted=0 and d.is_deleted=0 where rm.object_id_to=? and rm.object_type=? order by d.gmt_create desc
+
+ Time：16 ms - ID：com.ecog.acl.dao.RoleDao.selectByUserId
+ Execute SQL：select r.* from role r join relation_mapping rm on rm.object_id_from=r.id and rm.is_deleted=0 and r.is_deleted=0 where rm.object_id_to=? and rm.object_type=? order by r.gmt_create desc
+
+ Time：15 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+[2026-11-28 14:50:38.116] [main] [INFO ] com.ecog.acl.api.UserController - 浼佸井OAuth鑾峰彇鍒皍serid: acl_it_fixture_28ee9487
+ Time：16 ms - ID：com.ecog.acl.dao.UserDao.selectList
+ Execute SQL：SELECT id AS id,user_name AS userName,real_name AS realName,phone,pass_word AS `passWord`,user_key AS userKey,is_admin AS isAdmin,org_id AS orgId,district_id AS districtId,mail_address AS mailAddress,sort_index AS sortIndex,qywx_user_id AS qywxUserId,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user WHERE qywx_user_id=? AND is_deleted=0
+
+ Time：16 ms - ID：com.ecog.acl.dao.UserTokenDao.insert
+ Execute SQL：INSERT INTO user_token ( id, user_id, app_id, expire_time,gmt_create, is_deleted ) VALUES ( ?, ?, ?, ?,?, ? )
+
+ Time：0 ms - ID：com.ecog.acl.dao.DistrictDao.selectByUserId
+ Execute SQL：select d.* from district d join relation_mapping rm on rm.object_id_from=d.id and rm.is_deleted=0 and d.is_deleted=0 where rm.object_id_to=? and rm.object_type=? order by d.gmt_create desc
+
+ Time：15 ms - ID：com.ecog.acl.dao.RoleDao.selectByUserId
+ Execute SQL：select r.* from role r join relation_mapping rm on rm.object_id_from=r.id and rm.is_deleted=0 and r.is_deleted=0 where rm.object_id_to=? and rm.object_type=? order by r.gmt_create desc
+
+ Time：16 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：15 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：16 ms - ID：com.ecog.acl.dao.UserDao.selectById
+ Execute SQL：SELECT id AS id,user_name AS userName,real_name AS realName,phone,pass_word AS `passWord`,user_key AS userKey,is_admin AS isAdmin,org_id AS orgId,district_id AS districtId,mail_address AS mailAddress,sort_index AS sortIndex,qywx_user_id AS qywxUserId,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user WHERE id=? AND is_deleted=0
+
+ Time：16 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：16 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：15 ms - ID：com.ecog.acl.dao.UserDao.selectById
+ Execute SQL：SELECT id AS id,user_name AS userName,real_name AS realName,phone,pass_word AS `passWord`,user_key AS userKey,is_admin AS isAdmin,org_id AS orgId,district_id AS districtId,mail_address AS mailAddress,sort_index AS sortIndex,qywx_user_id AS qywxUserId,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user WHERE id=? AND is_deleted=0
+
+ Time：16 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (app_id = ?)
+
+ Time：31 ms - ID：com.ecog.acl.dao.UserTokenDao.delete
+ Execute SQL：UPDATE user_token SET is_deleted=1 WHERE is_deleted=0 AND (id = ?)
+
+ Time：20 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：14 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：17 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：13 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：15 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：15 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (id = ?)
+
+ Time：16 ms - ID：com.ecog.acl.dao.UserDao.selectById
+ Execute SQL：SELECT id AS id,user_name AS userName,real_name AS realName,phone,pass_word AS `passWord`,user_key AS userKey,is_admin AS isAdmin,org_id AS orgId,district_id AS districtId,mail_address AS mailAddress,sort_index AS sortIndex,qywx_user_id AS qywxUserId,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user WHERE id=? AND is_deleted=0
+
+ Time：16 ms - ID：com.ecog.acl.dao.UserTokenDao.selectList
+ Execute SQL：SELECT id,user_id AS userId,app_id AS appId,expire_time AS expireTime,gmt_create AS gmtCreate,gmt_modified AS gmtModified,is_deleted AS isDeleted FROM user_token WHERE is_deleted=0 AND (app_id = ?)
+
+[FIXTURE-LOCK] @After登记token逐条逻辑吊销完成：2条
+[FIXTURE-LOCK] user_id=204活跃token逻辑吊销：0条
+[FIXTURE-LOCK] fixture清理与验证全部通过：user_id=204
+[FIXTURE-LOCK] MySQL命名锁已释放（RELEASE_LOCK=1核验通过）
+[FIXTURE-LOCK] 锁连接L已关闭
+[FIXTURE-LOCK] 进程级文件锁已释放
+[FIXTURE-LOCK] 双锁生命周期完整结束（获取→持有→清理→验证→释放），生命周期证据：
+[FIXTURE-LOCK]   进程级文件锁已获取：C:\Users\youting\.acl-it\acl-it-fixture-mutex.lock
+[FIXTURE-LOCK]   锁连接L已建立（autocommit=true）
+[FIXTURE-LOCK]   MySQL命名锁已获取：acl_it_fixture_mutex（由连接L持有至清理验证完成）
+[FIXTURE-LOCK]   双锁获取完成：runId=28ee9487，user_name=acl_it_fixture_qywx_28ee9487，qywx_user_id=acl_it_fixture_28ee9487
+[FIXTURE-LOCK]   残留预检：命名空间无活跃残留（user_name/qywx_user_id两列LEFT前缀，is_deleted=0）
+[FIXTURE-LOCK]   fixture已创建（INSERT成功，userId已立即登记static）：user_id=204
+[FIXTURE-LOCK]   @After登记token逐条逻辑吊销完成：1条
+[FIXTURE-LOCK]   @After登记token逐条逻辑吊销完成：2条
+[FIXTURE-LOCK]   @After登记token逐条逻辑吊销完成：2条
+[FIXTURE-LOCK]   @After登记token逐条逻辑吊销完成：0条
+[FIXTURE-LOCK]   @After登记token逐条逻辑吊销完成：2条
+[FIXTURE-LOCK]   user_id=204活跃token逻辑吊销：0条
+[FIXTURE-LOCK]   fixture清理与验证全部通过：user_id=204
+[FIXTURE-LOCK]   MySQL命名锁已释放（RELEASE_LOCK=1核验通过）
+[FIXTURE-LOCK]   锁连接L已关闭
+[FIXTURE-LOCK]   进程级文件锁已释放
+Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 24.589 sec
+[2026-11-28 14:50:38.879] [Thread-7] [INFO ] o.s.w.context.support.GenericWebApplicationContext - Closing org.springframework.web.context.support.GenericWebApplicationContext@4e4efc1b: startup date [Sat Nov 28 14:50:18 CST 2026]; parent: org.springframework.context.annotation.AnnotationConfigApplicationContext@68034211
+[2026-11-28 14:50:38.974] [Thread-7] [INFO ] com.alibaba.druid.pool.DruidDataSource - {dataSource-1} closing ...
+[2026-11-28 14:50:39.004] [Thread-7] [INFO ] com.alibaba.druid.pool.DruidDataSource - {dataSource-1} closed
+
+Results :
+
+Tests run: 6, Failures: 0, Errors: 0, Skipped: 0
+
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary:
+[INFO] 
+[INFO] acl ................................................ SUCCESS [  0.495 s]
+[INFO] common ............................................. SUCCESS [  3.377 s]
+[INFO] server ............................................. SUCCESS [ 30.936 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 35.788 s
+[INFO] Finished at: 2026-11-28T14:50:39+08:00
+[INFO] Final Memory: 35M/434M
+[INFO] ------------------------------------------------------------------------

@@ -1282,3 +1282,25 @@
 - **标识命名澄清：** 终审指出内容SHA256（88907d17…）与Git blob对象SHA-1（UserTokenTest=`2026606cd19aaf8cc9b63f3e6f2feb30070a67ef`，实测一致）为两类摘要勿混称；binding.json已补四个归档文件的git_blob_sha1字段并加命名澄清。
 - **循环轨迹（九轮全部有reply存档+SHA链）：** R1 REWORK（LIKE/互斥）→R2主体通过+三项异常生命周期→R3 REWORK（失锁边界+归档错名更正）→R4 REWORK（核验与操作TOCTOU）→R5 REWORK（文件锁路径非单机全局+应用层写入未证明）→R6 REWORK（deleteByMap版本分歧，实为审查方读HEAD版）→R7 REWORK（工作区完整变更范围）→R8 REWORK（UserTokenTest归档）→**R9 PASS**。fixture-plan.md新增§13终局节、§7补r9行。
 - **下一步：** 向审查方申请实施授权（新会话简报自包含）；获授权后按冻结方案实施MultiDeviceLoginIntegrationTest改造，实施验收照§5（5/5 PASS+UserTokenTest PASS+token全吊销+fixture逻辑删+无非预期变化+异步终止实际代码核验）。
+
+
+### DEC-153 实施授权裁定=AUTHORIZED（新会话6b0a741f）；按冻结方案进入实施节点（2026-11-28）
+
+- **授权申请：** 会话迁移后新会话派单`brief_bms_prod_triage_p1_implauth.txt`（1064B正常送达，dispatch-2026-11-28T06-25-47，会话6b0a741f-0ffc-83e9-938c-25058f8f7406，指针已更新）。裁定reply 3259B SHA256=`7ca5ce962a0aff7e0e645718f3ccd86069568ac63d8e2c82f2600ea54cce0e20`（存档impl-authorization-verdict.txt）。**裁定：批准实施，状态AUTHORIZED。**
+- **授权基线：** damwate/AIEO 分支handoff/20261128-bms-prod-triage-p1-r4 完整SHA=`5f1bfe817ae74824352339d9f6f081dcb99b3cb0`；方案=fixture-plan.md（R9终审PASS，reply=f230f10a…）。授权范围严格限定=修改worktree中MultiDeviceLoginIntegrationTest.java+按冻结方案实施双锁/锁连接L/严格前缀预检/异常安全清理+重跑测试+收集证据完成实施验收。
+- **不可突破边界：** 仅改该测试文件；业务代码/生产配置禁改；业务断言原样保留；禁物理DELETE；1062原样失败不重试不换身份；双锁必须按冻结方案实现；main合并/生产发布不授权。
+- **实施重点核验（审查方明令）：** 双锁生命周期fail-closed（文件锁user.home锚定+GET_LOCK独立连接L）；破坏性操作（测试自有INSERT/残留清理/token吊销/用户逻辑删除/验证）均用锁连接L；异步线程终止=检查实际awaitWorkersTermination代码，shutdownNow≠终止，必须等isTerminated()才得释放文件锁；异常清理（部分初始化/测试失败/清理失败/释锁失败）留独立证据不吞异常；清理语义=用户与token均逻辑删除并验证DB实际状态。
+- **验收标准（八项必须全部满足）：** 5/5 PASS；UserTokenTest PASS；本轮token全吊销；fixture用户存在且is_deleted=1；原有无非预期变化；锁机制全生命周期有效正常释锁；所有工作线程实际终止；清理验证全部通过无未解释残留。交付要求八项=修改前后文件及SHA256/完整diff证明仅改授权文件/双锁获取持有释放证据/异步线程终止证据/测试运行完整日志退出码/DB pre/post对账/fixture与token清理结果/最终实施验收结论。
+- **验收后边界：** 实施完成须另行提交验收材料由审查方独立复核；验收通过不自动获得main合并或生产发布权限；发现冻结设计与实际代码不一致立即停止申请裁定不得自行变更设计。
+- **下一步（已进入）：** 实施MultiDeviceLoginIntegrationTest改造→ST-05→test-compile→基线pre/post+重跑→收集八项交付→提交验收材料。
+
+
+### DEC-154 fixture实施完成：6/6全过+基线对账零意外，实施验收材料提交待独立复核（2026-11-28）
+
+- **实施（授权=AUTHORIZED，DEC-153）：** 按冻结方案改造MultiDeviceLoginIntegrationTest.java（唯一授权文件），test-compile一次通过（2测试源文件）。实施版SHA256=`223f0565c88570b19293115a987e6ac0337420863eba0e947cba0c72997b5b42`（49344B）；被审版=`c070798b…26e30`；前后diff归档（673行）。
+- **运行结果（exit=0）：** 集成测试`Tests run: 5, Failures: 0, Errors: 0`（含此前BLOCKED的4项qywx全转PASS）+UserTokenTest 1/1=6/6全过；`FAIL-EVIDENCE`=0行。
+- **双锁生命周期证据（33行[FIXTURE-LOCK]，SHA=`c29f1334…`）：** 文件锁（C:/Users/youting/.acl-it/acl-it-fixture-mutex.lock）→连接L（autocommit=true）→GET_LOCK获取→runId=28ee9487→残留预检0残留→INSERT创建user_id=204→@After逐条吊销（1/2/2/0/2）→@AfterClass兜底吊销（活跃0）→清理验证a/b/c全过→RELEASE_LOCK=1核验→连接关闭→文件锁释放。
+- **DB pre/post对账（fixture维度全PASS）：** admin活跃token 1→1；全表活跃23→23；admin token行新增恰2（均is_deleted=1，本轮测试内创建）/移除0/状态变化0；既有活跃token（7956e5cd…）未动；fixture行post={id:204, is_deleted:1}；fixture活跃token 0→0。净留痕=1行逻辑删fixture+2行逻辑删token，均可前缀识别。
+- **实施披露（非静默变更）：** ①双锁获取钩子@BeforeClass→@Before（JUnit4+SpringRunner静态方法无法访问注入DataSource；获取时序/fail-closed/锁窗口语义不变，窗口覆盖全部测试强于冻结）；②@After吊销通道应用层→锁连接L（§2冻结条款）；③R4入口核验实施于三处+@After加严；④基线脚本补fixture维度+修复stdin双用途陷阱（python3 -吃掉JSON stdin→scp+PYTHONPATH=/tmp/pylib，AIEO任务侧工具只读）。
+- **验收材料：** evidence/task1-fixture-impl/（八项交付：前后文件+SHA/diff+变更范围/33行双锁证据/异步终止依据/完整日志+exit0/pre-post基线+对账JSON/清理结果/impl-acceptance-report.md）。实施方自检8/8 PASS，提交审查方会话6b0a741f独立复核；验收通过不自动获得main合并/生产发布权限。
+- **授权边界遵守：** 仅改授权文件（实施后git status与冻结归档一致）；业务代码/生产配置零触碰；断言原样（5个@Test方法体除4处调用点替换外零改动）；零物理DELETE；1062未配置重试；ST-05=IN_PROGRESS无FAIL。

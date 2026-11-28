@@ -1,0 +1,82 @@
+{
+ "at": "2026-11-28",
+ "database": "127.0.0.1:8306/ecog_acl",
+ "dimensions": {
+  "admin_user_active_tokens": {
+   "pre": 1,
+   "post": 1,
+   "verdict": "PASS"
+  },
+  "user_token_table_active_total": {
+   "pre": 23,
+   "post": 23,
+   "verdict": "PASS"
+  },
+  "admin_token_rows_added": {
+   "count": 2,
+   "all_is_deleted_1": true,
+   "created_during_run": [
+    "2026-11-28 14:50:36"
+   ],
+   "verdict": "PASS(净留痕=本轮token已吊销)"
+  },
+  "admin_token_rows_removed": {
+   "count": 0,
+   "verdict": "PASS"
+  },
+  "admin_token_rows_state_changed": {
+   "count": 0,
+   "verdict": "PASS"
+  },
+  "pre_existing_active_token_untouched": {
+   "pre": [
+    "7956e5cd…len32"
+   ],
+   "post": [
+    "7956e5cd…len32"
+   ],
+   "verdict": "PASS"
+  },
+  "fixture_users": {
+   "pre": {
+    "total": 0,
+    "active": 0
+   },
+   "post": {
+    "total": 1,
+    "active": 0
+   },
+   "post_rows": [
+    {
+     "id": 204,
+     "user_name": "acl_it_fixture_qywx_28ee9487",
+     "qywx_user_id": "acl_it_fixture_28ee9487",
+     "is_deleted": 1
+    }
+   ],
+   "verdict": "PASS(行存在且is_deleted=1)"
+  },
+  "fixture_tokens_active": {
+   "pre": 0,
+   "post": 0,
+   "verdict": "PASS(全吊销)"
+  }
+ },
+ "hashes": {
+  "baseline_pre_sha256": "1a51c98c0d44ede13d197a41ce767a68c232e13fb7fbf76227a3e60216df4fe1",
+  "baseline_post_sha256": "25b3a5c6566bb3efbd2291c93ae742dc08e6242b958ae86aac3167b67c2cfde9",
+  "test_run_log_sha256": "74155cf98ea981ac19cc7ed7c915c979e76dd9abd79e96ff486cb1b59569f15a",
+  "fixture_lock_lifecycle_sha256": "c29f13340e3a295e7cfc51822d1f49829a85c82bde39d3990e1abe2f4e728b67",
+  "impl_version_java_sha256": "223f0565c88570b19293115a987e6ac0337420863eba0e947cba0c72997b5b42",
+  "impl_diff_sha256": "9647b858bff0f73b417296b35e666fac6fa878d25ce8d9eee3a42220fbad3451",
+  "impl_change_scope_sha256": "4a419b84b851058375181270dcb8967c0b57ed6294e762b35f855023ba060ba0",
+  "impl_java_sha256_before_reviewed_copy": "c070798b98aae6bad508a0977ccb5303b9638fd68cfae5e9a3f88eba70226e30",
+  "fixture_lock_lifecycle_bytes": 3313
+ },
+ "test_run": {
+  "exit_code": 0,
+  "integration": "Tests run: 5, Failures: 0, Errors: 0, Skipped: 0",
+  "unit": "Tests run: 1, Failures: 0, Errors: 0, Skipped: 0",
+  "fail_evidence_lines": 0
+ }
+}
