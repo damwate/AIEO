@@ -1,0 +1,82 @@
+[INFO] Scanning for projects...
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.ecog.acl:common:jar:1.0.1
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-compiler-plugin is missing. @ com.ecog:acl:0.0.1-SNAPSHOT, D:\YotinGarden\.worktrees\bms-multi-device-login-acl\pom.xml, line 61, column 21
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.ecog.acl:client:jar:1.0.1
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-compiler-plugin is missing. @ com.ecog:acl:0.0.1-SNAPSHOT, D:\YotinGarden\.worktrees\bms-multi-device-login-acl\pom.xml, line 61, column 21
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.ecog.acl:server:jar:0.0.1-SNAPSHOT
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-compiler-plugin is missing. @ com.ecog:acl:0.0.1-SNAPSHOT, D:\YotinGarden\.worktrees\bms-multi-device-login-acl\pom.xml, line 61, column 21
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.ecog.acl:ui:jar:0.0.1-SNAPSHOT
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-compiler-plugin is missing. @ com.ecog:acl:0.0.1-SNAPSHOT, D:\YotinGarden\.worktrees\bms-multi-device-login-acl\pom.xml, line 61, column 21
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for com.ecog:acl:pom:0.0.1-SNAPSHOT
+[WARNING] 'build.plugins.plugin.version' for org.apache.maven.plugins:maven-compiler-plugin is missing. @ line 61, column 21
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] acl
+[INFO] common
+[INFO] server
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Building acl 0.0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Building common 1.0.1
+[INFO] ------------------------------------------------------------------------
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ common ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory D:\YotinGarden\.worktrees\bms-multi-device-login-acl\acl-common\src\main\resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ common ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ common ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory D:\YotinGarden\.worktrees\bms-multi-device-login-acl\acl-common\src\test\resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:testCompile (default-testCompile) @ common ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Building server 0.0.1-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[WARNING] The artifact mysql:mysql-connector-java:jar:8.0.33 has been relocated to com.mysql:mysql-connector-j:jar:8.0.33
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:resources (default-resources) @ server ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 15 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:compile (default-compile) @ server ---
+[INFO] Nothing to compile - all classes are up to date
+[INFO] 
+[INFO] --- maven-resources-plugin:2.6:testResources (default-testResources) @ server ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] skip non existing resourceDirectory D:\YotinGarden\.worktrees\bms-multi-device-login-acl\acl-server\src\test\resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.1:testCompile (default-testCompile) @ server ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 2 source files to D:\YotinGarden\.worktrees\bms-multi-device-login-acl\acl-server\target\test-classes
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary:
+[INFO] 
+[INFO] acl ................................................ SUCCESS [  0.819 s]
+[INFO] common ............................................. SUCCESS [  2.791 s]
+[INFO] server ............................................. SUCCESS [  8.966 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 13.886 s
+[INFO] Finished at: 2026-11-28T11:29:44+08:00
+[INFO] Final Memory: 49M/281M
+[INFO] ------------------------------------------------------------------------

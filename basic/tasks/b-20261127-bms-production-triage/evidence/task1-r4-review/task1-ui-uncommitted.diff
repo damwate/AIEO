@@ -1,0 +1,44 @@
+diff --git a/src/main/java/com/ecog/web/bms/controller/MobileOAuthController.java b/src/main/java/com/ecog/web/bms/controller/MobileOAuthController.java
+index 6fd81075..8b7e5ff6 100644
+--- a/src/main/java/com/ecog/web/bms/controller/MobileOAuthController.java
++++ b/src/main/java/com/ecog/web/bms/controller/MobileOAuthController.java
+@@ -121,7 +121,7 @@ public class MobileOAuthController {
+             // 先清理历史遗留的影子Cookie（宿主级/当前域/父域级同名变体），否则浏览器可能继续发送旧变体，
+             // 服务端getCookie取第一个仍读到死token，导致登录后依旧403（登录循环）
+             clearShadowCookies(response);
+-            FrameCookieUtils.addCookie(response, config.getCookieKey(), cookieValue, null, false, 36000, "/", true);
++            FrameCookieUtils.addCookie(response, config.getCookieKey(), cookieValue, null, false, FrameCookieUtils.LOGIN_COOKIE_MAX_AGE_SECONDS, "/", true);
+             FrameCookieUtils.addCookie(response, config.getPasswordCookieKey(), cookieValue, null, false, 3600 * 24 * 365 * 10, "/", true);
+             // logger.info("[OAuth] Cookie写入完成, 跳转: {}", redirectUrl);
+             response.sendRedirect(redirectUrl);
+@@ -200,7 +200,7 @@ public class MobileOAuthController {
+             //         redirectUrl);
+             // 先清理历史遗留的影子Cookie，避免旧变体继续被发送导致403登录循环
+             clearShadowCookies(response);
+-            FrameCookieUtils.addCookie(response, config.getCookieKey(), cookieValue, null, false, 36000, "/", true);
++            FrameCookieUtils.addCookie(response, config.getCookieKey(), cookieValue, null, false, FrameCookieUtils.LOGIN_COOKIE_MAX_AGE_SECONDS, "/", true);
+             FrameCookieUtils.addCookie(response, config.getPasswordCookieKey(), cookieValue, null, false, 3600 * 24 * 365 * 10, "/", true);
+             // logger.info("[PC OAuth] Cookie写入完成, 准备渲染回调页");
+             renderPcLoginCallbackPage(response, redirectUrl, accessToken);
+diff --git a/src/main/java/com/ecog/web/bms/utils/FrameCookieUtils.java b/src/main/java/com/ecog/web/bms/utils/FrameCookieUtils.java
+index 7092b9fc..ee67591d 100644
+--- a/src/main/java/com/ecog/web/bms/utils/FrameCookieUtils.java
++++ b/src/main/java/com/ecog/web/bms/utils/FrameCookieUtils.java
+@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
+ public class FrameCookieUtils {
+ 
+     private static final Logger logger = LoggerFactory.getLogger(FrameCookieUtils.class);
++    //主登录Cookie与ACL新签发token一致为30天；其他Cookie属性保持原样
++    public static final int LOGIN_COOKIE_MAX_AGE_SECONDS = 2592000;
+     /**
+      * 添加一个新Cookie
+      *
+@@ -91,7 +93,7 @@ public class FrameCookieUtils {
+      * @return null
+      */
+     public static void addCookie(HttpServletResponse response, String cookieName, String cookieValue, String domain) {
+-        addCookie(response, cookieName, cookieValue, domain, true, 36000, "/", false);
++        addCookie(response, cookieName, cookieValue, domain, true, LOGIN_COOKIE_MAX_AGE_SECONDS, "/", false);
+     }
+ 
+     /**

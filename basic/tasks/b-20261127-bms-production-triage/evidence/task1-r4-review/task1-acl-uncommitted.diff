@@ -1,0 +1,227 @@
+diff --git a/acl-server/pom.xml b/acl-server/pom.xml
+index 5ebbb31..c050c09 100644
+--- a/acl-server/pom.xml
++++ b/acl-server/pom.xml
+@@ -86,6 +86,11 @@
+ 			<groupId>org.springframework.boot</groupId>
+ 			<artifactId>spring-boot-starter-actuator</artifactId>
+ 		</dependency>
++		<dependency>
++			<groupId>org.springframework.boot</groupId>
++			<artifactId>spring-boot-starter-test</artifactId>
++			<scope>test</scope>
++		</dependency>
+ 	</dependencies>
+ 
+ 	<build>
+diff --git a/acl-server/src/main/java/com/ecog/acl/api/UserController.java b/acl-server/src/main/java/com/ecog/acl/api/UserController.java
+index 718e394..31ae9b4 100644
+--- a/acl-server/src/main/java/com/ecog/acl/api/UserController.java
++++ b/acl-server/src/main/java/com/ecog/acl/api/UserController.java
+@@ -39,6 +39,8 @@ import java.util.stream.Collectors;
+ @RequestMapping("/user")
+ public class UserController {
+     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
++    //新登录会话统一30天；历史token仍按各自已存expireTime自然失效
++    private static final long LOGIN_EXPIRE_TIME_SPAN_SECONDS = 2592000L;
+ 
+     @Autowired
+     private UserService userService;
+@@ -144,7 +146,7 @@ public class UserController {
+ 
+         try {
+             UserLoginBO loginBO = userService.userLogin(userToken.getUserName(),
+-                    userToken.getPassWord(), userToken.getAppId(), 100000000);
++                    userToken.getPassWord(), userToken.getAppId(), LOGIN_EXPIRE_TIME_SPAN_SECONDS);
+             if (loginBO == null) {
+                 return HttpResult.authError("用户名或密码错误");
+             } else {
+@@ -247,8 +249,8 @@ public class UserController {
+         }
+         try {
+             UserToken userToken = userTokenService.getById(accessToken);
+-            // DEF-001 修复配套：已过期的 Token 与不存在的 Token 同等拒绝（原实现只查存在性）
+-            if (userToken == null || isTokenExpired(userToken)) {
++            //统一规则：不存在、已吊销、NULL有效期或已到期均拒绝
++            if (userToken == null || !userToken.isValid(new Date())) {
+                 return HttpResult.notFound();
+             }
+             User user = userService.selectById(userToken.getUserId());
+@@ -261,10 +263,6 @@ public class UserController {
+         }
+     }
+ 
+-    private boolean isTokenExpired(UserToken userToken) {
+-        return userToken.getExpireTime() != null && userToken.getExpireTime().before(new Date());
+-    }
+-
+     /**
+      * 分页查询用户列表
+      *
+@@ -316,13 +314,14 @@ public class UserController {
+         List<MenuTreeBO> userMenuList = null;
+         try {
+             UserToken userToken = userTokenService.getById(accessToken);
+-            if (userToken != null) {
+-                User user = userService.selectById(userToken.getUserId());
+-                if (user.getAdmin()) {
+-                    userMenuList = menuService.getMenuTreeList(1, 10000).getRecords();
+-                } else {
+-                    userMenuList = menuService.getUserMenuList(userToken.getUserId());
+-                }
++            if (userToken == null || !userToken.isValid(new Date())) {
++                return HttpResult.notFound();
++            }
++            User user = userService.selectById(userToken.getUserId());
++            if (user.getAdmin()) {
++                userMenuList = menuService.getMenuTreeList(1, 10000).getRecords();
++            } else {
++                userMenuList = menuService.getUserMenuList(userToken.getUserId());
+             }
+             return HttpResult.success(userMenuList == null ? null :
+                     userMenuList.stream().map(b -> MenuTreeDTO.from(b)).collect(Collectors.toList()));
+@@ -345,13 +344,14 @@ public class UserController {
+         List<DynamicConfig> userConfigList = null;
+         try {
+             UserToken userToken = userTokenService.getById(accessToken);
+-            if (userToken != null) {
+-                User user = userService.selectById(userToken.getUserId());
+-                if (user.getAdmin()) {
+-                    userConfigList = configService.getDynamicConfigList(1, 10000).getRecords();
+-                } else {
+-                    userConfigList = configService.getUserConfigList(userToken.getUserId());
+-                }
++            if (userToken == null || !userToken.isValid(new Date())) {
++                return HttpResult.notFound();
++            }
++            User user = userService.selectById(userToken.getUserId());
++            if (user.getAdmin()) {
++                userConfigList = configService.getDynamicConfigList(1, 10000).getRecords();
++            } else {
++                userConfigList = configService.getUserConfigList(userToken.getUserId());
+             }
+             return HttpResult.success(userConfigList == null ? null :
+                     userConfigList.stream().map(b -> DynamicConfigDTO.from(b)).collect(Collectors.toList()));
+@@ -643,7 +643,7 @@ public class UserController {
+             }
+ 
+             // 4. 调用企微免登录服务生成token（跳过密码校验）
+-            UserLoginBO loginBO = userService.qywxLogin(dbUser, appId, 100000000);
++            UserLoginBO loginBO = userService.qywxLogin(dbUser, appId, LOGIN_EXPIRE_TIME_SPAN_SECONDS);
+             if (loginBO == null) {
+                 return HttpResult.authError("登录失败");
+             }
+diff --git a/acl-server/src/main/java/com/ecog/acl/entity/UserToken.java b/acl-server/src/main/java/com/ecog/acl/entity/UserToken.java
+index 5e222d0..5e512d3 100644
+--- a/acl-server/src/main/java/com/ecog/acl/entity/UserToken.java
++++ b/acl-server/src/main/java/com/ecog/acl/entity/UserToken.java
+@@ -49,4 +49,12 @@ public class UserToken extends BaseEntity<UserToken> {
+     public void setExpireTime(Date expireTime) {
+         this.expireTime = expireTime;
+     }
++
++    /**
++     * 统一token有效期判断；NULL、恰到期和已过期均无效。
++     * Date按绝对时间比较，调用方传入当前时间，便于固定时间做边界测试。
++     */
++    public boolean isValid(Date now) {
++        return expireTime != null && now != null && expireTime.after(now);
++    }
+ }
+diff --git a/acl-server/src/main/java/com/ecog/acl/mvc/AuthInterceptor.java b/acl-server/src/main/java/com/ecog/acl/mvc/AuthInterceptor.java
+index 3f3f6f9..ba72339 100644
+--- a/acl-server/src/main/java/com/ecog/acl/mvc/AuthInterceptor.java
++++ b/acl-server/src/main/java/com/ecog/acl/mvc/AuthInterceptor.java
+@@ -68,7 +68,7 @@ public class AuthInterceptor implements HandlerInterceptor {
+                 return reject(response, UNAUTHORIZED_JSON);
+             }
+             UserToken userToken = userTokenService.getById(accessToken);
+-            if (isTokenInvalid(userToken)) {
++            if (userToken == null || !userToken.isValid(new Date())) {
+                 return reject(response, UNAUTHORIZED_JSON);
+             }
+             User user = userService.selectById(userToken.getUserId());
+@@ -102,13 +102,6 @@ public class AuthInterceptor implements HandlerInterceptor {
+         return accessToken;
+     }
+ 
+-    private boolean isTokenInvalid(UserToken userToken) {
+-        if (userToken == null) {
+-            return true;
+-        }
+-        return userToken.getExpireTime() != null && userToken.getExpireTime().before(new Date());
+-    }
+-
+     private boolean isAdmin(User user) {
+         return Boolean.TRUE.equals(user.getAdmin());
+     }
+diff --git a/acl-server/src/main/java/com/ecog/acl/service/impl/UserServiceImpl.java b/acl-server/src/main/java/com/ecog/acl/service/impl/UserServiceImpl.java
+index 86eae9e..b5c2959 100644
+--- a/acl-server/src/main/java/com/ecog/acl/service/impl/UserServiceImpl.java
++++ b/acl-server/src/main/java/com/ecog/acl/service/impl/UserServiceImpl.java
+@@ -25,8 +25,8 @@ import org.springframework.beans.factory.annotation.Autowired;
+ import org.springframework.stereotype.Service;
+ import org.springframework.transaction.annotation.Transactional;
+ 
+-import java.util.HashMap;
+ import java.util.List;
++import java.util.UUID;
+ import java.util.stream.Collectors;
+ 
+ /**
+@@ -181,15 +181,11 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
+             Integer userId = user1.getId();
+             //检查密码
+             if (user1.getPassWord().equals(getMd5Code(passWord, user1.getUserKey()))) {
+-                //删除用户token
+-                HashMap<String, Object> mapper = new HashMap<>(1);
+-                mapper.put("user_id", userId);
+-                mapper.put("app_id", appId);
+-                userTokenDao.deleteByMap(mapper);
++                //保留其他设备/场景的有效token，多会话并存
+                 //生成新token
+                 long lExpireTime = DateTime.now().getTime() + expireTimeSpan * 1000;
+                 DateTime expireTime = new DateTime(lExpireTime);
+-                String accessToken = getUserAccessToken(userName, passWord, appId, lExpireTime);
++                String accessToken = getUserAccessToken();
+                 UserToken token = new UserToken();
+                 token.setId(accessToken);
+                 token.setAppId(appId);
+@@ -286,15 +282,11 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
+     @Transactional(rollbackFor = Exception.class)
+     public UserLoginBO qywxLogin(User user, String appId, long expireTimeSpan) {
+         Integer userId = user.getId();
+-        //删除用户token
+-        HashMap<String, Object> mapper = new HashMap<>(1);
+-        mapper.put("user_id", userId);
+-        mapper.put("app_id", appId);
+-        userTokenDao.deleteByMap(mapper);
++        //保留其他设备/场景的有效token，多会话并存
+         //生成新token
+         long lExpireTime = DateTime.now().getTime() + expireTimeSpan * 1000;
+         DateTime expireTime = new DateTime(lExpireTime);
+-        String accessToken = getUserAccessToken(user.getUserName(), user.getPassWord(), appId, lExpireTime);
++        String accessToken = getUserAccessToken();
+         UserToken token = new UserToken();
+         token.setId(accessToken);
+         token.setAppId(appId);
+@@ -338,15 +330,12 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
+     }
+ 
+     /**
+-     * 生成登录token
++     * 生成安全随机的32位登录token，避免并发登录共享或冲突
+      *
+-     * @param userName
+-     * @param password
+-     * @param lExpireTime
+-     * @return
++     * @return 32位随机token
+      */
+-    private String getUserAccessToken(String userName, String password, String appId, long lExpireTime) {
+-        return SecureUtil.md5(userName + password + appId + String.valueOf(lExpireTime)).toLowerCase();
++    private String getUserAccessToken() {
++        return UUID.randomUUID().toString().replace("-", "");
+     }
+ 
+     private UserBO toBO(User user) {
