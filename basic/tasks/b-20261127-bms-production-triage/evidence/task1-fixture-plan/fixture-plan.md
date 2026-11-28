@@ -1,13 +1,14 @@
-# qywx fixture 自建自清方案（B 方案，修订版 R4·最后终审轮）—— P1 任务1 测试代码修改计划
+# qywx fixture 自建自清方案（B 方案，修订版 R5）—— P1 任务1 测试代码修改计划
 
 提交轮次：R1 审查 REWORK（P1-1/P1-2，r1-plan-review-verdict.txt）→ R2 修订 → R2 复审主体通过+
 补三项异常生命周期（r2-plan-review-verdict.txt，SHA256=
 `5f253f4d7e828aabd9172d6a8f6e8768c0dd81670fb3687d8d3d6d6cd3871976`）→ R3 修订 →
-R3 终审 REWORK 仅两项（r3-plan-finalreview-verdict.txt，SHA256=
-`2cb4fc175a5a9dbfefc0f3183822e048b7b4e683a0155fa22e8b5fc31106ea60`：①持锁后失锁安全边界未封闭；
-②证据归档错名 r3-review-reply.txt 实为 R2 复审 reply，已按内容更名修正）→ 本 R4 仅补
-**破坏性操作前锁归属核验 + 失锁禁清理 + finally 异常分离**，其余一概不动。
-状态：**仅方案修订，未实施**。授权边界：最后终审通过前不改代码、不执行 INSERT、不重跑测试。
+R3 终审 REWORK 两项（r3-plan-finalreview-verdict.txt，SHA256=
+`2cb4fc175a5a9dbfefc0f3183822e048b7b4e683a0155fa22e8b5fc31106ea60`）→ R4 修订 →
+R4 终审 REWORK 唯一遗留=核验与破坏性操作间 TOCTOU 竞态（r4-plan-finalreview-verdict.txt，SHA256=
+`39f80914258570d2137efc92775a314c774c8647f60d47075d0ff8a5b2784ece`，要求技术论证而非直接写码）→
+本 R5=**锁连接承载全部破坏性操作（会话绑定消除 TOCTOU）+ 进程级文件锁外层互斥**，其余已通过项一概不动。
+状态：**仅方案修订，未实施**。授权边界：通过前不改代码、不执行 INSERT、不重跑测试。
 范围：仅 `MultiDeviceLoginIntegrationTest.java` 单测试文件；业务代码、生产配置、测试断言零改动；
 运行方式与命令不变（`python -I runtime/run_acl_tests.py`）。
 
@@ -37,11 +38,37 @@ runid = UUID 去横线取 8 位 hex，每次运行新生成；user_name 与 qywx
   参数2=`acl_it_fixture_` 字面量），user_name 与 qywx_user_id 两处同样处理；全程禁用 LIKE 做命名空间匹配。
   本轮唯一性预检（自身完整名）本就用 `=` 精确匹配，不受影响。补采诊断脚本 user-schema.json 曾用
   LIKE——其语义偏宽（多匹配方向），"零占用"结论不受影响；实施版一律 LEFT 字面前缀。
-- **【P1-2 新增】跨进程互斥（MySQL 命名锁）**：@BeforeClass 第一步（先于残留检查）用 dataSource
-  独立连接（autocommit=true，仅用于锁，不承载业务 SQL）执行 `SELECT GET_LOCK('acl_it_fixture_mutex', 0)`：
+- **【P1-2/R5】跨进程互斥（进程级文件锁 + MySQL 命名锁 + 锁连接承载全部破坏性操作）**：@BeforeClass
+  依次：①获取进程级文件锁（见下）→ ②开独立连接 L（autocommit=true）执行
+  `SELECT GET_LOCK('acl_it_fixture_mutex', 0)`：
   - 返回 1 → 持锁继续；返回 0 或 NULL 或获取过程抛异常 → **fail-closed：关闭该未持锁连接并抛异常，
     本轮不扫描、不清理、不创建**。
   - 持锁连接存 static 字段，同一连接持有至清理验证完成，覆盖残留检查→创建→4 测试生命周期→清理→验证全程。
+  - **【R5 核心变更·锁连接承载全部破坏性操作（回应终审 TOCTOU 问题）】**：测试自有的全部破坏性写入
+    （fixture INSERT、残留逻辑清理、token 吊销、fixture 用户逻辑删除）与验证查询一律在锁连接 L 上以
+    PreparedStatement 执行，不再经 MyBatis 服务。**论证：GET_LOCK 为会话级锁，语句与锁同会话后，
+    "锁有效"与"语句可执行"由同一会话本体绑定——会话死亡后该连接上不可能再执行任何语句，写入要么发生在
+    持锁会话存活期内、要么根本不发生；锁有效期覆盖操作执行期由 MySQL 会话构造保证，不依赖任何操作前检查
+    （操作前双重核验保留，降级为快速失败诊断，不再承担安全职责）。审查方 T1-T4 场景的 T4"A 失锁后仍执行
+    逻辑删除"在本设计下不可能发生。**
+  - **【R5·"不改变应用持久层"评估结论】**：业务层代码零改动；变更仅在测试文件内部——测试自有写入从
+    MyBatis 服务改为 L 上的等价语句：fixture INSERT 复刻 MPMetaObjectHandler 填充结果（显式
+    is_deleted=0，gmt_create 走列默认 CURRENT_TIMESTAMP，列集以 user-schema.json 实测为准，
+    RETURN_GENERATED_KEYS 取 userId 供 static 登记）；逻辑删除复刻 LogicSqlInjector 语句形态
+    `UPDATE <表> SET is_deleted=1 WHERE id=? AND is_deleted=0` 并核验影响行数——与 @TableLogic
+    deleteById 生成语句同形态，属既有逻辑删除机制的等价执行，非新语义、非物理 DELETE。
+    被测业务流（login/logout/qywxOAuthLogin）仍走应用层——它们是被测系统本身，不动。
+  - **【R5·进程级文件锁（外层互斥，第二道防线）】**：@BeforeClass 最先获取 java.nio FileLock
+    （FileChannel.lock，锁文件=测试模块 `target/acl-it-fixture-mutex.lock`；tryLock 截止时间循环，
+    超时=fail-closed 抛异常），FileChannel 存 static 字段，@AfterClass finally 中释放并关闭；
+    JVM 进程死亡由 OS 释放（本地文件系统可靠）。**作用：A 进程存活期间 B 完全无法进入生命周期——
+    即使 A 的锁会话已死，B 也拿不到文件锁**，审查方场景"T3 B 开始自己的测试"在 A 存活期内被排除。
+    单机假设如实声明：runner 本机运行（run_acl_tests.py 本地执行）；跨主机并发不在本轮范围，如未来
+    需要须另行评估。锁文件路径在测试模块 target/ 内，随构建目录隔离，不入 Git。
+  - **【R5·双层不变式】**：破坏性写入仅当 (a) A 进程存活（文件锁互斥排除 B 启动）且 (b) L 会话存活
+    （否则语句执行前/中失败）才可能发生——两进程同时破坏性操作不存在可行交织；"检查成功"不再等同于
+    "操作安全"，后者由会话绑定构造保证。测试中途 L 死亡：文件锁仍在（B 被挡），A 的下一破坏性入口即
+    失败（L 不可用）→ 本轮验收失败+残留审计，B 在 A 退出后由预检清理残留（逻辑删）。
   - **【R4 补·破坏性操作前锁归属核验】**：每个破坏性操作入口（残留命名空间扫描及残留逻辑清理、
     fixture 创建、@AfterClass token 与用户清理）之前，**均在原持锁连接上**执行核验，两项都过才继续：
     ① 连接探活（原连接执行 `SELECT 1`，异常即失锁）；
@@ -56,8 +83,9 @@ runid = UUID 去横线取 8 位 hex，每次运行新生成；user_name 与 qywx
   - 异常/进程退出安全：@AfterClass 即使 @BeforeClass 失败仍执行（JUnit4 ClassRoadie）；锁未持有则
     清理逻辑整体跳过（无对象可清）；进程崩溃时 MySQL 会话断开、GET_LOCK 自动释放——三个退出路径均不依赖文档声明。
   - 锁仅用于测试进程互斥，不做任何生产业务逻辑。
-- **token 清理**：每测试 `@After` 对登记 token `deleteByToken` 吊销（既有机制）；
-  @AfterClass 按 fixture userId 兜底吊销剩余活跃 token。
+- **token 清理（R5 起全部走 L）**：每测试 `@After` 对登记 token 在 L 上按
+  `UPDATE user_token SET is_deleted=1 WHERE id=? AND is_deleted=0` 逐条吊销（L 不可用=记录失败、
+  交主异常路径）；@AfterClass 兜底吊销同通道。
 
 ## 3. 清理顺序固定、try/finally 释锁与结果验证（R2 复审补充要求 + R3 异常生命周期补齐）
 
@@ -66,8 +94,10 @@ runid = UUID 去横线取 8 位 hex，每次运行新生成；user_name 与 qywx
 - **try（顺序固定，先 token 后用户，不先删用户再找 token）**：
   0. 【R4 补】入口锁归属核验（见 §2 两项核验）——失锁则 try 不执行任何删除，直接走失败路径（记录+验收失败+残留审计）。
   1. 若 fixture 未创建（@BeforeClass 持锁前失败）→ 跳过清理，无对象可清。
-  2. 按 fixture userId 查询活跃 token → 全部 deleteById 逻辑吊销（user_token 同为 @TableLogic 链路）。
-  3. `userService.deleteById(fixture)` 逻辑删除用户。
+  2. 按 fixture userId 查询活跃 token → 在 L 上按 `UPDATE user_token SET is_deleted=1
+     WHERE id=? AND is_deleted=0` 逐条吊销（影响行数核验）。
+  3. 在 L 上按 `UPDATE user SET is_deleted=1 WHERE id=? AND is_deleted=0` 逻辑删除 fixture 用户
+     （影响行数=1 核验）。
   4. **清理结果验证（jdbc 只读，任一失败即抛异常使本轮验收失败并输出残留行审计信息
      id/user_name/计数，不含敏感值）**：
      a) fixture 用户行存在且 is_deleted=1（行仍在=未发生物理 DELETE）；
@@ -86,9 +116,11 @@ runid = UUID 去横线取 8 位 hex，每次运行新生成；user_name 与 qywx
 
 ## 4. 测试改造点（单文件，仅调用点替换）——复审 PASS 原样保留
 
-- 新增 `private User findOrCreateQywxFixtureUser()`（及锁与预检辅助）：持锁 → LEFT 前缀残留预检清理
-  → 自身完整名/虚构 qywx id `=` 精确唯一性预检（=0 才插入）→ insert → 回读断言（id 非空 / is_deleted=0 /
-  user_name 与 qywx_user_id 等于本 runid 预期值）；fixture 引用与持锁连接存 static 字段。
+- 新增 `private User findOrCreateQywxFixtureUser()`（及文件锁/命名锁/预检辅助）：持双锁 →
+  LEFT 前缀残留预检清理 → 自身完整名/虚构 qywx id `=` 精确唯一性预检（=0 才插入）→
+  在 L 上 INSERT（复刻填充语义，RETURN_GENERATED_KEYS 取 userId 立即登记 static）→
+  回读断言（id 非空 / is_deleted=0 / user_name 与 qywx_user_id 等于本 runid 预期值）；
+  fixture 身份、userId、L、FileChannel 均存 static 字段。
 - 4 处 `findQywxBoundUser()` 调用点替换（行139/167/251/263）；原方法删除。
 - 测试体其余零改动；测试间隔离不变（每测试开头 `activeTokenIds(userId)` 快照基线）；
   并发测试两阶段终止+兜底登记机制不变（R5/R6 已复核版本原样保留）。
@@ -122,3 +154,14 @@ runid = UUID 去横线取 8 位 hex，每次运行新生成；user_name 与 qywx
 错名修正说明：原 `r3-review-reply.txt` 实际内容为 R2 复审 reply，终审（R3 裁定二·C）指出后已按内容
 更名为 `r2-plan-review-verdict.txt` 并新增真正的 R3 终审 reply `r3-plan-finalreview-verdict.txt`；
 原文件内容未覆盖、未丢失，仅名称归位。采集脚本（acl_user_schema_{remote,drive}.py）为只读诊断通道副本。
+
+## 8. R4 终审 TOCTOU 问题与 R5 回答（终审要求的技术论证，本文 §2 为设计落地）
+
+- 终审问题：操作前核验（SELECT 1 + CONNECTION_ID() + IS_USED_LOCK）与实际破坏性操作非原子，
+  且 MyBatis 服务走连接池连接、与锁连接不同会话——锁会话死亡后操作仍可能在无互斥保护下执行；
+  增加核验次数不能消除 TOCTOU。
+- R5 回答：**锁有效期覆盖操作执行期改为由"会话绑定"构造保证**——全部测试自有破坏性写入移到锁连接 L
+  同一 MySQL 会话执行（§2 核心变更），会话死=语句不可能执行；"操作前核验"降级为快速失败诊断。
+  另加进程级文件锁外层互斥（A 进程存活期 B 无法进入生命周期），审查方 T1-T4 场景的 T2/T3/T4 三步
+  全部不可行。终审方向一"锁与实际破坏性数据库操作同一连接生命周期"采纳并已评估持久层影响（§2 等价语句）；
+  终审"数据库端强制保护"与"如实报告约束冲突"两条分支因此无需启用。
