@@ -1167,3 +1167,60 @@
 - **R4 修复：** commit `8a745547eef28c7976753799a92aa13b0701c8cd`（parent=`3ac3ded3b5c5b252424c799f0496546a7589219f`，仅 `ApprovalFlowServiceImpl.java` 1 文件 +13/−3，ST-01 PASS=`evidence/st01-r4-fix.json`）：Flow 改按 `object_id`+`object_type=ChangeOrderFlow` 关联查询（多条 fail-closed，仅旧数据无 Flow 回退）；PM 零完成改 `zeroCashAmount && (payDate==null || zeroBusinessAmount)`。真实编译日志补齐=`evidence/build-service-refund-r4.log`（4766 字节 BUILD SUCCESS，修复上一轮 0 字节日志缺口）。业务 commit 未推送、未合并 master、未发布。
 - **codex 交接：** `handoff.md` §15 为验收入口。至少含：两处 P0 修复源码审查；reply 要求的两组干净动态证据（干净合同基线多笔退款证明 otherPrice 与大池子 addAmount 各只应用一次 T；flow.amount=0+payAmount 非零+payDate=null 的 PM 场景证明实收不清零）；5195/5196 历史测试数据不得当干净断言、Sku 3100050 存量 0 阻塞事实均已标注。
 - **边界：** DEC-010 红线与 §12 禁扩范围不变；推送远端/合并/发布仍须用户拍板；验收结论回写任务夹后方可进入 S3/S4。
+
+### DEC-137 BMS 三项生产问题按 Standard/S3 立项，P0 0元变更单审核优先热修（2026-11-27）
+
+- **授权依据：** 用户原话“用AIEO标准版开发任务”，同次提交登录互踢、三方价格同步、新增变更单无法审核三项问题；任务包=`basic/tasks/b-20261127-bms-production-triage`。按 AGENTS.md 节点自主推进授权执行，规划协商照常；DEC-010 高危红线不由节点授权解除。
+- **执行顺序与隔离：** 单任务 M1 串行推进：S0只读诊断→S1 ChatGPT规划复审→S2 P0审核热修→S3 P1多设备登录→S4 P2三方价格只读首查→S5交付。P0 从生产 UI `1a0742d6caa1471473dd8c917543df43e282f1b5` 建独立热修分支，避免混入未发布 Er+F UI `342791f9a649fec84b97916ac8232fd41573ff4c`；P1 ACL 基线=`07fa35463d478716c51fd5a291c82a39aaaa96fd`；P2 首查禁止任何同步写入。
+- **S0 根因事实：** 流程5610为 `flow_type=50/status=12/amount=0`，nginx仅见多次详情GET、无pmAudit POST；生产UI祖先`084728d8`在`finance_project_other_detail3.html`将0元变更单整个`receiveCard`隐藏，而同意/驳回按钮位于该卡片内，直接导致无法审核。单条详情DTO已填`flowOper=pmAudit`，排除漏字段假设。ACL `userLogin/qywxLogin` 登录前按`user_id+app_id`删除全部旧token，为多设备互踢直接原因。
+- **验收与边界：** P0须验证0元待PM单可审核、非零展示不倒退、99/-10按钮隐藏；P1须验证双token并存、过期重登、logout只吊销当前token；P2仅输出三方差异清单与2026年前后口径，未讨论前不得写价格。生产发布/main或master合并/生产数据删除均须用户本人拍板；他人WIP与既有Er+F codex验收不混入本任务。
+
+### DEC-138 三项生产问题规划R2有条件通过，P0单HTML热修进入S2（2026-11-27）
+
+- **规划证据：** R1=`phase0/logs/dispatch-2026-11-27T06-51-44/reply.txt`（SHA256=`51f64fc4343e60f4031897a1c4d5fdafb1975c49478424c874664ed7166c327f`）要求补POST/状态机、token生命周期和只读边界；R2=`phase0/logs/dispatch-2026-11-27T07-06-12/reply.txt`（SHA256=`bed87ad6b96ec246cbff8357cfda69cb65ae9ac3dab6e51a2ced24c461af84e6`）明确批准P0单HTML实施、P1独立分支开发、P2只读核查。整体REWORK只表示未达到发布批准，不阻断已允许的本地实施。
+- **P0实施：** 干净worktree分支`task/bms-zero-change-audit-hotfix`基于`1a0742d6caa1471473dd8c917543df43e282f1b5`；仅移动`finance_project_other_detail3.html`的`#divBtnOper`到`#receiveCard`外。本地浏览器基线复现及修复后五场景、同意/驳回请求构造均已留证；compile/package PASS。生产基线project jar另行从`28611b52d4f7dc5290c9a1692a88a076f468fead`干净构建用于dev状态流转。
+- **证据纠偏：** 审查回复中的“生产浏览器复现/按提供dev证据”不据实采用；当前只有本地fixture浏览器证据，dev实测另跑。生产5610审核属生产写操作，不纳入执行侧擅自操作，发布和实际业务审核均留用户拍板。
+- **下一节点：** S2完成dev状态流转和独立验收后自主进入S3 ACL；P1正式验收前必须只读核明NULL历史token与联合索引；P2仅独立只读传输，禁现有隐式写库查询客户端。
+
+### DEC-139 用户要求先讨论并存档再操作；P0证据验收HOLD，P1/P2按交接包分段续作（2026-11-27）
+
+- **最新用户指令：** “不要想着一次性处理完，先跟chatgpt讨论怎么做并存档结论和方案再操作，免得后面token用完了，下一个模型没法接”。本任务后续必须分段执行并保留可接手上下文，不得为一次性收尾跳过讨论/验收。
+- **P0状态：** commit=`98c71c017acde67eaafbc5f61d8607ecdb610d19`修复方向经独立审查PASS，完整源码与原始证据因未推送/附件未上传而BLOCKED；会商同意挂起，不追加代码。本地浏览器与dev真实状态流转均已有证据，但未发布、未对生产5610写操作，不能称生产恢复。
+- **P1状态：** 30天统一新会话方案经R4有条件PASS；当前ACL/UI为隔离worktree内未提交候选实现，集成测试未实际执行，不得登记完成。生产ACL预检排除联合唯一索引和NULL历史，无迁移/删除。
+- **P2状态：** BMS 2203行、小店66商品143SKU、JST 1950条完整原始数据已只读落盘；JST一次限流后断点续跑完成。正式三方差异报告尚未生成，样本冒烟数字不得当最终结果；同步写入仍禁止。
+- **交接单源：** `basic/tasks/b-20261127-bms-production-triage/handoff.md`，含全部reply SHA、Git落点、证据哈希、异常、下一步和安全边界。本任务启动的dev JVM/fixture已停止；交接文件已本机落盘，未提交、未推送（用户未批准），不宣称满足L-015远端交接完成。
+
+### DEC-140 P2三方商品价格只读首查完成并验收PASS；P0/P1审查材料授权仍需用户拍板（2026-11-27）
+
+- **P2交付：** `deliverables/BMS三方商品价格差异首查_20261127.md`及同名`.xlsx`；正式候选1541行，2026+可唯一比较157行（差异7/一致150），排除1384行、待处理758行、缺编码70行；JST1950原始→1086编码、重复864、冲突0。独立回链验证覆盖1541行、BMS1266、小店143、JST1086及7条差异；工作簿recalc/audit/scan/validate均0问题。
+- **独立验收：** 算法复核reply SHA256=`458aa2031db38a44f01bb581e47cb72037827a9f81a984b7bde13d9a0f4345d2`；S4正式验收reply SHA256=`da60b664b4ec669449e44e0e3e0da96f019a6ad15ffe436e30750180e702a8a1`，结论PASS（仅只读成果；对端未直接读取原始价格，不伪称亲自复算）。历史JST全集限制保留。
+- **业务边界：** 7条是待核实差异而非已认定错误；758待处理不等于758价格异常；不授权同步、批量修复、token刷新或生产写入。P2节点关闭。
+- **P1进展与阻断：** 实施复核R1=REWORK（reply SHA256=`a5a7bf48e8c7234de295f348a53f3d76c458bec3e736c6ca4e17b3326dce19c0`）；已补齐完整源码/测试/事务与生产字段证据包`task1-r2-review.zip`（SHA256=`25c709449bdb8ae2c15e4c98fdc8ce5cfa49387f3387e888edfb4d787198d49a`），但未提交、未运行测试。R2完整审查及P0完整验收均需可读材料通道；推送业务分支或审查证据分支属于用户授权项，不自行执行。
+
+### DEC-141 P1实施复核R2=REWORK（六项收敛）；附件通道实测打通，主体设计全部PASS（2026-11-28）
+
+- **R2派单：** 续派P1实施复核会话`6b093fa6-b4bc-83ec-83da-4f284d068df3`（--session-result=dispatch-2026-11-27T08-29-36/result.json），消息1064字节+附件`task1-r2-review.zip`（41.5KB，SHA256=`25c709449bdb8ae2c15e4c98fdc8ce5cfa49387f3387e888edfb4d787198d49a`）。ST-05自检IN_PROGRESS无FAIL（`st05-p1-impl-r2.log`）。派单现场=`phase0/logs/dispatch-2026-11-28T02-50-56`。
+- **裁定：** REWORK，reply 11185字节，SHA256=`09032b433a05fc7d74c72e1b1558152498c3e783c1b4f781b786f904bf36f7b9`。附件zip经审查方独立验证SHA一致+MANIFEST 19/19逐文件全对+源码实际审读（"不是摘要审查"）——P0曾阻断的附件通道在gpt_dispatch `--attach`（chip校验+上传完成轮询+回读双验）下实测打通。
+- **PASS项（不需重设计）：** token随机生成、30天签发、单token logout方向、双登录持久化测试设计、并发事务设计（独立连接独立提交）、NULL边界、ZIP/MANIFEST完整性。
+- **六项REWORK：** ①账号登录30天断言时间顺序错误（beforeA取在login之后必失败）+MySQL DATETIME秒级精度容差；②并发测试finally仅shutdownNow无awaitTermination=异常路径@After清理竞态可能遗留token；③保存失败测试捕获任意RuntimeException=假阳性，须验dev SQL_MODE+断言具体持久化失败+证明无遗留记录；④FrameCookieUtils通用4参重载默认寿命36000→2592000可能扩大非登录Cookie寿命，须全仓审计调用点或仅改登录Cookie显式调用；⑤补BaseEntity/MyBatis-Plus逻辑删除配置证据；⑥UI基线不一致说明（R1请求写98c71c01、R2预检材料写1a0742d6，须给出各diff实际基线完整SHA及两者关系）。
+- **执行边界不变：** R3通过前禁运行测试/提交/推送/发布；P0保持HOLD；不扩大P1范围。另：昨日磁盘清理咨询派单（新会话`6b09cc08`）发送后采集fail-closed（INBOUND_START_UNIT_MISSING），按L-018归属校验补采驱动`recoll_cdrive_r1.mjs`完成采集（15281字节，SHA256=`9dc2f4df2f5189765f284b215d9d5de47e1aa05a6293f5da7125e77a62e887ab`，七查全过，未重发）。
+
+### DEC-142 P1实施复核R3=REWORK（五项PASS）；R4材料就绪但附件配额阻断；用户加派四库原始数据导出（2026-11-28）
+
+- **R3派单与裁定：** 续派会话`6b093fa6`（--session-result=dispatch-2026-11-28T02-50-56/result.json），简报1185字节+附件`task1-r3-review.zip`（61503B，SHA256=`96785ba89d12e45ec6c984deb6760591e4340b6052bdf436c32c02d1bc25cafb`，29文件）。裁定REWORK（reply=`dispatch-2026-11-28T03-17-09/reply.txt`，7851B，SHA256=`876bff9439077f48a81dd2c624f299269d94d2a6e9aac6c984a783db9410efef`）：R3-1时间顺序/1秒容差、R3-3 MySQL 1406测试、R3-4 Cookie审计（选项A）、R3-5逻辑删除证据、R3-6基线说明=全部PASS；唯一代码阻断=R3-2 InterruptedException分支只shutdownNow不等待实际终止+第二次awaitTermination失败断言跳过兜底登记；另要求补`deleteByUserId`全仓调用审计（只读，保留方法）。仍禁测试/提交/推送/发布，P0保持HOLD。
+- **R4修订：** 测试finally抽出`awaitWorkersTermination`助手（中断路径1s循环等待实际终止+恢复中断位、助手零断言），finally顺序=等待终止→登记新增非基线token→之后才fail（终止与清理状态分离）；`evidence-deletebyuserid-audit.md`=全仓仅声明+实现2命中、调用者0、登录路径无token删除、方法原样保留。R4包8文件SHA256=`ad02b949990858fb8ad0481c6573691ade32f1c9f03a813ed41cc32732bdaf9d`，test-compile BUILD SUCCESS（`task1-r4-testcompile.log`），ST-05 IN_PROGRESS无FAIL。业务代码零改动。
+- **附件配额阻断（环境级）：** 两次R4派单均fail-closed"附件挂载未验证"且send-state=NOT_SENT。6轮DOM诊断（`phase0/logs/diag-r4-attach-01..06`）根因=ChatGPT账号附件配额用尽（页面明示"已达到文件附件数量限制…11月29日10:55后重试"）：app禁用全部文件input、setInputFiles空转、paste事件同样被拒；R3 03:17成功挂载为窗口末次配额。禁绕过（账号级限制）；处置待用户拍板：A=证据包走GitHub交接分支（推送须批准）；B=等2026-11-29 10:55重置。会话ctx-budget=WARN（31584B），R4后按L-018第6条评估迁移。
+- **用户加派（2026-11-28当日指令）：** "各个微信小店店铺，聚水潭，花园计算器，bms，这几个库的数据都有了吗，先把原始数据导出到excel…名称-编码-价格-规格要有"。执行=只读导出，不匹配、零业务写入：`runtime/export_raw_data_excel.py`→`deliverables/各库原始数据导出_20261128.xlsx`（12数据页+汇总页；微信5店143SKU[70缺码如实标注]/JST1950/BMS2203/GDC目录SKU32+套餐16+材质34/GDC线上项目126+客户115）。GDC"库"确认=①产品目录库在部署包`data/`CSV（skus/offers/materials等，已归档`evidence/gdc-catalog/`，容器内基本一致skus差2行）②线上运行库=share.yotin正式栈Postgres（garden-20261014-db-1，31表，无商品/价格表；schema与业务数据只读导出）。新鲜重拉微信数据需`WECHAT_SHOP4/5_APP_SECRET`来源env路径（本机未找到，昨夜16:01全量快照已完整够用），待用户提供路径。
+
+### DEC-143 R4-R6审查经GitHub交接分支收敛：R6 PASS→两轮授权测试→裁定fixture选B，方案已提交待审（2026-11-28）
+
+- **用户批准：** ①R4送审走GitHub交接分支（AskUserQuestion选择推荐项）；②P0热修分支`task/bms-zero-change-audit-hotfix`（98c71c01）批准推送至bms-ui（不合并main、不发布，P0验收HOLD不变）。推送经SakuraCat本地代理127.0.0.1:14979（L-016：`reg query //v`，Git Bash须`//v`；1080与直连均不通）。
+- **交接分支：** damwate/AIEO `handoff/20261128-bms-prod-triage-p1-r4`：R4包=1fea425、R5包=334dd76、R6包=c3f6257、run1证据=55b3cbe、run2证据=16e0997。按skill"文件走GitHub、网页走短消息"，审查方按SHA核验版本，附件配额限制整体绕开。
+- **R4裁定=REWORK（仅R4-1）**：`dispatch-2026-11-28T04-09-24/reply.txt`（7476B，SHA256=`2c2781965d7768009615127fef3dedc5e72ca42db00861c9a466508e6749c146`，旧会话6b093fa6末次）。R4-1=两阶段清理时间边界：固定1s等待轮可越过90s宽限deadline冒充"期内终止"。
+- **R5修订=逐轮remaining等待**：按审查方供给修法，第一阶段每轮计算`remaining=deadline-nanoTime()`以NANOSECONDS等待，最后一次等待严格不跨越deadline；期内终止=true，期满shutdownNow后不限时等`isTerminated()`才返回false。R5包=334dd76。
+- **会话迁移（L-018第6条）**：旧会话6b093fa6累计40197B近HARD 49152B，R5起`--new-session`新建审查会话首派即活（`dispatch-2026-11-28T04-23-11`；04-20-00为迁移首试无reply残留，未重发）。R5裁定=REWORK仅时间边界残余（reply 4190B，SHA256=`2af9631d20aee2c036cf6d067159ff2b87c93dcdad7bdaf518a9acf9a1d06e10`），审查方给出逐轮remaining终版修法。
+- **R6裁定=PASS+测试授权**：c3f6257落实终版修法。`dispatch-2026-11-28T04-28-19/reply.txt`（1977B，SHA256=`f8d184459d2688ab3ff70c6197a5b5926ac926491ce4d2cfbb3d086de58a2afc`）：R6 PASS，授权运行测试。
+- **run1（授权内）**：`python -I runtime/run_acl_tests.py`退出码1；UserTokenTest PASS；MultiDeviceLoginIntegrationTest 5 errors全在ApplicationContext加载（SpringMvcConfiguration.resourceHandlerMapping需ServletContext vs webEnvironment=NONE）→被测逻辑零执行；DB基线pre/post逐字段一致=零污染。证据=55b3cbe。处置申请`dispatch-2026-11-28T04-41-39`（简报1184B），批复"R6测试装配处置：PASS，授权实施最小修复并重跑"（reply 1854B，SHA256=`c5766d4f644e62b7d1e804862e59e16464a6917ff8bcd6b0aa5a837ce538ac65`）——定性环境/装配失败，仅授权注解NONE→MOCK一词。
+- **run2（授权内）**：MOCK修复（仅一处+注释）重跑：上下文加载成功；`accountTokensCoexistAndLogoutOnlyRevokesCurrentToken`端到端PASS（双登录共存、单token logout仅吊销当前）；UserTokenTest PASS；4项qywx同一根因=findQywxBoundUser前置断言（dev库180用户qywx_user_id绑定数=0，dev-user-qywx-check.json），被测逻辑零执行。基线逐项对账：测试用户token 778→780(+2)、活跃1→1不变；全表2827→2829(+2)、活跃23→23不变；+2行均12:44:41创建app101且is_deleted=1（1个测试内logout吊销+1个@After兜底）；现有行零变化。证据=16e0997。
+- **R6裁定=B（fixture自建自清）**：`dispatch-2026-11-28T04-51-29/reply.txt`（3632B，SHA256=`72b537ebe078f68094e7234ab6895c17c22a8da87c420accaba5782dcacd8fa6`），新审查会话`6b0a5e02-a758-83e8-82da-648fc1a067c8`（第4条消息达L-018阈值，主动迁移）。4项qywx定性=BLOCKED（不记业务FAIL也不记PASS）；拒绝A（一次性INSERT：不可重复、环境重建需重备、fixture与测试生命周期分离易遗留）；授权边界=本轮仅提交fixture方案+测试代码修改计划，通过前禁改码/INSERT/重跑；R6既有证据原样保留。
+- **fixture方案已提交待审（本commit）**：`evidence/task1-fixture-plan/fixture-plan.md`+`user-schema.json`（dev库user表15列SHOW COLUMNS实测+`acl_it_fixture`命名空间零占用预检；ssh只读通道`runtime/acl_user_schema_remote.py`+`acl_user_schema_drive.py`，凭证stdin不落盘）。要点：user_name/qywx_user_id=`acl_it_fixture_*_<8hex runid>`（user_name UNIQUE逻辑删旧行仍占名→随机防跨轮冲突）、pass_word=随机MD5占位非真实凭证、is_admin显式false、real_name因UNIQUE不设；创建=userService.insert（实测链@TableLogic+LogicSqlInjector+MPMetaObjectHandler）；清理=deleteById实为UPDATE is_deleted=1（yml logic-delete-value:1实测）+@AfterClass token兜底+下轮预检清残留，全程零物理DELETE；改造=4处findQywxBoundUser调用点替换，测试体/断言/并发清理零改动；验收=R6裁定四条+5/5。

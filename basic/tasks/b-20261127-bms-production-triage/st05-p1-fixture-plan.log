@@ -1,0 +1,9 @@
+Taskpack: b-20261127-bms-production-triage
+Phase: IN_PROGRESS
+[PASS] ① 需求记录
+[PASS] ② 步骤清单
+[PASS] ③ 步骤验收记录
+[PASS] ④ REJECT返工记录
+[PASS] ⑤ 返工次数
+Overall: PASS
+检查说明：①需求=handoff.md+task-brief.md+steps.md S3/P1任务1未变；②步骤=S3新增R4-R6收敛/两轮测试/R6裁定B三条记录+⑦导出v2+返工记录5条；③验收=两轮reply+裁定reply均按SHA256登记于DEC-143，4项qywx=BLOCKED未虚记PASS；④⑤=REWORK 2→3→4→5轮全收敛、零REJECT如实登记。本轮=fixture方案审查提交，无实施/无INSERT/无重跑（裁定授权边界）。
