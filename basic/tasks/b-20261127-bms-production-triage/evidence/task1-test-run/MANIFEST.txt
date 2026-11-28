@@ -1,0 +1,7 @@
+05137b164e08d793  371133  acl-test-run.log
+9dc11cff72315b5b  12  exit-code.txt
+b62b2257b3e0813e  109205  baseline-pre.json
+abaaa0c2ac492fac  109206  baseline-post.json
+c366139fdd0d0f2d  40335  com.ecog.acl.MultiDeviceLoginIntegrationTest.txt
+700abd7743731268  281  com.ecog.acl.entity.UserTokenTest.txt
+e01f2e38a535d466  2452  run-summary.md
