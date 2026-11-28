@@ -1,10 +1,13 @@
-# qywx fixture 自建自清方案（B 方案，修订版 R3·终审轮）—— P1 任务1 测试代码修改计划
+# qywx fixture 自建自清方案（B 方案，修订版 R4·最后终审轮）—— P1 任务1 测试代码修改计划
 
-提交轮次：R1 审查 REWORK（P1-1/P1-2）→ R2 修订 → R2 复审主体通过（P1-1/P1-2 基本成立，
-reply=`phase0/logs/dispatch-2026-11-28T05-15-59/reply.txt`，5295B，
-SHA256=`5f253f4d7e828aabd9172d6a8f6e8768c0dd81670fb3687d8d3d6d6cd3871976`）→ 本 R3 仅补齐三项
-异常生命周期（try/finally 释锁+核验返回值、部分初始化可清理、锁连接异常三态），不重开已通过事项。
-状态：**仅方案修订，未实施**。授权边界：终审通过前不改代码、不执行 INSERT、不重跑测试。
+提交轮次：R1 审查 REWORK（P1-1/P1-2，r1-plan-review-verdict.txt）→ R2 修订 → R2 复审主体通过+
+补三项异常生命周期（r2-plan-review-verdict.txt，SHA256=
+`5f253f4d7e828aabd9172d6a8f6e8768c0dd81670fb3687d8d3d6d6cd3871976`）→ R3 修订 →
+R3 终审 REWORK 仅两项（r3-plan-finalreview-verdict.txt，SHA256=
+`2cb4fc175a5a9dbfefc0f3183822e048b7b4e683a0155fa22e8b5fc31106ea60`：①持锁后失锁安全边界未封闭；
+②证据归档错名 r3-review-reply.txt 实为 R2 复审 reply，已按内容更名修正）→ 本 R4 仅补
+**破坏性操作前锁归属核验 + 失锁禁清理 + finally 异常分离**，其余一概不动。
+状态：**仅方案修订，未实施**。授权边界：最后终审通过前不改代码、不执行 INSERT、不重跑测试。
 范围：仅 `MultiDeviceLoginIntegrationTest.java` 单测试文件；业务代码、生产配置、测试断言零改动；
 运行方式与命令不变（`python -I runtime/run_acl_tests.py`）。
 
@@ -39,7 +42,16 @@ runid = UUID 去横线取 8 位 hex，每次运行新生成；user_name 与 qywx
   - 返回 1 → 持锁继续；返回 0 或 NULL 或获取过程抛异常 → **fail-closed：关闭该未持锁连接并抛异常，
     本轮不扫描、不清理、不创建**。
   - 持锁连接存 static 字段，同一连接持有至清理验证完成，覆盖残留检查→创建→4 测试生命周期→清理→验证全程。
-  - **持锁连接失效（测试中途检测到连接异常）→ 立即终止测试并如实失败，不得换连接后假定仍持锁**。
+  - **【R4 补·破坏性操作前锁归属核验】**：每个破坏性操作入口（残留命名空间扫描及残留逻辑清理、
+    fixture 创建、@AfterClass token 与用户清理）之前，**均在原持锁连接上**执行核验，两项都过才继续：
+    ① 连接探活（原连接执行 `SELECT 1`，异常即失锁）；
+    ② 锁归属核验：`SELECT CONNECTION_ID()`（原连接）与 `SELECT IS_USED_LOCK('acl_it_fixture_mutex')`
+    比对——IS_USED_LOCK 返回持锁会话连接 id，必须等于本连接 id；NULL（锁已释放）或等于其他 id（他人持锁）
+    均判失锁。**仅"连接对象非 null"或"此前 GET_LOCK 曾返回 1"不算数**。
+    核验与操作之间仍可能中断——因此任何连接异常一经检测立即停止，不允许回退到其他连接继续执行。
+  - **【R4 补·失锁行为（fail-closed）】**：一旦检测到持锁连接失效或锁归属丢失：立即终止后续测试及
+    破坏性清理；不换连接继续；不重新获取锁补做本轮清理；记录失锁与清理未完成情况；本轮验收失败并输出
+    残留审计；未完成残留留给后续获得锁的轮次按其预检处理。**@AfterClass 即使执行，失锁后也不执行任何删除**。
   - 释放：@AfterClass 清理与验证全部完成后 `SELECT RELEASE_LOCK(...)` 再关连接（try/finally 结构见 §3）。
   - 异常/进程退出安全：@AfterClass 即使 @BeforeClass 失败仍执行（JUnit4 ClassRoadie）；锁未持有则
     清理逻辑整体跳过（无对象可清）；进程崩溃时 MySQL 会话断开、GET_LOCK 自动释放——三个退出路径均不依赖文档声明。
@@ -52,6 +64,7 @@ runid = UUID 去横线取 8 位 hex，每次运行新生成；user_name 与 qywx
 @AfterClass 整体为 **try/finally**：
 
 - **try（顺序固定，先 token 后用户，不先删用户再找 token）**：
+  0. 【R4 补】入口锁归属核验（见 §2 两项核验）——失锁则 try 不执行任何删除，直接走失败路径（记录+验收失败+残留审计）。
   1. 若 fixture 未创建（@BeforeClass 持锁前失败）→ 跳过清理，无对象可清。
   2. 按 fixture userId 查询活跃 token → 全部 deleteById 逻辑吊销（user_token 同为 @TableLogic 链路）。
   3. `userService.deleteById(fixture)` 逻辑删除用户。
@@ -64,6 +77,8 @@ runid = UUID 去横线取 8 位 hex，每次运行新生成；user_name 与 qywx
   - 若曾持锁：`SELECT RELEASE_LOCK('acl_it_fixture_mutex')` 并**核验返回值=1**；
     释放失败必须记录并使本轮验收失败，不静默忽略。
   - 关闭持锁连接（连接已死则按已关闭处理并记录）。
+  - **【R4 补·异常分离】**try 主异常与 finally 释放异常分别记录、统一判定失败，
+    释放异常不得覆盖或掩盖 try 主异常——两类异常证据均保留。
 - **部分初始化必须可清理（R3 补齐）**：fixture INSERT 成功后**立即**将 user_name / qywx_user_id /
   生成的 userId 写入 static 字段（先于回读断言）；即使后续回读或断言失败，@AfterClass 仍按 static
   字段定位并清理该 fixture——不因创建方法未完整返回而跳过清理。
@@ -93,3 +108,17 @@ runid = UUID 去横线取 8 位 hex，每次运行新生成；user_name 与 qywx
 - fixture 无 admin 权限；不绑定真实企业微信身份；mock 不回调真实 API。
 - UNIQUE 1062：原样报告、不换身份偷偷重试、不改现有数据、不把失败包装为通过（复审认可保持）。
 - 不修改 run_acl_tests.py、不放宽任何业务断言、不动生产配置与业务代码。
+
+## 7. 证据归档说明（R4 修正错名，零历史丢失）
+
+| 文件 | 内容 | SHA256 | 字节 |
+|---|---|---|---|
+| fixture-plan.md | 本方案（R4） | 本 commit | — |
+| user-schema.json | dev 库 user 表 15 列 SHOW COLUMNS 实测 + fixture 命名空间零占用预检 | commit 内 | 1721 |
+| r1-plan-review-verdict.txt | R1 方案审查裁定（REWORK：P1-1/P1-2） | `ca47ba09934dec14a3fcdf22d568fc6116f43288a915630b1708156c6b070572` | 6510 |
+| r2-plan-review-verdict.txt | R2 方案复审裁定（主体通过+补三项异常生命周期） | `5f253f4d7e828aabd9172d6a8f6e8768c0dd81670fb3687d8d3d6d6cd3871976` | 5295 |
+| r3-plan-finalreview-verdict.txt | R3 方案终审裁定（REWORK：锁失效边界+归档修正） | `2cb4fc175a5a9dbfefc0f3183822e048b7b4e683a0155fa22e8b5fc31106ea60` | 7483 |
+
+错名修正说明：原 `r3-review-reply.txt` 实际内容为 R2 复审 reply，终审（R3 裁定二·C）指出后已按内容
+更名为 `r2-plan-review-verdict.txt` 并新增真正的 R3 终审 reply `r3-plan-finalreview-verdict.txt`；
+原文件内容未覆盖、未丢失，仅名称归位。采集脚本（acl_user_schema_{remote,drive}.py）为只读诊断通道副本。

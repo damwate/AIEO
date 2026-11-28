@@ -1238,3 +1238,9 @@
 - **三项补齐（R3）：** ①@AfterClass改try/finally——无论token清理/用户逻辑删/验证是否异常都执行finally：RELEASE_LOCK并核验返回值=1，释放失败记录+使验收失败不静默；连接已死按已关闭处理并记录。②部分初始化必须可清理——INSERT成功后立即写static字段（user_name/qywx_user_id/userId，先于回读断言），后续回读/断言失败@AfterClass仍按static字段定位清理，不因创建方法未完整返回跳过。③锁连接异常三态——GET_LOCK返回0/NULL或获取异常→关闭未持锁连接，不扫描不清理不创建；持锁连接失效→立即终止测试如实失败，不得换连接假定仍持锁；进程崩溃=会话断开自动释放（方案已载）。
 - **约束不变：** 不改业务测试断言/生产逻辑/配置；不物理DELETE；不自动重试1062；不扩大单文件范围（确需扩大先说明理由）。授权状态=只允许修订方案+提交证据；修订后提交新完整SHA做**最后一轮方案复审**，通过后单独授权实施。R6端到端PASS证据继续有效；4项qywx未完成不得提前计入PASS。
 - **R3修订（本commit）**：fixture-plan.md §2锁连接异常三态+同连接持有声明、§3改try/finally结构（try四步固定顺序+finally释锁核验）、§4部分初始化static字段立即登记；R2复审reply存档`r3-review-reply.txt`；ST-05=`st05-p1-fixture-plan-r2.log` PASS。
+
+### DEC-146 fixture方案R3终审=REWORK两项（失锁边界未封闭+归档错名）；R4修订提交最后终审（2026-11-28）
+
+- **终审：** 新审查会话（R6-B方案终审简报1189B，--new-session迁移，第4条消息达L-018阈值）`dispatch-2026-11-28T05-21-43/reply.txt`（7483B，SHA256=`2cb4fc175a5a9dbfefc0f3183822e048b7b4e683a0155fa22e8b5fc31106ea60`）。逐项：①try/finally释放锁=PASS（实施注意finally异常不得覆盖try主异常，两类异常分别记录统一判失败）；②部分初始化清理=PASS（INSERT后立即登记static身份+userId认可）；③锁连接三态=REWORK——获取失败fail-closed通过，但**持锁后失锁安全边界未封闭**：失锁核验必须发生在破坏性操作之前（残留扫描/清理、fixture创建、@AfterClass清理三入口），须核验原持锁连接仍有效且本会话仍持有命名锁（建议CONNECTION_ID()对比IS_USED_LOCK，不能只看连接非null或历史GET_LOCK返回1）；一旦失锁=立即终止后续测试与破坏性清理、不换连接、不重新取锁补做本轮、记录+验收失败+残留留给后续持锁轮次，@AfterClass失锁后不得执行删除。
+- **证据归档问题（终审二·C）：** 上一轮我把R2复审reply误存为`r3-review-reply.txt`。修正=r1→`r1-plan-review-verdict.txt`（ca47ba09…）/r2→`r2-plan-review-verdict.txt`（5f253f4d…）/真R3终审reply→`r3-plan-finalreview-verdict.txt`（2cb4fc17…），git mv保留历史、内容零丢失；fixture-plan.md新增§7归档索引表（文件→内容→完整SHA256→字节）。
+- **R4修订（本commit）**：仅两项，不重开已过事项——§2新增破坏性操作前锁归属核验（SELECT 1探活+CONNECTION_ID()=IS_USED_LOCK('acl_it_fixture_mutex')，核验与操作间中断即停不回退）与失锁fail-closed行为；§3 try入口加核验步骤0（失锁不执行任何删除）、finally加异常分离条款。授权状态=本轮及下一轮仅允许方案修订+证据；修订后提交新SHA做最后一次方案终审，通过后单独授权实施。
