@@ -213,7 +213,8 @@ runid = UUID 去横线取 8 位 hex，每次运行新生成；user_name 与 qywx
 | r4-plan-finalreview-verdict.txt | R4 方案终审裁定（REWORK：核验与破坏性操作间 TOCTOU） | `39f80914258570d2137efc92775a314c774c8647f60d47075d0ff8a5b2784ece` | 3753 |
 | r5-plan-finalreview-verdict.txt | R5 方案终审裁定（REWORK：文件锁路径非单机全局+应用层写入未证明纳入保护） | `3bfde7d4cd6f2ec74a7e0fc5dad1bc2e3fc949b4043a5e185bdf935acd2e208e` | 5169 |
 | r6-plan-finalreview-verdict.txt | R6 方案终审裁定（P1-2 REWORK：漏列 deleteByMap=版本分歧；P1-1 有条件通过） | `3fdfa16498b5ff0feffedf5c7e6e51ff059ef3de9678875c2dd90c8d523c5c32` | 4754 |
-| acl-userServiceImpl-tested-version.java | 被测版 UserServiceImpl 工作区副本（SHA256=d83d92dc…645e1c5） | 同左 | 12595 |
+| acl-userServiceImpl-tested-version.java | 被测版 UserServiceImpl 工作区副本（raw=d83d92dc…645e1c5；repo blob LF=1d91da09…83875a，仅行尾差异） | binding.json | 12595 |
+| acl-multiDeviceLoginIntegrationTest-tested-version.java | 被测版测试文件工作区副本（raw=blob=c070798b…226e30） | 同左 | 18793 |
 | acl-userServiceImpl-tested-vs-HEAD.diff | 被测版 vs HEAD（07fa3546）diff——deleteByMap 移除即被测功能 | commit 内 | 见文件 |
 | acl-source-version-binding.json | 版本绑定：分支/HEAD/两版清单/SHA256/grep 结论 | commit 内 | 见文件 |
 

@@ -5,8 +5,16 @@
   "tested_source_state": "HEAD + uncommitted working-tree modifications (the feature under test, not yet committed)",
   "reviewer_readable_version": "YotinGarden/bms-acl main checkout, same HEAD 07fa3546, clean working tree (= GitHub HEAD)",
   "tested_version_files": {
-    "UserServiceImpl.java": "d83d92dcbcfa965847621e52b1a25dc1bd89a603eec0fe667287a3f9b645e1c5",
-    "MultiDeviceLoginIntegrationTest.java": "c070798b98aae6bad508a0977ccb5303b9638fd68cfae5e9a3f88eba70226e30"
+    "UserServiceImpl.java": {
+      "archive": "acl-userServiceImpl-tested-version.java",
+      "sha256_raw_local": "d83d92dcbcfa965847621e52b1a25dc1bd89a603eec0fe667287a3f9b645e1c5",
+      "sha256_repo_blob_lf": "1d91da0983ce0ebb2dd3ddf15589562220fd3eae7896ad769d02050ec383875a"
+    },
+    "MultiDeviceLoginIntegrationTest.java": {
+      "archive": "acl-multiDeviceLoginIntegrationTest-tested-version.java",
+      "sha256_raw_local": "c070798b98aae6bad508a0977ccb5303b9638fd68cfae5e9a3f88eba70226e30",
+      "sha256_repo_blob_lf": "c070798b98aae6bad508a0977ccb5303b9638fd68cfae5e9a3f88eba70226e30"
+    }
   },
   "diff_vs_head": {
     "file": "acl-userServiceImpl-tested-vs-HEAD.diff",
@@ -17,5 +25,6 @@
   "tested_version_grep_deleteByMap": "0 hits in UserServiceImpl/login paths; only ApplicationServiceImpl.47 and RelationServiceImpl.54 (unrelated tables)",
   "verdicts_chain": {
     "r6_plan_finalreview_verdict": "3fdfa16498b5ff0feffedf5c7e6e51ff059ef3de9678875c2dd90c8d523c5c32"
-  }
+  },
+  "archive_hash_note": "SHA256(raw_local)=磁盘原样字节；SHA256(repo_blob_lf)=git归一化(CRLF→LF)后blob内容。UserServiceImpl副本原文件为CRLF故两值不同(语义同)；测试文件副本原文件即LF故两值相同。已用CRLF→LF变换法验证与git实际blob一致。"
 }
